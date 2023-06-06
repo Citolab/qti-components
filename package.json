@@ -9,6 +9,9 @@
   ],
   "license": "GPLv3",
   "private": false,
+  "engines": {
+    "node": ">=16.0.0"
+  },
   "version": "6.0.3-12",
   "type": "module",
   "main": "dist/qti-components/index.js",
