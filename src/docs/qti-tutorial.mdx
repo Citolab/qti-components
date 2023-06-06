@@ -1,0 +1,502 @@
+import { Canvas, Meta, Story } from '@storybook/blocks';
+
+<Meta title="QTI Tutorial" />
+
+# QTI
+
+The most widely used standard for marking up assessments, tests, and individual questions in XML is currently IMS Question and Test Interoperability (QTI). IMS is an e-learning standards-related organization (see [Related topics](#artrelatedtopics) for a link) that works on standards ranging from metadata to transferring learner information. QTI standardizes how to mark up questions in XML, arrange them into tests and assessments, add metadata, and package everything in a ZIP file.
+
+<div className="dw-article-sidebar ibm-background-cool-white-20">
+
+##### Frequently used acronyms
+
+- URI: Uniform resource identifier
+- XHTML: Extensible Hypertext Markup Language
+
+</div>
+
+QTI XML not only describes the static parts of questions, assessments, and tests (text, layout, order, and so on) but also their dynamic behavior—how, for instance, to behave when the user gives a wrong answer, when to provide certain feedback, and how to calculate the score. You can make this process as complicated as you like: QTI provides you with programming facilities to make it all happen.
+
+Unfortunately, how it all works is a bit of a puzzle. The documentation is structured around _defining_ the standard, not _explaining_ it. Some examples are accompanied by a helpful document (the _IMS Question and Test Interoperability Implementation Guide_—see [Related topics](#artrelatedtopics) for a link), but this still doesn't provide much detail about what goes on inside.
+
+This article explores the response and result processing within QTI's basic building block: the assessment item. How do you rate a user's response, and what do you do with it in terms of scoring?
+
+## QTI assessment items
+
+If you are unfamiliar with QTI, this section provides a short overview of assessment items.
+
+_Assessment items_ (or in short, _items_ ) are the basic building blocks of QTI. An item can consist of an arbitrarily complex combination of text (with markup), multiple questions of different types, side information panels, multimedia objects, and more. It also defines its own result and response processing—when the answer is considered correct, scoring, and feedback.
+
+In practice, QTI assessment items are usually not complex. The majority I've seen contain only a single question. [Listing 1](#list1) shows the anatomy of a QTI assessment item.
+
+##### Listing 1\. Anatomy of a QTI item
+
+```xml
+<qti-assessment-item xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0">
+
+<qti-response-declaration>
+   <!-- Information about the answers to the questions inside -->
+</qti-response-declaration>
+
+<qti-outcome-declaration>
+   <!-- Internal variables for computing scores, controlling feedback, etc. -->
+</qti-outcome-declaration>
+
+<qti-item-body>
+   <!-- Text and the interactive parts (questions) -->
+</qti-item-body>
+
+<qti-response-processing>
+   <!-- How to handle the user's response -->
+</qti-response-processing>
+
+<qti-modal-feedback>
+   <!-- Optional feedback messages to the user -->
+</qti-modal-feedback>
+
+</qti-assessment-item>
+```
+
+Here's a breakdown of the markup:
+
+- A `<qti-response-declaration>` contains information about the answer (the response) to a question: When is it correct, and (optionally) how is it scored? A `<qti-response-declaration>` is required for every separate question in the `<qti-item-body>`.
+- An `<qti-outcome-declaration>` defines an internal variable—for instance, for returning the score to the environment or for controlling the feedback to the user.
+- The single `<qti-item-body>` element contains the text, markup, and questions for this item. The markup has a remarkable similarity with XHTML, but beware: Although you see familiar elements like `<p>` and `<ul>`, everything is in the QTI namespace (`http://www.imsglobal.org/xsd/imsqti_v2p1`) and _not_ in the XHTML namespace. The standard does not prescribe that you have to render it with a browser, which leaves a lot of room for interpretation. So, consistent rendering is a major problem when exchanging content between different QTI processing engines.
+- The `<qti-response-processing>` section describes the actions to perform when the student is finished with the item. Its content is a simple programming language in which you can perform computations, set `<qti-outcome-declaration>` variables, and more.
+- Finally, `<modalFeedback>` defines the item's feedback to the student (for instance, display "Well done" when the answer is correct).
+
+This article is about the `<qti-response-declaration>`, `<qti-outcome-declaration>`, and `<qti-response-processing>` sections.
+
+### Interaction types
+
+An `<qti-item-body>` element in an item can contain zero or more interactions with the user. Most of these interactions are typical questions (for example, multiple choice, order elements, fill in the blanks). You can also add interactions like "upload document," "draw a picture," and "start a film."
+
+[Listing 2](#list2) provides an example of a multiple-choice question.
+
+##### Listing 2\. Multiple-choice interaction example
+
+```xml
+<qti-item-body>
+   <qti-choice-interaction response-identifier="RESPONSE" shuffle="true" max-choices="1">
+      <qti-prompt>What is the top color of the Dutch flag?</qti-prompt>
+      <qti-simple-choice identifier="A">Red</qti-simple-choice>
+      <qti-simple-choice identifier="B">Orange</qti-simple-choice>
+      <qti-simple-choice identifier="C">Black</qti-simple-choice>
+      <qti-simple-choice identifier="D">White</qti-simple-choice>
+   </qti-choice-interaction>
+</qti-item-body>
+```
+
+And [Listing 3](#list3) offers an example of an ordering question.
+
+##### Listing 3\. Ordering interaction example
+
+```xml
+<qti-item-body>
+   <qti-order-interaction response-identifier="RESPONSE" shuffle="false">
+      <qti-prompt>Order these cities from north to south:</qti-prompt>
+      <qti-simple-choice identifier="A">Tripoli</qti-simple-choice>
+      <qti-simple-choice identifier="B">Stockholm</qti-simple-choice>
+      <qti-simple-choice identifier="C">Paris</qti-simple-choice>
+   </qti-order-interaction>
+</qti-item-body>
+```
+
+QTI v2.1 defines 20 interaction types. You can find a full set of examples in the _IMS Question and Test Interoperability Implementation Guide._ You determine which types to use, but note that not all QTI processing engines support all interaction types.
+
+As you can see in the examples, an interaction has a `responseIdentifier` attribute that binds the interaction to a `<qti-response-declaration>` with the same identifier. This is the link for the result and response processing, and I come back to it later.
+
+## The QTI data model
+
+An important prerequisite for understanding QTI's response and result processing is understanding its data model and the reasons behind its apparent complexity.
+
+When a user is finished with a QTI item, the answers need to be checked. For this, answers are represented as data. Sometimes, the data is simple: A multiple-choice, single-answer question just returns the identifier of the given answer, and a numeric slider interaction returns a number. Most interaction types, however, are more complicated. For instance:
+
+- Multiple-choice, multiple-answer questions return a set of answer identifiers (for example, "The identifiers of the answers checked were A, C, and D.").
+- Ordering things returns an ordered set of answer identifiers (for example, "The identifiers of the sequence created were C, A, and B.").
+- Questions in which you associate words with each other return a set of identifier pairs (for example, "The words were associated as (A, C), (B, D), and (E, F).").
+- Positioning objects on a map returns a set of points (for example, "The objects were placed at locations (102, 10), (125, 653).").
+
+Deciding whether an answer is right or wrong is done through the `<qti-response-declaration>` bound to the interaction. This means that it must have an appropriate data type for the interaction. For instance, [Listing 4](#list4) provides a declaration for a `<positionObjectInteraction>`, a question type in which you have to position objects on a graphic (for example, a map). Its data type is a set of points.
+
+##### Listing 4\. A response declaration with a set of points
+
+```xml
+<qti-response-declaration identifier="RESPONSE" base-type="point" cardinality="multiple">
+   <qti-correct-response>
+      <qti-value>118 184</qti-value>
+      <qti-value>150 235</qti-value>
+      <qti-value>96 114</qti-value>
+   </qti-correct-response>
+</qti-response-declaration>
+```
+
+QTI data types are defined by the `base-type` and `cardinality` attributes on `<qti-response-declaration>` and `<qti-outcome-declaration>` elements:
+
+- The `base-type` attribute defines the basic data type:
+  - `boolean`
+  - `directedPair`
+  - `duration`
+  - `file`
+  - `float`
+  - `identifier`
+  - `integer`
+  - `pair`
+  - `point`
+  - `string`
+  - `uri`
+- The `cardinality` attribute defines the number of `base-type` elements and whether the set is ordered. Values are:
+  - `multiple`
+  - `ordered`
+  - `record` (a special, rather complicated type not discussed in this article)
+  - `single`
+
+## Response and result processing
+
+Response and result processing takes care of what happens when the user is finished with the item. The QTI processor must perform tasks such as deciding whether the answer is correct, computing a score, and providing feedback. The `<qti-response-declaration>`, `<qti-outcome-declaration>`, and `<qti-response-processing>` sections all have a role in this process.
+
+### Response declarations
+
+The identifier of a `<qti-response-declaration>` element always binds it to an interaction in the item's body. [Listing 5](#list5) provides an example.
+
+##### Listing 5\. Binding an interaction to its response declaration
+
+```xml
+<qti-response-declaration identifier="QUESTION1" cardinality="single" base-type="identifier">
+   <qti-correct-response>
+      <qti-value>B</qti-value>
+   </qti-correct-response>
+</qti-response-declaration>
+<qti-item-body>
+   <qti-choice-interaction response-identifier="QUESTION1" shuffle="false" max-choices="1">
+      <qti-prompt>Is a goldfish a mammal?</qti-prompt>
+      <qti-simple-choice identifier="A">Yes</qti-simple-choice>
+      <qti-simple-choice identifier="B">No</qti-simple-choice>
+   </qti-choice-interaction>
+</qti-item-body>
+```
+
+A `<qti-response-declaration>` is not a simple variable: It's better to think about it as an object in the object-oriented sense. This object has three "methods" that you can use in computations in the `<qti-response-processing>` section of the item:
+
+- Get the learner's response to the question.
+- Get the correct (optimal) response to the question.
+- Map different answers to points so that an answer can have more nuances than plain right or wrong.
+
+[Listing 6](#list6) provides an example of a `<qti-response-declaration>` in which a score is calculated depending on the answers given.
+
+##### Listing 6\. Response declaration that calculates a score
+
+```xml
+<qti-response-declaration identifier="QUESTION1" cardinality="multiple" base-type="identifier">
+   <qti-correct-response>
+      <qti-value>A</qti-value>
+      <qti-value>D</qti-value>
+   </qti-correct-response>
+   <qti-mapping defaultValue="0" lower-bound="0" upper-bound="1">
+      <qti-map-entry map-key="A" mapped-value="0.5"/>
+      <qti-map-entry map-key="B" mapped-value="-0.5"/>
+      <qti-map-entry map-key="C" mapped-value="-0.5"/>
+      <qti-map-entry map-key="D" mapped-value="0.5"/>
+   </qti-mapping>
+</qti-response-declaration>
+<qti-item-body>
+   <qti-choice-interaction response-identifier="QUESTION1" shuffle="false" max-choices="0">
+      <qti-prompt>Which are colors?</qti-prompt>
+      <qti-simple-choice identifier="A">Red</qti-simple-choice>
+      <qti-simple-choice identifier="B">Small</qti-simple-choice>
+      <qti-simple-choice identifier="C">Soft</qti-simple-choice>
+      <qti-simple-choice identifier="D">Purple</qti-simple-choice>
+   </qti-choice-interaction>
+</qti-item-body>
+```
+
+So, if the learner provided the answers A (red), B (small), and D (purple), the score would be calculated according to the `<mapping>` as _(A) 0.5 + (B) -0.5 + (D) 0.5 = 0.5._
+
+You might wonder why this process is all done inside a `<qti-response-declaration>`. Determining whether an answer is correct and calculating scores can also be done in the `<qti-response-processing>` section. There seems to be no direct need to _declare_ correct answers and scores when you can also _compute_ them (or vice versa).
+
+The reason behind this is that QTI also wants the standard to be applicable for simple situations—for instance, a rendering engine that simply ignores the response processing and just looks at the defined correct responses. The same reasoning applies for the [predefined response processing templates](#predefined_response_processing_templates).
+
+### Outcome declarations
+
+An `<qti-outcome-declaration>` is the QTI equivalent of a variable. [Listing 7](#list7) provides an example.
+
+##### Listing 7\. Example of an outcome declaration
+
+```xml
+<qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float">
+   <qti-default-value>
+      <qti-value base-type="float">0.5</qti-value>
+   </qti-default-value>
+</qti-outcome-declaration>
+```
+
+This markup defines a variable called `SCORE`, with a single `float` in it and a default value of 0.5\. Providing a default is optional. If you don't, numeric variables are initialized to 0.0 and non-numeric variables to `NULL`.
+
+**Note:**`SCORE` is a reserved name. You use it to provide a numeric score representing the candidate's overall performance on the item to the environment.
+
+You can add more intelligence to an `<qti-outcome-declaration>` by providing a structure called `<matchTable>` or `<interpolationTable>`. I haven't seen them used, and most rendering engines probably don't support them, so I don't explain them here.
+
+### Response processing
+
+The `<qti-response-processing>` section of an item contains instructions for the rendering engine about what to do after the user has provided an answer. The instructions can be in two formats:
+
+- A program or script in a simple, XML-based programming language
+- A reference to a predefined template that is also a script in the response processing programming language (Because the template is _predefined,_ rendering engines can hard-code it and, if you stick to this option, you don't need to provide a full script interpreter.)
+
+### The script language
+
+Let's first examine the response processing script. [Listing 8](#list8) provides an example of such a script.
+
+##### Listing 8\. Simple example of response processing
+
+```xml
+<qti-response-declaration identifier="RESPONSE_01" cardinality="single" base-type="string">
+   <qti-correct-response>
+      <qti-value>white</qti-value>
+   </qti-correct-response>
+</qti-response-declaration>
+<qti-response-declaration identifier="RESPONSE_02" cardinality="single" base-type="string">
+   <qti-correct-response>
+      <qti-value>green</qti-value>
+   </qti-correct-response>
+</qti-response-declaration>
+
+<qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float"/>
+
+<qti-item-body>
+   <p>Fill in the right colors:</p>
+   <p>Snow is
+      <qti-text-entry-interaction response-identifier="RESPONSE_01" expected-length="5"/>
+      and grass is
+      <qti-text-entry-interaction response-identifier="RESPONSE_02" expected-length="5"/>.
+   </p>
+</qti-item-body>
+
+<qti-response-processing>
+   <qti-response-condition>
+      <qti-response-if>
+         <qti-and>
+            <qti-match>
+               <qti-variable identifier="RESPONSE_01"/>
+               <qti-correct identifier="RESPONSE_01"/>
+            </qti-match>
+            <qti-match>
+               <qti-variable identifier="RESPONSE_02"/>
+               <qti-correct identifier="RESPONSE_02"/>
+            </qti-match>
+         </qti-and>
+         <qti-set-outcome-value identifier="SCORE">
+            <qti-base-value base-type="integer">1.0</qti-base-value>
+         </qti-set-outcome-value>
+      </qti-response-if>
+      <qti-response-else>
+         <qti-set-outcome-value identifier="SCORE">
+            <qti-base-value base-type="integer">0.0</qti-base-value>
+         </qti-set-outcome-value>
+      </qti-response-else>
+   </qti-response-condition>
+</qti-response-processing>
+```
+
+This response processing examines the values of the learner's two responses to the defined correct (optimal) responses. This is done in the `<match>` elements. Both must be correct, which is handled by the surrounding `<and>` element. If they are, the `SCORE <qti-outcome-declaration>` is set to 1.0; otherwise, it is set to 0.0\. [Listing 9](#list9) offers another, somewhat more complicated, example.
+
+##### Listing 9\. More complicated example of response processing
+
+```xml
+<qti-response-declaration identifier="RESPONSE" cardinality="multiple" base-type="identifier">
+   <qti-correct-response>
+      <qti-value>A</qti-value>
+      <qti-value>C</qti-value>
+   </qti-correct-response>
+   <qti-mapping lower-bound="0.0" upper-bound="1.0" default-value="0.0">
+      <qti-map-entry map-key="A" mapped-value="0.5"/>
+      <qti-map-entry map-key="B" mapped-value="-0.25"/>
+      <qti-map-entry map-key="C" mapped-value="0.5"/>
+      <qti-map-entry map-key="D" mapped-value="-0.25"/>
+   </qti-mapping>
+</qti-response-declaration>
+
+<qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float"/>
+<qti-outcome-declaration identifier="FEEDBACK" cardinality="single" base-type="identifier"/>
+<qti-outcome-declaration identifier="FEEDBACK_TRESHOLD" cardinality="single" base-type="float">
+   <qti-default-value>
+      <qti-value base-type="float">0.75</qti-value>
+   </qti-default-value>
+</qti-outcome-declaration>
+
+<qti-item-body>
+   <qti-choice-interaction response-identifier="RESPONSE" shuffle="true" max-choices="0">
+      <qti-prompt>Which countries are south of the USA?</qti-prompt>
+      <qti-simple-choice identifier="A">Mexico</qti-simple-choice>
+      <qti-simple-choice identifier="B">Canada</qti-simple-choice>
+      <qti-simple-choice identifier="C">Brazil</qti-simple-choice>
+      <qti-simple-choice identifier="D">Norway</qti-simple-choice>
+   </qti-choice-interaction>
+</qti-item-body>
+
+<qti-response-processing>
+   <qti-response-condition>
+      <qti-response-if>
+         <is-null>
+            <qti-variable identifier="RESPONSE"/>
+         </is-null>
+         <qti-set-outcome-value identifier="SCORE">
+            <qti-base-value base-type="float">0.0</qti-base-value>
+         </qti-set-outcome-value>
+         <qti-set-outcome-value identifier="FEEDBACK">
+            <qti-base-value base-type="identifier">FAILURE</qti-base-value>
+         </qti-set-outcome-value>
+      </qti-response-if>
+      <qti-response-else>
+         <qti-set-outcome-value identifier="SCORE">
+            <qti-map-response identifier="RESPONSE"/>
+         </qti-set-outcome-value>
+         <qti-response-condition>
+            <qti-response-if>
+               <qti-gte>
+                  <qti-variable identifier="SCORE"/>
+                  <qti-variable identifier="FEEDBACK_TRESHOLD"/>
+               </qti-gte>
+               <qti-set-outcome-value identifier="FEEDBACK">
+                  <qti-base-value base-type="identifier">ANSWER_CORRECT</qti-base-value>
+               </qti-set-outcome-value>
+            </qti-response-if>
+            <qti-response-else>
+               <qti-set-outcome-value identifier="FEEDBACK">
+                  <qti-base-value base-type="identifier">FAILURE</qti-base-value>
+               </qti-set-outcome-value>
+            </qti-response-else>
+         </qti-response-condition>
+      </qti-response-else>
+   </qti-response-condition>
+</qti-response-processing>
+
+```
+
+Besides setting a score, this response processing also sets an `<qti-outcome-declaration>` called `FEEDBACK` to either `FAILURE` or `ANSWER_CORRECT`. You can use this declaration to provide the right feedback to the user.
+
+Response processing follows these steps:
+
+1.  Determine whether an answer is present (maybe the user clicked **Continue** without providing an answer). If so, the `<qti-response-declaration>` value is `NULL` (checked by the `<isNull>` element), and `SCORE` and `FEEDBACK` are set to the right values.
+2.  Set the `SCORE` to the value provided by the `<mapping>` from the `<qti-response-declaration` (using the `<mapResponse>` element).
+3.  Compare the `SCORE` to a fixed-value set by the `FEEDBACK_TRESHOLD <qti-outcome-declaration>` (in the `<gte>` [greater than or equal] element) and sets the `FEEDBACK` accordingly.
+
+Besides your own declarations, you can use some predefined variables in the response processing:
+
+- **`duration`.** The time the user spent answering the question in seconds. Use this variable, for instance, to lower the score when it took the user too long to provide an answer.
+- **`nunAttempts` and `completionStatus`.** These variables are handled in the section about [adaptive processing](#adaptive_and_non_adaptive_processing).
+
+If you're familiar with programming or scripting, writing response processing is not complicated. You can find a full definition of the language in the QTI document, _IMS Question and Test Interoperability Assessment Test, Section, and Item Information Model_ (see [Related topics](#artrelatedtopics) for a link). As you can see, because of the XML, it is all rather verbose, and you do have to write a lot of code to produce meaningful actions. Unfortunately, that's the standard.
+
+### Predefined response processing templates
+
+As I already touched on in [Response declarations](#response_declarations), the QTI standard has built-in options for simple response processing. For instance, by using the correct response in a `<qti-response-declaration>`, it can determine whether a given answer is right or wrong without doing any scripted response processing at all. This approach allows simple content and accompanying rendering engines without violation of the standard.
+
+Another simplifying feature is the response processing templates. QTI predefines three templates for basic response processing. The templates are identified by fixed URIs—for instance:
+
+```xml
+<qti-response-processing
+   template="http://www.imsglobal.org/question/qti_v2p0/rptemplates/match_correct"/>
+```
+
+Actual scripts are coupled to these URIs. A rendering engine can handle them as scripts should. To help rendering engines find the right template, you can provide a location such as:
+
+```xml
+<qti-response-processing
+   template="..." template-location="/rptemplates/match_correct.xml" />
+```
+
+You can use the predefined templates if:
+
+- The action includes only one interaction
+- The `<qti-response-declaration>` for this action is called `RESPONSE`
+- The action includes an `<qti-outcome-declaration>` called `SCORE` of type `float`
+
+The predefined templates are:
+
+- `Match_Correct`: Set the score to 0.0 if the answer is absent or wrong and to1.0 if it is right. The URI is:
+
+  <pre data-widget="syntaxhighlighter" className="brush: js; html-script: true; gutter: true;">
+    http://www.imsglobal.org/question/qti_v2p0/rptemplates/match_correct
+  </pre>
+
+- `Map_Response`: Set the score to 0.0 if there was no answer; otherwise, use the mapping inside the `RESPONSE <qti-response-declaration>`. The URI is:
+
+  <pre data-widget="syntaxhighlighter" className="brush: js; html-script: true; gutter: true;">
+    http://www.imsglobal.org/question/qti_v2p1/rptemplates/map_response
+  </pre>
+
+- `Map_Response_Point`: This is the same as `Map_Response` but for graphic interaction types. It uses area mapping instead of identifier mapping. The URI is:
+
+  <pre data-widget="syntaxhighlighter" className="brush: js; html-script: true; gutter: true;">
+    http://www.imsglobal.org/question/qti_v2p1/rptemplates/map_response_point
+  </pre>
+
+You can express all predefined templates in the response processing scripting language. If you download the QTI examples, the template scripts are included. For instance, [Listing 10](#list10) shows the code for `Map_Response`.
+
+##### Listing 10\. Script for the predefined template Map_Response
+
+```xml
+<qti-response-processing>
+   <qti-response-condition>
+      <qti-response-if>
+         <qti-is-null>
+            <qti-variable identifier="RESPONSE"/>
+         </qti-is-null>
+         <qti-set-outcome-value identifier="SCORE">
+            <qti-base-value base-type="integer">0</qti-base-value>
+         </qti-set-outcome-value>
+      </qti-response-if>
+      <qti-response-else>
+         <qti-set-outcome-value identifier="SCORE">
+            <qti-map-response identifier="RESPONSE"/>
+         </qti-set-outcome-value>
+      </qti-response-else>
+   </qti-response-condition>
+</qti-response-processing>
+```
+
+You don't have to keep to these QTI predefined templates. In a situation where the content producer and rendering engine builder are tightly coupled, nothing stops you from defining your own.
+
+### Adaptive and non-adaptive processing
+
+Up to this point, I have talked about the response processing of a QTI item, such as a one-time learner interaction with the question: The question is presented, an answer is given, the score is computed. QTI calls this exam format _non-adaptive_ items. In another situation, you want to teach something to the learner and use questions as the mechanism for doing so. In this case, the learner usually has more than one opportunity to answer the question. More detailed feedback might be given ("This particular answer is wrong," "I have a tip for you: …"), and you can adjust the score based on the number of attempts.
+
+For this situation, QTI defines _adaptive_ items. An adaptive item is identified by setting the `adaptive` attribute on the root element to `true()`, as in [Listing 11](#list11).
+
+##### Listing 11\. Making an item adaptive by setting the root element's adaptive attribute
+
+```xml
+<qti-assessment-item adaptive="true" … >
+ …
+</qti-assessment-item>
+```
+
+In an adaptive item, the interaction with the learner no longer ends by default after the answer is provided. Instead, it can end in two ways:
+
+- By something defined in the rendering engine (an explicit **Stop** button, a time-out, and so on)
+- The response processing explicitly setting a built-in variable called `completionStatus`
+
+The variable `completionStatus` has four possible values of type `identifier`: `completed`, `incomplete`, `not_attempted`, and `unknown`. If you set it to `completed`, the interaction will end.
+
+Another built-in variable that is handy for adaptive items is `numAttempts` . As you might expect, this variable simply counts the number of attempts the user has made to answer the item. For instance, [Listing 12](#list12) shows a response processing fragment that ends the interaction after the user has made more than four attempts.
+
+##### Listing 12\. Using numAttempts to set the completion status
+
+```xml
+<qti-response-if>
+   <qti-gt>
+      <qti-variable identifier="numAttempts"/>
+      <qti-base-value base-type="integer">4</qti-base-value>
+   </qti-gt>
+   <qti-set-outcome-value identifier="completionStatus">
+      <qti-base-value base-type="identifier">completed</qti-base-value>
+   </qti-set-outcome-value>
+</qti-response-if>
+```
+
+## Conclusion
+
+This article touched on the way a QTI rendering engine performs (or should perform: good rendering engines are rare) response and result processing—what should happen after the learner answers a question. In most cases, a score is set, but you can also use it for other purposes.
+
+If you don't want to or don't have to implement the full QTI response and response processing, you can still stay within the standard and fall back on comparing the given correct responses or use the built-in response processing templates.

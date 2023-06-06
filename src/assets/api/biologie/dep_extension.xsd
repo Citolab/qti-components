@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.duo.nl/schema/dep_extension" xmlns:xs="http://www.w3.org/2001/XMLSchema"  targetNamespace="http://www.duo.nl/schema/dep_extension" elementFormDefault="qualified" attributeFormDefault="unqualified" version="IMS CPX 1.2 QTI 3.0">
+	<xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.w3.org/2001/xml.xsd"/>
+	<xs:annotation>
+		<xs:documentation>            XSD Data File Information            =========================            Author:         Cito            Date:           03-05-2021            Version:        1.0            Status:                     Description:                History:                    License:                                     </xs:documentation>
+	</xs:annotation>
+	<xs:element name="depItem" type="DEPItem.Type"/>
+	<xs:element name="depTest" type="DEPTest.Type"/>
+	<xs:element name="dep-calculator" type="Calculator.Type"/>
+	<xs:element name="dep-formulaList" type="FormulaList.Type"/>
+	<xs:element name="dep-notepad" type="Notepad.Type"/>
+	<xs:element name="dep-protractor" type="Protractor.Type"/>
+	<xs:element name="dep-reset" type="Reset.Type"/>
+	<xs:element name="dep-rule" type="Ruler.Type"/>
+	<xs:element name="dep-spellCheck" type="SpellCheck.Type"/>
+	<xs:element name="dep-symbolPicker" type="SymbolPicker.Type"/>
+	<xs:element name="dep-textMarker" type="TextMarker.Type"/>
+	<xs:element name="dep-triangle" type="Triangle.Type"/>	
+	<xs:complexType name="DEPItem.Type">
+		<xs:sequence>
+		    <xs:element name="toolInfo" type="ToolInfo.Type" minOccurs="0"/>
+			<xs:element name="toolboxElements" type="ToolboxElements.Type" minOccurs="0"/>
+			<xs:element name="mathElements" type="MathElements.Type" minOccurs="0"/>
+			<xs:element name="blockInteractionExtensions" type="BlockInteractionExtensions.Type" minOccurs="0"/>
+			<xs:element name="uploadInteractionExtensions" type="UploadInteractionExtensions.Type" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>	
+	<xs:complexType name="ToolInfo.Type">
+		<xs:sequence>
+			<xs:element name="calculator" type="Calculator.Type" minOccurs="0"/>
+			<xs:element name="formulaList" type="FormulaList.Type" minOccurs="0"/>
+			<xs:element name="notepad" type="Notepad.Type" minOccurs="0"/>
+			<xs:element name="protractor" type="Protractor.Type" minOccurs="0"/>
+			<xs:element name="reset" type="Reset.Type" minOccurs="0"/>
+			<xs:element name="ruler" type="Ruler.Type" minOccurs="0"/>
+			<xs:element name="spellCheck" type="SpellCheck.Type" minOccurs="0"/>
+			<xs:element name="symbolPicker" type="SymbolPicker.Type" minOccurs="0"/>
+			<xs:element name="textMarker" type="TextMarker.Type" minOccurs="0"/>
+			<xs:element name="triangle" type="Triangle.Type" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Calculator.Type">
+		<xs:sequence>
+			<xs:group ref="ToolBase.ContentGroup"/>
+			<xs:element name="dep-calculator-type" type="CalculatorMode.Type" minOccurs="0"/>
+			<xs:element name="dep-switch" type="xs:boolean" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:group name="ToolBase.ContentGroup">
+		<xs:sequence>
+			<xs:element name="dep-description" type="xs:normalizedString" minOccurs="0"/>
+		</xs:sequence>
+	</xs:group>
+	<xs:simpleType name="CalculatorMode.Type">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="basic"/>
+			<xs:enumeration value="mathematical"/>
+			<xs:enumeration value="scientific"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="FormulaList.Type">
+		<xs:sequence>
+			<xs:group ref="ToolBase.ContentGroup"/>
+			<xs:element name="dep-menuItem" type="MenuItem.Type" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="MenuItem.Type">
+		<xs:sequence>
+			<xs:element name="dep-menuLabel" type="xs:normalizedString"/>
+			<xs:element name="dep-formulas" type="Formulas.Type" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Formulas.Type">
+		<xs:sequence>
+			<xs:element name="dep-formulaLabel" type="xs:normalizedString" minOccurs="0"/>
+			<xs:element name="dep-formula" type="Formula.Type" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Formula.Type">
+		<xs:sequence>
+			<xs:any/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Notepad.Type">
+		<xs:sequence>
+			<xs:group ref="ToolBase.ContentGroup"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Protractor.Type">
+		<xs:sequence>
+			<xs:group ref="ToolBase.ContentGroup"/>
+			<xs:element name="dep-enableRotation" type="xs:boolean"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Reset.Type">
+		<xs:sequence>
+			<xs:group ref="ToolBase.ContentGroup"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Ruler.Type">
+		<xs:sequence>
+			<xs:group ref="ToolBase.ContentGroup"/>
+			<xs:element name="dep-start" type="xs:decimal"/>
+			<xs:element name="dep-end" type="xs:decimal"/>
+			<xs:element name="dep-stepSize" type="xs:integer"/>
+			<xs:element name="dep-step" type="xs:decimal"/>
+			<xs:element name="dep-unit" type="xs:normalizedString"/>
+			<xs:element name="dep-opacity" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:minInclusive value="0"/>
+						<xs:maxInclusive value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SpellCheck.Type">
+		<xs:sequence>
+			<xs:group ref="ToolBase.ContentGroup"/>
+			<xs:element name="dep-culture" type="xs:normalizedString"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SymbolPicker.Type">
+		<xs:sequence>
+			<xs:group ref="ToolBase.ContentGroup"/>
+			<xs:element name="dep-symbols" type="xs:normalizedString"/>
+		</xs:sequence>
+	</xs:complexType>	
+	<xs:complexType name="TextMarker.Type">
+		<xs:sequence>
+			<xs:group ref="ToolBase.ContentGroup"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Triangle.Type">
+		<xs:sequence>
+			<xs:group ref="ToolBase.ContentGroup"/>
+			<xs:element name="dep-minDegrees" type="xs:integer" minOccurs="0"/>
+			<xs:element name="dep-maxDegrees" type="xs:integer" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ToolboxElements.Type">
+		<xs:sequence>
+			<xs:element name="toolboxElement" type="ToolboxElement.Type" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ToolboxElement.Type">
+		<xs:sequence>
+			<xs:element name="toolboxEnabledControl" type="ToolboxEnabledControl.Type" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="identifier" type="xs:normalizedString" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="ToolboxEnabledControl.Type">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="math"/>
+			<xs:enumeration value="shapes"/>
+			<xs:enumeration value="tables"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="MathElements.Type">
+		<xs:sequence>
+			<xs:element name="mathElement" type="MathElement.Type" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="MathElement.Type">
+		<xs:sequence>
+			<xs:element name="precursor" type="Precursor.Type" minOccurs="0"/>
+			<xs:element name="enabledControls" type="EnabledControls.Type" minOccurs="0"/>
+			<xs:element name="wordFormulas" type="WordFormulas.Type" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="identifier" type="xs:normalizedString" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="Precursor.Type">
+		<xs:simpleContent>
+			<xs:extension base="xs:normalizedString">
+				<xs:attribute name="newLine" type="xs:boolean" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="EnabledControls.Type">
+		<xs:sequence>
+			<xs:element name="enabledControl" type="EnabledControl.Type" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="EnabledControl.Type">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="fraction"/>
+			<xs:enumeration value="power"/>
+			<xs:enumeration value="squareroot"/>
+			<xs:enumeration value="cuberoot"/>
+			<xs:enumeration value="add"/>
+			<xs:enumeration value="subtract"/>
+			<xs:enumeration value="multiplication"/>
+			<xs:enumeration value="division"/>
+			<xs:enumeration value="dot"/>
+			<xs:enumeration value="isequal"/>
+			<xs:enumeration value="isnotequal"/>
+			<xs:enumeration value="approximatelyequal"/>
+			<xs:enumeration value="greaterequal"/>
+			<xs:enumeration value="lessequal"/>
+			<xs:enumeration value="lessthan"/>
+			<xs:enumeration value="greaterthan"/>
+			<xs:enumeration value="parentheses"/>
+			<xs:enumeration value="pi"/>
+			<xs:enumeration value="enter"/>
+			<xs:enumeration value="mixedFraction"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="WordFormulas.Type">
+		<xs:sequence>
+			<xs:element name="wordFormula" type="WordFormula.Type" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="WordFormula.Type">
+		<xs:attribute name="identifier" type="xs:normalizedString" use="required"/>
+		<xs:attribute name="name" type="xs:normalizedString" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="BlockInteractionExtensions.Type">
+		<xs:sequence>
+			<xs:element name="blockInteractionExtension" type="BlockInteractionExtension.Type" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="BlockInteractionExtension.Type">
+		<xs:sequence>
+			<xs:element name="pauseBefore" type="xs:double" minOccurs="0"/>
+			<xs:element name="pauseAfter" type="xs:double" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="IdentifierRef" type="xs:normalizedString" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="UploadInteractionExtensions.Type">
+		<xs:sequence>
+			<xs:element name="uploadInteractionExtension" type="UploadInteractionExtension.Type" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="UploadInteractionExtension.Type">
+		<xs:sequence>
+			<xs:element name="duration" type="xs:double" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="IdentifierRef" type="xs:normalizedString" use="required"/>
+	</xs:complexType>	
+	<xs:complexType name="DEPTest.Type">
+		<xs:sequence>
+			<xs:element name="testPart" type="DEPTestPart.Type" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DEPTestPart.Type">
+		<xs:sequence>
+			<xs:element name="postCondition" minOccurs="0">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="PostCondition.Type"/>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="qtiTestPartIdentifierRef" type="xs:normalizedString" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="PostCondition.Type">
+		<xs:sequence>
+			<xs:choice maxOccurs="unbounded">
+				<xs:any namespace="##other" processContents="lax"/>
+			</xs:choice>
+		</xs:sequence>
+		<xs:attribute name="message" type="xs:normalizedString"/>
+	</xs:complexType>
+	<xs:simpleType name="TestType.Type">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="test"/>
+			<xs:enumeration value="exam"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Property.Type">
+		<xs:sequence>
+			<xs:element name="name" type="xs:normalizedString"/>
+			<xs:element name="value" type="xs:string"/>
+			<xs:element name="description" type="xs:normalizedString" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>	
+	<xs:simpleType name="Tool.Type">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="calculator"/>
+			<xs:enumeration value="notepad"/>
+			<xs:enumeration value="spellCheck"/>
+			<xs:enumeration value="ruler"/>
+			<xs:enumeration value="protractor"/>
+			<xs:enumeration value="triangle"/>
+			<xs:enumeration value="symbolPicker"/>
+			<xs:enumeration value="formulaEditor"/>
+			<xs:enumeration value="formulaList"/>
+			<xs:enumeration value="mediaPlayer"/>
+			<xs:enumeration value="textMarker"/>
+			<xs:enumeration value="reset"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

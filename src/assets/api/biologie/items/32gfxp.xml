@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<qti-assessment-item
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd http://www.duo.nl/schema/dep_extension ../dep_extension.xsd"
+  title="32gfxp"
+  identifier="ITM-32gfxp"
+  time-dependent="false"
+  label="32gfxp"
+  xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+  xmlns:dep="http://www.duo.nl/schema/dep_extension"
+>
+  <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="identifier">
+    <qti-correct-response interpretation="A">
+      <qti-value>A</qti-value>
+    </qti-correct-response>
+  </qti-response-declaration>
+  <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float">
+    <qti-default-value>
+      <qti-value>0</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-outcome-declaration identifier="MAXSCORE" cardinality="single" base-type="float">
+    <qti-default-value>
+      <qti-value>1</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-companion-materials-info>
+    <qti-calculator>
+      <qti-calculator-type>basic</qti-calculator-type>
+      <qti-description />
+    </qti-calculator>
+    <dep:dep-calculator>
+      <dep:dep-description />
+      <dep:dep-calculator-type>basic</dep:dep-calculator-type>
+      <dep:dep-switch>true</dep:dep-switch>
+    </dep:dep-calculator>
+    <dep:dep-symbolPicker>
+      <dep:dep-description />
+      <dep:dep-symbols>€èéëêïöàá§±→←↑↓↔↕</dep:dep-symbols>
+    </dep:dep-symbolPicker>
+    <dep:dep-textMarker>
+      <dep:dep-description />
+    </dep:dep-textMarker>
+  </qti-companion-materials-info>
+  <qti-stylesheet href="../css/cito_itemstyle.css" type="text/css" />
+  <qti-stylesheet href="../css/cito_userstyle.css" type="text/css" />
+  <qti-stylesheet href="../css/cito_generated_biBB14403.css" type="text/css" />
+  <qti-item-body class="defaultBody" xml:lang="nl-NL">
+    <div class="content">
+      <div class="qti-layout-row">
+        <div class="qti-layout-col6">
+          <p>
+            <strong>Pim brouwt bier</strong>
+          </p>
+          <p>
+            Bier wordt gemaakt van water, gist, zaden van gerst en de bloemen van hop. In de afbeelding staan de stappen
+            die genomen worden tijdens het maken van bier.
+          </p>
+          <p>
+            <img
+              id="Id-IMG_0124da0d-54c1-49b1-a5bb-775493d0c2ff"
+              src="../img/itembank-cbt-392a.jpg"
+              width="460"
+              height="117"
+              alt=""
+            />
+          </p>
+        </div>
+
+        <div class="qti-layout-col6">
+          <div id="body">
+            <p>
+              Bij het gisten worden eencellige organismen toegevoegd. Deze organismen zetten zetmeel om in alcohol en
+              koolzuurgas.
+            </p>
+            <p>
+              Pim proeft wat van zijn bier. Het bier bevat alcohol en suikers.
+              <br />
+              Alcohol is een giftige stof.
+            </p>
+          </div>
+
+          <div id="question">
+            <p>
+              <strong>Waar wordt in het lichaam van Pim deze giftige stof onschadelijk gemaakt?</strong>
+            </p>
+          </div>
+
+          <div id="mc">
+            <qti-choice-interaction
+              id="choiceInteraction1"
+              class="qti-labels-none "
+              max-choices="1"
+              shuffle="false"
+              response-identifier="RESPONSE"
+            >
+              <qti-simple-choice identifier="A">
+                <p>in de lever</p>
+              </qti-simple-choice>
+
+              <qti-simple-choice identifier="B">
+                <p>in de maag</p>
+              </qti-simple-choice>
+
+              <qti-simple-choice identifier="C">
+                <p>in de lever en in de maag</p>
+              </qti-simple-choice>
+            </qti-choice-interaction>
+          </div>
+        </div>
+      </div>
+    </div>
+  </qti-item-body>
+  <qti-response-processing template="https://purl.imsglobal.org/spec/qti/v3p0/rptemplates/match_correct.xml" />
+</qti-assessment-item>

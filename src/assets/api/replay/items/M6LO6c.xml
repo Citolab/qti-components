@@ -1,0 +1,85 @@
+<qti-assessment-item xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0  https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema" adaptive="false" title="omtrek formule 3x15" identifier="ITM-M6LO6c" time-dependent="false">
+  <qti-response-declaration cardinality="single" identifier="RESPONSE" base-type="integer">
+    <qti-correct-response interpretation="(3&amp;15)|(15&amp;3)">
+      <qti-value>3</qti-value>
+    </qti-correct-response>
+  </qti-response-declaration>
+  <qti-response-declaration cardinality="single" identifier="RESPONSE2" base-type="integer">
+    <qti-correct-response>
+      <qti-value>15</qti-value>
+    </qti-correct-response>
+  </qti-response-declaration>
+  <qti-outcome-declaration cardinality="single" identifier="SCORE" base-type="integer">
+    <qti-default-value>
+      <qti-value>0</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-outcome-declaration cardinality="single" identifier="ItemFunctionalType" base-type="string">
+    <qti-default-value>
+      <qti-value>Regular</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-item-body ><div class="container">
+    <div class="qti-layout-row">
+      <div id="column-left" class="qti-layout-col12">
+        <img id="Id-IMG_94e8c9fa-f511-4aa6-909f-876f7dc2ae36" src="../img/M6LO6c.png" alt="" width="600" />
+        
+    </div>
+    <div id="column-right" class="qti-layout-col6">
+    <div class="prompt">
+    <br />
+          <p>De omtrek van deze rechthoek kun je bereken door:<br />
+          </p>
+        </div>
+        <div >2 x ( <qti-text-entry-interaction class="" pattern-mask="^-?([0-9]{1,3})?$" response-identifier="RESPONSE" expected-length="4" />
+ +        <qti-text-entry-interaction class="questify_textEntryInteractionNumeric" pattern-mask="^-?([0-9]{1,3})?$" response-identifier="RESPONSE2" expected-length="4" />
+ )</div></div>
+  </div>
+</div></qti-item-body>
+<qti-response-processing>
+  <qti-response-condition>
+    <qti-response-if>
+      <qti-or>
+        <qti-and>
+          <qti-match>
+            <qti-custom-operator class="type:parse-numeric-nl">
+              <qti-variable identifier="RESPONSE" />
+            </qti-custom-operator>
+            <qti-base-value base-type="integer">3</qti-base-value>
+          </qti-match>
+          <qti-match>
+          <qti-custom-operator class="type:parse-numeric-nl">
+            <qti-variable identifier="RESPONSE2" />
+          </qti-custom-operator>
+            <qti-base-value base-type="integer">15</qti-base-value>
+          </qti-match>
+        </qti-and>
+        <qti-and>
+          <qti-match>
+          <qti-custom-operator class="type:parse-numeric-nl">
+            <qti-variable identifier="RESPONSE" />
+          </qti-custom-operator>
+            <qti-base-value base-type="integer">15</qti-base-value>
+          </qti-match>
+          <qti-match>
+          <qti-custom-operator class="type:parse-numeric-nl">
+            <qti-variable identifier="RESPONSE2" />
+          </qti-custom-operator>
+            <qti-base-value base-type="integer">3</qti-base-value>
+          </qti-match>
+        </qti-and>
+      </qti-or>
+      <qti-set-outcome-value identifier="SCORE">
+        <qti-base-value base-type="float">1</qti-base-value>
+      </qti-set-outcome-value>
+    </qti-response-if>
+    <qti-response-else>
+      <qti-set-outcome-value identifier="SCORE">
+        <qti-base-value base-type="float">0</qti-base-value>
+      </qti-set-outcome-value>
+    </qti-response-else>
+  </qti-response-condition>
+</qti-response-processing>
+</qti-assessment-item>

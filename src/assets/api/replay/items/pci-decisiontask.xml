@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<qti-assessment-item xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd" identifier="i605b50d60c465892a88c0651ffd390" title="decisiontask" label="decisiontask" xml:lang="en-US" adaptive="false" time-dependent="false" tool-name="TAO" tool-version="3.4.0-sprint134">
+  <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="string" />
+  <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float" />
+  <qti-stylesheet href="style/custom/tao-user-styles.css" type="text/css" media="all" title="" />
+  <qti-item-body>
+    <div class="grid-row">
+      <div class="col-12" />
+    </div>
+    <div class="grid-row">
+      <div class="col-12" />
+    </div>
+    <div class="grid-row">
+      <div class="col-12">
+        <qti-custom-interaction response-identifier="RESPONSE">
+          <qti-portable-custom-interaction custom-interaction-type-identifier="decisiontask" hook="decisiontask/runtime/decisiontask.amd.js" version="0.0.10">
+            <resources>
+              <libraries>
+                <lib id="IMSGlobal/jquery_2_1_1" />
+                <lib id="decisiontask/runtime/js/renderer" />
+              </libraries>
+              <stylesheets>
+                <link href="decisiontask/runtime/css/base.css" type="text/css" title="base" />
+                <link href="decisiontask/runtime/css/decisiontask.css" type="text/css" title="decisiontask" />
+              </stylesheets>
+              <mediaFiles>
+                <file src="decisiontask/runtime/assets/feedback0.wav" type="application/octet-stream" />
+                <file src="decisiontask/runtime/assets/feedback1.wav" type="application/octet-stream" />
+                <file src="decisiontask/runtime/assets/feedback2.wav" type="application/octet-stream" />
+                <file src="decisiontask/runtime/assets/feedback3.wav" type="application/octet-stream" />
+                <file src="decisiontask/runtime/assets/feedback4.wav" type="application/octet-stream" />
+                <file src="decisiontask/runtime/assets/feedback5.wav" type="application/octet-stream" />
+              </mediaFiles>
+            </resources>
+            <properties>
+              <properties key="data">
+                <properties key="0">
+                  <property key="stimulusindex">1</property>
+                  <property key="stimulus">5 + 7 = 12</property>
+                  <property key="response">1
+</property>
+                </properties>
+                <properties key="1">
+                  <property key="stimulusindex">2</property>
+                  <property key="stimulus">4 + 4 = 9</property>
+                  <property key="response">2
+</property>
+                </properties>
+                <properties key="2">
+                  <property key="stimulusindex">3</property>
+                  <property key="stimulus">7 + 6 = 13</property>
+                  <property key="response">1</property>
+                </properties>
+              </properties>
+              <property key="uploadedFname">stimuli_IIL_item.csv</property>
+              <property key="feedback">true</property>
+              <property key="shufflestimuli" />
+              <property key="respkey" />
+              <property key="tlimit">0</property>
+              <property key="level">2</property>
+              <property key="buttonlabel0">True</property>
+              <property key="buttonlabel1">False</property>
+              <property key="buttonlabel2" />
+              <property key="buttonlabel3" />
+              <property key="buttonlabel4" />
+              <property key="buttonlabel5" />
+              <property key="buttonlabel6" />
+              <property key="buttonlabel7" />
+            </properties>
+            <markup>
+              <div class="decisiontask">
+                <div class="prompt" />
+                <div class="globalWrapper" />
+              </div>
+            </markup>
+          </qti-portable-custom-interaction>
+        </qti-custom-interaction>
+      </div>
+    </div>
+  </qti-item-body>
+  <qti-response-processing template="https://purl.imsglobal.org/spec/qti/v3p0/rptemplates/match_correct.xml" />
+</qti-assessment-item>

@@ -1,0 +1,61 @@
+<qti-assessment-item xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0  https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" adaptive="false" title="Sleep de som waarin de omtrek wordt berekend naar het blauwe vak" identifier="ITM-M6_LO6_6_n" time-dependent="false">
+  <qti-response-declaration cardinality="single" identifier="RESPONSE" base-type="identifier">
+    <qti-correct-response interpretation="D">
+      <qti-value>D</qti-value>
+    </qti-correct-response>
+  </qti-response-declaration>
+  <qti-outcome-declaration cardinality="single" identifier="SCORE" base-type="integer">
+    <qti-default-value>
+      <qti-value>0</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-item-body>
+    <div class="container">
+      <div class="qti-layout-row">
+        <div class="qti-layout-col6">
+        <img id="Id-IMG_e0f8040f-1a16-4d6f-ac63-244d1d91d8e7" src="../img/M6.LO6_6.png" alt="" />
+        </div>
+        <div class="qti-layout-col6">
+        <qti-choice-interaction id="choiceInteraction1" shuffle="false" min-choices="1" max-choices="1" response-identifier="RESPONSE">
+          <qti-prompt>
+            Wat is de omtrek van deze foto?
+          </qti-prompt>
+          <qti-simple-choice identifier="A">
+            <p>10 + 12 = 22 cm</p>
+          </qti-simple-choice>
+          <qti-simple-choice identifier="B">
+            <p>10 x 12 = 120 cm</p>
+          </qti-simple-choice>
+          <qti-simple-choice identifier="C">
+            <p>10 + 12 + 10 = 32 cm</p>
+          </qti-simple-choice>
+          <qti-simple-choice identifier="D">
+            <p>20 + 24 = 44 cm</p>
+          </qti-simple-choice>
+          <qti-simple-choice identifier="E">
+            <p>10 x 12 x 2 = 240 cm</p>
+          </qti-simple-choice>
+        </qti-choice-interaction>
+      </div>
+      </div>
+    </div>
+  </qti-item-body>
+  <qti-response-processing>
+    <qti-response-condition>
+      <qti-response-if>
+        <qti-match>
+          <qti-variable identifier="RESPONSE" />
+          <qti-correct identifier="RESPONSE" />
+        </qti-match>
+        <qti-set-outcome-value identifier="SCORE">
+          <qti-base-value base-type="float">1</qti-base-value>
+        </qti-set-outcome-value>
+      </qti-response-if>
+      <qti-response-else>
+        <qti-set-outcome-value identifier="SCORE">
+          <qti-base-value base-type="float">0</qti-base-value>
+        </qti-set-outcome-value>
+      </qti-response-else>
+    </qti-response-condition>
+  </qti-response-processing>
+</qti-assessment-item>

@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<qti-assessment-item
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd
+																							   http://www.duo.nl/schema/dep_extension ../dep_extension.xsd"
+  title="32cdqa"
+  identifier="ITM-32cdqa"
+  time-dependent="false"
+  label="32cdqa"
+  xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+  xmlns:dep="http://www.duo.nl/schema/dep_extension"
+>
+  <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="string" />
+  <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float">
+    <qti-default-value>
+      <qti-value>0</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-outcome-declaration
+    identifier="qtiAspectInhoudOutcomeDeclaration"
+    cardinality="single"
+    base-type="integer"
+    view="scorer"
+    normal-maximum="1"
+    normal-minimum="0"
+  />
+  <qti-outcome-declaration identifier="MAXSCORE" cardinality="single" base-type="float">
+    <qti-default-value>
+      <qti-value>1</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-companion-materials-info>
+    <qti-calculator>
+      <qti-calculator-type>basic</qti-calculator-type>
+      <qti-description />
+    </qti-calculator>
+    <dep:dep-calculator>
+      <dep:dep-description />
+      <dep:dep-calculator-type>basic</dep:dep-calculator-type>
+      <dep:dep-switch>true</dep:dep-switch>
+    </dep:dep-calculator>
+    <dep:dep-symbolPicker>
+      <dep:dep-description />
+      <dep:dep-symbols>€èéëêïöàá§±→←↑↓↔↕</dep:dep-symbols>
+    </dep:dep-symbolPicker>
+    <dep:dep-textMarker>
+      <dep:dep-description />
+    </dep:dep-textMarker>
+  </qti-companion-materials-info>
+  <qti-stylesheet href="../css/cito_itemstyle.css" type="text/css" />
+  <qti-stylesheet href="../css/cito_userstyle.css" type="text/css" />
+  <qti-stylesheet href="../css/cito_generated.css" type="text/css" />
+  <qti-item-body class="defaultBody" xml:lang="nl-NL">
+    <div class="content">
+      <div class="qti-layout-row">
+        <div class="qti-layout-col6">
+          <div id="leftbody">
+            <p>
+              <strong>Blindheid</strong>
+            </p>
+            <p>
+              In een artikel staat: "Geluid geeft blinden beeld." Dit houdt in dat blinden door middel van geluid
+              beelden vormen in hun hersenen. Beelden ontstaan in het gezichtscentrum. Dit ligt in het centraal
+              zenuwstelsel. Blinden worden zich zo bewust van hun omgeving.
+            </p>
+          </div>
+        </div>
+
+        <div class="qti-layout-col6">
+          <div id="question">
+            <p>
+              <strong>Van welke uitwendige prikkel maken blinde mensen hier gebruik?</strong>
+            </p>
+          </div>
+
+          <div class="cito_genclass_bi_BB_033_10_1">
+            <div>
+              <qti-extended-text-interaction
+                response-identifier="RESPONSE"
+                id="I50b26e23-3f64-4c19-a280-bd72aba7fb9c"
+                class="qti-height-lines-6"
+                expected-lines="5"
+                expected-length="350"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <qti-rubric-block id="qtiScoringRubricBlock" use="instructions" view="scorer">
+      <qti-content-body />
+    </qti-rubric-block>
+    <qti-rubric-block
+      id="qtiAspectInhoudRubricBlock"
+      use="scoring"
+      view="scorer"
+      data-dep-caption="Inhoud"
+      data-outcome-idref="qtiAspectInhoudOutcomeDeclaration"
+    >
+      <qti-content-body>
+        <div>geluid</div>
+      </qti-content-body>
+    </qti-rubric-block>
+  </qti-item-body>
+</qti-assessment-item>

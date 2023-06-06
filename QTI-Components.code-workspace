@@ -1,0 +1,40 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "workbench.colorCustomizations": {
+      "activityBar.activeBackground": "#08678e",
+      "activityBar.activeBorder": "#5b0542",
+      "activityBar.background": "#08678e",
+      "activityBar.foreground": "#e7e7e7",
+      "activityBar.inactiveForeground": "#e7e7e799",
+      "activityBarBadge.background": "#5b0542",
+      "activityBarBadge.foreground": "#e7e7e7",
+      "statusBar.background": "#05445e",
+      "statusBar.foreground": "#e7e7e7",
+      "statusBarItem.hoverBackground": "#08678e",
+      "titleBar.activeBackground": "#05445e",
+      "titleBar.activeForeground": "#e7e7e7",
+      "titleBar.inactiveBackground": "#05445e99",
+      "titleBar.inactiveForeground": "#e7e7e799",
+      "sash.hoverBorder": "#08678e",
+      "statusBarItem.remoteBackground": "#05445e",
+      "statusBarItem.remoteForeground": "#e7e7e7",
+      "commandCenter.border": "#e7e7e799"
+    },
+    "peacock.color": "#05445e",
+    "mdx.experimentalLanguageServer": true
+  },
+  "extensions": {
+    "recommendations": [
+      "runem.lit-plugin",
+      "dbaeumer.vscode-eslint",
+      "esbenp.prettier-vscode",
+      "bierner.lit-html",
+      "johnpapa.vscode-peacock"
+    ]
+  }
+}

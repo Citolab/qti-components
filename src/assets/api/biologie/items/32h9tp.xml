@@ -1,0 +1,186 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<qti-assessment-item
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd http://www.duo.nl/schema/dep_extension ../dep_extension.xsd"
+  title="32h9tp"
+  identifier="ITM-32h9tp"
+  time-dependent="false"
+  label="32h9tp"
+  xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+  xmlns:dep="http://www.duo.nl/schema/dep_extension"
+>
+  <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="identifier">
+    <qti-correct-response interpretation="B">
+      <qti-value>B</qti-value>
+    </qti-correct-response>
+  </qti-response-declaration>
+  <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float">
+    <qti-default-value>
+      <qti-value>0</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-outcome-declaration identifier="MAXSCORE" cardinality="single" base-type="float">
+    <qti-default-value>
+      <qti-value>1</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-companion-materials-info>
+    <qti-calculator>
+      <qti-calculator-type>basic</qti-calculator-type>
+      <qti-description />
+    </qti-calculator>
+    <dep:dep-calculator>
+      <dep:dep-description />
+      <dep:dep-calculator-type>basic</dep:dep-calculator-type>
+      <dep:dep-switch>true</dep:dep-switch>
+    </dep:dep-calculator>
+    <dep:dep-symbolPicker>
+      <dep:dep-description />
+      <dep:dep-symbols>€èéëêïöàá§±→←↑↓↔↕</dep:dep-symbols>
+    </dep:dep-symbolPicker>
+    <dep:dep-textMarker>
+      <dep:dep-description />
+    </dep:dep-textMarker>
+  </qti-companion-materials-info>
+  <qti-stylesheet href="../css/cito_itemstyle.css" type="text/css" />
+  <qti-stylesheet href="../css/cito_userstyle.css" type="text/css" />
+  <qti-stylesheet href="../css/cito_generated.css" type="text/css" />
+  <qti-stylesheet href="../css/cito_generated_biBB15602.css" type="text/css" />
+  <qti-item-body class="defaultBody" xml:lang="nl-NL">
+    <div class="content">
+      <div class="qti-layout-row">
+        <div class="qti-layout-col6">
+          <p>
+            <strong>De teek</strong>
+          </p>
+          <p>
+            Een teek is een diertje dat kan voorkomen op planten. Ze voeden zich met bloed van mensen en dieren zoals
+            schapen. Sommige teken zijn besmet met bacteriën die de ziekte van Lyme kunnen veroorzaken bij de mens.
+          </p>
+          <p>
+            <img
+              id="Id-IMG_b7ea875d-f9a4-49f5-9615-6d23746e70d0"
+              src="../img/itembank-cbt-406.jpg"
+              width="300"
+              height="200"
+              alt=""
+            />
+          </p>
+        </div>
+
+        <div class="qti-layout-col6">
+          <div id="body">
+            <p>Je ziet tekeningen van cellen van vier verschillende typen organismen.</p>
+            <table class="cito_genclass_bi_BB_156_02_1">
+              <colgroup>
+                <col />
+                <col />
+                <col class="cito_genclass_bi_BB_156_02_2" />
+                <col />
+              </colgroup>
+              <tbody>
+                <tr>
+                  <td class="cito_genclass_bi_BB_156_02_3 cito_genclass_bi_BB_156_02_4">
+                    <p class="cito_genclass_bi_BB_156_02_5">
+                      <img
+                        id="Id-IMG_ffb06463-8343-4b8b-8082-48c757c6340e"
+                        src="../img/itembank-cbt-460c.jpg"
+                        width="100"
+                        height="130"
+                        alt=""
+                      />
+                    </p>
+                  </td>
+                  <td class="cito_genclass_bi_BB_156_02_3 cito_genclass_bi_BB_156_02_6">
+                    <p class="cito_genclass_bi_BB_156_02_7">
+                      <img
+                        id="Id-IMG_71108a05-df87-4d5b-aee6-37b4df46afab"
+                        src="../img/itembank-cbt-460d.jpg"
+                        width="100"
+                        height="130"
+                        alt=""
+                      />
+                    </p>
+                  </td>
+                  <td class="cito_genclass_bi_BB_156_02_3 cito_genclass_bi_BB_156_02_8">
+                    <p class="cito_genclass_bi_BB_156_02_9">
+                      <img
+                        id="Id-IMG_de911373-fba6-4159-b2bf-9f1eb774a7d2"
+                        src="../img/itembank-cbt-460a.jpg"
+                        width="100"
+                        height="130"
+                        alt=""
+                      />
+                    </p>
+                  </td>
+                  <td class="cito_genclass_bi_BB_156_02_3 cito_genclass_bi_BB_156_02_10">
+                    <p class="cito_genclass_bi_BB_156_02_11">
+                      <img
+                        id="Id-IMG_0a723d4b-35c9-467b-804c-eb495f1690ce"
+                        src="../img/itembank-cbt-460b.jpg"
+                        width="100"
+                        height="130"
+                        alt=""
+                      />
+                    </p>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="cito_genclass_bi_BB_156_02_12 cito_genclass_bi_BB_156_02_13">
+                    <p class="cito_genclass_bi_BB_156_02_14">1</p>
+                  </td>
+                  <td class="cito_genclass_bi_BB_156_02_12 cito_genclass_bi_BB_156_02_15">
+                    <p class="cito_genclass_bi_BB_156_02_16">2</p>
+                  </td>
+                  <td class="cito_genclass_bi_BB_156_02_12 cito_genclass_bi_BB_156_02_17">
+                    <p class="cito_genclass_bi_BB_156_02_18">3</p>
+                  </td>
+                  <td class="cito_genclass_bi_BB_156_02_12 cito_genclass_bi_BB_156_02_19">
+                    <p class="cito_genclass_bi_BB_156_02_20">4</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <p />
+          </div>
+
+          <div id="question">
+            <p>
+              <strong>
+                Welke tekening laat de cel van een type organisme zien die de ziekte van Lyme kan veroorzaken?
+              </strong>
+            </p>
+          </div>
+
+          <div id="mc">
+            <qti-choice-interaction
+              id="choiceInteraction1"
+              class="qti-labels-none "
+              max-choices="1"
+              shuffle="false"
+              response-identifier="RESPONSE"
+            >
+              <qti-simple-choice identifier="A">
+                <p>tekening 1</p>
+              </qti-simple-choice>
+
+              <qti-simple-choice identifier="B">
+                <p>tekening 2</p>
+              </qti-simple-choice>
+
+              <qti-simple-choice identifier="C">
+                <p>tekening 3</p>
+              </qti-simple-choice>
+
+              <qti-simple-choice identifier="D">
+                <p>tekening 4</p>
+              </qti-simple-choice>
+            </qti-choice-interaction>
+          </div>
+        </div>
+      </div>
+    </div>
+  </qti-item-body>
+  <qti-response-processing template="https://purl.imsglobal.org/spec/qti/v3p0/rptemplates/match_correct.xml" />
+</qti-assessment-item>

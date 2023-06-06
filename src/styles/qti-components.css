@@ -1,0 +1,154 @@
+@layer base {
+  /** default styles for all components */
+  .base {
+    @apply cursor-pointer rounded-md text-gray-900
+      outline-none ring-1 ring-inset ring-gray-300;
+  }
+}
+
+@layer components {
+  /** The different components, you can choose only one */
+
+  /* - button  : .input-control-hidden qti-choice, qti-hotspot */
+  .button {
+    @apply base select-none px-3 py-2 font-semibold shadow-sm;
+  }
+
+  /*  - select  : inline-choice */
+  .select {
+    @apply base relative appearance-none  px-3 py-2 pr-7 shadow-sm;
+    background: url("data:image/svg+xml,%3Csvg fill='currentColor' width='22' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg' aria-hidden='true'%3E%3Cpath clip-rule='evenodd' fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z'%3E%3C/path%3E%3C/svg%3E")
+      no-repeat center right 6px;
+  }
+
+  /* - check   : qti-choice, qti-hotspot */
+  .check {
+    @apply base flex select-none  items-center gap-2 rounded-full px-1 py-0.5 shadow-none;
+    @apply !ring-0; /* !important, remove for checkbox and radio the active ring, the radio and checkbox will be selected instead */
+
+    &::part(cha) {
+      /* let the checkmark or radio circle already take up space, else when checking everyhing collapses */
+      @apply h-2/3 w-2/3;
+    }
+    &[role='radio']::part(ch) {
+      @apply flex h-5 w-5 shrink-0 items-center justify-center rounded-full shadow-sm ring-2 ring-inset ring-gray-300;
+    }
+    &[role='radio'][aria-checked='true']::part(cha) {
+      @apply rounded-full bg-primary-500;
+    }
+    &[role='checkbox']::part(ch) {
+      @apply flex h-5 w-5 shrink-0 items-center justify-center rounded shadow-sm ring-2 ring-inset ring-gray-300;
+    }
+    &[role='checkbox'][aria-checked='true']::part(cha) {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='red' width='100%' height='100%' viewBox='0 0 24 24'%3E%3Cpath d='M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z'/%3E%3C/svg%3E");
+    }
+  }
+  /* - text    : text-entry and extended-text */
+  .text {
+    @apply base cursor-text rounded-sm p-3 text-gray-600 shadow-inner;
+  }
+
+  /* - spot    : gap-select-point, graphic-order, qti-graphic-associate */
+  .spot {
+    @apply base h-full w-full bg-transparent p-0 ring-2 ring-gray-900;
+  }
+
+  .point {
+    @apply base h-6 w-6 bg-transparent p-0 ring-2 ring-gray-900;
+  }
+
+  /* - drag    : gap-match, match, order, associate */
+  .drag {
+    @apply base cursor-grab select-none bg-white py-1 pl-4 pr-2 font-semibold shadow-sm;
+    background-image: radial-gradient(
+      circle at center,
+      rgba(0, 0, 0, 0.1) 0,
+      rgb(0, 0, 0, 0.1) 2px,
+      white 2px,
+      white 100%
+    );
+    background-repeat: repeat-y;
+    background-position: left 2px;
+    background-size: 14px 8px;
+  }
+
+  /* - drop    : gap-match, match, order, associate */
+  .drop {
+    @apply base ring-outset relative bg-gray-50 shadow-inner ring-2 ring-gray-300 ring-offset-1;
+  }
+
+  .order {
+    @apply h-6 w-6 rounded-full bg-primary-500 text-white;
+  }
+  /** End components */
+}
+
+@layer utilities {
+  /* hover, every element has a hover, except disabled( which overrides hover */
+  .hov {
+    @apply bg-gray-50;
+  }
+  .hov-ring {
+    @apply ring-primary-500;
+  }
+  /* focus, every element has a focus, even drop ( for keyboard access, eventually ) */
+  .foc {
+    @apply outline-2 outline-primary-300;
+  }
+  /* active, choice active class and, used on checkbox and radio where not .qti-input-choice-hidden */
+  .act {
+    @apply ring-2 ring-primary-400;
+  }
+  /* readonly, overwrites cursor, hover background, outline for focus and ring */
+  .rdo {
+    @apply cursor-pointer bg-white shadow-none outline-0 ring-0;
+  }
+  /* disabled, make gray state */
+  .dis {
+    @apply cursor-not-allowed bg-gray-100 text-gray-500 shadow-none ring-gray-400;
+    /* drag in the drop, else the drag in the drop was black and not gray */
+    & > * {
+      @apply !text-gray-500;
+    }
+  }
+}
+
+@layer utilities {
+  /** Modifiers */
+
+  /* PK: There was no utility to reset the ring-inset
+  We use this for the drop container, where we want the ring to have an outset
+  So the drag, with ring-inset, snugs neatly into the drop with ring-'outset' 
+  by unsetting the ring-inset */
+  .ring-outset {
+    --tw-ring-inset: unset;
+  }
+
+  /* intext for elements which has to appear in text
+  - intext    : gap-match > qti-gap, hottext > hottext, select
+  */
+  .button-in {
+    @apply inline-flex;
+
+    /* @apply inline-flex gap-1 px-1 py-0 align-bottom font-normal ring-offset-0; */
+  }
+  .check-in {
+    @apply inline-flex;
+
+    /* @apply inline-flex gap-1 px-1 py-0 align-bottom font-normal ring-offset-0; */
+  }
+
+  /* small for elements which has to appear in text
+  - intext    : gap-match > qti-gap, hottext > hottext, select
+*/
+  .button-sm {
+    /* @apply gap-0.5 rounded !px-1 !py-0 outline-offset-0 ring-1; */
+  }
+  .check-sm {
+    @apply gap-0.5 outline-offset-0 ring-1;
+    /* @apply gap-0.5 rounded !px-1 !py-0 outline-offset-0 ring-1; */
+    &::part(ch) {
+      @apply !h-4 !w-4 !ring-1;
+    }
+  }
+}

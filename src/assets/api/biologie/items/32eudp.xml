@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<qti-assessment-item
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd http://www.duo.nl/schema/dep_extension ../dep_extension.xsd"
+  title="32eudp"
+  identifier="ITM-32eudp"
+  time-dependent="false"
+  label="32eudp"
+  xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+  xmlns:dep="http://www.duo.nl/schema/dep_extension"
+>
+  <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="identifier">
+    <qti-correct-response interpretation="D">
+      <qti-value>D</qti-value>
+    </qti-correct-response>
+  </qti-response-declaration>
+  <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float">
+    <qti-default-value>
+      <qti-value>0</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-outcome-declaration identifier="MAXSCORE" cardinality="single" base-type="float">
+    <qti-default-value>
+      <qti-value>1</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-companion-materials-info>
+    <qti-calculator>
+      <qti-calculator-type>basic</qti-calculator-type>
+      <qti-description />
+    </qti-calculator>
+    <dep:dep-calculator>
+      <dep:dep-description />
+      <dep:dep-calculator-type>basic</dep:dep-calculator-type>
+      <dep:dep-switch>true</dep:dep-switch>
+    </dep:dep-calculator>
+    <dep:dep-symbolPicker>
+      <dep:dep-description />
+      <dep:dep-symbols>€èéëêïöàá§±→←↑↓↔↕</dep:dep-symbols>
+    </dep:dep-symbolPicker>
+    <dep:dep-textMarker>
+      <dep:dep-description />
+    </dep:dep-textMarker>
+  </qti-companion-materials-info>
+  <qti-stylesheet href="../css/cito_itemstyle.css" type="text/css" />
+  <qti-stylesheet href="../css/cito_userstyle.css" type="text/css" />
+  <qti-stylesheet href="../css/cito_generated_biBB08605.css" type="text/css" />
+  <qti-item-body class="defaultBody" xml:lang="nl-NL">
+    <div class="content">
+      <div class="qti-layout-row">
+        <div class="qti-layout-col6">
+          <p>
+            <strong>Het menselijk lichaam op de computer</strong>
+          </p>
+          <p>Richelle ziet in een animatie een afbeelding van een hart.</p>
+        </div>
+
+        <div class="qti-layout-col6">
+          <div id="body">
+            <p>Vier mogelijke richtingen waarin het bloed kan stromen zie je in de afbeeldingen.</p>
+          </div>
+
+          <div id="question">
+            <p>
+              <strong>Welke afbeelding geeft de juiste stroomrichting aan?</strong>
+            </p>
+          </div>
+
+          <div id="mc">
+            <qti-choice-interaction
+              id="choiceInteraction1"
+              class="qti-labels-none two-columns "
+              max-choices="1"
+              shuffle="false"
+              response-identifier="RESPONSE"
+            >
+              <qti-simple-choice identifier="A">
+                <p>
+                  <img
+                    id="Id-IMG_bb5db579-5464-4b82-81d8-deca59b539bb"
+                    src="../img/itembank-cbt-378a.gif"
+                    width="136"
+                    height="162"
+                    alt=""
+                  />
+                </p>
+                <p />
+              </qti-simple-choice>
+
+              <qti-simple-choice identifier="B">
+                <p>
+                  <img
+                    id="Id-IMG_6f37b7d7-824d-4fa7-88a3-c173d4007105"
+                    src="../img/itembank-cbt-378bnw.gif"
+                    width="136"
+                    height="162"
+                    alt=""
+                  />
+                </p>
+                <p />
+              </qti-simple-choice>
+
+              <qti-simple-choice identifier="C">
+                <p>
+                  <img
+                    id="Id-IMG_f25eb872-e186-4897-8cb6-976ecaaa27ea"
+                    src="../img/itembank-cbt-378cnw2.jpg"
+                    width="136"
+                    height="162"
+                    alt=""
+                  />
+                </p>
+              </qti-simple-choice>
+
+              <qti-simple-choice identifier="D">
+                <p>
+                  <img
+                    id="Id-IMG_4c5dfa7c-a9a9-4785-96cb-24e4e8f4aecc"
+                    src="../img/itembank-cbt-378dnw3.gif"
+                    width="136"
+                    height="162"
+                    alt=""
+                  />
+                </p>
+              </qti-simple-choice>
+            </qti-choice-interaction>
+          </div>
+        </div>
+      </div>
+    </div>
+  </qti-item-body>
+  <qti-response-processing template="https://purl.imsglobal.org/spec/qti/v3p0/rptemplates/match_correct.xml" />
+</qti-assessment-item>

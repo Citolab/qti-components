@@ -1,0 +1,24 @@
+{
+  "items": [
+    { "href": "G6.BR1_3.xml", "identifier": "file0G6.BR1_3.xml" },
+    { "href": "G6.BR1_4n.xml", "identifier": "file1G6.BR1_4n.xml" },
+    { "href": "G6HG5d.xml", "identifier": "file2G6HG5d.xml" },
+    { "href": "G6HG5e.xml", "identifier": "file3G6HG5e.xml" },
+    { "href": "G6HG5f.xml", "identifier": "file4G6HG5f.xml" },
+    { "href": "M6.LO6_1.xml", "identifier": "file5M6.LO6_1.xml" },
+    { "href": "M6.LO6_3.xml", "identifier": "file6M6.LO6_3.xml" },
+    { "href": "M6.LO6_5.xml", "identifier": "file7M6.LO6_5.xml" },
+    { "href": "M6.LO6_6_n.xml", "identifier": "file8M6.LO6_6_n.xml" },
+    { "href": "M6.LO6_7_n.xml", "identifier": "file9M6.LO6_7_n.xml" },
+    { "href": "M6LO6c.xml", "identifier": "file10M6LO6c.xml" },
+    { "href": "M6LO6f.xml", "identifier": "file11M6LO6f.xml" },
+    { "href": "VH6.VH3_4n.xml", "identifier": "file12VH6.VH3_4n.xml" },
+    { "href": "VH6.VH3_7nn.xml", "identifier": "file13VH6.VH3_7nn.xml" },
+    { "href": "VH6.VH3_8.xml", "identifier": "file14VH6.VH3_8.xml" },
+    { "href": "end.xml", "identifier": "file15end.xml" },
+    { "href": "mathEntryInteraction.xml", "identifier": "file16mathEntryInteraction.xml" },
+    { "href": "pci-decisiontask.xml", "identifier": "file17pci-decisiontask.xml" },
+    { "href": "pci-getallen.xml", "identifier": "file18pci-getallen.xml" },
+    { "href": "pci-meetkunde.xml", "identifier": "file19pci-meetkunde.xml" }
+  ]
+}

@@ -1,0 +1,207 @@
+<qti-assessment-item xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd" title="Beware the robot revolution" identifier="incontext_rows" adaptive="false" time-dependent="false">
+
+    <qti-stylesheet href="../css/incontext.css" type="text/css"></qti-stylesheet>
+
+    <qti-item-body>
+
+
+        <qti-hottext-interaction class="qti-input-control-hidden" response-identifier="RESPONSE1" min-choices="1" max-choices="1">
+            <div class="qti-layout-row">
+                <div class="qti-layout-col6 article">
+
+                    <h1>Beware the robot revolution</h1>
+
+                    <cite>adapted from an article by Katie Allen</cite>
+
+                    <p>
+                        <span class="nummering">1</span>
+
+                        <qti-hottext class="type:lite" identifier="1-p1">Ask an economist or a technology expert and they will happily tell you that decades of data reliably show automation has created more jobs than it has destroyed.</qti-hottext>
+                        <qti-hottext class="type:lite" identifier="2-p1">Far fewer of us now work on farms, for example, thanks to super-efficient machines that do the bulk of the work.</qti-hottext>
+                        <qti-hottext class="type:lite" identifier="3-p1">Such technology has boosted productivity and, with it, living standards.</qti-hottext>
+                        <qti-hottext class="type:lite" identifier="4-p1">As a result, more people work in leisure industries such as hospitality or hairdressing, serving all those people with higher disposable incomes and more free time.</qti-hottext>
+                    </p>
+
+                </div>
+
+
+                <div class="qti-layout-col6 item">
+                    <p>
+                    "automation has created more jobs than it has destroyed" (alinea 1) 
+                    1p		Deze bewering gaan we highlighten in de tekst. Welke zin verderop in de tekst is inhoudelijk een herhaling van deze bewering? Die willen we ook highlighten. Klik de zin aan.  
+                    </p>
+
+
+                </div>
+            </div>
+
+            <div class="qti-layout-row">
+                <div class="qti-layout-col6 article">
+
+
+                    <p>
+                        <span class="nummering">2</span>
+                        <qti-hottext class="type:lite" identifier="1-p2">So far so good. And were the pattern to continue, one could envisage the realisation of the prediction made by John Maynard Keynes in 1930 that the working week would eventually be cut, perhaps to just 15 hours.</qti-hottext>
+                        <qti-hottext class="type:lite" identifier="2-p2">The problem with this rose-tinted view of automation, however, is its focus on big averages that take little account of individuals' experiences.</qti-hottext>
+                        <qti-hottext class="type:lite" identifier="3-p2">Sure, the number of job gains for the whole of the UK is higher than the number lost to technology.</qti-hottext>
+                        <qti-hottext class="type:lite" identifier="4-p2">
+                        But that is little consolation to someone who loses his job in a Midlands car plant to a robot and discovers most of the new openings are far afield in the coffee bars and hotels of London.
+                        </qti-hottext>
+                    </p>
+                </div>
+
+
+                <div class="qti-layout-col6 item">
+
+
+                    <qti-choice-interaction shuffle="false" response-identifier="RESPONSE2" min-choices="1" max-choices="1">
+                        <qti-prompt>
+                            <strong>
+                                                We want to highlight the main point from paragraph 2 in the article. Which of the following becomes clear?  
+                                            </strong>
+                        </qti-prompt>
+                        <qti-simple-choice identifier="A">
+                                            Low-skilled employees have to work more hours per week than people working in technology. 
+                                    
+                                        </qti-simple-choice>
+                        <qti-simple-choice identifier="B">
+                                            New jobs appear in different places than where automation causes unemployment. 
+                                        </qti-simple-choice>
+                        <qti-simple-choice identifier="C">
+                                            People whose jobs are taken over by a machine suffer from a loss of self-esteem. 
+                                        </qti-simple-choice>
+                        <qti-simple-choice identifier="D">
+                                            Workers who are laid off receive too little support when looking for new employment.
+                                        </qti-simple-choice>
+                    </qti-choice-interaction>
+                </div>
+            </div>
+
+            <div class="qti-layout-row">
+                <div class="qti-layout-col6 article">
+                    <p>
+                        <span class="nummering">3</span>
+                        <qti-hottext class="type:lite" identifier="1-p3">
+                        Nor do studies of what has gone before allow for the fact that the pace of technological change will probably be quicker in the future.</qti-hottext>
+
+                        <qti-hottext class="type:lite" identifier="2-p3">
+                            In other words, evolutions that took place over previous decades may well have been
+                            <span id="p3gap1" class="inlinechoicetext"></span>
+                            enough for most people to find new ways of making a living, with varying degrees of difficulty.
+                        </qti-hottext>
+
+                        <qti-hottext class="type:lite" identifier="3-p3">But faster and more widespread technological changes in the future are unlikely to be so easy to adapt to.
+                        </qti-hottext>
+                    </p>
+                </div>
+                <div class="qti-layout-col6 item">
+                    <qti-choice-interaction class="type:collapsible id:p3gap1" shuffle="false" response-identifier="RESPONSE3" min-choices="1" max-choices="1">
+                        <qti-prompt>
+                            <strong>
+                                    1p		Which of the following fits the gap in paragraph 3? 
+                                </strong>
+                        </qti-prompt>
+                        <qti-simple-choice identifier="A">
+                                arbitrary 
+                            </qti-simple-choice>
+                        <qti-simple-choice identifier="B">
+                                gradual 
+                            </qti-simple-choice>
+                        <qti-simple-choice identifier="C">
+                                rapid 
+                            </qti-simple-choice>
+                        <qti-simple-choice identifier="D">
+                                serious 
+                            </qti-simple-choice>
+                    </qti-choice-interaction>
+
+                </div>
+            </div>
+
+
+            <div class="qti-layout-row">
+                <div class="qti-layout-col6 article">
+                    <p>
+                        <span class="nummering">4</span>
+                        <qti-hottext class="type:lite" identifier="1-p4">
+                            For governments, this imposes a pressing need to step in and ensure the rise of the robots is not accompanied by a further rise in
+                            <span id="p4gap1" class="blockquote inlinechoicetext w-100 __22__"></span>
+                            .
+                        </qti-hottext>
+                        <qti-hottext class="type:lite" identifier="2-p4">As tempting as it may be to pour money into boosting automation in return for the long-awaited boost to productivity and headline economic growth, doing so without having a clear plan for retraining displaced workers would cause untold harm to millions of individuals.</qti-hottext>
+                        <qti-hottext class="type:lite" identifier="3-p4">As the Institute for Public Policy Research (IPPR) points out, some workers are far more vulnerable than others to automation.
+                        </qti-hottext>
+                        <qti-hottext class="type:lite" identifier="4-p4">It highlights particular risks for low-skill sectors and warns that the robot revolution could widen Britain's already entrenched north-south divide.
+                        </qti-hottext>
+                    </p>
+                </div>
+                <div class="qti-layout-col6 item">
+                    <qti-choice-interaction class="type:collapsible id:p4gap1 __22__" shuffle="false" response-identifier="RESPONSE4" min-choices="1" max-choices="1">
+                        <qti-prompt>
+                            <strong>
+                                        Which of the following fits the gap in paragraph 4?
+                                    </strong>
+                        </qti-prompt>
+                        <qti-simple-choice identifier="A">
+                                    expertise 
+                                </qti-simple-choice>
+                        <qti-simple-choice identifier="B">
+                                    immobility 
+                                </qti-simple-choice>
+                        <qti-simple-choice identifier="C">
+                                    inequality 
+                                </qti-simple-choice>
+                        <qti-simple-choice identifier="D">
+                                    inflation 
+                                </qti-simple-choice>
+                        <qti-simple-choice identifier="E">
+                                    maintenance
+                                </qti-simple-choice>
+                    </qti-choice-interaction>
+                </div>
+            </div>
+
+            <div class="qti-layout-row">
+                <div class="qti-layout-col6 article">
+                    <p>
+                        <span class="nummering">5</span>
+                        <qti-hottext class="type:lite" identifier="1-p5">
+                        The IPPR rightly calls for an urgent increase in investment in education and retraining.
+                    </qti-hottext>
+                        <qti-hottext class="type:lite" identifier="2-p5">It also asks for funds to be prioritised to help regions far away from the capital.</qti-hottext>
+                        <qti-hottext class="type:lite" identifier="3-p5">These are the regions that most need help equipping people to adapt as automation shakes up their workplaces.</qti-hottext>
+                        <qti-hottext class="type:lite" identifier="4-p5">
+                    If the government fails to act, the result could all too easily be a spike in unemployment and poverty in places with the lowest skilled workers ─ a very high price to pay for a bit of average productivity growth.
+                    </qti-hottext>
+                    </p>
+                </div>
+                <div class="qti-layout-col6 item">
+
+                    <qti-choice-interaction shuffle="false" response-identifier="RESPONSE5" min-choices="1" max-choices="1">
+                        <qti-prompt>
+                                    We want to highlight the point made in paragraphs 4 and 5. What is the main point in these paragraphs?  
+                        </qti-prompt>
+                        <qti-simple-choice identifier="A">
+                                Authorities should focus more on the labour force instead of striving for economic progress.  
+                        
+                            </qti-simple-choice>
+                        <qti-simple-choice identifier="B">
+                                If you take into account money spent on upkeep, robots are just slightly more cost-effective than people. 
+                            </qti-simple-choice>
+                        <qti-simple-choice identifier="C">
+                                It is more profitable to switch to a technology-based industry than is generally acknowledged. 
+                            </qti-simple-choice>
+                        <qti-simple-choice identifier="D">
+                                The manufacturing industry will suffer if too many people lose their jobs as a result of robotics. 
+                            </qti-simple-choice>
+                    </qti-choice-interaction>
+                </div>
+            </div>
+
+        </qti-hottext-interaction>
+
+        <cite>The Guardian, 2017</cite>
+
+
+    </qti-item-body>
+</qti-assessment-item>

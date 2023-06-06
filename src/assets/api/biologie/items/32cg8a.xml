@@ -1,0 +1,311 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<qti-assessment-item
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd
+                                                                                               http://www.duo.nl/schema/dep_extension ../dep_extension.xsd"
+  title="32cg8a"
+  identifier="ITM-32cg8a"
+  time-dependent="false"
+  label="32cg8a"
+  xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+  xmlns:dep="http://www.duo.nl/schema/dep_extension"
+>
+  <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="string" />
+  <qti-response-declaration identifier="RESPONSE2" cardinality="single" base-type="string" />
+  <qti-response-declaration identifier="RESPONSE3" cardinality="single" base-type="string" />
+  <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float">
+    <qti-default-value>
+      <qti-value>0</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-outcome-declaration
+    identifier="qtiAspectInhoudOutcomeDeclaration"
+    cardinality="single"
+    base-type="integer"
+    view="scorer"
+    normal-maximum="2"
+    normal-minimum="0"
+  />
+  <qti-outcome-declaration identifier="MAXSCORE" cardinality="single" base-type="float">
+    <qti-default-value>
+      <qti-value>2</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-companion-materials-info>
+    <qti-calculator>
+      <qti-calculator-type>basic</qti-calculator-type>
+      <qti-description />
+    </qti-calculator>
+    <dep:dep-calculator>
+      <dep:dep-description />
+      <dep:dep-calculator-type>basic</dep:dep-calculator-type>
+      <dep:dep-switch>true</dep:dep-switch>
+    </dep:dep-calculator>
+    <dep:dep-symbolPicker>
+      <dep:dep-description />
+      <dep:dep-symbols>€èéëêïöàá§±→←↑↓↔↕</dep:dep-symbols>
+    </dep:dep-symbolPicker>
+    <dep:dep-textMarker>
+      <dep:dep-description />
+    </dep:dep-textMarker>
+  </qti-companion-materials-info>
+  <qti-stylesheet href="../css/cito_itemstyle.css" type="text/css" />
+  <qti-stylesheet href="../css/cito_userstyle.css" type="text/css" />
+  <qti-stylesheet href="../css/cito_generated.css" type="text/css" />
+  <qti-item-body class="defaultBody" xml:lang="nl-NL">
+    <div class="content">
+      <div class="qti-layout-row">
+        <div class="qti-layout-col6">
+          <div id="leftbody">
+            <p>
+              <strong>Gemiddelde energiebehoefte</strong>
+            </p>
+            <p>
+              Een mens heeft niet altijd evenveel energie per dag nodig.
+              <br />
+              De eerste drie jaar heb je de minste energie nodig.
+              <br />
+              In de puberteit heb je de meeste energie per dag nodig.
+              <br />
+              Daarna wordt de gemiddelde energiebehoefte per dag steeds minder.
+            </p>
+            <p>
+              Gegevens over mannen van verschillende leeftijd zie je in de tabel.
+              <br />
+              De tweede kolom is geordend van laag naar hoog, de leeftijdsgroepen zijn niet geordend.
+            </p>
+            <table class="cito_genclass_Bi_BB_10_B_13-2013_1">
+              <colgroup>
+                <col />
+                <col />
+              </colgroup>
+              <tbody>
+                <tr>
+                  <td class="cito_genclass_Bi_BB_10_B_13-2013_2 cito_genclass_Bi_BB_10_B_13-2013_3">
+                    <p>
+                      <strong>Leeftijd</strong>
+                    </p>
+                  </td>
+                  <td class="cito_genclass_Bi_BB_10_B_13-2013_2 cito_genclass_Bi_BB_10_B_13-2013_4">
+                    <p class="cito_genclass_Bi_BB_10_B_13-2013_5">
+                      <strong>
+                        gemiddelde energiebehoefte
+                        <br />
+                        per dag (in kJ)
+                      </strong>
+                    </p>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="cito_genclass_Bi_BB_10_B_13-2013_6 cito_genclass_Bi_BB_10_B_13-2013_7">
+                    <p />
+                  </td>
+                  <td class="cito_genclass_Bi_BB_10_B_13-2013_6 cito_genclass_Bi_BB_10_B_13-2013_8">
+                    <p>5.000</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="cito_genclass_Bi_BB_10_B_13-2013_9 cito_genclass_Bi_BB_10_B_13-2013_10">
+                    <p>4 t/m     8 jaar</p>
+                  </td>
+                  <td class="cito_genclass_Bi_BB_10_B_13-2013_9 cito_genclass_Bi_BB_10_B_13-2013_11">
+                    <p>7.200</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="cito_genclass_Bi_BB_10_B_13-2013_12 cito_genclass_Bi_BB_10_B_13-2013_13">
+                    <p>9 t/m   13 jaar</p>
+                  </td>
+                  <td class="cito_genclass_Bi_BB_10_B_13-2013_12 cito_genclass_Bi_BB_10_B_13-2013_14">
+                    <p>10.600</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="cito_genclass_Bi_BB_10_B_13-2013_15 cito_genclass_Bi_BB_10_B_13-2013_16">
+                    <p />
+                  </td>
+                  <td class="cito_genclass_Bi_BB_10_B_13-2013_15 cito_genclass_Bi_BB_10_B_13-2013_17">
+                    <p>11.000</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="cito_genclass_Bi_BB_10_B_13-2013_18 cito_genclass_Bi_BB_10_B_13-2013_19">
+                    <p>19 t/m 30 jaar</p>
+                  </td>
+                  <td class="cito_genclass_Bi_BB_10_B_13-2013_18 cito_genclass_Bi_BB_10_B_13-2013_20">
+                    <p>12.200</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="cito_genclass_Bi_BB_10_B_13-2013_21 cito_genclass_Bi_BB_10_B_13-2013_22">
+                    <p>31 t/m 50 jaar</p>
+                  </td>
+                  <td class="cito_genclass_Bi_BB_10_B_13-2013_21 cito_genclass_Bi_BB_10_B_13-2013_23">
+                    <p>12.900</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="cito_genclass_Bi_BB_10_B_13-2013_24 cito_genclass_Bi_BB_10_B_13-2013_25">
+                    <p />
+                  </td>
+                  <td class="cito_genclass_Bi_BB_10_B_13-2013_24 cito_genclass_Bi_BB_10_B_13-2013_26">
+                    <p>14.000</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <p />
+          </div>
+        </div>
+
+        <div class="qti-layout-col6">
+          <div id="body">
+            <p>In de tabel ontbreken de volgende leeftijdsgroepen:</p>
+            <table class="cito_genclass_Bi_BB_10_B_13-2013_27">
+              <colgroup>
+                <col />
+              </colgroup>
+              <tbody>
+                <tr>
+                  <td class="cito_genclass_Bi_BB_10_B_13-2013_28 cito_genclass_Bi_BB_10_B_13-2013_29">
+                    <p>1 t/m 3 jaar</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="cito_genclass_Bi_BB_10_B_13-2013_30 cito_genclass_Bi_BB_10_B_13-2013_31">
+                    <p>14 t/m 18 jaar</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="cito_genclass_Bi_BB_10_B_13-2013_32 cito_genclass_Bi_BB_10_B_13-2013_33">
+                    <p>51 t/m 70 jaar</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <p />
+          </div>
+
+          <div id="question">
+            <p>
+              <strong>Welke leeftijdsgroep hoort bij de gemiddelde energiebehoefte per dag?</strong>
+            </p>
+          </div>
+
+          <div class="cito_genclass_Bi_BB_10_B_13-2013_34">
+            <div>
+              <p>Bij 5.000 hoort de leeftijdsgroep</p>
+            </div>
+
+            <div>
+              <qti-extended-text-interaction
+                response-identifier="RESPONSE"
+                id="If6d5f23c-4447-4fea-87e3-27642d837f60"
+                class="qti-height-lines-3"
+                expected-lines="2"
+                expected-length="140"
+              />
+            </div>
+          </div>
+
+          <div class="cito_genclass_Bi_BB_10_B_13-2013_35">
+            <div>
+              <p>Bij 11.000 hoort de leeftijdsgroep</p>
+            </div>
+
+            <div>
+              <qti-extended-text-interaction
+                response-identifier="RESPONSE2"
+                id="I7f095964-de13-4fee-900b-79fc9c674bd1"
+                class="qti-height-lines-3"
+                expected-lines="2"
+                expected-length="140"
+              />
+            </div>
+          </div>
+
+          <div class="cito_genclass_Bi_BB_10_B_13-2013_36">
+            <div>
+              <p>Bij 14.000 hoort de leeftijdsgroep</p>
+            </div>
+
+            <div>
+              <qti-extended-text-interaction
+                response-identifier="RESPONSE3"
+                id="I14e90f5f-5f7e-464b-b228-a24becc34554"
+                class="qti-height-lines-3"
+                expected-lines="2"
+                expected-length="140"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <qti-rubric-block id="qtiScoringRubricBlock" use="instructions" view="scorer">
+      <qti-content-body />
+    </qti-rubric-block>
+    <qti-rubric-block
+      id="qtiAspectInhoudRubricBlock"
+      use="scoring"
+      view="scorer"
+      data-dep-caption="Inhoud"
+      data-outcome-idref="qtiAspectInhoudOutcomeDeclaration"
+    >
+      <qti-content-body>
+        <div>
+          juiste antwoorden:
+          <br />
+          - Bij 5.000 hoort de leeftijdsgroep: 1 t/m 3 jaar
+          <br />
+          - Bij 11.000 hoort de leeftijdsgroep: 51 t/m 70 jaar
+          <br />
+          - Bij 14.000 hoort de leeftijdsgroep: 14 t/m 18 jaar
+        </div>
+        <table class="cito_genclass_Bi_BB_10_B_13-2013_37">
+          <colgroup>
+            <col />
+            <col class="cito_genclass_Bi_BB_10_B_13-2013_38" />
+          </colgroup>
+          <tbody>
+            <tr>
+              <td class="cito_genclass_Bi_BB_10_B_13-2013_39 cito_genclass_Bi_BB_10_B_13-2013_40">
+                <div />
+              </td>
+              <td class="cito_genclass_Bi_BB_10_B_13-2013_39 cito_genclass_Bi_BB_10_B_13-2013_41">
+                <div />
+              </td>
+            </tr>
+            <tr>
+              <td class="cito_genclass_Bi_BB_10_B_13-2013_42 cito_genclass_Bi_BB_10_B_13-2013_43">
+                <div>drie juiste leeftijdsgroepen gekozen</div>
+              </td>
+              <td class="cito_genclass_Bi_BB_10_B_13-2013_42 cito_genclass_Bi_BB_10_B_13-2013_44">
+                <div>2</div>
+              </td>
+            </tr>
+            <tr>
+              <td class="cito_genclass_Bi_BB_10_B_13-2013_45 cito_genclass_Bi_BB_10_B_13-2013_46">
+                <div>twee juiste leeftijdsgroepen gekozen</div>
+              </td>
+              <td class="cito_genclass_Bi_BB_10_B_13-2013_45 cito_genclass_Bi_BB_10_B_13-2013_47">
+                <div>1</div>
+              </td>
+            </tr>
+            <tr>
+              <td class="cito_genclass_Bi_BB_10_B_13-2013_48 cito_genclass_Bi_BB_10_B_13-2013_49">
+                <div>minder dan twee juiste leeftijdsgroepen gekozen</div>
+              </td>
+              <td class="cito_genclass_Bi_BB_10_B_13-2013_48 cito_genclass_Bi_BB_10_B_13-2013_50">
+                <div>0</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div />
+      </qti-content-body>
+    </qti-rubric-block>
+  </qti-item-body>
+</qti-assessment-item>

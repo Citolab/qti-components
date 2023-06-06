@@ -1,0 +1,67 @@
+/* PK: Tailwind theming file for all qti-components
+  Uses tailwind components and utilities from the other files
+
+  https://play.tailwindcss.com/OFThGk8CbR
+  https://play.tailwindcss.com/CeHVrnwgXR
+  https://play.tailwindcss.com/JOgoCf81JM
+
+  We make use of the default prose stylesheet, since it is much better looking then
+  the default HTML styling.
+  https://play.tailwindcss.com/uj1vGACRJA?layout=preview
+
+  So first we ( as tailwind does ) reset ALL styling on all default elements
+  Then we add the prose stylesheet: the Interaction will / or will not have a no-prose declaration, don't know about that yet
+  Then we create tailwind components
+  Then we consume these components in our qti-webcomponents
+
+  outline: used for focus
+  ring: used for border around the elements, can be active, its an inner ring, except for
+  the dropping well, because that has to surround the drag with the inner ring
+
+  There are 6 types
+  - text    : text-entry and extended-text
+  - select  : inline-choice
+  - button  : .input-control-hidden qti-choice, qti-hotspot
+  - check   : qti-choice, qti-hotspot
+  - drag    : gap-match, match, order, associate
+  - drop    : gap-match, match, order, associate
+  - spot    : gap-select-point, graphic-order, qti-graphic-associate
+
+  trying to get the follower modifiers to work:
+
+  - sm   , for elements inside text
+  - lg,  , for large readable containers
+  - in  , inline in text
+
+  taking into account cursors, select-none for some of the elements
+*/
+
+/* FIXMEs 
+  Outline always on top, sometimes it slips under the hover background
+  Intext with inline gaps does not align nicely with existing text https://play.tailwindcss.com/cJEGhvANwM
+  modifiers can not be in components, like this example where red should be a modifier inside base https://play.tailwindcss.com/JSnnv1Vvab?file=css
+  */
+
+/* @layer base, components, utilities, variants; */
+
+/* layout, dimensions, design */
+
+@import 'tailwindcss/base';
+
+@import 'tailwindcss/components';
+@import './styles/qti-components.css';
+
+@import 'tailwindcss/utilities';
+
+/* QTI Interactions */
+@import './styles/qti/qti-styles.css';
+@import './styles/qti/qti-layout.css';
+@import './styles/qti/qti-input-width.css';
+@import './styles/qti-interactions.css';
+@import './styles/qti-interactions.layout.css';
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
+}

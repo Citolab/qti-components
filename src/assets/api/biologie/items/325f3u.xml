@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<qti-assessment-item
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+  title="325f3u"
+  identifier="ITM-325f3u"
+  time-dependent="false"
+  label="325f3u"
+  xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+>
+  <qti-stylesheet href="../css/cito_itemstyle.css" type="text/css" />
+  <qti-stylesheet href="../css/cito_userstyle.css" type="text/css" />
+  <qti-item-body class="defaultBody">
+    <div class="content">
+      <div class="qti-layout-row">
+        <div class="qti-layout-col6">
+          <p class="UserSRTitelGroot">
+            Tenzij anders vermeld, is er sprake van normale situaties en gezonde organismen.
+          </p>
+        </div>
+        <div class="qti-layout-col6" />
+      </div>
+    </div>
+  </qti-item-body>
+</qti-assessment-item>

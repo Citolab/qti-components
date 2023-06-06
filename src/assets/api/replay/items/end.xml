@@ -1,0 +1,12 @@
+<qti-assessment-item xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0  https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" adaptive="false" title="end" identifier="ITM-end" time-dependent="false">
+  <qti-item-body>
+    <div class="container">
+      <div class="qti-layout-row">
+        <div id="column-left" class="qti-layout-col12">
+          <h3>Dankjewel voor het invullen, je bent nu klaar.</h3>
+          <p>Klik op "inleveren" om te zien hoe je de vragen hebt gemaakt.</p>
+        </div>
+      </div>
+    </div>
+  </qti-item-body>
+</qti-assessment-item>

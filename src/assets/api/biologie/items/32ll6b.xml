@@ -1,0 +1,367 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<qti-assessment-item
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+  title="32ll6b"
+  identifier="ITM-32ll6b"
+  time-dependent="false"
+  label="32ll6b"
+  xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+>
+  <qti-stylesheet href="../css/cito_itemstyle.css" type="text/css" />
+  <qti-stylesheet href="../css/cito_userstyle.css" type="text/css" />
+  <qti-stylesheet href="../css/cito_generated.css" type="text/css" />
+  <qti-item-body class="defaultBody">
+    <div class="content">
+      <div class="qti-layout-row">
+        <div class="qti-layout-col12">
+          <table class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_1">
+            <colgroup>
+              <col class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_2" />
+              <col class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_3" />
+            </colgroup>
+            <tbody>
+              <tr>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_4 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_5"
+                >
+                  <p>
+                    <strong>vraagnummer</strong>
+                  </p>
+                </td>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_4 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_6"
+                >
+                  <p>
+                    <strong>bronvermelding</strong>
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_7 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_8"
+                >
+                  <p>2</p>
+                </td>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_7 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_9"
+                >
+                  <p>onbekend;eigen beheer Cito/CvTE</p>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_10 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_11"
+                >
+                  <p>3</p>
+                </td>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_10 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_12"
+                >
+                  <p>onbekend</p>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_13 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_14"
+                >
+                  <p>4</p>
+                </td>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_13 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_15"
+                >
+                  <p>
+                    https://loekys-little-hiding-place.jouwweb.nl/leuke-weetjes-over-planten-en-bloemen/word-je-gek-van-onkruid-in-de-tuin
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_16 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_17"
+                >
+                  <p>5</p>
+                </td>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_16 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_18"
+                >
+                  <p>https://nl.wikipedia.org/wiki/Bestand:Throat_with_Tonsils_0012J.jpeg;onbekend</p>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_19 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_20"
+                >
+                  <p>7</p>
+                </td>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_19 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_21"
+                >
+                  <p>onbekend</p>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_22 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_23"
+                >
+                  <p>8</p>
+                </td>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_22 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_24"
+                >
+                  <p>http://www.robinsonlibrary.com/america/uslocal/newengland/connecticut/general/symbols.htm</p>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_25 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_26"
+                >
+                  <p>9</p>
+                </td>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_25 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_27"
+                >
+                  <p>eigen beheer Cito/CvTE</p>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_28 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_29"
+                >
+                  <p>10</p>
+                </td>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_28 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_30"
+                >
+                  <p>https://www.alrijne.nl/media/3154/pz08_bypass-10-2017.pdf</p>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_31 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_32"
+                >
+                  <p>11</p>
+                </td>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_31 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_33"
+                >
+                  <p>eigen beheer Cito/CvTE</p>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_34 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_35"
+                >
+                  <p>12</p>
+                </td>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_34 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_36"
+                >
+                  <p>https://www.meneerspoor.nl/amylase.html</p>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_37 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_38"
+                >
+                  <p>13</p>
+                </td>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_37 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_39"
+                >
+                  <p>eigen beheer Cito/CvTE</p>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_40 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_41"
+                >
+                  <p>14</p>
+                </td>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_40 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_42"
+                >
+                  <p
+                  >https://www.geldersevallei.nl/wcm/connect/www/153bf999-33fa-4e7f-b167-aa817112f285/2.14+Pim+nierzorg+cystenieren+versie+07-2018.doc.pdf?MOD=AJPERES&amp;CVID=</p>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_43 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_44"
+                >
+                  <p>17</p>
+                </td>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_43 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_45"
+                >
+                  <p>
+                    https://fda.report/media/105968/Quantitative-Methods-and-Modeling-to-Support-GDUFA-Regulatory-Science-Research-Program--Liang-Zhao--FDA.pdf
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_46 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_47"
+                >
+                  <p>19</p>
+                </td>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_46 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_48"
+                >
+                  <p>onbekend</p>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_49 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_50"
+                >
+                  <p>20</p>
+                </td>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_49 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_51"
+                >
+                  <p>http://cliparts.co/cliparts/8TE/bM8/8TEbM8dpc.jpg</p>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_52 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_53"
+                >
+                  <p>21</p>
+                </td>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_52 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_54"
+                >
+                  <p>https://commons.wikimedia.org/wiki/File:Fraxinus_excelsior_4560.jpg</p>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_55 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_56"
+                >
+                  <p>22</p>
+                </td>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_55 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_57"
+                >
+                  <p>onbekend</p>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_58 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_59"
+                >
+                  <p>25</p>
+                </td>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_58 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_60"
+                >
+                  <p>https://ggdgelderlandzuid.nl/blog/week-van-de-teek/;eigen beheer Cito/CvTE</p>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_61 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_62"
+                >
+                  <p>26</p>
+                </td>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_61 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_63"
+                >
+                  <p>https://quizlet.com/13441861/lab-excerise-1-flash-cards/</p>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_64 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_65"
+                >
+                  <p>27</p>
+                </td>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_64 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_66"
+                >
+                  <p>
+                    https://sites.google.com/site/siteeffetlotus/l-utilite-de-l-effet-hydrophobe-pour-la-feuille-de-lotus ;onbekend
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_67 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_68"
+                >
+                  <p>30</p>
+                </td>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_67 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_69"
+                >
+                  <p>https://tomvangelder.antrovista.com/amfibieen-58m517.html</p>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_70 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_71"
+                >
+                  <p>31</p>
+                </td>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_70 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_72"
+                >
+                  <p>https://paoloviscardi.com/tag/panda/</p>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_73 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_74"
+                >
+                  <p>32</p>
+                </td>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_73 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_75"
+                >
+                  <p>https://commons.wikimedia.org/wiki/File:Lutralutraskull.png#globalusage</p>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_76 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_77"
+                >
+                  <p>33</p>
+                </td>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_76 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_78"
+                >
+                  <p>onbekend</p>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_79 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_80"
+                >
+                  <p>34</p>
+                </td>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_79 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_81"
+                >
+                  <p>https://www.toerismeaffligem.be/blikvangers/bierbrouwen.php</p>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_82 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_83"
+                >
+                  <p>36</p>
+                </td>
+                <td
+                  class="cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_82 cito_genclass_infoscherm_bronvermelding_2022-_examenvariant_1_84"
+                >
+                  <p>onbekend</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p />
+        </div>
+      </div>
+    </div>
+  </qti-item-body>
+</qti-assessment-item>

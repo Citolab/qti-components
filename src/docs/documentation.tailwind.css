@@ -1,0 +1,7 @@
+/* Handy template to use tailwind in MDX docs */
+
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@config "../../tailwind.config.doc.cjs";

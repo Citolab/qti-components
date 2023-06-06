@@ -1,0 +1,29 @@
+.inlinechoicetext {
+  display: inline-block;
+  color: var(--qti-text-color);
+  border-radius: var(--qti-border-radius);
+  background: var(--qti-background);
+  box-shadow: inset 0px var(--qti-border-width) var(--qti-border-color);
+}
+.inlinechoicetext:empty {
+  width: 50%;
+}
+.inlinechoicetext:empty:after {
+  content: '\00a0';
+}
+
+qti-hottext {
+  display: unset !important;
+}
+qti-hottext:before,
+qti-hottext:after {
+  content: unset !important;
+}
+
+qti-hottext[aria-checked="true"] {
+  text-decoration: underline;
+}
+
+/* [qti-hottext-interaction] [qti-choice] {
+  display: unset !important;
+} */

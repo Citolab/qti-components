@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<qti-assessment-item
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd
+																							   http://www.duo.nl/schema/dep_extension ../dep_extension.xsd"
+  title="32cdpg"
+  identifier="ITM-32cdpg"
+  time-dependent="false"
+  label="32cdpg"
+  xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+  xmlns:dep="http://www.duo.nl/schema/dep_extension"
+>
+  <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="string" />
+  <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float">
+    <qti-default-value>
+      <qti-value>0</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-outcome-declaration
+    identifier="qtiAspectInhoudOutcomeDeclaration"
+    cardinality="single"
+    base-type="integer"
+    view="scorer"
+    normal-maximum="1"
+    normal-minimum="0"
+  />
+  <qti-outcome-declaration identifier="MAXSCORE" cardinality="single" base-type="float">
+    <qti-default-value>
+      <qti-value>1</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-companion-materials-info>
+    <qti-calculator>
+      <qti-calculator-type>basic</qti-calculator-type>
+      <qti-description />
+    </qti-calculator>
+    <dep:dep-calculator>
+      <dep:dep-description />
+      <dep:dep-calculator-type>basic</dep:dep-calculator-type>
+      <dep:dep-switch>true</dep:dep-switch>
+    </dep:dep-calculator>
+    <dep:dep-symbolPicker>
+      <dep:dep-description />
+      <dep:dep-symbols>€èéëêïöàá§±→←↑↓↔↕</dep:dep-symbols>
+    </dep:dep-symbolPicker>
+    <dep:dep-textMarker>
+      <dep:dep-description />
+    </dep:dep-textMarker>
+  </qti-companion-materials-info>
+  <qti-stylesheet href="../css/cito_itemstyle.css" type="text/css" />
+  <qti-stylesheet href="../css/cito_userstyle.css" type="text/css" />
+  <qti-stylesheet href="../css/cito_generated.css" type="text/css" />
+  <qti-item-body class="defaultBody" xml:lang="nl-NL">
+    <div class="content">
+      <div class="qti-layout-row">
+        <div class="qti-layout-col6">
+          <div id="leftbody">
+            <p>
+              <strong>Leven in de sloot</strong>
+            </p>
+            <p>
+              Lars heeft in de sloot enkele kleine diertjes gevangen. Je ziet een van die diertjes.
+              <br />
+              Met behulp van een determineerkaart zoekt Lars het diertje op.
+            </p>
+            <p>
+              <img
+                id="Id-IMG_621025c3-0c2d-4972-a78a-851f4deb4d6b"
+                src="../img/itembank-cbt-142.jpg"
+                width="425"
+                height="194"
+                alt=""
+              />
+            </p>
+            <p>
+              <br />
+              » Klik op de knop voor de determineerkaart.
+            </p>
+            <p class="cito_genclass_bi_BB_026_07_1" />
+            <div class="dep-dialogTrigger" data-stimulus-idref="WIN_bf4c4f47-f752-4e9e-8117-a707f5528ca1">
+              <img
+                src="../img/pictogram_document.jpg"
+                alt=""
+                width="50"
+                height="50"
+                id="Id-IMG-2b6aee32-5bd7-47d2-bea5-11e778a9329f"
+              />
+            </div>
+            <p />
+            <div
+              id="WIN_bf4c4f47-f752-4e9e-8117-a707f5528ca1"
+              class="dep-dialog hide-dialog"
+              data-dep-dialog-caption=""
+              data-dep-dialog-width="700"
+              data-dep-dialog-height="800"
+              data-dep-dialog-resizemode="fixed"
+              data-dep-dialog-modal="false"
+              data-dep-dialog-open="true"
+            >
+              <img
+                src="../img/itembank-cbt-143a.gif"
+                width="653"
+                height="786"
+                alt=""
+                id="Id-IMG-23451bbf-d831-48f5-9dfc-c1a8ce8ff0c4"
+              />
+            </div>
+            <p />
+          </div>
+        </div>
+
+        <div class="qti-layout-col6">
+          <div id="question">
+            <p>
+              <strong>Welk diertje heeft Lars gevangen?</strong>
+            </p>
+          </div>
+
+          <div class="cito_genclass_bi_BB_026_07_2">
+            <div>
+              <qti-extended-text-interaction
+                response-identifier="RESPONSE"
+                id="I9d228b4a-e0d6-419c-a62e-57ea82efe74d"
+                class="qti-height-lines-6"
+                expected-lines="5"
+                expected-length="350"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <qti-rubric-block id="qtiScoringRubricBlock" use="instructions" view="scorer">
+      <qti-content-body />
+    </qti-rubric-block>
+    <qti-rubric-block
+      id="qtiAspectInhoudRubricBlock"
+      use="scoring"
+      view="scorer"
+      data-dep-caption="Inhoud"
+      data-outcome-idref="qtiAspectInhoudOutcomeDeclaration"
+    >
+      <qti-content-body>
+        <div>schaatsenrijder</div>
+      </qti-content-body>
+    </qti-rubric-block>
+  </qti-item-body>
+</qti-assessment-item>
