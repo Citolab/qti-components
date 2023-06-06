@@ -66,7 +66,7 @@
     "storybook": "storybook dev -p 6006",
     "deploy": "firebase deploy --only hosting:qti-components",
     "build-storybook": "storybook build",
-    "publish:latest": "npx np --tag next",
+    "publish:latest": "npx np",
     "publish:next": "npx np --tag next",
     "test-storybook": "test-storybook",
     "cem": "cem analyze --watch",
