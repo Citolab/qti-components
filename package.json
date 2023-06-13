@@ -21,19 +21,20 @@
       "require": "./dist/qti-components/index.cjs"
     },
     "./qti-item": {
-      "import": "./dist/qti-item/index.js"
+      "import": "./dist/qti-item/index.js",
+      "require": "./dist/qti-item/index.cjs"
     },
     "./react/qti-item": {
-      "import": "./dist/qti-item-react/index.js"
-    },
-    "./qti-test": {
-      "import": "./dist/qti-test/index.js"
+      "import": "./dist/qti-item-react/index.js",
+      "require": "./dist/qti-item-react/index.cjs"
     },
     "./qti-transform": {
-      "import": "./dist/qti-transform/index.js"
+      "import": "./dist/qti-transform/index.js",
+      "require": "./dist/qti-transform/index.cjs"
     },
     "./index.css": {
-      "import": "./dist/index.css"
+      "import": "./dist/index.css",
+      "require": "./dist/index.css"
     }
   },
   "types": "./dist/qti-components/index.d.ts",
@@ -58,7 +59,8 @@
   },
   "files": [
     "dist",
-    "types"
+    "types",
+    "./dist/index.css"
   ],
   "scripts": {
     "test:generate-output": "jest --json --outputFile=.jest-test-results.json || true",

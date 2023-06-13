@@ -28,8 +28,9 @@ const outdir = 'dist';
     .build({
       target: 'es2017',
       dts: true,
-      format: ['esm'],
+      format: ['esm', 'cjs'],
       minify: true,
+      bundle: true,
       entryPoints: [
         //
         // NOTE: Entry points must be mapped in package.json > exports, otherwise users won't be able to import them!
@@ -48,7 +49,6 @@ const outdir = 'dist';
       define: {
         'process.env.NODE_ENV': '"production"'
       },
-      bundle: true,
       external: ['@lit-labs/react', '@lit-labs/context', 'react', 'lit'],
       splitting: true,
       // https://github.com/evanw/esbuild/issues/3109#issuecomment-1539846087
@@ -72,7 +72,7 @@ const outdir = 'dist';
   const buildResult = await tsup
     .build({
       target: 'es2017',
-      format: ['esm'],
+      format: ['esm', 'cjs'],
       entryPoints: { './index': './src/index.ts' },
       minify: true,
       bundle: true,
