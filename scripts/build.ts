@@ -28,7 +28,7 @@ const outdir = 'dist';
     .build({
       target: 'es2017',
       dts: true,
-      format: ['esm', 'cjs'],
+      format: ['esm'],
       minify: true,
       bundle: true,
       entryPoints: [
@@ -72,7 +72,7 @@ const outdir = 'dist';
   const buildResult = await tsup
     .build({
       target: 'es2017',
-      format: ['esm', 'cjs'],
+      format: ['esm'],
       entryPoints: { './index': './src/index.ts' },
       minify: true,
       bundle: true,

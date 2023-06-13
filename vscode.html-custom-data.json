@@ -221,7 +221,6 @@
           "description": "the maximum number of selections a candidate must make, the other options will be disabled when max options is checked",
           "values": []
         },
-        { "name": "shuffle", "values": [] },
         { "name": "response-identifier", "values": [] },
         {
           "name": "disabled",
@@ -297,6 +296,18 @@
       "references": []
     },
     {
+      "name": "qti-graphic-gap-match-interaction",
+      "description": "\n\n\n---\n\n\n\n\n### **Events:**\n - **qti-register-interaction** - undefined\n- **qti-interaction-response** - undefined",
+      "attributes": [
+        { "name": "response-identifier", "values": [] },
+        { "name": "disabled", "values": [] },
+        { "name": "readonly", "values": [] },
+        { "name": "min-associations", "values": [] },
+        { "name": "max-associations", "values": [] }
+      ],
+      "references": []
+    },
+    {
       "name": "qti-graphic-order-interaction",
       "description": "\n\n\n---\n\n\n\n\n### **Events:**\n - **qti-register-interaction** - undefined\n- **qti-interaction-response** - undefined",
       "attributes": [
@@ -310,7 +321,6 @@
           "description": "the maximum number of selections a candidate must make, the other options will be disabled when max options is checked",
           "values": []
         },
-        { "name": "shuffle", "values": [] },
         { "name": "response-identifier", "values": [] },
         {
           "name": "disabled",
@@ -322,18 +332,6 @@
           "description": "readonly should be exposed to the attributes and accessible as property",
           "values": []
         }
-      ],
-      "references": []
-    },
-    {
-      "name": "qti-graphic-gap-match-interaction",
-      "description": "\n\n\n---\n\n\n\n\n### **Events:**\n - **qti-register-interaction** - undefined\n- **qti-interaction-response** - undefined",
-      "attributes": [
-        { "name": "response-identifier", "values": [] },
-        { "name": "disabled", "values": [] },
-        { "name": "readonly", "values": [] },
-        { "name": "min-associations", "values": [] },
-        { "name": "max-associations", "values": [] }
       ],
       "references": []
     },
@@ -351,7 +349,6 @@
           "description": "the maximum number of selections a candidate must make, the other options will be disabled when max options is checked",
           "values": []
         },
-        { "name": "shuffle", "values": [] },
         { "name": "response-identifier", "values": [] },
         {
           "name": "disabled",
@@ -380,7 +377,25 @@
           "description": "the maximum number of selections a candidate must make, the other options will be disabled when max options is checked",
           "values": []
         },
-        { "name": "shuffle", "values": [] },
+        { "name": "response-identifier", "values": [] },
+        {
+          "name": "disabled",
+          "description": "disabled should be exposed to the attributes and accessible as property",
+          "values": []
+        },
+        {
+          "name": "readonly",
+          "description": "readonly should be exposed to the attributes and accessible as property",
+          "values": []
+        }
+      ],
+      "references": []
+    },
+    {
+      "name": "qti-inline-choice-interaction",
+      "description": "\n\n\n---\n\n\n\n\n### **Events:**\n - **qti-register-interaction** - undefined\n- **qti-interaction-response** - undefined",
+      "attributes": [
+        { "name": "", "values": [] },
         { "name": "response-identifier", "values": [] },
         {
           "name": "disabled",
@@ -404,25 +419,6 @@
         { "name": "readonly", "values": [] },
         { "name": "min-associations", "values": [] },
         { "name": "max-associations", "values": [] }
-      ],
-      "references": []
-    },
-    {
-      "name": "qti-inline-choice-interaction",
-      "description": "\n\n\n---\n\n\n\n\n### **Events:**\n - **qti-register-interaction** - undefined\n- **qti-interaction-response** - undefined",
-      "attributes": [
-        { "name": "", "values": [] },
-        { "name": "response-identifier", "values": [] },
-        {
-          "name": "disabled",
-          "description": "disabled should be exposed to the attributes and accessible as property",
-          "values": []
-        },
-        {
-          "name": "readonly",
-          "description": "readonly should be exposed to the attributes and accessible as property",
-          "values": []
-        }
       ],
       "references": []
     },
@@ -552,17 +548,17 @@
       "references": []
     },
     {
-      "name": "qti-expression",
-      "description": "\n\n\n---\n\n\n",
-      "attributes": [],
-      "references": []
-    },
-    {
       "name": "qti-response-else",
       "description": "\n\n\n---\n\n\n",
       "attributes": [
         { "name": "debugCalculateResult", "values": [{ "name": "object" }] }
       ],
+      "references": []
+    },
+    {
+      "name": "qti-expression",
+      "description": "\n\n\n---\n\n\n",
+      "attributes": [],
       "references": []
     },
     {
@@ -610,12 +606,6 @@
       "references": []
     },
     {
-      "name": "qti-and",
-      "description": "\n\n\n---\n\n\n",
-      "attributes": [],
-      "references": []
-    },
-    {
       "name": "interaction",
       "description": "\n\n\n---\n\n\n\n\n### **Events:**\n - **qti-register-interaction** - undefined\n- **qti-interaction-response** - undefined",
       "attributes": [
@@ -631,6 +621,20 @@
           "values": []
         }
       ],
+      "references": []
+    },
+    {
+      "name": "qti-response-if",
+      "description": "\n\n\n---\n\n\n",
+      "attributes": [
+        { "name": "debugCalculateResult", "values": [{ "name": "object" }] }
+      ],
+      "references": []
+    },
+    {
+      "name": "qti-and",
+      "description": "\n\n\n---\n\n\n",
+      "attributes": [],
       "references": []
     },
     {
@@ -669,6 +673,12 @@
       "references": []
     },
     {
+      "name": "qti-gt",
+      "description": "\n\n\n---\n\n\n",
+      "attributes": [],
+      "references": []
+    },
+    {
       "name": "qti-equal-rounded",
       "description": "\n\n\n---\n\n\n",
       "attributes": [
@@ -681,12 +691,6 @@
           ]
         }
       ],
-      "references": []
-    },
-    {
-      "name": "qti-gt",
-      "description": "\n\n\n---\n\n\n",
-      "attributes": [],
       "references": []
     },
     {
@@ -745,14 +749,6 @@
       "name": "qti-variable",
       "description": "\n\n\n---\n\n\n",
       "attributes": [],
-      "references": []
-    },
-    {
-      "name": "qti-response-if",
-      "description": "\n\n\n---\n\n\n",
-      "attributes": [
-        { "name": "debugCalculateResult", "values": [{ "name": "object" }] }
-      ],
       "references": []
     },
     {
