@@ -72,8 +72,9 @@ const outdir = 'dist';
   const buildResult = await tsup
     .build({
       target: 'es2017',
+      dts: true,
       format: ['esm'],
-      entryPoints: { './index': './src/index.ts' },
+      entryPoints: ['./src/index.ts'],
       minify: true,
       bundle: true,
       // necessary so the peerdependencies in the package.json will still be included in thuis build

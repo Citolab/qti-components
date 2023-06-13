@@ -19,6 +19,9 @@
     ".": {
       "import": "./dist/qti-components/index.js"
     },
+    "./qti-components": {
+      "import": "./dist/qti-components/index.js"
+    },
     "./qti-item": {
       "import": "./dist/qti-item/index.js"
     },
@@ -27,11 +30,21 @@
     },
     "./qti-transform": {
       "import": "./dist/qti-transform/index.js"
+    },
+    "./index.css": {
+      "import": "./dist/index.css",
+      "require": "./dist/index.css"
     }
   },
   "types": "./dist/qti-components/index.d.ts",
   "typesVersions": {
     "*": {
+      ".": [
+        "./dist/index.d.ts"
+      ],
+      "qti-components": [
+        "./dist/qti-components/index.d.ts"
+      ],
       "qti-item": [
         "./dist/qti-item/index.d.ts"
       ],
