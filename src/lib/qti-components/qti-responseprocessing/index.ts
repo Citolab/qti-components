@@ -9,6 +9,8 @@ export * from './qti-responseelse/qti-responseelse';
 
 export * from './qti-expression/qti-gt/qti-gt';
 export * from './qti-expression/qti-gte/qti-gte';
+export * from './qti-expression/qti-lt/qti-lt';
+export * from './qti-expression/qti-lte/qti-lte';
 export * from './qti-expression/qti-and/qti-and';
 
 export * from './qti-expression/qti-or/qti-or';
