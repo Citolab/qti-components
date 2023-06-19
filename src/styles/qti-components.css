@@ -11,7 +11,8 @@
 
   /* - button  : .input-control-hidden qti-choice, qti-hotspot */
   .button {
-    @apply base select-none px-3 py-2 font-semibold shadow-sm;
+    @apply base px-3 py-2 font-semibold shadow-sm;
+    /* @apply select-none; */
   }
 
   /*  - select  : inline-choice */
@@ -23,8 +24,9 @@
 
   /* - check   : qti-choice, qti-hotspot */
   .check {
-    @apply base flex select-none  items-center gap-2 rounded-full px-1 py-0.5 shadow-none;
+    @apply base flex items-center gap-2 rounded-full px-1 py-0.5 shadow-none;
     @apply !ring-0; /* !important, remove for checkbox and radio the active ring, the radio and checkbox will be selected instead */
+    /* @apply select-none; */
 
     &::part(cha) {
       /* let the checkmark or radio circle already take up space, else when checking everyhing collapses */
@@ -59,7 +61,8 @@
 
   /* - drag    : gap-match, match, order, associate */
   .drag {
-    @apply base cursor-grab select-none bg-white py-1 pl-4 pr-2 font-semibold shadow-sm;
+    @apply base cursor-grab bg-white py-1 pl-4 pr-2 font-semibold shadow-sm;
+    /* @apply select-none; */
     background-image: radial-gradient(
       circle at center,
       rgba(0, 0, 0, 0.1) 0,

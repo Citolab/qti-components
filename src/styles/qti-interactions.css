@@ -100,7 +100,7 @@ qti-hottext-interaction {
 
 qti-inline-choice-interaction {
   &::part(select) {
-    @apply select hover:hov focus:foc aria-checked:act aria-readonly:rdo aria-disabled:dis;
+    @apply select hover:hov focus:foc; /* aria-checked:act aria-readonly:rdo aria-disabled:dis; */
   }
 }
 
@@ -220,29 +220,41 @@ qti-graphic-gap-match-interaction {
 }
 
 qti-slider-interaction {
+  --qti-tick-color: rgb(229 231 235 / 1);
+  --qti-tick-width: 2px;
+
   @apply relative;
   width: 100%;
   display: block;
-  &::part(knob) {
-    @apply absolute h-4 w-4 origin-center -translate-x-1/2 cursor-pointer rounded-full bg-primary-500;
+
+  &::part(slider) {
+    @apply m-12 mt-2;
+  }
+
+  &::part(bounds) {
+    @apply flex w-full justify-between;
+  }
+
+  &::part(ticks) {
+    @apply mb-1 h-2;
+    background-position: 0 center;
+    background: linear-gradient(to right, var(--qti-tick-color) var(--qti-tick-width), transparent 1px) repeat-x;
+    background-size: calc(calc(100% - var(--qti-tick-width)) / ((var(--max) - var(--min)) / var(--step))) 100%;
   }
 
   &::part(rail) {
-    @apply h-4;
-    background-position: 0 center;
-    --qti-border-color: #ff0000;
-    --qti-border-width: 2px;
-    /* ticks */
-    background: linear-gradient(to right, var(--qti-border-color) var(--qti-border-width), transparent 1px) repeat-x,
-      linear-gradient(to top, var(--qti-border-color) var(--qti-border-width), transparent 1px) repeat-x;
-    background-size: calc(calc(100% - var(--qti-border-width)) / ((var(--max) - var(--min)) / var(--step))) 50%;
+    @apply flex h-2 w-full items-center rounded-full border-solid border-gray-200 bg-gray-100;
+  }
+
+  &::part(knob) {
+    @apply relative h-5 w-5 origin-center -translate-x-1/2 cursor-pointer rounded-full bg-primary-500;
   }
 }
 
 qti-select-point-interaction {
   &::part(point) {
     @apply hover:bg-blue-100 hover:bg-opacity-30;
-    @apply point hover:hov-ring focus:foc aria-checked:act aria-readonly:rdo aria-disabled:dis rounded-full;
+    @apply point hover:hov-ring focus:foc rounded-full; /* aria-checked:act aria-readonly:rdo aria-disabled:dis ;*/
   }
 }
 

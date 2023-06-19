@@ -20,6 +20,7 @@ export class QtiSliderInteraction extends Interaction {
   private _min: number;
   @property({ type: Number, attribute: 'lower-bound' }) set min(value: number) {
     this._min = value;
+    this.value = value;
     this.style.setProperty('--min', `${this._min}`);
   }
   get min(): number {
@@ -79,8 +80,16 @@ export class QtiSliderInteraction extends Interaction {
     const _leftValue = ((this.value - this.min) / (this.max - this.min)) * 100;
 
     return html`<slot name="prompt"></slot>
-      <div id="rail" @mousedown=${this._onMouseDown} @touchstart=${this._onTouchMove} part="rail">
-        <div id="knob" part="knob" style="left:${_leftValue}%"></div>
+      <div id="slider" part="slider">
+        <div id="bounds" part="bounds">
+          <div>${this._min}</div>
+          <div>${this._max}</div>
+        </div>
+        <div id="ticks" part="ticks"></div>
+        <div id="rail" part="rail" @mousedown=${this._onMouseDown} @touchstart=${this._onTouchMove}>
+          <div id="knob" part="knob" style="left:${_leftValue}%"></div>
+        </div>
+        <div id="value" part="value">${this.value}</div>
       </div>`;
   }
 
@@ -147,7 +156,7 @@ export class QtiSliderInteraction extends Interaction {
 
   /** calculateValue gets x position and compares this with the total width in pixels */
   private calculateValue(diffX: number) {
-    const valueNow = this.min + ((this.max - this.min) * diffX) / this.offsetWidth;
+    const valueNow = this.min + ((this.max - this.min) * diffX) / this._rail.getBoundingClientRect().width;
     const roundedStepValue = this.min + Math.round((valueNow - this.min) / this._step) * this._step;
     this.value = roundedStepValue;
   }

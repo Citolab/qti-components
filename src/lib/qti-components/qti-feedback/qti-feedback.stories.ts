@@ -257,7 +257,6 @@ export const woordmars = () => {
   `;
 };
 
-
 export const kringloop = () => {
   const assessmentItemRef = createRef<QtiAssessmentItem>();
 
@@ -277,98 +276,127 @@ export const kringloop = () => {
         action(JSON.stringify(e.detail))();
       }}"
     >
-    <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="float">
-		<qti-correct-response interpretation="562 kilo">
-			<qti-value>562</qti-value>
-		</qti-correct-response>
-	</qti-response-declaration>
-	<qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float">
-		<qti-default-value>
-			<qti-value>0</qti-value>
-		</qti-default-value>
-	</qti-outcome-declaration>
-	<qti-outcome-declaration identifier="FEEDBACK" cardinality="single" base-type="identifier"></qti-outcome-declaration>
-	<qti-item-body xml:lang="nl-NL">
-		<div class="qti-layout-row">
-			<div class="qti-layout-col12">
-				<p>
-					<strong>Hoeveel kilo afval werd er 2021 in Nederland per persoon weggegooid?</strong>
-				</p>
-				<div>
-					<qti-slider-interaction response-identifier="RESPONSE" lower-bound="0" upper-bound="1000"><qti-slider-interaction> kilo.
-					<qti-feedback-inline id="feedbackInline-correct-exact" identifier="correct-exact" outcome-identifier="FEEDBACK" show-hide="show">
-						Helemaal goed! Dat is net zoveel als het gewicht van een groot paard! 🐎
-					</qti-feedback-inline>
-					<qti-feedback-inline id="feedbackInline-correct" identifier="correct" outcome-identifier="FEEDBACK" show-hide="show">
-						Bijna! We rekenen het goed! 562 kilo 😮 Dat is net zoveel als het gewicht van een groot paard!🐎
-					</qti-feedback-inline>
-					<qti-feedback-inline id="feedbackInline-incorrect-less" identifier="incorrect-less" outcome-identifier="FEEDBACK" show-hide="show">
-						Helaas het is nog meer! 562 kilo 😮! Dat is net zoveel als het gewicht van een groot paard 🐎
-					</qti-feedback-inline>
-					<qti-feedback-inline id="feedbackInline-incorrect-more" identifier="incorrect-more" outcome-identifier="FEEDBACK" show-hide="show">
-						Dat is niet goed, gelukkig is het minder, maar toch 562 kilo! Dat is net zoveel als het gewicht van een groot paard!🐎
-					</qti-feedback-inline>
-
-				</div>
-			</div>
-		</div>
-	</qti-item-body>
-	<qti-response-processing>
-		<qti-response-condition>
-			<qti-response-if>
-				<qti-and>
-					<qti-gte>
-						<qti-variable identifier="RESPONSE"></qti-variable>
-						<qti-base-value base-type="float">500</qti-base-value>
-					</qti-gte>
-					<qti-lte>
-						<qti-variable identifier="RESPONSE"></qti-variable>
-						<qti-base-value base-type="float">600</qti-base-value>
-					</qti-lte>
-				</qti-and>
-				<qti-set-outcome-value identifier="SCORE">
-					<qti-base-value base-type="float">1</qti-base-value>
-				</qti-set-outcome-value>
-				<qti-response-condition>
-					<qti-response-if>
-						<qti-equal>
-							<qti-variable identifier="RESPONSE"></qti-variable>
-							<qti-correct identifier="RESPONSE"></qti-correct>
-						</qti-equal>
-						<qti-set-outcome-value identifier="FEEDBACK">
-							<qti-base-value base-type="identifier">correct-exact</qti-base-value>
-						</qti-set-outcome-value>
-					</qti-response-if>
-					<qti-response-else>
-						<qti-set-outcome-value identifier="FEEDBACK">
-							<qti-base-value base-type="string">correct</qti-base-value>
-						</qti-set-outcome-value>
-					</qti-response-else>
-				</qti-response-condition>
-			</qti-response-if>
-			<qti-response-else>
-				<qti-set-outcome-value identifier="SCORE">
-					<qti-base-value base-type="float">0</qti-base-value>
-				</qti-set-outcome-value>
-				<qti-response-condition>
-					<qti-response-if>
-						<qti-lt>
-							<qti-variable identifier="RESPONSE"></qti-variable>
-							<qti-base-value base-type="float">500</qti-base-value>
-						</qti-lt>
-						<qti-set-outcome-value identifier="FEEDBACK">
-							<qti-base-value base-type="string">incorrect-less</qti-base-value>
-						</qti-set-outcome-value>
-					</qti-response-if>
-					<qti-response-else>
-						<qti-set-outcome-value identifier="FEEDBACK">
-							<qti-base-value base-type="string">incorrect-more</qti-base-value>
-						</qti-set-outcome-value>
-					</qti-response-else>
-				</qti-response-condition>
-			</qti-response-else>
-		</qti-response-condition>
-	</qti-response-processing>
-</qti-assessment-item>
+      <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="float">
+        <qti-correct-response interpretation="562 kilo">
+          <qti-value>562</qti-value>
+        </qti-correct-response>
+      </qti-response-declaration>
+      <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float">
+        <qti-default-value>
+          <qti-value>0</qti-value>
+        </qti-default-value>
+      </qti-outcome-declaration>
+      <qti-outcome-declaration
+        identifier="FEEDBACK"
+        cardinality="single"
+        base-type="identifier"
+      ></qti-outcome-declaration>
+      <qti-item-body xml:lang="nl-NL">
+        <div class="qti-layout-row">
+          <div class="qti-layout-col12">
+            <p>
+              <strong>Hoeveel kilo afval werd er 2021 in Nederland per persoon weggegooid?</strong>
+            </p>
+            <div>
+              <qti-slider-interaction
+                response-identifier="RESPONSE"
+                lower-bound="0"
+                step="100"
+                upper-bound="1000"
+              ></qti-slider-interaction>
+              <qti-feedback-inline
+                id="feedbackInline-correct-exact"
+                identifier="correct-exact"
+                outcome-identifier="FEEDBACK"
+                show-hide="show"
+              >
+                Helemaal goed! Dat is net zoveel als het gewicht van een groot paard! 🐎
+              </qti-feedback-inline>
+              <qti-feedback-inline
+                id="feedbackInline-correct"
+                identifier="correct"
+                outcome-identifier="FEEDBACK"
+                show-hide="show"
+              >
+                Bijna! We rekenen het goed! 562 kilo 😮 Dat is net zoveel als het gewicht van een groot paard!🐎
+              </qti-feedback-inline>
+              <qti-feedback-inline
+                id="feedbackInline-incorrect-less"
+                identifier="incorrect-less"
+                outcome-identifier="FEEDBACK"
+                show-hide="show"
+              >
+                Helaas het is nog meer! 562 kilo 😮! Dat is net zoveel als het gewicht van een groot paard 🐎
+              </qti-feedback-inline>
+              <qti-feedback-inline
+                id="feedbackInline-incorrect-more"
+                identifier="incorrect-more"
+                outcome-identifier="FEEDBACK"
+                show-hide="show"
+              >
+                Dat is niet goed, gelukkig is het minder, maar toch 562 kilo! Dat is net zoveel als het gewicht van een
+                groot paard!🐎
+              </qti-feedback-inline>
+            </div>
+          </div>
+        </div>
+      </qti-item-body>
+      <qti-response-processing>
+        <qti-response-condition>
+          <qti-response-if>
+            <qti-and>
+              <qti-gte>
+                <qti-variable identifier="RESPONSE"></qti-variable>
+                <qti-base-value base-type="float">500</qti-base-value>
+              </qti-gte>
+              <qti-lte>
+                <qti-variable identifier="RESPONSE"></qti-variable>
+                <qti-base-value base-type="float">600</qti-base-value>
+              </qti-lte>
+            </qti-and>
+            <qti-set-outcome-value identifier="SCORE">
+              <qti-base-value base-type="float">1</qti-base-value>
+            </qti-set-outcome-value>
+            <qti-response-condition>
+              <qti-response-if>
+                <qti-equal>
+                  <qti-variable identifier="RESPONSE"></qti-variable>
+                  <qti-correct identifier="RESPONSE"></qti-correct>
+                </qti-equal>
+                <qti-set-outcome-value identifier="FEEDBACK">
+                  <qti-base-value base-type="identifier">correct-exact</qti-base-value>
+                </qti-set-outcome-value>
+              </qti-response-if>
+              <qti-response-else>
+                <qti-set-outcome-value identifier="FEEDBACK">
+                  <qti-base-value base-type="string">correct</qti-base-value>
+                </qti-set-outcome-value>
+              </qti-response-else>
+            </qti-response-condition>
+          </qti-response-if>
+          <qti-response-else>
+            <qti-set-outcome-value identifier="SCORE">
+              <qti-base-value base-type="float">0</qti-base-value>
+            </qti-set-outcome-value>
+            <qti-response-condition>
+              <qti-response-if>
+                <qti-lt>
+                  <qti-variable identifier="RESPONSE"></qti-variable>
+                  <qti-base-value base-type="float">500</qti-base-value>
+                </qti-lt>
+                <qti-set-outcome-value identifier="FEEDBACK">
+                  <qti-base-value base-type="string">incorrect-less</qti-base-value>
+                </qti-set-outcome-value>
+              </qti-response-if>
+              <qti-response-else>
+                <qti-set-outcome-value identifier="FEEDBACK">
+                  <qti-base-value base-type="string">incorrect-more</qti-base-value>
+                </qti-set-outcome-value>
+              </qti-response-else>
+            </qti-response-condition>
+          </qti-response-else>
+        </qti-response-condition>
+      </qti-response-processing>
+    </qti-assessment-item>
   `;
 };
