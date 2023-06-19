@@ -49,6 +49,7 @@ export const Interaction = {
     return html`
       <button @click=${() => showScreenshot()}>screenshot</button>
 
+      <!-- style="width:300px; left:100px; position: absolute" -->
       <qti-slider-interaction
         @qti-interaction-response="${action(`on-interaction-response`)}"
         ?disabled=${disabled}

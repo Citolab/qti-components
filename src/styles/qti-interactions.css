@@ -220,21 +220,20 @@ qti-graphic-gap-match-interaction {
 }
 
 qti-slider-interaction {
+  @apply block;
   --qti-tick-color: rgb(229 231 235 / 1);
   --qti-tick-width: 2px;
 
-  @apply relative;
-  width: 100%;
-  display: block;
-
   &::part(slider) {
-    @apply m-12 mt-2;
+    @apply mx-8;
   }
 
+  --show-bounds: true;
   &::part(bounds) {
     @apply flex w-full justify-between;
   }
 
+  --show-ticks: true;
   &::part(ticks) {
     @apply mb-1 h-2;
     background-position: 0 center;
@@ -243,11 +242,18 @@ qti-slider-interaction {
   }
 
   &::part(rail) {
-    @apply flex h-2 w-full items-center rounded-full border-solid border-gray-200 bg-gray-100;
+    @apply flex h-3 w-full items-center rounded-full border-solid border-gray-200 bg-gray-100;
   }
 
   &::part(knob) {
     @apply relative h-5 w-5 origin-center -translate-x-1/2 cursor-pointer rounded-full bg-primary-500;
+    /* transform: translateX(var(--value-percentage)); */
+    left: var(--value-percentage);
+  }
+
+  --show-value: true;
+  &::part(value) {
+    @apply absolute bottom-4 m-2 w-[4ch] -translate-x-1/2 cursor-pointer rounded bg-primary-500 py-1 text-center;
   }
 }
 

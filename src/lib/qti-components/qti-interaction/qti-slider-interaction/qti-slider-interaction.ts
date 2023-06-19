@@ -1,10 +1,35 @@
-import { css, html } from 'lit';
+import { css, html, nothing } from 'lit';
 import { state, property, query } from 'lit/decorators.js';
 
 import { Interaction } from '../internal/interaction/interaction';
 import { watch } from '../../utilities/decorators/watch';
 
+/**
+ * @summary The SliderInteraction.Type (qti-slider-interaction) presents the candidate with a control for selecting a numerical value between a lower and upper bound.
+ * @documentation https://www.imsglobal.org/spec/qti/v3p0/impl#h.s61xcrj4qcyj
+ * @status stable
+ * @since 6.0
+ *
+ * @event qti-register-interaction - emitted when the interaction wants to register itself
+ * @event qti-interaction-response - emitted when the interaction changes
+ *
+ * @cssprop --show-value - shows the current value while sliding
+ * @cssprop --show-ticks - shows the ticks according to steps
+ * @cssprop --show-bounds - shows value for lower and upper boundary
+ *
+ * @csspart slider -- slider inluding, bounds and ticks and value, use it for paddings and margins
+ * @csspart bounds -- div for bounds, containing two divs for with min, and max bounds value
+ * @csspart ticks -- div for ticks, use lineair gradient and exposed css variables for styling
+ * @csspart rail -- div for rail, style according to needs
+ * @csspart knob -- div, should be relative or absolute
+ * @csspart value -- div, containing value
+ *
+ * @slot - The default slot where <qti-simple-choice> must be placed.
+ * @slot prompt - slot where the prompt is placed.
+ */
 export class QtiSliderInteraction extends Interaction {
+  csLive: CSSStyleDeclaration;
+
   @query('#knob')
   private _knob: HTMLElement;
 
@@ -57,6 +82,12 @@ export class QtiSliderInteraction extends Interaction {
   validate(): boolean {
     return true;
   }
+  constructor() {
+    super();
+    /* the computed style is a live property, we use this to get css variables
+    see render template */
+    this.csLive = getComputedStyle(this);
+  }
 
   set response(myResponse: string | string[]) {
     if (Array.isArray(myResponse)) {
@@ -77,19 +108,26 @@ export class QtiSliderInteraction extends Interaction {
     // convert the value, which is the real slider value to a percentage for the dom.
     this.value < this.min && (this.value = this.min);
     this.value > this.max && (this.value = this.max);
-    const _leftValue = ((this.value - this.min) / (this.max - this.min)) * 100;
+    const valuePercentage = ((this.value - this.min) / (this.max - this.min)) * 100;
+    this.style.setProperty('--value-percentage', `${valuePercentage}%`);
+    this.setAttribute('aria-valuenow', this.value.toString());
 
     return html`<slot name="prompt"></slot>
       <div id="slider" part="slider">
-        <div id="bounds" part="bounds">
-          <div>${this._min}</div>
-          <div>${this._max}</div>
-        </div>
-        <div id="ticks" part="ticks"></div>
+        ${this.csLive.getPropertyValue('--show-bounds') == 'true'
+          ? html`<div id="bounds" part="bounds">
+              <div>${this._min}</div>
+              <div>${this._max}</div>
+            </div>`
+          : nothing}
+        ${this.csLive.getPropertyValue('--show-ticks') == 'true' ? html`<div id="ticks" part="ticks"></div>` : nothing}
         <div id="rail" part="rail" @mousedown=${this._onMouseDown} @touchstart=${this._onTouchMove}>
-          <div id="knob" part="knob" style="left:${_leftValue}%"></div>
+          <div id="knob" part="knob">
+            ${this.csLive.getPropertyValue('--show-value') == 'true'
+              ? html`<div id="value" part="value">${this.value}</div>`
+              : nothing}
+          </div>
         </div>
-        <div id="value" part="value">${this.value}</div>
       </div>`;
   }
 
@@ -126,7 +164,6 @@ export class QtiSliderInteraction extends Interaction {
 
   private _onMouseDown(event) {
     const handleMouseMove = (event: MouseEvent) => {
-      // PK: Fixme.. this fixes
       // if the qti-slider-interaction has an absolute left position and body is scrolled a bit, take account for that
       const diffX = event.pageX - this._rail.getBoundingClientRect().left - document.documentElement.scrollLeft;
 
@@ -145,7 +182,6 @@ export class QtiSliderInteraction extends Interaction {
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
 
-    // PK: Fixme.. this fixes
     // if the qti-slider-interaction has an absolute left position and body is scrolled a bit, take account for that
     const diffX = event.pageX - this._rail.getBoundingClientRect().left - document.documentElement.scrollLeft;
 

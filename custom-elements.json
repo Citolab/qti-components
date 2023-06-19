@@ -4,97 +4,6 @@
   "modules": [
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-item/index.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "*",
-          "declaration": {
-            "name": "*",
-            "package": "./qti-item"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/lib/qti-item/qti-item.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "QtiItem",
-          "members": [],
-          "attributes": [
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled"
-            },
-            {
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "readonly"
-            },
-            {
-              "name": "xml",
-              "fieldName": "xml"
-            },
-            {
-              "name": "scale",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "fieldName": "scale",
-              "inheritedFrom": {
-                "name": "ScaleToFitMixin",
-                "module": "src/lib/qti-components/utilities/scale-to-fit/scale-to-fit.mixin.ts"
-              }
-            }
-          ],
-          "mixins": [
-            {
-              "name": "ScaleToFitMixin",
-              "module": "/src/lib/qti-components/utilities/scale-to-fit/scale-to-fit.mixin"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "qti-item",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "QtiItem",
-          "declaration": {
-            "name": "QtiItem",
-            "module": "src/lib/qti-item/qti-item.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-item",
-          "declaration": {
-            "name": "QtiItem",
-            "module": "src/lib/qti-item/qti-item.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "src/lib/qti-components/index.ts",
       "declarations": [],
       "exports": [
@@ -470,7 +379,7 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-item-react/index.ts",
+      "path": "src/lib/qti-item/index.ts",
       "declarations": [],
       "exports": [
         {
@@ -478,19 +387,66 @@
           "name": "*",
           "declaration": {
             "name": "*",
-            "package": "./qti-item.react"
+            "package": "./qti-item"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-item-react/qti-item.react.ts",
+      "path": "src/lib/qti-item/qti-item.ts",
       "declarations": [
         {
-          "kind": "variable",
+          "kind": "class",
+          "description": "",
           "name": "QtiItem",
-          "default": "createComponent({\n  tagName: 'qti-item',\n  react: React,\n  elementClass: QtiItemComponent,\n  events: {\n    qtioutcomechanged: 'qti-outcome-changed', // as EventName<Event>\n    qtiinteractionchanged: 'qti-interaction-changed',\n    qtiitemconnected: 'qti-item-connected'\n  }\n})"
+          "members": [],
+          "attributes": [
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readonly"
+            },
+            {
+              "name": "xml",
+              "fieldName": "xml"
+            },
+            {
+              "name": "scale",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "fieldName": "scale",
+              "inheritedFrom": {
+                "name": "ScaleToFitMixin",
+                "module": "src/lib/qti-components/utilities/scale-to-fit/scale-to-fit.mixin.ts"
+              }
+            }
+          ],
+          "mixins": [
+            {
+              "name": "ScaleToFitMixin",
+              "module": "/src/lib/qti-components/utilities/scale-to-fit/scale-to-fit.mixin"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "qti-item",
+          "customElement": true
         }
       ],
       "exports": [
@@ -499,7 +455,15 @@
           "name": "QtiItem",
           "declaration": {
             "name": "QtiItem",
-            "module": "src/lib/qti-item-react/qti-item.react.ts"
+            "module": "src/lib/qti-item/qti-item.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-item",
+          "declaration": {
+            "name": "QtiItem",
+            "module": "src/lib/qti-item/qti-item.ts"
           }
         }
       ]
@@ -543,6 +507,42 @@
           "declaration": {
             "name": "qtiTransform",
             "module": "src/lib/qti-transform/qti-transform.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/lib/qti-item-react/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "package": "./qti-item.react"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/lib/qti-item-react/qti-item.react.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "QtiItem",
+          "default": "createComponent({\n  tagName: 'qti-item',\n  react: React,\n  elementClass: QtiItemComponent,\n  events: {\n    qtioutcomechanged: 'qti-outcome-changed', // as EventName<Event>\n    qtiinteractionchanged: 'qti-interaction-changed',\n    qtiitemconnected: 'qti-item-connected'\n  }\n})"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiItem",
+          "declaration": {
+            "name": "QtiItem",
+            "module": "src/lib/qti-item-react/qti-item.react.ts"
           }
         }
       ]
@@ -1564,6 +1564,22 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "package": "./qti-expression/qti-lt/qti-lt"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "package": "./qti-expression/qti-lte/qti-lte"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "package": "./qti-expression/qti-and/qti-and"
           }
         },
@@ -2439,18 +2455,6 @@
               }
             },
             {
-              "name": "shuffle",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "shuffle",
-              "inheritedFrom": {
-                "name": "Choices",
-                "module": "src/lib/qti-components/qti-interaction/internal/choices/choices.ts"
-              }
-            },
-            {
               "name": "response-identifier",
               "type": {
                 "text": "string"
@@ -2868,142 +2872,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-interaction/qti-graphic-order-interaction/qti-graphic-order-interaction.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "QtiGraphicOrderInteraction",
-          "members": [],
-          "superclass": {
-            "name": "Choices",
-            "module": "/src/lib/qti-components/qti-interaction/internal/choices/choices"
-          },
-          "tagName": "qti-graphic-order-interaction",
-          "customElement": true,
-          "attributes": [
-            {
-              "name": "min-choices",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "description": "the minimal number of selections a candidate must make",
-              "fieldName": "minChoices",
-              "inheritedFrom": {
-                "name": "Choices",
-                "module": "src/lib/qti-components/qti-interaction/internal/choices/choices.ts"
-              }
-            },
-            {
-              "name": "max-choices",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "description": "the maximum number of selections a candidate must make, the other options will be disabled when max options is checked",
-              "fieldName": "maxChoices",
-              "inheritedFrom": {
-                "name": "Choices",
-                "module": "src/lib/qti-components/qti-interaction/internal/choices/choices.ts"
-              }
-            },
-            {
-              "name": "shuffle",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "shuffle",
-              "inheritedFrom": {
-                "name": "Choices",
-                "module": "src/lib/qti-components/qti-interaction/internal/choices/choices.ts"
-              }
-            },
-            {
-              "name": "response-identifier",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "responseIdentifier",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "src/lib/qti-components/qti-interaction/internal/interaction/interaction.ts"
-              }
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "disabled should be exposed to the attributes and accessible as property",
-              "fieldName": "disabled",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "src/lib/qti-components/qti-interaction/internal/interaction/interaction.ts"
-              }
-            },
-            {
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "readonly should be exposed to the attributes and accessible as property",
-              "fieldName": "readonly",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "src/lib/qti-components/qti-interaction/internal/interaction/interaction.ts"
-              }
-            }
-          ],
-          "events": [
-            {
-              "name": "qti-register-interaction",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "src/lib/qti-components/qti-interaction/internal/interaction/interaction.ts"
-              }
-            },
-            {
-              "name": "qti-interaction-response",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "src/lib/qti-components/qti-interaction/internal/interaction/interaction.ts"
-              }
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "QtiGraphicOrderInteraction",
-          "declaration": {
-            "name": "QtiGraphicOrderInteraction",
-            "module": "src/lib/qti-components/qti-interaction/qti-graphic-order-interaction/qti-graphic-order-interaction.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-graphic-order-interaction",
-          "declaration": {
-            "name": "QtiGraphicOrderInteraction",
-            "module": "src/lib/qti-components/qti-interaction/qti-graphic-order-interaction/qti-graphic-order-interaction.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "src/lib/qti-components/qti-interaction/qti-graphic-gap-match-interaction/qti-graphic-gap-match-interaction.ts",
       "declarations": [
         {
@@ -3130,6 +2998,130 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/lib/qti-components/qti-interaction/qti-graphic-order-interaction/qti-graphic-order-interaction.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiGraphicOrderInteraction",
+          "members": [],
+          "superclass": {
+            "name": "Choices",
+            "module": "/src/lib/qti-components/qti-interaction/internal/choices/choices"
+          },
+          "tagName": "qti-graphic-order-interaction",
+          "customElement": true,
+          "attributes": [
+            {
+              "name": "min-choices",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "the minimal number of selections a candidate must make",
+              "fieldName": "minChoices",
+              "inheritedFrom": {
+                "name": "Choices",
+                "module": "src/lib/qti-components/qti-interaction/internal/choices/choices.ts"
+              }
+            },
+            {
+              "name": "max-choices",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "the maximum number of selections a candidate must make, the other options will be disabled when max options is checked",
+              "fieldName": "maxChoices",
+              "inheritedFrom": {
+                "name": "Choices",
+                "module": "src/lib/qti-components/qti-interaction/internal/choices/choices.ts"
+              }
+            },
+            {
+              "name": "response-identifier",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "responseIdentifier",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "src/lib/qti-components/qti-interaction/internal/interaction/interaction.ts"
+              }
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "disabled should be exposed to the attributes and accessible as property",
+              "fieldName": "disabled",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "src/lib/qti-components/qti-interaction/internal/interaction/interaction.ts"
+              }
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "readonly should be exposed to the attributes and accessible as property",
+              "fieldName": "readonly",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "src/lib/qti-components/qti-interaction/internal/interaction/interaction.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "qti-register-interaction",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "src/lib/qti-components/qti-interaction/internal/interaction/interaction.ts"
+              }
+            },
+            {
+              "name": "qti-interaction-response",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "src/lib/qti-components/qti-interaction/internal/interaction/interaction.ts"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiGraphicOrderInteraction",
+          "declaration": {
+            "name": "QtiGraphicOrderInteraction",
+            "module": "src/lib/qti-components/qti-interaction/qti-graphic-order-interaction/qti-graphic-order-interaction.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-graphic-order-interaction",
+          "declaration": {
+            "name": "QtiGraphicOrderInteraction",
+            "module": "src/lib/qti-components/qti-interaction/qti-graphic-order-interaction/qti-graphic-order-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/lib/qti-components/qti-interaction/qti-hotspot-interaction/qti-hotspot-interaction.ts",
       "declarations": [
         {
@@ -3165,18 +3157,6 @@
               "default": "1",
               "description": "the maximum number of selections a candidate must make, the other options will be disabled when max options is checked",
               "fieldName": "maxChoices",
-              "inheritedFrom": {
-                "name": "Choices",
-                "module": "src/lib/qti-components/qti-interaction/internal/choices/choices.ts"
-              }
-            },
-            {
-              "name": "shuffle",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "shuffle",
               "inheritedFrom": {
                 "name": "Choices",
                 "module": "src/lib/qti-components/qti-interaction/internal/choices/choices.ts"
@@ -3307,18 +3287,6 @@
               }
             },
             {
-              "name": "shuffle",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "shuffle",
-              "inheritedFrom": {
-                "name": "Choices",
-                "module": "src/lib/qti-components/qti-interaction/internal/choices/choices.ts"
-              }
-            },
-            {
               "name": "response-identifier",
               "type": {
                 "text": "string"
@@ -3396,6 +3364,109 @@
           "declaration": {
             "name": "QtiHottextInteraction",
             "module": "src/lib/qti-components/qti-interaction/qti-hottext-interaction/qti-hottext-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/lib/qti-components/qti-interaction/qti-inline-choice-interaction/qti-inline-choice-interaction.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiInlineChoiceInteraction",
+          "members": [],
+          "attributes": [
+            {
+              "name": "",
+              "fieldName": "",
+              "attribute": ""
+            },
+            {
+              "name": "response-identifier",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "responseIdentifier",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "src/lib/qti-components/qti-interaction/internal/interaction/interaction.ts"
+              }
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "disabled should be exposed to the attributes and accessible as property",
+              "fieldName": "disabled",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "src/lib/qti-components/qti-interaction/internal/interaction/interaction.ts"
+              }
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "readonly should be exposed to the attributes and accessible as property",
+              "fieldName": "readonly",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "src/lib/qti-components/qti-interaction/internal/interaction/interaction.ts"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "Interaction",
+            "module": "/src/lib/qti-components/qti-interaction/internal/interaction/interaction"
+          },
+          "tagName": "qti-inline-choice-interaction",
+          "customElement": true,
+          "events": [
+            {
+              "name": "qti-register-interaction",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "src/lib/qti-components/qti-interaction/internal/interaction/interaction.ts"
+              }
+            },
+            {
+              "name": "qti-interaction-response",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "src/lib/qti-components/qti-interaction/internal/interaction/interaction.ts"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiInlineChoiceInteraction",
+          "declaration": {
+            "name": "QtiInlineChoiceInteraction",
+            "module": "src/lib/qti-components/qti-interaction/qti-inline-choice-interaction/qti-inline-choice-interaction.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-inline-choice-interaction",
+          "declaration": {
+            "name": "QtiInlineChoiceInteraction",
+            "module": "src/lib/qti-components/qti-interaction/qti-inline-choice-interaction/qti-inline-choice-interaction.ts"
           }
         }
       ]
@@ -3522,109 +3593,6 @@
           "declaration": {
             "name": "QtiMatchInteraction",
             "module": "src/lib/qti-components/qti-interaction/qti-match-interaction/qti-match-interaction.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-interaction/qti-inline-choice-interaction/qti-inline-choice-interaction.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "QtiInlineChoiceInteraction",
-          "members": [],
-          "attributes": [
-            {
-              "name": "",
-              "fieldName": "",
-              "attribute": ""
-            },
-            {
-              "name": "response-identifier",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "responseIdentifier",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "src/lib/qti-components/qti-interaction/internal/interaction/interaction.ts"
-              }
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "disabled should be exposed to the attributes and accessible as property",
-              "fieldName": "disabled",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "src/lib/qti-components/qti-interaction/internal/interaction/interaction.ts"
-              }
-            },
-            {
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "readonly should be exposed to the attributes and accessible as property",
-              "fieldName": "readonly",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "src/lib/qti-components/qti-interaction/internal/interaction/interaction.ts"
-              }
-            }
-          ],
-          "superclass": {
-            "name": "Interaction",
-            "module": "/src/lib/qti-components/qti-interaction/internal/interaction/interaction"
-          },
-          "tagName": "qti-inline-choice-interaction",
-          "customElement": true,
-          "events": [
-            {
-              "name": "qti-register-interaction",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "src/lib/qti-components/qti-interaction/internal/interaction/interaction.ts"
-              }
-            },
-            {
-              "name": "qti-interaction-response",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "src/lib/qti-components/qti-interaction/internal/interaction/interaction.ts"
-              }
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "QtiInlineChoiceInteraction",
-          "declaration": {
-            "name": "QtiInlineChoiceInteraction",
-            "module": "src/lib/qti-components/qti-interaction/qti-inline-choice-interaction/qti-inline-choice-interaction.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-inline-choice-interaction",
-          "declaration": {
-            "name": "QtiInlineChoiceInteraction",
-            "module": "src/lib/qti-components/qti-interaction/qti-inline-choice-interaction/qti-inline-choice-interaction.ts"
           }
         }
       ]
@@ -3934,6 +3902,78 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/lib/qti-components/qti-interaction/qti-position-object-interaction/qti-position-object-interaction.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiSPositionObjectInteraction",
+          "members": [],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "qti-position-object-interaction",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiSPositionObjectInteraction",
+          "declaration": {
+            "name": "QtiSPositionObjectInteraction",
+            "module": "src/lib/qti-components/qti-interaction/qti-position-object-interaction/qti-position-object-interaction.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-position-object-interaction",
+          "declaration": {
+            "name": "QtiSPositionObjectInteraction",
+            "module": "src/lib/qti-components/qti-interaction/qti-position-object-interaction/qti-position-object-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/lib/qti-components/qti-interaction/qti-position-object-interaction/qti-position-object-stage.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiPositionObjectStage",
+          "members": [],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "qti-position-object-stage",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiPositionObjectStage",
+          "declaration": {
+            "name": "QtiPositionObjectStage",
+            "module": "src/lib/qti-components/qti-interaction/qti-position-object-interaction/qti-position-object-stage.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-position-object-stage",
+          "declaration": {
+            "name": "QtiPositionObjectStage",
+            "module": "src/lib/qti-components/qti-interaction/qti-position-object-interaction/qti-position-object-stage.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/lib/qti-components/qti-interaction/qti-select-point-interaction/qti-select-point-interaction.ts",
       "declarations": [
         {
@@ -4048,85 +4088,87 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-interaction/qti-position-object-interaction/qti-position-object-interaction.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "QtiSPositionObjectInteraction",
-          "members": [],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "qti-position-object-interaction",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "QtiSPositionObjectInteraction",
-          "declaration": {
-            "name": "QtiSPositionObjectInteraction",
-            "module": "src/lib/qti-components/qti-interaction/qti-position-object-interaction/qti-position-object-interaction.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-position-object-interaction",
-          "declaration": {
-            "name": "QtiSPositionObjectInteraction",
-            "module": "src/lib/qti-components/qti-interaction/qti-position-object-interaction/qti-position-object-interaction.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-interaction/qti-position-object-interaction/qti-position-object-stage.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "QtiPositionObjectStage",
-          "members": [],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "qti-position-object-stage",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "QtiPositionObjectStage",
-          "declaration": {
-            "name": "QtiPositionObjectStage",
-            "module": "src/lib/qti-components/qti-interaction/qti-position-object-interaction/qti-position-object-stage.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-position-object-stage",
-          "declaration": {
-            "name": "QtiPositionObjectStage",
-            "module": "src/lib/qti-components/qti-interaction/qti-position-object-interaction/qti-position-object-stage.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "src/lib/qti-components/qti-interaction/qti-slider-interaction/qti-slider-interaction.ts",
       "declarations": [
         {
           "kind": "class",
           "description": "",
           "name": "QtiSliderInteraction",
+          "cssProperties": [
+            {
+              "description": "shows the current value while sliding",
+              "name": "--show-value"
+            },
+            {
+              "description": "shows the ticks according to steps",
+              "name": "--show-ticks"
+            },
+            {
+              "description": "shows value for lower and upper boundary",
+              "name": "--show-bounds"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "-- slider inluding, bounds and ticks and value, use it for paddings and margins",
+              "name": "slider"
+            },
+            {
+              "description": "-- div for bounds, containing two divs for with min, and max bounds value",
+              "name": "bounds"
+            },
+            {
+              "description": "-- div for ticks, use lineair gradient and exposed css variables for styling",
+              "name": "ticks"
+            },
+            {
+              "description": "-- div for rail, style according to needs",
+              "name": "rail"
+            },
+            {
+              "description": "-- div, should be relative or absolute",
+              "name": "knob"
+            },
+            {
+              "description": "-- div, containing value",
+              "name": "value"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot where <qti-simple-choice> must be placed.",
+              "name": ""
+            },
+            {
+              "description": "slot where the prompt is placed.",
+              "name": "prompt"
+            }
+          ],
           "members": [],
+          "events": [
+            {
+              "name": "qti-register-interaction",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "emitted when the interaction wants to register itself",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "src/lib/qti-components/qti-interaction/internal/interaction/interaction.ts"
+              }
+            },
+            {
+              "name": "qti-interaction-response",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "emitted when the interaction changes",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "src/lib/qti-components/qti-interaction/internal/interaction/interaction.ts"
+              }
+            }
+          ],
           "attributes": [
             {
               "name": "value",
@@ -4215,30 +4257,9 @@
             "name": "Interaction",
             "module": "/src/lib/qti-components/qti-interaction/internal/interaction/interaction"
           },
+          "summary": "The SliderInteraction.Type (qti-slider-interaction) presents the candidate with a control for selecting a numerical value between a lower and upper bound.",
           "tagName": "qti-slider-interaction",
-          "customElement": true,
-          "events": [
-            {
-              "name": "qti-register-interaction",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "src/lib/qti-components/qti-interaction/internal/interaction/interaction.ts"
-              }
-            },
-            {
-              "name": "qti-interaction-response",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "src/lib/qti-components/qti-interaction/internal/interaction/interaction.ts"
-              }
-            }
-          ]
+          "customElement": true
         }
       ],
       "exports": [
@@ -4385,51 +4406,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-responseprocessing/qti-responseelse/qti-responseelse.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "QtiResponseElse",
-          "members": [],
-          "attributes": [
-            {
-              "name": "debugCalculateResult",
-              "type": {
-                "text": "object"
-              },
-              "fieldName": "debugCalculateResult"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "qti-response-else",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "QtiResponseElse",
-          "declaration": {
-            "name": "QtiResponseElse",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-responseelse/qti-responseelse.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-response-else",
-          "declaration": {
-            "name": "QtiResponseElse",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-responseelse/qti-responseelse.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-condition-expression.ts",
       "declarations": [
         {
@@ -4486,6 +4462,51 @@
           "declaration": {
             "name": "QtiExpression",
             "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-expression.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/lib/qti-components/qti-responseprocessing/qti-responseelse/qti-responseelse.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiResponseElse",
+          "members": [],
+          "attributes": [
+            {
+              "name": "debugCalculateResult",
+              "type": {
+                "text": "object"
+              },
+              "fieldName": "debugCalculateResult"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "qti-response-else",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiResponseElse",
+          "declaration": {
+            "name": "QtiResponseElse",
+            "module": "src/lib/qti-components/qti-responseprocessing/qti-responseelse/qti-responseelse.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-response-else",
+          "declaration": {
+            "name": "QtiResponseElse",
+            "module": "src/lib/qti-components/qti-responseprocessing/qti-responseelse/qti-responseelse.ts"
           }
         }
       ]
@@ -5158,14 +5179,6 @@
               "fieldName": "maxChoices"
             },
             {
-              "name": "shuffle",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "shuffle"
-            },
-            {
               "name": "response-identifier",
               "type": {
                 "text": "string"
@@ -5657,55 +5670,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-responseprocessing/qti-responseelse/qti-responseif/qti-responseif.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "QtiResponseIf",
-          "members": [],
-          "superclass": {
-            "name": "QtiResponseElse",
-            "module": "/src/lib/qti-components/qti-responseprocessing/qti-responseelse/qti-responseelse"
-          },
-          "tagName": "qti-response-if",
-          "customElement": true,
-          "attributes": [
-            {
-              "name": "debugCalculateResult",
-              "type": {
-                "text": "object"
-              },
-              "fieldName": "debugCalculateResult",
-              "inheritedFrom": {
-                "name": "QtiResponseElse",
-                "module": "src/lib/qti-components/qti-responseprocessing/qti-responseelse/qti-responseelse.ts"
-              }
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "QtiResponseIf",
-          "declaration": {
-            "name": "QtiResponseIf",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-responseelse/qti-responseif/qti-responseif.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-response-if",
-          "declaration": {
-            "name": "QtiResponseIf",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-responseelse/qti-responseif/qti-responseif.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-and/qti-and.ts",
       "declarations": [
         {
@@ -6060,6 +6024,78 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-lt/qti-lt.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiLt",
+          "members": [],
+          "superclass": {
+            "name": "QtiExpression",
+            "module": "/src/lib/qti-components/qti-responseprocessing/qti-expression/qti-expression"
+          },
+          "tagName": "qti-lt",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiLt",
+          "declaration": {
+            "name": "QtiLt",
+            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-lt/qti-lt.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-lt",
+          "declaration": {
+            "name": "QtiLt",
+            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-lt/qti-lt.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-lte/qti-lte.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiLte",
+          "members": [],
+          "superclass": {
+            "name": "QtiConditionExpression",
+            "module": "/src/lib/qti-components/qti-responseprocessing/qti-expression/qti-condition-expression"
+          },
+          "tagName": "qti-lte",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiLte",
+          "declaration": {
+            "name": "QtiLte",
+            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-lte/qti-lte.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-lte",
+          "declaration": {
+            "name": "QtiLte",
+            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-lte/qti-lte.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-mapping/qti-mapping.ts",
       "declarations": [
         {
@@ -6339,6 +6375,55 @@
           "declaration": {
             "name": "QtiVariable",
             "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-variable/qti-variable.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/lib/qti-components/qti-responseprocessing/qti-responseelse/qti-responseif/qti-responseif.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiResponseIf",
+          "members": [],
+          "superclass": {
+            "name": "QtiResponseElse",
+            "module": "/src/lib/qti-components/qti-responseprocessing/qti-responseelse/qti-responseelse"
+          },
+          "tagName": "qti-response-if",
+          "customElement": true,
+          "attributes": [
+            {
+              "name": "debugCalculateResult",
+              "type": {
+                "text": "object"
+              },
+              "fieldName": "debugCalculateResult",
+              "inheritedFrom": {
+                "name": "QtiResponseElse",
+                "module": "src/lib/qti-components/qti-responseprocessing/qti-responseelse/qti-responseelse.ts"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiResponseIf",
+          "declaration": {
+            "name": "QtiResponseIf",
+            "module": "src/lib/qti-components/qti-responseprocessing/qti-responseelse/qti-responseif/qti-responseif.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-response-if",
+          "declaration": {
+            "name": "QtiResponseIf",
+            "module": "src/lib/qti-components/qti-responseprocessing/qti-responseelse/qti-responseif/qti-responseif.ts"
           }
         }
       ]

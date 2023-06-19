@@ -503,7 +503,7 @@
     },
     {
       "name": "qti-slider-interaction",
-      "description": "\n\n\n---\n\n\n\n\n### **Events:**\n - **qti-register-interaction** - undefined\n- **qti-interaction-response** - undefined",
+      "description": "The SliderInteraction.Type (qti-slider-interaction) presents the candidate with a control for selecting a numerical value between a lower and upper bound.\n\n\n---\n\n\n\n\n### **Events:**\n - **qti-register-interaction** - emitted when the interaction wants to register itself\n- **qti-interaction-response** - emitted when the interaction changes\n\n### **Slots:**\n - _default_ - The default slot where <qti-simple-choice> must be placed.\n- **prompt** - slot where the prompt is placed.\n\n### **CSS Properties:**\n - **--show-value** - shows the current value while sliding _(default: undefined)_\n- **--show-ticks** - shows the ticks according to steps _(default: undefined)_\n- **--show-bounds** - shows value for lower and upper boundary _(default: undefined)_\n\n### **CSS Parts:**\n - **slider** - -- slider inluding, bounds and ticks and value, use it for paddings and margins\n- **bounds** - -- div for bounds, containing two divs for with min, and max bounds value\n- **ticks** - -- div for ticks, use lineair gradient and exposed css variables for styling\n- **rail** - -- div for rail, style according to needs\n- **knob** - -- div, should be relative or absolute\n- **value** - -- div, containing value",
       "attributes": [
         { "name": "value", "values": [] },
         { "name": "step-label", "values": [] },
@@ -548,17 +548,17 @@
       "references": []
     },
     {
+      "name": "qti-expression",
+      "description": "\n\n\n---\n\n\n",
+      "attributes": [],
+      "references": []
+    },
+    {
       "name": "qti-response-else",
       "description": "\n\n\n---\n\n\n",
       "attributes": [
         { "name": "debugCalculateResult", "values": [{ "name": "object" }] }
       ],
-      "references": []
-    },
-    {
-      "name": "qti-expression",
-      "description": "\n\n\n---\n\n\n",
-      "attributes": [],
       "references": []
     },
     {
@@ -620,14 +620,6 @@
           "description": "readonly should be exposed to the attributes and accessible as property",
           "values": []
         }
-      ],
-      "references": []
-    },
-    {
-      "name": "qti-response-if",
-      "description": "\n\n\n---\n\n\n",
-      "attributes": [
-        { "name": "debugCalculateResult", "values": [{ "name": "object" }] }
       ],
       "references": []
     },
@@ -706,6 +698,18 @@
       "references": []
     },
     {
+      "name": "qti-lt",
+      "description": "\n\n\n---\n\n\n",
+      "attributes": [],
+      "references": []
+    },
+    {
+      "name": "qti-lte",
+      "description": "\n\n\n---\n\n\n",
+      "attributes": [],
+      "references": []
+    },
+    {
       "name": "qti-mapping",
       "description": "\n\n\n---\n\n\n",
       "attributes": [
@@ -749,6 +753,14 @@
       "name": "qti-variable",
       "description": "\n\n\n---\n\n\n",
       "attributes": [],
+      "references": []
+    },
+    {
+      "name": "qti-response-if",
+      "description": "\n\n\n---\n\n\n",
+      "attributes": [
+        { "name": "debugCalculateResult", "values": [{ "name": "object" }] }
+      ],
       "references": []
     },
     {
