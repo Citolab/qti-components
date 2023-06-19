@@ -5,12 +5,23 @@ import './qti-slider-interaction';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 import * as htmlToImage from 'html-to-image';
-import { toPng, toJpeg, toBlob, toPixelData, toSvg } from 'html-to-image';
-import { ref } from 'lit/directives/ref';
+import { StoryObj, Meta } from '@storybook/web-components';
 
-export default {
-  component: 'qti-slider-interaction'
+type Story = StoryObj; // <Props>;
+
+const meta: Meta = {
+  component: 'qti-slider-interaction',
+  argTypes: {
+    orientation: {
+      control: { type: 'radio' },
+      options: ['horizontal', 'vertical'],
+      table: { category: 'QTI' }
+    },
+    readonly: { control: { type: 'boolean' } },
+    disabled: { control: { type: 'boolean' } }
+  }
 };
+export default meta;
 
 type Interaction = {
   min: number;
@@ -33,17 +44,9 @@ export const Interaction = {
       const shot: HTMLImageElement = document.querySelector('.screenshot');
 
       htmlToImage
-        .toPng(interaction, {
-          width: parseInt(interaction.style.width),
-          height: parseInt(interaction.style.height),
-          pixelRatio: 2
-        })
-        .then(function (dataUrl) {
-          shot.src = dataUrl;
-        })
-        .catch(function (error) {
-          console.error('oops, something went wrong!', error);
-        });
+        .toPng(interaction)
+        .then(dataUrl => (shot.src = dataUrl))
+        .catch(error => console.error('oops, something went wrong!', error));
     };
 
     return html`

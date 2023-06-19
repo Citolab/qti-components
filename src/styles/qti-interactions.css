@@ -221,6 +221,9 @@ qti-graphic-gap-match-interaction {
 
 qti-slider-interaction {
   @apply block; /* else no screenshot will be made with html-to-image */
+
+  @apply hover:hov focus:foc aria-checked:act aria-readonly:rdo aria-disabled:dis;
+
   --qti-tick-color: rgb(229 231 235 / 1);
   --qti-tick-width: 2px;
 
@@ -244,9 +247,9 @@ qti-slider-interaction {
   }
 
   &::part(rail) {
-    @apply box-border; /* if you have a border in the design apply, the border will stay INSIDE the rail */
     @apply flex items-center; /* so the knob is neatly centered vertically */
-    /* the rest is design, feel free to alter */
+    /* DESIGN */
+    @apply box-border; /* if you have a border in the design apply, this box-border will make the border stay INSIDE the rail */
     @apply h-3 w-full cursor-pointer rounded-full border-solid border-gray-200 bg-gray-100;
   }
 
