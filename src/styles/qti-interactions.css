@@ -220,40 +220,46 @@ qti-graphic-gap-match-interaction {
 }
 
 qti-slider-interaction {
-  @apply block;
+  @apply block; /* else no screenshot will be made with html-to-image */
   --qti-tick-color: rgb(229 231 235 / 1);
   --qti-tick-width: 2px;
 
   &::part(slider) {
-    @apply mx-8;
+    @apply mx-8; /* so the slider stays INSIDE of the qti-slider-interaction */
+    @apply pb-4 pt-5; /* this keeps all content in the qti-slider interaction, also for html-to-image */
   }
 
   --show-bounds: true;
   &::part(bounds) {
-    @apply flex w-full justify-between;
+    @apply flex w-full justify-between; /* the two divs with value lower and upper will now be at start and end of this bounds container */
+    @apply mb-2; /* just so it aligns with the value 'knob' */
   }
 
   --show-ticks: true;
   &::part(ticks) {
-    @apply mb-1 h-2;
+    @apply mx-0.5 mb-1 h-2; /* absolute height for the ticks, and keep distance of the rail. push them 0.5 inward */
     background-position: 0 center;
     background: linear-gradient(to right, var(--qti-tick-color) var(--qti-tick-width), transparent 1px) repeat-x;
     background-size: calc(calc(100% - var(--qti-tick-width)) / ((var(--max) - var(--min)) / var(--step))) 100%;
   }
 
   &::part(rail) {
-    @apply flex h-3 w-full items-center rounded-full border-solid border-gray-200 bg-gray-100;
+    @apply box-border; /* if you have a border in the design apply, the border will stay INSIDE the rail */
+    @apply flex items-center; /* so the knob is neatly centered vertically */
+    /* the rest is design, feel free to alter */
+    @apply h-3 w-full cursor-pointer rounded-full border-solid border-gray-200 bg-gray-100;
   }
 
   &::part(knob) {
-    @apply relative h-5 w-5 origin-center -translate-x-1/2 cursor-pointer rounded-full bg-primary-500;
-    /* transform: translateX(var(--value-percentage)); */
+    @apply relative h-6 w-6 origin-center -translate-x-1/2 cursor-pointer rounded-full bg-primary-500;
     left: var(--value-percentage);
   }
 
   --show-value: true;
   &::part(value) {
-    @apply absolute bottom-4 m-2 w-[4ch] -translate-x-1/2 cursor-pointer rounded bg-primary-500 py-1 text-center;
+    @apply absolute bottom-8; /* align the value, which you can drag, on top of the knob, so it aligns with the rest of the values */
+    @apply left-3; /* should be half width of the knob if you want to center these two */
+    @apply -translate-x-1/2 cursor-pointer rounded bg-primary-500 px-4 py-2 text-center;
   }
 }
 
