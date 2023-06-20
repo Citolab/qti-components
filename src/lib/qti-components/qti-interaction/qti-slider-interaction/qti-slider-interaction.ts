@@ -1,4 +1,4 @@
-import { css, html, nothing } from 'lit';
+import { LitElement, css, html, nothing } from 'lit';
 import { state, property, query } from 'lit/decorators.js';
 
 import { Interaction } from '../internal/interaction/interaction';
@@ -82,6 +82,9 @@ export class QtiSliderInteraction extends Interaction {
   validate(): boolean {
     return true;
   }
+
+  // static shadowRootOptions: ShadowRootInit = { ...LitElement.shadowRootOptions, delegatesFocus: true, mode: 'open' };
+
   constructor() {
     super();
     /* the computed style is a live property, we use this to get css variables
