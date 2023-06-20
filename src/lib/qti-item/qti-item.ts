@@ -56,9 +56,6 @@ export class QtiItem extends ScaleToFitMixin(LitElement, 'qti-assessment-item') 
     const oldVal = this._xml;
     this._xml = val;
     this.requestUpdate('xml', oldVal);
-    requestAnimationFrame(() => {
-      this._item?.classList.add('qti-theme-raised');
-    });
   }
 
   @property({ type: String })
