@@ -30,6 +30,9 @@
     },
     "./qti-transform": {
       "import": "./dist/qti-transform/index.js"
+    },
+    "./index.css": {
+      "import": "./dist/index.css"
     }
   },
   "style": "dist/index.css",
