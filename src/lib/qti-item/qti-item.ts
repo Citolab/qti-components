@@ -61,7 +61,7 @@ export class QtiItem extends LitElement {
 
   static override styles = css`
     :host {
-      display: block; /* necessary to calculate scaling position */
+      display: block;
     }
   `;
 
