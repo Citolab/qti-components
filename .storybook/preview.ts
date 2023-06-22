@@ -2,12 +2,12 @@ import '../src/styles.css';
 import type { Preview } from '@storybook/web-components';
 import { withThemeByClassName } from '@storybook/addon-styling';
 
-import { setCustomElementsManifest } from '@storybook/web-components';
-import customElements from '../custom-elements.json';
-setCustomElementsManifest(customElements);
+// import { setCustomElementsManifest } from '@storybook/web-components';
+// import customElements from '../custom-elements.json';
+// setCustomElementsManifest(customElements);
 
-import { withTests } from '@storybook/addon-jest';
-import results from '../.jest-test-results.json';
+// import { withTests } from '@storybook/addon-jest';
+// import results from '../.jest-test-results.json';
 
 export const decorators = [
   // withTests({
