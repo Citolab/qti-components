@@ -72,7 +72,7 @@
     "deploy": "firebase deploy --only hosting:qti-components",
     "build-storybook": "storybook build",
     "prepare": "npm run build-lib",
-    "publish:latest": "np",
+    "publish": "np",
     "test-storybook": "test-storybook",
     "cem": "cem analyze --watch",
     "lint": "eslint src/lib/**",
