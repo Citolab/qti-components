@@ -18,7 +18,8 @@ const meta: Meta = {
       table: { category: 'QTI' }
     },
     readonly: { control: { type: 'boolean' } },
-    disabled: { control: { type: 'boolean' } }
+    disabled: { control: { type: 'boolean' } },
+    step: { control: { type: 'number' } }
   }
 };
 export default meta;
