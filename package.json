@@ -72,7 +72,7 @@
     "deploy": "firebase deploy --only hosting:qti-components",
     "build-storybook": "storybook build",
     "prepublishOnly": "echo 'calling prepublishOnly as npm lifecycle hook to build-lib!' && npm run build-lib",
-    "publish": "npx np",
+    "publish": "np",
     "test-storybook": "test-storybook",
     "cem": "cem analyze --watch",
     "lint": "eslint src/lib/**",
@@ -85,7 +85,8 @@
     "cheerio": "^1.0.0-rc.12",
     "haunted": "^5.0.0",
     "lit": "^2.6.1",
-    "lit-xml": "^0.5.0"
+    "lit-xml": "^0.5.0",
+    "np": "^8.0.4"
   },
   "peerdependencies": {
     "@lit-labs/context": "^0.3.0",

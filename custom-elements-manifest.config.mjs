@@ -1,4 +1,4 @@
-// import { generateCustomData } from 'cem-plugin-vs-code-custom-data-generator';
+import { generateCustomData } from 'cem-plugin-vs-code-custom-data-generator';
 
 const outdir = './'
 
