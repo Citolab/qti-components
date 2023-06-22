@@ -1,17 +1,15 @@
-import React, { ForwardRefExoticComponent } from 'react';
+import React, { ForwardRefExoticComponent, Ref } from 'react';
 import { createComponent } from '@lit-labs/react';
 
 import { QtiItem as QtiItemComponent } from '../qti-item/qti-item';
 import { OutcomeChangedDetails, ResponseInteraction, InteractionChangedDetails } from '../qti-components';
 
 interface QtiItemProps {
-  ref?: any;
+  ref?: Ref<QtiItemComponent>;
   className?: string;
-  scales?: boolean;
   responses?: ResponseInteraction[];
   xml: string;
   disabled?: boolean;
-  readonly?: boolean;
   qtiContext?: {
     view: 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor';
   };
