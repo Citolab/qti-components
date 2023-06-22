@@ -161,7 +161,7 @@ qti-associate-interaction {
     background: linear-gradient(
       180deg,
       rgb(0 0 0 / 0%) calc(50% - 1px),
-      #ff0000 calc(50%),
+      #000000 calc(50%),
       rgb(0 0 0 / 0%) calc(50% + 1px)
     );
   }
