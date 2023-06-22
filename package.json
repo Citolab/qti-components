@@ -71,7 +71,7 @@
     "storybook": "storybook dev -p 6006",
     "deploy": "firebase deploy --only hosting:qti-components",
     "build-storybook": "storybook build",
-    "prepare": "echo 'calling prepare as npm lifecycle hook to build-lib!' && npm run build-lib",
+    "prepublishOnly": "echo 'calling prepublishOnly as npm lifecycle hook to build-lib!' && npm run build-lib",
     "publish": "np",
     "test-storybook": "test-storybook",
     "cem": "cem analyze --watch",
