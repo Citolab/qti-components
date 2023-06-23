@@ -4,7 +4,7 @@ import { Interaction } from '../internal/interaction/interaction';
 import { resetCss } from '../../utilities/reset-styles/reset-shadowroot-styles';
 import { ref, createRef } from 'lit/directives/ref.js';
 import { customElement, property, state } from 'lit/decorators.js';
-import { watch } from '../../utilities/decorators/watch';
+import { watch } from '../../../decorators/watch';
 
 @customElement('qti-extended-text-interaction')
 export class QtiExtendedTextInteraction extends Interaction {

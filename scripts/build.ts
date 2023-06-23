@@ -1,10 +1,7 @@
 import chalk from 'chalk';
 import { execSync } from 'child_process';
 import tsup, { Options } from 'tsup';
-import { sassPlugin } from 'esbuild-sass-plugin';
 import { InlineCSSPlugin } from './inline-css-plugin.js';
-import fs from 'fs';
-import path from 'path';
 
 console.log('Building the project...');
 
@@ -35,14 +32,14 @@ const outdir = 'dist';
         //
         // NOTE: Entry points must be mapped in package.json > exports, otherwise users won't be able to import them!
         //
+        // decorators
+        './src/lib/decorators/index.ts',
         // qti-components
         './src/lib/qti-components/index.ts',
         // qti-item
         './src/lib/qti-item/index.ts',
         // qti-item-react
         './src/lib/qti-item-react/index.ts',
-        // qti-test
-        './src/lib/qti-test/index.ts',
         // qti-transform
         './src/lib/qti-transform/index.ts'
       ],
@@ -80,13 +77,7 @@ const outdir = 'dist';
       // necessary so the peerdependencies in the package.json will still be included in thuis build
       // https://github.com/egoist/tsup/issues/619#issuecomment-1420423401
       noExternal: [/(.*)/],
-      esbuildPlugins: [
-        // sassPlugin({
-        //   filter: /.*\?inline$/,
-        //   type: 'css-text'
-        // }),
-        InlineCSSPlugin
-      ]
+      esbuildPlugins: [InlineCSSPlugin]
     })
     .catch(err => {
       console.error(chalk.red(err));

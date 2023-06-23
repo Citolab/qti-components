@@ -1,4 +1,4 @@
-import { watch } from '../../../utilities/decorators/watch';
+import { watch } from '../../../../decorators/watch';
 import { Interaction } from '../interaction/interaction';
 import { property, state } from 'lit/decorators.js';
 import { QtiChoice } from '../choice/qti-choice';

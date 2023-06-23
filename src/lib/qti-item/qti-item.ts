@@ -3,7 +3,7 @@ import { type QtiAssessmentItem } from '../qti-components/qti-assessment-item/qt
 import { css, html, LitElement } from 'lit';
 
 import { customElement, property, state } from 'lit/decorators.js';
-import { watch } from '../qti-components/utilities/decorators/watch';
+import { watch } from '../decorators/watch';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { loggerContext } from '../qti-components/utilities/context/context';
 import { ContextProvider } from '@lit-labs/context';

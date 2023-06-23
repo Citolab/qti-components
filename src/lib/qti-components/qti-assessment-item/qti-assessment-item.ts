@@ -2,7 +2,7 @@ import { customElement, property } from 'lit/decorators.js';
 import { html, LitElement } from 'lit';
 import { OutcomeVariable } from '../qti-utilities/OutcomeVariable';
 import { ResponseVariable } from '../qti-utilities/ResponseVariable';
-import { watch } from '../utilities/decorators/watch';
+import { watch } from '../../decorators/watch';
 import type { ResponseInteraction } from '../qti-utilities/ExpressionResult';
 import type { Interaction } from '../qti-interaction/internal/interaction/interaction';
 import type { InteractionChangedDetails, OutcomeChangedDetails } from '../qti-utilities/EventTypes';

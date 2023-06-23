@@ -2,7 +2,7 @@ import { LitElement, css, html, nothing } from 'lit';
 import { state, property, query } from 'lit/decorators.js';
 
 import { Interaction } from '../internal/interaction/interaction';
-import { watch } from '../../utilities/decorators/watch';
+import { watch } from '../../../decorators/watch';
 
 /**
  * @summary The SliderInteraction.Type (qti-slider-interaction) presents the candidate with a control for selecting a numerical value between a lower and upper bound.

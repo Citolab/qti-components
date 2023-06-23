@@ -1,6 +1,6 @@
 import { html } from 'lit/static-html.js';
 import { property } from 'lit/decorators.js';
-import { watch } from '../../../utilities/decorators/watch';
+import { watch } from '../../../../decorators/watch';
 import { LitElement } from 'lit';
 
 const KEYCODE = {

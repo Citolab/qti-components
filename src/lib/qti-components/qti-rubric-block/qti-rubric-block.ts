@@ -3,7 +3,7 @@ import { customElement, property } from 'lit/decorators.js';
 import { ContextConsumer } from '@lit-labs/context';
 import { loggerContext } from '../utilities/context/context';
 
-import { watch } from '../utilities/decorators/watch';
+import { watch } from '../../decorators/watch';
 
 @customElement('qti-rubric-block')
 export class qtiRubricBlock extends LitElement {
