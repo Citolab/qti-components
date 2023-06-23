@@ -32,6 +32,8 @@ const outdir = 'dist';
         //
         // NOTE: Entry points must be mapped in package.json > exports, otherwise users won't be able to import them!
         //
+        // context
+        './src/lib/context/index.ts',
         // decorators
         './src/lib/decorators/index.ts',
         // qti-components

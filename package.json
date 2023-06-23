@@ -19,6 +19,9 @@
     ".": {
       "import": "./dist/qti-components/index.js"
     },
+    "./context": {
+      "import": "./dist/context/index.js"
+    },
     "./decorators": {
       "import": "./dist/decorators/index.js"
     },
@@ -44,6 +47,9 @@
     "*": {
       ".": [
         "./dist/index.d.ts"
+      ],
+      "context": [
+        "./dist/context/index.d.ts"
       ],
       "decorators": [
         "./dist/decorators/index.d.ts"
