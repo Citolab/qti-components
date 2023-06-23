@@ -1,5 +1,4 @@
 import { css, html } from 'lit';
-import { resetCss } from '../../utilities/reset-styles/reset-shadowroot-styles';
 import { Events } from '../../qti-utilities/EventStrings';
 import { Interaction } from '../internal/interaction/interaction';
 
@@ -43,7 +42,6 @@ export class QtiInlineChoiceInteraction extends Interaction {
 
   static override get styles() {
     return [
-      resetCss,
       css`
         :host {
           display: inline-block;

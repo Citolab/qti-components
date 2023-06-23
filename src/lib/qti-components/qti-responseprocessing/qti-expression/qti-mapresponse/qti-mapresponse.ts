@@ -1,6 +1,6 @@
-import { QtiExpression } from "../qti-expression";
-import { property } from "lit/decorators.js";
-import { ScoringHelper } from "../../../utilities/scoring/scoring-helper";
+import { QtiExpression } from '../qti-expression';
+import { property } from 'lit/decorators.js';
+import { ScoringHelper } from '../../utilities/scoring-helper';
 
 export class QtiMapResponse extends QtiExpression<number> {
   @property({ type: String }) identifier: string;
@@ -8,17 +8,17 @@ export class QtiMapResponse extends QtiExpression<number> {
   public override calculate(): number {
     const response = this.assessmentItem.getResponse(this.identifier);
     if (!response) {
-      console.warn(`Response ${this.identifier} can not be found`)
-      return null
+      console.warn(`Response ${this.identifier} can not be found`);
+      return null;
     }
     const mapping = response.mapping;
     const candidateResponses = !Array.isArray(response.value) ? [response.value] : response.value;
     let result = 0;
-    for(const candidateResponse of candidateResponses) {
+    for (const candidateResponse of candidateResponses) {
       const mappedValue = mapping.mapEntries.find(entry => {
         return ScoringHelper.compareSingleValues(entry.mapKey, candidateResponse, response.baseType);
       });
-      if(!(mappedValue == null || mappedValue.mappedValue == undefined)) {
+      if (!(mappedValue == null || mappedValue.mappedValue == undefined)) {
         result += mappedValue.mappedValue;
       } else {
         result += mapping.defaultValue;
@@ -34,4 +34,4 @@ export class QtiMapResponse extends QtiExpression<number> {
   }
 }
 
-customElements.define("qti-map-response", QtiMapResponse);
+customElements.define('qti-map-response', QtiMapResponse);

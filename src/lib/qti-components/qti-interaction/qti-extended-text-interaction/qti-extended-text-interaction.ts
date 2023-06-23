@@ -1,7 +1,6 @@
 import { css, html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { Interaction } from '../internal/interaction/interaction';
-import { resetCss } from '../../utilities/reset-styles/reset-shadowroot-styles';
 import { ref, createRef } from 'lit/directives/ref.js';
 import { customElement, property, state } from 'lit/decorators.js';
 import { watch } from '../../../decorators/watch';
@@ -47,7 +46,6 @@ export class QtiExtendedTextInteraction extends Interaction {
 
   static override get styles() {
     return [
-      resetCss,
       css`
         /* PK: display host as block, else design will be collapsed */
         :host {

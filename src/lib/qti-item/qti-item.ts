@@ -5,7 +5,7 @@ import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { watch } from '../decorators/watch';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
-import { loggerContext } from '../qti-components/utilities/context/context';
+import { loggerContext } from '../context/context';
 import { ContextProvider } from '@lit-labs/context';
 
 import styles from '../../styles.css?inline';

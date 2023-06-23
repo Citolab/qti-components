@@ -1,7 +1,6 @@
 import { css, html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { Interaction } from '../internal/interaction/interaction';
-import { resetCss } from '../../utilities/reset-styles/reset-shadowroot-styles';
 import { customElement, property, state } from 'lit/decorators.js';
 
 @customElement('qti-text-entry-interaction')
@@ -39,7 +38,6 @@ export class QtiTextEntryInteraction extends Interaction {
 
   static override get styles() {
     return [
-      resetCss,
       css`
         /* PK: display host as block, else design will be collapsed */
         :host {
