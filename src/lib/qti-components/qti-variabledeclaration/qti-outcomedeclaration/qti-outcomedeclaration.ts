@@ -8,26 +8,17 @@ export class QtiOutcomeDeclaration extends QtiVariableDeclaration {
   }
 
   get interpolationTable() {
-    const table = this.querySelector("qti-interpolation-table");
+    const table = this.querySelector('qti-interpolation-table');
     if (table) {
       const entries = new Map<number, number>();
-      for (const entry of table.querySelectorAll(
-        "qti-interpolation-table-entry"
-      )) {
-        if (
-          !entry.getAttribute("source-value") &&
-          entry.getAttribute("target-value")
-        ) {
-          console.error(
-            "source-value or target-value is missing in qti-interpolation-table-entry"
-          );
+      for (const entry of table.querySelectorAll('qti-interpolation-table-entry')) {
+        if (!entry.getAttribute('source-value') && entry.getAttribute('target-value')) {
+          console.error('source-value or target-value is missing in qti-interpolation-table-entry');
         }
-        const sourceValue = parseInt(entry.getAttribute("source-value"));
-        const targetValue = parseInt(entry.getAttribute("target-value"));
+        const sourceValue = parseInt(entry.getAttribute('source-value'));
+        const targetValue = parseInt(entry.getAttribute('target-value'));
         if (isNaN(sourceValue) || isNaN(targetValue)) {
-          console.error(
-            "source-value or target-value is not a number in qti-interpolation-table-entry"
-          );
+          console.error('source-value or target-value is not a number in qti-interpolation-table-entry');
         }
         entries.set(sourceValue, targetValue);
       }
@@ -41,8 +32,10 @@ export class QtiOutcomeDeclaration extends QtiVariableDeclaration {
     const identifier = this.getAttribute('identifier');
     const outcomeVariable = new OutcomeVariable();
     outcomeVariable.identifier = identifier;
+    // outcome variables can have a default value
+    // TODO: cardinality multiple not supported
+    outcomeVariable.value = this.querySelector('qti-default-value qti-value')?.innerHTML;
 
-    // this.emit("qti-register-variable", { detail: { variable: outcomeVariable } });
     this.dispatchEvent(
       new CustomEvent('qti-register-variable', {
         bubbles: true,

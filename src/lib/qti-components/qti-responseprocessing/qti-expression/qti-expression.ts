@@ -55,7 +55,18 @@ export class QtiExpression<T> extends LitElement {
             } as ResponseVariable;
           }
           default: {
-            return null;
+            // added for use of qti-equal-rounded
+            try {
+              const expression = e as QtiExpression<number>;
+              const value = expression.calculate();
+              return {
+                baseType: 'integer',
+                value: value.toString(),
+                cardinality: 'single'
+              } as ResponseVariable;
+            } catch (error) {
+              console.warn('default not sufficient');
+            }
           }
         }
       })

@@ -1,5 +1,6 @@
-import { LitElement } from 'lit';
+import { LitElement, PropertyValueMap } from 'lit';
 import { property } from 'lit/decorators.js';
+import { QtiAssessmentItem } from '../qti-assessment-item/qti-assessment-item';
 
 export abstract class QtiFeedback extends LitElement {
   @property({ type: String, attribute: 'show-hide' })
@@ -31,11 +32,13 @@ export abstract class QtiFeedback extends LitElement {
     );
   }
 
-  public checkShowFeedback(outcomeIdentifier: string, outcomeValue: number) {
+  public checkShowFeedback(outcomeIdentifier: string) {
+    const outcomeValue = (this.closest('qti-assessment-item') as QtiAssessmentItem).getOutcome(outcomeIdentifier);
+
     if (this.outcomeIdentifier !== outcomeIdentifier || !outcomeValue) return;
     const isFound = Array.isArray(outcomeValue)
       ? (outcomeValue as string[]).includes(this.identifier)
-      : this.identifier === outcomeValue.toString();
+      : this.identifier === outcomeValue?.value?.toString();
     this.showFeedback(isFound);
   }
 

@@ -25,6 +25,8 @@ export * from './qti-rubric-block/qti-content-body';
 /* start feedback */
 export * from './qti-feedback/qti-feedback-inline/qti-feedback-inline';
 export * from './qti-feedback/qti-modal-feedback/qti-modal-feedback';
+export * from './qti-feedback/qti-feedback-block/qti-feedback-block';
+
 /* end feedback */
 
 /* start textentryinteraction */
@@ -76,6 +78,9 @@ export * from './qti-interaction/qti-position-object-interaction/qti-position-ob
 export * from './qti-interaction/qti-select-point-interaction/qti-select-point-interaction';
 
 export * from './qti-interaction/qti-slider-interaction/qti-slider-interaction';
+
+export * from './qti-interaction/qti-end-attempt-interaction/qti-end-attempt-interaction';
+
 /* end only preview items */
 
 export * from './qti-interaction/qti-associable-hotspot';

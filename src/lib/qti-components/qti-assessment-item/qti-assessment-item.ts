@@ -101,10 +101,10 @@ export class QtiAssessmentItem extends LitElement {
   }
 
   public processResponse(): boolean {
-    if (!this.validateResponses()) {
-      console.info('Item is not valid, call validateResponses first');
-      return false;
-    }
+    // if (!this.validateResponses()) {
+    //   console.info('Item is not valid, call validateResponses first');
+    //   return false;
+    // }
     const responseProcessor = this.querySelector('qti-response-processing') as unknown as QtiResponseProcessing;
     if (!responseProcessor) {
       console.info('Client side response processing template not available');
@@ -219,8 +219,12 @@ export class QtiAssessmentItem extends LitElement {
 
   // checks the attributes of all feedback elements and shows/hides as appropriate.
   private outcomeChanged(event: CustomEvent<OutcomeChangedDetails>) {
+    this.showFeedback(event);
+  }
+
+  private showFeedback(event: CustomEvent<OutcomeChangedDetails>) {
     this.feedbackElements.forEach(fe => {
-      fe.checkShowFeedback(event.detail.outcomeIdentifier, event.detail.value);
+      fe.checkShowFeedback(event.detail.outcomeIdentifier); // , event.detail.value);
     });
   }
 
