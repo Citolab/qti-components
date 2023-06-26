@@ -19,7 +19,6 @@ export class QtiFeedbackBlock extends QtiFeedback {
   }
 
   protected firstUpdated(_changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
-    console.log('firstUpdated');
     this.checkShowFeedback(this.outcomeIdentifier);
   }
 }
