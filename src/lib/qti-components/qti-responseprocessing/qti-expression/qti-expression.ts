@@ -67,6 +67,7 @@ export class QtiExpression<T> extends LitElement {
             } catch (error) {
               console.warn('default not sufficient');
             }
+            return null;
           }
         }
       })
