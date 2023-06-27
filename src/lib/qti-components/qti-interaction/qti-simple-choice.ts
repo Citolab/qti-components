@@ -15,7 +15,7 @@ import { QtiChoice } from './internal/choice/qti-choice';
  * @slot - The default slot.
  */
 @customElement('qti-simple-choice')
-export default class QtiSimpleChoice extends QtiChoice {
+export class QtiSimpleChoice extends QtiChoice {
   override render() {
     return html`<div part="ch"><div part="cha"></div></div>
       <slot></slot> `;

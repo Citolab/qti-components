@@ -18,7 +18,7 @@ import { Choices } from '../internal/choices/choices';
  */
 
 @customElement('qti-choice-interaction')
-export default class QtiChoiceInteraction extends Choices {
+export class QtiChoiceInteraction extends Choices {
   static styles: CSSResultGroup = styles;
 
   /** orientation of choices */
