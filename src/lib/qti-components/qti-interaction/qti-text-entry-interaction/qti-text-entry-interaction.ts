@@ -44,7 +44,7 @@ export class QtiTextEntryInteraction extends Interaction {
           display: inline-block;
         }
         input {
-          padding: var(--qti-padding, 0.5rem);
+          border: 0;
         }
       `
     ];

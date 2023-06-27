@@ -6,8 +6,8 @@ import './qti-text-entry-interaction';
 
 const inputWidthClass = [
   '',
-  'qti-input-width-2',
   'qti-input-width-1',
+  'qti-input-width-2',
   'qti-input-width-3',
   'qti-input-width-4',
   'qti-input-width-6',
@@ -46,5 +46,17 @@ export const Interaction = {
       </qti-text-entry-interaction>
     `,
 
+  args: {}
+};
+
+export const Sizes = {
+  render: args =>
+    html`
+      ${inputWidthClass.map(
+        width =>
+          html`<qti-text-entry-interaction class=${width} response-identifier="RESPONSE"></qti-text-entry-interaction
+            ><br />`
+      )}
+    `,
   args: {}
 };

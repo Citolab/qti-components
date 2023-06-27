@@ -3,8 +3,8 @@ import { createRef, ref } from 'lit-html/directives/ref.js';
 
 import { action } from '@storybook/addon-actions';
 
-import '../../../index';
-import { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
+import '../lib/qti-components/index';
+import { QtiAssessmentItem } from '../lib/qti-components/qti-assessment-item/qti-assessment-item';
 
 export default {
   component: 'qti-printed-variable'
