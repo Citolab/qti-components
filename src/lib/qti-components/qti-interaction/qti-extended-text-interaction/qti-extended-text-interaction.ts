@@ -52,9 +52,9 @@ export class QtiExtendedTextInteraction extends Interaction {
           display: block;
         }
         textarea {
-          padding: var(--qti-padding, 0.5rem);
           width: 100%;
           height: 100%;
+          border: 0;
         }
       `
     ];
