@@ -2,6 +2,8 @@ import { css, html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { Interaction } from '../internal/interaction/interaction';
 import { customElement, property, state } from 'lit/decorators.js';
+import { watch } from '../../../decorators';
+import { createRef } from 'lit/directives/ref.js';
 
 @customElement('qti-text-entry-interaction')
 export class QtiTextEntryInteraction extends Interaction {
@@ -14,19 +16,22 @@ export class QtiTextEntryInteraction extends Interaction {
   @state()
   private _value = '';
 
+  @state()
+  private _size = 5;
+
+  inputRef = createRef<HTMLInputElement>();
+
   @property({ type: String, attribute: 'class' }) classNames;
-  // @watch('classNames', { waitUntilFirstUpdate: true })
-  // handleclassNamesChange(old, disabled: boolean) {
-  //   const classNames = this.classNames.split(' ');
-  //   classNames.forEach((className: string) => {
-  //     if (className.startsWith('qti-height-lines')) {
-  //       const nrRows = className.replace('qti-height-lines-', '');
-  //       if (this.textareaRef) {
-  //         this.textareaRef.value.rows = parseInt(nrRows);
-  //       }
-  //     }
-  //   });
-  // }
+  @watch('classNames')
+  handleclassNamesChange(old, classes: string) {
+    const classNames = classes.split(' ');
+    classNames.forEach((className: string) => {
+      if (className.startsWith('qti-input-width')) {
+        const nrRows = className.replace('qti-input-width-', '');
+        this._size = parseInt(nrRows);
+      }
+    });
+  }
 
   public set response(value: string | undefined) {
     this._value = value !== undefined ? value : '';
@@ -39,12 +44,8 @@ export class QtiTextEntryInteraction extends Interaction {
   static override get styles() {
     return [
       css`
-        /* PK: display host as block, else design will be collapsed */
         :host {
-          display: inline-block;
-        }
-        input {
-          border: 0;
+          display: inline-flex;
         }
       `
     ];
@@ -61,12 +62,13 @@ export class QtiTextEntryInteraction extends Interaction {
       type="text"
       placeholder="${ifDefined(this.placeholderText ? this.placeholderText : undefined)}"
       .value="${this._value}"
-      size="${ifDefined(this.expectedLength ? this.expectedLength : undefined)}"
+      size="${this._size}"
       pattern="${ifDefined(this.patternMask ? this.patternMask : undefined)}"
       ?disabled="${this.disabled}"
       ?readonly="${this.readonly}"
     />`;
   }
+  //
   // maxlength="${ifDefined(this.expectedLength ? this.expectedLength : undefined)}"
 
   protected textChanged(event: Event) {

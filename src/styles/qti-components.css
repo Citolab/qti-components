@@ -48,7 +48,7 @@
   }
   /* - text    : text-entry and extended-text */
   .text {
-    @apply base cursor-text rounded-sm p-3 text-gray-600 shadow-inner;
+    @apply base cursor-text rounded-sm border-0 p-3 text-gray-600 shadow-inner;
   }
 
   /* - spot    : gap-select-point, graphic-order, qti-graphic-associate */

@@ -17,7 +17,7 @@ qti-choice-interaction {
 qti-text-entry-interaction {
   @apply my-2;
   &::part(input) {
-    @apply text hover:hov focus:foc w-full;
+    @apply text hover:hov focus:foc;
   }
 }
 
