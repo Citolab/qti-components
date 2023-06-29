@@ -156,13 +156,13 @@ export class QtiAssessmentItem extends LitElement {
     return result;
   }
 
-  public getVariableValue(identifier: string): string | string[] | number | null {
+  public getVariable(identifier: string): VariableDeclaration<any> {
     const variable = this.variables.find(vr => vr.identifier === identifier);
     if (!variable) {
       console.warn(`Variable with identifier ${identifier} was not found`);
       return null;
     }
-    return variable.value;
+    return variable;
   }
 
   public getResponse(identifier: string): ResponseVariable | null {

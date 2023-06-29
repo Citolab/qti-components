@@ -1,10 +1,11 @@
+import { ResponseVariable } from '../../../qti-utilities/ResponseVariable';
 import { ScoringHelper } from '../../utilities/scoring-helper';
 import { QtiExpression } from '../qti-expression';
 
 export class QtiMatch extends QtiExpression<boolean> {
   public override calculate() {
     if (this.children.length === 2) {
-      const values = this.getVariables();
+      const values = this.getVariables() as ResponseVariable[];
       const valueToMap = values[0];
       const correctValueInfo = values[1];
       if (correctValueInfo.cardinality === 'single') {

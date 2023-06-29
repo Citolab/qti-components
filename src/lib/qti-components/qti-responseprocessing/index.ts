@@ -28,5 +28,5 @@ export * from './qti-expression/qti-variable/qti-variable';
 export * from './qti-expression/qti-multiple/qti-multiple';
 export * from './qti-expression/qti-ordered/qti-ordered';
 export * from './qti-expression/qti-printed-variable/qti-printed-variable';
-
+export * from './qti-expression/qti-member/qti-member';
 export * from './qti-expression/qti-mapping/qti-mapping';

@@ -1,3 +1,4 @@
+import { ResponseVariable } from '../../../qti-utilities/ResponseVariable';
 import { QtiExpression } from '../qti-expression';
 
 // PK: For the contains we assume the expressions to calculate are all directedPairs
@@ -5,7 +6,7 @@ import { QtiExpression } from '../qti-expression';
 export class QtiContains extends QtiExpression<boolean> {
   public override calculate() {
     // TODO: implement this for other types than directedPair
-    const values = this.getVariables();
+    const values = this.getVariables() as ResponseVariable[];
     if (this.children.length === 2) {
       const value1 = values[0];
       const value2 = values[1];

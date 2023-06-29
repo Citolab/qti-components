@@ -1,11 +1,14 @@
+import { property } from 'lit/decorators.js';
+import { BaseType, Cardinality } from '../../qti-utilities/ExpressionResult';
 import { OutcomeVariable } from '../../qti-utilities/OutcomeVariable';
 import { QtiVariableDeclaration } from '../qti-variabledeclaration';
 
 export class QtiOutcomeDeclaration extends QtiVariableDeclaration {
-  // fIXME: PK: attributes
-  static override get observedAttributes() {
-    return ['identifier', 'cardinality', 'base-type'];
-  }
+  @property({ type: String, attribute: 'base-type' }) baseType: BaseType;
+
+  @property({ type: String }) identifier: string;
+
+  @property({ type: String }) cardinality: Cardinality;
 
   get interpolationTable() {
     const table = this.querySelector('qti-interpolation-table');
@@ -29,12 +32,22 @@ export class QtiOutcomeDeclaration extends QtiVariableDeclaration {
   public override connectedCallback() {
     super.connectedCallback();
 
-    const identifier = this.getAttribute('identifier');
     const outcomeVariable = new OutcomeVariable();
-    outcomeVariable.identifier = identifier;
+    outcomeVariable.identifier = this.identifier;
+    outcomeVariable.cardinality = this.cardinality;
+    outcomeVariable.baseType = this.baseType;
+
     // outcome variables can have a default value
-    // TODO: cardinality multiple not supported
-    outcomeVariable.value = this.querySelector('qti-default-value qti-value')?.innerHTML;
+    const outcomeVariables = Array.from(this.querySelectorAll('qti-default-value > qti-value')).map(n => n.innerHTML);
+    if (outcomeVariables.length > 1) {
+      outcomeVariable.value = outcomeVariables;
+    }
+    if (outcomeVariables.length === 1) {
+      outcomeVariable.value = outcomeVariables[0];
+    }
+    if (!outcomeVariables) {
+      outcomeVariable.value = null;
+    }
 
     this.dispatchEvent(
       new CustomEvent('qti-register-variable', {

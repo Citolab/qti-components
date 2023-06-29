@@ -1,13 +1,14 @@
 import { property } from 'lit/decorators.js';
 import { ScoringHelper } from '../../utilities/scoring-helper';
 import { QtiExpression } from '../qti-expression';
+import { ResponseVariable } from '../../../qti-utilities/ResponseVariable';
 
 export class QtiEqual extends QtiExpression<boolean> {
   @property({ type: String }) toleranceMode: 'exact' | 'relative' | 'absolute' = 'exact';
 
   public override calculate() {
     if (this.children.length === 2) {
-      const values = this.getVariables();
+      const values = this.getVariables() as ResponseVariable[];
       const value1 = values[0];
       const value2 = values[1];
       if (this.toleranceMode !== 'exact') {

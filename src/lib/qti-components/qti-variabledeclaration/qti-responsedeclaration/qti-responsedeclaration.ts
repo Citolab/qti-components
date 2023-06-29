@@ -1,19 +1,15 @@
-import { QtiVariableDeclaration } from "../qti-variabledeclaration";
-import { ResponseVariable } from "../../qti-utilities/ResponseVariable";
-import {
-  BaseType,
-  Cardinality,
-} from "../../qti-utilities/ExpressionResult";
-import { property } from "lit/decorators.js";
-import { QtiMapping } from "../../qti-responseprocessing/qti-expression/qti-mapping/qti-mapping";
+import { QtiVariableDeclaration } from '../qti-variabledeclaration';
+import { ResponseVariable } from '../../qti-utilities/ResponseVariable';
+import { BaseType, Cardinality } from '../../qti-utilities/ExpressionResult';
+import { property } from 'lit/decorators.js';
+import { QtiMapping } from '../../qti-responseprocessing/qti-expression/qti-mapping/qti-mapping';
 
 export class QtiResponseDeclaration extends QtiVariableDeclaration {
-  @property({ type: String, attribute: "base-type" }) baseType: BaseType;
+  @property({ type: String, attribute: 'base-type' }) baseType: BaseType;
 
-  @property({ type: String, attribute: "identifier" }) identifier: string;
+  @property({ type: String }) identifier: string;
 
-  @property({ type: String, attribute: "cardinality" })
-  cardinality: Cardinality;
+  @property({ type: String }) cardinality: Cardinality;
 
   public override connectedCallback() {
     super.connectedCallback();
@@ -22,8 +18,8 @@ export class QtiResponseDeclaration extends QtiVariableDeclaration {
       baseType: this.baseType,
       identifier: this.identifier,
       correctResponse: this.correctResponse,
-      cardinality: this.cardinality || "single",
-      mapping: this.mapping,
+      cardinality: this.cardinality || 'single',
+      mapping: this.mapping
     });
 
     // this.emit("qti-register-variable", { detail: { variable: responseVariable } });
@@ -36,15 +32,15 @@ export class QtiResponseDeclaration extends QtiVariableDeclaration {
     );
   }
 
-  private get correctResponse(): string|string[] {
-    let result: string|string[];
-    const correctResponse = this.querySelector("qti-correct-response");
+  private get correctResponse(): string | string[] {
+    let result: string | string[];
+    const correctResponse = this.querySelector('qti-correct-response');
     if (correctResponse) {
-      const values = correctResponse.querySelectorAll("qti-value");
-      if (this.cardinality === "single" && values.length > 0) {
+      const values = correctResponse.querySelectorAll('qti-value');
+      if (this.cardinality === 'single' && values.length > 0) {
         result = values[0].textContent;
         values[0].remove();
-      } else if (this.cardinality !== "single") {
+      } else if (this.cardinality !== 'single') {
         result = [];
         for (let i = 0; i < values.length; i++) {
           result.push(values[i].textContent);
@@ -56,8 +52,8 @@ export class QtiResponseDeclaration extends QtiVariableDeclaration {
   }
 
   private get mapping() {
-    return this.querySelector("qti-mapping") as QtiMapping
+    return this.querySelector('qti-mapping') as QtiMapping;
   }
 }
 
-customElements.define("qti-response-declaration", QtiResponseDeclaration);
+customElements.define('qti-response-declaration', QtiResponseDeclaration);

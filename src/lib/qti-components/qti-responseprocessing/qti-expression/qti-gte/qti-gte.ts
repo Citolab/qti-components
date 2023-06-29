@@ -1,3 +1,4 @@
+import { ResponseVariable } from '../../../qti-utilities/ResponseVariable';
 import { QtiConditionExpression } from '../qti-condition-expression';
 
 // PK: For the contains we assume the expressions to calculate are all directedPairs
@@ -5,7 +6,7 @@ import { QtiConditionExpression } from '../qti-condition-expression';
 export class QtiGte extends QtiConditionExpression {
   public override calculate(): boolean {
     if (this.children.length === 2) {
-      const values = this.getVariables();
+      const values = this.getVariables() as ResponseVariable[];
       const value1 = values[0];
       const value2 = values[1];
       if (value1.baseType === value2.baseType && (value1.baseType === 'integer' || value1.baseType === 'float')) {

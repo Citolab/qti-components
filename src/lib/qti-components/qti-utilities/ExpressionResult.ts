@@ -18,7 +18,7 @@ export type integer = number;
 
 // export type string|string[] = string | string[];
 
-export type BaseType = 'boolean' | 'directedPair' | 'float' | 'integer' | 'string' | 'identifier' | 'pair';
+export type BaseType = 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'string' | 'identifier' | 'pair';
 
 export type Multiple = string | string[][];
 export type Ordered = string | string[][];
