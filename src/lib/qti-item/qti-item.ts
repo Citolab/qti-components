@@ -72,10 +72,12 @@ export class QtiItem extends LitElement {
 
   connectedCallback(): void {
     super.connectedCallback();
-    const sheet = new CSSStyleSheet();
-    sheet.replaceSync(styles);
-    // push the sheet onto the existing styles, else it overwrites the styles for scaling
-    this.shadowRoot.adoptedStyleSheets.push(sheet);
+    // const sheet = new CSSStyleSheet();
+    // sheet.replaceSync(styles);
+    // this.shadowRoot.adoptedStyleSheets.push(sheet);
+    const styleTag = document.createElement('style');
+    styleTag.textContent = styles;
+    this.shadowRoot.appendChild(styleTag);
   }
 
   override render = () => html`${unsafeHTML(this._xml)}`;
