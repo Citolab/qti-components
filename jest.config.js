@@ -3,15 +3,13 @@ export default {
   verbose: true,
   testEnvironment: "jsdom",
   transform: {
-    "^.+\\.(js|ts)$": "ts-jest",
-  },
-  transformIgnorePatterns: ["node_modules/(?!@?lit)"],
-  // modulePathIgnorePatterns: ['node_modules', '.jest-test-results.json'],
-  globals: {
-    "ts-jest": {
+    "^.+\\.(js|ts)$": ["ts-jest", {
       tsconfig: {
         allowJs: true,
       },
-    },
+    }]
   },
+  transformIgnorePatterns: ["node_modules/(?!@?lit)"],
+  // modulePathIgnorePatterns: ['node_modules', '.jest-test-results.json'],
+
 }
