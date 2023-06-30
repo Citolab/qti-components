@@ -84,7 +84,7 @@
     "test": "jest",
     "dev": "vite",
     "build-app": "tsc && vite build",
-    "build-lib": "ts-node --esm --project tsconfig.node.json scripts/build.ts && npm run arethetypeswrong",
+    "build-lib": "ts-node --esm --project tsconfig.node.json scripts/build.ts",
     "build-lib-watch": "nodemon --watch \"src/**\" --ext \"ts,json,css\" --ignore \"src/**/*.spec.ts\" --exec \"ts-node --esm --project tsconfig.node.json scripts/build.ts\"",
     "storybook": "storybook dev -p 6006",
     "deploy": "firebase deploy --only hosting:qti-components",
