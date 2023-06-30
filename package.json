@@ -14,28 +14,34 @@
   },
   "version": "6.0.20",
   "type": "module",
-  "main": "dist/qti-components/index.js",
+  "main": "dist/index.js",
   "exports": {
     ".": {
-      "import": "./dist/qti-components/index.js"
+      "import": "./dist/index.js"
     },
     "./context": {
-      "import": "./dist/context/index.js"
+      "import": "./dist/context/index.js",
+      "require": "./dist/context/index.cjs"
     },
     "./decorators": {
-      "import": "./dist/decorators/index.js"
+      "import": "./dist/decorators/index.js",
+      "require": "./dist/decorators/index.cjs"
     },
     "./qti-components": {
-      "import": "./dist/qti-components/index.js"
+      "import": "./dist/qti-components/index.js",
+      "require": "./dist/qti-components/index.cjs"
     },
     "./qti-item": {
-      "import": "./dist/qti-item/index.js"
+      "import": "./dist/qti-item/index.js",
+      "require": "./dist/qti-item/index.cjs"
     },
     "./react/qti-item": {
-      "import": "./dist/qti-item-react/index.js"
+      "import": "./dist/qti-item-react/index.js",
+      "require": "./dist/qti-item-react/index.cjs"
     },
     "./qti-transform": {
-      "import": "./dist/qti-transform/index.js"
+      "import": "./dist/qti-transform/index.js",
+      "require": "./dist/qti-transform/index.cjs"
     },
     "./index.css": {
       "import": "./dist/index.css"
@@ -78,7 +84,7 @@
     "test": "jest",
     "dev": "vite",
     "build-app": "tsc && vite build",
-    "build-lib": "ts-node --esm --project tsconfig.node.json scripts/build.ts",
+    "build-lib": "ts-node --esm --project tsconfig.node.json scripts/build.ts && npm run arethetypeswrong",
     "build-lib-watch": "nodemon --watch \"src/**\" --ext \"ts,json,css\" --ignore \"src/**/*.spec.ts\" --exec \"ts-node --esm --project tsconfig.node.json scripts/build.ts\"",
     "storybook": "storybook dev -p 6006",
     "deploy": "firebase deploy --only hosting:qti-components",
@@ -90,9 +96,11 @@
     "lint": "eslint src/lib/**",
     "kill 6006": "sudo lsof -i :6006 | grep LISTEN | awk '{print $2}' | xargs kill",
     "list-outdated-dependencies": "npx npm-check-updates --format repo --peer",
-    "update-dependencies": "npx npm-check-updates --peer -u && npm install"
+    "update-dependencies": "npx npm-check-updates --peer -u && npm install",
+    "arethetypeswrong": "attw --pack"
   },
   "dependencies": {
+    "@arethetypeswrong/cli": "^0.4.2",
     "@lit-labs/context": "^0.3.3",
     "@lit-labs/react": "^1.2.0",
     "@tailwindcss/nesting": "^0.0.0-insiders.565cd3e",
@@ -139,6 +147,7 @@
     "html-to-image": "^1.11.11",
     "jest-environment-jsdom": "^29.5.0",
     "nodemon": "^2.0.22",
+    "np": "^8.0.4",
     "postcss": "^8.4.24",
     "postcss-import": "^15.1.0",
     "postcss-nesting": "^11.3.0",
@@ -152,10 +161,9 @@
     "tailwindcss": "^3.3.2",
     "ts-jest": "^29.1.0",
     "ts-node": "^10.9.1",
-    "tsup": "^7.0.0",
+    "tsup": "^7.1.0",
     "typescript": "^5.1.3",
-    "vite": "^4.3.9",
-    "np": "^8.0.4"
+    "vite": "^4.3.9"
   },
   "customElements": "custom-elements.json"
 }
