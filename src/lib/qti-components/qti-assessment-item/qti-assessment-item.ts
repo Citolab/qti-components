@@ -228,13 +228,18 @@ export class QtiAssessmentItem extends LitElement {
     });
   }
 
-  public setOutcomeValue(identifier: string, value: number) {
+  public setOutcomeValue(identifier: string, value: string | number) {
     const outcomeIdentifier = this.getOutcome(identifier);
     if (!outcomeIdentifier) {
       console.warn(`Can not set qti-outcome-identifier: ${identifier}, it is not available`);
       return;
     }
-    outcomeIdentifier.value = value;
+
+    if (outcomeIdentifier.cardinality === 'single') {
+      outcomeIdentifier.value = value;
+    } else {
+      (outcomeIdentifier.value as any[]).push(value);
+    }
 
     this.dispatchEvent(
       new CustomEvent<OutcomeChangedDetails>('qti-outcome-changed', {

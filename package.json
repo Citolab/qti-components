@@ -89,7 +89,6 @@
     "storybook": "storybook dev -p 6006",
     "deploy": "firebase deploy --only hosting:qti-components",
     "build-storybook": "storybook build",
-    "prepublishOnly": "echo 'calling prepublishOnly as npm lifecycle hook to build-lib!' && npm run build-lib",
     "npm": "np",
     "test-storybook": "test-storybook",
     "cem": "cem analyze --watch",
@@ -97,7 +96,10 @@
     "kill 6006": "sudo lsof -i :6006 | grep LISTEN | awk '{print $2}' | xargs kill",
     "list-outdated-dependencies": "npx npm-check-updates --format repo --peer",
     "update-dependencies": "npx npm-check-updates --peer -u && npm install",
-    "arethetypeswrong": "attw --pack"
+    "arethetypeswrong": "attw --pack",
+    "----hooks----": "",
+    "prepublishOnly": "echo 'calling prepublishOnly as npm lifecycle hook to build-lib!' && npm run build-lib",
+    "postpublish": "npm run deploy"
   },
   "dependencies": {
     "@lit-labs/context": "^0.3.3",
