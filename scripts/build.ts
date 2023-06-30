@@ -63,5 +63,3 @@ try {
   });
   console.log(chalk.green(`The build has been generated at ${outdir}\n`));
 })();
-
-console.log('RURURURURURUARASUDASKDJASKDJASKDJASKJDASHDLASHDLASHDLASHDLHASLDHASLDHALSHDLASHDLHAS');
