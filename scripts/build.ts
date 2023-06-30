@@ -14,8 +14,6 @@ try {
   execSync(`ts-node --esm --project tsconfig.node.json scripts/make-css.ts --outdir "${outdir}"`, {
     stdio: 'inherit'
   });
-
-  // execSync(`tsup`, { stdio: "inherit" });
 } catch (err) {
   console.error(chalk.red(err));
   process.exit(1);
