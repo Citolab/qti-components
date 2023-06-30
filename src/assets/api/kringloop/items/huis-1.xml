@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<qti-assessment-item identifier="huis1" title="huis1">
+
+  <qti-response-declaration
+    identifier="RESPONSE"
+    cardinality="multiple"
+    base-type="identifier"
+  >
+    <qti-correct-response>
+      <qti-value>H</qti-value>
+      <qti-value>O</qti-value>
+    </qti-correct-response>
+    <qti-mapping lower-bound="0" upper-bound="2" default-value="-2">
+      <qti-map-entry map-key="sun" mapped-value="1"></qti-map-entry>
+      <qti-map-entry map-key="water" mapped-value="1"></qti-map-entry>
+      <qti-map-entry map-key="wind" mapped-value="1"></qti-map-entry>
+    </qti-mapping>
+  </qti-response-declaration>
+  <qti-outcome-declaration
+    identifier="SCORE"
+    cardinality="single"
+    base-type="float"
+  ></qti-outcome-declaration>
+  <qti-item-body>
+    <qti-choice-interaction
+      response-identifier="RESPONSE"
+      shuffle="true"
+      max-choices="0"
+    >
+      <qti-prompt>Welke energiebronnen zijn voorbeelden van hernieuwbare energie?</qti-prompt>
+
+      <qti-simple-choice identifier="coal">Kolen</qti-simple-choice>
+      <qti-simple-choice identifier="sun">Zon <qti-feedback-inline
+          outcome-identifier="FEEDBACK" identifier="C" show-hide="show"
+        >Goed</qti-feedback-inline>
+
+      </qti-simple-choice>
+      <qti-simple-choice identifier="water">Water</qti-simple-choice>
+      <qti-simple-choice identifier="gas">Gas</qti-simple-choice>
+      <qti-simple-choice identifier="oil">Olie</qti-simple-choice>
+      <qti-simple-choice identifier="wind">Wind</qti-simple-choice>
+    </qti-choice-interaction>
+  </qti-item-body>
+  <qti-response-processing
+    template="https://www.imsglobal.org/question/qti_v3p0/rptemplates/map_response.xml"
+  ></qti-response-processing>
+</qti-assessment-item>

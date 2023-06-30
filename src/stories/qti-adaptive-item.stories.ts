@@ -7,10 +7,10 @@ import '../lib/qti-components/index';
 import { QtiAssessmentItem } from '../lib/qti-components/qti-assessment-item/qti-assessment-item';
 
 export default {
-  component: 'qti-printed-variable'
+  component: 'qti-adaptive-item'
 };
 
-export const inline = () => {
+export const Printed = () => {
   const assessmentItemRef = createRef<QtiAssessmentItem>();
 
   return html`<qti-assessment-item

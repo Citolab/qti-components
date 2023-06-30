@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-item
+  identifier="eten2"
+>
+  <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="identifier">
+    <qti-correct-response>
+      <qti-value>A</qti-value>
+    </qti-correct-response>
+  </qti-response-declaration>
+  <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float"></qti-outcome-declaration>
+  <qti-outcome-declaration
+    identifier="FEEDBACK"
+    cardinality="single"
+    base-type="identifier"
+  ></qti-outcome-declaration>
+
+  <qti-item-body>
+    <qti-choice-interaction response-identifier="RESPONSE" shuffle="false" max-choices="1">
+      <qti-prompt>Selecteer het plaatje van sinaasappelsap in de juiste verpakking:</qti-prompt>
+      <qti-simple-choice identifier="A"> Sinaasappelsap in een drankkarton <qti-feedback-inline
+          outcome-identifier="FEEDBACK" identifier="A" show-hide="show"
+        >goed</qti-feedback-inline>
+      </qti-simple-choice>
+      <qti-simple-choice identifier="B"> Sinaasappelsap in een PET-fles <qti-feedback-inline
+          outcome-identifier="FEEDBACK" identifier="B" show-hide="show"
+        >fout</qti-feedback-inline>
+      </qti-simple-choice>
+      <qti-simple-choice identifier="C"> Sinaasappelsap in een glazen fles <qti-feedback-inline
+          outcome-identifier="FEEDBACK" identifier="C" show-hide="show"
+        >fout</qti-feedback-inline>
+      </qti-simple-choice>
+    </qti-choice-interaction>
+  </qti-item-body>
+  <qti-response-processing>
+    <qti-set-outcome-value identifier="FEEDBACK">
+      <qti-variable identifier="RESPONSE"></qti-variable>
+    </qti-set-outcome-value>
+
+    <qti-response-condition>
+      <qti-response-if>
+        <qti-match>
+          <qti-variable identifier="RESPONSE"></qti-variable>
+          <qti-correct identifier="RESPONSE"></qti-correct>
+        </qti-match>
+        <qti-set-outcome-value identifier="SCORE">
+          <qti-base-value base-type="float">1</qti-base-value>
+        </qti-set-outcome-value>
+      </qti-response-if>
+      <qti-response-else>
+        <qti-set-outcome-value identifier="SCORE">
+          <qti-base-value base-type="float">0</qti-base-value>
+        </qti-set-outcome-value>
+      </qti-response-else>
+    </qti-response-condition>
+  </qti-response-processing>
+</qti-assessment-item>

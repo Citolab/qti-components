@@ -2,6 +2,7 @@
   "packages": [
     "biologie",
     "replay",
-    "toetsenincontext"
+    "toetsenincontext",
+    "kringloop"
   ]
 }

@@ -1,7 +1,7 @@
 import { createContext } from '@lit-labs/context';
 
 export interface Logger {
-  view: string;
+  view: 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor';
   log: (msg: string) => void;
 }
 

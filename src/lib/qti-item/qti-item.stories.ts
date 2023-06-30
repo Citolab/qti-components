@@ -7,6 +7,7 @@ import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { qtiTransform } from '../qti-transform/qti-transform';
 import { useEffect, useState, virtual } from 'haunted';
 
+import * as cheerio from 'cheerio';
 import '../qti-components';
 import './qti-item';
 
@@ -24,10 +25,8 @@ export default {
       options: packages.packages,
       control: { type: 'radio' }
     },
-    scales: { control: { type: 'boolean' } },
     readonly: { control: { type: 'boolean' } },
-    disabled: { control: { type: 'boolean' } },
-    'in-shadow-root': { control: { type: 'boolean' } }
+    disabled: { control: { type: 'boolean' } }
   },
   args: {
     serverLocation: 'http://localhost:6006/api',
@@ -59,7 +58,6 @@ export const QtiItem = {
         .removeNamesSpaces()
         .fnCh($ => $('qti-inline-choice span').contents().unwrap())
         .fnCh($ => $('*').remove('qti-stylesheet'))
-        // .mathml()
         .xml();
 
       setItemXML(xml);
@@ -73,7 +71,6 @@ export const QtiItem = {
         @qti-interaction-changed=${action(`on-interaction-changed`)}
         @qti-outcome-changed=${action(`qti-outcome-changed`)}
         .qtiContext=${{ view }}
-        ?scales=${args.scales}
         ?disabled=${args.disabled}
         ?readonly=${args.readonly}
         xml=${itemXML}

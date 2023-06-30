@@ -1,5 +1,7 @@
 {
   "items": [
+    { "href": "adaptive.xml", "identifier": "file14adaptive.xml" },
+    { "href": "zonnepanelen.xml", "identifier": "file14adaptive.xml" },
     { "href": "G6.BR1_3.xml", "identifier": "file0G6.BR1_3.xml" },
     { "href": "G6.BR1_4n.xml", "identifier": "file1G6.BR1_4n.xml" },
     { "href": "G6HG5d.xml", "identifier": "file2G6HG5d.xml" },
@@ -14,7 +16,6 @@
     { "href": "M6LO6f.xml", "identifier": "file11M6LO6f.xml" },
     { "href": "VH6.VH3_4n.xml", "identifier": "file12VH6.VH3_4n.xml" },
     { "href": "VH6.VH3_7nn.xml", "identifier": "file13VH6.VH3_7nn.xml" },
-    { "href": "VH6.VH3_8.xml", "identifier": "file14VH6.VH3_8.xml" },
     { "href": "end.xml", "identifier": "file15end.xml" },
     { "href": "mathEntryInteraction.xml", "identifier": "file16mathEntryInteraction.xml" },
     { "href": "pci-decisiontask.xml", "identifier": "file17pci-decisiontask.xml" },
