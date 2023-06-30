@@ -50,33 +50,32 @@
   </qti-outcome-declaration>
   <qti-outcome-declaration base-type="identifier" cardinality="single" identifier="FEEDBACK" />
 
-  <!--￼Define
-    a feedback variable; its cardinality is "multiple" so that it can contain the identifiers of
-    several 
-                feedback elements, and in this case it is initialised to the identifier, part1, of the first part
-    of this adaptive 
-                question-->
+  <!--￼
+    Define a feedback variable; its cardinality is "multiple" so that it can contain the identifiers of
+    several feedback elements, and in this case it is initialised to the identifier, part1, of the
+    first part of this adaptive question
+  -->
 
   <qti-outcome-declaration base-type="identifier" cardinality="multiple" identifier="BODY">
     <qti-default-value>
       <qti-value>part1</qti-value>
     </qti-default-value>
   </qti-outcome-declaration>
+
   <qti-item-body class="">
     <div class="">
 
-      <!--￼This
-            feedbackBlock is the first part of this adaptive question to appear, since the BODY
-            variable initially 
-                contains its identifier, part1; it contains the first multiple choice interaction in this question.
-            When BODY is 
-                set to part2, this feedbackBlock is no longer visible.-->            
-            
-            <qti-feedback-block id="feedbackBlock0" identifier="part1"
+      <!--￼
+        This feedbackBlock is the first part of this adaptive question to appear, since the BODY variable
+      initially contains its identifier, part1; it contains the first multiple choice interaction in this
+      question. When BODY is  set to part2, this feedbackBlock is no longer visible
+      -->            
+      
+        <qti-feedback-block id="feedbackBlock0" identifier="part1"
         outcome-identifier="BODY" show-hide="show">
         <qti-content-body>
-          <p>This is the first part of this question: Which of these input methods do you wish to
-      use?</p>
+          <p> This is the first part of this question: Which of these input methods do you wish to
+      use? </p>
                 <qti-choice-interaction id="choiceInteraction0" max-choices="1"
             response-identifier="RESPONSE1" shuffle="true">
             <qti-simple-choice id="simpleChoice0" identifier="OPTION1">Multiple choice </qti-simple-choice>
@@ -87,29 +86,24 @@
         </qti-content-body>
       </qti-feedback-block>
 
-      <!--￼This
-            feedbackBlock is the second part of the question ; it appears when the BODY variable
-            contains its identifier, 
-                part2. BODY is a multiple cardinality variable, so it can contain the identifiers of several
-            feedbackBlocks (and 
-                feedbackInlines) at the same time, each of which is visible if their show attribute is set to show,
-            or hidden if 
-                their show attribute is set to hide.-->            
+      <!--￼
+        This feedbackBlock is the second part of the question ; it appears when the BODY variable contains
+      its identifier, part2. BODY is a multiple cardinality variable, so it can contain the identifiers
+      of several feedbackBlocks (and feedbackInlines) at the same time, each of which is visible if their
+      show attribute is set to show, or hidden if their show attribute is set to hide.
+      -->            
             
-            <qti-feedback-block
+      <qti-feedback-block
         identifier="part2" outcome-identifier="BODY" show-hide="show">
         <qti-content-body>
-          <p>OK, this is the type of input you have chosen. Now please answer this, the second part
-      of the question.</p>
-
+          <p>OK, this is the type of input you have chosen. Now please answer this, the second
+      partof the question.</p>
         </qti-content-body>
       </qti-feedback-block>
-
-      <!--￼This
-            feedbackBlock appears if the user chose to use multiple choice in the first part of the
-            question – it contains
-                the selected type of interaction.-->            
-            
+      <!--￼
+        This feedbackBlock appears if the user chose to use multiple choice in the first part of the
+        question – it contains the selected type of interaction.
+        -->
             <qti-feedback-block
         identifier="option1" outcome-identifier="BODY" show-hide="show">
         <qti-content-body>
@@ -200,21 +194,18 @@
     <qti-response-condition>
       <qti-response-if>
         <qti-member>
-
-          <!--￼Check
-                    whether "part1" is contained in the BODY variable, and if it is, set up the
-                    second part of the 
-                        question.-->
-
+          <!--￼
+          Check whether "part1" is contained in the BODY variable, and if it is, set up the second part of
+          the question.
+          -->
           <qti-base-value base-type="identifier">part1</qti-base-value>
           <qti-variable identifier="BODY" />
         </qti-member>
         <qti-set-outcome-value identifier="BODY">
           <qti-multiple>
-
-            <!--Put
-                        "part2" into the BODY variable.-->
-
+            <!--
+            Put "part2" into the BODY variable.
+            -->
             <qti-base-value base-type="identifier">part2</qti-base-value>
           </qti-multiple>
         </qti-set-outcome-value>
