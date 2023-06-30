@@ -1,8 +1,7 @@
 import { createContext } from '@lit-labs/context';
 
-export interface Logger {
+export interface Audience {
   view: 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor';
-  log: (msg: string) => void;
 }
 
-export const loggerContext = createContext<Logger>('logger');
+export const audienceContext = createContext<Audience>('logger');
