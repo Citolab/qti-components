@@ -90,7 +90,7 @@
     "deploy": "firebase deploy --only hosting:qti-components",
     "build-storybook": "storybook build",
     "prepublishOnly": "echo 'calling prepublishOnly as npm lifecycle hook to build-lib!' && npm run build-lib",
-    "npm": "np --any-branch",
+    "npm": "np",
     "test-storybook": "test-storybook",
     "cem": "cem analyze --watch",
     "lint": "eslint src/lib/**",
