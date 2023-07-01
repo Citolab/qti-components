@@ -5,7 +5,7 @@ import { QtiMultiple } from './qti-multiple/qti-multiple';
 import { state } from 'lit/decorators.js';
 import { VariableDeclaration } from '../../qti-utilities/VariableDeclaration';
 
-export class QtiExpression<T> extends LitElement {
+export abstract class QtiExpression<T> extends LitElement {
   protected _error = [];
 
   @state()
@@ -32,7 +32,6 @@ export class QtiExpression<T> extends LitElement {
   }
 
   public calculate(): T {
-    // eslint-disable-next-line no-throw-literal
     throw new Error('Not implemented');
   }
 
@@ -96,5 +95,3 @@ export class QtiExpression<T> extends LitElement {
       })
       .filter(v => v !== null);
 }
-
-customElements.define('qti-expression', QtiExpression);
