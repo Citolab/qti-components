@@ -16,7 +16,7 @@ export class QtiMultiple extends QtiExpression<VariableDeclaration<string | stri
     }
 
     // const values = variables.map(v => v.value);
-    console.log(variables);
+    // console.log(variables);
     // const flattenedArray = values.reduce((acc: string[], value: string | string[]) => {
     //   return acc.concat(Array.isArray(value) ? [...value] : value);
     // }, []);
