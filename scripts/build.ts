@@ -7,18 +7,6 @@ console.log('Building the project...');
 
 const outdir = 'dist';
 
-try {
-  console.log('Generating component metadata');
-  execSync(`cem analyze --litelement --outdir "dist"`, { stdio: 'inherit' });
-
-  execSync(`ts-node --esm --project tsconfig.node.json scripts/make-css.ts --outdir "${outdir}"`, {
-    stdio: 'inherit'
-  });
-} catch (err) {
-  console.error(chalk.red(err));
-  process.exit(1);
-}
-
 (async () => {
   const targetsResult = await tsup.build({
     target: 'es2017',
@@ -44,6 +32,18 @@ try {
     esbuildPlugins: [InlineCSSPlugin] // https://github.com/evanw/esbuild/issues/3109#issuecomment-1539846087
   });
   console.log(chalk.green(`qti-components has been generated at ${outdir}\n`));
+
+  try {
+    console.log('Generating component metadata');
+    execSync(`cem analyze --litelement --outdir "dist"`, { stdio: 'inherit' });
+
+    execSync(`ts-node --esm --project tsconfig.node.json scripts/make-css.ts --outdir "${outdir}"`, {
+      stdio: 'inherit'
+    });
+  } catch (err) {
+    console.error(chalk.red(err));
+    process.exit(1);
+  }
 
   // Make a build purely for enjoying creating qti-items in a plain HTML file
 
