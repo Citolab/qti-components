@@ -11,26 +11,45 @@ const meta: Meta = {
 };
 export default meta;
 
-export const Print: Story = {
+export const Single: Story = {
   render: args => {
     return html` <qti-assessment-item data-testid="qti-assessment-item">
-      <qti-response-declaration base-type="string" cardinality="multiple" identifier="RESPONSE">
+      <qti-outcome-declaration base-type="string" cardinality="single" identifier="OUTCOME">
         <qti-default-value>
-          <qti-value>Dit zou je moeten zien</qti-value>
-        </qti-default-value>
-      </qti-response-declaration>
-
-      <qti-outcome-declaration base-type="string" cardinality="multiple" identifier="STORY">
-        <qti-default-value>
-          <qti-value>Dit zou je moeten zien</qti-value>
+          <qti-value>SINGLE</qti-value>
         </qti-default-value>
       </qti-outcome-declaration>
 
       <qti-item-body>
-        <qti-printed-variable identifier="RESPONSE"></qti-printed-variable>
+        <qti-printed-variable identifier="OUTCOME"></qti-printed-variable>
       </qti-item-body>
       <qti-response-processing>
-        <qti-set-outcome-value identifier="STORY">
+        <qti-set-outcome-value identifier="OUTCOME">
+          <qti-base-value base-type="identifier">UITSTOOT</qti-base-value>
+        </qti-set-outcome-value>
+      </qti-response-processing>
+    </qti-assessment-item>`;
+  },
+  play: ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    (canvas.getByTestId('qti-assessment-item') as QtiAssessmentItem).processResponse();
+  }
+};
+
+export const Multiple: Story = {
+  render: args => {
+    return html` <qti-assessment-item data-testid="qti-assessment-item">
+      <qti-outcome-declaration base-type="string" cardinality="multiple" identifier="OUTCOME">
+        <qti-default-value>
+          <qti-value>MULTIPLE</qti-value>
+        </qti-default-value>
+      </qti-outcome-declaration>
+
+      <qti-item-body>
+        <qti-printed-variable identifier="OUTCOME"></qti-printed-variable>
+      </qti-item-body>
+      <qti-response-processing>
+        <qti-set-outcome-value identifier="OUTCOME">
           <qti-base-value base-type="identifier">UITSTOOT</qti-base-value>
         </qti-set-outcome-value>
       </qti-response-processing>

@@ -43,15 +43,16 @@ export class QtiOutcomeDeclaration extends QtiVariableDeclaration {
 
     // outcome variables can have a default value
     const outcomeVariables = Array.from(this.querySelectorAll('qti-default-value > qti-value')).map(n => n.innerHTML);
-    if (outcomeVariables.length > 1) {
+    if (outcomeVariables.length === 0) {
+      outcomeVariable.value = null;
+    } else if (
+      outcomeVariables.length > 1 ||
+      outcomeVariable.cardinality === 'multiple' ||
+      outcomeVariable.cardinality === 'ordered'
+    ) {
       outcomeVariable.value = outcomeVariables;
-    }
-    if (outcomeVariables.length === 1) {
-      if (outcomeVariable.cardinality === 'multiple' || outcomeVariable.cardinality === 'ordered') {
-        outcomeVariable.value = outcomeVariables;
-      } else {
-        outcomeVariable.value = outcomeVariables[0];
-      }
+    } else {
+      outcomeVariable.value = outcomeVariables[0];
     }
     if (!outcomeVariables) {
       outcomeVariable.value = null;

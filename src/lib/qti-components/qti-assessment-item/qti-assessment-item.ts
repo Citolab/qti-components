@@ -23,7 +23,8 @@ import type QtiRegisterVariable from '../qti-utilities/events/qti-register-varia
  * @slot - The default slot where all the other QTI 3 item structures go.
  *
  * @event qti-interaction-changed - Emitted when an interaction is changed.
- * @event qti-outcome-changed - Emitted when the radio group receives user input.
+ * @event qti-outcome-changed - Emitted when an outcome has changed.
+ * @event qti-response-processing - Emitted when response-processing is called.
  *
  */
 @customElement('qti-assessment-item')
@@ -37,6 +38,8 @@ export class QtiAssessmentItem extends LitElement {
 
   @property({ type: String }) title: string;
   @property({ type: String }) identifier: string;
+
+  private _numAttempts = 0;
 
   override render() {
     return html`<slot></slot>`;
@@ -101,10 +104,6 @@ export class QtiAssessmentItem extends LitElement {
   }
 
   public processResponse(): boolean {
-    // if (!this.validateResponses()) {
-    //   console.info('Item is not valid, call validateResponses first');
-    //   return false;
-    // }
     const responseProcessor = this.querySelector('qti-response-processing') as unknown as QtiResponseProcessing;
     if (!responseProcessor) {
       console.info('Client side response processing template not available');
@@ -117,6 +116,8 @@ export class QtiAssessmentItem extends LitElement {
     }
 
     responseProcessor.process();
+    this._numAttempts++;
+    this.dispatchEvent(new CustomEvent('qti-response-processing'));
     return true;
   }
 
@@ -156,13 +157,23 @@ export class QtiAssessmentItem extends LitElement {
     return result;
   }
 
-  public getVariable(identifier: string): VariableDeclaration<any> {
-    const variable = this.variables.find(vr => vr.identifier === identifier);
-    if (!variable) {
-      console.warn(`Variable with identifier ${identifier} was not found`);
-      return null;
+  public getVariable(identifier: string): VariableDeclaration<number | string | string[] | undefined> {
+    switch (identifier) {
+      case 'numAttempts':
+        return { identifier: 'numAttempts', cardinality: 'single', baseType: 'integer', value: this._numAttempts };
+        break;
+
+      default:
+        {
+          const variable = this.variables.find(vr => vr.identifier === identifier);
+          if (!variable) {
+            console.warn(`Variable with identifier ${identifier} was not found`);
+            return null;
+          }
+          return variable;
+        }
+        break;
     }
-    return variable;
   }
 
   public getResponse(identifier: string): ResponseVariable | null {
@@ -248,7 +259,7 @@ export class QtiAssessmentItem extends LitElement {
         detail: {
           item: this.identifier,
           outcomeIdentifier: identifier,
-          value
+          value: outcomeIdentifier.value
         }
       })
     );
