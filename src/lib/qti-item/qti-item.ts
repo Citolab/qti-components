@@ -9,28 +9,11 @@ import { audienceContext } from '../context/audience-context';
 import { ContextProvider } from '@lit-labs/context';
 
 import styles from '../../styles.css?inline';
+import { qtiTransform } from '../qti-transform';
 
 @customElement('qti-item')
 export class QtiItem extends LitElement {
-  @property({ type: Boolean }) disabled = false;
-  @watch('disabled', { waitUntilFirstUpdate: true })
-  handleDisabledChange(old, disabled: boolean) {
-    disabled && this._item?.setAttribute('disabled', '');
-    !disabled && this._item?.removeAttribute('disabled');
-  }
-
-  @property({ type: Boolean }) readonly = false;
-  @watch('readonly', { waitUntilFirstUpdate: true })
-  handleReadonlyChange(old, readonly: boolean) {
-    readonly && this._item?.setAttribute('readonly', '');
-    !readonly && this._item?.removeAttribute('readonly');
-  }
-
-  @property({ type: Object, attribute: false }) responses: ResponseInteraction[];
-  @watch('responses', { waitUntilFirstUpdate: true })
-  handleResponsesChange(old, responses: ResponseInteraction[]) {
-    this._item && (this._item.responses = responses);
-  }
+  @property({ type: String, attribute: 'item-location' }) itemLocation = '';
 
   public set qtiContext(context: {
     view: 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor';
@@ -43,14 +26,10 @@ export class QtiItem extends LitElement {
     view: 'candidate'
   });
 
-  get _item(): QtiAssessmentItem {
-    return this.shadowRoot?.querySelector('qti-assessment-item');
-  }
-
   private _xml;
   set xml(val: string) {
     const oldVal = this._xml;
-    this._xml = val;
+    this._xml = qtiTransform(val).customTypes().assetsLocation(`${this.itemLocation}`).xml(); // .assetsLocation(`${this.itemLocation}/`).removeNamesSpaces().xml();
     this.requestUpdate('xml', oldVal);
   }
   @property({ type: String })
@@ -63,11 +42,6 @@ export class QtiItem extends LitElement {
       display: block;
     }
   `;
-
-  public processResponse = () => this._item?.processResponse();
-  public showCorrectResponse = () => this._item?.showCorrectResponse();
-  public validateResponses = (): boolean => (this._item ? this._item.validateResponses() : false);
-  public resetInteractions = () => this._item?.resetInteractions();
 
   connectedCallback(): void {
     super.connectedCallback();

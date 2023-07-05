@@ -5,13 +5,14 @@ import { QtiItem as QtiItemComponent } from '.';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
 import { qtiTransform } from '../qti-transform/qti-transform';
-import { useEffect, useState, virtual } from 'haunted';
+import { useEffect, useRef, useState, virtual } from 'haunted';
 
 import * as cheerio from 'cheerio';
 import '../qti-components';
 import './qti-item';
 
 import packages from '../../assets/api/package.json';
+import { QtiAssessmentItem } from '../qti-components';
 
 export default {
   component: 'qti-item',
@@ -39,6 +40,8 @@ export const QtiItem = {
   render: (args, { argTypes, loaded: { loadeditems } }) => {
     const items: { href: string; identifier: string }[] = loadeditems.items;
     const [itemXML, setItemXML] = useState<string>();
+    const qtiItemRef = useRef<QtiAssessmentItem>(null);
+
     const itemContainer = createRef<QtiItemComponent>();
 
     const qtipkg = args.qtipkg;
@@ -53,14 +56,14 @@ export const QtiItem = {
       const xmlFetch = await fetch(uri);
       const xmlText = await xmlFetch.text();
 
-      const xml = qtiTransform(xmlText)
-        .assetsLocation(`${args.serverLocation}/${args.qtipkg}/items/`)
-        .removeNamesSpaces()
-        .fnCh($ => $('qti-inline-choice span').contents().unwrap())
-        .fnCh($ => $('*').remove('qti-stylesheet'))
-        .xml();
+      // const xml = qtiTransform(xmlText)
+      //   .assetsLocation(`${args.serverLocation}/${args.qtipkg}/items/`)
+      //   .removeNamesSpaces()
+      //   .fnCh($ => $('qti-inline-choice span').contents().unwrap())
+      //   .fnCh($ => $('*').remove('qti-stylesheet'))
+      //   .xml();
 
-      setItemXML(xml);
+      setItemXML(xmlText);
     }, [itemIndex, items, qtipkg]);
 
     const view = args.view;
@@ -68,11 +71,11 @@ export const QtiItem = {
     return html`
       <qti-item
         ${ref(itemContainer)}
+        item-location=${`${args.serverLocation}/${args.qtipkg}/items/`}
         @qti-interaction-changed=${action(`on-interaction-changed`)}
         @qti-outcome-changed=${action(`qti-outcome-changed`)}
+        @qti-item-connected=${({ detail }) => (qtiItemRef.current = detail)}
         .qtiContext=${{ view }}
-        ?disabled=${args.disabled}
-        ?readonly=${args.readonly}
         xml=${itemXML}
       >
       </qti-item>

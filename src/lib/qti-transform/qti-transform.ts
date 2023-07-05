@@ -74,19 +74,18 @@ export const qtiTransform = (xmlValue: string) => {
     },
     assetsLocation(uri: string, attributes = ['src', 'href', 'data']) {
       const documentPath = uri.substring(0, uri.lastIndexOf('/'));
-      const newXMlDocument = new DOMParser().parseFromString(xmlString, 'text/xml');
+      const $ = cheerio.load(xmlString, { xmlMode: true });
+
       for (const attribute of attributes) {
-        const srcAttributes = newXMlDocument.querySelectorAll('[' + attribute + ']');
-        srcAttributes.forEach(node => {
-          const srcValue = node.getAttribute(attribute)!;
+        $(`[${attribute}]`).each((_, node) => {
+          const srcValue = $(node).attr(attribute)!;
           if (!srcValue.startsWith('data:') && !srcValue.startsWith('http')) {
-            // Just paste the relative path of the src location after the documentrootPath
-            // BUT THE RELATIVE PATH HAS TO BE ESCAPED, ELSE /../ will also shorten the URL
-            node.setAttribute(attribute, documentPath + '/' + encodeURIComponent(srcValue));
+            const newSrcValue = documentPath + '/' + encodeURIComponent(srcValue);
+            $(node).attr(attribute, newSrcValue);
           }
         });
       }
-      xmlString = new XMLSerializer().serializeToString(newXMlDocument);
+      xmlString = $.xml();
       return api;
     },
     customTypes() {
