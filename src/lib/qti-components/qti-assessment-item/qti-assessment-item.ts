@@ -29,7 +29,7 @@ import type QtiRegisterVariable from '../qti-utilities/events/qti-register-varia
  */
 @customElement('qti-assessment-item')
 export class QtiAssessmentItem extends LitElement {
-  public variables: VariableDeclaration<(string | string[]) | number>[] = []; // made public for tests to access
+  public variables: VariableDeclaration<string | string[]>[] = []; // made public for tests to access
   private feedbackElements: QtiFeedback[] = [];
   private interactionElements: Interaction[] = [];
 
@@ -70,9 +70,7 @@ export class QtiAssessmentItem extends LitElement {
       new CustomEvent<{ identifier: string }>('qti-item-connected', {
         bubbles: true,
         composed: true,
-        detail: {
-          identifier: this.identifier
-        }
+        detail: this
       })
     );
   }
@@ -91,11 +89,10 @@ export class QtiAssessmentItem extends LitElement {
   }
 
   public showCorrectResponse() {
-    const ResponseVariables = this.variables.filter(
-      (vari: ResponseVariable | OutcomeVariable) => 'correctResponse' in vari
+    const responseVariables = this.variables.filter(
+      (vari: ResponseVariable | OutcomeVariable) => 'correctResponse' in vari && vari.correctResponse
     ) as ResponseVariable[];
-
-    this.responses = ResponseVariables.map(cr => {
+    this.responses = responseVariables.map(cr => {
       return {
         responseIdentifier: cr.identifier,
         response: cr.correctResponse
@@ -157,10 +154,15 @@ export class QtiAssessmentItem extends LitElement {
     return result;
   }
 
-  public getVariable(identifier: string): VariableDeclaration<number | string | string[] | undefined> {
+  public getVariable(identifier: string): VariableDeclaration<string | string[] | undefined> {
     switch (identifier) {
       case 'numAttempts':
-        return { identifier: 'numAttempts', cardinality: 'single', baseType: 'integer', value: this._numAttempts };
+        return {
+          identifier: 'numAttempts',
+          cardinality: 'single',
+          baseType: 'integer',
+          value: this._numAttempts.toString()
+        };
         break;
 
       default:
@@ -239,7 +241,7 @@ export class QtiAssessmentItem extends LitElement {
     });
   }
 
-  public setOutcomeValue(identifier: string, value: string | number) {
+  public setOutcomeValue(identifier: string, value: string) {
     const outcomeIdentifier = this.getOutcome(identifier);
     if (!outcomeIdentifier) {
       console.warn(`Can not set qti-outcome-identifier: ${identifier}, it is not available`);

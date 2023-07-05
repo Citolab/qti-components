@@ -21,6 +21,7 @@ export class QtiResponseDeclaration extends QtiVariableDeclaration {
     responseVariable.correctResponse = this.correctResponse;
     responseVariable.cardinality = this.cardinality || 'single';
     responseVariable.mapping = this.mapping;
+    responseVariable.value = this.defaultValues(responseVariable);
 
     // this.emit("qti-register-variable", { detail: { variable: responseVariable } });
     this.dispatchEvent(

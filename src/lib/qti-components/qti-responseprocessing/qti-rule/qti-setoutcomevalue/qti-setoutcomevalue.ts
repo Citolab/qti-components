@@ -5,7 +5,7 @@ import { QtiRule } from '../qti-rule';
 export class QtiSetOutcomeValue extends QtiRule {
   public override process() {
     const identifier = this.getAttribute('identifier');
-    const expression = this.firstElementChild as QtiExpression<number>;
+    const expression = this.firstElementChild as QtiExpression<string>;
 
     const value = expression ? expression.calculate() : null;
 

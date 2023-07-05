@@ -33,14 +33,22 @@ export abstract class QtiFeedback extends LitElement {
   }
 
   public checkShowFeedback(outcomeIdentifier: string) {
-    const outcomeValue = (this.closest('qti-assessment-item') as QtiAssessmentItem).getOutcome(
-      outcomeIdentifier
-    )?.value;
+    const outComeVariable = (this.closest('qti-assessment-item') as QtiAssessmentItem).getOutcome(outcomeIdentifier);
 
-    if (this.outcomeIdentifier !== outcomeIdentifier || !outcomeValue) return;
-    const isFound = Array.isArray(outcomeValue)
-      ? (outcomeValue as string[]).includes(this.identifier)
-      : this.identifier === outcomeValue?.toString();
+    if (this.outcomeIdentifier !== outcomeIdentifier || !outComeVariable) return;
+
+    let isFound = false;
+    if (Array.isArray(outComeVariable.value)) {
+      isFound =
+        outComeVariable.baseType == 'float' || outComeVariable.baseType == 'integer'
+          ? outComeVariable.value.includes(this.identifier)
+          : outComeVariable.value.includes(this.identifier);
+    } else {
+      isFound =
+        outComeVariable.baseType == 'float' || outComeVariable.baseType == 'integer'
+          ? this.identifier === outComeVariable.value
+          : this.identifier === outComeVariable.value;
+    }
     this.showFeedback(isFound);
   }
 

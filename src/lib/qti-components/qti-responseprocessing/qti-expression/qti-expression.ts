@@ -39,7 +39,7 @@ export abstract class QtiExpression<T> extends LitElement {
     return this.closest('qti-assessment-item') as QtiAssessmentItem;
   }
 
-  protected getVariables = (): VariableDeclaration<number | string | string[] | undefined>[] =>
+  protected getVariables = (): VariableDeclaration<number | string | (number | string)[] | undefined>[] =>
     Array.from(this.children)
       .map((e: Element) => {
         switch (e.tagName.toLowerCase()) {

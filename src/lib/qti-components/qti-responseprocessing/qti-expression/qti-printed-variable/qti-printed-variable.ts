@@ -7,7 +7,7 @@ export class QtPrintedVariable extends LitElement {
   identifier: string;
 
   @state()
-  value: string | string[] | number = '';
+  value: string | string[] = '';
 
   override render() {
     return html`${Array.isArray(this.value) ? this.value.map(val => html`${val}`) : this.value}`;
@@ -21,12 +21,12 @@ export class QtPrintedVariable extends LitElement {
     });
   }
 
-  // protected firstUpdated(_changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
-  //   super.firstUpdated(_changedProperties);
+  // public connectedCallback(): void {
+  //   super.connectedCallback();
   //   this.value = this.calculate() as string;
   // }
 
-  public calculate(): string | string[] | number {
+  public calculate(): string | string[] {
     const assessmentItem = this.closest('qti-assessment-item') as QtiAssessmentItem;
     const identifier = this.identifier;
     const result = assessmentItem.getVariable(identifier).value;
