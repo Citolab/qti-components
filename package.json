@@ -145,7 +145,6 @@
     "eslint-plugin-sort-imports-es6-autofix": "^0.6.0",
     "eslint-plugin-storybook": "^0.6.12",
     "eslint-plugin-wc": "^1.5.0",
-    "html-to-image": "^1.11.11",
     "jest-environment-jsdom": "^29.5.0",
     "nodemon": "^2.0.22",
     "np": "^8.0.4",

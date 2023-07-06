@@ -242,18 +242,34 @@ export class QtiAssessmentItem extends LitElement {
   }
 
   public setOutcomeValue(identifier: string, value: string) {
-    const outcomeIdentifier = this.getOutcome(identifier);
-    if (!outcomeIdentifier) {
-      console.warn(`Can not set qti-outcome-identifier: ${identifier}, it is not available`);
-      return;
-    }
+    let outcomeIdentifier: VariableDeclaration<any>;
+    switch (identifier) {
+      // https://qti-components.citolab.nl/?path=/docs/qti-tutorial--docs#listing-12-using-numattempts-to-set-the-completion-status
+      // PK: let's fake a completionStatus variable for adaptive items
+      case 'completionStatus':
+        outcomeIdentifier = {
+          identifier: 'completionStatus',
+          cardinality: 'single',
+          baseType: 'string',
+          value: value
+        };
+        break;
+      default:
+        {
+          outcomeIdentifier = this.getOutcome(identifier);
+          if (!outcomeIdentifier) {
+            console.warn(`Can not set qti-outcome-identifier: ${identifier}, it is not available`);
+            return;
+          }
 
-    if (outcomeIdentifier.cardinality === 'single') {
-      outcomeIdentifier.value = value;
-    } else {
-      (outcomeIdentifier.value as any[]).push(value);
+          if (outcomeIdentifier.cardinality === 'single') {
+            outcomeIdentifier.value = value;
+          } else {
+            (outcomeIdentifier.value as any[]).push(value);
+          }
+        }
+        break;
     }
-
     this.dispatchEvent(
       new CustomEvent<OutcomeChangedDetails>('qti-outcome-changed', {
         bubbles: true,

@@ -1,9 +1,6 @@
-import { ResponseInteraction } from '../qti-components/qti-utilities/ExpressionResult';
-import { type QtiAssessmentItem } from '../qti-components/qti-assessment-item/qti-assessment-item';
 import { css, html, LitElement } from 'lit';
 
 import { customElement, property, state } from 'lit/decorators.js';
-import { watch } from '../decorators/watch';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { audienceContext } from '../context/audience-context';
 import { ContextProvider } from '@lit-labs/context';

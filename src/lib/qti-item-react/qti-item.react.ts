@@ -2,12 +2,7 @@ import React, { ForwardRefExoticComponent, Ref } from 'react';
 import { createComponent } from '@lit-labs/react';
 
 import { QtiItem as QtiItemComponent } from '../qti-item/qti-item';
-import {
-  OutcomeChangedDetails,
-  ResponseInteraction,
-  InteractionChangedDetails,
-  QtiAssessmentItem
-} from '../qti-components';
+import { OutcomeChangedDetails, InteractionChangedDetails, QtiAssessmentItem } from '../qti-components';
 
 interface QtiItemProps {
   ref?: Ref<QtiItemComponent>;
@@ -16,17 +11,18 @@ interface QtiItemProps {
   audienceContext?: {
     view: 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor';
   };
-  qtioutcomechanged?: (e: CustomEvent<OutcomeChangedDetails>) => void;
-  qtiinteractionchanged?: (e: CustomEvent<InteractionChangedDetails>) => void;
-  qtiitemconnected?: (e: CustomEvent<QtiAssessmentItem>) => void;
+  'item-location'?: string;
+  'qti-outcome-changed'?: (e: CustomEvent<OutcomeChangedDetails>) => void;
+  'qti-interaction-changed'?: (e: CustomEvent<InteractionChangedDetails>) => void;
+  'qti-item-connected'?: (e: CustomEvent<QtiAssessmentItem>) => void;
 }
 export const QtiItem = createComponent({
   tagName: 'qti-item',
   react: React,
   elementClass: QtiItemComponent,
   events: {
-    qtioutcomechanged: 'qti-outcome-changed', // as EventName<Event>
-    qtiinteractionchanged: 'qti-interaction-changed',
-    qtiitemconnected: 'qti-item-connected'
+    'qti-outcome-changed': 'qti-outcome-changed', // as EventName<Event>
+    'qti-interaction-changed': 'qti-interaction-changed',
+    'qti-item-connected': 'qti-item-connected'
   }
 }) as ForwardRefExoticComponent<QtiItemProps>;
