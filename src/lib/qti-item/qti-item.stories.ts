@@ -56,13 +56,6 @@ export const QtiItem = {
       const xmlFetch = await fetch(uri);
       const xmlText = await xmlFetch.text();
 
-      // const xml = qtiTransform(xmlText)
-      //   .assetsLocation(`${args.serverLocation}/${args.qtipkg}/items/`)
-      //   .removeNamesSpaces()
-      //   .fnCh($ => $('qti-inline-choice span').contents().unwrap())
-      //   .fnCh($ => $('*').remove('qti-stylesheet'))
-      //   .xml();
-
       setItemXML(xmlText);
     }, [itemIndex, items, qtipkg]);
 
