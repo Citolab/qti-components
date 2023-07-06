@@ -15,7 +15,7 @@ import { qtiTransform } from '../qti-transform';
 export class QtiItem extends LitElement {
   @property({ type: String, attribute: 'item-location' }) itemLocation = '';
 
-  public set qtiContext(context: {
+  public set audienceContext(context: {
     view: 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor';
   }) {
     this.provider.value.view = context.view;

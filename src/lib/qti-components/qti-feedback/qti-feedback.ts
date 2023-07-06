@@ -35,9 +35,6 @@ export abstract class QtiFeedback extends LitElement {
   public checkShowFeedback(outcomeIdentifier: string) {
     const outComeVariable = (this.closest('qti-assessment-item') as QtiAssessmentItem).getOutcome(outcomeIdentifier);
 
-    /* eslint-disable no-debugger */
-    if (this.outcomeIdentifier === 'OUT-A') debugger;
-
     if (this.outcomeIdentifier !== outcomeIdentifier || !outComeVariable) return;
     let isFound = false;
     if (Array.isArray(outComeVariable.value)) {

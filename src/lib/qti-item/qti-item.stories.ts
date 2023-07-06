@@ -75,7 +75,7 @@ export const QtiItem = {
         @qti-interaction-changed=${action(`on-interaction-changed`)}
         @qti-outcome-changed=${action(`qti-outcome-changed`)}
         @qti-item-connected=${({ detail }) => (qtiItemRef.current = detail)}
-        .qtiContext=${{ view }}
+        .audienceContext=${{ view }}
         xml=${itemXML}
       >
       </qti-item>

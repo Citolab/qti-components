@@ -2,24 +2,23 @@ import React, { ForwardRefExoticComponent, Ref } from 'react';
 import { createComponent } from '@lit-labs/react';
 
 import { QtiItem as QtiItemComponent } from '../qti-item/qti-item';
-import { OutcomeChangedDetails, ResponseInteraction, InteractionChangedDetails } from '../qti-components';
+import {
+  OutcomeChangedDetails,
+  ResponseInteraction,
+  InteractionChangedDetails,
+  QtiAssessmentItem
+} from '../qti-components';
 
 interface QtiItemProps {
   ref?: Ref<QtiItemComponent>;
   className?: string;
-  responses?: ResponseInteraction[];
   xml: string;
-  disabled?: boolean;
-  qtiContext?: {
+  audienceContext?: {
     view: 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor';
   };
-  processResponse?: () => void;
-  showCorrectResponse?: () => void;
-  validateResponses?: () => boolean;
-  resetInteractions?: () => void;
   qtioutcomechanged?: (e: CustomEvent<OutcomeChangedDetails>) => void;
   qtiinteractionchanged?: (e: CustomEvent<InteractionChangedDetails>) => void;
-  qtiitemconnected?: (e: CustomEvent<{ identifier: string }>) => void;
+  qtiitemconnected?: (e: CustomEvent<QtiAssessmentItem>) => void;
 }
 export const QtiItem = createComponent({
   tagName: 'qti-item',
