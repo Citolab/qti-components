@@ -6,7 +6,7 @@ export class QtiFeedbackBlock extends QtiFeedback {
     return html`
       <style>
         .on {
-          display: inline-block;
+          display: block;
         }
         .off {
           display: none;
