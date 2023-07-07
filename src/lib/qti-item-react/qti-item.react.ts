@@ -1,11 +1,11 @@
 import React, { ForwardRefExoticComponent, Ref } from 'react';
 import { createComponent } from '@lit-labs/react';
 
-import { QtiItem as QtiItemComponent } from '../qti-item/qti-item';
+import { QtiItem as QtiItemWebComponent } from '../qti-item/qti-item';
 import { OutcomeChangedDetails, InteractionChangedDetails, QtiAssessmentItem } from '../qti-components';
 
 interface QtiItemProps {
-  ref?: Ref<QtiItemComponent>;
+  ref?: Ref<QtiItemWebComponent>;
   className?: string;
   xml: string;
   audienceContext?: {
@@ -19,7 +19,7 @@ interface QtiItemProps {
 export const QtiItem = createComponent({
   tagName: 'qti-item',
   react: React,
-  elementClass: QtiItemComponent,
+  elementClass: QtiItemWebComponent,
   events: {
     'qti-outcome-changed': 'qti-outcome-changed', // as EventName<Event>
     'qti-interaction-changed': 'qti-interaction-changed',
