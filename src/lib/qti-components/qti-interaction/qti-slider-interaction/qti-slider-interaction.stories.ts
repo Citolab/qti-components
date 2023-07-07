@@ -4,7 +4,6 @@ import { action } from '@storybook/addon-actions';
 import './qti-slider-interaction';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
-import * as htmlToImage from 'html-to-image';
 import { StoryObj, Meta } from '@storybook/web-components';
 
 type Story = StoryObj; // <Props>;
@@ -39,20 +38,7 @@ type Interaction = {
 export const Interaction = {
   render: args => {
     const { min, max, step, orientation, stepLabel, reverse, response, readonly, disabled } = args;
-
-    const showScreenshot = () => {
-      const interaction: HTMLElement = document.querySelector('qti-slider-interaction');
-      const shot: HTMLImageElement = document.querySelector('.screenshot');
-
-      htmlToImage
-        .toPng(interaction)
-        .then(dataUrl => (shot.src = dataUrl))
-        .catch(error => console.error('oops, something went wrong!', error));
-    };
-
     return html`
-      <button @click=${() => showScreenshot()}>screenshot</button>
-
       <!-- style="width:300px; left:100px; position: absolute" -->
       <qti-slider-interaction
         @qti-interaction-response="${action(`on-interaction-response`)}"
@@ -71,7 +57,6 @@ export const Interaction = {
           In total, what percentage of the UK population do you think were eventually classified as having no religion?
         </qti-prompt>
       </qti-slider-interaction>
-      <img class="screenshot" />
     `;
   },
 
