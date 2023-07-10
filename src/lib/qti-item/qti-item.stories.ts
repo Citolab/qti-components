@@ -1,13 +1,8 @@
 import { html } from 'lit';
 import { action } from '@storybook/addon-actions';
-import { createRef, ref } from 'lit-html/directives/ref.js';
-import { QtiItem as QtiItemComponent } from '.';
-import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
-import { qtiTransform } from '../qti-transform/qti-transform';
 import { useEffect, useRef, useState, virtual } from 'haunted';
 
-import * as cheerio from 'cheerio';
 import '../qti-components';
 import './qti-item';
 
@@ -42,8 +37,6 @@ export const QtiItem = {
     const [itemXML, setItemXML] = useState<string>();
     const qtiItemRef = useRef<QtiAssessmentItem>(null);
 
-    const itemContainer = createRef<QtiItemComponent>();
-
     const qtipkg = args.qtipkg;
     const itemIndex = args.itemIndex;
 
@@ -63,11 +56,10 @@ export const QtiItem = {
 
     return html`
       <qti-item
-        ${ref(itemContainer)}
         item-location=${`${args.serverLocation}/${args.qtipkg}/items/`}
         @qti-interaction-changed=${action(`on-interaction-changed`)}
         @qti-outcome-changed=${action(`qti-outcome-changed`)}
-        @qti-item-connected=${({ detail }) => (qtiItemRef.current = detail)}
+        @qti-item-connected=${({ detail: item }) => (qtiItemRef.current = item)}
         .audienceContext=${{ view }}
         xml=${itemXML}
       >
