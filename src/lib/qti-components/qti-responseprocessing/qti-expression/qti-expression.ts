@@ -1,4 +1,4 @@
-import { LitElement, css, html } from 'lit';
+import { LitElement, css, html, nothing } from 'lit';
 import { QtiAssessmentItem } from '../../qti-assessment-item/qti-assessment-item';
 import { ResponseVariable } from '../../qti-utilities/ResponseVariable';
 import { QtiMultiple } from './qti-multiple/qti-multiple';
@@ -6,7 +6,10 @@ import { state } from 'lit/decorators.js';
 import { VariableDeclaration } from '../../qti-utilities/VariableDeclaration';
 
 export abstract class QtiExpression<T> extends LitElement {
+  @state()
+  protected _result: any;
   protected _error = [];
+  private _debug = false;
 
   @state()
   protected set error(val: string) {
@@ -16,6 +19,9 @@ export abstract class QtiExpression<T> extends LitElement {
   }
 
   static styles = css`
+    :host {
+      display: inline;
+    }
     [role='alert'] {
       border: 1px solid red;
       background: pink;
@@ -28,7 +34,8 @@ export abstract class QtiExpression<T> extends LitElement {
   `;
 
   override render() {
-    return html`${this._error.map(error => html`<div role="alert">${error}</div>`)}`;
+    return html`${this._debug ? html`${this._error.map(error => html`<div role="alert">${error}</div>`)}` : nothing}
+    ${this._debug ? html`${JSON.stringify(this._result)}` : nothing} ${this._debug ? html`<slot></slot>` : nothing}`;
   }
 
   public calculate(): T {
@@ -39,7 +46,10 @@ export abstract class QtiExpression<T> extends LitElement {
     return this.closest('qti-assessment-item') as QtiAssessmentItem;
   }
 
-  protected getVariables = (): VariableDeclaration<number | string | (number | string)[] | undefined>[] =>
+  protected getVariables = (): VariableDeclaration<number | string | (number | string)[] | null>[] =>
+    // FIXME: if this itself is multiple, this will never enter the qti-multiple switch
+    // See this example here: https://github.com/1EdTech/qti-examples/blob/master/qtiv3-examples/packaging/items/Example05-feedbackBlock-adaptive.xml
+
     Array.from(this.children)
       .map((e: Element) => {
         switch (e.tagName.toLowerCase()) {
