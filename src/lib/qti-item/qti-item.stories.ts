@@ -6,7 +6,7 @@ import { useEffect, useRef, useState, virtual } from 'haunted';
 import '../qti-components';
 import './qti-item';
 
-import packages from '../../assets/api/package.json';
+import packages from '../../assets/api/packages.json';
 import { QtiAssessmentItem } from '../qti-components';
 
 export default {

@@ -103,7 +103,7 @@
   },
   "dependencies": {
     "@lit-labs/context": "^0.3.3",
-    "@lit-labs/react": "^1.2.0",
+    "@lit-labs/react": "^1.2.1",
     "@tailwindcss/nesting": "^0.0.0-insiders.565cd3e",
     "cheerio": "^1.0.0-rc.12",
     "haunted": "^5.0.0",
@@ -113,7 +113,8 @@
   "peerdependencies": {
     "@lit-labs/context": "> 0.3",
     "@lit-labs/react": "> 1.2",
-    "lit": ">= 3 < 4"
+    "lit": ">= 3 < 4",
+    "react": "> 18"
   },
   "devDependencies": {
     "@custom-elements-manifest/analyzer": "^0.8.3",

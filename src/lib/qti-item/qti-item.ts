@@ -26,7 +26,7 @@ export class QtiItem extends LitElement {
   private _xml;
   set xml(val: string) {
     const oldVal = this._xml;
-    this._xml = qtiTransform(val).customTypes().assetsLocation(`${this.itemLocation}`).xml(); // .assetsLocation(`${this.itemLocation}/`).removeNamesSpaces().xml();
+    this._xml = qtiTransform(val).customTypes().customDefinition().assetsLocation(`${this.itemLocation}`).xml(); // .assetsLocation(`${this.itemLocation}/`).removeNamesSpaces().xml();
     this.requestUpdate('xml', oldVal);
   }
   @property({ type: String })

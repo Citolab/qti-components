@@ -67,6 +67,15 @@ export const Transformations = {
       .elementNameAttributes(['qti-select-point'])
       .xml();
 
+    const operatorDefinition = qtiTransform(`<qti-match>
+      <qti-custom-operator definition="type:parse-numeric-nl">
+        <qti-variable identifier="RESPONSE" />
+      </qti-custom-operator>
+      <qti-correct identifier="RESPONSE" />
+    </qti-match>`)
+      .customDefinition()
+      .xml();
+
     return html`
       <pre>${mathml}</pre>
       <pre>${removeNamesSpaces}</pre>
@@ -75,6 +84,7 @@ export const Transformations = {
       <pre>${customTypes}</pre>
       <pre>${suffix}</pre>
       <pre>${elementNameAttributes}</pre>
+      <pre>${operatorDefinition}</pre>
     `;
   }
 };

@@ -188,7 +188,6 @@
       spoil</b> the <b>broth</b>". </qti-feedback-inline>
       </div>
     </div>
-    <qti-end-attempt-interaction title="End attempt" />
   </qti-item-body>
   <qti-response-processing>
     <qti-response-condition>

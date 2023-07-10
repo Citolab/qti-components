@@ -103,6 +103,21 @@ export const qtiTransform = (xmlValue: string) => {
       xmlString = $.xml();
       return api;
     },
+    // PK: Transform used for customoperator, since we can't add a class there, with a type
+    // We use the definition instead
+    customDefinition() {
+      const $ = cheerio.load(xmlString, { xml: true, xmlMode: true });
+      $('*').each((i, element: Element) => {
+        const str = $(element).attr('definition');
+        if (str) {
+          if (str.startsWith('type:')) {
+            element.name = `${element.name}-${str.slice('type:'.length)}`;
+          }
+        }
+      });
+      xmlString = $.xml();
+      return api;
+    },
     suffix(elements: string[], suffix: string) {
       const $ = cheerio.load(xmlString, { xml: true, xmlMode: true });
       $('*').each((i, el: cheerio.Element) => {
