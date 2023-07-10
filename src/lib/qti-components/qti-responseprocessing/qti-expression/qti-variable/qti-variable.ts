@@ -3,9 +3,6 @@ import { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-i
 import { QtiExpression } from '../qti-expression';
 
 export class QtiVariable extends QtiExpression<string | string[]> {
-  override render() {
-    return html``;
-  }
   public override calculate() {
     const identifier = this.getAttribute('identifier');
     const result = (this.closest('qti-assessment-item') as QtiAssessmentItem).getVariable(identifier).value;
