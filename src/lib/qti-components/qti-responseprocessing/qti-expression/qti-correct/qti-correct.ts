@@ -1,26 +1,18 @@
-import { html } from "lit";
-import { QtiExpression } from "../qti-expression";
-import { QtiAssessmentItem } from "../../../qti-assessment-item/qti-assessment-item";
+import { html } from 'lit';
+import { QtiExpression } from '../qti-expression';
+import { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
 
-export class QtiCorrect extends QtiExpression<string|string[]> {
-  override render() {
-    return html``;
-  }
-
+export class QtiCorrect extends QtiExpression<string | string[]> {
   get interpretation() {
-    return this.getAttribute("interpretation") || "";
+    return this.getAttribute('interpretation') || '';
   }
 
   override calculate() {
-    const identifier = this.getAttribute("identifier") || "";
-    const responseVariable = (
-      this.closest("qti-assessment-item") as QtiAssessmentItem
-    ).getResponse(identifier);
+    const identifier = this.getAttribute('identifier') || '';
+    const responseVariable = (this.closest('qti-assessment-item') as QtiAssessmentItem).getResponse(identifier);
     responseVariable.correctResponse;
-    if (responseVariable.cardinality !== "single") {
-      return responseVariable.correctResponse.length > 0
-        ? responseVariable.correctResponse[0]
-        : "";
+    if (responseVariable.cardinality !== 'single') {
+      return responseVariable.correctResponse.length > 0 ? responseVariable.correctResponse[0] : '';
     } else {
       return responseVariable.correctResponse;
     }
