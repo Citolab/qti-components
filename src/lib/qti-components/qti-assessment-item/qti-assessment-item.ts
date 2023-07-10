@@ -64,8 +64,8 @@ export class QtiAssessmentItem extends LitElement {
     this.addEventListener('qti-interaction-response', this.interactionResponse);
   }
 
-  connectedCallback(): void {
-    super.connectedCallback();
+  firstUpdated(val): void {
+    super.firstUpdated(val);
     this.dispatchEvent(
       new CustomEvent<{ identifier: string }>('qti-item-connected', {
         bubbles: true,
