@@ -4,11 +4,6 @@ import { html } from 'lit';
 import { ResponseVariable } from '../../../qti-utilities/ResponseVariable';
 
 export class QtiProduct extends QtiExpression<number> {
-  @state()
-  mult: number = 0;
-
-  override render = () => html`<pre>${this.mult}</pre>`;
-
   public override calculate() {
     const values = this.getVariables() as ResponseVariable[];
     const product = values.reduce((accumulator, currentValue) => {
@@ -23,7 +18,6 @@ export class QtiProduct extends QtiExpression<number> {
       }
       return accumulator;
     }, 1);
-    this.mult = product;
     return product;
   }
 }
