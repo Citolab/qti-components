@@ -4,7 +4,7 @@ import { html, LitElement } from 'lit';
 @customElement('qti-rule')
 export class QtiRule extends LitElement {
   override render() {
-    return html``;
+    return html`<slot></slot>`;
   }
 
   public process() {
