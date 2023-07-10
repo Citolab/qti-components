@@ -23,7 +23,6 @@ export class QtiResponseDeclaration extends QtiVariableDeclaration {
     responseVariable.mapping = this.mapping;
     responseVariable.value = this.defaultValues(responseVariable);
 
-    // this.emit("qti-register-variable", { detail: { variable: responseVariable } });
     this.dispatchEvent(
       new CustomEvent('qti-register-variable', {
         bubbles: true,

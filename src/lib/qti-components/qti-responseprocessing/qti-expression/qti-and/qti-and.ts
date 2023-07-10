@@ -3,10 +3,6 @@ import { QtiConditionExpression } from '../qti-condition-expression';
 import { QtiExpression } from '../qti-expression';
 
 export class QtiAnd extends QtiConditionExpression {
-  override render() {
-    return html``;
-  }
-
   public override calculate() {
     // children can be a mix of qti-expression and qti-condition-expression
     const values = Array.from(this.children).map(c => {

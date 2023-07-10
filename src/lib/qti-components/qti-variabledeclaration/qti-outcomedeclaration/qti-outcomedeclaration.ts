@@ -47,9 +47,6 @@ export class QtiOutcomeDeclaration extends QtiVariableDeclaration {
         detail: { variable: outcomeVariable }
       })
     );
-
-    // const qtiAssessmentItem = this.closest("qti-assessment-item") as QtiAssessmentItem
-    // qtiAssessmentItem.variables.push(outcomeVariable);
   }
 }
 
