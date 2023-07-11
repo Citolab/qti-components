@@ -1,13 +1,17 @@
 import '../../index';
+import '../../../qti-item';
 
 import { html } from 'lit';
 import { action } from '@storybook/addon-actions';
 import { Meta, StoryObj } from '@storybook/web-components';
 
-type Story = StoryObj;
+import xml from './qti-end-attempt-interaction.xml?raw';
+import { useRef, virtual } from 'haunted';
+import { QtiAssessmentItem } from '../../index';
 
 const meta: Meta = {
-  component: 'qti-end-attempt-interaction'
+  component: 'qti-end-attempt-interaction',
+  decorators: [story => html`${virtual(story)()}`]
 };
 export default meta;
 
@@ -26,4 +30,17 @@ export const Interaction = {
         <qti-response-processing> </qti-response-processing>
       </qti-assessment-item>
     `
+};
+
+export const XML = {
+  render: () => {
+    const qtiItemRef = useRef<QtiAssessmentItem>(null);
+    return html`<qti-item
+        @qti-outcome-changed=${action(`qti-outcome-changed`)}
+        @qti-interaction-changed=${action(`qti-interaction-changed`)}
+        @qti-item-connected=${({ detail }) => (qtiItemRef.current = detail)}
+        xml=${xml}
+      ></qti-item>
+      <button @click=${() => qtiItemRef.current.processResponse()}>PROCESS</button>`;
+  }
 };

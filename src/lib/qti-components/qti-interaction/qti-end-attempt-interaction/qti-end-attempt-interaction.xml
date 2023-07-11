@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qti-assessment-item
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd
+                        http://www.duo.nl/schema/dep_extension ../dep_extension.xsd"
+    title="32bll7"
+    identifier="ITM-32bll7"
+    time-dependent="false"
+    label="32bll7"
+    xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+    xmlns:dep="http://www.duo.nl/schema/dep_extension"
+>
+    <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="identifier">
+        <qti-correct-response>
+            <qti-value>MGH001C</qti-value>
+        </qti-correct-response>
+    </qti-response-declaration>
+    <qti-response-declaration identifier="HINTREQUEST" cardinality="single" base-type="boolean" />
+    <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float" />
+    <qti-outcome-declaration identifier="FEEDBACK" cardinality="single" base-type="identifier" />
+    <qti-item-body>
+        <qti-choice-interaction response-identifier="RESPONSE" shuffle="false" max-choices="1">
+            <qti-prompt>Who is the President of Mexico?</qti-prompt>
+            <qti-simple-choice identifier="MGH001A">George W Bush</qti-simple-choice>
+            <qti-simple-choice identifier="MGH001B">Tony Blair</qti-simple-choice>
+            <qti-simple-choice identifier="MGH001C">Vicente Fox</qti-simple-choice>
+            <qti-simple-choice identifier="MGH001D">Ariel Sharon</qti-simple-choice>
+        </qti-choice-interaction>
+        <p>
+            <qti-end-attempt-interaction response-identifier="HINTREQUEST" title="Show Hint" />
+        </p>
+        <qti-feedback-block identifier="HINT" outcome-identifier="FEEDBACK" show-hide="show">
+            <qti-content-body> Tony lives in the United Kingdom and George lives in Washington. </qti-content-body>
+        </qti-feedback-block>
+    </qti-item-body>
+    <qti-response-processing>
+        <qti-set-outcome-value identifier="FEEDBACK">
+            <qti-base-value base-type="identifier">NOHINT</qti-base-value>
+        </qti-set-outcome-value>
+        <qti-response-condition>
+            <qti-response-if>
+                <qti-variable identifier="HINTREQUEST" />
+                <qti-set-outcome-value identifier="FEEDBACK">
+                    <qti-base-value base-type="identifier">HINT</qti-base-value>
+                </qti-set-outcome-value>
+            </qti-response-if>
+            <qti-response-else>
+                <qti-response-condition>
+                    <qti-response-if>
+                        <qti-match>
+                            <qti-variable identifier="RESPONSE" />
+                            <qti-correct identifier="RESPONSE" />
+                        </qti-match>
+                        <qti-set-outcome-value identifier="SCORE">
+                            <qti-base-value base-type="float">1</qti-base-value>
+                        </qti-set-outcome-value>
+                    </qti-response-if>
+                    <qti-response-else>
+                        <qti-set-outcome-value identifier="SCORE">
+                            <qti-base-value base-type="float">0</qti-base-value>
+                        </qti-set-outcome-value>
+                    </qti-response-else>
+                </qti-response-condition>
+            </qti-response-else>
+        </qti-response-condition>
+    </qti-response-processing>
+</qti-assessment-item>

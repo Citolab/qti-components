@@ -51,8 +51,7 @@ export const QtiItem = {
 
     const view = args.view;
 
-    return html`
-      <qti-item
+    return html` <qti-item
         .audienceContext=${{ view }}
         item-location=${`${args.serverLocation}/${args.qtipkg}/items/`}
         @qti-interaction-changed=${action(`on-interaction-changed`)}
@@ -60,7 +59,7 @@ export const QtiItem = {
         @qti-item-connected=${({ detail: item }) => (qtiItemRef.current = item)}
         xml=${itemXML}
       ></qti-item>
-    `;
+      <button @click=${() => qtiItemRef.current.processResponse()}>PROCESS</button>`;
   },
   loaders: [
     async args => ({
