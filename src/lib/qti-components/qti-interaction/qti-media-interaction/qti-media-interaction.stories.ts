@@ -1,11 +1,14 @@
 import { html } from 'lit';
 import { action } from '@storybook/addon-actions';
+import { useRef, virtual } from 'haunted';
+import '../../../qti-item';
 
-import './qti-media-interaction';
+import xml from './qti-media-interaction.xml?raw';
+import { QtiAssessmentItem } from '../../qti-assessment-item/qti-assessment-item';
 
 export default {
   component: 'qti-media-interaction',
-
+  decorators: [story => html`${virtual(story)()}`],
   argTypes: {
     autostart: { type: 'boolean', description: '' },
     minPlays: { type: 'number', description: '' },
@@ -41,4 +44,23 @@ export const Interaction = {
     `,
 
   args: {}
+};
+
+export const XML = {
+  render: () => {
+    const qtiItemRef = useRef<QtiAssessmentItem>(null);
+
+    return html` <qti-item
+        @qti-outcome-changed=${action(`qti-outcome-changed`)}
+        @qti-interaction-changed=${action(`qti-interaction-changed`)}
+        @qti-item-connected=${({ detail }) => (qtiItemRef.current = detail)}
+        xml=${xml}
+      ></qti-item>
+      <button
+        class="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
+        @click=${() => qtiItemRef.current.processResponse()}
+      >
+        PROCESS
+      </button>`;
+  }
 };
