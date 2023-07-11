@@ -1,5 +1,5 @@
 import { html, LitElement } from 'lit';
-import { VariableDeclaration } from '../qti-utilities/VariableDeclaration';
+import { VariableDeclaration } from '../qti-utilities/Variables';
 
 export class QtiVariableDeclaration extends LitElement {
   override render() {
@@ -8,9 +8,7 @@ export class QtiVariableDeclaration extends LitElement {
 
   protected defaultValues(variable: VariableDeclaration<string | string[] | null>) {
     const htmlValues = Array.from(this.querySelectorAll('qti-default-value > qti-value'));
-    if (htmlValues.length === 0 && (variable.cardinality === 'multiple' || variable.cardinality === 'ordered')) {
-      return [];
-    }
+
     if (htmlValues.length === 0) {
       return null;
     }

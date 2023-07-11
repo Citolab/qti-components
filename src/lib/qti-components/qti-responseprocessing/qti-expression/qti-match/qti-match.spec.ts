@@ -1,7 +1,7 @@
 import { QtiMatch } from './qti-match';
 import { html, render } from 'lit';
 import { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
-import { ResponseVariable } from './../../../qti-utilities/ResponseVariable';
+import { ResponseVariable } from './../../../qti-utilities/Variables';
 import { describe, expect, it } from '@jest/globals';
 import '../../../../../lib/qti-components/index';
 
@@ -9,7 +9,7 @@ describe('qti-match', () => {
   it('should check if the variable identified in the first child is contained in the second one', () => {
     const template = () => html`
       <qti-assessment-item>
-        <qti-response-declaration  identifier="TEI1" base-type="string" cardinality="single">
+        <qti-response-declaration identifier="TEI1" base-type="string" cardinality="single">
           <qti-correct-response>
             <qti-value>test</qti-value>
           </qti-correct-response>
@@ -23,13 +23,13 @@ describe('qti-match', () => {
     render(template(), document.body);
 
     const qtiMatch = document.body.querySelector('qti-match') as QtiMatch;
-    const assessmentItem = document.body.querySelector(
-      'qti-assessment-item'
-    ) as QtiAssessmentItem;
-    assessmentItem.responses = [{
-      responseIdentifier: 'TEI1',
-      response: 'test',
-    }]
+    const assessmentItem = document.body.querySelector('qti-assessment-item') as QtiAssessmentItem;
+    assessmentItem.responses = [
+      {
+        responseIdentifier: 'TEI1',
+        response: 'test'
+      }
+    ];
     expect(qtiMatch.calculate()).toBeTruthy();
   });
 });

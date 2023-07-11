@@ -1,6 +1,6 @@
 import { property } from 'lit/decorators.js';
 import { QtiExpression } from '../qti-expression';
-import { ResponseVariable } from '../../../qti-utilities/ResponseVariable';
+import { ResponseVariable } from '../../../qti-utilities/Variables';
 
 export class QtiEqualRounded extends QtiExpression<boolean> {
   @property({ type: String }) roundingMode: 'decimalPlaces' | 'significantFigures' = 'significantFigures';

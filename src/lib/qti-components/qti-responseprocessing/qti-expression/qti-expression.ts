@@ -1,9 +1,9 @@
 import { LitElement, css, html, nothing } from 'lit';
 import { QtiAssessmentItem } from '../../qti-assessment-item/qti-assessment-item';
-import { ResponseVariable } from '../../qti-utilities/ResponseVariable';
+import { ResponseVariable } from '../../qti-utilities/Variables';
 import { QtiMultiple } from './qti-multiple/qti-multiple';
 import { state } from 'lit/decorators.js';
-import { VariableDeclaration } from '../../qti-utilities/VariableDeclaration';
+import { VariableDeclaration } from '../../qti-utilities/Variables';
 
 export abstract class QtiExpression<T> extends LitElement {
   @state()
@@ -65,18 +65,18 @@ export abstract class QtiExpression<T> extends LitElement {
             const variable = this.assessmentItem.getVariable(identifier);
             return variable;
           }
-          case 'qti-multiple': {
-            const multiple = e as QtiMultiple;
-            const values = multiple.calculate();
-            if (values.length > 0) {
-              return {
-                baseType: values[0].baseType,
-                value: values.map(v => v.value),
-                cardinality: 'multiple'
-              } as ResponseVariable;
-            }
-            return null;
-          }
+          // case 'qti-multiple': {
+          //   const multiple = e as QtiMultiple;
+          //   const values = multiple.calculate();
+          //   if (values.length > 0) {
+          //     return {
+          //       baseType: values[0].baseType,
+          //       value: values.map(v => v.value),
+          //       cardinality: 'multiple'
+          //     } as ResponseVariable;
+          //   }
+          //   return null;
+          // }
           case 'qti-correct': {
             const identifier = e.getAttribute('identifier') || '';
             const responseVariable = this.assessmentItem.getResponse(identifier);

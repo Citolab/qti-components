@@ -1,5 +1,4 @@
-import { ResponseVariable } from '../../../qti-utilities/ResponseVariable';
-import { VariableDeclaration } from '../../../qti-utilities/VariableDeclaration';
+import { ResponseVariable, ResultVariable, VariableDeclaration } from '../../../qti-utilities/Variables';
 import { QtiExpression } from '../qti-expression';
 export class QtiMultiple extends QtiExpression<VariableDeclaration<string | string[]>[]> {
   public override calculate(): ResponseVariable[] {

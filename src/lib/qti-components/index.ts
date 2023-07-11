@@ -3,8 +3,7 @@ export * from './qti-utilities/ExpressionResult';
 /* only exported to override or extend for specific purposes */
 export * from './qti-utilities/EventTypes';
 export * from './qti-utilities/EventStrings';
-export * from './qti-utilities/ResponseVariable';
-export * from './qti-utilities/OutcomeVariable';
+export * from './qti-utilities/Variables';
 
 /* only exported to override or extend for specific purposes */
 export * from './qti-assessment-item/qti-assessment-item';

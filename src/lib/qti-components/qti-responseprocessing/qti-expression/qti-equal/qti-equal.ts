@@ -1,7 +1,7 @@
 import { property } from 'lit/decorators.js';
 import { ScoringHelper } from '../../utilities/scoring-helper';
 import { QtiExpression } from '../qti-expression';
-import { ResponseVariable } from '../../../qti-utilities/ResponseVariable';
+import { ResponseVariable } from '../../../qti-utilities/Variables';
 
 export class QtiEqual extends QtiExpression<boolean> {
   @property({ type: String }) toleranceMode: 'exact' | 'relative' | 'absolute' = 'exact';

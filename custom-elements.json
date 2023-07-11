@@ -36,7 +36,7 @@
           "name": "*",
           "declaration": {
             "name": "*",
-            "package": "./qti-utilities/ResponseVariable"
+            "package": "./qti-utilities/Variables"
           }
         },
         {
@@ -44,7 +44,7 @@
           "name": "*",
           "declaration": {
             "name": "*",
-            "package": "./qti-utilities/OutcomeVariable"
+            "package": "./qti-utilities/Variables"
           }
         },
         {
@@ -1945,7 +1945,7 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-utilities/OutcomeVariable.ts",
+      "path": "src/lib/qti-components/qti-utilities/Variables.ts",
       "declarations": [
         {
           "kind": "class",
@@ -1960,14 +1960,14 @@
           "name": "OutcomeVariable",
           "declaration": {
             "name": "OutcomeVariable",
-            "module": "src/lib/qti-components/qti-utilities/OutcomeVariable.ts"
+            "module": "src/lib/qti-components/qti-utilities/Variables.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-utilities/ResponseVariable.ts",
+      "path": "src/lib/qti-components/qti-utilities/Variables.ts",
       "declarations": [
         {
           "kind": "class",
@@ -1982,7 +1982,7 @@
           "name": "ResponseVariable",
           "declaration": {
             "name": "ResponseVariable",
-            "module": "src/lib/qti-components/qti-utilities/ResponseVariable.ts"
+            "module": "src/lib/qti-components/qti-utilities/Variables.ts"
           }
         }
       ]
@@ -2036,7 +2036,7 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-utilities/VariableDeclaration.ts",
+      "path": "src/lib/qti-components/qti-utilities/Variables.ts",
       "declarations": [],
       "exports": []
     },

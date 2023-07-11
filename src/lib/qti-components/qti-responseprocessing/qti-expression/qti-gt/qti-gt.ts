@@ -1,4 +1,4 @@
-import { ResponseVariable } from '../../../qti-utilities/ResponseVariable';
+import { ResponseVariable } from '../../../qti-utilities/Variables';
 import { QtiExpression } from '../qti-expression';
 
 export class QtiGt extends QtiExpression<boolean> {

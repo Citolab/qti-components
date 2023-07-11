@@ -1,6 +1,6 @@
 import { QtiMapResponse } from './qti-mapresponse';
 import { html, render } from 'lit';
-import { ResponseVariable } from './../../../qti-utilities/ResponseVariable';
+import { ResponseVariable } from './../../../qti-utilities/Variables';
 import { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
 import { describe, expect, it } from '@jest/globals';
 import '../../../../qti-components/index';

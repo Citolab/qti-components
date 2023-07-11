@@ -1,7 +1,7 @@
 import { LitElement, html } from 'lit';
 import { QtiExpression } from '../qti-expression';
 import { QtiRule } from '../../qti-rule/qti-rule';
-import { ResponseVariable } from '../../../qti-utilities/ResponseVariable';
+import { ResponseVariable } from '../../../qti-utilities/Variables';
 
 export class QtiNot extends QtiExpression<boolean> {
   override render() {

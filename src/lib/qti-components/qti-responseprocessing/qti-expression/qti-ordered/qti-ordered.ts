@@ -1,4 +1,4 @@
-import { ResponseVariable } from '../../../qti-utilities/ResponseVariable';
+import { ResponseVariable } from '../../../qti-utilities/Variables';
 import { QtiExpression } from '../qti-expression';
 export class QtiOrdered extends QtiExpression<ResponseVariable[]> {
   public override calculate(): ResponseVariable[] {

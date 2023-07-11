@@ -1,8 +1,8 @@
 import { property } from 'lit/decorators.js';
 import { BaseType, Cardinality } from '../../qti-utilities/ExpressionResult';
-import { OutcomeVariable } from '../../qti-utilities/OutcomeVariable';
+import { OutcomeVariable } from '../../qti-utilities/Variables';
 import { QtiVariableDeclaration } from '../qti-variabledeclaration';
-import { VariableDeclaration } from '../../qti-utilities/VariableDeclaration';
+import { VariableDeclaration } from '../../qti-utilities/Variables';
 
 export class QtiOutcomeDeclaration extends QtiVariableDeclaration {
   @property({ type: String, attribute: 'base-type' }) baseType: BaseType;
