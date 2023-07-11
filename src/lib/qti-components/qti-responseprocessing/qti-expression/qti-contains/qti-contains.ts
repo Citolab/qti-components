@@ -1,9 +1,9 @@
 import { ResponseVariable } from '../../../qti-utilities/Variables';
-import { QtiExpression } from '../qti-expression';
+import { QtiConditionExpression } from '../qti-condition-expression';
 
 // PK: For the contains we assume the expressions to calculate are all directedPairs
 // I don't know it this in QTI is always the case however?
-export class QtiContains extends QtiExpression<boolean> {
+export class QtiContains extends QtiConditionExpression {
   public override calculate() {
     // TODO: implement this for other types than directedPair
     const values = this.getVariables() as ResponseVariable[];

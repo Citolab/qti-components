@@ -65,18 +65,18 @@ export abstract class QtiExpression<T> extends LitElement {
             const variable = this.assessmentItem.getVariable(identifier);
             return variable;
           }
-          // case 'qti-multiple': {
-          //   const multiple = e as QtiMultiple;
-          //   const values = multiple.calculate();
-          //   if (values.length > 0) {
-          //     return {
-          //       baseType: values[0].baseType,
-          //       value: values.map(v => v.value),
-          //       cardinality: 'multiple'
-          //     } as ResponseVariable;
-          //   }
-          //   return null;
-          // }
+          case 'qti-multiple': {
+            const multiple = e as QtiMultiple;
+            const values = multiple.calculate();
+            if (values.length > 0) {
+              return {
+                baseType: values[0].baseType,
+                value: values.map(v => v.value),
+                cardinality: 'multiple'
+              } as ResponseVariable;
+            }
+            return null;
+          }
           case 'qti-correct': {
             const identifier = e.getAttribute('identifier') || '';
             const responseVariable = this.assessmentItem.getResponse(identifier);
