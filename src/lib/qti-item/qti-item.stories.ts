@@ -26,7 +26,7 @@ export default {
   },
   args: {
     serverLocation: 'http://localhost:6006/api',
-    qtipkg: 'replay',
+    qtipkg: 'biologie',
     itemIndex: 0
   }
 };
@@ -36,9 +36,6 @@ export const QtiItem = {
     const items: { href: string; identifier: string }[] = loadeditems.items;
     const [itemXML, setItemXML] = useState<string>();
     const qtiItemRef = useRef<QtiAssessmentItem>(null);
-
-    const qtipkg = args.qtipkg;
-    const itemIndex = args.itemIndex;
 
     useEffect(async () => {
       if (items == undefined) return;
@@ -50,34 +47,26 @@ export const QtiItem = {
       const xmlText = await xmlFetch.text();
 
       setItemXML(xmlText);
-    }, [itemIndex, items, qtipkg]);
+    }, [args.itemIndex, items, args.qtipkg]);
 
     const view = args.view;
 
     return html`
       <qti-item
+        .audienceContext=${{ view }}
         item-location=${`${args.serverLocation}/${args.qtipkg}/items/`}
         @qti-interaction-changed=${action(`on-interaction-changed`)}
         @qti-outcome-changed=${action(`qti-outcome-changed`)}
         @qti-item-connected=${({ detail: item }) => (qtiItemRef.current = item)}
-        .audienceContext=${{ view }}
         xml=${itemXML}
-      >
-      </qti-item>
+      ></qti-item>
     `;
   },
   loaders: [
-    async args => {
-      return {
-        loadeditems: await fetch(`${args.args.serverLocation}/${args.args.qtipkg}/items.json`)
-          .then(response => {
-            if (response.status >= 400 && response.status < 600) {
-              console.log('error');
-            }
-            return response.json();
-          })
-          .catch(error => console.log(error))
-      };
-    }
+    async args => ({
+      loadeditems: await fetch(`${args.args.serverLocation}/${args.args.qtipkg}/items.json`)
+        .then(response => (response.ok ? response.json() : console.log('error')))
+        .catch(console.log)
+    })
   ]
 };

@@ -28,6 +28,7 @@ export class QtiItem extends LitElement {
     const oldVal = this._xml;
     this._xml = qtiTransform(val).customTypes().customDefinition().assetsLocation(`${this.itemLocation}`).xml(); // .assetsLocation(`${this.itemLocation}/`).removeNamesSpaces().xml();
     this.requestUpdate('xml', oldVal);
+    this.setAttribute('xml', '--cleared--'); // we clear this after setting the XML, else the dom isn't readably anymore with this large string
   }
   @property({ type: String })
   get xml() {
@@ -50,5 +51,6 @@ export class QtiItem extends LitElement {
     this.shadowRoot.appendChild(styleTag);
   }
 
-  override render = () => html`${unsafeHTML(this._xml)}`;
+  // PK: the slot here is just added for the image which will join later qti-extended, qti-ext, screenshot
+  override render = () => html`${unsafeHTML(this._xml)}<slot></slot>`;
 }
