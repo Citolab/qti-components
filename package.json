@@ -12,7 +12,7 @@
   "engines": {
     "node": ">=16.0.0"
   },
-  "version": "6.0.25",
+  "version": "6.0.26",
   "type": "module",
   "main": "dist/index.js",
   "exports": {
