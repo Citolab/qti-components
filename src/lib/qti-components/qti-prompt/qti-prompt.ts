@@ -2,7 +2,7 @@ import { html, LitElement } from 'lit';
 
 export class QtiPrompt extends LitElement {
   override render() {
-    return html` <slot></slot> `;
+    return html`<slot></slot>`;
   }
 
   override connectedCallback(): void {

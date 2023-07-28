@@ -1,7 +1,7 @@
 @layer base {
   /** default styles for all components */
   .base {
-    @apply cursor-pointer rounded-md text-gray-900
+    @apply cursor-pointer rounded-md 
       outline-none ring-1 ring-inset ring-gray-300;
   }
 }

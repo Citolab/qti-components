@@ -279,3 +279,7 @@ qti-position-object-stage {
     /* height: 40px; */
   }
 }
+
+qti-prompt {
+  @apply my-2 block w-full;
+}

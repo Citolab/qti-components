@@ -57,7 +57,11 @@ export const Interaction = {
       orientation=${ifDefined(args.orientation)}
       ?readonly=${args.readonly}
       .disabled=${args.disabled}
-      >${'\n'}${[
+      ><qti-prompt>
+        <p>Which of the following features are <strong>new</strong> to QTI 3?</p>
+        <p>Pick 1 choice.</p></qti-prompt
+      >
+      ${'\n'}${[
         'I think you can use WorkFlow.',
         'You should use FlowChart',
         'No you should use Workload Rage.',
@@ -84,6 +88,22 @@ export const Simple: Story = {
   args: {
     orientation: 'vertical',
     classes: ['qti-input-control-hidden', 'qti-choices-stacking-2']
+  }
+};
+
+export const ContentEditable = {
+  render: () => {
+    return html`
+      <div contenteditable="true">
+        <qti-choice-interaction>
+          <qti-prompt>Can you start editting one of these simplechoices</qti-prompt>
+          <qti-simple-choice identifier="choice-1"> I think you can use WorkFlow. </qti-simple-choice>
+          <qti-simple-choice identifier="choice-2"><br /></qti-simple-choice>
+          <qti-simple-choice identifier="choice-3"> No you should use Workload Rage. </qti-simple-choice>
+          <qti-simple-choice identifier="choice-4"><br /></qti-simple-choice>
+        </qti-choice-interaction>
+      </div>
+    `;
   }
 };
 

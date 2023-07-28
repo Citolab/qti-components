@@ -6,6 +6,6 @@ export default css`
   :host {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    // align-items: flex-start;
   }
 `;
