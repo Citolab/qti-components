@@ -1,6 +1,6 @@
 import { LitElement } from 'lit';
 export class QtiStylesheet extends LitElement {
-  private styleLink: HTMLStyleElement;
+  private styleLink: HTMLStyleElement | HTMLLinkElement;
 
   constructor() {
     super();
@@ -10,13 +10,23 @@ export class QtiStylesheet extends LitElement {
     super.connectedCallback();
     const item = this.closest('qti-assessment-item');
     const link = this.getAttribute('href');
-    const styles = document.createElement('link');
-    styles.rel = 'stylesheet';
-    styles.type = 'text/css';
-    styles.media = 'screen';
-    styles.href = link;
-    item.appendChild(styles);
-    this.styleLink = styles;
+
+    if (link !== null) {
+      const styles = document.createElement('link');
+      styles.rel = 'stylesheet';
+      styles.type = 'text/css';
+      styles.media = 'screen';
+      styles.href = link;
+      item.appendChild(styles);
+      this.styleLink = styles;
+    }
+    if (this.textContent !== null) {
+      const styles = document.createElement('style');
+      styles.media = 'screen';
+      styles.textContent = this.textContent;
+      item.appendChild(styles);
+      this.styleLink = styles;
+    }
   }
 
   override disconnectedCallback() {
