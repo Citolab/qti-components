@@ -50,8 +50,8 @@ export const Interaction = {
   render: args =>
     html`
       <qti-order-interaction
-        @qti-register-interaction="${action(`on-register-interaction`)}"
-        @qti-interaction-response="${action(`on-interaction-response`)}"
+        @qti-register-interaction="${action(`qti-register-interaction`)}"
+        @qti-interaction-response="${action(`qti-interaction-response`)}"
         .disabled=${args.disabled}
         .readonly=${args.readonly}
         orientation=${ifDefined(args.orientation)}

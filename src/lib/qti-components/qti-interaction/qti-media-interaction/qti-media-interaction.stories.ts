@@ -28,7 +28,7 @@ export const Interaction = {
         min-plays=${args.minPlays}
         max-plays=${args.maxPlays}
         response-identifier="RESPONSE"
-        @on-interaction-response="${e => {
+        @qti-interaction-response="${e => {
           action(e);
         }}"
         .response=${args.response}

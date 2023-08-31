@@ -23,7 +23,7 @@ export const checkbox = {
   render: args =>
     html`
       <qti-hottext-interaction
-        @on-interaction-response="${e => {
+        @qti-interaction-response="${e => {
           action(JSON.stringify(e.detail))();
         }}"
         .response=${args.response}
@@ -52,7 +52,7 @@ export const button = {
   render: ({ maxChoices, presentationClass, response }) =>
     html`
       <qti-hottext-interaction
-        @on-interaction-response="${e => {
+        @qti-interaction-response="${e => {
           action(JSON.stringify(e.detail))();
         }}"
         .response=${response}

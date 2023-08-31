@@ -22,7 +22,7 @@ export default {
 export const Interaction = {
   render: args =>
     html` <qti-inline-choice-interaction
-      @on-interaction-response="${e => {
+      @qti-interaction-response="${e => {
         action(JSON.stringify(e.detail))();
       }}"
       .response=${args.response}

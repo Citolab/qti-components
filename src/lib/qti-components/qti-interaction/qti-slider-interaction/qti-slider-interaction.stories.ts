@@ -41,7 +41,7 @@ export const Interaction = {
     return html`
       <!-- style="width:300px; left:100px; position: absolute" -->
       <qti-slider-interaction
-        @qti-interaction-response="${action(`on-interaction-response`)}"
+        @qti-interaction-response="${action(`qti-interaction-response`)}"
         ?disabled=${disabled}
         ?readonly=${readonly}
         response=${ifDefined(response)}

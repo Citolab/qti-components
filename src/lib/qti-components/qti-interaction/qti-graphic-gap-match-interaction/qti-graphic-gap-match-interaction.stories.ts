@@ -28,8 +28,8 @@ export const Interaction = {
   render: args =>
     html`
       <qti-graphic-gap-match-interaction
-        @on-register-interaction="${e => action(JSON.stringify(e.detail.responseIdentifier))()}"
-        @on-interaction-response="${e => action(JSON.stringify(e.detail))()}"
+        @qti-register-interaction="${e => action(JSON.stringify(e.detail.responseIdentifier))()}"
+        @qti-interaction-response="${e => action(JSON.stringify(e.detail))()}"
         class="qti-choices-top qti-selections-dark"
         response-identifier="RESPONSE"
         shuffle="false"
