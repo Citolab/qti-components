@@ -11,7 +11,7 @@ export const Interaction = {
   render: args =>
     html` <qti-match-interaction
       .dragOptions=${{ copyStylesDragClone: false }}
-      @on-interaction-response="${action(`on-interaction-response`)}"
+      @qti-interaction-response="${action(`qti-interaction-response`)}"
       class="qti-choices-top"
       max-associations="4"
       response-identifier="RESPONSE"
@@ -31,7 +31,7 @@ export const Interaction = {
     </qti-match-interaction>`
 };
 
-export const QtiConvert = {
+export const Tabular = {
   render: () =>
     html`<qti-assessment-item
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -59,6 +59,7 @@ export const QtiConvert = {
       <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float"></qti-outcome-declaration>
       <qti-item-body>
         <qti-match-interaction
+          @qti-interaction-response="${action(`qti-interaction-response`)}"
           class="qti-match-tabular"
           response-identifier="RESPONSE"
           shuffle="true"
@@ -85,40 +86,3 @@ export const QtiConvert = {
       ></qti-response-processing>
     </qti-assessment-item>`
 };
-
-// export const QtiMatchTabular = {
-//   render: () =>
-//     html`<qti-match-interaction
-//       class="qti-match-tabular"
-//       response-identifier="RESPONSE"
-//       shuffle="false"
-//       @on-interaction-response="${action(`on-interaction-response`)}"
-//       max-associations="3"
-//       min-associations="0"
-//     >
-//       <qti-prompt>
-//         <p>
-//           <strong>Domanda 1/2</strong>
-//         </p>
-//       </qti-prompt>
-//       <qti-simple-match-set>
-//         <qti-simple-associable-choice identifier="V" fixed="false" show-hide="show" match-max="0" match-min="0">
-//           Kolom 1
-//         </qti-simple-associable-choice>
-//         <qti-simple-associable-choice identifier="F" fixed="false" show-hide="show" match-max="0" match-min="0">
-//           Kolom 2
-//         </qti-simple-associable-choice>
-//       </qti-simple-match-set>
-//       <qti-simple-match-set>
-//         <qti-simple-associable-choice identifier="RESPONSE" fixed="false" show-hide="show" match-max="1" match-min="0"
-//           >Rij 1</qti-simple-associable-choice
-//         >
-//         <qti-simple-associable-choice identifier="RESPONSE" fixed="false" show-hide="show" match-max="1" match-min="0"
-//           >Rij 2</qti-simple-associable-choice
-//         >
-//         <qti-simple-associable-choice identifier="RESPONSE" fixed="false" show-hide="show" match-max="1" match-min="0"
-//           >Rij 3</qti-simple-associable-choice
-//         >
-//       </qti-simple-match-set>
-//     </qti-match-interaction>`
-// };
