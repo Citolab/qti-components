@@ -24,7 +24,7 @@
 
   /* - check   : qti-choice, qti-hotspot */
   .check {
-    @apply base flex items-center gap-2 rounded-full px-1 py-0.5 shadow-none;
+    @apply base flex items-center gap-2 px-1 py-0.5 shadow-none;
     @apply !ring-0; /* !important, remove for checkbox and radio the active ring, the radio and checkbox will be selected instead */
     /* @apply select-none; */
 
