@@ -1,6 +1,7 @@
 import { css, html } from 'lit';
 import { Events } from '../../qti-utilities/EventStrings';
 import { Interaction } from '../internal/interaction/interaction';
+import { property, state } from 'lit/decorators.js';
 
 interface OptionType {
   textContent: string;
@@ -8,8 +9,6 @@ interface OptionType {
   selected: boolean;
 }
 export class QtiInlineChoiceInteraction extends Interaction {
-  options: OptionType[] = [];
-
   public static inputWidthClass = [
     '',
     'qti-input-width-2',
@@ -23,22 +22,10 @@ export class QtiInlineChoiceInteraction extends Interaction {
     'qti-input-width-72'
   ];
 
-  static override get properties() {
-    return {
-      ...Interaction.properties,
-      ...{
-        options: {
-          type: Array,
-          value: [],
-          attribute: false
-        }
-      }
-    };
-  }
+  @state() options: OptionType[] = [];
 
-  override connectedCallback() {
-    super.connectedCallback();
-  }
+  @property({ attribute: 'data-prompt', type: String })
+  dataPrompt: string = 'select';
 
   static override get styles() {
     return [
@@ -63,14 +50,14 @@ export class QtiInlineChoiceInteraction extends Interaction {
     </select>`;
   }
 
-  constructor() {
-    super();
+  firstUpdated(val) {
+    super.firstUpdated(val);
     this.addEventListener(Events.ON_DROPDOWN_SELECTED, this.choiceSelected);
     const choices = Array.from(this.querySelectorAll('qti-inline-choice'));
 
     this.options = [
       {
-        textContent: 'select',
+        textContent: this.dataPrompt,
         value: '',
         selected: false
       },

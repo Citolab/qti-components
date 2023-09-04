@@ -22,9 +22,25 @@ export default {
 export const Interaction = {
   render: args =>
     html` <qti-inline-choice-interaction
-      @qti-interaction-response="${e => {
-        action(JSON.stringify(e.detail))();
-      }}"
+      @qti-interaction-response="${action('qti-interaction-response')}"
+      .response=${args.response}
+      ?disabled=${args.disabled}
+      ?readonly=${args.readonly}
+      class="${args.inputWidthClass}"
+      response-identifier="RESPONSE"
+      shuffle="${args.shuffle}"
+    >
+      <qti-inline-choice identifier="G">Gloucester</qti-inline-choice>
+      <qti-inline-choice identifier="L">Lancaster</qti-inline-choice>
+      <qti-inline-choice identifier="Y">York</qti-inline-choice>
+    </qti-inline-choice-interaction>`
+};
+
+export const DataPrompt = {
+  render: args =>
+    html` <qti-inline-choice-interaction
+      data-prompt="Select the correct answer"
+      @qti-interaction-response="${action('qti-interaction-response')}"
       .response=${args.response}
       ?disabled=${args.disabled}
       ?readonly=${args.readonly}
@@ -43,9 +59,7 @@ export const Item = {
     html` <qti-assessment-item
       .responses="${response}"
       identifier="inline-choice"
-      @qti-interaction-changed="${e => {
-        action(JSON.stringify(e.detail))();
-      }}"
+      @qti-interaction-changed="${action('qti-interaction-response')}"
     >
       <qti-item-body>
         <p>Identify the missing word in this famous quote from Shakespeare's Richard III.</p>
