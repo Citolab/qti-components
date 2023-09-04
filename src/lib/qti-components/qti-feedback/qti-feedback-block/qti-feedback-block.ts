@@ -5,6 +5,9 @@ export class QtiFeedbackBlock extends QtiFeedback {
   override render() {
     return html`
       <style>
+        :host {
+          display: block;
+        }
         .on {
           display: block;
         }
