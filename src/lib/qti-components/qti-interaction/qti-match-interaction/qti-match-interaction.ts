@@ -5,6 +5,7 @@ import '../qti-simple-associable-choice';
 import { property, state } from 'lit/decorators.js';
 import { QtiSimpleAssociableChoice } from '../qti-simple-associable-choice';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 
 interface Column {
   id: number;
@@ -51,12 +52,12 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
       <table>
         <tr>
           <td></td>
-          ${this.cols.map((col, i) => html`<th>${unsafeHTML(col.innerHTML)}</th>`)}
+          ${this.cols.map((col, i) => html`<th part="r-header">${unsafeHTML(col.innerHTML)}</th>`)}
         </tr>
         ${this.rows.map(
-          (row, r) => html`<tr>
-            <td>${unsafeHTML(row.innerHTML)}</td>
-            ${this.cols.map((col, c) => {
+          (row, rIndex) => html`<tr>
+            <td part="c-header">${unsafeHTML(row.innerHTML)}</td>
+            ${this.cols.map((col, cIndex) => {
               const value = `${row.getAttribute('identifier')} ${col.getAttribute('identifier')}`;
               return html`<td>
                 <input
