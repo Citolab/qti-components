@@ -62,7 +62,7 @@ export const DragDropInteractionMixin = <T extends Constructor<LitElement>>(
             elem.removeAttribute('over');
             elem.removeAttribute('dragging');
             // pk: if not dropped on a drop location put it back where it belongs
-            if (ev.dataTransfer.dropEffect === 'none') {
+            if (ev.dataTransfer.dropEffect === 'none' || ev.dataTransfer.dropEffect === undefined) {
               if (this.configuration.dragCanBePlacedBack) {
                 const draggable = ev.currentTarget as HTMLElement;
                 const position = this.draggables.get(draggable);

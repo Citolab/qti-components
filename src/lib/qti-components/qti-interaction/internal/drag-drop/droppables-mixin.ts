@@ -31,6 +31,7 @@ export const DroppablesMixin = <T extends Constructor<LitElement>>(
 
       this.dragoverHandler = this.dragoverHandler.bind(this);
       this.dragleaveHandler = this.dragleaveHandler.bind(this);
+      this.dragenterHandler = this.dragenterHandler.bind(this);
 
       this.dropHandler = this.dropHandler.bind(this);
 
@@ -67,11 +68,13 @@ export const DroppablesMixin = <T extends Constructor<LitElement>>(
 
     private attachHandler(droppable: Element) {
       droppable.addEventListener('dragover', this.dragoverHandler);
+      droppable.addEventListener('dragenter', this.dragenterHandler);
       droppable.addEventListener('drop', this.dropHandler);
     }
 
     private removeHandler(droppable: Element) {
       droppable.removeEventListener('dragover', this.dragoverHandler);
+      droppable.removeEventListener('dragenter', this.dragenterHandler);
       droppable.removeEventListener('drop', this.dropHandler);
     }
 
@@ -84,9 +87,12 @@ export const DroppablesMixin = <T extends Constructor<LitElement>>(
       this.observer?.disconnect();
     }
 
+    dragenterHandler(ev: DragEvent) {
+      ev.preventDefault();
+    }
+
     dragoverHandler(ev: DragEvent) {
       ev.preventDefault();
-
       const droppable = ev.currentTarget as HTMLElement;
       // droppablesInShadowRoot
       // ? droppable.setAttribute('part', droppable.getAttribute('part') + ' active') :
@@ -127,6 +133,7 @@ export const DroppablesMixin = <T extends Constructor<LitElement>>(
 
       const droppable = ev.currentTarget as HTMLElement;
       droppable.removeAttribute('active');
+      ev.dataTransfer.dropEffect = 'none';
 
       return false;
     }

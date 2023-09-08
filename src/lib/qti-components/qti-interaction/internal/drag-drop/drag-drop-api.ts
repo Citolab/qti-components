@@ -71,7 +71,7 @@ export class TouchDragAndDrop {
     // Save current timestamp
     this._touchBegin = Date.now();
 
-    const { x, y } = this._getPositionFromEvent(e);
+    const { x, y } = this._getPoint(e);
 
     this._touchDown = { x, y };
 
@@ -95,7 +95,7 @@ export class TouchDragAndDrop {
     if (this._canDrag && this._dragSrc) {
       // Create copy of element for visual drag feedback
 
-      const { x, y } = this._getPositionFromEvent(e);
+      const { x, y } = this._getPoint(e);
       const _touches = { clientX: x, clientY: y };
 
       if (this._getDelta(_touches) >= this._DRAGDELTA) {
@@ -204,27 +204,24 @@ export class TouchDragAndDrop {
    * @param {Object} pt
    */
   private _findDroppable(event) {
-    let element;
-
-    // PK: Just some smart code from
-    // https://github.com/justinribeiro/html5-dragdroptouch-shim/blob/ebc0b8a01d820da3b8a6e75d49461220eb78ebb2/src/index.js#L253
-    // find what we're looking for in the composed path that isn't a slot or a
-    // fragment,
-    // PK ADDED: And is indeed a dropzone
-    const found = event.composedPath().find(i => {
-      if (i.nodeType === 1 && i.nodeName !== 'SLOT' && i.hasAttribute('dropzone')) {
-        return i;
-      }
-    });
-
-    if (found) {
-      // find the shadow root for our target
-      const theLowestShadowRoot = found.getRootNode();
-      const pointFromTouchEvent = this._getPoint(event);
-      element = theLowestShadowRoot.elementFromPoint(pointFromTouchEvent.x, pointFromTouchEvent.y);
-    }
-
+    const pointFromTouchEvent = this._getPoint(event);
+    const element = this.elementFromPoint(pointFromTouchEvent.x, pointFromTouchEvent.y);
     return element;
+  }
+
+  private elementFromPoint(x: number, y: number): Element {
+    let el = document.elementFromPoint(x, y);
+    if (el) {
+      while (el.shadowRoot) {
+        const customEl = el.shadowRoot.elementFromPoint(x, y);
+        if (customEl === null || customEl === el) {
+          break;
+        }
+        el = customEl;
+      }
+      return el;
+    }
+    return null;
   }
 
   private _getPoint(event, page?) {
@@ -308,32 +305,32 @@ export class TouchDragAndDrop {
     this._handleClick = true;
   }
 
-  private _getPositionFromEvent(e: any): {
-    x: number;
-    y: number;
-  } {
-    let _touchMove;
-    if (e.type == 'touchstart' || e.type == 'touchmove' || e.type == 'touchend' || e.type == 'touchcancel') {
-      const evt = typeof e.originalEvent === 'undefined' ? e : e.originalEvent;
-      const touch = evt.touches[0] || evt.changedTouches[0];
-      _touchMove = {
-        x: touch.pageX,
-        y: touch.pageY
-      };
-    } else if (
-      e.type == 'mousedown' ||
-      e.type == 'mouseup' ||
-      e.type == 'mousemove' ||
-      e.type == 'mouseover' ||
-      e.type == 'mouseout' ||
-      e.type == 'mouseenter' ||
-      e.type == 'mouseleave'
-    ) {
-      _touchMove = {
-        x: e.clientX,
-        y: e.clientY
-      };
-    }
-    return _touchMove;
-  }
+  // private _getPositionFromEvent(e: any): {
+  //   x: number;
+  //   y: number;
+  // } {
+  //   let _touchMove;
+  //   if (e.type == 'touchstart' || e.type == 'touchmove' || e.type == 'touchend' || e.type == 'touchcancel') {
+  //     const evt = typeof e.originalEvent === 'undefined' ? e : e.originalEvent;
+  //     const touch = evt.touches[0] || evt.changedTouches[0];
+  //     _touchMove = {
+  //       x: touch.pageX,
+  //       y: touch.pageY
+  //     };
+  //   } else if (
+  //     e.type == 'mousedown' ||
+  //     e.type == 'mouseup' ||
+  //     e.type == 'mousemove' ||
+  //     e.type == 'mouseover' ||
+  //     e.type == 'mouseout' ||
+  //     e.type == 'mouseenter' ||
+  //     e.type == 'mouseleave'
+  //   ) {
+  //     _touchMove = {
+  //       x: e.clientX,
+  //       y: e.clientY
+  //     };
+  //   }
+  //   return _touchMove;
+  // }
 }
