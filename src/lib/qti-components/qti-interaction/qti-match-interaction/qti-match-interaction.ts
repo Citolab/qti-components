@@ -5,7 +5,6 @@ import '../qti-simple-associable-choice';
 import { property, state } from 'lit/decorators.js';
 import { QtiSimpleAssociableChoice } from '../qti-simple-associable-choice';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
-import { ifDefined } from 'lit/directives/if-defined.js';
 
 interface Column {
   id: number;

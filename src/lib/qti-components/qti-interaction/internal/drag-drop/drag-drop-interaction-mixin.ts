@@ -61,6 +61,7 @@ export const DragDropInteractionMixin = <T extends Constructor<LitElement>>(
             ev.preventDefault();
             elem.removeAttribute('over');
             elem.removeAttribute('dragging');
+
             // pk: if not dropped on a drop location put it back where it belongs
             if (ev.dataTransfer.dropEffect === 'none' || ev.dataTransfer.dropEffect === undefined) {
               if (this.configuration.dragCanBePlacedBack) {
@@ -211,8 +212,6 @@ export const DragDropInteractionMixin = <T extends Constructor<LitElement>>(
         responseString += droppable.getAttribute('identifier');
         return responseString;
       });
-
-      // const value = { list: { pair: response } };
 
       this.dispatchEvent(
         new CustomEvent('qti-interaction-response', {
