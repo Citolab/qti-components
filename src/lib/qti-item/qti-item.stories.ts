@@ -20,9 +20,7 @@ export default {
     qtipkg: {
       options: packages.packages,
       control: { type: 'radio' }
-    },
-    readonly: { control: { type: 'boolean' } },
-    disabled: { control: { type: 'boolean' } }
+    }
   },
   args: {
     serverLocation: 'http://localhost:6006/api',

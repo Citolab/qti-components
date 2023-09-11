@@ -28,7 +28,7 @@ export class QtiItem extends LitElement {
     const oldVal = this._xml;
     this._xml = qtiTransform(val).customTypes().customDefinition().assetsLocation(`${this.itemLocation}`).xml(); // .assetsLocation(`${this.itemLocation}/`).removeNamesSpaces().xml();
     this.requestUpdate('xml', oldVal);
-    // this.setAttribute('xml', '--JOE--'); // we clear this after setting the XML, else the dom isn't readably anymore with this large string
+    this.setAttribute('xml', '--cleared--'); // we clear this after setting the XML, else the dom isn't readably anymore with this large string
   }
   @property({ type: String })
   get xml() {
@@ -43,7 +43,7 @@ export class QtiItem extends LitElement {
 
   connectedCallback(): void {
     super.connectedCallback();
-    // const sheet = new CSSStyleSheet(); // new style does not seem to work on old mobile devices
+    // const sheet = new CSSStyleSheet();
     // sheet.replaceSync(styles);
     // this.shadowRoot.adoptedStyleSheets.push(sheet);
     const styleTag = document.createElement('style');
