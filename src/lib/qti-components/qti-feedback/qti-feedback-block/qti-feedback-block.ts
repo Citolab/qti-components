@@ -15,7 +15,7 @@ export class QtiFeedbackBlock extends QtiFeedback {
           display: none;
         }
       </style>
-      <div class="feedback ${this.showStatus}">
+      <div part="feedback-block" class="feedback ${this.showStatus}">
         <slot></slot>
       </div>
     `;
