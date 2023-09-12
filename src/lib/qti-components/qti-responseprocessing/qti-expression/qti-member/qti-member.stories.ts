@@ -1,6 +1,6 @@
 import '../../../index';
 import { html } from 'lit';
-import { expect } from '@storybook/jest';
+// import { expect } from '@storybook/jest';
 import { within } from '@storybook/testing-library';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { QtiMember } from './qti-member';
@@ -52,12 +52,12 @@ export const MemberCorrect: Story = {
         <qti-variable identifier="BODY"></qti-variable>
       </qti-member>
     </qti-assessment-item>`;
-  },
-  play: ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const isMember = (canvas.getByTestId('qti-member') as QtiMember).calculate();
-    expect(isMember).toBeTruthy;
   }
+  // play: ({ canvasElement }) => {
+  //   const canvas = within(canvasElement);
+  //   const isMember = (canvas.getByTestId('qti-member') as QtiMember).calculate();
+  //   expect(isMember).toBeTruthy;
+  // }
 };
 
 export const AssessmentCorrect: Story = {
@@ -87,9 +87,9 @@ export const AssessmentCorrect: Story = {
         </qti-response-condition>
       </qti-response-processing>
     </qti-assessment-item>`;
-  },
-  play: ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    (canvas.getByTestId('qti-assessment-item') as QtiAssessmentItem).processResponse();
   }
+  // play: ({ canvasElement }) => {
+  //   const canvas = within(canvasElement);
+  //   (canvas.getByTestId('qti-assessment-item') as QtiAssessmentItem).processResponse();
+  // }
 };

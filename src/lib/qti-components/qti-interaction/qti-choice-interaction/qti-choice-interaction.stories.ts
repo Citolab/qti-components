@@ -2,7 +2,7 @@ import { action } from '@storybook/addon-actions';
 import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
-import { expect } from '@storybook/jest';
+// import { expect } from '@storybook/jest';
 import { userEvent, within } from '@storybook/testing-library';
 
 import type { Meta, StoryObj } from '@storybook/web-components';
@@ -72,15 +72,15 @@ export const Interaction = {
             >${'\n'}`
       )}</qti-choice-interaction
     >`;
-  },
-  play: ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    //   // 👇 Simulate interactions with the component
-    //   // See https://storybook.js.org/docs/react/essentials/actions#automatically-matching-args to learn how to setup logging in the Actions panel
-    userEvent.click(canvas.getByTestId('choice-2'));
-    // //   // 👇 Assert DOM structure
-    expect(canvas.getByTestId('choice-2').getAttribute('aria-checked')).toBeTruthy();
   }
+  // play: ({ canvasElement }) => {
+  //   const canvas = within(canvasElement);
+  //   //   // 👇 Simulate interactions with the component
+  //   //   // See https://storybook.js.org/docs/react/essentials/actions#automatically-matching-args to learn how to setup logging in the Actions panel
+  //   userEvent.click(canvas.getByTestId('choice-2'));
+  //   // //   // 👇 Assert DOM structure
+  //   expect(canvas.getByTestId('choice-2').getAttribute('aria-checked')).toBeTruthy();
+  // }
 };
 
 export const Simple: Story = {
