@@ -18,9 +18,9 @@ export class QtiFeedbackBlock extends QtiFeedback {
     return html` <slot part="feedback" class="feedback ${this.showStatus}"></slot> `;
   }
 
-  // protected firstUpdated(_changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
-  //   this.checkShowFeedback(this.outcomeIdentifier);
-  // }
+  protected firstUpdated(_changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
+    this.checkShowFeedback(this.outcomeIdentifier);
+  }
 }
 
 customElements.define('qti-feedback-block', QtiFeedbackBlock);
