@@ -71,7 +71,16 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
                       this.response = this.response.filter(v => v !== value);
                     }
                     this.requestUpdate();
-                    this.saveResponse();
+                    this.dispatchEvent(
+                      new CustomEvent('qti-interaction-response', {
+                        bubbles: true,
+                        composed: true,
+                        detail: {
+                          responseIdentifier: this.responseIdentifier,
+                          response: this.response
+                        }
+                      })
+                    );
                   }}
                 />
               </td>`;
@@ -80,19 +89,6 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
         )}
       </table>
     `;
-  }
-
-  protected saveResponse() {
-    this.dispatchEvent(
-      new CustomEvent('qti-interaction-response', {
-        bubbles: true,
-        composed: true,
-        detail: {
-          responseIdentifier: this.responseIdentifier,
-          response: this.response
-        }
-      })
-    );
   }
 }
 
