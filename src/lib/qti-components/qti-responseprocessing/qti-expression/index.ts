@@ -20,6 +20,6 @@ export * from './qti-ordered/qti-ordered';
 export * from './qti-printed-variable/qti-printed-variable';
 export * from './qti-product/qti-product';
 export * from './qti-variable/qti-variable';
-
+export * from './qti-string-match/qti-string-match';
 export * from './qti-condition-expression';
 export * from './qti-expression';
