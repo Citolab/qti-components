@@ -304,39 +304,39 @@ export const kringloop = () => {
                 step="100"
                 upper-bound="1000"
               ></qti-slider-interaction>
-              <qti-feedback-inline
-                id="feedbackInline-correct-exact"
+              <qti-feedback-block
+                id="feedbackblock-correct-exact"
                 identifier="correct-exact"
                 outcome-identifier="FEEDBACK"
                 show-hide="show"
               >
                 Helemaal goed! Dat is net zoveel als het gewicht van een groot paard! 🐎
-              </qti-feedback-inline>
-              <qti-feedback-inline
-                id="feedbackInline-correct"
+              </qti-feedback-block>
+              <qti-feedback-block
+                id="feedbackblock-correct"
                 identifier="correct"
                 outcome-identifier="FEEDBACK"
                 show-hide="show"
               >
                 Bijna! We rekenen het goed! 562 kilo 😮 Dat is net zoveel als het gewicht van een groot paard!🐎
-              </qti-feedback-inline>
-              <qti-feedback-inline
-                id="feedbackInline-incorrect-less"
+              </qti-feedback-block>
+              <qti-feedback-block
+                id="feedbackblock-incorrect-less"
                 identifier="incorrect-less"
                 outcome-identifier="FEEDBACK"
                 show-hide="show"
               >
                 Helaas het is nog meer! 562 kilo 😮! Dat is net zoveel als het gewicht van een groot paard 🐎
-              </qti-feedback-inline>
-              <qti-feedback-inline
-                id="feedbackInline-incorrect-more"
+              </qti-feedback-block>
+              <qti-feedback-block
+                id="feedbackblock-incorrect-more"
                 identifier="incorrect-more"
                 outcome-identifier="FEEDBACK"
                 show-hide="show"
               >
                 Dat is niet goed, gelukkig is het minder, maar toch 562 kilo! Dat is net zoveel als het gewicht van een
                 groot paard!🐎
-              </qti-feedback-inline>
+              </qti-feedback-block>
             </div>
           </div>
         </div>

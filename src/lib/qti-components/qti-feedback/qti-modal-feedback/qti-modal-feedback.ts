@@ -1,22 +1,17 @@
-import { html } from 'lit';
+import { css, html } from 'lit';
 import { QtiFeedback } from '../qti-feedback';
 
 export class QtiModalFeedback extends QtiFeedback {
-  override render() {
-    return html`
-      <style>
-        .on {
-          display: inline-block;
-        }
-        .off {
-          display: none;
-        }
-      </style>
-      <div class="feedback ${this.showStatus}">
-        <slot></slot>
-      </div>
-    `;
-  }
+  static override styles = css`
+    .on {
+      display: inline-block;
+    }
+    .off {
+      display: none;
+    }
+  `;
+
+  override render = () => html` <slot part="feedback" class="${this.showStatus}"></slot> `;
 }
 
 customElements.define('qti-modal-feedback', QtiModalFeedback);

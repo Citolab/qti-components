@@ -52,21 +52,23 @@ export class QtiTextEntryInteraction extends Interaction {
   }
 
   override render() {
-    return html` <input
-      part="input"
-      spellcheck="false"
-      autocomplete="off"
-      @keydown="${event => event.stopImmediatePropagation()}"
-      @keyup="${this.textChanged}"
-      @change="${this.textChanged}"
-      type="text"
-      placeholder="${ifDefined(this.placeholderText ? this.placeholderText : undefined)}"
-      .value="${this._value}"
-      size="${this._size}"
-      pattern="${ifDefined(this.patternMask ? this.patternMask : undefined)}"
-      ?disabled="${this.disabled}"
-      ?readonly="${this.readonly}"
-    />`;
+    return html`
+      <input
+        part="input"
+        spellcheck="false"
+        autocomplete="off"
+        @keydown="${event => event.stopImmediatePropagation()}"
+        @keyup="${this.textChanged}"
+        @change="${this.textChanged}"
+        type="${this.patternMask == '[0-9]*' ? 'number' : 'text'}"
+        placeholder="${ifDefined(this.placeholderText ? this.placeholderText : undefined)}"
+        .value="${this._value}"
+        size="${this._size}"
+        pattern="${ifDefined(this.patternMask ? this.patternMask : undefined)}"
+        ?disabled="${this.disabled}"
+        ?readonly="${this.readonly}"
+      />
+    `;
   }
   //
   // maxlength="${ifDefined(this.expectedLength ? this.expectedLength : undefined)}"

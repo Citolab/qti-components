@@ -1,29 +1,23 @@
-import { PropertyValueMap, html } from 'lit';
+import { PropertyValueMap, css, html } from 'lit';
 import { QtiFeedback } from '../qti-feedback';
 
 export class QtiFeedbackBlock extends QtiFeedback {
+  static override styles = css`
+    .on {
+      display: block;
+    }
+    .off {
+      display: none;
+    }
+  `;
+
   override render() {
-    return html`
-      <style>
-        :host {
-          display: block;
-        }
-        .on {
-          display: block;
-        }
-        .off {
-          display: none;
-        }
-      </style>
-      <div class="feedback ${this.showStatus}">
-        <slot></slot>
-      </div>
-    `;
+    return html` <slot part="feedback" class="feedback ${this.showStatus}"></slot> `;
   }
 
-  protected firstUpdated(_changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
-    this.checkShowFeedback(this.outcomeIdentifier);
-  }
+  // protected firstUpdated(_changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
+  //   this.checkShowFeedback(this.outcomeIdentifier);
+  // }
 }
 
 customElements.define('qti-feedback-block', QtiFeedbackBlock);
