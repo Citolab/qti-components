@@ -3,6 +3,9 @@ import { QtiFeedback } from '../qti-feedback';
 
 export class QtiFeedbackBlock extends QtiFeedback {
   static override styles = css`
+    :host {
+      display: block;
+    }
     .on {
       display: block;
     }
