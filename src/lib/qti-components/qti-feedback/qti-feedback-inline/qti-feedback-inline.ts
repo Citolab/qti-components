@@ -11,6 +11,6 @@ export class QtiFeedbackInline extends QtiFeedback {
     }
   `;
 
-  override render = () => html` <slot class="${this.showStatus}"></slot> `;
+  override render = () => html` <slot part="feedback" class="${this.showStatus}"></slot> `;
 }
 customElements.define('qti-feedback-inline', QtiFeedbackInline);
