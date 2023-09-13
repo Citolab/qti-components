@@ -48,7 +48,7 @@ export class QtiItem extends LitElement {
     // this.shadowRoot.adoptedStyleSheets.push(sheet);
     const styleTag = document.createElement('style');
     styleTag.textContent = styles;
-    this.shadowRoot.appendChild(styleTag);
+    this.shadowRoot?.appendChild(styleTag);
   }
 
   // PK: the slot here is just added for the image which will join later qti-extended, qti-ext, screenshot
