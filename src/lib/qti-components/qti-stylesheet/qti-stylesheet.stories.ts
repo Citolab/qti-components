@@ -20,8 +20,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: args => html`<qti-assessment-item>
+    <qti-stylesheet href="/qti-stylesheet/linked.css" type="text/css"></qti-stylesheet>
     <qti-item-body>
-      <qti-stylesheet href="/qti-stylesheet/linked.css" type="text/css"></qti-stylesheet>
       <qti-choice-interaction
         class="qti-orientation-horizontal qti-input-control-hidden"
         max-choices="1"
@@ -37,8 +37,8 @@ export const Default: Story = {
 
 export const Inline: Story = {
   render: args => html`<qti-assessment-item>
+    <qti-stylesheet type="text/css">${inlineCSS}</qti-stylesheet>
     <qti-item-body>
-      <qti-stylesheet type="text/css">${inlineCSS}</qti-stylesheet>
       <qti-choice-interaction
         class="qti-orientation-horizontal qti-input-control-hidden"
         max-choices="1"
