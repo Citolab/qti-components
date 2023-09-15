@@ -23,3 +23,4 @@ export * from './qti-variable/qti-variable';
 export * from './qti-string-match/qti-string-match';
 export * from './qti-condition-expression';
 export * from './qti-expression';
+export * from './qti-sum/qti-sum';
