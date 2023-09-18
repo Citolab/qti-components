@@ -12,6 +12,10 @@ qti-choice-interaction {
       @apply check hover:hov focus:foc aria-checked:act aria-readonly:rdo aria-disabled:dis;
     }
   }
+
+  qti-simple-choice > p {
+    @apply m-0 p-0;
+  }
 }
 
 qti-text-entry-interaction {
