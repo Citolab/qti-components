@@ -28,7 +28,7 @@ export class QtiSimpleChoice extends QtiChoice {
 
   override render() {
     return html`<div part="ch"><div part="cha"></div></div>
-      <slot></slot> `;
+      <slot part="slot"></slot> `;
   }
 }
 

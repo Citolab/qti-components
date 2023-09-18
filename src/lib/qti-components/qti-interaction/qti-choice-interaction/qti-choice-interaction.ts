@@ -25,7 +25,9 @@ export class QtiChoiceInteraction extends Choices {
   @property({ type: String })
   public orientation: 'horizontal' | 'vertical';
 
-  override render = () => html` <slot name="prompt"></slot><slot></slot>`;
+  render() {
+    return html` <slot name="prompt"></slot><slot part="slot"></slot>`;
+  }
 }
 
 declare global {

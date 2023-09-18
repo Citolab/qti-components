@@ -91,11 +91,21 @@ export const Simple: Story = {
   }
 };
 
+export const Multiple: Story = {
+  render: Interaction.render,
+  args: {
+    orientation: 'vertical',
+    classes: ['qti-choices-stacking-2'],
+    'min-choices': 1,
+    'max-choices': 2
+  }
+};
+
 export const ContentEditable = {
   render: () => {
     return html`
       <div contenteditable="true">
-        <qti-choice-interaction>
+        <qti-choice-interaction response-identifier="RESPONSE">
           <qti-prompt>Can you start editting one of these simplechoices</qti-prompt>
           <qti-simple-choice identifier="choice-1"> I think you can use WorkFlow. </qti-simple-choice>
           <qti-simple-choice identifier="choice-2"><br /></qti-simple-choice>

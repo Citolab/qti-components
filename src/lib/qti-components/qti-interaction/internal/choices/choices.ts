@@ -103,7 +103,7 @@ export abstract class Choices extends Interaction {
     }
   }
 
-  private _choiceElementSelectedHandler(event: CustomEvent<{ identifier: string; checked: boolean }>) {
+  protected _choiceElementSelectedHandler(event: CustomEvent<{ identifier: string; checked: boolean }>) {
     if (this.maxChoices === 1) {
       this._choiceElements
         .filter(ce => ce.identifier !== event.detail.identifier)
@@ -114,7 +114,7 @@ export abstract class Choices extends Interaction {
     this._choiceElementSelected();
   }
 
-  private _choiceElementSelected() {
+  protected _choiceElementSelected() {
     const selectedIdentifiers = this._choiceElements.filter(ce => ce.checked).map(ce => ce.identifier);
 
     if (this.maxChoices > 1) {
