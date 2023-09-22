@@ -91,3 +91,4 @@ export * from './qti-interaction/qti-hottext';
 export * from './qti-interaction/qti-inline-choice';
 export * from './qti-interaction/qti-simple-associable-choice';
 export * from './qti-interaction/qti-simple-choice';
+export * from './qti-interaction/internal/interaction/interaction';
