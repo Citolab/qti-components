@@ -73,17 +73,18 @@ export const qtiTransform = (xmlValue: string) => {
       return api;
     },
     assetsLocation(uri: string, attributes = ['src', 'href', 'data']) {
-      const documentPath = uri.substring(0, uri.lastIndexOf('/'));
       const $ = cheerio.load(xmlString, { xmlMode: true });
-
-      for (const attribute of attributes) {
-        $(`[${attribute}]`).each((_, node) => {
-          const srcValue = $(node).attr(attribute)!;
-          if (!srcValue.startsWith('data:') && !srcValue.startsWith('http')) {
-            const newSrcValue = documentPath + '/' + encodeURIComponent(srcValue);
-            $(node).attr(attribute, newSrcValue);
-          }
-        });
+      if (uri !== '') {
+        const documentPath = uri.substring(0, uri.lastIndexOf('/'));
+        for (const attribute of attributes) {
+          $(`[${attribute}]`).each((_, node) => {
+            const srcValue = $(node).attr(attribute)!;
+            if (!srcValue.startsWith('data:') && !srcValue.startsWith('http')) {
+              const newSrcValue = documentPath + '/' + encodeURIComponent(srcValue);
+              $(node).attr(attribute, newSrcValue);
+            }
+          });
+        }
       }
       xmlString = $.xml();
       return api;
