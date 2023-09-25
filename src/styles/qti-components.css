@@ -62,7 +62,7 @@
 
   /* - drag    : gap-match, match, order, associate */
   .drag {
-    @apply base cursor-grab bg-white py-1 pl-4 pr-2 font-semibold shadow-sm;
+    @apply base inline-block cursor-grab bg-white py-1 pl-4 pr-2 font-semibold shadow-sm;
     /* @apply select-none; */
     background-image: radial-gradient(
       circle at center,
