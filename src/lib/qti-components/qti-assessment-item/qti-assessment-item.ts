@@ -64,6 +64,22 @@ export class QtiAssessmentItem extends LitElement {
     this.addEventListener('qti-interaction-response', this.interactionResponse);
   }
 
+  connectedCallback(): void {
+    super.connectedCallback();
+    this.variables.push({
+      identifier: 'numAttempts',
+      cardinality: 'single',
+      baseType: 'integer',
+      value: this._numAttempts.toString()
+    });
+    this.variables.push({
+      identifier: 'completionStatus',
+      cardinality: 'single',
+      baseType: 'string',
+      value: 'not_attempted'
+    });
+  }
+
   firstUpdated(val): void {
     super.firstUpdated(val);
     this.dispatchEvent(
@@ -114,6 +130,9 @@ export class QtiAssessmentItem extends LitElement {
 
     responseProcessor.process();
     this._numAttempts++;
+    this.setOutcomeValue('numAttempts', this._numAttempts.toString());
+    this.setOutcomeValue('completionStatus', this._getCompletionStatus());
+
     this.dispatchEvent(new CustomEvent('qti-response-processing'));
     return true;
   }
@@ -144,27 +163,23 @@ export class QtiAssessmentItem extends LitElement {
   }
 
   // check all interactions contain valid responses
-  public validateResponses(): boolean {
-    let result = true;
-    this.interactionElements.forEach(interactionElement => {
-      if (!interactionElement.validate()) {
-        result = false;
-      }
-    });
-    return result;
+  // public validateResponses(): boolean {
+  //   let result = true;
+  //   this.interactionElements.forEach(interactionElement => {
+  //     if (!interactionElement.validate()) {
+  //       result = false;
+  //     }
+  //   });
+  //   return result;
+  // }
+  private _getCompletionStatus(): 'completed' | 'incomplete' | 'not_attempted' | 'unknown' {
+    if (this.interactionElements.every(interactionElement => interactionElement.validate())) return 'completed';
+    if (this.interactionElements.some(interactionElement => interactionElement.validate())) return 'incomplete';
+    return 'not_attempted';
   }
 
   public getVariable(identifier: string): VariableDeclaration<string | string[] | undefined> {
     switch (identifier) {
-      case 'numAttempts':
-        return {
-          identifier: 'numAttempts',
-          cardinality: 'single',
-          baseType: 'integer',
-          value: this._numAttempts.toString()
-        };
-        break;
-
       default:
         {
           const variable = this.variables.find(vr => vr.identifier === identifier);
@@ -210,6 +225,13 @@ export class QtiAssessmentItem extends LitElement {
     if (responseVariable) {
       responseVariable.value = detail.response;
     }
+
+    // https://www.imsglobal.org/spec/qti/v3p0/impl#h.886q73e2ya9q
+    // At the start of the first attempt it changes to the reserved value "unknown".
+    // It remains with this value for the duration of the item session
+    // unless set to a different value by a setOutcomeValue rule in responseProcessing.
+    this.setOutcomeValue('completionStatus', 'unknown');
+
     event.stopImmediatePropagation();
 
     const identifier = this.getAttribute('identifier');
