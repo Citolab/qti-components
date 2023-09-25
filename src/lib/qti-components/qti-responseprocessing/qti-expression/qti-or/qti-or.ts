@@ -24,7 +24,7 @@ export class QtiOr extends QtiConditionExpression {
         } else if (value === "false") {
           value = false;
         } else {
-          console.error("unexpected value in qti-and, expected boolean");
+          console.error("unexpected value in qti-or, expected boolean");
           return null;
         }
       }
