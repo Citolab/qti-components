@@ -19,7 +19,7 @@ export class QtiSetOutcomeValue extends QtiRule {
     //   return;
     // }
     const qtiAssessmentItem = this.closest('qti-assessment-item') as QtiAssessmentItem;
-    qtiAssessmentItem.setOutcomeValue(identifier, value);
+    qtiAssessmentItem._setOutcomeValue(identifier, value);
   }
 }
 

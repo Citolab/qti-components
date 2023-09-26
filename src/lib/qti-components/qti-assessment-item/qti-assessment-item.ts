@@ -1,4 +1,4 @@
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import { html, LitElement } from 'lit';
 import { OutcomeVariable } from '../qti-utilities/Variables';
 import { ResponseVariable } from '../qti-utilities/Variables';
@@ -10,6 +10,8 @@ import type { QtiFeedback } from '../qti-feedback/qti-feedback';
 import type { QtiResponseProcessing } from '../qti-responseprocessing';
 import type { VariableDeclaration } from '../qti-utilities/Variables';
 import type QtiRegisterVariable from '../qti-utilities/events/qti-register-variable';
+import { Item, itemContext } from './qti-assessment-item.context';
+import { provide } from '@lit-labs/context';
 
 /**
  * @summary The qti-assessment-item element contains all the other QTI 3 item structures.
@@ -29,55 +31,65 @@ import type QtiRegisterVariable from '../qti-utilities/events/qti-register-varia
  */
 @customElement('qti-assessment-item')
 export class QtiAssessmentItem extends LitElement {
-  public variables: VariableDeclaration<string | string[]>[] = []; // made public for tests to access
-  private feedbackElements: QtiFeedback[] = [];
-  private interactionElements: Interaction[] = [];
+  @property({ type: String }) title: string;
+  @property({ type: String }) identifier: string | undefined = undefined;
+  @property({ type: String }) adaptive: 'true' | 'false' = 'false';
+  @property({ type: String }) timeDependent: 'true' | 'false' = 'false';
 
   @property({ type: Boolean }) disabled: boolean;
-  @property({ type: Boolean }) readonly: boolean;
-
-  @property({ type: String }) title: string;
-  @property({ type: String }) identifier: string;
-
-  private _numAttempts = 0;
-
-  override render() {
-    return html`<slot></slot>`;
-  }
-
   @watch('disabled', { waitUntilFirstUpdate: true })
   _handleDisabledChange = (_: boolean, disabled: boolean) => {
-    this.interactionElements.forEach(ch => (ch.disabled = disabled));
+    this._interactionElements.forEach(ch => (ch.disabled = disabled));
   };
 
+  @property({ type: Boolean }) readonly: boolean;
   @watch('readonly', { waitUntilFirstUpdate: true })
   _handleReadonlyChange = (_: boolean, readonly: boolean) =>
-    this.interactionElements.forEach(ch => (ch.readonly = readonly));
+    this._interactionElements.forEach(ch => (ch.readonly = readonly));
+
+  @provide({ context: itemContext })
+  @state()
+  private _itemProvider: Readonly<Item> = {
+    variables: [
+      {
+        identifier: 'completionStatus',
+        cardinality: 'single',
+        baseType: 'string',
+        value: 'not_attempted',
+        type: 'outcome'
+      },
+      {
+        identifier: 'numAttempts',
+        cardinality: 'single',
+        baseType: 'integer',
+        value: '0',
+        type: 'response'
+      }
+    ]
+  };
+
+  private _feedbackElements: QtiFeedback[] = [];
+  private _interactionElements: Interaction[] = [];
+
+  override render() {
+    return html`<slot></slot>
+      <pre>${JSON.stringify(this._itemProvider.variables, null, 2)}</pre>`;
+  }
 
   constructor() {
     super();
-    // listen for events.
-    this.addEventListener('qti-register-variable', this._registerVariable);
-    this.addEventListener('qti-register-feedback', this.registerFeedbackElement);
-    this.addEventListener('qti-register-interaction', this.registerInteractionElement);
-    this.addEventListener('qti-outcome-changed', this.outcomeChanged);
-    this.addEventListener('qti-interaction-response', this.interactionResponse);
-  }
 
-  connectedCallback(): void {
-    super.connectedCallback();
-    this.variables.push({
-      identifier: 'numAttempts',
-      cardinality: 'single',
-      baseType: 'integer',
-      value: this._numAttempts.toString()
+    this.addEventListener('qti-register-variable', ({ detail }) => {
+      this._itemProvider = { ...this._itemProvider, variables: [...this._itemProvider.variables, detail.variable] };
     });
-    this.variables.push({
-      identifier: 'completionStatus',
-      cardinality: 'single',
-      baseType: 'string',
-      value: 'not_attempted'
+    this.addEventListener('qti-register-feedback', ({ detail }) => {
+      this._feedbackElements.push(detail);
     });
+    this.addEventListener('qti-register-interaction', ({ detail }) => {
+      this._interactionElements.push(detail);
+    });
+    this.addEventListener('qti-outcome-changed', this.handleOutcomeChanged);
+    this.addEventListener('qti-interaction-response', this.handleResponseChanged);
   }
 
   firstUpdated(val): void {
@@ -91,21 +103,8 @@ export class QtiAssessmentItem extends LitElement {
     );
   }
 
-  public override disconnectedCallback() {
-    // remove events listeners.
-    this.removeEventListener('qti-register-variable', this._registerVariable);
-    this.removeEventListener('qti-register-feedback', this.registerFeedbackElement);
-    this.removeEventListener('qti-register-interaction', this.registerInteractionElement);
-    this.removeEventListener('qti-outcome-changed', this.outcomeChanged);
-    this.removeEventListener('qti-interaction-response', this.interactionResponse);
-  }
-
-  private _registerVariable(event: QtiRegisterVariable) {
-    this.variables.push(event.detail.variable);
-  }
-
   public showCorrectResponse() {
-    const responseVariables = this.variables.filter(
+    const responseVariables = this._itemProvider.variables.filter(
       (vari: ResponseVariable | OutcomeVariable) => 'correctResponse' in vari && vari.correctResponse
     ) as ResponseVariable[];
     this.responses = responseVariables.map(cr => {
@@ -129,9 +128,16 @@ export class QtiAssessmentItem extends LitElement {
     }
 
     responseProcessor.process();
-    this._numAttempts++;
-    this.setOutcomeValue('numAttempts', this._numAttempts.toString());
-    this.setOutcomeValue('completionStatus', this._getCompletionStatus());
+
+    this._setOutcomeValue(
+      'numAttempts',
+      (+this._itemProvider.variables.find(v => v.identifier === 'numAttempts')?.value + 1).toString()
+    );
+
+    if (this.adaptive === 'false') {
+      // if adapative, completionStatus is set by the processing template
+      this._setOutcomeValue('completionStatus', this._getCompletionStatus());
+    }
 
     this.dispatchEvent(new CustomEvent('qti-response-processing'));
     return true;
@@ -142,7 +148,7 @@ export class QtiAssessmentItem extends LitElement {
   set responses(myResponses: ResponseInteraction[]) {
     if (myResponses) {
       for (const response of myResponses) {
-        const interaction: Interaction | undefined = this.interactionElements.find(
+        const interaction: Interaction | undefined = this._interactionElements.find(
           i => i.getAttribute('response-identifier') === response.responseIdentifier
         );
         // If there is a responseVariable, set the value back into the responseVariable
@@ -158,84 +164,81 @@ export class QtiAssessmentItem extends LitElement {
     }
   }
 
-  resetInteractions() {
-    this.interactionElements.forEach(interactionElement => interactionElement.reset());
-  }
-
-  // check all interactions contain valid responses
-  // public validateResponses(): boolean {
-  //   let result = true;
-  //   this.interactionElements.forEach(interactionElement => {
-  //     if (!interactionElement.validate()) {
-  //       result = false;
-  //     }
-  //   });
-  //   return result;
-  // }
-  private _getCompletionStatus(): 'completed' | 'incomplete' | 'not_attempted' | 'unknown' {
-    if (this.interactionElements.every(interactionElement => interactionElement.validate())) return 'completed';
-    if (this.interactionElements.some(interactionElement => interactionElement.validate())) return 'incomplete';
-    return 'not_attempted';
+  // FIXME: pk, does this take into account the cardinality of the response variable?
+  public resetInteractions() {
+    this._interactionElements.forEach(interactionElement => interactionElement.reset());
   }
 
   public getVariable(identifier: string): VariableDeclaration<string | string[] | undefined> {
-    switch (identifier) {
-      default:
-        {
-          const variable = this.variables.find(vr => vr.identifier === identifier);
-          if (!variable) {
-            console.warn(`Variable with identifier ${identifier} was not found`);
-            return null;
-          }
-          return variable;
-        }
-        break;
+    const variable = this._itemProvider.variables.find(vr => vr.identifier === identifier);
+    if (!variable) {
+      console.warn(`Variable with identifier ${identifier} was not found`);
+      return null;
     }
+    return variable;
   }
 
   public getResponse(identifier: string): ResponseVariable | null {
-    const variable = this.variables.find(vr => vr.identifier === identifier);
-    const responseVariable = variable instanceof ResponseVariable ? variable : null;
-    return responseVariable;
+    const variable = this._itemProvider.variables.find(vr => vr.identifier === identifier);
+    const responseVariable = variable.type === 'response' ? variable : null;
+    return responseVariable as ResponseVariable;
   }
 
   public getOutcome(identifier: string): OutcomeVariable | null {
-    const variable = this.variables.find(vr => vr.identifier === identifier);
-    if (variable instanceof OutcomeVariable) {
-      return variable;
+    const variable = this._itemProvider.variables.find(vr => vr.identifier === identifier);
+    const outcomeVariable = variable.type === 'outcome' ? variable : null;
+    return outcomeVariable as OutcomeVariable;
+  }
+
+  // saving privates here: ------------------------------------------------------------------------------
+
+  private _setOutcomeValue(outcomeIdentifier: string, outcome: string) {
+    const outcomeVariable = this.getOutcome(outcomeIdentifier);
+    if (!outcomeVariable) {
+      console.warn(`Can not set qti-outcome-identifier: ${outcomeIdentifier}, it is not available`);
+      return;
     }
-    return null;
-  }
 
-  private registerFeedbackElement(e: CustomEvent<QtiFeedback>) {
-    e.stopPropagation();
-    this.feedbackElements.push(e.detail);
-  }
+    this._itemProvider = {
+      ...this._itemProvider,
+      variables: this._itemProvider.variables.map(v => {
+        if (v.identifier !== outcomeIdentifier) {
+          return v;
+        }
+        return {
+          ...v,
+          value: outcomeVariable.cardinality === 'single' ? outcome : [...v.value, outcome]
+        };
+      })
+    };
 
-  private registerInteractionElement(e: CustomEvent<null>) {
-    e.stopPropagation();
-    this.interactionElements.push(e.target as Interaction);
+    this.dispatchEvent(
+      new CustomEvent<OutcomeChangedDetails>('qti-outcome-changed', {
+        bubbles: true,
+        composed: true,
+        detail: {
+          item: this.identifier,
+          outcomeIdentifier,
+          value: this._itemProvider.variables.find(v => v.identifier === outcomeIdentifier)?.value
+        }
+      })
+    );
   }
 
   // interaction has fired an event to save response.
-  private interactionResponse(event: CustomEvent<InteractionChangedDetails>) {
-    const detail = event.detail;
-    // Maybe we do not have a responseVariable declared, no problem should work without
-    const responseVariable = this.getResponse(detail.responseIdentifier);
-    if (responseVariable) {
-      responseVariable.value = detail.response;
-    }
-
-    // https://www.imsglobal.org/spec/qti/v3p0/impl#h.886q73e2ya9q
-    // At the start of the first attempt it changes to the reserved value "unknown".
-    // It remains with this value for the duration of the item session
-    // unless set to a different value by a setOutcomeValue rule in responseProcessing.
-    this.setOutcomeValue('completionStatus', 'unknown');
-
+  private handleResponseChanged(event: CustomEvent<InteractionChangedDetails>) {
     event.stopImmediatePropagation();
+    const detail = event.detail;
 
-    const identifier = this.getAttribute('identifier');
-    if (!identifier) {
+    // change value in an immutable way
+    this._itemProvider = {
+      ...this._itemProvider,
+      variables: this._itemProvider.variables.map(v =>
+        v.identifier === detail.responseIdentifier ? { ...v, value: detail.response } : v
+      )
+    };
+
+    if (!this.identifier) {
       console.warn(`qti-assessment-item has no identifier specified`);
     }
 
@@ -244,7 +247,7 @@ export class QtiAssessmentItem extends LitElement {
         bubbles: true,
         composed: true,
         detail: {
-          item: identifier,
+          item: this.identifier,
           responseIdentifier: detail.responseIdentifier,
           response: detail.response
         }
@@ -252,57 +255,20 @@ export class QtiAssessmentItem extends LitElement {
     );
   }
 
-  // checks the attributes of all feedback elements and shows/hides as appropriate.
-  private outcomeChanged(event: CustomEvent<OutcomeChangedDetails>) {
+  private handleOutcomeChanged(event: CustomEvent<OutcomeChangedDetails>) {
     this.showFeedback(event);
   }
 
   private showFeedback(event: CustomEvent<OutcomeChangedDetails>) {
-    this.feedbackElements.forEach(fe => {
+    this._feedbackElements.forEach(fe => {
       fe.checkShowFeedback(event.detail.outcomeIdentifier); // , event.detail.value);
     });
   }
 
-  public setOutcomeValue(identifier: string, value: string) {
-    let outcomeIdentifier: VariableDeclaration<any>;
-    switch (identifier) {
-      // https://qti-components.citolab.nl/?path=/docs/qti-tutorial--docs#listing-12-using-numattempts-to-set-the-completion-status
-      // PK: let's fake a completionStatus variable for adaptive items
-      case 'completionStatus':
-        outcomeIdentifier = {
-          identifier: 'completionStatus',
-          cardinality: 'single',
-          baseType: 'string',
-          value: value
-        };
-        break;
-      default:
-        {
-          outcomeIdentifier = this.getOutcome(identifier);
-          if (!outcomeIdentifier) {
-            console.warn(`Can not set qti-outcome-identifier: ${identifier}, it is not available`);
-            return;
-          }
-
-          if (outcomeIdentifier.cardinality === 'single') {
-            outcomeIdentifier.value = value;
-          } else {
-            (outcomeIdentifier.value as any[]).push(value);
-          }
-        }
-        break;
-    }
-    this.dispatchEvent(
-      new CustomEvent<OutcomeChangedDetails>('qti-outcome-changed', {
-        bubbles: true,
-        composed: true,
-        detail: {
-          item: this.identifier,
-          outcomeIdentifier: identifier,
-          value: outcomeIdentifier.value
-        }
-      })
-    );
+  private _getCompletionStatus(): 'completed' | 'incomplete' | 'not_attempted' | 'unknown' {
+    if (this._interactionElements.every(interactionElement => interactionElement.validate())) return 'completed';
+    if (this._interactionElements.some(interactionElement => interactionElement.validate())) return 'incomplete';
+    return 'not_attempted';
   }
 }
 
