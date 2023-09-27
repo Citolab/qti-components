@@ -38,7 +38,7 @@ export abstract class QtiExpression<T> extends LitElement {
     ${this._debug ? html`${JSON.stringify(this._result)}` : nothing} ${this._debug ? html`<slot></slot>` : nothing}`;
   }
 
-  public calculate(): T {
+  public calculate(): Readonly<T> {
     throw new Error('Not implemented');
   }
 

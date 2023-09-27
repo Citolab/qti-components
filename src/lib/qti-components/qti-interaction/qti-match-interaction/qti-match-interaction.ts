@@ -5,6 +5,7 @@ import '../qti-simple-associable-choice';
 import { property, state } from 'lit/decorators.js';
 import { QtiSimpleAssociableChoice } from '../qti-simple-associable-choice';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
+import { ResponseInteraction } from '../../qti-utilities/ExpressionResult';
 
 interface Column {
   id: number;
@@ -54,38 +55,39 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
           ${this.cols.map((col, i) => html`<th part="r-header">${unsafeHTML(col.innerHTML)}</th>`)}
         </tr>
         ${this.rows.map(
-          (row, rIndex) => html`<tr>
-            <td part="c-header">${unsafeHTML(row.innerHTML)}</td>
-            ${this.cols.map((col, cIndex) => {
-              const value = `${row.getAttribute('identifier')} ${col.getAttribute('identifier')}`;
-              return html`<td>
-                <input
-                  type="checkbox"
-                  value=${col.getAttribute('identifier')}
-                  .checked=${this.response.includes(value)}
-                  @change=${e => {
-                    const checkbox = e.target as HTMLInputElement;
-                    if (checkbox.checked) {
-                      this.response.push(value);
-                    } else {
-                      this.response = this.response.filter(v => v !== value);
-                    }
-                    this.requestUpdate();
-                    this.dispatchEvent(
-                      new CustomEvent('qti-interaction-response', {
-                        bubbles: true,
-                        composed: true,
-                        detail: {
-                          responseIdentifier: this.responseIdentifier,
-                          response: this.response
-                        }
-                      })
-                    );
-                  }}
-                />
-              </td>`;
-            })}
-          </tr>`
+          (row, rIndex) =>
+            html`<tr>
+              <td part="c-header">${unsafeHTML(row.innerHTML)}</td>
+              ${this.cols.map((col, cIndex) => {
+                const value = `${row.getAttribute('identifier')} ${col.getAttribute('identifier')}`;
+                return html`<td>
+                  <input
+                    type="checkbox"
+                    value=${col.getAttribute('identifier')}
+                    .checked=${this.response.includes(value)}
+                    @change=${e => {
+                      const checkbox = e.target as HTMLInputElement;
+                      if (checkbox.checked) {
+                        this.response.push(value);
+                      } else {
+                        this.response = this.response.filter(v => v !== value);
+                      }
+                      this.requestUpdate();
+                      this.dispatchEvent(
+                        new CustomEvent<ResponseInteraction>('qti-interaction-response', {
+                          bubbles: true,
+                          composed: true,
+                          detail: {
+                            responseIdentifier: this.responseIdentifier,
+                            response: this.response
+                          }
+                        })
+                      );
+                    }}
+                  />
+                </td>`;
+              })}
+            </tr>`
         )}
       </table>
     `;

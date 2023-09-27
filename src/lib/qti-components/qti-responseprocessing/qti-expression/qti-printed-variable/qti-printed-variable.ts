@@ -26,7 +26,7 @@ export class QtPrintedVariable extends LitElement {
   //   this.value = this.calculate() as string;
   // }
 
-  public calculate(): string | string[] {
+  public calculate(): Readonly<string | string[]> {
     const assessmentItem = this.closest('qti-assessment-item') as QtiAssessmentItem;
     const identifier = this.identifier;
     const result = assessmentItem.getVariable(identifier).value;

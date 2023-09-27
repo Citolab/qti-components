@@ -25,7 +25,9 @@ describe('qti-map-response', () => {
     render(template(), document.body);
 
     const assessmentItem = document.body.querySelector('qti-assessment-item') as QtiAssessmentItem;
-    (assessmentItem.variables.find(vr => vr.identifier === 'interaction_1') as ResponseVariable).value = 'b';
+    // (assessmentItem.variables.find(vr => vr.identifier === 'interaction_1') as ResponseVariable).value = 'b';
+    // assessmentItem.getVariable('interaction_1').value = 'b';
+    assessmentItem.updateResponseVariable('interaction_1', 'b');
 
     const qtiMapResponse = document.body.querySelector('qti-map-response') as QtiMapResponse;
     expect(qtiMapResponse.calculate()).toEqual(1);

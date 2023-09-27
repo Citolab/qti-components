@@ -25,6 +25,7 @@ export const Default = () => {
       @qti-register-interaction="${action(`qti-register-interaction`)}"
       @qti-interaction-changed="${action(`qti-interaction-changed`)}"
       @qti-outcome-changed="${action(`qti-outcome-changed`)}"
+      @qti-response-processing="${action(`qti-response-processing`)}"
       adaptive="false"
     >
       <qti-response-declaration identifier="RESPONSE" cardinality="multiple" base-type="identifier">

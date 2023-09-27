@@ -71,36 +71,40 @@ export class QtiAssessmentItem extends LitElement {
   private _feedbackElements: QtiFeedback[] = [];
   private _interactionElements: Interaction[] = [];
 
-  override render() {
-    return html`<slot></slot>
-      <pre>${JSON.stringify(this._itemProvider.variables, null, 2)}</pre>`;
+  firstUpdated(val): void {
+    super.firstUpdated(val);
+    this._emit<InteractionChangedDetails>('item-connected', this);
   }
 
+  override render() {
+    return html`<slot></slot> `;
+  }
+
+  // <pre>${JSON.stringify(this._itemProvider.variables, null, 2)}</pre>
   constructor() {
     super();
 
     this.addEventListener('qti-register-variable', ({ detail }) => {
       this._itemProvider = { ...this._itemProvider, variables: [...this._itemProvider.variables, detail.variable] };
     });
-    this.addEventListener('qti-register-feedback', ({ detail }) => {
-      this._feedbackElements.push(detail);
+    this.addEventListener('qti-register-feedback', (e: CustomEvent<QtiFeedback>) => {
+      e.stopPropagation();
+      this._feedbackElements.push(e.detail);
     });
-    this.addEventListener('qti-register-interaction', ({ detail }) => {
-      this._interactionElements.push(detail);
+    this.addEventListener('qti-register-interaction', (e: CustomEvent<null>) => {
+      e.stopPropagation();
+      this._interactionElements.push(e.target as Interaction);
     });
-    this.addEventListener('qti-outcome-changed', this.handleOutcomeChanged);
-    this.addEventListener('qti-interaction-response', this.handleResponseChanged);
-  }
-
-  firstUpdated(val): void {
-    super.firstUpdated(val);
-    this.dispatchEvent(
-      new CustomEvent<{ identifier: string }>('qti-item-connected', {
-        bubbles: true,
-        composed: true,
-        detail: this
-      })
+    this.addEventListener(
+      // wordt aangeroepen vanuit de processingtemplate
+      'qti-set-outcome-value',
+      (e: CustomEvent<{ outcomeIdentifier: string; value: string | string[] }>) => {
+        const { outcomeIdentifier, value } = e.detail;
+        this.updateOutcomeVariable(outcomeIdentifier, value);
+      }
     );
+
+    this.addEventListener('qti-interaction-response', this.handleUpdateResponseVariable);
   }
 
   public showCorrectResponse() {
@@ -129,17 +133,17 @@ export class QtiAssessmentItem extends LitElement {
 
     responseProcessor.process();
 
-    this._setOutcomeValue(
+    this.updateOutcomeVariable(
       'numAttempts',
       (+this._itemProvider.variables.find(v => v.identifier === 'numAttempts')?.value + 1).toString()
     );
 
     if (this.adaptive === 'false') {
       // if adapative, completionStatus is set by the processing template
-      this._setOutcomeValue('completionStatus', this._getCompletionStatus());
+      this.updateOutcomeVariable('completionStatus', this._getCompletionStatus());
     }
 
-    this.dispatchEvent(new CustomEvent('qti-response-processing'));
+    this._emit('qti-response-processing');
     return true;
   }
 
@@ -148,14 +152,16 @@ export class QtiAssessmentItem extends LitElement {
   set responses(myResponses: ResponseInteraction[]) {
     if (myResponses) {
       for (const response of myResponses) {
+        const responseVariable = this.getResponse(response.responseIdentifier);
+        if (responseVariable) {
+          this.updateResponseVariable(response.responseIdentifier, response.response);
+        }
+
         const interaction: Interaction | undefined = this._interactionElements.find(
           i => i.getAttribute('response-identifier') === response.responseIdentifier
         );
         // If there is a responseVariable, set the value back into the responseVariable
-        const responseVariable = this.getResponse(response.responseIdentifier);
-        if (responseVariable) {
-          responseVariable.value = response.response;
-        }
+
         // Set the response in the interaction
         if (interaction) {
           interaction.response = response.response;
@@ -169,99 +175,66 @@ export class QtiAssessmentItem extends LitElement {
     this._interactionElements.forEach(interactionElement => interactionElement.reset());
   }
 
-  public getVariable(identifier: string): VariableDeclaration<string | string[] | undefined> {
-    const variable = this._itemProvider.variables.find(vr => vr.identifier === identifier);
-    if (!variable) {
-      console.warn(`Variable with identifier ${identifier} was not found`);
-      return null;
-    }
-    return variable;
+  public getResponse(identifier: string): Readonly<ResponseVariable> {
+    return this.getVariable(identifier) as ResponseVariable;
   }
 
-  public getResponse(identifier: string): ResponseVariable | null {
-    const variable = this._itemProvider.variables.find(vr => vr.identifier === identifier);
-    const responseVariable = variable.type === 'response' ? variable : null;
-    return responseVariable as ResponseVariable;
+  public getOutcome(identifier: string): Readonly<OutcomeVariable> {
+    return this.getVariable(identifier) as OutcomeVariable;
   }
 
-  public getOutcome(identifier: string): OutcomeVariable | null {
-    const variable = this._itemProvider.variables.find(vr => vr.identifier === identifier);
-    const outcomeVariable = variable.type === 'outcome' ? variable : null;
-    return outcomeVariable as OutcomeVariable;
+  public getVariable(identifier: string): Readonly<VariableDeclaration<string | string[] | null>> {
+    return this._itemProvider.variables.find(v => v.identifier === identifier) || null;
   }
 
   // saving privates here: ------------------------------------------------------------------------------
 
-  private _setOutcomeValue(outcomeIdentifier: string, outcome: string) {
-    const outcomeVariable = this.getOutcome(outcomeIdentifier);
+  private handleUpdateResponseVariable(event: CustomEvent<ResponseInteraction>) {
+    const { responseIdentifier, response } = event.detail;
+    this.updateResponseVariable(responseIdentifier, response);
+  }
+
+  public updateResponseVariable(identifier: string, value: string | string[] | undefined) {
+    this._itemProvider = {
+      ...this._itemProvider,
+      variables: this._itemProvider.variables.map(v => (v.identifier !== identifier ? v : { ...v, value: value }))
+    };
+
+    this._emit<InteractionChangedDetails>('qti-interaction-changed', {
+      item: this.identifier,
+      responseIdentifier: identifier,
+      response: value
+    });
+  }
+
+  public updateOutcomeVariable(identifier: string, value: string | string[] | undefined) {
+    const outcomeVariable = this.getOutcome(identifier);
     if (!outcomeVariable) {
-      console.warn(`Can not set qti-outcome-identifier: ${outcomeIdentifier}, it is not available`);
+      console.warn(`Can not set qti-outcome-identifier: ${identifier}, it is not available`);
       return;
     }
 
     this._itemProvider = {
       ...this._itemProvider,
       variables: this._itemProvider.variables.map(v => {
-        if (v.identifier !== outcomeIdentifier) {
+        if (v.identifier !== identifier) {
           return v;
         }
         return {
           ...v,
-          value: outcomeVariable.cardinality === 'single' ? outcome : [...v.value, outcome]
+          value: outcomeVariable.cardinality === 'single' ? value : [...v.value, value as string]
         };
       })
     };
 
-    this.dispatchEvent(
-      new CustomEvent<OutcomeChangedDetails>('qti-outcome-changed', {
-        bubbles: true,
-        composed: true,
-        detail: {
-          item: this.identifier,
-          outcomeIdentifier,
-          value: this._itemProvider.variables.find(v => v.identifier === outcomeIdentifier)?.value
-        }
-      })
-    );
-  }
+    this._emit<InteractionChangedDetails>('qti-outcome-changed', {
+      item: this.identifier,
+      identifier,
+      value: this._itemProvider.variables.find(v => v.identifier === identifier)?.value
+    });
 
-  // interaction has fired an event to save response.
-  private handleResponseChanged(event: CustomEvent<InteractionChangedDetails>) {
-    event.stopImmediatePropagation();
-    const detail = event.detail;
-
-    // change value in an immutable way
-    this._itemProvider = {
-      ...this._itemProvider,
-      variables: this._itemProvider.variables.map(v =>
-        v.identifier === detail.responseIdentifier ? { ...v, value: detail.response } : v
-      )
-    };
-
-    if (!this.identifier) {
-      console.warn(`qti-assessment-item has no identifier specified`);
-    }
-
-    this.dispatchEvent(
-      new CustomEvent<InteractionChangedDetails>('qti-interaction-changed', {
-        bubbles: true,
-        composed: true,
-        detail: {
-          item: this.identifier,
-          responseIdentifier: detail.responseIdentifier,
-          response: detail.response
-        }
-      })
-    );
-  }
-
-  private handleOutcomeChanged(event: CustomEvent<OutcomeChangedDetails>) {
-    this.showFeedback(event);
-  }
-
-  private showFeedback(event: CustomEvent<OutcomeChangedDetails>) {
     this._feedbackElements.forEach(fe => {
-      fe.checkShowFeedback(event.detail.outcomeIdentifier); // , event.detail.value);
+      fe.checkShowFeedback(identifier);
     });
   }
 
@@ -269,6 +242,16 @@ export class QtiAssessmentItem extends LitElement {
     if (this._interactionElements.every(interactionElement => interactionElement.validate())) return 'completed';
     if (this._interactionElements.some(interactionElement => interactionElement.validate())) return 'incomplete';
     return 'not_attempted';
+  }
+
+  private _emit<T>(name, detail = null) {
+    this.dispatchEvent(
+      new CustomEvent<T>(name, {
+        bubbles: true,
+        composed: true,
+        detail
+      })
+    );
   }
 }
 

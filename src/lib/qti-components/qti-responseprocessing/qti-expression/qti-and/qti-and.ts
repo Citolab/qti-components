@@ -11,7 +11,7 @@ export class QtiAnd extends QtiConditionExpression {
         console.error("Element doesn't implement QtiConditionExpression");
         return null;
       }
-      let value = condition.calculate();
+      let value = condition.calculate() as Boolean;
       // convert string value to boolean and return null if not possible
       if (typeof value === 'string') {
         if (value === 'true') {
