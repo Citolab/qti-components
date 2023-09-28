@@ -26,6 +26,18 @@ const config: StorybookConfig = {
   staticDirs: ['../src/assets'],
   docs: {
     autodocs: 'tag'
+  },
+  // onlye here for jest tests : https://github.com/storybookjs/storybook/issues/14856#issuecomment-1262333250
+  async viteFinal(config, { configType }) {
+    config.resolve = {
+      ...config.resolve,
+      alias: {
+        ...config!.resolve!.alias,
+        path: require.resolve('path-browserify')
+      }
+    };
+
+    return config;
   }
 };
 export default config;

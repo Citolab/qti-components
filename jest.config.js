@@ -10,6 +10,5 @@ export default {
     }]
   },
   transformIgnorePatterns: ["node_modules/(?!@?lit)"],
-  // modulePathIgnorePatterns: ['node_modules', '.jest-test-results.json'],
-
+  // modulePathIgnorePatterns: ['node_modules', '.jest-test-results.json']
 }

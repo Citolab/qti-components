@@ -24,12 +24,7 @@ describe('qti-match', () => {
 
     const qtiMatch = document.body.querySelector('qti-match') as QtiMatch;
     const assessmentItem = document.body.querySelector('qti-assessment-item') as QtiAssessmentItem;
-    assessmentItem.responses = [
-      {
-        responseIdentifier: 'TEI1',
-        response: 'test'
-      }
-    ];
+    assessmentItem.updateResponseVariable('TEI1', 'test');
     expect(qtiMatch.calculate()).toBeTruthy();
   });
 });

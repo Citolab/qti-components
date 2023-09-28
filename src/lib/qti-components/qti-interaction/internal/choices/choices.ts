@@ -36,12 +36,6 @@ export abstract class Choices extends Interaction {
     this.addEventListener('qti-loose-choice', this._looseChoiceElement);
   }
 
-  reset(): void {
-    this._choiceElements.forEach(choiceElement => {
-      choiceElement.reset();
-    });
-  }
-
   validate(): boolean {
     const nrSelected = this._choiceElements.reduce((acc, val) => {
       return acc + (val.checked ? 1 : 0);
@@ -49,17 +43,10 @@ export abstract class Choices extends Interaction {
     return nrSelected >= this.minChoices;
   }
 
-  set response(myResponse: ResponseType) {
-    // reset all boxes
+  set response(responseValue: string | string[]) {
+    const responseValueArray = Array.isArray(responseValue) ? responseValue : [responseValue];
     this._choiceElements.forEach(ce => {
-      ce.checked = false;
-    });
-    const response = Array.isArray(myResponse) ? myResponse : [myResponse];
-    response.forEach((val: string) => {
-      const choicebox = this.querySelector(`[identifier='${val}']`)!;
-      if (choicebox) {
-        (choicebox as QtiChoice).checked = true;
-      }
+      ce.checked = responseValueArray.find(rv => rv === ce.identifier) ? true : false;
     });
   }
 

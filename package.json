@@ -80,7 +80,7 @@
     "./dist/index.css"
   ],
   "scripts": {
-    "test:generate-output": "jest --json --outputFile=.jest-test-results.json || true",
+    "test:generate-output": "jest --watch --json --outputFile=.jest-test-results.json || true",
     "test": "jest",
     "dev": "vite",
     "build-app": "tsc && vite build",
@@ -149,6 +149,7 @@
     "jest-environment-jsdom": "^29.7.0",
     "nodemon": "^3.0.1",
     "np": "^8.0.4",
+    "path-browserify": "^1.0.1",
     "postcss": "^8.4.29",
     "postcss-import": "^15.1.0",
     "postcss-nesting": "^12.0.1",

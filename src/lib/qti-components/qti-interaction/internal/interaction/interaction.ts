@@ -10,9 +10,8 @@ export abstract class Interaction extends LitElement {
   /** readonly should be exposed to the attributes and accessible as property */
   @property({ reflect: true, type: Boolean }) readonly = false;
 
-  abstract reset(): void;
   abstract validate(): boolean;
-  abstract set response(val: string | string[]);
+  abstract set response(val: Readonly<string | string[]>);
 
   public override connectedCallback() {
     super.connectedCallback();

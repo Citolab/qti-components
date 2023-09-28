@@ -22,12 +22,9 @@ describe('qti-string-match', () => {
 
     const qtiStringMatch = document.body.querySelector('qti-string-match') as QtiStringMatch;
     const assessmentItem = document.body.querySelector('qti-assessment-item') as QtiAssessmentItem;
-    assessmentItem.responses = [
-      {
-        responseIdentifier: 'RESPONSE',
-        response: 'test'
-      }
-    ];
+
+    assessmentItem.updateResponseVariable('RESPONSE', 'test');
+
     expect(qtiStringMatch.calculate()).toBeTruthy();
   });
 
@@ -49,12 +46,8 @@ describe('qti-string-match', () => {
 
     const qtiStringMatch = document.body.querySelector('qti-string-match') as QtiStringMatch;
     const assessmentItem = document.body.querySelector('qti-assessment-item') as QtiAssessmentItem;
-    assessmentItem.responses = [
-      {
-        responseIdentifier: 'RESPONSE',
-        response: 'test'
-      }
-    ];
+    assessmentItem.updateResponseVariable('RESPONSE', 'test');
+
     expect(qtiStringMatch.calculate()).toBeFalsy();
   });
 
@@ -69,6 +62,7 @@ describe('qti-string-match', () => {
         <qti-string-match case-sensitive="true">
           <qti-variable identifier="RESPONSE"></qti-variable>
           <qti-correct identifier="RESPONSE"></qti-correct>
+          </qti-string-match>
         </qti-equal>
       </qti-assessment-item>
     `;
@@ -76,12 +70,8 @@ describe('qti-string-match', () => {
 
     const qtiStringMatch = document.body.querySelector('qti-string-match') as QtiStringMatch;
     const assessmentItem = document.body.querySelector('qti-assessment-item') as QtiAssessmentItem;
-    assessmentItem.responses = [
-      {
-        responseIdentifier: 'RESPONSE',
-        response: 'test'
-      }
-    ];
+    assessmentItem.updateResponseVariable('RESPONSE', 'test');
+
     expect(qtiStringMatch.calculate()).toBeFalsy();
   });
 
@@ -96,6 +86,7 @@ describe('qti-string-match', () => {
         <qti-string-match case-sensitive="false">
           <qti-variable identifier="RESPONSE"></qti-variable>
           <qti-correct identifier="RESPONSE"></qti-correct>
+          </qti-string-match>
         </qti-equal>
       </qti-assessment-item>
     `;
@@ -103,12 +94,8 @@ describe('qti-string-match', () => {
 
     const qtiStringMatch = document.body.querySelector('qti-string-match') as QtiStringMatch;
     const assessmentItem = document.body.querySelector('qti-assessment-item') as QtiAssessmentItem;
-    assessmentItem.responses = [
-      {
-        responseIdentifier: 'RESPONSE',
-        response: 'test'
-      }
-    ];
+    assessmentItem.updateResponseVariable('RESPONSE', 'test');
+
     expect(qtiStringMatch.calculate()).toBeTruthy();
   });
 
@@ -130,12 +117,8 @@ describe('qti-string-match', () => {
 
     const qtiStringMatch = document.body.querySelector('qti-string-match') as QtiStringMatch;
     const assessmentItem = document.body.querySelector('qti-assessment-item') as QtiAssessmentItem;
-    assessmentItem.responses = [
-      {
-        responseIdentifier: 'RESPONSE',
-        response: 'test'
-      }
-    ];
+    assessmentItem.updateResponseVariable('RESPONSE', 'test');
+
     expect(qtiStringMatch.calculate()).toBeFalsy();
   });
 });

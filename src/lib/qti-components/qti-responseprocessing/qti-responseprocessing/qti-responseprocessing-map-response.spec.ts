@@ -50,22 +50,17 @@ describe('qti-response-processing', () => {
 
   it('map response 2', async () => {
     const assessmentItem = document.body.querySelector('qti-assessment-item') as QtiAssessmentItem;
-    const responses = {
-      response: ['H', 'O'],
-      responseIdentifier: 'RESPONSE'
-    } as ResponseInteraction;
-    assessmentItem.responses = [responses];
+
+    assessmentItem.updateResponseVariable('RESPONSE', ['H', 'O']);
+
     assessmentItem.processResponse();
     expect(+assessmentItem.getOutcome('SCORE').value).toEqual(2);
   });
 
   it('map response 1', async () => {
     const assessmentItem = document.body.querySelector('qti-assessment-item') as QtiAssessmentItem;
-    const responses = {
-      response: ['O'],
-      responseIdentifier: 'RESPONSE'
-    } as ResponseInteraction;
-    assessmentItem.responses = [responses];
+    assessmentItem.updateResponseVariable('RESPONSE', ['O']);
+
     assessmentItem.processResponse();
     expect(+assessmentItem.getOutcome('SCORE').value).toEqual(1);
   });

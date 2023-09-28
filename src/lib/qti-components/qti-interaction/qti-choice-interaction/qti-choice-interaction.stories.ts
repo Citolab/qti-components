@@ -39,6 +39,9 @@ const meta: Meta = {
     shuffle: { description: 'unsupported', table: { category: 'QTI' } },
     'data-max-selections-message': { description: 'unsupported', table: { category: 'QTI' } },
     'data-min-selections-message': { description: 'unsupported', table: { category: 'QTI' } }
+  },
+  parameters: {
+    jest: ['qti-choice-interaction.test.ts']
   }
 };
 export default meta;

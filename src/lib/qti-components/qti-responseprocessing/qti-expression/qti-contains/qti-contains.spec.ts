@@ -25,7 +25,9 @@ describe('qti-contains', () => {
 
     const qtiContains = document.body.querySelector('qti-contains') as QtiContains;
     const assessmentItem = document.body.querySelector('qti-assessment-item') as QtiAssessmentItem;
-    assessmentItem.responses = [{ responseIdentifier: 'gapmatch_1', response: ['GT1 G1'] }];
+
+    assessmentItem.updateResponseVariable('gapmatch_1', ['GT1 G1']);
+
     expect(qtiContains.calculate()).toBeTruthy();
   });
 
@@ -47,7 +49,8 @@ describe('qti-contains', () => {
 
     const qtiContains = document.body.querySelector('qti-contains') as QtiContains;
     const assessmentItem = document.body.querySelector('qti-assessment-item') as QtiAssessmentItem;
-    assessmentItem.responses = [{ responseIdentifier: 'gapmatch_1', response: 'GTb Gb' }];
+    assessmentItem.updateResponseVariable('gapmatch_1', 'GTb Gb');
+
     expect(qtiContains.calculate()).toBeTruthy();
   });
 });
