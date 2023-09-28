@@ -10,7 +10,7 @@ import type { QtiFeedback } from '../qti-feedback/qti-feedback';
 import type { QtiResponseProcessing } from '../qti-responseprocessing';
 import type { VariableDeclaration } from '../qti-utilities/Variables';
 import type QtiRegisterVariable from '../qti-utilities/events/qti-register-variable';
-import { Item, itemContext } from './qti-assessment-item.context';
+import { ItemContext, itemContext } from './qti-assessment-item.context';
 import { ContextConsumer, provide } from '@lit-labs/context';
 
 /**
@@ -49,13 +49,14 @@ export class QtiAssessmentItem extends LitElement {
 
   @provide({ context: itemContext })
   @property({ attribute: false })
-  public context: Readonly<Item> = {
+  public context: Readonly<ItemContext> = {
+    identifier: this.identifier,
     variables: [
       {
         identifier: 'completionStatus',
         cardinality: 'single',
         baseType: 'string',
-        value: 'not_attempted',
+        value: 'unknown',
         type: 'outcome'
       },
       {
@@ -68,17 +69,12 @@ export class QtiAssessmentItem extends LitElement {
     ]
   };
 
-  public initialContext: Readonly<Item> = {
-    variables: this.context.variables
-  };
-
+  private _initialContext: Readonly<ItemContext> = { ...this.context, variables: this.context.variables };
   private _feedbackElements: QtiFeedback[] = [];
   private _interactionElements: Interaction[] = [];
 
   updated(changedProperties: Map<string, any>) {
     if (changedProperties.has('context')) {
-      this.dispatchEvent(new CustomEvent('context-changed', { bubbles: true, composed: true }));
-
       this.context.variables.forEach(variable => {
         if (variable.type === 'response') {
           const interactionElement = this._interactionElements.find(
@@ -88,10 +84,15 @@ export class QtiAssessmentItem extends LitElement {
             interactionElement.response = variable.value;
           }
         }
+
+        if (variable.type === 'outcome' || variable['_constructor-name_'] == 'OutcomeVariable') {
+          this._feedbackElements.forEach(fe => fe.checkShowFeedback(variable.identifier));
+        }
       });
     }
+
+    this.dispatchEvent(new CustomEvent('context-changed', { bubbles: true, composed: true }));
   }
-  // this._interactionElements.forEach(interactionElement => interactionElement.reset());
 
   firstUpdated(val): void {
     super.firstUpdated(val);
@@ -107,7 +108,7 @@ export class QtiAssessmentItem extends LitElement {
 
     this.addEventListener('qti-register-variable', ({ detail }) => {
       this.context = { ...this.context, variables: [...this.context.variables, detail.variable] };
-      this.initialContext = this.context;
+      this._initialContext = this.context;
     });
     this.addEventListener('qti-register-feedback', (e: CustomEvent<QtiFeedback>) => {
       e.stopPropagation();
@@ -194,7 +195,7 @@ export class QtiAssessmentItem extends LitElement {
 
   // FIXME: pk, does this take into account the cardinality of the response variable?
   public resetResponses() {
-    this.context = this.initialContext;
+    this.context = this._initialContext;
   }
 
   public getResponse(identifier: string): Readonly<ResponseVariable> {
@@ -253,10 +254,6 @@ export class QtiAssessmentItem extends LitElement {
       item: this.identifier,
       identifier,
       value: this.context.variables.find(v => v.identifier === identifier)?.value
-    });
-
-    this._feedbackElements.forEach(fe => {
-      fe.checkShowFeedback(identifier);
     });
   }
 

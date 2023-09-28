@@ -1,8 +1,9 @@
 import { createContext } from '@lit-labs/context';
-import { OutcomeVariable, ResponseVariable, VariableDeclaration } from '../qti-utilities/Variables';
+import { VariableDeclaration } from '../qti-utilities/Variables';
 
-export interface Item {
+export interface ItemContext {
+  identifier: string;
   variables: ReadonlyArray<VariableDeclaration<string | string[]>>;
 }
 
-export const itemContext = createContext<Item>('item');
+export const itemContext = createContext<ItemContext>('item');

@@ -2,7 +2,7 @@ import { html, LitElement } from 'lit';
 
 import { customElement, state } from 'lit/decorators.js';
 import { consume, ContextConsumer } from '@lit-labs/context';
-import { Item, itemContext } from './qti-assessment-item.context';
+import { ItemContext, itemContext } from './qti-assessment-item.context';
 
 @customElement('debug-assessment-item')
 export class DebugAssessmentItem extends LitElement {
