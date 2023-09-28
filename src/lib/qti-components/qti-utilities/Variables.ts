@@ -9,14 +9,6 @@ export interface VariableDeclaration<T> {
   type: 'outcome' | 'response';
 }
 
-// temporary
-export interface ResultVariable {
-  cardinality: Cardinality;
-  baseType: BaseType;
-  result: number | boolean | string | (number | boolean | string)[];
-}
-
-// fixed in the declarations
 export class OutcomeVariable implements VariableDeclaration<string | string[] | null> {
   public identifier: string;
   public cardinality: Cardinality;
@@ -30,9 +22,9 @@ export class ResponseVariable implements VariableDeclaration<string | string[] |
   public cardinality: Cardinality;
   public baseType: BaseType;
   public value: string | string[] | null = null;
-
-  // public candidateResponse: string | string[] | null = null;
+  public type: 'outcome' | 'response' = 'response';
+  // specific to response variables
+  public candidateResponse: string | string[] | null = null;
   public mapping: QtiMapping;
   public correctResponse: string | string[] | null = null;
-  public type: 'outcome' | 'response' = 'response';
 }

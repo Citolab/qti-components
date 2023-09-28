@@ -2,7 +2,6 @@ import { html, LitElement } from 'lit';
 
 import { customElement, queryAssignedElements, queryAssignedNodes, state } from 'lit/decorators.js';
 import { QtiAssessmentItem } from './qti-assessment-item';
-import { register } from 'module';
 import { VariableDeclaration } from '../qti-utilities/Variables';
 
 @customElement('debug-item')

@@ -9,9 +9,8 @@ import type { InteractionChangedDetails, OutcomeChangedDetails } from '../qti-ut
 import type { QtiFeedback } from '../qti-feedback/qti-feedback';
 import type { QtiResponseProcessing } from '../qti-responseprocessing';
 import type { VariableDeclaration } from '../qti-utilities/Variables';
-import type QtiRegisterVariable from '../qti-utilities/events/qti-register-variable';
 import { ItemContext, itemContext } from './qti-assessment-item.context';
-import { ContextConsumer, provide } from '@lit-labs/context';
+import { provide } from '@lit-labs/context';
 
 /**
  * @summary The qti-assessment-item element contains all the other QTI 3 item structures.
@@ -170,30 +169,6 @@ export class QtiAssessmentItem extends LitElement {
     return true;
   }
 
-  // check set response back for interactions
-  // We can set the responses as a string or as an object in ResponseFormat
-  // set responses(myResponses: ResponseInteraction[]) {
-  //   if (myResponses) {
-  //     for (const response of myResponses) {
-  //       const responseVariable = this.getResponse(response.responseIdentifier);
-  //       if (responseVariable) {
-  //         this.updateResponseVariable(response.responseIdentifier, response.response);
-  //       }
-
-  //       const interaction: Interaction | undefined = this._interactionElements.find(
-  //         i => i.getAttribute('response-identifier') === response.responseIdentifier
-  //       );
-  //       // If there is a responseVariable, set the value back into the responseVariable
-
-  //       // Set the response in the interaction
-  //       if (interaction) {
-  //         interaction.response = response.response;
-  //       }
-  //     }
-  //   }
-  // }
-
-  // FIXME: pk, does this take into account the cardinality of the response variable?
   public resetResponses() {
     this.context = this._initialContext;
   }
