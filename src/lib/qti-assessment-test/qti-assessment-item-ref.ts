@@ -16,6 +16,4 @@ export class QtiAssessmentItemRef extends QtiItem {
     });
     this.dispatchEvent(event);
   }
-
-  // override render = () => html`${unsafeHTML(this._xml)}<slot></slot>`;
 }

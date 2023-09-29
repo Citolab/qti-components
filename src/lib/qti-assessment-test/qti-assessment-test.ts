@@ -21,7 +21,7 @@ export class QtiAssessmentTest extends LitElement {
     this.context = {
       ...this.context,
       items: this.context.items.map(item =>
-        item.identifier === this._activeAssessmentItemEl?.identifier
+        item.identifier === this._activeAssessmentItemEl?.identifier && item.identifier === identifier
           ? { ...this._activeAssessmentItemEl?.context }
           : item
       )
@@ -46,20 +46,13 @@ export class QtiAssessmentTest extends LitElement {
                 baseType: 'string',
                 value: 'not_attempted',
                 type: 'outcome'
-              },
-              {
-                identifier: 'numAttempts',
-                cardinality: 'single',
-                baseType: 'integer',
-                value: '0',
-                type: 'response'
               }
             ]
           }
         ];
       }
     );
-    this.addEventListener('on-test-request-item', (e: CustomEvent<number>) => {
+    this.addEventListener('on-test-request-item', (e: CustomEvent<number>): void => {
       this.context = { ...this.context, itemIndex: e.detail };
     });
   }
@@ -79,25 +72,3 @@ export class QtiAssessmentTest extends LitElement {
     `;
   }
 }
-
-// @state()
-// private _savedResponses: ReadonlyArray<VariableDeclaration<string | string[]>> = [];
-
-// save a copy of the response variables
-// private _saveResponse = () => {
-//   this._savedResponses = this._assessmentItemRef.context.variables;
-// };
-
-// load the copy of the response variables
-// private _loadResponse = () => {
-//   this._assessmentItemRef.context = { ...this._assessmentItemRef.context, variables: this._savedResponses };
-// };
-
-// <button @click=${this._saveResponse}>Save</button>
-// <button @click=${this._loadResponse}>Load</button>
-// <pre>${JSON.stringify(this.context, null, 2)}</pre>
-// <pre>${JSON.stringify(this._savedResponses, null, 2)}</pre>
-// @queryAssignedElements({ slot: 'list', flatten: true, selector: 'qti-assessment-item' })
-// listItems!: Array<QtiAssessmentItem>;
-
-// @slotchange=${(e: Event) => console.log('slotchange', e, this.listItems)}

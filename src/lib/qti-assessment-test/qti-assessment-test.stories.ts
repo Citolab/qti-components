@@ -53,22 +53,33 @@ export const QtiTest = {
     const itemRefEls = useRef<QtiAssessmentItemRef[]>([]);
     const [itemIndex, setItemIndex] = useState<number>(0);
 
-    useEffect(async () => {
+    useEffect(() => {
       if (itemRefEls.current.length === 0) return;
-      const itemRefEl = itemRefEls.current[testEl.value.context.itemIndex];
 
+      const itemRefEl = itemRefEls.current[testEl.value.context.itemIndex];
       const uri = `${args.serverLocation}/${args.qtipkg}/items/${itemRefEl.href}`;
-      await new Promise(resolve => setTimeout(resolve, Math.floor(Math.random() * 1001) + 500));
-      const xmlFetch = await fetch(uri);
-      const xmlText = await xmlFetch.text();
-      itemRefEl.itemLocation = `${args.serverLocation}/${args.qtipkg}/items/`;
-      itemRefEl.xml = xmlText;
-      // itemRefEl.audienceContext.view = args.view;
+
+      const controller = new AbortController();
+      const signal = controller.signal;
+
+      const fetchXml = async () => {
+        try {
+          const xmlFetch = await fetch(uri, { signal });
+          const xmlText = await xmlFetch.text();
+          itemRefEl.itemLocation = `${args.serverLocation}/${args.qtipkg}/items/`;
+          itemRefEl.xml = xmlText;
+        } catch (error) {
+          console.error(error);
+        }
+      };
+
+      fetchXml();
+
+      return () => {
+        controller.abort();
+      };
     }, [itemIndex, itemRefEls, args.qtipkg]);
 
-    const view = args.view;
-
-    // https://www.imsglobal.org/spec/qti/v3p0/impl#h.2rwe0ikqhcpe
     return html`
       <div
         @register-qti-assessment-item-ref=${e => itemRefEls.current.push(e.target)}
