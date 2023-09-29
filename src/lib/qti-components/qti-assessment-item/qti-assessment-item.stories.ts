@@ -5,10 +5,9 @@ import { action } from '@storybook/addon-actions';
 import { QtiAssessmentItem } from '../qti-assessment-item/qti-assessment-item';
 
 import '../index';
-import './debug-assessment-item';
-import './debug-item';
+import '../../qti-assessment-test';
 
-import { useEffect, useRef, useState, virtual } from 'haunted';
+import { virtual } from 'haunted';
 
 export default {
   component: 'qti-assessment-item',
@@ -18,7 +17,7 @@ export default {
 export const Default = () => {
   const assessmentItemRef = createRef<QtiAssessmentItem>();
 
-  return html` <debug-item>
+  return html`<qti-assessment-test>
       <qti-assessment-item
         identifier="blah"
         ${ref(assessmentItemRef)}
@@ -87,7 +86,7 @@ export const Default = () => {
         </qti-response-processing>
         <debug-assessment-item></debug-assessment-item>
       </qti-assessment-item>
-    </debug-item>
+    </qti-assessment-test>
     <button @click=${() => assessmentItemRef.value?.processResponse()}>PROCESS</button>
     <button @click=${() => assessmentItemRef.value?.resetResponses()}>Reset</button>`;
 };

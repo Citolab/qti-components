@@ -46,10 +46,10 @@ export class QtiAssessmentItem extends LitElement {
   _handleReadonlyChange = (_: boolean, readonly: boolean) =>
     this._interactionElements.forEach(ch => (ch.readonly = readonly));
 
-  @provide({ context: itemContext })
+  // @provide({ context: itemContext })
   @property({ attribute: false })
   public context: Readonly<ItemContext> = {
-    identifier: this.identifier,
+    identifier: this.getAttribute('identifier'),
     variables: [
       {
         identifier: 'completionStatus',
@@ -88,9 +88,10 @@ export class QtiAssessmentItem extends LitElement {
           this._feedbackElements.forEach(fe => fe.checkShowFeedback(variable.identifier));
         }
       });
+      this.dispatchEvent(
+        new CustomEvent('context-changed', { bubbles: true, composed: true, detail: this.identifier })
+      );
     }
-
-    this.dispatchEvent(new CustomEvent('context-changed', { bubbles: true, composed: true }));
   }
 
   firstUpdated(val): void {
@@ -99,9 +100,9 @@ export class QtiAssessmentItem extends LitElement {
   }
 
   override render() {
-    return html`<slot></slot>`;
+    return html`<slot></slot> `;
   }
-
+  // <pre>${JSON.stringify(this.context, null, 2)}</pre>
   constructor() {
     super();
 
