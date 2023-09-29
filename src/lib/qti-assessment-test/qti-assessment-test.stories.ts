@@ -8,7 +8,6 @@ import './index';
 import packages from '../../assets/api/packages.json';
 
 import { QtiAssessmentTest } from './qti-assessment-test';
-import { QtiAssessmentItem } from '../qti-components';
 import { QtiAssessmentItemRef } from './index';
 
 export default {
@@ -53,13 +52,13 @@ export const QtiTest = {
     const testEl = createRef<QtiAssessmentTest>();
     const itemRefEls = useRef<QtiAssessmentItemRef[]>([]);
     const [itemIndex, setItemIndex] = useState<number>(0);
-    // const [itemRefEl, setItemRefEl] = useState<QtiAssessmentItemRef>(null);
 
     useEffect(async () => {
       if (itemRefEls.current.length === 0) return;
       const itemRefEl = itemRefEls.current[testEl.value.context.itemIndex];
 
       const uri = `${args.serverLocation}/${args.qtipkg}/items/${itemRefEl.href}`;
+      await new Promise(resolve => setTimeout(resolve, Math.floor(Math.random() * 1001) + 500));
       const xmlFetch = await fetch(uri);
       const xmlText = await xmlFetch.text();
       itemRefEl.itemLocation = `${args.serverLocation}/${args.qtipkg}/items/`;
@@ -80,6 +79,8 @@ export const QtiTest = {
       >
         index: ${itemIndex}
         <qti-assessment-test ${ref(testEl)}>
+          <test-progress></test-progress>
+
           <qti-test-part>
             <qti-assessment-section>
               ${loadeditems.items.map(
@@ -91,7 +92,6 @@ export const QtiTest = {
               )}
             </qti-assessment-section>
           </qti-test-part>
-          <test-progress></test-progress>
         </qti-assessment-test>
       </div>
     `;

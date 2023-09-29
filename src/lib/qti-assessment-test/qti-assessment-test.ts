@@ -7,7 +7,7 @@ import { TestContext, testContext } from './qti-assessment-test.context';
 
 @customElement('qti-assessment-test')
 export class QtiAssessmentTest extends LitElement {
-  private _assessmentItemEl: QtiAssessmentItem | undefined;
+  private _activeAssessmentItemEl: QtiAssessmentItem | undefined;
 
   @provide({ context: testContext })
   @property({ attribute: false })
@@ -21,7 +21,9 @@ export class QtiAssessmentTest extends LitElement {
     this.context = {
       ...this.context,
       items: this.context.items.map(item =>
-        item.identifier === this._assessmentItemEl?.identifier ? { ...this._assessmentItemEl?.context } : item
+        item.identifier === this._activeAssessmentItemEl?.identifier
+          ? { ...this._activeAssessmentItemEl?.context }
+          : item
       )
     };
   };
@@ -44,6 +46,13 @@ export class QtiAssessmentTest extends LitElement {
                 baseType: 'string',
                 value: 'not_attempted',
                 type: 'outcome'
+              },
+              {
+                identifier: 'numAttempts',
+                cardinality: 'single',
+                baseType: 'integer',
+                value: '0',
+                type: 'response'
               }
             ]
           }
@@ -56,11 +65,11 @@ export class QtiAssessmentTest extends LitElement {
   }
 
   private _setItem = (item: QtiAssessmentItem) => {
-    this._assessmentItemEl = item;
+    this._activeAssessmentItemEl = item;
 
-    const itemContext = this.context.items.find(item => item.identifier === this._assessmentItemEl?.identifier);
-    if (itemContext.variables.find(v => v.identifier === 'numAttempts')) {
-      this._assessmentItemEl.context = itemContext;
+    const itemContext = this.context.items.find(item => item.identifier === this._activeAssessmentItemEl?.identifier);
+    if (itemContext.variables.find(v => v.identifier === 'completionStatus').value === 'unknown') {
+      this._activeAssessmentItemEl.context = itemContext;
     }
   };
 
