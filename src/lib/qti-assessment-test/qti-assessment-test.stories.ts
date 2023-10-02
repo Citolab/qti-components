@@ -51,10 +51,11 @@ export const QtiTest = {
 
     const testEl = createRef<QtiAssessmentTest>();
     const itemRefEls = useRef<QtiAssessmentItemRef[]>([]);
-    const [itemIndex, setItemIndex] = useState<number>(0);
+    const [itemIndex, setItemIndex] = useState<number | null>(null);
 
     useEffect(() => {
       if (itemRefEls.current.length === 0) return;
+      if (itemIndex === null) return;
 
       const itemRefEl = itemRefEls.current[testEl.value.context.itemIndex];
       const uri = `${args.serverLocation}/${args.qtipkg}/items/${itemRefEl.href}`;
@@ -67,6 +68,7 @@ export const QtiTest = {
           const xmlFetch = await fetch(uri, { signal });
           const xmlText = await xmlFetch.text();
           itemRefEl.itemLocation = `${args.serverLocation}/${args.qtipkg}/items/`;
+          console.log('useEffect: set ItemXML');
           itemRefEl.xml = xmlText;
         } catch (error) {
           console.error(error);
@@ -83,8 +85,9 @@ export const QtiTest = {
     return html`
       <div
         @register-qti-assessment-item-ref=${e => itemRefEls.current.push(e.target)}
-        @on-test-request-item=${({ detail: index }) => {
-          itemRefEls.current[itemIndex].xml = ''; // clear the old item
+        @on-test-set-index=${({ detail: index }) => {
+          console.log('setXML = ""');
+          if (itemRefEls.current[itemIndex]) itemRefEls.current[itemIndex].xml = ''; // clear the old item
           setItemIndex(index);
         }}
       >
