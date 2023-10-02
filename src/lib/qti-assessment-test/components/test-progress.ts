@@ -2,7 +2,6 @@ import { consume } from '@lit-labs/context';
 import { LitElement, css, html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { TestContext, testContext } from '../qti-assessment-test.context';
-import { QtiAssessmentTest } from '../qti-assessment-test';
 
 @customElement('test-progress')
 export class QtiTestProgress extends LitElement {
@@ -25,15 +24,19 @@ export class QtiTestProgress extends LitElement {
         detail: index
       })
     );
-    // this.closest<QtiAssessmentTest>('qti-assessment-test').context = {
-    //   ...this.closest<QtiAssessmentTest>('qti-assessment-test').context,
-    //   itemIndex: index
-    // };
   }
 
   render() {
     const { items, itemIndex } = this._testProvider;
     return html`
+      <input
+        type="range"
+        value=${itemIndex}
+        class="absolute w-full appearance-none bg-transparent"
+        max=${items.length - 1}
+        @input=${e => this._requestItem(+(e.target as HTMLInputElement).value)}
+      />
+
       ${items.map(
         (item, index) =>
           html` <button
@@ -41,7 +44,8 @@ export class QtiTestProgress extends LitElement {
             @click=${_ => this._requestItem(index)}
             id="${item.identifier}"
           >
-            ${item.identifier} ${item.variables.find(v => v.identifier === 'completionStatus')?.value}
+            ${item.identifier}<br />${item.variables.find(v => v.identifier === 'completionStatus')?.value}
+            <br />${item.variables.find(v => v.identifier === 'SCORE')?.value}
           </button>`
       )}
     `;

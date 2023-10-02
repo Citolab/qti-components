@@ -48,7 +48,7 @@ export class QtiAssessmentItem extends LitElement {
 
   // @provide({ context: itemContext })
   @property({ attribute: false })
-  public context: Readonly<ItemContext> = {
+  private _context: ItemContext = {
     identifier: this.getAttribute('identifier'),
     variables: [
       {
@@ -68,47 +68,85 @@ export class QtiAssessmentItem extends LitElement {
     ]
   };
 
-  private _initialContext: Readonly<ItemContext> = { ...this.context, variables: this.context.variables };
-  private _feedbackElements: QtiFeedback[] = [];
-  private _interactionElements: Interaction[] = [];
+  // public get context(): ItemContext {
+  //   return this._context;
+  // }
 
+  public set context(value: ItemContext) {
+    this._context = value;
+    this.requestUpdate('context', null);
+  }
+
+  public set initcontext(value: ItemContext) {
+    this.context = value;
+
+    this.context.variables.forEach(variable => {
+      if (variable.type === 'response') {
+        const interactionElement = this._interactionElements.find(
+          (el: Interaction) => el.responseIdentifier === variable.identifier
+        );
+        if (interactionElement) {
+          interactionElement.response = variable.value;
+        }
+      }
+
+      if (variable.type === 'outcome' || variable['_constructor-name_'] == 'OutcomeVariable') {
+        this._feedbackElements.forEach(fe => fe.checkShowFeedback(variable.identifier));
+      }
+    });
+  }
+
+  // FIXME: can this be done in a setter
   updated(changedProperties: Map<string, any>) {
     if (changedProperties.has('context')) {
-      this.context.variables.forEach(variable => {
-        if (variable.type === 'response') {
-          const interactionElement = this._interactionElements.find(
-            (el: Interaction) => el.responseIdentifier === variable.identifier
-          );
-          if (interactionElement) {
-            interactionElement.response = variable.value;
-          }
-        }
-
-        if (variable.type === 'outcome' || variable['_constructor-name_'] == 'OutcomeVariable') {
-          this._feedbackElements.forEach(fe => fe.checkShowFeedback(variable.identifier));
-        }
-      });
       this.dispatchEvent(
-        new CustomEvent('context-changed', { bubbles: true, composed: true, detail: this.identifier })
+        new CustomEvent<ItemContext>('context-changed', { bubbles: true, composed: true, detail: this.context })
       );
     }
   }
+
+  private _initialContext: Readonly<ItemContext> = { ...this.context, variables: this._context.variables };
+  private _feedbackElements: QtiFeedback[] = [];
+  private _interactionElements: Interaction[] = [];
 
   firstUpdated(val): void {
     super.firstUpdated(val);
     this._emit<{ detail: QtiAssessmentItem }>('item-connected', this);
   }
 
-  override render() {
-    return html`<slot></slot> `;
+  /** @deprecated use context property instead */
+  set responses(myResponses: ResponseInteraction[]) {
+    if (myResponses) {
+      for (const response of myResponses) {
+        const responseVariable = this.getResponse(response.responseIdentifier);
+        if (responseVariable) {
+          this.updateResponseVariable(response.responseIdentifier, response.response);
+        }
+
+        // const interaction: Interaction | undefined = this._interactionElements.find(
+        //   i => i.getAttribute('response-identifier') === response.responseIdentifier
+        // );
+        // If there is a responseVariable, set the value back into the responseVariable
+
+        // Set the response in the interaction
+        // if (interaction) {
+        //   interaction.response = response.response;
+        // }
+      }
+    }
   }
-  // <pre>${JSON.stringify(this.context, null, 2)}</pre>
+
+  override render() {
+    return html`<slot></slot>
+      <pre>${JSON.stringify(this._context, null, 2)}</pre>`;
+  }
+
   constructor() {
     super();
 
     this.addEventListener('qti-register-variable', ({ detail }) => {
-      this.context = { ...this.context, variables: [...this.context.variables, detail.variable] };
-      this._initialContext = this.context;
+      this._context = { ...this._context, variables: [...this._context.variables, detail.variable] };
+      this._initialContext = this._context;
     });
     this.addEventListener('qti-register-feedback', (e: CustomEvent<QtiFeedback>) => {
       e.stopPropagation();
@@ -158,7 +196,7 @@ export class QtiAssessmentItem extends LitElement {
 
     this.updateOutcomeVariable(
       'numAttempts',
-      (+this.context.variables.find(v => v.identifier === 'numAttempts')?.value + 1).toString()
+      (+this._context.variables.find(v => v.identifier === 'numAttempts')?.value + 1).toString()
     );
 
     if (this.adaptive === 'false') {
@@ -183,7 +221,7 @@ export class QtiAssessmentItem extends LitElement {
   }
 
   public getVariable(identifier: string): Readonly<VariableDeclaration<string | string[] | null>> {
-    return this.context.variables.find(v => v.identifier === identifier) || null;
+    return this._context.variables.find(v => v.identifier === identifier) || null;
   }
 
   // saving privates here: ------------------------------------------------------------------------------
@@ -194,9 +232,9 @@ export class QtiAssessmentItem extends LitElement {
   }
 
   public updateResponseVariable(identifier: string, value: string | string[] | undefined) {
-    this.context = {
-      ...this.context,
-      variables: this.context.variables.map(v => (v.identifier !== identifier ? v : { ...v, value: value }))
+    this._context = {
+      ...this._context,
+      variables: this._context.variables.map(v => (v.identifier !== identifier ? v : { ...v, value: value }))
     };
 
     this._emit<InteractionChangedDetails>('qti-interaction-changed', {
@@ -213,9 +251,9 @@ export class QtiAssessmentItem extends LitElement {
       return;
     }
 
-    this.context = {
-      ...this.context,
-      variables: this.context.variables.map(v => {
+    this._context = {
+      ...this._context,
+      variables: this._context.variables.map(v => {
         if (v.identifier !== identifier) {
           return v;
         }
@@ -229,7 +267,7 @@ export class QtiAssessmentItem extends LitElement {
     this._emit<InteractionChangedDetails>('qti-outcome-changed', {
       item: this.identifier,
       identifier,
-      value: this.context.variables.find(v => v.identifier === identifier)?.value
+      value: this._context.variables.find(v => v.identifier === identifier)?.value
     });
   }
 
