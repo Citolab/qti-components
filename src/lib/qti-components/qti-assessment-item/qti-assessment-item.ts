@@ -68,17 +68,12 @@ export class QtiAssessmentItem extends LitElement {
     ]
   };
 
-  // public get context(): ItemContext {
-  //   return this._context;
-  // }
+  public get context(): ItemContext {
+    return this._context;
+  }
 
   public set context(value: ItemContext) {
     this._context = value;
-    this.requestUpdate('context', null);
-  }
-
-  public set initcontext(value: ItemContext) {
-    this.context = value;
 
     this.context.variables.forEach(variable => {
       if (variable.type === 'response') {
@@ -94,15 +89,8 @@ export class QtiAssessmentItem extends LitElement {
         this._feedbackElements.forEach(fe => fe.checkShowFeedback(variable.identifier));
       }
     });
-  }
 
-  // FIXME: can this be done in a setter
-  updated(changedProperties: Map<string, any>) {
-    if (changedProperties.has('context')) {
-      this.dispatchEvent(
-        new CustomEvent<ItemContext>('context-changed', { bubbles: true, composed: true, detail: this.context })
-      );
-    }
+    this.requestUpdate('context', null);
   }
 
   private _initialContext: Readonly<ItemContext> = { ...this.context, variables: this._context.variables };
@@ -199,11 +187,6 @@ export class QtiAssessmentItem extends LitElement {
       (+this._context.variables.find(v => v.identifier === 'numAttempts')?.value + 1).toString()
     );
 
-    if (this.adaptive === 'false') {
-      // if adapative, completionStatus is set by the processing template
-      this.updateOutcomeVariable('completionStatus', this._getCompletionStatus());
-    }
-
     this._emit('qti-response-processing');
     return true;
   }
@@ -229,6 +212,10 @@ export class QtiAssessmentItem extends LitElement {
   private handleUpdateResponseVariable(event: CustomEvent<ResponseInteraction>) {
     const { responseIdentifier, response } = event.detail;
     this.updateResponseVariable(responseIdentifier, response);
+    if (this.adaptive === 'false') {
+      // if adapative, completionStatus is set by the processing template
+      this.updateOutcomeVariable('completionStatus', this._getCompletionStatus());
+    }
   }
 
   public updateResponseVariable(identifier: string, value: string | string[] | undefined) {
