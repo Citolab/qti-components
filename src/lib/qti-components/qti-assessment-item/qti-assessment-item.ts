@@ -125,8 +125,7 @@ export class QtiAssessmentItem extends LitElement {
   }
 
   override render() {
-    return html`<slot></slot>
-      <pre>${JSON.stringify(this._context, null, 2)}</pre>`;
+    return html`<slot></slot>`;
   }
 
   constructor() {

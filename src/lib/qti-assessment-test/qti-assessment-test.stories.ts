@@ -94,7 +94,7 @@ export const QtiTest = {
         index: ${itemIndex}
         <qti-assessment-test ${ref(testEl)}>
           <test-progress></test-progress>
-
+          <test-next>NEXT</test-next>
           <qti-test-part>
             <qti-assessment-section>
               ${loadeditems.items.map(
