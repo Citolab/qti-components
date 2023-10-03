@@ -9,7 +9,7 @@ export class QtiAssessmentItemRef extends QtiItem {
 
   connectedCallback(): void {
     super.connectedCallback();
-    const event = new CustomEvent('register-qti-assessment-item-ref', {
+    const event = new CustomEvent('register-item-ref', {
       bubbles: true,
       composed: true,
       detail: { identifier: this.identifier, href: this.href }
