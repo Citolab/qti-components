@@ -251,6 +251,8 @@ export class QtiAssessmentItem extends LitElement {
       })
     };
 
+    this._feedbackElements.forEach(fe => fe.checkShowFeedback(identifier));
+
     this._emit<InteractionChangedDetails>('qti-outcome-changed', {
       item: this.identifier,
       identifier,
