@@ -1,6 +1,5 @@
 import { customElement, property } from 'lit/decorators.js';
 import { QtiItem } from '../qti-item';
-import { html } from 'lit';
 
 @customElement('qti-assessment-item-ref')
 export class QtiAssessmentItemRef extends QtiItem {
