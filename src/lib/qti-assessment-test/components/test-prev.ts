@@ -22,9 +22,9 @@ export class TestPrev extends LitElement {
 
   render() {
     const { items, itemIndex } = this._testContext;
-    const item = items[itemIndex - 1];
+    const nextItemIndex = Math.max(itemIndex - 1, 0);
     return html`
-      <button @click=${_ => this._requestItem(itemIndex - 1)} id="${item.identifier}">
+      <button @click=${_ => this._requestItem(nextItemIndex)} id="${items[nextItemIndex].identifier}">
         <slot></slot>
       </button>
     `;

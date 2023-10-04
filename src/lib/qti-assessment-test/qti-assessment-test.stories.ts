@@ -7,7 +7,6 @@ import './index';
 
 import packages from '../../assets/api/packages.json';
 
-import { QtiAssessmentTest } from './qti-assessment-test';
 import { QtiAssessmentItemRef } from './index';
 
 export default {
@@ -71,8 +70,8 @@ export const QtiTest = {
         @on-test-set-item=${({ detail: identifier }) => requestItem(identifier)}
       >
         <test-show-index></test-show-index>
-        <qti-test-part>
-          <qti-assessment-section>
+        <qti-test-part identifier="part1" navigation-mode="nonlinear" submission-mode="individual">
+          <qti-assessment-section identifier="section-1" title="Section 1" visible="true" required="true">
             ${loadeditems.items.map(
               item =>
                 html`<qti-assessment-item-ref identifier="${item.identifier}" href="${item.href}">
@@ -81,6 +80,7 @@ export const QtiTest = {
           </qti-assessment-section>
         </qti-test-part>
 
+        <test-prev>PREV</test-prev>
         <test-progress></test-progress>
         <test-next>NEXT</test-next>
       </qti-assessment-test>

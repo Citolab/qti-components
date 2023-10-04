@@ -37,6 +37,8 @@ export class QtiTestProgress extends LitElement {
         @input=${e => this._requestItem(+(e.target as HTMLInputElement).value)}
       />
 
+      <progress id="file" max=${items.length - 1} value=${itemIndex}>70%</progress>
+
       ${items.map(
         (item, index) =>
           html` <button
