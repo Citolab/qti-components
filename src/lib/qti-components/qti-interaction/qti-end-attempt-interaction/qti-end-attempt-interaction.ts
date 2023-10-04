@@ -3,6 +3,10 @@ import { QtiAssessmentItem } from '../../qti-assessment-item/qti-assessment-item
 import { property } from 'lit/decorators.js';
 
 export class QtiEndAttemptInteraction extends LitElement {
+  // read response-identifer from the item
+  @property({ type: String, attribute: 'response-identifier' })
+  public responseIdentifier: string;
+
   @property({ type: String })
   public title: 'end attempt';
 
@@ -10,7 +14,9 @@ export class QtiEndAttemptInteraction extends LitElement {
     return html`<button @click=${this.endAttempt}>${this.title}</button>`;
   }
   public endAttempt(e: Event) {
-    (this.closest('qti-assessment-item') as QtiAssessmentItem).processResponse();
+    const assessmentItem = this.closest('qti-assessment-item') as QtiAssessmentItem;
+    assessmentItem.updateResponseVariable(this.responseIdentifier, 'true');
+    assessmentItem.processResponse();
   }
 }
 

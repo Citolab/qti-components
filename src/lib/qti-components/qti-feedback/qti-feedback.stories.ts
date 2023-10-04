@@ -400,3 +400,91 @@ export const kringloop = () => {
     </qti-assessment-item>
   `;
 };
+
+export const blockHint = () => {
+  const assessmentItemRef = createRef<QtiAssessmentItem>();
+
+  const processResponse = () => {
+    assessmentItemRef.value?.processResponse();
+  };
+
+  return html` <qti-assessment-item
+    identifier="kringloop1"
+    ${ref(assessmentItemRef)}
+    @qti-outcome-changed="${e => {
+      action(JSON.stringify(e.detail))();
+    }}"
+    @qti-interaction-changed="${e => {
+      processResponse();
+      action(JSON.stringify(e.detail))();
+    }}"
+  >
+
+      <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="identifier">
+        <qti-correct-response>
+          <qti-value>MGH001C</qti-value>
+        </qti-correct-response>
+      </qti-response-declaration>
+      <qti-response-declaration
+        identifier="HINTREQUEST"
+        cardinality="single"
+        base-type="boolean"
+      ></qti-response-declaration>
+      <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float"></qti-outcome-declaration>
+      <qti-outcome-declaration
+        identifier="FEEDBACK"
+        cardinality="single"
+        base-type="identifier"
+      ></qti-outcome-declaration>
+      <qti-item-body>
+        <qti-choice-interaction response-identifier="RESPONSE" shuffle="false" max-choices="1">
+          <qti-prompt>Who is the President of Mexico?</qti-prompt>
+          <qti-simple-choice identifier="MGH001A">George W Bush</qti-simple-choice>
+          <qti-simple-choice identifier="MGH001B">Tony Blair</qti-simple-choice>
+          <qti-simple-choice identifier="MGH001C">Vicente Fox</qti-simple-choice>
+          <qti-simple-choice identifier="MGH001D">Ariel Sharon</qti-simple-choice>
+        </qti-choice-interaction>
+        <p>
+          <qti-end-attempt-interaction
+            response-identifier="HINTREQUEST"
+            title="Show Hint"
+          ></qti-end-attempt-interaction>
+        </p>
+        <qti-feedback-block identifier="HINT" outcome-identifier="FEEDBACK" show-hide="show">
+          <qti-content-body> Tony lives in the United Kingdom and George lives in Washington. </qti-content-body>
+        </qti-feedback-block>
+      </qti-item-body>
+      <qti-response-processing>
+        <qti-set-outcome-value identifier="FEEDBACK">
+          <qti-base-value base-type="identifier">NOHINT</qti-base-value>
+        </qti-set-outcome-value>
+        <qti-response-condition>
+          <qti-response-if>
+            <qti-variable identifier="HINTREQUEST"></qti-variable>
+            <qti-set-outcome-value identifier="FEEDBACK">
+              <qti-base-value base-type="identifier">HINT</qti-base-value>
+            </qti-set-outcome-value>
+          </qti-response-if>
+          <qti-response-else>
+            <qti-response-condition>
+              <qti-response-if>
+                <qti-match>
+                  <qti-variable identifier="RESPONSE"></qti-variable>
+                  <qti-correct identifier="RESPONSE"></qti-correct>
+                </qti-match>
+                <qti-set-outcome-value identifier="SCORE">
+                  <qti-base-value base-type="float">1</qti-base-value>
+                </qti-set-outcome-value>
+              </qti-response-if>
+              <qti-response-else>
+                <qti-set-outcome-value identifier="SCORE">
+                  <qti-base-value base-type="float">0</qti-base-value>
+                </qti-set-outcome-value>
+              </qti-response-else>
+            </qti-response-condition>
+          </qti-response-else>
+        </qti-response-condition>
+      </qti-response-processing>
+    </qti-assessment-item>
+  </qti-assessment-item>`;
+};
