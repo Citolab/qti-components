@@ -2,8 +2,7 @@ import { css, html } from 'lit';
 import { Interaction } from '../internal/interaction/interaction';
 
 export class QtiMediaInteraction extends Interaction {
-  value: number;
-
+  value = 0;
   reset() {
     // throw new Error('Method not implemented.');
   }
@@ -41,6 +40,16 @@ export class QtiMediaInteraction extends Interaction {
 
   override connectedCallback() {
     super.connectedCallback();
+    // get audio, video of object tag.
+    const mediaObject = this.querySelector('audio') || this.querySelector('video') || this.querySelector('object');
+    if (mediaObject) {
+      // listen to ended event
+      mediaObject.addEventListener('ended', () => {
+        // set value to 0
+        this.value++;
+        this.saveResponse(this.value.toString());
+      });
+    }
   }
 }
 
