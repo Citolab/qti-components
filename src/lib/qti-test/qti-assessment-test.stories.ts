@@ -10,7 +10,7 @@ import packages from '../../assets/api/packages.json';
 import { QtiAssessmentItemRef } from './index';
 
 export default {
-  component: 'qti-assessment-test',
+  title: 'qti-test',
   argTypes: {
     view: {
       options: ['candidate', 'scorer'],
@@ -44,7 +44,7 @@ export default {
   decorators: [story => html`${virtual(story)()}`]
 };
 
-export const QtiTest = {
+export const QtiAssessmentTest = {
   render: (args, { argTypes, loaded: { loadeditems } }) => {
     const itemRefEls = useRef<Map<string, QtiAssessmentItemRef>>(new Map());
 

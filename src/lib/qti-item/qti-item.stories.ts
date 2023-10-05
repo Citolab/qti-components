@@ -8,6 +8,9 @@ import './qti-item';
 
 import packages from '../../assets/api/packages.json';
 import { QtiAssessmentItem } from '../qti-components';
+import { createRef, ref } from 'lit-html/directives/ref.js';
+
+import { QtiItem } from './qti-item';
 
 export default {
   component: 'qti-item',
@@ -29,33 +32,34 @@ export default {
   }
 };
 
-export const QtiItem = {
+export const QtiItemStory = {
   render: (args, { argTypes, loaded: { loadeditems } }) => {
     const items: { href: string; identifier: string }[] = loadeditems.items;
-    const [itemXML, setItemXML] = useState<string>();
+
     const qtiItemRef = useRef<QtiAssessmentItem>(null);
+    const assessmentItemRef = createRef<QtiItem>();
 
     useEffect(async () => {
       if (items == undefined) return;
-      if (args.itemIndex > items.length) return;
+      if (args.itemIndex > items.length - 1) return;
       const item = items[args.itemIndex];
 
       const uri = `${args.serverLocation}/${args.qtipkg}/items/${item.href}`;
       const xmlFetch = await fetch(uri);
       const xmlText = await xmlFetch.text();
 
-      setItemXML(xmlText);
+      assessmentItemRef.value.xml = xmlText;
     }, [args.itemIndex, items, args.qtipkg]);
 
     const view = args.view;
 
     return html` <qti-item
+        ${ref(assessmentItemRef)}
         .audienceContext=${{ view }}
         item-location=${`${args.serverLocation}/${args.qtipkg}/items/`}
         @qti-interaction-changed=${action(`on-interaction-changed`)}
         @qti-outcome-changed=${action(`qti-outcome-changed`)}
         @qti-item-connected=${({ detail: item }) => (qtiItemRef.current = item)}
-        xml=${itemXML}
       ></qti-item>
       <button @click=${() => qtiItemRef.current.processResponse()}>PROCESS</button>`;
   },

@@ -10,3 +10,4 @@ export * from './test-show-correct';
 
 export * from './test-show-index';
 export * from './test-print-variables';
+export * from './test-print-score';

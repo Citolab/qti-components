@@ -5,7 +5,7 @@ import { action } from '@storybook/addon-actions';
 import { QtiAssessmentItem } from '../qti-assessment-item/qti-assessment-item';
 
 import '../index';
-import '../../qti-assessment-test';
+import '../../qti-test';
 
 import { virtual } from 'haunted';
 

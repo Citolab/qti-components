@@ -17,8 +17,12 @@ export class QtiEndAttemptInteraction extends LitElement {
     return html`<button @click=${this.endAttempt}>${this.title}</button>`;
   }
   public endAttempt(e: Event) {
-    const assessmentItem = this.closest('qti-assessment-item') as QtiAssessmentItem;
-    assessmentItem.updateResponseVariable(this.responseIdentifier, 'true');
-    assessmentItem.processResponse(this.countAttempt === 'true');
+    this.dispatchEvent(
+      new CustomEvent('end-attempt', {
+        bubbles: true,
+        composed: true,
+        detail: { responseIdentifier: this.responseIdentifier, countAttempt: this.countAttempt === 'true' }
+      })
+    );
   }
 }

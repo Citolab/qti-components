@@ -101,6 +101,11 @@ export class QtiAssessmentItem extends LitElement {
     this._emit<{ detail: QtiAssessmentItem }>('qti-item-connected', this);
   }
 
+  disconnectedCallback(): void {
+    super.disconnectedCallback();
+    this._emit('qti-item-disconnected');
+  }
+
   /** @deprecated use context property instead */
   set responses(myResponses: ResponseInteraction[]) {
     if (myResponses) {
@@ -139,6 +144,12 @@ export class QtiAssessmentItem extends LitElement {
       e.stopPropagation();
       this._interactionElements.push(e.target as Interaction);
     });
+    this.addEventListener('end-attempt', (e: CustomEvent<{ responseIdentifier: string; countAttempt: boolean }>) => {
+      const { responseIdentifier, countAttempt } = e.detail;
+      this.updateResponseVariable(responseIdentifier, 'true');
+      this.processResponse(countAttempt);
+    });
+
     this.addEventListener(
       // wordt aangeroepen vanuit de processingtemplate
       'qti-set-outcome-value',
@@ -177,6 +188,11 @@ export class QtiAssessmentItem extends LitElement {
 
     responseProcessor.process();
 
+    if (this.adaptive === 'false') {
+      // if adapative, completionStatus is set by the processing template
+      this.updateOutcomeVariable('completionStatus', this._getCompletionStatus());
+    }
+
     countNumAttempts &&
       this.updateOutcomeVariable(
         'numAttempts',
@@ -208,10 +224,6 @@ export class QtiAssessmentItem extends LitElement {
   private handleUpdateResponseVariable(event: CustomEvent<ResponseInteraction>) {
     const { responseIdentifier, response } = event.detail;
     this.updateResponseVariable(responseIdentifier, response);
-    if (this.adaptive === 'false') {
-      // if adapative, completionStatus is set by the processing template
-      this.updateOutcomeVariable('completionStatus', this._getCompletionStatus());
-    }
   }
 
   public updateResponseVariable(identifier: string, value: string | string[] | undefined) {
