@@ -33,11 +33,13 @@ export class QtiOutcomeDeclaration extends QtiVariableDeclaration {
   public override connectedCallback() {
     super.connectedCallback();
 
-    const outcomeVariable = new OutcomeVariable();
-    outcomeVariable.identifier = this.identifier;
-    outcomeVariable.cardinality = this.cardinality;
-    outcomeVariable.baseType = this.baseType;
-
+    const outcomeVariable: OutcomeVariable = {
+      identifier: this.identifier,
+      cardinality: this.cardinality,
+      baseType: this.baseType,
+      type: 'outcome',
+      value: null
+    };
     outcomeVariable.value = this.defaultValues(outcomeVariable);
 
     this.dispatchEvent(

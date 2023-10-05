@@ -1,11 +1,14 @@
 import { LitElement, html } from 'lit';
 import { QtiAssessmentItem } from '../../qti-assessment-item/qti-assessment-item';
-import { property } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 
+@customElement('qti-end-attempt-interaction')
 export class QtiEndAttemptInteraction extends LitElement {
-  // read response-identifer from the item
   @property({ type: String, attribute: 'response-identifier' })
   public responseIdentifier: string;
+
+  @property({ type: String, attribute: 'count-attempt' })
+  public countAttempt: string = 'true';
 
   @property({ type: String })
   public title: 'end attempt';
@@ -16,8 +19,6 @@ export class QtiEndAttemptInteraction extends LitElement {
   public endAttempt(e: Event) {
     const assessmentItem = this.closest('qti-assessment-item') as QtiAssessmentItem;
     assessmentItem.updateResponseVariable(this.responseIdentifier, 'true');
-    assessmentItem.processResponse();
+    assessmentItem.processResponse(this.countAttempt === 'true');
   }
 }
-
-customElements.define('qti-end-attempt-interaction', QtiEndAttemptInteraction);

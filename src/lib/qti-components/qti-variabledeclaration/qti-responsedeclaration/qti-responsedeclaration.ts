@@ -14,13 +14,16 @@ export class QtiResponseDeclaration extends QtiVariableDeclaration {
   public override connectedCallback() {
     super.connectedCallback();
 
-    const responseVariable = new ResponseVariable();
-
-    responseVariable.baseType = this.baseType;
-    responseVariable.identifier = this.identifier;
-    responseVariable.correctResponse = this.correctResponse;
-    responseVariable.cardinality = this.cardinality || 'single';
-    responseVariable.mapping = this.mapping;
+    const responseVariable: ResponseVariable = {
+      baseType: this.baseType,
+      identifier: this.identifier,
+      correctResponse: this.correctResponse,
+      cardinality: this.cardinality || 'single',
+      mapping: this.mapping,
+      value: null,
+      type: 'response',
+      candidateResponse: null
+    };
     responseVariable.value = this.defaultValues(responseVariable);
 
     this.dispatchEvent(

@@ -18,7 +18,7 @@ export class QtiAssessmentTest extends LitElement {
       ...this.context,
       items: this.context.items.map(itemContext => {
         return itemContext.identifier == identifier
-          ? { ...this.context.items.find(item => item.identifier === identifier)?.itemEl.context }
+          ? { ...itemContext, ...this.context.items.find(item => item.identifier === identifier)?.itemEl.context }
           : itemContext;
       })
     };
@@ -74,7 +74,7 @@ export class QtiAssessmentTest extends LitElement {
     if (itemContext.variables.find(v => v.identifier === 'completionStatus').value === 'not_attempted') {
       this.copyItemContext(item.identifier);
     } else {
-      el.context = itemContext;
+      el.variables = [...itemContext.variables];
     }
   };
 

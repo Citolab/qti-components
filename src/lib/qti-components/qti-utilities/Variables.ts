@@ -9,22 +9,11 @@ export interface VariableDeclaration<T> {
   type: 'outcome' | 'response';
 }
 
-export class OutcomeVariable implements VariableDeclaration<string | string[] | null> {
-  public identifier: string;
-  public cardinality: Cardinality;
-  public baseType: BaseType;
-  public value: string | string[] | null = null;
-  public type: 'outcome' | 'response' = 'outcome';
-}
+export interface OutcomeVariable extends VariableDeclaration<string | string[] | null> {}
 
-export class ResponseVariable implements VariableDeclaration<string | string[] | null> {
-  public identifier: string;
-  public cardinality: Cardinality;
-  public baseType: BaseType;
-  public value: string | string[] | null = null;
-  public type: 'outcome' | 'response' = 'response';
+export interface ResponseVariable extends VariableDeclaration<string | string[] | null> {
   // specific to response variables
-  public candidateResponse: string | string[] | null = null;
-  public mapping: QtiMapping;
-  public correctResponse: string | string[] | null = null;
+  candidateResponse: string | string[] | null;
+  mapping: QtiMapping;
+  correctResponse: string | string[] | null;
 }

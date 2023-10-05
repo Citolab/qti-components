@@ -73,8 +73,8 @@ export class QtiAssessmentItem extends LitElement {
     return this._context;
   }
 
-  public set context(value: ItemContext) {
-    this._context = value;
+  public set variables(value: VariableDeclaration<string | string[] | null>[]) {
+    this._context = { ...this.context, variables: value };
 
     this.context.variables.forEach(variable => {
       if (variable.type === 'response') {
@@ -86,12 +86,10 @@ export class QtiAssessmentItem extends LitElement {
         }
       }
 
-      if (variable.type === 'outcome' || variable['_constructor-name_'] == 'OutcomeVariable') {
+      if (variable.type === 'outcome') {
         this._feedbackElements.forEach(fe => fe.checkShowFeedback(variable.identifier));
       }
     });
-
-    this.requestUpdate('context', null);
   }
 
   private _initialContext: Readonly<ItemContext> = { ...this.context, variables: this._context.variables };
@@ -153,19 +151,19 @@ export class QtiAssessmentItem extends LitElement {
     this.addEventListener('qti-interaction-response', this.handleUpdateResponseVariable);
   }
 
-  // public showCorrectResponse() {
-  //   const responseVariables = this.context.variables.filter(
-  //     (vari: ResponseVariable | OutcomeVariable) => 'correctResponse' in vari && vari.correctResponse
-  //   ) as ResponseVariable[];
-  //   this.responses = responseVariables.map(cr => {
-  //     return {
-  //       responseIdentifier: cr.identifier,
-  //       response: cr.correctResponse
-  //     };
-  //   });
-  // }
+  public showCorrectResponse() {
+    const responseVariables = this.context.variables.filter(
+      (vari: ResponseVariable | OutcomeVariable) => 'correctResponse' in vari && vari.correctResponse
+    ) as ResponseVariable[];
+    this.responses = responseVariables.map(cr => {
+      return {
+        responseIdentifier: cr.identifier,
+        response: cr.correctResponse
+      };
+    });
+  }
 
-  public processResponse(): boolean {
+  public processResponse(countNumAttempts: boolean = true): boolean {
     const responseProcessor = this.querySelector('qti-response-processing') as unknown as QtiResponseProcessing;
     if (!responseProcessor) {
       console.info('Client side response processing template not available');
@@ -179,17 +177,18 @@ export class QtiAssessmentItem extends LitElement {
 
     responseProcessor.process();
 
-    this.updateOutcomeVariable(
-      'numAttempts',
-      (+this._context.variables.find(v => v.identifier === 'numAttempts')?.value + 1).toString()
-    );
+    countNumAttempts &&
+      this.updateOutcomeVariable(
+        'numAttempts',
+        (+this._context.variables.find(v => v.identifier === 'numAttempts')?.value + 1).toString()
+      );
 
     this._emit('qti-response-processing');
     return true;
   }
 
   public resetResponses() {
-    this.context = this._initialContext;
+    this._context = this._initialContext;
   }
 
   public getResponse(identifier: string): Readonly<ResponseVariable> {

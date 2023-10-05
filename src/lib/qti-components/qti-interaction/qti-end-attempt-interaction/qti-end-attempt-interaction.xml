@@ -27,7 +27,8 @@
             <qti-simple-choice identifier="MGH001D">Ariel Sharon</qti-simple-choice>
         </qti-choice-interaction>
         <p>
-            <qti-end-attempt-interaction response-identifier="HINTREQUEST" title="Show Hint" />
+            <qti-end-attempt-interaction count-attempt="false" response-identifier="HINTREQUEST"
+                title="Show Hint" />
         </p>
         <qti-feedback-block identifier="HINT" outcome-identifier="FEEDBACK" show-hide="show">
             <qti-content-body> Tony lives in the United Kingdom and George lives in Washington. </qti-content-body>
