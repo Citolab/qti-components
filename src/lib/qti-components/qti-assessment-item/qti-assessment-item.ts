@@ -100,7 +100,7 @@ export class QtiAssessmentItem extends LitElement {
 
   firstUpdated(val): void {
     super.firstUpdated(val);
-    this._emit<{ detail: QtiAssessmentItem }>('item-connected', this);
+    this._emit<{ detail: QtiAssessmentItem }>('qti-item-connected', this);
   }
 
   /** @deprecated use context property instead */

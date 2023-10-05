@@ -62,7 +62,7 @@ export class QtiAssessmentTest extends LitElement {
     super();
     this.addEventListener('register-item-ref', this.onItemRefRegistered);
     this.addEventListener('on-test-request-item', this.onTestRequestItem);
-    this.addEventListener('item-connected', (e: any) => this.setItem(e.detail));
+    this.addEventListener('qti-item-connected', (e: any) => this.setItem(e.detail));
     this.addEventListener('qti-interaction-changed', e => this.copyItemContext(e.detail.item));
     this.addEventListener('qti-outcome-changed', e => this.copyItemContext(e.detail.item));
   }
