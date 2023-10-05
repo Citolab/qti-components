@@ -7,3 +7,4 @@ export * from './test-paging';
 export * from './test-show-correct';
 
 export * from './test-show-index';
+export * from './test-print-variables';

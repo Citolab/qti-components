@@ -86,6 +86,7 @@ export const QtiTest = {
         <test-slider></test-slider>
         <test-next>NEXT</test-next>
         <test-show-correct>correct</test-show-correct>
+        <test-print-variables></test-print-variables>
       </qti-assessment-test>
     `;
   },
