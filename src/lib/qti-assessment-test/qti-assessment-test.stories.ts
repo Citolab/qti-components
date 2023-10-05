@@ -82,6 +82,8 @@ export const QtiTest = {
 
         <test-prev>PREV</test-prev>
         <test-progress></test-progress>
+        <test-paging></test-paging>
+        <test-slider></test-slider>
         <test-next>NEXT</test-next>
       </qti-assessment-test>
     `;
