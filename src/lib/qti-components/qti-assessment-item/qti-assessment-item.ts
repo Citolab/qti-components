@@ -112,15 +112,12 @@ export class QtiAssessmentItem extends LitElement {
           this.updateResponseVariable(response.responseIdentifier, response.response);
         }
 
-        // const interaction: Interaction | undefined = this._interactionElements.find(
-        //   i => i.getAttribute('response-identifier') === response.responseIdentifier
-        // );
-        // If there is a responseVariable, set the value back into the responseVariable
-
-        // Set the response in the interaction
-        // if (interaction) {
-        //   interaction.response = response.response;
-        // }
+        const interaction: Interaction | undefined = this._interactionElements.find(
+          i => i.getAttribute('response-identifier') === response.responseIdentifier
+        );
+        if (interaction) {
+          interaction.response = response.response;
+        }
       }
     }
   }
