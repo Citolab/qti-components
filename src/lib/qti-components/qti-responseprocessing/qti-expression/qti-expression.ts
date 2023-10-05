@@ -70,9 +70,11 @@ export abstract class QtiExpression<T> extends LitElement {
             const values = multiple.calculate();
             if (values.length > 0) {
               return {
+                identifier: '',
                 baseType: values[0].baseType,
                 value: values.map(v => v.value),
-                cardinality: 'multiple'
+                cardinality: 'multiple',
+                type: 'response'
               } as ResponseVariable;
             }
             return null;

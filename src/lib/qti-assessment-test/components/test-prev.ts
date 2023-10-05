@@ -24,7 +24,7 @@ export class TestPrev extends LitElement {
     const { items, itemIndex } = this._testContext;
     const nextItemIndex = Math.max(itemIndex - 1, 0);
     return html`
-      <button @click=${_ => this._requestItem(nextItemIndex)} id="${items[nextItemIndex].identifier}">
+      <button part="button" @click=${_ => this._requestItem(nextItemIndex)} id="${items[nextItemIndex].identifier}">
         <slot></slot>
       </button>
     `;

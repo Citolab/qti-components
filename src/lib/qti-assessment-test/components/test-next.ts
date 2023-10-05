@@ -24,7 +24,7 @@ export class TestNext extends LitElement {
     const { items, itemIndex } = this._testContext;
     const nextItemIndex = Math.min(itemIndex + 1, items.length - 1);
     return html`
-      <button @click=${_ => this._requestItem(nextItemIndex)} id="${items[nextItemIndex].identifier}">
+      <button part="button" @click=${_ => this._requestItem(nextItemIndex)} id="${items[nextItemIndex].identifier}">
         <slot></slot>
       </button>
     `;

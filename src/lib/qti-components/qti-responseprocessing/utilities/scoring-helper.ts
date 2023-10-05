@@ -1,7 +1,7 @@
 import { BaseType } from '../..';
 
 export class ScoringHelper {
-  public static compareSingleValues(value1: string, value2: string, baseType: BaseType): boolean {
+  public static compareSingleValues(value1: Readonly<string>, value2: Readonly<string>, baseType: BaseType): boolean {
     switch (baseType) {
       case 'identifier':
       case 'string':

@@ -1,20 +1,18 @@
 import { consume } from '@lit-labs/context';
 import { LitElement, css, html } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import { TestContext, testContext } from '../qti-assessment-test.context';
+import { prop } from 'cheerio/lib/api/attributes';
 
-@customElement('test-paging')
-export class QtiTestPaging extends LitElement {
+@customElement('test-paging-buttons')
+export class QtiTestPagingButtons extends LitElement {
   @consume({ context: testContext, subscribe: true })
   @state()
   public _testProvider?: TestContext;
 
-  static styles = css`
-    .active {
-      background-color: green;
-      color: white;
-    }
-  `;
+  protected createRenderRoot(): Element | ShadowRoot {
+    return this;
+  }
 
   _requestItem(index) {
     this.dispatchEvent(
@@ -32,12 +30,13 @@ export class QtiTestPaging extends LitElement {
       ${items.map(
         (item, index) =>
           html` <button
-            class=${index === itemIndex ? 'active' : ''}
+            part="button"
+            data-completion-status=${item.variables.find(v => v.identifier === 'completionStatus')?.value}
+            data-active-item=${index === itemIndex}
             @click=${_ => this._requestItem(index)}
             id="${item.identifier}"
           >
-            ${item.identifier}<br />${item.variables.find(v => v.identifier === 'completionStatus')?.value}
-            <br />${item.variables.find(v => v.identifier === 'SCORE')?.value}
+            ${index + 1}
           </button>`
       )}
     `;

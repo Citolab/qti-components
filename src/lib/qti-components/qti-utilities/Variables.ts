@@ -13,7 +13,7 @@ export interface OutcomeVariable extends VariableDeclaration<string | string[] |
 
 export interface ResponseVariable extends VariableDeclaration<string | string[] | null> {
   // specific to response variables
-  candidateResponse: string | string[] | null;
-  mapping: QtiMapping;
-  correctResponse: string | string[] | null;
+  candidateResponse?: string | string[] | null;
+  mapping?: QtiMapping;
+  correctResponse?: string | string[] | null;
 }

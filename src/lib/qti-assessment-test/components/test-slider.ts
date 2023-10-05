@@ -23,6 +23,7 @@ export class QtiTestSlider extends LitElement {
     const { items, itemIndex } = this._testProvider;
     return html`
       <input
+        part="input"
         type="range"
         value=${itemIndex}
         class="absolute w-full appearance-none bg-transparent"

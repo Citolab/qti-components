@@ -15,7 +15,7 @@ export class QtiTestShowCorrect extends LitElement {
     const item = items[itemIndex].itemEl;
 
     return html`
-      <button @click=${_ => item.showCorrectResponse()}>
+      <button part="button" @click=${_ => item.showCorrectResponse()}>
         <slot></slot>
       </button>
     `;

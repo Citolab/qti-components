@@ -12,7 +12,9 @@ export class QtiTestProgress extends LitElement {
   render() {
     const { items, itemIndex } = this._testProvider;
     return html`
-      <progress id="file" max=${items.length - 1} value=${itemIndex}>${itemIndex / (items.length - 1)}%</progress>
+      <progress part="progress" id="file" max=${items.length - 1} value=${itemIndex}>
+        ${itemIndex / (items.length - 1)}%
+      </progress>
     `;
   }
 }

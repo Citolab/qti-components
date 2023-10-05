@@ -24,7 +24,7 @@ export class QtiEqual extends QtiExpression<boolean> {
         console.error('unexpected cardinality in qti equal');
         return false;
       }
-      return ScoringHelper.compareSingleValues(value1.value, value2.value, value1.baseType);
+      return ScoringHelper.compareSingleValues(value1.value as string, value2.value as string, value1.baseType);
     }
     console.error('unexpected number of children in qti-equal');
     return null;

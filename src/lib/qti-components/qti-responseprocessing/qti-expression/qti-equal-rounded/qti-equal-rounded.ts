@@ -47,8 +47,8 @@ export class QtiEqualRounded extends QtiExpression<boolean> {
       switch (values[0].baseType) {
         case 'integer':
         case 'float': {
-          const float1 = parseFloat(value1.value);
-          const float2 = parseFloat(value2.value);
+          const float1 = parseFloat(value1.value as string);
+          const float2 = parseFloat(value2.value as string);
 
           if (!isNaN(float1) && !isNaN(float2)) {
             if (this.roundingMode === 'significantFigures') {

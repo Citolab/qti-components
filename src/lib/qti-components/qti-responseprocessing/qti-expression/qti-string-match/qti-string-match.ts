@@ -20,9 +20,9 @@ export class QtiStringMatch extends QtiExpression<boolean> {
         console.error('unexpected cardinality in qti string-match');
         return false;
       }
-      const v1 = this.caseSensitive === 'true' ? value1.value : value1.value.toLowerCase();
-      const v2 = this.caseSensitive === 'true' ? value2.value : value2.value.toLowerCase();
-      return ScoringHelper.compareSingleValues(v1, v2, value1.baseType);
+      const v1 = this.caseSensitive === 'true' ? value1.value : (value1.value as string).toLowerCase();
+      const v2 = this.caseSensitive === 'true' ? value2.value : (value2.value as string).toLowerCase();
+      return ScoringHelper.compareSingleValues(v1 as string, v2 as string, value1.baseType);
     }
     console.error('unexpected number of children in qti-string-match');
     return null;
