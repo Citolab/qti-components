@@ -17,7 +17,6 @@ export class QtiItem extends LitElement {
   private _xml: string = '';
 
   set xml(val: string) {
-    // if (!this.shadowRoot) return;
     this._xml = qtiTransform(val).customTypes().customDefinition().assetsLocation(`${this.itemLocation}`).xml();
   }
 

@@ -7,7 +7,7 @@ export abstract class QtiFeedback extends LitElement {
   protected showHide: string;
 
   @property({ type: String, attribute: 'outcome-identifier' })
-  protected outcomeIdentifier: string;
+  public outcomeIdentifier: string;
 
   @property({ type: String })
   protected identifier: string;
