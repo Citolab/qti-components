@@ -138,7 +138,9 @@ export class QtiAssessmentItem extends LitElement {
     });
     this.addEventListener('qti-register-feedback', (e: CustomEvent<QtiFeedback>) => {
       e.stopPropagation();
-      this._feedbackElements.push(e.detail);
+      const feedbackElement = e.detail;
+      this._feedbackElements.push(feedbackElement);
+      feedbackElement.checkShowFeedback(feedbackElement.outcomeIdentifier);
     });
     this.addEventListener('qti-register-interaction', (e: CustomEvent<null>) => {
       e.stopPropagation();
