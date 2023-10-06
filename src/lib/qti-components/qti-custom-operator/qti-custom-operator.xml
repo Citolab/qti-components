@@ -1,0 +1,246 @@
+<qti-assessment-item
+  xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+  time-dependent="false"
+  xml:lang="en"
+  identifier="ITEM-ZONNEPANNELEN"
+  title="Zonnepanelen"
+  adaptive="true"
+>
+  <qti-response-declaration identifier="RSP-A-1" base-type="integer" cardinality="single" />
+
+  <qti-response-declaration identifier="RSP-B-1" base-type="identifier" cardinality="single">
+    <qti-correct-response>
+      <qti-value>MINDER</qti-value>
+    </qti-correct-response>
+  </qti-response-declaration>
+
+
+  <qti-response-declaration identifier="RSP-C-1" base-type="integer" cardinality="single">
+    <qti-correct-response>
+      <qti-value>500</qti-value>
+    </qti-correct-response>
+  </qti-response-declaration>
+  <qti-response-declaration identifier="RSP-C-2" base-type="integer" cardinality="single">
+    <qti-correct-response>
+      <qti-value>25</qti-value>
+    </qti-correct-response>
+  </qti-response-declaration>
+
+
+  <qti-response-declaration identifier="RSP-D-1" base-type="integer" cardinality="single">
+    <qti-correct-response>
+      <qti-value>120</qti-value>
+    </qti-correct-response>
+  </qti-response-declaration>
+
+  <qti-outcome-declaration identifier="FBK-B" base-type="string" cardinality="single"></qti-outcome-declaration>
+  <qti-outcome-declaration identifier="FBK-B-SHOW" base-type="identifier" cardinality="single"></qti-outcome-declaration>
+  <qti-outcome-declaration identifier="FBK-C" base-type="string" cardinality="single"></qti-outcome-declaration>
+  <qti-outcome-declaration identifier="OUT-C" cardinality="single" base-type="float"></qti-outcome-declaration>
+
+  <qti-outcome-declaration identifier="COR-D" cardinality="single" base-type="float"></qti-outcome-declaration>
+  <qti-outcome-declaration identifier="OUT-D-1" cardinality="single" base-type="float"></qti-outcome-declaration>
+  <qti-outcome-declaration identifier="OUT-D-2" cardinality="single" base-type="float"></qti-outcome-declaration>
+  <qti-outcome-declaration identifier="FBK-D" base-type="string" cardinality="single"></qti-outcome-declaration>
+  <qti-outcome-declaration identifier="FBK-D-SHOW" base-type="string" cardinality="single"></qti-outcome-declaration>
+
+
+  <qti-outcome-declaration identifier="STEP" cardinality="multiple" base-type="integer">
+    <qti-default-value>
+      <qti-value>A</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+
+  <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float">
+    <qti-default-value>
+      <qti-value>0</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+
+  <qti-item-body>
+    <!-- <p>SCORE:<qti-printed-variable class="qti-well"
+    identifier="SCORE"></qti-printed-variable></p> -->
+
+    <qti-feedback-block outcome-identifier="STEP" show-hide="show" identifier="A">
+      <qti-content-body>
+        <p>Hoeveel zonnepannelen liggen hier ongeveer?</p>
+      <p><qti-text-entry-interaction
+            class="qti-input-width-3"
+            pattern-mask="[0-9]*"
+            response-identifier="RSP-A-1" /></p>
+      </qti-content-body>
+    </qti-feedback-block>
+
+    <qti-feedback-block outcome-identifier="STEP" show-hide="show" identifier="B">
+      <qti-content-body>
+
+        <p> Zonnepanelen zorgen voor <qti-inline-choice-interaction
+            data-prompt="selecteer" response-identifier="RSP-B-1">
+            <qti-inline-choice identifier="GEEN">geen</qti-inline-choice>
+            <qti-inline-choice identifier="MINDER">minder</qti-inline-choice>
+            <qti-inline-choice identifier="EVENVEEL">evenveel</qti-inline-choice>
+            <qti-inline-choice identifier="MEER">meer</qti-inline-choice>
+          </qti-inline-choice-interaction>
+        CO2-uitstoot. </p>
+
+      <qti-feedback-inline
+          outcome-identifier="FBK-B" show-hide="show" identifier="CORRECT">👍</qti-feedback-inline>
+      <qti-feedback-inline
+          outcome-identifier="FBK-B" show-hide="show" identifier="INCORRECT">😔 Jammer, probeer
+        opnieuw.</qti-feedback-inline>
+      <qti-feedback-inline
+          outcome-identifier="FBK-B-SHOW" show-hide="show" identifier="SHOW"> De productie, het
+        transport en het recyclen van zonnepanelen zorgt voor CO2-uitstoot. Zonnepanelen zijn dus
+        niet helemaal fossiel vrij, maar het verbruik van fossiele brandstoffen is wel een stuk
+        lager. </qti-feedback-inline>
+      </qti-content-body>
+    </qti-feedback-block>
+
+    <qti-feedback-block outcome-identifier="STEP" show-hide="show" identifier="C">
+      <qti-content-body>
+
+        <p> Inderdaad, het is minder. We gaan nu berekenen hoeveel CO2-uitstoot dit bespaart voor de <qti-printed-variable
+            class="qti-well"
+            identifier="RSP-A-1"></qti-printed-variable> zonnepanelen die jij geteld hebt. </p>
+
+
+      <ul>
+          <li>Levensduur van 1 zonnepaneel is 25 jaar</li>
+          <li>CO2-uitstoot voor de productie van 1 zonnepaneel is 500 kilo</li>
+          <li>1 zonnepaneel voorkomt 120 kilo CO2-uitstoot per jaar</li>
+        </ul>
+      <p>
+          <strong>Hoeveel kilo CO2 stoot de productie van de zonnepanelen uit?</strong> Houd
+        rekening met de levensduur.</p>
+        <p>
+          <qti-printed-variable
+            class="qti-well" identifier="RSP-A-1"></qti-printed-variable> × <qti-text-entry-interaction
+            class="qti-input-width-3"
+            pattern-mask="[0-9]*"
+            response-identifier="RSP-C-1"
+          ></qti-text-entry-interaction> / <qti-text-entry-interaction
+            pattern-mask="[0-9]*"
+            response-identifier="RSP-C-2"></qti-text-entry-interaction> = <qti-printed-variable
+            class="qti-well" identifier="OUT-C"></qti-printed-variable> kilo per jaar </p>
+      <qti-feedback-block
+          outcome-identifier="FBK-C" show-hide="show" identifier="CORRECT">
+          <qti-content-body> 👍 Dat klopt.</qti-content-body>
+        </qti-feedback-block>
+      <qti-feedback-block
+          outcome-identifier="FBK-C" show-hide="show" identifier="INCORRECT">
+          <qti-content-body>😔 Onjuist.</qti-content-body>
+        </qti-feedback-block>
+      </qti-content-body>
+
+    </qti-feedback-block>
+
+    <qti-feedback-block outcome-identifier="STEP" show-hide="show" identifier="D">
+      <qti-content-body>
+        <p> Reken nu uit hoeveel CO2-uitstoot per jaar bespaard wordt.</p><p><qti-printed-variable
+            class="qti-well"
+            identifier="RSP-A-1" /> × <qti-text-entry-interaction pattern-mask="[0-9]*"
+            response-identifier="RSP-D-1" /> - <qti-printed-variable
+            class="qti-well" identifier="OUT-C" /> = <qti-printed-variable
+            class="qti-well" identifier="OUT-D-1" /> kilo per jaar </p>
+
+      <qti-feedback-inline
+          outcome-identifier="FBK-D" show-hide="show" identifier="CORRECT">👍 Correct. </qti-feedback-inline>
+
+
+      <qti-feedback-block
+          outcome-identifier="FBK-D-SHOW" show-hide="show" identifier="SHOW">
+          <qti-content-body>😔 Helaas, de juiste berekening moest zijn: <p><qti-printed-variable
+                class="qti-well"
+                identifier="RSP-A-1" /> × <span class="qti-well">500</span> / <span
+                class="qti-well">25</span> = <qti-printed-variable
+                class="qti-well" identifier="OUT-D-2" /> kilo per jaar </p>
+            <p>
+              <qti-printed-variable class="qti-well"
+                identifier="RSP-A-1" /> × <span
+                class="qti-well">120</span> - <qti-printed-variable
+                class="qti-well" identifier="OUT-D-2" /> = <qti-printed-variable
+                class="qti-well" identifier="COR-D" /> kilo per jaar </p>
+          </qti-content-body>
+        </qti-feedback-block>
+
+
+      </qti-content-body>
+    </qti-feedback-block>
+    <p><qti-end-attempt-interaction response-identifier="HALLO" title="Volgende stap" /></p>
+  </qti-item-body>
+
+  <qti-response-processing>
+
+    <qti-set-outcome-value identifier="STEP">
+      <qti-custom-operator class="js.org">
+        <qti-base-value base-type="string"><![CDATA[
+
+          if (item.getVariable('RSP-A-1').value !== null && !item.getVariable('STEP').value.includes('B')) {
+            item.updateOutcomeVariable('STEP', 'B');
+          }
+  
+          if (
+            item.getVariable('RSP-B-1').value !== null &&
+            item.getVariable('FBK-B').value !== 'CORRECT' &&
+            !item.getVariable('STEP').value.includes('C')
+          ) {
+            if (item.getVariable('RSP-B-1').value === item.getVariable('RSP-B-1').correctResponse) {
+              item.updateOutcomeVariable('SCORE', !item.getVariable('FBK-B').value ? 1 : 0);
+              item.updateOutcomeVariable('FBK-B', 'CORRECT');
+              item.updateOutcomeVariable('STEP', 'C');
+            } else {
+              item.updateOutcomeVariable('FBK-B', 'INCORRECT');
+              item.updateOutcomeVariable('FBK-B-SHOW', 'SHOW');
+            }
+          }
+  
+          if (item.getVariable('STEP').value.includes('C') && item.getVariable('RSP-C-1').value !== null && item.getVariable('RSP-C-2').value !== null) {
+            const outcome =
+              (item.getVariable('RSP-A-1').value * item.getVariable('RSP-C-1').value) / item.getVariable('RSP-C-2').value;
+  
+            item.updateOutcomeVariable('OUT-C', outcome);
+            !item.getVariable('STEP').value.includes('D') && item.updateOutcomeVariable('STEP', 'D');
+          }
+          
+          if (item.getVariable('RSP-D-1').value !== null) {
+            const outcome =
+              item.getVariable('RSP-A-1').value * item.getVariable('RSP-D-1').value - item.getVariable('OUT-C').value;
+  
+            const correct =
+              item.getVariable('RSP-A-1').value * item.getVariable('RSP-D-1').correctResponse -
+              (item.getVariable('RSP-A-1').value * item.getVariable('RSP-C-1').correctResponse) /
+                item.getVariable('RSP-C-2').correctResponse;
+  
+                const calc1 =
+                item.getVariable('RSP-A-1').value * 500 / 25;
+  
+            item.updateOutcomeVariable('OUT-D-1', outcome);
+            item.updateOutcomeVariable('OUT-D-2', calc1);
+            item.updateOutcomeVariable('COR-D', correct);
+  
+            if (outcome === correct) {
+              item.updateOutcomeVariable('FBK-D', 'CORRECT');
+              item.updateOutcomeVariable('SCORE', item.getVariable('SCORE').value + 1);
+            } else {
+              item.updateOutcomeVariable('FBK-D', 'INCORRECT');
+              item.updateOutcomeVariable('FBK-D-SHOW', 'SHOW');
+              // item.showCorrectResponse();
+            }
+            item.updateOutcomeVariable('STEP', 'E');
+          }
+  
+          if (item.getVariable('STEP').value.includes('E')
+          ) {
+            if (item.getVariable('FBK-B').value !== undefined) {
+              item.updateOutcomeVariable('completionStatus', 'completed'); 
+            }
+          }
+
+          ]]></qti-base-value>
+      </qti-custom-operator>
+    </qti-set-outcome-value>
+
+  </qti-response-processing>
+</qti-assessment-item>

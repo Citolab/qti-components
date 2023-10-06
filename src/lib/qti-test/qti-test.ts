@@ -15,6 +15,7 @@ export class QtiTest extends LitElement {
   private assessmentTestURI: '';
   loadedItems = [];
   itemRefEls = useRef<Map<string, QtiAssessmentItemRef>>(new Map());
+  controller = new AbortController();
 
   requestItem(identifier: string) {
     const fetchXml = async () => {
@@ -22,10 +23,23 @@ export class QtiTest extends LitElement {
         itemRef.xml = '';
       }
       const itemRefEl = this.itemRefEls.current.get(identifier);
-      const xmlFetch = await fetch(`${this.assessmentTestURI}/items/${itemRefEl.href}`); // , { signal });
-      const xmlText = await xmlFetch.text();
-      itemRefEl.xml = xmlText;
+      const controller = new AbortController();
+      const signal = controller.signal;
+      try {
+        const xmlFetch = await fetch(`${this.assessmentTestURI}/items/${itemRefEl.href}`, { signal });
+        const xmlText = await xmlFetch.text();
+        itemRefEl.xml = xmlText;
+      } catch (error) {
+        if (error.name === 'AbortError') {
+          console.log('Fetch aborted');
+        } else {
+          console.error(error);
+        }
+      }
     };
+    if (this.controller) {
+      this.controller.abort();
+    }
     fetchXml();
   }
 

@@ -12,7 +12,7 @@ export abstract class QtiFeedback extends LitElement {
   @property({ type: String })
   protected identifier: string;
 
-  @property({ type: String, attribute: false })
+  @property({ type: String, reflect: true })
   protected showStatus: string;
 
   constructor() {

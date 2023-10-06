@@ -17,8 +17,14 @@ export class QtiItem extends LitElement {
   private _xml: string = '';
 
   set xml(val: string) {
-    if (!this.shadowRoot) return;
+    // if (!this.shadowRoot) return;
     this._xml = qtiTransform(val).customTypes().customDefinition().assetsLocation(`${this.itemLocation}`).xml();
+  }
+
+  set css(val: string) {
+    const sheet = new CSSStyleSheet();
+    sheet.replaceSync(val);
+    this.shadowRoot?.adoptedStyleSheets.push(sheet);
   }
 
   assessmentItem: QtiAssessmentItem = null;
@@ -37,9 +43,7 @@ export class QtiItem extends LitElement {
 
   connectedCallback(): void {
     super.connectedCallback();
-    const sheet = new CSSStyleSheet();
-    sheet.replaceSync(styles);
-    this.shadowRoot.adoptedStyleSheets.push(sheet);
+    this.css = styles;
   }
 
   override render = () => html`${unsafeHTML(this._xml)}<slot></slot>`;
