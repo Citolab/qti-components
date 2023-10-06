@@ -60,8 +60,7 @@
   </qti-outcome-declaration>
 
   <qti-item-body>
-    <!-- <p>SCORE:<qti-printed-variable class="qti-well"
-    identifier="SCORE"></qti-printed-variable></p> -->
+    <p>SCORE:<qti-printed-variable class="qti-well" identifier="SCORE"></qti-printed-variable></p>
 
     <qti-feedback-block outcome-identifier="STEP" show-hide="show" identifier="A">
       <qti-content-body>
@@ -178,7 +177,8 @@
         <qti-base-value base-type="string"><![CDATA[
 
           if (item.getVariable('RSP-A-1').value !== null && !item.getVariable('STEP').value.includes('B')) {
-            item.updateOutcomeVariable('STEP', 'B');
+            // item.updateOutcomeVariable('STEP', 'B');
+            return 'B'
           }
   
           if (
@@ -189,7 +189,8 @@
             if (item.getVariable('RSP-B-1').value === item.getVariable('RSP-B-1').correctResponse) {
               item.updateOutcomeVariable('SCORE', !item.getVariable('FBK-B').value ? 1 : 0);
               item.updateOutcomeVariable('FBK-B', 'CORRECT');
-              item.updateOutcomeVariable('STEP', 'C');
+              // item.updateOutcomeVariable('STEP', 'C');
+              return 'C';
             } else {
               item.updateOutcomeVariable('FBK-B', 'INCORRECT');
               item.updateOutcomeVariable('FBK-B-SHOW', 'SHOW');
@@ -228,7 +229,8 @@
               item.updateOutcomeVariable('FBK-D-SHOW', 'SHOW');
               // item.showCorrectResponse();
             }
-            item.updateOutcomeVariable('STEP', 'E');
+            // item.updateOutcomeVariable('STEP', 'E');
+            return 'E'
           }
   
           if (item.getVariable('STEP').value.includes('E')
