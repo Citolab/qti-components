@@ -17,7 +17,6 @@ export class QtiItem extends LitElement {
   private _xml: string = '';
 
   set xml(val: string) {
-    if (!this.shadowRoot) return;
     this._xml = qtiTransform(val).customTypes().customDefinition().assetsLocation(`${this.itemLocation}`).xml();
   }
 
@@ -39,7 +38,7 @@ export class QtiItem extends LitElement {
     super.connectedCallback();
     const sheet = new CSSStyleSheet();
     sheet.replaceSync(styles);
-    this.shadowRoot.adoptedStyleSheets.push(sheet);
+    this.shadowRoot?.adoptedStyleSheets.push(sheet);
   }
 
   override render = () => html`${unsafeHTML(this._xml)}<slot></slot>`;
