@@ -29,10 +29,12 @@ export class QtiCustomOperator extends LitElement implements Calculate {
   }
 
   handleSlotChange(event: Event) {
-    const scriptString = this.firstElementChild?.firstChild?.textContent?.trim();
+    // expecting <[!CDATA[ ... ]]> is converted into <!-- ... --> with qti-transform: cDataToComment
+    const commentNode = Array.from(this.firstElementChild?.childNodes ?? []).find(
+      node => node.nodeType === Node.COMMENT_NODE
+    ) as COMMENT_NODE;
     try {
-      const output = scriptString.replace('[CDATA[', '').replace(']]', '').trim();
-      this.operatorFunction = new Function('context', 'fn', 'item', output ?? '');
+      this.operatorFunction = new Function('context', 'fn', 'item', commentNode.textContent ?? '');
     } catch (e) {
       console.error('custom-operator contains invalid javascript code', e);
     }
@@ -41,8 +43,10 @@ export class QtiCustomOperator extends LitElement implements Calculate {
   public calculate() {
     const fn = {
       match: QtiMatch.match,
-      var: (responseIdentifier: string) =>
-        this.context?.variables.find(v => v.identifier === responseIdentifier)?.value ?? ''
+      variable: (responseIdentifier: string) =>
+        this.context?.variables.find(v => v.identifier === responseIdentifier)?.value ?? '',
+      correct: (responseIdentifier: string) =>
+        this.context?.variables.find(v => v.identifier === responseIdentifier)?.correct ?? ''
     };
     const item = {
       getVariable: (variableIdentifier: string) =>

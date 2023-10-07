@@ -70,7 +70,7 @@ export class QtiAssessmentItem extends LitElement {
   };
 
   public get context(): ItemContext {
-    return this._context;
+    return { ...this._context };
   }
 
   public set variables(value: VariableDeclaration<string | string[] | null>[]) {

@@ -17,7 +17,12 @@ export class QtiItem extends LitElement {
   private _xml: string = '';
 
   set xml(val: string) {
-    this._xml = qtiTransform(val).customTypes().customDefinition().assetsLocation(`${this.itemLocation}`).xml();
+    this._xml = qtiTransform(val)
+      .customTypes()
+      .cDataToComment()
+      .customDefinition()
+      .assetsLocation(`${this.itemLocation}`)
+      .xml();
   }
 
   set css(val: string) {

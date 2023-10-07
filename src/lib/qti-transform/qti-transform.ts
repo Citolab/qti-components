@@ -50,6 +50,10 @@ export const qtiTransform = (xmlValue: string) => {
       applyXSL1(removeAllNamespaces);
       return api;
     },
+    cDataToComment() {
+      xmlString = xmlString.replace(/<!\[CDATA\[/g, '<!--').replace(/\]\]>/g, '-->');
+      return api;
+    },
     pciHooks(uri: string) {
       const attributes = ['hook', 'module'];
       const documentPath = uri.substring(0, uri.lastIndexOf('/'));
