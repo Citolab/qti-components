@@ -4,6 +4,7 @@ import { customElement, property } from 'lit/decorators.js';
 import { itemContext, ItemContext } from '../qti-assessment-item/qti-assessment-item.context';
 import { QtiMatch } from '../qti-responseprocessing';
 import { Calculate } from '../qti-utilities/ExpressionResult';
+import { ResponseVariable } from '../qti-utilities/Variables';
 
 /**
  * https://www.imsglobal.org/spec/qti/v3p0/impl#h.fi29q8dubjgw
@@ -32,7 +33,7 @@ export class QtiCustomOperator extends LitElement implements Calculate {
     // expecting <[!CDATA[ ... ]]> is converted into <!-- ... --> with qti-transform: cDataToComment
     const commentNode = Array.from(this.firstElementChild?.childNodes ?? []).find(
       node => node.nodeType === Node.COMMENT_NODE
-    ) as COMMENT_NODE;
+    );
     try {
       this.operatorFunction = new Function('context', 'fn', 'item', commentNode.textContent ?? '');
     } catch (e) {
@@ -46,7 +47,8 @@ export class QtiCustomOperator extends LitElement implements Calculate {
       variable: (responseIdentifier: string) =>
         this.context?.variables.find(v => v.identifier === responseIdentifier)?.value ?? '',
       correct: (responseIdentifier: string) =>
-        this.context?.variables.find(v => v.identifier === responseIdentifier)?.correct ?? ''
+        (this.context?.variables.find(v => v.identifier === responseIdentifier) as ResponseVariable)?.correctResponse ??
+        ''
     };
     const item = {
       getVariable: (variableIdentifier: string) =>
