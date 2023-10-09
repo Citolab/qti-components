@@ -10,7 +10,7 @@ export class QtiAssessmentTest extends LitElement {
   @provide({ context: testContext })
   @property({ attribute: false })
   public context: TestContext = {
-    itemIndex: null, // <--- is null when no item is loaded
+    itemIndex: null, // <--- is null when no item is loaded, can be used to show a loader icon
     items: []
   };
 
