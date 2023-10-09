@@ -12,17 +12,11 @@ export abstract class QtiFeedback extends LitElement {
   @property({ type: String })
   protected identifier: string;
 
-  @property({ type: String, reflect: true })
+  @property({ type: String, attribute: false })
   protected showStatus: string;
 
-  constructor() {
-    super();
-    this.showHide = 'show';
-    this.showFeedback(this.showHide === 'hide');
-  }
   public override connectedCallback() {
     super.connectedCallback();
-
     this.dispatchEvent(
       new CustomEvent<QtiFeedback>('qti-register-feedback', {
         bubbles: true,
@@ -52,6 +46,6 @@ export abstract class QtiFeedback extends LitElement {
   }
 
   private showFeedback(value: boolean) {
-    this.showStatus = value ? 'on' : 'off';
+    this.showStatus = (value && this.showHide === 'show') || (!value && this.showHide === 'hide') ? 'on' : 'off';
   }
 }
