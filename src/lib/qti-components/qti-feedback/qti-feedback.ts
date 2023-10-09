@@ -1,6 +1,8 @@
 import { LitElement, PropertyValueMap } from 'lit';
 import { property } from 'lit/decorators.js';
 import { QtiAssessmentItem } from '../qti-assessment-item/qti-assessment-item';
+import { isNullOrUndefined } from 'util';
+import { IsNullOrUndefined } from '../qti-utilities/utils';
 
 export abstract class QtiFeedback extends LitElement {
   @property({ type: String, attribute: 'show-hide' })
@@ -27,15 +29,18 @@ export abstract class QtiFeedback extends LitElement {
   }
 
   public checkShowFeedback(outcomeIdentifier: string) {
-    const outComeVariable = (this.closest('qti-assessment-item') as QtiAssessmentItem).getOutcome(outcomeIdentifier);
+    const outcomeVariable = (this.closest('qti-assessment-item') as QtiAssessmentItem).getOutcome(outcomeIdentifier);
 
-    if (this.outcomeIdentifier !== outcomeIdentifier || !outComeVariable) return;
-
+    if (this.outcomeIdentifier !== outcomeIdentifier || !outcomeVariable) return;
     let isFound = false;
-    if (Array.isArray(outComeVariable.value)) {
-      isFound = outComeVariable.value.includes(this.identifier);
+    if (Array.isArray(outcomeVariable.value)) {
+      isFound = outcomeVariable.value.includes(this.identifier);
     } else {
-      isFound = this.identifier === outComeVariable.value;
+      isFound =
+        (!IsNullOrUndefined(this.identifier) &&
+          !IsNullOrUndefined(outcomeVariable?.value) &&
+          this.identifier === outcomeVariable.value) ||
+        false;
     }
 
     this.showFeedback(isFound);
