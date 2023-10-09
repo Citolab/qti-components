@@ -1,3 +1,4 @@
+import { convertNumberToUniveralFormat } from '../../../qti-utilities/utils';
 import { QtiExpression } from '../../qti-expression/qti-expression';
 import { QtiRule } from '../qti-rule';
 
@@ -19,7 +20,9 @@ export class QtiSetOutcomeValue extends QtiRule {
         composed: true,
         detail: {
           outcomeIdentifier,
-          value
+          value: Array.isArray(value)
+            ? value.map((v: string) => convertNumberToUniveralFormat(v))
+            : convertNumberToUniveralFormat(value)
         }
       })
     );
