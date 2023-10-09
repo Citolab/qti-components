@@ -14,6 +14,9 @@ export class QtiAssessmentTest extends LitElement {
     items: []
   };
 
+  itemRefEls: Map<string, QtiAssessmentItemRef> = new Map();
+
+  // only copies the variables from the item, back into the testcontext to retain state
   private copyItemVariables(identifier: string): void {
     this.context = {
       ...this.context,
@@ -29,8 +32,6 @@ export class QtiAssessmentTest extends LitElement {
     return this.querySelector<QtiAssessmentItemRef>(`qti-assessment-item-ref[identifier="${identifier}"]`)
       .assessmentItem;
   }
-
-  itemRefEls: Map<string, QtiAssessmentItemRef> = new Map();
 
   private onItemRefRegistered(e: CustomEvent<{ href: string; identifier: string }>): void {
     this.itemRefEls.set(e.detail.identifier, e.target as QtiAssessmentItemRef);
@@ -57,11 +58,18 @@ export class QtiAssessmentTest extends LitElement {
   private onTestRequestItem(e: CustomEvent<number>): void {
     e.stopImmediatePropagation();
     if (e.detail === this.context.itemIndex) return; // same item
+
+    // PK: this is where the magic should happen
+    // can or can we not navigate to the next item?
+    // if we can navigate to the next item, then should we?
+
+    // - processResponse?, not for now, it will give feedback when we don't want to
     // this.context.items[this.context.itemIndex]?.itemEl.processResponse();
 
-    // this.context = { ...this.context, itemIndex: e.detail };
+    // - set the index to null, meaning we finished this item and testContext will be triggered
     this.context = { ...this.context, itemIndex: null };
 
+    // - request a new item to the outer realm!
     this._requestItem(this.context.items[e.detail].identifier);
   }
 
@@ -80,20 +88,20 @@ export class QtiAssessmentTest extends LitElement {
   }
 
   private itemConnected = (item: QtiAssessmentItem): void => {
-    // this.context.items = this.context.items.map(itemContext => {
-    //   return itemContext.identifier == item.identifier ? { ...itemContext, connected: true } : itemContext;
-    // });
-
+    // Ah, the new item has entered the inner realm, let's connect it to the context
     // get the index of the current item
     const itemIndex = this.context.items.findIndex(itemContext => itemContext.identifier === item.identifier);
 
+    // set the index of the current item, triggering the context ( set disabled or not )
     this.context = { ...this.context, itemIndex };
 
+    // get the testcontext of this item
     const itemContext = this.context.items.find(item => item.identifier === item?.identifier);
-    // debugger;
+    // if it is still empty, then copy the variables from the item
     if (itemContext.variables.length === 1) {
       this.copyItemVariables(item.identifier);
     } else {
+      // if it is not empty, then the item variables with the testcontext variables
       item.variables = [...itemContext.variables];
     }
   };
