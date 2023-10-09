@@ -90,13 +90,14 @@ export class QtiAssessmentTest extends LitElement {
   private itemConnected = (item: QtiAssessmentItem): void => {
     // Ah, the new item has entered the inner realm, let's connect it to the context
     // get the index of the current item
+    // debugger;
     const itemIndex = this.context.items.findIndex(itemContext => itemContext.identifier === item.identifier);
 
     // set the index of the current item, triggering the context ( set disabled or not )
     this.context = { ...this.context, itemIndex };
 
     // get the testcontext of this item
-    const itemContext = this.context.items.find(item => item.identifier === item?.identifier);
+    const itemContext = this.context.items.find(i => i?.identifier === item?.identifier);
     // if it is still empty, then copy the variables from the item
     if (itemContext.variables.length === 1) {
       this.copyItemVariables(item.identifier);

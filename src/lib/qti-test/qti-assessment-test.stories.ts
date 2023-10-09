@@ -79,13 +79,13 @@ export const QtiAssessmentTest = {
             )}
           </qti-assessment-section>
         </qti-test-part>
-        <test-next>NEXT</test-next>
 
         <test-prev>PREV</test-prev>
         <test-progress></test-progress>
         <test-paging-buttons></test-paging-buttons>
         <test-paging-radio></test-paging-radio>
         <test-slider></test-slider>
+        <test-next>NEXT</test-next>
         <test-show-correct>correct</test-show-correct>
         <test-print-variables></test-print-variables>
       </qti-assessment-test>
