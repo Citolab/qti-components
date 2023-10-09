@@ -5,7 +5,6 @@ import { QtiAssessmentItem } from './qti-assessment-item';
 export interface ItemContext {
   href?: string;
   identifier: string;
-  itemEl: QtiAssessmentItem;
   variables: ReadonlyArray<VariableDeclaration<string | string[]>>;
 }
 

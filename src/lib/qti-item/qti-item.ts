@@ -13,14 +13,37 @@ import { QtiAssessmentItem } from '../qti-components';
 export class QtiItem extends LitElement {
   @property({ type: String, attribute: 'item-location' }) itemLocation = '';
 
+  @property({ type: Boolean, attribute: false })
+  disabled: boolean = false;
+
+  update(changedProperties: Map<string | number | symbol, unknown>): void {
+    if (changedProperties.has('disabled')) {
+      if (this.assessmentItem) this.assessmentItem.disabled = this.disabled;
+    }
+    super.update(changedProperties);
+  }
+
   @state()
   private _xml: string = '';
 
   set xml(val: string) {
-    this._xml = qtiTransform(val).customTypes().customDefinition().assetsLocation(`${this.itemLocation}`).xml();
+    this._xml = qtiTransform(val)
+      .customTypes()
+      .cDataToComment()
+      .customDefinition()
+      .assetsLocation(`${this.itemLocation}`)
+      .xml();
   }
 
-  assessmentItem: QtiAssessmentItem = null;
+  set css(val: string) {
+    const sheet = new CSSStyleSheet();
+    sheet.replaceSync(val);
+    this.shadowRoot?.adoptedStyleSheets.push(sheet);
+  }
+
+  get assessmentItem(): QtiAssessmentItem | null {
+    return this.shadowRoot?.querySelector('qti-assessment-item');
+  }
 
   @provide({ context: audienceContext })
   @property({ attribute: false })
@@ -30,15 +53,13 @@ export class QtiItem extends LitElement {
 
   constructor() {
     super();
-    this.addEventListener('qti-item-connected', (e: any) => (this.assessmentItem = e.detail));
-    this.addEventListener('qti-item-disconnected', (e: any) => (this.assessmentItem = null));
+    // this.addEventListener('qti-item-connected', (e: any) => (this.assessmentItem = e.detail));
+    // this.addEventListener('qti-item-disconnected', (e: any) => (this.assessmentItem = null));
   }
 
   connectedCallback(): void {
     super.connectedCallback();
-    const sheet = new CSSStyleSheet();
-    sheet.replaceSync(styles);
-    this.shadowRoot?.adoptedStyleSheets.push(sheet);
+    this.css = styles;
   }
 
   override render = () => html`${unsafeHTML(this._xml)}<slot></slot>`;

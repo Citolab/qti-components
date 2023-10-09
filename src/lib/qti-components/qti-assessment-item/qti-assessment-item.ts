@@ -5,7 +5,7 @@ import { ResponseVariable } from '../qti-utilities/Variables';
 import { watch } from '../../decorators/watch';
 import type { ResponseInteraction } from '../qti-utilities/ExpressionResult';
 import type { Interaction } from '../qti-interaction/internal/interaction/interaction';
-import type { InteractionChangedDetails, OutcomeChangedDetails } from '../qti-utilities/EventTypes';
+import type { InteractionChangedDetails } from '../qti-utilities/EventTypes';
 import type { QtiFeedback } from '../qti-feedback/qti-feedback';
 import type { QtiResponseProcessing } from '../qti-responseprocessing';
 import type { VariableDeclaration } from '../qti-utilities/Variables';
@@ -46,11 +46,10 @@ export class QtiAssessmentItem extends LitElement {
   _handleReadonlyChange = (_: boolean, readonly: boolean) =>
     this._interactionElements.forEach(ch => (ch.readonly = readonly));
 
-  // @provide({ context: itemContext })
+  @provide({ context: itemContext })
   @property({ attribute: false })
   private _context: ItemContext = {
     identifier: this.getAttribute('identifier'),
-    itemEl: this,
     variables: [
       {
         identifier: 'completionStatus',
@@ -70,7 +69,7 @@ export class QtiAssessmentItem extends LitElement {
   };
 
   public get context(): ItemContext {
-    return this._context;
+    return { ...this._context };
   }
 
   public set variables(value: VariableDeclaration<string | string[] | null>[]) {

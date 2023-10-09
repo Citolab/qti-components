@@ -1,0 +1,372 @@
+<qti-assessment-item
+  xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+  time-dependent="false"
+  xml:lang="en"
+  identifier="ITEM-FIETSENSTALLING"
+  title="fietsenstalling"
+  adaptive="true"
+>
+
+  <qti-response-declaration identifier="RSP-A-1" base-type="integer" cardinality="single" />
+  <qti-response-declaration identifier="RSP-A-2" base-type="integer" cardinality="single" />
+  <qti-response-declaration identifier="RSP-A-3" base-type="integer" cardinality="single" />
+
+  <qti-response-declaration identifier="RSP-B-1" cardinality="ordered" base-type="identifier">
+    <qti-correct-response>
+      <qti-value>A</qti-value>
+      <qti-value>B</qti-value>
+      <qti-value>C</qti-value>
+      <qti-value>D</qti-value>
+      <qti-value>E</qti-value>
+    </qti-correct-response>
+  </qti-response-declaration>
+
+  <qti-response-declaration identifier="RSP-C-1" base-type="integer" cardinality="single">
+    <qti-correct-response>
+      <qti-value>0</qti-value>
+    </qti-correct-response>
+  </qti-response-declaration>
+
+  <qti-response-declaration identifier="RSP-C-2" base-type="integer" cardinality="single">
+    <qti-correct-response>
+      <qti-value>3</qti-value>
+    </qti-correct-response>
+
+  </qti-response-declaration>
+  <qti-response-declaration identifier="RSP-C-3" base-type="integer" cardinality="single">
+    <qti-correct-response>
+      <qti-value>75</qti-value>
+    </qti-correct-response>
+
+  </qti-response-declaration>
+
+  <qti-response-declaration identifier="RSP-D" base-type="integer" cardinality="single">
+    <qti-correct-response>
+      <qti-value>12</qti-value>
+    </qti-correct-response>
+  </qti-response-declaration>
+
+  <qti-outcome-declaration identifier="FBK-B" base-type="string" cardinality="single"></qti-outcome-declaration>
+  <qti-outcome-declaration identifier="FBK-B-SHOW" base-type="string" cardinality="single"></qti-outcome-declaration>
+
+  <qti-outcome-declaration identifier="OUT-C-1" base-type="integer" cardinality="single" />
+  <qti-outcome-declaration identifier="OUT-C-2" base-type="integer" cardinality="single" />
+  <qti-outcome-declaration identifier="OUT-C-3" base-type="integer" cardinality="single" />
+  <qti-outcome-declaration identifier="OUT-C-TOTAL" base-type="integer" cardinality="single" />
+
+  <qti-outcome-declaration identifier="OUT-D-TOTAL" base-type="integer" cardinality="single" />
+
+
+  <qti-outcome-declaration identifier="FBK-D" base-type="string" cardinality="single"></qti-outcome-declaration>
+
+  <qti-outcome-declaration identifier="OUT-E-1" base-type="integer" cardinality="single" />
+  <qti-outcome-declaration identifier="OUT-E-2" base-type="integer" cardinality="single" />
+  <qti-outcome-declaration identifier="OUT-E-3" base-type="integer" cardinality="single" />
+  <qti-outcome-declaration identifier="OUT-E-TOTAL" base-type="integer" cardinality="single" />
+
+  <qti-outcome-declaration identifier="OUT-F-TOTAL" base-type="integer" cardinality="single" />
+
+
+  <qti-outcome-declaration identifier="STEP" cardinality="multiple" base-type="integer">
+    <qti-default-value>
+      <qti-value>A</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+
+  <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float">
+    <qti-default-value>
+      <qti-value>0</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+
+  <qti-stylesheet href="/css/fietsenstalling.css" type="text/css" />
+
+  <qti-item-body>
+    <!-- <p>SCORE:<qti-printed-variable class="qti-well"
+    identifier="SCORE"></qti-printed-variable></p> -->
+
+    <qti-feedback-block outcome-identifier="STEP" show-hide="show" identifier="A">
+      <qti-content-body>
+        <p>Wat is ongeveer het aantal gewone fietsen, elektrische fietsen en benzine scooters in de
+        stalling?</p>
+      <p><qti-text-entry-interaction expected-length="3"
+            response-identifier="RSP-A-1" pattern-mask="[0-9]*" /> gewone fietsen </p>
+      <p><qti-text-entry-interaction
+            expected-length="3"
+            response-identifier="RSP-A-2" pattern-mask="[0-9]*" /> elektrische fietsen</p>
+      <p><qti-text-entry-interaction
+            expected-length="3"
+            response-identifier="RSP-A-3" pattern-mask="[0-9]*" /> benzine scooters</p>
+      </qti-content-body>
+    </qti-feedback-block>
+
+    <qti-feedback-block outcome-identifier="STEP" show-hide="show" identifier="B">
+      <qti-content-body>
+        <strong>Welk vervoersmiddel stoot het meest CO2 uit per reizigerskilometer?</strong>
+
+
+        <qti-order-interaction
+          response-identifier="RSP-B-1"
+          class="qti-choices-left 
+  qti-labels-decimal qti-labels-suffix-none"
+          orientation="vertical">
+          <qti-prompt>Zet de vervoersmiddelen op de juiste volgorde van minst naar meest.</qti-prompt>
+          <qti-simple-choice identifier="E">Benzine scooter</qti-simple-choice>
+          <qti-simple-choice identifier="D">Elektrische auto</qti-simple-choice>
+          <qti-simple-choice identifier="C">Elektrische fiets</qti-simple-choice>
+          <qti-simple-choice identifier="B">Elektrische trein</qti-simple-choice>
+          <qti-simple-choice identifier="A">Gewone fiets</qti-simple-choice>
+        </qti-order-interaction>
+
+        <qti-feedback-inline
+          outcome-identifier="FBK-B" show-hide="show" identifier="CORRECT">👍 Dat klopt.</qti-feedback-inline>
+      <qti-feedback-inline
+          outcome-identifier="FBK-B" show-hide="show" identifier="INCORRECT">😔 Helaas, onjuist.</qti-feedback-inline>
+      <qti-feedback-inline
+          outcome-identifier="FBK-B-SHOW" show-hide="show" identifier="SHOW">Elektrisch is schoner
+        dan benzine of diesel, zeker als de stroom duurzaam wordt opgewekt, zoals bij de trein. De
+        CO2-uitstoot per reizigerskilometer is daarnaast lager als er meerdere mensen tegelijk
+        kunnen worden vervoerd in het vervoersmiddel.</qti-feedback-inline>
+      </qti-content-body>
+
+    </qti-feedback-block>
+
+    <qti-feedback-block outcome-identifier="STEP" show-hide="show" identifier="C">
+      <qti-content-body>
+
+        <p>Je gaat nu kijken hoe schoon de fietsenstalling is op basis van de aantallen die jij hebt
+        ingevuld.</p>
+        <ul>
+          <li>CO2-uitstoot gewone fiets:<br /><em>0 gram</em> per kilometer</li>
+          <li>CO2-uitstoot elektrische fiets:<br /><em>3 gram</em> per kilometer</li>
+          <li>CO2-uitstoot benzine scooter:<br /><em>75 gram</em> per kilometer</li>
+        </ul>
+        <p>Ga
+        er vanuit dat elk vervoersmiddel gemiddeld 12 kilometer aflegt per dag.</p>
+
+        <strong>Bereken
+        de CO2 uitstoot per voertuig categorie.</strong>
+        
+
+        <table>
+          <tr>
+            <td>Gewone fiets:</td>
+            <td><qti-printed-variable class="qti-well" identifier="RSP-A-1" /></td>
+            <td>×</td>
+            <td><qti-text-entry-interaction class="qti-input-width-3" pattern-mask="[0-9]*"
+                response-identifier="RSP-C-1" /></td>
+            <td>=</td>
+            <td><qti-printed-variable class="qti-well" identifier="OUT-C-1" />&#160;<small>gram/km</small></td>
+
+          </tr>
+          <tr>
+            <td>Elektrische fiets:</td>
+            <td><qti-printed-variable class="qti-well" identifier="RSP-A-2" /></td>
+            <td>×</td>
+            <td><qti-text-entry-interaction class="qti-input-width-3" pattern-mask="[0-9]*"
+                response-identifier="RSP-C-2" /></td>
+            <td>=</td>
+            <td><qti-printed-variable class="qti-well" identifier="OUT-C-2" />&#160;<small>gram/km</small></td>
+          </tr>
+          <tr>
+            <td>Benzine scooter:</td>
+            <td><qti-printed-variable class="qti-well" identifier="RSP-A-3" /></td>
+            <td>×</td>
+            <td><qti-text-entry-interaction class="qti-input-width-3" pattern-mask="[0-9]*"
+                response-identifier="RSP-C-3" /></td>
+            <td>=</td>
+            <td><qti-printed-variable class="qti-well" identifier="OUT-C-3" />&#160;<small>gram/km</small></td>
+          </tr>
+          <tr>
+            <td colspan="4">Totaal</td>
+            <td> = </td>
+            <td><qti-printed-variable
+                class="qti-well" identifier="OUT-C-TOTAL" />&#160;<small>gram/km</small></td>
+          </tr>
+
+        </table>
+      </qti-content-body>
+    </qti-feedback-block>
+
+    <qti-feedback-block outcome-identifier="STEP" show-hide="show" identifier="D">
+      <qti-content-body>
+        <p><strong>Bereken de CO2-uitstoot van de fietsenstalling per dag.</strong></p><qti-printed-variable
+          class="qti-well" identifier="OUT-C-TOTAL" /> × <span><qti-text-entry-interaction
+            response-identifier="RSP-D" /> = <qti-printed-variable
+            class="qti-well" identifier="OUT-D-TOTAL" /></span> gram per dag<br /><qti-feedback-inline
+          outcome-identifier="FBK-D" show-hide="show" identifier="CORRECT">👍 Goed gedaan.</qti-feedback-inline>
+              
+          
+          <qti-feedback-block
+          outcome-identifier="FBK-D" show-hide="show" identifier="INCORRECT">
+          <qti-content-body> 😔 <p>De berekening moet zijn: </p>
+            <table>
+              <tr>
+                <td>Gewone fiets:</td>
+                <td><qti-printed-variable class="qti-well" identifier="RSP-A-1" /></td>
+                <td>×</td>
+                <td><span class="qti-well">0</span></td>
+                <td>=</td>
+                <td><qti-printed-variable class="qti-well" identifier="OUT-E-1" />&#160;<small>
+        gram/km</small></td>
+
+              </tr>
+              <tr>
+                <td>Elektrische fiets:</td>
+                <td><qti-printed-variable class="qti-well" identifier="RSP-A-2" /></td>
+                <td>×</td>
+                <td><span class="qti-well">3</span></td>
+
+                <td>=</td>
+                <td><qti-printed-variable class="qti-well" identifier="OUT-E-2" />&#160;<small>
+        gram/km</small></td>
+              </tr>
+              <tr>
+                <td>Benzine scooter:</td>
+                <td><qti-printed-variable class="qti-well" identifier="RSP-A-3" /></td>
+                <td>×</td>
+                <td><span class="qti-well">75</span></td>
+
+                <td>=</td>
+                <td><qti-printed-variable class="qti-well" identifier="OUT-E-3" />&#160;<small>
+        gram/km</small></td>
+              </tr>
+              <tr>
+                <td colspan="4">Totaal</td>
+                <td> = </td>
+                <td><qti-printed-variable
+                    class="qti-well" identifier="OUT-E-TOTAL" />&#160;<small>gram/km</small></td>
+              </tr>
+
+            </table>
+            <qti-printed-variable
+              class="qti-well" identifier="OUT-C-TOTAL" /> × 12 = <qti-printed-variable
+              class="qti-well" identifier="OUT-F-TOTAL" /> gram per dag </qti-content-body>
+        </qti-feedback-block>
+
+      </qti-content-body>
+    </qti-feedback-block>
+
+    <qti-feedback-block outcome-identifier="STEP" show-hide="show" identifier="E">
+      <qti-content-body> </qti-content-body>
+    </qti-feedback-block>
+
+    <p><qti-end-attempt-interaction
+        response-identifier="ATTEMPT" title="END ATTEMPT" /></p>
+
+  </qti-item-body>
+
+  <qti-response-processing>
+    <qti-set-outcome-value identifier="STEP">
+      <qti-custom-operator class="js.org">
+        <qti-base-value base-type="string"><![CDATA[
+        if (item.getVariable('RSP-A-1').value !== null && item.getVariable('RSP-A-2').value !== null && item.getVariable('RSP-A-3').value !== null && !item.getVariable('STEP').value.includes('B')) {
+          item.updateOutcomeVariable('STEP', 'B');
+        }
+
+        if (
+          item.getVariable('RSP-B-1')?.value?.length > 0 && !item.getVariable('STEP').value.includes('C')
+        ) {
+          // PK: order does not deliver correct array yet, but the default drag-to-drop pair
+          const outcome = item.getVariable('RSP-B-1').value.map(val => val.charAt(0)).join("")
+
+          // PK: so just compare strings then
+          const correct = item.getVariable('RSP-B-1').correctResponse.join("")
+
+          if (outcome === correct) {
+           item.updateOutcomeVariable('SCORE', !item.getVariable('FBK-B').value ? 1 : 0);
+            item.updateOutcomeVariable('FBK-B', 'CORRECT');
+            item.updateOutcomeVariable('FBK-B-SHOW', 'SHOW');
+          } else {
+            item.updateOutcomeVariable('FBK-B', 'INCORRECT');
+            item.updateOutcomeVariable('FBK-B-SHOW', 'SHOW');
+          }
+          item.updateOutcomeVariable('STEP', 'C');
+        }
+        
+        if (item.getVariable('STEP').value.includes('C')
+        ) {
+
+          if (item.getVariable('RSP-C-1').value !== null) {
+            const outCome = parseInt(item.getVariable('RSP-A-1').value) * parseInt(item.getVariable('RSP-C-1').value)
+            item.updateOutcomeVariable('OUT-C-1', outCome);
+          }
+          if (item.getVariable('RSP-C-2').value !== null) {
+            const outCome = parseInt(item.getVariable('RSP-A-2').value) * parseInt(item.getVariable('RSP-C-2').value)
+            item.updateOutcomeVariable('OUT-C-2', outCome);
+          }
+          if (item.getVariable('RSP-C-3').value !== null) {
+            const outCome = parseInt(item.getVariable('RSP-A-3').value) * parseInt(item.getVariable('RSP-C-3').value)
+            item.updateOutcomeVariable('OUT-C-3', outCome);
+          }
+
+          const outCome = 
+          item.getVariable('OUT-C-1').value +
+          item.getVariable('OUT-C-2').value +
+          item.getVariable('OUT-C-3').value 
+
+          if (item.getVariable('RSP-C-1').value !== null && item.getVariable('RSP-C-2').value !== null && item.getVariable('RSP-C-3').value !== null) {
+            item.updateOutcomeVariable('OUT-C-TOTAL', outCome);
+            item.updateOutcomeVariable('STEP', 'D');
+          }
+        }
+
+        if (item.getVariable('STEP').value.includes('D')
+        ) {
+          if (item.getVariable('RSP-D').value !== null) {
+
+            const total =  parseInt((item.getVariable('OUT-C-TOTAL').value) * 
+            parseInt(item.getVariable('RSP-D').value))
+ 
+            item.updateOutcomeVariable('OUT-D-TOTAL', total);
+            item.updateOutcomeVariable('STEP', 'E');
+          }
+        }
+
+        if (item.getVariable('STEP').value.includes('E')) {
+
+          const correctC1 = (item.getVariable('RSP-C-1').value === item.getVariable('RSP-C-1').correctResponse)
+          const correctC2 = (item.getVariable('RSP-C-2').value === item.getVariable('RSP-C-2').correctResponse)
+          const correctC3 = (item.getVariable('RSP-C-3').value === item.getVariable('RSP-C-3').correctResponse)
+          const correctD = (item.getVariable('RSP-D').value === item.getVariable('RSP-D').correctResponse)
+        
+          if (correctC1  && correctC2 && correctC3 && correctD) {
+            item.updateOutcomeVariable('SCORE', item.getVariable('SCORE').value + 1);
+
+            item.updateOutcomeVariable('FBK-D', 'CORRECT');
+          } else {
+            item.updateOutcomeVariable('FBK-D', 'INCORRECT');
+
+            const outCome1 = parseInt(item.getVariable('RSP-A-1').value) * 0
+            item.updateOutcomeVariable('OUT-E-1', outCome1);
+            const outCome2 = parseInt(item.getVariable('RSP-A-2').value) * 3
+            item.updateOutcomeVariable('OUT-E-2', outCome2);
+            const outCome3 = parseInt(item.getVariable('RSP-A-3').value) * 75
+            item.updateOutcomeVariable('OUT-E-3', outCome3);
+  
+            const outCome = 
+            item.getVariable('OUT-E-1').value +
+            item.getVariable('OUT-E-2').value +
+            item.getVariable('OUT-E-3').value 
+  
+            item.updateOutcomeVariable('OUT-E-TOTAL', outCome);          
+
+            const dayTotal = parseInt(item.getVariable('OUT-E-TOTAL').value) * 12
+            item.updateOutcomeVariable('OUT-F-TOTAL', dayTotal);          
+          }
+          item.updateOutcomeVariable('STEP', 'G');
+        }
+
+
+        if (item.getVariable('STEP').value.includes('G')
+        ) {
+          item.updateOutcomeVariable('completionStatus', 'completed'); 
+        }
+        
+        ]]></qti-base-value>
+      </qti-custom-operator>
+    </qti-set-outcome-value>
+  </qti-response-processing>
+</qti-assessment-item>

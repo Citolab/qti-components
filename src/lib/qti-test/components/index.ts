@@ -7,7 +7,7 @@ export * from './test-paging-radio';
 export * from './test-paging-buttons';
 
 export * from './test-show-correct';
-
+export * from './test-script';
 export * from './test-show-index';
 export * from './test-print-variables';
 export * from './test-print-score';

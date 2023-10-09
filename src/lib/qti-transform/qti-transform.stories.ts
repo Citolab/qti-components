@@ -76,6 +76,13 @@ export const Transformations = {
       .customDefinition()
       .xml();
 
+    const cDataToComment = qtiTransform(`<qti-match><![CDATA[
+        this should be transformed to commented CDATA
+      ]]>
+    </qti-match>`)
+      .cDataToComment()
+      .xml();
+
     return html`
       <pre>${mathml}</pre>
       <pre>${removeNamesSpaces}</pre>
@@ -85,6 +92,8 @@ export const Transformations = {
       <pre>${suffix}</pre>
       <pre>${elementNameAttributes}</pre>
       <pre>${operatorDefinition}</pre>
+      <h2>cDataToComment</h2>
+      <pre>${cDataToComment}</pre>
     `;
   }
 };

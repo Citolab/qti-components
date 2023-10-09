@@ -92,3 +92,6 @@ export * from './qti-interaction/qti-inline-choice';
 export * from './qti-interaction/qti-simple-associable-choice';
 export * from './qti-interaction/qti-simple-choice';
 export * from './qti-interaction/internal/interaction/interaction';
+
+export * from './qti-assessment-item/qti-assessment-item.context';
+export * from './qti-custom-operator/qti-custom-operator';
