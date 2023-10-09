@@ -13,6 +13,16 @@ import { QtiAssessmentItem } from '../qti-components';
 export class QtiItem extends LitElement {
   @property({ type: String, attribute: 'item-location' }) itemLocation = '';
 
+  @property({ type: Boolean, attribute: false })
+  disabled: boolean = false;
+
+  update(changedProperties: Map<string | number | symbol, unknown>): void {
+    if (changedProperties.has('disabled')) {
+      if (this.assessmentItem) this.assessmentItem.disabled = this.disabled;
+    }
+    super.update(changedProperties);
+  }
+
   @state()
   private _xml: string = '';
 
@@ -31,7 +41,9 @@ export class QtiItem extends LitElement {
     this.shadowRoot?.adoptedStyleSheets.push(sheet);
   }
 
-  assessmentItem: QtiAssessmentItem = null;
+  get assessmentItem(): QtiAssessmentItem | null {
+    return this.shadowRoot?.querySelector('qti-assessment-item');
+  }
 
   @provide({ context: audienceContext })
   @property({ attribute: false })
@@ -41,8 +53,8 @@ export class QtiItem extends LitElement {
 
   constructor() {
     super();
-    this.addEventListener('qti-item-connected', (e: any) => (this.assessmentItem = e.detail));
-    this.addEventListener('qti-item-disconnected', (e: any) => (this.assessmentItem = null));
+    // this.addEventListener('qti-item-connected', (e: any) => (this.assessmentItem = e.detail));
+    // this.addEventListener('qti-item-disconnected', (e: any) => (this.assessmentItem = null));
   }
 
   connectedCallback(): void {

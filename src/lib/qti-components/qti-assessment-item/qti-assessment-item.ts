@@ -50,7 +50,6 @@ export class QtiAssessmentItem extends LitElement {
   @property({ attribute: false })
   private _context: ItemContext = {
     identifier: this.getAttribute('identifier'),
-    itemEl: this,
     variables: [
       {
         identifier: 'completionStatus',
