@@ -24,7 +24,7 @@ export class QtiItem extends LitElement {
   }
 
   @state()
-  private _xml: string = '';
+  protected _xml: string = '';
 
   set xml(val: string) {
     this._xml = qtiTransform(val)
