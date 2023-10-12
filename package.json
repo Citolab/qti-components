@@ -88,6 +88,7 @@
   ],
   "scripts": {
     "test:generate-output": "jest --watch --json --outputFile=.jest-test-results.json || true",
+    "test:output": "jest --json --outputFile=.jest-test-results.json",
     "test": "jest",
     "dev": "vite",
     "build-app": "tsc && vite build",
