@@ -27,7 +27,7 @@ interface QtiAssessmentTestProps {
 }
 
 export const QtiTest = createComponent({
-  tagName: 'qti-item',
+  tagName: 'qti-test',
   react: React,
   elementClass: QtiAssessmentTestWebComponent,
   events: {
