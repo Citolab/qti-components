@@ -77,10 +77,10 @@
       "qti-item": [
         "./dist/qti-item/index.d.ts"
       ],
-      "react/qti-item": [
-        "./dist/qti-item-react/index.d.ts"
-      ],
       "react/qti-test": [
+        "./dist/qti-test-react/index.d.ts"
+      ],
+      "react/qti-item": [
         "./dist/qti-item-react/index.d.ts"
       ],
       "qti-transform": [
