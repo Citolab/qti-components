@@ -66,13 +66,13 @@ For a bit more advanced example using React and the QTIItem React wrapper from t
 <QtiItem
   className="w-full h-[480px] bg-white shadow p-4"
   responses={itemResponses.current.get(itemId!)}
-  qtiinteractionchanged={({ detail }: { detail: any }) => {
+  onInteractionChanged={({ detail }: { detail: any }) => {
     storeResponse(detail.item, detail.response, detail.responseIdentifier);
   }}
-  qtioutcomechanged={(e: any) => {
+  onOutcomeChanged={(e: any) => {
     itemOutcomes.current.set(items[itemIndex].identifier, e.detail.value);
   }}
-  qtiitemconnected={(e: any) => {
+  onItemConnected={(e: any) => {
     qtiItem.current = e.target;
     setItemId(e.detail.identifier);
   }}
