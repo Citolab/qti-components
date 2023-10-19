@@ -79,9 +79,6 @@ export const Item = {
   render: () => {
     const testRef = createRef<QtiAssessmentItem>();
     return html` <button @click="${() => testRef.value.processResponse()}">processResponse</button>
-      <button @click="${() => testRef.value.resetInteractions()}">Reset</button>
-      <button @click="${() => alert(testRef.value.validateResponses())}">Validate</button>
-
       <button
         @click=${() => {
           testRef.value.showCorrectResponse();
