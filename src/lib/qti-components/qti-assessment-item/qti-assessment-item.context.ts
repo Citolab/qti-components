@@ -1,4 +1,4 @@
-import { createContext } from '@lit-labs/context';
+import { createContext } from '@lit/context';
 import { VariableDeclaration } from '../qti-utilities/Variables';
 import { QtiAssessmentItem } from './qti-assessment-item';
 

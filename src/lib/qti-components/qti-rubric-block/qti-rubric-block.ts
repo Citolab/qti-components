@@ -1,6 +1,6 @@
 import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { ContextConsumer } from '@lit-labs/context';
+import { ContextConsumer } from '@lit/context';
 import { audienceContext } from '../../context/audience-context';
 
 import { watch } from '../../decorators/watch';

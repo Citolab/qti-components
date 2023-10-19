@@ -1,4 +1,4 @@
-import { createContext } from '@lit-labs/context';
+import { createContext } from '@lit/context';
 
 export interface AudienceContext {
   view: 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor';

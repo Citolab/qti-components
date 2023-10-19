@@ -1,4 +1,4 @@
-import { consume } from '@lit-labs/context';
+import { consume } from '@lit/context';
 import { html, css, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { itemContext, ItemContext } from '../qti-assessment-item/qti-assessment-item.context';

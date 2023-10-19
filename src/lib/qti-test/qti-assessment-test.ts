@@ -1,7 +1,7 @@
 import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { QtiAssessmentItem } from '../qti-components';
-import { provide } from '@lit-labs/context';
+import { provide } from '@lit/context';
 import { TestContext, testContext } from './qti-assessment-test.context';
 import { QtiAssessmentItemRef } from './qti-assessment-item-ref';
 
@@ -82,7 +82,7 @@ export class QtiAssessmentTest extends LitElement {
     super();
     this.addEventListener('register-item-ref', this.onItemRefRegistered);
     this.addEventListener('on-test-request-item', this.onTestRequestItem);
-    this.addEventListener('qti-item-connected', (e: any) => this.itemConnected(e.detail));
+    this.addEventListener('qti-item-connected', (e: CustomEvent<QtiAssessmentItem>) => this.itemConnected(e.detail));
     this.addEventListener('qti-interaction-changed', e => this.copyItemVariables(e.detail.item));
     this.addEventListener('qti-outcome-changed', e => this.copyItemVariables(e.detail.item));
   }

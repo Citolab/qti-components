@@ -1,11 +1,10 @@
-import { createContext } from '@lit-labs/context';
+import { createContext } from '@lit/context';
 import { ItemContext } from '../qti-components/qti-assessment-item/qti-assessment-item.context';
-import { QtiAssessmentItem } from '../qti-components';
 
 interface ItemInfo {
   href: string;
 }
-export interface TestContext {
+export class TestContext {
   itemIndex: number | null;
   items: (ItemContext & ItemInfo)[];
 }

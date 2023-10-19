@@ -1,7 +1,7 @@
 import { css, html, LitElement } from 'lit';
 
 import { customElement, state } from 'lit/decorators.js';
-import { consume } from '@lit-labs/context';
+import { consume } from '@lit/context';
 import { TestContext, testContext } from '../qti-assessment-test.context';
 
 @customElement('test-next')

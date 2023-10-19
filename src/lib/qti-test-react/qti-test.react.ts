@@ -1,0 +1,40 @@
+import React, { ForwardRefExoticComponent, ReactNode, Ref } from 'react';
+import { createComponent } from '@lit/react';
+import { InteractionChangedDetails, OutcomeChangedDetails } from '../qti-components/qti-utilities/EventTypes';
+import { TestContext } from '../qti-test/qti-assessment-test.context';
+import { QtiAssessmentTest as QtiAssessmentTestWebComponent } from '../qti-test/qti-assessment-test';
+import { QtiAssessmentItem } from '../qti-components';
+
+export interface OutcomeChangedDetailsExtended extends OutcomeChangedDetails {
+  identifier: string;
+}
+
+interface QtiAssessmentTestProps {
+  children?: ReactNode;
+  className?: string;
+  context: TestContext;
+  ref?: Ref<QtiAssessmentTestWebComponent | undefined>;
+  onOutcomeChanged?: (e: CustomEvent<OutcomeChangedDetails>) => void;
+  onInteractionChanged?: (e: CustomEvent<InteractionChangedDetails>) => void;
+  onRegisterItem?: (
+    e: CustomEvent<{
+      href: string;
+      identifier: string;
+    }>
+  ) => void;
+  onTestRequestItem?: (e: CustomEvent<number>) => void;
+  onItemConnected?: (e: CustomEvent<QtiAssessmentItem>) => void;
+}
+
+export const QtiTest = createComponent({
+  tagName: 'qti-item',
+  react: React,
+  elementClass: QtiAssessmentTestWebComponent,
+  events: {
+    onOutcomeChanged: 'qti-outcome-changed', // as EventName<Event>
+    onInteractionChanged: 'qti-interaction-changed',
+    onItemConnected: 'qti-item-connected',
+    onRegisterItem: 'register-item-ref',
+    onTestRequestItem: 'on-test-request-item'
+  }
+}) as ForwardRefExoticComponent<QtiAssessmentTestProps>;

@@ -1,4 +1,4 @@
-import { ContextConsumer } from '@lit-labs/context';
+import { ContextConsumer } from '@lit/context';
 import { html, LitElement } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 

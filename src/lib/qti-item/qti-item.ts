@@ -3,7 +3,7 @@ import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { AudienceContext, audienceContext } from '../context/audience-context';
-import { provide } from '@lit-labs/context';
+import { provide } from '@lit/context';
 
 import styles from '../../styles.css?inline';
 import { qtiTransform } from '../qti-transform';

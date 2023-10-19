@@ -20,12 +20,13 @@ const outdir = 'dist';
       './src/lib/qti-item/index.ts',
       './src/lib/qti-item-react/index.ts',
       './src/lib/qti-transform/index.ts',
-      './src/lib/qti-test/index.ts'
+      './src/lib/qti-test/index.ts',
+      './src/lib/qti-test-react/index.ts'
     ],
     define: {
       'process.env.NODE_ENV': '"production"'
     },
-    external: ['@lit-labs/react', '@lit-labs/context', 'react', 'lit'],
+    external: ['@lit/react', '@lit/context', 'react', 'lit'],
     splitting: true,
     esbuildPlugins: [InlineCSSPlugin] // https://github.com/evanw/esbuild/issues/3109#issuecomment-1539846087
   });

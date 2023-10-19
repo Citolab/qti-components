@@ -43,6 +43,10 @@
       "import": "./dist/qti-item-react/index.js",
       "require": "./dist/qti-item-react/index.cjs"
     },
+    "./react/qti-test": {
+      "import": "./dist/qti-test-react/index.js",
+      "require": "./dist/qti-test-react/index.cjs"
+    },
     "./qti-transform": {
       "import": "./dist/qti-transform/index.js",
       "require": "./dist/qti-transform/index.cjs"
@@ -110,18 +114,18 @@
     "postpublish": "npm run deploy"
   },
   "dependencies": {
-    "@lit-labs/context": "^0.5.0",
-    "@lit-labs/react": "^2.1.1",
+    "@lit/context": "^1.0.0",
+    "@lit/react": "^1.0.0",
     "@tailwindcss/nesting": "^0.0.0-insiders.565cd3e",
     "cheerio": "^1.0.0-rc.12",
     "haunted": "^5.0.0",
-    "lit": "^2.8.0",
+    "lit": "^3.0.0",
     "lit-xml": "^0.6.0",
     "remark-gfm": "^4.0.0"
   },
   "peerdependencies": {
-    "@lit-labs/context": "> 0.3",
-    "@lit-labs/react": "> 1.2",
+    "@lit/context": "> 0.3",
+    "@lit/react": "> 1.2",
     "lit": ">= 3 < 4",
     "react": "> 18"
   },
@@ -129,17 +133,18 @@
     "@arethetypeswrong/cli": "^0.12.1",
     "@custom-elements-manifest/analyzer": "^0.8.4",
     "@jest/globals": "^29.7.0",
-    "@storybook/addon-a11y": "^7.4.6",
-    "@storybook/addon-essentials": "^7.4.6",
-    "@storybook/addon-interactions": "^7.4.6",
-    "@storybook/addon-jest": "^7.4.6",
-    "@storybook/addon-links": "^7.4.6",
-    "@storybook/blocks": "^7.4.6",
+    "@storybook/addon-a11y": "^7.5.0",
+    "@storybook/addon-essentials": "^7.5.0",
+    "@storybook/addon-interactions": "^7.5.0",
+    "@storybook/addon-jest": "^7.5.0",
+    "@storybook/addon-links": "^7.5.0",
+    "@storybook/addon-mdx-gfm": "^7.5.0",
+    "@storybook/blocks": "^7.5.0",
     "@storybook/jest": "^0.2.3",
     "@storybook/test-runner": "^0.13.0",
     "@storybook/testing-library": "^0.2.2",
-    "@storybook/web-components": "^7.4.6",
-    "@storybook/web-components-vite": "^7.4.6",
+    "@storybook/web-components": "^7.5.0",
+    "@storybook/web-components-vite": "^7.5.0",
     "@tailwindcss/typography": "^0.5.10",
     "@types/node": "^20.8.5",
     "@typescript-eslint/eslint-plugin": "^6.7.5",
@@ -164,7 +169,7 @@
     "prettier-plugin-tailwindcss": "^0.5.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "storybook": "^7.4.6",
+    "storybook": "^7.5.0",
     "tailwindcss": "^3.3.2",
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1",
