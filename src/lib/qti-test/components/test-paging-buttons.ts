@@ -10,7 +10,7 @@ export class QtiTestPagingButtons extends LitElement {
   @state()
   public _testProvider?: TestContext;
 
-  protected createRenderRoot(): Element | ShadowRoot {
+  protected createRenderRoot() {
     return this;
   }
 
