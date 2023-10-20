@@ -67,15 +67,30 @@ export class QtiAssessmentTest extends LitElement {
     // this.context.items[this.context.itemIndex]?.itemEl.processResponse();
 
     // - set the index to null, meaning we finished this item and testContext will be triggered
-    this.context = { ...this.context, itemIndex: null };
+    const truthy = true;
+    if (!truthy) {
+      this.context = { ...this.context, itemIndex: e.detail };
+    } else {
+      this.context = { ...this.context, itemIndex: null };
+      this._requestItem(this.context.items[e.detail].identifier);
+    }
 
     // - request a new item to the outer realm!
-    this._requestItem(this.context.items[e.detail].identifier);
   }
 
   firstUpdated(a): void {
     super.firstUpdated(a);
+    if (this.context.items.length === 0) return;
     this._requestItem(this.context.items[0].identifier);
+  }
+
+  updated(changedProperties: Map<string, any>) {
+    if (changedProperties.has('context')) {
+      const oldIndex = changedProperties.get('context')?.itemIndex;
+      if (this.context.itemIndex !== null && oldIndex !== this.context.itemIndex) {
+        this._requestItem(this.context.items[this.context.itemIndex].identifier);
+      }
+    }
   }
 
   constructor() {

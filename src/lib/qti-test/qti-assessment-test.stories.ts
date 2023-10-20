@@ -49,6 +49,7 @@ export default {
 export const QtiAssessmentTestStory = {
   render: (args, { argTypes, loaded: { loadeditems } }) => {
     const itemRefEls = useRef<Map<string, QtiAssessmentItemRef>>(new Map());
+    const assessmentTestEl = createRef<QtiAssessmentTest>();
 
     function requestItem(identifier: string) {
       const fetchXml = async () => {
@@ -64,27 +65,16 @@ export const QtiAssessmentTestStory = {
     }
 
     return html`
-      <button
-        @click=${() => {
-          const test = document.querySelector('qti-assessment-test') as QtiAssessmentTest;
-          const context = test.context;
-          localStorage.setItem('context', JSON.stringify(context));
-        }}
-      >
+      <button @click=${() => localStorage.setItem('context', JSON.stringify(assessmentTestEl.value.context))}>
         Save
       </button>
 
-      <button
-        @click=${() => {
-          const test = document.querySelector('qti-assessment-test') as QtiAssessmentTest;
-          const context = JSON.parse(localStorage.getItem('context'));
-          test.context = context;
-        }}
-      >
+      <button @click=${() => (assessmentTestEl.value.context = JSON.parse(localStorage.getItem('context')))}>
         Load
       </button>
 
       <qti-assessment-test
+        ${ref(assessmentTestEl)}
         @register-item-ref=${e => {
           itemRefEls.current.set(e.target.identifier, e.target);
           e.target.itemLocation = `${args.serverLocation}/${args.qtipkg}/items/${e.target.href}`;
