@@ -7,7 +7,9 @@ import './index';
 
 import packages from '../../assets/api/packages.json';
 
-import { QtiAssessmentItemRef } from './index';
+// import { QtiAssessmentItemRef } from './index';
+import { QtiAssessmentTest } from './qti-assessment-test';
+import { QtiAssessmentItemRef } from './qti-assessment-item-ref';
 
 export default {
   title: 'qti-test',
@@ -44,7 +46,7 @@ export default {
   decorators: [story => html`${virtual(story)()}`]
 };
 
-export const QtiAssessmentTest = {
+export const QtiAssessmentTestStory = {
   render: (args, { argTypes, loaded: { loadeditems } }) => {
     const itemRefEls = useRef<Map<string, QtiAssessmentItemRef>>(new Map());
 
@@ -62,6 +64,26 @@ export const QtiAssessmentTest = {
     }
 
     return html`
+      <button
+        @click=${() => {
+          const test = document.querySelector('qti-assessment-test') as QtiAssessmentTest;
+          const context = test.context;
+          localStorage.setItem('context', JSON.stringify(context));
+        }}
+      >
+        Save
+      </button>
+
+      <button
+        @click=${() => {
+          const test = document.querySelector('qti-assessment-test') as QtiAssessmentTest;
+          const context = JSON.parse(localStorage.getItem('context'));
+          test.context = context;
+        }}
+      >
+        Load
+      </button>
+
       <qti-assessment-test
         @register-item-ref=${e => {
           itemRefEls.current.set(e.target.identifier, e.target);

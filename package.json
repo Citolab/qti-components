@@ -119,16 +119,12 @@
   "dependencies": {
     "@lit/context": "^1.0.0",
     "@lit/react": "^1.0.0",
-    "@tailwindcss/nesting": "^0.0.0-insiders.565cd3e",
     "cheerio": "^1.0.0-rc.12",
-    "haunted": "^5.0.0",
-    "lit": "^3.0.0",
-    "lit-xml": "^0.6.0",
-    "remark-gfm": "^4.0.0"
+    "lit": "^3.0.0"
   },
   "peerdependencies": {
-    "@lit/context": "> 0.3",
-    "@lit/react": "> 1.2",
+    "@lit/context": ">= 1.0",
+    "@lit/react": ">= 1.0",
     "lit": ">= 3 < 4",
     "react": "> 18"
   },
@@ -174,11 +170,15 @@
     "react-dom": "^18.2.0",
     "storybook": "^7.5.0",
     "tailwindcss": "^3.3.2",
+    "@tailwindcss/nesting": "^0.0.0-insiders.565cd3e",
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1",
     "tsup": "^7.2.0",
     "typescript": "^5.2.2",
-    "vite": "^4.5.0"
+    "vite": "^4.5.0",
+    "haunted": "^5.0.0",
+    "lit-xml": "^0.6.0",
+    "remark-gfm": "^4.0.0"
   },
   "customElements": "custom-elements.json"
 }
