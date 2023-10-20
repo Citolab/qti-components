@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <qti-assessment-test
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
@@ -25,10 +25,12 @@
       visible="true"
       keep-together="false"
     >
-      <qti-assessment-item-ref identifier="ITM-32llxx" href="32llxx.xml" category="dep-informational">
+      <qti-assessment-item-ref identifier="ITM-32llxx" href="./items/32llxx.xml"
+        category="dep-informational">
         <qti-weight identifier="WEIGHT" value="0" />
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref identifier="ITM-325f3u" href="325f3u.xml" category="dep-informational">
+      <qti-assessment-item-ref identifier="ITM-325f3u" href="./items/325f3u.xml"
+        category="dep-informational">
         <qti-weight identifier="WEIGHT" value="0" />
       </qti-assessment-item-ref>
     </qti-assessment-section>
@@ -38,37 +40,37 @@
       visible="true"
       keep-together="false"
     >
-      <qti-assessment-item-ref identifier="ITM-32eukv" href="32eukv.xml">
+      <qti-assessment-item-ref identifier="ITM-32eukv" href="./items/32eukv.xml">
         <qti-weight identifier="WEIGHT" value="1" />
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref identifier="ITM-32cpek" href="32cpek.xml">
+      <qti-assessment-item-ref identifier="ITM-32cpek" href="./items/32cpek.xml">
         <qti-weight identifier="WEIGHT" value="1" />
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref identifier="ITM-32ckgc" href="32ckgc.xml">
+      <qti-assessment-item-ref identifier="ITM-32ckgc" href="./items/32ckgc.xml">
         <qti-weight identifier="WEIGHT" value="1" />
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref identifier="ITM-32ckab" href="32ckab.xml">
+      <qti-assessment-item-ref identifier="ITM-32ckab" href="./items/32ckab.xml">
         <qti-weight identifier="WEIGHT" value="1" />
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref identifier="ITM-32cjnu" href="32cjnu.xml">
+      <qti-assessment-item-ref identifier="ITM-32cjnu" href="./items/32cjnu.xml">
         <qti-weight identifier="WEIGHT" value="1" />
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref identifier="ITM-32ha97" href="32ha97.xml">
+      <qti-assessment-item-ref identifier="ITM-32ha97" href="./items/32ha97.xml">
         <qti-weight identifier="WEIGHT" value="1" />
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref identifier="ITM-32cdqd" href="32cdqd.xml">
+      <qti-assessment-item-ref identifier="ITM-32cdqd" href="./items/32cdqd.xml">
         <qti-weight identifier="WEIGHT" value="1" />
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref identifier="ITM-32cdj9" href="32cdj9.xml">
+      <qti-assessment-item-ref identifier="ITM-32cdj9" href="./items/32cdj9.xml">
         <qti-weight identifier="WEIGHT" value="1" />
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref identifier="ITM-32eudp" href="32eudp.xml">
+      <qti-assessment-item-ref identifier="ITM-32eudp" href="./items/32eudp.xml">
         <qti-weight identifier="WEIGHT" value="1" />
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref identifier="ITM-32gfxy" href="32gfxy.xml">
+      <qti-assessment-item-ref identifier="ITM-32gfxy" href="./items/32gfxy.xml">
         <qti-weight identifier="WEIGHT" value="1" />
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref identifier="ITM-32eugm" href="32eugm.xml">
+      <qti-assessment-item-ref identifier="ITM-32eugm" href="./items/32eugm.xml">
         <qti-weight identifier="WEIGHT" value="1" />
       </qti-assessment-item-ref>
     </qti-assessment-section>
@@ -78,40 +80,40 @@
       visible="true"
       keep-together="false"
     >
-      <qti-assessment-item-ref identifier="ITM-32cf69" href="32cf69.xml">
+      <qti-assessment-item-ref identifier="ITM-32cf69" href="./items/32cf69.xml">
         <qti-weight identifier="WEIGHT" value="1" />
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref identifier="ITM-32dal2" href="32dal2.xml">
+      <qti-assessment-item-ref identifier="ITM-32dal2" href="./items/32dal2.xml">
         <qti-weight identifier="WEIGHT" value="1" />
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref identifier="ITM-32ceta" href="32ceta.xml">
+      <qti-assessment-item-ref identifier="ITM-32ceta" href="./items/32ceta.xml">
         <qti-weight identifier="WEIGHT" value="1" />
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref identifier="ITM-32ew63" href="32ew63.xml">
+      <qti-assessment-item-ref identifier="ITM-32ew63" href="./items/32ew63.xml">
         <qti-weight identifier="WEIGHT" value="1" />
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref identifier="ITM-32ew5m" href="32ew5m.xml">
+      <qti-assessment-item-ref identifier="ITM-32ew5m" href="./items/32ew5m.xml">
         <qti-weight identifier="WEIGHT" value="1" />
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref identifier="ITM-32cesr" href="32cesr.xml">
+      <qti-assessment-item-ref identifier="ITM-32cesr" href="./items/32cesr.xml">
         <qti-weight identifier="WEIGHT" value="1" />
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref identifier="ITM-32cdqa" href="32cdqa.xml">
+      <qti-assessment-item-ref identifier="ITM-32cdqa" href="./items/32cdqa.xml">
         <qti-weight identifier="WEIGHT" value="1" />
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref identifier="ITM-32ew5e" href="32ew5e.xml">
+      <qti-assessment-item-ref identifier="ITM-32ew5e" href="./items/32ew5e.xml">
         <qti-weight identifier="WEIGHT" value="1" />
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref identifier="ITM-32ckac" href="32ckac.xml">
+      <qti-assessment-item-ref identifier="ITM-32ckac" href="./items/32ckac.xml">
         <qti-weight identifier="WEIGHT" value="1" />
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref identifier="ITM-32evnk" href="32evnk.xml">
+      <qti-assessment-item-ref identifier="ITM-32evnk" href="./items/32evnk.xml">
         <qti-weight identifier="WEIGHT" value="1" />
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref identifier="ITM-32dan5" href="32dan5.xml">
+      <qti-assessment-item-ref identifier="ITM-32dan5" href="./items/32dan5.xml">
         <qti-weight identifier="WEIGHT" value="1" />
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref identifier="ITM-32cg8a" href="32cg8a.xml">
+      <qti-assessment-item-ref identifier="ITM-32cg8a" href="./items/32cg8a.xml">
         <qti-weight identifier="WEIGHT" value="1" />
       </qti-assessment-item-ref>
     </qti-assessment-section>
@@ -121,49 +123,51 @@
       visible="true"
       keep-together="false"
     >
-      <qti-assessment-item-ref identifier="ITM-32bll7" href="32bll7.xml">
+      <qti-assessment-item-ref identifier="ITM-32bll7" href="./items/32bll7.xml">
         <qti-weight identifier="WEIGHT" value="1" />
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref identifier="ITM-32h9tp" href="32h9tp.xml">
+      <qti-assessment-item-ref identifier="ITM-32h9tp" href="./items/32h9tp.xml">
         <qti-weight identifier="WEIGHT" value="1" />
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref identifier="ITM-32daru" href="32daru.xml">
+      <qti-assessment-item-ref identifier="ITM-32daru" href="./items/32daru.xml">
         <qti-weight identifier="WEIGHT" value="1" />
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref identifier="ITM-32cdpg" href="32cdpg.xml">
+      <qti-assessment-item-ref identifier="ITM-32cdpg" href="./items/32cdpg.xml">
         <qti-weight identifier="WEIGHT" value="1" />
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref identifier="ITM-32eug2" href="32eug2.xml">
+      <qti-assessment-item-ref identifier="ITM-32eug2" href="./items/32eug2.xml">
         <qti-weight identifier="WEIGHT" value="1" />
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref identifier="ITM-32gfxw" href="32gfxw.xml">
+      <qti-assessment-item-ref identifier="ITM-32gfxw" href="./items/32gfxw.xml">
         <qti-weight identifier="WEIGHT" value="1" />
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref identifier="ITM-32ckks" href="32ckks.xml">
+      <qti-assessment-item-ref identifier="ITM-32ckks" href="./items/32ckks.xml">
         <qti-weight identifier="WEIGHT" value="1" />
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref identifier="ITM-32euku" href="32euku.xml">
+      <qti-assessment-item-ref identifier="ITM-32euku" href="./items/32euku.xml">
         <qti-weight identifier="WEIGHT" value="1" />
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref identifier="ITM-32ckhf" href="32ckhf.xml">
+      <qti-assessment-item-ref identifier="ITM-32ckhf" href="./items/32ckhf.xml">
         <qti-weight identifier="WEIGHT" value="1" />
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref identifier="ITM-32ew4l" href="32ew4l.xml">
+      <qti-assessment-item-ref identifier="ITM-32ew4l" href="./items/32ew4l.xml">
         <qti-weight identifier="WEIGHT" value="1" />
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref identifier="ITM-32gfxp" href="32gfxp.xml">
+      <qti-assessment-item-ref identifier="ITM-32gfxp" href="./items/32gfxp.xml">
         <qti-weight identifier="WEIGHT" value="1" />
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref identifier="ITM-32euh2" href="32euh2.xml">
+      <qti-assessment-item-ref identifier="ITM-32euh2" href="./items/32euh2.xml">
         <qti-weight identifier="WEIGHT" value="1" />
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref identifier="ITM-32eujq" href="32eujq.xml">
+      <qti-assessment-item-ref identifier="ITM-32eujq" href="./items/32eujq.xml">
         <qti-weight identifier="WEIGHT" value="1" />
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref identifier="ITM-32ll6b" href="32ll6b.xml" category="dep-informational">
+      <qti-assessment-item-ref identifier="ITM-32ll6b" href="./items/32ll6b.xml"
+        category="dep-informational">
         <qti-weight identifier="WEIGHT" value="0" />
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref identifier="ITM-32c2sb" href="32c2sb.xml" category="dep-informational">
+      <qti-assessment-item-ref identifier="ITM-32c2sb" href="./items/32c2sb.xml"
+        category="dep-informational">
         <qti-weight identifier="WEIGHT" value="0" />
       </qti-assessment-item-ref>
     </qti-assessment-section>

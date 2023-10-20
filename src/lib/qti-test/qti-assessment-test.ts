@@ -66,11 +66,12 @@ export class QtiAssessmentTest extends LitElement {
     // - processResponse?, not for now, it will give feedback when we don't want to
     // this.context.items[this.context.itemIndex]?.itemEl.processResponse();
 
-    // - set the index to null, meaning we finished this item and testContext will be triggered
     const truthy = true;
     if (!truthy) {
+      // - set the index to id we want it to be
       this.context = { ...this.context, itemIndex: e.detail };
     } else {
+      // - set the index to null, meaning we finished this item and testContext will be triggered
       this.context = { ...this.context, itemIndex: null };
       this._requestItem(this.context.items[e.detail].identifier);
     }

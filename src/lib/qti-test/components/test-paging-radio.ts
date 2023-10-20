@@ -2,7 +2,6 @@ import { consume } from '@lit/context';
 import { LitElement, css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { TestContext, testContext } from '../qti-assessment-test.context';
-import { prop } from 'cheerio/lib/api/attributes';
 
 @customElement('test-paging-radio')
 export class QtiTestPagingRadio extends LitElement {
