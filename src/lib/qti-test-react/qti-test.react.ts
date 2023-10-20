@@ -10,7 +10,7 @@ export interface OutcomeChangedDetailsExtended extends OutcomeChangedDetails {
 }
 
 interface QtiAssessmentTestProps {
-  children?: ReactNode;
+  children?: any;
   className?: string;
   context: TestContext;
   ref?: Ref<WcQtiTest | undefined>;
