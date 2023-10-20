@@ -1,10 +1,10 @@
 /* eslint-disable wc/no-invalid-element-name */
 
-import { useRef } from 'haunted';
 import { html, LitElement } from 'lit';
 
 import { customElement, property, query, state } from 'lit/decorators.js';
 import { QtiAssessmentItemRef } from './qti-assessment-item-ref';
+import { QtiAssessmentTest } from './qti-assessment-test';
 
 @customElement('qti-test')
 export class QtiTest extends LitElement {
@@ -14,15 +14,19 @@ export class QtiTest extends LitElement {
   @property({ type: String, attribute: 'assessment-test-uri' })
   private assessmentTestURI: '';
   loadedItems = [];
-  itemRefEls = useRef<Map<string, QtiAssessmentItemRef>>(new Map());
+  itemRefEls: Map<string, QtiAssessmentItemRef> = new Map();
   controller = new AbortController();
+
+  getAssessmentTest(): QtiAssessmentTest {
+    return this.querySelector<QtiAssessmentTest>('qti-assessment-test');
+  }
 
   requestItem(identifier: string) {
     const fetchXml = async () => {
-      for (const itemRef of this.itemRefEls.current.values()) {
+      for (const itemRef of this.itemRefEls.values()) {
         itemRef.xml = '';
       }
-      const itemRefEl = this.itemRefEls.current.get(identifier);
+      const itemRefEl = this.itemRefEls.get(identifier);
       const controller = new AbortController();
       const signal = controller.signal;
       try {
@@ -47,7 +51,7 @@ export class QtiTest extends LitElement {
     return html`
       <qti-assessment-test
         @register-item-ref=${e => {
-          this.itemRefEls.current.set(e.target.identifier, e.target);
+          this.itemRefEls.set(e.target.identifier, e.target);
           e.target.itemLocation = `${this.assessmentTestURI}/items/${e.target.href}`;
         }}
         @on-test-set-item=${({ detail: identifier }) => this.requestItem(identifier)}
