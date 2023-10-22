@@ -1,0 +1,11 @@
+qti-assessment-test {
+  @apply m-4 block h-screen w-screen bg-red-400;
+}
+
+qti-assessment-item-ref[active] {
+  @apply block rounded bg-green-400 p-8;
+}
+
+:host {
+  @apply bg-blue-400;
+}

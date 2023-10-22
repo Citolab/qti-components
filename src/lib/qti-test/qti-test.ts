@@ -8,7 +8,7 @@ import { QtiAssessmentItemRef } from './qti-assessment-item-ref';
 import { QtiAssessmentTest } from './qti-assessment-test';
 import { until } from 'lit/directives/until.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
-// import './index';
+import styles from './qti-test.css?inline';
 
 @customElement('qti-test')
 export class QtiTest extends LitElement {
@@ -27,6 +27,12 @@ export class QtiTest extends LitElement {
 
   getAssessmentTest(): QtiAssessmentTest {
     return this.querySelector<QtiAssessmentTest>('qti-assessment-test');
+  }
+
+  set css(val: string) {
+    const sheet = new CSSStyleSheet();
+    sheet.replaceSync(val);
+    this.shadowRoot?.adoptedStyleSheets.push(sheet);
   }
 
   fetchData = async () => {
@@ -53,7 +59,7 @@ export class QtiTest extends LitElement {
   connectedCallback(): void {
     super.connectedCallback();
     this.content = this.fetchData();
-
+    this.css = styles;
     this.itemLocation = this.assessmentTestURI.substring(0, this.assessmentTestURI.lastIndexOf('/'));
   }
 
@@ -61,6 +67,7 @@ export class QtiTest extends LitElement {
     const fetchXml = async () => {
       for (const itemRef of this._itemRefEls.values()) {
         itemRef.xml = '';
+        itemRef.removeAttribute('active');
       }
       const itemRefEl = this._itemRefEls.get(identifier);
       const controller = new AbortController();
@@ -69,6 +76,7 @@ export class QtiTest extends LitElement {
         const xmlFetch = await fetch(`${this.itemLocation}/${itemRefEl.href}`, { signal });
         const xmlText = await xmlFetch.text();
         itemRefEl.xml = xmlText;
+        itemRefEl.setAttribute('active', '');
       } catch (error) {
         if (error.name === 'AbortError') {
           console.log('Fetch aborted');
@@ -105,20 +113,19 @@ export class QtiTest extends LitElement {
                     identifier="${item.identifier}"
                     href="${item.href}"
                     category="${ifDefined(item.category)}"
-                  >
-                  </qti-assessment-item-ref>`
+                  ></qti-assessment-item-ref>`
               )}
             </qti-assessment-section>
           </qti-test-part>
-          <test-next>NEXT</test-next>
-
+          
+          <!-- <test-progress></test-progress> -->
           <test-prev>PREV</test-prev>
-          <test-progress></test-progress>
           <test-paging-buttons></test-paging-buttons>
-          <test-paging-radio></test-paging-radio>
-          <test-slider></test-slider>
-          <test-show-correct>correct</test-show-correct>
-          <test-print-variables></test-print-variables>
+          <test-next>NEXT</test-next>
+          <!-- <test-paging-radio></test-paging-radio> -->
+          <!-- <test-slider></test-slider> -->
+          <!-- <test-show-correct>correct</test-show-correct> -->
+          <!-- <test-print-variables></test-print-variables> -->
         </qti-assessment-test>
       `}
     `;
