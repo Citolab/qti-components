@@ -69,8 +69,12 @@ export const QtiTestStory = {
         ${ref(testEl)}
         @qti-outcome-changed=${action('qti-outcome-changed')}
         @qti-interaction-changed=${action('qti-interaction-changed')}
+        @qti-assessment-first-updated="${(e: CustomEvent<QtiAssessmentTest>) => {
+          if (JSON.parse(localStorage.getItem('context'))) {
+            e.detail.context = JSON.parse(localStorage.getItem('context'));
+          }
+        }}"
         package-uri="${args.serverLocation}/${args.qtipkg}/"
-        .xml=${''}
       >
       </qti-test>
     `;

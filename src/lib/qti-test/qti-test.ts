@@ -149,6 +149,7 @@ export class QtiTest extends LitElement {
             const { old, new: newItem } = e.detail;
             this.requestItem(newItem, old);
           }}"
+
         >
           <test-show-index></test-show-index>
           <qti-test-part>
