@@ -68,6 +68,7 @@ export const QtiTestStory = {
         }}"
         package-uri="${args.serverLocation}/${args.qtipkg}/"
       >
+        <!-- <test-slider></test-slider> -->
       </qti-test>
     `;
   }

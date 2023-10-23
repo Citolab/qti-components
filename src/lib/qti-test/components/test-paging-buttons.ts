@@ -29,7 +29,7 @@ export class QtiTestPagingButtons extends LitElement {
     return html`
       ${items.map(
         (item, index) =>
-          html` <button
+          html`<button
             part="button"
             data-completion-status=${item.variables.find(v => v.identifier === 'completionStatus')?.value}
             data-active-item=${index === itemIndex}
