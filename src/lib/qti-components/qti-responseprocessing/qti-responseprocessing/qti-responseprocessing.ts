@@ -4,7 +4,7 @@ import { html, LitElement } from 'lit';
 import { mapResponse, mapResponsePoint, matchCorrect } from '../../qti-utilities/TemplateStrings';
 import { type QtiRule } from '../qti-rule/qti-rule';
 
-@customElement('qti-response-processing')
+@customElement('qti-response-processed')
 export default class QtiResponseProcessing extends LitElement {
   override render() {
     return html`<slot></slot>`;
@@ -47,6 +47,6 @@ export default class QtiResponseProcessing extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'qti-response-processing': QtiResponseProcessing;
+    'qti-response-processed': QtiResponseProcessing;
   }
 }

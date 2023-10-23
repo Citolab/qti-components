@@ -26,7 +26,7 @@ const match_correct_item = html` <qti-assessment-item identifier="choice" title=
   ></qti-response-processing>
 </qti-assessment-item>`;
 
-describe('qti-response-processing', () => {
+describe('qti-response-processed', () => {
   beforeEach(async () => {
     const template = () => match_correct_item;
     render(template(), document.body);

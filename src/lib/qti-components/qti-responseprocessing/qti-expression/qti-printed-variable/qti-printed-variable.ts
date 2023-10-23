@@ -16,7 +16,7 @@ export class QtPrintedVariable extends LitElement {
   constructor() {
     super();
     const assessmentItem = this.closest('qti-assessment-item') as QtiAssessmentItem;
-    assessmentItem.addEventListener('qti-response-processing', () => {
+    assessmentItem.addEventListener('qti-response-processed', () => {
       this.value = this.calculate() as string;
     });
   }

@@ -15,32 +15,46 @@ export class QtiTest extends LitElement {
   // @property({ type: String, attribute: 'navigation-mode' })
   // private _navigationMode: 'linear' | 'nonlinear' = 'linear';
 
-  @property({ type: String, attribute: 'assessment-test-uri' })
-  public assessmentTestURI: string = '';
+  @state()
+  private content: Promise<any>;
 
   @state()
   private _loadedItems = [];
 
   private _itemRefEls: Map<string, QtiAssessmentItemRef> = new Map();
   private _controller = new AbortController();
+
+  @property({ type: String, attribute: 'package-uri' })
+  public packageURI: string = '';
+
+  @property({ type: String, attribute: 'current-item-identifier' })
+  public currentItemIdentifier: string = '';
+
   itemLocation: string;
 
-  getAssessmentTest(): QtiAssessmentTest {
-    return this.querySelector<QtiAssessmentTest>('qti-assessment-test');
+  updated(changedProperties: Map<string, any>) {
+    if (changedProperties.has('packageURI')) {
+      this._loadedItems = []; // empty all items
+      this.content = this.fetchData(); // load new items async
+    }
   }
 
-  set css(val: string) {
-    const sheet = new CSSStyleSheet();
-    sheet.replaceSync(val);
-    this.shadowRoot?.adoptedStyleSheets.push(sheet);
-  }
+  private _testFromImsmanifest = async href => {
+    const response = await fetch(href);
+    const imsmanifestXML = await response.text();
+    await new Promise<void>(r => setTimeout(() => r(), 500)); // Add some delay for demo purposes
+    const $ = cheerio.load(imsmanifestXML, { xmlMode: true, xml: { xmlMode: true } });
+    // <resource identifier="TST-bb-bi-22-examenvariant-1" type="imsqti_test_xmlv3p0" href="depitems/bb-bi-22-examenvariant-1.xml">
+    const el = $('resource[type="imsqti_test_xmlv3p0"]').first();
+    return el.attr('href');
+  };
 
-  fetchData = async () => {
-    const uri = this.getAttribute('assessment-test-uri');
-    const response = await fetch(uri);
+  private _itemsFromAssessmentTest = async href => {
+    const response = await fetch(`${this.packageURI}/${href}`);
     const assessmentTestXML = await response.text();
+
     // Add some delay for demo purposes
-    await new Promise<void>(r => setTimeout(() => r(), 1000));
+    await new Promise<void>(r => setTimeout(() => r(), 500));
 
     const $ = cheerio.load(assessmentTestXML, { xmlMode: true, xml: { xmlMode: true } });
     const items = [];
@@ -50,17 +64,29 @@ export class QtiTest extends LitElement {
       const category = $(element).attr('category');
       items.push({ identifier, href, category });
     });
-    this._loadedItems = items;
+    return items;
   };
 
-  @state()
-  private content: Promise<any>;
+  fetchData = async () => {
+    const assessmentTestHref = await this._testFromImsmanifest(this.packageURI + '/imsmanifest.xml');
+    const assessmentTestItems = await this._itemsFromAssessmentTest(assessmentTestHref);
+    this.itemLocation = `${this.packageURI}/${assessmentTestHref.substring(0, assessmentTestHref.lastIndexOf('/'))}`;
+    this._loadedItems = assessmentTestItems;
+  };
 
   connectedCallback(): void {
     super.connectedCallback();
-    this.content = this.fetchData();
     this.css = styles;
-    this.itemLocation = this.assessmentTestURI.substring(0, this.assessmentTestURI.lastIndexOf('/'));
+  }
+
+  getAssessmentTest(): QtiAssessmentTest {
+    return this.querySelector<QtiAssessmentTest>('qti-assessment-test');
+  }
+
+  set css(val: string) {
+    const sheet = new CSSStyleSheet();
+    sheet.replaceSync(val);
+    this.shadowRoot?.adoptedStyleSheets.push(sheet);
   }
 
   requestItem(identifier: string) {
@@ -99,7 +125,8 @@ export class QtiTest extends LitElement {
         <qti-assessment-test
           @register-item-ref=${e => {
             this._itemRefEls.set(e.target.identifier, e.target);
-            e.target.itemLocation = `${this.itemLocation}/${e.target.href}`;
+            const itemRefEl = this._itemRefEls.get(e.target.identifier);
+            e.target.itemLocation = `${this.itemLocation}/${itemRefEl.href}`;
           }}
           @on-test-set-item=${({ detail: identifier }) => this.requestItem(identifier)}
         >

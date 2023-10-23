@@ -67,7 +67,7 @@ export class QtiAssessmentTest extends LitElement {
     // this.context.items[this.context.itemIndex]?.itemEl.processResponse();
 
     const truthy = true;
-    if (truthy) {
+    if (!truthy) {
       // - set the index to id we want it to be
       this.context = { ...this.context, itemIndex: e.detail };
     } else {
@@ -81,7 +81,10 @@ export class QtiAssessmentTest extends LitElement {
 
   firstUpdated(a): void {
     super.firstUpdated(a);
-    if (this.context.items.length === 0) return;
+    if (this.context.items.length === 0) {
+      console.warn('No items found in the test, please add at least one item');
+      return;
+    }
     this._requestItem(this.context.items[0].identifier);
   }
 
