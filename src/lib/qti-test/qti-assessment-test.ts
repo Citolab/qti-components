@@ -7,22 +7,29 @@ import { QtiAssessmentItemRef } from './qti-assessment-item-ref';
 
 @customElement('qti-assessment-test')
 export class QtiAssessmentTest extends LitElement {
-  private _initialValue: TestContext = {
-    itemIndex: null, // <--- is null when no item is loaded, can be used to show a loader icon
-    items: []
-  };
+  @property({ type: String }) identifier: string;
 
   @provide({ context: testContext })
   @property({ attribute: false })
-  public context: TestContext = this._initialValue;
+  private _context: TestContext = {
+    itemIndex: 0,
+    items: []
+  };
+  public get context(): TestContext {
+    return this._context;
+  }
+  public set context(value: TestContext) {
+    console.log('wooo', value);
+    this._context = value;
+  }
 
-  itemRefEls: Map<string, QtiAssessmentItemRef> = new Map();
+  private _itemRefEls: Map<string, QtiAssessmentItemRef> = new Map();
 
   // only copies the variables from the item, back into the testcontext to retain state
   private copyItemVariables(identifier: string): void {
-    this.context = {
-      ...this.context,
-      items: this.context.items.map(itemContext => {
+    this._context = {
+      ...this._context,
+      items: this._context.items.map(itemContext => {
         return itemContext.identifier == identifier
           ? { ...itemContext, variables: this.getAssessmentItem(identifier).context.variables }
           : itemContext;
@@ -30,21 +37,21 @@ export class QtiAssessmentTest extends LitElement {
     };
   }
 
-  restoreContext = (contextToRestore: TestContext) => {
-    if (!contextToRestore) {
-      contextToRestore = this._initialValue;
-    }
-    this.context.itemIndex = contextToRestore.itemIndex;
-    // append the items that are not yet in the context and replace the ones that are
-    contextToRestore.items?.forEach(itemContext => {
-      const existingItemContext = this.context.items.find(i => i.identifier === itemContext.identifier);
-      if (existingItemContext) {
-        existingItemContext.variables = itemContext.variables;
-      } else {
-        this.context.items.push(itemContext);
-      }
-    });
-  };
+  // restoreContext = (contextToRestore: TestContext) => {
+  //   if (!contextToRestore) {
+  //     contextToRestore = this._initialValue;
+  //   }
+  //   this.context.itemIndex = contextToRestore.itemIndex;
+  //   // append the items that are not yet in the context and replace the ones that are
+  //   contextToRestore.items?.forEach(itemContext => {
+  //     const existingItemContext = this.context.items.find(i => i.identifier === itemContext.identifier);
+  //     if (existingItemContext) {
+  //       existingItemContext.variables = itemContext.variables;
+  //     } else {
+  //       this.context.items.push(itemContext);
+  //     }
+  //   });
+  // };
 
   getAssessmentItem(identifier: string): QtiAssessmentItem {
     return this.querySelector<QtiAssessmentItemRef>(`qti-assessment-item-ref[identifier="${identifier}"]`)
@@ -52,11 +59,11 @@ export class QtiAssessmentTest extends LitElement {
   }
 
   private onItemRefRegistered(e: CustomEvent<{ href: string; identifier: string }>): void {
-    this.itemRefEls.set(e.detail.identifier, e.target as QtiAssessmentItemRef);
+    this._itemRefEls.set(e.detail.identifier, e.target as QtiAssessmentItemRef);
 
     const { href, identifier } = e.detail;
-    this.context.items = [
-      ...this.context.items,
+    this._context.items = [
+      ...this._context.items,
       {
         href,
         identifier,
@@ -75,23 +82,23 @@ export class QtiAssessmentTest extends LitElement {
 
   private onTestRequestItem(e: CustomEvent<number>): void {
     e.stopImmediatePropagation();
-    if (e.detail === this.context.itemIndex) return; // same item
+    if (e.detail === this._context.itemIndex) return; // same item
 
     // PK: this is where the magic should happen
     // can or can we not navigate to the next item?
     // if we can navigate to the next item, then should we?
 
     // - processResponse?, not for now, it will give feedback when we don't want to
-    // this.context.items[this.context.itemIndex]?.itemEl.processResponse();
+    // this._context.items[this._context.itemIndex]?.itemEl.processResponse();
 
     const truthy = true;
-    if (!truthy) {
+    if (truthy) {
       // - set the index to id we want it to be
-      this.context = { ...this.context, itemIndex: e.detail };
+      this._context = { ...this._context, itemIndex: e.detail };
     } else {
       // - set the index to null, meaning we finished this item and testContext will be triggered
-      this.context = { ...this.context, itemIndex: null };
-      this._requestItem(this.context.items[e.detail].identifier);
+      // this._context = { ...this._context, itemIndex: null };
+      // this._requestItem(this._context.items[e.detail].identifier);
     }
 
     // - request a new item to the outer realm!
@@ -99,18 +106,23 @@ export class QtiAssessmentTest extends LitElement {
 
   firstUpdated(a): void {
     super.firstUpdated(a);
-    if (this.context.items.length === 0) {
+    if (this._context.items.length === 0) {
       console.warn('No items found in the test, please add at least one item');
       return;
     }
-    this._requestItem(this.context.items[0].identifier);
+    // this._requestItem(this._context.items[0].identifier);
+    this._emit<{ detail: QtiAssessmentItem }>('qti-assessment-first-updated', this);
   }
 
   updated(changedProperties: Map<string, any>) {
-    if (changedProperties.has('context')) {
-      const oldIndex = changedProperties.get('context')?.itemIndex;
-      if (this.context.itemIndex !== null && oldIndex !== this.context.itemIndex) {
-        this._requestItem(this.context.items[this.context.itemIndex].identifier);
+    console.log('updated', changedProperties);
+    if (changedProperties.has('_context')) {
+      const oldIndex = changedProperties.get('_context')?.itemIndex;
+      if (this._context.itemIndex !== null && oldIndex !== this._context.itemIndex) {
+        this._requestItem(
+          this._context.items[this._context.itemIndex].identifier,
+          this._context.items[oldIndex]?.identifier
+        );
       }
     }
   }
@@ -119,7 +131,9 @@ export class QtiAssessmentTest extends LitElement {
     super();
     this.addEventListener('register-item-ref', this.onItemRefRegistered);
     this.addEventListener('on-test-request-item', this.onTestRequestItem);
-    this.addEventListener('qti-item-connected', (e: CustomEvent<QtiAssessmentItem>) => this.itemConnected(e.detail));
+    this.addEventListener('qti-item-first-updated', (e: CustomEvent<QtiAssessmentItem>) =>
+      this.itemConnected(e.detail)
+    );
     this.addEventListener('qti-interaction-changed', e => this.copyItemVariables(e.detail.item));
     this.addEventListener('qti-outcome-changed', e => this.copyItemVariables(e.detail.item));
   }
@@ -128,13 +142,13 @@ export class QtiAssessmentTest extends LitElement {
     // Ah, the new item has entered the inner realm, let's connect it to the context
     // get the index of the current item
     // debugger;
-    const itemIndex = this.context.items.findIndex(itemContext => itemContext.identifier === item.identifier);
+    const itemIndex = this._context.items.findIndex(itemContext => itemContext.identifier === item.identifier);
 
     // set the index of the current item, triggering the context ( set disabled or not )
-    this.context = { ...this.context, itemIndex };
+    // this._context = { ...this._context, itemIndex };
 
     // get the testcontext of this item
-    const itemContext = this.context.items.find(i => i?.identifier === item?.identifier);
+    const itemContext = this._context.items.find(i => i?.identifier === item?.identifier);
     // if it is still empty, then copy the variables from the item
     if (itemContext.variables.length === 1) {
       this.copyItemVariables(item.identifier);
@@ -144,12 +158,31 @@ export class QtiAssessmentTest extends LitElement {
     }
   };
 
-  private _requestItem(identifier?: string): void {
+  private _requestItem(identifier?: string, oldIdentifier?: string): void {
     this.dispatchEvent(
-      new CustomEvent<string>('on-test-set-item', {
+      new CustomEvent<
+        | {
+            old: string | undefined;
+            new?: string;
+          }
+        | undefined
+      >('on-test-set-item', {
         bubbles: true,
         composed: true,
-        detail: identifier
+        detail: {
+          old: oldIdentifier,
+          new: identifier
+        }
+      })
+    );
+  }
+
+  private _emit<T>(name, detail = null) {
+    this.dispatchEvent(
+      new CustomEvent<T>(name, {
+        bubbles: true,
+        composed: true,
+        detail
       })
     );
   }

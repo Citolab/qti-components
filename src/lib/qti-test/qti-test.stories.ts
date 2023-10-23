@@ -51,9 +51,19 @@ export const QtiTestStory = {
     const testEl = createRef<QtiAssessmentTest>();
 
     return html`
-      <button @click=${() => localStorage.setItem('context', JSON.stringify(testEl.value.context))}>Save</button>
+      <button
+        style="position:absolute; left:0"
+        @click=${() => localStorage.setItem('context', JSON.stringify(testEl.value.context))}
+      >
+        Save
+      </button>
 
-      <button @click=${() => (testEl.value.context = JSON.parse(localStorage.getItem('context')))}>Load</button>
+      <button
+        style="position:absolute; left:3rem"
+        @click=${() => (testEl.value.context = JSON.parse(localStorage.getItem('context')))}
+      >
+        Load
+      </button>
 
       <qti-test
         ${ref(testEl)}
@@ -69,7 +79,7 @@ export const QtiTestStory = {
 
 /*
 @qti-response-processed=${action('qti-response-processed')}
-@qti-item-connected-=${action('qti-item-connected')}
+@qti-item-connected-=${action('qti-item-first-updated')}
 */
 
 /*

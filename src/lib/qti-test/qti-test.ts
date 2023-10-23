@@ -3,7 +3,7 @@
 import { html, LitElement } from 'lit';
 import * as cheerio from 'cheerio';
 
-import { customElement, property, query, state } from 'lit/decorators.js';
+import { customElement, property, query, queryAssignedElements, state } from 'lit/decorators.js';
 import { QtiAssessmentItemRef } from './qti-assessment-item-ref';
 import { QtiAssessmentTest } from './qti-assessment-test';
 import { until } from 'lit/directives/until.js';
@@ -15,6 +15,9 @@ import { createRef, ref } from 'lit/directives/ref.js';
 export class QtiTest extends LitElement {
   // @property({ type: String, attribute: 'navigation-mode' })
   // private _navigationMode: 'linear' | 'nonlinear' = 'linear';
+
+  @query('qti-test-part')
+  _qtiTestPart;
 
   @state()
   private content: Promise<any>;
@@ -28,19 +31,16 @@ export class QtiTest extends LitElement {
   @property({ type: String, attribute: 'package-uri' })
   public packageURI: string = '';
 
-  @property({ type: String, attribute: 'current-item-identifier' })
-  public currentItemIdentifier: string = '';
+  private _itemLocation: string;
 
-  itemLocation: string;
-
-  assessmentTestEl = createRef<QtiAssessmentTest>();
+  private _assessmentTestEl = createRef<QtiAssessmentTest>();
 
   set context(value: any) {
-    this.assessmentTestEl.value.context = value;
+    this._assessmentTestEl.value.context = value;
   }
 
   get context(): any {
-    return this.assessmentTestEl.value.context;
+    return this._assessmentTestEl.value.context;
   }
 
   updated(changedProperties: Map<string, any>) {
@@ -53,7 +53,7 @@ export class QtiTest extends LitElement {
   private _testFromImsmanifest = async href => {
     const response = await fetch(href);
     const imsmanifestXML = await response.text();
-    await new Promise<void>(r => setTimeout(() => r(), 500)); // Add some delay for demo purposes
+    await new Promise<void>(r => setTimeout(() => r(), 1000)); // Add some delay for demo purposes
     const $ = cheerio.load(imsmanifestXML, { xmlMode: true, xml: { xmlMode: true } });
     // <resource identifier="TST-bb-bi-22-examenvariant-1" type="imsqti_test_xmlv3p0" href="depitems/bb-bi-22-examenvariant-1.xml">
     const el = $('resource[type="imsqti_test_xmlv3p0"]').first();
@@ -65,7 +65,7 @@ export class QtiTest extends LitElement {
     const assessmentTestXML = await response.text();
 
     // Add some delay for demo purposes
-    await new Promise<void>(r => setTimeout(() => r(), 500));
+    await new Promise<void>(r => setTimeout(() => r(), 1000));
 
     const $ = cheerio.load(assessmentTestXML, { xmlMode: true, xml: { xmlMode: true } });
     const items = [];
@@ -81,7 +81,7 @@ export class QtiTest extends LitElement {
   fetchData = async () => {
     const assessmentTestHref = await this._testFromImsmanifest(this.packageURI + '/imsmanifest.xml');
     const assessmentTestItems = await this._itemsFromAssessmentTest(assessmentTestHref);
-    this.itemLocation = `${this.packageURI}/${assessmentTestHref.substring(0, assessmentTestHref.lastIndexOf('/'))}`;
+    this._itemLocation = `${this.packageURI}/${assessmentTestHref.substring(0, assessmentTestHref.lastIndexOf('/'))}`;
     this._loadedItems = assessmentTestItems;
   };
 
@@ -100,20 +100,23 @@ export class QtiTest extends LitElement {
     this.shadowRoot?.adoptedStyleSheets.push(sheet);
   }
 
-  requestItem(identifier: string) {
+  async requestItem(identifier: string, oldIdentifier) {
     const fetchXml = async () => {
-      for (const itemRef of this._itemRefEls.values()) {
-        itemRef.xml = '';
-        itemRef.removeAttribute('active');
-      }
+      await new Promise<void>(r => setTimeout(() => r(), 1000)); // Add some delay for demo purposes
+
       const itemRefEl = this._itemRefEls.get(identifier);
       const controller = new AbortController();
       const signal = controller.signal;
       try {
-        const xmlFetch = await fetch(`${this.itemLocation}/${itemRefEl.href}`, { signal });
+        const xmlFetch = await fetch(`${this._itemLocation}/${itemRefEl.href}`, { signal });
         const xmlText = await xmlFetch.text();
+
+        if (oldIdentifier) {
+          this._itemRefEls.get(oldIdentifier).xml = '';
+          // this._itemRefEls.get(oldIdentifier).active = false;
+        }
         itemRefEl.xml = xmlText;
-        itemRefEl.setAttribute('active', '');
+        // itemRefEl.active = true;
       } catch (error) {
         if (error.name === 'AbortError') {
           console.log('Fetch aborted');
@@ -125,7 +128,9 @@ export class QtiTest extends LitElement {
     if (this._controller) {
       this._controller.abort();
     }
-    fetchXml();
+    this._qtiTestPart.loading = true;
+    await fetchXml();
+    this._qtiTestPart.loading = false;
   }
 
   override render() {
@@ -134,13 +139,16 @@ export class QtiTest extends LitElement {
       ${this._loadedItems.length > 0 &&
       html`
         <qti-assessment-test
-        ${ref(this.assessmentTestEl)}
+        ${ref(this._assessmentTestEl)}
           @register-item-ref=${e => {
             this._itemRefEls.set(e.target.identifier, e.target);
             const itemRefEl = this._itemRefEls.get(e.target.identifier);
-            e.target.itemLocation = `${this.itemLocation}/${itemRefEl.href}`;
+            e.target.itemLocation = `${this._itemLocation}/${itemRefEl.href}`;
           }}
-          @on-test-set-item=${({ detail: identifier }) => this.requestItem(identifier)}
+          @on-test-set-item="${(e: CustomEvent<{ old: string; new: string }>) => {
+            const { old, new: newItem } = e.detail;
+            this.requestItem(newItem, old);
+          }}"
         >
           <test-show-index></test-show-index>
           <qti-test-part>
@@ -158,9 +166,23 @@ export class QtiTest extends LitElement {
           </qti-test-part>
           
           <!-- <test-progress></test-progress> -->
-          <test-prev>PREV</test-prev>
-          <test-paging-buttons></test-paging-buttons>
-          <test-next>NEXT</test-next>
+          <div class="nav">
+            <test-prev>
+            <svg class="arrow" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
+          </svg>
+          <span class="sr-only">PREV</span>
+            </test-prev>
+
+            <test-paging-buttons></test-paging-buttons>
+            
+            <test-next>
+              <span class="sr-only">NEXT</span>
+              <svg class="arrow" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+              </svg>
+            </test-next>
+          </div>
           <!-- <test-paging-radio></test-paging-radio> -->
           <!-- <test-slider></test-slider> -->
           <!-- <test-show-correct>correct</test-show-correct> -->

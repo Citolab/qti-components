@@ -28,7 +28,7 @@ export const QtiTest = createComponent({
   events: {
     onOutcomeChanged: 'qti-outcome-changed', // as EventName<Event>
     onInteractionChanged: 'qti-interaction-changed',
-    onItemConnected: 'qti-item-connected',
+    onItemConnected: 'qti-item-first-updated',
     onRegisterItem: 'register-item-ref',
     onTestRequestItem: 'on-test-request-item'
   }

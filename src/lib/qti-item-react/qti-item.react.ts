@@ -23,6 +23,6 @@ export const QtiItem = createComponent({
   events: {
     onOutcomeChanged: 'qti-outcome-changed', // as EventName<Event>
     onInteractionChanged: 'qti-interaction-changed',
-    onItemConnected: 'qti-item-connected'
+    onItemConnected: 'qti-item-first-updated'
   }
 }) as ForwardRefExoticComponent<QtiItemProps>;
