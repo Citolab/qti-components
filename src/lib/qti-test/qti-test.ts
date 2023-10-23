@@ -13,9 +13,6 @@ import { createRef, ref } from 'lit/directives/ref.js';
 
 @customElement('qti-test')
 export class QtiTest extends LitElement {
-  // @property({ type: String, attribute: 'navigation-mode' })
-  // private _navigationMode: 'linear' | 'nonlinear' = 'linear';
-
   @query('qti-test-part')
   _qtiTestPart;
 

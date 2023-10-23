@@ -2,7 +2,7 @@ import React, { ForwardRefExoticComponent, ReactNode, Ref } from 'react';
 import { createComponent } from '@lit/react';
 import { InteractionChangedDetails, OutcomeChangedDetails } from '../qti-components/qti-utilities/EventTypes';
 import { TestContext } from '../qti-test/qti-assessment-test.context';
-import { QtiTest as WcQtiTest } from './../qti-test';
+import { QtiAssessmentTest, QtiTest as WcQtiTest } from './../qti-test';
 import { QtiAssessmentItem } from '../qti-components';
 
 export interface OutcomeChangedDetailsExtended extends OutcomeChangedDetails {
@@ -24,6 +24,7 @@ interface QtiAssessmentTestProps {
   ) => void;
   onTestRequestItem?: (e: CustomEvent<number>) => void;
   onItemConnected?: (e: CustomEvent<QtiAssessmentItem>) => void;
+  onTestFirstUpdated?: (e: CustomEvent<QtiAssessmentTest>) => void;
 }
 
 export const QtiTest = createComponent({
@@ -35,6 +36,7 @@ export const QtiTest = createComponent({
     onInteractionChanged: 'qti-interaction-changed',
     onItemConnected: 'qti-item-first-updated',
     onRegisterItem: 'register-item-ref',
-    onTestRequestItem: 'on-test-request-item'
+    onTestRequestItem: 'on-test-request-item',
+    onTestFirstUpdated: 'qti-assessment-first-updated'
   }
 }) as ForwardRefExoticComponent<QtiAssessmentTestProps>;
