@@ -99,7 +99,6 @@ export class QtiAssessmentTest extends LitElement {
   }
 
   updated(changedProperties: Map<string, any>) {
-    console.log('updated', changedProperties);
     if (changedProperties.has('_context')) {
       const oldIndex = changedProperties.get('_context')?.itemIndex;
       if (this._context.itemIndex !== null && oldIndex !== this._context.itemIndex) {
