@@ -77,7 +77,7 @@ export class QtiAssessmentTest extends LitElement {
     // this._context.items[this._context.itemIndex]?.itemEl.processResponse();
 
     const truthy = true;
-    if (!truthy) {
+    if (truthy) {
       // - set the index to id we want it to be
       this._context = { ...this._context, itemIndex: e.detail };
     } else {

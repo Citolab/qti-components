@@ -51,12 +51,13 @@ export const QtiTestStory = {
     const testEl = createRef<QtiAssessmentTest>();
 
     return html`
-      <button @click=${() => localStorage.setItem('context', JSON.stringify(testEl.value.context))}>Save</button>
-
-      <button @click=${() => (testEl.value.context = JSON.parse(localStorage.getItem('context')))}>Load</button>
-
       <qti-test ${ref(testEl)} assessment-test-uri="${args.serverLocation}/${args.qtipkg}/bb-bi-22-examenvariant-1.xml">
       </qti-test>
     `;
   }
 };
+
+/*
+<button @click=${() => localStorage.setItem('context', JSON.stringify(testEl.value.context))}>Save</button>
+<button @click=${() => (testEl.value.context = JSON.parse(localStorage.getItem('context')))}>Load</button>
+*/
