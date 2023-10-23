@@ -1,6 +1,7 @@
 import { html } from 'lit';
 import { createRef, ref } from 'lit-html/directives/ref.js';
 import { useEffect, useRef, virtual, useState } from 'haunted';
+import { action } from '@storybook/addon-actions';
 
 import '../qti-components/index';
 import './index';
@@ -47,17 +48,33 @@ export default {
 
 export const QtiTestStory = {
   render: args => {
-    const itemRefEls = useRef<Map<string, QtiAssessmentItemRef>>(new Map());
     const testEl = createRef<QtiAssessmentTest>();
 
     return html`
-      <qti-test ${ref(testEl)} assessment-test-uri="${args.serverLocation}/${args.qtipkg}/bb-bi-22-examenvariant-1.xml">
+      <button @click=${() => localStorage.setItem('context', JSON.stringify(testEl.value.context))}>Save</button>
+
+      <button @click=${() => (testEl.value.context = JSON.parse(localStorage.getItem('context')))}>Load</button>
+
+      <qti-test
+        ${ref(testEl)}
+        @qti-outcome-changed=${action('qti-outcome-changed')}
+        @qti-interaction-changed=${action('qti-interaction-changed')}
+        package-uri="${args.serverLocation}/${args.qtipkg}/"
+        .xml=${''}
+      >
       </qti-test>
     `;
   }
 };
 
 /*
+@qti-response-processed=${action('qti-response-processed')}
+@qti-item-connected-=${action('qti-item-connected')}
+*/
+
+/*
 <button @click=${() => localStorage.setItem('context', JSON.stringify(testEl.value.context))}>Save</button>
 <button @click=${() => (testEl.value.context = JSON.parse(localStorage.getItem('context')))}>Load</button>
 */
+
+// <resource identifier="TST-bb-bi-22-examenvariant-1" type="imsqti_test_xmlv3p0" href="depitems/bb-bi-22-examenvariant-1.xml">

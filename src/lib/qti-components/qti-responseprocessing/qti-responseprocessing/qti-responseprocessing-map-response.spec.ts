@@ -42,7 +42,7 @@ const unitTestItem = html`<qti-assessment-item
   ></qti-response-processing>
 </qti-assessment-item>`;
 
-describe('qti-response-processing', () => {
+describe('qti-response-processed', () => {
   beforeEach(async () => {
     const template = () => unitTestItem;
     render(template(), document.body);

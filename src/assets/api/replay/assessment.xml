@@ -1,4 +1,7 @@
-<qti-assessment-test xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0  https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" title="VH6.VH3_v1" identifier="TST-VH6_VH3_v1">
+<qti-assessment-test xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema" title="VH6.VH3_v1" identifier="TST-VH6_VH3_v1">
   <qti-outcome-declaration cardinality="single" identifier="SCORE" base-type="integer">
     <qti-default-value>
       <qti-value>0</qti-value>
@@ -9,78 +12,98 @@
       <qti-value>0</qti-value>
     </qti-default-value>
   </qti-outcome-declaration>
-  <qti-test-part identifier="RES-6340d7fd-6914-463a-8ec8-b3f0fb8ca9e9" submission-mode="simultaneous" navigation-mode="nonlinear">
-    <qti-assessment-section title="Nieuwe sectie" visible="true" identifier="RES-da596a51-1e84-41da-a571-04787125bdd6" keep-together="false">
+  <qti-test-part identifier="RES-6340d7fd-6914-463a-8ec8-b3f0fb8ca9e9"
+    submission-mode="simultaneous" navigation-mode="nonlinear">
+    <qti-assessment-section title="Nieuwe sectie" visible="true"
+      identifier="RES-da596a51-1e84-41da-a571-04787125bdd6" keep-together="false">
 
 
-      <qti-assessment-item-ref href="M6.LO6_3.xml" category="ItemFunctionalType_Regular" identifier="ITM-M6_LO6_3">
-        <qti-weight identifier="WEIGHT" value="1"></qti-weight>
-      </qti-assessment-item-ref>
-
-      <qti-assessment-item-ref href="G6.BR1_3.xml" category="ItemFunctionalType_Regular" identifier="ITM-G6_BR1_3">
-        <qti-weight identifier="WEIGHT" value="1"></qti-weight>
-      </qti-assessment-item-ref>
-
-      <qti-assessment-item-ref href="pci-meetkunde.xml" category="ItemFunctionalType_Regular" identifier="pci-meetkunde">
+      <qti-assessment-item-ref href="./items/M6.LO6_3.xml" category="ItemFunctionalType_Regular"
+        identifier="ITM-M6_LO6_3">
         <qti-weight identifier="WEIGHT" value="1"></qti-weight>
       </qti-assessment-item-ref>
 
-      <qti-assessment-item-ref href="mathEntryInteraction.xml" category="ItemFunctionalType_Regular" identifier="mathEntryInteraction">
+      <qti-assessment-item-ref href="./items/G6.BR1_3.xml" category="ItemFunctionalType_Regular"
+        identifier="ITM-G6_BR1_3">
         <qti-weight identifier="WEIGHT" value="1"></qti-weight>
       </qti-assessment-item-ref>
 
-      <qti-assessment-item-ref href="pci-decisiontask.xml" category="ItemFunctionalType_Regular" identifier="pci-decisiontask">
+      <qti-assessment-item-ref href="./items/pci-meetkunde.xml"
+        category="ItemFunctionalType_Regular" identifier="pci-meetkunde">
         <qti-weight identifier="WEIGHT" value="1"></qti-weight>
       </qti-assessment-item-ref>
 
-      <qti-assessment-item-ref href="pci-getallen.xml" category="ItemFunctionalType_Regular" identifier="pci-getallen">
+      <qti-assessment-item-ref href="./items/mathEntryInteraction.xml"
+        category="ItemFunctionalType_Regular" identifier="mathEntryInteraction">
         <qti-weight identifier="WEIGHT" value="1"></qti-weight>
       </qti-assessment-item-ref>
 
-      <qti-assessment-item-ref href="G6HG5e.xml" category="ItemFunctionalType_Regular" identifier="ITM-G6HG5e">
-        <qti-weight identifier="WEIGHT" value="1"></qti-weight>
-      </qti-assessment-item-ref>
-      <qti-assessment-item-ref href="M6.LO6_6_n.xml" category="ItemFunctionalType_Regular" identifier="ITM-M6_LO6_6_n">
-        <qti-weight identifier="WEIGHT" value="1"></qti-weight>
-      </qti-assessment-item-ref>
-      <qti-assessment-item-ref href="G6.BR1_4n.xml" category="ItemFunctionalType_Regular" identifier="ITM-G6_BR1_4n">
-        <qti-weight identifier="WEIGHT" value="1"></qti-weight>
-      </qti-assessment-item-ref>
-      <qti-assessment-item-ref href="VH6.VH3_4n.xml" category="ItemFunctionalType_Regular" identifier="ITM-VH6_VH3_4n">
+      <qti-assessment-item-ref href="./items/pci-decisiontask.xml"
+        category="ItemFunctionalType_Regular" identifier="pci-decisiontask">
         <qti-weight identifier="WEIGHT" value="1"></qti-weight>
       </qti-assessment-item-ref>
 
- 
+      <qti-assessment-item-ref href="./items/pci-getallen.xml" category="ItemFunctionalType_Regular"
+        identifier="pci-getallen">
+        <qti-weight identifier="WEIGHT" value="1"></qti-weight>
+      </qti-assessment-item-ref>
+
+      <qti-assessment-item-ref href="./items/G6HG5e.xml" category="ItemFunctionalType_Regular"
+        identifier="ITM-G6HG5e">
+        <qti-weight identifier="WEIGHT" value="1"></qti-weight>
+      </qti-assessment-item-ref>
+      <qti-assessment-item-ref href="./items/M6.LO6_6_n.xml" category="ItemFunctionalType_Regular"
+        identifier="ITM-M6_LO6_6_n">
+        <qti-weight identifier="WEIGHT" value="1"></qti-weight>
+      </qti-assessment-item-ref>
+      <qti-assessment-item-ref href="./items/G6.BR1_4n.xml" category="ItemFunctionalType_Regular"
+        identifier="ITM-G6_BR1_4n">
+        <qti-weight identifier="WEIGHT" value="1"></qti-weight>
+      </qti-assessment-item-ref>
+      <qti-assessment-item-ref href="./items/VH6.VH3_4n.xml" category="ItemFunctionalType_Regular"
+        identifier="ITM-VH6_VH3_4n">
+        <qti-weight identifier="WEIGHT" value="1"></qti-weight>
+      </qti-assessment-item-ref>
 
 
-      <qti-assessment-item-ref href="M6.LO6_1.xml" category="ItemFunctionalType_Regular" identifier="ITM-M6_LO6_1">
+      <qti-assessment-item-ref href="./items/M6.LO6_1.xml" category="ItemFunctionalType_Regular"
+        identifier="ITM-M6_LO6_1">
         <qti-weight identifier="WEIGHT" value="1"></qti-weight>
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref href="M6.LO6_7_n.xml" category="ItemFunctionalType_Regular" identifier="ITM-M6_LO6_7_n">
+      <qti-assessment-item-ref href="./items/M6.LO6_7_n.xml" category="ItemFunctionalType_Regular"
+        identifier="ITM-M6_LO6_7_n">
         <qti-weight identifier="WEIGHT" value="1"></qti-weight>
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref href="G6HG5d.xml" category="ItemFunctionalType_Regular" identifier="ITM-G6HG5d">
+      <qti-assessment-item-ref href="./items/G6HG5d.xml" category="ItemFunctionalType_Regular"
+        identifier="ITM-G6HG5d">
         <qti-weight identifier="WEIGHT" value="1"></qti-weight>
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref href="M6.LO6_5.xml" category="ItemFunctionalType_Regular" identifier="ITM-M6_LO6_5">
+      <qti-assessment-item-ref href="./items/M6.LO6_5.xml" category="ItemFunctionalType_Regular"
+        identifier="ITM-M6_LO6_5">
         <qti-weight identifier="WEIGHT" value="1"></qti-weight>
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref href="G6HG5f.xml" category="ItemFunctionalType_Regular" identifier="ITM-G6HG5f">
+      <qti-assessment-item-ref href="./items/G6HG5f.xml" category="ItemFunctionalType_Regular"
+        identifier="ITM-G6HG5f">
         <qti-weight identifier="WEIGHT" value="1"></qti-weight>
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref href="M6LO6c.xml" category="ItemFunctionalType_Regular" identifier="ITM-M6LO6c">
+      <qti-assessment-item-ref href="./items/M6LO6c.xml" category="ItemFunctionalType_Regular"
+        identifier="ITM-M6LO6c">
         <qti-weight identifier="WEIGHT" value="1"></qti-weight>
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref href="VH6.VH3_7nn.xml" category="ItemFunctionalType_Regular" identifier="ITM-VH6_VH3_7nn">
+      <qti-assessment-item-ref href="./items/VH6.VH3_7nn.xml" category="ItemFunctionalType_Regular"
+        identifier="ITM-VH6_VH3_7nn">
         <qti-weight identifier="WEIGHT" value="1"></qti-weight>
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref href="M6LO6f.xml" category="ItemFunctionalType_Regular" identifier="ITM-M6LO6f">
+      <qti-assessment-item-ref href="./items/M6LO6f.xml" category="ItemFunctionalType_Regular"
+        identifier="ITM-M6LO6f">
         <qti-weight identifier="WEIGHT" value="1"></qti-weight>
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref href="VH6.VH3_8.xml" category="ItemFunctionalType_Regular" identifier="ITM-VH6_VH3_8">
+      <qti-assessment-item-ref href="./items/VH6.VH3_8.xml" category="ItemFunctionalType_Regular"
+        identifier="ITM-VH6_VH3_8">
         <qti-weight identifier="WEIGHT" value="1"></qti-weight>
       </qti-assessment-item-ref>
-      <qti-assessment-item-ref href="end.xml" category="ItemFunctionalType_Informational" identifier="ITM-end">
+      <qti-assessment-item-ref href="./items/end.xml" category="ItemFunctionalType_Informational"
+        identifier="ITM-end">
         <qti-weight identifier="WEIGHT" value="0"></qti-weight>
       </qti-assessment-item-ref>
     </qti-assessment-section>
@@ -89,7 +112,8 @@
     <qti-set-outcome-value identifier="SCORE">
       <qti-round>
         <qti-sum>
-          <qti-test-variables exclude-category="openvraag" variable-identifier="SCORE" weight-identifier="WEIGHT"></qti-test-variables>
+          <qti-test-variables exclude-category="openvraag" variable-identifier="SCORE"
+            weight-identifier="WEIGHT"></qti-test-variables>
         </qti-sum>
       </qti-round>
     </qti-set-outcome-value>
