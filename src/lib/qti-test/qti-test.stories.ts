@@ -51,6 +51,10 @@ export const QtiTestStory = {
     const testEl = createRef<QtiAssessmentTest>();
 
     return html`
+      <button @click=${() => localStorage.setItem('context', JSON.stringify(testEl.value.context))}>Save</button>
+
+      <button @click=${() => (testEl.value.context = JSON.parse(localStorage.getItem('context')))}>Load</button>
+
       <qti-test
         ${ref(testEl)}
         @qti-outcome-changed=${action('qti-outcome-changed')}

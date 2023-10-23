@@ -9,6 +9,7 @@ import { QtiAssessmentTest } from './qti-assessment-test';
 import { until } from 'lit/directives/until.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import styles from './qti-test.css?inline';
+import { createRef, ref } from 'lit/directives/ref.js';
 
 @customElement('qti-test')
 export class QtiTest extends LitElement {
@@ -31,6 +32,16 @@ export class QtiTest extends LitElement {
   public currentItemIdentifier: string = '';
 
   itemLocation: string;
+
+  assessmentTestEl = createRef<QtiAssessmentTest>();
+
+  set context(value: any) {
+    this.assessmentTestEl.value.context = value;
+  }
+
+  get context(): any {
+    return this.assessmentTestEl.value.context;
+  }
 
   updated(changedProperties: Map<string, any>) {
     if (changedProperties.has('packageURI')) {
@@ -123,6 +134,7 @@ export class QtiTest extends LitElement {
       ${this._loadedItems.length > 0 &&
       html`
         <qti-assessment-test
+        ${ref(this.assessmentTestEl)}
           @register-item-ref=${e => {
             this._itemRefEls.set(e.target.identifier, e.target);
             const itemRefEl = this._itemRefEls.get(e.target.identifier);
