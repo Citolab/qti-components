@@ -14,7 +14,7 @@ export class QtiTestShowCorrect extends LitElement {
   render() {
     const { items, itemIndex } = this._testProvider;
     if (itemIndex == null) return html``;
-    const item = this.closest<QtiAssessmentTest>('qti-assessment-test')?.itemRefEls.get(items[itemIndex]?.identifier)
+    const item = this.closest<QtiAssessmentTest>('qti-assessment-test')?._itemRefEls.get(items[itemIndex]?.identifier)
       ?.assessmentItem as QtiAssessmentItem;
 
     return html`

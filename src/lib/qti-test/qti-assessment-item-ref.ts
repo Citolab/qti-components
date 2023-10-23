@@ -5,6 +5,7 @@ import { QtiItem } from '../qti-item';
 export class QtiAssessmentItemRef extends QtiItem {
   @property({ type: String }) identifier: string;
   @property({ type: String }) href: string;
+  // @property({ type: Boolean, reflect: true }) active: boolean = false;
 
   connectedCallback(): void {
     super.connectedCallback();

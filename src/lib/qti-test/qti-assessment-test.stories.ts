@@ -51,13 +51,15 @@ export const QtiAssessmentTestStory = {
     const itemRefEls = useRef<Map<string, QtiAssessmentItemRef>>(new Map());
     const assessmentTestEl = createRef<QtiAssessmentTest>();
 
-    function requestItem(identifier: string) {
+    function requestItem(identifier: { old: string; new: string }) {
       const fetchXml = async () => {
-        for (const itemRef of itemRefEls.current.values()) {
-          itemRef.xml = '';
+        // debugger;
+        if (identifier.old) {
+          const oldItemRefEl = itemRefEls.current.get(identifier.old);
+          oldItemRefEl.xml = '';
         }
-        const itemRefEl = itemRefEls.current.get(identifier);
-        const xmlFetch = await fetch(`${args.serverLocation}/${args.qtipkg}/items/${itemRefEl.href}`); // , { signal });
+        const itemRefEl = itemRefEls.current.get(identifier.new);
+        const xmlFetch = await fetch(`${args.serverLocation}/${args.qtipkg}/depitems/${itemRefEl.href}`); // , { signal });
         const xmlText = await xmlFetch.text();
         itemRefEl.xml = xmlText;
       };
@@ -80,10 +82,15 @@ export const QtiAssessmentTestStory = {
           e.target.itemLocation = `${args.serverLocation}/${args.qtipkg}/items/${e.target.href}`;
         }}
         @on-test-set-item=${({ detail: identifier }) => requestItem(identifier)}
+        @qti-assessment-first-updated="${(e: CustomEvent<QtiAssessmentTest>) => {
+          if (JSON.parse(localStorage.getItem('context'))) {
+            e.detail.context = JSON.parse(localStorage.getItem('context'));
+          }
+        }}"
       >
         <test-show-index></test-show-index>
-        <qti-test-part identifier="part1" navigation-mode="nonlinear" submission-mode="individual">
-          <qti-assessment-section identifier="section-1" title="Section 1" visible="true" required="true">
+        <qti-test-part>
+          <qti-assessment-section>
             ${loadeditems.items.map(
               item =>
                 html`<qti-assessment-item-ref identifier="${item.identifier}" href="${item.href}">
@@ -111,3 +118,5 @@ export const QtiAssessmentTestStory = {
     })
   ]
 };
+
+/* .context=${JSON.parse(localStorage.getItem('context'))} */

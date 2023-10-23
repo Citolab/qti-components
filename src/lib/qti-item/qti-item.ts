@@ -53,7 +53,7 @@ export class QtiItem extends LitElement {
 
   constructor() {
     super();
-    // this.addEventListener('qti-item-connected', (e: any) => (this.assessmentItem = e.detail));
+    // this.addEventListener('qti-item-first-updated', (e: any) => (this.assessmentItem = e.detail));
     // this.addEventListener('qti-item-disconnected', (e: any) => (this.assessmentItem = null));
   }
 
