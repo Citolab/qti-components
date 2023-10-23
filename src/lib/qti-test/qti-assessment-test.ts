@@ -23,7 +23,7 @@ export class QtiAssessmentTest extends LitElement {
     this._context = value;
   }
 
-  private _itemRefEls: Map<string, QtiAssessmentItemRef> = new Map();
+  public itemRefEls: Map<string, QtiAssessmentItemRef> = new Map();
 
   // only copies the variables from the item, back into the testcontext to retain state
   private copyItemVariables(identifier: string): void {
@@ -59,7 +59,7 @@ export class QtiAssessmentTest extends LitElement {
   }
 
   private onItemRefRegistered(e: CustomEvent<{ href: string; identifier: string }>): void {
-    this._itemRefEls.set(e.detail.identifier, e.target as QtiAssessmentItemRef);
+    this.itemRefEls.set(e.detail.identifier, e.target as QtiAssessmentItemRef);
 
     const { href, identifier } = e.detail;
     this._context.items = [

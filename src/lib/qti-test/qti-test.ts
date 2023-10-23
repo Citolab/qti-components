@@ -184,6 +184,7 @@ export class QtiTest extends LitElement {
               </svg>
             </test-next>
           </div>
+          <slot></slot>
           <!-- <test-paging-radio></test-paging-radio> -->
           <!-- <test-slider></test-slider> -->
           <!-- <test-show-correct>correct</test-show-correct> -->

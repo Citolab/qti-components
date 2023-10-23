@@ -51,24 +51,16 @@ export const QtiTestStory = {
     const testEl = createRef<QtiAssessmentTest>();
 
     return html`
-      <button
-        style="position:absolute; left:0"
-        @click=${() => localStorage.setItem('context', JSON.stringify(testEl.value.context))}
-      >
-        Save
-      </button>
-
-      <button
-        style="position:absolute; left:3rem"
-        @click=${() => (testEl.value.context = JSON.parse(localStorage.getItem('context')))}
-      >
-        Load
-      </button>
-
       <qti-test
         ${ref(testEl)}
-        @qti-outcome-changed=${action('qti-outcome-changed')}
-        @qti-interaction-changed=${action('qti-interaction-changed')}
+        @qti-outcome-changed=${e => {
+          localStorage.setItem('context', JSON.stringify(testEl.value.context));
+          action('qti-outcome-changed')(e);
+        }}
+        @qti-interaction-changed=${e => {
+          localStorage.setItem('context', JSON.stringify(testEl.value.context));
+          action('qti-interaction-changed')(e);
+        }}
         @qti-assessment-first-updated="${(e: CustomEvent<QtiAssessmentTest>) => {
           if (JSON.parse(localStorage.getItem('context'))) {
             e.detail.context = JSON.parse(localStorage.getItem('context'));
@@ -76,6 +68,7 @@ export const QtiTestStory = {
         }}"
         package-uri="${args.serverLocation}/${args.qtipkg}/"
       >
+        <!-- <test-slider></test-slider> -->
       </qti-test>
     `;
   }
@@ -92,3 +85,19 @@ export const QtiTestStory = {
 */
 
 // <resource identifier="TST-bb-bi-22-examenvariant-1" type="imsqti_test_xmlv3p0" href="depitems/bb-bi-22-examenvariant-1.xml">
+
+/*
+<button
+style="position:absolute; left:0"
+@click=${() => localStorage.setItem('context', JSON.stringify(testEl.value.context))}
+>
+Save
+</button>
+
+<button
+style="position:absolute; left:3rem"
+@click=${() => (testEl.value.context = JSON.parse(localStorage.getItem('context')))}
+>
+Load
+</button>
+*/
