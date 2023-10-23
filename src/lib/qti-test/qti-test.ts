@@ -99,21 +99,19 @@ export class QtiTest extends LitElement {
 
   async requestItem(identifier: string, oldIdentifier) {
     const fetchXml = async () => {
-      await new Promise<void>(r => setTimeout(() => r(), 1000)); // Add some delay for demo purposes
-
       const itemRefEl = this._itemRefEls.get(identifier);
       const controller = new AbortController();
       const signal = controller.signal;
       try {
         const xmlFetch = await fetch(`${this._itemLocation}/${itemRefEl.href}`, { signal });
+        await new Promise<void>(r => setTimeout(() => r(), 1000)); // Add some delay for demo purposes
+
         const xmlText = await xmlFetch.text();
 
         if (oldIdentifier) {
           this._itemRefEls.get(oldIdentifier).xml = '';
-          // this._itemRefEls.get(oldIdentifier).active = false;
         }
         itemRefEl.xml = xmlText;
-        // itemRefEl.active = true;
       } catch (error) {
         if (error.name === 'AbortError') {
           console.log('Fetch aborted');
