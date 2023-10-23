@@ -97,32 +97,27 @@ export class QtiTest extends LitElement {
     this.shadowRoot?.adoptedStyleSheets.push(sheet);
   }
 
-  async requestItem(identifier: string, oldIdentifier) {
+  async requestItem(identifier: string, oldIdentifier: string) {
     const fetchXml = async () => {
       const itemRefEl = this._itemRefEls.get(identifier);
-      const controller = new AbortController();
-      const signal = controller.signal;
+      this._controller = new AbortController();
+      const signal = this._controller.signal;
       try {
         const xmlFetch = await fetch(`${this._itemLocation}/${itemRefEl.href}`, { signal });
-        await new Promise<void>(r => setTimeout(() => r(), 1000)); // Add some delay for demo purposes
-
         const xmlText = await xmlFetch.text();
-
-        if (oldIdentifier) {
-          this._itemRefEls.get(oldIdentifier).xml = '';
-        }
+        oldIdentifier && (this._itemRefEls.get(oldIdentifier).xml = '');
         itemRefEl.xml = xmlText;
       } catch (error) {
         if (error.name === 'AbortError') {
+          oldIdentifier && (this._itemRefEls.get(oldIdentifier).xml = '');
           console.log('Fetch aborted');
         } else {
           console.error(error);
         }
       }
     };
-    if (this._controller) {
-      this._controller.abort();
-    }
+    this._controller?.abort();
+
     this._qtiTestPart.loading = true;
     await fetchXml();
     this._qtiTestPart.loading = false;
@@ -181,7 +176,7 @@ export class QtiTest extends LitElement {
           </div>
           <slot></slot>
           <!-- <test-paging-radio></test-paging-radio> -->
-          <!-- <test-slider></test-slider> -->
+          <test-slider></test-slider>
           <!-- <test-show-correct>correct</test-show-correct> -->
           <!-- <test-print-variables></test-print-variables> -->
         </qti-assessment-test>
