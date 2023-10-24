@@ -88,7 +88,11 @@ export const QtiAssessmentTestStory = {
           <qti-assessment-section>
             ${loadeditems.items.map(
               item =>
-                html`<qti-assessment-item-ref identifier="${item.identifier}" href="${item.href}">
+                html`<qti-assessment-item-ref
+                  item-location=${`${args.serverLocation}/${args.qtipkg}/depitems/`}
+                  identifier="${item.identifier}"
+                  href="${item.href}"
+                >
                 </qti-assessment-item-ref>`
             )}
           </qti-assessment-section>

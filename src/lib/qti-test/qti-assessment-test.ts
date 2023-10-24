@@ -16,6 +16,7 @@ export class QtiAssessmentTest extends LitElement {
   @provide({ context: testContext })
   @property({ attribute: false })
   private _context: TestContext = this._initialValue;
+
   public get context(): TestContext {
     return this._context;
   }
