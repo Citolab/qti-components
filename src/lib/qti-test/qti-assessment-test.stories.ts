@@ -48,17 +48,16 @@ export default {
 
 export const QtiAssessmentTestStory = {
   render: (args, { argTypes, loaded: { loadeditems } }) => {
-    const itemRefEls = useRef<Map<string, QtiAssessmentItemRef>>(new Map());
     const assessmentTestEl = createRef<QtiAssessmentTest>();
 
     function requestItem(identifier: { old: string; new: string }) {
       const fetchXml = async () => {
         // debugger;
         if (identifier.old) {
-          const oldItemRefEl = itemRefEls.current.get(identifier.old);
+          const oldItemRefEl = assessmentTestEl.value.itemRefEls.get(identifier.old);
           oldItemRefEl.xml = '';
         }
-        const itemRefEl = itemRefEls.current.get(identifier.new);
+        const itemRefEl = assessmentTestEl.value.itemRefEls.get(identifier.new);
         const xmlFetch = await fetch(`${args.serverLocation}/${args.qtipkg}/depitems/${itemRefEl.href}`); // , { signal });
         const xmlText = await xmlFetch.text();
         itemRefEl.xml = xmlText;
@@ -77,10 +76,6 @@ export const QtiAssessmentTestStory = {
 
       <qti-assessment-test
         ${ref(assessmentTestEl)}
-        @register-item-ref=${e => {
-          itemRefEls.current.set(e.target.identifier, e.target);
-          e.target.itemLocation = `${args.serverLocation}/${args.qtipkg}/items/${e.target.href}`;
-        }}
         @on-test-set-item=${({ detail: identifier }) => requestItem(identifier)}
         @qti-assessment-first-updated="${(e: CustomEvent<QtiAssessmentTest>) => {
           if (JSON.parse(localStorage.getItem('context'))) {

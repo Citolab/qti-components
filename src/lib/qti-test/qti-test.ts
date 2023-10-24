@@ -20,7 +20,7 @@ export class QtiTest extends LitElement {
   private content: Promise<any>;
 
   @state()
-  private _loadedItems = [];
+  private _items = [];
 
   private _itemRefEls: Map<string, QtiAssessmentItemRef> = new Map();
   private _controller = new AbortController();
@@ -42,12 +42,12 @@ export class QtiTest extends LitElement {
 
   updated(changedProperties: Map<string, any>) {
     if (changedProperties.has('packageURI')) {
-      this._loadedItems = []; // empty all items
+      this._items = []; // empty all items
       this.content = this.fetchData(); // load new items async
     }
   }
 
-  private _testFromImsmanifest = async href => {
+  private static _testFromImsmanifest = async href => {
     const response = await fetch(href);
     const imsmanifestXML = await response.text();
     await new Promise<void>(r => setTimeout(() => r(), 1000)); // Add some delay for demo purposes
@@ -57,8 +57,8 @@ export class QtiTest extends LitElement {
     return el.attr('href');
   };
 
-  private _itemsFromAssessmentTest = async href => {
-    const response = await fetch(`${this.packageURI}/${href}`);
+  private static _itemsFromAssessmentTest = async href => {
+    const response = await fetch(href);
     const assessmentTestXML = await response.text();
 
     // Add some delay for demo purposes
@@ -76,10 +76,10 @@ export class QtiTest extends LitElement {
   };
 
   fetchData = async () => {
-    const assessmentTestHref = await this._testFromImsmanifest(this.packageURI + '/imsmanifest.xml');
-    const assessmentTestItems = await this._itemsFromAssessmentTest(assessmentTestHref);
+    const assessmentTestHref = await QtiTest._testFromImsmanifest(this.packageURI + '/imsmanifest.xml');
+    const assessmentTestItems = await QtiTest._itemsFromAssessmentTest(this.packageURI + assessmentTestHref);
     this._itemLocation = `${this.packageURI}/${assessmentTestHref.substring(0, assessmentTestHref.lastIndexOf('/'))}`;
-    this._loadedItems = assessmentTestItems;
+    this._items = assessmentTestItems;
   };
 
   connectedCallback(): void {
@@ -126,7 +126,7 @@ export class QtiTest extends LitElement {
   override render() {
     return html`
       ${until(this.content, html`<span>Loading...</span>`)}
-      ${this._loadedItems.length > 0 &&
+      ${this._items.length > 0 &&
       html`
         <qti-assessment-test
         ${ref(this._assessmentTestEl)}
@@ -145,7 +145,7 @@ export class QtiTest extends LitElement {
           <qti-test-part>
             <qti-assessment-section>
               </qti-assessment-item-ref>
-              ${this._loadedItems.map(
+              ${this._items.map(
                 item =>
                   html`<qti-assessment-item-ref
                     identifier="${item.identifier}"

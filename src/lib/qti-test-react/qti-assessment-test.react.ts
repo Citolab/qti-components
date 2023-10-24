@@ -17,15 +17,9 @@ interface QtiAssessmentTestProps {
 
   onOutcomeChanged?: (e: CustomEvent<OutcomeChangedDetails>) => void;
   onInteractionChanged?: (e: CustomEvent<InteractionChangedDetails>) => void;
-  onRegisterItem?: (
-    e: CustomEvent<{
-      href: string;
-      identifier: string;
-    }>
-  ) => void;
   onTestRequestItem?: (e: CustomEvent<{ old: string; new: string }>) => void;
   onTestFirstUpdated?: (e: CustomEvent<WcQtiAssessmentTest>) => void;
-  onItemConnected?: (e: CustomEvent<QtiAssessmentItem>) => void;
+  onItemFirstUpdated?: (e: CustomEvent<QtiAssessmentItem>) => void;
 }
 
 export const QtiAssessmentTest = createComponent({
@@ -35,8 +29,7 @@ export const QtiAssessmentTest = createComponent({
   events: {
     onOutcomeChanged: 'qti-outcome-changed', // as EventName<Event>
     onInteractionChanged: 'qti-interaction-changed',
-    onItemConnected: 'qti-item-connected',
-    onRegisterItem: 'register-item-ref',
+    onItemFirstUpdated: 'qti-item-first-updated',
     onTestRequestItem: 'on-test-set-item',
     onTestFirstUpdated: 'qti-assessment-first-updated'
   }
