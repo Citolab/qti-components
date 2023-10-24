@@ -4,7 +4,7 @@ import { html, LitElement } from 'lit';
 import { mapResponse, mapResponsePoint, matchCorrect } from '../../qti-utilities/TemplateStrings';
 import { type QtiRule } from '../qti-rule/qti-rule';
 
-@customElement('qti-response-processed')
+@customElement('qti-response-processing')
 export default class QtiResponseProcessing extends LitElement {
   override render() {
     return html`<slot></slot>`;

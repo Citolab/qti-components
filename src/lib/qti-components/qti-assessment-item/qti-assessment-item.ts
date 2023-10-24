@@ -176,7 +176,7 @@ export class QtiAssessmentItem extends LitElement {
   }
 
   public processResponse(countNumAttempts: boolean = true): boolean {
-    const responseProcessor = this.querySelector('qti-response-processed') as unknown as QtiResponseProcessing;
+    const responseProcessor = this.querySelector('qti-response-processing') as unknown as QtiResponseProcessing;
     if (!responseProcessor) {
       console.info('Client side response processing template not available');
       return false;
