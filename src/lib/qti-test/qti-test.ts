@@ -13,9 +13,6 @@ import { createRef, ref } from 'lit/directives/ref.js';
 
 @customElement('qti-test')
 export class QtiTest extends LitElement {
-  // @property({ type: String, attribute: 'navigation-mode' })
-  // private _navigationMode: 'linear' | 'nonlinear' = 'linear';
-
   @query('qti-test-part')
   _qtiTestPart;
 
@@ -100,34 +97,27 @@ export class QtiTest extends LitElement {
     this.shadowRoot?.adoptedStyleSheets.push(sheet);
   }
 
-  async requestItem(identifier: string, oldIdentifier) {
+  async requestItem(identifier: string, oldIdentifier: string) {
     const fetchXml = async () => {
-      await new Promise<void>(r => setTimeout(() => r(), 1000)); // Add some delay for demo purposes
-
       const itemRefEl = this._itemRefEls.get(identifier);
-      const controller = new AbortController();
-      const signal = controller.signal;
+      this._controller = new AbortController();
+      const signal = this._controller.signal;
       try {
         const xmlFetch = await fetch(`${this._itemLocation}/${itemRefEl.href}`, { signal });
         const xmlText = await xmlFetch.text();
-
-        if (oldIdentifier) {
-          this._itemRefEls.get(oldIdentifier).xml = '';
-          // this._itemRefEls.get(oldIdentifier).active = false;
-        }
+        oldIdentifier && (this._itemRefEls.get(oldIdentifier).xml = '');
         itemRefEl.xml = xmlText;
-        // itemRefEl.active = true;
       } catch (error) {
         if (error.name === 'AbortError') {
+          oldIdentifier && (this._itemRefEls.get(oldIdentifier).xml = '');
           console.log('Fetch aborted');
         } else {
           console.error(error);
         }
       }
     };
-    if (this._controller) {
-      this._controller.abort();
-    }
+    this._controller?.abort();
+
     this._qtiTestPart.loading = true;
     await fetchXml();
     this._qtiTestPart.loading = false;
@@ -172,13 +162,13 @@ export class QtiTest extends LitElement {
             <svg class="arrow" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
             <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
           </svg>
-          <span class="sr-only">PREV</span>
+          <!-- <span class="sr-only">PREV</span> -->
             </test-prev>
 
             <test-paging-buttons></test-paging-buttons>
             
             <test-next>
-              <span class="sr-only">NEXT</span>
+              <!-- <span class="sr-only">NEXT</span> -->
               <svg class="arrow" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
               <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
               </svg>
@@ -186,7 +176,7 @@ export class QtiTest extends LitElement {
           </div>
           <slot></slot>
           <!-- <test-paging-radio></test-paging-radio> -->
-          <!-- <test-slider></test-slider> -->
+          <test-slider></test-slider>
           <!-- <test-show-correct>correct</test-show-correct> -->
           <!-- <test-print-variables></test-print-variables> -->
         </qti-assessment-test>

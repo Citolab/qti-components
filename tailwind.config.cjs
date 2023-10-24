@@ -10,7 +10,7 @@ based on their tagname */
 
 export default {
   corePlugins: {
-    preflight: false,
+    preflight: true,
   },
   content: [],
   theme: {

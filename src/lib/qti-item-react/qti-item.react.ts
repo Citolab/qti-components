@@ -14,7 +14,7 @@ interface QtiItemProps {
   'item-location'?: string;
   onOutcomeChanged?: (e: CustomEvent<OutcomeChangedDetails>) => void;
   onInteractionChanged?: (e: CustomEvent<InteractionChangedDetails>) => void;
-  onItemConnected?: (e: CustomEvent<QtiAssessmentItem>) => void;
+  onItemFirstUpdated?: (e: CustomEvent<QtiAssessmentItem>) => void;
 }
 export const QtiItem = createComponent({
   tagName: 'qti-item',
@@ -23,6 +23,6 @@ export const QtiItem = createComponent({
   events: {
     onOutcomeChanged: 'qti-outcome-changed', // as EventName<Event>
     onInteractionChanged: 'qti-interaction-changed',
-    onItemConnected: 'qti-item-first-updated'
+    onItemFirstUpdated: 'qti-item-first-updated'
   }
 }) as ForwardRefExoticComponent<QtiItemProps>;

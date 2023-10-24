@@ -73,31 +73,3 @@ export const QtiTestStory = {
     `;
   }
 };
-
-/*
-@qti-response-processed=${action('qti-response-processed')}
-@qti-item-connected-=${action('qti-item-first-updated')}
-*/
-
-/*
-<button @click=${() => localStorage.setItem('context', JSON.stringify(testEl.value.context))}>Save</button>
-<button @click=${() => (testEl.value.context = JSON.parse(localStorage.getItem('context')))}>Load</button>
-*/
-
-// <resource identifier="TST-bb-bi-22-examenvariant-1" type="imsqti_test_xmlv3p0" href="depitems/bb-bi-22-examenvariant-1.xml">
-
-/*
-<button
-style="position:absolute; left:0"
-@click=${() => localStorage.setItem('context', JSON.stringify(testEl.value.context))}
->
-Save
-</button>
-
-<button
-style="position:absolute; left:3rem"
-@click=${() => (testEl.value.context = JSON.parse(localStorage.getItem('context')))}
->
-Load
-</button>
-*/
