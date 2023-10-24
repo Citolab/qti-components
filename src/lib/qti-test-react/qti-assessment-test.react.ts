@@ -23,7 +23,8 @@ interface QtiAssessmentTestProps {
       identifier: string;
     }>
   ) => void;
-  onTestRequestItem?: (e: CustomEvent<number>) => void;
+  onTestRequestItem?: (e: CustomEvent<{ old: string; new: string }>) => void;
+  onTestFirstUpdated?: (e: CustomEvent<WcQtiAssessmentTest>) => void;
   onItemConnected?: (e: CustomEvent<QtiAssessmentItem>) => void;
 }
 
@@ -36,6 +37,7 @@ export const QtiAssessmentTest = createComponent({
     onInteractionChanged: 'qti-interaction-changed',
     onItemConnected: 'qti-item-connected',
     onRegisterItem: 'register-item-ref',
-    onTestRequestItem: 'on-test-set-item'
+    onTestRequestItem: 'on-test-set-item',
+    onTestFirstUpdated: 'qti-assessment-first-updated'
   }
 }) as ForwardRefExoticComponent<QtiAssessmentTestProps>;

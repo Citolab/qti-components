@@ -7,14 +7,15 @@ import { QtiAssessmentItemRef } from './qti-assessment-item-ref';
 
 @customElement('qti-assessment-test')
 export class QtiAssessmentTest extends LitElement {
+  private _initialValue: TestContext = {
+    itemIndex: 0,
+    items: []
+  };
   @property({ type: String }) identifier: string;
 
   @provide({ context: testContext })
   @property({ attribute: false })
-  private _context: TestContext = {
-    itemIndex: 0,
-    items: []
-  };
+  private _context: TestContext = this._initialValue;
   public get context(): TestContext {
     return this._context;
   }
@@ -37,21 +38,21 @@ export class QtiAssessmentTest extends LitElement {
     };
   }
 
-  // restoreContext = (contextToRestore: TestContext) => {
-  //   if (!contextToRestore) {
-  //     contextToRestore = this._initialValue;
-  //   }
-  //   this.context.itemIndex = contextToRestore.itemIndex;
-  //   // append the items that are not yet in the context and replace the ones that are
-  //   contextToRestore.items?.forEach(itemContext => {
-  //     const existingItemContext = this.context.items.find(i => i.identifier === itemContext.identifier);
-  //     if (existingItemContext) {
-  //       existingItemContext.variables = itemContext.variables;
-  //     } else {
-  //       this.context.items.push(itemContext);
-  //     }
-  //   });
-  // };
+  restoreContext = (contextToRestore: TestContext) => {
+    if (!contextToRestore) {
+      contextToRestore = this._initialValue;
+    }
+    this.context.itemIndex = contextToRestore.itemIndex;
+    // append the items that are not yet in the context and replace the ones that are
+    contextToRestore.items?.forEach(itemContext => {
+      const existingItemContext = this.context.items.find(i => i.identifier === itemContext.identifier);
+      if (existingItemContext) {
+        existingItemContext.variables = itemContext.variables;
+      } else {
+        this.context.items.push(itemContext);
+      }
+    });
+  };
 
   getAssessmentItem(identifier: string): QtiAssessmentItem {
     return this.querySelector<QtiAssessmentItemRef>(`qti-assessment-item-ref[identifier="${identifier}"]`)
