@@ -1,14 +1,20 @@
-import React, { ForwardRefExoticComponent, Ref } from 'react';
+import React, { ForwardRefExoticComponent, ReactNode, Ref } from 'react';
 import { createComponent } from '@lit/react';
 import { InteractionChangedDetails, OutcomeChangedDetails } from '../qti-components/qti-utilities/EventTypes';
 import { TestContext } from '../qti-test/qti-assessment-test.context';
-import { QtiAssessmentTest, QtiTest as WcQtiTest } from './../qti-test';
+import { QtiAssessmentTest as WcQtiAssessmentTest } from './../qti-test';
 import { QtiAssessmentItem } from '../qti-components';
 
-interface QtiTestProps {
+export interface OutcomeChangedDetailsExtended extends OutcomeChangedDetails {
+  identifier: string;
+}
+
+interface QtiAssessmentTestProps {
+  children?: any;
   className?: string;
   context?: TestContext;
-  ref?: Ref<WcQtiTest | undefined>;
+  ref?: Ref<WcQtiAssessmentTest | undefined>;
+
   onOutcomeChanged?: (e: CustomEvent<OutcomeChangedDetails>) => void;
   onInteractionChanged?: (e: CustomEvent<InteractionChangedDetails>) => void;
   onRegisterItem?: (
@@ -17,21 +23,21 @@ interface QtiTestProps {
       identifier: string;
     }>
   ) => void;
-  onTestRequestItem?: (e: CustomEvent<number>) => void;
+  onTestRequestItem?: (e: CustomEvent<{ old: string; new: string }>) => void;
+  onTestFirstUpdated?: (e: CustomEvent<WcQtiAssessmentTest>) => void;
   onItemConnected?: (e: CustomEvent<QtiAssessmentItem>) => void;
-  onTestFirstUpdated?: (e: CustomEvent<QtiAssessmentTest>) => void;
 }
 
-export const QtiTest = createComponent({
-  tagName: 'qti-test',
+export const QtiAssessmentTest = createComponent({
+  tagName: 'qti-assessment-test',
   react: React,
-  elementClass: WcQtiTest,
+  elementClass: WcQtiAssessmentTest,
   events: {
     onOutcomeChanged: 'qti-outcome-changed', // as EventName<Event>
     onInteractionChanged: 'qti-interaction-changed',
-    onItemConnected: 'qti-item-first-updated',
+    onItemConnected: 'qti-item-connected',
     onRegisterItem: 'register-item-ref',
-    onTestRequestItem: 'on-test-request-item',
+    onTestRequestItem: 'on-test-set-item',
     onTestFirstUpdated: 'qti-assessment-first-updated'
   }
-}) as ForwardRefExoticComponent<QtiTestProps>;
+}) as ForwardRefExoticComponent<QtiAssessmentTestProps>;

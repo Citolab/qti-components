@@ -6,7 +6,7 @@ interface ItemInfo {
 }
 export class TestContext {
   itemIndex: number | null;
-  items: (ItemContext & ItemInfo)[];
+  items: ItemContext[];
 }
 
 export const testContext = createContext<TestContext>('test');
