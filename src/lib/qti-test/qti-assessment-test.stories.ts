@@ -65,6 +65,10 @@ export const QtiAssessmentTestStory = {
       fetchXml();
     }
 
+    useEffect(() => {
+      console.log('Erbuiten', assessmentTestEl.value.signalContext.value);
+    }, [assessmentTestEl]);
+
     return html`
       <button @click=${() => localStorage.setItem('context', JSON.stringify(assessmentTestEl.value.context))}>
         Save
@@ -72,6 +76,16 @@ export const QtiAssessmentTestStory = {
 
       <button @click=${() => (assessmentTestEl.value.context = JSON.parse(localStorage.getItem('context')))}>
         Load
+      </button>
+
+      <button
+        @click=${() =>
+          (assessmentTestEl.value.signalContext.value = {
+            ...assessmentTestEl.value.signalContext.value,
+            itemIndex: 2
+          })}
+      >
+        Volgende
       </button>
 
       <qti-assessment-test
@@ -88,7 +102,11 @@ export const QtiAssessmentTestStory = {
           <qti-assessment-section>
             ${loadeditems.items.map(
               item =>
-                html`<qti-assessment-item-ref identifier="${item.identifier}" href="${item.href}">
+                html`<qti-assessment-item-ref
+                  item-location=${`${args.serverLocation}/${args.qtipkg}/depitems/`}
+                  identifier="${item.identifier}"
+                  href="${item.href}"
+                >
                 </qti-assessment-item-ref>`
             )}
           </qti-assessment-section>
@@ -101,7 +119,7 @@ export const QtiAssessmentTestStory = {
         <test-slider></test-slider>
         <test-next>NEXT</test-next>
         <test-show-correct>correct</test-show-correct>
-        <test-print-variables></test-print-variables>
+        <!-- <test-print-variables></test-print-variables> -->
       </qti-assessment-test>
     `;
   },
