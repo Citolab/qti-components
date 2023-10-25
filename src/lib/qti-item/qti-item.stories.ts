@@ -1,16 +1,13 @@
 import { html } from 'lit';
 import { action } from '@storybook/addon-actions';
-
-import { useEffect, useRef, useState, virtual } from 'haunted';
-
-import '../qti-components';
-import './qti-item';
-
-import packages from '../../assets/api/packages.json';
-import { QtiAssessmentItem } from '../qti-components';
+import { useEffect, useRef, virtual } from 'haunted';
 import { createRef, ref } from 'lit-html/directives/ref.js';
 
-import { QtiItem } from './qti-item';
+import '@citolab/qti-components/qti-components';
+import { QtiItem } from '@citolab/qti-components/qti-item';
+import { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
+
+import packages from '../../assets/api/packages.json';
 
 export default {
   component: 'qti-item',
@@ -44,7 +41,7 @@ export const QtiItemStory = {
       if (args.itemIndex > items.length - 1) return;
       const item = items[args.itemIndex];
 
-      const uri = `${args.serverLocation}/${args.qtipkg}/items/${item.href}`;
+      const uri = `${args.serverLocation}/${args.qtipkg}/depitems/${item.href}`;
       const xmlFetch = await fetch(uri);
       const xmlText = await xmlFetch.text();
 

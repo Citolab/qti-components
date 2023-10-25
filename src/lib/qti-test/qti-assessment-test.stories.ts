@@ -2,14 +2,11 @@ import { html } from 'lit';
 import { createRef, ref } from 'lit-html/directives/ref.js';
 import { useEffect, useRef, virtual, useState } from 'haunted';
 
-import '../qti-components/index';
-import './index';
+import '@citolab/qti-components/qti-test';
+import '@citolab/qti-components/qti-components';
+import { QtiAssessmentTest } from '@citolab/qti-components/qti-test';
 
 import packages from '../../assets/api/packages.json';
-
-// import { QtiAssessmentItemRef } from './index';
-import { QtiAssessmentTest } from './qti-assessment-test';
-import { QtiAssessmentItemRef } from './qti-assessment-item-ref';
 
 export default {
   title: 'qti-test',
