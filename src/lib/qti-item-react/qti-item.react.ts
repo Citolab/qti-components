@@ -1,8 +1,12 @@
 import React, { ForwardRefExoticComponent, Ref } from 'react';
 import { createComponent } from '@lit/react';
 
-import { QtiItem as QtiItemWebComponent } from '../qti-item/qti-item';
-import { OutcomeChangedDetails, InteractionChangedDetails, QtiAssessmentItem } from '../qti-components';
+import { QtiItem as QtiItemWebComponent } from '@citolab/qti-components/qti-item';
+import {
+  OutcomeChangedDetails,
+  InteractionChangedDetails,
+  QtiAssessmentItem
+} from '@citolab/qti-components/qti-components';
 
 interface QtiItemProps {
   ref?: Ref<QtiItemWebComponent>;

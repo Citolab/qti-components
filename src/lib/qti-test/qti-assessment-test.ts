@@ -4,6 +4,7 @@ import { QtiAssessmentItem } from '../qti-components';
 import { provide } from '@lit/context';
 import { TestContext, testContext } from './qti-assessment-test.context';
 import { QtiAssessmentItemRef } from './qti-assessment-item-ref';
+import { SignalWatcher, signal, Signal, effect } from '@lit-labs/preact-signals';
 
 @customElement('qti-assessment-test')
 export class QtiAssessmentTest extends LitElement {
@@ -13,24 +14,37 @@ export class QtiAssessmentTest extends LitElement {
   };
   @property({ type: String }) identifier: string;
 
+  public signalContext = signal(this._initialValue);
+
   @provide({ context: testContext })
   @property({ attribute: false })
-  private _context: TestContext = this._initialValue;
+  private _context: TestContext; // = this._initialValue;
 
-  public get context(): TestContext {
-    return this._context;
-  }
   public set context(value: TestContext) {
-    this._context = value;
+    this.signalContext.value = value;
+  }
+
+  constructor() {
+    super();
+    this.addEventListener('register-item-ref', this.onItemRefRegistered);
+    this.addEventListener('on-test-request-item', this.onTestRequestItem);
+    this.addEventListener('qti-item-first-updated', (e: CustomEvent<QtiAssessmentItem>) =>
+      this.itemConnected(e.detail)
+    );
+    this.addEventListener('qti-interaction-changed', e => this.copyItemVariables(e.detail.item));
+    this.addEventListener('qti-outcome-changed', e => this.copyItemVariables(e.detail.item));
+
+    // update the provider context
+    effect(() => (this._context = this.signalContext.value));
   }
 
   public itemRefEls: Map<string, QtiAssessmentItemRef> = new Map();
 
   // only copies the variables from the item, back into the testcontext to retain state
   private copyItemVariables(identifier: string): void {
-    this._context = {
-      ...this._context,
-      items: this._context.items.map(itemContext => {
+    this.signalContext.value = {
+      ...this.signalContext.value,
+      items: this.signalContext.value.items.map(itemContext => {
         return itemContext.identifier == identifier
           ? { ...itemContext, variables: this.getAssessmentItem(identifier).context.variables }
           : itemContext;
@@ -42,14 +56,14 @@ export class QtiAssessmentTest extends LitElement {
     if (!contextToRestore) {
       contextToRestore = this._initialValue;
     }
-    this.context.itemIndex = contextToRestore.itemIndex;
+    this.signalContext.value.itemIndex = contextToRestore.itemIndex;
     // append the items that are not yet in the context and replace the ones that are
     contextToRestore.items?.forEach(itemContext => {
-      const existingItemContext = this.context.items.find(i => i.identifier === itemContext.identifier);
+      const existingItemContext = this.signalContext.value.items.find(i => i.identifier === itemContext.identifier);
       if (existingItemContext) {
         existingItemContext.variables = itemContext.variables;
       } else {
-        this.context.items.push(itemContext);
+        this.signalContext.value.items.push(itemContext);
       }
     });
   };
@@ -63,8 +77,8 @@ export class QtiAssessmentTest extends LitElement {
     this.itemRefEls.set(e.detail.identifier, e.target as QtiAssessmentItemRef);
 
     const { href, identifier } = e.detail;
-    this._context.items = [
-      ...this._context.items,
+    this.signalContext.value.items = [
+      ...this.signalContext.value.items,
       {
         href,
         identifier,
@@ -83,13 +97,13 @@ export class QtiAssessmentTest extends LitElement {
 
   private onTestRequestItem(e: CustomEvent<number>): void {
     e.stopImmediatePropagation();
-    if (e.detail === this._context.itemIndex) return; // same item
-    this._context = { ...this._context, itemIndex: e.detail };
+    if (e.detail === this.signalContext.value.itemIndex) return; // same item
+    this.signalContext.value = { ...this.signalContext.value, itemIndex: e.detail };
   }
 
   firstUpdated(a): void {
     super.firstUpdated(a);
-    if (this._context.items.length === 0) {
+    if (this.signalContext.value.items.length === 0) {
       console.warn('No items found in the test, please add at least one item');
       return;
     }
@@ -99,28 +113,17 @@ export class QtiAssessmentTest extends LitElement {
   updated(changedProperties: Map<string, any>) {
     if (changedProperties.has('_context')) {
       const oldIndex = changedProperties.get('_context')?.itemIndex;
-      if (this._context.itemIndex !== null && oldIndex !== this._context.itemIndex) {
+      if (this.signalContext.value.itemIndex !== null && oldIndex !== this.signalContext.value.itemIndex) {
         this._requestItem(
-          this._context.items[this._context.itemIndex].identifier,
-          this._context.items[oldIndex]?.identifier
+          this.signalContext.value.items[this.signalContext.value.itemIndex].identifier,
+          this.signalContext.value.items[oldIndex]?.identifier
         );
       }
     }
   }
 
-  constructor() {
-    super();
-    this.addEventListener('register-item-ref', this.onItemRefRegistered);
-    this.addEventListener('on-test-request-item', this.onTestRequestItem);
-    this.addEventListener('qti-item-first-updated', (e: CustomEvent<QtiAssessmentItem>) =>
-      this.itemConnected(e.detail)
-    );
-    this.addEventListener('qti-interaction-changed', e => this.copyItemVariables(e.detail.item));
-    this.addEventListener('qti-outcome-changed', e => this.copyItemVariables(e.detail.item));
-  }
-
   private itemConnected = (item: QtiAssessmentItem): void => {
-    const itemContext = this._context.items.find(i => i?.identifier === item?.identifier);
+    const itemContext = this.signalContext.value.items.find(i => i?.identifier === item?.identifier);
     // if it is still empty, then copy the variables from the item
     if (itemContext.variables.length === 1) {
       this.copyItemVariables(item.identifier);
@@ -168,14 +171,14 @@ export class QtiAssessmentTest extends LitElement {
 //   // if (!value) {
 //   //   value = this._initialValue;
 //   // }
-//   // this._context.items?.forEach(itemContext => {
+//   // this.signalContext.value.items?.forEach(itemContext => {
 //   //   if (!value.items) value.items = [];
 //   //   if (!value.items.find(i => i.identifier === itemContext.identifier)) {
 //   //     value.items.push(itemContext);
 //   //   }
 //   // });
-//   // this._context = value;
+//   // this.signalContext.value = value;
 // }
 // get context(): TestContext {
-//   return this._context;
+//   return this.signalContext.value;
 // }

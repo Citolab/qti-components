@@ -1,9 +1,11 @@
 import React, { ForwardRefExoticComponent, ReactNode, Ref } from 'react';
 import { createComponent } from '@lit/react';
-import { InteractionChangedDetails, OutcomeChangedDetails } from '../qti-components/qti-utilities/EventTypes';
-import { TestContext } from '../qti-test/qti-assessment-test.context';
-import { QtiAssessmentTest as WcQtiAssessmentTest } from './../qti-test';
-import { QtiAssessmentItem } from '../qti-components';
+import {
+  InteractionChangedDetails,
+  OutcomeChangedDetails,
+  QtiAssessmentItem
+} from '@citolab/qti-components/qti-components';
+import { TestContext, QtiAssessmentTest as WcQtiAssessmentTest } from '@citolab/qti-components/qti-test';
 
 export interface OutcomeChangedDetailsExtended extends OutcomeChangedDetails {
   identifier: string;

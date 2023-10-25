@@ -2,14 +2,11 @@ import { html } from 'lit';
 import { createRef, ref } from 'lit-html/directives/ref.js';
 import { useEffect, useRef, virtual, useState } from 'haunted';
 
-import '../qti-components/index';
-import './index';
+import '@citolab/qti-components/qti-test';
+import '@citolab/qti-components/qti-components';
+import { QtiAssessmentTest } from '@citolab/qti-components/qti-test';
 
 import packages from '../../assets/api/packages.json';
-
-// import { QtiAssessmentItemRef } from './index';
-import { QtiAssessmentTest } from './qti-assessment-test';
-import { QtiAssessmentItemRef } from './qti-assessment-item-ref';
 
 export default {
   title: 'qti-test',
@@ -65,6 +62,10 @@ export const QtiAssessmentTestStory = {
       fetchXml();
     }
 
+    useEffect(() => {
+      console.log('Erbuiten', assessmentTestEl.value.signalContext.value);
+    }, [assessmentTestEl]);
+
     return html`
       <button @click=${() => localStorage.setItem('context', JSON.stringify(assessmentTestEl.value.context))}>
         Save
@@ -72,6 +73,16 @@ export const QtiAssessmentTestStory = {
 
       <button @click=${() => (assessmentTestEl.value.context = JSON.parse(localStorage.getItem('context')))}>
         Load
+      </button>
+
+      <button
+        @click=${() =>
+          (assessmentTestEl.value.signalContext.value = {
+            ...assessmentTestEl.value.signalContext.value,
+            itemIndex: 2
+          })}
+      >
+        Volgende
       </button>
 
       <qti-assessment-test
@@ -105,7 +116,7 @@ export const QtiAssessmentTestStory = {
         <test-slider></test-slider>
         <test-next>NEXT</test-next>
         <test-show-correct>correct</test-show-correct>
-        <test-print-variables></test-print-variables>
+        <!-- <test-print-variables></test-print-variables> -->
       </qti-assessment-test>
     `;
   },
