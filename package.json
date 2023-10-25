@@ -121,8 +121,7 @@
     "@lit/context": "^1.0.0",
     "@lit/react": "^1.0.0",
     "cheerio": "^1.0.0-rc.12",
-    "lit": "^3.0.0",
-    "@lit-labs/preact-signals": "^1.0.0"
+    "lit": "^3.0.0"
   },
   "peerdependencies": {
     "@lit/context": ">= 1.0",
