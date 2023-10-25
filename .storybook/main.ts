@@ -31,7 +31,6 @@ const config: StorybookConfig = {
   },
   // onlye here for jest tests : https://github.com/storybookjs/storybook/issues/14856#issuecomment-1262333250
   async viteFinal(config, { configType }) {
-    console.log('W000000000T', path.resolve(__dirname, '../src/lib'));
     config.resolve = {
       ...config.resolve,
       alias: {
