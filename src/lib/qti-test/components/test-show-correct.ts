@@ -6,7 +6,7 @@ import { QtiAssessmentItem } from '../../qti-components';
 import { QtiAssessmentTest } from '../qti-assessment-test';
 
 @customElement('test-show-correct')
-export class QtiTestShowCorrect extends LitElement {
+export class TestShowCorrect extends LitElement {
   @consume({ context: testContext, subscribe: true })
   @state()
   public _testProvider?: TestContext;

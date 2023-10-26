@@ -73,6 +73,14 @@ export class QtiAssessmentTest extends LitElement {
       .assessmentItem;
   }
 
+  get currentAssessmentItem(): QtiAssessmentItem {
+    return this.querySelector<QtiAssessmentItemRef>(
+      `qti-assessment-item-ref[identifier="${
+        this.signalContext.value.items[this.signalContext.value.itemIndex].identifier
+      }"]`
+    ).assessmentItem;
+  }
+
   private onItemRefRegistered(e: CustomEvent<{ href: string; identifier: string }>): void {
     this.itemRefEls.set(e.detail.identifier, e.target as QtiAssessmentItemRef);
 

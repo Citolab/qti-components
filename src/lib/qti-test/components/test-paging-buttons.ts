@@ -5,7 +5,7 @@ import { TestContext, testContext } from '../qti-assessment-test.context';
 import { prop } from 'cheerio/lib/api/attributes';
 
 @customElement('test-paging-buttons')
-export class QtiTestPagingButtons extends LitElement {
+export class TestPagingButtons extends LitElement {
   @consume({ context: testContext, subscribe: true })
   @state()
   public _testProvider?: TestContext;

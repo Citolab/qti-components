@@ -4,7 +4,7 @@ import { customElement, state } from 'lit/decorators.js';
 import { TestContext, testContext } from '../qti-assessment-test.context';
 
 @customElement('test-slider')
-export class QtiTestSlider extends LitElement {
+export class TestSlider extends LitElement {
   @consume({ context: testContext, subscribe: true })
   @state()
   public _testProvider?: TestContext;

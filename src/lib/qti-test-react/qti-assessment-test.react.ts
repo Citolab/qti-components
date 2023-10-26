@@ -1,14 +1,64 @@
+import { DOMAttributes } from 'react';
 import React, { ForwardRefExoticComponent, ReactNode, Ref } from 'react';
+
 import { createComponent } from '@lit/react';
 import {
   InteractionChangedDetails,
   OutcomeChangedDetails,
   QtiAssessmentItem
 } from '@citolab/qti-components/qti-components';
-import { TestContext, QtiAssessmentTest as WcQtiAssessmentTest } from '@citolab/qti-components/qti-test';
+import {
+  QtiAssessmentItemRef,
+  TestContext,
+  TestNext,
+  TestPrev,
+  TestShowIndex,
+  TestProgress,
+  TestPagingButtons,
+  TestPagingRadio,
+  TestSlider,
+  TestShowCorrect,
+  TestPrintVariables,
+  QtiAssessmentTest as WcQtiAssessmentTest
+} from '@citolab/qti-components/qti-test';
 
 export interface OutcomeChangedDetailsExtended extends OutcomeChangedDetails {
   identifier: string;
+}
+
+type CustomElement<T> = Partial<T & DOMAttributes<T> & { children: any }>;
+
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      ['qti-test-part']: CustomElement<{ identifier: string }>;
+      ['qti-assessment-section']: CustomElement<{
+        identifier: string;
+        title: string;
+        visible: string;
+        required: string;
+      }>;
+
+      ['qti-assessment-item-ref']: CustomElement<{
+        identifier: string;
+        href: string;
+        key: string;
+        'item-location': string;
+        category?: string;
+        ref: (el: any) => Map<string, QtiAssessmentItemRef>;
+      }>;
+
+      ['test-prev']: CustomElement<TestPrev>;
+      ['test-next']: CustomElement<TestNext>;
+      'test-show-index': CustomElement<TestShowIndex>;
+      'test-progress': CustomElement<TestProgress>;
+      'test-paging-buttons': CustomElement<TestPagingButtons>;
+      'test-paging-radio': CustomElement<TestPagingRadio>;
+      'test-slider': CustomElement<TestSlider>;
+      'test-show-correct': CustomElement<TestShowCorrect>;
+      'test-print-variables': CustomElement<TestPrintVariables>;
+    }
+  }
 }
 
 interface QtiAssessmentTestProps {
