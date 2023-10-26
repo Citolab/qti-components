@@ -7,7 +7,7 @@ interface QtiTestProps {
   children?: any;
   className?: string;
   context?: TestContext;
-  ref?: Ref<WcQtiTest | undefined>;
+  ref?: Ref<any | undefined>;
   onOutcomeChanged?: (e: CustomEvent<OutcomeChangedDetails>) => void;
   onInteractionChanged?: (e: CustomEvent<InteractionChangedDetails>) => void;
   onTestFirstUpdated?: (e: CustomEvent<QtiAssessmentTest>) => void;

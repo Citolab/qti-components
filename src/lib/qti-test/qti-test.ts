@@ -28,4 +28,6 @@ function QtiTestComponent(element) {
   return html`${manifestData ? virtual(QtiTestHaunted)(manifestData) : ``}`;
 }
 
-customElements.define('qti-test', component(QtiTestComponent as any, { observedAttributes: ['package-uri'] }));
+export const QtiTest = component(QtiTestComponent as any, { observedAttributes: ['package-uri'] });
+
+customElements.define('qti-test', QtiTest);
