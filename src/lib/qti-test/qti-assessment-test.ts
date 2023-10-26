@@ -21,6 +21,7 @@ export class QtiAssessmentTest extends LitElement {
   private _context: TestContext; // = this._initialValue;
 
   public set context(value: TestContext) {
+    console.log('set context', value);
     this.signalContext.value = value;
   }
 
@@ -121,7 +122,11 @@ export class QtiAssessmentTest extends LitElement {
   updated(changedProperties: Map<string, any>) {
     if (changedProperties.has('_context')) {
       const oldIndex = changedProperties.get('_context')?.itemIndex;
-      if (this.signalContext.value.itemIndex !== null && oldIndex !== this.signalContext.value.itemIndex) {
+      if (
+        this.signalContext.value.items.length > 0 &&
+        this.signalContext.value.itemIndex !== null &&
+        oldIndex !== this.signalContext.value.itemIndex
+      ) {
         this._requestItem(
           this.signalContext.value.items[this.signalContext.value.itemIndex].identifier,
           this.signalContext.value.items[oldIndex]?.identifier

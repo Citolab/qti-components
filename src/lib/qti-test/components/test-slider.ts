@@ -25,7 +25,7 @@ export class TestSlider extends LitElement {
       <input
         part="input"
         type="range"
-        value=${itemIndex}
+        value=${itemIndex.toString()}
         class="absolute w-full appearance-none bg-transparent"
         max=${items.length - 1}
         @input=${e => this._requestItem(+(e.target as HTMLInputElement).value)}
