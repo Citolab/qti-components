@@ -10,23 +10,8 @@
     </metadata>
     <organizations />
     <resources>
-        <resource type="imsqti_item_xmlv3p0" href="items/Example05-feedbackBlock-adaptive.xml"
-            identifier="ITM-example-feedback-block-adaptive-1"></resource>
-        <resource type="imsqti_item_xmlv3p0" href="items/zonnepanelen.xml"
-            identifier="ITM-zonnepanelen-1"></resource>
-        <resource type="imsqti_item_xmlv3p0" href="items/afval-1.xml"
-            identifier="ITM-afval-1"></resource>
-        <resource type="imsqti_item_xmlv3p0" href="items/eten-1.xml"
-            identifier="ITM-eten-1"></resource>
-        <resource type="imsqti_item_xmlv3p0" href="items/eten-2.xml"
-            identifier="ITM-eten-2"></resource>
-        <resource type="imsqti_item_xmlv3p0" href="items/huis-1.xml"
-            identifier="ITM-huis-1"></resource>
-        <resource type="imsqti_item_xmlv3p0" href="items/kleding-1.xml"
-            identifier="ITM-kleding-1"></resource>
-        <resource type="imsqti_item_xmlv3p0" href="items/woonwijk-1.xml"
-            identifier="ITM-woonwijk-1"></resource>
-        <resource type="imsqti_item_xmlv3p0" href="items/woonwijk-2.xml"
-            identifier="ITM-woonwijk-2"></resource>
+        <resource identifier="replay" type="imsqti_test_xmlv3p0" href="assessment.xml">
+            <file href="assessment.xml" />
+        </resource>
     </resources>
 </manifest>

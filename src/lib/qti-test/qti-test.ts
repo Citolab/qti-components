@@ -1,8 +1,6 @@
 /* eslint-disable wc/no-invalid-element-name */
 
 import { html, LitElement } from 'lit';
-import * as cheerio from 'cheerio';
-
 import { customElement, property, query, queryAssignedElements, state } from 'lit/decorators.js';
 import { QtiAssessmentItemRef } from './qti-assessment-item-ref';
 import { QtiAssessmentTest } from './qti-assessment-test';
@@ -10,6 +8,7 @@ import { until } from 'lit/directives/until.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import styles from './qti-test.css?inline';
 import { createRef, ref } from 'lit/directives/ref.js';
+import { fetchManifestData, requestItem } from './test-utils';
 
 @customElement('qti-test')
 export class QtiTest extends LitElement {
@@ -40,47 +39,14 @@ export class QtiTest extends LitElement {
     return this._assessmentTestEl.value.context;
   }
 
-  updated(changedProperties: Map<string, any>) {
+  async updated(changedProperties: Map<string, any>) {
     if (changedProperties.has('packageURI')) {
       this._items = []; // empty all items
-      this.content = this.fetchData(); // load new items async
+      const { itemLocation, items, testIdentifier } = await fetchManifestData(this.packageURI); // load new items async
+      this._itemLocation = itemLocation;
+      this._items = items;
     }
   }
-
-  private static _testFromImsmanifest = async href => {
-    const response = await fetch(href);
-    const imsmanifestXML = await response.text();
-    await new Promise<void>(r => setTimeout(() => r(), 1000)); // Add some delay for demo purposes
-    const $ = cheerio.load(imsmanifestXML, { xmlMode: true, xml: { xmlMode: true } });
-    // <resource identifier="TST-bb-bi-22-examenvariant-1" type="imsqti_test_xmlv3p0" href="depitems/bb-bi-22-examenvariant-1.xml">
-    const el = $('resource[type="imsqti_test_xmlv3p0"]').first();
-    return el.attr('href');
-  };
-
-  private static _itemsFromAssessmentTest = async href => {
-    const response = await fetch(href);
-    const assessmentTestXML = await response.text();
-
-    // Add some delay for demo purposes
-    await new Promise<void>(r => setTimeout(() => r(), 1000));
-
-    const $ = cheerio.load(assessmentTestXML, { xmlMode: true, xml: { xmlMode: true } });
-    const items = [];
-    $('qti-assessment-item-ref').each((_, element) => {
-      const identifier = $(element).attr('identifier')!;
-      const href = $(element).attr('href')!;
-      const category = $(element).attr('category');
-      items.push({ identifier, href, category });
-    });
-    return items;
-  };
-
-  fetchData = async () => {
-    const assessmentTestHref = await QtiTest._testFromImsmanifest(this.packageURI + '/imsmanifest.xml');
-    const assessmentTestItems = await QtiTest._itemsFromAssessmentTest(this.packageURI + assessmentTestHref);
-    this._itemLocation = `${this.packageURI}/${assessmentTestHref.substring(0, assessmentTestHref.lastIndexOf('/'))}`;
-    this._items = assessmentTestItems;
-  };
 
   connectedCallback(): void {
     super.connectedCallback();
@@ -97,32 +63,6 @@ export class QtiTest extends LitElement {
     this.shadowRoot?.adoptedStyleSheets.push(sheet);
   }
 
-  async requestItem(identifier: string, oldIdentifier: string) {
-    const fetchXml = async () => {
-      const itemRefEl = this._itemRefEls.get(identifier);
-      this._controller = new AbortController();
-      const signal = this._controller.signal;
-      try {
-        const xmlFetch = await fetch(`${this._itemLocation}/${itemRefEl.href}`, { signal });
-        const xmlText = await xmlFetch.text();
-        oldIdentifier && (this._itemRefEls.get(oldIdentifier).xml = '');
-        itemRefEl.xml = xmlText;
-      } catch (error) {
-        if (error.name === 'AbortError') {
-          oldIdentifier && (this._itemRefEls.get(oldIdentifier).xml = '');
-          console.log('Fetch aborted');
-        } else {
-          console.error(error);
-        }
-      }
-    };
-    this._controller?.abort();
-
-    this._qtiTestPart.loading = true;
-    await fetchXml();
-    this._qtiTestPart.loading = false;
-  }
-
   override render() {
     return html`
       ${until(this.content, html`<span>Loading...</span>`)}
@@ -135,9 +75,15 @@ export class QtiTest extends LitElement {
             const itemRefEl = this._itemRefEls.get(e.target.identifier);
             e.target.itemLocation = `${this._itemLocation}/${itemRefEl.href}`;
           }}
-          @on-test-set-item="${(e: CustomEvent<{ old: string; new: string }>) => {
-            const { old, new: newItem } = e.detail;
-            this.requestItem(newItem, old);
+          @on-test-set-item="${async ({ detail: identifier }) => {
+            const itemRefEl = this._itemRefEls.get(identifier.new);
+
+            this._qtiTestPart.loading = true;
+            const newItemXML = await requestItem(`${this._itemLocation}/${itemRefEl.href}`);
+            this._assessmentTestEl.value.itemRefEls.forEach((value, key) => (value.xml = ''));
+            itemRefEl.xml = newItemXML;
+
+            this._qtiTestPart.loading = false;
           }}"
 
         >

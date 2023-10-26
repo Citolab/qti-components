@@ -7,6 +7,8 @@ import '@citolab/qti-components/qti-components';
 import { QtiAssessmentTest } from '@citolab/qti-components/qti-test';
 
 import packages from '../../assets/api/packages.json';
+import { ManifestData, fetchManifestData, requestItem } from './test-utils';
+import { ifDefined } from 'lit/directives/if-defined.js';
 
 export default {
   title: 'qti-test',
@@ -44,65 +46,49 @@ export default {
 };
 
 export const QtiAssessmentTestStory = {
-  render: (args, { argTypes, loaded: { loadeditems } }) => {
+  render: (args, { argTypes, loaded: { manifestData } }) => {
+    const md = manifestData as ManifestData;
     const assessmentTestEl = createRef<QtiAssessmentTest>();
-
-    function requestItem(identifier: { old: string; new: string }) {
-      const fetchXml = async () => {
-        // debugger;
-        if (identifier.old) {
-          const oldItemRefEl = assessmentTestEl.value.itemRefEls.get(identifier.old);
-          oldItemRefEl.xml = '';
-        }
-        const itemRefEl = assessmentTestEl.value.itemRefEls.get(identifier.new);
-        const xmlFetch = await fetch(`${args.serverLocation}/${args.qtipkg}/depitems/${itemRefEl.href}`); // , { signal });
-        const xmlText = await xmlFetch.text();
-        itemRefEl.xml = xmlText;
-      };
-      fetchXml();
-    }
 
     useEffect(() => {
       console.log('Erbuiten', assessmentTestEl.value.signalContext.value);
     }, [assessmentTestEl]);
 
     return html`
-      <button @click=${() => localStorage.setItem('context', JSON.stringify(assessmentTestEl.value.context))}>
-        Save
-      </button>
-
-      <button @click=${() => (assessmentTestEl.value.context = JSON.parse(localStorage.getItem('context')))}>
-        Load
-      </button>
-
-      <button
-        @click=${() =>
-          (assessmentTestEl.value.signalContext.value = {
-            ...assessmentTestEl.value.signalContext.value,
-            itemIndex: 2
-          })}
-      >
-        Volgende
-      </button>
-
       <qti-assessment-test
+        identifier="${md.testIdentifier}"
         ${ref(assessmentTestEl)}
-        @on-test-set-item=${({ detail: identifier }) => requestItem(identifier)}
-        @qti-assessment-first-updated="${(e: CustomEvent<QtiAssessmentTest>) => {
-          if (JSON.parse(localStorage.getItem('context'))) {
-            e.detail.context = JSON.parse(localStorage.getItem('context'));
-          }
-        }}"
+        @on-test-set-item=${async ({ detail: identifier }) => {
+          const itemRefEl = assessmentTestEl.value.itemRefEls.get(identifier.new);
+          const newItemXML = await requestItem(`${md.itemLocation}/${itemRefEl.href}`);
+          assessmentTestEl.value.itemRefEls.forEach((value, key) => (value.xml = ''));
+          itemRefEl.xml = newItemXML;
+        }}
+        @qti-assessment-first-updated=${(e: CustomEvent<QtiAssessmentTest>) => {
+          const storedTestContext = JSON.parse(localStorage.getItem(`${md.testIdentifier}-assessment-test-context`));
+          storedTestContext && (assessmentTestEl.value.context = storedTestContext);
+        }}
+        @qti-outcome-changed=${() =>
+          localStorage.setItem(
+            `${md.testIdentifier}-assessment-test-context`,
+            JSON.stringify(assessmentTestEl.value.context)
+          )}
+        @qti-interaction-changed=${() =>
+          localStorage.setItem(
+            `${md.testIdentifier}-assessment-test-context`,
+            JSON.stringify(assessmentTestEl.value.context)
+          )}
       >
         <test-show-index></test-show-index>
         <qti-test-part>
           <qti-assessment-section>
-            ${loadeditems.items.map(
+            ${md.items.map(
               item =>
                 html`<qti-assessment-item-ref
-                  item-location=${`${args.serverLocation}/${args.qtipkg}/depitems/`}
+                  item-location=${`${md.itemLocation}`}
                   identifier="${item.identifier}"
                   href="${item.href}"
+                  category="${ifDefined(item.category)}"
                 >
                 </qti-assessment-item-ref>`
             )}
@@ -110,23 +96,14 @@ export const QtiAssessmentTestStory = {
         </qti-test-part>
 
         <test-prev>PREV</test-prev>
-        <test-progress></test-progress>
         <test-paging-buttons></test-paging-buttons>
-        <test-paging-radio></test-paging-radio>
-        <test-slider></test-slider>
         <test-next>NEXT</test-next>
-        <test-show-correct>correct</test-show-correct>
-        <!-- <test-print-variables></test-print-variables> -->
       </qti-assessment-test>
     `;
   },
   loaders: [
     async args => ({
-      loadeditems: await fetch(`${args.args.serverLocation}/${args.args.qtipkg}/items.json`)
-        .then(response => (response.ok ? response.json() : console.log('error')))
-        .catch(console.log)
+      manifestData: await fetchManifestData(`${args.args.serverLocation}/${args.args.qtipkg}`)
     })
   ]
 };
-
-/* .context=${JSON.parse(localStorage.getItem('context'))} */
