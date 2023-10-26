@@ -5,7 +5,7 @@ import { ResponseVariable } from '../qti-utilities/Variables';
 import { watch } from '../../decorators/watch';
 import type { ResponseInteraction } from '../qti-utilities/ExpressionResult';
 import type { Interaction } from '../qti-interaction/internal/interaction/interaction';
-import type { InteractionChangedDetails } from '../qti-utilities/EventTypes';
+import type { InteractionChangedDetails, OutcomeChangedDetails } from '../qti-utilities/EventTypes';
 import type { QtiFeedback } from '../qti-feedback/qti-feedback';
 import type { QtiResponseProcessing } from '../qti-responseprocessing';
 import type { VariableDeclaration } from '../qti-utilities/Variables';
@@ -262,9 +262,9 @@ export class QtiAssessmentItem extends LitElement {
 
     this._feedbackElements.forEach(fe => fe.checkShowFeedback(identifier));
 
-    this._emit<InteractionChangedDetails>('qti-outcome-changed', {
+    this._emit<OutcomeChangedDetails>('qti-outcome-changed', {
       item: this.identifier,
-      identifier,
+      outcomeIdentifier: identifier,
       value: this._context.variables.find(v => v.identifier === identifier)?.value
     });
   }
