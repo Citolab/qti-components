@@ -42,12 +42,16 @@ qti-test-part[loading] {
 }
 
 .nav {
-  @apply isolate inline-flex -space-x-px rounded-md shadow-sm;
+  @apply isolate inline-flex w-full -space-x-px rounded-md shadow-sm;
 }
 
 test-prev::part(button) {
   all: unset;
   @apply relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0;
+}
+
+test-slider::part(input) {
+  @apply w-full;
 }
 
 test-next::part(button) {
@@ -56,7 +60,8 @@ test-next::part(button) {
 }
 
 test-paging-buttons {
-  /* @apply hidden md:-mt-px md:flex; */
+  @apply hidden w-full justify-center md:-mt-px md:flex;
+
   & > button {
     @apply relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0;
     &[data-active-item='true'] {

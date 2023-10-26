@@ -9,6 +9,7 @@ import { QtiAssessmentTest } from '@citolab/qti-components/qti-test';
 import packages from '../../assets/api/packages.json';
 import { ManifestData, fetchManifestData, requestItem } from './test-utils';
 import { ifDefined } from 'lit/directives/if-defined.js';
+import './qti-test.css';
 
 export default {
   title: 'qti-test',
@@ -20,16 +21,6 @@ export default {
     qtipkg: {
       options: packages.packages,
       control: { type: 'radio' }
-    },
-    readonly: { control: { type: 'boolean' } },
-    disabled: { control: { type: 'boolean' } },
-    'navigation-mode': {
-      control: { type: 'radio' },
-      options: ['linear', 'nonlinear']
-    },
-    'submission-mode': {
-      control: { type: 'radio' },
-      options: ['individual', 'simultaneous']
     }
   },
   args: {
@@ -51,8 +42,10 @@ export const QtiAssessmentTestStory = {
     const assessmentTestEl = createRef<QtiAssessmentTest>();
 
     useEffect(() => {
-      console.log('Erbuiten', assessmentTestEl.value.signalContext.value);
-    }, [assessmentTestEl]);
+      assessmentTestEl.value.signalContext.subscribe(a => {
+        localStorage.setItem(`${md.testIdentifier}-assessment-test-context`, JSON.stringify(a));
+      });
+    }, [assessmentTestEl.value]);
 
     return html`
       <qti-assessment-test
@@ -68,16 +61,6 @@ export const QtiAssessmentTestStory = {
           const storedTestContext = JSON.parse(localStorage.getItem(`${md.testIdentifier}-assessment-test-context`));
           storedTestContext && (assessmentTestEl.value.context = storedTestContext);
         }}
-        @qti-outcome-changed=${() =>
-          localStorage.setItem(
-            `${md.testIdentifier}-assessment-test-context`,
-            JSON.stringify(assessmentTestEl.value.context)
-          )}
-        @qti-interaction-changed=${() =>
-          localStorage.setItem(
-            `${md.testIdentifier}-assessment-test-context`,
-            JSON.stringify(assessmentTestEl.value.context)
-          )}
       >
         <test-show-index></test-show-index>
         <qti-test-part>
@@ -95,9 +78,31 @@ export const QtiAssessmentTestStory = {
           </qti-assessment-section>
         </qti-test-part>
 
-        <test-prev>PREV</test-prev>
-        <test-paging-buttons></test-paging-buttons>
-        <test-next>NEXT</test-next>
+        <div class="nav">
+          <test-prev>
+            <svg class="arrow" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path
+                fill-rule="evenodd"
+                d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </test-prev>
+
+          <test-paging-buttons></test-paging-buttons>
+
+          <test-next>
+            <svg class="arrow" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path
+                fill-rule="evenodd"
+                d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </test-next>
+        </div>
+
+        <test-slider></test-slider>
       </qti-assessment-test>
     `;
   },
