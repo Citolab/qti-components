@@ -10,6 +10,9 @@ export class TestPagingButtons extends LitElement {
   @state()
   public _testProvider?: TestContext;
 
+  @property({ type: Number })
+  private maxDisplayedItems = 5;
+
   protected createRenderRoot() {
     return this;
   }
@@ -26,17 +29,20 @@ export class TestPagingButtons extends LitElement {
 
   render() {
     const { items, itemIndex } = this._testProvider;
+    const start = Math.max(0, itemIndex - this.maxDisplayedItems);
+    const end = Math.min(items.length - 1, itemIndex + this.maxDisplayedItems);
+    const displayedItems = items.slice(start, end + 1);
     return html`
-      ${items.map(
+      ${displayedItems.map(
         (item, index) =>
           html`<button
             part="button"
             data-completion-status=${item.variables.find(v => v.identifier === 'completionStatus')?.value}
-            data-active-item=${index === itemIndex}
-            @click=${_ => this._requestItem(index)}
+            data-active-item=${start + index === itemIndex}
+            @click=${_ => this._requestItem(start + index)}
             id="${item.identifier}"
           >
-            ${index + 1}
+            ${start + index + 1}
           </button>`
       )}
     `;

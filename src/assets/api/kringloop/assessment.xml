@@ -1,0 +1,20 @@
+<qti-assessment-test xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema" title="Kringloop adaptieve items"
+  identifier="Kringloop">
+
+  <qti-test-part identifier="RES-6340d7fd-6914-463a-8ec8-b3f0fb8ca9e9"
+    submission-mode="simultaneous" navigation-mode="nonlinear">
+    <qti-assessment-section title="Nieuwe sectie" identifier="a" visible="true">
+
+      <qti-assessment-item-ref href="items/afvalbak.xml" identifier="ITM-afvalbak"></qti-assessment-item-ref>
+      <qti-assessment-item-ref href="items/fietsenstalling.xml" identifier="ITM-fietsenstalling"></qti-assessment-item-ref>
+      <qti-assessment-item-ref href="items/supermarkt.xml" identifier="ITM-supermarkt"></qti-assessment-item-ref>
+      <qti-assessment-item-ref href="items/waterkraan.xml" identifier="ITM-waterkraan"></qti-assessment-item-ref>
+      <qti-assessment-item-ref href="items/zonnepanelen.xml" identifier="ITM-zonnepanelen-1"></qti-assessment-item-ref>
+
+    </qti-assessment-section>
+  </qti-test-part>
+
+</qti-assessment-test>

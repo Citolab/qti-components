@@ -17,7 +17,7 @@ export default {
   }
 };
 
-export const Interaction = {
+export const Default = {
   render: args =>
     html`<qti-associate-interaction
       response-identifier=${ifDefined(args['response-identifier'])}

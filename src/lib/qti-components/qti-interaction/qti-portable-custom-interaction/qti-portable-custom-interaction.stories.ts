@@ -6,7 +6,7 @@ export default {
   component: 'qti-portable-custom-interaction'
 };
 
-export const Interaction = {
+export const Default = {
   render: args =>
     html`<qti-portable-custom-interaction
       response-identifier="RESPONSE"

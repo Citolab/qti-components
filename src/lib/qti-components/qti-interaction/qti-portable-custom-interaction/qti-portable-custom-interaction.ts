@@ -126,18 +126,25 @@ export class QtiPortableCustomInteraction extends LitElement {
     requirePCI(
       ['require'],
       require => {
-        define('qtiCustomInteractionContext', () => {
-          return {
-            register: ctxA => {
-              this.register(ctxA);
-            },
-            notifyReady: () => {
-              /* only used in the TAO version */
-            }
-          };
-        });
-        require([this.module], () => {
-          /* nothing */
+        !require.defined('qtiCustomInteractionContext') &&
+          define('qtiCustomInteractionContext', () => {
+            return {
+              register: ctxA => {
+                this.register(ctxA);
+              },
+              notifyReady: () => {
+                /* only used in the TAO version */
+              }
+            };
+          });
+        // PK: this is a hack to make sure that the interaction is only registered once
+        // If it was previsouly loaded, the register will nog kick in, because the class is already defined
+        // and in the constructor of the PCI, the register is called.
+        // So now it is alreadly defined, we just register it ourselves.
+        const wasPreviouslyLoaded = require.defined(this.module);
+        require([this.module], ctxA => {
+          // register it because it was previously loaded
+          wasPreviouslyLoaded && this.register(ctxA);
         }, err => {
           this._errorMessage = err;
         });

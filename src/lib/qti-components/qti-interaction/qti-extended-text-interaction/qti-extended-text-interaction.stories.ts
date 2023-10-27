@@ -31,28 +31,27 @@ const meta: Meta = {
 };
 export default meta;
 
-export const Interaction = {
-  render: args =>
-    html`
-      <qti-extended-text-interaction
-        @qti-register-interaction="${action(`qti-register-interaction`)}"
-        @qti-interaction-response="${action(`qti-interaction-response`)}"
-        response-identifier=${args['response-identifier']}
-        .response=${args.response}
-        ?disabled=${args.disabled}
-        ?readonly=${args.readonly}
-        placeholder-text=${ifDefined(args['placeholder-text'])}
-        class="${args.class}"
-        expected-length=${ifDefined(args['expected-length'])}
-        pattern-mask=${ifDefined(args['pattern-mask'])}
-        data-patternmask-message=${ifDefined(args['data-pattern-mask-message'])}
-      >
-      </qti-extended-text-interaction>
-    `
+export const Default = {
+  render: args => html`
+    <qti-extended-text-interaction
+      @qti-register-interaction="${action(`qti-register-interaction`)}"
+      @qti-interaction-response="${action(`qti-interaction-response`)}"
+      response-identifier=${args['response-identifier']}
+      .response=${args.response}
+      ?disabled=${args.disabled}
+      ?readonly=${args.readonly}
+      placeholder-text=${ifDefined(args['placeholder-text'])}
+      class="${args.class}"
+      expected-length=${ifDefined(args['expected-length'])}
+      pattern-mask=${ifDefined(args['pattern-mask'])}
+      data-patternmask-message=${ifDefined(args['data-pattern-mask-message'])}
+    >
+    </qti-extended-text-interaction>
+  `
 };
 
-export const patternMask = {
-  render: Interaction.render,
+export const PatternMask = {
+  render: Default.render,
   args: {
     'pattern-mask': '[A-Za-z]{3}',
     'data-pattern-mask-message': 'Alleen maar 3 letters toegestaan'

@@ -7,7 +7,7 @@ export default {
   component: 'qti-select-point-interaction'
 };
 
-export const Interaction = {
+export const Default = {
   render: args =>
     html`<qti-position-object-stage>
       <img src="https://qti-convert.web.app/images/uk.png" width="206" height="280" />

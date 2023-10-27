@@ -35,7 +35,7 @@ type Interaction = {
   disabled: boolean;
 };
 
-export const Interaction = {
+export const Default = {
   render: args => {
     const { min, max, step, orientation, stepLabel, reverse, response, readonly, disabled } = args;
     return html`

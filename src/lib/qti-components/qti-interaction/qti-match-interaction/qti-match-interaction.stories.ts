@@ -7,7 +7,7 @@ export default {
   component: 'qti-match-interaction'
 };
 
-export const Interaction = {
+export const Default = {
   render: args =>
     html` <qti-match-interaction
       .dragOptions=${{ copyStylesDragClone: false }}

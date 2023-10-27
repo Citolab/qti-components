@@ -35,6 +35,7 @@ export class QtiSelectPointInteraction extends Interaction {
                 left: `${point.split(' ')[0]}px`,
                 top: `${point.split(' ')[1]}px`
               })}
+              aria-label="Remove point at ${point}"
               @click=${(e: Event) => {
                 e.stopPropagation();
                 this._points = this._points.filter((_, i) => i !== index);
@@ -49,7 +50,7 @@ export class QtiSelectPointInteraction extends Interaction {
 
   static override styles = [
     css`
-      host() {
+      :host {
         display: block;
       }
       point-container {
