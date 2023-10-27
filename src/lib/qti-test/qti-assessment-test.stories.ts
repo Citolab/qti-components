@@ -34,7 +34,7 @@ export default {
   decorators: [story => html`${virtual(story)()}`]
 };
 
-export const QtiAssessmentTestStory = {
+export const Default = {
   render: (args, { argTypes, loaded: { manifestData } }) => {
     return html`${QtiTestVirtual(manifestData)}`;
   },

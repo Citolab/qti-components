@@ -46,7 +46,7 @@ const meta: Meta = {
 };
 export default meta;
 
-export const Interaction = {
+export const Default = {
   render: args => {
     return html` <qti-choice-interaction
       data-max-selections-message="Too little selections made"
@@ -87,7 +87,7 @@ export const Interaction = {
 };
 
 export const Simple: Story = {
-  render: Interaction.render,
+  render: Default.render,
   args: {
     orientation: 'vertical',
     classes: ['qti-input-control-hidden', 'qti-choices-stacking-2']
@@ -95,7 +95,7 @@ export const Simple: Story = {
 };
 
 export const Multiple: Story = {
-  render: Interaction.render,
+  render: Default.render,
   args: {
     orientation: 'vertical',
     classes: ['qti-choices-stacking-2'],

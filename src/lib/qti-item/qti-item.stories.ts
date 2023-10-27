@@ -29,7 +29,7 @@ export default {
   }
 };
 
-export const QtiItemStory = {
+export const Default = {
   render: (args, { argTypes, loaded: { loadeditems } }) => {
     const items: { href: string; identifier: string }[] = loadeditems.items;
 
