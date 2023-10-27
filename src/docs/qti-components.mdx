@@ -1,29 +1,11 @@
-import { Canvas, Meta, Story } from '@storybook/blocks';
+import { Canvas, Meta } from '@storybook/blocks';
 import './documentation.tailwind.css';
 
 <Meta title="QTI Components" />
 
 # QTI Components
 
-Using the standard for non-standard tests
-
-## Promise
-
-Renders basic QTI3 XML's.
-QTI components are an implementation of the QTI standard in webcomponents
-
-## Installation
-
-```
-npm install @citolab/qti-components@latest
-```
-
-```js
-import '@citolab/qti-components';
-```
-
-https://jsfiddle.net/mrklein/s97Ld0gn/20/
-https://codepen.io/trickyjs/pen/xxyyWLG
+Webcomponents for QTI
 
 import * as QtiChoiceInteractionStory from '../lib/qti-components/qti-interaction/qti-choice-interaction/qti-choice-interaction.stories';
 
@@ -31,13 +13,15 @@ import * as QtiAssessmentTestStory from '../lib/qti-test/qti-assessment-test.sto
 
 import * as QtiItemStory from '../lib/qti-item/qti-item.stories';
 
-### Choice
+### Qti Item
 
-<Canvas of={QtiChoiceInteractionStory.Default} />
+<Canvas of={QtiItemStory.Default} />
+
+### Qti Test
 
 <Canvas of={QtiAssessmentTestStory.Default} />
 
-<Canvas of={QtiItemStory.Default} />
+<Canvas of={QtiChoiceInteractionStory.Default} />
 
 ## Features
 
@@ -50,19 +34,22 @@ import * as QtiItemStory from '../lib/qti-item/qti-item.stories';
 - Composable, just like lego bricks you can you make your own player, review or builder
 - Serverless, rendering and scoring can be done on the frontend
 - Responsive, support for different screen resolutions
-- Extensible with customized qti-interactions ( see qti-components-custom )
+- Extensible
 - No clever code (ie hacks!)
 - Embraces different platforms ( touch/mouse ) and their way of input
 - Pluggable responseprocessing ( see qti-components-responseprocessing )
-- Framework agnostic, use with Vue, React, Angular or plain vanilla
-- Lightweight, core bundle is just 17kb not minified
+- Framework agnostic, use with Vue, React, Angular, Vanilla, or in HTML
+- Lightweight
 - Few dependencies, only one dependency on @Lit
-- Stateless, event based, no state is managed
 - Expose relevant components to light dom for easy styling
-- Examples in plain vanilla javascript
+- Typescript
 
-# How to use
+## Installation
 
-- qti-item
-- qti-components
-- qti-transform
+```
+npm install @citolab/qti-components@latest
+```
+
+```js
+import '@citolab/qti-components';
+```

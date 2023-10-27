@@ -10,7 +10,8 @@ import './qti-test.css';
 import { QtiTestHaunted } from './qti-test.haunted';
 
 export default {
-  title: 'qti-test',
+  title: 'qti-test/qti-assessment-test',
+  component: 'qti-assessment-test',
   argTypes: {
     view: {
       options: ['candidate', 'scorer'],

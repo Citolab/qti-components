@@ -8,8 +8,10 @@ import { QtiItem } from '@citolab/qti-components/qti-item';
 import { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
 
 import packages from '../../assets/api/packages.json';
+import { fetchManifestData } from '@citolab/qti-components/qti-test';
 
 export default {
+  title: 'qti-item/Default',
   component: 'qti-item',
   decorators: [story => html`${virtual(story)()}`],
   argTypes: {
@@ -30,8 +32,8 @@ export default {
 };
 
 export const Default = {
-  render: (args, { argTypes, loaded: { loadeditems } }) => {
-    const items: { href: string; identifier: string }[] = loadeditems.items;
+  render: (args, { argTypes, loaded: { manifestData } }) => {
+    const items: { href: string; identifier: string }[] = manifestData.items;
 
     const qtiItemRef = useRef<QtiAssessmentItem>(null);
     const assessmentItemRef = createRef<QtiItem>();
@@ -62,9 +64,7 @@ export const Default = {
   },
   loaders: [
     async args => ({
-      loadeditems: await fetch(`${args.args.serverLocation}/${args.args.qtipkg}/items.json`)
-        .then(response => (response.ok ? response.json() : console.log('error')))
-        .catch(console.log)
+      manifestData: await fetchManifestData(`${args.args.serverLocation}/${args.args.qtipkg}`)
     })
   ]
 };

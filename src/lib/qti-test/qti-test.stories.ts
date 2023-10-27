@@ -10,7 +10,8 @@ import { QtiAssessmentTest } from '@citolab/qti-components/qti-test';
 import packages from '../../assets/api/packages.json';
 
 export default {
-  title: 'qti-test',
+  title: 'qti-test/qti-test',
+  component: 'qti-test',
   argTypes: {
     view: {
       options: ['candidate', 'scorer'],
@@ -44,7 +45,7 @@ export default {
   decorators: [story => html`${virtual(story)()}`]
 };
 
-export const QtiTestStory = {
+export const Default = {
   render: args => {
     const testEl = createRef<QtiAssessmentTest>();
 
