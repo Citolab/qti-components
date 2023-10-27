@@ -7,7 +7,7 @@ import '@citolab/qti-components/qti-components';
 import { QtiItem } from '@citolab/qti-components/qti-item';
 import { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
 
-import packages from '../../../public/assets/api/packages.json';
+import packages from '../../assets/packages.json';
 import { fetchManifestData } from '@citolab/qti-components/qti-test';
 
 export default {

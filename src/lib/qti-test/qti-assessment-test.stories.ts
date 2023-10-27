@@ -4,7 +4,7 @@ import { virtual } from 'haunted';
 import '@citolab/qti-components/qti-test';
 import '@citolab/qti-components/qti-components';
 
-import packages from '../../../public/assets/api/packages.json';
+import packages from '../../assets/packages.json';
 import { fetchManifestData } from './test-utils';
 import './qti-test.css';
 import { QtiTestHaunted } from './qti-test.haunted';
