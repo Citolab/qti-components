@@ -31,7 +31,7 @@ export class QtiMatch extends QtiExpression<boolean> {
         return false;
       }
       return ScoringHelper.compareSingleValues(
-        valueToMap.value.toString(),
+        valueToMap.value?.toString(),
         correctValueInfo.value.toString(),
         correctValueInfo.baseType
       );
