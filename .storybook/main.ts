@@ -1,3 +1,5 @@
+import * as tsconfigPaths from 'vite-tsconfig-paths';
+
 import type { StorybookConfig } from '@storybook/web-components-vite';
 import path from 'path';
 import remarkGfm from 'remark-gfm';
@@ -30,21 +32,15 @@ const config: StorybookConfig = {
   },
 
   async viteFinal(config, { configType }) {
-    config.resolve = {
-      ...config.resolve,
-      alias: {
-        ...config!.resolve!.alias, // only here for jest tests : https://github.com/storybookjs/storybook/issues/14856#issuecomment-1262333250
-        path: require.resolve('path-browserify'),
-        '@citolab/qti-components/qti-components': path.resolve(__dirname, '../src/lib/qti-components'),
-        '@citolab/qti-components/qti-test': path.resolve(__dirname, '../src/lib/qti-test'),
-        '@citolab/qti-components/qti-item': path.resolve(__dirname, '../src/lib/qti-item'),
-        '@citolab/qti-components/react/qti-test': path.resolve(__dirname, '../src/lib/qti-test-react'),
-        '@citolab/qti-components/react/qti-item': path.resolve(__dirname, '../src/lib/qti-item-react'),
-        '@citolab/qti-components/qti-transform': path.resolve(__dirname, '../src/lib/qti-transform')
-      }
+    return {
+      ...config,
+      optimizeDeps: {
+        ...config.optimizeDeps,
+        exclude: ['@citolab/qti-components']
+      },
+      plugins: [...config.plugins!, tsconfigPaths.default()],
+      resolve: { ...config.resolve, alias: { ...config!.resolve!.alias, path: require.resolve('path-browserify') } }
     };
-
-    return config;
   }
 };
 export default config;
