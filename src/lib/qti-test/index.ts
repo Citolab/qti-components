@@ -4,3 +4,4 @@ export * from './qti-test-part';
 export * from './qti-test';
 export * from './components';
 export * from './qti-assessment-test.context';
+export * from './test-utils';

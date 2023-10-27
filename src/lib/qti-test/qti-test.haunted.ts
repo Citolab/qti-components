@@ -1,4 +1,3 @@
-import { useEffect } from 'haunted';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { QtiAssessmentTest } from './qti-assessment-test';
@@ -17,8 +16,8 @@ export const QtiTestHaunted = manifestData => {
 
   return html`
     <qti-assessment-test
-      identifier="${md.testIdentifier}"
       ${ref(assessmentTestEl)}
+      identifier="${md.testIdentifier}"
       @on-test-set-item=${async ({ detail: identifier }) => {
         const itemRefEl = assessmentTestEl.value.itemRefEls.get(identifier.new);
         const newItemXML = await requestItem(`${md.itemLocation}/${itemRefEl.href}`);

@@ -66,6 +66,7 @@ interface QtiAssessmentTestProps {
   className?: string;
   context?: TestContext;
   ref?: Ref<WcQtiAssessmentTest | undefined>;
+  identifier: string;
 
   onOutcomeChanged?: (e: CustomEvent<OutcomeChangedDetails>) => void;
   onInteractionChanged?: (e: CustomEvent<InteractionChangedDetails>) => void;
