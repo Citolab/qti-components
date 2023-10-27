@@ -7,7 +7,7 @@ export default {
   component: 'qti-select-point-interaction'
 };
 
-export const Interaction = {
+export const Default = {
   render: args =>
     html` <qti-select-point-interaction
       @qti-register-interaction=${action(`qti-register-interaction`)}

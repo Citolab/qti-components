@@ -42,8 +42,8 @@ export class QtiPositionObjectStage extends LitElement {
     this.startY = event.clientY;
   }
 
-  override connectedCallback(): void {
-    super.connectedCallback();
+  override firstUpdated(a): void {
+    super.firstUpdated(a);
 
     // Get the draggable and drop zone elements
     this.dragElement = this.querySelector('qti-position-object-interaction>img');

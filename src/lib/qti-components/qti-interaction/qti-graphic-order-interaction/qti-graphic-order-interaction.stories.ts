@@ -7,7 +7,7 @@ export default {
   component: 'qti-graphic-order-interaction'
 };
 
-export const Interaction = {
+export const Default = {
   render: args =>
     html` <qti-graphic-order-interaction max-choices="0" response-identifier="RESPONSE1">
       <img src="qti-graphic-order-interaction/uk.png" height="280" width="206" />

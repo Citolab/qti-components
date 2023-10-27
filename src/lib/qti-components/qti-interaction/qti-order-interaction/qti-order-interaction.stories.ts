@@ -46,29 +46,28 @@ export default {
   }
 };
 
-export const Interaction = {
-  render: args =>
-    html`
-      <qti-order-interaction
-        @qti-register-interaction="${action(`qti-register-interaction`)}"
-        @qti-interaction-response="${action(`qti-interaction-response`)}"
-        .disabled=${args.disabled}
-        .readonly=${args.readonly}
-        orientation=${ifDefined(args.orientation)}
-        class=${ifDefined(
-          args.classes ? (Array.isArray(args.classes) ? args.classes.join(' ') : args.classes) : undefined
-        )}
-        response-identifier="RESPONSE"
+export const Default = {
+  render: args => html`
+    <qti-order-interaction
+      @qti-register-interaction="${action(`qti-register-interaction`)}"
+      @qti-interaction-response="${action(`qti-interaction-response`)}"
+      .disabled=${args.disabled}
+      .readonly=${args.readonly}
+      orientation=${ifDefined(args.orientation)}
+      class=${ifDefined(
+        args.classes ? (Array.isArray(args.classes) ? args.classes.join(' ') : args.classes) : undefined
+      )}
+      response-identifier="RESPONSE"
+    >
+      <qti-prompt
+        >The following F1 drivers finished on the podium in the first ever Grand Prix of Bahrain. Can you rearrange them
+        into the correct finishing order?</qti-prompt
       >
-        <qti-prompt
-          >The following F1 drivers finished on the podium in the first ever Grand Prix of Bahrain. Can you rearrange
-          them into the correct finishing order?</qti-prompt
-        >
-        <qti-simple-choice identifier="DriverA">Rubens</qti-simple-choice>
-        <qti-simple-choice identifier="DriverB">Jenson</qti-simple-choice>
-        <qti-simple-choice identifier="DriverC">Michael</qti-simple-choice>
-      </qti-order-interaction>
-    `,
+      <qti-simple-choice identifier="DriverA">Rubens</qti-simple-choice>
+      <qti-simple-choice identifier="DriverB">Jenson</qti-simple-choice>
+      <qti-simple-choice identifier="DriverC">Michael</qti-simple-choice>
+    </qti-order-interaction>
+  `,
 
   args: {}
 };

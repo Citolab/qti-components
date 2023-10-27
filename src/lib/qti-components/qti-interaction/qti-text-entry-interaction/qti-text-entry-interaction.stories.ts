@@ -27,24 +27,23 @@ export default {
   }
 };
 
-export const Interaction = {
-  render: args =>
-    html`
-      <qti-text-entry-interaction
-        @qti-register-interaction="${action(`qti-register-interaction`)}"
-        @qti-interaction-response="${action(`qti-interaction-response`)}"
-        .response=${args.response}
-        ?disabled=${args.disabled}
-        ?readonly=${args.readonly}
-        placeholder-text="totaal"
-        class="text-entry-interaction ${inputWidthClass}"
-        expected-length=${args.expectedLength}
-        pattern-mask=${args.patternMask}
-        data-patternmask-message=${args.dataPatternmaskMessage}
-        response-identifier="RESPONSE"
-      >
-      </qti-text-entry-interaction>
-    `,
+export const Default = {
+  render: args => html`
+    <qti-text-entry-interaction
+      @qti-register-interaction="${action(`qti-register-interaction`)}"
+      @qti-interaction-response="${action(`qti-interaction-response`)}"
+      .response=${args.response}
+      ?disabled=${args.disabled}
+      ?readonly=${args.readonly}
+      placeholder-text="totaal"
+      class="text-entry-interaction ${inputWidthClass}"
+      expected-length=${args.expectedLength}
+      pattern-mask=${args.patternMask}
+      data-patternmask-message=${args.dataPatternmaskMessage}
+      response-identifier="RESPONSE"
+    >
+    </qti-text-entry-interaction>
+  `,
 
   args: {}
 };

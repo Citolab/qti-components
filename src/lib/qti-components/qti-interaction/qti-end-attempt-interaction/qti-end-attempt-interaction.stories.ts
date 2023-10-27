@@ -15,7 +15,7 @@ const meta: Meta = {
 };
 export default meta;
 
-export const Interaction = {
+export const Default = {
   render: args => html`
     <qti-assessment-item
       @qti-register-interaction="${action(`qti-register-interaction`)}"
@@ -31,7 +31,7 @@ export const Interaction = {
   `
 };
 
-export const XML = {
+export const Example = {
   render: () => {
     const qtiItemRef = useRef<QtiAssessmentItem>(null);
     return html`<qti-item
