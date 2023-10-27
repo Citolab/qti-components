@@ -1,22 +1,14 @@
 import { Canvas, Meta, Controls, Source } from '@storybook/blocks';
 import '../../docs/documentation.tailwind.css';
 
-<Meta title="QTI Item" />
+<Meta title="qti-item/qti-item" />
 
-# QTI Item
-
-Using the standard for non-standard tests
-
-## Promise
-
-Renders basic QTI3 XML's.
+# qti-item
 
 import * as QtiItemStory from './qti-item.stories';
 
-### Choice
-
 <Canvas of={QtiItemStory.Default} />
-<Controls of={QtiItemStory.Default} />
-
 <Source of={QtiItemStory.Default} />
-## Features
+
+<Canvas of={QtiItemStory.Item} />
+<Controls of={QtiItemStory.Item} />

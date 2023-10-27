@@ -23,7 +23,7 @@ function QtiTestComponent(element) {
     fetchManifest(element.packageUri).then(manifest => {
       setManifestData(manifest);
     });
-  }, []);
+  }, [element.packageUri]);
 
   return html`${manifestData ? virtual(QtiTestHaunted)(manifestData) : ``}`;
 }
