@@ -24,16 +24,16 @@ const config: StorybookConfig = {
     name: '@storybook/web-components-vite',
     options: {}
   },
-  staticDirs: ['../src/assets'],
+  staticDirs: ['../public/assets'],
   docs: {
     autodocs: 'tag'
   },
-  // onlye here for jest tests : https://github.com/storybookjs/storybook/issues/14856#issuecomment-1262333250
+
   async viteFinal(config, { configType }) {
     config.resolve = {
       ...config.resolve,
       alias: {
-        ...config!.resolve!.alias,
+        ...config!.resolve!.alias, // only here for jest tests : https://github.com/storybookjs/storybook/issues/14856#issuecomment-1262333250
         path: require.resolve('path-browserify'),
         '@citolab/qti-components/qti-components': path.resolve(__dirname, '../src/lib/qti-components'),
         '@citolab/qti-components/qti-test': path.resolve(__dirname, '../src/lib/qti-test'),

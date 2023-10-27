@@ -7,7 +7,7 @@ import '@citolab/qti-components/qti-test';
 import '@citolab/qti-components/qti-components';
 import { QtiAssessmentTest } from '@citolab/qti-components/qti-test';
 
-import packages from '../../assets/api/packages.json';
+import packages from '../../../public/assets/api/packages.json';
 
 export default {
   title: 'qti-test/qti-test',

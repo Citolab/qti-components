@@ -1,4 +1,4 @@
-import { LitElement } from 'lit';
+import { LitElement, PropertyValueMap } from 'lit';
 export class QtiStylesheet extends LitElement {
   private styleLink: HTMLStyleElement | HTMLLinkElement;
 
@@ -6,8 +6,9 @@ export class QtiStylesheet extends LitElement {
     super();
   }
 
-  public override connectedCallback() {
-    super.connectedCallback();
+  protected firstUpdated(_changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
+    super.firstUpdated(_changedProperties);
+
     const item = this.closest('qti-assessment-item');
     const link = this.getAttribute('href');
 
@@ -20,6 +21,7 @@ export class QtiStylesheet extends LitElement {
       item.appendChild(styles);
       this.styleLink = styles;
     }
+
     if (this.textContent !== null) {
       const styles = document.createElement('style');
       styles.media = 'screen';

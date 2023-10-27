@@ -1,8 +1,8 @@
 import { Canvas, Meta, Story } from '@storybook/blocks';
 
-import * as StylesheetStories from './qti-stylesheet.stories';
+import * as Stories from './qti-stylesheet.stories';
 
-<Meta of={StylesheetStories} />
+<Meta of={Stories} />
 
 # stylesheet
 
@@ -10,4 +10,10 @@ A stylesheet is a square box that can be activated or deactivated when ticked.
 
 Use stylesheets to select one or more options from a list of choices.
 
-<Canvas of={StylesheetStories.Default} />
+## Linked variant
+
+<Canvas of={Stories.Default} />
+
+## Inline variant ( not qti supported )
+
+<Canvas of={Stories.Inline} />
