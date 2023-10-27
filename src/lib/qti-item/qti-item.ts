@@ -10,10 +10,6 @@ import { qtiTransform } from '../qti-transform';
 import { QtiAssessmentItem } from '../qti-components';
 
 @customElement('qti-item')
-/**
- * A custom element representing a QTI item.
- * @element qti-item
- */
 export class QtiItem extends LitElement {
   /**
    * The location of the item.

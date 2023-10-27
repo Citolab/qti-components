@@ -32,15 +32,7 @@ export default {
 
 export const Default = {
   render: args => {
-    const assessmentItemRef = createRef<QtiItem>();
-
-    const view = args.view;
-
     return html` <qti-item
-      ${ref(assessmentItemRef)}
-      @qti-interaction-changed=${action(`on-interaction-changed`)}
-      @qti-outcome-changed=${action(`qti-outcome-changed`)}
-      @qti-item-connected=${action(`qti-item-connected`)}
       .xml=${xml`<qti-assessment-item>
   <qti-item-body>
     <p>Look at the text in the picture.</p>
