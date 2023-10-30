@@ -22,7 +22,7 @@ export default {
 export const Default = {
   render: args => html`
     <qti-media-interaction
-      autostart=${args.autostart}
+      autostart="false"
       loop=${args.loop}
       min-plays=${args.minPlays}
       max-plays=${args.maxPlays}
@@ -35,7 +35,7 @@ export const Default = {
       ?readonly=${args.readonly}
     >
       <qti-prompt>Play this video.</qti-prompt>
-      <video width="320" height="240">
+      <video width="320" height="240" controls>
         <source src="qti-media-interaction/earth.mp4" type="video/mp4" />
         Your browser does not support the video tag
       </video>
@@ -52,7 +52,7 @@ export const Item = {
         @qti-outcome-changed=${action(`qti-outcome-changed`)}
         @qti-interaction-changed=${action(`qti-interaction-changed`)}
         @qti-item-connected=${({ detail }) => (qtiItemRef.current = detail)}
-        xml=${xml}
+        .xml=${xml}
       ></qti-item>
       <button @click=${() => qtiItemRef.current.processResponse()}>PROCESS</button>`;
   }

@@ -1,8 +1,8 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <qti-assessment-item
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd
-																							   http://www.duo.nl/schema/dep_extension ../dep_extension.xsd"
+                      http://www.duo.nl/schema/dep_extension ../dep_extension.xsd"
   title="32cpek"
   identifier="ITM-32cpek"
   time-dependent="false"
@@ -55,38 +55,32 @@
           <p>
             <strong>Zenuwstelsel</strong>
           </p>
-          <p>
-            De man in het filmfragment heeft een ziekte.
-            <br />
-            Deze ziekte wordt veroorzaakt door een verminderde werking van een deel van het zenuwstelsel.
-            <br />
-            Door dit probleem wordt het dagelijkse functioneren voor hem steeds moeilijker.
-          </p>
+          <p> De man in het filmfragment heeft een
+      ziekte. <br /> Deze ziekte wordt veroorzaakt door een verminderde werking van een deel van het
+      zenuwstelsel. <br /> Door dit probleem wordt het dagelijkse functioneren voor hem steeds
+      moeilijker. </p>
           <p class="cito_genclass_Bi_BB_10_A_14-2012_1" />
-          <div id="I81a20d96-8b84-4c9e-8e5e-5e2c64e0def8">
+          <div
+            id="I81a20d96-8b84-4c9e-8e5e-5e2c64e0def8">
             <qti-media-interaction
               response-identifier="VIDEORESPONSE"
               autostart="false"
               max-plays="0"
               id="I6f9b9b94-5a79-477a-a462-19db78f7ebf1"
             >
-              <object
-                type="video/webm"
-                data="../video/BB_14a_T_WebM_Facet384x288.webm"
-                height="288"
-                width="384"
-                data-dep-description=""
-                data-dep-controls="true"
-                data-dep-controlslist="start pause stop scroll"
-              />
+              <video width="384" height="288" controls="true">
+                <source src="../video/BB_14a_T_WebM_Facet384x288.webm" type="video/webm" />
+              </video>
             </qti-media-interaction>
           </div>
           <p />
         </div>
 
-        <div class="qti-layout-col6">
+        <div
+          class="qti-layout-col6">
           <div id="body">
-            <p>In de afbeelding zie je een hersendoorsnede. Enkele delen zijn met een cijfer aangegeven.</p>
+            <p>In de afbeelding zie je een hersendoorsnede. Enkele delen zijn met een cijfer
+      aangegeven.</p>
             <p>
               <img
                 id="Id-IMG_058431cf-1d8e-4390-bb5c-bfc5524f91bd"
@@ -100,9 +94,8 @@
 
           <div id="question">
             <p>
-              <strong>
-                Welk cijfer geeft het deel van het zenuwstelsel aan dat bij de man in het filmfragment niet goed werkt?
-              </strong>
+              <strong> Welk cijfer geeft het deel van het zenuwstelsel aan dat bij de man in het
+      filmfragment niet goed werkt? </strong>
             </p>
           </div>
 
@@ -131,5 +124,6 @@
       </div>
     </div>
   </qti-item-body>
-  <qti-response-processing template="https://purl.imsglobal.org/spec/qti/v3p0/rptemplates/match_correct.xml" />
+  <qti-response-processing
+    template="https://purl.imsglobal.org/spec/qti/v3p0/rptemplates/match_correct.xml" />
 </qti-assessment-item>

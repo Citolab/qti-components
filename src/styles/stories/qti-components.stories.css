@@ -8,4 +8,4 @@
 
 @import 'tailwindcss/utilities';
 
-@config "../../../tailwind.config.theme.cjs";
+@config "./tailwind.config.qti-components.cjs";

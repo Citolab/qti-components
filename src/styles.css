@@ -5,12 +5,8 @@
   https://play.tailwindcss.com/CeHVrnwgXR
   https://play.tailwindcss.com/JOgoCf81JM
 
-  We make use of the default prose stylesheet, since it is much better looking then
-  the default HTML styling.
-  https://play.tailwindcss.com/uj1vGACRJA?layout=preview
+  You should in you project include modern-normalize.css
 
-  So first we ( as tailwind does ) reset ALL styling on all default elements
-  Then we add the prose stylesheet: the Interaction will / or will not have a no-prose declaration, don't know about that yet
   Then we create tailwind components
   Then we consume these components in our qti-webcomponents
 

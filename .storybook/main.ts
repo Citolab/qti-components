@@ -1,7 +1,5 @@
 import * as tsconfigPaths from 'vite-tsconfig-paths';
-
 import type { StorybookConfig } from '@storybook/web-components-vite';
-import path from 'path';
 import remarkGfm from 'remark-gfm';
 
 const config: StorybookConfig = {

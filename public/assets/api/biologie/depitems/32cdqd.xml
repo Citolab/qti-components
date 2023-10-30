@@ -1,8 +1,8 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <qti-assessment-item
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd
-																							   http://www.duo.nl/schema/dep_extension ../dep_extension.xsd"
+                      http://www.duo.nl/schema/dep_extension ../dep_extension.xsd"
   title="32cdqd"
   identifier="ITM-32cdqd"
   time-dependent="false"
@@ -59,46 +59,44 @@
             <p>
               <strong>Schrikken</strong>
             </p>
-            <p>In het filmfragment zie je de training van paarden voor Prinsjesdag.</p>
+            <p>In het filmfragment zie je de training
+      van paarden voor Prinsjesdag.</p>
             <p class="cito_genclass_bi_BB_037_04_1" />
-            <div id="I13dd68b3-57fb-4e9a-ace1-51c833de140e">
+            <div
+              id="I13dd68b3-57fb-4e9a-ace1-51c833de140e">
               <qti-media-interaction
                 response-identifier="VIDEORESPONSE"
                 autostart="false"
                 max-plays="0"
                 id="I58af13aa-d4ad-477b-acf2-51a947b91bda"
               >
-                <object
-                  type="video/webm"
-                  data="../video/BIvmbo16-Cavalerie.webm"
-                  height="288"
-                  width="384"
-                  data-dep-description=""
-                  data-dep-controls="true"
-                  data-dep-controlslist="start pause stop scroll"
-                />
+
+                <video width="384" height="288" controls="true">
+                  <source src="../video/BIvmbo16-Cavalerie.webm" type="video/webm" />
+                </video>
               </qti-media-interaction>
             </div>
             <p />
           </div>
         </div>
 
-        <div class="qti-layout-col6">
+        <div
+          class="qti-layout-col6">
           <div id="body">
-            <p>
-              De paarden worden getraind om rustig te blijven als ze onbekende voorwerpen tegenkomen. Als een paard
-              schrikt, kan het steigeren en hard wegrennen. Deze reacties vinden onbewust plaats en hebben als doel het
-              dier te beschermen tegen schade.
-            </p>
+            <p> De paarden worden getraind om rustig te blijven als ze onbekende voorwerpen
+      tegenkomen. Als een paard schrikt, kan het steigeren en hard wegrennen. Deze reacties vinden
+      onbewust plaats en hebben als doel het dier te beschermen tegen schade. </p>
           </div>
 
-          <div id="question">
+          <div
+            id="question">
             <p>
               <strong>Hoe noemen we zulke onbewuste reacties?</strong>
             </p>
           </div>
 
-          <div class="cito_genclass_bi_BB_037_04_2">
+          <div
+            class="cito_genclass_bi_BB_037_04_2">
             <div>
               <qti-extended-text-interaction
                 response-identifier="RESPONSE"

@@ -11,7 +11,7 @@
     xmlns:dep="http://www.duo.nl/schema/dep_extension"
 >
     <qti-item-body>
-        <qti-media-interaction autostart="false" loop="true" response-identifier="RESPONSE">
+        <qti-media-interaction autostart="false" response-identifier="RESPONSE">
             <qti-prompt>Play this video.</qti-prompt>
             <video width="320" height="240" controls="true">
                 <source src="qti-media-interaction/earth.mp4" type="video/mp4" /> Your browser does

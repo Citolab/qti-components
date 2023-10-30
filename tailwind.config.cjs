@@ -10,7 +10,7 @@ based on their tagname */
 
 export default {
   corePlugins: {
-    preflight: true,
+    preflight: false,
   },
   content: [],
   theme: {
@@ -21,7 +21,7 @@ export default {
     }
   },
   plugins: [
-    require('@tailwindcss/typography'),
+    // require('@tailwindcss/typography'),
     /* PK: created a plugin for the ::part psuedo selector which tailwind
     does not support out of the box, specific for webcomponents, could add slotted also
     usage : part-[selector]:bg-red-400
