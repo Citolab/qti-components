@@ -8,6 +8,7 @@ import { userEvent, within } from '@storybook/testing-library';
 import type { Meta, StoryObj } from '@storybook/web-components';
 
 import '../../index';
+import { QtiAssessmentItem, QtiChoiceInteraction } from '../../index';
 
 type Story = StoryObj; // <Props>;
 
@@ -49,6 +50,7 @@ export default meta;
 export const Default = {
   render: args => {
     return html` <qti-choice-interaction
+      data-testid="qti-choice-interaction"
       data-max-selections-message="Too little selections made"
       data-min-selections-message="Too much selections made"
       response-identifier=${args['response-identifier']}
@@ -104,6 +106,21 @@ export const Multiple: Story = {
   }
 };
 
+export const CorrectResponse: Story = {
+  render: Default.render,
+  args: {
+    orientation: 'vertical',
+    classes: ['qti-input-control-hidden', 'qti-choices-stacking-2'],
+    'min-choices': 1,
+    'max-choices': 2
+  },
+  play: ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const el = canvas.getByTestId('qti-choice-interaction') as QtiChoiceInteraction;
+    el.correctResponse = ['choice-1', 'choice-2'];
+  }
+};
+
 export const ContentEditable = {
   render: () => {
     return html`
@@ -119,12 +136,3 @@ export const ContentEditable = {
     `;
   }
 };
-
-// export const PercentageImplemented = {
-//   render: ({ args }, { argTypes }) =>
-//     html`<progress id="file" max=${Object.keys(argTypes).length} value="3">70%</progress> ${JSON.stringify(
-//         argTypes,
-//         null,
-//         4
-//       )}`
-// };

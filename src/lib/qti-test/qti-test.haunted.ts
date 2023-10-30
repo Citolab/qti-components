@@ -23,8 +23,7 @@ export const QtiTestHaunted = manifestData => {
             const itemRefEl = assessmentTestEl.value.itemRefEls.get(identifier.new);
             const newItemXML = await requestItem(`${md.itemLocation}/${itemRefEl.href}`);
             itemRefEl.xml = newItemXML;
-            itemRefEl.scrollIntoView({ block: 'center', inline: 'center', behavior: 'instant' });
-            assessmentTestEl.value.itemRefEls.forEach(
+            assessmentTestEl.value?.itemRefEls.forEach(
               (value, key) => value.identifier !== itemRefEl.identifier && (value.xml = '')
             );
           }}
@@ -32,8 +31,11 @@ export const QtiTestHaunted = manifestData => {
             // const storedTestContext = JSON.parse(localStorage.getItem(`${md.testIdentifier}-assessment-test-context`));
             // storedTestContext && (assessmentTestEl.value.context = storedTestContext);
           }}
+          audience-context=""
+          item-index="0"
         >
           <test-show-index></test-show-index>
+
           <qti-test-part>
             <qti-assessment-section>
               ${md.items.map(
@@ -50,31 +52,28 @@ export const QtiTestHaunted = manifestData => {
           </qti-test-part>
 
           <div class="nav">
-            <test-prev>
-              <svg class="arrow" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path
-                  fill-rule="evenodd"
-                  d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-            </test-prev>
-
+            <test-prev> &#9001; </test-prev>
             <test-paging-buttons></test-paging-buttons>
-
-            <test-next>
-              <svg class="arrow" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path
-                  fill-rule="evenodd"
-                  d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-            </test-next>
+            <test-next> &#9002; </test-next>
           </div>
 
           <test-slider></test-slider>
+
+          <test-toggle-scoring></test-toggle-scoring>
+
+          <test-manual-scoring></test-manual-scoring>
         </qti-assessment-test>
       `
     : ``;
 };
+
+// <label>
+//   <input
+//     type="checkbox"
+//     @change=${(e: Event) => {
+//       const el = e.target as HTMLInputElement;
+//       setAudienceContext(el.checked ? 'scorer' : 'candidate');
+//     }}
+//   />
+//   Toggle audience context
+// </label>

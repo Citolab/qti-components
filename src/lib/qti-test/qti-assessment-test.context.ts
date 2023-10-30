@@ -6,6 +6,7 @@ interface ItemInfo {
 }
 export class TestContext {
   itemIndex: number | null;
+  audienceContext: 'candidate' | 'scorer';
   items: ItemContext[];
 }
 

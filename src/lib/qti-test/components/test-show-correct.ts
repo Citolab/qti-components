@@ -18,7 +18,7 @@ export class TestShowCorrect extends LitElement {
       ?.assessmentItem as QtiAssessmentItem;
 
     return html`
-      <button part="button" @click=${_ => item.showCorrectResponse()}>
+      <button part="button" @click=${_ => item._showCorrectResponse()}>
         <slot></slot>
       </button>
     `;

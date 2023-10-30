@@ -6,6 +6,7 @@ import '@citolab/qti-components/qti-components';
 
 import { packages } from '../../assets/packages.json';
 export default {
+  // title: 'qti-test/qti-test',
   component: 'qti-test',
   argTypes: {
     view: {
@@ -23,7 +24,7 @@ export default {
   }
 };
 
-export const Default = {
+export const QtiTest = {
   render: args => {
     return html`
       <qti-test

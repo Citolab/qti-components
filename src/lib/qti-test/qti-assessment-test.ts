@@ -5,11 +5,21 @@ import { provide } from '@lit/context';
 import { TestContext, testContext } from './qti-assessment-test.context';
 import { QtiAssessmentItemRef } from './qti-assessment-item-ref';
 import { SignalWatcher, signal, Signal, effect } from '@lit-labs/preact-signals';
-
+import { AudienceContext } from '../context';
 @customElement('qti-assessment-test')
 export class QtiAssessmentTest extends LitElement {
+  @property({ type: String, reflect: true }) audienceContext:
+    | 'author'
+    | 'candidate'
+    | 'proctor'
+    | 'scorer'
+    | 'testConstructor'
+    | 'tutor';
+  @property({ type: String, reflect: true }) itemIndex: string;
+
   private _initialValue: TestContext = {
     itemIndex: 0,
+    audienceContext: 'candidate',
     items: []
   };
   @property({ type: String }) identifier: string;
@@ -23,6 +33,29 @@ export class QtiAssessmentTest extends LitElement {
   public set context(value: TestContext) {
     console.log('set context', value);
     this.signalContext.value = value;
+  }
+
+  updated(changedProperties: Map<string, any>) {
+    if (changedProperties.has('_context')) {
+      const oldIndex = changedProperties.get('_context')?.itemIndex;
+      if (
+        this.signalContext.value.items.length > 0 &&
+        this.signalContext.value.itemIndex !== null &&
+        oldIndex !== this.signalContext.value.itemIndex
+      ) {
+        this._requestItem(
+          this.signalContext.value.items[this.signalContext.value.itemIndex].identifier,
+          this.signalContext.value.items[oldIndex]?.identifier
+        );
+      }
+    }
+    if (changedProperties.has('audienceContext')) {
+      this.itemRefEls.forEach((value, key) => (value.audienceContext = { view: this.audienceContext }));
+      console.log('audienceContext', this.audienceContext);
+    }
+    if (changedProperties.has('itemIndex')) {
+      console.log('itemIndex', this.itemIndex);
+    }
   }
 
   constructor() {
@@ -117,22 +150,6 @@ export class QtiAssessmentTest extends LitElement {
       return;
     }
     this._emit<{ detail: QtiAssessmentItem }>('qti-assessment-first-updated', this);
-  }
-
-  updated(changedProperties: Map<string, any>) {
-    if (changedProperties.has('_context')) {
-      const oldIndex = changedProperties.get('_context')?.itemIndex;
-      if (
-        this.signalContext.value.items.length > 0 &&
-        this.signalContext.value.itemIndex !== null &&
-        oldIndex !== this.signalContext.value.itemIndex
-      ) {
-        this._requestItem(
-          this.signalContext.value.items[this.signalContext.value.itemIndex].identifier,
-          this.signalContext.value.items[oldIndex]?.identifier
-        );
-      }
-    }
   }
 
   private itemConnected = (item: QtiAssessmentItem): void => {

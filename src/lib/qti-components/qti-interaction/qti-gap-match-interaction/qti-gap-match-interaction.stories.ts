@@ -81,7 +81,7 @@ export const Example = {
     return html` <button @click="${() => testRef.value.processResponse()}">processResponse</button>
       <button
         @click=${() => {
-          testRef.value.showCorrectResponse();
+          testRef.value._showCorrectResponse();
         }}
       >
         set correct response

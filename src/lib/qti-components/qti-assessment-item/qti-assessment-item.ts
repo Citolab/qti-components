@@ -10,7 +10,8 @@ import type { QtiFeedback } from '../qti-feedback/qti-feedback';
 import type { QtiResponseProcessing } from '../qti-responseprocessing';
 import type { VariableDeclaration } from '../qti-utilities/Variables';
 import { ItemContext, itemContext } from './qti-assessment-item.context';
-import { provide } from '@lit/context';
+import { ContextConsumer, provide } from '@lit/context';
+import { audienceContext } from 'src/lib/context';
 
 /**
  * @summary The qti-assessment-item element contains all the other QTI 3 item structures.
@@ -163,16 +164,24 @@ export class QtiAssessmentItem extends LitElement {
     this.addEventListener('qti-interaction-response', this.handleUpdateResponseVariable);
   }
 
-  public showCorrectResponse() {
+  public logger = new ContextConsumer(this, audienceContext, e => this._showCorrectResponse(e.view == 'scorer'), true);
+
+  private _showCorrectResponse(show: boolean) {
     const responseVariables = this.context.variables.filter(
       (vari: ResponseVariable | OutcomeVariable) => 'correctResponse' in vari && vari.correctResponse
     ) as ResponseVariable[];
-    this.responses = responseVariables.map(cr => {
+    const responses = responseVariables.map(cr => {
       return {
         responseIdentifier: cr.identifier,
         response: cr.correctResponse
       };
     });
+    for (const response of responses) {
+      const interaction: Interaction | undefined = this._interactionElements.find(
+        i => i.getAttribute('response-identifier') === response.responseIdentifier
+      );
+      interaction && (interaction.correctResponse = show ? response.response : '');
+    }
   }
 
   public processResponse(countNumAttempts: boolean = true): boolean {
