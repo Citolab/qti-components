@@ -2,4 +2,6 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+@config "../tailwind.config.bundled.cjs";
+
 @import './styles/qti-styles.css';
