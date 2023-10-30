@@ -3,7 +3,7 @@ import { VariableDeclaration } from '../qti-utilities/Variables';
 
 export class QtiVariableDeclaration extends LitElement {
   override render() {
-    return html``;
+    return html`<slot></slot>`;
   }
 
   protected defaultValues(variable: VariableDeclaration<string | string[] | null>) {

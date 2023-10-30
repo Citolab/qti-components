@@ -5,12 +5,11 @@ import { ManifestData, requestItem } from './test-utils';
 import { html } from 'lit';
 import { useEffect, useState } from 'haunted';
 
-export const QtiTestHaunted = manifestData => {
+export const QtiTestHaunted = (manifestData, itemIndex) => {
   const [md, setMd] = useState<ManifestData>(null);
   const assessmentTestEl = createRef<QtiAssessmentTest>();
 
   useEffect(() => {
-    console.log('QtiTestHaunted', manifestData);
     setMd(manifestData);
   }, [md]);
 
@@ -32,9 +31,9 @@ export const QtiTestHaunted = manifestData => {
             // storedTestContext && (assessmentTestEl.value.context = storedTestContext);
           }}
           audience-context=""
-          item-index="0"
+          item-index=${itemIndex}
         >
-          <test-show-index></test-show-index>
+          <test-show-index></test-show-index> : <test-item-id></test-item-id>
 
           <qti-test-part>
             <qti-assessment-section>

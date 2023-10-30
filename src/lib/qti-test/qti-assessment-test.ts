@@ -8,14 +8,11 @@ import { SignalWatcher, signal, Signal, effect } from '@lit-labs/preact-signals'
 import { AudienceContext } from '../context';
 @customElement('qti-assessment-test')
 export class QtiAssessmentTest extends LitElement {
-  @property({ type: String, reflect: true }) audienceContext:
-    | 'author'
+  @property({ type: String, reflect: true, attribute: 'audience-context' }) audienceContext:
     | 'candidate'
-    | 'proctor'
     | 'scorer'
-    | 'testConstructor'
-    | 'tutor';
-  @property({ type: String, reflect: true }) itemIndex: string;
+    | '';
+  @property({ type: Number, reflect: true, attribute: 'item-index' }) itemIndex: number = 0;
 
   private _initialValue: TestContext = {
     itemIndex: 0,
@@ -50,11 +47,11 @@ export class QtiAssessmentTest extends LitElement {
       }
     }
     if (changedProperties.has('audienceContext')) {
+      this._context = { ...this._context, audienceContext: this.audienceContext };
       this.itemRefEls.forEach((value, key) => (value.audienceContext = { view: this.audienceContext }));
-      console.log('audienceContext', this.audienceContext);
     }
     if (changedProperties.has('itemIndex')) {
-      console.log('itemIndex', this.itemIndex);
+      this.signalContext.value = { ...this.signalContext.value, itemIndex: this.itemIndex };
     }
   }
 

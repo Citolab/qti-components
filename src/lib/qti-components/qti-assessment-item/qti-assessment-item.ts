@@ -164,9 +164,7 @@ export class QtiAssessmentItem extends LitElement {
     this.addEventListener('qti-interaction-response', this.handleUpdateResponseVariable);
   }
 
-  public logger = new ContextConsumer(this, audienceContext, e => this._showCorrectResponse(e.view == 'scorer'), true);
-
-  private _showCorrectResponse(show: boolean) {
+  public showCorrectResponse(show: boolean) {
     const responseVariables = this.context.variables.filter(
       (vari: ResponseVariable | OutcomeVariable) => 'correctResponse' in vari && vari.correctResponse
     ) as ResponseVariable[];

@@ -1,8 +1,5 @@
 import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { ContextConsumer } from '@lit/context';
-import { audienceContext } from '../../context/audience-context';
-
 import { watch } from '../../decorators/watch';
 
 @customElement('qti-rubric-block')
@@ -31,20 +28,11 @@ export class qtiRubricBlock extends LitElement {
     });
   }
 
-  // data-dep-caption="Inhoud"
-  // data-outcome-idref="qtiAspectInhoudOutcomeDeclaration"
   static override styles = css`
     :host {
       display: block;
     }
   `;
-
-  public logger = new ContextConsumer(
-    this,
-    audienceContext,
-    e => (this.style.display = this.view === e.view ? 'block' : 'none'),
-    true
-  );
 
   override render() {
     return html`<slot></slot>`;

@@ -1,4 +1,5 @@
 import * as cheerio from 'cheerio';
+import { TestContext } from './qti-assessment-test.context';
 
 /**
  * Fetches an IMS manifest XML file from the given href and returns the first resource element with type "imsqti_test_xmlv3p0".

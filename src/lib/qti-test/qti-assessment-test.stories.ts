@@ -23,7 +23,8 @@ export default {
   },
   args: {
     serverLocation: 'http://localhost:6006/api',
-    qtipkg: 'biologie'
+    qtipkg: 'biologie',
+    itemIndex: 0
   },
   parameters: {
     layout: 'fullscreen',
@@ -36,7 +37,7 @@ export default {
 
 export const QtiAssessmentTest = {
   render: (args, { argTypes, loaded: { manifestData } }) => {
-    return html`${QtiTestVirtual(manifestData)}`;
+    return html`${QtiTestVirtual(manifestData, args.itemIndex)}`;
   },
   loaders: [
     async args => ({

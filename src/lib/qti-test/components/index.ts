@@ -13,3 +13,4 @@ export * from './test-print-variables';
 export * from './test-print-score';
 export * from './test-manual-scoring';
 export * from './test-toggle-scoring';
+export * from './test-item-id';
