@@ -3,44 +3,36 @@ import { createRef, ref } from 'lit/directives/ref.js';
 import { QtiAssessmentTest } from './qti-assessment-test';
 import { ManifestData, requestItem } from './test-utils';
 import { html } from 'lit';
-import { useEffect, useState } from 'haunted';
+import { TestContext } from './qti-assessment-test.context';
 
-export const QtiTestHaunted = (manifestData, itemIndex) => {
-  const [md, setMd] = useState<ManifestData>(null);
+export const QtiTestHaunted = (manifestData: ManifestData, itemIndex: number, testContext: TestContext) => {
   const assessmentTestEl = createRef<QtiAssessmentTest>();
-
-  useEffect(() => {
-    setMd(manifestData);
-  }, [md]);
-
-  return md
+  return manifestData
     ? html`
         <qti-assessment-test
           ${ref(assessmentTestEl)}
-          identifier="${md.testIdentifier}"
+          identifier="${manifestData.testIdentifier}"
           @on-test-set-item=${async ({ detail: identifier }) => {
             const itemRefEl = assessmentTestEl.value.itemRefEls.get(identifier.new);
-            const newItemXML = await requestItem(`${md.itemLocation}/${itemRefEl.href}`);
+            const newItemXML = await requestItem(`${manifestData.itemLocation}/${itemRefEl.href}`);
             itemRefEl.xml = newItemXML;
             assessmentTestEl.value?.itemRefEls.forEach(
               (value, key) => value.identifier !== itemRefEl.identifier && (value.xml = '')
             );
           }}
           @qti-assessment-first-updated=${(e: CustomEvent<QtiAssessmentTest>) => {
-            // const storedTestContext = JSON.parse(localStorage.getItem(`${md.testIdentifier}-assessment-test-context`));
-            // storedTestContext && (assessmentTestEl.value.context = storedTestContext);
+            testContext && (assessmentTestEl.value.context = testContext);
           }}
-          audience-context=""
           item-index=${itemIndex}
         >
           <test-show-index></test-show-index> : <test-item-id></test-item-id>
 
           <qti-test-part>
             <qti-assessment-section>
-              ${md.items.map(
+              ${manifestData.items.map(
                 item =>
                   html`<qti-assessment-item-ref
-                    item-location=${`${md.itemLocation}`}
+                    item-location=${`${manifestData.itemLocation}`}
                     identifier="${item.identifier}"
                     href="${item.href}"
                     category="${ifDefined(item.category)}"
@@ -65,14 +57,3 @@ export const QtiTestHaunted = (manifestData, itemIndex) => {
       `
     : ``;
 };
-
-// <label>
-//   <input
-//     type="checkbox"
-//     @change=${(e: Event) => {
-//       const el = e.target as HTMLInputElement;
-//       setAudienceContext(el.checked ? 'scorer' : 'candidate');
-//     }}
-//   />
-//   Toggle audience context
-// </label>
