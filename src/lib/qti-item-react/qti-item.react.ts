@@ -8,7 +8,7 @@ import {
   QtiAssessmentItem
 } from '@citolab/qti-components/qti-components';
 
-interface QtiItemProps {
+export interface QtiItemProps {
   ref?: Ref<QtiItemWebComponent>;
   className?: string;
   xml: string;
