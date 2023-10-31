@@ -33,6 +33,7 @@ function QtiTestComponent(element: QtiTestProps) {
 }
 
 export const QtiTest = component<QtiTestProps>(QtiTestComponent as any, {
+  // @ts-ignore
   observedAttributes: ['package-uri']
 });
 
