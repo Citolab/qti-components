@@ -2,70 +2,44 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-button {
-  all: unset;
-}
-
-button:focus {
-  outline: revert;
-}
-
 ::host {
-  @apply h-screen w-screen bg-slate-50; /* bg-red-400; */
+  @apply h-screen w-screen bg-slate-50;
 }
 
 qti-assessment-test {
-  @apply block p-8; /* bg-red-400; */
-}
+  @apply block p-8;
+  .nav {
+    @apply isolate mt-4 inline-flex w-full -space-x-px rounded-md shadow-sm;
+  }
 
-:host {
-  @apply bg-blue-400;
-}
+  test-prev::part(button) {
+    all: unset;
+    @apply relative inline-flex items-center rounded-l-md bg-white py-2 pl-2 pr-4 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0;
+  }
 
-.arrow {
-  @apply h-5 w-5;
-}
+  test-slider::part(input) {
+    @apply w-full;
+  }
 
-.nav {
-  @apply isolate mt-4 inline-flex w-full -space-x-px rounded-md shadow-sm;
-}
+  test-next::part(button) {
+    all: unset;
+    @apply relative inline-flex items-center rounded-r-md bg-white py-2 pl-4 pr-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0;
+  }
 
-test-prev::part(button) {
-  all: unset;
-  @apply relative inline-flex items-center rounded-l-md bg-white py-2 pl-2 pr-4 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0;
-}
+  test-paging-buttons {
+    @apply hidden w-full justify-center  md:-mt-px md:flex;
 
-test-slider::part(input) {
-  @apply w-full;
-}
-
-test-next::part(button) {
-  all: unset;
-  @apply relative inline-flex items-center rounded-r-md bg-white py-2 pl-4 pr-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0;
-}
-
-test-paging-buttons {
-  @apply hidden w-full justify-center  md:-mt-px md:flex;
-
-  & > button {
-    @apply relative inline-flex items-center bg-white px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0;
-    &[data-active-item='true'] {
-      @apply relative z-10 inline-flex items-center bg-indigo-600 px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600;
+    & > button {
+      @apply relative inline-flex items-center bg-white px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0;
+      &[data-active-item='true'] {
+        @apply relative z-10 inline-flex items-center bg-indigo-600 px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600;
+      }
     }
   }
-}
 
-/* qti-test-part {
-  qti-assessment-section {
-    @apply flex aspect-video gap-8 overflow-x-hidden;
-    qti-assessment-item-ref {
-      @apply block h-full w-full max-w-none flex-shrink-0 bg-white p-8;
+  qti-test-part {
+    qti-assessment-section {
+      @apply aspect-video w-full;
     }
-  }
-} */
-
-qti-test-part {
-  qti-assessment-section {
-    @apply aspect-video w-full;
   }
 }
