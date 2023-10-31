@@ -7,7 +7,11 @@ import { fetchManifestData } from './test-utils';
 import { useEffect } from 'haunted';
 import styles from './qti-test.css?inline';
 
-function QtiTestComponent(element) {
+interface QtiTestProps extends HTMLElement {
+  packageUri: string;
+}
+
+function QtiTestComponent(element: QtiTestProps) {
   const [manifestData, setManifestData] = useState();
 
   useEffect(() => {
@@ -28,6 +32,8 @@ function QtiTestComponent(element) {
   return html`${manifestData ? virtual(QtiTestHaunted)(manifestData) : ``}`;
 }
 
-export const QtiTest = component(QtiTestComponent as any, { observedAttributes: ['package-uri'] });
+export const QtiTest = component<QtiTestProps>(QtiTestComponent as any, {
+  observedAttributes: ['package-uri']
+});
 
 customElements.define('qti-test', QtiTest);
