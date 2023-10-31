@@ -50,6 +50,19 @@ export abstract class Choices extends Interaction {
     });
   }
 
+  set correctResponse(responseValue: string | string[]) {
+    const responseValueArray = Array.isArray(responseValue) ? responseValue : [responseValue];
+    if (responseValue == '') {
+      this._choiceElements.forEach(ce => {
+        ce.removeAttribute('data-correct-response');
+      });
+      return;
+    }
+    this._choiceElements.forEach(ce => {
+      ce.setAttribute('data-correct-response', responseValueArray.find(rv => rv === ce.identifier) ? 'true' : 'false');
+    });
+  }
+
   override connectedCallback() {
     super.connectedCallback();
     this.addEventListener('qti-choice-element-selected', this._choiceElementSelectedHandler);

@@ -31,14 +31,44 @@ export class QtiItem extends LitElement {
     if (changedProperties.has('disabled')) {
       if (this.assessmentItem) this.assessmentItem.disabled = this.disabled;
     }
+    if (changedProperties.has('audienceContext')) {
+      this.checkAudienceContext();
+    }
     super.update(changedProperties);
   }
+
+  static styles = css`
+    [view],
+    qti-outcome-declaration,
+    qti-response-declaration {
+      display: none;
+    }
+    [view].show {
+      display: block;
+    }
+  `;
 
   /**
    * The XML content of the item.
    */
   @state()
   protected _xml: string = '';
+
+  constructor() {
+    super();
+    this.addEventListener('qti-item-first-updated', (e: CustomEvent<QtiAssessmentItem>) => {
+      this.checkAudienceContext();
+    });
+  }
+
+  private checkAudienceContext() {
+    this.shadowRoot.querySelectorAll('[view]')?.forEach((element: HTMLElement) => {
+      element.getAttribute('view') === this.audienceContext.view
+        ? element.classList.add('show')
+        : element.classList.remove('show');
+    });
+    this.assessmentItem?.showCorrectResponse(this.audienceContext.view === 'scorer');
+  }
 
   /**
    * Sets the XML content of the item.
@@ -73,7 +103,7 @@ export class QtiItem extends LitElement {
   /**
    * The audience context. describes
    */
-  @provide({ context: audienceContext })
+  // @provide({ context: audienceContext })
   @property({ attribute: false })
   public audienceContext: AudienceContext = {
     view: 'candidate'

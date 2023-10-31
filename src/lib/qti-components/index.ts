@@ -13,8 +13,8 @@ export * from './qti-prompt/qti-prompt';
 export * from './qti-interaction/internal/choice/qti-choice';
 
 /* start response and outcome */
-export * from './qti-variabledeclaration/qti-responsedeclaration/qti-responsedeclaration';
-export * from './qti-variabledeclaration/qti-outcomedeclaration/qti-outcomedeclaration';
+export * from './qti-variable-declaration/qti-response-declaration/qti-response-declaration';
+export * from './qti-variable-declaration/qti-outcome-declaration/qti-outcomedeclaration';
 /* end response and outcome */
 
 export * from './qti-companion-materials-info/qti-companion-materials-info';
@@ -46,7 +46,7 @@ export * from './qti-interaction/qti-inline-choice-interaction/qti-inline-choice
 export * from './qti-interaction/qti-choice-interaction/qti-choice-interaction';
 /* end choiceinteraction */
 
-export * from './qti-responseprocessing';
+export * from './qti-response-processing';
 
 /* start custom interactions */
 export * from './qti-interaction/qti-portable-custom-interaction/qti-portable-custom-interaction';

@@ -12,6 +12,9 @@ export abstract class Interaction extends LitElement {
 
   abstract validate(): boolean;
   abstract set response(val: Readonly<string | string[]>);
+  set correctResponse(val: Readonly<string | string[]>) {
+    console.warn('correctResponse is not implemented');
+  }
 
   public override connectedCallback() {
     super.connectedCallback();

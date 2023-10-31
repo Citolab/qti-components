@@ -2,6 +2,7 @@ import { css, html } from 'lit';
 import { Events } from '../../qti-utilities/EventStrings';
 import { Interaction } from '../internal/interaction/interaction';
 import { property, state } from 'lit/decorators.js';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
 interface OptionType {
   textContent: string;
@@ -24,6 +25,8 @@ export class QtiInlineChoiceInteraction extends Interaction {
 
   @state() options: OptionType[] = [];
 
+  @state() correctOption: string = '';
+
   @property({ attribute: 'data-prompt', type: String })
   dataPrompt: string = 'select';
 
@@ -38,16 +41,17 @@ export class QtiInlineChoiceInteraction extends Interaction {
   }
 
   override render() {
-    return html` <select
-      part="select"
-      @change="${this.choiceSelected}"
-      ?disabled="${this.disabled}"
-      ?readonly="${this.readonly}"
-    >
-      ${this.options.map(
-        option => html` <option value="${option.value}" ?selected="${option.selected}">${option.textContent}</option> `
-      )}
-    </select>`;
+    return html`
+      <select part="select" @change="${this.choiceSelected}" ?disabled="${this.disabled}" ?readonly="${this.readonly}">
+        ${this.options.map(
+          option => html`
+            <option value="${option.value}" ?selected="${option.selected}">${option.textContent}</option>
+          `
+        )}
+      </select>
+
+      ${unsafeHTML(this.correctOption)}
+    `;
   }
 
   firstUpdated(val) {
@@ -83,6 +87,15 @@ export class QtiInlineChoiceInteraction extends Interaction {
       value === option.value && (option.selected = true);
       return option;
     });
+  }
+
+  set correctResponse(value: Readonly<string | string[]>) {
+    if (value === '') {
+      this.correctOption = '';
+      return;
+    }
+    console.log('correctResponse', value);
+    this.correctOption = this.options.find(option => value === option.value).textContent;
   }
 
   public choiceSelected(event: Event) {

@@ -61,7 +61,6 @@ export const Item = {
     }, [args.itemIndex, md.items, args.qtipkg]);
 
     const view = args.view;
-
     return html` <qti-item
         ${ref(assessmentItemRef)}
         .audienceContext=${{ view }}
