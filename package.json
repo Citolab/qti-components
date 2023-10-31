@@ -150,7 +150,7 @@
     "@types/node": "^20.8.8",
     "@typescript-eslint/eslint-plugin": "^6.9.0",
     "autoprefixer": "^10.4.16",
-    "cem-plugin-vs-code-custom-data-generator": "^1.4.2",
+    "custom-element-vs-code-integration": "^1.2.1",
     "eslint": "^8.52.0",
     "eslint-plugin-import": "^2.29.0",
     "eslint-plugin-jest": "^27.4.3",

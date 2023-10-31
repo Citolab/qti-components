@@ -1,71 +1,121 @@
 {
+  "$schema": "https://raw.githubusercontent.com/microsoft/vscode-html-languageservice/main/docs/customData.schema.json",
   "version": 1.1,
   "tags": [
     {
-      "name": "qti-item",
-      "description": "\n\n\n---\n\n\n",
+      "name": "qti-assessment-item-ref",
+      "description": "\n---\n",
       "attributes": [
-        { "name": "disabled", "values": [] },
-        { "name": "readonly", "values": [] },
-        { "name": "xml", "values": [] },
-        { "name": "scale", "values": [] }
+        { "name": "identifier", "values": [] },
+        { "name": "href", "values": [] },
+        {
+          "name": "item-location",
+          "description": "The location of the item.",
+          "values": []
+        }
       ],
       "references": []
     },
     {
-      "name": "qti-assessment-item",
-      "description": "The qti-assessment-item element contains all the other QTI 3 item structures.\n\n\n---\n\n\n\n\n### **Events:**\n - **qti-item-connected** - undefined\n- **qti-interaction-changed** - Emitted when an interaction is changed.\n- **qti-outcome-changed** - Emitted when the radio group receives user input.\n\n### **Slots:**\n - _default_ - The default slot where all the other QTI 3 item structures go.",
+      "name": "qti-assessment-test",
+      "description": "\n---\n\n\n### **Events:**\n - **on-test-set-item** - undefined\n- **name** - undefined",
       "attributes": [
-        { "name": "disabled", "values": [] },
-        { "name": "readonly", "values": [] },
-        { "name": "title", "values": [] },
+        {
+          "name": "audience-context",
+          "values": [
+            { "name": "" },
+            { "name": "candidate" },
+            { "name": "scorer" },
+            { "name": "''" }
+          ]
+        },
+        { "name": "item-index", "values": [] },
         { "name": "identifier", "values": [] }
+      ],
+      "references": []
+    },
+    {
+      "name": "qti-test-part",
+      "description": "\n---\n",
+      "attributes": [
+        { "name": "loading", "values": [] },
+        {
+          "name": "navigation-mode",
+          "values": [{ "name": "linear" }, { "name": "nonlinear" }]
+        }
+      ],
+      "references": []
+    },
+    {
+      "name": "qti-item",
+      "description": "\n---\n",
+      "attributes": [
+        {
+          "name": "item-location",
+          "description": "The location of the item.",
+          "values": []
+        }
       ],
       "references": []
     },
     {
       "name": "qti-companion-materials-info",
-      "description": "\n\n\n---\n\n\n",
+      "description": "\n---\n",
       "attributes": [],
       "references": []
     },
     {
-      "name": "qti-feedback",
-      "description": "\n\n\n---\n\n\n\n\n### **Events:**\n - **qti-register-feedback** - undefined",
+      "name": "qti-custom-operator",
+      "description": "https://www.imsglobal.org/spec/qti/v3p0/impl#h.fi29q8dubjgw\n<qti-custom-operator class=\"js.org\">\n     <qti-base-value base-type=\"string\"><![CDATA[\n       console.log(context.variables);\n       return 'B'\n       document.querySelector('qti-end-attempt-interaction').disabled = true;\n       ]]></qti-base-value>\n   </qti-custom-operator>\n </qti-set-outcome-value>\n---\n\n\n### **Events:**\n - **qti-set-outcome-value** - undefined",
+      "attributes": [],
+      "references": []
+    },
+    {
+      "name": "qti-assessment-item",
+      "description": "The qti-assessment-item element contains all the other QTI 3 item structures.\n---\n\n\n### **Events:**\n - **name** - undefined\n- **qti-interaction-changed** - Emitted when an interaction is changed.\n- **qti-outcome-changed** - Emitted when an outcome has changed.\n- **qti-response-processing** - Emitted when response-processing is called.\n\n### **Slots:**\n - _default_ - The default slot where all the other QTI 3 item structures go.",
       "attributes": [
-        { "name": "show-hide", "values": [] },
-        { "name": "outcome-identifier", "values": [] },
-        { "name": "identifier", "values": [] }
+        { "name": "title", "values": [] },
+        { "name": "identifier", "values": [] },
+        {
+          "name": "adaptive",
+          "values": [{ "name": "true" }, { "name": "false" }]
+        },
+        {
+          "name": "timeDependent",
+          "values": [{ "name": "true" }, { "name": "false" }]
+        },
+        { "name": "disabled", "values": [] },
+        { "name": "readonly", "values": [] }
       ],
       "references": []
     },
     {
       "name": "qti-associable-hotspot",
-      "description": "\n\n\n---\n\n\n\n\n### **Events:**\n - **qti-register-hotspot** - undefined",
+      "description": "\n---\n\n\n### **Events:**\n - **qti-register-hotspot** - undefined",
       "attributes": [],
       "references": []
     },
     {
       "name": "qti-gap-img",
-      "description": "\n\n\n---\n\n\n",
+      "description": "\n---\n",
       "attributes": [{ "name": "tabindex", "values": [] }],
       "references": []
     },
     {
       "name": "qti-gap-text",
-      "description": "\n\n\n---\n\n\n",
+      "description": "\n---\n",
       "attributes": [{ "name": "tabindex", "values": [] }],
       "references": []
     },
     {
       "name": "qti-gap",
-      "description": "\n\n\n---\n\n\n",
+      "description": "\n---\n",
       "attributes": [{ "name": "tabindex", "values": [] }],
       "references": []
     },
     {
       "name": "qti-hotspot-choice",
-      "description": "\n\n\n---\n\n\n\n\n### **Events:**\n - **qti-register-choice** - register itselves on a qti-choice-interaction element.\n- **qti-loose-choice** - de-register itselves on a qti-choice-interaction element.\n- **qti-choice-element-selected** - Emitted when the choice is selected.",
+      "description": "\n---\n\n\n### **Events:**\n - **qti-register-choice** - register itselves on a qti-choice-interaction element.\n- **qti-loose-choice** - de-register itselves on a qti-choice-interaction element.\n- **qti-choice-element-selected** - Emitted when the choice is selected.",
       "attributes": [
         { "name": "aria-ordervalue", "values": [] },
         { "name": "identifier", "values": [] },
@@ -78,7 +128,7 @@
     },
     {
       "name": "qti-hottext",
-      "description": "\n\n\n---\n\n\n\n\n### **Events:**\n - **qti-register-choice** - register itselves on a qti-choice-interaction element.\n- **qti-loose-choice** - de-register itselves on a qti-choice-interaction element.\n- **qti-choice-element-selected** - Emitted when the choice is selected.",
+      "description": "\n---\n\n\n### **Events:**\n - **qti-register-choice** - register itselves on a qti-choice-interaction element.\n- **qti-loose-choice** - de-register itselves on a qti-choice-interaction element.\n- **qti-choice-element-selected** - Emitted when the choice is selected.",
       "attributes": [
         { "name": "identifier", "values": [] },
         { "name": "tabindex", "values": [] },
@@ -90,19 +140,19 @@
     },
     {
       "name": "qti-inline-choice",
-      "description": "\n\n\n---\n\n\n",
+      "description": "\n---\n",
       "attributes": [],
       "references": []
     },
     {
       "name": "qti-simple-associable-choice",
-      "description": "\n\n\n---\n\n\n",
+      "description": "\n---\n",
       "attributes": [],
       "references": []
     },
     {
       "name": "qti-simple-choice",
-      "description": "Short summary of the component's intended use.\n\n\n---\n\n\n\n\n### **Events:**\n - **qti-choice-element-selected** - Emitted when a choice is selected.\n- **qti-register-choice** - Emitted when an choice is added\n- **qti-loose-choice** - Emitted when a choice is removed\n\n### **Slots:**\n - _default_ - The default slot.",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **qti-choice-element-selected** - Emitted when a choice is selected.\n- **qti-register-choice** - Emitted when an choice is added\n- **qti-loose-choice** - Emitted when a choice is removed\n\n### **Slots:**\n - _default_ - The default slot.",
       "attributes": [
         { "name": "identifier", "values": [] },
         { "name": "tabindex", "values": [] },
@@ -114,25 +164,25 @@
     },
     {
       "name": "qti-item-body",
-      "description": "The qti-item-body node contains the text, graphics, media objects and interactions that describe the item's content and information about how it is structured.\n\n\n---\n\n\n\n\n### **Slots:**\n - _default_ - item body content.\n- **qti-rubric-block** - the qti rubric block is placed above the item",
+      "description": "The qti-item-body node contains the text, graphics, media objects and interactions that describe the item's content and information about how it is structured.\n---\n\n\n### **Slots:**\n - _default_ - item body content.\n- **qti-rubric-block** - the qti rubric block is placed above the item",
       "attributes": [],
       "references": []
     },
     {
       "name": "qti-prompt",
-      "description": "\n\n\n---\n\n\n",
+      "description": "\n---\n",
       "attributes": [],
       "references": []
     },
     {
       "name": "qti-content-body",
-      "description": "\n\n\n---\n\n\n",
+      "description": "\n---\n",
       "attributes": [],
       "references": []
     },
     {
       "name": "qti-rubric-block",
-      "description": "\n\n\n---\n\n\n",
+      "description": "\n---\n",
       "attributes": [
         { "name": "id", "values": [] },
         {
@@ -160,19 +210,119 @@
     },
     {
       "name": "qti-stylesheet",
-      "description": "\n\n\n---\n\n\n",
+      "description": "\n---\n",
       "attributes": [],
       "references": []
     },
     {
       "name": "qti-variabledeclaration",
-      "description": "\n\n\n---\n\n\n",
+      "description": "\n---\n",
       "attributes": [],
       "references": []
     },
     {
+      "name": "test-item-id",
+      "description": "\n---\n",
+      "attributes": [],
+      "references": []
+    },
+    {
+      "name": "test-manual-scoring",
+      "description": "\n---\n\n\n### **Events:**\n - **qti-set-outcome-value** - undefined",
+      "attributes": [
+        { "name": "disabled", "values": [] },
+        { "name": "readonly", "values": [] },
+        { "name": "value", "values": [] },
+        { "name": "min", "values": [] },
+        { "name": "max", "values": [] }
+      ],
+      "references": []
+    },
+    {
+      "name": "test-next",
+      "description": "\n---\n\n\n### **Events:**\n - **on-test-request-item** - undefined",
+      "attributes": [],
+      "references": []
+    },
+    {
+      "name": "test-paging-buttons",
+      "description": "\n---\n\n\n### **Events:**\n - **on-test-request-item** - undefined",
+      "attributes": [{ "name": "maxDisplayedItems", "values": [] }],
+      "references": []
+    },
+    {
+      "name": "test-paging-radio",
+      "description": "\n---\n\n\n### **Events:**\n - **on-test-request-item** - undefined",
+      "attributes": [],
+      "references": []
+    },
+    {
+      "name": "test-prev",
+      "description": "\n---\n\n\n### **Events:**\n - **on-test-request-item** - undefined",
+      "attributes": [],
+      "references": []
+    },
+    {
+      "name": "test-print-score",
+      "description": "\n---\n\n\n### **Events:**\n - **on-test-request-item** - undefined",
+      "attributes": [],
+      "references": []
+    },
+    {
+      "name": "test-print-variables",
+      "description": "\n---\n",
+      "attributes": [],
+      "references": []
+    },
+    {
+      "name": "test-progress",
+      "description": "\n---\n",
+      "attributes": [],
+      "references": []
+    },
+    {
+      "name": "test-script",
+      "description": "\n---\n",
+      "attributes": [],
+      "references": []
+    },
+    {
+      "name": "test-show-correct",
+      "description": "\n---\n",
+      "attributes": [],
+      "references": []
+    },
+    {
+      "name": "test-show-index",
+      "description": "\n---\n\n\n### **Events:**\n - **on-test-request-item** - undefined",
+      "attributes": [],
+      "references": []
+    },
+    {
+      "name": "test-slider",
+      "description": "\n---\n\n\n### **Events:**\n - **on-test-request-item** - undefined",
+      "attributes": [],
+      "references": []
+    },
+    {
+      "name": "test-toggle-scoring",
+      "description": "\n---\n",
+      "attributes": [],
+      "references": []
+    },
+    {
+      "name": "qti-feedback-block",
+      "description": "\n---\n\n\n### **Events:**\n - **qti-register-feedback** - undefined",
+      "attributes": [
+        { "name": "show-hide", "values": [] },
+        { "name": "outcome-identifier", "values": [] },
+        { "name": "identifier", "values": [] }
+      ],
+      "references": []
+    },
+    {
       "name": "qti-feedback-inline",
-      "description": "\n\n\n---\n\n\n\n\n### **Events:**\n - **qti-register-feedback** - undefined",
+      "description": "\n---\n\n\n### **Events:**\n - **qti-register-feedback** - undefined",
       "attributes": [
         { "name": "show-hide", "values": [] },
         { "name": "outcome-identifier", "values": [] },
@@ -182,7 +332,7 @@
     },
     {
       "name": "qti-modal-feedback",
-      "description": "\n\n\n---\n\n\n\n\n### **Events:**\n - **qti-register-feedback** - undefined",
+      "description": "\n---\n\n\n### **Events:**\n - **qti-register-feedback** - undefined",
       "attributes": [
         { "name": "show-hide", "values": [] },
         { "name": "outcome-identifier", "values": [] },
@@ -192,7 +342,7 @@
     },
     {
       "name": "qti-associate-interaction",
-      "description": "\n\n\n---\n\n\n\n\n### **Events:**\n - **qti-register-interaction** - undefined\n- **qti-interaction-response** - undefined",
+      "description": "\n---\n\n\n### **Events:**\n - **qti-register-interaction** - undefined\n- **qti-interaction-response** - undefined",
       "attributes": [
         { "name": "response-identifier", "values": [] },
         { "name": "disabled", "values": [] },
@@ -204,7 +354,7 @@
     },
     {
       "name": "qti-choice-interaction",
-      "description": "The ChoiceInteraction.Type (qti-choice-interaction) interaction presents a collection of choices to the candidate.\n\n\n---\n\n\n\n\n### **Events:**\n - **qti-register-interaction** - emitted when the interaction wants to register itself\n- **qti-interaction-response** - emitted when the interaction changes\n\n### **Slots:**\n - _default_ - The default slot where <qti-simple-choice> must be placed.\n- **prompt** - slot where the prompt is placed.",
+      "description": "The ChoiceInteraction.Type (qti-choice-interaction) interaction presents a collection of choices to the candidate.\n---\n\n\n### **Events:**\n - **qti-register-interaction** - emitted when the interaction wants to register itself\n- **qti-interaction-response** - emitted when the interaction changes\n\n### **Slots:**\n - _default_ - The default slot where <qti-simple-choice> must be placed.\n- **prompt** - slot where the prompt is placed.",
       "attributes": [
         {
           "name": "orientation",
@@ -236,8 +386,28 @@
       "references": []
     },
     {
+      "name": "qti-end-attempt-interaction",
+      "description": "\n---\n\n\n### **Events:**\n - **end-attempt** - undefined\n- **qti-register-interaction** - undefined\n- **qti-interaction-response** - undefined",
+      "attributes": [
+        { "name": "count-attempt", "values": [] },
+        { "name": "title", "values": [{ "name": "end attempt" }] },
+        { "name": "response-identifier", "values": [] },
+        {
+          "name": "disabled",
+          "description": "disabled should be exposed to the attributes and accessible as property",
+          "values": []
+        },
+        {
+          "name": "readonly",
+          "description": "readonly should be exposed to the attributes and accessible as property",
+          "values": []
+        }
+      ],
+      "references": []
+    },
+    {
       "name": "qti-extended-text-interaction",
-      "description": "\n\n\n---\n\n\n\n\n### **Events:**\n - **qti-register-interaction** - undefined\n- **qti-interaction-response** - undefined",
+      "description": "\n---\n\n\n### **Events:**\n - **qti-register-interaction** - undefined\n- **qti-interaction-response** - undefined",
       "attributes": [
         {
           "name": "expected-length",
@@ -267,7 +437,7 @@
     },
     {
       "name": "qti-gap-match-interaction",
-      "description": "\n\n\n---\n\n\n\n\n### **Events:**\n - **qti-register-interaction** - undefined\n- **qti-interaction-response** - undefined",
+      "description": "\n---\n\n\n### **Events:**\n - **qti-register-interaction** - undefined\n- **qti-interaction-response** - undefined",
       "attributes": [
         { "name": "response-identifier", "values": [] },
         { "name": "disabled", "values": [] },
@@ -279,7 +449,7 @@
     },
     {
       "name": "qti-graphic-associate-interaction",
-      "description": "\n\n\n---\n\n\n\n\n### **Events:**\n - **qti-register-interaction** - undefined\n- **qti-interaction-response** - undefined",
+      "description": "\n---\n\n\n### **Events:**\n - **qti-register-interaction** - undefined\n- **qti-interaction-response** - undefined",
       "attributes": [
         { "name": "response-identifier", "values": [] },
         {
@@ -297,7 +467,7 @@
     },
     {
       "name": "qti-graphic-gap-match-interaction",
-      "description": "\n\n\n---\n\n\n\n\n### **Events:**\n - **qti-register-interaction** - undefined\n- **qti-interaction-response** - undefined",
+      "description": "\n---\n\n\n### **Events:**\n - **qti-register-interaction** - undefined\n- **qti-interaction-response** - undefined",
       "attributes": [
         { "name": "response-identifier", "values": [] },
         { "name": "disabled", "values": [] },
@@ -309,7 +479,7 @@
     },
     {
       "name": "qti-graphic-order-interaction",
-      "description": "\n\n\n---\n\n\n\n\n### **Events:**\n - **qti-register-interaction** - undefined\n- **qti-interaction-response** - undefined",
+      "description": "\n---\n\n\n### **Events:**\n - **qti-register-interaction** - undefined\n- **qti-interaction-response** - undefined",
       "attributes": [
         {
           "name": "min-choices",
@@ -337,7 +507,7 @@
     },
     {
       "name": "qti-hotspot-interaction",
-      "description": "\n\n\n---\n\n\n\n\n### **Events:**\n - **qti-register-interaction** - undefined\n- **qti-interaction-response** - undefined",
+      "description": "\n---\n\n\n### **Events:**\n - **qti-register-interaction** - undefined\n- **qti-interaction-response** - undefined",
       "attributes": [
         {
           "name": "min-choices",
@@ -365,7 +535,7 @@
     },
     {
       "name": "qti-hottext-interaction",
-      "description": "\n\n\n---\n\n\n\n\n### **Events:**\n - **qti-register-interaction** - undefined\n- **qti-interaction-response** - undefined",
+      "description": "\n---\n\n\n### **Events:**\n - **qti-register-interaction** - undefined\n- **qti-interaction-response** - undefined",
       "attributes": [
         {
           "name": "min-choices",
@@ -393,9 +563,9 @@
     },
     {
       "name": "qti-inline-choice-interaction",
-      "description": "\n\n\n---\n\n\n\n\n### **Events:**\n - **qti-register-interaction** - undefined\n- **qti-interaction-response** - undefined",
+      "description": "\n---\n\n\n### **Events:**\n - **qti-register-interaction** - undefined\n- **qti-interaction-response** - undefined",
       "attributes": [
-        { "name": "", "values": [] },
+        { "name": "data-prompt", "values": [] },
         { "name": "response-identifier", "values": [] },
         {
           "name": "disabled",
@@ -412,7 +582,7 @@
     },
     {
       "name": "qti-match-interaction",
-      "description": "\n\n\n---\n\n\n\n\n### **Events:**\n - **qti-register-interaction** - undefined\n- **qti-interaction-response** - undefined",
+      "description": "\n---\n\n\n### **Events:**\n - **qti-interaction-response** - undefined\n- **qti-register-interaction** - undefined",
       "attributes": [
         { "name": "response-identifier", "values": [] },
         { "name": "disabled", "values": [] },
@@ -424,7 +594,7 @@
     },
     {
       "name": "qti-media-interaction",
-      "description": "\n\n\n---\n\n\n\n\n### **Events:**\n - **qti-register-interaction** - undefined\n- **qti-interaction-response** - undefined",
+      "description": "\n---\n\n\n### **Events:**\n - **qti-register-interaction** - undefined\n- **qti-interaction-response** - undefined",
       "attributes": [
         { "name": "", "values": [] },
         { "name": "response-identifier", "values": [] },
@@ -443,7 +613,7 @@
     },
     {
       "name": "qti-order-interaction",
-      "description": "\n\n\n---\n\n\n\n\n### **Events:**\n - **qti-register-interaction** - undefined\n- **qti-interaction-response** - undefined",
+      "description": "\n---\n\n\n### **Events:**\n - **qti-register-interaction** - undefined\n- **qti-interaction-response** - undefined",
       "attributes": [
         {
           "name": "orientation",
@@ -460,7 +630,7 @@
     },
     {
       "name": "qti-portable-custom-interaction",
-      "description": "\n\n\n---\n\n\n",
+      "description": "\n---\n",
       "attributes": [
         { "name": "response-identifier", "values": [] },
         { "name": "module", "values": [] },
@@ -471,19 +641,19 @@
     },
     {
       "name": "qti-position-object-interaction",
-      "description": "\n\n\n---\n\n\n",
+      "description": "\n---\n",
       "attributes": [],
       "references": []
     },
     {
       "name": "qti-position-object-stage",
-      "description": "\n\n\n---\n\n\n",
+      "description": "\n---\n",
       "attributes": [],
       "references": []
     },
     {
       "name": "qti-select-point-interaction",
-      "description": "\n\n\n---\n\n\n\n\n### **Events:**\n - **qti-register-interaction** - undefined\n- **qti-interaction-response** - undefined",
+      "description": "\n---\n\n\n### **Events:**\n - **qti-register-interaction** - undefined\n- **qti-interaction-response** - undefined",
       "attributes": [
         { "name": "max-choices", "values": [] },
         { "name": "min-choices", "values": [] },
@@ -503,7 +673,7 @@
     },
     {
       "name": "qti-slider-interaction",
-      "description": "The SliderInteraction.Type (qti-slider-interaction) presents the candidate with a control for selecting a numerical value between a lower and upper bound.\n\n\n---\n\n\n\n\n### **Events:**\n - **qti-register-interaction** - emitted when the interaction wants to register itself\n- **qti-interaction-response** - emitted when the interaction changes\n\n### **Slots:**\n - _default_ - The default slot where <qti-simple-choice> must be placed.\n- **prompt** - slot where the prompt is placed.\n\n### **CSS Properties:**\n - **--show-value** - shows the current value while sliding _(default: undefined)_\n- **--show-ticks** - shows the ticks according to steps _(default: undefined)_\n- **--show-bounds** - shows value for lower and upper boundary _(default: undefined)_\n\n### **CSS Parts:**\n - **slider** - -- slider inluding, bounds and ticks and value, use it for paddings and margins\n- **bounds** - -- div for bounds, containing two divs for with min, and max bounds value\n- **ticks** - -- div for ticks, use lineair gradient and exposed css variables for styling\n- **rail** - -- div for rail, style according to needs\n- **knob** - -- div, should be relative or absolute\n- **value** - -- div, containing value",
+      "description": "The SliderInteraction.Type (qti-slider-interaction) presents the candidate with a control for selecting a numerical value between a lower and upper bound.\n---\n\n\n### **Events:**\n - **qti-register-interaction** - emitted when the interaction wants to register itself\n- **qti-interaction-response** - emitted when the interaction changes\n\n### **Slots:**\n - _default_ - The default slot where <qti-simple-choice> must be placed.\n- **prompt** - slot where the prompt is placed.\n\n### **CSS Properties:**\n - **--show-value** - shows the current value while sliding _(default: undefined)_\n- **--show-ticks** - shows the ticks according to steps _(default: undefined)_\n- **--show-bounds** - shows value for lower and upper boundary _(default: undefined)_\n\n### **CSS Parts:**\n - **slider** - -- slider inluding, bounds and ticks and value, use it for paddings and margins\n- **bounds** - -- div for bounds, containing two divs for with min, and max bounds value\n- **ticks** - -- div for ticks, use lineair gradient and exposed css variables for styling\n- **rail** - -- div for rail, style according to needs\n- **knob** - -- div, should be relative or absolute\n- **value** - -- div, containing value",
       "attributes": [
         { "name": "value", "values": [] },
         { "name": "step-label", "values": [] },
@@ -527,7 +697,7 @@
     },
     {
       "name": "qti-text-entry-interaction",
-      "description": "\n\n\n---\n\n\n\n\n### **Events:**\n - **qti-register-interaction** - undefined\n- **qti-interaction-response** - undefined",
+      "description": "\n---\n\n\n### **Events:**\n - **qti-register-interaction** - undefined\n- **qti-interaction-response** - undefined",
       "attributes": [
         { "name": "expected-length", "values": [] },
         { "name": "pattern-mask", "values": [] },
@@ -548,14 +718,8 @@
       "references": []
     },
     {
-      "name": "qti-expression",
-      "description": "\n\n\n---\n\n\n",
-      "attributes": [],
-      "references": []
-    },
-    {
       "name": "qti-response-else",
-      "description": "\n\n\n---\n\n\n",
+      "description": "\n---\n",
       "attributes": [
         { "name": "debugCalculateResult", "values": [{ "name": "object" }] }
       ],
@@ -563,29 +727,19 @@
     },
     {
       "name": "qti-response-processing",
-      "description": "\n\n\n---\n\n\n",
+      "description": "\n---\n",
       "attributes": [{ "name": "identifier", "values": [] }],
       "references": []
     },
     {
       "name": "qti-rule",
-      "description": "\n\n\n---\n\n\n",
+      "description": "\n---\n",
       "attributes": [],
       "references": []
     },
     {
       "name": "qti-outcome-declaration",
-      "description": "\n\n\n---\n\n\n\n\n### **Events:**\n - **qti-register-variable** - undefined",
-      "attributes": [
-        { "name": "identifier", "values": [] },
-        { "name": "cardinality", "values": [] },
-        { "name": "base-type", "values": [] }
-      ],
-      "references": []
-    },
-    {
-      "name": "qti-response-declaration",
-      "description": "\n\n\n---\n\n\n\n\n### **Events:**\n - **qti-register-variable** - undefined",
+      "description": "\n---\n\n\n### **Events:**\n - **qti-register-variable** - undefined",
       "attributes": [
         { "name": "base-type", "values": [{ "name": "BaseType" }] },
         { "name": "identifier", "values": [] },
@@ -594,64 +748,44 @@
       "references": []
     },
     {
-      "name": "qti-choice",
-      "description": "qti-choice is used by qti-simple-choice, qti-inline-choice, qti-hottext, qti-hotspot-choice.\n\n\n---\n\n\n\n\n### **Events:**\n - **qti-register-choice** - register itselves on a qti-choice-interaction element.\n- **qti-loose-choice** - de-register itselves on a qti-choice-interaction element.\n- **qti-choice-element-selected** - Emitted when the choice is selected.\n\n### **Slots:**\n - _default_ - The choices slot element",
+      "name": "qti-response-declaration",
+      "description": "\n---\n\n\n### **Events:**\n - **qti-register-variable** - undefined",
       "attributes": [
+        { "name": "base-type", "values": [{ "name": "BaseType" }] },
         { "name": "identifier", "values": [] },
-        { "name": "tabindex", "values": [] },
-        { "name": "aria-disabled", "values": [] },
-        { "name": "aria-readonly", "values": [] },
-        { "name": "aria-checked", "values": [] }
-      ],
-      "references": []
-    },
-    {
-      "name": "interaction",
-      "description": "\n\n\n---\n\n\n\n\n### **Events:**\n - **qti-register-interaction** - undefined\n- **qti-interaction-response** - undefined",
-      "attributes": [
-        { "name": "response-identifier", "values": [] },
-        {
-          "name": "disabled",
-          "description": "disabled should be exposed to the attributes and accessible as property",
-          "values": []
-        },
-        {
-          "name": "readonly",
-          "description": "readonly should be exposed to the attributes and accessible as property",
-          "values": []
-        }
+        { "name": "cardinality", "values": [{ "name": "Cardinality" }] }
       ],
       "references": []
     },
     {
       "name": "qti-and",
-      "description": "\n\n\n---\n\n\n",
+      "description": "\n---\n",
       "attributes": [],
       "references": []
     },
     {
       "name": "qti-base-value",
-      "description": "\n\n\n---\n\n\n",
+      "description": "\n---\n",
       "attributes": [
-        { "name": "baseType", "values": [{ "name": "BaseType" }] }
+        { "name": "base-type", "values": [{ "name": "BaseType" }] }
       ],
       "references": []
     },
     {
       "name": "qti-contains",
-      "description": "\n\n\n---\n\n\n",
+      "description": "\n---\n",
       "attributes": [],
       "references": []
     },
     {
       "name": "qti-correct",
-      "description": "\n\n\n---\n\n\n",
+      "description": "\n---\n",
       "attributes": [],
       "references": []
     },
     {
       "name": "qti-equal",
-      "description": "\n\n\n---\n\n\n",
+      "description": "\n---\n",
       "attributes": [
         {
           "name": "toleranceMode",
@@ -666,12 +800,11 @@
     },
     {
       "name": "qti-equal-rounded",
-      "description": "\n\n\n---\n\n\n",
+      "description": "\n---\n",
       "attributes": [
         {
           "name": "roundingMode",
           "values": [
-            { "name": "" },
             { "name": "decimalPlaces" },
             { "name": "significantFigures" }
           ]
@@ -681,37 +814,43 @@
     },
     {
       "name": "qti-gt",
-      "description": "\n\n\n---\n\n\n",
+      "description": "\n---\n",
       "attributes": [],
       "references": []
     },
     {
       "name": "qti-gte",
-      "description": "\n\n\n---\n\n\n",
+      "description": "\n---\n",
       "attributes": [],
       "references": []
     },
     {
       "name": "qti-is-null",
-      "description": "\n\n\n---\n\n\n",
+      "description": "\n---\n",
       "attributes": [],
       "references": []
     },
     {
       "name": "qti-lt",
-      "description": "\n\n\n---\n\n\n",
+      "description": "\n---\n",
       "attributes": [],
       "references": []
     },
     {
       "name": "qti-lte",
-      "description": "\n\n\n---\n\n\n",
+      "description": "\n---\n",
       "attributes": [],
       "references": []
     },
     {
+      "name": "qti-map-response",
+      "description": "\n---\n",
+      "attributes": [{ "name": "identifier", "values": [] }],
+      "references": []
+    },
+    {
       "name": "qti-mapping",
-      "description": "\n\n\n---\n\n\n",
+      "description": "\n---\n",
       "attributes": [
         { "name": "default-value", "values": [] },
         { "name": "lower-bound", "values": [] },
@@ -720,44 +859,74 @@
       "references": []
     },
     {
-      "name": "qti-map-response",
-      "description": "\n\n\n---\n\n\n",
-      "attributes": [{ "name": "identifier", "values": [] }],
+      "name": "qti-match",
+      "description": "\n---\n",
+      "attributes": [],
       "references": []
     },
     {
-      "name": "qti-match",
-      "description": "\n\n\n---\n\n\n",
+      "name": "qti-member",
+      "description": "\n---\n",
       "attributes": [],
       "references": []
     },
     {
       "name": "qti-multiple",
-      "description": "\n\n\n---\n\n\n",
+      "description": "\n---\n",
+      "attributes": [],
+      "references": []
+    },
+    {
+      "name": "qti-not",
+      "description": "\n---\n",
       "attributes": [],
       "references": []
     },
     {
       "name": "qti-or",
-      "description": "\n\n\n---\n\n\n",
+      "description": "\n---\n",
       "attributes": [],
       "references": []
     },
     {
       "name": "qti-ordered",
-      "description": "\n\n\n---\n\n\n",
+      "description": "\n---\n",
+      "attributes": [],
+      "references": []
+    },
+    {
+      "name": "qti-printed-variable",
+      "description": "\n---\n",
+      "attributes": [{ "name": "identifier", "values": [] }],
+      "references": []
+    },
+    {
+      "name": "qti-string-match",
+      "description": "\n---\n",
+      "attributes": [{ "name": "case-sensitive", "values": [] }],
+      "references": []
+    },
+    {
+      "name": "qti-product",
+      "description": "\n---\n",
+      "attributes": [],
+      "references": []
+    },
+    {
+      "name": "qti-sum",
+      "description": "\n---\n",
       "attributes": [],
       "references": []
     },
     {
       "name": "qti-variable",
-      "description": "\n\n\n---\n\n\n",
+      "description": "\n---\n",
       "attributes": [],
       "references": []
     },
     {
       "name": "qti-response-if",
-      "description": "\n\n\n---\n\n\n",
+      "description": "\n---\n",
       "attributes": [
         { "name": "debugCalculateResult", "values": [{ "name": "object" }] }
       ],
@@ -765,19 +934,19 @@
     },
     {
       "name": "qti-response-condition",
-      "description": "\n\n\n---\n\n\n",
+      "description": "\n---\n",
       "attributes": [],
       "references": []
     },
     {
       "name": "qti-set-outcome-value",
-      "description": "\n\n\n---\n\n\n",
+      "description": "\n---\n\n\n### **Events:**\n - **qti-set-outcome-value** - undefined",
       "attributes": [],
       "references": []
     },
     {
       "name": "qti-response-else-if",
-      "description": "\n\n\n---\n\n\n",
+      "description": "\n---\n",
       "attributes": [
         { "name": "debugCalculateResult", "values": [{ "name": "object" }] }
       ],

@@ -4,6 +4,41 @@
   "modules": [
     {
       "kind": "javascript-module",
+      "path": "src/lib/context/audience-context.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "audienceContext"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "audienceContext",
+          "declaration": {
+            "name": "audienceContext",
+            "module": "src/lib/context/audience-context.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/lib/context/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "package": "./audience-context"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/lib/decorators/index.ts",
       "declarations": [],
       "exports": [
@@ -98,27 +133,7 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/context/audience-context.ts",
-      "declarations": [
-        {
-          "kind": "variable",
-          "name": "audienceContext"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "audienceContext",
-          "declaration": {
-            "name": "audienceContext",
-            "module": "src/lib/context/audience-context.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/lib/context/index.ts",
+      "path": "src/lib/qti-item-react/index.ts",
       "declarations": [],
       "exports": [
         {
@@ -126,7 +141,28 @@
           "name": "*",
           "declaration": {
             "name": "*",
-            "package": "./audience-context"
+            "package": "./qti-item.react"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/lib/qti-item-react/qti-item.react.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "QtiItem",
+          "default": "createComponent({\n  tagName: 'qti-item',\n  react: React,\n  elementClass: QtiItemWebComponent,\n  events: {\n    onOutcomeChanged: 'qti-outcome-changed', // as EventName<Event>\n    onInteractionChanged: 'qti-interaction-changed',\n    onItemFirstUpdated: 'qti-item-first-updated'\n  }\n})"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiItem",
+          "declaration": {
+            "name": "QtiItem",
+            "module": "src/lib/qti-item-react/qti-item.react.ts"
           }
         }
       ]
@@ -213,7 +249,7 @@
           "name": "*",
           "declaration": {
             "name": "*",
-            "package": "./qti-variabledeclaration/qti-responsedeclaration/qti-responsedeclaration"
+            "package": "./qti-variable-declaration/qti-response-declaration/qti-response-declaration"
           }
         },
         {
@@ -221,7 +257,7 @@
           "name": "*",
           "declaration": {
             "name": "*",
-            "package": "./qti-variabledeclaration/qti-outcomedeclaration/qti-outcomedeclaration"
+            "package": "./qti-variable-declaration/qti-outcome-declaration/qti-outcomedeclaration"
           }
         },
         {
@@ -317,7 +353,7 @@
           "name": "*",
           "declaration": {
             "name": "*",
-            "package": "./qti-responseprocessing"
+            "package": "./qti-response-processing"
           }
         },
         {
@@ -540,42 +576,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-item-react/index.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "*",
-          "declaration": {
-            "name": "*",
-            "package": "./qti-item.react"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/lib/qti-item-react/qti-item.react.ts",
-      "declarations": [
-        {
-          "kind": "variable",
-          "name": "QtiItem",
-          "default": "createComponent({\n  tagName: 'qti-item',\n  react: React,\n  elementClass: QtiItemWebComponent,\n  events: {\n    onOutcomeChanged: 'qti-outcome-changed', // as EventName<Event>\n    onInteractionChanged: 'qti-interaction-changed',\n    onItemFirstUpdated: 'qti-item-first-updated'\n  }\n})"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "QtiItem",
-          "declaration": {
-            "name": "QtiItem",
-            "module": "src/lib/qti-item-react/qti-item.react.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "src/lib/qti-test/index.ts",
       "declarations": [],
       "exports": [
@@ -774,6 +774,21 @@
           ],
           "attributes": [
             {
+              "name": "audience-context",
+              "type": {
+                "text": "| 'candidate'\n    | 'scorer'\n    | ''"
+              },
+              "fieldName": "audienceContext"
+            },
+            {
+              "name": "item-index",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "fieldName": "itemIndex"
+            },
+            {
               "name": "identifier",
               "type": {
                 "text": "string"
@@ -877,7 +892,22 @@
           "name": "QtiTestHaunted",
           "parameters": [
             {
-              "name": "manifestData"
+              "name": "manifestData",
+              "type": {
+                "text": "ManifestData"
+              }
+            },
+            {
+              "name": "itemIndex",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "testContext",
+              "type": {
+                "text": "TestContext"
+              }
             }
           ]
         }
@@ -1140,6 +1170,52 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/lib/qti-transform/qti-transform.examples.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "transforms",
+          "type": {
+            "text": "object"
+          },
+          "default": "{\n  mathml,\n  removeNamesSpaces,\n  pciHooks,\n  assetsLocation,\n  customTypes,\n  suffix,\n  elementNameAttributes,\n  operatorDefinition,\n  cDataToComment\n}"
+        },
+        {
+          "kind": "variable",
+          "name": "transformStrings",
+          "type": {
+            "text": "object"
+          },
+          "default": "{\n  mathmlString,\n  removeNamesSpacesString,\n  pciHooksString,\n  assetsLocationString,\n  customTypesString,\n  suffixString,\n  elementNameAttributesString,\n  operatorDefinitionString,\n  cDataToCommentString\n}"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "transforms",
+          "declaration": {
+            "name": "transforms",
+            "module": "src/lib/qti-transform/qti-transform.examples.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "transformStrings",
+          "declaration": {
+            "name": "transformStrings",
+            "module": "src/lib/qti-transform/qti-transform.examples.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/lib/qti-transform/qti-transform.mdx",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/lib/qti-transform/qti-transform.ts",
       "declarations": [
         {
@@ -1165,6 +1241,91 @@
           }
         }
       ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/lib/qti-components/qti-companion-materials-info/qti-companion-materials-info.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiCompanionMaterialsInfo",
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "qti-companion-materials-info",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiCompanionMaterialsInfo",
+          "declaration": {
+            "name": "QtiCompanionMaterialsInfo",
+            "module": "src/lib/qti-components/qti-companion-materials-info/qti-companion-materials-info.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-companion-materials-info",
+          "declaration": {
+            "name": "QtiCompanionMaterialsInfo",
+            "module": "src/lib/qti-components/qti-companion-materials-info/qti-companion-materials-info.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/lib/qti-components/qti-custom-operator/qti-custom-operator.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "https://www.imsglobal.org/spec/qti/v3p0/impl#h.fi29q8dubjgw\n<qti-custom-operator class=\"js.org\">\n     <qti-base-value base-type=\"string\"><![CDATA[\n       console.log(context.variables);\n       return 'B'\n       document.querySelector('qti-end-attempt-interaction').disabled = true;\n       ]]></qti-base-value>\n   </qti-custom-operator>\n </qti-set-outcome-value>",
+          "name": "QtiCustomOperator",
+          "members": [],
+          "events": [
+            {
+              "name": "qti-set-outcome-value",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "qti-custom-operator",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiCustomOperator",
+          "declaration": {
+            "name": "QtiCustomOperator",
+            "module": "src/lib/qti-components/qti-custom-operator/qti-custom-operator.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-custom-operator",
+          "declaration": {
+            "name": "QtiCustomOperator",
+            "module": "src/lib/qti-components/qti-custom-operator/qti-custom-operator.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/lib/qti-components/qti-custom-operator/qti-custom-operator.xml",
+      "declarations": [],
+      "exports": []
     },
     {
       "kind": "javascript-module",
@@ -1298,91 +1459,6 @@
           }
         }
       ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-companion-materials-info/qti-companion-materials-info.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "QtiCompanionMaterialsInfo",
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "qti-companion-materials-info",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "QtiCompanionMaterialsInfo",
-          "declaration": {
-            "name": "QtiCompanionMaterialsInfo",
-            "module": "src/lib/qti-components/qti-companion-materials-info/qti-companion-materials-info.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-companion-materials-info",
-          "declaration": {
-            "name": "QtiCompanionMaterialsInfo",
-            "module": "src/lib/qti-components/qti-companion-materials-info/qti-companion-materials-info.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-custom-operator/qti-custom-operator.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "https://www.imsglobal.org/spec/qti/v3p0/impl#h.fi29q8dubjgw\n<qti-custom-operator class=\"js.org\">\n     <qti-base-value base-type=\"string\"><![CDATA[\n       console.log(context.variables);\n       return 'B'\n       document.querySelector('qti-end-attempt-interaction').disabled = true;\n       ]]></qti-base-value>\n   </qti-custom-operator>\n </qti-set-outcome-value>",
-          "name": "QtiCustomOperator",
-          "members": [],
-          "events": [
-            {
-              "name": "qti-set-outcome-value",
-              "type": {
-                "text": "CustomEvent"
-              }
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "qti-custom-operator",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "QtiCustomOperator",
-          "declaration": {
-            "name": "QtiCustomOperator",
-            "module": "src/lib/qti-components/qti-custom-operator/qti-custom-operator.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-custom-operator",
-          "declaration": {
-            "name": "QtiCustomOperator",
-            "module": "src/lib/qti-components/qti-custom-operator/qti-custom-operator.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-custom-operator/qti-custom-operator.xml",
-      "declarations": [],
-      "exports": []
     },
     {
       "kind": "javascript-module",
@@ -2190,7 +2266,7 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-responseprocessing/index.ts",
+      "path": "src/lib/qti-components/qti-response-processing/index.ts",
       "declarations": [],
       "exports": [
         {
@@ -2198,7 +2274,7 @@
           "name": "QtiResponseProcessing",
           "declaration": {
             "name": "default",
-            "module": "./qti-responseprocessing/qti-responseprocessing"
+            "module": "./qti-response-processing/qti-responseprocessing"
           }
         },
         {
@@ -2214,7 +2290,7 @@
           "name": "*",
           "declaration": {
             "name": "*",
-            "package": "./qti-rule/qti-responsecondition/qti-responsecondition"
+            "package": "./qti-rule/qti-response-condition/qti-response-condition"
           }
         },
         {
@@ -2222,7 +2298,7 @@
           "name": "*",
           "declaration": {
             "name": "*",
-            "package": "./qti-rule/qti-setoutcomevalue/qti-setoutcomevalue"
+            "package": "./qti-rule/qti-set-outcome-value/qti-set-outcome-value"
           }
         },
         {
@@ -2230,7 +2306,7 @@
           "name": "*",
           "declaration": {
             "name": "*",
-            "package": "./qti-responseelse/qti-responseif/qti-responseif"
+            "package": "./qti-response-else/qti-response-if/qti-response-if"
           }
         },
         {
@@ -2238,7 +2314,7 @@
           "name": "*",
           "declaration": {
             "name": "*",
-            "package": "./qti-responseelse/qti-responseif/qti-responseelseif/qti-responseelseif"
+            "package": "./qti-response-else/qti-response-if/qti-response-else-if/qti-response-else-if"
           }
         },
         {
@@ -2246,7 +2322,7 @@
           "name": "*",
           "declaration": {
             "name": "*",
-            "package": "./qti-responseelse/qti-responseelse"
+            "package": "./qti-response-else/qti-response-else"
           }
         },
         {
@@ -2626,7 +2702,7 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-variabledeclaration/qti-variabledeclaration.ts",
+      "path": "src/lib/qti-components/qti-variable-declaration/qti-variable-declaration.ts",
       "declarations": [
         {
           "kind": "class",
@@ -2647,7 +2723,7 @@
           "name": "QtiVariableDeclaration",
           "declaration": {
             "name": "QtiVariableDeclaration",
-            "module": "src/lib/qti-components/qti-variabledeclaration/qti-variabledeclaration.ts"
+            "module": "src/lib/qti-components/qti-variable-declaration/qti-variable-declaration.ts"
           }
         },
         {
@@ -2655,7 +2731,7 @@
           "name": "qti-variabledeclaration",
           "declaration": {
             "name": "QtiVariableDeclaration",
-            "module": "src/lib/qti-components/qti-variabledeclaration/qti-variabledeclaration.ts"
+            "module": "src/lib/qti-components/qti-variable-declaration/qti-variable-declaration.ts"
           }
         }
       ]
@@ -2751,6 +2827,150 @@
           "declaration": {
             "name": "*",
             "package": "./test-print-score"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "package": "./test-manual-scoring"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "package": "./test-toggle-scoring"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "package": "./test-item-id"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/lib/qti-test/components/test-item-id.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "TestItemId",
+          "members": [],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "test-item-id",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TestItemId",
+          "declaration": {
+            "name": "TestItemId",
+            "module": "src/lib/qti-test/components/test-item-id.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "test-item-id",
+          "declaration": {
+            "name": "TestItemId",
+            "module": "src/lib/qti-test/components/test-item-id.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/lib/qti-test/components/test-manual-scoring.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "TestManualScoring",
+          "members": [],
+          "events": [
+            {
+              "name": "qti-set-outcome-value",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readonly"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "fieldName": "value"
+            },
+            {
+              "name": "min",
+              "type": {
+                "text": "number"
+              },
+              "fieldName": "min"
+            },
+            {
+              "name": "max",
+              "type": {
+                "text": "number"
+              },
+              "fieldName": "max"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "test-manual-scoring",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TestManualScoring",
+          "declaration": {
+            "name": "TestManualScoring",
+            "module": "src/lib/qti-test/components/test-manual-scoring.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "test-manual-scoring",
+          "declaration": {
+            "name": "TestManualScoring",
+            "module": "src/lib/qti-test/components/test-manual-scoring.ts"
           }
         }
       ]
@@ -3213,6 +3433,42 @@
           "declaration": {
             "name": "TestSlider",
             "module": "src/lib/qti-test/components/test-slider.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/lib/qti-test/components/test-toggle-scoring.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "TestToggleScoring",
+          "members": [],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "test-toggle-scoring",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TestToggleScoring",
+          "declaration": {
+            "name": "TestToggleScoring",
+            "module": "src/lib/qti-test/components/test-toggle-scoring.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "test-toggle-scoring",
+          "declaration": {
+            "name": "TestToggleScoring",
+            "module": "src/lib/qti-test/components/test-toggle-scoring.ts"
           }
         }
       ]
@@ -5870,7 +6126,7 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-responseprocessing/qti-expression/index.ts",
+      "path": "src/lib/qti-components/qti-response-processing/qti-expression/index.ts",
       "declarations": [],
       "exports": [
         {
@@ -5974,7 +6230,7 @@
           "name": "*",
           "declaration": {
             "name": "*",
-            "package": "./qti-mapresponse/qti-mapresponse"
+            "package": "./qti-map-response/qti-map-response"
           }
         },
         {
@@ -6085,7 +6341,7 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-condition-expression.ts",
+      "path": "src/lib/qti-components/qti-response-processing/qti-expression/qti-condition-expression.ts",
       "declarations": [
         {
           "kind": "class",
@@ -6094,7 +6350,7 @@
           "members": [],
           "superclass": {
             "name": "QtiExpression",
-            "module": "/src/lib/qti-components/qti-responseprocessing/qti-expression/qti-expression"
+            "module": "/src/lib/qti-components/qti-response-processing/qti-expression/qti-expression"
           }
         }
       ],
@@ -6104,14 +6360,14 @@
           "name": "QtiConditionExpression",
           "declaration": {
             "name": "QtiConditionExpression",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-condition-expression.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-condition-expression.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-expression.ts",
+      "path": "src/lib/qti-components/qti-response-processing/qti-expression/qti-expression.ts",
       "declarations": [
         {
           "kind": "class",
@@ -6131,14 +6387,14 @@
           "name": "QtiExpression",
           "declaration": {
             "name": "QtiExpression",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-expression.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-expression.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-responseprocessing/qti-responseelse/qti-responseelse.ts",
+      "path": "src/lib/qti-components/qti-response-processing/qti-response-else/qti-response-else.ts",
       "declarations": [
         {
           "kind": "class",
@@ -6168,7 +6424,7 @@
           "name": "QtiResponseElse",
           "declaration": {
             "name": "QtiResponseElse",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-responseelse/qti-responseelse.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-response-else/qti-response-else.ts"
           }
         },
         {
@@ -6176,14 +6432,14 @@
           "name": "qti-response-else",
           "declaration": {
             "name": "QtiResponseElse",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-responseelse/qti-responseelse.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-response-else/qti-response-else.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-responseprocessing/qti-responseprocessing/qti-responseprocessing.ts",
+      "path": "src/lib/qti-components/qti-response-processing/qti-response-processing/qti-responseprocessing.ts",
       "declarations": [
         {
           "kind": "class",
@@ -6209,7 +6465,7 @@
           "name": "default",
           "declaration": {
             "name": "QtiResponseProcessing",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-responseprocessing/qti-responseprocessing.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-response-processing/qti-responseprocessing.ts"
           }
         },
         {
@@ -6217,14 +6473,14 @@
           "name": "qti-response-processing",
           "declaration": {
             "name": "QtiResponseProcessing",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-responseprocessing/qti-responseprocessing.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-response-processing/qti-responseprocessing.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-responseprocessing/qti-rule/qti-rule.ts",
+      "path": "src/lib/qti-components/qti-response-processing/qti-rule/qti-rule.ts",
       "declarations": [
         {
           "kind": "class",
@@ -6245,7 +6501,7 @@
           "name": "QtiRule",
           "declaration": {
             "name": "QtiRule",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-rule/qti-rule.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-rule/qti-rule.ts"
           }
         },
         {
@@ -6253,14 +6509,14 @@
           "name": "qti-rule",
           "declaration": {
             "name": "QtiRule",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-rule/qti-rule.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-rule/qti-rule.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-responseprocessing/utilities/scoring-helper.ts",
+      "path": "src/lib/qti-components/qti-response-processing/utilities/scoring-helper.ts",
       "declarations": [
         {
           "kind": "class",
@@ -6275,7 +6531,7 @@
           "name": "ScoringHelper",
           "declaration": {
             "name": "ScoringHelper",
-            "module": "src/lib/qti-components/qti-responseprocessing/utilities/scoring-helper.ts"
+            "module": "src/lib/qti-components/qti-response-processing/utilities/scoring-helper.ts"
           }
         }
       ]
@@ -6417,74 +6673,7 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-variabledeclaration/qti-responsedeclaration/qti-responsedeclaration.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "QtiResponseDeclaration",
-          "members": [],
-          "events": [
-            {
-              "name": "qti-register-variable",
-              "type": {
-                "text": "CustomEvent"
-              }
-            }
-          ],
-          "attributes": [
-            {
-              "name": "base-type",
-              "type": {
-                "text": "BaseType"
-              },
-              "fieldName": "baseType"
-            },
-            {
-              "name": "identifier",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "identifier"
-            },
-            {
-              "name": "cardinality",
-              "type": {
-                "text": "Cardinality"
-              },
-              "fieldName": "cardinality"
-            }
-          ],
-          "superclass": {
-            "name": "QtiVariableDeclaration",
-            "module": "/src/lib/qti-components/qti-variabledeclaration/qti-variabledeclaration"
-          },
-          "tagName": "qti-response-declaration",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "QtiResponseDeclaration",
-          "declaration": {
-            "name": "QtiResponseDeclaration",
-            "module": "src/lib/qti-components/qti-variabledeclaration/qti-responsedeclaration/qti-responsedeclaration.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-response-declaration",
-          "declaration": {
-            "name": "QtiResponseDeclaration",
-            "module": "src/lib/qti-components/qti-variabledeclaration/qti-responsedeclaration/qti-responsedeclaration.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-variabledeclaration/qti-outcomedeclaration/qti-outcomedeclaration.ts",
+      "path": "src/lib/qti-components/qti-variable-declaration/qti-outcome-declaration/qti-outcomedeclaration.ts",
       "declarations": [
         {
           "kind": "class",
@@ -6524,7 +6713,7 @@
           ],
           "superclass": {
             "name": "QtiVariableDeclaration",
-            "module": "/src/lib/qti-components/qti-variabledeclaration/qti-variabledeclaration"
+            "module": "/src/lib/qti-components/qti-variable-declaration/qti-variable-declaration"
           },
           "tagName": "qti-outcome-declaration",
           "customElement": true
@@ -6536,7 +6725,7 @@
           "name": "QtiOutcomeDeclaration",
           "declaration": {
             "name": "QtiOutcomeDeclaration",
-            "module": "src/lib/qti-components/qti-variabledeclaration/qti-outcomedeclaration/qti-outcomedeclaration.ts"
+            "module": "src/lib/qti-components/qti-variable-declaration/qti-outcome-declaration/qti-outcomedeclaration.ts"
           }
         },
         {
@@ -6544,7 +6733,74 @@
           "name": "qti-outcome-declaration",
           "declaration": {
             "name": "QtiOutcomeDeclaration",
-            "module": "src/lib/qti-components/qti-variabledeclaration/qti-outcomedeclaration/qti-outcomedeclaration.ts"
+            "module": "src/lib/qti-components/qti-variable-declaration/qti-outcome-declaration/qti-outcomedeclaration.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/lib/qti-components/qti-variable-declaration/qti-response-declaration/qti-response-declaration.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiResponseDeclaration",
+          "members": [],
+          "events": [
+            {
+              "name": "qti-register-variable",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "base-type",
+              "type": {
+                "text": "BaseType"
+              },
+              "fieldName": "baseType"
+            },
+            {
+              "name": "identifier",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "identifier"
+            },
+            {
+              "name": "cardinality",
+              "type": {
+                "text": "Cardinality"
+              },
+              "fieldName": "cardinality"
+            }
+          ],
+          "superclass": {
+            "name": "QtiVariableDeclaration",
+            "module": "/src/lib/qti-components/qti-variable-declaration/qti-variable-declaration"
+          },
+          "tagName": "qti-response-declaration",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiResponseDeclaration",
+          "declaration": {
+            "name": "QtiResponseDeclaration",
+            "module": "src/lib/qti-components/qti-variable-declaration/qti-response-declaration/qti-response-declaration.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-response-declaration",
+          "declaration": {
+            "name": "QtiResponseDeclaration",
+            "module": "src/lib/qti-components/qti-variable-declaration/qti-response-declaration/qti-response-declaration.ts"
           }
         }
       ]
@@ -7167,7 +7423,7 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-and/qti-and.ts",
+      "path": "src/lib/qti-components/qti-response-processing/qti-expression/qti-and/qti-and.ts",
       "declarations": [
         {
           "kind": "class",
@@ -7176,7 +7432,7 @@
           "members": [],
           "superclass": {
             "name": "QtiConditionExpression",
-            "module": "/src/lib/qti-components/qti-responseprocessing/qti-expression/qti-condition-expression"
+            "module": "/src/lib/qti-components/qti-response-processing/qti-expression/qti-condition-expression"
           },
           "tagName": "qti-and",
           "customElement": true
@@ -7188,7 +7444,7 @@
           "name": "QtiAnd",
           "declaration": {
             "name": "QtiAnd",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-and/qti-and.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-and/qti-and.ts"
           }
         },
         {
@@ -7196,14 +7452,14 @@
           "name": "qti-and",
           "declaration": {
             "name": "QtiAnd",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-and/qti-and.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-and/qti-and.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-basevalue/qti-basevalue.ts",
+      "path": "src/lib/qti-components/qti-response-processing/qti-expression/qti-basevalue/qti-basevalue.ts",
       "declarations": [
         {
           "kind": "class",
@@ -7222,7 +7478,7 @@
           ],
           "superclass": {
             "name": "QtiExpression",
-            "module": "/src/lib/qti-components/qti-responseprocessing/qti-expression/qti-expression"
+            "module": "/src/lib/qti-components/qti-response-processing/qti-expression/qti-expression"
           },
           "tagName": "qti-base-value",
           "customElement": true
@@ -7234,7 +7490,7 @@
           "name": "QtiBaseValue",
           "declaration": {
             "name": "QtiBaseValue",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-basevalue/qti-basevalue.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-basevalue/qti-basevalue.ts"
           }
         },
         {
@@ -7242,14 +7498,14 @@
           "name": "qti-base-value",
           "declaration": {
             "name": "QtiBaseValue",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-basevalue/qti-basevalue.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-basevalue/qti-basevalue.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-contains/qti-contains.ts",
+      "path": "src/lib/qti-components/qti-response-processing/qti-expression/qti-contains/qti-contains.ts",
       "declarations": [
         {
           "kind": "class",
@@ -7258,7 +7514,7 @@
           "members": [],
           "superclass": {
             "name": "QtiConditionExpression",
-            "module": "/src/lib/qti-components/qti-responseprocessing/qti-expression/qti-condition-expression"
+            "module": "/src/lib/qti-components/qti-response-processing/qti-expression/qti-condition-expression"
           },
           "tagName": "qti-contains",
           "customElement": true
@@ -7270,7 +7526,7 @@
           "name": "QtiContains",
           "declaration": {
             "name": "QtiContains",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-contains/qti-contains.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-contains/qti-contains.ts"
           }
         },
         {
@@ -7278,14 +7534,14 @@
           "name": "qti-contains",
           "declaration": {
             "name": "QtiContains",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-contains/qti-contains.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-contains/qti-contains.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-correct/qti-correct.ts",
+      "path": "src/lib/qti-components/qti-response-processing/qti-expression/qti-correct/qti-correct.ts",
       "declarations": [
         {
           "kind": "class",
@@ -7294,7 +7550,7 @@
           "members": [],
           "superclass": {
             "name": "QtiExpression",
-            "module": "/src/lib/qti-components/qti-responseprocessing/qti-expression/qti-expression"
+            "module": "/src/lib/qti-components/qti-response-processing/qti-expression/qti-expression"
           },
           "tagName": "qti-correct",
           "customElement": true
@@ -7306,7 +7562,7 @@
           "name": "QtiCorrect",
           "declaration": {
             "name": "QtiCorrect",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-correct/qti-correct.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-correct/qti-correct.ts"
           }
         },
         {
@@ -7314,14 +7570,14 @@
           "name": "qti-correct",
           "declaration": {
             "name": "QtiCorrect",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-correct/qti-correct.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-correct/qti-correct.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-equal/qti-equal.ts",
+      "path": "src/lib/qti-components/qti-response-processing/qti-expression/qti-equal/qti-equal.ts",
       "declarations": [
         {
           "kind": "class",
@@ -7340,7 +7596,7 @@
           ],
           "superclass": {
             "name": "QtiExpression",
-            "module": "/src/lib/qti-components/qti-responseprocessing/qti-expression/qti-expression"
+            "module": "/src/lib/qti-components/qti-response-processing/qti-expression/qti-expression"
           },
           "tagName": "qti-equal",
           "customElement": true
@@ -7352,7 +7608,7 @@
           "name": "QtiEqual",
           "declaration": {
             "name": "QtiEqual",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-equal/qti-equal.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-equal/qti-equal.ts"
           }
         },
         {
@@ -7360,14 +7616,14 @@
           "name": "qti-equal",
           "declaration": {
             "name": "QtiEqual",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-equal/qti-equal.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-equal/qti-equal.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-equal-rounded/qti-equal-rounded.ts",
+      "path": "src/lib/qti-components/qti-response-processing/qti-expression/qti-equal-rounded/qti-equal-rounded.ts",
       "declarations": [
         {
           "kind": "class",
@@ -7386,7 +7642,7 @@
           ],
           "superclass": {
             "name": "QtiExpression",
-            "module": "/src/lib/qti-components/qti-responseprocessing/qti-expression/qti-expression"
+            "module": "/src/lib/qti-components/qti-response-processing/qti-expression/qti-expression"
           },
           "tagName": "qti-equal-rounded",
           "customElement": true
@@ -7398,7 +7654,7 @@
           "name": "QtiEqualRounded",
           "declaration": {
             "name": "QtiEqualRounded",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-equal-rounded/qti-equal-rounded.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-equal-rounded/qti-equal-rounded.ts"
           }
         },
         {
@@ -7406,14 +7662,14 @@
           "name": "qti-equal-rounded",
           "declaration": {
             "name": "QtiEqualRounded",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-equal-rounded/qti-equal-rounded.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-equal-rounded/qti-equal-rounded.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-gt/qti-gt.ts",
+      "path": "src/lib/qti-components/qti-response-processing/qti-expression/qti-gt/qti-gt.ts",
       "declarations": [
         {
           "kind": "class",
@@ -7422,7 +7678,7 @@
           "members": [],
           "superclass": {
             "name": "QtiExpression",
-            "module": "/src/lib/qti-components/qti-responseprocessing/qti-expression/qti-expression"
+            "module": "/src/lib/qti-components/qti-response-processing/qti-expression/qti-expression"
           },
           "tagName": "qti-gt",
           "customElement": true
@@ -7434,7 +7690,7 @@
           "name": "QtiGt",
           "declaration": {
             "name": "QtiGt",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-gt/qti-gt.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-gt/qti-gt.ts"
           }
         },
         {
@@ -7442,50 +7698,14 @@
           "name": "qti-gt",
           "declaration": {
             "name": "QtiGt",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-gt/qti-gt.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-gt/qti-gt.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-is-null/qti-is-null.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "QtiIsNull",
-          "members": [],
-          "superclass": {
-            "name": "QtiExpression",
-            "module": "/src/lib/qti-components/qti-responseprocessing/qti-expression/qti-expression"
-          },
-          "tagName": "qti-is-null",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "QtiIsNull",
-          "declaration": {
-            "name": "QtiIsNull",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-is-null/qti-is-null.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-is-null",
-          "declaration": {
-            "name": "QtiIsNull",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-is-null/qti-is-null.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-gte/qti-gte.ts",
+      "path": "src/lib/qti-components/qti-response-processing/qti-expression/qti-gte/qti-gte.ts",
       "declarations": [
         {
           "kind": "class",
@@ -7494,7 +7714,7 @@
           "members": [],
           "superclass": {
             "name": "QtiConditionExpression",
-            "module": "/src/lib/qti-components/qti-responseprocessing/qti-expression/qti-condition-expression"
+            "module": "/src/lib/qti-components/qti-response-processing/qti-expression/qti-condition-expression"
           },
           "tagName": "qti-gte",
           "customElement": true
@@ -7506,7 +7726,7 @@
           "name": "QtiGte",
           "declaration": {
             "name": "QtiGte",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-gte/qti-gte.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-gte/qti-gte.ts"
           }
         },
         {
@@ -7514,14 +7734,50 @@
           "name": "qti-gte",
           "declaration": {
             "name": "QtiGte",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-gte/qti-gte.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-gte/qti-gte.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-lt/qti-lt.ts",
+      "path": "src/lib/qti-components/qti-response-processing/qti-expression/qti-is-null/qti-is-null.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiIsNull",
+          "members": [],
+          "superclass": {
+            "name": "QtiExpression",
+            "module": "/src/lib/qti-components/qti-response-processing/qti-expression/qti-expression"
+          },
+          "tagName": "qti-is-null",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiIsNull",
+          "declaration": {
+            "name": "QtiIsNull",
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-is-null/qti-is-null.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-is-null",
+          "declaration": {
+            "name": "QtiIsNull",
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-is-null/qti-is-null.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/lib/qti-components/qti-response-processing/qti-expression/qti-lt/qti-lt.ts",
       "declarations": [
         {
           "kind": "class",
@@ -7530,7 +7786,7 @@
           "members": [],
           "superclass": {
             "name": "QtiExpression",
-            "module": "/src/lib/qti-components/qti-responseprocessing/qti-expression/qti-expression"
+            "module": "/src/lib/qti-components/qti-response-processing/qti-expression/qti-expression"
           },
           "tagName": "qti-lt",
           "customElement": true
@@ -7542,7 +7798,7 @@
           "name": "QtiLt",
           "declaration": {
             "name": "QtiLt",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-lt/qti-lt.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-lt/qti-lt.ts"
           }
         },
         {
@@ -7550,14 +7806,14 @@
           "name": "qti-lt",
           "declaration": {
             "name": "QtiLt",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-lt/qti-lt.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-lt/qti-lt.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-lte/qti-lte.ts",
+      "path": "src/lib/qti-components/qti-response-processing/qti-expression/qti-lte/qti-lte.ts",
       "declarations": [
         {
           "kind": "class",
@@ -7566,7 +7822,7 @@
           "members": [],
           "superclass": {
             "name": "QtiConditionExpression",
-            "module": "/src/lib/qti-components/qti-responseprocessing/qti-expression/qti-condition-expression"
+            "module": "/src/lib/qti-components/qti-response-processing/qti-expression/qti-condition-expression"
           },
           "tagName": "qti-lte",
           "customElement": true
@@ -7578,7 +7834,7 @@
           "name": "QtiLte",
           "declaration": {
             "name": "QtiLte",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-lte/qti-lte.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-lte/qti-lte.ts"
           }
         },
         {
@@ -7586,14 +7842,59 @@
           "name": "qti-lte",
           "declaration": {
             "name": "QtiLte",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-lte/qti-lte.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-lte/qti-lte.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-mapping/qti-mapping.ts",
+      "path": "src/lib/qti-components/qti-response-processing/qti-expression/qti-map-response/qti-map-response.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiMapResponse",
+          "members": [],
+          "attributes": [
+            {
+              "name": "identifier",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "identifier"
+            }
+          ],
+          "superclass": {
+            "name": "QtiExpression",
+            "module": "/src/lib/qti-components/qti-response-processing/qti-expression/qti-expression"
+          },
+          "tagName": "qti-map-response",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiMapResponse",
+          "declaration": {
+            "name": "QtiMapResponse",
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-map-response/qti-map-response.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-map-response",
+          "declaration": {
+            "name": "QtiMapResponse",
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-map-response/qti-map-response.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/lib/qti-components/qti-response-processing/qti-expression/qti-mapping/qti-mapping.ts",
       "declarations": [
         {
           "kind": "class",
@@ -7638,7 +7939,7 @@
           "name": "QtiMapping",
           "declaration": {
             "name": "QtiMapping",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-mapping/qti-mapping.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-mapping/qti-mapping.ts"
           }
         },
         {
@@ -7646,59 +7947,14 @@
           "name": "qti-mapping",
           "declaration": {
             "name": "QtiMapping",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-mapping/qti-mapping.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-mapping/qti-mapping.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-mapresponse/qti-mapresponse.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "QtiMapResponse",
-          "members": [],
-          "attributes": [
-            {
-              "name": "identifier",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "identifier"
-            }
-          ],
-          "superclass": {
-            "name": "QtiExpression",
-            "module": "/src/lib/qti-components/qti-responseprocessing/qti-expression/qti-expression"
-          },
-          "tagName": "qti-map-response",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "QtiMapResponse",
-          "declaration": {
-            "name": "QtiMapResponse",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-mapresponse/qti-mapresponse.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-map-response",
-          "declaration": {
-            "name": "QtiMapResponse",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-mapresponse/qti-mapresponse.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-match/qti-match.ts",
+      "path": "src/lib/qti-components/qti-response-processing/qti-expression/qti-match/qti-match.ts",
       "declarations": [
         {
           "kind": "class",
@@ -7707,7 +7963,7 @@
           "members": [],
           "superclass": {
             "name": "QtiExpression",
-            "module": "/src/lib/qti-components/qti-responseprocessing/qti-expression/qti-expression"
+            "module": "/src/lib/qti-components/qti-response-processing/qti-expression/qti-expression"
           },
           "tagName": "qti-match",
           "customElement": true
@@ -7719,7 +7975,7 @@
           "name": "QtiMatch",
           "declaration": {
             "name": "QtiMatch",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-match/qti-match.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-match/qti-match.ts"
           }
         },
         {
@@ -7727,14 +7983,14 @@
           "name": "qti-match",
           "declaration": {
             "name": "QtiMatch",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-match/qti-match.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-match/qti-match.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-member/qti-member.ts",
+      "path": "src/lib/qti-components/qti-response-processing/qti-expression/qti-member/qti-member.ts",
       "declarations": [
         {
           "kind": "class",
@@ -7743,7 +7999,7 @@
           "members": [],
           "superclass": {
             "name": "QtiExpression",
-            "module": "/src/lib/qti-components/qti-responseprocessing/qti-expression/qti-expression"
+            "module": "/src/lib/qti-components/qti-response-processing/qti-expression/qti-expression"
           },
           "tagName": "qti-member",
           "customElement": true
@@ -7755,7 +8011,7 @@
           "name": "QtiMember",
           "declaration": {
             "name": "QtiMember",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-member/qti-member.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-member/qti-member.ts"
           }
         },
         {
@@ -7763,14 +8019,14 @@
           "name": "qti-member",
           "declaration": {
             "name": "QtiMember",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-member/qti-member.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-member/qti-member.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-multiple/qti-multiple.ts",
+      "path": "src/lib/qti-components/qti-response-processing/qti-expression/qti-multiple/qti-multiple.ts",
       "declarations": [
         {
           "kind": "class",
@@ -7779,7 +8035,7 @@
           "members": [],
           "superclass": {
             "name": "QtiExpression",
-            "module": "/src/lib/qti-components/qti-responseprocessing/qti-expression/qti-expression"
+            "module": "/src/lib/qti-components/qti-response-processing/qti-expression/qti-expression"
           },
           "tagName": "qti-multiple",
           "customElement": true
@@ -7791,7 +8047,7 @@
           "name": "QtiMultiple",
           "declaration": {
             "name": "QtiMultiple",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-multiple/qti-multiple.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-multiple/qti-multiple.ts"
           }
         },
         {
@@ -7799,14 +8055,14 @@
           "name": "qti-multiple",
           "declaration": {
             "name": "QtiMultiple",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-multiple/qti-multiple.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-multiple/qti-multiple.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-not/qti-not.ts",
+      "path": "src/lib/qti-components/qti-response-processing/qti-expression/qti-not/qti-not.ts",
       "declarations": [
         {
           "kind": "class",
@@ -7815,7 +8071,7 @@
           "members": [],
           "superclass": {
             "name": "QtiExpression",
-            "module": "/src/lib/qti-components/qti-responseprocessing/qti-expression/qti-expression"
+            "module": "/src/lib/qti-components/qti-response-processing/qti-expression/qti-expression"
           },
           "tagName": "qti-not",
           "customElement": true
@@ -7827,7 +8083,7 @@
           "name": "QtiNot",
           "declaration": {
             "name": "QtiNot",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-not/qti-not.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-not/qti-not.ts"
           }
         },
         {
@@ -7835,14 +8091,14 @@
           "name": "qti-not",
           "declaration": {
             "name": "QtiNot",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-not/qti-not.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-not/qti-not.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-or/qti-or.ts",
+      "path": "src/lib/qti-components/qti-response-processing/qti-expression/qti-or/qti-or.ts",
       "declarations": [
         {
           "kind": "class",
@@ -7851,7 +8107,7 @@
           "members": [],
           "superclass": {
             "name": "QtiConditionExpression",
-            "module": "/src/lib/qti-components/qti-responseprocessing/qti-expression/qti-condition-expression"
+            "module": "/src/lib/qti-components/qti-response-processing/qti-expression/qti-condition-expression"
           },
           "tagName": "qti-or",
           "customElement": true
@@ -7863,7 +8119,7 @@
           "name": "QtiOr",
           "declaration": {
             "name": "QtiOr",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-or/qti-or.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-or/qti-or.ts"
           }
         },
         {
@@ -7871,14 +8127,14 @@
           "name": "qti-or",
           "declaration": {
             "name": "QtiOr",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-or/qti-or.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-or/qti-or.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-ordered/qti-ordered.ts",
+      "path": "src/lib/qti-components/qti-response-processing/qti-expression/qti-ordered/qti-ordered.ts",
       "declarations": [
         {
           "kind": "class",
@@ -7887,7 +8143,7 @@
           "members": [],
           "superclass": {
             "name": "QtiExpression",
-            "module": "/src/lib/qti-components/qti-responseprocessing/qti-expression/qti-expression"
+            "module": "/src/lib/qti-components/qti-response-processing/qti-expression/qti-expression"
           },
           "tagName": "qti-ordered",
           "customElement": true
@@ -7899,7 +8155,7 @@
           "name": "QtiOrdered",
           "declaration": {
             "name": "QtiOrdered",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-ordered/qti-ordered.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-ordered/qti-ordered.ts"
           }
         },
         {
@@ -7907,14 +8163,14 @@
           "name": "qti-ordered",
           "declaration": {
             "name": "QtiOrdered",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-ordered/qti-ordered.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-ordered/qti-ordered.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-printed-variable/qti-printed-variable.ts",
+      "path": "src/lib/qti-components/qti-response-processing/qti-expression/qti-printed-variable/qti-printed-variable.ts",
       "declarations": [
         {
           "kind": "class",
@@ -7944,7 +8200,7 @@
           "name": "QtPrintedVariable",
           "declaration": {
             "name": "QtPrintedVariable",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-printed-variable/qti-printed-variable.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-printed-variable/qti-printed-variable.ts"
           }
         },
         {
@@ -7952,50 +8208,14 @@
           "name": "qti-printed-variable",
           "declaration": {
             "name": "QtPrintedVariable",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-printed-variable/qti-printed-variable.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-printed-variable/qti-printed-variable.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-product/qti-product.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "QtiProduct",
-          "members": [],
-          "superclass": {
-            "name": "QtiExpression",
-            "module": "/src/lib/qti-components/qti-responseprocessing/qti-expression/qti-expression"
-          },
-          "tagName": "qti-product",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "QtiProduct",
-          "declaration": {
-            "name": "QtiProduct",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-product/qti-product.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-product",
-          "declaration": {
-            "name": "QtiProduct",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-product/qti-product.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-string-match/qti-string-match.ts",
+      "path": "src/lib/qti-components/qti-response-processing/qti-expression/qti-string-match/qti-string-match.ts",
       "declarations": [
         {
           "kind": "class",
@@ -8014,7 +8234,7 @@
           ],
           "superclass": {
             "name": "QtiExpression",
-            "module": "/src/lib/qti-components/qti-responseprocessing/qti-expression/qti-expression"
+            "module": "/src/lib/qti-components/qti-response-processing/qti-expression/qti-expression"
           },
           "tagName": "qti-string-match",
           "customElement": true
@@ -8026,7 +8246,7 @@
           "name": "QtiStringMatch",
           "declaration": {
             "name": "QtiStringMatch",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-string-match/qti-string-match.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-string-match/qti-string-match.ts"
           }
         },
         {
@@ -8034,14 +8254,50 @@
           "name": "qti-string-match",
           "declaration": {
             "name": "QtiStringMatch",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-string-match/qti-string-match.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-string-match/qti-string-match.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-sum/qti-sum.ts",
+      "path": "src/lib/qti-components/qti-response-processing/qti-expression/qti-product/qti-product.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiProduct",
+          "members": [],
+          "superclass": {
+            "name": "QtiExpression",
+            "module": "/src/lib/qti-components/qti-response-processing/qti-expression/qti-expression"
+          },
+          "tagName": "qti-product",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiProduct",
+          "declaration": {
+            "name": "QtiProduct",
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-product/qti-product.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-product",
+          "declaration": {
+            "name": "QtiProduct",
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-product/qti-product.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/lib/qti-components/qti-response-processing/qti-expression/qti-sum/qti-sum.ts",
       "declarations": [
         {
           "kind": "class",
@@ -8050,7 +8306,7 @@
           "members": [],
           "superclass": {
             "name": "QtiExpression",
-            "module": "/src/lib/qti-components/qti-responseprocessing/qti-expression/qti-expression"
+            "module": "/src/lib/qti-components/qti-response-processing/qti-expression/qti-expression"
           },
           "tagName": "qti-sum",
           "customElement": true
@@ -8062,7 +8318,7 @@
           "name": "QtiSum",
           "declaration": {
             "name": "QtiSum",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-sum/qti-sum.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-sum/qti-sum.ts"
           }
         },
         {
@@ -8070,14 +8326,14 @@
           "name": "qti-sum",
           "declaration": {
             "name": "QtiSum",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-sum/qti-sum.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-sum/qti-sum.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-variable/qti-variable.ts",
+      "path": "src/lib/qti-components/qti-response-processing/qti-expression/qti-variable/qti-variable.ts",
       "declarations": [
         {
           "kind": "class",
@@ -8086,7 +8342,7 @@
           "members": [],
           "superclass": {
             "name": "QtiExpression",
-            "module": "/src/lib/qti-components/qti-responseprocessing/qti-expression/qti-expression"
+            "module": "/src/lib/qti-components/qti-response-processing/qti-expression/qti-expression"
           },
           "tagName": "qti-variable",
           "customElement": true
@@ -8098,7 +8354,7 @@
           "name": "QtiVariable",
           "declaration": {
             "name": "QtiVariable",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-variable/qti-variable.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-variable/qti-variable.ts"
           }
         },
         {
@@ -8106,14 +8362,14 @@
           "name": "qti-variable",
           "declaration": {
             "name": "QtiVariable",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-expression/qti-variable/qti-variable.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-expression/qti-variable/qti-variable.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-responseprocessing/qti-responseelse/qti-responseif/qti-responseif.ts",
+      "path": "src/lib/qti-components/qti-response-processing/qti-response-else/qti-response-if/qti-response-if.ts",
       "declarations": [
         {
           "kind": "class",
@@ -8122,7 +8378,7 @@
           "members": [],
           "superclass": {
             "name": "QtiResponseElse",
-            "module": "/src/lib/qti-components/qti-responseprocessing/qti-responseelse/qti-responseelse"
+            "module": "/src/lib/qti-components/qti-response-processing/qti-response-else/qti-response-else"
           },
           "tagName": "qti-response-if",
           "customElement": true,
@@ -8135,7 +8391,7 @@
               "fieldName": "debugCalculateResult",
               "inheritedFrom": {
                 "name": "QtiResponseElse",
-                "module": "src/lib/qti-components/qti-responseprocessing/qti-responseelse/qti-responseelse.ts"
+                "module": "src/lib/qti-components/qti-response-processing/qti-response-else/qti-response-else.ts"
               }
             }
           ]
@@ -8147,7 +8403,7 @@
           "name": "QtiResponseIf",
           "declaration": {
             "name": "QtiResponseIf",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-responseelse/qti-responseif/qti-responseif.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-response-else/qti-response-if/qti-response-if.ts"
           }
         },
         {
@@ -8155,14 +8411,50 @@
           "name": "qti-response-if",
           "declaration": {
             "name": "QtiResponseIf",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-responseelse/qti-responseif/qti-responseif.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-response-else/qti-response-if/qti-response-if.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-responseprocessing/qti-rule/qti-setoutcomevalue/qti-setoutcomevalue.ts",
+      "path": "src/lib/qti-components/qti-response-processing/qti-rule/qti-response-condition/qti-response-condition.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiResponseCondition",
+          "members": [],
+          "superclass": {
+            "name": "QtiRule",
+            "module": "/src/lib/qti-components/qti-response-processing/qti-rule/qti-rule"
+          },
+          "tagName": "qti-response-condition",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiResponseCondition",
+          "declaration": {
+            "name": "QtiResponseCondition",
+            "module": "src/lib/qti-components/qti-response-processing/qti-rule/qti-response-condition/qti-response-condition.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-response-condition",
+          "declaration": {
+            "name": "QtiResponseCondition",
+            "module": "src/lib/qti-components/qti-response-processing/qti-rule/qti-response-condition/qti-response-condition.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/lib/qti-components/qti-response-processing/qti-rule/qti-set-outcome-value/qti-set-outcome-value.ts",
       "declarations": [
         {
           "kind": "class",
@@ -8179,7 +8471,7 @@
           ],
           "superclass": {
             "name": "QtiRule",
-            "module": "/src/lib/qti-components/qti-responseprocessing/qti-rule/qti-rule"
+            "module": "/src/lib/qti-components/qti-response-processing/qti-rule/qti-rule"
           },
           "tagName": "qti-set-outcome-value",
           "customElement": true
@@ -8191,7 +8483,7 @@
           "name": "QtiSetOutcomeValue",
           "declaration": {
             "name": "QtiSetOutcomeValue",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-rule/qti-setoutcomevalue/qti-setoutcomevalue.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-rule/qti-set-outcome-value/qti-set-outcome-value.ts"
           }
         },
         {
@@ -8199,50 +8491,14 @@
           "name": "qti-set-outcome-value",
           "declaration": {
             "name": "QtiSetOutcomeValue",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-rule/qti-setoutcomevalue/qti-setoutcomevalue.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-rule/qti-set-outcome-value/qti-set-outcome-value.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-responseprocessing/qti-rule/qti-responsecondition/qti-responsecondition.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "QtiResponseCondition",
-          "members": [],
-          "superclass": {
-            "name": "QtiRule",
-            "module": "/src/lib/qti-components/qti-responseprocessing/qti-rule/qti-rule"
-          },
-          "tagName": "qti-response-condition",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "QtiResponseCondition",
-          "declaration": {
-            "name": "QtiResponseCondition",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-rule/qti-responsecondition/qti-responsecondition.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-response-condition",
-          "declaration": {
-            "name": "QtiResponseCondition",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-rule/qti-responsecondition/qti-responsecondition.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-responseprocessing/qti-responseelse/qti-responseif/qti-responseelseif/qti-responseelseif.ts",
+      "path": "src/lib/qti-components/qti-response-processing/qti-response-else/qti-response-if/qti-response-else-if/qti-response-else-if.ts",
       "declarations": [
         {
           "kind": "class",
@@ -8251,7 +8507,7 @@
           "members": [],
           "superclass": {
             "name": "QtiResponseIf",
-            "module": "/src/lib/qti-components/qti-responseprocessing/qti-responseelse/qti-responseif/qti-responseif"
+            "module": "/src/lib/qti-components/qti-response-processing/qti-response-else/qti-response-if/qti-response-if"
           },
           "tagName": "qti-response-else-if",
           "customElement": true,
@@ -8264,7 +8520,7 @@
               "fieldName": "debugCalculateResult",
               "inheritedFrom": {
                 "name": "QtiResponseElse",
-                "module": "src/lib/qti-components/qti-responseprocessing/qti-responseelse/qti-responseelse.ts"
+                "module": "src/lib/qti-components/qti-response-processing/qti-response-else/qti-response-else.ts"
               }
             }
           ]
@@ -8276,7 +8532,7 @@
           "name": "QtiResponseElseIf",
           "declaration": {
             "name": "QtiResponseElseIf",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-responseelse/qti-responseif/qti-responseelseif/qti-responseelseif.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-response-else/qti-response-if/qti-response-else-if/qti-response-else-if.ts"
           }
         },
         {
@@ -8284,7 +8540,7 @@
           "name": "qti-response-else-if",
           "declaration": {
             "name": "QtiResponseElseIf",
-            "module": "src/lib/qti-components/qti-responseprocessing/qti-responseelse/qti-responseif/qti-responseelseif/qti-responseelseif.ts"
+            "module": "src/lib/qti-components/qti-response-processing/qti-response-else/qti-response-if/qti-response-else-if/qti-response-else-if.ts"
           }
         }
       ]
