@@ -67,6 +67,8 @@ interface QtiAssessmentTestProps {
   context?: TestContext;
   ref?: Ref<WcQtiAssessmentTest | undefined>;
   identifier: string;
+  itemIndex: number;
+  audienceContext: 'candidate' | 'scorer' | '';
 
   onOutcomeChanged?: (e: CustomEvent<OutcomeChangedDetails>) => void;
   onInteractionChanged?: (e: CustomEvent<InteractionChangedDetails>) => void;
