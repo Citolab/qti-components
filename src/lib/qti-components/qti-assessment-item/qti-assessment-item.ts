@@ -7,7 +7,7 @@ import type { ResponseInteraction } from '../qti-utilities/ExpressionResult';
 import type { Interaction } from '../qti-interaction/internal/interaction/interaction';
 import type { InteractionChangedDetails, OutcomeChangedDetails } from '../qti-utilities/EventTypes';
 import type { QtiFeedback } from '../qti-feedback/qti-feedback';
-import type { QtiResponseProcessing } from '../qti-responseprocessing';
+import type { QtiResponseProcessing } from '../qti-response-processing';
 import type { VariableDeclaration } from '../qti-utilities/Variables';
 import { ItemContext, itemContext } from './qti-assessment-item.context';
 import { ContextConsumer, provide } from '@lit/context';

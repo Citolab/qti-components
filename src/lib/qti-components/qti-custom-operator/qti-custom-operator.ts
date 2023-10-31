@@ -2,7 +2,7 @@ import { consume } from '@lit/context';
 import { html, css, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { itemContext, ItemContext } from '../qti-assessment-item/qti-assessment-item.context';
-import { QtiMatch } from '../qti-responseprocessing';
+import { QtiMatch } from '../qti-response-processing';
 import { Calculate } from '../qti-utilities/ExpressionResult';
 import { ResponseVariable } from '../qti-utilities/Variables';
 
