@@ -2,12 +2,27 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+/* only applied in qti-test, if present */
+/*
 ::host {
   @apply h-screen w-screen bg-slate-50;
 }
+*/
+
+/* qti-assessment-test {
+  @apply grid h-full w-full grid-cols-3;
+  qti-test-part {
+    @apply container col-span-3 mx-auto aspect-[4/3];
+  }
+} */
 
 qti-assessment-test {
-  @apply block p-8;
+  qti-test-part {
+    qti-assessment-section {
+      @apply block  overflow-y-auto rounded-sm bg-white p-8;
+    }
+  }
+
   .nav {
     @apply isolate mt-4 inline-flex w-full -space-x-px rounded-md shadow-sm;
   }
@@ -34,12 +49,6 @@ qti-assessment-test {
       &[data-active-item='true'] {
         @apply relative z-10 inline-flex items-center bg-indigo-600 px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600;
       }
-    }
-  }
-
-  qti-test-part {
-    qti-assessment-section {
-      @apply aspect-video w-full;
     }
   }
 }

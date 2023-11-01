@@ -19,15 +19,15 @@ export class TestScript extends LitElement {
   handleSlotChange(event: Event) {
     const commentNode = Array.from(this.childNodes ?? []).find(node => node.nodeType === Node.COMMENT_NODE);
     try {
-      this.operatorFunction = new Function('context', 'item', commentNode.textContent ?? '');
+      this.operatorFunction = new Function('testContext', 'itemContext', commentNode.textContent ?? '');
     } catch (e) {
       console.error('custom-operator contains invalid javascript code', e);
     }
     this._context = new ContextConsumer(
       this,
       testContext,
-      e => {
-        this._printed = this.operatorFunction(e, this.closest('qti-assessment-item'));
+      testContext => {
+        this._printed = this.operatorFunction(testContext, testContext.items[testContext.itemIndex]);
       },
       true
     );

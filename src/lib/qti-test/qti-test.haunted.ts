@@ -25,7 +25,17 @@ export const QtiTestHaunted = (manifestData: ManifestData, itemIndex: number, te
           }}
           item-index=${itemIndex}
         >
-          <test-show-index></test-show-index> : <test-item-id></test-item-id>
+          <div>
+            <test-show-index></test-show-index>:
+            <test-item-id></test-item-id>
+          </div>
+
+          <test-toggle-scoring></test-toggle-scoring>
+
+          <div>
+            <test-scoring-manual></test-scoring-manual>
+            <test-scoring-buttons></test-scoring-buttons>
+          </div>
 
           <qti-test-part>
             <qti-assessment-section>
@@ -37,6 +47,7 @@ export const QtiTestHaunted = (manifestData: ManifestData, itemIndex: number, te
                     href="${item.href}"
                     category="${ifDefined(item.category)}"
                   >
+                    <item-print-variables></item-print-variables>
                   </qti-assessment-item-ref>`
               )}
             </qti-assessment-section>
@@ -50,9 +61,12 @@ export const QtiTestHaunted = (manifestData: ManifestData, itemIndex: number, te
 
           <test-slider></test-slider>
 
-          <test-toggle-scoring></test-toggle-scoring>
-
-          <test-manual-scoring></test-manual-scoring>
+          <pre>
+          <test-script>
+          <!--
+            return JSON.stringify(itemContext, null, 2);
+           -->
+          </test-script></pre>
         </qti-assessment-test>
       `
     : ``;

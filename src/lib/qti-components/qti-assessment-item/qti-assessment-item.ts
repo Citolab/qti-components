@@ -10,8 +10,7 @@ import type { QtiFeedback } from '../qti-feedback/qti-feedback';
 import type { QtiResponseProcessing } from '../qti-response-processing';
 import type { VariableDeclaration } from '../qti-utilities/Variables';
 import { ItemContext, itemContext } from './qti-assessment-item.context';
-import { ContextConsumer, provide } from '@lit/context';
-import { audienceContext } from 'src/lib/context';
+import { provide } from '@lit/context';
 
 /**
  * @summary The qti-assessment-item element contains all the other QTI 3 item structures.
