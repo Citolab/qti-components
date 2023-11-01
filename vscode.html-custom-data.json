@@ -672,15 +672,13 @@
       "references": []
     },
     {
-      "name": "qti-slider-interaction",
-      "description": "The SliderInteraction.Type (qti-slider-interaction) presents the candidate with a control for selecting a numerical value between a lower and upper bound.\n---\n\n\n### **Events:**\n - **qti-register-interaction** - emitted when the interaction wants to register itself\n- **qti-interaction-response** - emitted when the interaction changes\n\n### **Slots:**\n - _default_ - The default slot where <qti-simple-choice> must be placed.\n- **prompt** - slot where the prompt is placed.\n\n### **CSS Properties:**\n - **--show-value** - shows the current value while sliding _(default: undefined)_\n- **--show-ticks** - shows the ticks according to steps _(default: undefined)_\n- **--show-bounds** - shows value for lower and upper boundary _(default: undefined)_\n\n### **CSS Parts:**\n - **slider** - -- slider inluding, bounds and ticks and value, use it for paddings and margins\n- **bounds** - -- div for bounds, containing two divs for with min, and max bounds value\n- **ticks** - -- div for ticks, use lineair gradient and exposed css variables for styling\n- **rail** - -- div for rail, style according to needs\n- **knob** - -- div, should be relative or absolute\n- **value** - -- div, containing value",
+      "name": "qti-text-entry-interaction",
+      "description": "\n---\n\n\n### **Events:**\n - **qti-register-interaction** - undefined\n- **qti-interaction-response** - undefined",
       "attributes": [
-        { "name": "value", "values": [] },
-        { "name": "step-label", "values": [] },
-        { "name": "reverse", "values": [] },
-        { "name": "lower-bound", "values": [] },
-        { "name": "upper-bound", "values": [] },
-        { "name": "step", "values": [] },
+        { "name": "expected-length", "values": [] },
+        { "name": "pattern-mask", "values": [] },
+        { "name": "placeholder-text", "values": [] },
+        { "name": "class", "values": [] },
         { "name": "response-identifier", "values": [] },
         {
           "name": "disabled",
@@ -696,13 +694,15 @@
       "references": []
     },
     {
-      "name": "qti-text-entry-interaction",
-      "description": "\n---\n\n\n### **Events:**\n - **qti-register-interaction** - undefined\n- **qti-interaction-response** - undefined",
+      "name": "qti-slider-interaction",
+      "description": "The SliderInteraction.Type (qti-slider-interaction) presents the candidate with a control for selecting a numerical value between a lower and upper bound.\n---\n\n\n### **Events:**\n - **qti-register-interaction** - emitted when the interaction wants to register itself\n- **qti-interaction-response** - emitted when the interaction changes\n\n### **Slots:**\n - _default_ - The default slot where <qti-simple-choice> must be placed.\n- **prompt** - slot where the prompt is placed.\n\n### **CSS Properties:**\n - **--show-value** - shows the current value while sliding _(default: undefined)_\n- **--show-ticks** - shows the ticks according to steps _(default: undefined)_\n- **--show-bounds** - shows value for lower and upper boundary _(default: undefined)_\n\n### **CSS Parts:**\n - **slider** - -- slider inluding, bounds and ticks and value, use it for paddings and margins\n- **bounds** - -- div for bounds, containing two divs for with min, and max bounds value\n- **ticks** - -- div for ticks, use lineair gradient and exposed css variables for styling\n- **rail** - -- div for rail, style according to needs\n- **knob** - -- div, should be relative or absolute\n- **value** - -- div, containing value",
       "attributes": [
-        { "name": "expected-length", "values": [] },
-        { "name": "pattern-mask", "values": [] },
-        { "name": "placeholder-text", "values": [] },
-        { "name": "class", "values": [] },
+        { "name": "value", "values": [] },
+        { "name": "step-label", "values": [] },
+        { "name": "reverse", "values": [] },
+        { "name": "lower-bound", "values": [] },
+        { "name": "upper-bound", "values": [] },
+        { "name": "step", "values": [] },
         { "name": "response-identifier", "values": [] },
         {
           "name": "disabled",
@@ -843,12 +843,6 @@
       "references": []
     },
     {
-      "name": "qti-map-response",
-      "description": "\n---\n",
-      "attributes": [{ "name": "identifier", "values": [] }],
-      "references": []
-    },
-    {
       "name": "qti-mapping",
       "description": "\n---\n",
       "attributes": [
@@ -856,6 +850,12 @@
         { "name": "lower-bound", "values": [] },
         { "name": "upper-bound", "values": [] }
       ],
+      "references": []
+    },
+    {
+      "name": "qti-map-response",
+      "description": "\n---\n",
+      "attributes": [{ "name": "identifier", "values": [] }],
       "references": []
     },
     {

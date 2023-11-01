@@ -17,7 +17,8 @@
   "main": "dist/index.js",
   "exports": {
     ".": {
-      "import": "./dist/index.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     },
     "./context": {
       "import": "./dist/context/index.js",
