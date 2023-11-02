@@ -13,7 +13,7 @@ import { qtiTransform } from '@citolab/qti-components/qti-transform';
 import { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
 
 const meta: Meta = {
-  component: 'qti-item',
+  title: 'items',
   decorators: [story => html`${virtual(story)()}`],
   argTypes: {
     view: {
@@ -35,7 +35,7 @@ const meta: Meta = {
 
 export default meta;
 
-export const QtiItem = {
+export const Items = {
   render: (args, { argTypes, loaded: { loadeditems } }) => {
     const items: { href: string; identifier: string }[] = loadeditems.items;
     const [itemXML, setItemXML] = useState<string>();
