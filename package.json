@@ -77,7 +77,6 @@
     "postpublish": "npm run deploy"
   },
   "dependencies": {
-    "@lit-labs/preact-signals": "^1.0.0",
     "@lit/context": "^1.0.0",
     "@lit/react": "^1.0.0",
     "cheerio": "^1.0.0-rc.12",
@@ -87,8 +86,7 @@
     "@lit/context": ">= 1.0",
     "@lit/react": ">= 1.0",
     "lit": ">= 3 < 4",
-    "react": "> 18",
-    "@lit-labs/preact-signals": "^1.0.0"
+    "react": "> 18"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.12.2",
