@@ -22,10 +22,6 @@
     "baseUrl": "./",
     "paths": {
       "@citolab/qti-components/qti-components": ["src/lib/qti-components"],
-      "@citolab/qti-components/qti-test": ["src/lib/qti-test"],
-      "@citolab/qti-components/qti-item": ["src/lib/qti-item"],
-      "@citolab/qti-components/react/qti-test": ["src/lib/qti-test-react"],
-      "@citolab/qti-components/react/qti-item": ["src/lib/qti-item-react"],
       "@citolab/qti-components/qti-transform": ["src/lib/qti-transform"],
     }
   },

@@ -20,33 +20,9 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
-    "./context": {
-      "import": "./dist/context/index.js",
-      "require": "./dist/context/index.cjs"
-    },
-    "./decorators": {
-      "import": "./dist/decorators/index.js",
-      "require": "./dist/decorators/index.cjs"
-    },
     "./qti-components": {
       "import": "./dist/qti-components/index.js",
       "require": "./dist/qti-components/index.cjs"
-    },
-    "./qti-test": {
-      "import": "./dist/qti-test/index.js",
-      "require": "./dist/qti-test/index.cjs"
-    },
-    "./qti-item": {
-      "import": "./dist/qti-item/index.js",
-      "require": "./dist/qti-item/index.cjs"
-    },
-    "./react/qti-item": {
-      "import": "./dist/qti-item-react/index.js",
-      "require": "./dist/qti-item-react/index.cjs"
-    },
-    "./react/qti-test": {
-      "import": "./dist/qti-test-react/index.js",
-      "require": "./dist/qti-test-react/index.cjs"
     },
     "./qti-transform": {
       "import": "./dist/qti-transform/index.js",
@@ -63,26 +39,8 @@
       ".": [
         "./dist/index.d.ts"
       ],
-      "context": [
-        "./dist/context/index.d.ts"
-      ],
-      "decorators": [
-        "./dist/decorators/index.d.ts"
-      ],
       "qti-components": [
         "./dist/qti-components/index.d.ts"
-      ],
-      "qti-test": [
-        "./dist/qti-test/index.d.ts"
-      ],
-      "qti-item": [
-        "./dist/qti-item/index.d.ts"
-      ],
-      "react/qti-test": [
-        "./dist/qti-test-react/index.d.ts"
-      ],
-      "react/qti-item": [
-        "./dist/qti-item-react/index.d.ts"
       ],
       "qti-transform": [
         "./dist/qti-transform/index.d.ts"

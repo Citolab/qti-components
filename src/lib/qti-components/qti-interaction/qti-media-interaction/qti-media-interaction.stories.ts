@@ -1,7 +1,6 @@
 import { html } from 'lit';
 import { action } from '@storybook/addon-actions';
 import { useRef, virtual } from 'haunted';
-import '../../../qti-item';
 
 import xml from './qti-media-interaction.xml?raw';
 import { QtiAssessmentItem } from '../../qti-assessment-item/qti-assessment-item';
@@ -43,17 +42,4 @@ export const Default = {
   `,
 
   args: {}
-};
-
-export const Item = {
-  render: () => {
-    const qtiItemRef = useRef<QtiAssessmentItem>(null);
-    return html`<qti-item
-        @qti-outcome-changed=${action(`qti-outcome-changed`)}
-        @qti-interaction-changed=${action(`qti-interaction-changed`)}
-        @qti-item-connected=${({ detail }) => (qtiItemRef.current = detail)}
-        .xml=${xml}
-      ></qti-item>
-      <button @click=${() => qtiItemRef.current.processResponse()}>PROCESS</button>`;
-  }
 };

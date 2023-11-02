@@ -20,14 +20,8 @@ const outdir = 'dist';
         //
         // NOTE: Entry points must be mapped in package.json > exports, otherwise users won't be able to import them!
         //
-        './src/lib/context/index.ts',
-        './src/lib/decorators/index.ts',
         './src/lib/qti-components/index.ts',
-        './src/lib/qti-item/index.ts',
-        './src/lib/qti-item-react/index.ts',
-        './src/lib/qti-transform/index.ts',
-        './src/lib/qti-test/index.ts',
-        './src/lib/qti-test-react/index.ts'
+        './src/lib/qti-transform/index.ts'
       ],
       define: {
         'process.env.NODE_ENV': '"production"'
