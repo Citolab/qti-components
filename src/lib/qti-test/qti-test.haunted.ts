@@ -30,6 +30,8 @@ export const QtiTestHaunted = (manifestData: ManifestData, itemIndex: number, te
             <test-item-id></test-item-id>
           </div>
 
+          <test-print-score></test-print-score>
+
           <test-toggle-scoring></test-toggle-scoring>
 
           <div>
@@ -60,6 +62,8 @@ export const QtiTestHaunted = (manifestData: ManifestData, itemIndex: number, te
           </div>
 
           <test-slider></test-slider>
+
+          <test-process-response>NAKIJKEN</test-process-response>
 
           <pre>
           <test-script>

@@ -30,6 +30,3 @@ export class TestNext extends LitElement {
     `;
   }
 }
-
-// ${item.identifier}<br />${item.variables.find(v => v.identifier === 'completionStatus')?.value}
-// <br />${item.variables.find(v => v.identifier === 'SCORE')?.value}

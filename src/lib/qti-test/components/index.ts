@@ -15,3 +15,4 @@ export * from './test-scoring-input';
 export * from './test-toggle-scoring';
 export * from './test-item-id';
 export * from './test-scoring-buttons';
+export * from './test-process-response';
