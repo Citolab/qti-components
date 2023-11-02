@@ -1,20 +1,14 @@
-import { html } from 'lit';
-import { action } from '@storybook/addon-actions';
-import { createRef, ref } from 'lit-html/directives/ref.js';
-import { unsafeHTML } from 'lit/directives/unsafe-html.js';
-import type { Meta, StoryObj } from '@storybook/web-components';
-
-import { useEffect, useRef, useState, virtual } from 'haunted';
-
 import '@citolab/qti-components/qti-components';
 
+import { html } from 'lit';
+import { action } from '@storybook/addon-actions';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
+import type { Meta, StoryObj } from '@storybook/web-components';
+import { fetchItem } from './fetch-item';
 import packages from '../assets/packages.json';
-import { qtiTransform } from '@citolab/qti-components/qti-transform';
-import { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
 
 const meta: Meta = {
   title: 'items',
-  decorators: [story => html`${virtual(story)()}`],
   argTypes: {
     view: {
       options: ['candidate', 'scorer'],
@@ -34,71 +28,31 @@ const meta: Meta = {
 };
 
 export default meta;
+type Story = StoryObj;
 
-export const Items = {
-  render: (args, { argTypes, loaded: { loadeditems } }) => {
-    const items: { href: string; identifier: string }[] = loadeditems.items;
-    const [itemXML, setItemXML] = useState<string>();
-    const divRef = createRef<HTMLDivElement>();
-    const qtiAssessmentItemRef = useRef<QtiAssessmentItem>(null);
+let item;
 
-    const qtipkg = args.qtipkg;
-    const itemIndex = args.itemIndex;
+export const Items: Story = {
+  render: ({ disabled, view }, { argTypes, loaded: { xml } }) => {
+    const onInteractionChangedAction = action('on-interaction-changed');
+    const onOutcomeChangedAction = action('qti-outcome-changed');
+    const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => {
+      item = qtiAssessmentItem;
+      action('qti-item-first-updated');
+    };
 
-    useEffect(async () => {
-      if (items == undefined) return;
-      if (args.itemIndex > items.length) return;
-      const item = items[args.itemIndex];
-
-      const uri = `${args.serverLocation}/${args.qtipkg}/depitems/${item.href}`;
-      const xmlFetch = await fetch(uri);
-      const xmlText = await xmlFetch.text();
-
-      const xml = qtiTransform(xmlText)
-        .assetsLocation(`${args.serverLocation}/${args.qtipkg}/depitems/`)
-        .removeNamesSpaces()
-        .fnCh($ => $('qti-inline-choice span').contents().unwrap())
-        .fnCh($ => $('*').remove('qti-stylesheet'))
-        // .mathml()
-        .xml();
-
-      setItemXML(xml);
-    }, [itemIndex, items, qtipkg]);
-
-    // useEffect(async () => {
-    //   qtiItemRef.current.aud
-    // }, [args.view]);
-
-    useEffect(async () => {
-      qtiAssessmentItemRef.current.disabled = args.disabled;
-    }, [args.disabled]);
+    item && (item.disabled = disabled);
+    item && (item.view = view);
 
     return html`
       <div
-        ${ref(divRef)}
-        @qti-interaction-changed=${action(`on-interaction-changed`)}
-        @qti-outcome-changed=${action(`qti-outcome-changed`)}
-        @qti-item-first-updated=${({ detail: item }) => {
-          qtiAssessmentItemRef.current = item;
-          action(`qti-item-first-updated`);
-        }}
+        @qti-interaction-changed=${onInteractionChangedAction}
+        @qti-outcome-changed=${onOutcomeChangedAction}
+        @qti-item-first-updated=${onItemFirstUpdated}
       >
-        ${unsafeHTML(itemXML)}
+        ${unsafeHTML(xml.itemXML)}
       </div>
     `;
   },
-  loaders: [
-    async args => {
-      return {
-        loadeditems: await fetch(`${args.args.serverLocation}/${args.args.qtipkg}/items.json`)
-          .then(response => {
-            if (response.status >= 400 && response.status < 600) {
-              console.log('error');
-            }
-            return response.json();
-          })
-          .catch(error => console.log(error))
-      };
-    }
-  ]
+  loaders: [async ({ args }) => ({ xml: await fetchItem(`${args.serverLocation}/${args.qtipkg}`, args.itemIndex) })]
 };

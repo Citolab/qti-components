@@ -1,13 +1,8 @@
 import { html } from 'lit';
 import { action } from '@storybook/addon-actions';
-import { useRef, virtual } from 'haunted';
-
-import xml from './qti-media-interaction.xml?raw';
-import { QtiAssessmentItem } from '../../qti-assessment-item/qti-assessment-item';
 
 export default {
   component: 'qti-media-interaction',
-  decorators: [story => html`${virtual(story)()}`],
   argTypes: {
     autostart: { type: 'boolean', description: '' },
     minPlays: { type: 'number', description: '' },

@@ -117,7 +117,6 @@
     "eslint-plugin-sort-imports-es6-autofix": "^0.6.0",
     "eslint-plugin-storybook": "^0.6.15",
     "eslint-plugin-wc": "^2.0.4",
-    "haunted": "^5.0.0",
     "jest-environment-jsdom": "^29.7.0",
     "lit-xml": "^0.6.0",
     "nodemon": "^3.0.1",
