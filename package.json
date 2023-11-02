@@ -12,12 +12,13 @@
   "engines": {
     "node": ">=16.0.0"
   },
-  "version": "6.4.2",
+  "version": "6.4.4",
   "type": "module",
   "main": "dist/index.js",
   "exports": {
     ".": {
-      "import": "./dist/index.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     },
     "./context": {
       "import": "./dist/context/index.js",
