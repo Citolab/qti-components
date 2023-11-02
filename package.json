@@ -28,11 +28,11 @@
       "import": "./dist/qti-transform/index.js",
       "require": "./dist/qti-transform/index.cjs"
     },
-    "./index.css": {
-      "import": "./dist/index.css"
+    "./dist/*.css": {
+      "import": "./dist/*.css",
+      "require": "./dist/*.css"
     }
   },
-  "style": "dist/index.css",
   "types": "./dist/qti-components/index.d.ts",
   "typesVersions": {
     "*": {
@@ -50,7 +50,8 @@
   "files": [
     "dist",
     "types",
-    "./dist/index.css"
+    "./dist/styles.css",
+    "./dist/styles.bundled.css"
   ],
   "scripts": {
     "test:generate-output": "jest --watch --json --outputFile=.jest-test-results.json || true",
