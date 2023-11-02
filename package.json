@@ -28,7 +28,7 @@
       "import": "./dist/qti-transform/index.js",
       "require": "./dist/qti-transform/index.cjs"
     },
-    "./dist/*.css": {
+    "./*.css": {
       "import": "./dist/*.css",
       "require": "./dist/*.css"
     }
