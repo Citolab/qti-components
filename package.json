@@ -24,6 +24,10 @@
       "import": "./dist/qti-components/index.js",
       "require": "./dist/qti-components/index.cjs"
     },
+    "./qti-to-html5": {
+      "import": "./dist/qti-to-html5/index.js",
+      "require": "./dist/qti-to-html5/index.cjs"
+    },
     "./*.css": {
       "import": "./dist/*.css",
       "require": "./dist/*.css"
@@ -37,6 +41,9 @@
       ],
       "qti-components": [
         "./dist/qti-components/index.d.ts"
+      ],
+      "qti-to-html5": [
+        "./dist/qti-to-html5/index.d.ts"
       ]
     }
   },

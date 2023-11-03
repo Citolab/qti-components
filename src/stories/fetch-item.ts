@@ -1,6 +1,6 @@
 import * as cheerio from 'cheerio';
 import { xml } from 'lit-xml';
-import { qti2html5 } from './qti2html5';
+import { qti2html5 } from '../lib/qti-to-html5/qti-to-html5';
 
 /**
  * Retrieves items from an assessment test.

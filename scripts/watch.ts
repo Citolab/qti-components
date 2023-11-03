@@ -14,7 +14,8 @@ const outdir = 'dist';
     format: ['esm'],
     entryPoints: [
       // NOTE: Entry points must be mapped in package.json > exports, otherwise users won't be able to import them!
-      './src/lib/qti-components/index.ts'
+      './src/lib/qti-components/index.ts',
+      './src/lib/qti-to-html5/index.ts'
     ],
     define: {
       'process.env.NODE_ENV': '"production"'

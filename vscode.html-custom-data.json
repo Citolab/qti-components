@@ -28,12 +28,6 @@
       "references": []
     },
     {
-      "name": "qti-item-body",
-      "description": "The qti-item-body node contains the text, graphics, media objects and interactions that describe the item's content and information about how it is structured.\n---\n\n\n### **Slots:**\n - _default_ - item body content.\n- **qti-rubric-block** - the qti rubric block is placed above the item",
-      "attributes": [],
-      "references": []
-    },
-    {
       "name": "qti-associable-hotspot",
       "description": "\n---\n\n\n### **Events:**\n - **qti-register-hotspot** - undefined",
       "attributes": [],
@@ -104,6 +98,12 @@
         { "name": "aria-readonly", "values": [] },
         { "name": "aria-checked", "values": [] }
       ],
+      "references": []
+    },
+    {
+      "name": "qti-item-body",
+      "description": "The qti-item-body node contains the text, graphics, media objects and interactions that describe the item's content and information about how it is structured.\n---\n\n\n### **Slots:**\n - _default_ - item body content.\n- **qti-rubric-block** - the qti rubric block is placed above the item",
+      "attributes": [],
       "references": []
     },
     {
@@ -606,6 +606,14 @@
       "references": []
     },
     {
+      "name": "qti-response-if",
+      "description": "\n---\n",
+      "attributes": [
+        { "name": "debugCalculateResult", "values": [{ "name": "object" }] }
+      ],
+      "references": []
+    },
+    {
       "name": "qti-and",
       "description": "\n---\n",
       "attributes": [],
@@ -770,14 +778,6 @@
       "name": "qti-variable",
       "description": "\n---\n",
       "attributes": [],
-      "references": []
-    },
-    {
-      "name": "qti-response-if",
-      "description": "\n---\n",
-      "attributes": [
-        { "name": "debugCalculateResult", "values": [{ "name": "object" }] }
-      ],
       "references": []
     },
     {
