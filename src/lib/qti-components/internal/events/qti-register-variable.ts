@@ -1,4 +1,4 @@
-import { VariableDeclaration } from '../Variables';
+import { VariableDeclaration } from '../variables';
 
 type QtiRegisterVariable = CustomEvent<{
   variable: VariableDeclaration<string | string[]>;
