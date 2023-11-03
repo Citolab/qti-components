@@ -44,7 +44,8 @@
     "dist",
     "types",
     "./dist/styles.css",
-    "./dist/styles.bundled.css"
+    "./dist/styles.bundled.css",
+    "./src/styles/**/*.css"
   ],
   "scripts": {
     "test:generate-output": "jest --watch --json --outputFile=.jest-test-results.json || true",
