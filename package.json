@@ -24,10 +24,6 @@
       "import": "./dist/qti-components/index.js",
       "require": "./dist/qti-components/index.cjs"
     },
-    "./qti-transform": {
-      "import": "./dist/qti-transform/index.js",
-      "require": "./dist/qti-transform/index.cjs"
-    },
     "./*.css": {
       "import": "./dist/*.css",
       "require": "./dist/*.css"
@@ -41,9 +37,6 @@
       ],
       "qti-components": [
         "./dist/qti-components/index.d.ts"
-      ],
-      "qti-transform": [
-        "./dist/qti-transform/index.d.ts"
       ]
     }
   },

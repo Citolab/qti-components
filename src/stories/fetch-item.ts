@@ -1,19 +1,6 @@
-import { qtiTransform } from '@citolab/qti-components/qti-transform';
 import * as cheerio from 'cheerio';
-
-/**
- * Fetches an IMS manifest XML file from the given href and returns the first resource element with type "imsqti_test_xmlv3p0".
- * @param href - The URL of the IMS manifest XML file.
- * @returns The first resource element with type "imsqti_test_xmlv3p0".
- */
-const testFromImsmanifest = async href => {
-  const response = await fetch(href);
-  const imsmanifestXML = await response.text();
-  //   await new Promise<void>(r => setTimeout(() => r(), 1000)); // Add some delay for demo purposes
-  const $ = cheerio.load(imsmanifestXML, { xmlMode: true, xml: { xmlMode: true } });
-  const el = $('resource[type="imsqti_test_xmlv3p0"]').first();
-  return el;
-};
+import { xml } from 'lit-xml';
+import { qti2html5 } from './qti2html5';
 
 /**
  * Retrieves items from an assessment test.
@@ -25,7 +12,6 @@ const itemsFromAssessmentTest = async (
 ): Promise<{ identifier: string; href: string; category: string }[]> => {
   const response = await fetch(href);
   const assessmentTestXML = await response.text();
-  //   await new Promise<void>(r => setTimeout(() => r(), 1000)); // Add some delay for demo purposes
   const $ = cheerio.load(assessmentTestXML, { xmlMode: true, xml: { xmlMode: true } });
   const items: { identifier: string; href: string; category: string }[] = [];
   $('qti-assessment-item-ref').each((_, element) => {
@@ -83,24 +69,11 @@ export type ManifestData = {
  * @returns A Promise that resolves to a ManifestData object.
  */
 export const fetchItem = async (packageUri: string, index: number): Promise<ManifestData> => {
-  if (!packageUri.endsWith('/')) {
-    packageUri += '/';
-  }
-  const assessmentTestEl = await testFromImsmanifest(`${packageUri}/imsmanifest.xml`);
-  const items = await itemsFromAssessmentTest(packageUri + assessmentTestEl.attr('href'));
-
-  const itemLocation = `${packageUri}${assessmentTestEl
-    .attr('href')
-    .substring(0, assessmentTestEl.attr('href').lastIndexOf('/'))}/`;
-
+  packageUri = packageUri.endsWith('/') ? packageUri : packageUri + '/';
+  const assessmentTestHref = `depitems/assessment-test.xml`;
+  const items = await itemsFromAssessmentTest(packageUri + assessmentTestHref);
+  const itemLocation = `${packageUri}${assessmentTestHref.substring(0, assessmentTestHref.lastIndexOf('/'))}/`;
   const itemXML = await requestItem(`${itemLocation}${items[index].href}`);
-
-  const xml = qtiTransform(itemXML)
-    .assetsLocation(itemLocation)
-    .removeNamesSpaces()
-    .fnCh($ => $('qti-inline-choice span').contents().unwrap())
-    .fnCh($ => $('*').remove('qti-stylesheet'))
-    .xml();
-
-  return { itemXML: xml, itemLocation, items, testIdentifier: assessmentTestEl.attr('identifier')! };
+  const itemHTML = qti2html5(itemXML, itemLocation);
+  return { itemXML: itemHTML, itemLocation, items, testIdentifier: 'assessment-test'! };
 };
