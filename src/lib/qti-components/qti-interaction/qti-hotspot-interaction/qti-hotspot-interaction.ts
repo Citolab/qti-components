@@ -1,7 +1,6 @@
 import { css, html } from 'lit';
 import { Choices } from '../internal/choices/choices';
 import { QtiHotspotChoice } from '../qti-hotspot-choice';
-import { Events } from '../../qti-utilities/EventStrings';
 import { positionHotspots } from '../internal/hotspots/hotspot';
 
 export class QtiHotspotInteraction extends Choices {

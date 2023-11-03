@@ -1,5 +1,5 @@
 import { createContext } from '@lit/context';
-import { VariableDeclaration } from '../qti-utilities/Variables';
+import { VariableDeclaration } from '../internal/variables';
 import { QtiAssessmentItem } from './qti-assessment-item';
 
 export interface ItemContext {

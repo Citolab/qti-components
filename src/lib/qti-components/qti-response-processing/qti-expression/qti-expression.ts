@@ -1,9 +1,9 @@
 import { LitElement, css, html, nothing } from 'lit';
 import { QtiAssessmentItem } from '../../qti-assessment-item/qti-assessment-item';
-import { ResponseVariable } from '../../qti-utilities/Variables';
+import { ResponseVariable } from '../../internal/variables';
 import { QtiMultiple } from './qti-multiple/qti-multiple';
 import { state } from 'lit/decorators.js';
-import { VariableDeclaration } from '../../qti-utilities/Variables';
+import { VariableDeclaration } from '../../internal/variables';
 
 export abstract class QtiExpression<T> extends LitElement {
   @state()

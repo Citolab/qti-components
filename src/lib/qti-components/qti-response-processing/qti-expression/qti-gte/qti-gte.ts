@@ -1,4 +1,4 @@
-import { ResponseVariable } from '../../../qti-utilities/Variables';
+import { ResponseVariable } from '../../../internal/variables';
 import { QtiConditionExpression } from '../qti-condition-expression';
 
 // PK: For the contains we assume the expressions to calculate are all directedPairs

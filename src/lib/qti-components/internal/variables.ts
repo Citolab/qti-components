@@ -1,5 +1,5 @@
 import { QtiMapping } from '../qti-response-processing/qti-expression/qti-mapping/qti-mapping';
-import type { BaseType, Cardinality } from './ExpressionResult';
+import type { BaseType, Cardinality } from './expression-result';
 
 export interface VariableDeclaration<T> {
   identifier: string;

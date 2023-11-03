@@ -1,4 +1,4 @@
-import { convertNumberToUniveralFormat } from '../../../qti-utilities/utils';
+import { convertNumberToUniveralFormat } from '../../../internal/utils';
 import { QtiExpression } from '../../qti-expression/qti-expression';
 import { QtiRule } from '../qti-rule';
 

@@ -1,7 +1,7 @@
 import { QtiMatch } from './qti-match';
 import { html, render } from 'lit';
 import { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
-import { ResponseVariable } from '../../../qti-utilities/Variables';
+import { ResponseVariable } from '../../../internal/variables';
 import { describe, expect, it } from '@jest/globals';
 import '../../../index';
 

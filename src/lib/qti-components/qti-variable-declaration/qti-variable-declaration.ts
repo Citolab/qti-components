@@ -1,5 +1,5 @@
 import { html, LitElement } from 'lit';
-import { VariableDeclaration } from '../qti-utilities/Variables';
+import { VariableDeclaration } from '../internal/variables';
 
 export class QtiVariableDeclaration extends LitElement {
   override render() {

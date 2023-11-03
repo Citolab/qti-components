@@ -1,4 +1,4 @@
-import type { ResponseInteraction } from './ExpressionResult';
+import type { ResponseInteraction } from './expression-result';
 
 export interface OutcomeChangedDetails {
   item: string;

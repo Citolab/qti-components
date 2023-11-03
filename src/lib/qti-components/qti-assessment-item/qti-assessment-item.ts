@@ -1,14 +1,14 @@
 import { customElement, property, state } from 'lit/decorators.js';
 import { html, LitElement } from 'lit';
-import { OutcomeVariable } from '../qti-utilities/Variables';
-import { ResponseVariable } from '../qti-utilities/Variables';
+import { OutcomeVariable } from '../internal/variables';
+import { ResponseVariable } from '../internal/variables';
 import { watch } from '../../decorators/watch';
-import type { ResponseInteraction } from '../qti-utilities/ExpressionResult';
+import type { ResponseInteraction } from '../internal/expression-result';
 import type { Interaction } from '../qti-interaction/internal/interaction/interaction';
-import type { InteractionChangedDetails, OutcomeChangedDetails } from '../qti-utilities/EventTypes';
+import type { InteractionChangedDetails, OutcomeChangedDetails } from '../internal/event-types';
 import type { QtiFeedback } from '../qti-feedback/qti-feedback';
 import type { QtiResponseProcessing } from '../qti-response-processing';
-import type { VariableDeclaration } from '../qti-utilities/Variables';
+import type { VariableDeclaration } from '../internal/variables';
 import { ItemContext, itemContext } from './qti-assessment-item.context';
 import { provide } from '@lit/context';
 

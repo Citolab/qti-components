@@ -1,9 +1,8 @@
-export * from './qti-utilities/ExpressionResult';
+export * from './internal/expression-result';
 
 /* only exported to override or extend for specific purposes */
-export * from './qti-utilities/EventTypes';
-export * from './qti-utilities/EventStrings';
-export * from './qti-utilities/Variables';
+export * from './internal/event-types';
+export * from './internal/variables';
 
 /* only exported to override or extend for specific purposes */
 export * from './qti-assessment-item/qti-assessment-item';

@@ -1,7 +1,7 @@
 import { property } from 'lit/decorators.js';
 import { ScoringHelper } from '../../utilities/scoring-helper';
 import { QtiExpression } from '../qti-expression';
-import { ResponseVariable } from '../../../qti-utilities/Variables';
+import { ResponseVariable } from '../../../internal/variables';
 
 export class QtiStringMatch extends QtiExpression<boolean> {
   @property({ type: String, attribute: 'case-sensitive' }) caseSensitive = 'true';

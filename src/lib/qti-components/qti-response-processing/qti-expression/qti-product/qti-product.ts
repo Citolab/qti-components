@@ -1,7 +1,7 @@
 import { state } from 'lit/decorators.js';
 import { QtiExpression } from '../qti-expression';
 import { html } from 'lit';
-import { ResponseVariable } from '../../../qti-utilities/Variables';
+import { ResponseVariable } from '../../../internal/variables';
 
 export class QtiProduct extends QtiExpression<number> {
   public override calculate() {

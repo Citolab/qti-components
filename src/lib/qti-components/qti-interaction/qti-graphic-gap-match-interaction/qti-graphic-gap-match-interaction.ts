@@ -1,8 +1,6 @@
 import { css, html, LitElement } from 'lit';
-import { Events } from '../../qti-utilities/EventStrings';
 import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-interaction-mixin';
 import { QtiHotspotChoice } from '../qti-hotspot-choice';
-import { positionHotspots } from '../internal/hotspots/hotspot';
 
 export class QtiGraphicGapMatchInteraction extends DragDropInteractionMixin(
   LitElement,

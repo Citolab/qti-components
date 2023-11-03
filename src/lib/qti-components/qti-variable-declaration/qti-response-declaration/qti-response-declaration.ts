@@ -1,6 +1,6 @@
 import { QtiVariableDeclaration } from '../qti-variable-declaration';
-import { ResponseVariable } from '../../qti-utilities/Variables';
-import { BaseType, Cardinality } from '../../qti-utilities/ExpressionResult';
+import { ResponseVariable } from '../../internal/variables';
+import { BaseType, Cardinality } from '../../internal/expression-result';
 import { property } from 'lit/decorators.js';
 import { QtiMapping } from '../../qti-response-processing/qti-expression/qti-mapping/qti-mapping';
 
