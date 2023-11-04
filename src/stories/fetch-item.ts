@@ -2,6 +2,44 @@ import * as cheerio from 'cheerio';
 import { xml } from 'lit-xml';
 import { qti2html5 } from '../lib/qti-to-html5/qti-to-html5';
 
+function loadXML(xmlFileURL) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', xmlFileURL, true);
+    xhr.responseType = 'document';
+
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          const xmlDocument = xhr.responseXML;
+          if (xmlDocument) {
+            resolve(xmlDocument);
+          } else {
+            reject('Failed to load or parse the XML file.');
+          }
+        } else {
+          reject(`XML request failed with status ${xhr.status}`);
+        }
+      }
+    };
+
+    xhr.send();
+  });
+}
+
+export const qtiTransform = (xmlValue: string) => {
+  // the XML which will be transformed
+  let xmlDocument = xmlValue;
+  const api = {
+    load(xmlValue: string) {
+      xmlDocument = xmlValue;
+      return api;
+    },
+
+    tohtml5() {}
+  };
+  return api;
+};
 /**
  * Retrieves items from an assessment test.
  * @param href - The URL of the assessment test.

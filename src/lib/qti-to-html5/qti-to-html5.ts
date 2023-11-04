@@ -1,28 +1,40 @@
 import { xml } from 'lit-xml';
 
-const removeAllNamespaces = xml`
+const removeAllNamespaces = `
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:output method="html" version="1.0" encoding="UTF-8" indent="yes" />
-<xsl:template match="@*|node()">
-        <xsl:copy>
-            <xsl:apply-templates select="@*|node()"/>
-        </xsl:copy>
-    </xsl:template>
+<xsl:output method="html" version="5.0" encoding="UTF-8" indent="yes" />
+  <xsl:template match="@*|node()">
+    <xsl:copy>
+      <xsl:apply-templates select="@*|node()"/>
+    </xsl:copy>
+  </xsl:template>
 
-    <xsl:template match="*">
-  <!-- remove element prefix -->
-  <xsl:element name="{local-name()}">
-    <!-- process attributes -->
-    <xsl:for-each select="@*">
-      <!-- remove attribute prefix -->
-      <xsl:attribute name="{local-name()}">
+  <!-- convert CDATA to comments -->
+  <xsl:template match="text()[contains(., 'CDATA')]">
+    <strong>
+      <xsl:comment>
         <xsl:value-of select="."/>
-      </xsl:attribute>
-    </xsl:for-each>
+      </xsl:comment>
+    <strong>
+  </xsl:template>
+
+  <!-- remove xml comments -->
+  <xsl:template match="comment()" />
+
+  <xsl:template match="*">
+    <!-- remove element prefix -->
+    <xsl:element name="{local-name()}">
+      <!-- process attributes -->
+      <xsl:for-each select="@*">
+        <!-- remove attribute prefix -->
+        <xsl:attribute name="{local-name()}">
+          <xsl:value-of select="."/>
+        </xsl:attribute>
+      </xsl:for-each>
     <xsl:apply-templates/>
   </xsl:element>
 </xsl:template>
-</xsl:stylesheet>`.toString();
+</xsl:stylesheet>`;
 
 export function qti2html5(itemXML: string, itemLocation: string) {
   const xml = new DOMParser().parseFromString(itemXML, 'text/xml');
@@ -49,5 +61,6 @@ export function qti2html5(itemXML: string, itemLocation: string) {
   });
 
   const itemHTML = new XMLSerializer().serializeToString(itemHTMLFragment);
+  console.log(itemHTML);
   return itemHTML;
 }

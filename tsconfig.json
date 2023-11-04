@@ -22,7 +22,7 @@
     "baseUrl": "./",
     "paths": {
       "@citolab/qti-components/qti-components": ["src/lib/qti-components"],
-      "@citolab/qti-components/qti-transform": ["src/lib/qti-transform"],
+      "@citolab/qti-components/qti-to-html5": ["src/lib/qti-to-html5"],
     }
   },
   "include": ["src/**/*.ts"],
