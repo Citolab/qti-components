@@ -1,9 +1,9 @@
-import { expect } from '@jest/globals';
 
 import { QtiAssessmentItem, QtiLookupOutcomeValue } from '@citolab/qti-components/qti-components';
 import { render } from 'lit';
 import './qti-lookup-outcome-value';
 import { Default } from './qti-lookup-outcome-value.stories';
+import { expect } from '@storybook/jest';
 
 // import { composeStory } from '@storybook/web-components';
 // const FormError = composeStory(DefaultStory, Meta);
