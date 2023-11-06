@@ -9,7 +9,10 @@ export interface VariableDeclaration<T> {
   type: 'outcome' | 'response';
 }
 
-export interface OutcomeVariable extends VariableDeclaration<string | string[] | null> {}
+export interface OutcomeVariable extends VariableDeclaration<string | string[] | null> {
+  // specific to outcome variables
+  interpolationTable?: Map<number, number>;
+}
 
 export interface ResponseVariable extends VariableDeclaration<string | string[] | null> {
   // specific to response variables

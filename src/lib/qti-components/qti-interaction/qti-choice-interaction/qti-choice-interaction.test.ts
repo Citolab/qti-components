@@ -1,4 +1,9 @@
+import { describe, expect, it } from '@jest/globals';
 import crypto from 'crypto';
+import { render } from 'lit';
+import '../qti-simple-choice';
+import './qti-choice-interaction';
+import { Default } from './qti-choice-interaction.stories';
 
 // FIXME: Check if this is still needed, only when using choice this should be available
 Object.defineProperty(global, 'crypto', {
@@ -6,12 +11,6 @@ Object.defineProperty(global, 'crypto', {
     getRandomValues: (arr: any) => crypto.randomBytes(arr.length)
   }
 });
-
-import '../qti-simple-choice';
-import './qti-choice-interaction';
-import { describe, expect, it } from '@jest/globals';
-import { Default } from './qti-choice-interaction.stories';
-import { render } from 'lit';
 
 const getQtiSimpleChoices = () => Array.from(document.body.querySelectorAll('qti-simple-choice'));
 const getQtiChoiceInteraction = () => document.body.querySelector('qti-choice-interaction');

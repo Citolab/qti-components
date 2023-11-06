@@ -24,9 +24,9 @@
       "import": "./dist/qti-components/index.js",
       "require": "./dist/qti-components/index.cjs"
     },
-    "./qti-to-html5": {
-      "import": "./dist/qti-to-html5/index.js",
-      "require": "./dist/qti-to-html5/index.cjs"
+    "./qti-transformers": {
+      "import": "./dist/qti-transformers/index.js",
+      "require": "./dist/qti-transformers/index.cjs"
     },
     "./*.css": {
       "import": "./dist/*.css",
@@ -42,8 +42,8 @@
       "qti-components": [
         "./dist/qti-components/index.d.ts"
       ],
-      "qti-to-html5": [
-        "./dist/qti-to-html5/index.d.ts"
+      "qti-transformers": [
+        "./dist/qti-transformers/index.d.ts"
       ]
     }
   },
@@ -63,10 +63,10 @@
     "build-lib": "ts-node --esm --project tsconfig.node.json scripts/build.ts",
     "watch-lib": "nodemon --watch \"src/**\" --ext \"ts,json,css\" --ignore \"src/**/*.spec.ts\" --exec \"ts-node --esm --project tsconfig.node.json scripts/watch.ts\"",
     "storybook": "storybook dev -p 6006",
-    "deploy": "firebase deploy --only hosting:qti-components",
-    "build-storybook": "storybook build",
+    "storybook:deploy": "firebase deploy --only hosting:qti-components",
+    "storybook:build": "storybook build",
+    "storybook:test": "test-storybook --coverage",
     "npm publish": "np",
-    "test-storybook": "test-storybook",
     "cem": "cem analyze --watch",
     "lint": "eslint src/lib/**",
     "kill 6006": "sudo lsof -i :6006 | grep LISTEN | awk '{print $2}' | xargs kill",

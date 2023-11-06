@@ -2,7 +2,6 @@ import { property } from 'lit/decorators.js';
 import { BaseType, Cardinality } from '../../internal/expression-result';
 import { OutcomeVariable } from '../../internal/variables';
 import { QtiVariableDeclaration } from '../qti-variable-declaration';
-import { VariableDeclaration } from '../../internal/variables';
 
 export class QtiOutcomeDeclaration extends QtiVariableDeclaration {
   @property({ type: String, attribute: 'base-type' }) baseType: BaseType;
@@ -11,7 +10,7 @@ export class QtiOutcomeDeclaration extends QtiVariableDeclaration {
 
   @property({ type: String }) cardinality: Cardinality;
 
-  get interpolationTable() {
+  get interpolationTable(): Map<number, number> | null {
     const table = this.querySelector('qti-interpolation-table');
     if (table) {
       const entries = new Map<number, number>();
@@ -26,8 +25,13 @@ export class QtiOutcomeDeclaration extends QtiVariableDeclaration {
         }
         entries.set(sourceValue, targetValue);
       }
+      return entries;
     }
     return null;
+  }
+
+  constructor() {
+    super();
   }
 
   public override connectedCallback() {
@@ -38,7 +42,8 @@ export class QtiOutcomeDeclaration extends QtiVariableDeclaration {
       cardinality: this.cardinality,
       baseType: this.baseType,
       type: 'outcome',
-      value: null
+      value: null,
+      interpolationTable: this.interpolationTable
     };
     outcomeVariable.value = this.defaultValues(outcomeVariable);
 

@@ -3,12 +3,12 @@ import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 // import { expect } from '@storybook/jest';
-import { userEvent, within } from '@storybook/testing-library';
+import { within } from '@storybook/testing-library';
 
 import type { Meta, StoryObj } from '@storybook/web-components';
 
 import '../../index';
-import { QtiAssessmentItem, QtiChoiceInteraction } from '../../index';
+import { QtiChoiceInteraction } from '../../index';
 
 type Story = StoryObj; // <Props>;
 
