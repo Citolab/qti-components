@@ -1,3 +1,17 @@
+/**
+ * Returns an object with methods to load, parse, transform and serialize QTI XML items.
+ * @returns An object with methods to load, parse, transform and serialize QTI XML items.
+ * @example
+ * const qtiTransformer = qtiTransformItem();
+ * await qtiTransformer.load('path/to/xml/file.xml');
+ * qtiTransformer.path('/assessmentItem/itemBody');
+ * const html = qtiTransformer.html();
+ * const xml = qtiTransformer.xml();
+ */
+/**
+ * This module exports a function that returns an object with methods to load, parse, transform and serialize QTI XML items.
+ * @returns An object with methods to load, parse, transform and serialize QTI XML items.
+ */
 export const qtiTransformItem = () => {
   let xmlFragment: DocumentFragment;
 
@@ -28,6 +42,16 @@ export const qtiTransformItem = () => {
   return api;
 };
 
+/**
+ * Returns an object with methods to load, parse and transform QTI tests.
+ * @returns An object with methods to load, parse and transform QTI tests.
+ * @example
+ * const qtiTransformer = qtiTransformTest();
+ * await qtiTransformer.load('https://example.com/test.xml');
+ * const items = qtiTransformer.items();
+ * const html = qtiTransformer.html();
+ * const xml = qtiTransformer.xml();
+ */
 export const qtiTransformTest = () => {
   let xmlFragment: DocumentFragment;
 
