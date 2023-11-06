@@ -119,6 +119,219 @@ exports[`lib/qti-components/qti-interaction/qti-choice-interaction CorrectRespon
 </div>
 `;
 
+exports[`lib/qti-components/qti-interaction/qti-choice-interaction CorrectResponse play-test 2`] = `
+<div id="root-inner">
+  <qti-choice-interaction data-testid="qti-choice-interaction"
+                          data-max-selections-message="Too little selections made"
+                          data-min-selections-message="Too much selections made"
+                          response-identifier
+                          class="qti-input-control-hidden qti-choices-stacking-2"
+                          min-choices="1"
+                          max-choices="2"
+                          orientation="vertical"
+  >
+    <qti-prompt slot="prompt">
+      <p>
+        Which of the following features are
+        <strong>
+          new
+        </strong>
+        to QTI 3?
+      </p>
+      <p>
+        Pick 1 choice.
+      </p>
+    </qti-prompt>
+    <qti-simple-choice data-testid="choice-0"
+                       identifier="choice-0"
+                       role="checkbox"
+                       tabindex="0"
+                       aria-disabled="false"
+                       aria-readonly="false"
+                       aria-checked="false"
+                       data-correct-response="false"
+    >
+      I think you can use WorkFlow.
+    </qti-simple-choice>
+    <qti-simple-choice data-testid="choice-1"
+                       identifier="choice-1"
+                       role="checkbox"
+                       tabindex="0"
+                       aria-disabled="false"
+                       aria-readonly="false"
+                       aria-checked="false"
+                       data-correct-response="true"
+    >
+      You should use FlowChart
+    </qti-simple-choice>
+    <qti-simple-choice data-testid="choice-2"
+                       identifier="choice-2"
+                       role="checkbox"
+                       tabindex="0"
+                       aria-disabled="false"
+                       aria-readonly="false"
+                       aria-checked="false"
+                       data-correct-response="true"
+    >
+      No you should use Workload Rage.
+    </qti-simple-choice>
+    <qti-simple-choice data-testid="choice-3"
+                       identifier="choice-3"
+                       role="checkbox"
+                       tabindex="0"
+                       aria-disabled="false"
+                       aria-readonly="false"
+                       aria-checked="false"
+                       data-correct-response="false"
+    >
+      I would recommend Chart Up.
+    </qti-simple-choice>
+  </qti-choice-interaction>
+</div>
+`;
+
+exports[`lib/qti-components/qti-interaction/qti-choice-interaction CorrectResponse play-test 3`] = `
+<div id="root-inner">
+  <qti-choice-interaction data-testid="qti-choice-interaction"
+                          data-max-selections-message="Too little selections made"
+                          data-min-selections-message="Too much selections made"
+                          response-identifier
+                          class="qti-input-control-hidden qti-choices-stacking-2"
+                          min-choices="1"
+                          max-choices="2"
+                          orientation="vertical"
+  >
+    <qti-prompt slot="prompt">
+      <p>
+        Which of the following features are
+        <strong>
+          new
+        </strong>
+        to QTI 3?
+      </p>
+      <p>
+        Pick 1 choice.
+      </p>
+    </qti-prompt>
+    <qti-simple-choice data-testid="choice-0"
+                       identifier="choice-0"
+                       role="checkbox"
+                       tabindex="0"
+                       aria-disabled="false"
+                       aria-readonly="false"
+                       aria-checked="false"
+                       data-correct-response="false"
+    >
+      I think you can use WorkFlow.
+    </qti-simple-choice>
+    <qti-simple-choice data-testid="choice-1"
+                       identifier="choice-1"
+                       role="checkbox"
+                       tabindex="0"
+                       aria-disabled="false"
+                       aria-readonly="false"
+                       aria-checked="false"
+                       data-correct-response="true"
+    >
+      You should use FlowChart
+    </qti-simple-choice>
+    <qti-simple-choice data-testid="choice-2"
+                       identifier="choice-2"
+                       role="checkbox"
+                       tabindex="0"
+                       aria-disabled="false"
+                       aria-readonly="false"
+                       aria-checked="false"
+                       data-correct-response="true"
+    >
+      No you should use Workload Rage.
+    </qti-simple-choice>
+    <qti-simple-choice data-testid="choice-3"
+                       identifier="choice-3"
+                       role="checkbox"
+                       tabindex="0"
+                       aria-disabled="false"
+                       aria-readonly="false"
+                       aria-checked="false"
+                       data-correct-response="false"
+    >
+      I would recommend Chart Up.
+    </qti-simple-choice>
+  </qti-choice-interaction>
+</div>
+`;
+
+exports[`lib/qti-components/qti-interaction/qti-choice-interaction CorrectResponse play-test 4`] = `
+<div id="root-inner">
+  <qti-choice-interaction data-testid="qti-choice-interaction"
+                          data-max-selections-message="Too little selections made"
+                          data-min-selections-message="Too much selections made"
+                          response-identifier
+                          class="qti-input-control-hidden qti-choices-stacking-2"
+                          min-choices="1"
+                          max-choices="2"
+                          orientation="vertical"
+  >
+    <qti-prompt slot="prompt">
+      <p>
+        Which of the following features are
+        <strong>
+          new
+        </strong>
+        to QTI 3?
+      </p>
+      <p>
+        Pick 1 choice.
+      </p>
+    </qti-prompt>
+    <qti-simple-choice data-testid="choice-0"
+                       identifier="choice-0"
+                       role="checkbox"
+                       tabindex="0"
+                       aria-disabled="false"
+                       aria-readonly="false"
+                       aria-checked="false"
+                       data-correct-response="false"
+    >
+      I think you can use WorkFlow.
+    </qti-simple-choice>
+    <qti-simple-choice data-testid="choice-1"
+                       identifier="choice-1"
+                       role="checkbox"
+                       tabindex="0"
+                       aria-disabled="false"
+                       aria-readonly="false"
+                       aria-checked="false"
+                       data-correct-response="true"
+    >
+      You should use FlowChart
+    </qti-simple-choice>
+    <qti-simple-choice data-testid="choice-2"
+                       identifier="choice-2"
+                       role="checkbox"
+                       tabindex="0"
+                       aria-disabled="false"
+                       aria-readonly="false"
+                       aria-checked="false"
+                       data-correct-response="true"
+    >
+      No you should use Workload Rage.
+    </qti-simple-choice>
+    <qti-simple-choice data-testid="choice-3"
+                       identifier="choice-3"
+                       role="checkbox"
+                       tabindex="0"
+                       aria-disabled="false"
+                       aria-readonly="false"
+                       aria-checked="false"
+                       data-correct-response="false"
+    >
+      I would recommend Chart Up.
+    </qti-simple-choice>
+  </qti-choice-interaction>
+</div>
+`;
+
 exports[`lib/qti-components/qti-interaction/qti-choice-interaction Default smoke-test 1`] = `
 <div id="root-inner">
   <qti-choice-interaction data-testid="qti-choice-interaction"
@@ -250,6 +463,71 @@ exports[`lib/qti-components/qti-interaction/qti-choice-interaction Multiple smok
 `;
 
 exports[`lib/qti-components/qti-interaction/qti-choice-interaction Simple smoke-test 1`] = `
+<div id="root-inner">
+  <qti-choice-interaction data-testid="qti-choice-interaction"
+                          data-max-selections-message="Too little selections made"
+                          data-min-selections-message="Too much selections made"
+                          response-identifier
+                          class="qti-input-control-hidden qti-choices-stacking-2"
+                          orientation="vertical"
+  >
+    <qti-prompt slot="prompt">
+      <p>
+        Which of the following features are
+        <strong>
+          new
+        </strong>
+        to QTI 3?
+      </p>
+      <p>
+        Pick 1 choice.
+      </p>
+    </qti-prompt>
+    <qti-simple-choice data-testid="choice-0"
+                       identifier="choice-0"
+                       role="radio"
+                       tabindex="0"
+                       aria-disabled="false"
+                       aria-readonly="false"
+                       aria-checked="false"
+    >
+      I think you can use WorkFlow.
+    </qti-simple-choice>
+    <qti-simple-choice data-testid="choice-1"
+                       identifier="choice-1"
+                       role="radio"
+                       tabindex="0"
+                       aria-disabled="false"
+                       aria-readonly="false"
+                       aria-checked="false"
+    >
+      You should use FlowChart
+    </qti-simple-choice>
+    <qti-simple-choice data-testid="choice-2"
+                       identifier="choice-2"
+                       role="radio"
+                       tabindex="0"
+                       aria-disabled="false"
+                       aria-readonly="false"
+                       aria-checked="false"
+    >
+      No you should use Workload Rage.
+    </qti-simple-choice>
+    <qti-simple-choice data-testid="choice-3"
+                       identifier="choice-3"
+                       role="radio"
+                       tabindex="0"
+                       aria-disabled="false"
+                       aria-readonly="false"
+                       aria-checked="false"
+    >
+      I would recommend Chart Up.
+    </qti-simple-choice>
+  </qti-choice-interaction>
+</div>
+`;
+
+exports[`lib/qti-components/qti-interaction/qti-choice-interaction Simple smoke-test 2`] = `
 <div id="root-inner">
   <qti-choice-interaction data-testid="qti-choice-interaction"
                           data-max-selections-message="Too little selections made"

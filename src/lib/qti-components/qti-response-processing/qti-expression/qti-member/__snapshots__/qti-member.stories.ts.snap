@@ -71,6 +71,36 @@ exports[`lib/qti-components/qti-response-processing/qti-expression/qti-member Me
 </div>
 `;
 
+exports[`lib/qti-components/qti-response-processing/qti-expression/qti-member MemberCorrect smoke-test 2`] = `
+<div id="root-inner">
+  <qti-assessment-item>
+    <qti-outcome-declaration base-type="string"
+                             cardinality="multiple"
+                             identifier="BODY"
+    >
+      <qti-default-value>
+        <qti-value>
+          part1
+        </qti-value>
+        <qti-value>
+          part2
+        </qti-value>
+        <qti-value>
+          part3
+        </qti-value>
+      </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-member data-testid="qti-member">
+      <qti-base-value base-type="string">
+        part2
+      </qti-base-value>
+      <qti-variable identifier="BODY">
+      </qti-variable>
+    </qti-member>
+  </qti-assessment-item>
+</div>
+`;
+
 exports[`lib/qti-components/qti-response-processing/qti-expression/qti-member MemberFail play-test 1`] = `
 <div id="root-inner">
   <qti-assessment-item data-testid="qti-assessment">

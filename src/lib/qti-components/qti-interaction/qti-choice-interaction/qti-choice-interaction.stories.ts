@@ -7,7 +7,8 @@ import { within } from '@storybook/testing-library';
 
 import type { Meta, StoryObj } from '@storybook/web-components';
 
-import '../../index';
+import '@citolab/qti-components/qti-components';
+
 import { QtiChoiceInteraction } from '../../index';
 
 type Story = StoryObj; // <Props>;

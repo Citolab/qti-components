@@ -7,6 +7,8 @@
  * qtiTransformer.path('/assessmentItem/itemBody');
  * const html = qtiTransformer.html();
  * const xml = qtiTransformer.xml();
+ *
+ * qtiTransformItem().parse(storyXML).html()
  */
 /**
  * This module exports a function that returns an object with methods to load, parse, transform and serialize QTI XML items.

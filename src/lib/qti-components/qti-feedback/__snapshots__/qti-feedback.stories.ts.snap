@@ -368,6 +368,112 @@ exports[`lib/qti-components/qti-feedback modal smoke-test 1`] = `
 </div>
 `;
 
+exports[`lib/qti-components/qti-feedback modal smoke-test 2`] = `
+<div id="root-inner">
+  <qti-assessment-item identifier="blah">
+    <qti-response-declaration identifier="RESPONSE"
+                              cardinality="single"
+                              base-type="identifier"
+    >
+      <qti-correct-response>
+      </qti-correct-response>
+    </qti-response-declaration>
+    <qti-outcome-declaration identifier="FEEDBACK"
+                             cardinality="single"
+                             base-type="identifier"
+    >
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="SCORE"
+                             cardinality="single"
+                             base-type="float"
+                             normal-maximum="10.0"
+    >
+      <qti-default-value>
+        <qti-value>
+          0
+        </qti-value>
+      </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="MAXSCORE"
+                             cardinality="single"
+                             base-type="float"
+    >
+      <qti-default-value>
+        <qti-value>
+          10.0
+        </qti-value>
+      </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-item-body>
+      <qti-choice-interaction response-identifier="RESPONSE"
+                              shuffle="false"
+                              max-choices="1"
+      >
+        <qti-prompt slot="prompt">
+          Sigmund Freud and Carl Jung both belong to the psychoanalytic school of psychology.
+        </qti-prompt>
+        <qti-simple-choice identifier="true"
+                           fixed="true"
+                           role="radio"
+                           tabindex="0"
+                           aria-disabled="false"
+                           aria-readonly="false"
+                           aria-checked="false"
+        >
+          True
+        </qti-simple-choice>
+        <qti-simple-choice identifier="false"
+                           fixed="true"
+                           role="radio"
+                           tabindex="0"
+                           aria-disabled="false"
+                           aria-readonly="false"
+                           aria-checked="false"
+        >
+          False
+        </qti-simple-choice>
+      </qti-choice-interaction>
+    </qti-item-body>
+    <qti-response-processing>
+      <qti-set-outcome-value identifier="FEEDBACK">
+        <qti-variable identifier="RESPONSE">
+        </qti-variable>
+      </qti-set-outcome-value>
+      <qti-response-condition>
+        <qti-response-if>
+          <qti-match>
+            <qti-variable identifier="RESPONSE">
+            </qti-variable>
+            <qti-correct identifier="RESPONSE">
+            </qti-correct>
+          </qti-match>
+          <qti-set-outcome-value identifier="SCORE">
+            <qti-variable identifier="MAXSCORE">
+            </qti-variable>
+          </qti-set-outcome-value>
+        </qti-response-if>
+      </qti-response-condition>
+    </qti-response-processing>
+    <qti-modal-feedback outcome-identifier="FEEDBACK"
+                        show-hide="show"
+                        identifier="true"
+    >
+      <qti-content-body>
+        correct
+      </qti-content-body>
+    </qti-modal-feedback>
+    <qti-modal-feedback outcome-identifier="FEEDBACK"
+                        show-hide="show"
+                        identifier="false"
+    >
+      <qti-content-body>
+        incorrect
+      </qti-content-body>
+    </qti-modal-feedback>
+  </qti-assessment-item>
+</div>
+`;
+
 exports[`lib/qti-components/qti-feedback woordmars smoke-test 1`] = `
 <div id="root-inner">
   <qti-assessment-item 2

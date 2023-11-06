@@ -62,6 +62,68 @@ exports[`lib/qti-components/qti-interaction/qti-hottext-interaction Button smoke
 </div>
 `;
 
+exports[`lib/qti-components/qti-interaction/qti-hottext-interaction Button smoke-test 2`] = `
+<div id="root-inner">
+  <qti-hottext-interaction response-identifier="RESPONSE"
+                           class="qti-input-control-hidden"
+                           max-choices
+                           qti-hottext-interaction
+  >
+    <p>
+      Sponsors of the Olympic Games
+      <qti-hottext identifier="A"
+                   role="checkbox"
+                   tabindex="0"
+                   aria-disabled="false"
+                   aria-readonly="false"
+                   aria-checked="false"
+      >
+        who bought
+      </qti-hottext>
+      advertising time on United States television
+      <qti-hottext identifier="B"
+                   role="checkbox"
+                   tabindex="0"
+                   aria-disabled="false"
+                   aria-readonly="false"
+                   aria-checked="false"
+      >
+        includes
+      </qti-hottext>
+      <qti-hottext identifier="C"
+                   role="checkbox"
+                   tabindex="0"
+                   aria-disabled="false"
+                   aria-readonly="false"
+                   aria-checked="false"
+      >
+        at least
+      </qti-hottext>
+      a dozen international firms
+      <qti-hottext identifier="D"
+                   role="checkbox"
+                   tabindex="0"
+                   aria-disabled="false"
+                   aria-readonly="false"
+                   aria-checked="false"
+      >
+        whose
+      </qti-hottext>
+      names are familiar to American consumers.
+      <qti-hottext identifier="E"
+                   role="checkbox"
+                   tabindex="0"
+                   aria-disabled="false"
+                   aria-readonly="false"
+                   aria-checked="false"
+      >
+        No error.
+      </qti-hottext>
+    </p>
+  </qti-hottext-interaction>
+</div>
+`;
+
 exports[`lib/qti-components/qti-interaction/qti-hottext-interaction Default smoke-test 1`] = `
 <div id="root-inner">
   <qti-hottext-interaction response-identifier="RESPONSE"
