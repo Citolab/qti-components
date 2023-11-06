@@ -1,4 +1,4 @@
-import '../../../index';
+import '@citolab/qti-components/qti-components';
 
 import { describe, expect, it } from '@jest/globals';
 import { html, render } from 'lit';

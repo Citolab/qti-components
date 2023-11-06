@@ -1,6 +1,6 @@
 import { OutcomeVariable, QtiExpression, QtiRule } from '@citolab/qti-components/qti-components';
 import { customElement, property } from 'lit/decorators.js';
-import { convertNumberToUniveralFormat } from 'src/lib/qti-components/internal/utils';
+import { convertNumberToUniveralFormat } from '../../../internal/utils';
 
 /**
  * The lookupOutcomeValue rule sets the value of an outcome variable to the value obtained

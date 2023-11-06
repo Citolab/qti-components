@@ -1,8 +1,8 @@
+import '@citolab/qti-components/qti-components';
+import { describe, expect, it } from '@jest/globals';
 import { html, render } from 'lit';
 import { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
 import { QtiContains } from './qti-contains';
-import { describe, expect, it } from '@jest/globals';
-import '../../../index';
 
 describe('qti-contains', () => {
   it('should check if the variable identified in the first child is contained in the second one', () => {

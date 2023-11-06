@@ -1,7 +1,7 @@
-import { QtiEqual } from './qti-equal';
+import '@citolab/qti-components/qti-components';
 import { html, render } from 'lit';
 import { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
-import '../../../index';
+import { QtiEqual } from './qti-equal';
 
 describe('qti-equal', () => {
   it('response and correct response match', () => {

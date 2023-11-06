@@ -1,8 +1,7 @@
+import '@citolab/qti-components/qti-components';
 import { describe, expect, it } from '@jest/globals';
 import crypto from 'crypto';
 import { render } from 'lit';
-import '../qti-simple-choice';
-import './qti-choice-interaction';
 import { Default } from './qti-choice-interaction.stories';
 
 // FIXME: Check if this is still needed, only when using choice this should be available

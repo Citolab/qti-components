@@ -1,7 +1,7 @@
-import '../../../index';
-import { QtiCorrect } from './qti-correct';
-import { html, render } from 'lit';
+import '@citolab/qti-components/qti-components';
 import { describe, expect, it } from '@jest/globals';
+import { html, render } from 'lit';
+import { QtiCorrect } from './qti-correct';
 describe('qti-correct', () => {
   it('should return value in the correct baseType(float)', () => {
     const correctValue = 'A';

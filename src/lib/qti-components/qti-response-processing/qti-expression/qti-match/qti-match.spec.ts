@@ -1,9 +1,8 @@
-import { QtiMatch } from './qti-match';
+import '@citolab/qti-components/qti-components';
+import { describe, expect, it } from '@jest/globals';
 import { html, render } from 'lit';
 import { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
-import { ResponseVariable } from '../../../internal/variables';
-import { describe, expect, it } from '@jest/globals';
-import '../../../index';
+import { QtiMatch } from './qti-match';
 
 describe('qti-match', () => {
   it('should check if the variable identified in the first child is contained in the second one', () => {

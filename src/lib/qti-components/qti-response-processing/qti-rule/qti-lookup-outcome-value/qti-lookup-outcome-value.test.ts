@@ -1,15 +1,15 @@
-
+import '@citolab/qti-components/qti-components';
 import { QtiAssessmentItem, QtiLookupOutcomeValue } from '@citolab/qti-components/qti-components';
-import { render } from 'lit';
-import './qti-lookup-outcome-value';
-import { Default } from './qti-lookup-outcome-value.stories';
 import { expect } from '@storybook/jest';
+import { Default } from './qti-lookup-outcome-value.stories';
 
-// import { composeStory } from '@storybook/web-components';
-// const FormError = composeStory(DefaultStory, Meta);
+import { composeStory } from '@storybook/preview-api';
+import { render } from 'lit';
+
+const composedStory = composeStory(Default, Default.args);
 
 test('Checks if the form is valid', () => {
-  render(Default.render({ maxChoices: 1, minChoices: 1 }), document.body);
+  render(composedStory.toString(), document.body);
 
   const assessmentItem = document.body.querySelector('qti-assessment-item') as QtiAssessmentItem;
   assessmentItem.updateResponseVariable('SCORE', '3');

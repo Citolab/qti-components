@@ -1,8 +1,7 @@
-import { QtiStringMatch } from './qti-string-match';
+import '@citolab/qti-components/qti-components';
 import { html, render } from 'lit';
 import { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
-import '../../../index';
-
+import { QtiStringMatch } from './qti-string-match';
 describe('qti-string-match', () => {
   it('response and correct response match', () => {
     const template = () => html`

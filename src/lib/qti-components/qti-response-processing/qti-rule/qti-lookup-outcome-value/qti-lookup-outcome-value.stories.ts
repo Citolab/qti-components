@@ -5,8 +5,8 @@ import { within } from '@storybook/testing-library';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 
+import { qtiTransformItem } from '@citolab/qti-components/qti-transformers';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
-import { qtiTransformItem } from 'src/lib/qti-transformers';
 
 import storyXML from './qti-lookup-outcome-value.xml?raw';
 

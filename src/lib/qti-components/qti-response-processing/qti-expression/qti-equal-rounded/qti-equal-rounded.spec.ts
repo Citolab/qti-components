@@ -1,7 +1,7 @@
-import { QtiEqualRounded } from './qti-equal-rounded';
+import '@citolab/qti-components/qti-components';
 import { html, render } from 'lit';
 import { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
-import '../../../index';
+import { QtiEqualRounded } from './qti-equal-rounded';
 
 describe('qti-equal-rounded', () => {
   it('rounded 3 decimals equal', () => {
