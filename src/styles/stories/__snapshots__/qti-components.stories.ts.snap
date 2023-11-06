@@ -1,0 +1,550 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`styles/themes Components smoke-test 1`] = `
+<div id="root-inner">
+  <div class="grid grid-cols-6 gap-4 p-4">
+    <div class="text-xs">
+      button
+    </div>
+    <div class="text-xs">
+      hover
+    </div>
+    <div class="text-xs">
+      focus
+    </div>
+    <div class="text-xs">
+      active
+    </div>
+    <div class="text-xs">
+      active+focus
+    </div>
+    <div class="text-xs">
+      disabled
+    </div>
+    <button-component role="radio"
+                      aria-checked="false"
+                      class="check "
+    >
+      check
+    </button-component>
+    <button-component role="radio"
+                      aria-checked="false"
+                      class="check hov "
+    >
+      check
+    </button-component>
+    <button-component role="radio"
+                      aria-checked="false"
+                      class="check foc "
+    >
+      check
+    </button-component>
+    <button-component role="radio"
+                      aria-checked="true"
+                      class="check act "
+    >
+      check
+    </button-component>
+    <button-component role="radio"
+                      aria-checked="true"
+                      class="check foc act "
+    >
+      check
+    </button-component>
+    <button-component role="radio"
+                      aria-checked="false"
+                      class="check dis "
+    >
+      check
+    </button-component>
+    <button-component role="checkbox"
+                      aria-checked="false"
+                      class="check "
+    >
+      check
+    </button-component>
+    <button-component role="checkbox"
+                      aria-checked="false"
+                      class="check hov "
+    >
+      check
+    </button-component>
+    <button-component role="checkbox"
+                      aria-checked="false"
+                      class="check foc "
+    >
+      check
+    </button-component>
+    <button-component role="checkbox"
+                      aria-checked="true"
+                      class="check act "
+    >
+      check
+    </button-component>
+    <button-component role="checkbox"
+                      aria-checked="true"
+                      class="check foc act "
+    >
+      check
+    </button-component>
+    <button-component role="checkbox"
+                      aria-checked="false"
+                      class="check dis "
+    >
+      check
+    </button-component>
+    <div class="button ">
+      button
+    </div>
+    <div class="button  hov ">
+      button
+    </div>
+    <div class="button  foc ">
+      button
+    </div>
+    <div class="button  act ">
+      button
+    </div>
+    <div class="button  foc act ">
+      button
+    </div>
+    <div class="button  dis ">
+      button
+    </div>
+    <div class="spot ">
+    </div>
+    <div class="spot  hov ">
+    </div>
+    <div class="spot  foc ">
+    </div>
+    <div class="spot  act ">
+    </div>
+    <div class="spot  foc act ">
+    </div>
+    <div class="spot  dis ">
+    </div>
+    <div class="drag ">
+      drag
+    </div>
+    <div class="drag hov ">
+      drag
+    </div>
+    <div class="drag foc ">
+      drag
+    </div>
+    <div class="drag act ">
+      drag
+    </div>
+    <div class="drag foc act ">
+      drag
+    </div>
+    <div class="drag dis ">
+      drag
+    </div>
+    <div class="drop ">
+    </div>
+    <div class="drop hov ">
+    </div>
+    <div class="drop foc ">
+    </div>
+    <div class="drop act ">
+    </div>
+    <div class="drop foc act ">
+    </div>
+    <div class="drop dis ">
+    </div>
+    <div class="drop ">
+      <div class="drag ">
+        drag
+      </div>
+    </div>
+    <div class="drop hov ">
+      <div class="drag ">
+        drag
+      </div>
+    </div>
+    <div class="drop foc ">
+      <div class="drag ">
+        drag
+      </div>
+    </div>
+    <div class="drop act ">
+      <div class="drag ">
+        drag
+      </div>
+    </div>
+    <div class="drop foc act ">
+      <div class="drag ">
+        drag
+      </div>
+    </div>
+    <div class="drop dis ">
+      <div class="drag ">
+        drag
+      </div>
+    </div>
+    <div class="drop ">
+      With text
+      <div class="drag ">
+        drag
+      </div>
+    </div>
+    <div class="drop hov ">
+      With text
+      <div class="drag ">
+        drag
+      </div>
+    </div>
+    <div class="drop foc ">
+      With text
+      <div class="drag ">
+        drag
+      </div>
+    </div>
+    <div class="drop act ">
+      With text
+      <div class="drag ">
+        drag
+      </div>
+    </div>
+    <div class="drop foc act ">
+      With text
+      <div class="drag ">
+        drag
+      </div>
+    </div>
+    <div class="drop dis ">
+      With text
+      <div class="drag ">
+        drag
+      </div>
+    </div>
+    <input type="text"
+           value="Button text"
+           class="text "
+    >
+    <input type="text"
+           value="Button text"
+           class="text hov "
+    >
+    <input type="text"
+           value="Button text"
+           class="text foc "
+    >
+    <input type="text"
+           value="Button text"
+           class="text act "
+    >
+    <input type="text"
+           value="Button text"
+           class="text foc act "
+    >
+    <input type="text"
+           value="Button text"
+           class="text dis "
+    >
+    <select class="select ">
+      <option>
+        Button text
+      </option>
+    </select>
+    <select class="select hov ">
+      <option>
+        Button text
+      </option>
+    </select>
+    <select class="select foc ">
+      <option>
+        Button text
+      </option>
+    </select>
+    <select class="select act ">
+      <option>
+        Button text
+      </option>
+    </select>
+    <select class="select foc act ">
+      <option>
+        Button text
+      </option>
+    </select>
+    <select class="select dis ">
+      <option>
+        Button text
+      </option>
+    </select>
+  </div>
+  <div class="grid grid-cols-6 gap-4 p-4">
+    <div class="text-xs">
+      button
+    </div>
+    <div class="text-xs">
+      hover
+    </div>
+    <div class="text-xs">
+      focus
+    </div>
+    <div class="text-xs">
+      active
+    </div>
+    <div class="text-xs">
+      active+focus
+    </div>
+    <div class="text-xs">
+      disabled
+    </div>
+    <button-component role="radio"
+                      aria-checked="false"
+                      class="check sm"
+    >
+      check
+    </button-component>
+    <button-component role="radio"
+                      aria-checked="false"
+                      class="check hov sm"
+    >
+      check
+    </button-component>
+    <button-component role="radio"
+                      aria-checked="false"
+                      class="check foc sm"
+    >
+      check
+    </button-component>
+    <button-component role="radio"
+                      aria-checked="true"
+                      class="check act sm"
+    >
+      check
+    </button-component>
+    <button-component role="radio"
+                      aria-checked="true"
+                      class="check foc act sm"
+    >
+      check
+    </button-component>
+    <button-component role="radio"
+                      aria-checked="false"
+                      class="check dis sm"
+    >
+      check
+    </button-component>
+    <button-component role="checkbox"
+                      aria-checked="false"
+                      class="check sm"
+    >
+      check
+    </button-component>
+    <button-component role="checkbox"
+                      aria-checked="false"
+                      class="check hov sm"
+    >
+      check
+    </button-component>
+    <button-component role="checkbox"
+                      aria-checked="false"
+                      class="check foc sm"
+    >
+      check
+    </button-component>
+    <button-component role="checkbox"
+                      aria-checked="true"
+                      class="check act sm"
+    >
+      check
+    </button-component>
+    <button-component role="checkbox"
+                      aria-checked="true"
+                      class="check foc act sm"
+    >
+      check
+    </button-component>
+    <button-component role="checkbox"
+                      aria-checked="false"
+                      class="check dis sm"
+    >
+      check
+    </button-component>
+    <div class="button sm">
+      button
+    </div>
+    <div class="button sm hov ">
+      button
+    </div>
+    <div class="button sm foc ">
+      button
+    </div>
+    <div class="button sm act ">
+      button
+    </div>
+    <div class="button sm foc act ">
+      button
+    </div>
+    <div class="button sm dis ">
+      button
+    </div>
+    <div class="spot sm">
+    </div>
+    <div class="spot sm hov ">
+    </div>
+    <div class="spot sm foc ">
+    </div>
+    <div class="spot sm act ">
+    </div>
+    <div class="spot sm foc act ">
+    </div>
+    <div class="spot sm dis ">
+    </div>
+    <div class="drag sm">
+      drag
+    </div>
+    <div class="drag hov sm">
+      drag
+    </div>
+    <div class="drag foc sm">
+      drag
+    </div>
+    <div class="drag act sm">
+      drag
+    </div>
+    <div class="drag foc act sm">
+      drag
+    </div>
+    <div class="drag dis sm">
+      drag
+    </div>
+    <div class="drop sm">
+    </div>
+    <div class="drop hov sm">
+    </div>
+    <div class="drop foc sm">
+    </div>
+    <div class="drop act sm">
+    </div>
+    <div class="drop foc act sm">
+    </div>
+    <div class="drop dis sm">
+    </div>
+    <div class="drop sm">
+      <div class="drag sm">
+        drag
+      </div>
+    </div>
+    <div class="drop hov sm">
+      <div class="drag sm">
+        drag
+      </div>
+    </div>
+    <div class="drop foc sm">
+      <div class="drag sm">
+        drag
+      </div>
+    </div>
+    <div class="drop act sm">
+      <div class="drag sm">
+        drag
+      </div>
+    </div>
+    <div class="drop foc act sm">
+      <div class="drag sm">
+        drag
+      </div>
+    </div>
+    <div class="drop dis sm">
+      <div class="drag sm">
+        drag
+      </div>
+    </div>
+    <div class="drop sm">
+      With text
+      <div class="drag sm">
+        drag
+      </div>
+    </div>
+    <div class="drop hov sm">
+      With text
+      <div class="drag sm">
+        drag
+      </div>
+    </div>
+    <div class="drop foc sm">
+      With text
+      <div class="drag sm">
+        drag
+      </div>
+    </div>
+    <div class="drop act sm">
+      With text
+      <div class="drag sm">
+        drag
+      </div>
+    </div>
+    <div class="drop foc act sm">
+      With text
+      <div class="drag sm">
+        drag
+      </div>
+    </div>
+    <div class="drop dis sm">
+      With text
+      <div class="drag sm">
+        drag
+      </div>
+    </div>
+    <input type="text"
+           value="Button text"
+           class="text sm"
+    >
+    <input type="text"
+           value="Button text"
+           class="text hov sm"
+    >
+    <input type="text"
+           value="Button text"
+           class="text foc sm"
+    >
+    <input type="text"
+           value="Button text"
+           class="text act sm"
+    >
+    <input type="text"
+           value="Button text"
+           class="text foc act sm"
+    >
+    <input type="text"
+           value="Button text"
+           class="text dis sm"
+    >
+    <select class="select sm">
+      <option>
+        Button text
+      </option>
+    </select>
+    <select class="select hov sm">
+      <option>
+        Button text
+      </option>
+    </select>
+    <select class="select foc sm">
+      <option>
+        Button text
+      </option>
+    </select>
+    <select class="select act sm">
+      <option>
+        Button text
+      </option>
+    </select>
+    <select class="select foc act sm">
+      <option>
+        Button text
+      </option>
+    </select>
+    <select class="select dis sm">
+      <option>
+        Button text
+      </option>
+    </select>
+  </div>
+</div>
+`;

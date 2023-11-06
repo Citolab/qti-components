@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`lib/qti-components/qti-interaction/qti-position-object-interaction Default smoke-test 1`] = `
+<div id="root-inner">
+  <qti-position-object-stage>
+    <img src="https://qti-convert.web.app/images/uk.png"
+         width="206"
+         height="280"
+    >
+    <qti-position-object-interaction response-identifier="RESPONSE"
+                                     max-choices="3"
+    >
+      <img src="https://qti-convert.web.app/images/airport.png"
+           alt="Drop Zone"
+      >
+    </qti-position-object-interaction>
+  </qti-position-object-stage>
+</div>
+`;

@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`lib/qti-components/qti-interaction/qti-slider-interaction Default smoke-test 1`] = `
+<div id="root-inner">
+  <qti-slider-interaction response-identifier="RESPONSE"
+                          lower-bound="0"
+                          upper-bound="10"
+                          tabindex="0"
+                          role="slider"
+                          aria-valuenow="0"
+                          style="--min: 0; --max: 10; --step: 1; --value-percentage: 0%;"
+  >
+    <qti-prompt>
+      In total, what percentage of the UK population do you think were eventually classified as having no religion?
+    </qti-prompt>
+  </qti-slider-interaction>
+</div>
+`;

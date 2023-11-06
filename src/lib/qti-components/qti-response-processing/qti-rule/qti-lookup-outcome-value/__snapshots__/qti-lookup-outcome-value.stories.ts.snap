@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`lib/qti-components/qti-response-processing/qti-rule/qti-lookup-outcome-value Default play-test 1`] = `
+<div id="root-inner">
+  <qti-assessment-item xmlns="http://www.w3.org/1999/xhtml"
+                       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                       title="32c2sb"
+                       identifier="ITM-32c2sb"
+                       time-dependent="false"
+                       xsi:schemalocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+  >
+    <qti-outcome-declaration identifier="RAW_SCORE"
+                             cardinality="single"
+                             base-type="integer"
+    >
+      <qti-default-value>
+        <qti-value>
+          0
+        </qti-value>
+      </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="SCORE"
+                             cardinality="single"
+                             base-type="float"
+    >
+      <qti-interpolation-table>
+        <qti-interpolation-table-entry include-boundary="false"
+                                       source-value="3"
+                                       target-value="2"
+        >
+        </qti-interpolation-table-entry>
+        <qti-interpolation-table-entry include-boundary="false"
+                                       source-value="2"
+                                       target-value="1"
+        >
+        </qti-interpolation-table-entry>
+        <qti-interpolation-table-entry include-boundary="false"
+                                       source-value="1"
+                                       target-value="0"
+        >
+        </qti-interpolation-table-entry>
+        <qti-interpolation-table-entry include-boundary="false"
+                                       source-value="0"
+                                       target-value="0"
+        >
+        </qti-interpolation-table-entry>
+      </qti-interpolation-table>
+    </qti-outcome-declaration>
+    <qti-response-processing>
+      <qti-lookup-outcome-value identifier="SCORE">
+        <qti-variable identifier="RAW_SCORE">
+        </qti-variable>
+      </qti-lookup-outcome-value>
+    </qti-response-processing>
+  </qti-assessment-item>
+</div>
+`;

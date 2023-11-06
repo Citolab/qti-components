@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`lib/qti-components/qti-interaction/qti-end-attempt-interaction Default smoke-test 1`] = `
+<div id="root-inner">
+  <qti-assessment-item>
+    <qti-item-body>
+      <qti-printed-variable class="qti-well"
+                            identifier="numAttempts"
+      >
+      </qti-printed-variable>
+      <qti-end-attempt-interaction title="test num attempts">
+      </qti-end-attempt-interaction>
+    </qti-item-body>
+    <qti-response-processing>
+    </qti-response-processing>
+  </qti-assessment-item>
+</div>
+`;

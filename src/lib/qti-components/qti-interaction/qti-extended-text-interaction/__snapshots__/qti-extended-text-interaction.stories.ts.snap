@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`lib/qti-components/qti-interaction/qti-extended-text-interaction Default smoke-test 1`] = `
+<div id="root-inner">
+  <qti-extended-text-interaction response-identifier
+                                 class
+  >
+  </qti-extended-text-interaction>
+</div>
+`;
+
+exports[`lib/qti-components/qti-interaction/qti-extended-text-interaction PatternMask smoke-test 1`] = `
+<div id="root-inner">
+  <qti-extended-text-interaction response-identifier
+                                 class
+                                 pattern-mask="[A-Za-z]{3}"
+                                 data-patternmask-message="Alleen maar 3 letters toegestaan"
+  >
+  </qti-extended-text-interaction>
+</div>
+`;
