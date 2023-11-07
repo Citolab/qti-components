@@ -781,6 +781,12 @@
       "references": []
     },
     {
+      "name": "qti-lookup-outcome-value",
+      "description": "The lookupOutcomeValue rule sets the value of an outcome variable to the value obtained\nby looking up the value of the associated expression in the lookupTable associated\nwith the outcome's declaration.\n---\n\n\n### **Events:**\n - **qti-set-outcome-value** - undefined",
+      "attributes": [{ "name": "identifier", "values": [] }],
+      "references": []
+    },
+    {
       "name": "qti-response-condition",
       "description": "\n---\n",
       "attributes": [],

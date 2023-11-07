@@ -42,7 +42,7 @@ export const OneFalseResultsInFalse: Story = {
   }
 };
 
-class MockChild extends QtiConditionExpression {
+export class MockChild extends QtiConditionExpression {
   response = false;
   override connectedCallback() {
     super.connectedCallback();
@@ -52,4 +52,4 @@ class MockChild extends QtiConditionExpression {
     return this.response;
   }
 }
-window.customElements.define('mock-child', MockChild);
+customElements.define('mock-child', MockChild);
