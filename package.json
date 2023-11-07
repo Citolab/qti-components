@@ -55,9 +55,9 @@
     "./src/styles/**/*.css"
   ],
   "scripts": {
-    "test:generate-output": "jest --watch --json --outputFile=.jest-test-results.json || true",
-    "test:output": "jest --json --outputFile=.jest-test-results.json",
     "test": "jest",
+    "test:output": "jest --json --outputFile=.jest-test-results.json",
+    "test:watch-output": "jest --watch --json --outputFile=.jest-test-results.json || true",
     "dev": "vite",
     "build-app": "tsc && vite build",
     "build-lib": "ts-node --esm --project tsconfig.node.json scripts/build.ts",

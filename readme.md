@@ -23,11 +23,11 @@ To use @citolab/qti-components, you need to register the web components and impo
 Here's a basic example:
 
 ```javascript
-import * as QTI from 'https://unpkg.com/@citolab/qti-components@next/dist/index.js';
+import * as QTI from 'https://unpkg.com/@citolab/qti-components@latest/dist/index.js';
 ```
 
 ```css
-@import 'https://unpkg.com/@citolab/qti-components@next/dist/index.css';'
+@import 'https://unpkg.com/@citolab/qti-components@latest/dist/index.css';'
 ```
 
 ```html
@@ -59,26 +59,6 @@ import * as QTI from 'https://unpkg.com/@citolab/qti-components@next/dist/index.
 ```
 
 You can see a working example here [JSFiddle](https://jsfiddle.net/mrklein/s97Ld0gn).
-
-For a bit more advanced example using React and the QTIItem React wrapper from the package, you can check out this [StackBlitz](https://stackblitz.com/edit/qti-player). The item is integrated into a React component like this:
-
-```jsx
-<QtiItem
-  className="w-full h-[480px] bg-white shadow p-4"
-  responses={itemResponses.current.get(itemId!)}
-  onInteractionChanged={({ detail }: { detail: any }) => {
-    storeResponse(detail.item, detail.response, detail.responseIdentifier);
-  }}
-  onOutcomeChanged={(e: any) => {
-    itemOutcomes.current.set(items[itemIndex].identifier, e.detail.value);
-  }}
-  onItemConnected={(e: any) => {
-    qtiItem.current = e.target;
-    setItemId(e.detail.identifier);
-  }}
-  xml={itemXML}
-></QtiItem>
-```
 
 ## Storybook
 
