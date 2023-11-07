@@ -80,7 +80,6 @@
   "dependencies": {
     "@lit/context": "^1.0.0",
     "@lit/react": "^1.0.0",
-    "@storybook/preview-api": "^7.5.2",
     "cheerio": "^1.0.0-rc.12",
     "lit": "^3.0.0"
   },
@@ -101,6 +100,7 @@
     "@storybook/addon-links": "^7.5.2",
     "@storybook/blocks": "^7.5.2",
     "@storybook/jest": "^0.2.3",
+    "@storybook/preview-api": "^7.5.2",
     "@storybook/test-runner": "^0.13.0",
     "@storybook/testing-library": "^0.2.2",
     "@storybook/web-components": "^7.5.2",
