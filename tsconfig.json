@@ -1,7 +1,14 @@
 {
+  "ts-node": {
+    "moduleTypes": {
+      "jest.config.ts": "cjs"
+    }
+  },
   "compilerOptions": {
     "target": "es2017",
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
     "declaration": true,
     "emitDeclarationOnly": true,
     "outDir": "./types",
@@ -10,22 +17,19 @@
     "noUnusedParameters": false,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "moduleResolution": "Node",
+    "module": "es2020",
+    "moduleResolution": "node",
     "isolatedModules": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
     "useDefineForClassFields": false,
     "skipLibCheck": true,
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
     "baseUrl": "./",
     "paths": {
-      "@citolab/qti-components/qti-components": ["./src/lib/qti-components"],
-      "@citolab/qti-components/qti-transformers": ["./src/lib/qti-transformers"],
+      "@citolab/qti-components/qti-components": ["src/lib/qti-components"]
     }
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "./jest.config.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
-
