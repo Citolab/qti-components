@@ -1,0 +1,129 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`lib/qti-components/qti-response-processing/qti-expression/qti-member AssessmentCorrect smoke-test 1`] = `
+<div id="root-inner">
+  <qti-assessment-item data-testid="qti-assessment-item">
+    <qti-outcome-declaration base-type="string"
+                             cardinality="multiple"
+                             identifier="BODY"
+    >
+      <qti-default-value>
+        <qti-value>
+          part1
+        </qti-value>
+        <qti-value>
+          part2
+        </qti-value>
+        <qti-value>
+          part3
+        </qti-value>
+      </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-response-processing>
+      <qti-response-condition>
+        <qti-response-if>
+          <qti-member data-testid="qti-member">
+            <qti-base-value base-type="string">
+              part2
+            </qti-base-value>
+            <qti-variable identifier="BODY">
+            </qti-variable>
+          </qti-member>
+          <qti-set-outcome-value>
+            <qti-base-value base-type="string">
+              WOOHOO
+            </qti-base-value>
+          </qti-set-outcome-value>
+        </qti-response-if>
+      </qti-response-condition>
+    </qti-response-processing>
+  </qti-assessment-item>
+</div>
+`;
+
+exports[`lib/qti-components/qti-response-processing/qti-expression/qti-member MemberCorrect smoke-test 1`] = `
+<div id="root-inner">
+  <qti-assessment-item>
+    <qti-outcome-declaration base-type="string"
+                             cardinality="multiple"
+                             identifier="BODY"
+    >
+      <qti-default-value>
+        <qti-value>
+          part1
+        </qti-value>
+        <qti-value>
+          part2
+        </qti-value>
+        <qti-value>
+          part3
+        </qti-value>
+      </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-member data-testid="qti-member">
+      <qti-base-value base-type="string">
+        part2
+      </qti-base-value>
+      <qti-variable identifier="BODY">
+      </qti-variable>
+    </qti-member>
+  </qti-assessment-item>
+</div>
+`;
+
+exports[`lib/qti-components/qti-response-processing/qti-expression/qti-member MemberCorrect smoke-test 2`] = `
+<div id="root-inner">
+  <qti-assessment-item>
+    <qti-outcome-declaration base-type="string"
+                             cardinality="multiple"
+                             identifier="BODY"
+    >
+      <qti-default-value>
+        <qti-value>
+          part1
+        </qti-value>
+        <qti-value>
+          part2
+        </qti-value>
+        <qti-value>
+          part3
+        </qti-value>
+      </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-member data-testid="qti-member">
+      <qti-base-value base-type="string">
+        part2
+      </qti-base-value>
+      <qti-variable identifier="BODY">
+      </qti-variable>
+    </qti-member>
+  </qti-assessment-item>
+</div>
+`;
+
+exports[`lib/qti-components/qti-response-processing/qti-expression/qti-member MemberFail play-test 1`] = `
+<div id="root-inner">
+  <qti-assessment-item data-testid="qti-assessment">
+    <qti-outcome-declaration base-type="duration"
+                             cardinality="single"
+                             identifier="BODY"
+    >
+      <qti-default-value>
+        <qti-value>
+          part1
+        </qti-value>
+      </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-response-processing>
+      <qti-member data-testid="qti-member">
+        <qti-base-value base-type="float">
+        </qti-base-value>
+        <qti-variable identifier="BODY">
+        </qti-variable>
+        <qti-variable identifier="SUB-BODY">
+        </qti-variable>
+      </qti-member>
+    </qti-response-processing>
+  </qti-assessment-item>
+</div>
+`;

@@ -1,8 +1,8 @@
-import '../../../index';
+import '@citolab/qti-components/qti-components';
 
-import { QtiIsNull } from './qti-is-null';
-import { html, render } from 'lit';
 import { describe, expect, it } from '@jest/globals';
+import { html, render } from 'lit';
+import { QtiIsNull } from './qti-is-null';
 describe('qti-is-null', () => {
   it('null = true', () => {
     const template = () => html`

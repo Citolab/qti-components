@@ -1,7 +1,7 @@
 import { customElement } from 'lit/decorators.js';
 import { html, LitElement } from 'lit';
 
-import { mapResponse, mapResponsePoint, matchCorrect } from '../../qti-utilities/TemplateStrings';
+import { mapResponse, mapResponsePoint, matchCorrect } from '../../internal/template-strings';
 import { type QtiRule } from '../qti-rule/qti-rule';
 
 @customElement('qti-response-processing')

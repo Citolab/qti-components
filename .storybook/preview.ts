@@ -1,4 +1,4 @@
-import '../src/styles.css';
+import '../src/styles.bundled.css';
 import type { Preview } from '@storybook/web-components';
 
 import { setCustomElementsManifest } from '@storybook/web-components';

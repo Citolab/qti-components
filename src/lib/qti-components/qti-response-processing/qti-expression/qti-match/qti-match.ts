@@ -1,4 +1,4 @@
-import { ResponseVariable } from '../../../qti-utilities/Variables';
+import { ResponseVariable } from '../../../internal/variables';
 import { ScoringHelper } from '../../utilities/scoring-helper';
 import { QtiExpression } from '../qti-expression';
 

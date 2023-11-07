@@ -2,7 +2,7 @@ import { LitElement, PropertyValueMap } from 'lit';
 import { property } from 'lit/decorators.js';
 import { QtiAssessmentItem } from '../qti-assessment-item/qti-assessment-item';
 import { isNullOrUndefined } from 'util';
-import { IsNullOrUndefined } from '../qti-utilities/utils';
+import { IsNullOrUndefined } from '../internal/utils';
 
 export abstract class QtiFeedback extends LitElement {
   @property({ type: String, attribute: 'show-hide' })

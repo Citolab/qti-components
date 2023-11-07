@@ -3,62 +3,6 @@
   "version": 1.1,
   "tags": [
     {
-      "name": "qti-item",
-      "description": "\n---\n",
-      "attributes": [
-        {
-          "name": "item-location",
-          "description": "The location of the item.",
-          "values": []
-        }
-      ],
-      "references": []
-    },
-    {
-      "name": "qti-assessment-item-ref",
-      "description": "\n---\n",
-      "attributes": [
-        { "name": "identifier", "values": [] },
-        { "name": "href", "values": [] },
-        {
-          "name": "item-location",
-          "description": "The location of the item.",
-          "values": []
-        }
-      ],
-      "references": []
-    },
-    {
-      "name": "qti-assessment-test",
-      "description": "\n---\n\n\n### **Events:**\n - **on-test-set-item** - undefined\n- **name** - undefined",
-      "attributes": [
-        {
-          "name": "audience-context",
-          "values": [
-            { "name": "" },
-            { "name": "candidate" },
-            { "name": "scorer" },
-            { "name": "''" }
-          ]
-        },
-        { "name": "item-index", "values": [] },
-        { "name": "identifier", "values": [] }
-      ],
-      "references": []
-    },
-    {
-      "name": "qti-test-part",
-      "description": "\n---\n",
-      "attributes": [
-        { "name": "loading", "values": [] },
-        {
-          "name": "navigation-mode",
-          "values": [{ "name": "linear" }, { "name": "nonlinear" }]
-        }
-      ],
-      "references": []
-    },
-    {
       "name": "qti-assessment-item",
       "description": "The qti-assessment-item element contains all the other QTI 3 item structures.\n---\n\n\n### **Events:**\n - **name** - undefined\n- **qti-interaction-changed** - Emitted when an interaction is changed.\n- **qti-outcome-changed** - Emitted when an outcome has changed.\n- **qti-response-processing** - Emitted when response-processing is called.\n\n### **Slots:**\n - _default_ - The default slot where all the other QTI 3 item structures go.",
       "attributes": [
@@ -80,12 +24,6 @@
     {
       "name": "qti-companion-materials-info",
       "description": "\n---\n",
-      "attributes": [],
-      "references": []
-    },
-    {
-      "name": "qti-custom-operator",
-      "description": "https://www.imsglobal.org/spec/qti/v3p0/impl#h.fi29q8dubjgw\n<qti-custom-operator class=\"js.org\">\n     <qti-base-value base-type=\"string\"><![CDATA[\n       console.log(context.variables);\n       return 'B'\n       document.querySelector('qti-end-attempt-interaction').disabled = true;\n       ]]></qti-base-value>\n   </qti-custom-operator>\n </qti-set-outcome-value>\n---\n\n\n### **Events:**\n - **qti-set-outcome-value** - undefined",
       "attributes": [],
       "references": []
     },
@@ -216,96 +154,6 @@
     },
     {
       "name": "qti-variabledeclaration",
-      "description": "\n---\n",
-      "attributes": [],
-      "references": []
-    },
-    {
-      "name": "test-item-id",
-      "description": "\n---\n",
-      "attributes": [],
-      "references": []
-    },
-    {
-      "name": "test-next",
-      "description": "\n---\n\n\n### **Events:**\n - **on-test-request-item** - undefined",
-      "attributes": [],
-      "references": []
-    },
-    {
-      "name": "test-paging-buttons",
-      "description": "\n---\n\n\n### **Events:**\n - **on-test-request-item** - undefined",
-      "attributes": [{ "name": "maxDisplayedItems", "values": [] }],
-      "references": []
-    },
-    {
-      "name": "test-paging-radio",
-      "description": "\n---\n\n\n### **Events:**\n - **on-test-request-item** - undefined",
-      "attributes": [],
-      "references": []
-    },
-    {
-      "name": "test-prev",
-      "description": "\n---\n\n\n### **Events:**\n - **on-test-request-item** - undefined",
-      "attributes": [],
-      "references": []
-    },
-    {
-      "name": "test-print-score",
-      "description": "\n---\n\n\n### **Events:**\n - **on-test-request-item** - undefined",
-      "attributes": [],
-      "references": []
-    },
-    {
-      "name": "test-print-variables",
-      "description": "\n---\n",
-      "attributes": [],
-      "references": []
-    },
-    {
-      "name": "test-progress",
-      "description": "\n---\n",
-      "attributes": [],
-      "references": []
-    },
-    {
-      "name": "test-scoring-buttons",
-      "description": "\n---\n",
-      "attributes": [],
-      "references": []
-    },
-    {
-      "name": "test-scoring-input",
-      "description": "\n---\n",
-      "attributes": [{ "name": "disabled", "values": [] }],
-      "references": []
-    },
-    {
-      "name": "test-script",
-      "description": "\n---\n",
-      "attributes": [],
-      "references": []
-    },
-    {
-      "name": "test-show-correct",
-      "description": "\n---\n",
-      "attributes": [],
-      "references": []
-    },
-    {
-      "name": "test-show-index",
-      "description": "\n---\n\n\n### **Events:**\n - **on-test-request-item** - undefined",
-      "attributes": [],
-      "references": []
-    },
-    {
-      "name": "test-slider",
-      "description": "\n---\n\n\n### **Events:**\n - **on-test-request-item** - undefined",
-      "attributes": [],
-      "references": []
-    },
-    {
-      "name": "test-toggle-scoring",
       "description": "\n---\n",
       "attributes": [],
       "references": []
@@ -758,6 +606,14 @@
       "references": []
     },
     {
+      "name": "qti-response-if",
+      "description": "\n---\n",
+      "attributes": [
+        { "name": "debugCalculateResult", "values": [{ "name": "object" }] }
+      ],
+      "references": []
+    },
+    {
       "name": "qti-and",
       "description": "\n---\n",
       "attributes": [],
@@ -922,14 +778,6 @@
       "name": "qti-variable",
       "description": "\n---\n",
       "attributes": [],
-      "references": []
-    },
-    {
-      "name": "qti-response-if",
-      "description": "\n---\n",
-      "attributes": [
-        { "name": "debugCalculateResult", "values": [{ "name": "object" }] }
-      ],
       "references": []
     },
     {

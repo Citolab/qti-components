@@ -1,0 +1,76 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`lib/qti-components/qti-interaction/qti-inline-choice-interaction DataPrompt smoke-test 1`] = `
+<div id="root-inner">
+  <qti-inline-choice-interaction response-identifier="RESPONSE"
+                                 class
+                                 shuffle
+                                 data-prompt="Select the correct answer"
+  >
+    <qti-inline-choice identifier="G">
+      Gloucester
+    </qti-inline-choice>
+    <qti-inline-choice identifier="L">
+      Lancaster
+    </qti-inline-choice>
+    <qti-inline-choice identifier="Y">
+      York
+    </qti-inline-choice>
+  </qti-inline-choice-interaction>
+</div>
+`;
+
+exports[`lib/qti-components/qti-interaction/qti-inline-choice-interaction Default smoke-test 1`] = `
+<div id="root-inner">
+  <qti-inline-choice-interaction response-identifier="RESPONSE"
+                                 class
+                                 shuffle
+  >
+    <qti-inline-choice identifier="G">
+      Gloucester
+    </qti-inline-choice>
+    <qti-inline-choice identifier="L">
+      Lancaster
+    </qti-inline-choice>
+    <qti-inline-choice identifier="Y">
+      York
+    </qti-inline-choice>
+  </qti-inline-choice-interaction>
+</div>
+`;
+
+exports[`lib/qti-components/qti-interaction/qti-inline-choice-interaction Item smoke-test 1`] = `
+<div id="root-inner">
+  <qti-assessment-item identifier="inline-choice">
+    <qti-item-body>
+      <p>
+        Identify the missing word in this famous quote from Shakespeare's Richard III.
+      </p>
+      <blockquote>
+        <p>
+          Now is the winter of our discontent
+          <br>
+          Made glorious summer by this sun of
+          <qti-inline-choice-interaction response-identifier="RESPONSE"
+                                         class
+                                         shuffle
+          >
+            <qti-inline-choice identifier="G">
+              Gloucester
+            </qti-inline-choice>
+            <qti-inline-choice identifier="L">
+              Lancaster
+            </qti-inline-choice>
+            <qti-inline-choice identifier="Y">
+              York
+            </qti-inline-choice>
+          </qti-inline-choice-interaction>
+          And all the clouds that lour'd upon our house
+          <br>
+          In the deep bosom of the ocean buried.
+        </p>
+      </blockquote>
+    </qti-item-body>
+  </qti-assessment-item>
+</div>
+`;

@@ -5,7 +5,7 @@ import '../qti-simple-associable-choice';
 import { property, state } from 'lit/decorators.js';
 import { QtiSimpleAssociableChoice } from '../qti-simple-associable-choice';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
-import { ResponseInteraction } from '../../qti-utilities/ExpressionResult';
+import { ResponseInteraction } from '../../internal/expression-result';
 
 interface Column {
   id: number;

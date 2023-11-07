@@ -1,0 +1,617 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`lib/qti-components/qti-feedback inline smoke-test 1`] = `
+<div id="root-inner">
+  <qti-assessment-item identifier="blah">
+    <qti-response-declaration identifier="RESPONSE"
+                              cardinality="single"
+                              base-type="identifier"
+    >
+      <qti-correct-response>
+      </qti-correct-response>
+    </qti-response-declaration>
+    <qti-outcome-declaration identifier="FEEDBACK"
+                             cardinality="single"
+                             base-type="identifier"
+    >
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="SCORE"
+                             cardinality="single"
+                             base-type="float"
+                             normal-maximum="10.0"
+    >
+      <qti-default-value>
+        <qti-value>
+          0
+        </qti-value>
+      </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="MAXSCORE"
+                             cardinality="single"
+                             base-type="float"
+    >
+      <qti-default-value>
+        <qti-value>
+          10.0
+        </qti-value>
+      </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-item-body>
+      <qti-choice-interaction response-identifier="RESPONSE"
+                              shuffle="false"
+                              max-choices="1"
+      >
+        <qti-prompt slot="prompt">
+          Sigmund Freud and Carl Jung both belong to the psychoanalytic school of psychology.
+        </qti-prompt>
+        <qti-simple-choice identifier="true"
+                           fixed="true"
+                           role="radio"
+                           tabindex="0"
+                           aria-disabled="false"
+                           aria-readonly="false"
+                           aria-checked="false"
+        >
+          True
+          <qti-feedback-inline outcome-identifier="FEEDBACK"
+                               identifier="true"
+                               show-hide="show"
+          >
+            That's correct
+          </qti-feedback-inline>
+        </qti-simple-choice>
+        <qti-simple-choice identifier="false"
+                           fixed="true"
+                           role="radio"
+                           tabindex="0"
+                           aria-disabled="false"
+                           aria-readonly="false"
+                           aria-checked="false"
+        >
+          False
+          <qti-feedback-inline outcome-identifier="FEEDBACK"
+                               identifier="false"
+                               show-hide="show"
+          >
+            That's not correct
+          </qti-feedback-inline>
+        </qti-simple-choice>
+      </qti-choice-interaction>
+    </qti-item-body>
+    <qti-response-processing>
+      <qti-set-outcome-value identifier="FEEDBACK">
+        <qti-variable identifier="RESPONSE">
+        </qti-variable>
+      </qti-set-outcome-value>
+      <qti-response-condition>
+        <qti-response-if>
+          <qti-match>
+            <qti-variable identifier="RESPONSE">
+            </qti-variable>
+            <qti-correct identifier="RESPONSE">
+            </qti-correct>
+          </qti-match>
+          <qti-set-outcome-value identifier="SCORE">
+            <qti-variable identifier="MAXSCORE">
+            </qti-variable>
+          </qti-set-outcome-value>
+        </qti-response-if>
+      </qti-response-condition>
+    </qti-response-processing>
+  </qti-assessment-item>
+</div>
+`;
+
+exports[`lib/qti-components/qti-feedback kringloop smoke-test 1`] = `
+<div id="root-inner">
+  <qti-assessment-item identifier="kringloop1">
+    <qti-response-declaration identifier="RESPONSE"
+                              cardinality="single"
+                              base-type="float"
+    >
+      <qti-correct-response interpretation="562 kilo">
+      </qti-correct-response>
+    </qti-response-declaration>
+    <qti-outcome-declaration identifier="SCORE"
+                             cardinality="single"
+                             base-type="float"
+    >
+      <qti-default-value>
+        <qti-value>
+          0
+        </qti-value>
+      </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="FEEDBACK"
+                             cardinality="single"
+                             base-type="identifier"
+    >
+    </qti-outcome-declaration>
+    <qti-item-body xml:lang="nl-NL">
+      <div class="qti-layout-row">
+        <div class="qti-layout-col12">
+          <p>
+            <strong>
+              Hoeveel kilo afval werd er 2021 in Nederland per persoon weggegooid?
+            </strong>
+          </p>
+          <div>
+            <qti-slider-interaction response-identifier="RESPONSE"
+                                    lower-bound="0"
+                                    step="100"
+                                    upper-bound="1000"
+                                    tabindex="0"
+                                    role="slider"
+                                    aria-valuenow="0"
+                                    style="--min: 0; --step: 1; --max: 1000; --value-percentage: 0%;"
+            >
+            </qti-slider-interaction>
+            <qti-feedback-block id="feedbackblock-correct-exact"
+                                identifier="correct-exact"
+                                outcome-identifier="FEEDBACK"
+                                show-hide="show"
+            >
+              Helemaal goed! Dat is net zoveel als het gewicht van een groot paard! 🐎
+            </qti-feedback-block>
+            <qti-feedback-block id="feedbackblock-correct"
+                                identifier="correct"
+                                outcome-identifier="FEEDBACK"
+                                show-hide="show"
+            >
+              Bijna! We rekenen het goed! 562 kilo 😮 Dat is net zoveel als het gewicht van een groot paard!🐎
+            </qti-feedback-block>
+            <qti-feedback-block id="feedbackblock-incorrect-less"
+                                identifier="incorrect-less"
+                                outcome-identifier="FEEDBACK"
+                                show-hide="show"
+            >
+              Helaas het is nog meer! 562 kilo 😮! Dat is net zoveel als het gewicht van een groot paard 🐎
+            </qti-feedback-block>
+            <qti-feedback-block id="feedbackblock-incorrect-more"
+                                identifier="incorrect-more"
+                                outcome-identifier="FEEDBACK"
+                                show-hide="show"
+            >
+              Dat is niet goed, gelukkig is het minder, maar toch 562 kilo! Dat is net zoveel als het gewicht van een
+                groot paard!🐎
+            </qti-feedback-block>
+          </div>
+        </div>
+      </div>
+    </qti-item-body>
+    <qti-response-processing>
+      <qti-response-condition>
+        <qti-response-if>
+          <qti-and>
+            <qti-gte>
+              <qti-variable identifier="RESPONSE">
+              </qti-variable>
+              <qti-base-value base-type="float">
+                500
+              </qti-base-value>
+            </qti-gte>
+            <qti-lte>
+              <qti-variable identifier="RESPONSE">
+              </qti-variable>
+              <qti-base-value base-type="float">
+                600
+              </qti-base-value>
+            </qti-lte>
+          </qti-and>
+          <qti-set-outcome-value identifier="SCORE">
+            <qti-base-value base-type="float">
+              1
+            </qti-base-value>
+          </qti-set-outcome-value>
+          <qti-response-condition>
+            <qti-response-if>
+              <qti-equal>
+                <qti-variable identifier="RESPONSE">
+                </qti-variable>
+                <qti-correct identifier="RESPONSE">
+                </qti-correct>
+              </qti-equal>
+              <qti-set-outcome-value identifier="FEEDBACK">
+                <qti-base-value base-type="identifier">
+                  correct-exact
+                </qti-base-value>
+              </qti-set-outcome-value>
+            </qti-response-if>
+            <qti-response-else>
+              <qti-set-outcome-value identifier="FEEDBACK">
+                <qti-base-value base-type="string">
+                  correct
+                </qti-base-value>
+              </qti-set-outcome-value>
+            </qti-response-else>
+          </qti-response-condition>
+        </qti-response-if>
+        <qti-response-else>
+          <qti-set-outcome-value identifier="SCORE">
+            <qti-base-value base-type="float">
+              0
+            </qti-base-value>
+          </qti-set-outcome-value>
+          <qti-response-condition>
+            <qti-response-if>
+              <qti-lt>
+                <qti-variable identifier="RESPONSE">
+                </qti-variable>
+                <qti-base-value base-type="float">
+                  500
+                </qti-base-value>
+              </qti-lt>
+              <qti-set-outcome-value identifier="FEEDBACK">
+                <qti-base-value base-type="string">
+                  incorrect-less
+                </qti-base-value>
+              </qti-set-outcome-value>
+            </qti-response-if>
+            <qti-response-else>
+              <qti-set-outcome-value identifier="FEEDBACK">
+                <qti-base-value base-type="string">
+                  incorrect-more
+                </qti-base-value>
+              </qti-set-outcome-value>
+            </qti-response-else>
+          </qti-response-condition>
+        </qti-response-else>
+      </qti-response-condition>
+    </qti-response-processing>
+  </qti-assessment-item>
+</div>
+`;
+
+exports[`lib/qti-components/qti-feedback modal smoke-test 1`] = `
+<div id="root-inner">
+  <qti-assessment-item identifier="blah">
+    <qti-response-declaration identifier="RESPONSE"
+                              cardinality="single"
+                              base-type="identifier"
+    >
+      <qti-correct-response>
+      </qti-correct-response>
+    </qti-response-declaration>
+    <qti-outcome-declaration identifier="FEEDBACK"
+                             cardinality="single"
+                             base-type="identifier"
+    >
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="SCORE"
+                             cardinality="single"
+                             base-type="float"
+                             normal-maximum="10.0"
+    >
+      <qti-default-value>
+        <qti-value>
+          0
+        </qti-value>
+      </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="MAXSCORE"
+                             cardinality="single"
+                             base-type="float"
+    >
+      <qti-default-value>
+        <qti-value>
+          10.0
+        </qti-value>
+      </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-item-body>
+      <qti-choice-interaction response-identifier="RESPONSE"
+                              shuffle="false"
+                              max-choices="1"
+      >
+        <qti-prompt slot="prompt">
+          Sigmund Freud and Carl Jung both belong to the psychoanalytic school of psychology.
+        </qti-prompt>
+        <qti-simple-choice identifier="true"
+                           fixed="true"
+                           role="radio"
+                           tabindex="0"
+                           aria-disabled="false"
+                           aria-readonly="false"
+                           aria-checked="false"
+        >
+          True
+        </qti-simple-choice>
+        <qti-simple-choice identifier="false"
+                           fixed="true"
+                           role="radio"
+                           tabindex="0"
+                           aria-disabled="false"
+                           aria-readonly="false"
+                           aria-checked="false"
+        >
+          False
+        </qti-simple-choice>
+      </qti-choice-interaction>
+    </qti-item-body>
+    <qti-response-processing>
+      <qti-set-outcome-value identifier="FEEDBACK">
+        <qti-variable identifier="RESPONSE">
+        </qti-variable>
+      </qti-set-outcome-value>
+      <qti-response-condition>
+        <qti-response-if>
+          <qti-match>
+            <qti-variable identifier="RESPONSE">
+            </qti-variable>
+            <qti-correct identifier="RESPONSE">
+            </qti-correct>
+          </qti-match>
+          <qti-set-outcome-value identifier="SCORE">
+            <qti-variable identifier="MAXSCORE">
+            </qti-variable>
+          </qti-set-outcome-value>
+        </qti-response-if>
+      </qti-response-condition>
+    </qti-response-processing>
+    <qti-modal-feedback outcome-identifier="FEEDBACK"
+                        show-hide="show"
+                        identifier="true"
+    >
+      <qti-content-body>
+        correct
+      </qti-content-body>
+    </qti-modal-feedback>
+    <qti-modal-feedback outcome-identifier="FEEDBACK"
+                        show-hide="show"
+                        identifier="false"
+    >
+      <qti-content-body>
+        incorrect
+      </qti-content-body>
+    </qti-modal-feedback>
+  </qti-assessment-item>
+</div>
+`;
+
+exports[`lib/qti-components/qti-feedback modal smoke-test 2`] = `
+<div id="root-inner">
+  <qti-assessment-item identifier="blah">
+    <qti-response-declaration identifier="RESPONSE"
+                              cardinality="single"
+                              base-type="identifier"
+    >
+      <qti-correct-response>
+      </qti-correct-response>
+    </qti-response-declaration>
+    <qti-outcome-declaration identifier="FEEDBACK"
+                             cardinality="single"
+                             base-type="identifier"
+    >
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="SCORE"
+                             cardinality="single"
+                             base-type="float"
+                             normal-maximum="10.0"
+    >
+      <qti-default-value>
+        <qti-value>
+          0
+        </qti-value>
+      </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="MAXSCORE"
+                             cardinality="single"
+                             base-type="float"
+    >
+      <qti-default-value>
+        <qti-value>
+          10.0
+        </qti-value>
+      </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-item-body>
+      <qti-choice-interaction response-identifier="RESPONSE"
+                              shuffle="false"
+                              max-choices="1"
+      >
+        <qti-prompt slot="prompt">
+          Sigmund Freud and Carl Jung both belong to the psychoanalytic school of psychology.
+        </qti-prompt>
+        <qti-simple-choice identifier="true"
+                           fixed="true"
+                           role="radio"
+                           tabindex="0"
+                           aria-disabled="false"
+                           aria-readonly="false"
+                           aria-checked="false"
+        >
+          True
+        </qti-simple-choice>
+        <qti-simple-choice identifier="false"
+                           fixed="true"
+                           role="radio"
+                           tabindex="0"
+                           aria-disabled="false"
+                           aria-readonly="false"
+                           aria-checked="false"
+        >
+          False
+        </qti-simple-choice>
+      </qti-choice-interaction>
+    </qti-item-body>
+    <qti-response-processing>
+      <qti-set-outcome-value identifier="FEEDBACK">
+        <qti-variable identifier="RESPONSE">
+        </qti-variable>
+      </qti-set-outcome-value>
+      <qti-response-condition>
+        <qti-response-if>
+          <qti-match>
+            <qti-variable identifier="RESPONSE">
+            </qti-variable>
+            <qti-correct identifier="RESPONSE">
+            </qti-correct>
+          </qti-match>
+          <qti-set-outcome-value identifier="SCORE">
+            <qti-variable identifier="MAXSCORE">
+            </qti-variable>
+          </qti-set-outcome-value>
+        </qti-response-if>
+      </qti-response-condition>
+    </qti-response-processing>
+    <qti-modal-feedback outcome-identifier="FEEDBACK"
+                        show-hide="show"
+                        identifier="true"
+    >
+      <qti-content-body>
+        correct
+      </qti-content-body>
+    </qti-modal-feedback>
+    <qti-modal-feedback outcome-identifier="FEEDBACK"
+                        show-hide="show"
+                        identifier="false"
+    >
+      <qti-content-body>
+        incorrect
+      </qti-content-body>
+    </qti-modal-feedback>
+  </qti-assessment-item>
+</div>
+`;
+
+exports[`lib/qti-components/qti-feedback woordmars smoke-test 1`] = `
+<div id="root-inner">
+  <qti-assessment-item 2
+                       identifier="blah"
+  >
+    <qti-response-declaration identifier="RESPONSE"
+                              cardinality="single"
+                              base-type="identifier"
+    >
+      <qti-correct-response>
+      </qti-correct-response>
+    </qti-response-declaration>
+    <qti-outcome-declaration identifier="SCORE"
+                             cardinality="single"
+                             base-type="float"
+    >
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="FEEDBACK"
+                             cardinality="single"
+                             base-type="identifier"
+    >
+    </qti-outcome-declaration>
+    <qti-item-body>
+      <qti-choice-interaction class="qti-input-control-hidden"
+                              response-identifier="RESPONSE"
+                              max-choices="1"
+      >
+        <qti-prompt slot="prompt">
+          Wat betekent stuk?
+        </qti-prompt>
+        <qti-simple-choice identifier="A"
+                           role="radio"
+                           tabindex="0"
+                           aria-disabled="false"
+                           aria-readonly="false"
+                           aria-checked="false"
+        >
+          Een deel
+          <qti-feedback-inline outcome-identifier="FEEDBACK"
+                               identifier="A"
+                               show-hide="show"
+          >
+            goed
+          </qti-feedback-inline>
+          <qti-feedback-inline outcome-identifier="FEEDBACK"
+                               identifier="B"
+                               show-hide="show"
+          >
+            goed
+          </qti-feedback-inline>
+          <qti-feedback-inline outcome-identifier="FEEDBACK"
+                               identifier="C"
+                               show-hide="show"
+          >
+            goed
+          </qti-feedback-inline>
+          <qti-feedback-inline outcome-identifier="FEEDBACK"
+                               identifier="D"
+                               show-hide="show"
+          >
+            goed
+          </qti-feedback-inline>
+        </qti-simple-choice>
+        <qti-simple-choice identifier="B"
+                           role="radio"
+                           tabindex="0"
+                           aria-disabled="false"
+                           aria-readonly="false"
+                           aria-checked="false"
+        >
+          Een gat
+          <qti-feedback-inline outcome-identifier="FEEDBACK"
+                               identifier="B"
+                               show-hide="show"
+          >
+            fout
+          </qti-feedback-inline>
+        </qti-simple-choice>
+        <qti-simple-choice identifier="C"
+                           role="radio"
+                           tabindex="0"
+                           aria-disabled="false"
+                           aria-readonly="false"
+                           aria-checked="false"
+        >
+          Een krant
+          <qti-feedback-inline outcome-identifier="FEEDBACK"
+                               identifier="C"
+                               show-hide="show"
+          >
+            fout
+          </qti-feedback-inline>
+        </qti-simple-choice>
+        <qti-simple-choice identifier="D"
+                           role="radio"
+                           tabindex="0"
+                           aria-disabled="false"
+                           aria-readonly="false"
+                           aria-checked="false"
+        >
+          Een steen
+          <qti-feedback-inline outcome-identifier="FEEDBACK"
+                               identifier="D"
+                               show-hide="show"
+          >
+            fout
+          </qti-feedback-inline>
+        </qti-simple-choice>
+      </qti-choice-interaction>
+    </qti-item-body>
+    <qti-response-processing>
+      <qti-set-outcome-value identifier="FEEDBACK">
+        <qti-variable identifier="RESPONSE">
+        </qti-variable>
+      </qti-set-outcome-value>
+      <qti-response-condition>
+        <qti-response-if>
+          <qti-match>
+            <qti-variable identifier="RESPONSE">
+            </qti-variable>
+            <qti-correct identifier="RESPONSE">
+            </qti-correct>
+          </qti-match>
+          <qti-set-outcome-value identifier="SCORE">
+            <qti-base-value base-type="float">
+              1
+            </qti-base-value>
+          </qti-set-outcome-value>
+        </qti-response-if>
+        <qti-response-else>
+          <qti-set-outcome-value identifier="SCORE">
+            <qti-base-value base-type="float">
+              0
+            </qti-base-value>
+          </qti-set-outcome-value>
+        </qti-response-else>
+      </qti-response-condition>
+    </qti-response-processing>
+  </qti-assessment-item>
+</div>
+`;

@@ -12,100 +12,61 @@
   "engines": {
     "node": ">=16.0.0"
   },
-  "version": "6.4.4",
+  "version": "6.4.5",
   "type": "module",
   "main": "dist/index.js",
   "exports": {
     ".": {
-      "import": "./dist/index.js"
-    },
-    "./context": {
-      "import": "./dist/context/index.js",
-      "require": "./dist/context/index.cjs"
-    },
-    "./decorators": {
-      "import": "./dist/decorators/index.js",
-      "require": "./dist/decorators/index.cjs"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     },
     "./qti-components": {
       "import": "./dist/qti-components/index.js",
       "require": "./dist/qti-components/index.cjs"
     },
-    "./qti-test": {
-      "import": "./dist/qti-test/index.js",
-      "require": "./dist/qti-test/index.cjs"
+    "./qti-transformers": {
+      "import": "./dist/qti-transformers/index.js",
+      "require": "./dist/qti-transformers/index.cjs"
     },
-    "./qti-item": {
-      "import": "./dist/qti-item/index.js",
-      "require": "./dist/qti-item/index.cjs"
-    },
-    "./react/qti-item": {
-      "import": "./dist/qti-item-react/index.js",
-      "require": "./dist/qti-item-react/index.cjs"
-    },
-    "./react/qti-test": {
-      "import": "./dist/qti-test-react/index.js",
-      "require": "./dist/qti-test-react/index.cjs"
-    },
-    "./qti-transform": {
-      "import": "./dist/qti-transform/index.js",
-      "require": "./dist/qti-transform/index.cjs"
-    },
-    "./index.css": {
-      "import": "./dist/index.css"
+    "./*.css": {
+      "import": "./dist/*.css",
+      "require": "./dist/*.css"
     }
   },
-  "style": "dist/index.css",
   "types": "./dist/qti-components/index.d.ts",
   "typesVersions": {
     "*": {
       ".": [
         "./dist/index.d.ts"
       ],
-      "context": [
-        "./dist/context/index.d.ts"
-      ],
-      "decorators": [
-        "./dist/decorators/index.d.ts"
-      ],
       "qti-components": [
         "./dist/qti-components/index.d.ts"
       ],
-      "qti-test": [
-        "./dist/qti-test/index.d.ts"
-      ],
-      "qti-item": [
-        "./dist/qti-item/index.d.ts"
-      ],
-      "react/qti-test": [
-        "./dist/qti-test-react/index.d.ts"
-      ],
-      "react/qti-item": [
-        "./dist/qti-item-react/index.d.ts"
-      ],
-      "qti-transform": [
-        "./dist/qti-transform/index.d.ts"
+      "qti-transformers": [
+        "./dist/qti-transformers/index.d.ts"
       ]
     }
   },
   "files": [
     "dist",
     "types",
-    "./dist/index.css"
+    "./dist/styles.css",
+    "./dist/styles.bundled.css",
+    "./src/styles/**/*.css"
   ],
   "scripts": {
-    "test:generate-output": "jest --watch --json --outputFile=.jest-test-results.json || true",
-    "test:output": "jest --json --outputFile=.jest-test-results.json",
     "test": "jest",
+    "test:output": "jest --json --outputFile=.jest-test-results.json",
+    "test:watch-output": "jest --watch --json --outputFile=.jest-test-results.json || true",
     "dev": "vite",
     "build-app": "tsc && vite build",
     "build-lib": "ts-node --esm --project tsconfig.node.json scripts/build.ts",
     "watch-lib": "nodemon --watch \"src/**\" --ext \"ts,json,css\" --ignore \"src/**/*.spec.ts\" --exec \"ts-node --esm --project tsconfig.node.json scripts/watch.ts\"",
     "storybook": "storybook dev -p 6006",
-    "deploy": "firebase deploy --only hosting:qti-components",
-    "build-storybook": "storybook build",
+    "storybook:deploy": "firebase deploy --only hosting:qti-components",
+    "storybook:build": "storybook build",
+    "storybook:test": "test-storybook",
     "npm publish": "np",
-    "test-storybook": "test-storybook",
     "cem": "cem analyze --watch",
     "lint": "eslint src/lib/**",
     "kill 6006": "sudo lsof -i :6006 | grep LISTEN | awk '{print $2}' | xargs kill",
@@ -117,7 +78,6 @@
     "postpublish": "npm run deploy"
   },
   "dependencies": {
-    "@lit-labs/preact-signals": "^1.0.0",
     "@lit/context": "^1.0.0",
     "@lit/react": "^1.0.0",
     "cheerio": "^1.0.0-rc.12",
@@ -127,24 +87,24 @@
     "@lit/context": ">= 1.0",
     "@lit/react": ">= 1.0",
     "lit": ">= 3 < 4",
-    "react": "> 18",
-    "@lit-labs/preact-signals": "^1.0.0"
+    "react": "> 18"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.12.2",
     "@custom-elements-manifest/analyzer": "^0.9.0",
     "@jest/globals": "^29.7.0",
-    "@storybook/addon-a11y": "^7.5.1",
-    "@storybook/addon-essentials": "^7.5.1",
-    "@storybook/addon-interactions": "^7.5.1",
-    "@storybook/addon-jest": "^7.5.1",
-    "@storybook/addon-links": "^7.5.1",
-    "@storybook/blocks": "^7.5.1",
+    "@storybook/addon-a11y": "^7.5.2",
+    "@storybook/addon-essentials": "^7.5.2",
+    "@storybook/addon-interactions": "^7.5.2",
+    "@storybook/addon-jest": "^7.5.2",
+    "@storybook/addon-links": "^7.5.2",
+    "@storybook/blocks": "^7.5.2",
     "@storybook/jest": "^0.2.3",
+    "@storybook/preview-api": "^7.5.2",
     "@storybook/test-runner": "^0.13.0",
     "@storybook/testing-library": "^0.2.2",
-    "@storybook/web-components": "^7.5.1",
-    "@storybook/web-components-vite": "^7.5.1",
+    "@storybook/web-components": "^7.5.2",
+    "@storybook/web-components-vite": "^7.5.2",
     "@tailwindcss/nesting": "^0.0.0-insiders.565cd3e",
     "@tailwindcss/typography": "^0.5.10",
     "@types/node": "^20.8.8",
@@ -159,12 +119,12 @@
     "eslint-plugin-sort-imports-es6-autofix": "^0.6.0",
     "eslint-plugin-storybook": "^0.6.15",
     "eslint-plugin-wc": "^2.0.4",
-    "haunted": "^5.0.0",
     "jest-environment-jsdom": "^29.7.0",
     "lit-xml": "^0.6.0",
     "nodemon": "^3.0.1",
     "np": "^8.0.4",
     "path-browserify": "^1.0.1",
+    "playwright": "^1.39.0",
     "postcss": "^8.4.31",
     "postcss-import": "^15.1.0",
     "postcss-nesting": "^12.0.1",
@@ -173,7 +133,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "remark-gfm": "^4.0.0",
-    "storybook": "^7.5.1",
+    "storybook": "^7.5.2",
     "tailwindcss": "^3.3.2",
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1",

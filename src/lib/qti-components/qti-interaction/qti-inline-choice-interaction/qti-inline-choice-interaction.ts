@@ -1,5 +1,4 @@
 import { css, html } from 'lit';
-import { Events } from '../../qti-utilities/EventStrings';
 import { Interaction } from '../internal/interaction/interaction';
 import { property, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
@@ -45,7 +44,7 @@ export class QtiInlineChoiceInteraction extends Interaction {
       <select part="select" @change="${this.choiceSelected}" ?disabled="${this.disabled}" ?readonly="${this.readonly}">
         ${this.options.map(
           option => html`
-            <option value="${option.value}" ?selected="${option.selected}">${option.textContent}</option>
+            <option value="${option.value}" ?selected="${option.selected}">${unsafeHTML(option.textContent)}</option>
           `
         )}
       </select>
@@ -56,7 +55,7 @@ export class QtiInlineChoiceInteraction extends Interaction {
 
   firstUpdated(val) {
     super.firstUpdated(val);
-    this.addEventListener(Events.ON_DROPDOWN_SELECTED, this.choiceSelected);
+    this.addEventListener('on-dropdown-selected', this.choiceSelected);
     const choices = Array.from(this.querySelectorAll('qti-inline-choice'));
 
     this.options = [
@@ -95,7 +94,9 @@ export class QtiInlineChoiceInteraction extends Interaction {
       return;
     }
     console.log('correctResponse', value);
-    this.correctOption = this.options.find(option => value === option.value).textContent;
+    this.correctOption = `<span part="correct-option">${
+      this.options.find(option => value === option.value).textContent
+    }</span>`;
   }
 
   public choiceSelected(event: Event) {

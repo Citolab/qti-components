@@ -1,10 +1,8 @@
-export * from './qti-utilities/ExpressionResult';
-
 /* only exported to override or extend for specific purposes */
-export * from './qti-utilities/EventTypes';
-export * from './qti-utilities/EventStrings';
-export * from './qti-utilities/Variables';
-
+export * from './internal/expression-result';
+export * from './internal/event-types';
+export * from './internal/variables';
+export * from './internal/events';
 /* only exported to override or extend for specific purposes */
 export * from './qti-assessment-item/qti-assessment-item';
 export * from './qti-stylesheet/qti-stylesheet';
@@ -94,4 +92,3 @@ export * from './qti-interaction/qti-simple-choice';
 export * from './qti-interaction/internal/interaction/interaction';
 
 export * from './qti-assessment-item/qti-assessment-item.context';
-export * from './qti-custom-operator/qti-custom-operator';

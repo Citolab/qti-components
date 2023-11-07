@@ -1,10 +1,8 @@
-import { QtiMapResponse } from './qti-map-response';
-import { html, render } from 'lit';
-import { ResponseVariable } from '../../../qti-utilities/Variables';
-import { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
+import '@citolab/qti-components/qti-components';
 import { describe, expect, it } from '@jest/globals';
-import '../../../index';
-
+import { html, render } from 'lit';
+import { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
+import { QtiMapResponse } from './qti-map-response';
 describe('qti-map-response', () => {
   it('should the value of the mapping by response value', () => {
     const template = () => html`

@@ -1,8 +1,7 @@
-import '../../../index';
+import '@citolab/qti-components/qti-components';
 
-import { QtiMapping } from './qti-mapping';
-import { html, render } from 'lit';
 import { describe, expect, it } from '@jest/globals';
+import { html, render } from 'lit';
 import { QtiAssessmentItem, QtiMapResponse } from '../../../../../index';
 
 describe('qti-mapping', () => {

@@ -1,0 +1,273 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`lib/qti-components/qti-interaction/qti-gap-match-interaction Default smoke-test 1`] = `
+<div id="root-inner">
+  <qti-gap-match-interaction min-associations="1"
+                             max-associations="1"
+  >
+    <qti-gap-text identifier="W"
+                  match-max="1"
+                  qti-draggable="true"
+                  slot="qti-gap-text"
+                  tabindex="0"
+    >
+      winter
+    </qti-gap-text>
+    <qti-gap-text identifier="Sp"
+                  match-max="1"
+                  qti-draggable="true"
+                  slot="qti-gap-text"
+                  tabindex="0"
+    >
+      spring
+    </qti-gap-text>
+    <qti-gap-text identifier="Su"
+                  match-max="1"
+                  qti-draggable="true"
+                  slot="qti-gap-text"
+                  tabindex="0"
+    >
+      summer
+    </qti-gap-text>
+    <qti-gap-text identifier="A"
+                  match-max="1"
+                  qti-draggable="true"
+                  slot="qti-gap-text"
+                  tabindex="0"
+    >
+      autumn
+    </qti-gap-text>
+    <blockquote>
+      <p>
+        Now is the
+        <qti-gap identifier="G1"
+                 dropzone="move"
+                 tabindex="0"
+        >
+        </qti-gap>
+        of our discontent
+        <br>
+        Made glorious
+        <qti-gap identifier="G2"
+                 dropzone="move"
+                 tabindex="0"
+        >
+        </qti-gap>
+        by this sun of York;
+        <br>
+        And all the clouds that lour'd upon our house
+        <br>
+        In the deep bosom of the ocean buried.
+      </p>
+    </blockquote>
+  </qti-gap-match-interaction>
+</div>
+`;
+
+exports[`lib/qti-components/qti-interaction/qti-gap-match-interaction Example smoke-test 1`] = `
+<div id="root-inner">
+  <button>
+    processResponse
+  </button>
+  <button>
+    set correct response
+  </button>
+  <qti-assessment-item identifier="gap-match-item">
+    <qti-response-declaration base-type="directedPair"
+                              cardinality="multiple"
+                              identifier="RESPONSE"
+    >
+      <qti-correct-response>
+      </qti-correct-response>
+      <qti-mapping default-value="-1"
+                   lower-bound="0"
+      >
+        <qti-map-entry map-key="W G1"
+                       mapped-value="1"
+        >
+        </qti-map-entry>
+        <qti-map-entry map-key="Su G2"
+                       mapped-value="2"
+        >
+        </qti-map-entry>
+      </qti-mapping>
+    </qti-response-declaration>
+    <qti-outcome-declaration basetype="float"
+                             cardinality="single"
+                             identifier="SCORE"
+    >
+    </qti-outcome-declaration>
+    <qti-item-body>
+      <qti-gap-match-interaction class="qti-choices-top"
+                                 response-identifier="RESPONSE"
+                                 shuffle="false"
+                                 min-associations="1"
+                                 max-associations="1"
+      >
+        <qti-gap-text data-testid="choice-1"
+                      identifier="W"
+                      match-max="1"
+                      qti-draggable="true"
+                      slot="qti-gap-text"
+                      tabindex="0"
+        >
+          winter
+        </qti-gap-text>
+        <qti-gap-text identifier="Sp"
+                      match-max="1"
+                      qti-draggable="true"
+                      slot="qti-gap-text"
+                      tabindex="0"
+        >
+          spring
+        </qti-gap-text>
+        <qti-gap-text identifier="Su"
+                      match-max="1"
+                      qti-draggable="true"
+                      slot="qti-gap-text"
+                      tabindex="0"
+        >
+          summer
+        </qti-gap-text>
+        <qti-gap-text identifier="A"
+                      match-max="1"
+                      qti-draggable="true"
+                      slot="qti-gap-text"
+                      tabindex="0"
+        >
+          autumn
+        </qti-gap-text>
+        <blockquote>
+          <p>
+            Now is the
+            <qti-gap identifier="G1"
+                     dropzone="move"
+                     tabindex="0"
+            >
+            </qti-gap>
+            of our discontent
+            <br>
+            Made glorious
+            <qti-gap identifier="G2"
+                     dropzone="move"
+                     tabindex="0"
+            >
+            </qti-gap>
+            by this sun of York;
+            <br>
+            And all the clouds that lour'd upon our house
+            <br>
+            In the deep bosom of the ocean buried.
+          </p>
+        </blockquote>
+      </qti-gap-match-interaction>
+    </qti-item-body>
+    <qti-response-processing template="http://www.imsglobal.org/question/qti_v2p1/rptemplates/map_response">
+    </qti-response-processing>
+  </qti-assessment-item>
+</div>
+`;
+
+exports[`lib/qti-components/qti-interaction/qti-gap-match-interaction Example smoke-test 2`] = `
+<div id="root-inner">
+  <button>
+    processResponse
+  </button>
+  <button>
+    set correct response
+  </button>
+  <qti-assessment-item identifier="gap-match-item">
+    <qti-response-declaration base-type="directedPair"
+                              cardinality="multiple"
+                              identifier="RESPONSE"
+    >
+      <qti-correct-response>
+      </qti-correct-response>
+      <qti-mapping default-value="-1"
+                   lower-bound="0"
+      >
+        <qti-map-entry map-key="W G1"
+                       mapped-value="1"
+        >
+        </qti-map-entry>
+        <qti-map-entry map-key="Su G2"
+                       mapped-value="2"
+        >
+        </qti-map-entry>
+      </qti-mapping>
+    </qti-response-declaration>
+    <qti-outcome-declaration basetype="float"
+                             cardinality="single"
+                             identifier="SCORE"
+    >
+    </qti-outcome-declaration>
+    <qti-item-body>
+      <qti-gap-match-interaction class="qti-choices-top"
+                                 response-identifier="RESPONSE"
+                                 shuffle="false"
+                                 min-associations="1"
+                                 max-associations="1"
+      >
+        <qti-gap-text data-testid="choice-1"
+                      identifier="W"
+                      match-max="1"
+                      qti-draggable="true"
+                      slot="qti-gap-text"
+                      tabindex="0"
+        >
+          winter
+        </qti-gap-text>
+        <qti-gap-text identifier="Sp"
+                      match-max="1"
+                      qti-draggable="true"
+                      slot="qti-gap-text"
+                      tabindex="0"
+        >
+          spring
+        </qti-gap-text>
+        <qti-gap-text identifier="Su"
+                      match-max="1"
+                      qti-draggable="true"
+                      slot="qti-gap-text"
+                      tabindex="0"
+        >
+          summer
+        </qti-gap-text>
+        <qti-gap-text identifier="A"
+                      match-max="1"
+                      qti-draggable="true"
+                      slot="qti-gap-text"
+                      tabindex="0"
+        >
+          autumn
+        </qti-gap-text>
+        <blockquote>
+          <p>
+            Now is the
+            <qti-gap identifier="G1"
+                     dropzone="move"
+                     tabindex="0"
+            >
+            </qti-gap>
+            of our discontent
+            <br>
+            Made glorious
+            <qti-gap identifier="G2"
+                     dropzone="move"
+                     tabindex="0"
+            >
+            </qti-gap>
+            by this sun of York;
+            <br>
+            And all the clouds that lour'd upon our house
+            <br>
+            In the deep bosom of the ocean buried.
+          </p>
+        </blockquote>
+      </qti-gap-match-interaction>
+    </qti-item-body>
+    <qti-response-processing template="http://www.imsglobal.org/question/qti_v2p1/rptemplates/map_response">
+    </qti-response-processing>
+  </qti-assessment-item>
+</div>
+`;

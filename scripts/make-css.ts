@@ -16,8 +16,8 @@ console.log('Generating tailwind css');
 
 mkdirSync(themesDir, { recursive: true });
 
-buildStyleSheet({ in: 'src/styles.css', out: 'index.css' });
-buildStyleSheet({ in: 'src/styles.bundled.css', out: 'index.bundled.css' });
+buildStyleSheet({ in: 'src/styles.css', out: 'styles.css' });
+buildStyleSheet({ in: 'src/styles.bundled.css', out: 'styles.bundled.css' });
 
 function buildStyleSheet({ in: sourceCss, out: outCss }) {
   try {

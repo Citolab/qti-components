@@ -1,5 +1,5 @@
 import { html } from 'lit';
-import { Calculate } from '../../../qti-utilities/ExpressionResult';
+import { Calculate } from '../../../internal/expression-result';
 import { QtiExpression } from '../qti-expression';
 import { QtiConditionExpression } from '../qti-condition-expression';
 

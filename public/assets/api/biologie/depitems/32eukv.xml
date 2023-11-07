@@ -1,7 +1,8 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <qti-assessment-item
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd http://www.duo.nl/schema/dep_extension ../dep_extension.xsd"
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd
+                      http://www.duo.nl/schema/dep_extension ../dep_extension.xsd"
   title="32eukv"
   identifier="ITM-32eukv"
   time-dependent="false"
@@ -28,24 +29,6 @@
       <qti-value>1</qti-value>
     </qti-default-value>
   </qti-outcome-declaration>
-  <qti-companion-materials-info>
-    <qti-calculator>
-      <qti-calculator-type>basic</qti-calculator-type>
-      <qti-description />
-    </qti-calculator>
-    <dep:dep-calculator>
-      <dep:dep-description />
-      <dep:dep-calculator-type>basic</dep:dep-calculator-type>
-      <dep:dep-switch>true</dep:dep-switch>
-    </dep:dep-calculator>
-    <dep:dep-symbolPicker>
-      <dep:dep-description />
-      <dep:dep-symbols>€èéëêïöàá§±→←↑↓↔↕</dep:dep-symbols>
-    </dep:dep-symbolPicker>
-    <dep:dep-textMarker>
-      <dep:dep-description />
-    </dep:dep-textMarker>
-  </qti-companion-materials-info>
   <qti-stylesheet href="../css/cito_itemstyle.css" type="text/css" />
   <qti-stylesheet href="../css/cito_userstyle.css" type="text/css" />
   <qti-stylesheet href="../css/cito_generated.css" type="text/css" />
@@ -57,19 +40,18 @@
             <p>
               <strong>Reuzenpanda</strong>
             </p>
-            <p>
-              Een vrouwtjes reuzenpanda heeft slechts één eisprong per jaar. Hierdoor is ze hooguit drie dagen per jaar
-              vruchtbaar.
-            </p>
+            <p> Een vrouwtjes reuzenpanda heeft
+      slechts één eisprong per jaar. Hierdoor is ze hooguit drie dagen per jaar vruchtbaar. </p>
           </div>
         </div>
+        <!-- regular comment -->
+        <![CDATA[ <p> hier kan van alles staan ]]>
 
-        <div class="qti-layout-col6">
+        <div
+          class="qti-layout-col6">
           <div id="body">
-            <p>
-              De organen van het voorplantingsstelsel van reuzenpanda's komen overeen met de organen van het
-              voortplantingsstelsel van de mens.
-            </p>
+            <p> De organen van het voorplantingsstelsel van reuzenpanda's komen overeen met de
+      organen van het voortplantingsstelsel van de mens. </p>
           </div>
 
           <div id="question">
@@ -78,7 +60,8 @@
             </p>
           </div>
 
-          <div class="cito_genclass_bi_BB_102_04_1">
+          <div
+            class="cito_genclass_bi_BB_102_04_1">
             <div>
               <qti-extended-text-interaction
                 response-identifier="RESPONSE"

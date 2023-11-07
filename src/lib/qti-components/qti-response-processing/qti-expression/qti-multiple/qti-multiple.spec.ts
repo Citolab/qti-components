@@ -2,7 +2,7 @@ import './qti-multiple';
 import '../qti-basevalue/qti-basevalue';
 import { QtiMultiple } from './qti-multiple';
 import { html, render } from 'lit';
-import { directedPair } from '../../../qti-utilities/ExpressionResult';
+import { directedPair } from '../../../internal/expression-result';
 import { describe, expect, it } from '@jest/globals';
 describe('qti-multiple', () => {
   it('should return an array with the calculated results of its children, single child', () => {
@@ -13,11 +13,9 @@ describe('qti-multiple', () => {
     `;
     render(template(), document.body);
 
-    const qtiMultiple = document.body.querySelector(
-      'qti-multiple'
-    ) as QtiMultiple;
+    const qtiMultiple = document.body.querySelector('qti-multiple') as QtiMultiple;
     const calculated = qtiMultiple.calculate();
-    expect((calculated[0].value)).toMatch('GT1 G1');
+    expect(calculated[0].value).toMatch('GT1 G1');
   });
 
   it('should return an array with the calculated results of its children, 3 children', () => {
@@ -30,9 +28,7 @@ describe('qti-multiple', () => {
     `;
     render(template(), document.body);
 
-    const qtiMultiple = document.body.querySelector(
-      'qti-multiple'
-    ) as QtiMultiple;
-    expect((qtiMultiple.calculate()[2].value)).toMatch('Hoi')
+    const qtiMultiple = document.body.querySelector('qti-multiple') as QtiMultiple;
+    expect(qtiMultiple.calculate()[2].value).toMatch('Hoi');
   });
 });

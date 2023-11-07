@@ -1,5 +1,5 @@
-import { Calculate } from '../../../qti-utilities/ExpressionResult';
-import { ResponseVariable } from '../../../qti-utilities/Variables';
+import { Calculate } from '../../../internal/expression-result';
+import { ResponseVariable } from '../../../internal/variables';
 import { QtiExpression } from '../qti-expression';
 
 // PK: For the contains we assume the expressions to calculate are all directedPairs

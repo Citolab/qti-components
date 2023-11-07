@@ -1,7 +1,7 @@
-import '../../../index';
+import '@citolab/qti-components/qti-components';
 import { describe, expect } from '@jest/globals';
-import { QtiLt } from './qti-lt';
 import { html, render } from 'lit';
+import { QtiLt } from './qti-lt';
 describe('qti-gt', () => {
   it('equal = false', () => {
     const template = () => html`

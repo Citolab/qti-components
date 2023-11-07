@@ -1,7 +1,6 @@
-import { QtiProduct } from './qti-product';
+import '@citolab/qti-components/qti-components';
 import { html, render } from 'lit';
-import { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
-import '../../../index';
+import { QtiProduct } from './qti-product';
 
 describe('qti-product', () => {
   it('multiplies, the product of one or more variables', () => {

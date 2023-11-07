@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`lib/qti-components/qti-interaction/qti-media-interaction Default smoke-test 1`] = `
+<div id="root-inner">
+  <qti-media-interaction autostart="false"
+                         response-identifier="RESPONSE"
+                         loop
+                         min-plays
+                         max-plays
+  >
+    <qti-prompt>
+      Play this video.
+    </qti-prompt>
+    <video width="320"
+           height="240"
+           controls
+    >
+      <source src="qti-media-interaction/earth.mp4"
+              type="video/mp4"
+      >
+      Your browser does not support the video tag
+    </video>
+  </qti-media-interaction>
+</div>
+`;

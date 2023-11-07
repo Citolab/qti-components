@@ -1,4 +1,4 @@
-import { ResponseVariable } from '../../../qti-utilities/Variables';
+import { ResponseVariable } from '../../../internal/variables';
 import { QtiExpression } from '../qti-expression';
 
 export class QtiMember extends QtiExpression<boolean | null> {
