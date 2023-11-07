@@ -21,8 +21,8 @@
     "resolveJsonModule": true,
     "baseUrl": "./",
     "paths": {
-      "@citolab/qti-components/qti-components": ["src/lib/qti-components"],
-      "@citolab/qti-components/qti-transformers": ["src/lib/qti-transformers"],
+      "@citolab/qti-components/qti-components": ["./src/lib/qti-components"],
+      "@citolab/qti-components/qti-transformers": ["./src/lib/qti-transformers"],
     }
   },
   "include": ["src/**/*.ts"],
