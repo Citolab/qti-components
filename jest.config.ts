@@ -1,6 +1,8 @@
 import { pathsToModuleNameMapper } from 'ts-jest';
-import { compilerOptions } from './tsconfig';
-export default {
+import { compilerOptions } from './tsconfig.json';
+import type { JestConfigWithTsJest } from 'ts-jest';
+
+const jestConfig: JestConfigWithTsJest = {
   // preset: "ts-jest",
   verbose: true,
   testEnvironment: 'jsdom',
@@ -14,8 +16,11 @@ export default {
       }
     ]
   },
-  modulePaths: [compilerOptions.baseUrl],
   transformIgnorePatterns: ['node_modules/(?!@?lit)'],
-  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths /*, { prefix: '<rootDir>/' } */)
+  roots: ['<rootDir>']
+  // modulePaths: [compilerOptions.baseUrl], // <-- This will be set to 'baseUrl' value
+  // moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths /*, { prefix: '<rootDir>/' } */)
   // modulePathIgnorePatterns: ['node_modules', '.jest-test-results.json']
 };
+
+export default jestConfig;

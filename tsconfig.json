@@ -1,4 +1,9 @@
 {
+  "ts-node": {
+    "moduleTypes": {
+      "jest.config.ts": "cjs"
+    }
+  },
   "compilerOptions": {
     "target": "es2017",
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
@@ -10,7 +15,8 @@
     "noUnusedParameters": false,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "moduleResolution": "Node",
+    "module": "es2020",
+    "moduleResolution": "node",
     "isolatedModules": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
@@ -25,6 +31,6 @@
       "@citolab/qti-components/qti-transformers": ["src/lib/qti-transformers"],
     }
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "./jest.config.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
