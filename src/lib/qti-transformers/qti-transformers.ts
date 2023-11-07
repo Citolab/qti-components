@@ -180,7 +180,7 @@ function setLocation(xmlFragment: DocumentFragment, location: string) {
     const attrValue = elWithSrc.getAttribute(attr)?.trim();
 
     if (!attrValue.startsWith('data:') && !attrValue.startsWith('http')) {
-      const newSrcValue = location + encodeURIComponent(attrValue);
+      const newSrcValue = location + encodeURI(attrValue);
       elWithSrc.setAttribute(attr, newSrcValue);
     }
   });
