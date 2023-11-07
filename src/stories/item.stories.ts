@@ -1,11 +1,11 @@
 import '@citolab/qti-components/qti-components';
 
-import { html } from 'lit';
 import { action } from '@storybook/addon-actions';
-import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import type { Meta, StoryObj } from '@storybook/web-components';
-import { fetchItem } from './fetch-item';
+import { html } from 'lit';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import packages from '../assets/packages.json';
+import { fetchItem } from './fetch-item';
 
 const meta: Meta = {
   title: 'items',
@@ -52,6 +52,7 @@ export const Items: Story = {
       >
         ${unsafeHTML(xml.itemXML)}
       </div>
+      <button style="background:lightgray; padding:1rem" @click=${() => item?.processResponse()}>Submit</button>
     `;
   },
   loaders: [async ({ args }) => ({ xml: await fetchItem(`${args.serverLocation}/${args.qtipkg}`, args.itemIndex) })]

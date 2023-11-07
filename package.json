@@ -79,15 +79,11 @@
   },
   "dependencies": {
     "@lit/context": "^1.0.0",
-    "@lit/react": "^1.0.0",
-    "cheerio": "^1.0.0-rc.12",
     "lit": "^3.0.0"
   },
   "peerdependencies": {
     "@lit/context": ">= 1.0",
-    "@lit/react": ">= 1.0",
-    "lit": ">= 3 < 4",
-    "react": "> 18"
+    "lit": ">= 3 < 4"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.12.2",
@@ -140,7 +136,8 @@
     "tsup": "^7.2.0",
     "typescript": "^5.2.2",
     "vite": "^4.5.0",
-    "vite-tsconfig-paths": "^4.2.1"
+    "vite-tsconfig-paths": "^4.2.1",
+    "wc-storybook-helpers": "^1.0.9"
   },
   "customElements": "custom-elements.json"
 }
