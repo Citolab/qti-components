@@ -60,7 +60,6 @@ const meta: Meta = {
 };
 export default meta;
 
-// FIXME: Story can not be used as type Default:Story, got this error : 'Expected 2 arguments, but got 1.'
 export const Default = {
   render: args => {
     return html`${unsafeHTML(storyXML)}`;
