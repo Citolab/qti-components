@@ -1,31 +1,23 @@
 {
+  "compileOnSave": false,
   "compilerOptions": {
     "rootDir": ".",
-    "target": "es2017",
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "declaration": true,
-    "emitDeclarationOnly": true,
-    "outDir": "./types",
-    "strict": false,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
+    "sourceMap": true,
+    "declaration": false,
     "moduleResolution": "node",
-    "isolatedModules": true,
-    "allowSyntheticDefaultImports": true,
+    "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "forceConsistentCasingInFileNames": true,
-    "useDefineForClassFields": false,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2021", "dom"],
     "skipLibCheck": true,
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
+    "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
       "@citolab/qti-components/qti-components": ["src/lib/qti-components/index.ts"],
       "@citolab/qti-components/qti-transformers": ["src/lib/qti-transformers/index.ts"],
     }
   },
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "exclude": ["node_modules", "tmp"]
 }
-
