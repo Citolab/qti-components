@@ -2,14 +2,8 @@
   "hosting": {
     "public": "storybook-static",
     "target": "qti-components",
-    "predeploy": [
-      "npm run build-storybook"
-    ],
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
+    "predeploy": ["npm run storybook:build"],
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {
         "source": "**",
