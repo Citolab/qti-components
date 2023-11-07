@@ -2,7 +2,7 @@ import { QtiConditionExpression } from '../qti-condition-expression';
 import { QtiExpression } from '../qti-expression';
 
 type Constructor<T> = new (...args: any[]) => T;
-export class QtiAnd extends QtiAndMixin(QtiConditionExpression as unknown as Constructor<QtiConditionExpression>) {
+export class QtiAnd extends qtiAndMixin(QtiConditionExpression as unknown as Constructor<QtiConditionExpression>) {
   public calculate() {
     return this.calculateChildren(Array.from(this.children as unknown as QtiExpression<any>[]));
   }
@@ -10,7 +10,7 @@ export class QtiAnd extends QtiAndMixin(QtiConditionExpression as unknown as Con
 
 export type MockQtiExpression<T> = { calculate: () => T };
 type MockConstructor = new (...args: any[]) => {};
-export function QtiAndMixin<TBase extends MockConstructor>(Base: TBase) {
+export function qtiAndMixin<TBase extends MockConstructor>(Base: TBase) {
   return class MockQtiAnd extends Base {
     public calculateChildren(children: Array<MockQtiExpression<any>>) {
       // children can be a mix of qti-expression and qti-condition-expression

@@ -1,18 +1,18 @@
-import '../src/styles.bundled.css';
 import type { Preview } from '@storybook/web-components';
+import '../src/styles.bundled.css';
 
 import { setCustomElementsManifest } from '@storybook/web-components';
 import customElements from '../custom-elements.json';
 setCustomElementsManifest(customElements);
 
-import { withTests } from '@storybook/addon-jest';
-import results from '../.jest-test-results.json';
+// import { withTests } from '@storybook/addon-jest';
+// import results from '../.jest-test-results.json';
 
-export const decorators = [
-  withTests({
-    results
-  })
-];
+// export const decorators = [
+//   withTests({
+//     results
+//   })
+// ];
 
 const preview: Preview = {
   globalTypes: {
