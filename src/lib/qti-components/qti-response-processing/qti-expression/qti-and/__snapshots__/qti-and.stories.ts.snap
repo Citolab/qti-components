@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`lib/qti-components/qti-response-processing/qti-expression/qti-and AllTrueResultsInTrue play-test 1`] = `
+<div id="root-inner">
+  <qti-and>
+    <mock-child response="true">
+    </mock-child>
+    <mock-child response="true">
+    </mock-child>
+    <mock-child response="true">
+    </mock-child>
+  </qti-and>
+</div>
+`;
+
+exports[`lib/qti-components/qti-response-processing/qti-expression/qti-and OneFalseResultsInFalse play-test 1`] = `
+<div id="root-inner">
+  <qti-and>
+    <mock-child response="true">
+    </mock-child>
+    <mock-child response="false">
+    </mock-child>
+    <mock-child response="true">
+    </mock-child>
+  </qti-and>
+</div>
+`;
