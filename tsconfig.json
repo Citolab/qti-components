@@ -7,6 +7,8 @@
   "compilerOptions": {
     "target": "es2017",
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
     "declaration": true,
     "emitDeclarationOnly": true,
     "outDir": "./types",
@@ -23,12 +25,9 @@
     "forceConsistentCasingInFileNames": true,
     "useDefineForClassFields": false,
     "skipLibCheck": true,
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
     "baseUrl": "./",
     "paths": {
-      "@citolab/qti-components/qti-components": ["src/lib/qti-components"],
-      "@citolab/qti-components/qti-transformers": ["src/lib/qti-transformers"],
+      "@citolab/qti-components/qti-components": ["src/lib/qti-components"]
     }
   },
   "include": ["src/**/*.ts", "./jest.config.ts"],

@@ -1,5 +1,5 @@
 import { pathsToModuleNameMapper } from 'ts-jest';
-import { compilerOptions } from './tsconfig.json';
+import config from './tsconfig.json';
 import type { JestConfigWithTsJest } from 'ts-jest';
 
 const jestConfig: JestConfigWithTsJest = {
@@ -17,10 +17,10 @@ const jestConfig: JestConfigWithTsJest = {
     ]
   },
   transformIgnorePatterns: ['node_modules/(?!@?lit)'],
-  roots: ['<rootDir>']
-  // modulePaths: [compilerOptions.baseUrl], // <-- This will be set to 'baseUrl' value
-  // moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths /*, { prefix: '<rootDir>/' } */)
-  // modulePathIgnorePatterns: ['node_modules', '.jest-test-results.json']
+  roots: ['<rootDir>'],
+  modulePaths: [config.compilerOptions.baseUrl], // <-- This will be set to 'baseUrl' value
+  moduleNameMapper: pathsToModuleNameMapper(config.compilerOptions.paths /*, { prefix: '<rootDir>/' } */),
+  modulePathIgnorePatterns: ['node_modules', '.jest-test-results.json']
 };
 
 export default jestConfig;
