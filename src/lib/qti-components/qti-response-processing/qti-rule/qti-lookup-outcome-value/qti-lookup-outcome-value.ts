@@ -1,13 +1,14 @@
-import { OutcomeVariable, QtiExpression, QtiRule } from '@citolab/qti-components/qti-components';
-import { customElement, property } from 'lit/decorators.js';
+import { OutcomeVariable } from '@citolab/qti-components/qti-components';
+import { property } from 'lit/decorators.js';
 import { convertNumberToUniveralFormat } from '../../../internal/utils';
+import { QtiExpression } from '../../qti-expression/qti-expression';
+import { QtiRule } from '../qti-rule';
 
 /**
  * The lookupOutcomeValue rule sets the value of an outcome variable to the value obtained
  * by looking up the value of the associated expression in the lookupTable associated
  * with the outcome's declaration.
  */
-@customElement('qti-lookup-outcome-value')
 export class QtiLookupOutcomeValue extends QtiRule {
   @property({ type: String }) identifier: string;
 
@@ -39,36 +40,10 @@ export class QtiLookupOutcomeValue extends QtiRule {
     return value;
   }
 }
+customElements.define('qti-lookup-outcome-value', QtiLookupOutcomeValue);
 
 declare global {
   interface HTMLElementTagNameMap {
     'qti-lookup-outcome-value': QtiLookupOutcomeValue;
   }
 }
-
-// setVar(elem, (decl,value)=> {
-//   let method;
-//   if (decl.interpolationTable) {
-//     method = function(K) {
-//       let entries = decl.interpolationTable.entries;
-//       let keys = Object.getOwnPropertyNames(entries);
-//       for(let k of keys.sort().reverse()) {
-//         let entry = entries[k];
-//         let includeBoundary = entry.includeBoundary!=="false";
-//         if (k<K || (includeBoundary && k==K))
-//           return entry.targetValue;
-//       }
-//       return decl.interpolationTable.defaultValue;
-//     }
-//   } else if (decl.matchTable) {
-//     method = function(K) {
-//       let entry = decl.matchTable.entries[K];
-//       if (!entry && decl.baseType=="pair")
-//         entry = decl.matchTable.entries[swapPair(K)];
-//       return entry? entry.targetValue: decl.matchTable.defaultValue;
-//     }
-//   } else {
-//     return null;
-//   }
-//   return method? mapLookup(decl, method, value): null;
-// });
