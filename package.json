@@ -63,7 +63,7 @@
     "build-lib": "ts-node --esm --project tsconfig.node.json scripts/build.ts",
     "watch-lib": "nodemon --watch \"src/**\" --ext \"ts,json,css\" --ignore \"src/**/*.spec.ts\" --exec \"ts-node --esm --project tsconfig.node.json scripts/watch.ts\"",
     "storybook": "storybook dev -p 6006",
-    "storybook:deploy": "firebase deploy --only hosting:qti-components",
+    "deploy": "firebase deploy --only hosting:qti-components",
     "storybook:build": "storybook build",
     "storybook:test": "test-storybook",
     "npm publish": "np",

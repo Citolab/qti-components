@@ -640,6 +640,20 @@
       "references": []
     },
     {
+      "name": "qti-equal-rounded",
+      "description": "\n---\n",
+      "attributes": [
+        {
+          "name": "roundingMode",
+          "values": [
+            { "name": "decimalPlaces" },
+            { "name": "significantFigures" }
+          ]
+        }
+      ],
+      "references": []
+    },
+    {
       "name": "qti-equal",
       "description": "\n---\n",
       "attributes": [
@@ -649,20 +663,6 @@
             { "name": "exact" },
             { "name": "relative" },
             { "name": "absolute" }
-          ]
-        }
-      ],
-      "references": []
-    },
-    {
-      "name": "qti-equal-rounded",
-      "description": "\n---\n",
-      "attributes": [
-        {
-          "name": "roundingMode",
-          "values": [
-            { "name": "decimalPlaces" },
-            { "name": "significantFigures" }
           ]
         }
       ],
@@ -699,12 +699,6 @@
       "references": []
     },
     {
-      "name": "qti-map-response",
-      "description": "\n---\n",
-      "attributes": [{ "name": "identifier", "values": [] }],
-      "references": []
-    },
-    {
       "name": "qti-mapping",
       "description": "\n---\n",
       "attributes": [
@@ -712,6 +706,12 @@
         { "name": "lower-bound", "values": [] },
         { "name": "upper-bound", "values": [] }
       ],
+      "references": []
+    },
+    {
+      "name": "qti-map-response",
+      "description": "\n---\n",
+      "attributes": [{ "name": "identifier", "values": [] }],
       "references": []
     },
     {
@@ -739,13 +739,13 @@
       "references": []
     },
     {
-      "name": "qti-or",
+      "name": "qti-ordered",
       "description": "\n---\n",
       "attributes": [],
       "references": []
     },
     {
-      "name": "qti-ordered",
+      "name": "qti-or",
       "description": "\n---\n",
       "attributes": [],
       "references": []
