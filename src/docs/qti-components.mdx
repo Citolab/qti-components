@@ -51,16 +51,31 @@ import from 'https://unpkg.com/@citolab/qti-components@latest/dist/index.js'
 
 ## Development
 
-The webcomponents
+Installation
+
+```sh
+npm install @citolab/qti-components@latest
+```
+
+Import the webcomponents
 
 ```js
 import '@citolab/qti-components/qti-components';
 ```
 
-Transformers, from QTI XML to HTML5
+Use the transformers, from QTI XML to HTML5
 
 ```js
 import '@citolab/qti-components/qti-transfomers';
+```
+
+```js
+import '@citolab/qti-components/qti-transfomers';
+```
+
+```js
+const itemXML = '<qti-assessment-item>...</qti-assessment-item>';
+const itemHTML = await qtiTransformItem().parse(itemXML).html();
 ```
 
 <iframe
