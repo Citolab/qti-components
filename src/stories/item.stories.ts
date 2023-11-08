@@ -17,7 +17,7 @@ const meta: Meta = {
     disabled: { control: { type: 'boolean' } }
   },
   args: {
-    serverLocation: 'http://localhost:6006/api',
+    serverLocation: '/api',
     qtipkg: 'examples',
     itemIndex: 0
   }
