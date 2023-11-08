@@ -28,10 +28,8 @@
       "import": "./dist/qti-transformers/index.js",
       "require": "./dist/qti-transformers/index.cjs"
     },
-    "./*.css": {
-      "import": "./src/**/*.css",
-      "require": "./src/**/*.css"
-    }
+    "./styles.bundled.css": "./dist/styles.bundled.css",
+    "./styles.css": "./dist/styles.css"
   },
   "types": "./dist/qti-components/index.d.ts",
   "typesVersions": {
@@ -51,8 +49,7 @@
     "dist",
     "types",
     "./dist/styles.css",
-    "./dist/styles.bundled.css",
-    "./src/styles/**/*.css"
+    "./dist/styles.bundled.css"
   ],
   "scripts": {
     "test": "jest",
