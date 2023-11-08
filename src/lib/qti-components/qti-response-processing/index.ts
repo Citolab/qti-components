@@ -1,4 +1,4 @@
-export { default as QtiResponseProcessing } from './qti-response-processing/qti-responseprocessing';
+export { default as QtiResponseProcessing } from './qti-response-processing/qti-response-processing';
 
 export * from './qti-rule/qti-lookup-outcome-value/qti-lookup-outcome-value';
 export * from './qti-rule/qti-response-condition/qti-response-condition';

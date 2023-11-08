@@ -1,8 +1,7 @@
-import { html } from 'lit';
 import { QtiExpression } from '../qti-expression';
 
 export class QtiSum extends QtiExpression<number> {
-  public override calculate() {
+  public override getResult() {
     // children can be a mix of qti-expression and qti-condition-expression
     const values = Array.from(this.children).map(c => {
       const condition = c as QtiExpression<number>;

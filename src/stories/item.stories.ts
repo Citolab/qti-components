@@ -8,7 +8,7 @@ import packages from '../assets/packages.json';
 import { fetchItem } from './fetch-item';
 
 const meta: Meta = {
-  title: 'items',
+  title: 'Examples',
   argTypes: {
     view: {
       options: ['candidate', 'scorer'],
@@ -22,7 +22,7 @@ const meta: Meta = {
   },
   args: {
     serverLocation: 'http://localhost:6006/api',
-    qtipkg: 'biologie',
+    qtipkg: 'examples',
     itemIndex: 0
   }
 };
@@ -32,7 +32,7 @@ type Story = StoryObj;
 
 let item;
 
-export const Items: Story = {
+export const Examples: Story = {
   render: ({ disabled, view }, { argTypes, loaded: { xml } }) => {
     const onInteractionChangedAction = action('on-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');

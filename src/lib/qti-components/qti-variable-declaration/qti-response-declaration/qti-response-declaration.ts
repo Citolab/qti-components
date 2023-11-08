@@ -1,8 +1,12 @@
-import { QtiVariableDeclaration } from '../qti-variable-declaration';
-import { ResponseVariable } from '../../internal/variables';
+import { consume } from '@lit/context';
+import { css } from 'lit';
+import { html } from 'lit-html';
+import { property, state } from 'lit/decorators.js';
 import { BaseType, Cardinality } from '../../internal/expression-result';
-import { property } from 'lit/decorators.js';
+import { ResponseVariable } from '../../internal/variables';
+import { ItemContext, itemContext } from '../../qti-assessment-item/qti-assessment-item.context';
 import { QtiMapping } from '../../qti-response-processing/qti-expression/qti-mapping/qti-mapping';
+import { QtiVariableDeclaration } from '../qti-variable-declaration';
 
 export class QtiResponseDeclaration extends QtiVariableDeclaration {
   @property({ type: String, attribute: 'base-type' }) baseType: BaseType;
@@ -10,6 +14,23 @@ export class QtiResponseDeclaration extends QtiVariableDeclaration {
   @property({ type: String }) identifier: string;
 
   @property({ type: String }) cardinality: Cardinality;
+
+  @consume({ context: itemContext, subscribe: true })
+  @state()
+  public itemContext?: ItemContext;
+
+  static styles = [
+    css`
+      :host {
+        display: none;
+      }
+    `
+  ];
+
+  override render() {
+    const value = this.itemContext?.variables.find(v => v.identifier === this.identifier)?.value;
+    return html`${JSON.stringify(value, null, 2)}`;
+  }
 
   public override connectedCallback() {
     super.connectedCallback();

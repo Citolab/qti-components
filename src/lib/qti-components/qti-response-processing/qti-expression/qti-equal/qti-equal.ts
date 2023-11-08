@@ -1,12 +1,12 @@
 import { property } from 'lit/decorators.js';
+import { ResponseVariable } from '../../../internal/variables';
 import { ScoringHelper } from '../../utilities/scoring-helper';
 import { QtiExpression } from '../qti-expression';
-import { ResponseVariable } from '../../../internal/variables';
 
 export class QtiEqual extends QtiExpression<boolean> {
   @property({ type: String }) toleranceMode: 'exact' | 'relative' | 'absolute' = 'exact';
 
-  public override calculate() {
+  public override getResult() {
     if (this.children.length === 2) {
       const values = this.getVariables() as ResponseVariable[];
       const value1 = values[0];

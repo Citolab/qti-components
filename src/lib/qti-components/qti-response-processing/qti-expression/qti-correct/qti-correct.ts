@@ -1,13 +1,12 @@
-import { html } from 'lit';
-import { QtiExpression } from '../qti-expression';
 import { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
+import { QtiExpression } from '../qti-expression';
 
 export class QtiCorrect extends QtiExpression<string | string[]> {
   get interpretation() {
     return this.getAttribute('interpretation') || '';
   }
 
-  override calculate() {
+  override getResult() {
     const identifier = this.getAttribute('identifier') || '';
     const responseVariable = (this.closest('qti-assessment-item') as QtiAssessmentItem).getResponse(identifier);
     responseVariable.correctResponse;

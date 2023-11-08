@@ -1,6 +1,9 @@
-import { property } from 'lit/decorators.js';
+import { consume } from '@lit/context';
+import { css, html } from 'lit';
+import { property, state } from 'lit/decorators.js';
 import { BaseType, Cardinality } from '../../internal/expression-result';
 import { OutcomeVariable } from '../../internal/variables';
+import { ItemContext, itemContext } from '../../qti-assessment-item/qti-assessment-item.context';
 import { QtiVariableDeclaration } from '../qti-variable-declaration';
 
 export class QtiOutcomeDeclaration extends QtiVariableDeclaration {
@@ -9,6 +12,23 @@ export class QtiOutcomeDeclaration extends QtiVariableDeclaration {
   @property({ type: String }) identifier: string;
 
   @property({ type: String }) cardinality: Cardinality;
+
+  @consume({ context: itemContext, subscribe: true })
+  @state()
+  public itemContext?: ItemContext;
+
+  static styles = [
+    css`
+      :host {
+        display: none;
+      }
+    `
+  ];
+
+  override render() {
+    const value = this.itemContext?.variables.find(v => v.identifier === this.identifier)?.value;
+    return html`${JSON.stringify(value, null, 2)}`;
+  }
 
   get interpolationTable(): Map<number, number> | null {
     const table = this.querySelector('qti-interpolation-table');
@@ -28,10 +48,6 @@ export class QtiOutcomeDeclaration extends QtiVariableDeclaration {
       return entries;
     }
     return null;
-  }
-
-  constructor() {
-    super();
   }
 
   public override connectedCallback() {

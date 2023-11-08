@@ -1,9 +1,12 @@
-import { html } from 'lit';
 import { QtiExpression } from './qti-expression';
 
 export abstract class QtiConditionExpression extends QtiExpression<boolean> {
-  public calculate(): boolean {
-    // eslint-disable-next-line no-throw-literal
+  public calculate(): Readonly<boolean> {
+    this.result = this.getResult();
+    return this.result;
+  }
+
+  public getResult(): Readonly<boolean> {
     throw new Error('Not implemented');
   }
 }

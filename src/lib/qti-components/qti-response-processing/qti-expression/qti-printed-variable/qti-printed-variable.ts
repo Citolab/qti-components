@@ -1,25 +1,29 @@
-import { LitElement, PropertyValueMap, html } from 'lit';
-import { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
+import { consume } from '@lit/context';
+import { LitElement, html } from 'lit';
 import { property, state } from 'lit/decorators.js';
+import { ItemContext, itemContext } from 'src/lib/qti-components/qti-assessment-item/qti-assessment-item.context';
+import { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
 
 export class QtPrintedVariable extends LitElement {
   @property({ type: String })
   identifier: string;
 
+  @consume({ context: itemContext, subscribe: true })
   @state()
-  value: string | string[] = '';
+  public itemContext?: ItemContext;
 
   override render() {
-    return html`${Array.isArray(this.value) ? this.value.map(val => html`${val}`) : this.value}`;
+    const value = this.itemContext?.variables.find(v => v.identifier === this.identifier)?.value;
+    return html`${JSON.stringify(value, null, 2)}`;
   }
 
-  constructor() {
-    super();
-    const assessmentItem = this.closest('qti-assessment-item') as QtiAssessmentItem;
-    assessmentItem.addEventListener('qti-response-processed', () => {
-      this.value = this.calculate() as string;
-    });
-  }
+  // constructor() {
+  //   super();
+  //   const assessmentItem = this.closest('qti-assessment-item') as QtiAssessmentItem;
+  //   assessmentItem.addEventListener('qti-response-processed', () => {
+  //     this.value = this.calculate() as string;
+  //   });
+  // }
 
   // public connectedCallback(): void {
   //   super.connectedCallback();

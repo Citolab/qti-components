@@ -1,14 +1,8 @@
-import { html } from 'lit';
-import { Calculate } from '../../../internal/expression-result';
-import { QtiExpression } from '../qti-expression';
 import { QtiConditionExpression } from '../qti-condition-expression';
+import { QtiExpression } from '../qti-expression';
 
 export class QtiOr extends QtiConditionExpression {
-  override render() {
-    return html``;
-  }
-
-  public override calculate() {
+  public override getResult() {
     // children can be a mix of qti-expression and qti-condition-expression
     const values = Array.from(this.children).map(c => {
       const condition = c as QtiExpression<any>;

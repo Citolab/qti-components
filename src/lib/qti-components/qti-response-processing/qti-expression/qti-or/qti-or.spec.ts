@@ -1,8 +1,8 @@
+import { describe, expect, it } from '@jest/globals';
+import { html, render } from 'lit';
+import { QtiConditionExpression } from '../qti-condition-expression';
 import './qti-or';
 import { QtiOr } from './qti-or';
-import { html, render } from 'lit';
-import { describe, expect, it } from '@jest/globals';
-import { QtiConditionExpression } from '../qti-condition-expression';
 class MockChild extends QtiConditionExpression {
   response = false;
   override connectedCallback() {

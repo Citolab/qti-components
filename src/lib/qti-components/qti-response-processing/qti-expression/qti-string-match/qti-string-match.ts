@@ -1,12 +1,12 @@
 import { property } from 'lit/decorators.js';
+import { ResponseVariable } from '../../../internal/variables';
 import { ScoringHelper } from '../../utilities/scoring-helper';
 import { QtiExpression } from '../qti-expression';
-import { ResponseVariable } from '../../../internal/variables';
 
 export class QtiStringMatch extends QtiExpression<boolean> {
   @property({ type: String, attribute: 'case-sensitive' }) caseSensitive = 'true';
 
-  public override calculate() {
+  public override getResult() {
     if (this.children.length === 2) {
       const values = this.getVariables() as ResponseVariable[];
       const value1 = values[0];

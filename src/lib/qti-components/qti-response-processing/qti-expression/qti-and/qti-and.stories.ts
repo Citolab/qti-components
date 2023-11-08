@@ -48,7 +48,7 @@ export class MockChild extends QtiConditionExpression {
     super.connectedCallback();
     this.response = this.getAttribute('response') == 'true';
   }
-  public override calculate() {
+  public override getResult() {
     return this.response;
   }
 }

@@ -1,8 +1,8 @@
-import './qti-sum';
-import '../qti-basevalue/qti-basevalue';
-import { html, render } from 'lit';
 import { describe, expect, it } from '@jest/globals';
+import { html, render } from 'lit';
+import '../qti-basevalue/qti-basevalue';
 import { QtiConditionExpression } from '../qti-condition-expression';
+import './qti-sum';
 import { QtiSum } from './qti-sum';
 class MockChild extends QtiConditionExpression {
   response = false;

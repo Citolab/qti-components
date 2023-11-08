@@ -1,7 +1,7 @@
 import { ResponseVariable } from '../../../internal/variables';
 import { QtiExpression } from '../qti-expression';
 export class QtiOrdered extends QtiExpression<ResponseVariable[]> {
-  public override calculate(): ResponseVariable[] {
+  public override getResult(): ResponseVariable[] {
     const variables = this.getVariables() as ResponseVariable[];
     if (variables.length === 0) {
       console.error('unexpected number of children in qti multiple');

@@ -4,7 +4,7 @@ import { QtiExpression } from '../qti-expression';
 export class QtiBaseValue extends QtiExpression<string> {
   @property({ type: String, attribute: 'base-type' }) baseType: BaseType = 'string';
 
-  public override calculate(): string {
+  public override getResult(): string {
     const value = this.textContent;
     return value;
   }

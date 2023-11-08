@@ -1,6 +1,6 @@
 import { property } from 'lit/decorators.js';
-import { QtiExpression } from '../qti-expression';
 import { ResponseVariable } from '../../../internal/variables';
+import { QtiExpression } from '../qti-expression';
 
 export class QtiEqualRounded extends QtiExpression<boolean> {
   @property({ type: String }) roundingMode: 'decimalPlaces' | 'significantFigures' = 'significantFigures';
@@ -27,7 +27,7 @@ export class QtiEqualRounded extends QtiExpression<boolean> {
     return figures;
   }
 
-  public override calculate() {
+  public override getResult() {
     if (this.children.length === 2) {
       const values = this.getVariables() as ResponseVariable[];
       const value1 = values[0];

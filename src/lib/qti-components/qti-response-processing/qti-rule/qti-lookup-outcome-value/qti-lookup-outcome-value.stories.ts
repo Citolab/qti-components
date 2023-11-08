@@ -71,6 +71,6 @@ export const Default = {
     assessmentItem.updateResponseVariable('RAW_SCORE', '3');
 
     assessmentItem.processResponse();
-    expect(assessmentItem.context.variables.find(v => v.identifier === 'SCORE').value).toEqual('2');
+    expect(assessmentItem.variables.find(v => v.identifier === 'SCORE').value).toEqual('2');
   }
 };

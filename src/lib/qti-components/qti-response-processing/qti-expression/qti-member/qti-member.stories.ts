@@ -1,11 +1,10 @@
-import '../../../index';
 import { html } from 'lit';
+import '../../../index';
 // import { expect } from '@storybook/jest';
+import { action } from '@storybook/addon-actions';
 import { within } from '@storybook/testing-library';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { QtiMember } from './qti-member';
-import { QtiAssessmentItem } from '../../../index';
-import { action } from '@storybook/addon-actions';
 
 type Story = StoryObj; // <Props>;
 

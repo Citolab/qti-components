@@ -1,11 +1,11 @@
-import { QtiExpression } from '../qti-expression';
 import { property } from 'lit/decorators.js';
 import { ScoringHelper } from '../../utilities/scoring-helper';
+import { QtiExpression } from '../qti-expression';
 
 export class QtiMapResponse extends QtiExpression<number> {
   @property({ type: String }) identifier: string;
 
-  public override calculate(): number {
+  public override getResult(): number {
     const response = this.assessmentItem.getResponse(this.identifier);
     if (!response) {
       console.warn(`Response ${this.identifier} can not be found`);

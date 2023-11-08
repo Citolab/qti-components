@@ -1,5 +1,5 @@
+import { html, LitElement, PropertyValueMap } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import { html, LitElement } from 'lit';
 
 import { mapResponse, mapResponsePoint, matchCorrect } from '../../internal/template-strings';
 import { type QtiRule } from '../qti-rule/qti-rule';
@@ -15,28 +15,31 @@ export default class QtiResponseProcessing extends LitElement {
   }
 
   public process() {
+    const rules = [...this.children] as QtiRule[];
+
+    for (const rule of rules) {
+      rule.process();
+    }
+  }
+
+  public firstUpdated(_changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
     if (this.getAttribute('template')) {
       const splittedTemplateName = this.getAttribute('template')!.split('/');
       const templateName = splittedTemplateName[splittedTemplateName.length - 1].replace('.xml', '');
       this.innerHTML = '';
       switch (templateName) {
         case 'map_response': {
-          this.appendChild(this.fragmentFromString(mapResponse));
+          this.appendChild(this.fragmentFromString(mapResponse).firstElementChild.firstElementChild);
           break;
         }
         case 'map_response_point': {
-          this.appendChild(this.fragmentFromString(mapResponsePoint));
+          this.appendChild(this.fragmentFromString(mapResponsePoint).firstElementChild.firstElementChild);
           break;
         }
         case 'match_correct':
-          this.appendChild(this.fragmentFromString(matchCorrect));
+          this.appendChild(this.fragmentFromString(matchCorrect).firstElementChild.firstElementChild);
           break;
       }
-    }
-    const rules = [...this.children] as QtiRule[];
-
-    for (const rule of rules) {
-      rule.process();
     }
   }
 
@@ -47,6 +50,6 @@ export default class QtiResponseProcessing extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'qti-response-processed': QtiResponseProcessing;
+    'qti-response-processing': QtiResponseProcessing;
   }
 }
