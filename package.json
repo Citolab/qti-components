@@ -29,8 +29,8 @@
       "require": "./dist/qti-transformers/index.cjs"
     },
     "./*.css": {
-      "import": "./dist/*.css",
-      "require": "./dist/*.css"
+      "import": "./src/**/*.css",
+      "require": "./src/**/*.css"
     }
   },
   "types": "./dist/qti-components/index.d.ts",

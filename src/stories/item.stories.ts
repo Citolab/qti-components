@@ -10,10 +10,6 @@ import { fetchItem } from './fetch-item';
 const meta: Meta = {
   title: 'Examples',
   argTypes: {
-    view: {
-      options: ['candidate', 'scorer'],
-      control: { type: 'radio' }
-    },
     qtipkg: {
       options: packages.packages,
       control: { type: 'radio' }

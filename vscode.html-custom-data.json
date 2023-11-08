@@ -3,6 +3,12 @@
   "version": 1.1,
   "tags": [
     {
+      "name": "item-print-variables",
+      "description": "\n---\n",
+      "attributes": [],
+      "references": []
+    },
+    {
       "name": "qti-assessment-item",
       "description": "The qti-assessment-item element contains all the other QTI 3 item structures.\n---\n\n\n### **Events:**\n - **name** - undefined\n- **qti-interaction-changed** - Emitted when an interaction is changed.\n- **qti-outcome-changed** - Emitted when an outcome has changed.\n- **qti-response-processing** - Emitted when response-processing is called.\n\n### **Slots:**\n - _default_ - The default slot where all the other QTI 3 item structures go.",
       "attributes": [
@@ -568,9 +574,7 @@
     {
       "name": "qti-response-else",
       "description": "\n---\n",
-      "attributes": [
-        { "name": "debugCalculateResult", "values": [{ "name": "object" }] }
-      ],
+      "attributes": [],
       "references": []
     },
     {
@@ -606,15 +610,13 @@
       "references": []
     },
     {
-      "name": "qti-response-if",
+      "name": "qti-contains",
       "description": "\n---\n",
-      "attributes": [
-        { "name": "debugCalculateResult", "values": [{ "name": "object" }] }
-      ],
+      "attributes": [],
       "references": []
     },
     {
-      "name": "qti-and",
+      "name": "qti-correct",
       "description": "\n---\n",
       "attributes": [],
       "references": []
@@ -625,18 +627,6 @@
       "attributes": [
         { "name": "base-type", "values": [{ "name": "BaseType" }] }
       ],
-      "references": []
-    },
-    {
-      "name": "qti-contains",
-      "description": "\n---\n",
-      "attributes": [],
-      "references": []
-    },
-    {
-      "name": "qti-correct",
-      "description": "\n---\n",
-      "attributes": [],
       "references": []
     },
     {
@@ -655,6 +645,12 @@
       "references": []
     },
     {
+      "name": "qti-gt",
+      "description": "\n---\n",
+      "attributes": [],
+      "references": []
+    },
+    {
       "name": "qti-equal-rounded",
       "description": "\n---\n",
       "attributes": [
@@ -669,13 +665,13 @@
       "references": []
     },
     {
-      "name": "qti-gt",
+      "name": "qti-gte",
       "description": "\n---\n",
       "attributes": [],
       "references": []
     },
     {
-      "name": "qti-gte",
+      "name": "qti-and",
       "description": "\n---\n",
       "attributes": [],
       "references": []
@@ -781,6 +777,12 @@
       "references": []
     },
     {
+      "name": "qti-response-if",
+      "description": "\n---\n",
+      "attributes": [],
+      "references": []
+    },
+    {
       "name": "qti-lookup-outcome-value",
       "description": "The lookupOutcomeValue rule sets the value of an outcome variable to the value obtained\nby looking up the value of the associated expression in the lookupTable associated\nwith the outcome's declaration.\n---\n\n\n### **Events:**\n - **qti-set-outcome-value** - undefined",
       "attributes": [{ "name": "identifier", "values": [] }],
@@ -801,9 +803,7 @@
     {
       "name": "qti-response-else-if",
       "description": "\n---\n",
-      "attributes": [
-        { "name": "debugCalculateResult", "values": [{ "name": "object" }] }
-      ],
+      "attributes": [],
       "references": []
     }
   ]
