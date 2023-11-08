@@ -66,12 +66,12 @@ import '@citolab/qti-components/qti-components';
 Use the transformers, from QTI XML to HTML5
 
 ```js
-import '@citolab/qti-components/qti-transformers';
+import { qtiTransformItem } from '@citolab/qti-components/qti-transformers';
 ```
 
 ```js
 const itemXML = '<qti-assessment-item>...</qti-assessment-item>';
-const itemHTML = await qtiTransformItem().parse(itemXML).html();
+const itemHTML = await qtiTransformItem().parse(itemXML).path('./relative-path-to-item-assets').html();
 ```
 
 <iframe
