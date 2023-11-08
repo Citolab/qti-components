@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<qti-assessment-test
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+  identifier="Examples"
+  title="Examples"
+  xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+>
+  <qti-test-part
+    identifier="RES-b901b8e7-b516-47cc-8adc-165d065f13c7"
+    title="Nieuw toetsdeel"
+    navigation-mode="nonlinear"
+    submission-mode="individual"
+  >
+
+    <qti-assessment-section
+      identifier="RES-caddf4cd-c1e6-45eb-9dd7-91a5b2fc1913"
+      title="22-A2"
+      visible="true"
+    >
+
+
+      <qti-assessment-item-ref identifier="ITM-choice" href="items/choice.xml">
+        <qti-weight identifier="WEIGHT" value="1" />
+      </qti-assessment-item-ref>
+      <qti-assessment-item-ref identifier="ITM-choice_multiple" href="items/choice_multiple.xml">
+        <qti-weight identifier="WEIGHT" value="1" />
+      </qti-assessment-item-ref>
+      <qti-assessment-item-ref identifier="ITM-extended_text" href="items/extended_text.xml">
+        <qti-weight identifier="WEIGHT" value="1" />
+      </qti-assessment-item-ref>
+      <qti-assessment-item-ref identifier="ITM-gap_match" href="items/gap_match.xml">
+        <qti-weight identifier="WEIGHT" value="1" />
+      </qti-assessment-item-ref>
+      <qti-assessment-item-ref identifier="ITM-graphic_associate" href="items/graphic_associate.xml">
+        <qti-weight identifier="WEIGHT" value="1" />
+      </qti-assessment-item-ref>
+      <qti-assessment-item-ref identifier="ITM-graphic_gap_match" href="items/graphic_gap_match.xml">
+        <qti-weight identifier="WEIGHT" value="1" />
+      </qti-assessment-item-ref>
+      <qti-assessment-item-ref identifier="ITM-hotspot" href="items/hotspot.xml">
+        <qti-weight identifier="WEIGHT" value="1" />
+      </qti-assessment-item-ref>
+      <qti-assessment-item-ref identifier="ITM-inline_choice" href="items/inline_choice.xml">
+        <qti-weight identifier="WEIGHT" value="1" />
+      </qti-assessment-item-ref>
+      <qti-assessment-item-ref identifier="ITM-match" href="items/match.xml">
+        <qti-weight identifier="WEIGHT" value="1" />
+      </qti-assessment-item-ref>
+      <qti-assessment-item-ref identifier="ITM-math" href="items/math.xml">
+        <qti-weight identifier="WEIGHT" value="1" />
+      </qti-assessment-item-ref>
+      <qti-assessment-item-ref identifier="ITM-order" href="items/order.xml">
+        <qti-weight identifier="WEIGHT" value="1" />
+      </qti-assessment-item-ref>
+      <qti-assessment-item-ref identifier="ITM-position_object" href="items/position_object.xml">
+        <qti-weight identifier="WEIGHT" value="1" />
+      </qti-assessment-item-ref>
+      <qti-assessment-item-ref identifier="ITM-select_point" href="items/select_point.xml">
+        <qti-weight identifier="WEIGHT" value="1" />
+      </qti-assessment-item-ref>
+      <qti-assessment-item-ref identifier="ITM-slider" href="items/slider.xml">
+        <qti-weight identifier="WEIGHT" value="1" />
+      </qti-assessment-item-ref>
+
+    </qti-assessment-section>
+  </qti-test-part>
+
+</qti-assessment-test>

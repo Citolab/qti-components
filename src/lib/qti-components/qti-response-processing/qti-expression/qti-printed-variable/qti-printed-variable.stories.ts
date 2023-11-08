@@ -1,10 +1,11 @@
-import '../../../index';
-import { html } from 'lit';
-import type { Meta, StoryObj } from '@storybook/web-components';
-import { QtiAssessmentItem } from '../../../index';
+import { expect } from '@storybook/jest';
 import { within } from '@storybook/testing-library';
+import type { Meta, StoryObj } from '@storybook/web-components';
+import { html } from 'lit';
+import '../../../index';
+import { QtPrintedVariable, QtiAssessmentItem } from '../../../index';
 
-type Story = StoryObj; // <Props>;
+type Story = StoryObj<typeof QtPrintedVariable>; // <Props>;
 
 const meta: Meta = {
   component: 'qti-printed-variable'
@@ -36,9 +37,14 @@ export const Single: Story = {
   }
 };
 
+// Function to emulate pausing between interactions
+function sleep(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 export const Multiple: Story = {
   render: args => {
-    return html` <qti-assessment-item data-testid="qti-assessment-item">
+    return html` <qti-assessment-item>
       <qti-outcome-declaration base-type="string" cardinality="multiple" identifier="OUTCOME">
         <qti-default-value>
           <qti-value>MULTIPLE</qti-value>
@@ -55,8 +61,13 @@ export const Multiple: Story = {
       </qti-response-processing>
     </qti-assessment-item>`;
   },
-  play: ({ canvasElement }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    (canvas.getByTestId('qti-assessment-item') as QtiAssessmentItem).processResponse();
+    await sleep(2000);
+    (canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem).processResponse();
+    await sleep(2000);
+    expect(canvasElement.querySelector('qti-printed-variable')?.shadowRoot.textContent).toEqual(
+      `[ "MULTIPLE", "UITSTOOT" ]`
+    );
   }
 };

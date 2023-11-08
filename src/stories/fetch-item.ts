@@ -2,7 +2,7 @@ import { qtiTransformItem, qtiTransformTest } from 'src/lib/qti-transformers';
 
 export const fetchItem = async (packageUri: string, index: number): Promise<any> => {
   packageUri = packageUri.endsWith('/') ? packageUri : packageUri + '/';
-  const assessmentTestHref = `depitems/assessment-test.xml`;
+  const assessmentTestHref = `assessment.xml`;
   const itemLocation = `${packageUri}${assessmentTestHref.substring(0, assessmentTestHref.lastIndexOf('/'))}/`;
 
   const itemsFromTest = await qtiTransformTest()

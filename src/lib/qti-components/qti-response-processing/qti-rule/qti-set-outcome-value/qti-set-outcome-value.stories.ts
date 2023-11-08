@@ -1,7 +1,6 @@
-import '../../../index';
-import { html } from 'lit';
-import { within } from '@storybook/testing-library';
+import '@citolab/qti-components/qti-components';
 import type { Meta, StoryObj } from '@storybook/web-components';
+import { html } from 'lit';
 import { QtiAssessmentItem } from '../../../index';
 
 type Story = StoryObj; // <Props>;
@@ -13,7 +12,7 @@ export default meta;
 
 export const MemberFail: Story = {
   render: args => {
-    return html` <qti-assessment-item data-testid="qti-assessment-item">
+    return html` <qti-assessment-item>
       <qti-outcome-declaration base-type="identifier" cardinality="multiple" identifier="BODY">
         <qti-default-value>
           <qti-value>part1</qti-value>
@@ -31,9 +30,8 @@ export const MemberFail: Story = {
     </qti-assessment-item>`;
   },
   play: ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const item = canvas.getByTestId('qti-assessment-item') as QtiAssessmentItem;
+    // const canvas = within(canvasElement);
+    const item = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
     item.processResponse();
-    // console.log(item.getVariable('BODY'));
   }
 };

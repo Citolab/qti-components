@@ -4,7 +4,7 @@ import { QtiConditionExpression } from '../qti-condition-expression';
 // PK: For the contains we assume the expressions to calculate are all directedPairs
 // I don't know it this in QTI is always the case however?
 export class QtiGte extends QtiConditionExpression {
-  public override calculate(): boolean {
+  public override getResult(): boolean {
     if (this.children.length === 2) {
       const values = this.getVariables() as ResponseVariable[];
       const value1 = values[0];

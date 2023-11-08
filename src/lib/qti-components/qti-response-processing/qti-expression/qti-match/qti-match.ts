@@ -10,13 +10,12 @@ export class QtiMatch extends QtiExpression<boolean> {
   // in which we pass the expressions as pure functions, and hope for the best.
   // SADLY, the getVariables throws roet in de eten.. weet nog niet precies hoe deze werkt.
   // Maar ik ga erin duiken.
-  public override calculate() {
+  public override getResult() {
     if (this.children.length === 2) {
       const values = this.getVariables() as ResponseVariable[];
       const valueToMap = values[0];
       const correctValueInfo = values[1];
-      this._result = QtiMatch.match(valueToMap, correctValueInfo);
-      return this._result;
+      return QtiMatch.match(valueToMap, correctValueInfo);
     }
 
     console.error('unexpected number of children in match');

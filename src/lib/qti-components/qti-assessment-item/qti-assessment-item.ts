@@ -1,16 +1,15 @@
-import { customElement, property, state } from 'lit/decorators.js';
-import { html, LitElement } from 'lit';
-import { OutcomeVariable } from '../internal/variables';
-import { ResponseVariable } from '../internal/variables';
-import { watch } from '../../decorators/watch';
-import type { ResponseInteraction } from '../internal/expression-result';
-import type { Interaction } from '../qti-interaction/internal/interaction/interaction';
-import type { InteractionChangedDetails, OutcomeChangedDetails } from '../internal/event-types';
-import type { QtiFeedback } from '../qti-feedback/qti-feedback';
-import type { QtiResponseProcessing } from '../qti-response-processing';
-import type { VariableDeclaration } from '../internal/variables';
-import { ItemContext, itemContext } from './qti-assessment-item.context';
 import { provide } from '@lit/context';
+import { LitElement, html } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
+import { watch } from '../../decorators/watch';
+import type { InteractionChangedDetails, OutcomeChangedDetails } from '../internal/event-types';
+import type { ResponseInteraction } from '../internal/expression-result';
+import type { VariableDeclaration, VariableValue } from '../internal/variables';
+import { OutcomeVariable, ResponseVariable } from '../internal/variables';
+import type { QtiFeedback } from '../qti-feedback/qti-feedback';
+import type { Interaction } from '../qti-interaction/internal/interaction/interaction';
+import type { QtiResponseProcessing } from '../qti-response-processing';
+import { ItemContext, itemContext } from './qti-assessment-item.context';
 
 /**
  * @summary The qti-assessment-item element contains all the other QTI 3 item structures.
@@ -31,7 +30,7 @@ import { provide } from '@lit/context';
 @customElement('qti-assessment-item')
 export class QtiAssessmentItem extends LitElement {
   @property({ type: String }) title: string;
-  @property({ type: String }) identifier: string | undefined = undefined;
+  @property({ type: String }) identifier: string = '';
   @property({ type: String }) adaptive: 'true' | 'false' = 'false';
   @property({ type: String }) timeDependent: 'true' | 'false' = 'false';
 
@@ -68,14 +67,28 @@ export class QtiAssessmentItem extends LitElement {
     ]
   };
 
-  public get context(): ItemContext {
-    return { ...this._context };
+  public get variables(): VariableValue<string | string[] | null>[] {
+    return this._context.variables.map(v => ({ identifier: v.identifier, value: v.value, type: v.type }));
   }
 
-  public set variables(value: VariableDeclaration<string | string[] | null>[]) {
-    this._context = { ...this.context, variables: value };
+  public set variables(value: VariableValue<string | string[] | null>[]) {
+    if (!Array.isArray(value) || value.some(v => !('identifier' in v))) {
+      console.warn('variables property should be an array of VariableDeclaration');
+      return;
+    }
 
-    this.context.variables.forEach(variable => {
+    this._context = {
+      ...this._context,
+      variables: this._context.variables.map(variable => {
+        const matchingValue = value.find(v => v.identifier === variable.identifier);
+        if (matchingValue) {
+          return { ...variable, ...matchingValue };
+        }
+        return variable;
+      })
+    };
+
+    this._context.variables.forEach(variable => {
       if (variable.type === 'response') {
         const interactionElement = this._interactionElements.find(
           (el: Interaction) => el.responseIdentifier === variable.identifier
@@ -91,7 +104,7 @@ export class QtiAssessmentItem extends LitElement {
     });
   }
 
-  private _initialContext: Readonly<ItemContext> = { ...this.context, variables: this._context.variables };
+  private _initialContext: Readonly<ItemContext> = { ...this._context, variables: this._context.variables };
   private _feedbackElements: QtiFeedback[] = [];
   private _interactionElements: Interaction[] = [];
 
@@ -164,7 +177,7 @@ export class QtiAssessmentItem extends LitElement {
   }
 
   public showCorrectResponse(show: boolean) {
-    const responseVariables = this.context.variables.filter(
+    const responseVariables = this._context.variables.filter(
       (vari: ResponseVariable | OutcomeVariable) => 'correctResponse' in vari && vari.correctResponse
     ) as ResponseVariable[];
     const responses = responseVariables.map(cr => {

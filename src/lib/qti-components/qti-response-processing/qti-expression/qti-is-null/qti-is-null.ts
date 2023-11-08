@@ -1,11 +1,10 @@
-import { Calculate } from '../../../internal/expression-result';
 import { ResponseVariable } from '../../../internal/variables';
 import { QtiExpression } from '../qti-expression';
 
 // PK: For the contains we assume the expressions to calculate are all directedPairs
 // I don't know it this in QTI is always the case however?
 export class QtiIsNull extends QtiExpression<boolean> {
-  public override calculate(): boolean {
+  public override getResult(): boolean {
     if (this.children.length === 1) {
       const variables = this.getVariables() as ResponseVariable[];
       if (!variables) {

@@ -1,10 +1,8 @@
-import { state } from 'lit/decorators.js';
-import { QtiExpression } from '../qti-expression';
-import { html } from 'lit';
 import { ResponseVariable } from '../../../internal/variables';
+import { QtiExpression } from '../qti-expression';
 
 export class QtiProduct extends QtiExpression<number> {
-  public override calculate() {
+  public override getResult() {
     const values = this.getVariables() as ResponseVariable[];
     const product = values.reduce((accumulator, currentValue) => {
       if (currentValue.baseType == 'float' || currentValue.baseType == 'integer') {

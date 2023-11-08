@@ -1,7 +1,7 @@
+import { describe, expect, it } from '@jest/globals';
+import { html, render } from 'lit';
 import './qti-basevalue';
 import { QtiBaseValue } from './qti-basevalue';
-import { html, render } from 'lit';
-import { describe, expect, it } from '@jest/globals';
 describe('qti-base-value', () => {
   it('should return value in the correct baseType(float)', () => {
     const template = () => html` <qti-base-value base-type="float">1.034</qti-base-value> `;

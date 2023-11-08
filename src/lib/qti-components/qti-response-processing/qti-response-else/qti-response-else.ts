@@ -1,15 +1,9 @@
-import { html, LitElement } from 'lit';
+import { LitElement, html } from 'lit';
 import { QtiRule } from '../qti-rule/qti-rule';
 
 export class QtiResponseElse extends LitElement {
-  static override get properties() { 
-    return { 
-      debugCalculateResult: {type: Object},
-    };
-  }
-
   override render() {
-    return html` <slot></slot>`;
+    return html`<slot></slot>`;
   }
 
   public calculate() {

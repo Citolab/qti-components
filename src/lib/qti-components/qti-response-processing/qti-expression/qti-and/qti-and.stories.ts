@@ -42,14 +42,14 @@ export const OneFalseResultsInFalse: Story = {
   }
 };
 
-class MockChild extends QtiConditionExpression {
+export class MockChild extends QtiConditionExpression {
   response = false;
   override connectedCallback() {
     super.connectedCallback();
     this.response = this.getAttribute('response') == 'true';
   }
-  public override calculate() {
+  public override getResult() {
     return this.response;
   }
 }
-window.customElements.define('mock-child', MockChild);
+customElements.define('mock-child', MockChild);

@@ -1,12 +1,15 @@
 import { QtiMapping } from '../qti-response-processing/qti-expression/qti-mapping/qti-mapping';
 import type { BaseType, Cardinality } from './expression-result';
 
-export interface VariableDeclaration<T> {
+export interface VariableValue<T> {
   identifier: string;
-  cardinality: Cardinality;
-  baseType: BaseType;
   value: Readonly<T>;
   type: 'outcome' | 'response';
+}
+
+export interface VariableDeclaration<T> extends VariableValue<T> {
+  cardinality: Cardinality;
+  baseType: BaseType;
 }
 
 export interface OutcomeVariable extends VariableDeclaration<string | string[] | null> {

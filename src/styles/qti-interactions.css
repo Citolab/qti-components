@@ -236,10 +236,10 @@ qti-graphic-gap-match-interaction {
 qti-slider-interaction {
   @apply block; /* else no screenshot will be made with html-to-image */
 
-  @apply hover:hov focus:foc aria-checked:act aria-readonly:rdo aria-disabled:dis;
+  /* @apply hover:hov focus:foc aria-checked:act aria-readonly:rdo aria-disabled:dis; */
 
   --qti-tick-color: rgb(229 231 235 / 1);
-  --qti-tick-width: 2px;
+  --qti-tick-width: 1px;
 
   &::part(slider) {
     @apply mx-8; /* so the slider stays INSIDE of the qti-slider-interaction */
@@ -264,19 +264,19 @@ qti-slider-interaction {
     @apply flex items-center; /* so the knob is neatly centered vertically */
     /* DESIGN */
     @apply box-border; /* if you have a border in the design apply, this box-border will make the border stay INSIDE the rail */
-    @apply h-3 w-full cursor-pointer rounded-full border-solid border-gray-200 bg-gray-100;
+    @apply h-1.5 w-full cursor-pointer rounded-full border border-solid border-gray-300 bg-gray-200;
   }
 
   &::part(knob) {
-    @apply relative h-6 w-6 origin-center -translate-x-1/2 cursor-pointer rounded-full bg-primary-500;
+    @apply relative h-4 w-4 origin-center -translate-x-1/2 cursor-pointer rounded-full bg-primary-500;
     left: var(--value-percentage);
   }
 
   --show-value: true;
   &::part(value) {
     @apply absolute bottom-8; /* align the value, which you can drag, on top of the knob, so it aligns with the rest of the values */
-    @apply left-3; /* should be half width of the knob if you want to center these two */
-    @apply -translate-x-1/2 cursor-pointer rounded bg-primary-500 px-4 py-2 text-center;
+    @apply left-2; /* should be half width of the knob if you want to center these two */
+    @apply -translate-x-1/2 cursor-pointer rounded bg-gray-100 px-2 py-1 text-center text-gray-500;
   }
 }
 

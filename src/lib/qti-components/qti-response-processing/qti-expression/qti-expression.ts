@@ -1,44 +1,31 @@
-import { LitElement, css, html, nothing } from 'lit';
-import { QtiAssessmentItem } from '../../qti-assessment-item/qti-assessment-item';
-import { ResponseVariable } from '../../internal/variables';
-import { QtiMultiple } from './qti-multiple/qti-multiple';
+import { LitElement, css, html } from 'lit';
 import { state } from 'lit/decorators.js';
-import { VariableDeclaration } from '../../internal/variables';
+import { ResponseVariable, VariableDeclaration } from '../../internal/variables';
+import { QtiAssessmentItem } from '../../qti-assessment-item/qti-assessment-item';
+import { QtiMultiple } from './qti-multiple/qti-multiple';
 
 export abstract class QtiExpression<T> extends LitElement {
   @state()
-  protected _result: any;
-  protected _error = [];
-  private _debug = false;
+  protected result: any;
 
-  @state()
-  protected set error(val: string) {
-    const oldVal = this._error;
-    this._error.push(val);
-    this.requestUpdate('error', oldVal);
-  }
-
+  // hide the slot with css
   static styles = css`
-    :host {
-      display: inline;
-    }
-    [role='alert'] {
-      border: 1px solid red;
-      background: pink;
-      color: red;
-      padding: 0.5rem 0.25rem;
-      font-size: small;
-      border-radius: 5px;
-      margin-bottom: 3px;
+    slot {
+      display: none;
     }
   `;
 
   override render() {
-    return html`${this._debug ? html`${this._error.map(error => html`<div role="alert">${error}</div>`)}` : nothing}
-    ${this._debug ? html`${JSON.stringify(this._result)}` : nothing} ${this._debug ? html`<slot></slot>` : nothing}`;
+    return html`<pre>${JSON.stringify(this.result, null, 2)}</pre>
+      <slot></slot>`;
   }
 
   public calculate(): Readonly<T> {
+    this.result = this.getResult();
+    return this.result;
+  }
+
+  protected getResult(): Readonly<T> {
     throw new Error('Not implemented');
   }
 
@@ -67,7 +54,7 @@ export abstract class QtiExpression<T> extends LitElement {
           }
           case 'qti-multiple': {
             const multiple = e as QtiMultiple;
-            const values = multiple.calculate();
+            const values = multiple.getResult();
             if (values.length > 0) {
               return {
                 identifier: '',
@@ -92,7 +79,7 @@ export abstract class QtiExpression<T> extends LitElement {
             // added for use of qti-equal-rounded
             try {
               const expression = e as QtiExpression<number>;
-              const value = expression.calculate();
+              const value = expression.getResult();
               return {
                 baseType: 'integer',
                 value: value.toString(),

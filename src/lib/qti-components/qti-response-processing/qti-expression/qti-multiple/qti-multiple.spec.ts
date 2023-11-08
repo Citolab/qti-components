@@ -1,9 +1,8 @@
-import './qti-multiple';
-import '../qti-basevalue/qti-basevalue';
-import { QtiMultiple } from './qti-multiple';
-import { html, render } from 'lit';
-import { directedPair } from '../../../internal/expression-result';
 import { describe, expect, it } from '@jest/globals';
+import { html, render } from 'lit';
+import '../qti-basevalue/qti-basevalue';
+import './qti-multiple';
+import { QtiMultiple } from './qti-multiple';
 describe('qti-multiple', () => {
   it('should return an array with the calculated results of its children, single child', () => {
     const template = () => html`

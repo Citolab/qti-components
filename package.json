@@ -12,7 +12,7 @@
   "engines": {
     "node": ">=16.0.0"
   },
-  "version": "6.4.6-0",
+  "version": "6.5.1",
   "type": "module",
   "main": "dist/index.js",
   "exports": {
@@ -29,8 +29,8 @@
       "require": "./dist/qti-transformers/index.cjs"
     },
     "./*.css": {
-      "import": "./dist/*.css",
-      "require": "./dist/*.css"
+      "import": "./src/**/*.css",
+      "require": "./src/**/*.css"
     }
   },
   "types": "./dist/qti-components/index.d.ts",
@@ -63,7 +63,7 @@
     "build-lib": "ts-node --esm --project tsconfig.node.json scripts/build.ts",
     "watch-lib": "nodemon --watch \"src/**\" --ext \"ts,json,css\" --ignore \"src/**/*.spec.ts\" --exec \"ts-node --esm --project tsconfig.node.json scripts/watch.ts\"",
     "storybook": "storybook dev -p 6006",
-    "storybook:deploy": "firebase deploy --only hosting:qti-components",
+    "deploy": "firebase deploy --only hosting:qti-components",
     "storybook:build": "storybook build",
     "storybook:test": "test-storybook",
     "npm publish": "np",
@@ -79,32 +79,28 @@
   },
   "dependencies": {
     "@lit/context": "^1.0.0",
-    "@lit/react": "^1.0.0",
-    "cheerio": "^1.0.0-rc.12",
     "lit": "^3.0.0"
   },
   "peerdependencies": {
     "@lit/context": ">= 1.0",
-    "@lit/react": ">= 1.0",
-    "lit": ">= 3 < 4",
-    "react": "> 18"
+    "lit": ">= 3 < 4"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.12.2",
     "@custom-elements-manifest/analyzer": "^0.9.0",
     "@jest/globals": "^29.7.0",
-    "@storybook/addon-a11y": "^7.5.2",
-    "@storybook/addon-essentials": "^7.5.2",
-    "@storybook/addon-interactions": "^7.5.2",
-    "@storybook/addon-jest": "^7.5.2",
-    "@storybook/addon-links": "^7.5.2",
-    "@storybook/blocks": "^7.5.2",
+    "@storybook/addon-a11y": "^7.5.3",
+    "@storybook/addon-essentials": "^7.5.3",
+    "@storybook/addon-interactions": "^7.5.3",
+    "@storybook/addon-jest": "^7.5.3",
+    "@storybook/addon-links": "^7.5.3",
+    "@storybook/blocks": "^7.5.3",
     "@storybook/jest": "^0.2.3",
-    "@storybook/preview-api": "^7.5.2",
+    "@storybook/preview-api": "^7.5.3",
     "@storybook/test-runner": "^0.13.0",
     "@storybook/testing-library": "^0.2.2",
-    "@storybook/web-components": "^7.5.2",
-    "@storybook/web-components-vite": "^7.5.2",
+    "@storybook/web-components": "^7.5.3",
+    "@storybook/web-components-vite": "^7.5.3",
     "@tailwindcss/nesting": "^0.0.0-insiders.565cd3e",
     "@tailwindcss/typography": "^0.5.10",
     "@types/node": "^20.8.8",
@@ -133,14 +129,15 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "remark-gfm": "^4.0.0",
-    "storybook": "^7.5.2",
+    "storybook": "^7.5.3",
     "tailwindcss": "^3.3.2",
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1",
     "tsup": "^7.2.0",
     "typescript": "^5.2.2",
     "vite": "^4.5.0",
-    "vite-tsconfig-paths": "^4.2.1"
+    "vite-tsconfig-paths": "^4.2.1",
+    "wc-storybook-helpers": "^1.0.9"
   },
   "customElements": "custom-elements.json"
 }

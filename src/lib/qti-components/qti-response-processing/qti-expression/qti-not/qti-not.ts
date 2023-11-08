@@ -1,14 +1,12 @@
-import { LitElement, html } from 'lit';
+import { html } from 'lit';
 import { QtiExpression } from '../qti-expression';
-import { QtiRule } from '../../qti-rule/qti-rule';
-import { ResponseVariable } from '../../../internal/variables';
 
 export class QtiNot extends QtiExpression<boolean> {
   override render() {
     return html`${super.render()}`;
   }
 
-  public override calculate() {
+  public override getResult() {
     const expression = this.firstElementChild as QtiExpression<boolean>;
     const result = expression.calculate() as boolean;
     return !result;
