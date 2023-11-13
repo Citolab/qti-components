@@ -8,8 +8,8 @@ export interface VariableValue<T> {
 }
 
 export interface VariableDeclaration<T> extends VariableValue<T> {
-  cardinality: Cardinality;
-  baseType: BaseType;
+  cardinality?: Cardinality;
+  baseType?: BaseType;
 }
 
 export interface OutcomeVariable extends VariableDeclaration<string | string[] | null> {
