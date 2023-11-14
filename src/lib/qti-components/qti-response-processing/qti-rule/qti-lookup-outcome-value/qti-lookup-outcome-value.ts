@@ -23,7 +23,7 @@ export class QtiLookupOutcomeValue extends QtiRule {
     if (outcomeVariable.interpolationTable) {
       value = outcomeVariable.interpolationTable.get(parseInt(this.childExpression.calculate()));
     }
-    if (!value) {
+    if (value === null || value === undefined) {
       console.warn('lookupOutcomeValue: value is null or undefined');
       return 0;
     }

@@ -53,11 +53,10 @@ export class QtiInlineChoiceInteraction extends Interaction {
     `;
   }
 
-  firstUpdated(val) {
-    super.firstUpdated(val);
+  connectedCallback() {
+    super.connectedCallback();
     this.addEventListener('on-dropdown-selected', this.choiceSelected);
     const choices = Array.from(this.querySelectorAll('qti-inline-choice'));
-
     this.options = [
       {
         textContent: this.dataPrompt,
@@ -70,6 +69,10 @@ export class QtiInlineChoiceInteraction extends Interaction {
         selected: false
       }))
     ];
+  }
+
+  disconnectedCallback() {
+      this.removeEventListener('on-dropdown-selected', this.choiceSelected);
   }
 
   public validate(): boolean {
