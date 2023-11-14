@@ -17,10 +17,6 @@ export default class QtiResponseProcessing extends LitElement {
   override render() {
     return html`<slot></slot>`;
   }
-  // fIXME: PK: attributes
-  static override get observedAttributes() {
-    return ['identifier'];
-  }
 
   public process() {
     const rules = [...this.children] as QtiRule[];
