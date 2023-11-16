@@ -1,9 +1,9 @@
 import { css, html } from 'lit';
-import { ifDefined } from 'lit/directives/if-defined.js';
-import { Interaction } from '../internal/interaction/interaction';
 import { customElement, property, state } from 'lit/decorators.js';
-import { watch } from '../../../decorators';
+import { ifDefined } from 'lit/directives/if-defined.js';
 import { createRef } from 'lit/directives/ref.js';
+import { watch } from '../../../decorators';
+import { Interaction } from '../internal/interaction/interaction';
 
 @customElement('qti-text-entry-interaction')
 export class QtiTextEntryInteraction extends Interaction {
@@ -15,6 +15,9 @@ export class QtiTextEntryInteraction extends Interaction {
 
   @state()
   private _value = '';
+
+  @state()
+  private _correctValue = '';
 
   @state()
   private _size = 5;
@@ -47,27 +50,51 @@ export class QtiTextEntryInteraction extends Interaction {
         :host {
           display: inline-flex;
         }
+        .joe {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          position: relative;
+        }
+        .correct {
+          position: absolute;
+          width: 100%;
+          font-size: 0.8rem;
+          top: -1.5rem;
+        }
       `
     ];
   }
 
+  set correctResponse(value: string) {
+    this._correctValue = value;
+    // if (value == '') {
+    //   console.log(value);
+    // } else {
+    //   console.log(value);
+    // }
+  }
+
   override render() {
     return html`
-      <input
-        part="input"
-        spellcheck="false"
-        autocomplete="off"
-        @keydown="${event => event.stopImmediatePropagation()}"
-        @keyup="${this.textChanged}"
-        @change="${this.textChanged}"
-        type="${this.patternMask == '[0-9]*' ? 'number' : 'text'}"
-        placeholder="${ifDefined(this.placeholderText ? this.placeholderText : undefined)}"
-        .value="${this._value}"
-        size="${this._size}"
-        pattern="${ifDefined(this.patternMask ? this.patternMask : undefined)}"
-        ?disabled="${this.disabled}"
-        ?readonly="${this.readonly}"
-      />
+      <div class="joe">
+        <div class="correct">${this._correctValue}</div>
+        <input
+          part="input"
+          spellcheck="false"
+          autocomplete="off"
+          @keydown="${event => event.stopImmediatePropagation()}"
+          @keyup="${this.textChanged}"
+          @change="${this.textChanged}"
+          type="${this.patternMask == '[0-9]*' ? 'number' : 'text'}"
+          placeholder="${ifDefined(this.placeholderText ? this.placeholderText : undefined)}"
+          .value="${this._value}"
+          size="${this._size}"
+          pattern="${ifDefined(this.patternMask ? this.patternMask : undefined)}"
+          ?disabled="${this.disabled}"
+          ?readonly="${this.readonly}"
+        />
+      </div>
     `;
   }
   //
