@@ -1,7 +1,7 @@
 import { css, html } from 'lit';
-import { Interaction } from '../internal/interaction/interaction';
 import { property, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
+import { Interaction } from '../internal/interaction/interaction';
 
 interface OptionType {
   textContent: string;
@@ -72,7 +72,7 @@ export class QtiInlineChoiceInteraction extends Interaction {
   }
 
   disconnectedCallback() {
-      this.removeEventListener('on-dropdown-selected', this.choiceSelected);
+    this.removeEventListener('on-dropdown-selected', this.choiceSelected);
   }
 
   public validate(): boolean {
@@ -96,7 +96,6 @@ export class QtiInlineChoiceInteraction extends Interaction {
       this.correctOption = '';
       return;
     }
-    console.log('correctResponse', value);
     this.correctOption = `<span part="correct-option">${
       this.options.find(option => value === option.value).textContent
     }</span>`;
