@@ -26,3 +26,6 @@ dist-ssr
 .jest-test-results.json
 .firebase/
 storybook-static/
+
+vscode.html-custom-data.json
+vscode.css-custom-data.json
