@@ -153,13 +153,13 @@
       "references": []
     },
     {
-      "name": "qti-stylesheet",
+      "name": "qti-variabledeclaration",
       "description": "\n---\n",
       "attributes": [],
       "references": []
     },
     {
-      "name": "qti-variabledeclaration",
+      "name": "qti-stylesheet",
       "description": "\n---\n",
       "attributes": [],
       "references": []
@@ -580,7 +580,7 @@
     {
       "name": "qti-response-processing",
       "description": "\n---\n",
-      "attributes": [{ "name": "identifier", "values": [] }],
+      "attributes": [],
       "references": []
     },
     {
@@ -610,13 +610,13 @@
       "references": []
     },
     {
-      "name": "qti-contains",
+      "name": "qti-response-if",
       "description": "\n---\n",
       "attributes": [],
       "references": []
     },
     {
-      "name": "qti-correct",
+      "name": "qti-and",
       "description": "\n---\n",
       "attributes": [],
       "references": []
@@ -627,6 +627,12 @@
       "attributes": [
         { "name": "base-type", "values": [{ "name": "BaseType" }] }
       ],
+      "references": []
+    },
+    {
+      "name": "qti-contains",
+      "description": "\n---\n",
+      "attributes": [],
       "references": []
     },
     {
@@ -645,7 +651,7 @@
       "references": []
     },
     {
-      "name": "qti-gt",
+      "name": "qti-correct",
       "description": "\n---\n",
       "attributes": [],
       "references": []
@@ -665,13 +671,13 @@
       "references": []
     },
     {
-      "name": "qti-gte",
+      "name": "qti-gt",
       "description": "\n---\n",
       "attributes": [],
       "references": []
     },
     {
-      "name": "qti-and",
+      "name": "qti-gte",
       "description": "\n---\n",
       "attributes": [],
       "references": []
@@ -735,13 +741,13 @@
       "references": []
     },
     {
-      "name": "qti-or",
+      "name": "qti-ordered",
       "description": "\n---\n",
       "attributes": [],
       "references": []
     },
     {
-      "name": "qti-ordered",
+      "name": "qti-or",
       "description": "\n---\n",
       "attributes": [],
       "references": []
@@ -759,25 +765,19 @@
       "references": []
     },
     {
-      "name": "qti-string-match",
-      "description": "\n---\n",
-      "attributes": [{ "name": "case-sensitive", "values": [] }],
-      "references": []
-    },
-    {
       "name": "qti-sum",
       "description": "\n---\n",
       "attributes": [],
       "references": []
     },
     {
-      "name": "qti-variable",
+      "name": "qti-string-match",
       "description": "\n---\n",
-      "attributes": [],
+      "attributes": [{ "name": "case-sensitive", "values": [] }],
       "references": []
     },
     {
-      "name": "qti-response-if",
+      "name": "qti-variable",
       "description": "\n---\n",
       "attributes": [],
       "references": []

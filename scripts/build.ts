@@ -1,39 +1,54 @@
 import chalk from 'chalk';
 import { execSync } from 'child_process';
-import tsup from 'tsup';
+import tsup, { Options } from 'tsup';
 import { InlineCSSPlugin } from './inline-css-plugin.js';
+
+import pkgJson from '../package.json' assert { type: 'json' };
+
+const peerdependencies: string[] = [];
+for (const property in pkgJson.peerdependencies) {
+  peerdependencies.push(property);
+}
+
+const command = process.argv[2];
 
 console.log('Building the project...');
 
 const outdir = 'dist';
 
+const watchOptions = {
+  target: 'es2017',
+  dts: true,
+  format: ['esm'],
+
+  entryPoints: [
+    //
+    // NOTE: Entry points must be mapped in package.json > exports, otherwise users won't be able to import them!
+    //
+    './src/lib/qti-components/index.ts',
+    './src/lib/qti-transformers/index.ts'
+  ],
+  define: {
+    'process.env.NODE_ENV': command === 'watch' ? '"development"' : "'production'"
+  },
+  external: peerdependencies, // ['@lit/react', '@lit/context', 'react', 'lit'],
+  splitting: true,
+  esbuildPlugins: [InlineCSSPlugin]
+} as Options;
+
+const buildOptions = {
+  ...watchOptions,
+  clean: true,
+  minify: true,
+  bundle: true,
+  format: [...watchOptions.format!, 'esm']
+} as Options;
+
+const options = command === 'watch' ? watchOptions : buildOptions;
+
 (async () => {
   await tsup
-    .build({
-      target: 'es2017',
-      dts: true,
-      format: ['esm', 'cjs'],
-      clean: true,
-      minify: true,
-      bundle: true,
-      minifySyntax: true,
-      minifyWhitespace: true,
-      minifyIdentifiers: true,
-
-      entryPoints: [
-        //
-        // NOTE: Entry points must be mapped in package.json > exports, otherwise users won't be able to import them!
-        //
-        './src/lib/qti-components/index.ts',
-        './src/lib/qti-transformers/index.ts'
-      ],
-      define: {
-        'process.env.NODE_ENV': '"production"'
-      },
-      external: ['@lit/react', '@lit/context', 'react', 'lit'],
-      splitting: true,
-      esbuildPlugins: [InlineCSSPlugin] // https://github.com/evanw/esbuild/issues/3109#issuecomment-1539846087
-    })
+    .build(options)
     .catch(err => {
       console.error(chalk.red(err));
       process.exit(1);
@@ -54,19 +69,13 @@ const outdir = 'dist';
     process.exit(1);
   }
 
-  // Make a build purely for enjoying creating qti-items in a plain HTML file
+  if (command === 'watch') return;
 
-  const bundleResult = await tsup.build({
-    target: 'es2017',
-    dts: true,
-    format: ['esm', 'cjs'],
-    entryPoints: ['./src/index.ts'],
-    minify: true,
-    bundle: true,
-    // necessary so the peerdependencies in the package.json will still be included in this build
-    // https://github.com/egoist/tsup/issues/619#issuecomment-1420423401
-    noExternal: [/(.*)/],
-    esbuildPlugins: [InlineCSSPlugin]
+  // Make a build purely for enjoying creating qti-items in a plain HTML file
+  const bundleResult = tsup.build({
+    ...buildOptions,
+    external: [],
+    noExternal: [/(.*)/]
   });
   console.log(chalk.green(`The build has been generated at ${outdir}\n`));
 })();
