@@ -72,7 +72,7 @@
     "arethetypeswrong": "npm run build-lib && attw --pack",
     "----hooks----": "",
     "prepublishOnly": "echo 'calling prepublishOnly as npm lifecycle hook to build-lib!' && npm run build-lib",
-    "postpublish": "npm run deploy"
+    "postpublish": "echo 'posthook for prosperity, does nothing for now!'"
   },
   "dependencies": {
     "@lit/context": "^1.0.0",
