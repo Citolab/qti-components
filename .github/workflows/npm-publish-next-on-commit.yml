@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      # - name: Git configuration
-      #   run: |
-      #     git config --global user.email "patrick.deklein@cito.nl"
-      #     git config --global user.name "patrickdeklein"
+      - name: Git configuration
+        run: |
+          git config --global user.email "patrick.deklein@cito.nl"
+          git config --global user.name "patrickdeklein"
 
       - name: Checkout Repository
         uses: actions/checkout@v3
