@@ -24,6 +24,11 @@ jobs:
       - name: Publish to NPM
         run: npm version prepatch
 
+      - name: Git configuration
+        run: |
+          git config --global user.email "patrick.deklein@cito.nl"
+          git config --global user.name "patrickdeklein"
+
         # Push repository changes
       - name: Push changes to repository
         env:
