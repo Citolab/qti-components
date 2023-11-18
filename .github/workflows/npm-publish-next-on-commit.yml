@@ -1,0 +1,33 @@
+name: Publish NPM Package
+
+on:
+  push:
+    branches:
+      - main  # Trigger on push to the main branch, adjust as needed
+
+jobs:
+  publish-npm:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'  # Specify the Node.js version
+          registry-url: 'https://registry.npmjs.org/'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Package
+        run: npm run build-lib  # Adjust this command to suit your build process
+
+      - name: Publish to NPM
+        run: npm version prepatch && npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Verify Package
+        run: npm info @citolab/qti-components
