@@ -28,7 +28,7 @@ jobs:
         run: npm install
 
       - name: Publish to NPM
-        run: npm version prepatch
+        run: npm version prerelease
 
       - name: Publish to NPM
         env:
