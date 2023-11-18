@@ -624,13 +624,13 @@
       "references": []
     },
     {
-      "name": "qti-correct",
+      "name": "qti-contains",
       "description": "\n---\n",
       "attributes": [],
       "references": []
     },
     {
-      "name": "qti-contains",
+      "name": "qti-correct",
       "description": "\n---\n",
       "attributes": [],
       "references": []
@@ -729,13 +729,13 @@
       "references": []
     },
     {
-      "name": "qti-or",
+      "name": "qti-not",
       "description": "\n---\n",
       "attributes": [],
       "references": []
     },
     {
-      "name": "qti-not",
+      "name": "qti-or",
       "description": "\n---\n",
       "attributes": [],
       "references": []
@@ -747,15 +747,15 @@
       "references": []
     },
     {
-      "name": "qti-product",
-      "description": "\n---\n",
-      "attributes": [],
-      "references": []
-    },
-    {
       "name": "qti-printed-variable",
       "description": "\n---\n",
       "attributes": [{ "name": "identifier", "values": [] }],
+      "references": []
+    },
+    {
+      "name": "qti-product",
+      "description": "\n---\n",
+      "attributes": [],
       "references": []
     },
     {
