@@ -25,7 +25,7 @@ jobs:
         run: npm run build-lib  # Adjust this command to suit your build process
 
       - name: Publish to NPM
-        run: npm version prepatch && npm publish
+        run: npm version prepatch && git add . && git commit && npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
