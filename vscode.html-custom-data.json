@@ -153,13 +153,13 @@
       "references": []
     },
     {
-      "name": "qti-variabledeclaration",
+      "name": "qti-stylesheet",
       "description": "\n---\n",
       "attributes": [],
       "references": []
     },
     {
-      "name": "qti-stylesheet",
+      "name": "qti-variabledeclaration",
       "description": "\n---\n",
       "attributes": [],
       "references": []
@@ -610,12 +610,6 @@
       "references": []
     },
     {
-      "name": "qti-response-if",
-      "description": "\n---\n",
-      "attributes": [],
-      "references": []
-    },
-    {
       "name": "qti-and",
       "description": "\n---\n",
       "attributes": [],
@@ -627,6 +621,12 @@
       "attributes": [
         { "name": "base-type", "values": [{ "name": "BaseType" }] }
       ],
+      "references": []
+    },
+    {
+      "name": "qti-correct",
+      "description": "\n---\n",
+      "attributes": [],
       "references": []
     },
     {
@@ -648,12 +648,6 @@
           ]
         }
       ],
-      "references": []
-    },
-    {
-      "name": "qti-correct",
-      "description": "\n---\n",
-      "attributes": [],
       "references": []
     },
     {
@@ -735,6 +729,12 @@
       "references": []
     },
     {
+      "name": "qti-or",
+      "description": "\n---\n",
+      "attributes": [],
+      "references": []
+    },
+    {
       "name": "qti-not",
       "description": "\n---\n",
       "attributes": [],
@@ -747,7 +747,7 @@
       "references": []
     },
     {
-      "name": "qti-or",
+      "name": "qti-product",
       "description": "\n---\n",
       "attributes": [],
       "references": []
@@ -759,9 +759,9 @@
       "references": []
     },
     {
-      "name": "qti-product",
+      "name": "qti-string-match",
       "description": "\n---\n",
-      "attributes": [],
+      "attributes": [{ "name": "case-sensitive", "values": [] }],
       "references": []
     },
     {
@@ -771,13 +771,13 @@
       "references": []
     },
     {
-      "name": "qti-string-match",
+      "name": "qti-variable",
       "description": "\n---\n",
-      "attributes": [{ "name": "case-sensitive", "values": [] }],
+      "attributes": [],
       "references": []
     },
     {
-      "name": "qti-variable",
+      "name": "qti-response-if",
       "description": "\n---\n",
       "attributes": [],
       "references": []

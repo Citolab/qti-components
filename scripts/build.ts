@@ -20,7 +20,7 @@ const watchOptions = {
   target: 'es2017',
   dts: true,
   format: ['esm'],
-
+  clean: true,
   entryPoints: [
     //
     // NOTE: Entry points must be mapped in package.json > exports, otherwise users won't be able to import them!
@@ -74,8 +74,12 @@ const options = command === 'watch' ? watchOptions : buildOptions;
   // Make a build purely for enjoying creating qti-items in a plain HTML file
   const bundleResult = tsup.build({
     ...buildOptions,
+    dts: true,
     external: [],
-    noExternal: [/(.*)/]
+    noExternal: [/(.*)/],
+    splitting: false,
+    clean: false,
+    entryPoints: ['./src/index.ts']
   });
   console.log(chalk.green(`The build has been generated at ${outdir}\n`));
 })();
