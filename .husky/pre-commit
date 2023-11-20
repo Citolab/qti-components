@@ -1,7 +1,0 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
-npm ci
-npm test
-npm run build-lib
-npm run storybook:build
