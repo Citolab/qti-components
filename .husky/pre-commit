@@ -3,6 +3,5 @@
 
 npm ci
 npm test
-npm build-lib
-npm storybook:build
-
+npm run build-lib
+npm run storybook:build
