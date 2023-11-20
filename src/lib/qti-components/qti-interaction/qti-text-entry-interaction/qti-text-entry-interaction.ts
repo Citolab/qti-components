@@ -49,18 +49,14 @@ export class QtiTextEntryInteraction extends Interaction {
       css`
         :host {
           display: inline-flex;
-        }
-        .joe {
           display: flex;
           flex-direction: column;
           align-items: center;
           position: relative;
         }
-        .correct {
+        [part='correct'] {
           position: absolute;
           width: 100%;
-          font-size: 0.8rem;
-          top: -1.5rem;
         }
       `
     ];
@@ -68,33 +64,26 @@ export class QtiTextEntryInteraction extends Interaction {
 
   set correctResponse(value: string) {
     this._correctValue = value;
-    // if (value == '') {
-    //   console.log(value);
-    // } else {
-    //   console.log(value);
-    // }
   }
 
   override render() {
     return html`
-      <div class="joe">
-        <div class="correct">${this._correctValue}</div>
-        <input
-          part="input"
-          spellcheck="false"
-          autocomplete="off"
-          @keydown="${event => event.stopImmediatePropagation()}"
-          @keyup="${this.textChanged}"
-          @change="${this.textChanged}"
-          type="${this.patternMask == '[0-9]*' ? 'number' : 'text'}"
-          placeholder="${ifDefined(this.placeholderText ? this.placeholderText : undefined)}"
-          .value="${this._value}"
-          size="${this._size}"
-          pattern="${ifDefined(this.patternMask ? this.patternMask : undefined)}"
-          ?disabled="${this.disabled}"
-          ?readonly="${this.readonly}"
-        />
-      </div>
+      <div part="correct">${this._correctValue}</div>
+      <input
+        part="input"
+        spellcheck="false"
+        autocomplete="off"
+        @keydown="${event => event.stopImmediatePropagation()}"
+        @keyup="${this.textChanged}"
+        @change="${this.textChanged}"
+        type="${this.patternMask == '[0-9]*' ? 'number' : 'text'}"
+        placeholder="${ifDefined(this.placeholderText ? this.placeholderText : undefined)}"
+        .value="${this._value}"
+        size="${this._size}"
+        pattern="${ifDefined(this.patternMask ? this.patternMask : undefined)}"
+        ?disabled="${this.disabled}"
+        ?readonly="${this.readonly}"
+      />
     `;
   }
   //
