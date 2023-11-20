@@ -1,10 +1,7 @@
-// import { customElementVsCodePlugin } from "custom-element-vs-code-integration";
-
+import { customElementVsCodePlugin } from "custom-element-vs-code-integration";
 
 const outdir = './'
 
-// import ceProps from "./custom-elements.json";
-// type cePropTypes = typeof ceProps;
 const options = {};
 
 export default {
@@ -38,6 +35,6 @@ export default {
         });
       }
     },
-    // customElementVsCodePlugin(options)
+    customElementVsCodePlugin(options)
   ],
 };
