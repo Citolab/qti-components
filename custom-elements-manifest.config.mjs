@@ -1,4 +1,4 @@
-import { customElementVsCodePlugin } from "custom-element-vs-code-integration";
+// import { customElementVsCodePlugin } from "custom-element-vs-code-integration";
 
 
 const outdir = './'
@@ -38,6 +38,6 @@ export default {
         });
       }
     },
-    customElementVsCodePlugin(options)
+    // customElementVsCodePlugin(options)
   ],
 };
