@@ -25,7 +25,7 @@ jobs:
           registry-url: 'https://registry.npmjs.org/'
 
       - name: Install Dependencies
-        run: npm install
+        run: npm ci
 
       - name: Publish to NPM
         run: npm version prerelease
