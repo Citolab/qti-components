@@ -74,15 +74,14 @@
     "prepublishOnly": "echo 'calling prepublishOnly as npm lifecycle hook to build-lib!' && npm run build-lib",
     "postpublish": "echo 'posthook for prosperity, does nothing for now!'"
   },
-  "dependencies": {
+  "dependencies": {},
+  "peerdependencies": {
     "@lit/context": "^1.1.0",
     "lit": "^3.1.0"
   },
-  "peerdependencies": {
-    "@lit/context": ">= 1.0",
-    "lit": ">= 3 < 4"
-  },
   "devDependencies": {
+    "@lit/context": "^1.1.0",
+    "lit": "^3.1.0",
     "@arethetypeswrong/cli": "^0.13.1",
     "@custom-elements-manifest/analyzer": "^0.9.0",
     "@jest/globals": "^29.7.0",
