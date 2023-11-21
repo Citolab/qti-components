@@ -3,7 +3,7 @@ import { customElement, property } from 'lit/decorators.js';
 import { watch } from '../../decorators/watch';
 
 @customElement('qti-rubric-block')
-export class qtiRubricBlock extends LitElement {
+export class QtiRubricBlock extends LitElement {
   @property({ type: String }) override id; // ="qtiAspectInhoudRubricBlock"
 
   @property({ type: String }) use: 'instructions' | 'scoring' | 'navigation'; //  = "scoring"

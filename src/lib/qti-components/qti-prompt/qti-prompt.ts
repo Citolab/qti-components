@@ -1,5 +1,6 @@
 import { html, LitElement } from 'lit';
-
+import { customElement } from 'lit/decorators';
+@customElement('qti-prompt')
 export class QtiPrompt extends LitElement {
   override render() {
     return html`<slot></slot>`;
@@ -14,5 +15,3 @@ export class QtiPrompt extends LitElement {
     // const promptSlot = this.parentElement.shadowRoot.querySelector("[name='prompt']");
   }
 }
-
-customElements.define('qti-prompt', QtiPrompt);
