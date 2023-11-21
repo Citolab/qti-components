@@ -2,9 +2,6 @@ import type { StorybookConfig } from '@storybook/web-components-vite';
 import remarkGfm from 'remark-gfm';
 import * as tsconfigPaths from 'vite-tsconfig-paths';
 
-// '@storybook/addon-jest',
-// '@storybook/addon-links',
-
 const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
   addons: [

@@ -41,7 +41,7 @@ const buildOptions = {
   clean: true,
   minify: true,
   bundle: true,
-  format: [...watchOptions.format!, 'esm']
+  format: [...watchOptions.format!, 'cjs']
 } as Options;
 
 const options = command === 'watch' ? watchOptions : buildOptions;
@@ -74,11 +74,14 @@ const options = command === 'watch' ? watchOptions : buildOptions;
   // Make a build purely for enjoying creating qti-items in a plain HTML file
   const bundleResult = tsup.build({
     ...buildOptions,
-    dts: true,
+    dts: false,
     external: [],
     noExternal: [/(.*)/],
     splitting: false,
     clean: false,
+    sourcemap: false,
+    minify: true,
+    bundle: true,
     entryPoints: ['./src/index.ts']
   });
   console.log(chalk.green(`The build has been generated at ${outdir}\n`));

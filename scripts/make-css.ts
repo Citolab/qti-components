@@ -2,8 +2,7 @@
 // This script compiles scss to css
 //
 import chalk from 'chalk';
-import fs from 'fs';
-import { mkdirSync } from 'fs';
+import fs, { mkdirSync } from 'fs';
 import path from 'path';
 import postcss from 'postcss';
 
@@ -16,8 +15,8 @@ console.log('Generating tailwind css');
 
 mkdirSync(themesDir, { recursive: true });
 
-buildStyleSheet({ in: 'src/styles.css', out: 'styles.css' });
-buildStyleSheet({ in: 'src/styles.bundled.css', out: 'styles.bundled.css' });
+buildStyleSheet({ in: 'src/item.minimal.css', out: 'item.minimal.css' });
+buildStyleSheet({ in: 'src/item.css', out: 'item.css' });
 
 function buildStyleSheet({ in: sourceCss, out: outCss }) {
   try {

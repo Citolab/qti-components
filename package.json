@@ -16,10 +16,6 @@
   "type": "module",
   "main": "dist/index.js",
   "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    },
     "./qti-components": {
       "import": "./dist/qti-components/index.js",
       "require": "./dist/qti-components/index.cjs"
@@ -28,15 +24,12 @@
       "import": "./dist/qti-transformers/index.js",
       "require": "./dist/qti-transformers/index.cjs"
     },
-    "./styles.bundled.css": "./dist/styles.bundled.css",
-    "./styles.css": "./dist/styles.css"
+    "./item.css": "./dist/item.css",
+    "./item.minimal.css": "./dist/item.minimal.css"
   },
   "types": "./dist/qti-components/index.d.ts",
   "typesVersions": {
     "*": {
-      ".": [
-        "./dist/index.d.ts"
-      ],
       "qti-components": [
         "./dist/qti-components/index.d.ts"
       ],
@@ -48,8 +41,8 @@
   "files": [
     "dist",
     "types",
-    "./dist/styles.css",
-    "./dist/styles.bundled.css"
+    "./dist/item.css",
+    "./dist/item.minimal.css"
   ],
   "scripts": {
     "test": "jest",

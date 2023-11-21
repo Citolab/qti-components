@@ -1,8 +1,7 @@
 import type { Preview } from '@storybook/web-components';
-import '../src/styles.bundled.css';
-
 import { setCustomElementsManifest } from '@storybook/web-components';
 import customElements from '../custom-elements.json';
+import '../src/item.css';
 setCustomElementsManifest(customElements);
 
 const preview: Preview = {
