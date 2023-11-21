@@ -110,7 +110,7 @@ export class QtiAssessmentItem extends LitElement {
 
   firstUpdated(val): void {
     super.firstUpdated(val);
-    this._emit<{ detail: QtiAssessmentItem }>('qti-item-first-updated', this);
+    this._emit<{ detail: QtiAssessmentItem }>('qti-assessment-item-first-updated', this);
   }
 
   disconnectedCallback(): void {
