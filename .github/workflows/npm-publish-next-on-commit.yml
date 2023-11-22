@@ -9,7 +9,6 @@ jobs:
   publish-npm:
     runs-on: ubuntu-latest
     steps:
-
       - name: Git configuration
         run: |
           git config --global user.email "patrick.deklein@cito.nl"
