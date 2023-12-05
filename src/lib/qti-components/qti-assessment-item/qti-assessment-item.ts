@@ -115,7 +115,7 @@ export class QtiAssessmentItem extends LitElement {
 
   disconnectedCallback(): void {
     super.disconnectedCallback();
-    this._emit('qti-item-disconnected');
+    this._emit('qti-assessment-item-disconnected');
   }
 
   /** @deprecated use context property instead */
