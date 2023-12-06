@@ -1,3 +1,5 @@
+/** @type {import('jest').Config} */
+
 import type { JestConfigWithTsJest } from 'ts-jest';
 import { pathsToModuleNameMapper } from 'ts-jest';
 import config from './tsconfig.json';
