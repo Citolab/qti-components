@@ -20,6 +20,10 @@
       "import": "./dist/qti-components/index.js",
       "require": "./dist/qti-components/index.cjs"
     },
+    "./debug/qti-components": {
+      "import": "./dist/debug/qti-components/index.js",
+      "require": "./dist/debug/qti-components/index.cjs"
+    },
     "./qti-transformers": {
       "import": "./dist/qti-transformers/index.js",
       "require": "./dist/qti-transformers/index.cjs"
@@ -32,6 +36,9 @@
     "*": {
       "qti-components": [
         "./dist/qti-components/index.d.ts"
+      ],
+      "debug/qti-components": [
+        "./dist/debug/qti-components/index.d.ts"
       ],
       "qti-transformers": [
         "./dist/qti-transformers/index.d.ts"
