@@ -1,11 +1,14 @@
+import type { JestConfigWithTsJest } from 'ts-jest';
 import { pathsToModuleNameMapper } from 'ts-jest';
 import config from './tsconfig.json';
-import type { JestConfigWithTsJest } from 'ts-jest';
 
 const jestConfig: JestConfigWithTsJest = {
   // preset: "ts-jest",
   verbose: true,
   testEnvironment: 'jsdom',
+  globals: {
+    DEBUG: false
+  },
   transform: {
     '^.+\\.(js|ts)$': [
       'ts-jest',

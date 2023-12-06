@@ -3,9 +3,8 @@ import { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
 import { withActions } from '@storybook/addon-actions/decorator';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
-import './item-print-variables';
-
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
+import './item-print-variables';
 
 const { events, args, argTypes, template } = getWcStorybookHelpers('qti-assessment-item');
 
