@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import { execSync } from 'child_process';
+import { existsSync, promises as fsPromises } from 'fs';
 import tsup, { Options } from 'tsup';
-
 import { buildOptions, completeOptions, debugOptions, watchOptions } from './build-options.js';
 
 const command = process.argv[2];
@@ -12,6 +12,17 @@ console.log('Building the project...');
 const outdir = 'dist';
 
 (async () => {
+  try {
+    // make sure the folder is clean
+    if (existsSync(outdir)) {
+      await fsPromises.rm(outdir, { recursive: true });
+    }
+    await fsPromises.mkdir(outdir);
+  } catch (err) {
+    console.error(chalk.red(err));
+    process.exit(1);
+  }
+
   switch (buildType) {
     case 'watch':
       {
@@ -35,7 +46,7 @@ const outdir = 'dist';
 
 function buildCSS() {
   try {
-    execSync(`ts-node --esm --project tsconfig.node.json scripts/make-css.ts --outdir "dist"`, {
+    execSync(`ts-node --esm --project tsconfig.node.json scripts/make-css.ts --outdir "${outdir}"`, {
       stdio: 'inherit'
     });
   } catch (err) {
