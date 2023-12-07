@@ -52,8 +52,10 @@ export const buildOptions = {
   minify: true,
   bundle: true,
   pure: ['console.log'],
+  drop: ['console', 'debugger'],
   define: {
-    'process.env.NODE_ENV': '"production"'
+    'process.env.NODE_ENV': '"production"',
+    DEBUG: 'false'
   }
 } as Options;
 
@@ -80,8 +82,10 @@ export const completeOptions = {
   bundle: true,
   entryPoints: ['./src/index.ts'],
   pure: ['console.log'],
+  drop: ['console', 'debugger'],
   define: {
-    'process.env.NODE_ENV': '"production"'
+    'process.env.NODE_ENV': '"production"',
+    DEBUG: 'false'
   }
 } as Options;
 
