@@ -71,7 +71,7 @@ export class QtiAssessmentItem extends LitElement {
   }
 
   public set variables(value: VariableValue<string | string[] | null>[]) {
-    if (!checkAllowedStates(['item-created', 'item-connected'])) return;
+    if (!checkAllowedStates(this._state, ['item-created', 'item-connected'])) return;
 
     if (!Array.isArray(value) || value.some(v => !('identifier' in v))) {
       console.warn('variables property should be an array of VariableDeclaration');
@@ -180,7 +180,7 @@ export class QtiAssessmentItem extends LitElement {
   }
 
   public showCorrectResponse(show: boolean) {
-    if (DEBUG) if (!checkAllowedStates(['item-connected'])) return;
+    if (DEBUG) if (!checkAllowedStates(this._state, ['item-connected'])) return;
 
     const responseVariables = this._context.variables.filter(
       (vari: ResponseVariable | OutcomeVariable) => 'correctResponse' in vari && vari.correctResponse
@@ -200,7 +200,7 @@ export class QtiAssessmentItem extends LitElement {
   }
 
   public processResponse(countNumAttempts: boolean = true): boolean {
-    if (DEBUG) if (!checkAllowedStates(['item-connected'])) return false;
+    if (DEBUG) if (!checkAllowedStates(this._state, ['item-connected'])) return false;
 
     const responseProcessor = this.querySelector('qti-response-processing') as unknown as QtiResponseProcessing;
     if (!responseProcessor) {
@@ -231,7 +231,7 @@ export class QtiAssessmentItem extends LitElement {
   }
 
   public resetResponses() {
-    if (DEBUG) if (!checkAllowedStates(['item-connected'])) return;
+    if (DEBUG) if (!checkAllowedStates(this._state, ['item-connected'])) return;
     this._context = this._initialContext;
   }
 
@@ -319,16 +319,16 @@ declare global {
   }
 }
 
-function checkAllowedStates(allowedStates: string[], messageWhenNotAllowed?: string): boolean {
+function checkAllowedStates(state: string, allowedStates: string[], messageWhenNotAllowed?: string): boolean {
   if (DEBUG) return true;
-  if (!allowedStates.includes(this._state)) {
+  if (!allowedStates.includes(state)) {
     console.groupCollapsed(
-      messageWhenNotAllowed + ` when state is %c${this._state}%c`,
+      messageWhenNotAllowed + ` when state is %c${state}%c`,
       'background: red; color: black',
       'background: unset;'
     );
     console.trace(
-      `state is %c${this._state}%c, but should be ${allowedStates.join(' or ')}`,
+      `state is %c${state}%c, but should be ${allowedStates.join(' or ')}`,
       'background: #222; color: #bada55',
       'background: unset; color: unset'
     );
