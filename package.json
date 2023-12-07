@@ -16,18 +16,9 @@
   "type": "module",
   "main": "dist/index.js",
   "exports": {
-    "./qti-components": {
-      "import": "./dist/qti-components/index.js",
-      "require": "./dist/qti-components/index.cjs"
-    },
-    "./debug/qti-components": {
-      "import": "./dist/debug/qti-components/index.js",
-      "require": "./dist/debug/qti-components/index.cjs"
-    },
-    "./qti-transformers": {
-      "import": "./dist/qti-transformers/index.js",
-      "require": "./dist/qti-transformers/index.cjs"
-    },
+    "./qti-components": "./dist/qti-components/index.js",
+    "./debug/qti-components": "./dist/debug/qti-components/index.js",
+    "./qti-transformers": "./dist/qti-transformers/index.js",
     "./item.css": "./dist/item.css",
     "./item.minimal.css": "./dist/item.minimal.css"
   },

@@ -48,7 +48,6 @@ export const watchOptions = {
 
 export const buildOptions = {
   ...options,
-  format: [...options.format!, 'cjs'],
   minify: true,
   bundle: true,
   pure: ['console.log'],
