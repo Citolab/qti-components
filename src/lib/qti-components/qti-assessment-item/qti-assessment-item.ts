@@ -71,6 +71,8 @@ export class QtiAssessmentItem extends LitElement {
   }
 
   public set variables(value: VariableValue<string | string[] | null>[]) {
+    if (!checkAllowedStates(['item-created', 'item-connected'])) return;
+
     if (!Array.isArray(value) || value.some(v => !('identifier' in v))) {
       console.warn('variables property should be an array of VariableDeclaration');
       return;
@@ -178,6 +180,8 @@ export class QtiAssessmentItem extends LitElement {
   }
 
   public showCorrectResponse(show: boolean) {
+    if (DEBUG) if (!checkAllowedStates(['item-connected'])) return;
+
     const responseVariables = this._context.variables.filter(
       (vari: ResponseVariable | OutcomeVariable) => 'correctResponse' in vari && vari.correctResponse
     ) as ResponseVariable[];
@@ -196,6 +200,8 @@ export class QtiAssessmentItem extends LitElement {
   }
 
   public processResponse(countNumAttempts: boolean = true): boolean {
+    if (DEBUG) if (!checkAllowedStates(['item-connected'])) return false;
+
     const responseProcessor = this.querySelector('qti-response-processing') as unknown as QtiResponseProcessing;
     if (!responseProcessor) {
       console.info('Client side response processing template not available');
@@ -225,6 +231,7 @@ export class QtiAssessmentItem extends LitElement {
   }
 
   public resetResponses() {
+    if (DEBUG) if (!checkAllowedStates(['item-connected'])) return;
     this._context = this._initialContext;
   }
 
@@ -310,4 +317,24 @@ declare global {
   interface HTMLElementTagNameMap {
     'qti-assessment-item': QtiAssessmentItem;
   }
+}
+
+function checkAllowedStates(allowedStates: string[], messageWhenNotAllowed?: string): boolean {
+  if (DEBUG) return true;
+  if (!allowedStates.includes(this._state)) {
+    console.groupCollapsed(
+      messageWhenNotAllowed + ` when state is %c${this._state}%c`,
+      'background: red; color: black',
+      'background: unset;'
+    );
+    console.trace(
+      `state is %c${this._state}%c, but should be ${allowedStates.join(' or ')}`,
+      'background: #222; color: #bada55',
+      'background: unset; color: unset'
+    );
+    console.groupEnd();
+
+    return false;
+  }
+  return true;
 }
