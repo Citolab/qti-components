@@ -3,7 +3,7 @@ name: Publish @next to NPM on dev branch merge
 on:
   push:
     branches:
-      - dev  # Trigger on push to the main branch, adjust as needed
+      - dev  # Trigger on push to the dev branch, adjust as needed
 
 jobs:
   publish-npm:
