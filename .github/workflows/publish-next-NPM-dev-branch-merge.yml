@@ -1,9 +1,9 @@
-name: Publish NPM Package
+name: Publish @next to NPM on dev branch merge
 
 on:
   push:
     branches:
-      - main  # Trigger on push to the main branch, adjust as needed
+      - dev  # Trigger on push to the main branch, adjust as needed
 
 jobs:
   publish-npm:

@@ -94,3 +94,12 @@ export * from './qti-interaction/qti-simple-choice';
 export * from './qti-assessment-item/qti-assessment-item.context';
 
 export * from './qti-custom-operator/qti-custom-operator';
+
+console.log(
+  '%cC¿TO%cLab%c: qti-components loaded',
+  'font-weight:bold; color:green',
+  'font-family: "PT Sans", font-weight:bold; color:green; font-size: smaller;vertical-align: sub',
+  'font-weight:unset'
+);
+
+// css for font pt-sans and subscript and green

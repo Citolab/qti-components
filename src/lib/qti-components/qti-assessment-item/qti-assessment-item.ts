@@ -9,7 +9,9 @@ import { OutcomeVariable, ResponseVariable } from '../internal/variables';
 import type { QtiFeedback } from '../qti-feedback/qti-feedback';
 import type { Interaction } from '../qti-interaction/internal/interaction/interaction';
 import type { QtiResponseProcessing } from '../qti-response-processing';
-import { ItemContext, itemContext } from './qti-assessment-item.context';
+import { ItemContext, itemContext, itemContextVariables } from './qti-assessment-item.context';
+
+declare const DEBUG: boolean;
 
 /**
  * @summary The qti-assessment-item element contains all the other QTI 3 item structures.
@@ -49,29 +51,28 @@ export class QtiAssessmentItem extends LitElement {
   @property({ attribute: false })
   private _context: ItemContext = {
     identifier: this.getAttribute('identifier'),
-    variables: [
-      {
-        identifier: 'completionStatus',
-        cardinality: 'single',
-        baseType: 'string',
-        value: 'unknown',
-        type: 'outcome'
-      },
-      {
-        identifier: 'numAttempts',
-        cardinality: 'single',
-        baseType: 'integer',
-        value: '0',
-        type: 'response'
-      }
-    ]
+    variables: itemContextVariables
   };
+
+  @property({ type: String, reflect: true, attribute: 'state' }) _state:
+    | 'item-created' // <-- pk: this is the state when the item is created
+    | 'item-connected' // <-- pk: this is the state when the item is connected
+    | 'variables-restored' // <-- pk: this is the state when the variables are restored
+    | 'first-updated' // <-- pk: this is the state when the first-updated event is fired
+    | 'item-connected' = 'item-created'; // <-- pk: this is the state when the item is connected
+
+  private set state(value: this['_state']) {
+    this._state = value;
+    DEBUG && console.info(`item: %c${this._state}`, 'background: #222; color: #bada55');
+  }
 
   public get variables(): VariableValue<string | string[] | null>[] {
     return this._context.variables.map(v => ({ identifier: v.identifier, value: v.value, type: v.type }));
   }
 
   public set variables(value: VariableValue<string | string[] | null>[]) {
+    if (!checkAllowedStates(['item-created', 'item-connected'])) return;
+
     if (!Array.isArray(value) || value.some(v => !('identifier' in v))) {
       console.warn('variables property should be an array of VariableDeclaration');
       return;
@@ -109,16 +110,17 @@ export class QtiAssessmentItem extends LitElement {
   private _interactionElements: Interaction[] = [];
 
   firstUpdated(val): void {
-    super.firstUpdated(val);
+    this.state = 'first-updated';
+    DEBUG && console.groupEnd();
     this._emit<{ detail: QtiAssessmentItem }>('qti-assessment-item-first-updated', this);
   }
 
-  disconnectedCallback(): void {
-    super.disconnectedCallback();
-    this._emit('qti-assessment-item-disconnected');
+  connectedCallback(): void {
+    super.connectedCallback();
+    this.state = 'item-connected';
   }
 
-  /** @deprecated use context property instead */
+  /** @deprecated use variables property instead */
   set responses(myResponses: ResponseInteraction[]) {
     if (myResponses) {
       for (const response of myResponses) {
@@ -143,7 +145,8 @@ export class QtiAssessmentItem extends LitElement {
 
   constructor() {
     super();
-
+    DEBUG && console.group(`qti-assessment-item`);
+    this.state = 'item-created';
     this.addEventListener('qti-register-variable', ({ detail }) => {
       this._context = { ...this._context, variables: [...this._context.variables, detail.variable] };
       this._initialContext = this._context;
@@ -177,6 +180,8 @@ export class QtiAssessmentItem extends LitElement {
   }
 
   public showCorrectResponse(show: boolean) {
+    if (DEBUG) if (!checkAllowedStates(['item-connected'])) return;
+
     const responseVariables = this._context.variables.filter(
       (vari: ResponseVariable | OutcomeVariable) => 'correctResponse' in vari && vari.correctResponse
     ) as ResponseVariable[];
@@ -195,6 +200,8 @@ export class QtiAssessmentItem extends LitElement {
   }
 
   public processResponse(countNumAttempts: boolean = true): boolean {
+    if (DEBUG) if (!checkAllowedStates(['item-connected'])) return false;
+
     const responseProcessor = this.querySelector('qti-response-processing') as unknown as QtiResponseProcessing;
     if (!responseProcessor) {
       console.info('Client side response processing template not available');
@@ -224,6 +231,7 @@ export class QtiAssessmentItem extends LitElement {
   }
 
   public resetResponses() {
+    if (DEBUG) if (!checkAllowedStates(['item-connected'])) return;
     this._context = this._initialContext;
   }
 
@@ -309,4 +317,24 @@ declare global {
   interface HTMLElementTagNameMap {
     'qti-assessment-item': QtiAssessmentItem;
   }
+}
+
+function checkAllowedStates(allowedStates: string[], messageWhenNotAllowed?: string): boolean {
+  if (DEBUG) return true;
+  if (!allowedStates.includes(this._state)) {
+    console.groupCollapsed(
+      messageWhenNotAllowed + ` when state is %c${this._state}%c`,
+      'background: red; color: black',
+      'background: unset;'
+    );
+    console.trace(
+      `state is %c${this._state}%c, but should be ${allowedStates.join(' or ')}`,
+      'background: #222; color: #bada55',
+      'background: unset; color: unset'
+    );
+    console.groupEnd();
+
+    return false;
+  }
+  return true;
 }
