@@ -39,8 +39,7 @@ const buildOptions = {
   esbuildPlugins: [InlineCSSPlugin],
   outDir: 'dist',
   define: {
-    'process.env.NODE_ENV': '"production"',
-    DEBUG: 'false'
+    'process.env.NODE_ENV': '"production"'
   }
 } as Options;
 
@@ -48,8 +47,7 @@ export const watchOptions = {
   ...buildOptions,
   sourcemap: 'inline',
   define: {
-    'process.env.NODE_ENV': '"development"',
-    DEBUG: 'true'
+    'process.env.NODE_ENV': '"development"'
   }
 } as Options;
 
