@@ -11,8 +11,6 @@ import type { Interaction } from '../qti-interaction/internal/interaction/intera
 import type { QtiResponseProcessing } from '../qti-response-processing';
 import { ItemContext, itemContext, itemContextVariables } from './qti-assessment-item.context';
 
-declare const DEBUG: boolean;
-
 /**
  * @summary The qti-assessment-item element contains all the other QTI 3 item structures.
  * @documentation https://www.imsglobal.org/spec/qti/v3p0/impl#h.dltnnj87l0yj
@@ -71,8 +69,6 @@ export class QtiAssessmentItem extends LitElement {
   }
 
   public set variables(value: VariableValue<string | string[] | null>[]) {
-    if (!checkAllowedStates(this._state, ['item-created', 'item-connected'])) return;
-
     if (!Array.isArray(value) || value.some(v => !('identifier' in v))) {
       console.warn('variables property should be an array of VariableDeclaration');
       return;
@@ -180,8 +176,6 @@ export class QtiAssessmentItem extends LitElement {
   }
 
   public showCorrectResponse(show: boolean) {
-    if (DEBUG) if (!checkAllowedStates(this._state, ['item-connected'])) return;
-
     const responseVariables = this._context.variables.filter(
       (vari: ResponseVariable | OutcomeVariable) => 'correctResponse' in vari && vari.correctResponse
     ) as ResponseVariable[];
@@ -200,8 +194,6 @@ export class QtiAssessmentItem extends LitElement {
   }
 
   public processResponse(countNumAttempts: boolean = true): boolean {
-    if (DEBUG) if (!checkAllowedStates(this._state, ['item-connected'])) return false;
-
     const responseProcessor = this.querySelector('qti-response-processing') as unknown as QtiResponseProcessing;
     if (!responseProcessor) {
       console.info('Client side response processing template not available');
@@ -231,7 +223,6 @@ export class QtiAssessmentItem extends LitElement {
   }
 
   public resetResponses() {
-    if (DEBUG) if (!checkAllowedStates(this._state, ['item-connected'])) return;
     this._context = this._initialContext;
   }
 
@@ -317,24 +308,4 @@ declare global {
   interface HTMLElementTagNameMap {
     'qti-assessment-item': QtiAssessmentItem;
   }
-}
-
-function checkAllowedStates(state: string, allowedStates: string[], messageWhenNotAllowed?: string): boolean {
-  if (DEBUG) return true;
-  if (!allowedStates.includes(state)) {
-    console.groupCollapsed(
-      messageWhenNotAllowed + ` when state is %c${state}%c`,
-      'background: red; color: black',
-      'background: unset;'
-    );
-    console.trace(
-      `state is %c${state}%c, but should be ${allowedStates.join(' or ')}`,
-      'background: #222; color: #bada55',
-      'background: unset; color: unset'
-    );
-    console.groupEnd();
-
-    return false;
-  }
-  return true;
 }

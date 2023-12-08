@@ -20,25 +20,32 @@ for (const property in pkgJson.peerdependencies) {
 
 // ---- the options ----
 
-const options = {
+const buildOptions = {
   clean: false,
   target: 'es2017',
   dts: true,
   format: ['esm'],
+  minify: true,
+  bundle: true,
+  pure: ['console.log'],
+  drop: ['console', 'debugger'],
   entryPoints: [
     // NOTE: Entry points must be mapped in package.json > exports, otherwise users won't be able to import them!
     './src/lib/qti-components/index.ts',
     './src/lib/qti-transformers/index.ts'
   ],
-  // external: peerdependencies, // ['@lit/react', '@lit/context', 'react', 'lit'],
+  external: peerdependencies, // ['@lit/react', '@lit/context', 'react', 'lit'],
   splitting: true,
   esbuildPlugins: [InlineCSSPlugin],
-  outDir: 'dist'
+  outDir: 'dist',
+  define: {
+    'process.env.NODE_ENV': '"production"',
+    DEBUG: 'false'
+  }
 } as Options;
 
 export const watchOptions = {
-  ...options,
-  clean: true,
+  ...buildOptions,
   sourcemap: 'inline',
   define: {
     'process.env.NODE_ENV': '"development"',
@@ -46,32 +53,9 @@ export const watchOptions = {
   }
 } as Options;
 
-export const buildOptions = {
-  ...options,
-  minify: true,
-  bundle: true,
-  pure: ['console.log'],
-  drop: ['console', 'debugger'],
-  define: {
-    'process.env.NODE_ENV': '"production"',
-    DEBUG: 'false'
-  }
-} as Options;
-
-export const debugOptions = {
-  ...options,
-  pure: [],
-  bundle: true,
-  define: {
-    'process.env.NODE_ENV': '"production"',
-    DEBUG: 'true'
-  },
-  outDir: 'dist/debug'
-} as Options;
-
 // Make a build purely for enjoying creating qti-items in a plain HTML file
 export const completeOptions = {
-  ...options,
+  ...buildOptions,
   dts: false,
   external: [],
   noExternal: [/(.*)/],
@@ -80,11 +64,8 @@ export const completeOptions = {
   minify: true,
   bundle: true,
   entryPoints: ['./src/index.ts'],
-  pure: ['console.log'],
-  drop: ['console', 'debugger'],
   define: {
-    'process.env.NODE_ENV': '"production"',
-    DEBUG: 'false'
+    'process.env.NODE_ENV': '"production"'
   }
 } as Options;
 
@@ -106,13 +87,13 @@ export const completeOptions = {
     case 'watch':
       {
         await buildTS(watchOptions);
+        buildCEM();
         buildCSS();
       }
       break;
     case 'build':
       {
         await buildTS(buildOptions);
-        await buildTS(debugOptions);
         await buildTS(completeOptions);
         buildCEM();
         buildCSS();

@@ -8,9 +8,6 @@ const jestConfig: JestConfigWithTsJest = {
   // preset: "ts-jest",
   verbose: true,
   testEnvironment: 'jsdom',
-  globals: {
-    DEBUG: false
-  },
   transform: {
     '^.+\\.(js|ts)$': [
       'ts-jest',

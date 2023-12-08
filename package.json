@@ -17,7 +17,6 @@
   "main": "dist/index.js",
   "exports": {
     "./qti-components": "./dist/qti-components/index.js",
-    "./debug/qti-components": "./dist/debug/qti-components/index.js",
     "./qti-transformers": "./dist/qti-transformers/index.js",
     "./item.css": "./dist/item.css",
     "./item.minimal.css": "./dist/item.minimal.css"
@@ -27,9 +26,6 @@
     "*": {
       "qti-components": [
         "./dist/qti-components/index.d.ts"
-      ],
-      "debug/qti-components": [
-        "./dist/debug/qti-components/index.d.ts"
       ],
       "qti-transformers": [
         "./dist/qti-transformers/index.d.ts"
