@@ -61,7 +61,7 @@ export class QtiAssessmentItem extends LitElement {
 
   private set state(value: this['_state']) {
     this._state = value;
-    DEBUG && console.info(`item: %c${this._state}`, 'background: #222; color: #bada55');
+    console.info(`item: %c${this._state}`, 'background: #222; color: #bada55');
   }
 
   public get variables(): VariableValue<string | string[] | null>[] {
@@ -107,7 +107,6 @@ export class QtiAssessmentItem extends LitElement {
 
   firstUpdated(val): void {
     this.state = 'first-updated';
-    DEBUG && console.groupEnd();
     this._emit<{ detail: QtiAssessmentItem }>('qti-assessment-item-first-updated', this);
   }
 
@@ -141,7 +140,7 @@ export class QtiAssessmentItem extends LitElement {
 
   constructor() {
     super();
-    DEBUG && console.group(`qti-assessment-item`);
+    console.info(`qti-assessment-item`);
     this.state = 'item-created';
     this.addEventListener('qti-register-variable', ({ detail }) => {
       this._context = { ...this._context, variables: [...this._context.variables, detail.variable] };
@@ -256,6 +255,11 @@ export class QtiAssessmentItem extends LitElement {
       responseIdentifier: identifier,
       response: value
     });
+
+    if (this.adaptive === 'false') {
+      // if adapative, completionStatus is set by the processing template
+      this.updateOutcomeVariable('completionStatus', this._getCompletionStatus());
+    }
   }
 
   public updateOutcomeVariable(identifier: string, value: string | string[] | undefined) {
