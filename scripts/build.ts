@@ -27,8 +27,8 @@ const buildOptions = {
   format: ['esm'],
   minify: true,
   bundle: true,
-  pure: ['console.log'],
-  drop: ['console', 'debugger'],
+  // pure: ['console.log'],
+  // drop: ['console', 'debugger'],
   entryPoints: [
     // NOTE: Entry points must be mapped in package.json > exports, otherwise users won't be able to import them!
     './src/lib/qti-components/index.ts',
