@@ -61,7 +61,7 @@ export class QtiAssessmentItem extends LitElement {
 
   private set state(value: this['_state']) {
     this._state = value;
-    console.info(`item: %c${this._state}`, 'background: #222; color: #bada55');
+    // console.info(`item: %c${this._state}`, 'background: #222; color: #bada55');
   }
 
   public get variables(): VariableValue<string | string[] | null>[] {
@@ -140,7 +140,7 @@ export class QtiAssessmentItem extends LitElement {
 
   constructor() {
     super();
-    console.info(`qti-assessment-item`);
+    // console.info(`qti-assessment-item`);
     this.state = 'item-created';
     this.addEventListener('qti-register-variable', ({ detail }) => {
       this._context = { ...this._context, variables: [...this._context.variables, detail.variable] };
@@ -195,12 +195,12 @@ export class QtiAssessmentItem extends LitElement {
   public processResponse(countNumAttempts: boolean = true): boolean {
     const responseProcessor = this.querySelector('qti-response-processing') as unknown as QtiResponseProcessing;
     if (!responseProcessor) {
-      console.info('Client side response processing template not available');
+      // console.info('Client side response processing template not available');
       return false;
     }
 
     if (!responseProcessor.process) {
-      console.info('Client side response webcomponents not available');
+      // console.info('Client side response webcomponents not available');
       return false;
     }
 
