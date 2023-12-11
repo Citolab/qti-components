@@ -104,7 +104,7 @@ export const completeOptions = {
 
 function buildCSS() {
   try {
-    execSync(`ts-node --esm --project tsconfig.node.json scripts/make-css.ts --outdir "${outdir}"`, {
+    execSync(`npx --yes tsx scripts/make-css.ts --outdir "${outdir}"`, {
       stdio: 'inherit'
     });
   } catch (err) {
