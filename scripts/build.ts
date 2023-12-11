@@ -46,6 +46,10 @@ const buildOptions = {
 export const watchOptions = {
   ...buildOptions,
   sourcemap: 'inline',
+  minify: false,
+  bundle: true,
+  pure: [],
+  drop: [],
   define: {
     'process.env.NODE_ENV': '"development"'
   }
