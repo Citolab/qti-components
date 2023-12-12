@@ -1,7 +1,6 @@
-import { html } from 'lit/static-html.js';
+import { LitElement, html } from 'lit';
 import { property } from 'lit/decorators.js';
 import { watch } from '../../../../decorators/watch';
-import { LitElement } from 'lit';
 
 const KEYCODE = {
   SPACE: 32

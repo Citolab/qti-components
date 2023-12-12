@@ -1,6 +1,5 @@
 import { consume } from '@lit/context';
-import { css } from 'lit';
-import { html } from 'lit-html';
+import { css, html } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { BaseType, Cardinality } from '../../internal/expression-result';
 import { ResponseVariable } from '../../internal/variables';

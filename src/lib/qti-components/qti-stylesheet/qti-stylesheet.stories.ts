@@ -1,10 +1,10 @@
-import { html } from 'lit-html';
 import type { Meta, StoryObj } from '@storybook/web-components';
+import { html } from 'lit';
 
 import '../qti-assessment-item/qti-assessment-item';
-import '../qti-item-body/qti-item-body';
-import '../qti-interaction/qti-choice-interaction/qti-choice-interaction';
 import '../qti-interaction/internal/choice/qti-choice';
+import '../qti-interaction/qti-choice-interaction/qti-choice-interaction';
+import '../qti-item-body/qti-item-body';
 import '../qti-stylesheet/qti-stylesheet';
 import { QtiStylesheet } from '../qti-stylesheet/qti-stylesheet';
 

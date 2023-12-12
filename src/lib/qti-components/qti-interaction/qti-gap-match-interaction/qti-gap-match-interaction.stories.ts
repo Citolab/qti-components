@@ -1,12 +1,11 @@
-import { html } from 'lit';
 import { action } from '@storybook/addon-actions';
-import { createRef, ref } from 'lit-html/directives/ref.js';
+import { html } from 'lit';
+import { createRef, ref } from 'lit/directives/ref.js';
 import { QtiAssessmentItem } from '../../qti-assessment-item/qti-assessment-item';
-import { fireEvent, userEvent, within } from '@storybook/testing-library';
 
-import './../../index';
-import { ifDefined } from 'lit/directives/if-defined.js';
 import { Meta } from '@storybook/web-components';
+import { ifDefined } from 'lit/directives/if-defined.js';
+import './../../index';
 
 const meta: Meta = {
   component: 'qti-match-interaction',
@@ -81,7 +80,7 @@ export const Example = {
     return html` <button @click="${() => testRef.value.processResponse()}">processResponse</button>
       <button
         @click=${() => {
-          testRef.value._showCorrectResponse();
+          testRef.value.showCorrectResponse(true);
         }}
       >
         set correct response

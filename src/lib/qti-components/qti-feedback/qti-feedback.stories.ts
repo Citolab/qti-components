@@ -1,5 +1,5 @@
 import { html } from 'lit';
-import { createRef, ref } from 'lit-html/directives/ref.js';
+import { createRef, ref } from 'lit/directives/ref.js';
 
 import { action } from '@storybook/addon-actions';
 import { QtiAssessmentItem } from '../qti-assessment-item/qti-assessment-item';
