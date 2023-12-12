@@ -1,46 +1,28 @@
 import '@citolab/qti-components/qti-components';
 import { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
-import { withActions } from '@storybook/addon-actions/decorator';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
-import { getWcStorybookHelpers } from 'wc-storybook-helpers';
+// import { getWcStorybookHelpers } from 'wc-storybook-helpers';
 import './item-print-variables';
 
-const { events, args, argTypes, template } = getWcStorybookHelpers('qti-assessment-item');
+// const { events, args, argTypes, template } = getWcStorybookHelpers('qti-assessment-item');
 
 type Story = StoryObj<typeof QtiAssessmentItem>;
 
 const meta: Meta<QtiAssessmentItem> = {
-  component: 'qti-assessment-item',
-  args,
-  argTypes,
-  parameters: {
-    actions: {
-      handles: events
-    }
-  },
-  decorators: [withActions]
+  // component: 'qti-assessment-item',
+  // args,
+  // argTypes,
+  // parameters: {
+  //   actions: {
+  //     handles: events
+  //   }
+  // },
+  // decorators: [withActions]
 };
 export default meta;
 
-const QtiAssessmentItemTemplate = (args: any) => html`
-  ${template(
-    args,
-    html`
-      <qti-outcome-declaration
-        identifier="RAW_SCORE"
-        cardinality="single"
-        base-type="integer"
-      ></qti-outcome-declaration>
-      <qti-response-declaration
-        identifier="RESPONSE"
-        cardinality="single"
-        base-type="boolean"
-      ></qti-response-declaration>
-      <item-print-variables></item-print-variables>
-    `
-  )}
-`;
+const QtiAssessmentItemTemplate = (args: any) => html` <div>hoi</div> `;
 
 export const Default: Story = {
   render: args => QtiAssessmentItemTemplate.bind({})(args),
@@ -68,3 +50,20 @@ export const Default: Story = {
     // expect(qtiAssessmentItem.variables).toBeTruthy();
   }
 };
+
+// ${template(
+//   args,
+//   html`
+//     <qti-outcome-declaration
+//       identifier="RAW_SCORE"
+//       cardinality="single"
+//       base-type="integer"
+//     ></qti-outcome-declaration>
+//     <qti-response-declaration
+//       identifier="RESPONSE"
+//       cardinality="single"
+//       base-type="boolean"
+//     ></qti-response-declaration>
+//     <item-print-variables></item-print-variables> -->
+
+// )}

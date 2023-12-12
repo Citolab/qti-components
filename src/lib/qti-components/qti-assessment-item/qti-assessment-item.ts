@@ -46,13 +46,14 @@ export class QtiAssessmentItem extends LitElement {
     this._interactionElements.forEach(ch => (ch.readonly = readonly));
 
   @provide({ context: itemContext })
-  @property({ attribute: false })
+  // @property({ attribute: false })
   private _context: ItemContext = {
     identifier: this.getAttribute('identifier'),
     variables: itemContextVariables
   };
 
-  @property({ type: String, reflect: true, attribute: 'state' }) _state:
+  // @property({ type: String, reflect: true, attribute: 'state' })
+  _state:
     | 'item-created' // <-- pk: this is the state when the item is created
     | 'item-connected' // <-- pk: this is the state when the item is connected
     | 'variables-restored' // <-- pk: this is the state when the variables are restored
@@ -140,7 +141,7 @@ export class QtiAssessmentItem extends LitElement {
 
   constructor() {
     super();
-    // console.info(`qti-assessment-item`);
+    console.info(`constructor qti-assessment-item`);
     this.state = 'item-created';
     this.addEventListener('qti-register-variable', ({ detail }) => {
       this._context = { ...this._context, variables: [...this._context.variables, detail.variable] };
