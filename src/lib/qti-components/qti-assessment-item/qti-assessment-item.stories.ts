@@ -10,7 +10,7 @@ import './item-print-variables';
 type Story = StoryObj<typeof QtiAssessmentItem>;
 
 const meta: Meta<QtiAssessmentItem> = {
-  // component: 'qti-assessment-item',
+  component: 'qti-assessment-item'
   // args,
   // argTypes,
   // parameters: {
