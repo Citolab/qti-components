@@ -108,7 +108,10 @@ export class QtiAssessmentItem extends LitElement {
 
   firstUpdated(val): void {
     this.state = 'first-updated';
-    this._emit<{ detail: QtiAssessmentItem }>('qti-assessment-item-first-updated', this);
+    requestAnimationFrame(() => {
+      // necessary to wait for the children of every interaction
+      this._emit<{ detail: QtiAssessmentItem }>('qti-assessment-item-first-updated', this);
+    });
   }
 
   connectedCallback(): void {

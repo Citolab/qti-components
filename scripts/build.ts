@@ -14,7 +14,7 @@ const outdir = 'dist';
 import pkgJson from '../package.json' assert { type: 'json' };
 
 const peerdependencies: string[] = [];
-for (const property in pkgJson.peerdependencies) {
+for (const property in pkgJson.peerDependencies) {
   peerdependencies.push(property);
 }
 

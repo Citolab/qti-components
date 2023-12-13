@@ -119,7 +119,7 @@ export class QtiGraphicAssociateInteraction extends Interaction {
   override firstUpdated(e): void {
     super.firstUpdated(e);
 
-    this.hotspots = document.querySelectorAll('qti-associable-hotspot');
+    this.hotspots = this.querySelectorAll('qti-associable-hotspot');
 
     document.addEventListener('mousemove', event => {
       this.mouseCoord = {
