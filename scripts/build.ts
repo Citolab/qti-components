@@ -27,6 +27,8 @@ const buildOptions = {
   format: ['esm'],
   minify: true,
   bundle: true,
+  sourcemap: 'inline',
+
   // pure: ['console.log'],
   // drop: ['console', 'debugger'],
   entryPoints: [
@@ -45,7 +47,6 @@ const buildOptions = {
 
 export const watchOptions = {
   ...buildOptions,
-  sourcemap: 'inline',
   minify: false,
   bundle: true,
   pure: [],
