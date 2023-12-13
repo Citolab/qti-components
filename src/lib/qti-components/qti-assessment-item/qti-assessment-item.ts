@@ -9,7 +9,7 @@ import { OutcomeVariable, ResponseVariable } from '../internal/variables';
 import type { QtiFeedback } from '../qti-feedback/qti-feedback';
 import type { Interaction } from '../qti-interaction/internal/interaction/interaction';
 import type { QtiResponseProcessing } from '../qti-response-processing';
-import { ItemContext, itemContextVariables } from './qti-assessment-item.context';
+import { ItemContext, itemContext, itemContextVariables } from './qti-assessment-item.context';
 
 /**
  * @summary The qti-assessment-item element contains all the other QTI 3 item structures.
@@ -141,7 +141,6 @@ export class QtiAssessmentItem extends LitElement {
 
   constructor() {
     super();
-    console.info(`constructor qti-assessment-item`);
     this.state = 'item-created';
     this.addEventListener('qti-register-variable', ({ detail }) => {
       this._context = { ...this._context, variables: [...this._context.variables, detail.variable] };
