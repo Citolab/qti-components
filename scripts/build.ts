@@ -34,7 +34,7 @@ const buildOptions = {
     './src/lib/qti-components/index.ts',
     './src/lib/qti-transformers/index.ts'
   ],
-  external: ['@lit/react', '@lit/context', 'react', 'lit'], // peerdependencies
+  external: ['@lit/react', '@lit/context', 'react', 'lit', '@lit/reactive-element', '@lit', 'lit-html/src'], // peerdependencies
   splitting: true,
   esbuildPlugins: [InlineCSSPlugin],
   outDir: 'dist',
