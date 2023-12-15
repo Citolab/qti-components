@@ -1,10 +1,16 @@
 import { html } from 'lit';
 
 export default {
-  title:"styles/layout"
+  title: 'styles/layout'
 };
 
 export const FixedContainer = () => html`
+  <style>
+    /* Utility CSS to demonstrate column virtual borders - no effect on layout. */
+    [class*='qti-layout-col'] {
+      background-color: #eee;
+    }
+  </style>
   <div class="container">
     <h3 style="margin-top:0;">Fixed Container, qti-layout-row, qti-layout-col</h3>
 
