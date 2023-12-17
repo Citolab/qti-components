@@ -2,6 +2,7 @@ import type { Preview } from '@storybook/web-components';
 import { setCustomElementsManifest } from '@storybook/web-components';
 import customElements from '../custom-elements.json';
 import '../src/item.css';
+import { customViewports } from './custom-viewport-sizes';
 setCustomElementsManifest(customElements);
 
 const preview: Preview = {
@@ -17,7 +18,8 @@ const preview: Preview = {
         color: /(background|color)$/i,
         date: /Date$/
       }
-    }
+    },
+    viewport: { viewports: customViewports }
   }
 };
 

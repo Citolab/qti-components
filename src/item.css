@@ -6,5 +6,5 @@
 @config "../tailwind.config.bundled.cjs";
 
 qti-item-body {
-  @apply prose max-w-none;
+  @apply prose md:prose-lg lg:prose-xl;
 }

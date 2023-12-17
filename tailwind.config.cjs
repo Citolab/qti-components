@@ -18,7 +18,11 @@ export default {
       colors: {
         primary: colors.blue,
       },
-    }
+    },
+    screens: {
+      'md': '768px', // Your custom medium breakpoint
+      'lg': '1200px', // Your custom large breakpoint
+    },
   },
   plugins: [
     // require('@tailwindcss/typography'),
