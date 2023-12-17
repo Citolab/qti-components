@@ -2,8 +2,7 @@
   display: flex;
   flex-wrap: wrap;
   width: 100%;
-  --gap: 2.1276595745%: 
-  gap: var(--gap);
+  gap: 2.1276595745%;
 }
 
 .qti-layout-row [class*='qti-layout-col'] {
