@@ -1,4 +1,5 @@
 /**
+ * Browser based QTI-XML to HTML transformer.
  * Returns an object with methods to load, parse, transform and serialize QTI XML items.
  * @returns An object with methods to load, parse, transform and serialize QTI XML items.
  * @example
@@ -7,18 +8,25 @@
  * qtiTransformer.path('/assessmentItem/itemBody');
  * const html = qtiTransformer.html();
  * const xml = qtiTransformer.xml();
+ * const htmldoc = qtiTransformer.htmldoc();
+ * const xmldoc = qtiTransformer.xmldoc();
  *
  * qtiTransformItem().parse(storyXML).html()
  */
-/**
- * This module exports a function that returns an object with methods to load, parse, transform and serialize QTI XML items.
- * @returns An object with methods to load, parse, transform and serialize QTI XML items.
- */
-export const qtiTransformItem = () => {
-  let xmlFragment: DocumentFragment;
+
+export const qtiTransformItem = (): {
+  load: (uri: string) => Promise<typeof api>;
+  parse: (xmlString: string) => typeof api;
+  path: (location: string) => typeof api;
+  html: () => string;
+  xml: () => string;
+  htmldoc: () => DocumentFragment;
+  xmldoc: () => XMLDocument;
+} => {
+  let xmlFragment: XMLDocument;
 
   const api = {
-    async load(uri) {
+    async load(uri: string) {
       return new Promise<typeof api>((resolve, reject) => {
         loadXML(uri).then(xml => {
           xmlFragment = xml;
@@ -26,7 +34,7 @@ export const qtiTransformItem = () => {
         });
       });
     },
-    parse(xmlString) {
+    parse(xmlString: string) {
       xmlFragment = parseXML(xmlString);
       return api;
     },
@@ -35,10 +43,16 @@ export const qtiTransformItem = () => {
       return api;
     },
     html() {
-      return toHTML(xmlFragment);
+      return new XMLSerializer().serializeToString(toHTML(xmlFragment));
     },
     xml(): string {
       return new XMLSerializer().serializeToString(xmlFragment);
+    },
+    htmldoc() {
+      return toHTML(xmlFragment);
+    },
+    xmldoc(): XMLDocument {
+      return xmlFragment; // new XMLSerializer().serializeToString(xmlFragment);
     }
   };
   return api;
@@ -54,8 +68,15 @@ export const qtiTransformItem = () => {
  * const html = qtiTransformer.html();
  * const xml = qtiTransformer.xml();
  */
-export const qtiTransformTest = () => {
-  let xmlFragment: DocumentFragment;
+export const qtiTransformTest = (): {
+  load: (uri: string) => Promise<typeof api>;
+  items: () => { identifier: string; href: string; category: string }[];
+  html: () => string;
+  xml: () => string;
+  htmldoc: () => DocumentFragment;
+  xmldoc: () => XMLDocument;
+} => {
+  let xmlFragment: XMLDocument;
 
   const api = {
     async load(uri) {
@@ -70,10 +91,16 @@ export const qtiTransformTest = () => {
       return itemsFromTest(xmlFragment);
     },
     html() {
-      return toHTML(xmlFragment);
+      return new XMLSerializer().serializeToString(toHTML(xmlFragment));
     },
     xml(): string {
       return new XMLSerializer().serializeToString(xmlFragment);
+    },
+    htmldoc() {
+      return toHTML(xmlFragment);
+    },
+    xmldoc(): XMLDocument {
+      return xmlFragment;
     }
   };
   return api;
@@ -128,15 +155,13 @@ function itemsFromTest(xmlFragment: DocumentFragment) {
 }
 
 function loadXML(url) {
-  return new Promise<DocumentFragment | null>((resolve, reject) => {
+  return new Promise<XMLDocument | null>((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.open('GET', url, true);
     xhr.responseType = 'document';
 
     xhr.onload = () => {
       if (xhr.status >= 200 && xhr.status < 300) {
-        // const docFragment = document.createDocumentFragment();
-        // docFragment.appendChild(xhr.responseXML);
         return resolve(xhr.responseXML);
       } else {
         reject(xhr.statusText);
@@ -158,13 +183,12 @@ function parseXML(xmlDocument: string) {
   return xmlFragment;
 }
 
-function toHTML(xmlFragment: DocumentFragment) {
+function toHTML(xmlFragment: Document): DocumentFragment {
   const processor = new XSLTProcessor();
   const xsltDocument = new DOMParser().parseFromString(xmlToHTML, 'text/xml');
   processor.importStylesheet(xsltDocument);
   const itemHTMLFragment = processor.transformToFragment(xmlFragment, document);
-  const itemHTML = new XMLSerializer().serializeToString(itemHTMLFragment);
-  return itemHTML;
+  return itemHTMLFragment;
 }
 
 function setLocation(xmlFragment: DocumentFragment, location: string) {
