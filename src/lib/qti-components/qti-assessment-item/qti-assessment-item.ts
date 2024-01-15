@@ -145,9 +145,10 @@ export class QtiAssessmentItem extends LitElement {
   constructor() {
     super();
     this.state = 'item-created';
-    this.addEventListener('qti-register-variable', ({ detail }) => {
-      this._context = { ...this._context, variables: [...this._context.variables, detail.variable] };
+    this.addEventListener('qti-register-variable', e => {
+      this._context = { ...this._context, variables: [...this._context.variables, e.detail.variable] };
       this._initialContext = this._context;
+      e.stopPropagation();
     });
     this.addEventListener('qti-register-feedback', (e: CustomEvent<QtiFeedback>) => {
       e.stopPropagation();
@@ -171,6 +172,7 @@ export class QtiAssessmentItem extends LitElement {
       (e: CustomEvent<{ outcomeIdentifier: string; value: string | string[] }>) => {
         const { outcomeIdentifier, value } = e.detail;
         this.updateOutcomeVariable(outcomeIdentifier, value);
+        e.stopPropagation();
       }
     );
 

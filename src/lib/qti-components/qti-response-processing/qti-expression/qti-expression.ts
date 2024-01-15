@@ -4,7 +4,14 @@ import { ResponseVariable, VariableDeclaration } from '../../internal/variables'
 import { QtiAssessmentItem } from '../../qti-assessment-item/qti-assessment-item';
 import { QtiMultiple } from './qti-multiple/qti-multiple';
 
-export abstract class QtiExpression<T> extends LitElement {
+export interface QtiExpressionBase<T> {
+  // get assessmentItem(): QtiAssessmentItem;
+
+  // getVariables(): VariableDeclaration<number | string | (number | string)[] | null>[];
+  calculate(): Readonly<T>;
+}
+
+export abstract class QtiExpression<T> extends LitElement implements QtiExpressionBase<T> {
   @state()
   protected result: any;
 
@@ -29,11 +36,11 @@ export abstract class QtiExpression<T> extends LitElement {
     throw new Error('Not implemented');
   }
 
-  protected get assessmentItem(): QtiAssessmentItem {
+  get assessmentItem(): QtiAssessmentItem {
     return this.closest('qti-assessment-item') as QtiAssessmentItem;
   }
 
-  protected getVariables = (): VariableDeclaration<number | string | (number | string)[] | null>[] =>
+  getVariables = (): VariableDeclaration<number | string | (number | string)[] | null>[] =>
     // FIXME: if this itself is multiple, this will never enter the qti-multiple switch
     // See this example here: https://github.com/1EdTech/qti-examples/blob/master/qtiv3-examples/packaging/items/Example05-feedbackBlock-adaptive.xml
 
