@@ -35,6 +35,7 @@ export * from './qti-interaction/qti-inline-choice-interaction/qti-inline-choice
 export * from './qti-interaction/qti-choice-interaction/qti-choice-interaction';
 /* end choiceinteraction */
 export * from './qti-response-processing';
+export * from './qti-outcome-processing/qti-outcome-processing';
 /* start custom interactions */
 export * from './qti-interaction/qti-portable-custom-interaction/qti-portable-custom-interaction';
 /* end custom interactions */

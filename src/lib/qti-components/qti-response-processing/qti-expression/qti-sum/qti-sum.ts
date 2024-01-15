@@ -1,15 +1,29 @@
-import { QtiExpression } from '../qti-expression';
+import { QtiExpression, QtiExpressionBase } from '../qti-expression';
 
 export class QtiSum extends QtiExpression<number> {
+  private _expression: QtiSumExpression;
+  constructor() {
+    super();
+    this._expression = new QtiSumExpression(Array.from(this.children as unknown as QtiExpressionBase<number>[]));
+  }
+
   public override getResult() {
     // children can be a mix of qti-expression and qti-condition-expression
-    const values = Array.from(this.children).map(c => {
-      const condition = c as QtiExpression<number>;
-      if (!condition.calculate) {
+    const value = this._expression.calculate();
+    return value;
+  }
+}
+
+export class QtiSumExpression implements QtiExpressionBase<number> {
+  constructor(private expressions: QtiExpressionBase<number>[]) {}
+
+  public calculate() {
+    const values = this.expressions.map(c => {
+      if (!c.calculate) {
         console.error("Element doesn't implement QtiConditionExpression");
         return null;
       }
-      const value = condition.calculate();
+      const value = c.calculate();
       if (Number.isNaN(value)) {
         console.error('unexpected value in qti-sum, expected number');
         return null;
