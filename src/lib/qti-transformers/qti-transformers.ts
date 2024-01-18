@@ -212,6 +212,10 @@ function toHTML(xmlFragment: Document): DocumentFragment {
 }
 
 function setLocation(xmlFragment: DocumentFragment, location: string) {
+  if (!location.endsWith('/')) {
+    location += '/';
+  }
+
   xmlFragment.querySelectorAll('[src],[href]').forEach(elWithSrc => {
     let attr: 'src' | 'href' | '' = '';
 
