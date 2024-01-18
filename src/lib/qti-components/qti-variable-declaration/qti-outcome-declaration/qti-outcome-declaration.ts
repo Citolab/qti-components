@@ -8,9 +8,8 @@ import { QtiVariableDeclaration } from '../qti-variable-declaration';
 
 export class QtiOutcomeDeclaration extends QtiVariableDeclaration {
   @property({ type: String, attribute: 'base-type' }) baseType: BaseType;
-
+  @property({ type: String, attribute: 'external-scored' }) externalScored: String;
   @property({ type: String }) identifier: string;
-
   @property({ type: String }) cardinality: Cardinality;
 
   @consume({ context: itemContext, subscribe: true })
