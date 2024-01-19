@@ -13,3 +13,9 @@ export class ItemPrintVariables extends LitElement {
     return html` <pre>${JSON.stringify(this.itemContext, null, 2)}</pre> `;
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'item-print-variables': ItemPrintVariables;
+  }
+}

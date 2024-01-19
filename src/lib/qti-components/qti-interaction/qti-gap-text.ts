@@ -1,6 +1,7 @@
 import { html, LitElement } from 'lit';
-import { property } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 
+@customElement('qti-gap-text')
 export class QtiGapText extends LitElement {
   @property({ type: Number, reflect: true }) tabindex: number | undefined = 0;
 
@@ -14,4 +15,8 @@ export class QtiGapText extends LitElement {
   }
 }
 
-customElements.define('qti-gap-text', QtiGapText);
+declare global {
+  interface HTMLElementTagNameMap {
+    'qti-gap-text': QtiGapText;
+  }
+}

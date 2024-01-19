@@ -1,8 +1,10 @@
 import { css, html } from 'lit';
+import { customElement } from 'lit/decorators.js';
 import { Choices } from '../internal/choices/choices';
-import { QtiHotspotChoice } from '../qti-hotspot-choice';
 import { positionHotspots } from '../internal/hotspots/hotspot';
+import { QtiHotspotChoice } from '../qti-hotspot-choice';
 
+@customElement('qti-hotspot-interaction')
 export class QtiHotspotInteraction extends Choices {
   // do not select ( highlight blue, the image)
   // target the main slot make it relative and fit with the conten
@@ -49,4 +51,9 @@ export class QtiHotspotInteraction extends Choices {
     this.removeEventListener('qti-register-choice', this.positionHotspotOnRegister);
   }
 }
-customElements.define('qti-hotspot-interaction', QtiHotspotInteraction);
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'qti-hotspot-interaction': QtiHotspotInteraction;
+  }
+}

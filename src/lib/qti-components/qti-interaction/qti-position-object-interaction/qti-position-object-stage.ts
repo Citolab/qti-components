@@ -1,5 +1,7 @@
 import { LitElement, css, html } from 'lit';
+import { customElement } from 'lit/decorators.js';
 
+@customElement('qti-position-object-stage')
 export class QtiPositionObjectStage extends LitElement {
   choiceOrdering: boolean;
   startX: any;
@@ -76,4 +78,8 @@ export class QtiPositionObjectStage extends LitElement {
   }
 }
 
-customElements.define('qti-position-object-stage', QtiPositionObjectStage);
+declare global {
+  interface HTMLElementTagNameMap {
+    'qti-position-object-stage': QtiPositionObjectStage;
+  }
+}

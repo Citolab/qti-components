@@ -1,11 +1,11 @@
 import {
   itemContext,
   type Calculate,
-  type ResponseVariable,
-  type ItemContext
+  type ItemContext,
+  type ResponseVariable
 } from '@citolab/qti-components/qti-components';
 import { consume } from '@lit/context';
-import { html, LitElement } from 'lit';
+import { LitElement, html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 
 /**
@@ -68,5 +68,11 @@ export class QtiCustomOperator extends LitElement implements Calculate {
       }
     };
     return this.operatorFunction(this._context, fn, item);
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'qti-custom-operator': QtiCustomOperator;
   }
 }

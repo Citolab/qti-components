@@ -1,6 +1,8 @@
 import { css, html } from 'lit';
+import { customElement } from 'lit/decorators.js';
 import { QtiFeedback } from '../qti-feedback';
 
+@customElement('qti-feedback-inline')
 export class QtiFeedbackInline extends QtiFeedback {
   static override styles = css`
     .on {
@@ -13,4 +15,9 @@ export class QtiFeedbackInline extends QtiFeedback {
 
   override render = () => html` <slot part="feedback" class="${this.showStatus}"></slot> `;
 }
-customElements.define('qti-feedback-inline', QtiFeedbackInline);
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'qti-feedback-inline': QtiFeedbackInline;
+  }
+}

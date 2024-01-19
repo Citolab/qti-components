@@ -1,7 +1,9 @@
 import { css, html, LitElement } from 'lit';
+import { customElement } from 'lit/decorators.js';
 import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-interaction-mixin';
 import { QtiHotspotChoice } from '../qti-hotspot-choice';
 
+@customElement('qti-graphic-gap-match-interaction')
 export class QtiGraphicGapMatchInteraction extends DragDropInteractionMixin(
   LitElement,
   'qti-gap-img',
@@ -67,4 +69,8 @@ export class QtiGraphicGapMatchInteraction extends DragDropInteractionMixin(
   }
 }
 
-customElements.define('qti-graphic-gap-match-interaction', QtiGraphicGapMatchInteraction);
+declare global {
+  interface HTMLElementTagNameMap {
+    'qti-graphic-gap-match-interaction': QtiGraphicGapMatchInteraction;
+  }
+}

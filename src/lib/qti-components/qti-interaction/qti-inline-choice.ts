@@ -1,5 +1,11 @@
 import { LitElement } from 'lit';
+import { customElement } from 'lit/decorators.js';
 
+@customElement('qti-inline-choice')
 export class QtiInlineChoice extends LitElement {}
 
-customElements.define('qti-inline-choice', QtiInlineChoice);
+declare global {
+  interface HTMLElementTagNameMap {
+    'qti-inline-choice': QtiInlineChoice;
+  }
+}

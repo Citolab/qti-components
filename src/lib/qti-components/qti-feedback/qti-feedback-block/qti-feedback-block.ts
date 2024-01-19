@@ -1,6 +1,8 @@
 import { PropertyValueMap, css, html } from 'lit';
+import { customElement } from 'lit/decorators.js';
 import { QtiFeedback } from '../qti-feedback';
 
+@customElement('qti-feedback-block')
 export class QtiFeedbackBlock extends QtiFeedback {
   static override styles = css`
     :host {
@@ -22,5 +24,8 @@ export class QtiFeedbackBlock extends QtiFeedback {
     this.checkShowFeedback(this.outcomeIdentifier);
   }
 }
-
-customElements.define('qti-feedback-block', QtiFeedbackBlock);
+declare global {
+  interface HTMLElementTagNameMap {
+    'qti-feedback-block': QtiFeedbackBlock;
+  }
+}

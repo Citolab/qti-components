@@ -1,6 +1,8 @@
 import { html } from 'lit';
+import { customElement } from 'lit/decorators.js';
 import { Choices } from '../internal/choices/choices';
 
+@customElement('qti-hottext-interaction')
 export class QtiHottextInteraction extends Choices {
   override connectedCallback() {
     super.connectedCallback();
@@ -10,4 +12,8 @@ export class QtiHottextInteraction extends Choices {
   override render = () => html`<slot></slot>`;
 }
 
-customElements.define('qti-hottext-interaction', QtiHottextInteraction);
+declare global {
+  interface HTMLElementTagNameMap {
+    'qti-hottext-interaction': QtiHottextInteraction;
+  }
+}

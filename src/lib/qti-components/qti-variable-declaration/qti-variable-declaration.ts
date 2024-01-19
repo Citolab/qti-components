@@ -1,6 +1,8 @@
 import { html, LitElement } from 'lit';
+import { customElement } from 'lit/decorators.js';
 import { VariableDeclaration } from '../internal/variables';
 
+@customElement('qti-variabledeclaration')
 export class QtiVariableDeclaration extends LitElement {
   override render() {
     return html`<slot></slot>`;
@@ -21,4 +23,8 @@ export class QtiVariableDeclaration extends LitElement {
   }
 }
 
-customElements.define('qti-variabledeclaration', QtiVariableDeclaration);
+declare global {
+  interface HTMLElementTagNameMap {
+    'qti-variabledeclaration': QtiVariableDeclaration;
+  }
+}

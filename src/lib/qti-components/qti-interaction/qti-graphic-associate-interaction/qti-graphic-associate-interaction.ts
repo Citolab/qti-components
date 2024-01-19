@@ -1,12 +1,13 @@
 /* eslint-disable lit/no-invalid-html */
-import { css, svg, html, LitElement } from 'lit';
-import { QtiHotspotChoice } from '../qti-hotspot-choice';
-import { positionHotspots } from '../internal/hotspots/hotspot';
-import { query, queryAssignedElements, state } from 'lit/decorators.js';
-import { repeat } from 'lit/directives/repeat.js';
+import { css, html, svg } from 'lit';
+import { customElement, query, queryAssignedElements, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
+import { repeat } from 'lit/directives/repeat.js';
+import { positionHotspots } from '../internal/hotspots/hotspot';
 import { Interaction } from '../internal/interaction/interaction';
+import { QtiHotspotChoice } from '../qti-hotspot-choice';
 
+@customElement('qti-graphic-associate-interaction')
 export class QtiGraphicAssociateInteraction extends Interaction {
   choiceOrdering: boolean;
   hotspots;
@@ -160,4 +161,8 @@ export class QtiGraphicAssociateInteraction extends Interaction {
   }
 }
 
-customElements.define('qti-graphic-associate-interaction', QtiGraphicAssociateInteraction);
+declare global {
+  interface HTMLElementTagNameMap {
+    'qti-graphic-associate-interaction': QtiGraphicAssociateInteraction;
+  }
+}

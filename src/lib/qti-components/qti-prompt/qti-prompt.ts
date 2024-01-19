@@ -15,3 +15,9 @@ export class QtiPrompt extends LitElement {
     // const promptSlot = this.parentElement.shadowRoot.querySelector("[name='prompt']");
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'qti-prompt': QtiPrompt;
+  }
+}

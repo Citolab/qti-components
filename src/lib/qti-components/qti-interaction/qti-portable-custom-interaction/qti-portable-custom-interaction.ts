@@ -1,7 +1,10 @@
 import { LitElement, html } from 'lit';
+import { customElement } from 'lit/decorators.js';
 
 declare const requirejs: any;
 declare const define: any;
+
+@customElement('qti-portable-custom-interaction')
 export class QtiPortableCustomInteraction extends LitElement {
   private responseIdentifier: string;
   private module: string;
@@ -164,4 +167,8 @@ export class QtiPortableCustomInteraction extends LitElement {
   }
 }
 
-customElements.define('qti-portable-custom-interaction', QtiPortableCustomInteraction);
+declare global {
+  interface HTMLElementTagNameMap {
+    'qti-portable-custom-interaction': QtiPortableCustomInteraction;
+  }
+}

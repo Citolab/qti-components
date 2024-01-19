@@ -44,3 +44,9 @@ export class QtiRubricBlock extends LitElement {
     this.setAttribute('slot', 'qti-rubric-block');
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'qti-rubric-block': QtiRubricBlock;
+  }
+}

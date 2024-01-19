@@ -1,5 +1,4 @@
-import { LitElement, html } from 'lit';
-import { QtiAssessmentItem } from '../../qti-assessment-item/qti-assessment-item';
+import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { Interaction } from '../internal/interaction/interaction';
 @customElement('qti-end-attempt-interaction')
@@ -29,5 +28,11 @@ export class QtiEndAttemptInteraction extends Interaction {
         detail: { responseIdentifier: this.responseIdentifier, countAttempt: this.countAttempt === 'true' }
       })
     );
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'qti-end-attempt-interaction': QtiEndAttemptInteraction;
   }
 }

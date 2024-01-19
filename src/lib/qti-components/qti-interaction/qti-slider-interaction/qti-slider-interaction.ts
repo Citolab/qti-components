@@ -1,8 +1,8 @@
-import { LitElement, css, html, nothing } from 'lit';
-import { state, property, query } from 'lit/decorators.js';
+import { css, html, nothing } from 'lit';
+import { customElement, property, query } from 'lit/decorators.js';
 
-import { Interaction } from '../internal/interaction/interaction';
 import { watch } from '../../../decorators/watch';
+import { Interaction } from '../internal/interaction/interaction';
 
 /**
  * @summary The SliderInteraction.Type (qti-slider-interaction) presents the candidate with a control for selecting a numerical value between a lower and upper bound.
@@ -27,6 +27,8 @@ import { watch } from '../../../decorators/watch';
  * @slot - The default slot where <qti-simple-choice> must be placed.
  * @slot prompt - slot where the prompt is placed.
  */
+
+@customElement('qti-slider-interaction')
 export class QtiSliderInteraction extends Interaction {
   csLive: CSSStyleDeclaration;
 
@@ -230,4 +232,8 @@ export class QtiSliderInteraction extends Interaction {
   }
 }
 
-customElements.define('qti-slider-interaction', QtiSliderInteraction);
+declare global {
+  interface HTMLElementTagNameMap {
+    'qti-slider-interaction': QtiSliderInteraction;
+  }
+}

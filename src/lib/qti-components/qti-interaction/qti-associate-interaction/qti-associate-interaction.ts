@@ -1,8 +1,9 @@
 import { LitElement, css, html } from 'lit';
 
+import { customElement, state } from 'lit/decorators.js';
 import { DragDropInteractionMixin } from '../internal/drag-drop';
-import { state } from 'lit/decorators.js';
 
+@customElement('qti-associate-interaction')
 export class QtiAssociateInteraction extends DragDropInteractionMixin(
   LitElement,
   'qti-simple-associable-choice',
@@ -41,4 +42,8 @@ export class QtiAssociateInteraction extends DragDropInteractionMixin(
   }
 }
 
-customElements.define('qti-associate-interaction', QtiAssociateInteraction);
+declare global {
+  interface HTMLElementTagNameMap {
+    'qti-associate-interaction': QtiAssociateInteraction;
+  }
+}

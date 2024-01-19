@@ -1,7 +1,8 @@
 import { css, html, LitElement } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-interaction-mixin';
-import { property } from 'lit/decorators.js';
 
+@customElement('qti-order-interaction')
 export class QtiOrderInteraction extends DragDropInteractionMixin(LitElement, `qti-simple-choice`, true, 'drop-list') {
   childrenMap: Element[];
   private _classNames: string;
@@ -87,4 +88,8 @@ export class QtiOrderInteraction extends DragDropInteractionMixin(LitElement, `q
   }
 }
 
-customElements.define('qti-order-interaction', QtiOrderInteraction);
+declare global {
+  interface HTMLElementTagNameMap {
+    'qti-order-interaction': QtiOrderInteraction;
+  }
+}

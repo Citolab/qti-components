@@ -1,5 +1,5 @@
 import { css, html } from 'lit';
-import { property, state } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { Interaction } from '../internal/interaction/interaction';
 
@@ -8,6 +8,8 @@ interface OptionType {
   value: string;
   selected: boolean;
 }
+
+@customElement('qti-inline-choice-interaction')
 export class QtiInlineChoiceInteraction extends Interaction {
   public static inputWidthClass = [
     '',
@@ -108,4 +110,8 @@ export class QtiInlineChoiceInteraction extends Interaction {
   }
 }
 
-customElements.define('qti-inline-choice-interaction', QtiInlineChoiceInteraction);
+declare global {
+  interface HTMLElementTagNameMap {
+    'qti-inline-choice-interaction': QtiInlineChoiceInteraction;
+  }
+}

@@ -1,12 +1,13 @@
 import { consume } from '@lit/context';
 import { css, html } from 'lit';
-import { property, state } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import { BaseType, Cardinality } from '../../internal/expression-result';
 import { ResponseVariable } from '../../internal/variables';
 import { ItemContext, itemContext } from '../../qti-assessment-item/qti-assessment-item.context';
 import { QtiMapping } from '../../qti-response-processing/qti-expression/qti-mapping/qti-mapping';
 import { QtiVariableDeclaration } from '../qti-variable-declaration';
 
+@customElement('qti-response-declaration')
 export class QtiResponseDeclaration extends QtiVariableDeclaration {
   @property({ type: String, attribute: 'base-type' }) baseType: BaseType;
 
@@ -79,4 +80,8 @@ export class QtiResponseDeclaration extends QtiVariableDeclaration {
   }
 }
 
-customElements.define('qti-response-declaration', QtiResponseDeclaration);
+declare global {
+  interface HTMLElementTagNameMap {
+    'qti-response-declaration': QtiResponseDeclaration;
+  }
+}

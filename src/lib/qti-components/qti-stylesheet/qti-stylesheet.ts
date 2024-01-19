@@ -1,4 +1,7 @@
 import { LitElement, PropertyValueMap } from 'lit';
+import { customElement } from 'lit/decorators.js';
+
+@customElement('qti-stylesheet')
 export class QtiStylesheet extends LitElement {
   private styleLink: HTMLStyleElement | HTMLLinkElement;
 
@@ -43,4 +46,8 @@ export class QtiStylesheet extends LitElement {
   }
 }
 
-customElements.define('qti-stylesheet', QtiStylesheet);
+declare global {
+  interface HTMLElementTagNameMap {
+    'qti-stylesheet': QtiStylesheet;
+  }
+}

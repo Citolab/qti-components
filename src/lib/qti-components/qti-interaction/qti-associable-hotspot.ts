@@ -1,5 +1,7 @@
 import { LitElement, css, html } from 'lit';
+import { customElement } from 'lit/decorators.js';
 
+@customElement('qti-associable-hotspot')
 export class QtiAssociableHotspot extends LitElement {
   override connectedCallback() {
     super.connectedCallback();
@@ -23,4 +25,8 @@ export class QtiAssociableHotspot extends LitElement {
   }
 }
 
-customElements.define('qti-associable-hotspot', QtiAssociableHotspot);
+declare global {
+  interface HTMLElementTagNameMap {
+    'qti-associable-hotspot': QtiAssociableHotspot;
+  }
+}

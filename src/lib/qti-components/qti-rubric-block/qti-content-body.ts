@@ -7,3 +7,8 @@ export class QtiContentBody extends LitElement {
     return html`<slot></slot>`;
   }
 }
+declare global {
+  interface HTMLElementTagNameMap {
+    'qti-content-body': QtiContentBody;
+  }
+}

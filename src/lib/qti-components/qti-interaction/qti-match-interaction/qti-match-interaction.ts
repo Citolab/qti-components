@@ -1,11 +1,11 @@
 import { html, LitElement } from 'lit';
 import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-interaction-mixin';
 
-import '../qti-simple-associable-choice';
-import { property, state } from 'lit/decorators.js';
-import { QtiSimpleAssociableChoice } from '../qti-simple-associable-choice';
+import { customElement, property, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { ResponseInteraction } from '../../internal/expression-result';
+import '../qti-simple-associable-choice';
+import { QtiSimpleAssociableChoice } from '../qti-simple-associable-choice';
 
 interface Column {
   id: number;
@@ -18,6 +18,7 @@ interface Row {
   isChecked: boolean;
 }
 
+@customElement('qti-match-interaction')
 export class QtiMatchInteraction extends DragDropInteractionMixin(
   LitElement,
   'qti-simple-match-set:first-of-type qti-simple-associable-choice',
@@ -94,4 +95,8 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
   }
 }
 
-customElements.define('qti-match-interaction', QtiMatchInteraction);
+declare global {
+  interface HTMLElementTagNameMap {
+    'qti-match-interaction': QtiMatchInteraction;
+  }
+}
