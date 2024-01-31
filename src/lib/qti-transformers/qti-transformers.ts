@@ -1,3 +1,5 @@
+const xml = String.raw;
+
 /**
  * Browser based QTI-XML to HTML transformer.
  * Returns an object with methods to load, parse, transform and serialize QTI XML items.
@@ -62,6 +64,11 @@ export const qtiTransformItem = (): {
       }
       return api;
     },
+    convertCDATAtoComment() {
+      convertCDATAtoComment(xmlFragment);
+      return api;
+    },
+
     html() {
       return new XMLSerializer().serializeToString(toHTML(xmlFragment));
     },
@@ -126,26 +133,26 @@ export const qtiTransformTest = (): {
   return api;
 };
 
-const xmlToHTML = `
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+/*   <!-- convert CDATA to comments -->
+  <xsl:template match="text()[contains(., 'CDATA')]">
+  <xsl:comment>
+    <xsl:value-of select="."/>
+  </xsl:comment>
+</xsl:template>
+*/
+
+/*
+  <!-- remove xml comments -->
+  <xsl:template match="comment()" />
+  */
+
+const xmlToHTML = xml`<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:output method="html" version="5.0" encoding="UTF-8" indent="yes" />
   <xsl:template match="@*|node()">
     <xsl:copy>
       <xsl:apply-templates select="@*|node()"/>
     </xsl:copy>
   </xsl:template>
-
-  <!-- convert CDATA to comments -->
-  <xsl:template match="text()[contains(., 'CDATA')]">
-    <strong>
-      <xsl:comment>
-        <xsl:value-of select="."/>
-      </xsl:comment>
-    <strong>
-  </xsl:template>
-
-  <!-- remove xml comments -->
-  <xsl:template match="comment()" />
 
   <!-- remove existing namespaces -->
   <xsl:template match="*">
@@ -231,5 +238,13 @@ function setLocation(xmlFragment: DocumentFragment, location: string) {
       const newSrcValue = location + encodeURI(attrValue);
       elWithSrc.setAttribute(attr, newSrcValue);
     }
+  });
+}
+
+function convertCDATAtoComment(xmlFragment: DocumentFragment) {
+  const cdataElements = xmlFragment.querySelectorAll('qti-custom-operator[class="js.org"] > qti-base-value');
+  cdataElements.forEach(element => {
+    const commentText = document.createComment(element.textContent);
+    element.replaceChild(commentText, element.firstChild);
   });
 }
