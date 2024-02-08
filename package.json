@@ -10,7 +10,7 @@
   "license": "GPLv3",
   "private": false,
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=20.0.0"
   },
   "version": "6.7.1-22",
   "type": "module",
