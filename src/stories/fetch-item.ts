@@ -11,7 +11,7 @@ export const fetchItem = async (packageUri: string, index: number): Promise<any>
 
   const itemHTML = await qtiTransformItem()
     .load(itemLocation + itemsFromTest[index].href)
-    .then(api => api.path(itemLocation).html());
+    .then(api => api.path(itemLocation).stripStyleSheets().html());
 
   return { itemXML: itemHTML, items: itemsFromTest };
 };

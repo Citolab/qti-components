@@ -1,10 +1,2 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
 @import './styles/qti-item.css';
-
-@config "../tailwind.config.bundled.cjs";
-
-qti-item-body {
-  @apply prose-sm md:prose-base lg:prose-lg max-w-none;
-}
+@unocss;

@@ -4,6 +4,7 @@ import { action } from '@storybook/addon-actions';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
+
 import packages from '../assets/packages.json';
 import { fetchItem } from './fetch-item';
 
@@ -14,12 +15,18 @@ const meta: Meta = {
       options: packages.packages,
       control: { type: 'radio' }
     },
-    disabled: { control: { type: 'boolean' } }
+    disabled: { control: { type: 'boolean' } },
+    itemIndex: { control: { type: 'range', min: 0, max: 30, step: 1 } }
   },
   args: {
     serverLocation: '/api',
     qtipkg: 'examples',
     itemIndex: 0
+  },
+  parameters: {
+    controls: {
+      expanded: false
+    }
   }
 };
 
@@ -42,13 +49,14 @@ export const Examples: Story = {
 
     return html`
       <div
+        class="item"
         @qti-interaction-changed=${onInteractionChangedAction}
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemFirstUpdated}
       >
         ${unsafeHTML(xml.itemXML)}
       </div>
-      <button style="background:lightgray; padding:1rem" @click=${() => item?.processResponse()}>Submit</button>
+      <button @click=${() => item?.processResponse()}>Submit</button>
     `;
   },
   loaders: [async ({ args }) => ({ xml: await fetchItem(`${args.serverLocation}/${args.qtipkg}`, args.itemIndex) })]

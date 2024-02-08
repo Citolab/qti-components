@@ -1,113 +1,179 @@
 qti-choice-interaction {
-  @apply my-2 gap-2;
-
   &.qti-input-control-hidden {
-    qti-simple-choice {
-      @apply button hover:hov focus:foc aria-checked:act aria-readonly:rdo aria-disabled:dis;
+    & qti-simple-choice {
+      @apply button hover:hov focus:foc;
+      &::part(ch) {
+        @apply !hidden;
+      }
+      &[aria-checked='true'] {
+        @apply act;
+      }
+      &[aria-readonly='true'] {
+        @apply rdo;
+      }
+      &[aria-disabled='true'] {
+        @apply dis;
+      }
     }
   }
 
   &:not(.qti-input-control-hidden) {
-    qti-simple-choice {
-      @apply check hover:hov focus:foc aria-checked:act aria-readonly:rdo aria-disabled:dis;
+    & qti-simple-choice {
+      @apply check hover:hov focus:foc;
+      &[aria-checked='true'] {
+        @apply act;
+      }
+      &[aria-readonly='true'] {
+        @apply rdo;
+      }
+      &[aria-disabled='true'] {
+        @apply dis;
+      }
+
+      &::part(cha) {
+        /* let the checkmark or radio circle already take up space, else when checking everyhing collapses */
+        @apply h-2/3 w-2/3;
+      }
+      &[role='radio']::part(ch) {
+        @apply check-radio;
+      }
+      &[role='radio'][aria-checked='true']::part(cha) {
+        @apply check-radio-checked;
+      }
+      &[role='checkbox']::part(ch) {
+        @apply check-checkbox;
+      }
+      &[role='checkbox'][aria-checked='true']::part(cha) {
+        @apply check-checkbox-checked;
+      }
     }
   }
 
-  qti-simple-choice {
+  & qti-simple-choice {
     &[data-correct-response='true'] {
       &::after {
         content: '\02714';
         @apply text-green-600;
       }
-      /* @apply bg-green-100 text-green-600; */
     }
   }
 
-  qti-simple-choice > p {
+  & qti-simple-choice > p {
     @apply m-0 p-0;
   }
 }
 
 qti-text-entry-interaction {
-  @apply my-2;
   &::part(input) {
     @apply text hover:hov focus:foc;
   }
 }
 
 qti-extended-text-interaction {
-  @apply my-2;
   &::part(textarea) {
     @apply text hover:hov focus:foc;
   }
 }
 
 qti-gap-match-interaction {
-  @apply my-2 leading-8;
-  qti-gap-text {
-    @apply drag hover:hov focus:foc pl-3 pr-2 leading-normal;
+  & qti-gap-text {
+    @apply drag hover:hov focus:foc;
   }
-  qti-gap {
-    @apply drop hover:hov focus:foc inline-flex leading-normal;
+  & qti-gap {
+    @apply drop hover:hov focus:foc p-lg inline-flex;
     @apply w-32; /* PK: should be set in the javascript, default 100px, or listening to data-width attribute according to the spec */
     &:empty:after {
       content: '\0000a0'; /* when empty, put a space in it */
     }
     &:not(:empty) {
-      @apply inline-flex w-auto p-0 shadow-none;
+      @apply inline-flex w-auto p-0;
     }
     &:not(:empty) > * {
-      @apply flex-1 rotate-0 shadow-none ring-gray-200;
+      @apply flex-1 rotate-0 ring-gray-200;
     }
   }
 }
 
 qti-hotspot-interaction {
-  @apply my-2;
-
-  qti-hotspot-choice {
+  & qti-hotspot-choice {
     @apply hover:bg-blue-100 hover:bg-opacity-30;
-
     &[shape='circle'] {
-      @apply spot hover:hov-ring focus:foc aria-checked:act aria-readonly:rdo aria-disabled:dis rounded-full;
-    }
-
-    &[shape='rect'] {
-      @apply spot hover:hov-ring focus:foc aria-checked:act aria-readonly:rdo aria-disabled:dis;
-    }
-
-    &[shape='poly'] {
-      @apply hover:hov focus:foc aria-checked:act aria-readonly:rdo aria-disabled:dis;
+      @apply spot hover:hov-ring focus:foc  rounded-full;
       &[aria-checked='true'] {
-        @apply bg-primary-500;
+        @apply act;
+      }
+      &[aria-readonly='true'] {
+        @apply rdo;
+      }
+      &[aria-disabled='true'] {
+        @apply dis;
       }
     }
-
-    /* &::after {
-        content: '';
-        @apply absolute top-0 block origin-center bg-white;
-        height: 95%;
-        width: 95%;
-        clip-path: inherit;
-      } */
+    &[shape='rect'] {
+      @apply spot hover:hov-ring focus:foc;
+      &[aria-checked='true'] {
+        @apply act;
+      }
+      &[aria-readonly='true'] {
+        @apply rdo;
+      }
+      &[aria-disabled='true'] {
+        @apply dis;
+      }
+    }
+    &[shape='poly'] {
+      @apply hover:hov focus:foc;
+      &[aria-checked='true'] {
+        @apply act;
+      }
+      &[aria-readonly='true'] {
+        @apply rdo;
+      }
+      &[aria-disabled='true'] {
+        @apply dis;
+      }
+    }
   }
 }
 
 qti-hottext-interaction {
-  @apply my-2;
-
   &.qti-input-control-hidden {
     qti-hottext {
-      @apply button button-sm button-in  hover:hov focus:foc aria-checked:act aria-readonly:rdo aria-disabled:dis;
+      @apply button hover:hov  focus:foc inline-flex;
       &::part(ch) {
         @apply !hidden;
+      }
+      &[aria-checked='true'] {
+        @apply act;
+      }
+      &[aria-readonly='true'] {
+        @apply rdo;
+      }
+      &[aria-disabled='true'] {
+        @apply dis;
       }
     }
   }
 
   &:not(.qti-input-control-hidden) {
     qti-hottext {
-      @apply check check-sm check-in hover:hov focus:foc aria-checked:act aria-readonly:rdo aria-disabled:dis;
+      @apply check hover:hov focus:foc inline-flex;
+      &::part(cha) {
+        /* let the checkmark or radio circle already take up space, else when checking everyhing collapses */
+        @apply h-2/3 w-2/3;
+      }
+      &[role='radio']::part(ch) {
+        @apply check-radio;
+      }
+      &[role='radio'][aria-checked='true']::part(cha) {
+        @apply check-radio-checked;
+      }
+      &[role='checkbox']::part(ch) {
+        @apply check-checkbox;
+      }
+      &[role='checkbox'][aria-checked='true']::part(cha) {
+        @apply check-checkbox-checked;
+      }
     }
   }
 }
@@ -119,25 +185,24 @@ qti-inline-choice-interaction {
 }
 
 qti-match-interaction:not(.qti-match-tabular) {
-  qti-simple-match-set:first-of-type {
+  & qti-simple-match-set:first-of-type {
     @apply flex flex-wrap gap-2 pb-4;
 
-    qti-simple-associable-choice {
-      @apply drag hover:hov focus:foc py-2 pl-4 pr-3;
+    & qti-simple-associable-choice {
+      @apply drag hover:hov focus:foc;
     }
   }
 
-  qti-simple-match-set:last-of-type {
+  & qti-simple-match-set:last-of-type {
     @apply grid auto-cols-fr grid-flow-col gap-2;
 
-    qti-simple-associable-choice {
+    & qti-simple-associable-choice {
       @apply drop hover:hov focus:foc;
-      /* @apply flex h-32  flex-col gap-2; */
       @apply flex h-32 flex-col;
     }
 
-    qti-simple-associable-choice > qti-simple-associable-choice {
-      @apply drag hover:hov focus:foc py-2 pl-4 pr-3;
+    & qti-simple-associable-choice > qti-simple-associable-choice {
+      @apply drag hover:hov focus:foc;
       flex-basis: fit-content;
     }
   }
@@ -145,8 +210,8 @@ qti-match-interaction:not(.qti-match-tabular) {
 
 qti-order-interaction {
   &::part(qti-simple-choice),
-  qti-simple-choice {
-    @apply drag hover:hov focus:foc py-2 pl-4 pr-3;
+  & qti-simple-choice {
+    @apply drag hover:hov focus:foc;
   }
   &::part(qti-simple-choice) {
     @apply flex w-full items-center overflow-hidden text-ellipsis;
@@ -161,14 +226,14 @@ qti-order-interaction {
     @apply drop hover:hov focus:foc flex min-h-[4rem];
   }
   &::part(active) {
-    @apply ring-2 ring-primary-400;
+    @apply act;
   }
 }
 
 qti-associate-interaction {
   &::part(qti-simple-associable-choice),
-  qti-simple-associable-choice {
-    @apply drag hover:hov focus:foc flex items-center overflow-hidden text-ellipsis py-2 pl-4 pr-3;
+  & qti-simple-associable-choice {
+    @apply drag hover:hov focus:foc flex items-center overflow-hidden text-ellipsis;
   }
   &::part(associables-container) {
     @apply my-2 flex w-full justify-between;
@@ -180,7 +245,7 @@ qti-associate-interaction {
     );
   }
   &::part(active) {
-    @apply ring-2 ring-primary-400;
+    @apply act;
   }
   &::part(drop-list) {
     @apply drop grid h-[3rem] w-1/3;
@@ -188,17 +253,17 @@ qti-associate-interaction {
 }
 
 qti-graphic-order-interaction {
-  /* @apply my-2; */
-
-  qti-hotspot-choice {
-    @apply spot hover:hov focus:foc aria-checked:act aria-readonly:rdo aria-disabled:dis;
-    /* &::after {
-        content: '';
-        @apply absolute top-0 block scale-75 bg-white;
-        height: inherit;
-        width: inherit;
-        clip-path: inherit;
-      } */
+  & qti-hotspot-choice {
+    @apply spot hover:hov focus:foc;
+    &[aria-checked='true'] {
+      @apply act;
+    }
+    &[aria-readonly='true'] {
+      @apply rdo;
+    }
+    &[aria-disabled='true'] {
+      @apply dis;
+    }
     &[aria-ordervalue] {
       @apply order flex items-center justify-center;
     }
@@ -211,32 +276,48 @@ qti-graphic-order-interaction {
 qti-graphic-associate-interaction {
   @apply relative block;
 
-  qti-associable-hotspot {
+  & qti-associable-hotspot {
     &[shape='circle'] {
       /* border-radius: 100%;
         background-color: green; */
-      @apply spot hover:hov focus:foc aria-checked:act aria-readonly:rdo aria-disabled:dis;
+      @apply spot hover:hov focus:foc;
+      &[aria-checked='true'] {
+        @apply act;
+      }
+      &[aria-readonly='true'] {
+        @apply rdo;
+      }
+      &[aria-disabled='true'] {
+        @apply dis;
+      }
     }
 
     &[shape='square'] {
       /* border-radius: 0; */
       /* background-color: green; */
-      @apply spot hover:hov focus:foc aria-checked:act aria-readonly:rdo aria-disabled:dis;
+      @apply spot hover:hov focus:foc;
+      &[aria-checked='true'] {
+        @apply act;
+      }
+      &[aria-readonly='true'] {
+        @apply rdo;
+      }
+      &[aria-disabled='true'] {
+        @apply dis;
+      }
     }
   }
 }
 
 qti-graphic-gap-match-interaction {
   @apply relative;
-  img {
+  & img {
     @apply m-0 p-0;
   }
 }
 
 qti-slider-interaction {
   @apply block; /* else no screenshot will be made with html-to-image */
-
-  /* @apply hover:hov focus:foc aria-checked:act aria-readonly:rdo aria-disabled:dis; */
 
   --qti-tick-color: rgb(229 231 235 / 1);
   --qti-tick-width: 1px;
@@ -268,7 +349,7 @@ qti-slider-interaction {
   }
 
   &::part(knob) {
-    @apply relative h-4 w-4 origin-center -translate-x-1/2 cursor-pointer rounded-full bg-primary-500;
+    @apply bg-primary relative h-4 w-4 origin-center -translate-x-1/2 cursor-pointer rounded-full;
     left: var(--value-percentage);
   }
 
@@ -288,7 +369,7 @@ qti-select-point-interaction {
 }
 
 qti-position-object-stage {
-  qti-position-object-interaction {
+  & qti-position-object-interaction {
     /* no styles necessary, only layout styles, defined in the component */
     /* height: 40px; */
   }

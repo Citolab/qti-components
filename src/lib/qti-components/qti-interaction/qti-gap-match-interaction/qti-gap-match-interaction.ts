@@ -11,6 +11,7 @@ export class QtiGapMatchInteraction extends DragDropInteractionMixin(LitElement,
         align-items: flex-start;
         gap: 0.5rem;
       }
+
       :host(.qti-choices-top) {
         flex-direction: column;
       }
@@ -23,10 +24,12 @@ export class QtiGapMatchInteraction extends DragDropInteractionMixin(LitElement,
       :host(.qti-choices-right) {
         flex-direction: row-reverse;
       }
-      [part='drags'] {
+      [part='drags'],
+      [part='drops'] {
         display: flex;
         align-items: flex-start;
         flex: 1;
+        gap: 0.5rem;
       }
     `
   ];
