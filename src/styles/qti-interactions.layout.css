@@ -31,6 +31,6 @@ qti-choice-interaction {
     /* is the default layout */
   }
   &[orientation='horizontal'] {
-    flex-direction: row;
+    @apply flex-row;
   }
 }

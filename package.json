@@ -65,11 +65,10 @@
     "lit": "^3.1.0"
   },
   "devDependencies": {
-    "@lit/context": "^1.1.0",
-    "lit": "^3.1.0",
     "@arethetypeswrong/cli": "^0.13.2",
     "@custom-elements-manifest/analyzer": "^0.9.0",
     "@jest/globals": "^29.7.0",
+    "@lit/context": "^1.1.0",
     "@storybook/addon-a11y": "^7.6.4",
     "@storybook/addon-essentials": "^7.6.4",
     "@storybook/addon-interactions": "^7.6.4",
@@ -86,6 +85,10 @@
     "@tailwindcss/typography": "^0.5.10",
     "@types/node": "^20.9.2",
     "@typescript-eslint/eslint-plugin": "^6.11.0",
+    "@unocss/postcss": "^0.58.5",
+    "@unocss/preset-typography": "^0.58.5",
+    "@unocss/preset-wind": "^0.58.5",
+    "@unocss/transformer-directives": "^0.58.5",
     "autoprefixer": "^10.4.16",
     "custom-element-vs-code-integration": "^1.2.1",
     "eslint": "^8.54.0",
@@ -97,6 +100,7 @@
     "eslint-plugin-storybook": "^0.6.15",
     "eslint-plugin-wc": "^2.0.4",
     "jest-environment-jsdom": "^29.7.0",
+    "lit": "^3.1.0",
     "lit-xml": "^0.6.0",
     "nodemon": "^3.0.1",
     "np": "^8.0.4",
@@ -117,8 +121,13 @@
     "tsup": "^8.0.0",
     "tsx": "^4.6.2",
     "typescript": "^5.2.2",
+    "unocss": "^0.58.5",
     "vite": "^5.0.7",
     "vite-tsconfig-paths": "^4.2.1"
   },
-  "customElements": "custom-elements.json"
+  "customElements": "custom-elements.json",
+  "dependencies": {
+    "@unocss/reset": "^0.58.5",
+    "modern-normalize": "^2.0.0"
+  }
 }

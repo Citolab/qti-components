@@ -42,13 +42,14 @@ export const Examples: Story = {
 
     return html`
       <div
+        class="item"
         @qti-interaction-changed=${onInteractionChangedAction}
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-first-updated=${onItemFirstUpdated}
       >
         ${unsafeHTML(xml.itemXML)}
       </div>
-      <button style="background:lightgray; padding:1rem" @click=${() => item?.processResponse()}>Submit</button>
+      <button @click=${() => item?.processResponse()}>Submit</button>
     `;
   },
   loaders: [async ({ args }) => ({ xml: await fetchItem(`${args.serverLocation}/${args.qtipkg}`, args.itemIndex) })]
