@@ -184,22 +184,29 @@ function itemsFromTest(xmlFragment: DocumentFragment) {
   return items;
 }
 
+let currentRequest: XMLHttpRequest | null = null;
+
 function loadXML(url) {
+  if (currentRequest !== null) {
+    currentRequest.abort(); // Abort the ongoing request if there is one
+  }
+
   return new Promise<XMLDocument | null>((resolve, reject) => {
     const xhr = new XMLHttpRequest();
+    currentRequest = xhr; // Store the current request
+
     xhr.open('GET', url, true);
     xhr.responseType = 'document';
 
     xhr.onload = () => {
       if (xhr.status >= 200 && xhr.status < 300) {
-        return resolve(xhr.responseXML);
+        resolve(xhr.responseXML);
       } else {
         reject(xhr.statusText);
-        return null;
       }
     };
 
-    xhr.onerror = function () {
+    xhr.onerror = () => {
       reject(xhr.statusText);
     };
 
