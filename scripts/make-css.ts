@@ -11,7 +11,7 @@ import postcssConfig from '../postcss.config.cjs';
 const outdir = 'dist';
 const themesDir = path.join(outdir, './');
 
-console.log('Generating tailwind css');
+console.log('Generating css');
 
 mkdirSync(themesDir, { recursive: true });
 
