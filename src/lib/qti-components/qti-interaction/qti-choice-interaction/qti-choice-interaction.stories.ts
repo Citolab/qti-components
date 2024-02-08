@@ -2,8 +2,7 @@ import { action } from '@storybook/addon-actions';
 import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
-// import { expect } from '@storybook/jest';
-import { within } from '@storybook/testing-library';
+import { within } from '@storybook/test';
 
 import type { Meta, StoryObj } from '@storybook/web-components';
 
@@ -41,9 +40,6 @@ const meta: Meta = {
     shuffle: { description: 'unsupported', table: { category: 'QTI' } },
     'data-max-selections-message': { description: 'unsupported', table: { category: 'QTI' } },
     'data-min-selections-message': { description: 'unsupported', table: { category: 'QTI' } }
-  },
-  parameters: {
-    jest: ['qti-choice-interaction.test.ts']
   }
 };
 export default meta;

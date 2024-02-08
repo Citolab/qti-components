@@ -1,7 +1,6 @@
 import '@citolab/qti-components/qti-components';
 import { QtiAnd, QtiConditionExpression } from '@citolab/qti-components/qti-components';
-import { expect } from '@storybook/jest';
-import { within } from '@storybook/testing-library';
+import { expect, within } from '@storybook/test';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 

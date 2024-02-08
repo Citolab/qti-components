@@ -1,7 +1,7 @@
 /* eslint-env node */
 
 module.exports = {
-  plugins: ['@typescript-eslint', 'wc', 'lit', 'lit-a11y', 'import', 'sort-imports-es6-autofix', 'jest'],
+  plugins: ['@typescript-eslint', 'wc', 'lit', 'lit-a11y', 'import', 'sort-imports-es6-autofix'],
   extends: ['eslint:recommended', 'plugin:wc/recommended', 'plugin:wc/best-practice', 'plugin:lit/recommended', 'plugin:lit-a11y/recommended', 'plugin:storybook/recommended'],
   env: {
     es2021: true,
@@ -12,8 +12,8 @@ module.exports = {
   },
   overrides: [{
     extends: ['plugin:@typescript-eslint/eslint-recommended'
-    // 'plugin:@typescript-eslint/recommended',
-    // 'plugin:@typescript-eslint/recommended-requiring-type-checking'
+      // 'plugin:@typescript-eslint/recommended',
+      // 'plugin:@typescript-eslint/recommended-requiring-type-checking'
     ],
 
     parser: '@typescript-eslint/parser',
@@ -78,13 +78,6 @@ module.exports = {
       // '@typescript-eslint/no-extraneous-class': 'error',
       // '@typescript-eslint/no-parameter-properties': 'error',
       // '@typescript-eslint/strict-boolean-expressions': 'off'
-    }
-  }, {
-    files: ["src/**/*.spec.ts", "src/**/*.test.ts"],
-    plugins: ["jest"],
-    extends: ["plugin:jest/recommended"],
-    rules: {
-      "jest/prefer-expect-assertions": "off"
     }
   }],
   rules: {

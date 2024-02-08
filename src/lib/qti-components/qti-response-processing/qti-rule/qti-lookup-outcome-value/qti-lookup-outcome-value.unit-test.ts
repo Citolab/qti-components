@@ -1,6 +1,6 @@
 import '@citolab/qti-components/qti-components';
 import { QtiAssessmentItem, QtiLookupOutcomeValue } from '@citolab/qti-components/qti-components';
-import { expect } from '@storybook/jest';
+import { expect } from '@storybook/test';
 import { Default } from './qti-lookup-outcome-value.stories';
 
 import { composeStory } from '@storybook/preview-api';
