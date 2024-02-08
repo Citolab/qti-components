@@ -15,7 +15,8 @@ console.log('Generating tailwind css');
 
 mkdirSync(themesDir, { recursive: true });
 
-buildStyleSheet({ in: 'src/item.minimal.css', out: 'item.minimal.css' });
+buildStyleSheet({ in: 'src/item-normalize.css', out: 'item-normalize.css' });
+buildStyleSheet({ in: 'src/item-prose.css', out: 'item-prose.css' });
 buildStyleSheet({ in: 'src/item.css', out: 'item.css' });
 
 function buildStyleSheet({ in: sourceCss, out: outCss }) {
