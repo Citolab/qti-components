@@ -56,19 +56,19 @@
     "list-outdated-dependencies": "npx npm-check-updates --format repo --peer",
     "update-dependencies": "npx npm-check-updates --peer -u && npm install",
     "arethetypeswrong": "npm run build-lib && attw --pack",
-    "----hooks----": "",
+    "----hooks----": "-",
     "prepublishOnly": "echo 'calling prepublishOnly as npm lifecycle hook to build-lib!' && npm run build-lib",
     "postpublish": "echo 'posthook for prosperity, does nothing for now!'"
   },
   "peerDependencies": {
     "@lit/context": "^1.1.0",
-    "lit": "^3.1.0"
+    "lit": "^3.1.1"
   },
   "devDependencies": {
-    "@lit/context": "^1.1.0",
     "@arethetypeswrong/cli": "^0.13.5",
     "@custom-elements-manifest/analyzer": "^0.9.0",
     "@jest/globals": "^29.7.0",
+    "@lit/context": "^1.1.0",
     "@storybook/addon-a11y": "^7.6.9",
     "@storybook/addon-essentials": "^7.6.9",
     "@storybook/addon-interactions": "^7.6.9",
@@ -88,6 +88,7 @@
     "@unocss/postcss": "^0.58.5",
     "@unocss/preset-typography": "^0.58.5",
     "@unocss/preset-wind": "^0.58.5",
+    "@unocss/reset": "^0.58.5",
     "@unocss/transformer-directives": "^0.58.5",
     "autoprefixer": "^10.4.17",
     "custom-element-vs-code-integration": "^1.2.1",
@@ -121,12 +122,9 @@
     "tsup": "^8.0.1",
     "tsx": "^4.7.0",
     "typescript": "^5.3.3",
+    "unocss": "^0.58.5",
     "vite": "^5.0.11",
     "vite-tsconfig-paths": "^4.3.1"
   },
-  "customElements": "custom-elements.json",
-  "dependencies": {
-    "@unocss/reset": "^0.58.5",
-    "modern-normalize": "^2.0.0"
-  }
+  "customElements": "custom-elements.json"
 }

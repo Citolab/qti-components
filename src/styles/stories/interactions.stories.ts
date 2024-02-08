@@ -27,19 +27,14 @@ export default {
   title: 'styles/themes'
 };
 export const Interactions = args => html`
-  <!-- <qti-item-body> -->
-  <!-- <div style="display:flex; gap:0.5rem"> -->
-  <h2>gap-gap-match-interaction</h2>
+  <h2>gap-match-interaction</h2>
   ${GapMatch.render({})}
   <h2>qti-match-interaction</h2>
   ${Match.render({})}
-  <!-- </div> -->
-  <!-- <div style="display:flex; gap:0.5rem"> -->
   <h2>qti-order-interaction</h2>
   ${Order.render({})}
   <h2>qti-associate-interaction</h2>
   ${Associate.render({})}
-  <!-- </div> -->
   <h2>qti-graphic-gap-match-interaction</h2>
   ${GraphicGapMatch.render({})}
 

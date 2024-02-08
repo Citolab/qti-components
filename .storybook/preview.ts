@@ -1,9 +1,11 @@
-import './app.css';
-
 import type { Preview } from '@storybook/web-components';
 import { setCustomElementsManifest } from '@storybook/web-components';
 import customElements from '../custom-elements.json';
+import '../src/item-normalize.css';
+import '../src/item-prose.css';
 import '../src/item.css';
+import './app.css';
+
 import { customViewports } from './custom-viewport-sizes';
 setCustomElementsManifest(customElements);
 

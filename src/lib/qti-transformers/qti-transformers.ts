@@ -68,7 +68,10 @@ export const qtiTransformItem = (): {
       convertCDATAtoComment(xmlFragment);
       return api;
     },
-
+    stripStyleSheets() {
+      stripStyleSheets(xmlFragment);
+      return api;
+    },
     html() {
       return new XMLSerializer().serializeToString(toHTML(xmlFragment));
     },
@@ -247,4 +250,9 @@ function convertCDATAtoComment(xmlFragment: DocumentFragment) {
     const commentText = document.createComment(element.textContent);
     element.replaceChild(commentText, element.firstChild);
   });
+}
+
+function stripStyleSheets(xmlFragment: DocumentFragment) {
+  // remove qti-stylesheet tag
+  xmlFragment.querySelector('qti-stylesheet')?.remove();
 }

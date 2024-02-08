@@ -1,17 +1,7 @@
 import { html } from 'lit';
 
-import { withShadowRoot } from '.storybook/decorators';
-import normalize from '../../item-normalize.css?inline';
-import prose from '../../item-prose.css?inline';
-import item from '../../item.css?inline';
-
-// import '../../item-normalize.css';
-// import '../../item-prose.css';
-// import '../../item.css';
-
 export default {
-  title: 'styles/themes',
-  decorators: [story => withShadowRoot(story(), normalize + prose + item)]
+  title: 'styles/themes'
 };
 
 class ButtonComponent extends HTMLElement {
