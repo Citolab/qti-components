@@ -254,5 +254,5 @@ function convertCDATAtoComment(xmlFragment: DocumentFragment) {
 
 function stripStyleSheets(xmlFragment: DocumentFragment) {
   // remove qti-stylesheet tag
-  xmlFragment.querySelector('qti-stylesheet')?.remove();
+  xmlFragment.querySelectorAll('qti-stylesheet').forEach(stylesheet => stylesheet.remove());
 }
