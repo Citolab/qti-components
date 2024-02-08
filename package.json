@@ -121,5 +121,8 @@
     "vitest": "^1.2.2",
     "wireit": "^0.14.4"
   },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "^4.9.6"
+  },
   "customElements": "custom-elements.json"
 }
