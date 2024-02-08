@@ -15,12 +15,18 @@ const meta: Meta = {
       options: packages.packages,
       control: { type: 'radio' }
     },
-    disabled: { control: { type: 'boolean' } }
+    disabled: { control: { type: 'boolean' } },
+    itemIndex: { control: { type: 'range', min: 0, max: 30, step: 1 } }
   },
   args: {
     serverLocation: '/api',
     qtipkg: 'examples',
     itemIndex: 0
+  },
+  parameters: {
+    controls: {
+      expanded: false
+    }
   }
 };
 

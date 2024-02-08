@@ -1,56 +1,56 @@
-:where(.item) abbr[title] {
+abbr[title] {
   text-decoration: underline dotted;
 }
-:where(.item) b,
-:where(.item) strong {
+b,
+strong {
   font-weight: bolder;
 }
-:where(.item) code,
-:where(.item) kbd,
-:where(.item) samp,
-:where(.item) pre {
+code,
+kbd,
+samp,
+pre {
   font-family: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; /* 1 */
   font-size: 1em; /* 2 */
 }
-:where(.item) small {
+small {
   font-size: 80%;
 }
 
-:where(.item) table {
+table {
   width: 100%;
   border-collapse: collapse;
 }
 
 /* Set table borders */
-:where(.item) table,
-:where(.item) th,
-:where(.item) td {
+table,
+th,
+td {
   border-bottom: 1px solid #eee;
 }
-:where(.item) td {
+td {
   padding: 0.5rem 0 0.5rem 0;
 }
 
-:where(.item) td > p {
+td > p {
   padding: 0;
   margin: 0;
 }
 
-:where(.item) th {
+th {
   text-align: left;
 }
 /* Style table header */
-:where(.item) th {
+th {
   font-weight: bold;
   /* background-color: #f2f2f2; */
 }
 
 /* Style alternating rows */
-:where(.item) tr:nth-child(even) {
+tr:nth-child(even) {
   /* background-color: #f9f9f9; */
 }
 
 /* Add hover effect to rows */
-:where(.item) tr:hover {
+tr:hover {
   /* background-color: #e6e6e6; */
 }

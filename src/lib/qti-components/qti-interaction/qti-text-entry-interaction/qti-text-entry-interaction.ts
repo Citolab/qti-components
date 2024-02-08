@@ -47,13 +47,6 @@ export class QtiTextEntryInteraction extends Interaction {
   static override get styles() {
     return [
       css`
-        :host {
-          display: inline-flex;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          position: relative;
-        }
         [part='correct'] {
           position: absolute;
           width: 100%;
