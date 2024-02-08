@@ -1,16 +1,16 @@
 import { consume } from '@lit/context';
 import { css, html } from 'lit';
-import { property, state } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import { BaseType, Cardinality } from '../../internal/expression-result';
 import { OutcomeVariable } from '../../internal/variables';
 import { ItemContext, itemContext } from '../../qti-assessment-item/qti-assessment-item.context';
 import { QtiVariableDeclaration } from '../qti-variable-declaration';
 
+@customElement('qti-outcome-declaration')
 export class QtiOutcomeDeclaration extends QtiVariableDeclaration {
   @property({ type: String, attribute: 'base-type' }) baseType: BaseType;
-
+  @property({ type: String, attribute: 'external-scored' }) externalScored: String;
   @property({ type: String }) identifier: string;
-
   @property({ type: String }) cardinality: Cardinality;
 
   @consume({ context: itemContext, subscribe: true })
@@ -73,4 +73,8 @@ export class QtiOutcomeDeclaration extends QtiVariableDeclaration {
   }
 }
 
-customElements.define('qti-outcome-declaration', QtiOutcomeDeclaration);
+declare global {
+  interface HTMLElementTagNameMap {
+    'qti-outcome-declaration': QtiOutcomeDeclaration;
+  }
+}

@@ -1,6 +1,8 @@
 import { css, html, LitElement } from 'lit';
+import { customElement } from 'lit/decorators.js';
 import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-interaction-mixin';
 
+@customElement('qti-gap-match-interaction')
 export class QtiGapMatchInteraction extends DragDropInteractionMixin(LitElement, 'qti-gap-text', false, 'qti-gap') {
   static override styles = [
     css`
@@ -35,4 +37,8 @@ export class QtiGapMatchInteraction extends DragDropInteractionMixin(LitElement,
   }
 }
 
-customElements.define('qti-gap-match-interaction', QtiGapMatchInteraction);
+declare global {
+  interface HTMLElementTagNameMap {
+    'qti-gap-match-interaction': QtiGapMatchInteraction;
+  }
+}

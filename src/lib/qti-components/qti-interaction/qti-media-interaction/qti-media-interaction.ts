@@ -1,6 +1,8 @@
 import { css, html } from 'lit';
+import { customElement } from 'lit/decorators.js';
 import { Interaction } from '../internal/interaction/interaction';
 
+@customElement('qti-media-interaction')
 export class QtiMediaInteraction extends Interaction {
   value = 0;
   reset() {
@@ -53,4 +55,8 @@ export class QtiMediaInteraction extends Interaction {
   }
 }
 
-customElements.define('qti-media-interaction', QtiMediaInteraction);
+declare global {
+  interface HTMLElementTagNameMap {
+    'qti-media-interaction': QtiMediaInteraction;
+  }
+}

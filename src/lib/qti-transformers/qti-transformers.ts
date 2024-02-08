@@ -1,4 +1,7 @@
+const xml = String.raw;
+
 /**
+ * Browser based QTI-XML to HTML transformer.
  * Returns an object with methods to load, parse, transform and serialize QTI XML items.
  * @returns An object with methods to load, parse, transform and serialize QTI XML items.
  * @example
@@ -7,18 +10,25 @@
  * qtiTransformer.path('/assessmentItem/itemBody');
  * const html = qtiTransformer.html();
  * const xml = qtiTransformer.xml();
+ * const htmldoc = qtiTransformer.htmldoc();
+ * const xmldoc = qtiTransformer.xmldoc();
  *
  * qtiTransformItem().parse(storyXML).html()
  */
-/**
- * This module exports a function that returns an object with methods to load, parse, transform and serialize QTI XML items.
- * @returns An object with methods to load, parse, transform and serialize QTI XML items.
- */
-export const qtiTransformItem = () => {
-  let xmlFragment: DocumentFragment;
+
+export const qtiTransformItem = (): {
+  load: (uri: string) => Promise<typeof api>;
+  parse: (xmlString: string) => typeof api;
+  path: (location: string) => typeof api;
+  html: () => string;
+  xml: () => string;
+  htmldoc: () => DocumentFragment;
+  xmldoc: () => XMLDocument;
+} => {
+  let xmlFragment: XMLDocument;
 
   const api = {
-    async load(uri) {
+    async load(uri: string) {
       return new Promise<typeof api>((resolve, reject) => {
         loadXML(uri).then(xml => {
           xmlFragment = xml;
@@ -26,7 +36,7 @@ export const qtiTransformItem = () => {
         });
       });
     },
-    parse(xmlString) {
+    parse(xmlString: string) {
       xmlFragment = parseXML(xmlString);
       return api;
     },
@@ -34,11 +44,42 @@ export const qtiTransformItem = () => {
       setLocation(xmlFragment, location);
       return api;
     },
+    pciHooks(uri: string) {
+      const attributes = ['hook', 'module'];
+      const documentPath = uri.substring(0, uri.lastIndexOf('/'));
+      for (const attribute of attributes) {
+        const srcAttributes = xmlFragment.querySelectorAll('[' + attribute + ']');
+        srcAttributes.forEach(node => {
+          const srcValue = node.getAttribute(attribute)!;
+          if (!srcValue.startsWith('data:') && !srcValue.startsWith('http')) {
+            // Just paste the relative path of the src location after the documentrootPath
+            // old pcis can have a .js, new pci's don't
+            node.setAttribute('base-url', uri);
+            node.setAttribute(
+              'module',
+              documentPath + '/' + encodeURIComponent(srcValue + (srcValue.endsWith('.js') ? '' : '.js'))
+            );
+          }
+        });
+      }
+      return api;
+    },
+    convertCDATAtoComment() {
+      convertCDATAtoComment(xmlFragment);
+      return api;
+    },
+
     html() {
-      return toHTML(xmlFragment);
+      return new XMLSerializer().serializeToString(toHTML(xmlFragment));
     },
     xml(): string {
       return new XMLSerializer().serializeToString(xmlFragment);
+    },
+    htmldoc() {
+      return toHTML(xmlFragment);
+    },
+    xmldoc(): XMLDocument {
+      return xmlFragment; // new XMLSerializer().serializeToString(xmlFragment);
     }
   };
   return api;
@@ -54,8 +95,15 @@ export const qtiTransformItem = () => {
  * const html = qtiTransformer.html();
  * const xml = qtiTransformer.xml();
  */
-export const qtiTransformTest = () => {
-  let xmlFragment: DocumentFragment;
+export const qtiTransformTest = (): {
+  load: (uri: string) => Promise<typeof api>;
+  items: () => { identifier: string; href: string; category: string }[];
+  html: () => string;
+  xml: () => string;
+  htmldoc: () => DocumentFragment;
+  xmldoc: () => XMLDocument;
+} => {
+  let xmlFragment: XMLDocument;
 
   const api = {
     async load(uri) {
@@ -70,35 +118,41 @@ export const qtiTransformTest = () => {
       return itemsFromTest(xmlFragment);
     },
     html() {
-      return toHTML(xmlFragment);
+      return new XMLSerializer().serializeToString(toHTML(xmlFragment));
     },
     xml(): string {
       return new XMLSerializer().serializeToString(xmlFragment);
+    },
+    htmldoc() {
+      return toHTML(xmlFragment);
+    },
+    xmldoc(): XMLDocument {
+      return xmlFragment;
     }
   };
   return api;
 };
 
-const xmlToHTML = `
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+/*   <!-- convert CDATA to comments -->
+  <xsl:template match="text()[contains(., 'CDATA')]">
+  <xsl:comment>
+    <xsl:value-of select="."/>
+  </xsl:comment>
+</xsl:template>
+*/
+
+/*
+  <!-- remove xml comments -->
+  <xsl:template match="comment()" />
+  */
+
+const xmlToHTML = xml`<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:output method="html" version="5.0" encoding="UTF-8" indent="yes" />
   <xsl:template match="@*|node()">
     <xsl:copy>
       <xsl:apply-templates select="@*|node()"/>
     </xsl:copy>
   </xsl:template>
-
-  <!-- convert CDATA to comments -->
-  <xsl:template match="text()[contains(., 'CDATA')]">
-    <strong>
-      <xsl:comment>
-        <xsl:value-of select="."/>
-      </xsl:comment>
-    <strong>
-  </xsl:template>
-
-  <!-- remove xml comments -->
-  <xsl:template match="comment()" />
 
   <!-- remove existing namespaces -->
   <xsl:template match="*">
@@ -128,15 +182,13 @@ function itemsFromTest(xmlFragment: DocumentFragment) {
 }
 
 function loadXML(url) {
-  return new Promise<DocumentFragment | null>((resolve, reject) => {
+  return new Promise<XMLDocument | null>((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.open('GET', url, true);
     xhr.responseType = 'document';
 
     xhr.onload = () => {
       if (xhr.status >= 200 && xhr.status < 300) {
-        // const docFragment = document.createDocumentFragment();
-        // docFragment.appendChild(xhr.responseXML);
         return resolve(xhr.responseXML);
       } else {
         reject(xhr.statusText);
@@ -158,16 +210,19 @@ function parseXML(xmlDocument: string) {
   return xmlFragment;
 }
 
-function toHTML(xmlFragment: DocumentFragment) {
+function toHTML(xmlFragment: Document): DocumentFragment {
   const processor = new XSLTProcessor();
   const xsltDocument = new DOMParser().parseFromString(xmlToHTML, 'text/xml');
   processor.importStylesheet(xsltDocument);
   const itemHTMLFragment = processor.transformToFragment(xmlFragment, document);
-  const itemHTML = new XMLSerializer().serializeToString(itemHTMLFragment);
-  return itemHTML;
+  return itemHTMLFragment;
 }
 
 function setLocation(xmlFragment: DocumentFragment, location: string) {
+  if (!location.endsWith('/')) {
+    location += '/';
+  }
+
   xmlFragment.querySelectorAll('[src],[href]').forEach(elWithSrc => {
     let attr: 'src' | 'href' | '' = '';
 
@@ -183,5 +238,13 @@ function setLocation(xmlFragment: DocumentFragment, location: string) {
       const newSrcValue = location + encodeURI(attrValue);
       elWithSrc.setAttribute(attr, newSrcValue);
     }
+  });
+}
+
+function convertCDATAtoComment(xmlFragment: DocumentFragment) {
+  const cdataElements = xmlFragment.querySelectorAll('qti-custom-operator[class="js.org"] > qti-base-value');
+  cdataElements.forEach(element => {
+    const commentText = document.createComment(element.textContent);
+    element.replaceChild(commentText, element.firstChild);
   });
 }

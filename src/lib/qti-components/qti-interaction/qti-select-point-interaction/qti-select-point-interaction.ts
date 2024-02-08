@@ -1,9 +1,10 @@
-import { LitElement, css, html } from 'lit';
-import { property, state } from 'lit/decorators.js';
-import { Interaction } from '../internal/interaction/interaction';
+import { css, html } from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { styleMap } from 'lit/directives/style-map.js';
+import { Interaction } from '../internal/interaction/interaction';
 
+@customElement('qti-select-point-interaction')
 export class QtiSelectPointInteraction extends Interaction {
   @property({
     type: Number,
@@ -90,4 +91,9 @@ export class QtiSelectPointInteraction extends Interaction {
     super.disconnectedCallback();
   }
 }
-customElements.define('qti-select-point-interaction', QtiSelectPointInteraction);
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'qti-select-point-interaction': QtiSelectPointInteraction;
+  }
+}

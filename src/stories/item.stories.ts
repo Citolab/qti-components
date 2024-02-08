@@ -34,7 +34,7 @@ export const Examples: Story = {
     const onOutcomeChangedAction = action('qti-outcome-changed');
     const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
-      action('qti-assessment-item-first-updated');
+      action('qti-assessment-item-connected');
     };
 
     item && (item.disabled = disabled);
@@ -45,7 +45,7 @@ export const Examples: Story = {
         class="item"
         @qti-interaction-changed=${onInteractionChangedAction}
         @qti-outcome-changed=${onOutcomeChangedAction}
-        @qti-assessment-item-first-updated=${onItemFirstUpdated}
+        @qti-assessment-item-connected=${onItemFirstUpdated}
       >
         ${unsafeHTML(xml.itemXML)}
       </div>

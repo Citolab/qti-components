@@ -1,4 +1,4 @@
-import { css, html, LitElement } from 'lit';
+import { LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
 @customElement('qti-companion-materials-info')
@@ -11,4 +11,10 @@ export class QtiCompanionMaterialsInfo extends LitElement {
   // override render() {
   //   return html` <slot></slot> `;
   // }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'qti-companion-materials-info': QtiCompanionMaterialsInfo;
+  }
 }

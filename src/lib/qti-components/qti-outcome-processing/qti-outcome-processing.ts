@@ -1,6 +1,6 @@
-import { css, html, LitElement, PropertyValueMap } from 'lit';
+import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import { Calculate, QtiRule, QtiRuleBase } from '..';
+import { QtiRule, QtiRuleBase } from '..';
 
 @customElement('qti-outcome-processing')
 export class QtiOutcomeProcessing extends LitElement {
@@ -20,6 +20,12 @@ export class QtiOutcomeProcessing extends LitElement {
     const logic = new QtiOutcomeProcessingProcessor();
     const rules = [...this.children] as QtiRule[];
     logic.process(rules);
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'qti-outcome-processing': QtiOutcomeProcessing;
   }
 }
 

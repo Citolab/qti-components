@@ -1,6 +1,8 @@
 import { css, html } from 'lit';
+import { customElement } from 'lit/decorators.js';
 import { QtiFeedback } from '../qti-feedback';
 
+@customElement('qti-modal-feedback')
 export class QtiModalFeedback extends QtiFeedback {
   static override styles = css`
     .on {
@@ -14,4 +16,8 @@ export class QtiModalFeedback extends QtiFeedback {
   override render = () => html` <slot part="feedback" class="${this.showStatus}"></slot> `;
 }
 
-customElements.define('qti-modal-feedback', QtiModalFeedback);
+declare global {
+  interface HTMLElementTagNameMap {
+    'qti-modal-feedback': QtiModalFeedback;
+  }
+}

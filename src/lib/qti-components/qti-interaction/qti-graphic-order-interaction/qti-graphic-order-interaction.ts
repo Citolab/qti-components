@@ -2,8 +2,10 @@ import { css, html } from 'lit';
 import { Choices } from '../internal/choices/choices';
 import { QtiHotspotChoice } from '../qti-hotspot-choice';
 
+import { customElement } from 'lit/decorators.js';
 import { positionHotspots } from '../internal/hotspots/hotspot';
 
+@customElement('qti-graphic-order-interaction')
 export class QtiGraphicOrderInteraction extends Choices {
   choiceOrdering: boolean;
 
@@ -84,4 +86,8 @@ export class QtiGraphicOrderInteraction extends Choices {
   }
 }
 
-customElements.define('qti-graphic-order-interaction', QtiGraphicOrderInteraction);
+declare global {
+  interface HTMLElementTagNameMap {
+    'qti-graphic-order-interaction': QtiGraphicOrderInteraction;
+  }
+}

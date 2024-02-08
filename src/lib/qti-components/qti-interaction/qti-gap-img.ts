@@ -1,6 +1,7 @@
 import { LitElement } from 'lit';
-import { property } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 
+@customElement('qti-gap-img')
 export class QtiGapImg extends LitElement {
   @property({ type: Number, reflect: true }) tabindex: number | undefined = 0;
 
@@ -9,4 +10,8 @@ export class QtiGapImg extends LitElement {
   }
 }
 
-customElements.define('qti-gap-img', QtiGapImg);
+declare global {
+  interface HTMLElementTagNameMap {
+    'qti-gap-img': QtiGapImg;
+  }
+}

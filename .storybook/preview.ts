@@ -3,6 +3,8 @@ import './app.css';
 import type { Preview } from '@storybook/web-components';
 import { setCustomElementsManifest } from '@storybook/web-components';
 import customElements from '../custom-elements.json';
+import '../src/item.css';
+import { customViewports } from './custom-viewport-sizes';
 setCustomElementsManifest(customElements);
 
 const preview: Preview = {
@@ -13,12 +15,9 @@ const preview: Preview = {
   parameters: {
     actions: { argTypesRegex: '^on[A-Z].*' },
     controls: {
-      expanded: true,
-      matchers: {
-        color: /(background|color)$/i,
-        date: /Date$/
-      }
-    }
+      expanded: true
+    },
+    viewport: { viewports: customViewports }
   }
 };
 

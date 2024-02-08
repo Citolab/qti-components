@@ -1,5 +1,7 @@
 import { html, LitElement } from 'lit';
+import { customElement } from 'lit/decorators.js';
 
+@customElement('qti-simple-associable-choice')
 // tslint:disable: indent
 export class QtiSimpleAssociableChoice extends LitElement {
   // pk: This needs some explanation
@@ -23,4 +25,8 @@ export class QtiSimpleAssociableChoice extends LitElement {
   }
 }
 
-customElements.define('qti-simple-associable-choice', QtiSimpleAssociableChoice);
+declare global {
+  interface HTMLElementTagNameMap {
+    'qti-simple-associable-choice': QtiSimpleAssociableChoice;
+  }
+}

@@ -52,19 +52,6 @@ export class QtiAssessmentItem extends LitElement {
     variables: itemContextVariables
   };
 
-  // @property({ type: String, reflect: true, attribute: 'state' })
-  _state:
-    | 'item-created' // <-- pk: this is the state when the item is created
-    | 'item-connected' // <-- pk: this is the state when the item is connected
-    | 'variables-restored' // <-- pk: this is the state when the variables are restored
-    | 'first-updated' // <-- pk: this is the state when the first-updated event is fired
-    | 'item-connected' = 'item-created'; // <-- pk: this is the state when the item is connected
-
-  private set state(value: this['_state']) {
-    this._state = value;
-    // console.info(`item: %c${this._state}`, 'background: #222; color: #bada55');
-  }
-
   public get variables(): VariableValue<string | string[] | null>[] {
     return this._context.variables.map(v => ({ identifier: v.identifier, value: v.value, type: v.type }));
   }
@@ -106,14 +93,10 @@ export class QtiAssessmentItem extends LitElement {
   private _feedbackElements: QtiFeedback[] = [];
   private _interactionElements: Interaction[] = [];
 
-  firstUpdated(val): void {
-    this.state = 'first-updated';
-    this._emit<{ detail: QtiAssessmentItem }>('qti-assessment-item-first-updated', this);
-  }
-
-  connectedCallback(): void {
+  async connectedCallback(): Promise<void> {
     super.connectedCallback();
-    this.state = 'item-connected';
+    await this.updateComplete;
+    this._emit<{ detail: QtiAssessmentItem }>('qti-assessment-item-connected', this);
   }
 
   /** @deprecated use variables property instead */
@@ -141,7 +124,6 @@ export class QtiAssessmentItem extends LitElement {
 
   constructor() {
     super();
-    this.state = 'item-created';
     this.addEventListener('qti-register-variable', e => {
       this._context = { ...this._context, variables: [...this._context.variables, e.detail.variable] };
       this._initialContext = this._context;
