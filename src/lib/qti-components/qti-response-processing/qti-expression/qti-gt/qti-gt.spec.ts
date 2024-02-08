@@ -1,5 +1,4 @@
 import '@citolab/qti-components/qti-components';
-import { describe, expect } from '@jest/globals';
 import { html, render } from 'lit';
 import { QtiGt } from './qti-gt';
 describe('qti-gt', () => {

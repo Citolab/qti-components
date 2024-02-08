@@ -36,30 +36,34 @@
     "dist",
     "types",
     "./dist/item.css",
-    "./dist/item.minimal.css"
+    "./dist/item-normalize.css",
+    "./dist/item-prose.css"
   ],
   "scripts": {
-    "test": "jest",
-    "test:output": "jest --json --outputFile=.jest-test-results.json",
-    "test:watch-output": "jest --watch --json --outputFile=.jest-test-results.json || true",
-    "dev": "vite",
-    "build-app": "tsc && vite build",
+    "test": "vitest",
+    "build": "wireit",
     "build-lib": "tsx scripts/build.ts",
     "watch-lib": "nodemon --watch \"src/**\" --ext \"ts,json,css\" --ignore \"src/**/*.spec.ts\" --exec \"tsx scripts/build.ts\" watch",
-    "deploy": "firebase deploy --only hosting:qti-components",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build",
     "storybook:test": "test-storybook",
-    "npm publish": "np",
     "cem": "cem analyze --watch",
     "lint": "eslint src/lib/**",
-    "kill 6006": "sudo lsof -i :6006 | grep LISTEN | awk '{print $2}' | xargs kill",
-    "list-outdated-dependencies": "npx npm-check-updates --format repo --peer",
-    "update-dependencies": "npx npm-check-updates --peer -u && npm install",
-    "arethetypeswrong": "npm run build-lib && attw --pack",
+    "arethetypeswrong": "wireit",
     "----hooks----": "-",
     "prepublishOnly": "echo 'calling prepublishOnly as npm lifecycle hook to build-lib!' && npm run build-lib",
     "postpublish": "echo 'posthook for prosperity, does nothing for now!'"
+  },
+  "wireit": {
+    "build": {
+      "command": "tsc"
+    },
+    "arethetypeswrong": {
+      "command": "attw --pack",
+      "dependencies": [
+        "build-lib"
+      ]
+    }
   },
   "peerDependencies": {
     "@lit/context": "^1.1.0",
@@ -120,7 +124,9 @@
     "typescript": "^5.3.3",
     "unocss": "^0.58.5",
     "vite": "^5.0.11",
-    "vite-tsconfig-paths": "^4.3.1"
+    "vite-tsconfig-paths": "^4.3.1",
+    "vitest": "^1.2.2",
+    "wireit": "^0.14.4"
   },
   "customElements": "custom-elements.json"
 }

@@ -1,14 +1,13 @@
-import { describe, expect, it } from '@jest/globals';
 import { html, render } from 'lit';
 // import '../qti-basevalue/qti-basevalue';
+import { ItemContext, QtiAssessmentItem } from 'src';
 import '../../../qti-assessment-item/qti-assessment-item';
-import '../../qti-response-processing/qti-response-processing';
 import '../../../qti-variable-declaration/qti-outcome-declaration/qti-outcome-declaration';
-import './qti-sum';
+import '../../qti-response-processing/qti-response-processing';
 import './../../qti-rule/qti-set-outcome-value/qti-set-outcome-value';
 import './../qti-basevalue/qti-basevalue';
+import './qti-sum';
 import { QtiSum } from './qti-sum';
-import { ItemContext, QtiAssessmentItem } from 'src';
 
 describe('QtiComponent qti-sum', () => {
   it('all true', () => {

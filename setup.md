@@ -1,0 +1,7 @@
+    "dev": "vite",
+    "build-app": "tsc && vite build",
+    "kill 6006": "sudo lsof -i :6006 | grep LISTEN | awk '{print $2}' | xargs kill",
+    "list-outdated-dependencies": "npx npm-check-updates --format repo --peer",
+    "update-dependencies": "npx npm-check-updates --peer -u && npm install",
+    "npm publish": "np",
+    "deploy": "firebase deploy --only hosting:qti-components",

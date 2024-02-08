@@ -1,5 +1,5 @@
 import '@citolab/qti-components/qti-components';
-import { expect } from '@jest/globals';
+
 import { render } from 'lit';
 import Meta, {
   AllTrueResultsInTrue as AllTrueResultsInTrueStory,

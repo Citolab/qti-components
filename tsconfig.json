@@ -1,17 +1,12 @@
 {
-  "ts-node": {
-    "moduleTypes": {
-      "jest.config.ts": "cjs"
-    }
-  },
   "compilerOptions": {
     "target": "es2017",
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "declaration": true,
-    "emitDeclarationOnly": true,
-    "outDir": "./types",
+    // "emitDeclarationOnly": true,
+    "outDir": "./build",
     "strict": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
@@ -28,8 +23,9 @@
     "baseUrl": "./",
     "paths": {
       "@citolab/qti-components/qti-components": ["src/lib/qti-components"]
-    }
+    },
+    "types": ["vitest/globals"]
   },
-  "include": ["src/**/*.ts", "./jest.config.ts"],
+  "include": ["src/**/*.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

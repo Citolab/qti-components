@@ -1,5 +1,5 @@
 import '@citolab/qti-components/qti-components';
-import { describe, expect, it } from '@jest/globals';
+
 import crypto from 'crypto';
 import { render } from 'lit';
 import { Default } from './qti-choice-interaction.stories';
@@ -58,7 +58,7 @@ describe('qti-choice-interaction', () => {
       const ci = getQtiChoiceInteraction();
       const si = Array.from(getQtiSimpleChoices())[0];
 
-      const dispatchEventSpy = jest.spyOn(ci, 'dispatchEvent');
+      const dispatchEventSpy = vi.spyOn(ci, 'dispatchEvent');
 
       si.click();
 

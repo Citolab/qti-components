@@ -1,4 +1,3 @@
-import { describe, expect, it } from '@jest/globals';
 import { html, render } from 'lit';
 import { QtiConditionExpression } from '../qti-condition-expression';
 import './qti-or';

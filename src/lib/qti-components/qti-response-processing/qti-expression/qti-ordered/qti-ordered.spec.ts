@@ -1,4 +1,3 @@
-import { describe, expect, it } from '@jest/globals';
 import { html, render } from 'lit';
 import '../qti-basevalue/qti-basevalue';
 import './qti-ordered';

@@ -61,6 +61,7 @@ const meta: Meta = {
 export default meta;
 
 export const Default = {
+  args: {},
   render: args => {
     return html`${unsafeHTML(storyXML)}`;
   },
