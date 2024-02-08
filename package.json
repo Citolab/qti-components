@@ -41,6 +41,7 @@
   ],
   "scripts": {
     "test": "vitest",
+    "test-browser": "vitest --browser.name=chrome",
     "build": "wireit",
     "build-lib": "tsx scripts/build.ts",
     "watch-lib": "nodemon --watch \"src/**\" --ext \"ts,json,css\" --ignore \"src/**/*.spec.ts\" --exec \"tsx scripts/build.ts\" watch",
@@ -90,6 +91,8 @@
     "@unocss/preset-wind": "^0.58.5",
     "@unocss/reset": "^0.58.5",
     "@unocss/transformer-directives": "^0.58.5",
+    "@vitest/browser": "^1.2.2",
+    "@wdio/cli": "^8.31.0",
     "autoprefixer": "^10.4.17",
     "custom-element-vs-code-integration": "^1.2.1",
     "eslint": "^8.56.0",
