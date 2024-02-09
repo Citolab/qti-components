@@ -3,6 +3,7 @@
 /* base */
 @import './styles/qti-base/item-normalize';
 @import './styles/qti-base/item-layout';
+@import './styles/qti-base/item-view';
 @import './styles/qti-base/item-prose';
 
 /* components */

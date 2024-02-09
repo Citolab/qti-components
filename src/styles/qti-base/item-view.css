@@ -1,0 +1,8 @@
+[view],
+qti-outcome-declaration,
+qti-response-declaration {
+  display: none;
+}
+[view].show {
+  display: block;
+}
