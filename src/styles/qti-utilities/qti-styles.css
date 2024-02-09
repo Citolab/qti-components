@@ -1,0 +1,60 @@
+@layer qti-utilities {
+  .qti-underline {
+    text-decoration: underline;
+  }
+
+  .qti-align-left {
+    text-align: left;
+  }
+
+  .qti-align-center {
+    text-align: center;
+  }
+
+  .qti-align-right {
+    text-align: right;
+  }
+
+  .qti-valign-top {
+    vertical-align: top;
+  }
+
+  .qti-valign-middle {
+    vertical-align: middle;
+  }
+
+  .qti-valign-baseline {
+    vertical-align: baseline;
+  }
+
+  .qti-valign-bottom {
+    vertical-align: bottom;
+  }
+
+  .qti-fullwidth {
+    width: 100%;
+  }
+
+  .qti-hidden {
+    display: none;
+  }
+
+  .qti-visually-hidden {
+    position: fixed !important;
+    overflow: hidden;
+    width: 1px;
+    height: 1px;
+    border: 0;
+    margin: -1px;
+    clip: rect(1px 1px 1px 1px);
+  }
+
+  .qti-bordered {
+    padding: 2px;
+    border: 1px solid #888;
+  }
+
+  .qti-well {
+    @apply bordered inline-block rounded border border-gray-300 bg-gray-100 px-3 py-2 text-gray-600;
+  }
+}

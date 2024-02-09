@@ -1,2 +1,18 @@
-@import './styles/qti-item.css';
+@layer qti-base, qti-components, qti-utilities, qti-variants;
+
+/* base */
+@import './styles/qti-base/item-normalize';
+@import './styles/qti-base/item-layout';
+@import './styles/qti-base/item-prose';
+
+/* components */
+@import './styles/qti-components/qti-interactions';
+
+/* utilities */
+@import './styles/qti-utilities/qti-styles';
+
+/* variants */
+@import './styles/qti-variants/qti-input-width';
+@import './styles/qti-variants/qti-interactions';
+
 @unocss;

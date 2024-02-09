@@ -15,8 +15,6 @@ console.log('Generating css');
 
 mkdirSync(themesDir, { recursive: true });
 
-buildStyleSheet({ in: 'src/item-normalize.css', out: 'item-normalize.css' });
-buildStyleSheet({ in: 'src/item-prose.css', out: 'item-prose.css' });
 buildStyleSheet({ in: 'src/item.css', out: 'item.css' });
 
 function buildStyleSheet({ in: sourceCss, out: outCss }) {

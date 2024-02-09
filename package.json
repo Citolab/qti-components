@@ -17,9 +17,7 @@
   "exports": {
     "./qti-components": "./dist/qti-components/index.js",
     "./qti-transformers": "./dist/qti-transformers/index.js",
-    "./item.css": "./dist/item.css",
-    "./item-normalize.css": "./dist/item-normalize.css",
-    "./item-prose.css": "./dist/item-prose.css"
+    "./item.css": "./dist/item.css"
   },
   "types": "./dist/qti-components/index.d.ts",
   "typesVersions": {
@@ -35,9 +33,7 @@
   "files": [
     "dist",
     "types",
-    "./dist/item.css",
-    "./dist/item-normalize.css",
-    "./dist/item-prose.css"
+    "./dist/item.css"
   ],
   "scripts": {
     "test": "vitest",
