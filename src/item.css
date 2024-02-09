@@ -1,4 +1,4 @@
-@layer qti-base, qti-components, qti-utilities, qti-variants;
+@layer qti-base, qti-components, qti-utilities, qti-variants, qti-extended;
 
 /* base */
 @import './styles/qti-base/item-normalize';
