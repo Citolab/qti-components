@@ -13,7 +13,6 @@ const preview: Preview = {
   },
   // https://storybook.js.org/docs/web-components/essentials/controls#custom-control-type-matchers
   parameters: {
-    actions: { argTypesRegex: '^on[A-Z].*' },
     controls: {
       expanded: true
     },
