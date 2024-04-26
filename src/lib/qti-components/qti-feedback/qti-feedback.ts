@@ -35,8 +35,6 @@ export abstract class QtiFeedback extends LitElement {
     if (Array.isArray(outcomeVariable.value)) {
       isFound = outcomeVariable.value.includes(this.identifier);
     } else {
-      !IsNullOrUndefined(outcomeVariable?.value) &&
-      this.identifier === outcomeVariable.value);
       isFound =
         (!IsNullOrUndefined(this.identifier) &&
           !IsNullOrUndefined(outcomeVariable?.value) &&
