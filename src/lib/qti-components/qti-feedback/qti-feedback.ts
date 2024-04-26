@@ -1,7 +1,6 @@
 import { LitElement, PropertyValueMap } from 'lit';
 import { property } from 'lit/decorators.js';
 import { QtiAssessmentItem } from '../qti-assessment-item/qti-assessment-item';
-import { isNullOrUndefined } from 'util';
 import { IsNullOrUndefined } from '../internal/utils';
 
 export abstract class QtiFeedback extends LitElement {
@@ -33,13 +32,9 @@ export abstract class QtiFeedback extends LitElement {
 
     if (this.outcomeIdentifier !== outcomeIdentifier || !outcomeVariable) return;
     let isFound = false;
-    console.log("-------")
     if (Array.isArray(outcomeVariable.value)) {
       isFound = outcomeVariable.value.includes(this.identifier);
     } else {
-      console.log(this.identifier);
-      console.log(this.outcomeIdentifier);
-      console.log(!IsNullOrUndefined(this.identifier) &&
       !IsNullOrUndefined(outcomeVariable?.value) &&
       this.identifier === outcomeVariable.value);
       isFound =
@@ -54,6 +49,5 @@ export abstract class QtiFeedback extends LitElement {
 
   private showFeedback(value: boolean) {    
     this.showStatus = (value && this.showHide === 'show') || (!value && this.showHide === 'hide') ? 'on' : 'off';    
-    console.log(this.showStatus);
   }
 }
