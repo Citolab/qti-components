@@ -15,7 +15,7 @@ export abstract class QtiFeedback extends LitElement {
   protected identifier: string;
 
   @property({ type: String, attribute: false })
-  protected showStatus: string;
+  public showStatus: string;
 
   public override connectedCallback() {
     super.connectedCallback();
@@ -28,14 +28,20 @@ export abstract class QtiFeedback extends LitElement {
     );
   }
 
-  public checkShowFeedback(outcomeIdentifier: string) {
+  public checkShowFeedback(outcomeIdentifier: string) {    
     const outcomeVariable = (this.closest('qti-assessment-item') as QtiAssessmentItem).getOutcome(outcomeIdentifier);
 
     if (this.outcomeIdentifier !== outcomeIdentifier || !outcomeVariable) return;
     let isFound = false;
+    console.log("-------")
     if (Array.isArray(outcomeVariable.value)) {
       isFound = outcomeVariable.value.includes(this.identifier);
     } else {
+      console.log(this.identifier);
+      console.log(this.outcomeIdentifier);
+      console.log(!IsNullOrUndefined(this.identifier) &&
+      !IsNullOrUndefined(outcomeVariable?.value) &&
+      this.identifier === outcomeVariable.value);
       isFound =
         (!IsNullOrUndefined(this.identifier) &&
           !IsNullOrUndefined(outcomeVariable?.value) &&
@@ -46,7 +52,8 @@ export abstract class QtiFeedback extends LitElement {
     this.showFeedback(isFound);
   }
 
-  private showFeedback(value: boolean) {
-    this.showStatus = (value && this.showHide === 'show') || (!value && this.showHide === 'hide') ? 'on' : 'off';
+  private showFeedback(value: boolean) {    
+    this.showStatus = (value && this.showHide === 'show') || (!value && this.showHide === 'hide') ? 'on' : 'off';    
+    console.log(this.showStatus);
   }
 }
