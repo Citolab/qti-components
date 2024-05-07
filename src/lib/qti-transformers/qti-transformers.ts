@@ -100,6 +100,7 @@ export const qtiTransformItem = (): {
  */
 export const qtiTransformTest = (): {
   load: (uri: string) => Promise<typeof api>;
+  parse: (xmlString: string) => typeof api;
   items: () => { identifier: string; href: string; category: string }[];
   html: () => string;
   xml: () => string;
@@ -116,6 +117,10 @@ export const qtiTransformTest = (): {
           return resolve(api);
         });
       });
+    },
+    parse(xmlString: string) {
+      xmlFragment = parseXML(xmlString);
+      return api;
     },
     items() {
       return itemsFromTest(xmlFragment);
