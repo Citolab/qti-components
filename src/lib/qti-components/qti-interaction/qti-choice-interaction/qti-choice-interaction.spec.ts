@@ -1,15 +1,7 @@
 import '@citolab/qti-components/qti-components';
 
-import crypto from 'crypto';
 import { render } from 'lit';
 import { Default } from './qti-choice-interaction.stories';
-
-// FIXME: Check if this is still needed, only when using choice this should be available
-Object.defineProperty(global, 'crypto', {
-  value: {
-    getRandomValues: (arr: any) => crypto.randomBytes(arr.length)
-  }
-});
 
 const getQtiSimpleChoices = () => Array.from(document.body.querySelectorAll('qti-simple-choice'));
 const getQtiChoiceInteraction = () => document.body.querySelector('qti-choice-interaction');
