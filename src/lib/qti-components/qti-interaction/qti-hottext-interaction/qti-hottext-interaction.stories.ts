@@ -1,10 +1,9 @@
-import { html } from 'lit';
 import { action } from '@storybook/addon-actions';
+import { html } from 'lit';
 
-import './qti-hottext-interaction';
-import '../qti-hottext';
 import { ifDefined } from 'lit/directives/if-defined.js';
-import { Story, StoryObj } from '@storybook/web-components';
+import '../qti-hottext';
+import './qti-hottext-interaction';
 
 const responses = ['[]', '["a"]', '"b"', '["d","e"]'];
 

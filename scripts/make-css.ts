@@ -6,7 +6,7 @@ import fs, { mkdirSync } from 'fs';
 import path from 'path';
 import postcss from 'postcss';
 
-import postcssConfig from '../postcss.config.cjs';
+import postcssConfig from '../postcss.config.mjs';
 
 const outdir = 'dist';
 const themesDir = path.join(outdir, './');

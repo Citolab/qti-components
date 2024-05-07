@@ -7,7 +7,9 @@ const getQtiSimpleChoices = () => Array.from(document.body.querySelectorAll('qti
 const getQtiChoiceInteraction = () => document.body.querySelector('qti-choice-interaction');
 
 describe('qti-choice-interaction', () => {
-  afterEach(() => (document.getElementsByTagName('html')[0].innerHTML = '')); // MANDATORY
+  afterEach(async () => {
+    document.getElementsByTagName('html')[0].innerHTML = '';
+  }); // MANDATORY
 
   describe('maxChoices0', () => {
     beforeEach(async () => {

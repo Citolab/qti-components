@@ -1,7 +1,7 @@
+import fs from 'fs';
 import { join } from 'path';
 import postcss from 'postcss';
-import postcssConfig from '../postcss.config.cjs';
-import fs from 'fs';
+import postcssConfig from '../postcss.config.mjs';
 
 export const InlineCSSPlugin = {
   name: 'inline-css',
