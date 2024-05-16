@@ -38,6 +38,7 @@
   "scripts": {
     "test": "vitest",
     "test-browser": "vitest --browser.name=chrome",
+    "dev": "vite",
     "build": "wireit",
     "build-lib": "tsx scripts/build.ts",
     "watch-lib": "nodemon --watch \"src/**\" --ext \"ts,json,css\" --ignore \"src/**/*.spec.ts\" --exec \"tsx scripts/build.ts\" watch",
