@@ -56,6 +56,7 @@ export default defineConfig({
   ],
   shortcuts: {
     bordered: `border-2 border-solid border-gray-400 outline-none`,
+    borderinvisible: `border-transparent`,
     form: `    bordered flex w-5 h-5 shrink-0 items-center justify-center border-2 `,
     'p-lg': 'py-2 pl-4 pr-3',
     /* interaction elements, choose one */

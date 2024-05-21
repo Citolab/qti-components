@@ -55,3 +55,12 @@ export const Button = {
     classes: ['qti-input-control-hidden']
   }
 };
+
+export const Hidden = {
+  render: Default.render,
+
+  args: {
+    maxChoices: 1,
+    classes: ['qti-unselected-hidden']
+  }
+};

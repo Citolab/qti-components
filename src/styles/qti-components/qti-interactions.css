@@ -156,7 +156,8 @@
       }
     }
 
-    &:not(.qti-input-control-hidden) {
+    &:not(.qti-input-control-hidden),
+    &:not(.qti-unselected-hidden) {
       qti-hottext {
         @apply check hover:hov focus:foc inline-flex;
         &::part(cha) {
@@ -174,6 +175,24 @@
         }
         &[role='checkbox'][aria-checked='true']::part(cha) {
           @apply check-checkbox-checked;
+        }
+      }
+    }
+
+    &.qti-unselected-hidden {
+      qti-hottext {
+        @apply bordered borderinvisible cursor-pointer hover:bordered  focus:foc inline-flex;
+        &::part(ch) {
+          @apply !hidden;
+        }
+        &[aria-checked='true'] {
+          @apply bg-blue-200;
+        }
+        &[aria-readonly='true'] {
+          @apply rdo;
+        }
+        &[aria-disabled='true'] {
+          @apply dis;
         }
       }
     }
