@@ -1,16 +1,17 @@
 import { LitElement, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
+import { Interaction } from '../internal/interaction/interaction';
+import { Configuration, IMSpci } from './interface';
 
 declare const requirejs: any;
 declare const define: any;
 
 @customElement('qti-portable-custom-interaction')
-export class QtiPortableCustomInteraction extends LitElement {
-  private responseIdentifier: string;
+export class QtiPortableCustomInteraction extends Interaction {
   private module: string;
   private customInteractionTypeIdentifier: string;
-  private baseUrl: string;
   private _errorMessage: string = null;
+  private pci: IMSpci<unknown>;
 
   static override get properties() {
     return {
@@ -23,10 +24,6 @@ export class QtiPortableCustomInteraction extends LitElement {
         type: String,
         attribute: 'custom-interaction-type-identifier'
       },
-      baseUrl: {
-        type: String,
-        attribute: 'base-url'
-      },
       _errorMessage: {
         type: String,
         state: true
@@ -34,7 +31,14 @@ export class QtiPortableCustomInteraction extends LitElement {
     };
   }
 
-  getTAOConfig(node): {} | void {
+  validate(): boolean {
+    return true; // FOR NOW
+  }
+  set response(val: Readonly<string | string[]>) {
+    // Only set state is supported in a PCI
+  }
+
+  getTAOConfig(node) {
     const a = node.querySelectorAll('properties');
     let config = {};
 
@@ -72,19 +76,21 @@ export class QtiPortableCustomInteraction extends LitElement {
       return config;
     }
     console.log('Can not find qti-custom-interaction config');
+    return null;
   }
 
-  register(item) {
+  register(pci: IMSpci<unknown>) {
+    this.pci = pci;
     const type = this.parentElement.tagName === 'QTI-CUSTOM-INTERACTION' ? 'TAO' : 'IMS';
-
-    const dom = type == 'IMS' ? this.querySelector('qti-interaction-markup') : this.querySelector('markup');
+    const dom: HTMLElement =
+      type == 'IMS' ? this.querySelector('qti-interaction-markup') : this.querySelector('markup');
     dom.classList.add('qti-customInteraction');
 
     if (type == 'TAO' && this.querySelector('properties')) {
       (this.querySelector('properties') as HTMLElement).style.display = 'none';
     }
 
-    const config =
+    const config: any =
       type == 'IMS'
         ? {
             properties: this.dataset
@@ -92,8 +98,8 @@ export class QtiPortableCustomInteraction extends LitElement {
         : this.getTAOConfig(this);
 
     type == 'IMS'
-      ? item.getInstance(dom, config, undefined)
-      : item.initialize(this.customInteractionTypeIdentifier, dom.firstElementChild, config);
+      ? pci.getInstance(dom, config, undefined)
+      : (pci as any).initialize(this.customInteractionTypeIdentifier, dom.firstElementChild, config);
 
     if (type == 'TAO') {
       const links = Array.from(this.querySelectorAll('link')).map(acc => acc.getAttribute('href'));
@@ -112,9 +118,10 @@ export class QtiPortableCustomInteraction extends LitElement {
     super.connectedCallback();
     const requireConfig = {
       context: this.customInteractionTypeIdentifier,
-      baseUrl: this.baseUrl,
-      catchError: true
+      catchError: true,
+      paths: []
     };
+
     // pk: c'est tres ugly.. typescript whyunospread add props?!?
     if (window['requirePaths'] && window['requireShim']) {
       requireConfig['paths'] = window['requirePaths'];
@@ -124,8 +131,10 @@ export class QtiPortableCustomInteraction extends LitElement {
       this._errorMessage = `requirejs not found, load with cdn: https://cdnjs.com/libraries/require.js`;
       return;
     }
-
+    // Initial check in case the children are already present
+    this.registerModules(requireConfig);
     const requirePCI = requirejs.config(requireConfig);
+
     requirePCI(
       ['require'],
       require => {
@@ -144,7 +153,9 @@ export class QtiPortableCustomInteraction extends LitElement {
         // If it was previsouly loaded, the register will nog kick in, because the class is already defined
         // and in the constructor of the PCI, the register is called.
         // So now it is alreadly defined, we just register it ourselves.
+
         const wasPreviouslyLoaded = require.defined(this.module);
+
         require([this.module], ctxA => {
           // register it because it was previously loaded
           wasPreviouslyLoaded && this.register(ctxA);
@@ -156,6 +167,26 @@ export class QtiPortableCustomInteraction extends LitElement {
         this._errorMessage = err;
       }
     );
+  }
+
+  registerModules(config: any) {
+    // Get the qti-interaction-modules element
+    const interactionModules = this.querySelector('qti-interaction-modules');
+
+    if (interactionModules) {
+      // Get all qti-interaction-module elements
+      const modules = interactionModules.querySelectorAll('qti-interaction-module');
+      // Loop through each module and register it with RequireJS
+      for (const module of modules) {
+        const moduleId = module.getAttribute('id');
+        const primaryPath = module.getAttribute('primary-path');
+
+        if (moduleId && primaryPath) {
+          // Register the module with RequireJS
+          config['paths'] = { ...config['paths'], ...{ [moduleId]: primaryPath.replace(/\.js$/, '') } };
+        }
+      }
+    }
   }
 
   override render() {

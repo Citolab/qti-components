@@ -16,8 +16,13 @@ export const Default = {
       data-sum1="$1 * 12 + 3"
       data-sum2="$1 * 4 + 53"
       data-table-size="4"
-      base-url="./qti-portable-custom-interaction/"
     >
+      <qti-interaction-modules>
+        <qti-interaction-module
+          id="pci-getallen"
+          primary-path="/assets/qti-portable-custom-interaction/pci-getallen.js"
+        ></qti-interaction-module>
+      </qti-interaction-modules>
       <qti-interaction-markup></qti-interaction-markup>
     </qti-portable-custom-interaction>`
 };
