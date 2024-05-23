@@ -48,3 +48,12 @@ export declare type QtiVariableJSON = {
     [Ka in 'boolean' | 'integer' | 'float' | 'string' | 'pair' | 'directedPair' | 'identifier']?: ResponseType;
   };
 };
+
+export interface ModuleResolutionConfig {
+  waitSeconds?: number;
+  context?: string;
+  catchError?: boolean;
+  paths: {
+    [key: string]: string;
+  };
+}
