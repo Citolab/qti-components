@@ -231,12 +231,11 @@ export class QtiPortableCustomInteraction extends Interaction {
     // get the value of attribute: data-base-url
     const baseUrl = this.getAttribute('data-base-url');
     if (baseUrl) {
-      const moduleResolutionPath = `${this.getAttribute('data-base-url')}/modules/module_resolution.js`;
-      const moduleResolutionFallbackPath = `${this.getAttribute('data-base-url')}/modules/modules_resolution.js`;
+      const moduleResolutionPath = `${baseUrl}/modules/module_resolution.js`;
+      const moduleResolutionFallbackPath = `${baseUrl}/modules/module_resolution_fallback.js`;
       if (moduleResolutionPath) {
-        const primaryConfig = await this.loadConfig(moduleResolutionPath);
-        const fallbackConfig = await this.loadConfig(moduleResolutionFallbackPath);
-        await this.mergeConfigs(config, primaryConfig, fallbackConfig);
+        const primaryConfig = await this.loadConfig(moduleResolutionPath, baseUrl);
+        await this.mergeConfigs(config, primaryConfig, moduleResolutionFallbackPath);
       }
     }
     // Get the qti-interaction-modules element
@@ -275,13 +274,19 @@ export class QtiPortableCustomInteraction extends Interaction {
     return singleForwardSlashes;
   }
 
-  loadConfig = async (url: string): Promise<ModuleResolutionConfig> => {
+  loadConfig = async (url: string, baseUrl?: string): Promise<ModuleResolutionConfig> => {
     url = this.removeDoubleSlashes(url);
     try {
       const requireConfig = await fetch(url);
       if (requireConfig.ok) {
         const config = await requireConfig.json();
-        return config as ModuleResolutionConfig;
+        const moduleCong = config as ModuleResolutionConfig;
+        for (const moduleId in moduleCong.paths) {
+          if (baseUrl) {
+            moduleCong.paths[moduleId] = this.removeDoubleSlashes(`${baseUrl}/${moduleCong.paths[moduleId]}`);
+          }
+        }
+        return moduleCong;
       }
     } catch (e) {
       // do nothing
@@ -292,7 +297,7 @@ export class QtiPortableCustomInteraction extends Interaction {
   mergeConfigs = async (
     config: ModuleResolutionConfig,
     primaryConfig: ModuleResolutionConfig,
-    fallbackConfig: ModuleResolutionConfig
+    fallback: string | ModuleResolutionConfig
   ) => {
     for (const moduleId in primaryConfig?.paths) {
       // Check if the key is already in the config
@@ -300,7 +305,7 @@ export class QtiPortableCustomInteraction extends Interaction {
         // check if file exists
         let failedToResolve = false;
         try {
-          const pathWithExtension = primaryConfig.paths[moduleId].endsWith('.js')
+          const pathWithExtension = primaryConfig.paths[moduleId]?.toLocaleLowerCase().endsWith('.js')
             ? primaryConfig.paths[moduleId]
             : primaryConfig.paths[moduleId] + '.js';
           const m = await fetch(pathWithExtension);
@@ -312,8 +317,21 @@ export class QtiPortableCustomInteraction extends Interaction {
         } catch {
           failedToResolve = true;
         }
-        if (failedToResolve && fallbackConfig?.paths[moduleId]) {
-          config.paths[moduleId] = fallbackConfig.paths[moduleId].replace(/\.js$/, '');
+        if (failedToResolve && fallback) {
+          if (typeof fallback === 'string') {
+            try {
+              const fallbackConfig = await this.loadConfig(fallback);
+              if (fallbackConfig?.paths[moduleId]) {
+                config.paths[moduleId] = fallbackConfig.paths[moduleId].replace(/\.js$/, '');
+              }
+            } catch {
+              // ignore error
+            }
+          } else if (typeof fallback === 'object') {
+            if (fallback?.paths[moduleId]) {
+              config.paths[moduleId] = fallback.paths[moduleId].replace(/\.js$/, '');
+            }
+          }
         } else if (failedToResolve) {
           console.error('Failed to resolve module: ' + moduleId);
         }
