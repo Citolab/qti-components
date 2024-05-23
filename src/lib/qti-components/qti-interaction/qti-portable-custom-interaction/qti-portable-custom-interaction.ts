@@ -283,7 +283,9 @@ export class QtiPortableCustomInteraction extends Interaction {
         const moduleCong = config as ModuleResolutionConfig;
         for (const moduleId in moduleCong.paths) {
           if (baseUrl) {
-            moduleCong.paths[moduleId] = this.removeDoubleSlashes(`${baseUrl}/${moduleCong.paths[moduleId]}`);
+            moduleCong.paths[moduleId] = moduleCong.paths[moduleId]?.toLocaleLowerCase().startsWith('http')
+              ? moduleCong.paths[moduleId]
+              : this.removeDoubleSlashes(`${baseUrl}/${moduleCong.paths[moduleId]}`);
           }
         }
         return moduleCong;
