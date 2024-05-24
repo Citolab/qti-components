@@ -210,7 +210,7 @@ export class QtiPortableCustomInteraction extends Interaction {
 
           require([this.module], ctxA => {
             // register it because it was previously loaded
-            wasPreviouslyLoaded && this.register(ctxA);
+            this.register(ctxA);
           }, err => {
             this._errorMessage = err;
           });
@@ -250,12 +250,12 @@ export class QtiPortableCustomInteraction extends Interaction {
         const fallbackPath = module.getAttribute('fallback-path');
         const primaryConfig: ModuleResolutionConfig = primaryPath
           ? {
-              paths: { ...config['paths'], ...{ [moduleId]: primaryPath } }
+              paths: { ...config['paths'], ...{ [moduleId]: this.getResolvablePath(primaryPath, baseUrl) } }
             }
           : null;
         const fallbackConfig: ModuleResolutionConfig = fallbackPath
           ? {
-              paths: { ...config['paths'], ...{ [moduleId]: fallbackPath } }
+              paths: { ...config['paths'], ...{ [moduleId]: this.getResolvablePath(fallbackPath, baseUrl) } }
             }
           : null;
         if (moduleId && primaryConfig) {
@@ -283,9 +283,7 @@ export class QtiPortableCustomInteraction extends Interaction {
         const moduleCong = config as ModuleResolutionConfig;
         for (const moduleId in moduleCong.paths) {
           if (baseUrl) {
-            moduleCong.paths[moduleId] = moduleCong.paths[moduleId]?.toLocaleLowerCase().startsWith('http')
-              ? moduleCong.paths[moduleId]
-              : this.removeDoubleSlashes(`${baseUrl}/${moduleCong.paths[moduleId]}`);
+            moduleCong.paths[moduleId] = this.getResolvablePath(moduleCong.paths[moduleId], baseUrl);
           }
         }
         return moduleCong;
@@ -294,6 +292,12 @@ export class QtiPortableCustomInteraction extends Interaction {
       // do nothing
     }
     return null;
+  };
+
+  getResolvablePath = (path: string, basePath?: string) => {
+    return path?.toLocaleLowerCase().startsWith('http') || !basePath
+      ? path
+      : this.removeDoubleSlashes(`${basePath}/${path}`);
   };
 
   mergeConfigs = async (
