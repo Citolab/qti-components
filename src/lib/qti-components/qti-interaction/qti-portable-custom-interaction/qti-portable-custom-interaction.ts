@@ -210,7 +210,7 @@ export class QtiPortableCustomInteraction extends Interaction {
 
           require([this.module], ctxA => {
             // register it because it was previously loaded
-            this.register(ctxA);
+            wasPreviouslyLoaded && this.register(ctxA);
           }, err => {
             this._errorMessage = err;
           });

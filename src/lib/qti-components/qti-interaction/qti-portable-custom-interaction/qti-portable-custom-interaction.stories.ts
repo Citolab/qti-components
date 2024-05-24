@@ -129,4 +129,55 @@ export const GraphAmpIO = {
     </qti-portable-custom-interaction>`
 };
 
-//       base-url="./qti-portable-custom-interaction/" data-item-path-uri="https://storage.googleapis.com/bank-dev-ampup/c/54393195-3146-417d-ba1f-eb80dc5a30e8/43894675-a8cb-4846-b594-29fcd130bc7f/b110b173-a4a7-4ec2-8dff-4988395da848/"
+export const TapToReveal = {
+  render: args =>
+    html`<qti-portable-custom-interaction
+      class="hmh-tap-border-rounded"
+      custom-interaction-type-identifier="urn:fdc:hmhco.com:pci:tapToReveal"
+      data-tap-message="Tap to reveal the color of the solution"
+      data-toggle="true"
+      module="tap"
+      response-identifier="RESPONSE"
+      data-base-url="/assets/qti-portable-custom-interaction/"
+    >
+      <qti-prompt>
+        <p>Add 30ml of red cabbage solution to 100ml of each of the solutions below.</p>
+        <p>Observe the color change.</p>
+        <p>Click to see if your solution became the expected color.</p>
+      </qti-prompt>
+      <qti-interaction-markup>
+        <section class="border">
+          <div role="grid">
+            <div role="row">
+              <figure role="gridcell">
+                <figcaption>
+                  <h5>Baking Soda</h5>
+                </figcaption>
+                <img
+                  alt="Baking soda solution turns bright blue."
+                  class="tap"
+                  src="assets/qti-portable-custom-interaction/baking_soda.svg"
+                />
+              </figure>
+              <figure role="gridcell">
+                <figcaption>
+                  <h5>Vinegar</h5>
+                </figcaption>
+                <img alt="Vinegar turns pink." class="tap" src="assets/qti-portable-custom-interaction/vinegar.svg" />
+              </figure>
+              <figure role="gridcell">
+                <figcaption>
+                  <h5>Ammonia</h5>
+                </figcaption>
+                <img
+                  alt="Ammonia turns light green."
+                  class="tap"
+                  src="assets/qti-portable-custom-interaction/ammonia.svg"
+                />
+              </figure>
+            </div>
+          </div>
+        </section>
+      </qti-interaction-markup>
+    </qti-portable-custom-interaction>`
+};
