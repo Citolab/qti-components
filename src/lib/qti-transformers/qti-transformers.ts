@@ -28,9 +28,9 @@ export const qtiTransformItem = (): {
   let xmlFragment: XMLDocument;
 
   const api = {
-    async load(uri: string) {
+    async load(uri: string, cancelPreviousRequest = true) {
       return new Promise<typeof api>((resolve, reject) => {
-        loadXML(uri).then(xml => {
+        loadXML(uri, cancelPreviousRequest).then(xml => {
           xmlFragment = xml;
           return resolve(api);
         });
@@ -191,8 +191,8 @@ function itemsFromTest(xmlFragment: DocumentFragment) {
 
 let currentRequest: XMLHttpRequest | null = null;
 
-function loadXML(url) {
-  if (currentRequest !== null) {
+function loadXML(url, cancelPreviousRequest = true) {
+  if (cancelPreviousRequest && currentRequest !== null) {
     currentRequest.abort(); // Abort the ongoing request if there is one
   }
 
