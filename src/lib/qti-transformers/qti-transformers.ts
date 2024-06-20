@@ -17,7 +17,7 @@ const xml = String.raw;
  */
 
 export const qtiTransformItem = (): {
-  load: (uri: string) => Promise<typeof api>;
+  load: (uri: string, cancelPreviousRequest: boolean) => Promise<typeof api>;
   parse: (xmlString: string) => typeof api;
   path: (location: string) => typeof api;
   html: () => string;
