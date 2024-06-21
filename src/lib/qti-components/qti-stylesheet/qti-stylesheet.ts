@@ -5,14 +5,14 @@ import { customElement } from 'lit/decorators.js';
 export class QtiStylesheet extends LitElement {
   private styleLink: HTMLStyleElement | HTMLLinkElement;
 
-  constructor() {
-    super();
-  }
+  // protected createRenderRoot(): HTMLElement | DocumentFragment {
+  //   return this;
+  // }
 
   protected firstUpdated(_changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
     super.firstUpdated(_changedProperties);
 
-    const item = this.closest('qti-assessment-item');
+    const item = this;
     const link = this.getAttribute('href');
 
     if (link !== null) {
@@ -35,10 +35,9 @@ export class QtiStylesheet extends LitElement {
   }
 
   override disconnectedCallback() {
-    const item = this.closest('qti-assessment-item');
-    if (this.styleLink && this.styleLink.parentElement === this) {
+    if (this.styleLink) {
       try {
-        item.removeChild(this.styleLink);
+        this.styleLink.remove();
       } catch (error) {
         console.log('could not remove stylesheet');
       }
