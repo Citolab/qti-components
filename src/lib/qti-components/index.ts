@@ -5,6 +5,7 @@ export * from './internal/expression-result';
 export * from './internal/variables';
 /* only exported to override or extend for specific purposes */
 export * from './qti-assessment-item/qti-assessment-item';
+export * from './qti-assessment-stimulus-ref/qti-assessment-stimulus-ref';
 export * from './qti-interaction/internal/choice/qti-choice';
 export * from './qti-item-body/qti-item-body';
 export * from './qti-prompt/qti-prompt';
@@ -34,8 +35,8 @@ export * from './qti-interaction/qti-inline-choice-interaction/qti-inline-choice
 /* start choiceinteraction */
 export * from './qti-interaction/qti-choice-interaction/qti-choice-interaction';
 /* end choiceinteraction */
-export * from './qti-response-processing';
 export * from './qti-outcome-processing/qti-outcome-processing';
+export * from './qti-response-processing';
 /* start custom interactions */
 export * from './qti-interaction/qti-portable-custom-interaction/qti-portable-custom-interaction';
 /* end custom interactions */
