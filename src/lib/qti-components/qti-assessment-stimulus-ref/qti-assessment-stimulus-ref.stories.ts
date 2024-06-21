@@ -45,22 +45,15 @@ export const StimulusWithRef: Story = {
     </qti-assessment-item>`
 };
 
+/* An example of how to use the qti-assessment-stimulus-ref component to load a stimulus and append it to a placeholder element */
 export const StimulusDeliveryPlatform: Story = {
   render: args => {
     const placeholderRef = createRef<HTMLElement>();
     return html` <div
       @qti-assessment-stimulus-ref-connected=${async (e: Event) => {
         e.preventDefault();
-
         const stimulusRef = e.target as QtiAssessmentStimulusRef;
         stimulusRef.loadAndAppendStimulus(placeholderRef.value);
-
-        // const path = stimulusRef.href.substring(0, stimulusRef.href.lastIndexOf('/'));
-        // const stimulus = await qtiTransformItem()
-        //   .load(stimulusRef.href)
-        //   .then(api => api.path(path).htmldoc());
-
-        // stimulusRef.appendChild(stimulus);
       }}
     >
       <div class="qti-shared-stimulus" ${ref(placeholderRef)}></div>
