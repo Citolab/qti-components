@@ -20,6 +20,7 @@ export const qtiTransformItem = (): {
   load: (uri: string, cancelPreviousRequest?: boolean) => Promise<typeof api>;
   parse: (xmlString: string) => typeof api;
   path: (location: string) => typeof api;
+  fn: (fn: (xmlFragment: XMLDocument) => void) => typeof api;
   html: () => string;
   xml: () => string;
   htmldoc: () => DocumentFragment;
@@ -28,7 +29,7 @@ export const qtiTransformItem = (): {
   let xmlFragment: XMLDocument;
 
   const api = {
-    async load(uri: string, cancelPreviousRequest = true) {
+    async load(uri: string, cancelPreviousRequest = false) {
       return new Promise<typeof api>((resolve, reject) => {
         loadXML(uri, cancelPreviousRequest).then(xml => {
           xmlFragment = xml;
@@ -42,6 +43,10 @@ export const qtiTransformItem = (): {
     },
     path: (location: string) => {
       setLocation(xmlFragment, location);
+      return api;
+    },
+    fn(fn: (xmlFragment: XMLDocument) => void) {
+      fn(xmlFragment);
       return api;
     },
     pciHooks(uri: string) {
@@ -101,6 +106,7 @@ export const qtiTransformItem = (): {
 export const qtiTransformTest = (): {
   load: (uri: string) => Promise<typeof api>;
   parse: (xmlString: string) => typeof api;
+  fn: (fn: (xmlFragment: XMLDocument) => void) => typeof api;
   items: () => { identifier: string; href: string; category: string }[];
   html: () => string;
   xml: () => string;
@@ -120,6 +126,10 @@ export const qtiTransformTest = (): {
     },
     parse(xmlString: string) {
       xmlFragment = parseXML(xmlString);
+      return api;
+    },
+    fn(fn: (xmlFragment: XMLDocument) => void) {
+      fn(xmlFragment);
       return api;
     },
     items() {
