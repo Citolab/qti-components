@@ -2,11 +2,25 @@ import { LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { qtiTransformItem } from '../../qti-transformers';
 
+/**
+ * Represents a custom element for referencing an assessment stimulus.
+ */
 @customElement('qti-assessment-stimulus-ref')
 export class QtiAssessmentStimulusRef extends LitElement {
+  /**
+   * The identifier of the stimulus.
+   */
   @property({ type: String }) identifier = '';
+
+  /**
+   * The href of the stimulus.
+   */
   @property({ type: String }) href = '';
 
+  /**
+   * Lifecycle method called when the element is connected to the DOM.
+   * Loads and appends the stimulus if the 'qti-assessment-stimulus-ref-connected' event is not prevented.
+   */
   public async connectedCallback(): Promise<void> {
     super.connectedCallback();
 
@@ -25,6 +39,10 @@ export class QtiAssessmentStimulusRef extends LitElement {
     }
   }
 
+  /**
+   * Loads and appends the stimulus to the specified element.
+   * @param stimulusRef - The element to which the stimulus will be appended.
+   */
   public async loadAndAppendStimulus(stimulusRef: Element) {
     const path = this.href.substring(0, this.href.lastIndexOf('/'));
     const stimulus = await qtiTransformItem()

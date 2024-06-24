@@ -51,7 +51,7 @@ export const StimulusDeliveryPlatform: Story = {
     const placeholderRef = createRef<HTMLElement>();
     return html` <div
       @qti-assessment-stimulus-ref-connected=${async (e: Event) => {
-        e.preventDefault();
+        e.preventDefault(); // this prevents the default behaviour of the item to set the stimulus content
         const stimulusRef = e.target as QtiAssessmentStimulusRef;
         stimulusRef.loadAndAppendStimulus(placeholderRef.value);
       }}
