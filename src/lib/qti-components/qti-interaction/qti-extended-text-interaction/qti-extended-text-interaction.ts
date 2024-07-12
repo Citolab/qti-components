@@ -62,21 +62,22 @@ export class QtiExtendedTextInteraction extends Interaction {
   }
 
   override render() {
-    return html`<textarea
-      part="textarea"
-      ${ref(this.textareaRef)}
-      spellcheck="false"
-      autocomplete="off"
-      @keydown="${event => event.stopImmediatePropagation()}"
-      @keyup="${this.textChanged}"
-      @change="${this.textChanged}"
-      placeholder="${ifDefined(this.placeholderText ? this.placeholderText : undefined)}"
-      maxlength="${ifDefined(this.expectedLength ? this.expectedLength : undefined)}"
-      pattern="${ifDefined(this.patternMask ? this.patternMask : undefined)}"
-      ?disabled="${this.disabled}"
-      ?readonly="${this.readonly}"
-      .value=${this._value}
-    ></textarea>`;
+    return html`<slot name="prompt"></slot
+      ><textarea
+        part="textarea"
+        ${ref(this.textareaRef)}
+        spellcheck="false"
+        autocomplete="off"
+        @keydown="${event => event.stopImmediatePropagation()}"
+        @keyup="${this.textChanged}"
+        @change="${this.textChanged}"
+        placeholder="${ifDefined(this.placeholderText ? this.placeholderText : undefined)}"
+        maxlength="${ifDefined(this.expectedLength ? this.expectedLength : undefined)}"
+        pattern="${ifDefined(this.patternMask ? this.patternMask : undefined)}"
+        ?disabled="${this.disabled}"
+        ?readonly="${this.readonly}"
+        .value=${this._value}
+      ></textarea>`;
   }
 
   protected textChanged(event: Event) {

@@ -4,7 +4,7 @@ import { html } from 'lit';
 import { action } from '@storybook/addon-actions';
 import { Meta, StoryObj } from '@storybook/web-components';
 import { ifDefined } from 'lit/directives/if-defined.js';
-
+import '../../qti-prompt/qti-prompt';
 type Story = StoryObj;
 
 const meta: Meta = {
@@ -46,6 +46,7 @@ export const Default = {
       pattern-mask=${ifDefined(args['pattern-mask'])}
       data-patternmask-message=${ifDefined(args['data-pattern-mask-message'])}
     >
+      <qti-prompt>Write Sam a postcard. Answer the questions. Write 25-35 words.</qti-prompt>
     </qti-extended-text-interaction>
   `
 };
