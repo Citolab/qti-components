@@ -1,4 +1,4 @@
-import { html, LitElement } from 'lit';
+import { html, LitElement, PropertyValues } from 'lit';
 import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-interaction-mixin';
 
 import { customElement, property, state } from 'lit/decorators.js';
@@ -60,12 +60,21 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
             html`<tr>
               <td part="c-header">${unsafeHTML(row.innerHTML)}</td>
               ${this.cols.map((col, cIndex) => {
-                const value = `${row.getAttribute('identifier')} ${col.getAttribute('identifier')}`;
+                const rowId = row.getAttribute('identifier');
+                const colId = col.getAttribute('identifier');
+                const value = `${rowId} ${colId}`;
+                const selectedInRowCount = this.response.filter(v => v.split(' ')[0] === rowId).length || 0;
+
+                const checked = this.response.includes(value);
+                // disable if match max is greater than 1 and max is reached
+                const disable = row.matchMax === 1 ? false : selectedInRowCount >= row.matchMax && !checked;
+
                 return html`<td>
                   <input
-                    type="checkbox"
-                    value=${col.getAttribute('identifier')}
-                    .checked=${this.response.includes(value)}
+                    type=${row.matchMax === 1 ? 'radio' : `checkbox`}
+                    value=${value}
+                    .disabled=${disable}
+                    .checked=${checked}
                     @change=${e => {
                       const checkbox = e.target as HTMLInputElement;
                       if (checkbox.checked) {

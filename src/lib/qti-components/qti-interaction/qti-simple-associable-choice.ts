@@ -1,9 +1,29 @@
 import { html, LitElement } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 
 @customElement('qti-simple-associable-choice')
 // tslint:disable: indent
 export class QtiSimpleAssociableChoice extends LitElement {
+  /** the minimal number of selections a candidate must make */
+  @property({
+    type: Number,
+    attribute: 'match-min'
+  })
+  public matchMin: number = 0;
+
+  /** the maximum number of selections a candidate must make, the other options will be disabled when max options is checked */
+  @property({
+    type: Number,
+    attribute: 'match-max'
+  })
+  public matchMax: number = 1;
+
+  @property({
+    type: Boolean,
+    attribute: 'fixed'
+  })
+  public fixed = false;
+
   // pk: This needs some explanation
   // in the associate interaction there is a special slot for these qti-simple-associable-choices
   override connectedCallback(): void {
