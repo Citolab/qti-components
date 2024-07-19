@@ -1,9 +1,9 @@
 import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-
+import { QtiChoice } from './internal/choice/qti-choice';
 @customElement('qti-simple-associable-choice')
 // tslint:disable: indent
-export class QtiSimpleAssociableChoice extends LitElement {
+export class QtiSimpleAssociableChoice extends QtiChoice {
   /** the minimal number of selections a candidate must make */
   @property({
     type: Number,

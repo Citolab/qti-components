@@ -35,9 +35,11 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
   connectedCallback(): void {
     super.connectedCallback();
     this.rows = Array.from<QtiSimpleAssociableChoice>(
+      // eslint-disable-next-line wc/no-child-traversal-in-connectedcallback
       this.querySelectorAll('qti-simple-match-set:first-of-type qti-simple-associable-choice')
     );
     this.cols = Array.from<QtiSimpleAssociableChoice>(
+      // eslint-disable-next-line wc/no-child-traversal-in-connectedcallback
       this.querySelectorAll('qti-simple-match-set:last-of-type qti-simple-associable-choice')
     );
 
@@ -72,6 +74,8 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
                 return html`<td>
                   <input
                     type=${row.matchMax === 1 ? 'radio' : `checkbox`}
+                    id=${value}
+                    name=${rowId}
                     value=${value}
                     .disabled=${disable}
                     .checked=${checked}
