@@ -1,5 +1,5 @@
-import { html } from 'lit';
 import { action } from '@storybook/addon-actions';
+import { html } from 'lit';
 
 import '../../index';
 
@@ -32,7 +32,7 @@ export const Default = {
 };
 
 export const Tabular = {
-  render: () =>
+  render: args =>
     html`<qti-assessment-item
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
