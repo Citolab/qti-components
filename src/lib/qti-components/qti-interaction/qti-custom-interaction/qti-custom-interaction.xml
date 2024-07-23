@@ -33,20 +33,3 @@
     </qti-custom-interaction>
   </qti-item-body>
 </qti-assessment-item>
-
-
-<!-- 
-  - data-dep-min-values="0"
-  + height="370"
-  + width="467"
-  + data="../ref/6047-BiKB-bmi_467x370_29/json/manifest.json"
-
-  - object
-
-  id -> custom-interaction-type-identifier
-  data -> module
-
-  data="../ref/6047-BiKB-bmi_467x370_29/json/manifest.json" ->
-  data="qti-custom-interaction/ref/6047-BiKB-bmi_467x370_29/json/manifest.json"
-
--->

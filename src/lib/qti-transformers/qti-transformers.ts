@@ -21,6 +21,7 @@ export const qtiTransformItem = (): {
   parse: (xmlString: string) => typeof api;
   path: (location: string) => typeof api;
   fn: (fn: (xmlFragment: XMLDocument) => void) => typeof api;
+  customInteraction: (baseRef: string, baseItem: string) => typeof api;
   html: () => string;
   xml: () => string;
   htmldoc: () => DocumentFragment;
@@ -67,6 +68,19 @@ export const qtiTransformItem = (): {
           }
         });
       }
+      return api;
+    },
+    customInteraction(baseRef: string, baseItem: string) {
+      const qtiCustomInteraction = xmlFragment.querySelector('qti-custom-interaction');
+      const qtiCustomInteractionObject = qtiCustomInteraction.querySelector('object');
+
+      qtiCustomInteraction.setAttribute('data-base-ref', baseRef);
+      qtiCustomInteraction.setAttribute('data-base-item', baseRef + baseItem);
+      qtiCustomInteraction.setAttribute('data', qtiCustomInteractionObject.getAttribute('data'));
+      qtiCustomInteraction.setAttribute('width', qtiCustomInteractionObject.getAttribute('width'));
+      qtiCustomInteraction.setAttribute('height', qtiCustomInteractionObject.getAttribute('height'));
+
+      qtiCustomInteraction.removeChild(qtiCustomInteractionObject);
       return api;
     },
     convertCDATAtoComment() {
