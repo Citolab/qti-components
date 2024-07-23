@@ -1,0 +1,1 @@
+window.onload=function(){var n=document.createElement("iframe");n.frameBorder="0";n.scrolling="no";n.src=CES.getMedia()[0];document.body.appendChild(n)}

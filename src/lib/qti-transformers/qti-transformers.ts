@@ -93,6 +93,32 @@ export const qtiTransformItem = (): {
   return api;
 };
 
+export const qtiTransformManifest = (): {
+  load: (uri: string) => Promise<typeof api>;
+  assessmentTest: () => { href: string; identifier: string };
+} => {
+  let xmlFragment: XMLDocument;
+
+  const api = {
+    async load(uri) {
+      return new Promise<typeof api>((resolve, reject) => {
+        loadXML(uri).then(xml => {
+          xmlFragment = xml;
+          return resolve(api);
+        });
+      });
+    },
+    parse(xmlString: string) {
+      xmlFragment = parseXML(xmlString);
+    },
+    assessmentTest() {
+      const el = xmlFragment.querySelector('resource[type="imsqti_test_xmlv3p0"]');
+      return { href: el.getAttribute('href'), identifier: el.getAttribute('identifier') };
+    }
+  };
+  return api;
+};
+
 /**
  * Returns an object with methods to load, parse and transform QTI tests.
  * @returns An object with methods to load, parse and transform QTI tests.
@@ -248,14 +274,17 @@ function setLocation(xmlFragment: DocumentFragment, location: string) {
     location += '/';
   }
 
-  xmlFragment.querySelectorAll('[src],[href]').forEach(elWithSrc => {
-    let attr: 'src' | 'href' | '' = '';
+  xmlFragment.querySelectorAll('[src],[href],[primary-path]').forEach(elWithSrc => {
+    let attr: 'src' | 'href' | 'primary-path' | '' = '';
 
     if (elWithSrc.getAttribute('src')) {
       attr = 'src';
     }
     if (elWithSrc.getAttribute('href')) {
       attr = 'href';
+    }
+    if (elWithSrc.getAttribute('primary-path')) {
+      attr = 'primary-path';
     }
     const attrValue = elWithSrc.getAttribute(attr)?.trim();
 
