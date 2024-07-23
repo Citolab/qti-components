@@ -5,6 +5,7 @@
 @import './styles/qti-base/item-prose';
 @import './styles/qti-base/item-layout';
 @import './styles/qti-base/item-view';
+@import './styles/qti-base/item-popup';
 
 /* components */
 @import './styles/qti-components/qti-interactions';

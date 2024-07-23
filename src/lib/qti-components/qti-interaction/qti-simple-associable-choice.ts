@@ -1,6 +1,7 @@
 import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
+// THIS IS NOT USED IN TABULAR MATCH INTERACTION
 @customElement('qti-simple-associable-choice')
 // tslint:disable: indent
 export class QtiSimpleAssociableChoice extends LitElement {
