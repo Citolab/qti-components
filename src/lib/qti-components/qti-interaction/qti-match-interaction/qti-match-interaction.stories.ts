@@ -32,7 +32,7 @@ export const Default = {
 };
 
 export const Tabular = {
-  render: args =>
+  render: () =>
     html`<qti-assessment-item
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"

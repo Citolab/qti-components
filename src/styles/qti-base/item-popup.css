@@ -1,0 +1,15 @@
+[popover] {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  border: solid;
+  padding: 0.25em;
+  overflow: auto;
+  color: CanvasText;
+  background-color: Canvas;
+}
+
+[popovertarget] {
+  all: unset;
+  cursor: pointer;
+}

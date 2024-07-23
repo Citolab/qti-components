@@ -1,71 +1,103 @@
 import '@citolab/qti-components/qti-components';
 
 import { render } from 'lit';
-import { Tabular } from './qti-match-interaction.stories';
-
-const getMatchInteraction = () => document.body.querySelector('qti-match-interaction');
+import { Tabular, TabularMultiple } from './qti-match-interaction.stories';
+import { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
+import { userEvent } from '@storybook/test';
 
 const getChoices = () => {
   const matchInteractionShadowRoot = document.body.querySelector('qti-match-interaction').shadowRoot;
   const choices = Array.from(matchInteractionShadowRoot.querySelectorAll('input')) as HTMLInputElement[];
-
-  console.log('********', matchInteractionShadowRoot.querySelectorAll('input'));
-
   const map = new Map<string, HTMLInputElement>();
-  choices.forEach(qtiSimpleAssociableChoice => map.set(qtiSimpleAssociableChoice.id, qtiSimpleAssociableChoice));
+  choices.forEach(input => map.set(input.value, input));
   return map;
 };
-
-const getCorrectResponses = () =>
-  Array.from(
-    document.body.querySelector('qti-correct-response')?.querySelectorAll('qti-value'),
-    qtiValue => qtiValue.textContent
-  );
 
 describe('qti-match-interaction', () => {
   afterEach(async () => {
     document.getElementsByTagName('html')[0].innerHTML = '';
   }); // MANDATORY
-  describe('maxChoicesLargeThan1', () => {
+  describe('maxChoices 1', () => {
     beforeEach(async () => {
-      render(Tabular.render({ matchMax: 2 }), document.body);
+      render(Tabular.render(), document.body);
+    });
+
+    it('should show as radiobuttons', () => {
+      const choices = Array.from(getChoices().values());
+      expect(choices[0].getAttribute('type')).toMatch('radio');
+      expect(choices[1].getAttribute('type')).toMatch('radio');
+      expect(choices[2].getAttribute('type')).toMatch('radio');
+      expect(choices[3].getAttribute('type')).toMatch('radio');
+    });
+    it('should score correct', async () => {
+      const assessmentItem = document.body.querySelector('qti-assessment-item') as QtiAssessmentItem;
+      const correctResponses = ['P T', 'L M', 'D M', 'C R'];
+
+      const choices = getChoices();
+      for (const correctResponse of correctResponses) {
+        const choice = choices.get(correctResponse);
+        await userEvent.click(choice);
+      }
+      assessmentItem.processResponse();
+      const score = assessmentItem.variables.find(v => v.identifier === 'SCORE');
+
+      expect(score.value).toEqual('3');
+    });
+    it('should score correct clicking 3 times', async () => {
+      const assessmentItem = document.body.querySelector('qti-assessment-item') as QtiAssessmentItem;
+      const correctResponses = ['P T', 'L M', 'D M', 'C R'];
+
+      const choices = getChoices();
+      for (const correctResponse of correctResponses) {
+        const choice = choices.get(correctResponse);
+
+        await userEvent.click(choice);
+        await userEvent.click(choice);
+        await userEvent.click(choice);
+      }
+      assessmentItem.processResponse();
+      const score = assessmentItem.variables.find(v => v.identifier === 'SCORE');
+
+      expect(score.value).toEqual('3');
+    });
+    it('should score incorrect clicking twice', async () => {
+      const assessmentItem = document.body.querySelector('qti-assessment-item') as QtiAssessmentItem;
+      const correctResponses = ['P T', 'L M', 'D M', 'C R'];
+
+      const choices = getChoices();
+      for (const correctResponse of correctResponses) {
+        const choice = choices.get(correctResponse);
+        await userEvent.click(choice);
+        await userEvent.click(choice);
+      }
+      assessmentItem.processResponse();
+      const score = assessmentItem.variables.find(v => v.identifier === 'SCORE');
+
+      expect(score.value).toEqual('0');
+    });
+  });
+  describe('maxChoices > 1', () => {
+    beforeEach(async () => {
+      render(TabularMultiple.render(), document.body);
     });
 
     it('should show as checkboxes', () => {
       const choices = Array.from(getChoices().values());
-      expect(choices[0][0].getAttribute('type')).toMatch('checkbox');
-      expect(choices[1][0].getAttribute('role')).toMatch('checkbox');
-      expect(choices[2][0].getAttribute('role')).toMatch('checkbox');
-      expect(choices[3][0].getAttribute('role')).toMatch('checkbox');
+      expect(choices[0].getAttribute('type')).toMatch('checkbox');
+      expect(choices[1].getAttribute('type')).toMatch('checkbox');
+      expect(choices[2].getAttribute('type')).toMatch('checkbox');
+      expect(choices[3].getAttribute('type')).toMatch('checkbox');
+    });
+
+    it('trying to check 4 boxes while max-choice = 2 should not work', async () => {
+      const assessmentItem = document.body.querySelector('qti-assessment-item') as QtiAssessmentItem;
+      const choices = Array.from(getChoices().values());
+      const firstRow = choices.filter(c => c.value.startsWith('C'));
+      for (const choice of firstRow) {
+        await userEvent.click(choice);
+      }
+      const response = assessmentItem.getResponse('RESPONSE');
+      expect(response.value.length).toBe(2);
     });
   });
-  //   describe('maxChoices1', () => {
-  //     beforeEach(async () => {
-  //       render(Default.render({ matchMax: 1 }), document.body);
-  //     });
-
-  //     it('should show as radiobuttons', () => {
-  //       const choices = Array.from(getQtiSimpleAssociableChoices().values());
-  //       expect(choices[0][0].getAttribute('role')).toMatch('radio');
-  //       expect(choices[1][0].getAttribute('role')).toMatch('radio');
-  //       expect(choices[2][0].getAttribute('role')).toMatch('radio');
-  //       expect(choices[3][0].getAttribute('role')).toMatch('radio');
-  //     });
-
-  //     it('check scoring correct', () => {
-  //       const matchInteraction = getMatchInteraction();
-  //       let score = 0;
-  //       const setScore = (e: QtiOutcomeChanged) => (score = +e.detail.value);
-  //       matchInteraction.addEventListener('qti-interaction-response', setScore);
-
-  //       const correctResponses = getCorrectResponses();
-  //       const choices = getQtiSimpleAssociableChoices();
-  //       for (let i = 0; i < correctResponses.length; i++) {
-  //         const matchIngChoice = choices.get(correctResponses[i]);
-  //         matchIngChoice.click();
-  //       }
-  //       matchInteraction.removeEventListener('qti-interaction-response', setScore);
-  //       expect(score).toBe(1);
-  //     });
-  //   });
 });
