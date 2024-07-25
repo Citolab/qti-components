@@ -51,6 +51,10 @@ export class QtiCustomInteraction extends Interaction {
       });
   }
 
+  // MH: Changed the default bootstrap.js to use the new CES API
+  // Because the old one uses the global CES object that is not allowed to be accessed when the CI
+  // is embedded in an iframe and coming from another domain
+  // Therefor we need to use the new CES API to communicates via the broadcast API
   setupCES() {
     const iframe = this.shadowRoot.querySelector('#pciContainer') as HTMLIFrameElement,
       iframeWin = iframe.contentWindow || iframe,
