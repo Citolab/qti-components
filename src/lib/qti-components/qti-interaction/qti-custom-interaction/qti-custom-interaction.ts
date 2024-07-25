@@ -1,6 +1,7 @@
 import { html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { Interaction } from '../internal/interaction/interaction';
+import { removeDoubleSlashes } from '../../internal/utils';
 
 @customElement('qti-custom-interaction')
 export class QtiCustomInteraction extends Interaction {
@@ -33,7 +34,9 @@ export class QtiCustomInteraction extends Interaction {
   override connectedCallback(): void {
     super.connectedCallback();
 
-    const uriToManifest = this.baseItemUrl + this.data;
+    const uriToManifest = this.data.startsWith('http')
+      ? this.data
+      : removeDoubleSlashes(this.baseItemUrl + '/' + this.data);
     // fetch the json file located at the data attribute
     fetch(uriToManifest)
       .then(response => response.json())
@@ -51,21 +54,29 @@ export class QtiCustomInteraction extends Interaction {
       iframeWin = iframe.contentWindow || iframe,
       iframeDoc = iframe.contentDocument;
 
-    iframeWin['CES'] = {
-      setResponse: data => {
-        // console.log('setting the data', data);
-        this.rawResponse = data;
-        this.saveResponse(data);
-      },
-      getResponse: () => {
-        // console.log('getting the data');
-        return this.rawResponse;
-      },
-      getMedia: () => {
-        return this.manifest.media.map(media => this.baseRefUrl + media);
-      },
-      setStageHeight: () => {
-        console.log('not implemented');
+    const channel = new BroadcastChannel('ces_channel');
+    channel.onmessage = (event: MessageEvent) => {
+      const { type, data } = event.data;
+      switch (type) {
+        case 'setResponse':
+          this.rawResponse = data;
+          this.saveResponse(data);
+          break;
+        case 'getResponse':
+          debugger;
+          channel.postMessage({ type: 'responseData', data: this.rawResponse });
+          break;
+        case 'getMedia': {
+          const mediaData = this.manifest.media.map(media => {
+            const url = media.startsWith('http') ? media : removeDoubleSlashes(this.baseRefUrl + '/' + media);
+            return url;
+          });
+          channel.postMessage({ type: 'mediaData', data: mediaData });
+          break;
+        }
+        case 'setStageHeight':
+          console.log('setStageHeight not implemented');
+          break;
       }
     };
 
@@ -73,8 +84,8 @@ export class QtiCustomInteraction extends Interaction {
     iframeDoc.write(`
       <html>
         <head>
-          <link href='${this.baseRefUrl + this.manifest.style[0]}' rel="stylesheet" />
-          <script src='${this.baseRefUrl + this.manifest.script[0]}'></script>
+          <link href='${removeDoubleSlashes(`${this.baseRefUrl}/${this.manifest.style[0]}`)}' rel="stylesheet" />
+          <script src='${removeDoubleSlashes(`${this.baseRefUrl}/${this.manifest.script[0]}`)}'></script>
         </head>
         <body></body>
       </html>

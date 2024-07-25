@@ -18,3 +18,12 @@ export const convertNumberToUniveralFormat = (number: number | string) => {
 export function IsNullOrUndefined(value: unknown) {
   return value === null || value === undefined;
 }
+
+export function removeDoubleSlashes(str: string) {
+  const singleForwardSlashes = str
+    .replace(/([^:]\/)\/+/g, '$1')
+    .replace(/\/\//g, '/')
+    .replace('http:/', 'http://')
+    .replace('https:/', 'https://');
+  return singleForwardSlashes;
+}
