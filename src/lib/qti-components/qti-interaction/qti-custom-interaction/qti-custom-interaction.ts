@@ -25,6 +25,8 @@ export class QtiCustomInteraction extends Interaction {
   @state()
   private _errorMessage: string = null;
 
+  private channel = new BroadcastChannel('ces_channel');
+
   manifest: {
     script: string[];
     style: string[];
@@ -54,8 +56,8 @@ export class QtiCustomInteraction extends Interaction {
       iframeWin = iframe.contentWindow || iframe,
       iframeDoc = iframe.contentDocument;
 
-    const channel = new BroadcastChannel('ces_channel');
-    channel.onmessage = (event: MessageEvent) => {
+    // const channel = new BroadcastChannel('ces_channel');
+    this.channel.onmessage = (event: MessageEvent) => {
       const { type, data } = event.data;
       switch (type) {
         case 'setResponse':
@@ -63,15 +65,14 @@ export class QtiCustomInteraction extends Interaction {
           this.saveResponse(data);
           break;
         case 'getResponse':
-          debugger;
-          channel.postMessage({ type: 'responseData', data: this.rawResponse });
+          this.channel.postMessage({ type: 'responseData', data: this.rawResponse });
           break;
         case 'getMedia': {
           const mediaData = this.manifest.media.map(media => {
             const url = media.startsWith('http') ? media : removeDoubleSlashes(this.baseRefUrl + '/' + media);
             return url;
           });
-          channel.postMessage({ type: 'mediaData', data: mediaData });
+          this.channel.postMessage({ type: 'mediaData', data: mediaData });
           break;
         }
         case 'setStageHeight':
@@ -103,6 +104,7 @@ export class QtiCustomInteraction extends Interaction {
   }
 
   override disconnectedCallback(): void {
+    this.channel.close();
     super.disconnectedCallback();
   }
 
