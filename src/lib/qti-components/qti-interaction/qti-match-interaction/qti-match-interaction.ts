@@ -62,18 +62,23 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
     const checkbox = e.target as HTMLInputElement;
     const value = checkbox.value;
     const name = checkbox.name;    
+    const type = checkbox.type;
     if (checkbox.checked) {
       if (!this.response) {
         this.response = [value];
       }
-      else if (this.response.indexOf(value) === -1) {
-        this.response = this.response.filter(v => v.indexOf(name) === -1).concat([value]);        
+      else if (this.response.indexOf(value) === -1) {    
+        if (type === 'radio') {
+          this.response = this.response.filter(v => v.indexOf(name) === -1);
+        }   
+        this.response.push(value);
       }      
       this.lastCheckedRadio = checkbox;
     } else {
       this.response = this.response.filter(v => v !== value);
       this.lastCheckedRadio = null;
     }
+
     this.requestUpdate();
     this.dispatchEvent(
       new CustomEvent<ResponseInteraction>('qti-interaction-response', {
