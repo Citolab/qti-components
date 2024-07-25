@@ -61,8 +61,14 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
   handleRadioChange = e => {
     const checkbox = e.target as HTMLInputElement;
     const value = checkbox.value;
+    const name = checkbox.name;    
     if (checkbox.checked) {
-      this.response.push(value);
+      if (!this.response) {
+        this.response = [value];
+      }
+      else if (this.response.indexOf(value) === -1) {
+        this.response = this.response.filter(v => v.indexOf(name) === -1).concat([value]);        
+      }      
       this.lastCheckedRadio = checkbox;
     } else {
       this.response = this.response.filter(v => v !== value);
@@ -103,16 +109,17 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
                 const value = `${rowId} ${colId}`;
                 const selectedInRowCount = this.response.filter(v => v.split(' ')[0] === rowId).length || 0;
                 const checked = this.response.includes(value);
+                const part = `rb ${checked ? 'rb-checked' : ''}`;
                 // disable if match max is greater than 1 and max is reached
                 const disable = row.matchMax === 1 ? false : selectedInRowCount >= row.matchMax && !checked;
                 return html`<td>
                   <input
-                    type=${row.matchMax === 1 ? 'radio' : `checkbox`}
+                    type=${row.matchMax === 1 ? 'radio' : `checkbox`}                    
                     role="id"
+                    part=${part}                    
                     name=${rowId}
                     value=${value}
                     .disabled=${disable}
-                    .checked=${checked}
                     @change=${e => this.handleRadioChange(e)}
                     @click=${e => (row.matchMax === 1 ? this.handleRadioClick(e) : null)}
                   />
