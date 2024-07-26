@@ -60,8 +60,7 @@ export class QtiTextEntryInteraction extends Interaction {
   }
 
   override render() {
-    return html`
-      <div part="correct">${this._correctValue}</div>
+    return html`      
       <input
         part="input"
         spellcheck="false"
@@ -77,6 +76,7 @@ export class QtiTextEntryInteraction extends Interaction {
         ?disabled="${this.disabled}"
         ?readonly="${this.readonly}"
       />
+      <div part="correct">${this._correctValue}</div>
     `;
   }
   //
