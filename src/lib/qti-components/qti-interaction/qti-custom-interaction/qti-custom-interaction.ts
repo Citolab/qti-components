@@ -14,6 +14,8 @@ export class QtiCustomInteraction extends Interaction {
   // 4. Communication is done via the CES API but because the iframe is not allowed to access the global CES object we need to use window.postMessage
 
   // To achieve this we change the package by replacing the bootstrap.js with our own and inject a proxy CES API that communicates via postMessage
+  // Because we also want to run this in storybook, we cannot use window.top because to send messages there, because in case of storybook that is not the top window.
+  // So we send messages to all parent windows
   private rawResponse: string;
 
   constructor() {

@@ -2,9 +2,7 @@
 // Because the old one uses the global CES object that is not allowed to be accessed when the CI
 // is embedded in an iframe and coming from another domain
 // Therefor we need to use the new CES API to communicates via the broadcast API
-
 window.onload = async function () {
-  const channel = new BroadcastChannel('ces_channel');
   const handleMessage = event => {
     if (event.data.type === 'mediaData') {
       const media = event.data.data;
@@ -13,9 +11,17 @@ window.onload = async function () {
       n.scrolling = 'no';
       n.src = media[0];
       document.body.appendChild(n);
-      channel.close();
+      window.removeEventListener('message', handleMessage);
     }
   };
-  channel.onmessage = handleMessage;
-  channel.postMessage({ type: 'getMedia' });
+  window.addEventListener('message', handleMessage);
+  let w = window.parent;
+  while (w) {
+    w.postMessage({ type: 'getMedia' }, '*');
+    if (w !== w.parent) {
+      w = w.parent;
+    } else {
+      w = null;
+    }
+  }
 };
