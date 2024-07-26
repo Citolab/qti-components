@@ -40,9 +40,11 @@ export class QtiGapMatchInteraction extends DragDropInteractionMixin(LitElement,
   }
 
   set correctResponse(value: Readonly<string | string[]>) {
-    let matches: { text: string; gap: string }[] = [];        
-    if (value) {
-      matches = (value as string[]).map(x => {
+    let matches: { text: string; gap: string }[] = [];            
+    const response = Array.isArray(value) ? value : [value];
+
+    if (response) {      
+      matches = response.map(x => {
         const split = x.split(' ');
          return { text: split[0], gap: split[1]  };}
       );
