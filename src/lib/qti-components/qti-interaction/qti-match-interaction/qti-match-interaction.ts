@@ -31,6 +31,7 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
   lastCheckedRadio: HTMLInputElement | null = null;
 
   @state() response = [];
+  @state() correctOptions: string[] = [];
   @property({ type: String, attribute: 'response-identifier' }) responseIdentifier: string = '';
 
   connectedCallback(): void {
@@ -92,6 +93,16 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
     );
   };
 
+
+  set correctResponse(responseValue: string | string[]) {    
+    if (responseValue === '') {
+      this.correctOptions = [];
+      return;
+    } else if (Array.isArray(responseValue)) {
+      this.correctOptions = responseValue;
+    }
+  }
+
   override render() {
     if (!this.classList.contains('qti-match-tabular')) {
       return html`<slot name="prompt"></slot> <slot></slot>`;
@@ -114,7 +125,7 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
                 const value = `${rowId} ${colId}`;
                 const selectedInRowCount = this.response.filter(v => v.split(' ')[0] === rowId).length || 0;
                 const checked = this.response.includes(value);
-                const part = `rb ${checked ? 'rb-checked' : ''}`;
+                const part = `rb ${checked ? 'rb-checked' : ''} ${this.correctOptions.includes(value) ? 'rb-correct' : ''}`;
                 // disable if match max is greater than 1 and max is reached
                 const disable = row.matchMax === 1 ? false : selectedInRowCount >= row.matchMax && !checked;
                 return html`<td>
@@ -136,6 +147,7 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
     `;
   }
 }
+
 
 declare global {
   interface HTMLElementTagNameMap {

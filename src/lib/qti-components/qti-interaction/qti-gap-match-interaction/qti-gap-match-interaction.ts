@@ -38,6 +38,34 @@ export class QtiGapMatchInteraction extends DragDropInteractionMixin(LitElement,
     return html` <slot part="drags" name="qti-gap-text"></slot>
       <slot part="drops"></slot>`;
   }
+
+  set correctResponse(value: Readonly<string | string[]>) {
+    let matches: { text: string; gap: string }[] = [];        
+    if (value) {
+      matches = (value as string[]).map(x => {
+        const split = x.split(' ');
+         return { text: split[0], gap: split[1]  };}
+      );
+    }
+    
+    const gaps = this.querySelectorAll('qti-gap');
+      gaps.forEach((gap, index) => {
+        const identifier = gap.getAttribute('identifier');
+        const textIdentifier = matches.find(x => x.gap === identifier)?.text;
+        const text = this.querySelector(`qti-gap-text[identifier="${textIdentifier}"]`)?.textContent.trim();
+        if (textIdentifier && text) {
+          if (!gap.nextElementSibling?.classList.contains('correct-option')) {
+            const textSpan = document.createElement('span');         
+            textSpan.classList.add('correct-option');
+            textSpan.textContent = text;
+            gap.insertAdjacentElement('afterend', textSpan);  
+          }  
+        }  
+        else if (gap.nextElementSibling?.classList.contains('correct-option')) {
+          gap.nextElementSibling.remove();
+        }            
+      })
+  }
 }
 
 declare global {
