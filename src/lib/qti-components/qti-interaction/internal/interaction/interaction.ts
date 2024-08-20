@@ -36,7 +36,7 @@ export abstract class Interaction extends LitElement {
         composed: true,
         detail: {
           responseIdentifier: this.responseIdentifier,
-          response: value
+          response: Array.isArray(value) ? [...value] : value
         }
       })
     );

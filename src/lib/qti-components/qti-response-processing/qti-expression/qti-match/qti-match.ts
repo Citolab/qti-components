@@ -55,7 +55,8 @@ export class QtiMatch extends QtiExpression<boolean> {
           // sequence does not matter, find value somewhere in the array
           // and remove when found.
           let matchingValue: string | null = null;
-          for (const mv of valueToMap.value) {
+          const arr = [...valueToMap.value];
+          for (const mv of arr) {
             const result = ScoringHelper.compareSingleValues(correctAnswer, mv, correctValueInfo.baseType);
             if (result) {
               matchingValue = mv;
@@ -63,7 +64,7 @@ export class QtiMatch extends QtiExpression<boolean> {
             }
           }
           if (matchingValue !== null) {
-            (valueToMap.value as string[]).splice(valueToMap.value.indexOf(matchingValue), 1);
+            (arr as string[]).splice(arr.indexOf(matchingValue), 1);
           } else {
             return false;
           }

@@ -237,7 +237,7 @@ export class QtiAssessmentItem extends LitElement {
     this._emit<InteractionChangedDetails>('qti-interaction-changed', {
       item: this.identifier,
       responseIdentifier: identifier,
-      response: value
+      response: Array.isArray(value) ? [...value] : value
     });
 
     if (this.adaptive === 'false') {
