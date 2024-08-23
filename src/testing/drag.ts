@@ -26,9 +26,9 @@ type Coords = ElementClientCenter | { x: number; y: number };
 
 const getCoords = (target: Element | Coords): Coords => {
   if (isElement(target)) {
-    return getElementClientCenter(target);
+    return getElementClientCenter(target as Element);
   }
-  return target;
+  return target as Coords;
 };
 
 const sleep = (ms: number): Promise<void> => {
