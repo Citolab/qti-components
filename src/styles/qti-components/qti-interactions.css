@@ -222,6 +222,14 @@
         min-height: 4rem;
       }
 
+      & qti-simple-associable-choice[enabled] {
+        @apply foc;
+      }
+
+      & qti-simple-associable-choice[active] {
+        @apply act;
+      }
+
       & qti-simple-associable-choice > *:not(qti-simple-associable-choice) {
         pointer-events: none;
       }
