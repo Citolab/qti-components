@@ -1,36 +1,80 @@
 import { action } from '@storybook/addon-actions';
 import { html } from 'lit';
 
+import type { Meta, StoryObj } from '@storybook/web-components';
+
+import { createRef, ref } from 'lit/directives/ref.js';
 import '../../index';
 import { QtiAssessmentItem } from '../../index';
-import { createRef, ref } from 'lit/directives/ref.js';
 
-export default {
-  component: 'qti-match-interaction'
+import { expect, fn, within } from '@storybook/test';
+import drag from '../../../../testing/drag';
+// import { userEvent } from '@vitest/browser/context';
+
+type Story = StoryObj; // <Props>;
+
+const meta: Meta = {
+  component: 'qti-match-interaction',
+  argTypes: {
+    class: {
+      description: 'supported classes',
+      control: 'inline-radio',
+      options: ['qti-choices-top', 'qti-choices-bottom', 'qti-choices-left', 'qti-choices-right', 'qti-match-tabular'],
+      table: { category: 'QTI' }
+    }
+  }
 };
+export default meta;
 
 export const Default = {
   render: args =>
     html` <qti-match-interaction
       .dragOptions=${{ copyStylesDragClone: false }}
       @qti-interaction-response="${action(`qti-interaction-response`)}"
-      class="qti-choices-top"
+      class=${args.class}
       max-associations="4"
       response-identifier="RESPONSE"
     >
       <qti-simple-match-set>
-        <qti-simple-associable-choice identifier="C" match-max="1">Capulet</qti-simple-associable-choice>
+        <qti-simple-associable-choice data-testid="drag-capulet" identifier="C" match-max="1"
+          >Capulet</qti-simple-associable-choice
+        >
         <qti-simple-associable-choice identifier="D" match-max="1">Demetrius</qti-simple-associable-choice>
         <qti-simple-associable-choice identifier="L" match-max="1">Lysander</qti-simple-associable-choice>
         <qti-simple-associable-choice identifier="P" match-max="1">Prospero</qti-simple-associable-choice>
       </qti-simple-match-set>
 
       <qti-simple-match-set>
-        <qti-simple-associable-choice identifier="M" match-max="2">A Midsummer-Night's</qti-simple-associable-choice>
+        <qti-simple-associable-choice data-testid="drop-capulet" identifier="M" match-max="2"
+          >A Midsummer-Night's</qti-simple-associable-choice
+        >
         <qti-simple-associable-choice identifier="R" match-max="2">Romeo and Juliet</qti-simple-associable-choice>
         <qti-simple-associable-choice identifier="T" match-max="2">The Tempest</qti-simple-associable-choice>
       </qti-simple-match-set>
     </qti-match-interaction>`
+};
+
+export const Play: Story = {
+  render: Default.render,
+  args: {
+    orientation: 'vertical',
+    classes: ['qti-choices-bottom']
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    const interactionResponse = fn(event => expect(event.detail.response).toEqual(['C M', 'R', 'T']));
+
+    canvasElement.addEventListener('qti-interaction-response', interactionResponse);
+
+    const source = canvas.getByTestId('drag-capulet');
+    const target = canvas.getByTestId('drop-capulet');
+
+    await drag(source, { to: target });
+
+    expect(interactionResponse).toHaveBeenCalled();
+    canvasElement.removeEventListener('qti-interaction-response', interactionResponse);
+  }
 };
 
 export const Tabular = {

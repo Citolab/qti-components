@@ -1,4 +1,4 @@
-import { html, LitElement, PropertyValues } from 'lit';
+import { css, html, LitElement } from 'lit';
 import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-interaction-mixin';
 
 import { customElement, property, state } from 'lit/decorators.js';
@@ -25,7 +25,29 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
   false,
   'qti-simple-match-set:last-of-type qti-simple-associable-choice'
 ) {
-  static override styles = [];
+  static override styles = [
+    css`
+      :host {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      /* :host(.qti-choices-top) {
+        flex-direction: column;
+      } */
+      :host(.qti-choices-bottom) {
+        flex-direction: column-reverse;
+      }
+      :host(.qti-choices-left) {
+        flex-direction: row;
+      }
+      :host(.qti-choices-right) {
+        flex-direction: row-reverse;
+      }
+    `
+  ];
+
   rows: QtiSimpleAssociableChoice[];
   cols: QtiSimpleAssociableChoice[];
   lastCheckedRadio: HTMLInputElement | null = null;
