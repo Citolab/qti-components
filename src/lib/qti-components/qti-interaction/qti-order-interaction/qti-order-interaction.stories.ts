@@ -1,6 +1,5 @@
-import { html } from 'lit';
 import { action } from '@storybook/addon-actions';
-import { QtiOrderInteraction } from './qti-order-interaction';
+import { html } from 'lit';
 
 import '../../index';
 
@@ -19,6 +18,7 @@ export default {
     },
     readonly: { control: { type: 'boolean' } },
     disabled: { control: { type: 'boolean' } },
+    shuffle: { control: { type: 'boolean' } },
     classes: {
       description: 'supported classes',
       control: 'radio',
@@ -39,7 +39,7 @@ export default {
       ],
       table: { category: 'QTI' }
     },
-    shuffle: { description: 'unsupported', table: { category: 'QTI' } },
+
     'data-choices-container-width': { description: 'unsupported', table: { category: 'QTI' } },
     'data-max-selections-message': { description: 'unsupported', table: { category: 'QTI' } },
     'data-min-selections-message': { description: 'unsupported', table: { category: 'QTI' } }
@@ -54,6 +54,7 @@ export const Default = {
       .disabled=${args.disabled}
       .readonly=${args.readonly}
       orientation=${ifDefined(args.orientation)}
+      ?shuffle=${args.shuffle}
       class=${ifDefined(
         args.classes ? (Array.isArray(args.classes) ? args.classes.join(' ') : args.classes) : undefined
       )}

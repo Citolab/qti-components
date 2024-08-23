@@ -213,24 +213,18 @@ export const DragDropInteractionMixin = <T extends Constructor<LitElement>>(
     }
 
     protected saveResponse() {
-      const response = this.droppables.map(droppable => {
-        let responseString = '';
-
-        // const dragsInDroppable = droppable.shadowRoot
-        //   .querySelector<HTMLSlotElement>(`[name="qti-simple-associable-choice"]`)
-        //   .assignedElements();
-
-        const dragsInDroppable = droppable.querySelectorAll('[qti-draggable="true"]');
-
-        if (dragsInDroppable.length > 0) {
-          responseString +=
-            Array.from(dragsInDroppable)
-              .map(d => d.getAttribute('identifier'))
-              .join(' ') + ` `;
-        }
-        responseString += droppable.getAttribute('identifier');
-        return responseString;
-      });
+      let response: string | string[];
+      if (typeof (this as any).getResponse === 'function') {
+        // only for the qti-order-interaction, abstracted this away in a method
+        response = (this as any).getResponse(); // Call the method from the implementing class
+      } else {
+        response = this.droppables.map(droppable => {
+          const dragsInDroppable = droppable.querySelectorAll('[qti-draggable="true"]');
+          const identifiers = Array.from(dragsInDroppable).map(d => d.getAttribute('identifier'));
+          const droppableIdentifier = droppable.getAttribute('identifier');
+          return [...identifiers, droppableIdentifier].join(' ');
+        });
+      }
 
       this.dispatchEvent(
         new CustomEvent('qti-interaction-response', {

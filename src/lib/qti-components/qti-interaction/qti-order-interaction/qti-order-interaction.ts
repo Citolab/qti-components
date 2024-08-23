@@ -1,18 +1,19 @@
 import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-interaction-mixin';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
+import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-interaction-mixin';
+import { QtiSimpleChoice } from '../qti-simple-choice';
+import { ShuffleMixin } from './shuffle-mixin'; // Import the mixin
 
 @customElement('qti-order-interaction')
-export class QtiOrderInteraction extends DragDropInteractionMixin(LitElement, `qti-simple-choice`, true, 'drop-list') {
+export class QtiOrderInteraction extends ShuffleMixin(
+  DragDropInteractionMixin(LitElement, `qti-simple-choice`, true, 'drop-list'),
+  'qti-simple-choice'
+) {
   childrenMap: Element[];
-  private _classNames: string;
-  private _orientation: 'vertical' | 'horizontal';
-
-  public static layoutClass = ['qti-choices-top', 'qti-choices-bottom', 'qti-choices-left', 'qti-choices-right'];
 
   @state() nrChoices: number = 0;
-  @state() correctResponses: string[] = [];  
+  @state() correctResponses: string[] = [];
   @state() showCorrectResponses: boolean = false;
 
   /** orientation of choices */
@@ -75,25 +76,29 @@ export class QtiOrderInteraction extends DragDropInteractionMixin(LitElement, `q
     const choices = Array.from(this.querySelectorAll('qti-simple-choice'));
     if (this.nrChoices < choices.length) {
       this.nrChoices = choices.length;
-    }    
+    }
 
     return html` <slot name="prompt"> </slot>
       <div part="container">
         <slot part="drags"> </slot>
         <div part="drops">
           ${Array.from(Array(this.nrChoices)).map(
-            (_, i) => html`<drop-list part="drop-list" identifier="droplist${i}"></drop-list>${this.showCorrectResponses && this.correctResponses.length > i ? unsafeHTML(`<span part='correct-response'>${this.correctResponses[i]}</span>`) : ''}`
+            (_, i) =>
+              html`<drop-list part="drop-list" identifier="droplist${i}"></drop-list>${this.showCorrectResponses &&
+                this.correctResponses.length > i
+                  ? unsafeHTML(`<span part='correct-response'>${this.correctResponses[i]}</span>`)
+                  : ''}`
           )}
         </div>
       </div>`;
   }
 
-  set correctResponse(value: Readonly<string | string[]>) {     
+  set correctResponse(value: Readonly<string | string[]>) {
     if (value === '') {
       this.showCorrectResponses = false;
-      return
-    } 
-    
+      return;
+    }
+
     if (this.correctResponses.length === 0) {
       const responses = Array.isArray(value) ? value : [value];
 
@@ -105,17 +110,31 @@ export class QtiOrderInteraction extends DragDropInteractionMixin(LitElement, `q
 
         const text = simpleChoice?.textContent.trim();
         this.correctResponses = [...this.correctResponses, text];
-      })    
+      });
     }
 
     this.showCorrectResponses = true;
   }
 
-  override connectedCallback() {
+  // some interactions have a different way of getting the response
+  // this is called from the drag and drop mixin class
+  // you have to implement your own getResponse method in the superclass
+  // cause they are different for some interactions.
+  protected getResponse(): string[] {
+    const droppables = Array.from<QtiSimpleChoice>(this.shadowRoot.querySelectorAll('drop-list'));
+
+    const response = droppables.map(droppable => {
+      const dragsInDroppable = droppable.querySelectorAll('[qti-draggable="true"]');
+      const identifiers = Array.from(dragsInDroppable).map(d => d.getAttribute('identifier'));
+      return [...identifiers].join(' ');
+    });
+    return response;
+  }
+
+  override async connectedCallback() {
     super.connectedCallback();
-    // INFRINGEMENT..
-    // PK: if children are dropped into shadowdom, styling is lost, so we add a part selector on all children
-    // I they get lost into shadow dom after dropped, they can still be styled via lightdom part selectors
+
+    await this.update;
     this.childrenMap = Array.from(this.querySelectorAll('qti-simple-choice'));
     this.childrenMap.forEach(el => el.setAttribute('part', 'qti-simple-choice'));
   }

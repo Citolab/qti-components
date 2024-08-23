@@ -157,7 +157,6 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
                 return html`<td>
                   <input
                     type=${row.matchMax === 1 ? 'radio' : `checkbox`}
-                    role="id"
                     part=${part}
                     name=${rowId}
                     value=${value}
