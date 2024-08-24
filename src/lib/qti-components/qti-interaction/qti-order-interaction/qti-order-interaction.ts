@@ -2,8 +2,8 @@ import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-interaction-mixin';
+import { ShuffleMixin } from '../internal/shuffle/shuffle-mixin'; // Import the mixin
 import { QtiSimpleChoice } from '../qti-simple-choice';
-import { ShuffleMixin } from './shuffle-mixin'; // Import the mixin
 
 @customElement('qti-order-interaction')
 export class QtiOrderInteraction extends ShuffleMixin(
