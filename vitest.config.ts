@@ -7,13 +7,10 @@ export default defineConfig({
   test: {
     include: ['src/**/*.spec.ts', 'src/**/*.test.ts'],
     globals: true,
-    // environmentMatchGlobs: [
-    //   ['src/**/', 'jsdom'] // all tests in tests/dom will run in jsdom
-    // ],
     browser: {
-      provider: 'playwright', // or 'webdriverio'
       enabled: true,
-      name: 'webkit' // browser name is required
+      provider: 'playwright',
+      name: 'chromium'
     }
   }
 });
