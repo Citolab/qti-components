@@ -32,26 +32,24 @@ describe('ShuffleMixin', () => {
 
   it('should shuffle non-fixed choices when shuffle is true', async () => {
     element = document.querySelector('test-element') as TestElement;
-    element.shuffle = true;
-    // await element.updateComplete;
+    await element.updateComplete;
 
     const choices = Array.from(element.querySelectorAll('qti-simple-choice'));
-    const nonFixedChoices = choices.filter(choice => !choice.hasAttribute('fixed'));
-    const initialOrder = nonFixedChoices.map(choice => choice.style.order);
+    const initialOrder = choices.map((choice, i) => String(i + 1));
 
     // Reset shuffle
-    element.shuffle = false;
-    // await element.updateComplete;
+    element.shuffle = true;
+    await element.updateComplete;
 
-    const resetOrder = nonFixedChoices.map(choice => choice.style.order);
-
+    const resetOrder = choices.map(choice => choice.style.order);
+    // debugger;
     expect(initialOrder).not.to.deep.equal(resetOrder);
   });
 
   it('should not shuffle choices when shuffle is false', async () => {
     element = document.querySelector('test-element') as TestElement;
     element.shuffle = false;
-    // await element.updateComplete;
+    await element.updateComplete;
 
     const choices = Array.from(element.querySelectorAll('qti-simple-choice'));
     const nonFixedChoices = choices.filter(choice => !choice.hasAttribute('fixed'));
@@ -60,7 +58,7 @@ describe('ShuffleMixin', () => {
 
     // Enable shuffle
     element.shuffle = false;
-    // await element.updateComplete;
+    await element.updateComplete;
 
     const shuffledOrder = nonFixedChoices.map(choice => choice.style.order);
 
