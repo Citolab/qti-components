@@ -1,12 +1,12 @@
-import { css, html } from 'lit';
-import { Choices } from '../internal/choices/choices';
+import { css, html, LitElement } from 'lit';
+import { ChoicesMixin } from '../internal/choices/choices';
 import { QtiHotspotChoice } from '../qti-hotspot-choice';
 
 import { customElement } from 'lit/decorators.js';
 import { positionHotspots } from '../internal/hotspots/hotspot';
 
 @customElement('qti-graphic-order-interaction')
-export class QtiGraphicOrderInteraction extends Choices {
+export class QtiGraphicOrderInteraction extends ChoicesMixin(LitElement, 'qti-hotspot-choice') {
   choiceOrdering: boolean;
 
   // do not select ( highlight blue, the image)

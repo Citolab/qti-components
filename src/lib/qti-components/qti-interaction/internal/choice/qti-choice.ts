@@ -127,15 +127,7 @@ export abstract class QtiChoice extends LitElement {
     );
   }
 
-  validateAllProps() {
-    if (!this.getAttribute('identifier')) return false;
-    return true;
-  }
-
   override render() {
-    if (!this.validateAllProps()) {
-      console.warn(`Invalid props for ${this.outerHTML}`, `missing identifier`);
-    }
     return html` <slot></slot> `;
   }
 }

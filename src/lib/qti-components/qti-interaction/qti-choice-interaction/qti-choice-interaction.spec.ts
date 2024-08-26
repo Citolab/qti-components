@@ -55,7 +55,6 @@ describe('qti-choice-interaction', () => {
       const si = Array.from(getQtiSimpleChoices())[0];
 
       const dispatchEventSpy = vi.spyOn(ci, 'dispatchEvent');
-
       si.click();
 
       expect(dispatchEventSpy).toHaveBeenCalledWith(expect.any(Event));
