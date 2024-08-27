@@ -214,11 +214,24 @@
     }
 
     & qti-simple-match-set:last-of-type {
-      @apply grid auto-cols-fr grid-flow-col gap-2;
+      @apply grid auto-cols-fr grid-flow-col gap-2 w-full;
 
       & qti-simple-associable-choice {
         @apply drop hover:hov focus:foc;
-        @apply flex h-32 flex-col;
+        @apply flex flex-col;
+        min-height: 4rem;
+      }
+
+      & qti-simple-associable-choice[enabled] {
+        @apply foc;
+      }
+
+      & qti-simple-associable-choice[active] {
+        @apply act;
+      }
+
+      & qti-simple-associable-choice > *:not(qti-simple-associable-choice) {
+        pointer-events: none;
       }
 
       & qti-simple-associable-choice > qti-simple-associable-choice {

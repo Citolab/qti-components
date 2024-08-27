@@ -37,7 +37,7 @@ let item;
 
 export const Examples: Story = {
   render: ({ disabled, view }, { argTypes, loaded: { xml } }) => {
-    const onInteractionChangedAction = action('on-interaction-changed');
+    const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
     const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;

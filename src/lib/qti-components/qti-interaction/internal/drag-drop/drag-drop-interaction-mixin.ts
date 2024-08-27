@@ -1,12 +1,12 @@
-import { html, LitElement } from 'lit';
+import { LitElement } from 'lit';
+import { IInteraction } from '../interaction/interaction.interface';
 import { DroppablesMixin } from './droppables-mixin';
 import { FlippablesMixin } from './flippables-mixin';
-import { IInteraction } from '../interaction/interaction.interface';
 
-import { TouchDragAndDrop } from './drag-drop-api';
 import { property } from 'lit/decorators.js';
-import { watch } from '../../../../decorators/watch';
 import { liveQuery } from '../../../../decorators/live-query';
+import { watch } from '../../../../decorators/watch';
+import { TouchDragAndDrop } from './drag-drop-api';
 // keyboard navigatable drag drop: https://codepen.io/SitePoint/pen/vEzXbj
 // https://stackoverflow.com/questions/55242196/typescript-allows-to-use-proper-multiple-inheritance-with-mixins-but-fails-to-c
 // https://github.com/microsoft/TypeScript/issues/17744#issuecomment-558990381
@@ -46,43 +46,14 @@ export const DragDropInteractionMixin = <T extends Constructor<LitElement>>(
         this.dragDropApi.addDraggables(dragsAdded);
 
         dragsAdded.forEach(elem => {
-          // store initial positions of elements, and ofcourse, just the elements for looping and such
+          // store initial positions of elements, and of course, just the elements for looping and such
           this.draggables.set(elem, {
             parent: elem.parentElement,
             index: Array.from(elem.parentNode.children).indexOf(elem)
           });
           elem.setAttribute('qti-draggable', 'true');
-          elem.addEventListener('dragstart', (ev: any) => {
-            ev.dataTransfer.setData('text', ev.currentTarget.getAttribute(`identifier`));
-            elem.setAttribute('dragging', '');
-          });
-
-          elem.addEventListener('dragend', (ev: DragEvent) => {
-            ev.preventDefault();
-            elem.removeAttribute('over');
-            elem.removeAttribute('dragging');
-
-            // pk: if not dropped on a drop location put it back where it belongs
-            if (ev.dataTransfer.dropEffect === 'none' || ev.dataTransfer.dropEffect === undefined) {
-              if (this.configuration.dragCanBePlacedBack) {
-                const draggable = ev.currentTarget as HTMLElement;
-                const position = this.draggables.get(draggable);
-                const index =
-                  position.index < position.parent.children.length
-                    ? position.index
-                    : position.parent.children.length - 1;
-                const interaction = position.parent;
-                const gapText = position.parent.children[index];
-                interaction.insertBefore(draggable, gapText);
-                this.saveResponse();
-                this.checkMaxMatchAssociations();
-              }
-            }
-            if (ev.dataTransfer.dropEffect === 'move') {
-              this.saveResponse();
-              this.checkMaxMatchAssociations();
-            }
-          });
+          elem.addEventListener('dragstart', this.handleDragStart);
+          elem.addEventListener('dragend', this.handleDragEnd);
         });
       }
     }
@@ -147,6 +118,45 @@ export const DragDropInteractionMixin = <T extends Constructor<LitElement>>(
       );
     }
 
+    private handleDragStart = (ev: any) => {
+      ev.dataTransfer.setData('text', ev.currentTarget.getAttribute(`identifier`));
+      ev.currentTarget.setAttribute('dragging', '');
+
+      // highlight all droppables with an active class
+      this.droppables.forEach(d => d.setAttribute('enabled', ''));
+    };
+
+    private handleDragEnd = (ev: DragEvent) => {
+      ev.preventDefault();
+      this.droppables.forEach(d => d.removeAttribute('enabled'));
+      const draggable = ev.currentTarget as HTMLElement;
+      draggable.removeAttribute('over');
+      draggable.removeAttribute('dragging');
+
+      // pk: if not dropped on a drop location put it back where it belongs
+      if (ev.dataTransfer.dropEffect === 'none' || ev.dataTransfer.dropEffect === undefined) {
+        if (this.configuration.dragCanBePlacedBack) {
+          this.placeDraggableBack(draggable);
+        }
+      }
+      if (ev.dataTransfer.dropEffect === 'move') {
+        this.saveResponse();
+        this.checkMaxMatchAssociations();
+      }
+    };
+
+    private placeDraggableBack(draggable: HTMLElement) {
+      const position = this.draggables.get(draggable);
+      const index =
+        position.index <= position.parent.children.length ? position.index : position.parent.children.length - 1;
+      const interaction = position.parent;
+      const gapText = position.parent.children[index];
+
+      interaction.insertBefore(draggable, gapText);
+      this.saveResponse();
+      this.checkMaxMatchAssociations();
+    }
+
     reset(save = true): void {
       this.draggables.forEach((position, draggable) => {
         const children = position.parent.children;
@@ -160,7 +170,9 @@ export const DragDropInteractionMixin = <T extends Constructor<LitElement>>(
       this.droppables.forEach(d => {
         const maxMatch = +(d.getAttribute('match-max') || 1);
         // const maxMin = +(d.getAttribute('match-min') || 0);
-        const disable = maxMatch <= (d.children.length || 0);
+        // const disable = maxMatch <= (d.children.length || 0);
+        const disable = maxMatch <= (d.querySelectorAll('[qti-draggable="true"]').length || 0);
+
         disable ? d.setAttribute('disabled', '') : d.removeAttribute('disabled');
         disable ? d.removeAttribute('dropzone') : d.setAttribute('dropzone', 'move');
       });
@@ -201,17 +213,18 @@ export const DragDropInteractionMixin = <T extends Constructor<LitElement>>(
     }
 
     protected saveResponse() {
-      const response = this.droppables.map(droppable => {
-        let responseString = '';
-        if (droppable.children?.length > 0) {
-          responseString +=
-            Array.from(droppable.children)
-              .map(d => d.getAttribute('identifier'))
-              .join(' ') + ` `;
-        }
-        responseString += droppable.getAttribute('identifier');
-        return responseString;
-      });
+      let response: string | string[];
+      if (typeof (this as any).getResponse === 'function') {
+        // only for the qti-order-interaction, abstracted this away in a method
+        response = (this as any).getResponse(); // Call the method from the implementing class
+      } else {
+        response = this.droppables.map(droppable => {
+          const dragsInDroppable = droppable.querySelectorAll('[qti-draggable="true"]');
+          const identifiers = Array.from(dragsInDroppable).map(d => d.getAttribute('identifier'));
+          const droppableIdentifier = droppable.getAttribute('identifier');
+          return [...identifiers, droppableIdentifier].join(' ');
+        });
+      }
 
       this.dispatchEvent(
         new CustomEvent('qti-interaction-response', {
