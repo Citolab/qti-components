@@ -71,7 +71,7 @@ export const FallbackPath = {
         represents $5 and then click to shade the fraction of the chart representing the amount saved in two weeks.
       </p>
       <qti-portable-custom-interaction
-        custom-interaction-type-identifier="urn:fdc:hmhco.com:pci:shading"
+        custom-interaction-type-identifier="urn:fdc:hmhco.com:pci:shading1"
         data-controls="full"
         data-dimension1_initial="2"
         data-dimension2_initial="2"
@@ -103,7 +103,7 @@ export const FallbackPath = {
 export const GraphAmpIO = {
   render: args =>
     html`<qti-portable-custom-interaction
-      custom-interaction-type-identifier="urn:edmentum.com:pci:2019:graphInteraction"
+      custom-interaction-type-identifier="GraphAmpIO"
       data-height="360"
       data-prompt="Use the drawing tool(s) to form the correct answer on the provided graph."
       data-show-axes="true"
@@ -126,6 +126,11 @@ export const GraphAmpIO = {
           </div>
         </div>
       </qti-interaction-markup>
+      <qti-interaction-modules>
+        <qti-interaction-module id="graphInteraction" primary-path="modules/graphInteraction"></qti-interaction-module>
+        <qti-interaction-module id="tap" primary-path="tap"> </qti-interaction-module>
+        <qti-interaction-module id="d3" primary-path="modules/d3.v5.min"> </qti-interaction-module>
+      </qti-interaction-modules>
     </qti-portable-custom-interaction>`
 };
 
@@ -133,7 +138,7 @@ export const TapToReveal = {
   render: args =>
     html`<qti-portable-custom-interaction
       class="hmh-tap-border-rounded"
-      custom-interaction-type-identifier="urn:fdc:hmhco.com:pci:tapToReveal"
+      custom-interaction-type-identifier="tapToReveal"
       data-tap-message="Tap to reveal the color of the solution"
       data-toggle="true"
       module="tap"
@@ -179,5 +184,8 @@ export const TapToReveal = {
           </div>
         </section>
       </qti-interaction-markup>
+      <qti-interaction-modules>
+        <qti-interaction-module id="tap" primary-path="tap"> </qti-interaction-module>
+      </qti-interaction-modules>
     </qti-portable-custom-interaction>`
 };
