@@ -17,7 +17,62 @@
         }
       }
     }
+    &.qti-labels-decimal {
+      & qti-simple-choice {
+        display: flex;
+        align-items: center;
+        counter-increment: item; /* Increments a counter for each qti-simple-choice */
+        &::before {
+          content: counter(item);
+          margin-right: 8px; /* Adjusts spacing between the number and the text */
+          order: 1;
+        }
 
+        &::part(slot) {
+          order: 2;
+        }
+        &::after {
+          order: 3;
+        }
+      }
+    }
+    &.qti-labels-lower-alpha {
+      & qti-simple-choice {
+        display: flex;
+        align-items: center;
+        counter-increment: item; /* Increments a counter for each qti-simple-choice */
+        &::before {
+          content: counter(item, lower-alpha);
+          margin-right: 8px; /* Adjusts spacing between the number and the text */
+          order: 1;
+        }
+        &::part(slot) {
+          order: 2;
+        }
+        &::after {
+          order: 3;
+        }
+      }
+    }
+
+    &.qti-labels-upper-alpha {
+      & qti-simple-choice {
+        display: flex;
+        align-items: center;
+        counter-increment: item; /* Increments a counter for each qti-simple-choice */
+        &::before {
+          content: counter(item, upper-alpha);
+          margin-right: 8px; /* Adjusts spacing between the number and the text */
+          order: 1;
+        }
+        &::part(slot) {
+          order: 2;
+        }
+        &::after {
+          order: 3;
+        }
+      }
+    }
     &:not(.qti-input-control-hidden) {
       & qti-simple-choice {
         @apply check hover:hov focus:foc;
@@ -49,7 +104,6 @@
         }
       }
     }
-
     & qti-simple-choice {
       &[data-correct-response='true'] {
         &::after {

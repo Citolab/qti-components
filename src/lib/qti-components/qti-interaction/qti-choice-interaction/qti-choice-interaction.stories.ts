@@ -118,6 +118,61 @@ export const CorrectResponse: Story = {
   }
 };
 
+export const VocabularyDecimal: Story = {
+  render: Default.render,
+  args: {
+    orientation: 'vertical',
+    classes: ['qti-labels-decimal'],
+    'min-choices': 1,
+    'max-choices': 1
+  }
+};
+
+export const VocabularyLowerAlphaStory = {
+  render: Default.render,
+  args: {
+    orientation: 'vertical',
+    classes: ['qti-labels-lower-alpha'],
+    'min-choices': 1,
+    'max-choices': 1
+  }
+};
+
+export const VocabularyUpperAlphaStory = {
+  render: Default.render,
+  args: {
+    orientation: 'vertical',
+    classes: ['qti-labels-upper-alpha'],
+    'min-choices': 1,
+    'max-choices': 1
+  }
+};
+
+export const VocabularyLowerAlphaSuffixDotStory = {
+  render: Default.render,
+  args: {
+    orientation: 'vertical',
+    classes: ['qti-labels-lower-alpha', 'qti-labels-suffix-period'],
+    'min-choices': 1,
+    'max-choices': 1
+  }
+};
+
+export const VocabularyLowerAlphaSuffixDotAndCorrectStory = {
+  render: Default.render,
+  args: {
+    orientation: 'vertical',
+    classes: ['qti-labels-lower-alpha', 'qti-labels-suffix-period'],
+    'min-choices': 1,
+    'max-choices': 1
+  },
+  play: ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const el = canvas.getByTestId('qti-choice-interaction') as QtiChoiceInteraction;
+    el.correctResponse = ['choice-1', 'choice-2'];
+  }
+};
+
 export const ContentEditable = {
   render: () => {
     return html`
