@@ -9,8 +9,14 @@ export default defineConfig({
     globals: true,
     browser: {
       enabled: true,
+      name: 'chromium',
       provider: 'playwright',
-      name: 'chromium'
+      // headless: true, // Both modes work fine
+      providerOptions: {
+        launch: {
+          args: ['--remote-debugging-port=9222']
+        }
+      }
     }
   }
 });

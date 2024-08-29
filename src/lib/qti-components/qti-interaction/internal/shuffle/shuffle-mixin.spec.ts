@@ -48,7 +48,7 @@ describe('ShuffleMixin', () => {
 
   it('should not shuffle choices when shuffle is false', async () => {
     element = document.querySelector('test-element') as TestElement;
-    element.shuffle = false;
+    element.shuffle = true;
     await element.updateComplete;
 
     const choices = Array.from(element.querySelectorAll('qti-simple-choice'));

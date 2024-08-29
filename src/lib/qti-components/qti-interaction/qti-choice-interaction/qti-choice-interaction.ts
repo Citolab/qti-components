@@ -1,24 +1,15 @@
-import { customElement, property } from 'lit/decorators.js';
-import { html } from 'lit';
-import styles from './qti-choice-interaction.styles';
 import type { CSSResultGroup } from 'lit';
-import { Choices } from '../internal/choices/choices';
-
-/**
- * @summary The ChoiceInteraction.Type (qti-choice-interaction) interaction presents a collection of choices to the candidate.
- * @documentation https://www.imsglobal.org/spec/qti/v3p0/impl#h.j9nu1oa1tu3b
- * @status stable
- * @since 6.0
- *
- * @event qti-register-interaction - emitted when the interaction wants to register itself
- * @event qti-interaction-response - emitted when the interaction changes
- *
- * @slot - The default slot where <qti-simple-choice> must be placed.
- * @slot prompt - slot where the prompt is placed.
- */
+import { html, LitElement } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
+import { ChoicesInterface, ChoicesMixin } from '../internal/choices/choices';
+import { ShuffleMixin } from '../internal/shuffle/shuffle-mixin';
+import styles from './qti-choice-interaction.styles';
 
 @customElement('qti-choice-interaction')
-export class QtiChoiceInteraction extends Choices {
+export class QtiChoiceInteraction
+  extends ShuffleMixin(ChoicesMixin(LitElement, 'qti-simple-choice'), 'qti-simple-choice')
+  implements ChoicesInterface
+{
   static styles: CSSResultGroup = styles;
 
   /** orientation of choices */

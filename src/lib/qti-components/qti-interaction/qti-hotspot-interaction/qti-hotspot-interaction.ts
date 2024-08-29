@@ -1,11 +1,11 @@
-import { css, html } from 'lit';
+import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import { Choices } from '../internal/choices/choices';
+import { ChoicesMixin } from '../internal/choices/choices';
 import { positionHotspots } from '../internal/hotspots/hotspot';
 import { QtiHotspotChoice } from '../qti-hotspot-choice';
 
 @customElement('qti-hotspot-interaction')
-export class QtiHotspotInteraction extends Choices {
+export class QtiHotspotInteraction extends ChoicesMixin(LitElement, 'qti-hotspot-choice') {
   // do not select ( highlight blue, the image)
   // target the main slot make it relative and fit with the conten
   static override styles = [

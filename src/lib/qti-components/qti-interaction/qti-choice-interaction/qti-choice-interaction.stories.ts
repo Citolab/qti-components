@@ -2,7 +2,7 @@ import { action } from '@storybook/addon-actions';
 import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
-import { within } from '@storybook/test';
+import { expect, userEvent, within } from '@storybook/test';
 
 import type { Meta, StoryObj } from '@storybook/web-components';
 
@@ -24,6 +24,7 @@ const meta: Meta = {
     },
     readonly: { control: { type: 'boolean' } },
     disabled: { control: { type: 'boolean' } },
+    shuffle: { control: { type: 'boolean' }, table: { category: 'QTI' } },
     classes: {
       description: 'supported classes',
       control: 'inline-check',
@@ -37,7 +38,6 @@ const meta: Meta = {
       ],
       table: { category: 'QTI' }
     },
-    shuffle: { description: 'unsupported', table: { category: 'QTI' } },
     'data-max-selections-message': { description: 'unsupported', table: { category: 'QTI' } },
     'data-min-selections-message': { description: 'unsupported', table: { category: 'QTI' } }
   }
@@ -57,32 +57,41 @@ export const Default = {
       min-choices=${ifDefined(args['min-choices'])}
       max-choices=${ifDefined(args['max-choices'])}
       orientation=${ifDefined(args.orientation)}
+      shuffle=${args.shuffle}
       ?readonly=${args.readonly}
       .disabled=${args.disabled}
       ><qti-prompt>
         <p>Which of the following features are <strong>new</strong> to QTI 3?</p>
         <p>Pick 1 choice.</p></qti-prompt
       >
-      ${'\n'}${[
-        'I think you can use WorkFlow.',
-        'You should use FlowChart',
-        'No you should use Workload Rage.',
-        'I would recommend Chart Up.'
-      ].map(
-        (item, index) =>
-          html` <qti-simple-choice data-testid="choice-${index}" identifier="choice-${index}">${item}</qti-simple-choice
-            >${'\n'}`
-      )}</qti-choice-interaction
-    >`;
+      <qti-simple-choice data-testid="choice-0" identifier="choice-0">I think you can use WorkFlow.</qti-simple-choice>
+      <qti-simple-choice data-testid="choice-1" identifier="choice-1" fixed>You should use FlowChart</qti-simple-choice>
+      <qti-simple-choice data-testid="choice-2" identifier="choice-2">No you should use Workload</qti-simple-choice>
+      <qti-simple-choice data-testid="choice-3" identifier="choice-3">I would recommend Chart Up.</qti-simple-choice>
+    </qti-choice-interaction>`;
   }
-  // play: ({ canvasElement }) => {
-  //   const canvas = within(canvasElement);
-  //   //   // 👇 Simulate interactions with the component
-  //   //   // See https://storybook.js.org/docs/react/essentials/actions#automatically-matching-args to learn how to setup logging in the Actions panel
-  //   userEvent.click(canvas.getByTestId('choice-2'));
-  //   // //   // 👇 Assert DOM structure
-  //   expect(canvas.getByTestId('choice-2').getAttribute('aria-checked')).toBeTruthy();
-  // }
+};
+
+export const Standard: Story = {
+  render: Default.render,
+  args: {},
+  play: ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    userEvent.click(canvas.getByTestId('choice-2'));
+    expect(canvas.getByTestId('choice-2').getAttribute('aria-checked')).toBeTruthy();
+  }
+};
+
+export const MinChoices1: Story = {
+  render: Default.render,
+  args: {
+    minChoices: 1
+  },
+  play: ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    userEvent.click(canvas.getByTestId('choice-2'));
+    expect(canvas.getByTestId('choice-2').getAttribute('aria-checked')).toBeTruthy();
+  }
 };
 
 export const Simple: Story = {

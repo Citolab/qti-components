@@ -18,3 +18,8 @@
 @import './styles/qti-variants/qti-interactions';
 
 /* @unocss; */
+
+:root {
+  --qti-primary-color: cornflowerblue;
+  --qti-secondary-color: rgb(155, 140, 25);
+}
