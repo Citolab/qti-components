@@ -37,7 +37,7 @@ export class QtiCustomOperator extends LitElement implements Calculate {
       node => node.nodeType === Node.COMMENT_NODE
     );
     try {
-      this.operatorFunction = new Function('context', 'fn', 'item', commentNode.textContent ?? '');
+      this.operatorFunction = new Function('context', 'fn', 'item', commentNode.textContent ?? '');      
     } catch (e) {
       console.error('custom-operator contains invalid javascript code', e);
     }
@@ -54,7 +54,7 @@ export class QtiCustomOperator extends LitElement implements Calculate {
     const item = {
       getVariable: (variableIdentifier: string) =>
         this._context?.variables.find(v => v.identifier === variableIdentifier),
-      updateOutcomeVariable: (outcomeIdentifier: string, value: string | string[]) => {
+      updateOutcomeVariable: (outcomeIdentifier: string, value: string | string[]) => {        
         this.dispatchEvent(
           new CustomEvent<{ outcomeIdentifier: string; value: string | string[] }>('qti-set-outcome-value', {
             bubbles: true,
@@ -65,8 +65,21 @@ export class QtiCustomOperator extends LitElement implements Calculate {
             }
           })
         );
+      },
+      updateResponseVariable: (responseIdentifier: string, response: string | string[]) => {
+        this.dispatchEvent(
+          new CustomEvent<{ responseIdentifier: string; response: string | string[] }>('qti-interaction-response', {
+            bubbles: true,
+            composed: true,
+            detail: {
+              responseIdentifier,
+              response
+            }
+          })
+        );
       }
-    };
+    };   
+    
     return this.operatorFunction(this._context, fn, item);
   }
 }
