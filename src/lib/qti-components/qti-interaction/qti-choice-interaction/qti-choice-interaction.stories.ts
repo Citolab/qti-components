@@ -13,34 +13,34 @@ import { QtiChoiceInteraction } from '../../index';
 type Story = StoryObj; // <Props>;
 
 const meta: Meta = {
-  component: 'qti-choice-interaction'
-  // argTypes: {
-  //   'min-choices': { control: { type: 'number' }, table: { category: 'QTI' } },
-  //   'max-choices': { control: { type: 'number' }, table: { category: 'QTI' } },
-  //   orientation: {
-  //     control: { type: 'radio' },
-  //     options: ['horizontal', 'vertical'],
-  //     table: { category: 'QTI' }
-  //   },
-  //   readonly: { control: { type: 'boolean' } },
-  //   disabled: { control: { type: 'boolean' } },
-  //   classes: {
-  //     description: 'supported classes',
-  //     control: 'inline-check',
-  //     options: [
-  //       'qti-choices-stacking-2',
-  //       'qti-choices-stacking-3',
-  //       'qti-choices-stacking-4',
-  //       'qti-choices-stacking-5',
-  //       'qti-orientation-horizontal',
-  //       'qti-input-control-hidden'
-  //     ],
-  //     table: { category: 'QTI' }
-  //   },
-  //   shuffle: { description: 'unsupported', table: { category: 'QTI' } },
-  //   'data-max-selections-message': { description: 'unsupported', table: { category: 'QTI' } },
-  //   'data-min-selections-message': { description: 'unsupported', table: { category: 'QTI' } }
-  // }
+  component: 'qti-choice-interaction',
+  argTypes: {
+    'min-choices': { control: { type: 'number' }, table: { category: 'QTI' } },
+    'max-choices': { control: { type: 'number' }, table: { category: 'QTI' } },
+    orientation: {
+      control: { type: 'radio' },
+      options: ['horizontal', 'vertical'],
+      table: { category: 'QTI' }
+    },
+    readonly: { control: { type: 'boolean' } },
+    disabled: { control: { type: 'boolean' } },
+    shuffle: { control: { type: 'boolean' }, table: { category: 'QTI' } },
+    classes: {
+      description: 'supported classes',
+      control: 'inline-check',
+      options: [
+        'qti-choices-stacking-2',
+        'qti-choices-stacking-3',
+        'qti-choices-stacking-4',
+        'qti-choices-stacking-5',
+        'qti-orientation-horizontal',
+        'qti-input-control-hidden'
+      ],
+      table: { category: 'QTI' }
+    },
+    'data-max-selections-message': { description: 'unsupported', table: { category: 'QTI' } },
+    'data-min-selections-message': { description: 'unsupported', table: { category: 'QTI' } }
+  }
 };
 export default meta;
 
@@ -57,6 +57,7 @@ export const Default = {
       min-choices=${ifDefined(args['min-choices'])}
       max-choices=${ifDefined(args['max-choices'])}
       orientation=${ifDefined(args.orientation)}
+      shuffle=${args.shuffle}
       ?readonly=${args.readonly}
       .disabled=${args.disabled}
       ><qti-prompt>
@@ -64,7 +65,7 @@ export const Default = {
         <p>Pick 1 choice.</p></qti-prompt
       >
       <qti-simple-choice data-testid="choice-0" identifier="choice-0">I think you can use WorkFlow.</qti-simple-choice>
-      <qti-simple-choice data-testid="choice-1" identifier="choice-1">You should use FlowChart</qti-simple-choice>
+      <qti-simple-choice data-testid="choice-1" identifier="choice-1" fixed>You should use FlowChart</qti-simple-choice>
       <qti-simple-choice data-testid="choice-2" identifier="choice-2">No you should use Workload</qti-simple-choice>
       <qti-simple-choice data-testid="choice-3" identifier="choice-3">I would recommend Chart Up.</qti-simple-choice>
     </qti-choice-interaction>`;

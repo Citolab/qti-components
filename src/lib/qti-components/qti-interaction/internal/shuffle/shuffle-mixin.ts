@@ -1,4 +1,18 @@
-import { LitElement, PropertyValues } from 'lit';
+/**
+ * Mixin that provides shuffling functionality for a LitElement.
+ * @template T - The type of the LitElement subclass.
+ * @param {T} superClass - The superclass to extend.
+ * @param {string} selector - The CSS selector for the elements to shuffle.
+ * @returns {Constructor<ShuffleInterface> & T} - The extended class with shuffling functionality.
+ *
+ * adds a shuffle property to the class with an attribute converter
+ *
+ * qti-inline-choice-interaction
+ * qti-choice-interaction
+ * qti-match-interaction
+ */
+import { LitElement } from 'lit';
+import { property } from 'lit/decorators.js';
 
 type Constructor<T = {}> = new (...args: any[]) => T;
 
@@ -6,19 +20,14 @@ declare class ShuffleInterface {}
 
 export const ShuffleMixin = <T extends Constructor<LitElement>>(superClass: T, selector: string) => {
   class ShuffleElement extends superClass {
-    protected override firstUpdated(_changedProperties: PropertyValues) {
-      super.firstUpdated(_changedProperties);
-      if (this._shuffle) {
-        this._shuffleChoices();
-      }
-    }
+    private _shuffle: boolean = false;
 
-    private _shuffle = true;
-
-    get shuffle(): boolean {
-      return this._shuffle;
-    }
-
+    // Define the property with the custom converter
+    @property({
+      type: String,
+      reflect: true,
+      converter: stringToBooleanConverter
+    })
     set shuffle(value: boolean) {
       const oldValue = this._shuffle;
       this._shuffle = value;
@@ -28,6 +37,10 @@ export const ShuffleMixin = <T extends Constructor<LitElement>>(superClass: T, s
         this._resetShuffleChoices();
       }
       this.requestUpdate('shuffle', oldValue);
+    }
+
+    get shuffle(): boolean {
+      return this._shuffle;
     }
 
     private _shuffleChoices() {
@@ -71,4 +84,13 @@ export const ShuffleMixin = <T extends Constructor<LitElement>>(superClass: T, s
     }
   }
   return ShuffleElement as Constructor<ShuffleInterface> & T;
+};
+
+const stringToBooleanConverter = {
+  fromAttribute(value: string | null): boolean {
+    return value === 'true';
+  },
+  toAttribute(value: boolean): string {
+    return value ? 'true' : 'false';
+  }
 };

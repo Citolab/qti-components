@@ -131,10 +131,7 @@ export class QtiOrderInteraction extends ShuffleMixin(
     return response;
   }
 
-  override async connectedCallback() {
-    super.connectedCallback();
-
-    await this.update;
+  override async firstUpdated() {
     this.childrenMap = Array.from(this.querySelectorAll('qti-simple-choice'));
     this.childrenMap.forEach(el => el.setAttribute('part', 'qti-simple-choice'));
   }

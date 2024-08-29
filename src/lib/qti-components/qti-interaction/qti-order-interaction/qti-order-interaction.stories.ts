@@ -54,7 +54,7 @@ export const Default = {
       .disabled=${args.disabled}
       .readonly=${args.readonly}
       orientation=${ifDefined(args.orientation)}
-      ?shuffle=${args.shuffle}
+      shuffle=${args.shuffle}
       class=${ifDefined(
         args.classes ? (Array.isArray(args.classes) ? args.classes.join(' ') : args.classes) : undefined
       )}

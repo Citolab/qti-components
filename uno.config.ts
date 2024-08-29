@@ -24,8 +24,8 @@ export default defineConfig({
   theme: {
     // ...
     colors: {
-      primary: '#0000ff',
-      focus: '#00ff00'
+      primary: 'var(--qti-primary-color)',
+      focus: 'var(--qti-secondary-color)'
     }
   },
   transformers: [transformerDirectives()],
