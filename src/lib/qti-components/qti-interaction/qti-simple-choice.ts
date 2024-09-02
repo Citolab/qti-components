@@ -1,5 +1,5 @@
-import { customElement } from 'lit/decorators.js';
-import { CSSResultGroup, css, html } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
+import { CSSResultGroup, css, html, nothing } from 'lit';
 import { QtiChoice } from './internal/choice/qti-choice';
 
 /**
@@ -26,8 +26,15 @@ export class QtiSimpleChoice extends QtiChoice {
     }
   `;
 
+  // property label
+  @property({ type: String, attribute: false })
+  public marker: string;
+
   override render() {
-    return html`<div part="ch"><div part="cha"></div></div>
+    return html`<div part="ch">
+        <div part="cha"></div>
+      </div>
+      ${this.marker ? html`<div id="label">${this.marker}</div>` : nothing}
       <slot part="slot"></slot> `;
   }
 }
