@@ -28,24 +28,32 @@ export default {
 };
 
 export const Default = {
-  render: args => html`
-    <qti-text-entry-interaction
-      @qti-register-interaction="${action(`qti-register-interaction`)}"
-      @qti-interaction-response="${action(`qti-interaction-response`)}"
-      .response=${args.response}
-      ?disabled=${args.disabled}
-      ?readonly=${args.readonly}
-      placeholder-text="totaal"
-      class="text-entry-interaction ${inputWidthClass}"
-      expected-length=${args.expectedLength}
-      pattern-mask=${args.patternMask}
-      data-patternmask-message=${args.dataPatternmaskMessage}
-      response-identifier="RESPONSE"
-    >
-    </qti-text-entry-interaction>
-  `,
+  render: args => {
+    return html`
+      <qti-text-entry-interaction
+        @qti-register-interaction="${action(`qti-register-interaction`)}"
+        @qti-interaction-response="${action(`qti-interaction-response`)}"
+        .response=${args.response}
+        ?disabled=${args.disabled}
+        ?readonly=${args.readonly}
+        placeholder-text="totaal"
+        class="text-entry-interaction ${inputWidthClass}"
+        expected-length=${args.expectedLength}
+        pattern-mask=${args.patternMask}
+        data-patternmask-message=${args.dataPatternmaskMessage}
+        response-identifier="RESPONSE"
+      >
+      </qti-text-entry-interaction>
+    `;
+  }
+};
 
-  args: {}
+export const PatternMask = {
+  render: Default.render,
+  args: {
+    patternMask: '[A-Za-z]{3}',
+    dataPatternmaskMessage: 'Alleen maar 3 letters toegestaan'
+  }
 };
 
 export const Sizes = {

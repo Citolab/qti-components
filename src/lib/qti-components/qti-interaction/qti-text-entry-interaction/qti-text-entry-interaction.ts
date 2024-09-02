@@ -60,11 +60,20 @@ export class QtiTextEntryInteraction extends Interaction {
   }
 
   override render() {
-    return html`      
+    return html`
       <input
         part="input"
         spellcheck="false"
         autocomplete="off"
+        @blur="${(event: FocusEvent) => {
+          const input = event.target as HTMLInputElement;
+          if (!input.checkValidity()) {
+            input.setCustomValidity(this.dataset.patternmaskMessage || 'Invalid input');
+            input.reportValidity(); // Show the validation message
+          } else {
+            input.setCustomValidity(''); // Clear the custom validity message
+          }
+        }}"
         @keydown="${event => event.stopImmediatePropagation()}"
         @keyup="${this.textChanged}"
         @change="${this.textChanged}"

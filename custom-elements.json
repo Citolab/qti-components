@@ -929,41 +929,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-companion-materials-info/qti-companion-materials-info.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "QtiCompanionMaterialsInfo",
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "qti-companion-materials-info",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "QtiCompanionMaterialsInfo",
-          "declaration": {
-            "name": "QtiCompanionMaterialsInfo",
-            "module": "src/lib/qti-components/qti-companion-materials-info/qti-companion-materials-info.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-companion-materials-info",
-          "declaration": {
-            "name": "QtiCompanionMaterialsInfo",
-            "module": "src/lib/qti-components/qti-companion-materials-info/qti-companion-materials-info.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "src/lib/qti-components/qti-assessment-stimulus-ref/qti-assessment-stimulus-ref.ts",
       "declarations": [
         {
@@ -1020,6 +985,41 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/lib/qti-components/qti-companion-materials-info/qti-companion-materials-info.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiCompanionMaterialsInfo",
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "qti-companion-materials-info",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiCompanionMaterialsInfo",
+          "declaration": {
+            "name": "QtiCompanionMaterialsInfo",
+            "module": "src/lib/qti-components/qti-companion-materials-info/qti-companion-materials-info.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-companion-materials-info",
+          "declaration": {
+            "name": "QtiCompanionMaterialsInfo",
+            "module": "src/lib/qti-components/qti-companion-materials-info/qti-companion-materials-info.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/lib/qti-components/qti-custom-operator/qti-custom-operator.ts",
       "declarations": [
         {
@@ -1030,6 +1030,12 @@
           "events": [
             {
               "name": "qti-set-outcome-value",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "qti-interaction-response",
               "type": {
                 "text": "CustomEvent"
               }
@@ -1163,6 +1169,56 @@
           "declaration": {
             "name": "QtiItemBody",
             "module": "src/lib/qti-components/qti-item-body/qti-item-body.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/lib/qti-components/qti-outcome-processing/qti-outcome-processing.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiOutcomeProcessing",
+          "members": [],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "qti-outcome-processing",
+          "customElement": true
+        },
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiOutcomeProcessingProcessor",
+          "members": []
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiOutcomeProcessing",
+          "declaration": {
+            "name": "QtiOutcomeProcessing",
+            "module": "src/lib/qti-components/qti-outcome-processing/qti-outcome-processing.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-outcome-processing",
+          "declaration": {
+            "name": "QtiOutcomeProcessing",
+            "module": "src/lib/qti-components/qti-outcome-processing/qti-outcome-processing.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiOutcomeProcessingProcessor",
+          "declaration": {
+            "name": "QtiOutcomeProcessingProcessor",
+            "module": "src/lib/qti-components/qti-outcome-processing/qti-outcome-processing.ts"
           }
         }
       ]
@@ -1878,56 +1934,6 @@
           "declaration": {
             "name": "QtiSimpleChoice",
             "module": "src/lib/qti-components/qti-interaction/qti-simple-choice.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-outcome-processing/qti-outcome-processing.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "QtiOutcomeProcessing",
-          "members": [],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "qti-outcome-processing",
-          "customElement": true
-        },
-        {
-          "kind": "class",
-          "description": "",
-          "name": "QtiOutcomeProcessingProcessor",
-          "members": []
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "QtiOutcomeProcessing",
-          "declaration": {
-            "name": "QtiOutcomeProcessing",
-            "module": "src/lib/qti-components/qti-outcome-processing/qti-outcome-processing.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-outcome-processing",
-          "declaration": {
-            "name": "QtiOutcomeProcessing",
-            "module": "src/lib/qti-components/qti-outcome-processing/qti-outcome-processing.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "QtiOutcomeProcessingProcessor",
-          "declaration": {
-            "name": "QtiOutcomeProcessingProcessor",
-            "module": "src/lib/qti-components/qti-outcome-processing/qti-outcome-processing.ts"
           }
         }
       ]
@@ -2847,6 +2853,17 @@
               "fieldName": "orientation"
             },
             {
+              "name": "class",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "class",
+              "inheritedFrom": {
+                "name": "VocabularyMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/vocabulary/vocabulary-mixin.ts"
+              }
+            },
+            {
               "name": "shuffle",
               "type": {
                 "text": "boolean"
@@ -2896,6 +2913,10 @@
             }
           ],
           "mixins": [
+            {
+              "name": "VocabularyMixin",
+              "module": "/src/lib/qti-components/qti-interaction/internal/vocabulary/vocabulary-mixin"
+            },
             {
               "name": "ShuffleMixin",
               "module": "/src/lib/qti-components/qti-interaction/internal/shuffle/shuffle-mixin"
@@ -3582,6 +3603,105 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/lib/qti-components/qti-interaction/qti-graphic-order-interaction/qti-graphic-order-interaction.mdx",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/lib/qti-components/qti-interaction/qti-graphic-order-interaction/qti-graphic-order-interaction.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiGraphicOrderInteraction",
+          "members": [],
+          "mixins": [
+            {
+              "name": "ChoicesMixin",
+              "module": "/src/lib/qti-components/qti-interaction/internal/choices/choices"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "qti-graphic-order-interaction",
+          "customElement": true,
+          "attributes": [
+            {
+              "name": "response-identifier",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "responseIdentifier",
+              "inheritedFrom": {
+                "name": "ChoicesMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/choices/choices.ts"
+              }
+            },
+            {
+              "name": "min-choices",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "fieldName": "minChoices",
+              "inheritedFrom": {
+                "name": "ChoicesMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/choices/choices.ts"
+              }
+            },
+            {
+              "name": "max-choices",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "the maximum number of selections a candidate must make, the other options will be disabled when max options is checked",
+              "fieldName": "maxChoices",
+              "inheritedFrom": {
+                "name": "ChoicesMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/choices/choices.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "qti-interaction-response",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "inheritedFrom": {
+                "name": "ChoicesMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/choices/choices.ts"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiGraphicOrderInteraction",
+          "declaration": {
+            "name": "QtiGraphicOrderInteraction",
+            "module": "src/lib/qti-components/qti-interaction/qti-graphic-order-interaction/qti-graphic-order-interaction.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-graphic-order-interaction",
+          "declaration": {
+            "name": "QtiGraphicOrderInteraction",
+            "module": "src/lib/qti-components/qti-interaction/qti-graphic-order-interaction/qti-graphic-order-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/lib/qti-components/qti-interaction/qti-graphic-gap-match-interaction/qti-graphic-gap-match-interaction.mdx",
       "declarations": [],
       "exports": []
@@ -3708,105 +3828,6 @@
           "declaration": {
             "name": "QtiGraphicGapMatchInteraction",
             "module": "src/lib/qti-components/qti-interaction/qti-graphic-gap-match-interaction/qti-graphic-gap-match-interaction.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-interaction/qti-graphic-order-interaction/qti-graphic-order-interaction.mdx",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-interaction/qti-graphic-order-interaction/qti-graphic-order-interaction.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "QtiGraphicOrderInteraction",
-          "members": [],
-          "mixins": [
-            {
-              "name": "ChoicesMixin",
-              "module": "/src/lib/qti-components/qti-interaction/internal/choices/choices"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "qti-graphic-order-interaction",
-          "customElement": true,
-          "attributes": [
-            {
-              "name": "response-identifier",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "responseIdentifier",
-              "inheritedFrom": {
-                "name": "ChoicesMixin",
-                "module": "src/lib/qti-components/qti-interaction/internal/choices/choices.ts"
-              }
-            },
-            {
-              "name": "min-choices",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "fieldName": "minChoices",
-              "inheritedFrom": {
-                "name": "ChoicesMixin",
-                "module": "src/lib/qti-components/qti-interaction/internal/choices/choices.ts"
-              }
-            },
-            {
-              "name": "max-choices",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "description": "the maximum number of selections a candidate must make, the other options will be disabled when max options is checked",
-              "fieldName": "maxChoices",
-              "inheritedFrom": {
-                "name": "ChoicesMixin",
-                "module": "src/lib/qti-components/qti-interaction/internal/choices/choices.ts"
-              }
-            }
-          ],
-          "events": [
-            {
-              "name": "qti-interaction-response",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "ChoicesMixin",
-                "module": "src/lib/qti-components/qti-interaction/internal/choices/choices.ts"
-              }
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "QtiGraphicOrderInteraction",
-          "declaration": {
-            "name": "QtiGraphicOrderInteraction",
-            "module": "src/lib/qti-components/qti-interaction/qti-graphic-order-interaction/qti-graphic-order-interaction.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-graphic-order-interaction",
-          "declaration": {
-            "name": "QtiGraphicOrderInteraction",
-            "module": "src/lib/qti-components/qti-interaction/qti-graphic-order-interaction/qti-graphic-order-interaction.ts"
           }
         }
       ]
@@ -5824,6 +5845,17 @@
           "customElement": true,
           "attributes": [
             {
+              "name": "class",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "class",
+              "inheritedFrom": {
+                "name": "VocabularyMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/vocabulary/vocabulary-mixin.ts"
+              }
+            },
+            {
               "name": "shuffle",
               "type": {
                 "text": "boolean"
@@ -6354,6 +6386,17 @@
           "customElement": true,
           "attributes": [
             {
+              "name": "class",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "class",
+              "inheritedFrom": {
+                "name": "VocabularyMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/vocabulary/vocabulary-mixin.ts"
+              }
+            },
+            {
               "name": "shuffle",
               "type": {
                 "text": "boolean"
@@ -6419,6 +6462,113 @@
           "declaration": {
             "name": "ShuffleMixin",
             "module": "src/lib/qti-components/qti-interaction/internal/shuffle/shuffle-mixin.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/lib/qti-components/qti-interaction/internal/vocabulary/vocabulary-mixin.spec.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "TestElement",
+          "members": [],
+          "mixins": [
+            {
+              "name": "VocabularyMixin",
+              "module": "/src/lib/qti-components/qti-interaction/internal/vocabulary/vocabulary-mixin"
+            },
+            {
+              "name": "ShuffleMixin",
+              "module": "/src/lib/qti-components/qti-interaction/internal/shuffle/shuffle-mixin"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "test-element",
+          "customElement": true,
+          "attributes": [
+            {
+              "name": "class",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "class",
+              "inheritedFrom": {
+                "name": "VocabularyMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/vocabulary/vocabulary-mixin.ts"
+              }
+            },
+            {
+              "name": "shuffle",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "shuffle",
+              "inheritedFrom": {
+                "name": "ShuffleMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/shuffle/shuffle-mixin.ts"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "test-element",
+          "declaration": {
+            "name": "TestElement",
+            "module": "src/lib/qti-components/qti-interaction/internal/vocabulary/vocabulary-mixin.spec.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/lib/qti-components/qti-interaction/internal/vocabulary/vocabulary-mixin.ts",
+      "declarations": [
+        {
+          "kind": "mixin",
+          "description": "",
+          "name": "VocabularyMixin",
+          "members": [],
+          "attributes": [
+            {
+              "name": "class",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "class"
+            }
+          ],
+          "parameters": [
+            {
+              "name": "superClass",
+              "type": {
+                "text": "T"
+              }
+            },
+            {
+              "name": "selector",
+              "type": {
+                "text": "string"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "VocabularyMixin",
+          "declaration": {
+            "name": "VocabularyMixin",
+            "module": "src/lib/qti-components/qti-interaction/internal/vocabulary/vocabulary-mixin.ts"
           }
         }
       ]

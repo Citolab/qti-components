@@ -71,6 +71,15 @@ export class QtiExtendedTextInteraction extends Interaction {
         @keydown="${event => event.stopImmediatePropagation()}"
         @keyup="${this.textChanged}"
         @change="${this.textChanged}"
+        @blur="${(event: FocusEvent) => {
+          const input = event.target as HTMLInputElement;
+          if (!input.checkValidity()) {
+            input.setCustomValidity(this.dataset.patternmaskMessage || 'Invalid input');
+            input.reportValidity(); // Show the validation message
+          } else {
+            input.setCustomValidity(''); // Clear the custom validity message
+          }
+        }}"
         placeholder="${ifDefined(this.placeholderText ? this.placeholderText : undefined)}"
         maxlength="${ifDefined(this.expectedLength ? this.expectedLength : undefined)}"
         pattern="${ifDefined(this.patternMask ? this.patternMask : undefined)}"
