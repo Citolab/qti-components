@@ -151,14 +151,14 @@ export const ChoicesMixin = <T extends Constructor<LitElement>>(superClass: T, s
       this.saveResponse(result);
     }
 
-    protected saveResponse(result) {
+    protected saveResponse(response) {      
       this.dispatchEvent(
         new CustomEvent('qti-interaction-response', {
           bubbles: true,
           composed: true,
           detail: {
             responseIdentifier: this.responseIdentifier,
-            result
+            response
           }
         })
       );
