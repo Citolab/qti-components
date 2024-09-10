@@ -27,7 +27,7 @@ import * as QTI from 'https://unpkg.com/@citolab/qti-components@latest/dist/inde
 ```
 
 ```css
-@import 'https://unpkg.com/@citolab/qti-components@latest/dist/index.css';'
+@import 'https://unpkg.com/@citolab/qti-components@latest/dist/index.css';
 ```
 
 ```html
