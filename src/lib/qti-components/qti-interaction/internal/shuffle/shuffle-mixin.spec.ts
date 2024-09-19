@@ -30,6 +30,8 @@ describe('ShuffleMixin', () => {
     );
   });
 
+  // TODO: error on github build: expected [ '1', '2', '3', '4' ] to not deeply equal [ '1', '2', '3', '4' ]
+
   // it('should shuffle non-fixed choices when shuffle is true', async () => {
   //   element = document.querySelector('test-element') as TestElement;
   //   await element.updateComplete;
