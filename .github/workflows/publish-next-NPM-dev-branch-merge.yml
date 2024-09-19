@@ -33,7 +33,7 @@ jobs:
       - name: Test build
         run: npm run test
       - name: Version to prerelease
-        run: npm version prerelease
+        run: npm version prerelease --preid=beta
 
       # Push repository changes
       - name: Push changes to repository
