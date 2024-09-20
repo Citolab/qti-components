@@ -82,6 +82,13 @@ export const ChoicesMixin = <T extends Constructor<LitElement>>(superClass: T, s
       super.connectedCallback();
       this.addEventListener('qti-register-choice', this._registerChoiceElement);
       this.addEventListener('qti-choice-element-selected', this._choiceElementSelectedHandler);
+      this.dispatchEvent(
+        new CustomEvent('qti-register-interaction', {
+          bubbles: true,
+          cancelable: false,
+          composed: true
+        })
+      );
     }
 
     override disconnectedCallback() {
@@ -151,7 +158,7 @@ export const ChoicesMixin = <T extends Constructor<LitElement>>(superClass: T, s
       this.saveResponse(result);
     }
 
-    protected saveResponse(response) {      
+    protected saveResponse(response) {
       this.dispatchEvent(
         new CustomEvent('qti-interaction-response', {
           bubbles: true,
