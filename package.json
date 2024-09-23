@@ -12,7 +12,7 @@
   "engines": {
     "node": ">=20.0.0"
   },
-  "version": "6.9.1-beta.1",
+  "version": "6.9.1-beta.2",
   "type": "module",
   "exports": {
     "./qti-components": "./dist/qti-components/index.js",
