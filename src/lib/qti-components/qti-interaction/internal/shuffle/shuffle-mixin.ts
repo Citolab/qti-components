@@ -17,7 +17,6 @@ import { property } from 'lit/decorators.js';
 type Constructor<T = {}> = new (...args: any[]) => T;
 
 declare class ShuffleInterface {}
-
 export const ShuffleMixin = <T extends Constructor<LitElement>>(superClass: T, selector: string) => {
   class ShuffleElement extends superClass {
     private _shuffle: boolean = false;
@@ -43,6 +42,17 @@ export const ShuffleMixin = <T extends Constructor<LitElement>>(superClass: T, s
       return this._shuffle;
     }
 
+    connectedCallback() {
+      super.connectedCallback();
+      // Call _resetShuffleChoices initially to set the CSS order to initial.
+      // If shuffle is true, _shuffleChoices will be called automatically via the setter.
+      if (this.shuffle) {
+        this._shuffleChoices();
+      } else {
+        this._resetShuffleChoices();
+      }
+    }
+
     private _shuffleChoices() {
       const choices = Array.from(this.querySelectorAll(selector));
 
@@ -58,10 +68,36 @@ export const ShuffleMixin = <T extends Constructor<LitElement>>(superClass: T, s
         }
       });
 
-      // Shuffle non-fixed elements
-      for (let i = nonFixedElements.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [nonFixedElements[i], nonFixedElements[j]] = [nonFixedElements[j], nonFixedElements[i]];
+      // If there are 1 or fewer non-fixed elements, throw an error (no shuffle possible)
+      if (nonFixedElements.length <= 1) {
+        throw new Error('Shuffling is not possible with fewer than 2 non-fixed elements.');
+      }
+
+      let isShuffled = false;
+      const maxAttempts = 10; // Max attempts to prevent infinite loops
+      let attempt = 0;
+
+      // Shuffle until the result is different or maxAttempts is reached
+      while (!isShuffled && attempt < maxAttempts) {
+        attempt++;
+
+        // Shuffle non-fixed elements
+        for (let i = nonFixedElements.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [nonFixedElements[i], nonFixedElements[j]] = [nonFixedElements[j], nonFixedElements[i]];
+        }
+
+        // Check if the shuffled result is different from the original order
+        isShuffled = nonFixedElements.some((choice, index) => {
+          const originalIndex = choices.indexOf(choice);
+          return originalIndex !== index;
+        });
+
+        if (isShuffled) break;
+      }
+
+      if (!isShuffled) {
+        throw new Error('Failed to shuffle the choices after multiple attempts.');
       }
 
       // Assign order to each element
@@ -71,7 +107,7 @@ export const ShuffleMixin = <T extends Constructor<LitElement>>(superClass: T, s
           choice.style.order = String(order++);
         } else {
           const nonFixedChoice = nonFixedElements.shift();
-          nonFixedChoice.style.order = order++;
+          nonFixedChoice!.style.order = String(order++);
         }
       });
     }

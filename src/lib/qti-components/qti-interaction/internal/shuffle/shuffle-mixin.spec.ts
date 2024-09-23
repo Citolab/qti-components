@@ -30,45 +30,47 @@ describe('ShuffleMixin', () => {
     );
   });
 
-  it('should shuffle non-fixed choices when shuffle is true', async () => {
-    expect(true).toBe(true);
-  });
-
   // TODO: error on github build: expected [ '1', '2', '3', '4' ] to not deeply equal [ '1', '2', '3', '4' ]
 
-  // it('should shuffle non-fixed choices when shuffle is true', async () => {
-  //   element = document.querySelector('test-element') as TestElement;
-  //   await element.updateComplete;
+  it('should shuffle non-fixed choices when shuffle is true', async () => {
+    element = document.querySelector('test-element') as TestElement;
+    await element.updateComplete;
 
-  //   const choices = Array.from(element.querySelectorAll('qti-simple-choice'));
-  //   const initialOrder = choices.map((choice, i) => String(i + 1));
+    const choices = Array.from(element.querySelectorAll('qti-simple-choice'));
+    const initialOrder = choices.map((choice, i) => String(i + 1));
 
-  //   // Reset shuffle
-  //   element.shuffle = true;
-  //   await element.updateComplete;
+    // Reset shuffle
+    element.shuffle = true;
+    await element.updateComplete;
 
-  //   const resetOrder = choices.map(choice => choice.style.order);
-  //   // debugger;
-  //   expect(initialOrder).not.to.deep.equal(resetOrder);
-  // });
+    const resetOrder = choices.map(choice => choice.style.order);
+    // debugger;
+    expect(initialOrder).not.to.deep.equal(resetOrder);
+  });
 
   // TODO: fix me!!
-  // it('should not shuffle choices when shuffle is false', async () => {
-  //   element = document.querySelector('test-element') as TestElement;
-  //   element.shuffle = true;
-  //   await element.updateComplete;
+  it('should not shuffle choices when shuffle is false', async () => {
+    element = document.querySelector('test-element') as TestElement;
+    const choices = Array.from(element.querySelectorAll('qti-simple-choice'));
+    await element.updateComplete; // render without shuffle
 
-  //   const choices = Array.from(element.querySelectorAll('qti-simple-choice'));
-  //   const nonFixedChoices = choices.filter(choice => !choice.hasAttribute('fixed'));
+    const nonFixedChoices = choices.filter(choice => !choice.hasAttribute('fixed'));
+    const initialOrder = nonFixedChoices.map(choice => choice.style.order);
 
-  //   const initialOrder = nonFixedChoices.map(choice => choice.style.order);
+    // Enable shuffle
+    element.shuffle = true;
+    await element.updateComplete;
 
-  //   // Enable shuffle
-  //   element.shuffle = false;
-  //   await element.updateComplete;
+    const orderAfterShuffle = nonFixedChoices.map(choice => choice.style.order);
+    // Order should be different after shuffle
+    expect(initialOrder).not.to.deep.equal(orderAfterShuffle);
 
-  //   const shuffledOrder = nonFixedChoices.map(choice => choice.style.order);
+    // Disable shuffle
+    element.shuffle = false;
+    await element.updateComplete;
 
-  //   expect(initialOrder).to.deep.equal(shuffledOrder);
-  // });
+    const orderAfterShuffleDisabled = nonFixedChoices.map(choice => choice.style.order);
+    // Order should be the same as it was the first time.
+    expect(initialOrder).to.deep.equal(orderAfterShuffleDisabled);
+  });
 });

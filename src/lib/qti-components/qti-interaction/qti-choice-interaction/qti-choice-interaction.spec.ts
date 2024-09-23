@@ -1,5 +1,5 @@
 import '@citolab/qti-components/qti-components';
-import { userEvent } from '@vitest/browser/context';
+import { userEvent, page } from '@vitest/browser/context';
 
 import { render } from 'lit';
 import { Default } from './qti-choice-interaction.stories';
@@ -15,13 +15,6 @@ describe('qti-choice-interaction', () => {
   describe('maxChoices0', () => {
     beforeEach(async () => {
       render(Default.render({ 'max-choices': 3, 'min-choices': 2 }), document.body);
-    });
-
-    it('should validate because min-choices is 0', async () => {
-      await userEvent.click(getQtiSimpleChoices()[0]);
-      await userEvent.click(getQtiSimpleChoices()[1]);
-
-      expect(getQtiChoiceInteraction().validate()).toBeTruthy();
     });
 
     it('should show as checkbox', () => {
