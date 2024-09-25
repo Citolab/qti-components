@@ -1,6 +1,10 @@
 import { qtiTransformItem, qtiTransformManifest, qtiTransformTest } from 'src/lib/qti-transformers';
 
-export const fetchItem = async (packageUri: string, index: number, cancelPreviousRequest = true): Promise<any> => {
+export const fetchItemFromManifest = async (
+  packageUri: string,
+  index: number,
+  cancelPreviousRequest = true
+): Promise<any> => {
   packageUri = packageUri.endsWith('/') ? packageUri : packageUri + '/';
 
   const testFromManifest = await qtiTransformManifest()
@@ -27,4 +31,16 @@ export const fetchItem = async (packageUri: string, index: number, cancelPreviou
     );
 
   return { itemXML: itemHTML, items: itemsFromTest };
+};
+
+export const fetchItem = async (itemUri: string, cancelPreviousRequest = true): Promise<any> => {
+  const itemHTML = await qtiTransformItem()
+    .load(itemUri, cancelPreviousRequest)
+    .then(api =>
+      api
+        .path(itemUri.substring(0, itemUri.lastIndexOf('/')))
+        .stripStyleSheets()
+        .html()
+    );
+  return itemHTML;
 };

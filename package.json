@@ -79,10 +79,12 @@
     "@storybook/preview-api": "^8.2.9",
     "@storybook/test": "^8.2.9",
     "@storybook/test-runner": "^0.19.1",
+    "@storybook/testing-library": "^0.2.2",
     "@storybook/web-components": "^8.2.9",
     "@storybook/web-components-vite": "^8.2.9",
     "@testing-library/dom": "^10.4.0",
     "@types/node": "^22.5.0",
+    "@types/dom-view-transitions": "^1.0.5",
     "@typescript-eslint/eslint-plugin": "^8.2.0",
     "@unocss/postcss": "^0.62.2",
     "@unocss/preset-typography": "^0.62.2",
@@ -123,8 +125,5 @@
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "^4.21.0"
   },
-  "customElements": "custom-elements.json",
-  "dependencies": {
-    "@types/dom-view-transitions": "^1.0.5"
-  }
+  "customElements": "custom-elements.json"
 }

@@ -6,7 +6,7 @@ import { html } from 'lit';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
 import packages from '../assets/packages.json';
-import { fetchItem } from './fetch-item';
+import { fetchItemFromManifest } from './fetch-item';
 
 const meta: Meta = {
   title: 'Examples',
@@ -59,5 +59,7 @@ export const Examples: Story = {
       <button @click=${() => item?.processResponse()}>Submit</button>
     `;
   },
-  loaders: [async ({ args }) => ({ xml: await fetchItem(`${args.serverLocation}/${args.qtipkg}`, args.itemIndex) })]
+  loaders: [
+    async ({ args }) => ({ xml: await fetchItemFromManifest(`${args.serverLocation}/${args.qtipkg}`, args.itemIndex) })
+  ]
 };
