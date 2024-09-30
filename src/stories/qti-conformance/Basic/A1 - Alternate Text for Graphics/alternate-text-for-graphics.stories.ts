@@ -54,17 +54,3 @@ export const Default: Story = {
     })
   ]
 };
-
-// export const MyComponentStory: Story = () => html`${xml}`;
-
-// MyComponentStory.play = async () => {
-//   // Query elements using Testing Library
-//   const image = screen.getByAltText('expected-alt-text');
-
-//   // Assert if the element is visible
-//   expect(image).toBeInTheDocument();
-//   expect(image).toBeVisible();
-
-//   // Simulate interactions if necessary
-//   await userEvent.click(screen.getByRole('button'));
-// };
