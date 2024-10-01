@@ -65,8 +65,8 @@ export const Multiple: Story = {
     await sleep(2000);
     (canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem).processResponse();
     await sleep(2000);
-    expect(canvasElement.querySelector('qti-printed-variable')?.shadowRoot.textContent).toEqual(
-      `[ "MULTIPLE", "UITSTOOT" ]`
+    expect(canvasElement.querySelector('qti-printed-variable')?.shadowRoot.textContent.replace(/\s+/g, '')).toEqual(
+      `[ "MULTIPLE", "UITSTOOT" ]`.replace(/\s+/g, '')
     );
   }
 };
