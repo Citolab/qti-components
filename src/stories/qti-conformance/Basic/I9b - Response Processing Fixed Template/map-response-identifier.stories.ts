@@ -56,14 +56,6 @@ export const Default: Story = {
     userEvent.click(submitButton);
     expect(+score, 'SCORE = 0').toBe(0);
     expect(response, 'RESPONSE = NULL').toBe(null);
-
-    // //I9-L1-D2: If the value of the RESPONSE Response Variable is set to a Multiple Container [choice_a], the value of the SCORE OutcomeVariable is set to 1.
-    // userEvent.click(choiceA);
-    // userEvent.click(submitButton);
-    // score = assessmentItem.variables.find(v => v.identifier === 'SCORE').value;
-    // response = assessmentItem.variables.find(v => v.identifier === 'RESPONSE').value;
-    // expect(+score, 'SCORE = 1').toBe(1);
-    // expect(response, 'RESPONSE = choice_a').toBe('choice_a');
   },
   loaders: [
     async ({ args }) => ({
@@ -107,10 +99,8 @@ export const D2: Story = {
       'I9-L1-D2: If the value of the RESPONSE Response Variable is set to a Multiple Container [choice_a], the value of the SCORE OutcomeVariable is set to 1.';
 
     const choiceA = canvasElement.querySelector('qti-simple-choice[identifier="choice_a"]');
-    //I9-L1-D2: If the value of the RESPONSE Response Variable is set to a Multiple Container [choice_a], the value of the SCORE OutcomeVariable is set to 1.
     userEvent.click(choiceA);
     await timeout(200);
-
     userEvent.click(submitButton);
     await timeout(200);
     const score = assessmentItem.variables.find(v => v.identifier === 'SCORE').value;

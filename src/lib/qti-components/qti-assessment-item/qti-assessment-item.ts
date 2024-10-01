@@ -248,6 +248,7 @@ export class QtiAssessmentItem extends LitElement {
 
   public updateOutcomeVariable(identifier: string, value: string | string[] | undefined) {
     const outcomeVariable = this.getOutcome(identifier);
+
     if (!outcomeVariable) {
       console.warn(`Can not set qti-outcome-identifier: ${identifier}, it is not available`);
       return;
