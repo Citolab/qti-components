@@ -36,5 +36,8 @@ export const Default = {
     </qti-media-interaction>
   `,
 
-  args: {}
+  args: {},
+  parameters: {
+    chromatic: { disableSnapshot: true }
+  }
 };

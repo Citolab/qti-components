@@ -134,7 +134,14 @@ export const VocabularyDecimal: Story = {
     classes: ['qti-labels-decimal'],
     'min-choices': 1,
     'max-choices': 1
+  },
+  play: ({ canvasElement }) => {
+    // check if screenshots match
   }
+};
+
+VocabularyDecimal.parameters = {
+  chromatic: { disableSnapshot: false } // Ensure Chromatic takes a snapshot for this story
 };
 
 export const VocabularyLowerAlphaStory = {

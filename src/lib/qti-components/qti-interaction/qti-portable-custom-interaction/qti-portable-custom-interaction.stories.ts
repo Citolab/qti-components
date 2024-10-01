@@ -22,7 +22,10 @@ export const Default = {
         <qti-interaction-module id="pci-getallen" primary-path="pci-getallen.js"></qti-interaction-module>
       </qti-interaction-modules>
       <qti-interaction-markup></qti-interaction-markup>
-    </qti-portable-custom-interaction>`
+    </qti-portable-custom-interaction>`,
+  parameters: {
+    chromatic: { disableSnapshot: true }
+  }
 };
 
 export const FallbackPath = {
@@ -97,7 +100,10 @@ export const FallbackPath = {
         </qti-interaction-modules>
         <qti-interaction-markup> </qti-interaction-markup>
       </qti-portable-custom-interaction>
-    </div>`
+    </div>`,
+  parameters: {
+    chromatic: { disableSnapshot: true }
+  }
 };
 
 export const GraphAmpIO = {
@@ -187,5 +193,8 @@ export const TapToReveal = {
       <qti-interaction-modules>
         <qti-interaction-module id="tap" primary-path="tap"> </qti-interaction-module>
       </qti-interaction-modules>
-    </qti-portable-custom-interaction>`
+    </qti-portable-custom-interaction>`,
+  parameters: {
+    chromatic: { disableSnapshot: true }
+  }
 };

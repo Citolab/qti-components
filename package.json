@@ -1,11 +1,20 @@
 {
   "name": "@citolab/qti-components",
-  "repository": "https://github.com/Citolab/qti-components",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Citolab/qti-components.git"
+  },
   "description": "QTI webcomponents",
-  "author": "Patrick de Klein",
+  "author": {
+    "name": "Patrick de Klein"
+  },
   "contributors": [
-    "Sander Looise",
-    "Marcel Hoekstra"
+    {
+      "name": "Sander Looise"
+    },
+    {
+      "name": "Marcel Hoekstra"
+    }
   ],
   "license": "GPLv3",
   "private": false,
@@ -42,15 +51,16 @@
     "build-lib": "tsx scripts/build.ts",
     "watch-lib": "nodemon --watch \"src/**\" --ext \"ts,json,css\" --ignore \"src/**/*.spec.ts\" --exec \"tsx scripts/build.ts\" watch",
     "storybook": "storybook dev -p 6006",
-    "storybook:build": "storybook build",
-    "storybook:test": "test-storybook",
+    "build-storybook": "storybook build",
+    "test-storybook": "test-storybook",
     "cem": "cem analyze --watch",
     "lint": "eslint src/lib/**",
     "arethetypeswrong": "wireit",
     "----hooks----": "-",
     "prepublishOnly": "echo 'calling prepublishOnly as npm lifecycle hook to build-lib!' && npm run build-lib",
     "postpublish": "echo 'posthook for prosperity, does nothing for now!'",
-    "test:browser": "vitest --workspace=vitest.workspace.ts"
+    "test:browser": "vitest --workspace=vitest.workspace.ts",
+    "chromatic": "node chromatic-runner.cjs"
   },
   "wireit": {
     "build": {
@@ -83,8 +93,8 @@
     "@storybook/web-components": "^8.2.9",
     "@storybook/web-components-vite": "^8.2.9",
     "@testing-library/dom": "^10.4.0",
-    "@types/node": "^22.5.0",
     "@types/dom-view-transitions": "^1.0.5",
+    "@types/node": "^22.5.0",
     "@typescript-eslint/eslint-plugin": "^8.2.0",
     "@unocss/postcss": "^0.62.2",
     "@unocss/preset-typography": "^0.62.2",
@@ -94,7 +104,9 @@
     "@vitest/browser": "^2.0.5",
     "@wdio/cli": "^9.0.7",
     "autoprefixer": "^10.4.20",
+    "chromatic": "^11.11.0",
     "custom-element-vs-code-integration": "^1.4.1",
+    "dotenv": "^16.4.5",
     "eslint": "^8.57.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-lit": "^1.14.0",
@@ -125,5 +137,9 @@
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "^4.21.0"
   },
-  "customElements": "custom-elements.json"
+  "customElements": "custom-elements.json",
+  "bugs": {
+    "url": "https://github.com/Citolab/qti-components/issues"
+  },
+  "homepage": "https://github.com/Citolab/qti-components#readme"
 }

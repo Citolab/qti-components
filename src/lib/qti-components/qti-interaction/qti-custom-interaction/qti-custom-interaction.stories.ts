@@ -38,6 +38,9 @@ export const AbsolutePaths = {
               width="454" height="505"></qti-custom-interaction>
         </qti-item-body>
       </qti-assessment-item>`;
+  },
+  parameters: {
+    chromatic: { disableSnapshot: true }
   }
 };
 
