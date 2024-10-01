@@ -6,7 +6,7 @@ on:
       - conformance  # Trigger on push to the dev branch, adjust as needed
 
 jobs:
-  publish-npm:
+  chromatic-test:
     runs-on: ubuntu-latest
     steps:
       - name: Git configuration
