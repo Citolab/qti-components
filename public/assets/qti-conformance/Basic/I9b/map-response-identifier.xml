@@ -24,8 +24,7 @@
     <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float" />
     <qti-item-body>
         <qti-choice-interaction response-identifier="RESPONSE" min-choices="0" max-choices="6">
-            <qti-prompt>Select 0 to 6 SimpleChoices below and trigger Response Processing by ending
-                the attempt.</qti-prompt>
+            <qti-prompt></qti-prompt>
             <qti-simple-choice identifier="choice_a">Mapped Value = 1.0</qti-simple-choice>
             <qti-simple-choice identifier="choice_b">Mapped Value = 2.0</qti-simple-choice>
             <qti-simple-choice identifier="choice_c">Mapped Value = 5.0</qti-simple-choice>

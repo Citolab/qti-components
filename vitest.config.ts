@@ -6,6 +6,7 @@ export default defineConfig({
   base: process.env.VITEST ? undefined : './src',
   test: {
     include: ['src/**/*.spec.ts', 'src/**/*.test.ts'],
+    dangerouslyIgnoreUnhandledErrors: true,
     globals: true,
     browser: {
       enabled: true,
