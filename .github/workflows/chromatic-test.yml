@@ -6,35 +6,23 @@ on:
       - conformance  # Trigger on push to the dev branch, adjust as needed
 
 jobs:
-  chromatic-test:
+  chromatic:
+    name: Run Chromatic
     runs-on: ubuntu-latest
     steps:
-      - name: Git configuration
-        run: |
-          git config --global user.email "patrick.deklein@cito.nl"
-          git config --global user.name "patrickdeklein"
-
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-      
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
-          node-version: '20'  # Specify the Node.js version
-          registry-url: 'https://registry.npmjs.org/'
-
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
       - name: Install dependencies
+        # ⚠️ See your package manager's documentation for the correct command to install dependencies in a CI environment.
         run: npm ci
-  
-      - name: Build
-        run: npm run build
-      - name: Install playwright
-        run: npx playwright install  --with-deps
-      - name: Test build
-        run: npm run test
-      - name: Test Chromatic
-        env:
-          CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-        run: npm run chromatic
-
+      - name: Run Chromatic
+        uses: chromaui/action@latest
+        with:
+          # ⚠️ Make sure to configure a `CHROMATIC_PROJECT_TOKEN` repository secret
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
 
