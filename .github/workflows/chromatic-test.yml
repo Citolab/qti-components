@@ -33,6 +33,8 @@ jobs:
       - name: Test build
         run: npm run test
       - name: Test Chromatic
+        env:
+          CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
         run: npm run chromatic
 
 
