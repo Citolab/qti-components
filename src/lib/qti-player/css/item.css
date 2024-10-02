@@ -1,0 +1,165 @@
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities;
+@config "../../../../../tailwind.config.sb.cjs";
+@import '@citolab/qti-components/dist/item.css'; */
+@import '@unocss/reset/normalize.css';
+
+:host {
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    'Open Sans',
+    'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  @apply flex flex-col text-sm text-gray-700 md:text-base lg:text-base;
+}
+
+[class*='qti-layout-col']:nth-child(2) {
+  position: sticky;
+  top: 2.5rem;
+  height: 100%;
+}
+
+qti-assessment-item {
+  @apply w-full self-center  rounded-md bg-white;
+}
+qti-assessment-item {
+  @apply container mx-auto block p-2 md:p-6 lg:p-10;
+}
+
+qti-item-body {
+  @apply flex flex-col;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
+  vertical-align: middle;
+  font-style: italic;
+  background-repeat: no-repeat;
+  background-size: cover;
+  shape-margin: 1rem;
+}
+
+qti-rubric-block qti-content-body div:not(:empty),
+qti-simple-choice[role='radio'][data-correct-response='true']::part(slot),
+qti-simple-choice[role='radio'][data-correct-response='true']::part(slot):focus,
+qti-inline-choice-interaction::part(correct-option) {
+  background: linear-gradient(
+      104deg,
+      rgba(130, 255, 173, 0) 0.9%,
+      rgba(130, 255, 173, 1.25) 2.4%,
+      rgba(130, 255, 173, 0.5) 5.8%,
+      rgba(130, 255, 173, 0.1) 93%,
+      rgba(130, 255, 173, 0.7) 96%,
+      rgba(130, 255, 1732, 0) 98%
+    ),
+    linear-gradient(183deg, rgba(130, 255, 173, 0) 0%, rgba(130, 255, 173, 0.3) 7.9%, rgba(130, 255, 173, 0) 15%);
+  border-radius: 7.5px;
+  padding-right: 8px;
+  text-shadow:
+    -12px 12px 9.8px rgba(130, 255, 173, 0.7),
+    21px -18.1px 7.3px rgba(255, 255, 255, 1),
+    -18.1px -27.3px 30px rgba(255, 255, 255, 1);
+
+  @apply w-fit font-semibold text-green-700;
+}
+
+qti-simple-choice[role='radio']::part(slot) {
+  padding-left: 8px;
+}
+
+qti-rubric-block table {
+  @apply hidden;
+}
+
+qti-rubric-block qti-content-body div:not(:empty) {
+  @apply float-right my-4;
+}
+
+qti-simple-choice[role='radio'][data-correct-response='true']::after {
+  @apply hidden;
+}
+
+qti-rubric-block qti-content-body div:not(:empty) {
+  @apply border-none px-6 py-1;
+}
+
+qti-inline-choice-interaction::part(correct-option) {
+  padding: 0 8px;
+}
+
+qti-outcome-declaration {
+  @apply !hidden;
+}
+
+qti-choice-interaction:not(.qti-input-control-hidden) qti-simple-choice {
+  @apply p-0;
+
+  &:hover {
+    @apply bg-sky-100;
+  }
+  &[aria-disabled='true'] {
+    @apply bg-inherit;
+  }
+}
+
+qti-choice-interaction:not(.qti-input-control-hidden) qti-simple-choice[aria-disabled='true'] {
+  @apply bg-transparent;
+}
+
+p {
+  @apply mb-2 mt-0;
+}
+
+qti-simple-choice[role='radio'] {
+  @apply cursor-pointer;
+}
+
+qti-simple-choice[role='radio'] p {
+  @apply my-1;
+}
+
+qti-simple-choice[role='radio']:focus {
+  @apply outline-none;
+}
+
+qti-choice-interaction:not(.qti-input-control-hidden) qti-simple-choice[role='radio']::part(ch) {
+  @apply border-2 border-sky-500;
+}
+
+qti-choice-interaction:not(.qti-input-control-hidden)[disabled] qti-simple-choice[role='radio']::part(ch) {
+  @apply border-gray-300;
+}
+
+qti-extended-text-interaction::part(textarea) {
+  @apply border-2 border-sky-500;
+  &:disabled {
+    @apply border-gray-300;
+  }
+}
+
+qti-extended-text-interaction::part(textarea):focus {
+  @apply outline-none;
+}

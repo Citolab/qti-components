@@ -4,16 +4,21 @@ import * as tsconfigPaths from 'vite-tsconfig-paths';
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
-  addons: ['@storybook/addon-interactions', '@storybook/addon-a11y', {
-    name: '@storybook/addon-essentials',
-    options: {
-      mdxPluginOptions: {
-        mdxCompileOptions: {
-          remarkPlugins: [remarkGfm]
+  addons: [
+    '@storybook/addon-interactions',
+    '@storybook/addon-a11y',
+    {
+      name: '@storybook/addon-essentials',
+      options: {
+        mdxPluginOptions: {
+          mdxCompileOptions: {
+            remarkPlugins: [remarkGfm]
+          }
         }
       }
-    }
-  }, '@chromatic-com/storybook'],
+    },
+    '@chromatic-com/storybook'
+  ],
   framework: {
     name: '@storybook/web-components-vite',
     options: {}
@@ -26,11 +31,11 @@ const config: StorybookConfig = {
   async viteFinal(config, { configType }) {
     return {
       ...config,
-      optimizeDeps: {
-        ...config.optimizeDeps,
-        exclude: ['@citolab/qti-components']
-      },
-      plugins: [...config.plugins!, tsconfigPaths.default()],
+      // PK: to get UnoCSS to work with viet and not the postcss plugin we had to overcome some problems
+      // first issue integrating in storybook, second issue, UnoCSS is esm only
+      // https://github.com/unocss/unocss/issues/150
+      // https://github.com/storybookjs/storybook/issues/23972#issuecomment-1948534058
+      plugins: [...config.plugins!, tsconfigPaths.default(), (await import('unocss/vite')).default()],
       resolve: { ...config.resolve, alias: { ...config!.resolve!.alias, path: require.resolve('path-browserify') } }
     };
   }

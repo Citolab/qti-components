@@ -7,9 +7,20 @@ import transformerDirectives from '@unocss/transformer-directives';
 import { defineConfig } from 'unocss';
 
 export default defineConfig({
-  // content: {
-  //   filesystem: ['**/*.{html,js,ts,jsx,tsx,vue,svelte,astro}']
-  // },
+  content: {
+    pipeline: {
+      include: [
+        // the default
+        /\.(vue|svelte|[jt]sx|mdx?|astro|elm|php|phtml|html)($|\?)/,
+        // include js/ts files
+        'src/**/*.stories.{js,ts}',
+        'src/**/*.{js,ts}'
+      ]
+
+      // exclude files
+      // exclude: []
+    }
+  },
   // variants: [
   //   // hover:
   //   matcher => {
