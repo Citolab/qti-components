@@ -1,3 +1,4 @@
+export * from './hi-24-outline-arrow-left';
 export * from './hi-24-outline-bars-3';
 export * from './hi-24-outline-chevron-left';
 export * from './hi-24-outline-chevron-right';

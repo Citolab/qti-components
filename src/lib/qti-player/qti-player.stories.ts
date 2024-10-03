@@ -57,6 +57,9 @@ const meta: Meta = {
   args: {
     serverLocation: '/api',
     qtipkg: 'conformance'
+  },
+  parameters: {
+    layout: 'fullscreen'
   }
 };
 export default meta;
@@ -128,26 +131,20 @@ export const QtiPlayer: Story = {
           const assessmentTest = e.target;
           assessmentTest.context = testContext?.items ? testContext : null;
         }}
-        @qti-outcome-changed=${() => {
-          setSessionData(sessionIdentifier, testRef.value!.context);
-        }}
-        @qti-interaction-changed=${() => {
-          setSessionData(sessionIdentifier, testRef.value!.context);
-        }}
-        @qti-assessment-item-first-updated=${() => {
+        @qti-outcome-changed=${_ => setSessionData(sessionIdentifier, testRef.value!.context)}
+        @qti-interaction-changed=${_ => setSessionData(sessionIdentifier, testRef.value!.context)}
+        @qti-assessment-item-connected=${() => {
           const assessmentItem = testRef?.value?.itemRefEls.get(itemIdentifier || '')?.assessmentItem;
           if (assessmentItem) {
             // assessmentItem.disabled = viewMode === 'scorer';
           }
         }}
         .itemIdentifier=${itemIdentifier}
-        class="flex h-full w-full flex-col"
+        class="flex h-dvh w-full flex-col"
       >
         <div class="flex gap-2">
           <button class="m-2 flex h-10 w-10 items-start justify-center rounded-full bg-primary p-2 text-primary-light">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
+            <hi-24-outline-arrow-left class="h-6 w-6 stroke-[2px]"></hi-24-outline-arrow-left>
           </button>
 
           <test-auto-scoring></test-auto-scoring>
@@ -200,7 +197,6 @@ export const QtiPlayer: Story = {
         >
           <button
             class="flex h-10 cursor-pointer items-center rounded bg-primary-light px-4 font-semibold text-primary-dark"
-            onclick="console.log('rapportage')"
           >
             Inleveren
           </button>
@@ -214,25 +210,6 @@ export const QtiPlayer: Story = {
               </template>
             </test-paging-tmpl-button>
             <!-- <test-paging-buttons class="flex gap-1" max-displayed-items="100"></test-paging-buttons> -->
-
-            <!-- <test-paging-tmpl-stampino class="flex">
-              <template>
-                <template type="repeat" repeat="{{ items }}">
-                  <button
-                    aria-label="Button"
-                    identifier="{{ item.identifier }}"
-                    ?category="{{ item.category }}"
-                    class="
-                      flex h-4 w-4 cursor-pointer items-center justify-center border-2
-                      {{ item.type === 'regular' ? 'rounded-2xl' : '' }} 
-                      {{ item.active ? '!border-sky-600' : '' }}
-                      {{ item.answered ? 'bg-slate-300 shadow-sm' : '' }}
-                      {{ item.correct ? 'bg-green-100 border-green-400' : '' }}
-                      {{ item.incorrect ? 'bg-red-100 border-red-400' : '' }}"
-                  ></button>
-                </template>
-              </template>
-            </test-paging-tmpl-stampino> -->
 
             <div class="flex gap-2 self-start lg:self-end">
               <button
@@ -268,7 +245,7 @@ export const QtiPlayer: Story = {
             </test-view-toggle>
           </div>
         </div>
-        <test-print-variables class="text-sm"></test-print-variables>
+        <!-- <test-print-variables class="text-sm"></test-print-variables> -->
       </qti-test>
     `;
   },
