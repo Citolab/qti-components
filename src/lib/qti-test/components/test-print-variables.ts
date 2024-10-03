@@ -13,3 +13,9 @@ export class TestPrintVariables extends LitElement {
     return html` <pre>${JSON.stringify(this._testContext, null, 2)}</pre> `;
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'test-print-variables': TestPrintVariables;
+  }
+}

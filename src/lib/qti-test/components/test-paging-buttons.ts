@@ -83,4 +83,8 @@ export class TestPagingButtons extends LitElement {
   }
 }
 
-// ${isSkippedInCounting ? 'i' : counter}
+declare global {
+  interface HTMLElementTagNameMap {
+    'test-paging-buttons': TestPagingButtons;
+  }
+}

@@ -21,3 +21,9 @@ export class TestItemId extends LitElement {
     return html` ${qtiItemEl ? (qtiItemEl.assessmentItem ? qtiItemEl.assessmentItem.identifier : nothing) : nothing} `;
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'test-item-id': TestItemId;
+  }
+}

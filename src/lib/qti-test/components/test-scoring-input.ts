@@ -52,3 +52,9 @@ export class TestScoringInput extends LitElement {
     `;
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'test-scoring-input': TestScoringInput;
+  }
+}

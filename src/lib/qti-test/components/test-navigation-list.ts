@@ -1,12 +1,11 @@
-import { html, LitElement } from 'lit';
-
 import { consume } from '@lit/context';
+import { html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { sessionContext, SessionContext, testContext, TestContext } from '..';
 import { QtiItem } from '../qti-item';
 
-@customElement('test-navigation-thumbs')
-export class TestNavigationThumbs extends LitElement {
+@customElement('test-navigation-list')
+export class TestNavigationList extends LitElement {
   @consume({ context: testContext, subscribe: true })
   public _testContext?: TestContext;
 
@@ -28,5 +27,11 @@ export class TestNavigationThumbs extends LitElement {
       @pointerdown=${({ target }: { target: QtiItem }) => this._requestItem(target.identifier)}
       @qti-ext-item-first-updated=${e => e.stopPropagation()}
     ></slot>`;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'test-navigation-list': TestNavigationList;
   }
 }

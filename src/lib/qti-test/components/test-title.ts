@@ -20,3 +20,9 @@ export class TestTitle extends LitElement {
     return html`${qtiAssessmentTestEl.title} `;
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'test-title': TestTitle;
+  }
+}

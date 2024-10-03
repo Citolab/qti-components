@@ -66,3 +66,9 @@ export class TestScoringButtons extends LitElement {
       : nothing;
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'test-scoring-buttons': TestScoringButtons;
+  }
+}

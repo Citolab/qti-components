@@ -21,3 +21,9 @@ export class TestItemTitle extends LitElement {
     return html` ${qtiItemEl ? (qtiItemEl.assessmentItem ? qtiItemEl.assessmentItem.title : nothing) : nothing} `;
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'test-item-title': TestItemTitle;
+  }
+}

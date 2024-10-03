@@ -53,3 +53,9 @@ export class TestViewToggle extends LitElement {
     `;
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'test-view-toggle': TestViewToggle;
+  }
+}

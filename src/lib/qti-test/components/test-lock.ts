@@ -104,8 +104,8 @@ export class TestLock extends LitElement {
   }
 }
 
-// return html`<button
-//   @pointerdown=${() => screenfull.isEnabled && screenfull.request(this.closest('qti-assessment-test'))}
-// >
-//   fullscreen
-// </button>`;
+declare global {
+  interface HTMLElementTagNameMap {
+    'test-lock': TestLock;
+  }
+}

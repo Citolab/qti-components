@@ -32,3 +32,9 @@ export class TestProgress extends LitElement {
     `;
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'test-progress': TestProgress;
+  }
+}

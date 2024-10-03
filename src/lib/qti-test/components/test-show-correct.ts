@@ -27,3 +27,9 @@ export class TestShowCorrect extends LitElement {
     `;
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'test-show-correct': TestShowCorrect;
+  }
+}

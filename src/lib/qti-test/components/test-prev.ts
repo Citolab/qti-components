@@ -57,3 +57,9 @@ export class TestPrev extends LitElement {
     `;
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'test-prev': TestPrev;
+  }
+}

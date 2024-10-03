@@ -36,3 +36,9 @@ export class TestPrintScore extends LitElement {
     return html` ${totalScore}/${totalMaxScore}`;
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'test-print-score': TestPrintScore;
+  }
+}

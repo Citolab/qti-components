@@ -28,3 +28,9 @@ export class TestShowIndex extends LitElement {
     return html`<span part="index">${itemIndex + 1}</span>/<span part="total">${items.length}</span>`;
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'test-show-index': TestShowIndex;
+  }
+}

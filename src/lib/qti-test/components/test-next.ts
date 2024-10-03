@@ -52,3 +52,9 @@ export class TestNext extends LitElement {
     `;
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'test-next': TestNext;
+  }
+}

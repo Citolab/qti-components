@@ -2,6 +2,7 @@
 // import presetUno from '@unocss/preset-uno';
 // import presetWind from '@unocss/preset-wind';
 import presetMini from '@unocss/preset-mini';
+import { colors } from '@unocss/preset-wind';
 import transformerDirectives from '@unocss/transformer-directives';
 
 import { defineConfig } from 'unocss';
@@ -35,7 +36,16 @@ export default defineConfig({
   theme: {
     // ...
     colors: {
-      primary: 'var(--qti-primary-color)',
+      primary: {
+        light: '#FFBEBE',
+        DEFAULT: '#f86d70',
+        dark: '#a1616a'
+      },
+      secondary: {
+        light: colors.indigo[300],
+        DEFAULT: colors.indigo[500],
+        dark: colors.indigo[900]
+      },
       focus: 'var(--qti-secondary-color)'
     }
   },

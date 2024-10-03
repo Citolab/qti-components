@@ -74,3 +74,9 @@ export class TestPagingTmplButton extends LitElement {
     `;
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'test-paging-tmpl-button': TestPagingTmplButton;
+  }
+}

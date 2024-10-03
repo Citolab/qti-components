@@ -45,3 +45,9 @@ export class TestSlider extends LitElement {
     `;
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'test-slider': TestSlider;
+  }
+}

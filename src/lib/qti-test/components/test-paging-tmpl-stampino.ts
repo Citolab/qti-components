@@ -87,3 +87,9 @@ export class TestPagingTmplStampino extends LitElement {
     return myTemplate({ items: computedItems, viewmode: this._sessionContext.view });
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'test-paging-tmpl-stampino': TestPagingTmplStampino;
+  }
+}

@@ -51,3 +51,9 @@ export class TestPagingRadio extends LitElement {
     `;
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'test-paging-radio': TestPagingRadio;
+  }
+}

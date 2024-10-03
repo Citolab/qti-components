@@ -104,7 +104,6 @@ export const QtiPlayer: Story = {
     const currentItem = items.find(i => i.identifier === itemIdentifier);
     // const sessionState = signal<SessionStateType>('started');
     // const showWarning = signal<'complete' | 'incomplete' | 'complete_scoring' | 'incomplete_scoring' | false>(false);
-    // const submit = (force?: boolean) => {};
 
     const testContext = getSessionData(sessionIdentifier) as TestContext;
     const changeItem = async identifier => {
@@ -144,21 +143,21 @@ export const QtiPlayer: Story = {
         .itemIdentifier=${itemIdentifier}
         class="flex h-full w-full flex-col"
       >
-        <div className="flex gap-2">
-          <button onClick="{leaveSession}">
-            <div
-              className="bg-primary text-primary-light p-2 m-2 rounded-full h-10 w-10 flex items-start justify-center"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-              </svg>
-            </div>
+        <div class="flex gap-2">
+          <button class="m-2 flex h-10 w-10 items-start justify-center rounded-full bg-primary p-2 text-primary-light">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
           </button>
+
           <test-auto-scoring></test-auto-scoring>
         </div>
 
-        <dialog id="thumbpopover" popover>
-          <!-- class="absolute bottom-0 left-0 right-0 z-20 flex max-h-full flex-col gap-4 overflow-y-auto bg-white bg-white/60 p-4 pb-4 backdrop-blur-xl" -->
+        <dialog
+          id="thumbpopover"
+          popover
+          class="absolute bottom-0 left-0 right-0 z-20 flex max-h-full flex-col gap-4 overflow-y-auto bg-white bg-white/60 p-4 pb-4 backdrop-blur-xl"
+        >
           <div class="mt-1 flex justify-between gap-8 text-sky-800">
             <div class="font-semibold">Titel</div>
             <button
@@ -192,20 +191,8 @@ export const QtiPlayer: Story = {
           </test-navigation>
         </div>
 
-        <div
-          className=" flex-col scrollbar-hide flex w-full  snap-x snap-mandatory  items-start overflow-x-scroll h-full overflow-y-hidden scroll-px-0 gap-0 px-0"
-        >
+        <div class="flex-col flex w-full items-start overflow-x-scroll h-full overflow-y-hidden gap-0 px-0">
           ${unsafeHTML(assessmentXML)}
-        </div>
-
-        <div class="flex gap-2">
-          <button>
-            <div class="m-2 flex h-10 w-10 items-start justify-center rounded-full bg-primary p-2 text-primary-light">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-              </svg>
-            </div>
-          </button>
         </div>
 
         <div

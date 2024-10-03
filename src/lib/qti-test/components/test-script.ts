@@ -45,3 +45,9 @@ export class TestScript extends LitElement {
     // const itemIndex = items.findIndex(item => item.identifier === this._sessionContext.identifier);
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'test-script': TestScript;
+  }
+}

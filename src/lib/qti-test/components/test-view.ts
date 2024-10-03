@@ -10,8 +10,8 @@ export class TestView extends LitElement {
       new CustomEvent('on-test-switch-view', {
         composed: true,
         bubbles: true,
-        detail: view,
-      }),
+        detail: view
+      })
     );
   }
 
@@ -31,5 +31,11 @@ export class TestView extends LitElement {
         </select>
       </label>
     `;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'test-view': TestView;
   }
 }

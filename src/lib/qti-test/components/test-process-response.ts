@@ -30,3 +30,9 @@ export class TestProcessResponse extends LitElement {
     `;
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'test-process-response': TestProcessResponse;
+  }
+}

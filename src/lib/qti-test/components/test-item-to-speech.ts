@@ -89,3 +89,9 @@ export class TestItemToSpeech extends LitElement {
     }
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'test-item-to-speech': TestItemToSpeech;
+  }
+}
