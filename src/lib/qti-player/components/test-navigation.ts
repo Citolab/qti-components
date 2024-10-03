@@ -3,8 +3,7 @@
 import { consume } from '@lit/context';
 import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { sessionContext, SessionContext, testContext, TestContext } from 'src/lib/qti-test';
-import { QtiItem } from 'src/lib/qti-test/qti-item';
+import { sessionContext, SessionContext, testContext, TestContext } from '../../qti-test';
 
 @customElement('test-navigation')
 export class TestNavigation extends LitElement {
@@ -34,20 +33,16 @@ export class TestNavigation extends LitElement {
   render() {
     const { items } = this._testContext;
 
-    return html`<slot
-        @pointerdown=${({ target }: { target: QtiItem }) => this._requestItem(target.identifier)}
-        @qti-ext-item-first-updated=${e => e.stopPropagation()}
-      ></slot>
-      <div class="mt-1 flex justify-between gap-8 p-4 text-sky-800">
+    return html`<div class="mt-1 flex justify-between gap-8 p-4 text-sky-800">
         <div class="font-semibold">${this.title}</div>
         <button
-          @click=${() => this.dispatchEvent(new CustomEvent('close-dialog'))}
+          @click=${() => this.hidePopover()}
           class="flex cursor-pointer gap-2 rounded border-none bg-white p-2 text-lg  font-bold text-sky-800  shadow-sm outline-none ring-transparent"
         >
           <hi-24-outline-x-mark class="h-6 w-6 stroke-[2px]"></hi-24-outline-x-mark>
         </button>
       </div>
-      <test-navigation-thumbs class=" grid-cols-1 divide-y overflow-y-auto p-4 md:columns-4">
+      <test-navigation-list class=" grid-cols-1 divide-y overflow-y-auto p-4 md:columns-4">
         ${items.map((item, index) => {
           const rawscore = item.variables.find(vr => vr.identifier == 'SCORE');
           const score = parseInt(rawscore?.value?.toString());
@@ -83,12 +78,12 @@ export class TestNavigation extends LitElement {
               }}
             >
               <div class=${`h-4 w-4 cursor-pointer border-2`}></div>
-              <div class="flex flex-grow gap-1 py-0.5">${type === 'regular' ? item['title'] : html`info`}</div>
-              <div class="mr-2 w-4 text-right text-xs text-slate-300">${item['sequenceNumber']}</div>
+              <div class="flex flex-grow gap-1 py-0.5">${type === 'regular' ? item.title : html`info`}</div>
+              <div class="mr-2 w-4 text-right text-xs text-slate-300">${item.sequenceNumber}</div>
             </div>
           `;
         })}
-      </test-navigation-thumbs>`;
+      </test-navigation-list>`;
   }
 }
 

@@ -1,8 +1,8 @@
 // uno.config.ts
 // import presetUno from '@unocss/preset-uno';
 // import presetWind from '@unocss/preset-wind';
-import presetMini from '@unocss/preset-mini';
-import { colors } from '@unocss/preset-wind';
+// import presetMini from '@unocss/preset-mini';
+import presetWind, { colors } from '@unocss/preset-wind';
 import transformerDirectives from '@unocss/transformer-directives';
 
 import { defineConfig } from 'unocss';
@@ -50,7 +50,7 @@ export default defineConfig({
     }
   },
   transformers: [transformerDirectives()],
-  presets: [presetMini({ preflight: false, variablePrefix: 'qti-' })], // , prefix: 'qti-'
+  presets: [presetWind({ preflight: false, variablePrefix: 'qti-' })], // , prefix: 'qti-'
   rules: [
     [
       'chevron',

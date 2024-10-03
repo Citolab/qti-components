@@ -15,14 +15,8 @@ export class TestScoringButtons extends LitElement {
   @consume({ context: sessionContext, subscribe: true })
   protected _sessionContext?: SessionContext;
 
-  // protected createRenderRoot(): HTMLElement | DocumentFragment {
-  //   const renderTo = this.getAttribute('render-to');
-  //   return renderTo ? this.closest('qti-ext-test').querySelector<HTMLDivElement>(renderTo) : this;
-  // }
   protected createRenderRoot(): HTMLElement | DocumentFragment {
     return this;
-    // const renderTo = this.getAttribute('render-to');
-    // return renderTo ? this.closest('qti-ext-test').querySelector<HTMLDivElement>(renderTo) : this;
   }
 
   _changeOutcomeScore(value: number) {

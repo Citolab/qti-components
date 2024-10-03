@@ -29,3 +29,9 @@ export class TestNavigationThumbs extends LitElement {
     ></slot>`;
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'test-navigation-thumbs': TestNavigationThumbs;
+  }
+}

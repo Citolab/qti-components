@@ -4,7 +4,7 @@
 @config "../../../../../tailwind.config.sb.cjs";
 @import '@citolab/qti-components/dist/item.css'; */
 /* @import '@unocss/reset/normalize.css'; */
-
+/* 
 :host {
   font-family:
     system-ui,
@@ -162,4 +162,4 @@ qti-extended-text-interaction::part(textarea) {
 
 qti-extended-text-interaction::part(textarea):focus {
   @apply outline-none;
-}
+} */

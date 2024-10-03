@@ -110,7 +110,7 @@ export const QtiPlayer: Story = {
 
     const testContext = getSessionData(sessionIdentifier) as TestContext;
     const changeItem = async identifier => {
-      setSessionData('session', identifier);
+      // setSessionData('session', identifier);
 
       const itemRefEl = testRef.value.itemRefEls.get(identifier)!;
       if (!itemRefEl.xmlDoc) {
@@ -142,21 +142,12 @@ export const QtiPlayer: Story = {
         .itemIdentifier=${itemIdentifier}
         class="flex h-dvh w-full flex-col"
       >
-        <div class="flex gap-2">
-          <button class="m-2 flex h-10 w-10 items-start justify-center rounded-full bg-primary p-2 text-primary-light">
-            <hi-24-outline-arrow-left class="h-6 w-6 stroke-[2px]"></hi-24-outline-arrow-left>
-          </button>
-
-          <test-auto-scoring></test-auto-scoring>
-        </div>
-
-        <dialog
+        <!-- <dialog
           id="thumbpopover"
           popover
           class="absolute bottom-0 left-0 right-0 z-20 flex max-h-full flex-col gap-4 overflow-y-auto bg-white bg-white/60 p-4 pb-4 backdrop-blur-xl"
         >
           <div class="mt-1 flex justify-between gap-8 text-sky-800">
-            <div class="font-semibold">Titel</div>
             <button
               @click=${e => e.target.closest('dialog').close()}
               class="flex cursor-pointer gap-2 rounded border-none bg-white p-2 text-lg  font-bold text-sky-800  shadow-sm outline-none ring-transparent"
@@ -166,25 +157,35 @@ export const QtiPlayer: Story = {
           </div>
           <test-navigation-thumbs class="grid grid-cols-4 gap-4 px-4 md:grid-cols-6 lg:grid-cols-10">
             ${items.map(
-              item => html`
-                <div
-                  class=${`relative border-2 border-b-4 bg-white p-2`}
-                  @click=${e => {
-                    changeItem(item.identifier);
-                    // isThumbsOpen.value = false;
-                    e.target.closest('dialog').close();
-                  }}
-                >
-                  <img src=${item.thumbnail} alt=${item.title} />
-                </div>
-              `
-            )}
+          item => html`
+            <div
+              class=${`relative border-2 border-b-4 bg-white p-2`}
+              @click=${e => {
+                changeItem(item.identifier);
+                e.target.closest('dialog').close();
+              }}
+            >
+              <img src=${item.thumbnail} alt=${item.title} />
+            </div>
+          `
+        )}
           </test-navigation-thumbs>
-        </dialog>
+        </dialog> -->
+
+        <div class="flex gap-2">
+          <button class="m-2 flex h-10 w-10 items-start justify-center rounded-full bg-primary p-2 text-primary-light">
+            <hi-24-outline-arrow-left class="h-6 w-6 stroke-[2px]"></hi-24-outline-arrow-left>
+          </button>
+
+          <test-auto-scoring></test-auto-scoring>
+        </div>
 
         <div class="relative flex-grow overflow-hidden">
-          <test-navigation id="listpopover" popover>
-            <!-- class="absolute bottom-0 left-0 right-0 z-20 flex max-h-full flex-col gap-4 overflow-y-auto bg-white/60 pb-4 backdrop-blur-xl" -->
+          <test-navigation
+            id="listpopover"
+            popover
+            class="absolute bottom-0 left-0 right-0 z-20 flex max-h-full w-full flex-col gap-4 overflow-y-auto bg-white/60 pb-4 backdrop-blur-xl"
+          >
           </test-navigation>
         </div>
 
