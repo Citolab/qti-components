@@ -3,7 +3,7 @@
 @tailwind utilities;
 @config "../../../../../tailwind.config.sb.cjs";
 @import '@citolab/qti-components/dist/item.css'; */
-@import '@unocss/reset/normalize.css';
+/* @import '@unocss/reset/normalize.css'; */
 
 :host {
   font-family:

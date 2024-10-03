@@ -3,7 +3,7 @@
 @tailwind components;
 @tailwind utilities;
 @config "../../../../../tailwind.config.sb.cjs"; */
-@import '@unocss/reset/normalize.css';
+/* @import '@unocss/reset/normalize.css'; */
 
 [view] {
   display: none;

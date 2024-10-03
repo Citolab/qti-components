@@ -119,9 +119,14 @@ export class QtiTest extends LitElement {
     this.itemRefEls.set(e.detail.identifier, e.target);
 
     const { href, identifier } = e.detail;
+
+    console.log(1, identifier);
+
+    console.log(this._testContext.items.some(item => item.identifier === identifier));
+
     this._testContext = {
       ...this._testContext,
-      items: this._testContext.items.some(item => item.identifier === identifier)
+      items: this._testContext.items.find(item => item.identifier === identifier)
         ? [...this._testContext.items]
         : [
             ...this._testContext.items,

@@ -1,12 +1,10 @@
 /* eslint-disable lit-a11y/click-events-have-key-events */
-import type { QtiExtItem } from '@citolab/qti-extended/qti-ext-item';
+
 import { consume } from '@lit/context';
-import { LitElement, html } from 'lit';
+import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import type { TestContext } from '../../../qti-assessment-test/qti-assessment-test/qti-assessment-test.context';
-import { testContext } from '../../../qti-assessment-test/qti-assessment-test/qti-assessment-test.context';
-import type { SessionContext } from '../../../qti-ext-test/session.context';
-import { sessionContext } from '../../../qti-ext-test/session.context';
+import { sessionContext, SessionContext, testContext, TestContext } from 'src/lib/qti-test';
+import { QtiItem } from 'src/lib/qti-test/qti-item';
 
 @customElement('test-navigation')
 export class TestNavigation extends LitElement {
@@ -37,7 +35,7 @@ export class TestNavigation extends LitElement {
     const { items } = this._testContext;
 
     return html`<slot
-        @pointerdown=${({ target }: { target: QtiExtItem }) => this._requestItem(target.identifier)}
+        @pointerdown=${({ target }: { target: QtiItem }) => this._requestItem(target.identifier)}
         @qti-ext-item-first-updated=${e => e.stopPropagation()}
       ></slot>
       <div class="mt-1 flex justify-between gap-8 p-4 text-sky-800">
@@ -56,15 +54,28 @@ export class TestNavigation extends LitElement {
           const completionStatus = item.variables.find(v => v.identifier === 'completionStatus')?.value;
           const type = item.category !== this.infoCategory ? 'regular' : 'info'; // rounded-full
           const active = this._sessionContext.identifier === item.identifier; // !border-sky-600
-          const correct = this._sessionContext.view === 'scorer' && type == 'regular' && score !== undefined && !isNaN(score) && score > 0; // bg-green-100 border-green-400
+          const correct =
+            this._sessionContext.view === 'scorer' &&
+            type == 'regular' &&
+            score !== undefined &&
+            !isNaN(score) &&
+            score > 0; // bg-green-100 border-green-400
           const incorrect =
-            this._sessionContext.view === 'scorer' && type == 'regular' && score !== undefined && !isNaN(score) && score <= 0; // bg-red-100 border-red-400
+            this._sessionContext.view === 'scorer' &&
+            type == 'regular' &&
+            score !== undefined &&
+            !isNaN(score) &&
+            score <= 0; // bg-red-100 border-red-400
           const answered =
-            this._sessionContext.view === 'candidate' && completionStatus === 'completed' && item.category !== this.infoCategory; // bg-slate-300 shadow-sm
+            this._sessionContext.view === 'candidate' &&
+            completionStatus === 'completed' &&
+            item.category !== this.infoCategory; // bg-slate-300 shadow-sm
 
           return html`
             <div
-              class="${active ? 'bg-sky-500 text-white' : ''} flex cursor-pointer items-center justify-between gap-2 px-2 py-1 text-sm 
+              class="${active
+                ? 'bg-sky-500 text-white'
+                : ''} flex cursor-pointer items-center justify-between gap-2 px-2 py-1 text-sm 
                           text-slate-600"
               @click=${() => {
                 this._requestItem(item.identifier);

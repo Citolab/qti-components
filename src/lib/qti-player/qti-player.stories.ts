@@ -3,13 +3,16 @@
 import type { ArgTypes, Meta, StoryObj } from '@storybook/web-components';
 import packages from '../../assets/packages.json';
 
-import { signal } from '@lit-labs/preact-signals';
-import { html, nothing } from 'lit';
+import { html } from 'lit';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { fetchAssessmentFromManifest } from 'src/stories/fetch-item';
 import '../qti-components';
 import '../qti-test/qti-test';
 import './qti-player';
+
+import './components';
+import './css/item.css';
+import './css/test.css';
 
 // import 'virtual:uno.css';
 // import assessment from '../../../public/assets/api/conformance/assessment.xml?raw';
@@ -69,10 +72,24 @@ export const QtiPlayer: Story = {
     const itemIdentifier: string = getSessionData('session') ? getSessionData('session') : null;
     const testRef = createRef<QtiTest | undefined | null>();
 
-    const isThumbsOpen = signal<Boolean>(false);
-    const isListOpen = signal<Boolean>(false);
+    //   const viewMode = signal<'candidate' | 'scorer'>('candidate');
 
-    const viewMode = signal<'candidate' | 'scorer'>('candidate');
+    //   useEffect(() => {
+    //     const toggle = document.querySelector('test-view-toggle') as TestViewToggle;
+    //     toggle && toggle._switchView(viewMode);
+    // }, [viewMode]);
+
+    // useEffect(() => {
+    //     checkScoreMode();
+    // }, [viewMode]);
+
+    // useEffect(() => {
+    //     setViewMode(sessionState === 'finished' ? 'scorer' : 'candidate');
+    // }, [sessionState])
+
+    // useEffect(() => {
+    //     setCurrentItem(items.find(item => item.identifier === itemIdentifier));
+    // }, [items, itemIdentifier])
 
     const items = jsonData.items.map(item => ({
       ...item,
@@ -127,15 +144,25 @@ export const QtiPlayer: Story = {
         .itemIdentifier=${itemIdentifier}
         class="flex h-full w-full flex-col"
       >
-        <dialog
-          id="thumbpopover"
-          popover
-          class="absolute bottom-0 left-0 right-0 z-20 flex max-h-full flex-col gap-4 overflow-y-auto bg-white bg-white/60 p-4 pb-4 backdrop-blur-xl"
-        >
+        <div className="flex gap-2">
+          <button onClick="{leaveSession}">
+            <div
+              className="bg-primary text-primary-light p-2 m-2 rounded-full h-10 w-10 flex items-start justify-center"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+            </div>
+          </button>
+          <test-auto-scoring></test-auto-scoring>
+        </div>
+
+        <dialog id="thumbpopover" popover>
+          <!-- class="absolute bottom-0 left-0 right-0 z-20 flex max-h-full flex-col gap-4 overflow-y-auto bg-white bg-white/60 p-4 pb-4 backdrop-blur-xl" -->
           <div class="mt-1 flex justify-between gap-8 text-sky-800">
             <div class="font-semibold">Titel</div>
             <button
-              @click=${() => (isThumbsOpen.value = false)}
+              @click=${e => e.target.closest('dialog').close()}
               class="flex cursor-pointer gap-2 rounded border-none bg-white p-2 text-lg  font-bold text-sky-800  shadow-sm outline-none ring-transparent"
             >
               <hi-24-outline-x-mark class="h-6 w-6 stroke-[2px]"></hi-24-outline-x-mark>
@@ -160,11 +187,9 @@ export const QtiPlayer: Story = {
         </dialog>
 
         <div class="relative flex-grow overflow-hidden">
-          <!-- <test-navigation
-            id="listpopover"
-            popover
-            class="absolute bottom-0 left-0 right-0 z-20 flex max-h-full flex-col gap-4 overflow-y-auto bg-white/60 pb-4 backdrop-blur-xl"
-          ></test-navigation> -->
+          <test-navigation id="listpopover" popover>
+            <!-- class="absolute bottom-0 left-0 right-0 z-20 flex max-h-full flex-col gap-4 overflow-y-auto bg-white/60 pb-4 backdrop-blur-xl" -->
+          </test-navigation>
         </div>
 
         <div
@@ -172,27 +197,6 @@ export const QtiPlayer: Story = {
         >
           ${unsafeHTML(assessmentXML)}
         </div>
-
-        ${viewMode.value === 'scorer'
-          ? html`
-              <div class="flex w-full flex-grow items-center  bg-slate-200 px-2">
-                <div class="hidden flex-col justify-center text-lg font-semibold text-sky-800 md:flex">Punten</div>
-                <test-scoring-buttons
-                  .view=${'scorer'}
-                  ...=${currentItem?.scoreType === 'api' || currentItem?.scoreType === 'manual'
-                    ? {}
-                    : { disabled: true }}
-                ></test-scoring-buttons>
-                ${viewMode.value === 'scorer' &&
-                currentItem?.type !== 'info' &&
-                html`<score-info
-                  .scoreType=${currentItem?.scoreType}
-                  .score=${currentItem?.score}
-                  .answered=${currentItem?.answered}
-                ></score-info>`}
-              </div>
-            `
-          : nothing}
 
         <div class="flex gap-2">
           <button>
@@ -277,6 +281,7 @@ export const QtiPlayer: Story = {
             </test-view-toggle>
           </div>
         </div>
+        <test-print-variables class="text-sm"></test-print-variables>
       </qti-test>
     `;
   },
@@ -284,3 +289,26 @@ export const QtiPlayer: Story = {
     async ({ args }) => ({ manifestData: await fetchAssessmentFromManifest(`${args.serverLocation}/${args.qtipkg}`) })
   ]
 };
+
+/* ${
+  viewMode.value === 'scorer'
+    ? html`
+        <div class="flex w-full flex-grow items-center  bg-slate-200 px-2">
+          <div class="hidden flex-col justify-center text-lg font-semibold text-sky-800 md:flex">Punten</div>
+          <test-scoring-buttons
+            .view=${'scorer'}
+            ...=${currentItem?.scoreType === 'api' || currentItem?.scoreType === 'manual'
+              ? {}
+              : { disabled: true }}
+          ></test-scoring-buttons>
+          ${viewMode.value === 'scorer' &&
+          currentItem?.type !== 'info' &&
+          html`<score-info
+            .scoreType=${currentItem?.scoreType}
+            .score=${currentItem?.score}
+            .answered=${currentItem?.answered}
+          ></score-info>`}
+        </div>
+      `
+    : nothing
+} */

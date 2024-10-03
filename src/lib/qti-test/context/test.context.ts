@@ -3,6 +3,7 @@ import { createContext } from '@lit/context';
 
 export interface ItemExtContext extends ItemContext {
   category: string;
+  [key: string]: unknown; // Allows additional custom attributes
 }
 
 export class TestContext {
