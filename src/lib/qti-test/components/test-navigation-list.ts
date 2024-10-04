@@ -1,11 +1,17 @@
 import { consume } from '@lit/context';
-import { html, LitElement } from 'lit';
+import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { sessionContext, SessionContext, testContext, TestContext } from '..';
 import { QtiItem } from '../qti-item';
 
 @customElement('test-navigation-list')
 export class TestNavigationList extends LitElement {
+  static styles = css`
+    :host {
+      display: block;
+    }
+  `;
+
   @consume({ context: testContext, subscribe: true })
   public _testContext?: TestContext;
 

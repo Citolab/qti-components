@@ -50,7 +50,7 @@ export default defineConfig({
     }
   },
   transformers: [transformerDirectives()],
-  presets: [presetWind({ preflight: false, variablePrefix: 'qti-' })], // , prefix: 'qti-'
+  presets: [presetWind({ variablePrefix: 'qti-' })], // preflight: false, prefix: 'qti-'
   rules: [
     [
       'chevron',

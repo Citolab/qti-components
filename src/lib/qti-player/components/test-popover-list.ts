@@ -5,8 +5,8 @@ import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { sessionContext, SessionContext, testContext, TestContext } from '../../qti-test';
 
-@customElement('test-navigation')
-export class TestNavigation extends LitElement {
+@customElement('test-popover-list')
+export class TestPopOverList extends LitElement {
   @consume({ context: testContext, subscribe: true })
   public _testContext?: TestContext;
 
@@ -89,6 +89,6 @@ export class TestNavigation extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'test-navigation': TestNavigation;
+    'test-popover-list': TestPopOverList;
   }
 }

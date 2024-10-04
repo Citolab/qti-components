@@ -16,14 +16,14 @@ export class QtiItem extends LitElement {
   @property({ type: String }) view: 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor' | '' =
     'candidate';
 
-  willUpdate(changedProperties: Map<string | number | symbol, unknown>): void {
-    if (changedProperties.has('disabled')) {
-      if (this.assessmentItem) this.assessmentItem.disabled = this.disabled;
-    }
-    if (changedProperties.has('view')) {
-      this.checkView();
-    }
-  }
+  // willUpdate(changedProperties: Map<string | number | symbol, unknown>): void {
+  //   if (changedProperties.has('disabled')) {
+  //     if (this.assessmentItem) this.assessmentItem.disabled = this.disabled;
+  //   }
+  //   if (changedProperties.has('view')) {
+  //     this.checkView();
+  //   }
+  // }
 
   protected createRenderRoot() {
     return this;
@@ -35,19 +35,19 @@ export class QtiItem extends LitElement {
   @state()
   protected _xml: string = '';
 
-  constructor() {
-    super();
-    this.addEventListener('qti-assessment-item-connected', (e: CustomEvent<QtiAssessmentItem>) => {
-      this.checkView();
-    });
-  }
+  // constructor() {
+  //   super();
+  //   this.addEventListener('qti-assessment-item-connected', (e: CustomEvent<QtiAssessmentItem>) => {
+  //     this.checkView();
+  //   });
+  // }
 
-  private checkView() {
-    this.renderRoot.querySelectorAll('[view]')?.forEach((element: HTMLElement) => {
-      element.getAttribute('view') === this.view ? element.classList.add('show') : element.classList.remove('show');
-    });
-    this.assessmentItem?.showCorrectResponse(this.view === 'scorer');
-  }
+  // private checkView() {
+  //   this.renderRoot.querySelectorAll('[view]')?.forEach((element: HTMLElement) => {
+  //     element.getAttribute('view') === this.view ? element.classList.add('show') : element.classList.remove('show');
+  //   });
+  //   this.assessmentItem?.showCorrectResponse(this.view === 'scorer');
+  // }
 
   /**
    * Sets the XML content of the item.

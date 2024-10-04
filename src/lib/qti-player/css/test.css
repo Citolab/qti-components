@@ -84,3 +84,47 @@ test-scoring-buttons {
     @apply cursor-default border-slate-200 text-slate-200;
   }
 }
+
+test-view-toggle {
+  @apply ms-3 text-sm font-medium text-gray-900 flex items-center gap-2;
+  input {
+    @apply sr-only;
+  }
+  label {
+    @apply inline-flex items-center cursor-pointer;
+  }
+  div {
+    @apply relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600;
+  }
+}
+
+/* qti-assessment-test {
+  @apply w-full h-full flex flex-col;
+  & qti-test-part {
+    @apply h-full
+    & qti-assessment-section {
+      @apply scrollbar-hide flex w-full  snap-x snap-mandatory  items-start overflow-x-scroll h-full overflow-y-hidden scroll-px-0 gap-0 px-0;
+      & qti-assessment-item-ref {
+        @apply w-full py-4 md:pt-4 px-4 shrink-0  snap-start snap-always  h-full overflow-y-auto;
+      }
+    }
+  }
+} */
+/* flex h-10 items-center gap-4 rounded bg-primary-light pl-2 pr-4 cursor-pointer font-bold text-primary-dark */
+
+qti-assessment-test {
+  @apply flex-col flex w-full items-start overflow-x-hidden h-full overflow-y-auto;
+}
+
+test-popover-list:popover-open,
+test-popover-thumbs:popover-open {
+  max-height: 100%;
+  height: auto;
+  position: absolute;
+  inset: unset;
+  bottom: 4rem;
+  top: 4rem;
+  right: 0;
+  left: 0;
+  margin: 0;
+}

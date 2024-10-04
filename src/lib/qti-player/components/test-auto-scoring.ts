@@ -18,6 +18,7 @@ export class TestAutoScoring extends LitElement {
   }
 
   render() {
+    if (this._sessionContext.view !== 'scorer') return html``;
     const { items } = this._testContext;
     const currentItem = items.find(item => item.identifier === this._sessionContext.identifier);
 
@@ -27,8 +28,7 @@ export class TestAutoScoring extends LitElement {
         .view=${'scorer'}
         ...=${currentItem?.scoreType === 'api' || currentItem?.scoreType === 'manual' ? {} : { disabled: true }}
       ></test-scoring-buttons>
-      ${this._sessionContext.view === 'scorer' &&
-      currentItem?.type !== 'info' &&
+      ${currentItem?.type !== 'info' &&
       html`<score-info
         .scoreType=${currentItem?.scoreType as string}
         .score=${currentItem?.score as number}

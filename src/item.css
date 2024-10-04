@@ -1,7 +1,7 @@
 @layer qti-base, qti-components, qti-utilities, qti-variants, qti-extended;
 
 /* base */
-@import '@unocss/reset/normalize.css';
+/* @import '@unocss/reset/normalize.css'; */
 @import './styles/qti-base/item-prose';
 @import './styles/qti-base/item-layout';
 @import './styles/qti-base/item-view';
