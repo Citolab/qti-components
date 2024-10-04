@@ -1,17 +1,10 @@
 import { consume } from '@lit/context';
-import { css, html, LitElement } from 'lit';
+import { html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { sessionContext, SessionContext, testContext, TestContext } from '..';
-import { QtiItem } from '../qti-item';
 
 @customElement('test-navigation-list')
 export class TestNavigationList extends LitElement {
-  static styles = css`
-    :host {
-      display: block;
-    }
-  `;
-
   @consume({ context: testContext, subscribe: true })
   public _testContext?: TestContext;
 
@@ -30,8 +23,10 @@ export class TestNavigationList extends LitElement {
 
   render() {
     return html`<slot
-      @pointerdown=${({ target }: { target: QtiItem }) => this._requestItem(target.identifier)}
-      @qti-ext-item-first-updated=${e => e.stopPropagation()}
+      @pointerdown=${({ target }: { target: HTMLButtonElement }) => {
+        this._requestItem(target.getAttribute('identifier'));
+      }}
+      @qti-item-connected=${e => e.stopPropagation()}
     ></slot>`;
   }
 }

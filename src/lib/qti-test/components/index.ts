@@ -2,6 +2,7 @@ export * from './test-item-id';
 export * from './test-item-title';
 export * from './test-item-to-speech';
 export * from './test-lock';
+export * from './test-navigation-list';
 export * from './test-navigation-thumbs';
 export * from './test-next';
 export * from './test-paging-buttons';

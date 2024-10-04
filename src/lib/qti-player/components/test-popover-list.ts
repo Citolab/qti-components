@@ -20,16 +20,6 @@ export class TestPopOverList extends LitElement {
     return this;
   }
 
-  _requestItem(identifier: string) {
-    this.dispatchEvent(
-      new CustomEvent('qti-test-set-item', {
-        composed: true,
-        bubbles: true,
-        detail: identifier
-      })
-    );
-  }
-
   render() {
     const { items } = this._testContext;
 
@@ -42,7 +32,7 @@ export class TestPopOverList extends LitElement {
           <hi-24-outline-x-mark class="h-6 w-6 stroke-[2px]"></hi-24-outline-x-mark>
         </button>
       </div>
-      <test-navigation-list class=" grid-cols-1 divide-y overflow-y-auto p-4 md:columns-4">
+      <test-navigation-list class="block grid-cols-1 divide-y overflow-y-auto p-4 md:columns-4">
         ${items.map((item, index) => {
           const rawscore = item.variables.find(vr => vr.identifier == 'SCORE');
           const score = parseInt(rawscore?.value?.toString());
@@ -67,20 +57,17 @@ export class TestPopOverList extends LitElement {
             item.category !== this.infoCategory; // bg-slate-300 shadow-sm
 
           return html`
-            <div
+            <button
               class="${active
                 ? 'bg-sky-500 text-white'
                 : ''} flex cursor-pointer items-center justify-between gap-2 px-2 py-1 text-sm 
                           text-slate-600"
-              @click=${() => {
-                this._requestItem(item.identifier);
-                this.dispatchEvent(new CustomEvent('close-dialog'));
-              }}
+              identifier=${item.identifier}
             >
               <div class=${`h-4 w-4 cursor-pointer border-2`}></div>
               <div class="flex flex-grow gap-1 py-0.5">${type === 'regular' ? item.title : html`info`}</div>
               <div class="mr-2 w-4 text-right text-xs text-slate-300">${item.sequenceNumber}</div>
-            </div>
+            </button>
           `;
         })}
       </test-navigation-list>`;

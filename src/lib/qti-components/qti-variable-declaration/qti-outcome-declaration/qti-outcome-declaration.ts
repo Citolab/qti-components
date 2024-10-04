@@ -9,7 +9,7 @@ import { QtiVariableDeclaration } from '../qti-variable-declaration';
 @customElement('qti-outcome-declaration')
 export class QtiOutcomeDeclaration extends QtiVariableDeclaration {
   @property({ type: String, attribute: 'base-type' }) baseType: BaseType;
-  @property({ type: String, attribute: 'external-scored' }) externalScored: String;
+  @property({ type: String, attribute: 'external-scored' }) externalScored: 'human' | 'externalMachine' | null = null;
   @property({ type: String }) identifier: string;
   @property({ type: String }) cardinality: Cardinality;
 
@@ -52,17 +52,16 @@ export class QtiOutcomeDeclaration extends QtiVariableDeclaration {
 
   public override connectedCallback() {
     super.connectedCallback();
-
     const outcomeVariable: OutcomeVariable = {
       identifier: this.identifier,
       cardinality: this.cardinality,
       baseType: this.baseType,
       type: 'outcome',
       value: null,
-      interpolationTable: this.interpolationTable
+      interpolationTable: this.interpolationTable,
+      externalScored: this.externalScored
     };
     outcomeVariable.value = this.defaultValues(outcomeVariable);
-
     this.dispatchEvent(
       new CustomEvent('qti-register-variable', {
         bubbles: true,

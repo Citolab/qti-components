@@ -15,6 +15,7 @@ export interface VariableDeclaration<T> extends VariableValue<T> {
 export interface OutcomeVariable extends VariableDeclaration<string | string[] | null> {
   // specific to outcome variables
   interpolationTable?: Map<number, number>;
+  externalScored?: 'human' | 'externalMachine' | null;
 }
 
 export interface ResponseVariable extends VariableDeclaration<string | string[] | null> {

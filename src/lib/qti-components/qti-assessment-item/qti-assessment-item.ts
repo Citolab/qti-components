@@ -177,7 +177,7 @@ export class QtiAssessmentItem extends LitElement {
   }
 
   public processResponse(countNumAttempts: boolean = true): boolean {
-    const responseProcessor = this.querySelector('qti-response-processing') as unknown as QtiResponseProcessing;
+    const responseProcessor = this.querySelector<QtiResponseProcessing>('qti-response-processing');
     if (!responseProcessor) {
       // console.info('Client side response processing template not available');
       return false;
@@ -191,7 +191,7 @@ export class QtiAssessmentItem extends LitElement {
     responseProcessor.process();
 
     if (this.adaptive === 'false') {
-      // if adapative, completionStatus is set by the processing template
+      // if adaptive, completionStatus is set by the processing template
       this.updateOutcomeVariable('completionStatus', this._getCompletionStatus());
     }
 

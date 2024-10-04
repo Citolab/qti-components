@@ -11,7 +11,8 @@
   xmlns:dep="http://www.duo.nl/schema/dep_extension"
 >
   <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="string" />
-  <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float">
+  <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float"
+    external-scored="human">
     <qti-default-value>
       <qti-value>0</qti-value>
     </qti-default-value>
@@ -29,46 +30,33 @@
       <qti-value>1</qti-value>
     </qti-default-value>
   </qti-outcome-declaration>
-  <qti-stylesheet href="../css/cito_itemstyle.css" type="text/css" />
-  <qti-stylesheet href="../css/cito_userstyle.css" type="text/css" />
-  <qti-stylesheet href="../css/cito_generated.css" type="text/css" />
   <qti-item-body class="defaultBody" xml:lang="nl-NL">
-    <div class="content">
+    <div class="container">
       <div class="qti-layout-row">
         <div class="qti-layout-col6">
-          <div id="leftbody">
-            <p>
-              <strong>Reuzenpanda</strong>
-            </p>
-            <p> Een vrouwtjes reuzenpanda heeft
-      slechts één eisprong per jaar. Hierdoor is ze hooguit drie dagen per jaar vruchtbaar. </p>
-          </div>
+
+          <p>
+            <strong>Reuzenpanda</strong>
+          </p>
+            <p> Een vrouwtjes reuzenpanda heeft slechts
+      één eisprong per jaar. Hierdoor is ze hooguit drie dagen per jaar vruchtbaar. </p>
         </div>
         <div
           class="qti-layout-col6">
-          <div id="body">
-            <p> De organen van het voorplantingsstelsel van reuzenpanda's komen overeen met de
-      organen van het voortplantingsstelsel van de mens. </p>
-          </div>
-
-          <div id="question">
+          <p> De organen van het voorplantingsstelsel van reuzenpanda's komen overeen met de organen
+      van het voortplantingsstelsel van de mens. </p>
+       
             <p>
-              <strong>In welk deel van het voortplantingsstelsel vindt de eisprong plaats?</strong>
-            </p>
-          </div>
-
-          <div
-            class="cito_genclass_bi_BB_102_04_1">
-            <div>
+            <strong>In welk deel van het voortplantingsstelsel vindt de eisprong plaats?</strong>
+          </p>
+       
               <qti-extended-text-interaction
-                response-identifier="RESPONSE"
-                id="If9372a3d-8998-4aa3-a452-33b0d61d65f6"
-                class="qti-height-lines-6"
-                expected-lines="5"
-                expected-length="350"
-              />
-            </div>
-          </div>
+            response-identifier="RESPONSE"
+            id="If9372a3d-8998-4aa3-a452-33b0d61d65f6"
+            class="qti-height-lines-6"
+            expected-lines="5"
+            expected-length="350"
+          />
         </div>
       </div>
     </div>
