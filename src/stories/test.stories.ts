@@ -106,7 +106,7 @@ export const Test: Story = {
           <test-view-toggle> Nakijken </test-view-toggle>
           <test-auto-scoring></test-auto-scoring>
         </div>
-        <div class="relative flex-1 min-h-2xl overflow-y-auto">
+        <div class="relative flex-1 min-h-1/2 overflow-y-auto">
           <test-popover-thumbs
             popover
             id="popover-thumbs"

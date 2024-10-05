@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-test xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" identifier="_ce0e519b-1b33-5503-b093-37dda626e3c4" title="Demotoets" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd">
+  <qti-outcome-declaration identifier="MAX_SCORE" base-type="float" cardinality="single">
+    <qti-default-value>
+      <qti-value>0</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single">
+    <qti-default-value>
+      <qti-value>0</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-test-part identifier="TEST-PART" navigation-mode="linear" submission-mode="individual">
+    <qti-assessment-section identifier="SECTION" title="Section" visible="true">
+      <qti-assessment-item-ref identifier="INTRODUCTION" href="INTRODUCTION.xml"/>
+      <qti-assessment-item-ref identifier="ITEM001" href="ITEM001.xml"/>
+      <qti-assessment-item-ref identifier="ITEM002" href="ITEM002.xml"/>
+      <qti-assessment-item-ref identifier="ITEM003" href="ITEM003.xml"/>
+      <qti-assessment-item-ref identifier="ITEM004" href="ITEM004.xml"/>
+      <qti-assessment-item-ref identifier="ITEM005" href="ITEM005.xml"/>
+      <qti-assessment-item-ref identifier="ITEM006" href="ITEM006.xml"/>
+      <qti-assessment-item-ref identifier="ITEM007" href="ITEM007.xml"/>
+      <qti-assessment-item-ref identifier="ITEM008" href="ITEM008.xml"/>
+      <qti-assessment-item-ref identifier="ITEM009" href="ITEM009.xml"/>
+    </qti-assessment-section>
+  </qti-test-part>
+  <qti-outcome-processing>
+    <qti-set-outcome-value identifier="MAX_SCORE">
+      <qti-sum>
+        <qti-test-variables variable-identifier="MAX_SCORE"/>
+      </qti-sum>
+    </qti-set-outcome-value>
+    <qti-set-outcome-value identifier="SCORE">
+      <qti-sum>
+        <qti-test-variables variable-identifier="SCORE"/>
+      </qti-sum>
+    </qti-set-outcome-value>
+  </qti-outcome-processing>
+</qti-assessment-test>

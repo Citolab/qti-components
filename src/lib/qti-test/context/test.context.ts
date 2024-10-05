@@ -1,12 +1,15 @@
-import type { ItemContext, VariableDeclaration } from '@citolab/qti-components/qti-components';
+import type { VariableDeclaration, VariableValue } from '@citolab/qti-components/qti-components';
 import { createContext } from '@lit/context';
 
-export interface ItemExtContext extends ItemContext {
-  category: string;
+export interface ItemVariables {
+  category?: string;
+  href: string;
+  identifier: string;
+  variables: ReadonlyArray<VariableValue<string | string[] | null>>;
 }
 
 export class TestContext {
-  items: ItemExtContext[];
+  items: ItemVariables[];
   testOutcomeVariables: ReadonlyArray<VariableDeclaration<string | string[]>>;
 }
 
