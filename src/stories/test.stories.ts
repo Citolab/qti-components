@@ -7,7 +7,7 @@ import packages from '../assets/packages.json';
 import '../lib/qti-components';
 import { OutcomeVariable, QtiAssessmentItem } from '../lib/qti-components';
 import '../lib/qti-player/components';
-import '../lib/qti-player/css/test.css';
+import '../lib/qti-player/css/index.css';
 import '../lib/qti-test/qti-test';
 
 import { QtiTest } from '../lib/qti-test/qti-test';
@@ -113,22 +113,18 @@ export const Test: Story = {
 
           /*setSessionData(sessionIdentifier, testRef.value!.context*/
         }}
-        class="flex h-dvh w-full flex-col"
+        class="flex h-full w-full flex-col"
       >
         <div class="flex gap-2 items-center">
-          <button class="m-2 flex h-10 w-10 items-start justify-center rounded-full bg-primary p-2 text-primary-light">
-            <hi-24-outline-arrow-left class="h-6 w-6 stroke-[2px]"></hi-24-outline-arrow-left>
+          <button class="btn btn-primary items-center justify-center rounded-full">
+            <hi-24-outline-arrow-left class="h-6 w-6"></hi-24-outline-arrow-left>
           </button>
           <test-view-toggle> Nakijken </test-view-toggle>
           <test-auto-scoring></test-auto-scoring>
         </div>
-        <div class="relative flex-1 overflow-y-auto">
-          <test-popover-thumbs
-            popover
-            id="popover-thumbs"
-            class="bottom-0 left-0 right-0 z-20  max-h-full w-full overflow-y-auto bg-white/60 pb-4 backdrop-blur-xl"
-          >
-            <test-navigation-thumbs class="grid grid-cols-4 gap-4 px-4 md:grid-cols-6 lg:grid-cols-10">
+        <div class="relative flex-1 overflow-auto">
+          <div popover id="popover-thumbs">
+            <div class="grid grid-cols-4 gap-4 px-4 md:grid-cols-6 lg:grid-cols-10">
               ${augmentedItems.map(
                 item => html`
                   <test-item-link item-id=${item.identifier} class="relative">
@@ -142,43 +138,84 @@ export const Test: Story = {
                   </test-item-link>
                 `
               )}
-            </test-navigation-thumbs>
-          </test-popover-thumbs>
+            </div>
+          </div>
 
-          <test-popover-list
-            popover
-            id="popover-list"
-            class="z-20 max-h-full overflow-y-auto bg-white/60 backdrop-blur-xl"
-          >
-          </test-popover-list>
+          <div popover id="popover-list" class="w-full">
+            <div class="columns-1 md:columns-4">
+              ${augmentedItems.map(
+                item => html`
+                  <test-item-link item-id=${item.identifier} class="flex items-center gap-2">
+                    <test-item-indicator item-id=${item.identifier} info-category="dep-informational">
+                    </test-item-indicator>
+                    <div class="flex justify-between gap-1 w-full">
+                      <div class="flex-1">${item.category !== 'dep-informational' ? item.title : html`info`}</div>
+                      <div>${item.sequenceNumber}</div>
+                    </div>
+                  </test-item-link>
+                `
+              )}
+            </div>
+          </div>
 
           ${unsafeHTML(assessmentXML)}
         </div>
 
-        <test-navigation-list class="columns-4">
-          ${augmentedItems.map(
-            item => html`
-              <test-item-link item-id=${item.identifier} class="flex items-center gap-2">
-                <test-item-indicator item-id=${item.identifier} info-category="dep-informational">
-                </test-item-indicator>
-                <div class="flex justify-between gap-1 py-0.5 w-full">
-                  <div class="flex-1">${item.category !== 'dep-informational' ? item.title : html`info`}</div>
-                  <div class="mr-2 w-4 text-right text-xs text-slate-300">${item.sequenceNumber}</div>
-                </div>
-              </test-item-link>
-            `
-          )}
-        </test-navigation-list>
+        <div class="flex w-full items-center justify-between p-2">
+          <button class="btn btn-primary">Inleveren</button>
+          <div class="flex items-center gap-1">
+            ${augmentedItems.map(
+              item => html`
+                <test-item-link item-id=${item.identifier} class="relative">
+                  <test-item-indicator item-id=${item.identifier} info-category="dep-informational">
+                  </test-item-indicator>
+                </test-item-link>
+              `
+            )}
 
-        <div
-          class="z-20 flex w-full items-center justify-between gap-2 border-t border-slate-200 bg-white p-2 lg:gap-4"
-        >
-          <button
-            class="flex h-10 cursor-pointer items-center rounded bg-primary-light px-4 font-semibold text-primary-dark"
-          >
-            Inleveren
-          </button>
-          <div class="relative flex flex-1 items-center justify-center gap-2">
+            <div class="flex gap-2 ">
+              <button popovertarget="popover-thumbs" class="btn btn-outline">
+                <hi-24-outline-squares-2x2 class="h-6 w-6"></hi-24-outline-squares-2x2>
+              </button>
+              <button popovertarget="popover-list" class="btn btn-outline">
+                <hi-24-outline-bars-3 class="h-6 w-6"></hi-24-outline-bars-3>
+              </button>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <test-prev class="btn btn-primary">
+              <hi-24-outline-chevron-left class="h-6 w-6"></hi-24-outline-chevron-left>
+            </test-prev>
+            <test-next class="btn btn-primary">
+              <div class="hidden md:flex">Volgende</div>
+              <hi-24-outline-chevron-right class="h-6 w-6"></hi-24-outline-chevron-right>
+            </test-next>
+          </div>
+        </div>
+      </qti-test>
+    `;
+  },
+
+  loaders: [
+    async ({ args }) => ({ manifestData: await fetchAssessmentFromManifest(`${args.serverLocation}/${args.qtipkg}`) })
+  ]
+};
+
+/* <test-paging-buttons class="flex gap-1" max-displayed-items="100"></test-paging-buttons> */
+/*
+
+        <div class="grid grid-cols-2">
+          <div>
+            <test-print-variables class="text-sm"></test-print-variables>
+          </div>
+
+          <div>
+            <test-item-debug></test-item-debug>
+          </div>
+        </div> 
+
+        */
+/*
             <test-paging-tmpl-button class=" hidden md:flex md:gap-1" info-category="dep-informational">
               <template>
                 <style>
@@ -195,51 +232,4 @@ export const Test: Story = {
                 ></button>
               </template>
             </test-paging-tmpl-button>
-            <!-- <test-paging-buttons class="flex gap-1" max-displayed-items="100"></test-paging-buttons> -->
-
-            <div class="flex gap-2 self-start lg:self-end">
-              <button
-                popovertarget="popover-thumbs"
-                class="cursor-pointer rounded px-2 py-2 text-slate-500 ring-2 ring-inset ring-slate-300"
-              >
-                <hi-24-outline-squares-2x2 class="h-6 w-6 stroke-[2px] text-slate-500"></hi-24-outline-squares-2x2>
-              </button>
-              <button
-                popovertarget="popover-list"
-                class="cursor-pointer rounded px-2 py-2 text-slate-500 ring-2 ring-inset ring-slate-300"
-              >
-                <hi-24-outline-bars-3 class="h-6 w-6 stroke-[2px]"></hi-24-outline-bars-3>
-              </button>
-            </div>
-          </div>
-          <div class="flex items-center justify-end gap-2">
-            <test-prev
-              class="part[button]:disabled:bg-slate-300 flex cursor-pointer flex-nowrap text-nowrap rounded bg-primary py-2 pl-2 pr-2 font-semibold text-white"
-            >
-              <hi-24-outline-chevron-left class="h-6 w-6 stroke-[2px]"></hi-24-outline-chevron-left>
-            </test-prev>
-            <test-next
-              class="part[button]:disabled:bg-slate-300 flex cursor-pointer flex-nowrap text-nowrap rounded bg-primary py-2 pl-2 pr-2 font-semibold text-white disabled:bg-slate-300 md:pl-4"
-            >
-              <div class="hidden md:flex">Volgende</div>
-              <hi-24-outline-chevron-right class="h-6 w-6 stroke-[2px]"></hi-24-outline-chevron-right>
-            </test-next>
-          </div>
-        </div>
-        <!-- <div class="grid grid-cols-2">
-          <div>
-            <test-print-variables class="text-sm"></test-print-variables>
-          </div>
-
-          <div>
-            <test-item-debug></test-item-debug>
-          </div>
-        </div> -->
-      </qti-test>
-    `;
-  },
-
-  loaders: [
-    async ({ args }) => ({ manifestData: await fetchAssessmentFromManifest(`${args.serverLocation}/${args.qtipkg}`) })
-  ]
-};
+            */

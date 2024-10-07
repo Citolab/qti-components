@@ -1,0 +1,51 @@
+.flex {
+  display: flex;
+}
+.items-center {
+  align-items: center;
+}
+.justify-center {
+  justify-content: center;
+}
+.gap-2 {
+  gap: 0.5rem;
+}
+.gap-1 {
+  gap: 0.25rem;
+}
+.w-full {
+  width: 100%;
+}
+.h-full {
+  height: 100%;
+}
+.flex-1 {
+  flex: 1 1 0%;
+}
+.overflow-auto {
+  overflow: auto;
+}
+.absolute {
+  position: absolute;
+}
+.left-2 {
+  left: 0.5rem /* 8px */;
+}
+.top-2 {
+  top: 0.5rem /* 8px */;
+}
+.flex-col {
+  flex-direction: column;
+}
+.rounded-full {
+  border-radius: 9999px;
+}
+
+.columns-1 {
+  columns: 1;
+}
+@media (min-width: 768px) {
+  .md\:columns-4 {
+    columns: 4;
+  }
+}

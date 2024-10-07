@@ -62,23 +62,13 @@ export class TestItemIndicator extends LitElement {
         : this._internals.states.delete('completed');
     }
 
+    item.category === this.infoCategory
+      ? this._internals.states.add('info') // button.classList.add('!border-sky-600');
+      : this._internals.states.delete('info');
+
     this._sessionContext.identifier === item.identifier
       ? this._internals.states.add('active') // button.classList.add('!border-sky-600');
       : this._internals.states.delete('active');
-
-    // if (
-    //   this._sessionContext.view === 'scorer' &&
-    //   item.category !== this.infoCategory &&
-    //   score !== undefined &&
-    //   !isNaN(score)
-    // ) {
-    //   score > 0
-    //     ? this._internals.states.add('correct') // button.classList.add('!border-sky-600');
-    //     : this._internals.states.delete('correct');
-    //   score === 0
-    //     ? this._internals.states.add('incorrect') // button.classList.add(`bg-green-100`, `border-green-400`)
-    //     : this._internals.states.delete('incorrect'); // button.classList.add(`bg-red-100`, `border-red-400`);
-    // }
   }
 
   render() {

@@ -1,10 +1,18 @@
 /* eslint-disable lit-a11y/click-events-have-key-events */
 
-import { html, LitElement } from 'lit';
+import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
 @customElement('test-item-link')
 export class TestItemLink extends LitElement {
+  static styles = css`
+    :host {
+      display: block;
+      user-select: none;
+      cursor: pointer;
+    }
+  `;
+
   @property({ type: String, attribute: 'item-id' })
   private itemId: string = null;
 

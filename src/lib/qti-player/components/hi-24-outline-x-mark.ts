@@ -6,6 +6,8 @@ export class Hi24OutlineXMark extends LitElement {
   static styles = css`
     :host {
       display: block;
+      height: 1.5rem;
+      width: 1.5rem;
     }
   `;
   @property()
