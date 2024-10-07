@@ -1,5 +1,5 @@
+import { css, html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { CSSResultGroup, css, html, nothing } from 'lit';
 import { QtiChoice } from './internal/choice/qti-choice';
 
 /**
@@ -19,10 +19,17 @@ export class QtiSimpleChoice extends QtiChoice {
   static styles = css`
     :host {
       display: flex;
+      user-select: none;
     }
     slot {
       width: 100%;
       display: block;
+    }
+    [part='ch'] {
+      display: flex;
+      flex-shrink: 0;
+      align-items: center;
+      justify-content: center;
     }
   `;
 

@@ -1,3 +1,4 @@
+export * from './test-item-debug';
 export * from './test-item-id';
 export * from './test-item-title';
 export * from './test-item-to-speech';

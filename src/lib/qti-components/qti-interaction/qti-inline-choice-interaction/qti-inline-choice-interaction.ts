@@ -11,6 +11,34 @@ interface OptionType {
 
 @customElement('qti-inline-choice-interaction')
 export class QtiInlineChoiceInteraction extends Interaction {
+  static override get styles() {
+    return [
+      css`
+        :host {
+          display: inline-block;
+        }
+        slot {
+          display: flex;
+          flex-direction: column;
+        }
+        [role='menu'] {
+          position: absolute;
+          z-index: 1000;
+        }
+        .anchor {
+          /* anchor-name: --infobox; */
+          width: fit-content;
+        }
+
+        .positionedElement {
+          position: absolute;
+          /* position-anchor: --infobox; */
+          /* top: anchor(bottom); */
+        }
+      `
+    ];
+  }
+
   public static inputWidthClass = [
     '',
     'qti-input-width-2',
@@ -31,16 +59,6 @@ export class QtiInlineChoiceInteraction extends Interaction {
   @property({ attribute: 'data-prompt', type: String })
   dataPrompt: string = 'select';
 
-  static override get styles() {
-    return [
-      css`
-        :host {
-          display: inline-block;
-        }
-      `
-    ];
-  }
-
   override render() {
     return html`
       <select part="select" @change="${this.choiceSelected}" ?disabled="${this.disabled}" ?readonly="${this.readonly}">
@@ -54,6 +72,16 @@ export class QtiInlineChoiceInteraction extends Interaction {
       ${unsafeHTML(this.correctOption)}
     `;
   }
+
+  /*
+    <details class="anchor">
+      <summary>${this.dataPrompt}</summary>
+
+      <div role="menu" part="menu" class="positionedElement">
+        <slot></slot>
+      </div>
+    </details>
+    */
 
   connectedCallback() {
     super.connectedCallback();

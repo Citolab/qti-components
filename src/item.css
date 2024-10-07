@@ -1,5 +1,7 @@
 @layer qti-base, qti-components, qti-utilities, qti-variants, qti-extended;
 
+@import './styles/uno.config.css';
+
 /* base */
 @import './styles/qti-base/item-normalize.css';
 @import './styles/qti-base/item-prose';

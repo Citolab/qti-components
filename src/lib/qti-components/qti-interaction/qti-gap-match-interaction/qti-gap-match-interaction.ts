@@ -9,6 +9,7 @@ export class QtiGapMatchInteraction extends DragDropInteractionMixin(LitElement,
       :host {
         display: flex;
         align-items: flex-start;
+        flex-direction: column;
         gap: 0.5rem;
       }
 
@@ -24,8 +25,8 @@ export class QtiGapMatchInteraction extends DragDropInteractionMixin(LitElement,
       :host(.qti-choices-right) {
         flex-direction: row-reverse;
       }
-      [part='drags'],
-      [part='drops'] {
+      /* [part='drops'] , */
+      [part='drags'] {
         display: flex;
         align-items: flex-start;
         flex: 1;
@@ -40,33 +41,32 @@ export class QtiGapMatchInteraction extends DragDropInteractionMixin(LitElement,
   }
 
   set correctResponse(value: Readonly<string | string[]>) {
-    let matches: { text: string; gap: string }[] = [];            
+    let matches: { text: string; gap: string }[] = [];
     const response = Array.isArray(value) ? value : [value];
 
-    if (response) {      
+    if (response) {
       matches = response.map(x => {
         const split = x.split(' ');
-         return { text: split[0], gap: split[1]  };}
-      );
+        return { text: split[0], gap: split[1] };
+      });
     }
-    
+
     const gaps = this.querySelectorAll('qti-gap');
-      gaps.forEach((gap, index) => {
-        const identifier = gap.getAttribute('identifier');
-        const textIdentifier = matches.find(x => x.gap === identifier)?.text;
-        const text = this.querySelector(`qti-gap-text[identifier="${textIdentifier}"]`)?.textContent.trim();
-        if (textIdentifier && text) {
-          if (!gap.nextElementSibling?.classList.contains('correct-option')) {
-            const textSpan = document.createElement('span');         
-            textSpan.classList.add('correct-option');
-            textSpan.textContent = text;
-            gap.insertAdjacentElement('afterend', textSpan);  
-          }  
-        }  
-        else if (gap.nextElementSibling?.classList.contains('correct-option')) {
-          gap.nextElementSibling.remove();
-        }            
-      })
+    gaps.forEach((gap, index) => {
+      const identifier = gap.getAttribute('identifier');
+      const textIdentifier = matches.find(x => x.gap === identifier)?.text;
+      const text = this.querySelector(`qti-gap-text[identifier="${textIdentifier}"]`)?.textContent.trim();
+      if (textIdentifier && text) {
+        if (!gap.nextElementSibling?.classList.contains('correct-option')) {
+          const textSpan = document.createElement('span');
+          textSpan.classList.add('correct-option');
+          textSpan.textContent = text;
+          gap.insertAdjacentElement('afterend', textSpan);
+        }
+      } else if (gap.nextElementSibling?.classList.contains('correct-option')) {
+        gap.nextElementSibling.remove();
+      }
+    });
   }
 }
 

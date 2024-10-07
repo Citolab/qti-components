@@ -2,9 +2,9 @@
   qti-choice-interaction {
     &.qti-input-control-hidden {
       & qti-simple-choice {
-        @apply button hover:hov focus:foc;
+        @apply button hov foc;
         &::part(ch) {
-          @apply !hidden;
+          display: none;
         }
         &[aria-checked='true'] {
           @apply act;
@@ -19,7 +19,7 @@
     }
     &:not(.qti-input-control-hidden) {
       & qti-simple-choice {
-        @apply check hover:hov focus:foc;
+        @apply check hov foc;
         &[aria-checked='true'] {
           @apply act;
         }
@@ -31,8 +31,7 @@
         }
 
         &::part(cha) {
-          /* let the checkmark or radio circle already take up space, else when checking everyhing collapses */
-          @apply h-2/3 w-2/3;
+          @apply check-size;
         }
         &[role='radio']::part(ch) {
           @apply check-radio;
@@ -52,43 +51,49 @@
       &[data-correct-response='true'] {
         &::after {
           content: '\02714';
-          @apply text-green-600;
+          color: #16a34a; /* text-green-600 */
         }
       }
     }
 
     & qti-simple-choice > p {
-      @apply m-0 p-0;
+      margin: 0;
+      padding: 0;
     }
   }
 
   qti-text-entry-interaction {
     &::part(input) {
-      @apply text hover:hov focus:foc;
+      @apply text hov foc;
     }
   }
 
   qti-extended-text-interaction {
     &::part(textarea) {
-      @apply text hover:hov focus:foc;
+      @apply text hov foc;
     }
   }
 
   qti-gap-match-interaction {
     & qti-gap-text {
-      @apply drag hover:hov focus:foc;
+      @apply drag hov foc;
     }
     & qti-gap {
-      @apply drop hover:hov focus:foc p-lg inline-flex;
-      @apply w-32; /* PK: should be set in the javascript, default 100px, or listening to data-width attribute according to the spec */
+      @apply drop hov foc;
+      display: inline-flex;
+      width: 8rem; /* w-32 */
       &:empty:after {
         content: '\0000a0'; /* when empty, put a space in it */
       }
       &:not(:empty) {
-        @apply inline-flex w-auto p-0;
+        display: inline-flex;
+        padding: 0;
+        width: auto;
       }
       &:not(:empty) > * {
-        @apply flex-1 rotate-0 ring-gray-200;
+        flex: 1;
+        transform: rotate(0); /* rotate-0 */
+        box-shadow: 0 0 0 1px #e5e7eb; /* ring-gray-200 */
       }
     }
   }
@@ -96,7 +101,7 @@
   qti-hotspot-interaction {
     & qti-hotspot-choice {
       &[shape='circle'] {
-        @apply spot hover:hov-ring focus:foc rounded-full;
+        @apply spot hov foc rounded-full;
         &[aria-checked='true'] {
           @apply act;
         }
@@ -108,7 +113,7 @@
         }
       }
       &[shape='rect'] {
-        @apply spot hover:hov-ring focus:foc;
+        @apply spot hov foc;
         &[aria-checked='true'] {
           @apply act;
         }
@@ -150,7 +155,6 @@
           display: block;
         }
 
-        /* @apply hover:hov focus:foc; */
         &[aria-checked='true'] {
           @apply act;
         }
@@ -165,11 +169,37 @@
   }
 
   qti-hottext-interaction {
+    qti-hottext {
+      display: inline-flex;
+    }
+    /* &:not(.qti-input-control-hidden),
+    &:not(.qti-unselected-hidden) { */
+    qti-hottext {
+      @apply check hov foc;
+      &::part(cha) {
+        @apply check-size;
+      }
+      &[role='radio']::part(ch) {
+        @apply check-radio;
+      }
+      &[role='radio'][aria-checked='true']::part(cha) {
+        @apply check-radio-checked;
+      }
+      &[role='checkbox']::part(ch) {
+        @apply check-checkbox;
+      }
+      &[role='checkbox'][aria-checked='true']::part(cha) {
+        @apply check-checkbox-checked;
+      }
+    }
+    /* } */
+
     &.qti-input-control-hidden {
       qti-hottext {
-        @apply button hover:hov  focus:foc inline-flex;
+        @apply button hov foc;
+        /* @layer qti-variants { */
         &::part(ch) {
-          @apply !hidden;
+          display: none;
         }
         &[aria-checked='true'] {
           @apply act;
@@ -181,39 +211,18 @@
           @apply dis;
         }
       }
-    }
-
-    &:not(.qti-input-control-hidden),
-    &:not(.qti-unselected-hidden) {
-      qti-hottext {
-        @apply check hover:hov focus:foc inline-flex;
-        &::part(cha) {
-          /* let the checkmark or radio circle already take up space, else when checking everyhing collapses */
-          @apply h-2/3 w-2/3;
-        }
-        &[role='radio']::part(ch) {
-          @apply check-radio;
-        }
-        &[role='radio'][aria-checked='true']::part(cha) {
-          @apply check-radio-checked;
-        }
-        &[role='checkbox']::part(ch) {
-          @apply check-checkbox;
-        }
-        &[role='checkbox'][aria-checked='true']::part(cha) {
-          @apply check-checkbox-checked;
-        }
-      }
+      /* } */
     }
 
     &.qti-unselected-hidden {
       qti-hottext {
-        @apply bordered borderinvisible cursor-pointer hover:bordered  focus:foc inline-flex;
+        @apply hov foc;
+        cursor: pointer;
         &::part(ch) {
-          @apply !hidden;
+          display: none;
         }
         &[aria-checked='true'] {
-          @apply bg-blue-200;
+          background-color: var(--qti-primary-light); /* bg-blue-200 */
         }
         &[aria-readonly='true'] {
           @apply rdo;
@@ -227,25 +236,33 @@
 
   qti-inline-choice-interaction {
     &::part(select) {
-      @apply select hover:hov focus:foc; /* aria-checked:act aria-readonly:rdo aria-disabled:dis; */
+      @apply select hov foc;
     }
   }
 
   qti-match-interaction:not(.qti-match-tabular) {
     & qti-simple-match-set:first-of-type {
-      @apply flex flex-wrap gap-2 pb-4;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem; /* gap-2 */
+      padding-bottom: 1rem; /* pb-4 */
 
       & qti-simple-associable-choice {
-        @apply drag hover:hov focus:foc;
+        @apply drag hov foc;
       }
     }
 
     & qti-simple-match-set:last-of-type {
-      @apply grid auto-cols-fr grid-flow-col gap-2 w-full;
+      display: grid;
+      grid-auto-columns: 1fr; /* auto-cols-fr */
+      grid-auto-flow: column; /* grid-flow-col */
+      gap: 0.5rem; /* gap-2 */
+      width: 100%; /* w-full */
 
       & qti-simple-associable-choice {
-        @apply drop hover:hov focus:foc;
-        @apply flex flex-col;
+        @apply drop hov foc;
+        display: flex;
+        flex-direction: column;
         min-height: 4rem;
       }
 
@@ -262,7 +279,7 @@
       }
 
       & qti-simple-associable-choice > qti-simple-associable-choice {
-        @apply drag hover:hov focus:foc;
+        @apply drag hov foc;
         flex-basis: fit-content;
       }
     }
@@ -271,19 +288,25 @@
   qti-order-interaction {
     &::part(qti-simple-choice),
     & qti-simple-choice {
-      @apply drag hover:hov focus:foc;
+      @apply drag hov foc;
     }
     &::part(qti-simple-choice) {
-      @apply flex w-full items-center overflow-hidden text-ellipsis;
+      display: flex;
+      overflow: hidden;
+      align-items: center;
+      width: 100%;
+      text-overflow: ellipsis;
     }
     &::part(drops) {
-      @apply gap-2;
+      gap: 0.5rem; /* gap-2 */
     }
     &::part(drags) {
-      @apply gap-2;
+      gap: 0.5rem; /* gap-2 */
     }
     &::part(drop-list) {
-      @apply drop hover:hov focus:foc flex min-h-[4rem];
+      @apply drop hov foc;
+      display: flex;
+      min-height: 4rem;
     }
     &::part(active) {
       @apply act;
@@ -293,10 +316,17 @@
   qti-associate-interaction {
     &::part(qti-simple-associable-choice),
     & qti-simple-associable-choice {
-      @apply drag hover:hov focus:foc flex items-center overflow-hidden text-ellipsis;
+      @apply drag;
+      display: flex;
+      overflow: hidden;
+      align-items: center;
+      text-overflow: ellipsis;
     }
     &::part(associables-container) {
-      @apply my-2 flex w-full justify-between;
+      margin: 0.5rem 0; /* my-2 */
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
       background: linear-gradient(
         180deg,
         rgb(0 0 0 / 0%) calc(50% - 1px),
@@ -308,13 +338,16 @@
       @apply act;
     }
     &::part(drop-list) {
-      @apply drop grid h-[3rem] w-1/3;
+      @apply drop;
+      display: grid;
+      height: 3rem;
+      width: 33.33%; /* w-1/3 */
     }
   }
 
   qti-graphic-order-interaction {
     & qti-hotspot-choice {
-      @apply spot hover:hov focus:foc;
+      @apply spot hov foc;
       &[aria-checked='true'] {
         @apply act;
       }
@@ -325,7 +358,10 @@
         @apply dis;
       }
       &[aria-ordervalue] {
-        @apply order flex items-center justify-center;
+        @apply order;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
       &[aria-ordervalue]::after {
         content: attr(aria-ordervalue) !important;
@@ -334,13 +370,12 @@
   }
 
   qti-graphic-associate-interaction {
-    @apply relative block;
+    position: relative;
+    display: block;
 
     & qti-associable-hotspot {
       &[shape='circle'] {
-        /* border-radius: 100%;
-        background-color: green; */
-        @apply spot hover:hov focus:foc;
+        @apply spot hov foc;
         &[aria-checked='true'] {
           @apply act;
         }
@@ -353,9 +388,7 @@
       }
 
       &[shape='square'] {
-        /* border-radius: 0; */
-        /* background-color: green; */
-        @apply spot hover:hov focus:foc;
+        @apply spot hov foc;
         &[aria-checked='true'] {
           @apply act;
         }
@@ -370,72 +403,100 @@
   }
 
   qti-graphic-gap-match-interaction {
-    @apply relative;
+    position: relative;
     & img {
-      @apply m-0 p-0;
+      margin: 0;
+      padding: 0;
     }
   }
 
   qti-slider-interaction {
-    @apply block; /* else no screenshot will be made with html-to-image */
+    display: block;
 
     --qti-tick-color: rgb(229 231 235 / 1);
     --qti-tick-width: 1px;
 
     &::part(slider) {
-      @apply mx-8; /* so the slider stays INSIDE of the qti-slider-interaction */
-      @apply pb-4 pt-5; /* this keeps all content in the qti-slider interaction, also for html-to-image */
+      margin-left: 2rem; /* mx-8 */
+      margin-right: 2rem;
+      padding-bottom: 1rem; /* pb-4 */
+      padding-top: 1.25rem; /* pt-5 */
     }
 
     --show-bounds: true;
     &::part(bounds) {
-      @apply flex w-full justify-between; /* the two divs with value lower and upper will now be at start and end of this bounds container */
-      @apply mb-2; /* just so it aligns with the value 'knob' */
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+      margin-bottom: 0.5rem; /* mb-2 */
     }
 
     --show-ticks: true;
     &::part(ticks) {
-      @apply mx-0.5 mb-1 h-2; /* absolute height for the ticks, and keep distance of the rail. push them 0.5 inward */
+      margin-left: 0.125rem; /* mx-0.5 */
+      margin-right: 0.125rem;
+      margin-bottom: 0.25rem; /* mb-1 */
+      height: 0.5rem; /* h-2 */
       background-position: 0 center;
       background: linear-gradient(to right, var(--qti-tick-color) var(--qti-tick-width), transparent 1px) repeat-x;
       background-size: calc(calc(100% - var(--qti-tick-width)) / ((var(--max) - var(--min)) / var(--step))) 100%;
     }
 
     &::part(rail) {
-      @apply flex items-center; /* so the knob is neatly centered vertically */
-      /* DESIGN */
-      @apply box-border; /* if you have a border in the design apply, this box-border will make the border stay INSIDE the rail */
-      @apply h-1.5 w-full cursor-pointer rounded-full border border-solid border-gray-300 bg-gray-200;
+      display: flex;
+      align-items: center;
+      box-sizing: border-box;
+      height: 0.375rem; /* h-1.5 */
+      width: 100%;
+      cursor: pointer;
+      border-radius: 9999px; /* rounded-full */
+      border: 1px solid #d1d5db; /* border-gray-300 */
+      background-color: #e5e7eb; /* bg-gray-200 */
     }
 
     &::part(knob) {
-      @apply bg-primary relative h-4 w-4 origin-center -translate-x-1/2 cursor-pointer rounded-full;
+      background-color: var(--qti-primary-color);
+      position: relative;
+      height: 1rem; /* h-4 */
+      width: 1rem; /* w-4 */
+      transform-origin: center;
+      transform: translateX(-50%);
+      cursor: pointer;
+      border-radius: 9999px; /* rounded-full */
       left: var(--value-percentage);
     }
 
     --show-value: true;
     &::part(value) {
-      @apply absolute bottom-8; /* align the value, which you can drag, on top of the knob, so it aligns with the rest of the values */
-      @apply left-2; /* should be half width of the knob if you want to center these two */
-      @apply -translate-x-1/2 cursor-pointer rounded bg-gray-100 px-2 py-1 text-center text-gray-500;
+      position: absolute;
+      bottom: 2rem; /* bottom-8 */
+      left: 0.5rem; /* left-2 */
+      transform: translateX(-50%);
+      cursor: pointer;
+      border-radius: 0.25rem; /* rounded */
+      background-color: #f3f4f6; /* bg-gray-100 */
+      padding: 0.25rem 0.5rem; /* px-2 py-1 */
+      text-align: center;
+      color: #6b7280; /* text-gray-500 */
     }
   }
 
   qti-select-point-interaction {
     &::part(point) {
       @apply hover:bg-blue-100 hover:bg-opacity-30;
-      @apply point hover:hov-ring focus:foc rounded-full; /* aria-checked:act aria-readonly:rdo aria-disabled:dis ;*/
+      @apply point hov foc rounded-full;
     }
   }
 
   qti-position-object-stage {
     & qti-position-object-interaction {
       /* no styles necessary, only layout styles, defined in the component */
-      /* height: 40px; */
     }
   }
 
   qti-prompt {
-    @apply my-2 block w-full;
+    margin: 0.5rem 0; /* my-2 */
+    display: block;
+    width: 100%;
   }
 }

@@ -6,13 +6,14 @@ import { QtiChoice } from './internal/choice/qti-choice';
 
 @customElement('qti-hotspot-choice')
 export class QtiHotspotChoice extends QtiChoice {
-  @property({ attribute: 'aria-ordervalue', type: Number, reflect: true }) order: number;
-
-  static override styles = css`
+  static styles = css`
     :host {
+      display: flex;
+      user-select: none;
       position: absolute;
     }
   `;
+  @property({ attribute: 'aria-ordervalue', type: Number, reflect: true }) order: number;
 }
 
 declare global {

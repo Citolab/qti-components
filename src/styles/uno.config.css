@@ -1,0 +1,218 @@
+:root {
+  --qti-primary-light: #ffbebe;
+  --qti-primary: #f86d70;
+  --qti-primary-dark: #a1616a;
+
+  --qti-secondary-light: #bed4ff;
+  --qti-secondary: #6daef8;
+  --qti-secondary-dark: #3a449d;
+
+  --qti-border-thickness: 2px;
+  --qti-border-style: solid;
+  --qti-border-color-gray: #9ca3af; /* Corresponding to border-gray-400 */
+  --qti-border-radius-md: 0.375rem;
+  --qti-border-radius-lg: 0.5rem;
+  --qti-border-radius-full: 9999px;
+
+  --qti-bg-gray-50: #f9fafb;
+  --qti-bg-primary: var(--qti-primary);
+  --qti-bg-gray-100: #f3f4f6;
+
+  --qti-text-gray-500: #6b7280;
+  --qti-text-white: white;
+
+  --qti-padding-sm: 0.125rem; /* py-0.5 */
+  --qti-padding-md: 0.5rem; /* py-2 */
+  --qti-padding-lg: 0.75rem; /* p-3 */
+  --qti-padding-xl: 1rem; /* pl-4 */
+
+  --qti-font-weight-semibold: 600;
+
+  --qti-focus-color: var(--qti-secondary);
+}
+
+.chevron {
+  background: url("data:image/svg+xml,%3Csvg fill='currentColor' width='22' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg' aria-hidden='true'%3E%3Cpath clip-rule='evenodd' fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z'%3E%3C/path%3E%3C/svg%3E")
+    no-repeat center right 6px;
+}
+
+.handle {
+  background-image: radial-gradient(
+    circle at center,
+    rgba(0, 0, 0, 0.1) 0,
+    rgb(0, 0, 0, 0.1) 2px,
+    white 2px,
+    white 100%
+  );
+  background-repeat: repeat-y;
+  background-position: left 2px;
+  background-size: 14px 8px;
+}
+
+.check-mask {
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='currentColor' width='100%' height='100%' viewBox='0 0 24 24'%3E%3Cpath d='M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z'/%3E%3C/svg%3E");
+}
+
+.bordered {
+  border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color-gray);
+  outline: none;
+}
+
+.borderinvisible {
+  border-color: transparent;
+}
+
+.form {
+  @apply bordered;
+  width: 1.25rem; /* w-5 (5 * 0.25rem) */
+  height: 1.25rem; /* h-5 (5 * 0.25rem) */
+  border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color-gray);
+}
+
+.p-lg {
+  padding: var(--qti-padding-md) var(--qti-padding-lg) var(--qti-padding-md) var(--qti-padding-xl); /* Padding shorthand */
+}
+
+.button {
+  @apply bordered;
+  border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color-gray);
+  outline: none;
+  border-radius: var(--qti-border-radius-md);
+  padding: var(--qti-padding-md) var(--qti-padding-lg); /* Padding shorthand */
+  font-weight: var(--qti-font-weight-semibold);
+
+  /* cursor: pointer; */
+}
+
+.select {
+  @apply bordered chevron;
+  border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color-gray);
+  outline: none;
+  border-radius: var(--qti-border-radius-md);
+  position: relative;
+  appearance: none;
+  padding: var(--qti-padding-md) 1.75rem var(--qti-padding-md) var(--qti-padding-lg); /* Padding shorthand */
+}
+
+.text {
+  @apply bordered;
+  border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color-gray);
+  outline: none;
+  border-radius: 0;
+  cursor: text;
+  padding: var(--qti-padding-lg); /* Equal padding on all sides */
+}
+
+.spot {
+  @apply bordered;
+  border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color-gray);
+  outline: none;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  padding: 0;
+}
+
+.point {
+  @apply bordered;
+  border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color-gray);
+  outline: none;
+  width: 1.5rem; /* w-6 */
+  height: 1.5rem;
+  background-color: transparent;
+  padding: 0;
+}
+
+.drag {
+  @apply bordered handle;
+  border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color-gray);
+  outline: none;
+  padding: var(--qti-padding-md) var(--qti-padding-lg) var(--qti-padding-md) var(--qti-padding-xl); /* Padding shorthand */
+  border-radius: var(--qti-border-radius-md);
+  display: inline-block;
+  cursor: grab;
+  background-color: white;
+  font-weight: var(--qti-font-weight-semibold);
+}
+
+.drop {
+  @apply bordered;
+  border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color-gray);
+  outline: none;
+  border-radius: var(--qti-border-radius-lg);
+  position: relative;
+  background-color: var(--qti-bg-gray-50);
+  margin: 1px; /* m-px */
+}
+
+.order {
+  background-color: var(--qti-bg-primary);
+  border-radius: var(--qti-border-radius-full);
+  width: 1.5rem; /* w-6 */
+  height: 1.5rem;
+  color: var(--qti-text-white);
+}
+
+.check-size {
+  height: 66.67%; /* h-2/3 */
+  width: 66.67%; /* w-2/3 */
+}
+
+.check {
+  /* display: flex; */
+  /* align-items: center; */
+  gap: 0.5rem;
+  padding: var(--qti-padding-sm) 0.25rem; /* Padding shorthand */
+  outline: none;
+  border-radius: var(--qti-border-radius-md);
+  cursor: pointer;
+}
+
+.check-radio {
+  @apply form;
+  border-radius: var(--qti-border-radius-full);
+}
+
+.check-radio-checked {
+  background-color: var(--qti-bg-primary);
+  border-radius: var(--qti-border-radius-full);
+}
+
+.check-checkbox {
+  @apply form;
+  border-radius: var(--qti-border-radius-md);
+}
+
+.check-checkbox-checked {
+  @apply check-mask;
+  background-color: var(--qti-bg-primary);
+  mask-image: var(--check-mask); /* check-mask */
+}
+
+.hov {
+  background-color: var(--qti-bg-gray-50);
+}
+
+.foc {
+  /* outline: 2px solid var(--qti-focus-color);  */
+  outline-color: var(--qti-focus-color);
+  outline-width: 2px;
+}
+
+.act {
+  border-color: var(--qti-bg-primary); /* border-primary */
+}
+
+.rdo {
+  cursor: pointer;
+  background-color: white;
+  outline: 0;
+  border: none;
+}
+
+.dis {
+  cursor: not-allowed;
+  background-color: var(--qti-bg-gray-100);
+  color: var(--qti-text-gray-500);
+  border-color: var(--qti-border-color-gray);
+}

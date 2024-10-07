@@ -37,8 +37,8 @@ const config: StorybookConfig = {
       // https://github.com/storybookjs/storybook/issues/23972#issuecomment-1948534058
       plugins: [
         ...config.plugins!,
-        tsconfigPaths.default(),
-        (await import('unocss/vite')).default() // { mode: 'shadow-dom' }
+        tsconfigPaths.default()
+        // (await import('unocss/vite')).default() // { mode: 'shadow-dom' }
       ],
       resolve: { ...config.resolve, alias: { ...config!.resolve!.alias, path: require.resolve('path-browserify') } }
     };

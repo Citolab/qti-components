@@ -5,7 +5,7 @@ import { createRef, ref } from 'lit/directives/ref.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import packages from '../assets/packages.json';
 import '../lib/qti-components';
-import { QtiAssessmentItem } from '../lib/qti-components';
+import { OutcomeVariable, QtiAssessmentItem } from '../lib/qti-components';
 import '../lib/qti-player/components';
 import '../lib/qti-player/css/test.css';
 import '../lib/qti-test/qti-test';
@@ -44,6 +44,10 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 export const Test: Story = {
+  args: {
+    qtipkg: 'biologie'
+  },
+
   render: (
     args,
     { argTypes, loaded: { manifestData: jsonData } }: { argTypes: ArgTypes; loaded: Record<'manifestData', any> }
@@ -89,9 +93,14 @@ export const Test: Story = {
         }}
         @qti-interaction-changed=${e => {
           const qtiAssessmentItem: QtiAssessmentItem = e.target;
-          const scoreOutcomeIdentifier = qtiAssessmentItem.variables.find(v => v.identifier === 'SCORE');
+          const scoreOutcomeIdentifier = qtiAssessmentItem.variables.find(
+            v => v.identifier === 'SCORE'
+          ) as OutcomeVariable;
 
-          if (/*scoreOutcomeIdentifier.externalScored === null && */ qtiAssessmentItem.adaptive === 'false') {
+          if (
+            (scoreOutcomeIdentifier.externalScored === null && qtiAssessmentItem.adaptive === 'false') ||
+            qtiAssessmentItem.adaptive === null
+          ) {
             e.target.processResponse();
           }
 
@@ -106,7 +115,7 @@ export const Test: Story = {
           <test-view-toggle> Nakijken </test-view-toggle>
           <test-auto-scoring></test-auto-scoring>
         </div>
-        <div class="relative flex-1 min-h-1/2 overflow-y-auto">
+        <div class="relative flex-1 min-h-96 overflow-y-auto">
           <test-popover-thumbs
             popover
             id="popover-thumbs"
@@ -150,6 +159,14 @@ export const Test: Story = {
           <div class="relative flex flex-1 items-center justify-center gap-2">
             <test-paging-tmpl-button class=" hidden md:flex md:gap-1" info-category="dep-informational">
               <template>
+                <style>
+                  @scope {
+                    img {
+                      border: 5px solid black;
+                      background-color: goldenrod;
+                    }
+                  }
+                </style>
                 <button
                   class="flex h-4 w-4 cursor-pointer items-center justify-center border-2"
                   aria-label="Button"
@@ -192,17 +209,14 @@ export const Test: Story = {
             <test-print-variables class="text-sm"></test-print-variables>
           </div>
 
-          <dl>
-            <dt class="font-bold">id :</dt>
-            <dd><test-item-id></test-item-id></dd>
-
-            <dt class="font-bold">title</dt>
-            <dd><test-item-title></test-item-title></dd>
-          </dl>
+          <div>
+            <test-item-debug></test-item-debug>
+          </div>
         </div>
       </qti-test>
     `;
   },
+
   loaders: [
     async ({ args }) => ({ manifestData: await fetchAssessmentFromManifest(`${args.serverLocation}/${args.qtipkg}`) })
   ]

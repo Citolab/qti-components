@@ -2,9 +2,9 @@ import type { Preview } from '@storybook/web-components';
 import { setCustomElementsManifest } from '@storybook/web-components';
 import customElements from '../custom-elements.json';
 
-import '@unocss/reset/tailwind.css';
-import 'uno.css';
-import 'virtual:uno.css';
+// import '@unocss/reset/tailwind.css';
+// import 'uno.css';
+// import 'virtual:uno.css';
 import '../src/item.css';
 
 import '../src/index';
