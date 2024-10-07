@@ -132,7 +132,7 @@ export class QtiTest extends ChangeViewMixin(LitElement) {
     // if it is still empty, then copy the variables from the item
 
     if (!itemContext) {
-      console.log(`item with Id not found ${item?.identifier} is the name of the item the same?`);
+      console.warn(`item-ids between assessment.xml and item.xml should match: ${item?.identifier} is not found!`);
       return;
     }
 
@@ -143,11 +143,6 @@ export class QtiTest extends ChangeViewMixin(LitElement) {
       item.variables = [...itemContext.variables];
     }
   };
-
-  // @property({ type: String, reflect: false, attribute: 'view' })
-  // set view(viewer: viewer) {
-  //   this._sessionContext = { ...this._sessionContext, view: viewer };
-  // }
 
   private _onItemConnected(
     e: CustomEvent<{ href: string; identifier: string }> & { target: QtiAssessmentItemRef }
