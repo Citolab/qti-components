@@ -56,18 +56,23 @@ export const Test: Story = {
     const testRef = createRef<QtiTest | undefined | null>();
     const { itemLocation, assessmentLocation, testIdentifier, assessmentXML, items } = jsonData;
 
-    const augmentedItems = items.map(item => ({
-      ...item,
-      thumbnail: 'https://via.placeholder.com/150',
-      title: 'wadooo',
-      sequenceNumber: Math.round(Math.random() * 100),
-      domains: [
-        {
-          title: 'woei',
-          colorIndex: '#ff0000'
-        }
-      ]
-    }));
+    let sequence = 1;
+    const augmentedItems = items.map(item => {
+      const sequenceNumber = item.category === 'dep-informational' ? 'info' : sequence++;
+
+      return {
+        ...item,
+        thumbnail: 'https://via.placeholder.com/150',
+        title: 'wadooo',
+        sequenceNumber: sequenceNumber,
+        domains: [
+          {
+            title: 'woei',
+            colorIndex: '#ff0000'
+          }
+        ]
+      };
+    });
 
     const changeItem = async identifier => {
       const itemRefEl = testRef.value.itemRefEls.get(identifier)!;
@@ -126,16 +131,15 @@ export const Test: Story = {
             <test-navigation-thumbs class="grid grid-cols-4 gap-4 px-4 md:grid-cols-6 lg:grid-cols-10">
               ${augmentedItems.map(
                 item => html`
-                  <button
-                    identifier=${item.identifier}
-                    class=${`relative border-2 border-b-4 bg-white p-2`}
-                    @click=${e => {
-                      changeItem(item.identifier);
-                      e.target.closest('dialog').close();
-                    }}
-                  >
+                  <test-item-link item-id=${item.identifier} class="relative">
+                    <test-item-indicator
+                      item-id=${item.identifier}
+                      info-category="dep-informational"
+                      class="absolute left-2 top-2"
+                    >
+                    </test-item-indicator>
                     <img src=${item.thumbnail} alt=${item.title} />
-                  </button>
+                  </test-item-link>
                 `
               )}
             </test-navigation-thumbs>
