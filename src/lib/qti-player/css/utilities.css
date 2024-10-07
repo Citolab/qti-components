@@ -34,6 +34,9 @@
 .absolute {
   position: absolute;
 }
+.relative {
+  position: relative;
+}
 .left-2 {
   left: 0.5rem /* 8px */;
 }

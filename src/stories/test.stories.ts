@@ -110,8 +110,8 @@ export const Test: Story = {
         class="flex h-full w-full flex-col"
       >
         <div class="flex gap-2 items-center p-2">
-          <button class="btn btn-primary items-center justify-center rounded-circle">
-            <hi-24-outline-arrow-left class="h-6 w-6"></hi-24-outline-arrow-left>
+          <button class="btn btn-primary rounded-circle">
+            <hi-24-outline-arrow-left></hi-24-outline-arrow-left>
           </button>
           <test-view-toggle> Nakijken </test-view-toggle>
           <test-auto-scoring></test-auto-scoring>

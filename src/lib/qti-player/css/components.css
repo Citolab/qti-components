@@ -5,6 +5,7 @@
   flex-wrap: nowrap;
   border-radius: 0.25rem;
   font-weight: 600;
+  border: 0;
 }
 
 .btn-primary {
@@ -14,4 +15,5 @@
 
 .btn-outline {
   box-shadow: inset 0px 0px 0px 0.125rem var(--qti-border-color-gray);
+  background-color: white;
 }
