@@ -6,6 +6,20 @@ import { sessionContext, SessionContext, testContext, TestContext } from '..';
 
 @customElement('test-next')
 export class TestNext extends LitElement {
+  static styles = css`
+    :host,
+    button {
+      all: unset;
+      display: flex;
+      align-items: center;
+    }
+    :host([disabled]),
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+  `;
+
   @consume({ context: testContext, subscribe: true })
   public _testContext?: TestContext;
 
@@ -25,14 +39,6 @@ export class TestNext extends LitElement {
       })
     );
   }
-
-  static styles = css`
-    :host,
-    button {
-      all: unset;
-      display: flex;
-    }
-  `;
 
   render() {
     const { items } = this._testContext;

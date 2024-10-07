@@ -1,12 +1,24 @@
 /* eslint-disable lit-a11y/click-events-have-key-events */
 
 import { consume } from '@lit/context';
-import { html, LitElement, PropertyValues } from 'lit';
+import { css, html, LitElement, PropertyValues } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { sessionContext, SessionContext, testContext, TestContext } from '../../qti-test';
 
 @customElement('test-item-indicator')
 export class TestItemIndicator extends LitElement {
+  static styles = css`
+    :host {
+      display: block;
+      user-select: none;
+      cursor: pointer;
+      width: 1rem;
+      height: 1rem;
+      border: 2px solid #000000;
+      border-radius: 9999px;
+    }
+  `;
+
   @consume({ context: testContext, subscribe: true })
   public _testContext?: TestContext;
 

@@ -3,8 +3,8 @@
 @import './styles/uno.config.css';
 
 /* base */
-@import './styles/qti-base/item-normalize.css';
-@import './styles/qti-base/item-prose';
+/* @import './styles/qti-base/item-normalize.css'; */
+/* @import './styles/qti-base/item-prose'; */
 @import './styles/qti-base/item-layout';
 @import './styles/qti-base/item-view';
 @import './styles/qti-base/item-popup';
@@ -18,8 +18,3 @@
 /* variants */
 @import './styles/qti-variants/qti-input-width';
 @import './styles/qti-variants/qti-interactions';
-
-:root {
-  --qti-primary-color: cornflowerblue;
-  --qti-secondary-color: rgb(155, 140, 25);
-}

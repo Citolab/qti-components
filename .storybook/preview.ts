@@ -2,7 +2,7 @@ import type { Preview } from '@storybook/web-components';
 import { setCustomElementsManifest } from '@storybook/web-components';
 import customElements from '../custom-elements.json';
 
-import '@unocss/reset/tailwind.css';
+// import '@unocss/reset/tailwind.css';
 import '../src/item.css';
 
 import '../src/index';

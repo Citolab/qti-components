@@ -7,6 +7,12 @@
 .justify-center {
   justify-content: center;
 }
+.justify-between {
+  justify-content: space-between;
+}
+.p-2 {
+  padding: 0.5rem;
+}
 .gap-2 {
   gap: 0.5rem;
 }
@@ -37,10 +43,12 @@
 .flex-col {
   flex-direction: column;
 }
-.rounded-full {
-  border-radius: 9999px;
+.rounded-circle {
+  border-radius: 9999px !important;
 }
-
+.flex-wrap {
+  flex-wrap: wrap;
+}
 .columns-1 {
   columns: 1;
 }

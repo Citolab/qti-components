@@ -132,8 +132,8 @@
           height: 100%;
           background: repeating-linear-gradient(
             45deg,
-            var(--qti-primary-color),
-            var(--qti-primary-color) 5px,
+            var(--qti-primary),
+            var(--qti-primary) 5px,
             transparent 5px,
             transparent 10px
           );
@@ -149,8 +149,8 @@
             45deg,
             transparent,
             transparent 5px,
-            var(--qti-primary-color) 5px,
-            var(--qti-primary-color) 10px
+            var(--qti-primary) 5px,
+            var(--qti-primary) 10px
           );
           display: block;
         }
@@ -455,7 +455,7 @@
     }
 
     &::part(knob) {
-      background-color: var(--qti-primary-color);
+      background-color: var(--qti-primary);
       position: relative;
       height: 1rem; /* h-4 */
       width: 1rem; /* w-4 */

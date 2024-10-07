@@ -28,6 +28,7 @@
 
   --qti-font-weight-semibold: 600;
 
+  --qti-active: var(--qti-primary);
   --qti-focus-color: var(--qti-secondary);
 }
 

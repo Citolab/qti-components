@@ -63,14 +63,8 @@ export const Test: Story = {
       return {
         ...item,
         thumbnail: 'https://via.placeholder.com/150',
-        title: 'wadooo',
-        sequenceNumber: sequenceNumber,
-        domains: [
-          {
-            title: 'woei',
-            colorIndex: '#ff0000'
-          }
-        ]
+        title: '',
+        sequenceNumber: sequenceNumber
       };
     });
 
@@ -115,26 +109,26 @@ export const Test: Story = {
         }}
         class="flex h-full w-full flex-col"
       >
-        <div class="flex gap-2 items-center">
-          <button class="btn btn-primary items-center justify-center rounded-full">
+        <div class="flex gap-2 items-center p-2">
+          <button class="btn btn-primary items-center justify-center rounded-circle">
             <hi-24-outline-arrow-left class="h-6 w-6"></hi-24-outline-arrow-left>
           </button>
           <test-view-toggle> Nakijken </test-view-toggle>
           <test-auto-scoring></test-auto-scoring>
         </div>
         <div class="relative flex-1 overflow-auto">
-          <div popover id="popover-thumbs">
-            <div class="grid grid-cols-4 gap-4 px-4 md:grid-cols-6 lg:grid-cols-10">
+          <div popover id="popover-thumbs" class="w-full">
+            <div class="flex flex-wrap gap-2">
               ${augmentedItems.map(
                 item => html`
                   <test-item-link item-id=${item.identifier} class="relative">
+                    <img src=${item.thumbnail} alt=${item.title} />
                     <test-item-indicator
                       item-id=${item.identifier}
                       info-category="dep-informational"
                       class="absolute left-2 top-2"
                     >
                     </test-item-indicator>
-                    <img src=${item.thumbnail} alt=${item.title} />
                   </test-item-link>
                 `
               )}
@@ -166,7 +160,7 @@ export const Test: Story = {
           <div class="flex items-center gap-1">
             ${augmentedItems.map(
               item => html`
-                <test-item-link item-id=${item.identifier} class="relative">
+                <test-item-link item-id=${item.identifier}>
                   <test-item-indicator item-id=${item.identifier} info-category="dep-informational">
                   </test-item-indicator>
                 </test-item-link>
