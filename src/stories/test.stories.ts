@@ -9,6 +9,7 @@ import { OutcomeVariable, QtiAssessmentItem } from '../lib/qti-components';
 import '../lib/qti-player/components';
 import '../lib/qti-player/css/test.css';
 import '../lib/qti-test/qti-test';
+
 import { QtiTest } from '../lib/qti-test/qti-test';
 import { qtiTransformItem } from '../lib/qti-transformers';
 import { fetchAssessmentFromManifest } from './fetch-item';
@@ -56,16 +57,17 @@ export const Test: Story = {
     const { itemLocation, assessmentLocation, testIdentifier, assessmentXML, items } = jsonData;
 
     const augmentedItems = items.map(item => ({
-      identifier: item.identifier,
+      ...item,
       thumbnail: 'https://via.placeholder.com/150',
       title: 'wadooo',
+      sequenceNumber: Math.round(Math.random() * 100),
       domains: [
         {
           title: 'woei',
           colorIndex: '#ff0000'
         }
       ]
-    })) as ItemInfo[];
+    }));
 
     const changeItem = async identifier => {
       const itemRefEl = testRef.value.itemRefEls.get(identifier)!;
@@ -115,7 +117,7 @@ export const Test: Story = {
           <test-view-toggle> Nakijken </test-view-toggle>
           <test-auto-scoring></test-auto-scoring>
         </div>
-        <div class="relative flex-1 min-h-96 overflow-y-auto">
+        <div class="relative flex-1 overflow-y-auto">
           <test-popover-thumbs
             popover
             id="popover-thumbs"
@@ -142,12 +144,28 @@ export const Test: Story = {
           <test-popover-list
             popover
             id="popover-list"
-            class="bottom-0 left-0 right-0 z-20  max-h-full w-full overflow-y-auto bg-white/60 backdrop-blur-xl"
+            class="z-20 max-h-full overflow-y-auto bg-white/60 backdrop-blur-xl"
           >
           </test-popover-list>
 
           ${unsafeHTML(assessmentXML)}
         </div>
+
+        <test-navigation-list class="columns-4">
+          ${augmentedItems.map(
+            item => html`
+              <test-item-link item-id=${item.identifier} class="flex items-center gap-2">
+                <test-item-indicator item-id=${item.identifier} info-category="dep-informational">
+                </test-item-indicator>
+                <div class="flex justify-between gap-1 py-0.5 w-full">
+                  <div class="flex-1">${item.category !== 'dep-informational' ? item.title : html`info`}</div>
+                  <div class="mr-2 w-4 text-right text-xs text-slate-300">${item.sequenceNumber}</div>
+                </div>
+              </test-item-link>
+            `
+          )}
+        </test-navigation-list>
+
         <div
           class="z-20 flex w-full items-center justify-between gap-2 border-t border-slate-200 bg-white p-2 lg:gap-4"
         >
@@ -204,7 +222,7 @@ export const Test: Story = {
             </test-next>
           </div>
         </div>
-        <div class="grid grid-cols-2">
+        <!-- <div class="grid grid-cols-2">
           <div>
             <test-print-variables class="text-sm"></test-print-variables>
           </div>
@@ -212,7 +230,7 @@ export const Test: Story = {
           <div>
             <test-item-debug></test-item-debug>
           </div>
-        </div>
+        </div> -->
       </qti-test>
     `;
   },

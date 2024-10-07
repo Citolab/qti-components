@@ -59,8 +59,8 @@ export class TestPopOverList extends LitElement {
           return html`
             <button
               class="${active
-                ? 'bg-sky-500 text-white'
-                : ''} flex cursor-pointer items-center justify-between gap-2 px-2 py-1 text-sm 
+                ? 'bg-primary text-white'
+                : ''} flex cursor-pointer items-center justify-between gap-2 px-2 py-1 text-sm w-full
                           text-slate-600"
               identifier=${item.identifier}
             >

@@ -117,13 +117,42 @@ qti-assessment-test {
 
 test-popover-list:popover-open,
 test-popover-thumbs:popover-open {
-  max-height: 100%;
-  height: auto;
-  position: absolute;
-  inset: unset;
-  bottom: 4rem;
-  top: 4rem;
-  right: 0;
-  left: 0;
   margin: 0;
+  overflow-y: auto;
+  inset: 0 0 0 0;
+  width: 100%;
+  bottom: 0;
 }
+
+test-item-indicator {
+  @apply flex h-4 w-4 cursor-pointer rounded-full border-2;
+
+  &:state(info) {
+    @apply !rounded-none;
+  }
+  &:state(completed) {
+    @apply !bg-slate-300;
+  }
+  &:state(correct) {
+    @apply !bg-green-100 border-green-400;
+  }
+  &:state(incorrect) {
+    @apply !bg-red-100 border-red-400;
+  }
+  &:state(active) {
+    @apply !border-sky-600;
+  }
+}
+
+/* [popover]:open,
+[popover] {
+  position: absolute !important;
+  bottom: 0 !important;
+  margin: 0 !important;
+  height: auto !important;
+}
+
+[popover]::backdrop {
+  background-color: blue;
+  position: absolute;
+} */

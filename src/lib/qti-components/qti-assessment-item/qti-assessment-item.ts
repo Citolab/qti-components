@@ -248,7 +248,7 @@ export class QtiAssessmentItem extends LitElement {
       response: Array.isArray(value) ? [...value] : value
     });
 
-    if (this.adaptive === 'false') {
+    if (this.adaptive === 'false' || this.adaptive === null) {
       // if adapative, completionStatus is set by the processing template
       this.updateOutcomeVariable('completionStatus', this._getCompletionStatus());
     }

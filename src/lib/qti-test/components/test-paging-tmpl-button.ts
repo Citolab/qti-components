@@ -40,7 +40,6 @@ export class TestPagingTmplButton extends LitElement {
         const rawscore = item.variables.find(vr => vr.identifier == 'SCORE');
         const score = parseInt(rawscore?.value?.toString());
         const completionStatus = item.variables.find(v => v.identifier === 'completionStatus')?.value;
-
         const button = content.querySelector('button')!.cloneNode(true) as HTMLButtonElement;
         button.addEventListener('click', () => this._requestItem(item.identifier));
         button.setAttribute('id', item.identifier);
