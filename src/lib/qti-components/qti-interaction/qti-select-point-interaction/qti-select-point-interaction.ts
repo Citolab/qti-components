@@ -6,11 +6,23 @@ import { Interaction } from '../internal/interaction/interaction';
 
 @customElement('qti-select-point-interaction')
 export class QtiSelectPointInteraction extends Interaction {
+  static override styles = [
+    css`
+      :host {
+        display: block;
+      }
+      point-container {
+        display: block;
+        position: relative;
+      }
+    `
+  ];
+
   @property({
     type: Number,
     attribute: 'max-choices'
   })
-  public maxChoices: number = 0;
+  public maxChoices: number = Infinity;
 
   @property({
     type: Number,
@@ -20,6 +32,20 @@ export class QtiSelectPointInteraction extends Interaction {
 
   @state()
   private _points: string[] = [];
+
+  // Reference to the image element
+  private _imgElement: HTMLImageElement | null = null;
+
+  // Extracted click handler method
+  private _onImageClick = (event: MouseEvent) => {
+    if (this._points.length < this.maxChoices) {
+      const x = event.offsetX;
+      const y = event.offsetY;
+
+      this._points = [...this._points, `${x} ${y}`];
+      this.saveResponse(this._points);
+    }
+  };
 
   override render() {
     return html` <slot name="prompt"></slot>
@@ -49,18 +75,6 @@ export class QtiSelectPointInteraction extends Interaction {
       </point-container>`;
   }
 
-  static override styles = [
-    css`
-      :host {
-        display: block;
-      }
-      point-container {
-        display: block;
-        position: relative;
-      }
-    `
-  ];
-
   reset(): void {
     this._points = [];
   }
@@ -73,22 +87,24 @@ export class QtiSelectPointInteraction extends Interaction {
     this._points = Array.isArray(val) ? val : [val];
   }
 
-  override connectedCallback(): void {
-    super.connectedCallback();
+  override firstUpdated(): void {
+    this._imgElement = this.querySelector('img');
 
-    const img = this.querySelector('img');
-
-    // Attach a click event listener to the image element
-    img.addEventListener('click', event => {
-      const x = event.offsetX;
-      const y = event.offsetY;
-
-      this._points = [...this._points, x + ' ' + y];
-      this.saveResponse(this._points);
-    });
+    if (this._imgElement) {
+      // Attach the click event listener to the image element
+      this._imgElement.addEventListener('click', this._onImageClick);
+    } else {
+      console.warn('No <img> element found in <qti-select-point-interaction>');
+    }
   }
-  override disconnectedCallback() {
+
+  override disconnectedCallback(): void {
     super.disconnectedCallback();
+
+    if (this._imgElement) {
+      // Remove the click event listener from the image element
+      this._imgElement.removeEventListener('click', this._onImageClick);
+    }
   }
 }
 

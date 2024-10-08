@@ -154,6 +154,7 @@ export class TouchDragAndDrop {
       }
 
       // Make current drop container classwide available and fire dragover if it's really a drop container.
+
       this._currentDropContainer = target;
       if (this._currentDropContainer) this._dispatchEvent(target, 'dragover');
     }
@@ -205,22 +206,42 @@ export class TouchDragAndDrop {
    */
   private _findDroppable(event) {
     const pointFromTouchEvent = this._getPoint(event);
-    const element = this.elementFromPoint(pointFromTouchEvent.x, pointFromTouchEvent.y);
+    const visited = new Set<Element>();
+    const element = this.getElementWithDropzone(document, pointFromTouchEvent.x, pointFromTouchEvent.y, visited);
     return element;
   }
 
-  private elementFromPoint(x: number, y: number): Element {
-    let el = document.elementFromPoint(x, y);
+  private getElementWithDropzone(
+    root: DocumentOrShadowRoot,
+    x: number,
+    y: number,
+    visited: Set<Element>
+  ): Element | null {
+    const el = root.elementFromPoint(x, y) as HTMLElement | null;
     if (el) {
-      while (el.shadowRoot) {
-        const customEl = el.shadowRoot.elementFromPoint(x, y);
-        if (customEl === null || customEl === el) {
-          break;
-        }
-        el = customEl;
+      // Check if we've already visited this element
+      if (visited.has(el)) {
+        // Prevent infinite recursion by not revisiting the same element
+        return null;
       }
+      visited.add(el);
+
+      if (el.hasAttribute('dropzone')) {
+        // Found an element with 'dropzone'; return it immediately
+        return el;
+      }
+      if (el.shadowRoot) {
+        // Recursively search within the Shadow DOM
+        const nestedEl = this.getElementWithDropzone(el.shadowRoot, x, y, visited);
+        if (nestedEl) {
+          // If a nested element with 'dropzone' is found, return it
+          return nestedEl;
+        }
+      }
+      // No 'dropzone' attribute found in deeper levels; return the current element
       return el;
     }
+    // No element found at the given coordinates
     return null;
   }
 

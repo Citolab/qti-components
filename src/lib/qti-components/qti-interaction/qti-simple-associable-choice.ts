@@ -1,10 +1,24 @@
-import { html, LitElement } from 'lit';
+import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
 // THIS IS NOT USED IN TABULAR MATCH INTERACTION
 @customElement('qti-simple-associable-choice')
 // tslint:disable: indent
 export class QtiSimpleAssociableChoice extends LitElement {
+  static styles = css`
+    :host {
+      display: flex;
+      user-select: none;
+    }
+    slot {
+      width: 100%;
+      display: block;
+    }
+    slot[name='qti-simple-associable-choice'] {
+      width: 100%;
+    }
+  `;
+
   /** the minimal number of selections a candidate must make */
   @property({
     type: Number,

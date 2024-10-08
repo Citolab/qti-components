@@ -9,7 +9,7 @@ import packages from '../assets/packages.json';
 import { fetchItemFromManifest } from './fetch-item';
 
 const meta: Meta = {
-  title: 'Examples',
+  title: 'Item',
   argTypes: {
     qtipkg: {
       options: packages.packages,
@@ -35,7 +35,7 @@ type Story = StoryObj;
 
 let item;
 
-export const Examples: Story = {
+export const Item: Story = {
   render: ({ disabled, view }, { argTypes, loaded: { xml } }) => {
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');

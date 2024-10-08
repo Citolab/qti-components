@@ -1,38 +1,46 @@
 @layer qti-variants {
   qti-choice-interaction {
     &.qti-choices-stacking-2 {
-      @apply grid;
-      @apply grid-cols-2;
+      .grid {
+        display: grid; /* grid */
+      }
+      grid-template-columns: repeat(2, minmax(0, 1fr)); /* grid-cols-2 */
       qti-prompt {
-        @apply col-span-2;
+        grid-column: span 2 / span 2; /* col-span-2 */
       }
     }
     &.qti-choices-stacking-3 {
-      @apply grid;
-      @apply grid-cols-3;
+      .grid {
+        display: grid;
+      }
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       qti-prompt {
-        @apply col-span-3;
+        grid-column: span 3 / span 3;
       }
     }
     &.qti-choices-stacking-4 {
-      @apply grid;
-      @apply grid-cols-4;
+      .grid {
+        display: grid;
+      }
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       qti-prompt {
-        @apply col-span-4;
+        grid-column: span 4 / span 4;
       }
     }
     &.qti-choices-stacking-5 {
-      @apply grid;
-      @apply grid-cols-5;
+      .grid {
+        display: grid;
+      }
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       qti-prompt {
-        @apply col-span-5;
+        grid-column: span 5 / span 5;
       }
     }
     &.qti-orientation-horizontal {
       /* is the default layout */
     }
     &[orientation='horizontal'] {
-      @apply flex-row;
+      flex-direction: row;
     }
   }
 }

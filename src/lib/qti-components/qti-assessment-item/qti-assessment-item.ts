@@ -32,7 +32,7 @@ export class QtiAssessmentItem extends LitElement {
   @property({ type: String }) title: string;
   @property({ type: String }) identifier: string = '';
   @property({ type: String }) adaptive: 'true' | 'false' = 'false';
-  @property({ type: String }) timeDependent: 'true' | 'false' = 'false';
+  @property({ type: String }) timeDependent: 'true' | 'false' | null = null;
 
   @property({ type: Boolean }) disabled: boolean;
   @watch('disabled', { waitUntilFirstUpdate: true })
@@ -53,7 +53,15 @@ export class QtiAssessmentItem extends LitElement {
   };
 
   public get variables(): VariableValue<string | string[] | null>[] {
-    return this._context.variables.map(v => ({ identifier: v.identifier, value: v.value, type: v.type }));
+    return this._context.variables.map(v => ({
+      identifier: v.identifier,
+      value: v.value,
+      type: v.type,
+      // add externalscored, a fixed prop to the test, so the testcontext can read and decide how to score this item
+      ...(v.type === 'outcome' && v.identifier === 'SCORE'
+        ? { externalScored: (v as OutcomeVariable).externalScored }
+        : {})
+    }));
   }
 
   public set variables(value: VariableValue<string | string[] | null>[]) {
@@ -177,7 +185,7 @@ export class QtiAssessmentItem extends LitElement {
   }
 
   public processResponse(countNumAttempts: boolean = true): boolean {
-    const responseProcessor = this.querySelector('qti-response-processing') as unknown as QtiResponseProcessing;
+    const responseProcessor = this.querySelector<QtiResponseProcessing>('qti-response-processing');
     if (!responseProcessor) {
       // console.info('Client side response processing template not available');
       return false;
@@ -191,7 +199,7 @@ export class QtiAssessmentItem extends LitElement {
     responseProcessor.process();
 
     if (this.adaptive === 'false') {
-      // if adapative, completionStatus is set by the processing template
+      // if adaptive, completionStatus is set by the processing template
       this.updateOutcomeVariable('completionStatus', this._getCompletionStatus());
     }
 

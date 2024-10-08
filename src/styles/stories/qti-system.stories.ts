@@ -1,46 +1,59 @@
-import { html } from 'lit';
+import { html, LitElement } from 'lit';
+import { property } from 'lit/decorators.js';
 
 export default {
   title: 'styles/themes'
 };
 
-class ButtonComponent extends HTMLElement {
-  shadow: ShadowRoot;
-  constructor() {
-    super();
-    this.shadow = this.attachShadow({ mode: 'open' });
+class ButtonComponent extends LitElement {
+  @property({ type: String }) ch: string;
+  @property({ type: String }) cha: string;
+  private initialChildren?: Element[];
+
+  protected createRenderRoot(): HTMLElement | DocumentFragment {
+    return this;
   }
-  connectedCallback() {
-    this.render();
-  }
+
   render() {
-    this.shadow.innerHTML = `<div part="ch"><div part="cha"></div></div><slot></slot><div part="drop"></div>`;
+    console.log(this.initialChildren);
+    if (this.initialChildren === undefined) {
+      this.initialChildren = Array.from(this.children);
+    }
+    return html`<div class=${this.ch}><div class=${`check-size ${this.cha}`}></div></div>
+      ${this.initialChildren}
+
+      <div part="drop"></div>`;
   }
 }
 window.customElements.define('button-component', ButtonComponent);
 
+// grid grid-cols-6 gap-4
 const components = (mod: string) => html`
-  <div class="grid grid-cols-6 gap-4">
-    <div class="text-xs">button</div>
-    <div class="text-xs">hover</div>
-    <div class="text-xs">focus</div>
-    <div class="text-xs">active</div>
-    <div class="text-xs">active+focus</div>
-    <div class="text-xs">disabled</div>
+  <div style="display:grid;grid-template-columns: repeat(6, minmax(0, 1fr));gap:2rem;">
+    <div>button</div>
+    <div>hover</div>
+    <div>focus</div>
+    <div>active</div>
+    <div>active+focus</div>
+    <div>disabled</div>
 
-    <button-component role="radio" class="check ${mod}" aria-checked="false">check</button-component>
-    <button-component role="radio" class="check hov ${mod}" aria-checked="false">check</button-component>
-    <button-component role="radio" class="check foc ${mod}" aria-checked="false">check</button-component>
-    <button-component role="radio" class="check act ${mod}" aria-checked="true">check</button-component>
-    <button-component role="radio" class="check foc act ${mod}" aria-checked="true">check</button-component>
-    <button-component role="radio" class="check dis ${mod}" aria-checked="false">check</button-component>
+    <button-component ch="check-radio" cha="" class="check ${mod}">check</button-component>
+    <button-component ch="check-radio" cha="" class="check hov ${mod}">check</button-component>
+    <button-component ch="check-radio" cha="" class="check foc ${mod}">check</button-component>
+    <button-component ch="check-radio" cha="check-radio-checked" class="check act ${mod}">check</button-component>
+    <button-component ch="check-radio" cha="check-radio-checked" class="check foc act ${mod}">check</button-component>
+    <button-component ch="check-radio" cha="check-radio-checked dis" class="check dis ${mod}">check</button-component>
 
-    <button-component role="checkbox" class="check ${mod}" aria-checked="false">check</button-component>
-    <button-component role="checkbox" class="check hov ${mod}" aria-checked="false">check</button-component>
-    <button-component role="checkbox" class="check foc ${mod}" aria-checked="false">check</button-component>
-    <button-component role="checkbox" class="check act ${mod}" aria-checked="true">check</button-component>
-    <button-component role="checkbox" class="check foc act ${mod}" aria-checked="true">check</button-component>
-    <button-component role="checkbox" class="check dis ${mod}" aria-checked="false">check</button-component>
+    <button-component ch="check-checkbox" cha="" class="check ${mod}">check</button-component>
+    <button-component ch="check-checkbox" cha="" class="check hov ${mod}">check</button-component>
+    <button-component ch="check-checkbox" cha="" class="check foc ${mod}">check</button-component>
+    <button-component ch="check-checkbox" cha="check-checkbox-checked" class="check act ${mod}">check</button-component>
+    <button-component ch="check-checkbox" cha="check-checkbox-checked" class="check foc act ${mod}"
+      >check</button-component
+    >
+    <button-component ch="check-checkbox" cha="check-checkbox-checked dis" class="check dis ${mod}"
+      >check</button-component
+    >
 
     <div class="button ${mod}">button</div>
     <div class="button ${mod} hov ">button</div>

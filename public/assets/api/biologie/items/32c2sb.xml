@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <qti-assessment-item
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
@@ -8,40 +8,27 @@
   label="32c2sb"
   xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
 >
-  <qti-stylesheet href="../css/cito_itemstyle.css" type="text/css" />
-  <qti-stylesheet href="../css/cito_userstyle.css" type="text/css" />
-  <qti-item-body class="defaultBody">
-    <div class="content">
+  <qti-item-body>
+    <div class="container">
       <div class="qti-layout-row">
         <div class="qti-layout-col12">
-          <p class="UserSRTitelGroot">Disclaimer</p>
-          <p>
-            Dit materiaal is een product van het Ministerie van Onderwijs, Cultuur en Wetenschap en in beheer bij het
-            College voor Toetsen en Examens (CvTE)
-            <span class="UserSRGroep">te Utrecht.</span>
-            <br />
-            CvTE accepteert geen enkele aansprakelijkheid voor schade ontstaan door het gebruik van dit materiaal op
-            welke manier dan ook.
-            <br />
-            CvTE heeft conform de wettelijke bepalingen en voor zover mogelijk het auteursrecht op in dit materiaal
-            gebruikt (bronnen)materiaal geregeld.
-            <br />
-            Diegene die desondanks meent zekere rechten te kunnen doen gelden, wordt verzocht contact op te nemen met
-            het CvTE.
-          </p>
-          <p>
-            Dit materiaal is vrij te gebruiken voor eigen oefening, studie of privégebruik, alsmede schoolgebruik op
-            niet-commerciële basis.
-            <br />
-            Voor alle andere toepassingen geldt dat het gebruik van in dit product verwerkt (bronnen)materiaal niet is
-            toegestaan zonder toestemming van de rechthebbenden.
-            <br />
-            Op eventueel aangepast werk dient duidelijk vermeld te worden dat er sprake is van een aanpassing van een
-            product van CvTE.
-            <br />
-            Elke schijn van bemoeienis of goedkeuring van CvTE met betrekking tot het nieuwe materiaal dient te worden
-            uitgesloten.
-          </p>
+          <p>Disclaimer</p>
+          <p> Dit materiaal is een product van het Ministerie van Onderwijs,
+      Cultuur en Wetenschap en in beheer bij het College voor Toetsen en Examens (CvTE) <span
+              class="UserSRGroep">te Utrecht.</span>
+            <br /> CvTE accepteert geen enkele
+      aansprakelijkheid voor schade ontstaan door het gebruik van dit materiaal op welke manier dan
+      ook. <br /> CvTE heeft conform de wettelijke bepalingen en voor zover mogelijk het
+      auteursrecht op in dit materiaal gebruikt (bronnen)materiaal geregeld. <br /> Diegene die
+      desondanks meent zekere rechten te kunnen doen gelden, wordt verzocht contact op te nemen met
+      het CvTE. </p>
+          <p> Dit materiaal is vrij te gebruiken voor eigen oefening, studie of
+      privégebruik, alsmede schoolgebruik op niet-commerciële basis. <br /> Voor alle andere
+      toepassingen geldt dat het gebruik van in dit product verwerkt (bronnen)materiaal niet is
+      toegestaan zonder toestemming van de rechthebbenden. <br /> Op eventueel aangepast werk dient
+      duidelijk vermeld te worden dat er sprake is van een aanpassing van een product van CvTE. <br />
+      Elke schijn van bemoeienis of goedkeuring van CvTE met betrekking tot het nieuwe materiaal
+      dient te worden uitgesloten. </p>
 
           <p />
         </div>
