@@ -1,4 +1,4 @@
-/* [popover] {
+[popover] {
   position: fixed;
   inset: 0;
   margin: auto;
@@ -12,4 +12,4 @@
 [popovertarget] {
   all: unset;
   cursor: pointer;
-} */
+}
