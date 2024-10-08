@@ -17,9 +17,11 @@
 
 .btn-primary {
   background: var(--qti-primary);
-  &:hover {
+
+  &:not(:state(disabled)):hover {
     background: var(--qti-primary-dark);
   }
+
   color: white;
 }
 

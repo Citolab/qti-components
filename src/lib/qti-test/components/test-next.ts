@@ -8,11 +8,14 @@ import { sessionContext, SessionContext, testContext, TestContext } from '..';
 export class TestNext extends LitElement {
   static styles = css`
     :host {
-      all: unset;
       display: flex;
       align-items: center;
       cursor: pointer;
       user-select: none;
+    }
+    :host(:state(disabled)) {
+      cursor: not-allowed;
+      opacity: 0.5;
     }
   `;
 

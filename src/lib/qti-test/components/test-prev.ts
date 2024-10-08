@@ -13,6 +13,10 @@ export class TestPrev extends LitElement {
       cursor: pointer;
       user-select: none;
     }
+    :host(:state(disabled)) {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
   `;
 
   @consume({ context: testContext, subscribe: true })
