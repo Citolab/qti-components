@@ -97,10 +97,7 @@ export const Test: Story = {
             v => v.identifier === 'SCORE'
           ) as OutcomeVariable;
 
-          if (
-            (scoreOutcomeIdentifier.externalScored === null && qtiAssessmentItem.adaptive === 'false') ||
-            qtiAssessmentItem.adaptive === null
-          ) {
+          if (scoreOutcomeIdentifier.externalScored === null && qtiAssessmentItem.adaptive === 'false') {
             e.target.processResponse();
           }
 

@@ -31,7 +31,7 @@ import { ItemContext, itemContext, itemContextVariables } from './qti-assessment
 export class QtiAssessmentItem extends LitElement {
   @property({ type: String }) title: string;
   @property({ type: String }) identifier: string = '';
-  @property({ type: String }) adaptive: 'true' | 'false' | null = null;
+  @property({ type: String }) adaptive: 'true' | 'false' = 'false';
   @property({ type: String }) timeDependent: 'true' | 'false' | null = null;
 
   @property({ type: Boolean }) disabled: boolean;
@@ -248,7 +248,7 @@ export class QtiAssessmentItem extends LitElement {
       response: Array.isArray(value) ? [...value] : value
     });
 
-    if (this.adaptive === 'false' || this.adaptive === null) {
+    if (this.adaptive === 'false') {
       // if adapative, completionStatus is set by the processing template
       this.updateOutcomeVariable('completionStatus', this._getCompletionStatus());
     }
