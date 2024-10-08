@@ -1,4 +1,4 @@
-import { html, LitElement } from 'lit';
+import { css, html, LitElement } from 'lit';
 
 import { consume } from '@lit/context';
 import { customElement } from 'lit/decorators.js';
@@ -6,14 +6,22 @@ import { sessionContext, SessionContext } from '..';
 
 @customElement('test-view-toggle')
 export class TestViewToggle extends LitElement {
+  static styles = css`
+    ::slotted {
+      display: flex;
+      flex-wrap: nowrap;
+    }
+    label {
+      display: flex;
+      cursor: pointer;
+      user-select: none;
+    }
+  `;
+
   viewOptions = ['candidate', 'scorer', ''];
 
   @consume({ context: sessionContext, subscribe: true })
   protected _sessionContext?: SessionContext;
-
-  protected createRenderRoot(): HTMLElement | DocumentFragment {
-    return this;
-  }
 
   _switchView(view: string) {
     this.dispatchEvent(
@@ -27,7 +35,7 @@ export class TestViewToggle extends LitElement {
 
   render() {
     return html`
-      <label>
+      <label for="viewToggle" part="label">
         <input
           type="checkbox"
           role="switch"

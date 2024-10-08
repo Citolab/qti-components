@@ -1,5 +1,6 @@
 import { html, LitElement, nothing } from 'lit';
 
+import { OutcomeVariable } from '@citolab/qti-components/qti-components';
 import { consume } from '@lit/context';
 import { customElement, property } from 'lit/decorators.js';
 import { QtiTest, sessionContext, SessionContext, testContext, TestContext } from '..';
@@ -14,10 +15,6 @@ export class TestScoringButtons extends LitElement {
 
   @consume({ context: sessionContext, subscribe: true })
   protected _sessionContext?: SessionContext;
-
-  protected createRenderRoot(): HTMLElement | DocumentFragment {
-    return this;
-  }
 
   _changeOutcomeScore(value: number) {
     const { items } = this._testContext;
@@ -34,7 +31,11 @@ export class TestScoringButtons extends LitElement {
     const item = items.find(item => item.identifier === this._sessionContext.identifier);
     if (items.length === 0) return nothing;
     const maxScore = item.variables.find(vr => vr.identifier == 'MAXSCORE')?.value;
-    const score = item.variables.find(vr => vr.identifier == 'SCORE')?.value;
+    const scoreOutcome = item.variables.find(vr => vr.identifier == 'SCORE') as OutcomeVariable;
+
+    const score = scoreOutcome?.value;
+
+    this.disabled = !(scoreOutcome?.externalScored === 'human');
 
     return maxScore
       ? html`

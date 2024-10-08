@@ -2,7 +2,6 @@
 import type { ArgTypes, Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
-import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import packages from '../assets/packages.json';
 import '../lib/qti-components';
 import { OutcomeVariable, QtiAssessmentItem } from '../lib/qti-components';
@@ -13,7 +12,6 @@ import '../lib/qti-test/qti-test';
 import { QtiTest } from '../lib/qti-test/qti-test';
 import { qtiTransformItem } from '../lib/qti-transformers';
 import { fetchAssessmentFromManifest } from './fetch-item';
-// import '../lib/qti-player/css/item.css';
 
 const setSessionData = <T>(key: string, value?: T): void => sessionStorage.setItem(key, JSON.stringify(value));
 const getSessionData = <T>(key: string): T | null =>
@@ -114,11 +112,19 @@ export const Test: Story = {
           <button class="btn btn-primary rounded-circle">
             <hi-24-outline-arrow-left></hi-24-outline-arrow-left>
           </button>
-          <test-view-toggle> Nakijken </test-view-toggle>
-          <test-auto-scoring>Punten</test-auto-scoring>
+          <test-view-toggle>Nakijken</test-view-toggle>
+          <div class="flex gap-2">
+            <test-scoring-buttons view="scorer"></test-scoring-buttons>
+            <test-scoring-feedback
+              view="scorer"
+              data-text-no-response="je hebt geen antwoord ingevuld"
+              data-text-correct="je antwoord is goed"
+              data-text-incorrect="je antwoord is fout"
+            ></test-scoring-feedback>
+          </div>
         </div>
         <div class="relative flex-1 overflow-auto">
-          <dialog popover id="popover-thumbs" class="w-full">
+          <div popover id="popover-thumbs" class="w-full">
             <div class="flex flex-wrap gap-2">
               ${augmentedItems.map(
                 item => html`
@@ -134,9 +140,9 @@ export const Test: Story = {
                 `
               )}
             </div>
-          </dialog>
+          </div>
 
-          <dialog popover id="popover-list" class="w-full absolute bottom-0">
+          <div popover id="popover-list" class="w-full absolute bottom-0">
             <div class="columns-1 md:columns-4">
               ${augmentedItems.map(
                 item => html`
@@ -151,22 +157,24 @@ export const Test: Story = {
                 `
               )}
             </div>
-          </dialog>
+          </div>
 
-          ${unsafeHTML(assessmentXML)}
+          <test-assessment-xml-container class="block p-2" .xmlDoc=${assessmentXML}> </test-assessment-xml-container>
         </div>
 
-        <div class="flex w-full items-center justify-between p-2">
+        <div class="flex w-full items-center justify-between p-2 gap-2">
           <button class="btn btn-primary">Inleveren</button>
-          <div class="flex items-center gap-1">
-            ${augmentedItems.map(
-              item => html`
-                <test-item-link item-id=${item.identifier}>
-                  <test-item-indicator item-id=${item.identifier} info-category="dep-informational">
-                  </test-item-indicator>
-                </test-item-link>
-              `
-            )}
+          <div class="flex items-center">
+            <div class="hidden md:flex flex-1 gap-1 overflow-auto w-full">
+              ${augmentedItems.map(
+                item => html`
+                  <test-item-link item-id=${item.identifier}>
+                    <test-item-indicator item-id=${item.identifier} info-category="dep-informational">
+                    </test-item-indicator>
+                  </test-item-link>
+                `
+              )}
+            </div>
 
             <div class="flex gap-2 ">
               <button popovertarget="popover-thumbs" class="btn btn-outline">

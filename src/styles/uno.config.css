@@ -135,7 +135,7 @@
   outline: none;
   padding: var(--qti-padding-md) var(--qti-padding-lg) var(--qti-padding-md) var(--qti-padding-xl); /* Padding shorthand */
   border-radius: var(--qti-border-radius-md);
-  display: inline-block;
+
   cursor: grab;
   background-color: white;
   font-weight: var(--qti-font-weight-semibold);

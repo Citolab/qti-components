@@ -43,7 +43,7 @@ export const fetchAssessmentFromManifest = async (packageUri: string): Promise<a
 
   const assessmentHTML = await qtiTransformTest()
     .load(packageUri + testFromManifest.href)
-    .then(api => api.html());
+    .then(api => api.htmldoc());
 
   const itemsFromTest = await qtiTransformTest()
     .load(packageUri + testFromManifest.href)
