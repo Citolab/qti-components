@@ -6,6 +6,8 @@
   border-radius: 0.25rem;
   font-weight: 600;
   border: 0;
+  cursor: pointer;
+  user-select: none;
 
   &:state(disabled) {
     cursor: not-allowed;
@@ -15,6 +17,9 @@
 
 .btn-primary {
   background: var(--qti-primary);
+  &:hover {
+    background: var(--qti-primary-dark);
+  }
   color: white;
 }
 
