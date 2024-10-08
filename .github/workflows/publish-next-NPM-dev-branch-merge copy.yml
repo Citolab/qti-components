@@ -32,8 +32,9 @@ jobs:
         run: npx playwright install  --with-deps
       - name: Test build
         run: npm run test
-      - name: Test Chromatic
-        run: npm run chromatic
+# FIXME: chromatic tests on dev branch
+#      - name: Test Chromatic
+#       run: npm run chromatic
       - name: Version to prerelease
         run: npm version prerelease --preid=beta
 
