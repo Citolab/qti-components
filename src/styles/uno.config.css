@@ -28,8 +28,13 @@
 
   --qti-font-weight-semibold: 600;
 
-  --qti-active: var(--qti-primary);
+  --qti-active: blue;
   --qti-focus-color: var(--qti-secondary);
+
+  --qti-correct: rgb(74 222 128);
+  --qti-correct-light: rgb(220 252 231);
+  --qti-incorrect: rgb(248 113 113);
+  --qti-incorrect-light: rgb(254 226 226);
 }
 
 .chevron {

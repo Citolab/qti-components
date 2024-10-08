@@ -24,8 +24,8 @@ export class ScoreInfo extends LitElement {
 
     const completionStatus = item.variables.find(v => v.identifier === 'completionStatus')?.value;
     const scoreOutcome = item.variables.find(vr => vr.identifier == 'SCORE') as OutcomeVariable;
-    const score = parseInt(scoreOutcome.value as string);
-    const externalScored = scoreOutcome.externalScored;
+    const score = parseInt(scoreOutcome?.value as string);
+    const externalScored = scoreOutcome?.externalScored;
 
     const feedbackText = () => {
       if (completionStatus !== 'completed') {

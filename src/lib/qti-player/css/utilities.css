@@ -55,6 +55,9 @@
 .columns-1 {
   columns: 1;
 }
+.bottom-0 {
+  bottom: 0px;
+}
 @media (min-width: 768px) {
   .md\:columns-4 {
     columns: 4;

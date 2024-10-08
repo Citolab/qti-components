@@ -1,5 +1,4 @@
 import type { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
-import { css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { QtiItem } from '../qti-item';
 
@@ -7,11 +6,6 @@ import { QtiItem } from '../qti-item';
 export class QtiAssessmentItemRef extends QtiItem {
   @property({ type: String }) key: string | undefined;
   @property({ type: String }) category?: string;
-  static styles = css`
-    :host {
-      display: block;
-    }
-  `;
 
   weigths: Map<string, number> = new Map();
 

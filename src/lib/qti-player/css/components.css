@@ -6,6 +6,11 @@
   border-radius: 0.25rem;
   font-weight: 600;
   border: 0;
+
+  &:state(disabled) {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
 }
 
 .btn-primary {

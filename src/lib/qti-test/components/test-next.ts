@@ -1,22 +1,18 @@
 import { css, html, LitElement } from 'lit';
 
 import { consume } from '@lit/context';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement } from 'lit/decorators.js';
 import { sessionContext, SessionContext, testContext, TestContext } from '..';
 
 @customElement('test-next')
 export class TestNext extends LitElement {
   static styles = css`
-    :host,
-    button {
+    :host {
       all: unset;
       display: flex;
       align-items: center;
-    }
-    :host([disabled]),
-    button:disabled {
-      cursor: not-allowed;
-      opacity: 0.5;
+      cursor: pointer;
+      user-select: none;
     }
   `;
 
@@ -26,11 +22,29 @@ export class TestNext extends LitElement {
   @consume({ context: sessionContext, subscribe: true })
   protected _sessionContext?: SessionContext;
 
-  @property({ type: Boolean, reflect: true, attribute: 'disabled' })
-  isLastItem = false;
+  private _internals: ElementInternals;
+
+  updated() {
+    const { items } = this._testContext;
+    const itemIndex = items.findIndex(item => item.identifier === this._sessionContext.identifier);
+    itemIndex === items.length - 1 ? this._internals.states.add('disabled') : this._internals.states.delete('disabled');
+  }
+
+  constructor() {
+    super();
+    this._internals = this.attachInternals();
+
+    this.addEventListener('click', () => {
+      const { items } = this._testContext;
+      const itemIndex = items.findIndex(item => item.identifier === this._sessionContext.identifier);
+      const nextItemIndex = Math.min(itemIndex + 1, items.length - 1);
+      const newIdenfier = items[nextItemIndex]?.identifier;
+      const lastItem = itemIndex === items.length - 1;
+      if (!lastItem) this._requestItem(newIdenfier);
+    });
+  }
 
   _requestItem(identifier: string) {
-    if (this.isLastItem) return; // Prevent dispatching event if it's the last item
     this.dispatchEvent(
       new CustomEvent('qti-test-set-item', {
         composed: true,
@@ -41,21 +55,7 @@ export class TestNext extends LitElement {
   }
 
   render() {
-    const { items } = this._testContext;
-    const itemIndex = items.findIndex(item => item.identifier === this._sessionContext.identifier);
-    const nextItemIndex = Math.min(itemIndex + 1, items.length - 1);
-    const newIdenfier = items[nextItemIndex]?.identifier;
-    this.isLastItem = itemIndex === items.length - 1; // Check if it's the last item
-    return html`
-      <button
-        part="button"
-        @click=${_ => this._requestItem(newIdenfier)}
-        id="${newIdenfier}"
-        ?disabled=${this.isLastItem}
-      >
-        <slot></slot>
-      </button>
-    `;
+    return html` <slot></slot> `;
   }
 }
 

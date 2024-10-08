@@ -50,6 +50,7 @@ h2,
 h3 {
   text-wrap: balance;
 }
+  */
 
 img,
 video {
@@ -61,7 +62,7 @@ video {
   background-size: cover;
   shape-margin: 1rem;
 }
-
+/*
 qti-rubric-block qti-content-body div:not(:empty),
 qti-simple-choice[role='radio'][data-correct-response='true']::part(slot),
 qti-simple-choice[role='radio'][data-correct-response='true']::part(slot):focus,

@@ -59,15 +59,15 @@ export const Test: Story = {
     let sequence = 1;
     const augmentedItems = items.map(item => {
       const sequenceNumber = item.category === 'dep-informational' ? 'info' : sequence++;
-
       return {
         ...item,
         thumbnail: 'https://via.placeholder.com/150',
-        title: '',
+        title: item.identifier,
         sequenceNumber: sequenceNumber
       };
     });
 
+    let oldIdentifier = null;
     const changeItem = async identifier => {
       const itemRefEl = testRef.value.itemRefEls.get(identifier)!;
       if (!itemRefEl.xmlDoc) {
@@ -75,9 +75,10 @@ export const Test: Story = {
           .load(`${assessmentLocation}/${itemRefEl.href}`)
           .then(api => api.path(itemLocation).htmldoc());
       }
-      testRef.value.itemRefEls.forEach(
-        value => (value.style.display = value.identifier !== itemRefEl.identifier ? 'none' : 'block')
-      );
+      if (oldIdentifier != null) {
+        testRef.value.itemRefEls.get(oldIdentifier).xmlDoc = null;
+      }
+      oldIdentifier = identifier;
     };
     return html`
       <qti-test
@@ -114,10 +115,10 @@ export const Test: Story = {
             <hi-24-outline-arrow-left></hi-24-outline-arrow-left>
           </button>
           <test-view-toggle> Nakijken </test-view-toggle>
-          <test-auto-scoring></test-auto-scoring>
+          <test-auto-scoring>Punten</test-auto-scoring>
         </div>
         <div class="relative flex-1 overflow-auto">
-          <div popover id="popover-thumbs" class="w-full">
+          <dialog popover id="popover-thumbs" class="w-full">
             <div class="flex flex-wrap gap-2">
               ${augmentedItems.map(
                 item => html`
@@ -133,9 +134,9 @@ export const Test: Story = {
                 `
               )}
             </div>
-          </div>
+          </dialog>
 
-          <div popover id="popover-list" class="w-full">
+          <dialog popover id="popover-list" class="w-full absolute bottom-0">
             <div class="columns-1 md:columns-4">
               ${augmentedItems.map(
                 item => html`
@@ -150,7 +151,7 @@ export const Test: Story = {
                 `
               )}
             </div>
-          </div>
+          </dialog>
 
           ${unsafeHTML(assessmentXML)}
         </div>
@@ -169,20 +170,20 @@ export const Test: Story = {
 
             <div class="flex gap-2 ">
               <button popovertarget="popover-thumbs" class="btn btn-outline">
-                <hi-24-outline-squares-2x2 class="h-6 w-6"></hi-24-outline-squares-2x2>
+                <hi-24-outline-squares-2x2></hi-24-outline-squares-2x2>
               </button>
               <button popovertarget="popover-list" class="btn btn-outline">
-                <hi-24-outline-bars-3 class="h-6 w-6"></hi-24-outline-bars-3>
+                <hi-24-outline-bars-3></hi-24-outline-bars-3>
               </button>
             </div>
           </div>
           <div class="flex items-center gap-2">
-            <test-prev class="btn btn-primary">
-              <hi-24-outline-chevron-left class="h-6 w-6"></hi-24-outline-chevron-left>
+            <test-prev class="btn btn-primary" role="button">
+              <hi-24-outline-chevron-left></hi-24-outline-chevron-left>
             </test-prev>
-            <test-next class="btn btn-primary">
+            <test-next class="btn btn-primary" role="button">
               <div class="hidden md:flex">Volgende</div>
-              <hi-24-outline-chevron-right class="h-6 w-6"></hi-24-outline-chevron-right>
+              <hi-24-outline-chevron-right></hi-24-outline-chevron-right>
             </test-next>
           </div>
         </div>
