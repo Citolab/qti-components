@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-item xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" title="Open-tekstvraag met media" identifier="_60a43f6e-06be-52b1-bd90-8c179bee604b" adaptive="false" time-dependent="false" xml:lang="nl-NL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd http://www.w3.org/1998/Math/MathML https://purl.imsglobal.org/spec/mathml/v3p0/schema/xsd/mathml3.xsd">
+  <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="string"/>
+  <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single" external-scored="human" normal-maximum="1.0">
+    <qti-default-value>
+      <qti-value>0</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
+    <qti-default-value>
+      <qti-value>1</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-outcome-declaration identifier="FEEDBACK" base-type="identifier" cardinality="single"/>
+  <qti-item-body>
+    <qti-extended-text-interaction response-identifier="RESPONSE">
+      <qti-prompt>
+        <p>Wat denk jij ervan?</p>
+        <p>
+          <img alt="" src="resources/6252e5ce8e58323a85f41570136c191d.png" width="256" height="256"/>
+        </p>
+        <p>&#xa0;</p>
+        <div>
+          <object data="https://www.youtube.com/embed/czhkG9jB8Gw?si=iDBpblIF-CHQv6Vc" type="text/html" width="560" height="315"/>
+        </div>
+        <div>
+          <div>
+            <object data="https://player.vimeo.com/video/685729014?h=d71fdf9478" type="text/html" width="640" height="338"/>
+            <p><a href="https://vimeo.com/685729014">Monsieur Cachemire</a> from <a href="https://vimeo.com/iouriphilippepaille">Iouri Philippe Paill&#xe9;</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
+          </div>
+          <p>&#xa0;</p>
+        </div>
+      </qti-prompt>
+    </qti-extended-text-interaction>
+    <qti-rubric-block use="scoring" view="scorer" class="qti-rubric-discretionary-placement">
+      <qti-content-body>
+        <p>Ik denk er het mijne van</p>
+        <p>
+          <img alt="" src="resources/6252e5ce8e58323a85f41570136c191d.png" width="256" height="256"/>
+        </p>
+      </qti-content-body>
+    </qti-rubric-block>
+  </qti-item-body>
+</qti-assessment-item>

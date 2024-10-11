@@ -27,23 +27,26 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
 ) {
   static override styles = [
     css`
-      :host {
+      .match {
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
       }
 
-      /* :host(.qti-choices-top) {
+      :host(.qti-choices-top) .match {
         flex-direction: column;
-      } */
-      :host(.qti-choices-bottom) {
+      }
+      :host(.qti-choices-bottom) .match {
         flex-direction: column-reverse;
       }
-      :host(.qti-choices-left) {
+      :host(.qti-choices-left) .match {
         flex-direction: row;
       }
-      :host(.qti-choices-right) {
+      :host(.qti-choices-right) .match {
         flex-direction: row-reverse;
+      }
+      slot[name='prompt'] {
+        display: block;
       }
     `
   ];
@@ -126,7 +129,7 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
 
   override render() {
     if (!this.classList.contains('qti-match-tabular')) {
-      return html`<slot name="prompt"></slot> <slot></slot>`;
+      return html`<slot name="prompt"></slot> <slot class=".match"></slot>`;
     }
     return html`
       <slot name="prompt"></slot>

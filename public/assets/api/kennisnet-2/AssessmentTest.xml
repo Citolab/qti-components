@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-test xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" identifier="_912121b4-9376-5b70-af30-45dcfefdc65e" title="De titel van mijn toets" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd">
+  <qti-outcome-declaration identifier="CATEGORY_0_MAXSCORE" base-type="float" cardinality="single">
+    <qti-default-value>
+      <qti-value>0</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-outcome-declaration identifier="CATEGORY_0_SCORE" base-type="float" cardinality="single">
+    <qti-default-value>
+      <qti-value>0</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-outcome-declaration identifier="CATEGORY_0_PERCENTAGE" base-type="float" cardinality="single">
+    <qti-default-value>
+      <qti-value>0</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-outcome-declaration identifier="CATEGORY_0_FEEDBACK" base-type="identifier" cardinality="single"/>
+  <qti-outcome-declaration identifier="CATEGORY_1_MAXSCORE" base-type="float" cardinality="single">
+    <qti-default-value>
+      <qti-value>0</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-outcome-declaration identifier="CATEGORY_1_SCORE" base-type="float" cardinality="single">
+    <qti-default-value>
+      <qti-value>0</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-outcome-declaration identifier="CATEGORY_1_PERCENTAGE" base-type="float" cardinality="single">
+    <qti-default-value>
+      <qti-value>0</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-outcome-declaration identifier="CATEGORY_1_FEEDBACK" base-type="identifier" cardinality="single"/>
+  <qti-test-part identifier="TEST-PART" navigation-mode="linear" submission-mode="individual">
+    <qti-assessment-section identifier="SECTION" title="Section" visible="true">
+      <qti-assessment-item-ref identifier="INTRODUCTION" href="INTRODUCTION.xml"/>
+      <qti-assessment-item-ref identifier="ITEM001" href="ITEM001.xml" category="CATEGORY_0"/>
+      <qti-assessment-item-ref identifier="ITEM002" href="ITEM002.xml" category="CATEGORY_0"/>
+      <qti-assessment-item-ref identifier="ITEM003" href="ITEM003.xml" category="CATEGORY_0"/>
+      <qti-assessment-item-ref identifier="ITEM004" href="ITEM004.xml" category="CATEGORY_1"/>
+      <qti-assessment-item-ref identifier="ITEM005" href="ITEM005.xml" category="CATEGORY_0"/>
+      <qti-assessment-item-ref identifier="ITEM006" href="ITEM006.xml" category="CATEGORY_0"/>
+      <qti-assessment-item-ref identifier="ITEM007" href="ITEM007.xml" category="CATEGORY_1"/>
+      <qti-assessment-item-ref identifier="ITEM008" href="ITEM008.xml" category="CATEGORY_0"/>
+      <qti-assessment-item-ref identifier="ITEM009" href="ITEM009.xml" category="CATEGORY_0"/>
+      <qti-assessment-item-ref identifier="ITEM010" href="ITEM010.xml" category="CATEGORY_0"/>
+      <qti-assessment-item-ref identifier="ITEM011" href="ITEM011.xml" category="CATEGORY_1"/>
+      <qti-assessment-item-ref identifier="ITEM012" href="ITEM012.xml" category="CATEGORY_0"/>
+      <qti-assessment-item-ref identifier="ITEM013" href="ITEM013.xml" category="CATEGORY_0"/>
+    </qti-assessment-section>
+  </qti-test-part>
+  <qti-outcome-processing>
+    <qti-set-outcome-value identifier="CATEGORY_0_MAXSCORE">
+      <qti-sum>
+        <qti-test-variables variable-identifier="MAX_SCORE" include-category="CATEGORY_0"/>
+      </qti-sum>
+    </qti-set-outcome-value>
+    <qti-set-outcome-value identifier="CATEGORY_1_MAXSCORE">
+      <qti-sum>
+        <qti-test-variables variable-identifier="MAX_SCORE" include-category="CATEGORY_1"/>
+      </qti-sum>
+    </qti-set-outcome-value>
+    <qti-set-outcome-value identifier="CATEGORY_0_SCORE">
+      <qti-sum>
+        <qti-test-variables variable-identifier="SCORE" include-category="CATEGORY_0"/>
+      </qti-sum>
+    </qti-set-outcome-value>
+    <qti-set-outcome-value identifier="CATEGORY_1_SCORE">
+      <qti-sum>
+        <qti-test-variables variable-identifier="SCORE" include-category="CATEGORY_1"/>
+      </qti-sum>
+    </qti-set-outcome-value>
+    <qti-set-outcome-value identifier="CATEGORY_0_PERCENTAGE">
+      <qti-product>
+        <qti-divide>
+          <qti-variable identifier="CATEGORY_0_SCORE"/>
+          <qti-variable identifier="CATEGORY_0_MAXSCORE"/>
+        </qti-divide>
+        <qti-base-value base-type="float">100</qti-base-value>
+      </qti-product>
+    </qti-set-outcome-value>
+    <qti-set-outcome-value identifier="CATEGORY_1_PERCENTAGE">
+      <qti-product>
+        <qti-divide>
+          <qti-variable identifier="CATEGORY_1_SCORE"/>
+          <qti-variable identifier="CATEGORY_1_MAXSCORE"/>
+        </qti-divide>
+        <qti-base-value base-type="float">100</qti-base-value>
+      </qti-product>
+    </qti-set-outcome-value>
+    <qti-outcome-condition>
+      <qti-outcome-if>
+        <qti-lt>
+          <qti-variable identifier="CATEGORY_0_PERCENTAGE"/>
+          <qti-base-value base-type="float">31</qti-base-value>
+        </qti-lt>
+        <qti-set-outcome-value identifier="CATEGORY_0_FEEDBACK">
+          <qti-base-value base-type="identifier">RANGE_1</qti-base-value>
+        </qti-set-outcome-value>
+      </qti-outcome-if>
+      <qti-outcome-else-if>
+        <qti-and>
+          <qti-gt>
+            <qti-variable identifier="CATEGORY_0_PERCENTAGE"/>
+            <qti-base-value base-type="float">31</qti-base-value>
+          </qti-gt>
+          <qti-lte>
+            <qti-variable identifier="CATEGORY_0_PERCENTAGE"/>
+            <qti-base-value base-type="float">57</qti-base-value>
+          </qti-lte>
+        </qti-and>
+        <qti-set-outcome-value identifier="CATEGORY_0_FEEDBACK">
+          <qti-base-value base-type="identifier">RANGE_2</qti-base-value>
+        </qti-set-outcome-value>
+      </qti-outcome-else-if>
+      <qti-outcome-else-if>
+        <qti-and>
+          <qti-gt>
+            <qti-variable identifier="CATEGORY_0_PERCENTAGE"/>
+            <qti-base-value base-type="float">57</qti-base-value>
+          </qti-gt>
+          <qti-lte>
+            <qti-variable identifier="CATEGORY_0_PERCENTAGE"/>
+            <qti-base-value base-type="float">87</qti-base-value>
+          </qti-lte>
+        </qti-and>
+        <qti-set-outcome-value identifier="CATEGORY_0_FEEDBACK">
+          <qti-base-value base-type="identifier">RANGE_3</qti-base-value>
+        </qti-set-outcome-value>
+      </qti-outcome-else-if>
+      <qti-outcome-else>
+        <qti-set-outcome-value identifier="CATEGORY_0_FEEDBACK">
+          <qti-base-value base-type="identifier">ITEM004</qti-base-value>
+        </qti-set-outcome-value>
+      </qti-outcome-else>
+    </qti-outcome-condition>
+    <qti-outcome-condition>
+      <qti-outcome-if>
+        <qti-lt>
+          <qti-variable identifier="CATEGORY_1_PERCENTAGE"/>
+          <qti-base-value base-type="float">50</qti-base-value>
+        </qti-lt>
+        <qti-set-outcome-value identifier="CATEGORY_1_FEEDBACK">
+          <qti-base-value base-type="identifier">RANGE_1</qti-base-value>
+        </qti-set-outcome-value>
+      </qti-outcome-if>
+      <qti-outcome-else>
+        <qti-set-outcome-value identifier="CATEGORY_1_FEEDBACK">
+          <qti-base-value base-type="identifier">ITEM002</qti-base-value>
+        </qti-set-outcome-value>
+      </qti-outcome-else>
+    </qti-outcome-condition>
+  </qti-outcome-processing>
+  <qti-test-feedback identifier="RANGE_1" outcome-identifier="CATEGORY_0_FEEDBACK" show-hide="show" access="atEnd">
+    <qti-content-body>Feedback 1.1</qti-content-body>
+  </qti-test-feedback>
+  <qti-test-feedback identifier="RANGE_2" outcome-identifier="CATEGORY_0_FEEDBACK" show-hide="show" access="atEnd">
+    <qti-content-body>Feedback 1.2</qti-content-body>
+  </qti-test-feedback>
+  <qti-test-feedback identifier="RANGE_3" outcome-identifier="CATEGORY_0_FEEDBACK" show-hide="show" access="atEnd">
+    <qti-content-body>Feedback 1.3</qti-content-body>
+  </qti-test-feedback>
+  <qti-test-feedback identifier="RANGE_4" outcome-identifier="CATEGORY_0_FEEDBACK" show-hide="show" access="atEnd">
+    <qti-content-body>Feedback 1.4</qti-content-body>
+  </qti-test-feedback>
+  <qti-test-feedback identifier="RANGE_1" outcome-identifier="CATEGORY_1_FEEDBACK" show-hide="show" access="atEnd">
+    <qti-content-body>Feedback 2.1</qti-content-body>
+  </qti-test-feedback>
+  <qti-test-feedback identifier="RANGE_2" outcome-identifier="CATEGORY_1_FEEDBACK" show-hide="show" access="atEnd">
+    <qti-content-body>Feedback 2.2</qti-content-body>
+  </qti-test-feedback>
+</qti-assessment-test>

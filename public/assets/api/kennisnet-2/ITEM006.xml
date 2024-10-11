@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-item xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" title="Test met opmaak" identifier="_a8951b0c-4e2f-5d4c-9f75-77fc5a26ef28" adaptive="false" time-dependent="false" xml:lang="nl-NL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd http://www.w3.org/1998/Math/MathML https://purl.imsglobal.org/spec/mathml/v3p0/schema/xsd/mathml3.xsd">
+  <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="string"/>
+  <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single" external-scored="human" normal-maximum="1.0">
+    <qti-default-value>
+      <qti-value>0</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
+    <qti-default-value>
+      <qti-value>1</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-outcome-declaration identifier="FEEDBACK" base-type="identifier" cardinality="single"/>
+  <qti-item-body>
+    <qti-extended-text-interaction response-identifier="RESPONSE">
+      <qti-prompt>
+        <p>De tekst heeft <span class="qti-underline">onderstreepte</span> stukken, <strong>vetgedrukte</strong> stukken, <sub>subscript</sub>, <sup>superscript</sup> en <span class="qti-italic">cursieve</span> stukken en s&#xfe;&#xea;&#xe7;&#xee;&#xe3;&#xb6;&#xcb;&#x2026;tekens.</p>
+        <hr/>
+        <p class="qti-align-center">Gecentreerd</p>
+        <p class="qti-align-right">Rechts uitgelijnd</p>
+        <p class="qti-align-right">&#xa0;</p>
+        <p>Deze tekst is wat langer zodat we goed kunnen testen of ook het uitvullen goed werkt. Ik typ er nog even voor de zekerheid een twee zin achteraan.</p>
+        <p>&#xa0;</p>
+        <ol>
+          <li>Een</li>
+          <li>Genummerde</li>
+          <li>Lijst</li>
+        </ol>
+        <ul>
+          <li>dit</li>
+          <li>is</li>
+          <li>een opsomming</li>
+        </ul>
+        <p>&#xa0;</p>
+        <table class="qti-bordered">
+          <thead>
+            <tr>
+              <th scope="col">Dit</th>
+              <th scope="col">is</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">een</th>
+              <td>tabel</td>
+            </tr>
+            <tr>
+              <th scope="row">met</th>
+              <td>koppen</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>&#xa0;</p>
+      </qti-prompt>
+    </qti-extended-text-interaction>
+    <qti-rubric-block use="scoring" view="scorer" class="qti-rubric-discretionary-placement">
+      <qti-content-body>Test</qti-content-body>
+    </qti-rubric-block>
+  </qti-item-body>
+</qti-assessment-item>

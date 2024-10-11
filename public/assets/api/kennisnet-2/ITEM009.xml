@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-item xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" title="Test Word-content" identifier="_14a6a0b3-a398-5f3c-a895-d65d274dbce9" adaptive="false" time-dependent="false" xml:lang="nl-NL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd http://www.w3.org/1998/Math/MathML https://purl.imsglobal.org/spec/mathml/v3p0/schema/xsd/mathml3.xsd">
+  <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="string"/>
+  <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single" external-scored="human" normal-maximum="1.0">
+    <qti-default-value>
+      <qti-value>0</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
+    <qti-default-value>
+      <qti-value>1</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-outcome-declaration identifier="FEEDBACK" base-type="identifier" cardinality="single"/>
+  <qti-item-body>
+    <qti-extended-text-interaction response-identifier="RESPONSE">
+      <qti-prompt>
+        <p>Dit is een tekst uit een Word-document</p>
+        <p>&#xa0;</p>
+        <p>Met verschillende paragrafen</p>
+        <p class="qti-align-right">En uitlijningen</p>
+        <p class="qti-align-right">&#xa0;</p>
+        <p>Of <strong>bold</strong>, <span class="qti-italic">italic</span> en <span class="qti-underline">underline.</span></p>
+        <p>&#xa0;</p>
+        <p><span class="qti-underline">Kleuren</span> <span class="qti-underline">en</span> <span class="qti-underline">groottes</span></p>
+      </qti-prompt>
+    </qti-extended-text-interaction>
+    <qti-rubric-block use="scoring" view="scorer" class="qti-rubric-discretionary-placement">
+      <qti-content-body>Ok</qti-content-body>
+    </qti-rubric-block>
+  </qti-item-body>
+</qti-assessment-item>

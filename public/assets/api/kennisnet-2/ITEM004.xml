@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-item xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" title="Test tekst invullen" identifier="_4e53edf4-aa9b-523c-bb9d-dd44b1f7f670" adaptive="false" time-dependent="false" xml:lang="nl-NL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd http://www.w3.org/1998/Math/MathML https://purl.imsglobal.org/spec/mathml/v3p0/schema/xsd/mathml3.xsd">
+  <qti-response-declaration identifier="RESPONSE1" cardinality="single" base-type="string">
+    <qti-correct-response>
+      <qti-value>tekst</qti-value>
+      <qti-value>woord</qti-value>
+    </qti-correct-response>
+    <qti-mapping>
+      <qti-map-entry map-key="tekst" mapped-value="1" case-sensitive="true"/>
+      <qti-map-entry map-key="woord" mapped-value="1" case-sensitive="true"/>
+    </qti-mapping>
+  </qti-response-declaration>
+  <qti-response-declaration identifier="RESPONSE2" cardinality="single" base-type="string">
+    <qti-correct-response>
+      <qti-value>woord</qti-value>
+      <qti-value>woordje</qti-value>
+    </qti-correct-response>
+    <qti-mapping>
+      <qti-map-entry map-key="woord" mapped-value="1" case-sensitive="false"/>
+      <qti-map-entry map-key="woordje" mapped-value="1" case-sensitive="false"/>
+    </qti-mapping>
+  </qti-response-declaration>
+  <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single" normal-minimum="1.0" normal-maximum="3.0">
+    <qti-default-value>
+      <qti-value>1</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
+    <qti-default-value>
+      <qti-value>3</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-outcome-declaration identifier="FEEDBACK" base-type="identifier" cardinality="single"/>
+  <qti-item-body>
+    <p>Vul hier een <qti-text-entry-interaction response-identifier="RESPONSE1"/> in en hier nog een <qti-text-entry-interaction response-identifier="RESPONSE2"/>.</p>
+    <qti-feedback-block identifier="correct" outcome-identifier="FEEDBACK" show-hide="show">
+      <qti-content-body>Helemaal goed!</qti-content-body>
+    </qti-feedback-block>
+    <qti-feedback-block identifier="incorrect" outcome-identifier="FEEDBACK" show-hide="show">
+      <qti-content-body>Helemaal fout</qti-content-body>
+    </qti-feedback-block>
+  </qti-item-body>
+  <qti-response-processing>
+    <qti-set-outcome-value identifier="SCORE">
+      <qti-sum>
+        <qti-base-value base-type="float">1</qti-base-value>
+        <qti-product>
+          <qti-sum>
+            <qti-map-response identifier="RESPONSE1"/>
+            <qti-map-response identifier="RESPONSE2"/>
+          </qti-sum>
+          <qti-base-value base-type="float">1</qti-base-value>
+        </qti-product>
+      </qti-sum>
+    </qti-set-outcome-value>
+    <qti-response-condition>
+      <qti-response-if>
+        <qti-match>
+          <qti-sum>
+            <qti-map-response identifier="RESPONSE1"/>
+            <qti-map-response identifier="RESPONSE2"/>
+          </qti-sum>
+          <qti-base-value base-type="float">2</qti-base-value>
+        </qti-match>
+        <qti-set-outcome-value identifier="FEEDBACK">
+          <qti-base-value base-type="identifier">correct</qti-base-value>
+        </qti-set-outcome-value>
+      </qti-response-if>
+      <qti-response-else>
+        <qti-set-outcome-value identifier="FEEDBACK">
+          <qti-base-value base-type="identifier">incorrect</qti-base-value>
+        </qti-set-outcome-value>
+      </qti-response-else>
+    </qti-response-condition>
+  </qti-response-processing>
+</qti-assessment-item>

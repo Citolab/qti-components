@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest xmlns="http://www.imsglobal.org/xsd/qti/qtiv3p0/imscp_v1p1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd https://purl.imsglobal.org/spec/md/v1p3/schema/xsd/imsmd_loose_v1p3p2.xsd http://www.imsglobal.org/xsd/qti/qtiv3p0/imscp_v1p1 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqtiv3p0_imscpv1p2_v1p0.xsd" identifier="MANIFEST_QTI">
+  <metadata>
+    <schema>QTI Package</schema>
+    <schemaversion>3.0.0</schemaversion>
+  </metadata>
+  <organizations/>
+  <resources>
+    <resource identifier="test" type="imsqti_test_xmlv3p0" href="AssessmentTest.xml">
+      <metadata/>
+      <file href="AssessmentTest.xml"/>
+      <dependency identifierref="INTRODUCTION"/>
+      <dependency identifierref="ITEM001"/>
+      <dependency identifierref="ITEM002"/>
+      <dependency identifierref="ITEM003"/>
+      <dependency identifierref="ITEM004"/>
+      <dependency identifierref="ITEM005"/>
+      <dependency identifierref="ITEM006"/>
+      <dependency identifierref="ITEM007"/>
+      <dependency identifierref="ITEM008"/>
+      <dependency identifierref="ITEM009"/>
+    </resource>
+    <resource identifier="INTRODUCTION" type="imsqti_item_xmlv3p0" href="INTRODUCTION.xml">
+      <metadata/>
+      <file href="INTRODUCTION.xml"/>
+    </resource>
+    <resource identifier="ITEM001" type="imsqti_item_xmlv3p0" href="ITEM001.xml">
+      <metadata/>
+      <file href="ITEM001.xml"/>
+    </resource>
+    <resource identifier="ITEM002" type="imsqti_item_xmlv3p0" href="ITEM002.xml">
+      <metadata/>
+      <file href="ITEM002.xml"/>
+    </resource>
+    <resource identifier="ITEM003" type="imsqti_item_xmlv3p0" href="ITEM003.xml">
+      <metadata/>
+      <file href="ITEM003.xml"/>
+    </resource>
+    <resource identifier="ITEM004" type="imsqti_item_xmlv3p0" href="ITEM004.xml">
+      <metadata/>
+      <file href="ITEM004.xml"/>
+    </resource>
+    <resource identifier="ITEM005" type="imsqti_item_xmlv3p0" href="ITEM005.xml">
+      <metadata/>
+      <file href="ITEM005.xml"/>
+    </resource>
+    <resource identifier="ITEM006" type="imsqti_item_xmlv3p0" href="ITEM006.xml">
+      <metadata/>
+      <file href="ITEM006.xml"/>
+    </resource>
+    <resource identifier="ITEM007" type="imsqti_item_xmlv3p0" href="ITEM007.xml">
+      <metadata/>
+      <file href="ITEM007.xml"/>
+    </resource>
+    <resource identifier="ITEM008" type="imsqti_item_xmlv3p0" href="ITEM008.xml">
+      <metadata/>
+      <file href="ITEM008.xml"/>
+    </resource>
+    <resource identifier="ITEM009" type="imsqti_item_xmlv3p0" href="ITEM009.xml">
+      <metadata/>
+      <file href="ITEM009.xml"/>
+    </resource>
+    <resource identifier="RESOURCE001" type="webcontent" href="resources/stylesheet.css">
+      <metadata/>
+      <file href="resources/stylesheet.css"/>
+    </resource>
+    <resource identifier="RESOURCE002" type="webcontent" href="resources/6252e5ce8e58323a85f41570136c191d.png">
+      <metadata/>
+      <file href="resources/6252e5ce8e58323a85f41570136c191d.png"/>
+    </resource>
+    <resource identifier="RESOURCE003" type="webcontent" href="resources/8c571f983f691e42e7b3a0dc2664e51d.png">
+      <metadata/>
+      <file href="resources/8c571f983f691e42e7b3a0dc2664e51d.png"/>
+    </resource>
+    <resource identifier="RESOURCE004" type="webcontent" href="resources/80378beafd6b12ab7b97899ce39a2b78.jpg">
+      <metadata/>
+      <file href="resources/80378beafd6b12ab7b97899ce39a2b78.jpg"/>
+    </resource>
+    <resource identifier="RESOURCE005" type="webcontent" href="resources/72c4b1f4ea9f7ba5548683c37806580e.png">
+      <metadata/>
+      <file href="resources/72c4b1f4ea9f7ba5548683c37806580e.png"/>
+    </resource>
+    <resource identifier="RESOURCE006" type="webcontent" href="resources/22fd50d1cc707e413ce3ca889c831f57.jpg">
+      <metadata/>
+      <file href="resources/22fd50d1cc707e413ce3ca889c831f57.jpg"/>
+    </resource>
+  </resources>
+</manifest>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-item xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" title="Vul het juiste woord in" identifier="ITEM004" adaptive="false" time-dependent="false" xml:lang="nl-NL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd http://www.w3.org/1998/Math/MathML https://purl.imsglobal.org/spec/mathml/v3p0/schema/xsd/mathml3.xsd">
+	<qti-response-declaration identifier="RESPONSE" cardinality="multiple" base-type="directedPair">
+		<qti-correct-response>
+			<qti-value>
+				W1 G1
+			</qti-value>
+			<qti-value>
+				W2 G2
+			</qti-value>
+			<qti-value>
+				W3 G3
+			</qti-value>
+			<qti-value>
+				W4 G4
+			</qti-value>
+			<qti-value>
+				W5 G5
+			</qti-value>
+		</qti-correct-response>
+		<qti-mapping default-value="-1">
+			<qti-map-entry map-key="W1 G1" mapped-value="1" />
+			<qti-map-entry map-key="W2 G2" mapped-value="1" />
+			<qti-map-entry map-key="W3 G3" mapped-value="1" />
+			<qti-map-entry map-key="W4 G4" mapped-value="1" />
+			<qti-map-entry map-key="W5 G5" mapped-value="1" />
+		</qti-mapping>
+	</qti-response-declaration>
+	<qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single" normal-minimum="0.0" normal-maximum="1.0">
+		<qti-default-value>
+			<qti-value>
+				0
+			</qti-value>
+		</qti-default-value>
+	</qti-outcome-declaration>
+	<qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
+		<qti-default-value>
+			<qti-value>
+				1
+			</qti-value>
+		</qti-default-value>
+	</qti-outcome-declaration>
+	<qti-outcome-declaration identifier="FEEDBACK" base-type="identifier" cardinality="single" />
+	<qti-stylesheet href="resources/stylesheet.css" type="text/css" />
+	<qti-item-body>
+		<qti-gap-match-interaction response-identifier="RESPONSE" shuffle="true">
+			<qti-gap-text identifier="W1" match-max="1" match-min="1" show-hide="show">
+				plank
+			</qti-gap-text>
+			<qti-gap-text identifier="W2" match-max="1" match-min="1" show-hide="show">
+				haring
+			</qti-gap-text>
+			<qti-gap-text identifier="W3" match-max="1" match-min="1" show-hide="show">
+				knaagt
+			</qti-gap-text>
+			<qti-gap-text identifier="W4" match-max="1" match-min="1" show-hide="show">
+				vlecht
+			</qti-gap-text>
+			<qti-gap-text identifier="W5" match-max="1" match-min="1" show-hide="show">
+				eiland
+			</qti-gap-text>
+			<p>
+				Mijn vader zaagt de&#xa0;
+				<qti-gap identifier="G1" />
+				&#xa0;in vier gelijke stukken.
+			</p>
+			<p>
+				De visboer verkoopt heerlijke&#xa0;
+				<qti-gap identifier="G2" />
+				.
+			</p>
+			<p>
+				De hamster&#xa0;
+				<qti-gap identifier="G3" />
+				&#xa0;op een pinda.
+			</p>
+			<p>
+				Moeder maakt een&#xa0;
+				<qti-gap identifier="G4" />
+				&#xa0;in mijn haar.
+			</p>
+			<p>
+				De piraat heeft ergens op een&#xa0;
+				<qti-gap identifier="G5" />
+				&#xa0;zijn schat begraven.
+			</p>
+		</qti-gap-match-interaction>
+		<qti-feedback-block identifier="correct" outcome-identifier="FEEDBACK" show-hide="show">
+			<qti-content-body>
+				Alles goed!
+			</qti-content-body>
+		</qti-feedback-block>
+		<qti-feedback-block identifier="incorrect" outcome-identifier="FEEDBACK" show-hide="show">
+			<qti-content-body>
+				Helaas...
+			</qti-content-body>
+		</qti-feedback-block>
+	</qti-item-body>
+	<qti-response-processing>
+		<qti-set-outcome-value identifier="SCORE">
+			<qti-sum>
+				<qti-base-value base-type="float">
+					0
+				</qti-base-value>
+				<qti-product>
+					<qti-map-response identifier="RESPONSE" />
+					<qti-base-value base-type="float">
+						0.2
+					</qti-base-value>
+				</qti-product>
+			</qti-sum>
+		</qti-set-outcome-value>
+		<qti-response-condition>
+			<qti-response-if>
+				<qti-match>
+					<qti-map-response identifier="RESPONSE" />
+					<qti-base-value base-type="float">
+						5
+					</qti-base-value>
+				</qti-match>
+				<qti-set-outcome-value identifier="FEEDBACK">
+					<qti-base-value base-type="identifier">
+						correct
+					</qti-base-value>
+				</qti-set-outcome-value>
+			</qti-response-if>
+			<qti-response-else>
+				<qti-set-outcome-value identifier="FEEDBACK">
+					<qti-base-value base-type="identifier">
+						incorrect
+					</qti-base-value>
+				</qti-set-outcome-value>
+			</qti-response-else>
+		</qti-response-condition>
+	</qti-response-processing>
+</qti-assessment-item>

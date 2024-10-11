@@ -14,7 +14,7 @@ const meta: Meta = {
       control: { type: 'radio' }
     },
     disabled: { control: { type: 'boolean' } },
-    itemIndex: { control: { type: 'range', min: 0, max: 30, step: 1 } }
+    itemIndex: { control: { type: 'number' } }
   },
   args: {
     serverLocation: '/api',

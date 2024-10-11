@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-item xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" title="Volgordevraag"
+  identifier="_26f53b5d-51f1-5ff3-9907-65cf5a7e1a13" adaptive="false" time-dependent="false"
+  xml:lang="nl-NL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd
+                      http://www.w3.org/1998/Math/MathML https://purl.imsglobal.org/spec/mathml/v3p0/schema/xsd/mathml3.xsd">
+  <qti-response-declaration identifier="RESPONSE" cardinality="ordered" base-type="identifier">
+    <qti-correct-response>
+      <qti-value>_7277e44510f33087d07f4066d0ce308b</qti-value>
+      <qti-value>_1295359046aa972a407e41a1350316e7</qti-value>
+      <qti-value>_97094d4eb5162950ed0f771abed47e4d</qti-value>
+      <qti-value>_1815d0886d3fddd35b602bc0054b868d</qti-value>
+      <qti-value>_ec46da4638d1a6bc9c7d601efcb88bd2</qti-value>
+    </qti-correct-response>
+  </qti-response-declaration>
+  <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single"
+    normal-minimum="1.0" normal-maximum="3.0">
+    <qti-default-value>
+      <qti-value>1</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
+    <qti-default-value>
+      <qti-value>3</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-outcome-declaration identifier="FEEDBACK" base-type="identifier" cardinality="single" />
+  <qti-item-body>
+    <qti-order-interaction response-identifier="RESPONSE" orientation="vertical" shuffle="true">
+      <qti-prompt>Zet de dingen op volgorde</qti-prompt>
+      <qti-simple-choice identifier="_7277e44510f33087d07f4066d0ce308b">Element 1</qti-simple-choice>
+      <qti-simple-choice identifier="_1295359046aa972a407e41a1350316e7" fixed="true">Element 2</qti-simple-choice>
+      <qti-simple-choice identifier="_97094d4eb5162950ed0f771abed47e4d">Element 3</qti-simple-choice>
+      <qti-simple-choice identifier="_1815d0886d3fddd35b602bc0054b868d">Element 4</qti-simple-choice>
+      <qti-simple-choice identifier="_ec46da4638d1a6bc9c7d601efcb88bd2" fixed="true">Element 5</qti-simple-choice>
+    </qti-order-interaction>
+    <qti-feedback-block identifier="correct" outcome-identifier="FEEDBACK" show-hide="show">
+      <qti-content-body>Je hebt alles goed gedaan!</qti-content-body>
+    </qti-feedback-block>
+    <qti-feedback-block identifier="incorrect" outcome-identifier="FEEDBACK" show-hide="show">
+      <qti-content-body>Het staat niet helemaal goed</qti-content-body>
+    </qti-feedback-block>
+  </qti-item-body>
+  <qti-response-processing>
+    <qti-response-condition>
+      <qti-response-if>
+        <qti-match>
+          <qti-variable identifier="RESPONSE" />
+          <qti-correct identifier="RESPONSE" />
+        </qti-match>
+        <qti-set-outcome-value identifier="SCORE">
+          <qti-base-value base-type="float">3</qti-base-value>
+        </qti-set-outcome-value>
+      </qti-response-if>
+      <qti-response-else>
+        <qti-set-outcome-value identifier="SCORE">
+          <qti-base-value base-type="float">1</qti-base-value>
+        </qti-set-outcome-value>
+      </qti-response-else>
+    </qti-response-condition>
+    <qti-response-condition>
+      <qti-response-if>
+        <qti-match>
+          <qti-variable identifier="RESPONSE" />
+          <qti-correct identifier="RESPONSE" />
+        </qti-match>
+        <qti-set-outcome-value identifier="FEEDBACK">
+          <qti-base-value base-type="identifier">correct</qti-base-value>
+        </qti-set-outcome-value>
+      </qti-response-if>
+      <qti-response-else>
+        <qti-set-outcome-value identifier="FEEDBACK">
+          <qti-base-value base-type="identifier">incorrect</qti-base-value>
+        </qti-set-outcome-value>
+      </qti-response-else>
+    </qti-response-condition>
+  </qti-response-processing>
+</qti-assessment-item>
