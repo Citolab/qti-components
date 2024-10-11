@@ -54,8 +54,8 @@ export class QtiSimpleAssociableChoice extends LitElement {
   // And we have slot for content like in this associate interaction
   override render() {
     return html`
-      <slot></slot>
-      <slot name="qti-simple-associable-choice"></slot>
+      <slot part="slot"></slot>
+      <slot part="dropslot" name="qti-simple-associable-choice"></slot>
     `;
   }
 }

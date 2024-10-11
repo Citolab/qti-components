@@ -23,7 +23,8 @@ export class QtiSimpleChoice extends QtiChoice {
     }
     slot {
       width: 100%;
-      display: block;
+      display: flex;
+      align-items: center;
     }
     [part='ch'] {
       display: flex;

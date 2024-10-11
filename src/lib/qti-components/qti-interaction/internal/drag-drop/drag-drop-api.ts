@@ -27,7 +27,8 @@ export class TouchDragAndDrop {
   private _DBLCLICKDELAY = 500; // maximum delay in which a second click must occur
   private _CONTEXTMENUDELAY = 1000; // hold delay after which context menu is shown
   private _DRAGDELTA = 5; // Minimum of pixels which the finger must be moved to start drag
-  private _COPYOPACITY = 0.7; // Opacity of the drag copy element
+  private _COPYOPACITY = 1; // Opacity of the drag copy element
+  private _ORGOPACITY = 0.7; // Opacity of the drag copy element
   private static _instance: TouchDragAndDrop;
 
   copyStylesDragClone: boolean = true;

@@ -2,7 +2,13 @@
   qti-choice-interaction {
     &.qti-input-control-hidden {
       & qti-simple-choice {
-        @apply button hov foc;
+        @apply button;
+        &:hover {
+          @apply hov;
+        }
+        &:focus {
+          @apply foc;
+        }
         &::part(ch) {
           display: none;
         }
@@ -19,7 +25,13 @@
     }
     &:not(.qti-input-control-hidden) {
       & qti-simple-choice {
-        @apply check hov foc;
+        @apply check;
+        &:hover {
+          @apply hov;
+        }
+        &:focus {
+          @apply foc;
+        }
         &[aria-checked='true'] {
           @apply act;
         }
@@ -63,26 +75,46 @@
   }
 
   qti-text-entry-interaction {
+    &:hover {
+      @apply hov;
+    }
+    &:focus-within {
+      @apply foc;
+    }
     &::part(input) {
-      @apply text hov foc;
+      @apply text;
     }
   }
 
   qti-extended-text-interaction {
     &::part(textarea) {
-      @apply text hov foc;
+      @apply text;
+    }
+    &:hover {
+      @apply hov;
+    }
+    &:focus-within {
+      @apply foc;
     }
   }
 
   qti-gap-match-interaction {
     & qti-gap-text {
-      @apply drag hov foc;
+      @apply drag;
+
+      &:hover {
+        @apply hov;
+      }
+      &:focus {
+        @apply foc;
+      }
     }
     & qti-gap {
-      @apply drop hov foc;
+      @apply drop;
       display: inline-flex;
       width: 8rem; /* w-32 */
       &:empty:after {
+        padding: var(--qti-padding-md) var(--qti-padding-lg); /* Padding shorthand */
         content: '\0000a0'; /* when empty, put a space in it */
       }
       &:not(:empty) {
@@ -101,7 +133,13 @@
   qti-hotspot-interaction {
     & qti-hotspot-choice {
       &[shape='circle'] {
-        @apply spot hov foc rounded-full;
+        @apply spot;
+        &:hover {
+          @apply hov;
+        }
+        &:focus {
+          @apply foc;
+        }
         &[aria-checked='true'] {
           @apply act;
         }
@@ -113,7 +151,13 @@
         }
       }
       &[shape='rect'] {
-        @apply spot hov foc;
+        @apply spot;
+        &:hover {
+          @apply hov;
+        }
+        &:focus {
+          @apply foc;
+        }
         &[aria-checked='true'] {
           @apply act;
         }
@@ -171,11 +215,18 @@
   qti-hottext-interaction {
     qti-hottext {
       display: inline-flex;
+      align-items: center;
     }
     /* &:not(.qti-input-control-hidden),
     &:not(.qti-unselected-hidden) { */
     qti-hottext {
-      @apply check hov foc;
+      @apply check;
+      &:hover {
+        @apply hov;
+      }
+      &:focus {
+        @apply foc;
+      }
       &::part(cha) {
         @apply check-size;
       }
@@ -196,7 +247,18 @@
 
     &.qti-input-control-hidden {
       qti-hottext {
-        @apply button hov foc;
+        /* --qti-padding-md: 0.1rem;
+        --qti-padding-lg: 0.2rem;
+        --qti-border-radius-md: 0.3rem;
+        --qti-border-thickness: 1px;
+        --qti-font-weight-semibold: 400; */
+        @apply button;
+        &:hover {
+          @apply hov;
+        }
+        &:focus {
+          @apply foc;
+        }
         /* @layer qti-variants { */
         &::part(ch) {
           display: none;
@@ -216,7 +278,12 @@
 
     &.qti-unselected-hidden {
       qti-hottext {
-        @apply hov foc;
+        &:hover {
+          @apply hov;
+        }
+        &:focus {
+          @apply foc;
+        }
         cursor: pointer;
         &::part(ch) {
           display: none;
@@ -236,7 +303,13 @@
 
   qti-inline-choice-interaction {
     &::part(select) {
-      @apply select hov foc;
+      @apply select;
+      &:hover {
+        @apply hov;
+      }
+      &:focus {
+        @apply foc;
+      }
     }
   }
 
@@ -244,11 +317,17 @@
     & qti-simple-match-set:first-of-type {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.5rem; /* gap-2 */
+      gap: var(--qti-gap-size); /* gap-2 */
       padding-bottom: 1rem; /* pb-4 */
 
       & qti-simple-associable-choice {
-        @apply drag hov foc;
+        @apply drag;
+        &:hover {
+          @apply hov;
+        }
+        &:focus {
+          @apply foc;
+        }
       }
     }
 
@@ -256,14 +335,12 @@
       display: grid;
       grid-auto-columns: 1fr; /* auto-cols-fr */
       grid-auto-flow: column; /* grid-flow-col */
-      gap: 0.5rem; /* gap-2 */
+      gap: var(--qti-gap-size); /* gap-2 */
       width: 100%; /* w-full */
 
       & qti-simple-associable-choice {
-        @apply drop hov foc;
         display: flex;
         flex-direction: column;
-        min-height: 4rem;
       }
 
       & qti-simple-associable-choice[enabled] {
@@ -274,12 +351,35 @@
         @apply act;
       }
 
+      & qti-simple-associable-choice::part(dropslot) {
+        @apply drop;
+        &:hover {
+          @apply hov;
+        }
+        &:focus {
+          @apply foc;
+        }
+        display: flex;
+        flex-direction: column;
+        min-height: 6rem;
+      }
+
+      & qti-simple-associable-choice > qti-simple-associable-choice::part(dropslot) {
+        display: none;
+      }
+
       & qti-simple-associable-choice > *:not(qti-simple-associable-choice) {
         pointer-events: none;
       }
 
       & qti-simple-associable-choice > qti-simple-associable-choice {
-        @apply drag hov foc;
+        @apply drag;
+        &:hover {
+          @apply hov;
+        }
+        &:focus {
+          @apply foc;
+        }
         flex-basis: fit-content;
       }
     }
@@ -288,7 +388,13 @@
   qti-order-interaction {
     &::part(qti-simple-choice),
     & qti-simple-choice {
-      @apply drag hov foc;
+      @apply drag;
+      &:hover {
+        @apply hov;
+      }
+      &:focus {
+        @apply foc;
+      }
     }
     &::part(qti-simple-choice) {
       display: flex;
@@ -304,7 +410,13 @@
       gap: 0.5rem; /* gap-2 */
     }
     &::part(drop-list) {
-      @apply drop hov foc;
+      @apply drop;
+      &:hover {
+        @apply hov;
+      }
+      &:focus {
+        @apply foc;
+      }
       display: flex;
       min-height: 4rem;
     }
@@ -316,6 +428,7 @@
   qti-associate-interaction {
     &::part(qti-simple-associable-choice),
     & qti-simple-associable-choice {
+      /* drags in drops */
       @apply drag;
       display: flex;
       overflow: hidden;
@@ -323,31 +436,43 @@
       text-overflow: ellipsis;
     }
     &::part(associables-container) {
-      margin: 0.5rem 0; /* my-2 */
       display: flex;
-      width: 100%;
       justify-content: space-between;
       background: linear-gradient(
         180deg,
         rgb(0 0 0 / 0%) calc(50% - 1px),
-        #000000 calc(50%),
+        var(--qti-border-color-gray) calc(50%),
         rgb(0 0 0 / 0%) calc(50% + 1px)
       );
     }
     &::part(active) {
       @apply act;
     }
+    &::part(drop-container) {
+      display: flex;
+      flex-direction: column;
+      gap: var(--qti-gap-size);
+    }
     &::part(drop-list) {
       @apply drop;
+      &:focus {
+        @apply foc;
+      }
       display: grid;
       height: 3rem;
-      width: 33.33%; /* w-1/3 */
+      min-width: 10rem;
     }
   }
 
   qti-graphic-order-interaction {
     & qti-hotspot-choice {
-      @apply spot hov foc;
+      @apply spot;
+      &:hover {
+        @apply hov;
+      }
+      &:focus {
+        @apply foc;
+      }
       &[aria-checked='true'] {
         @apply act;
       }
@@ -375,7 +500,13 @@
 
     & qti-associable-hotspot {
       &[shape='circle'] {
-        @apply spot hov foc;
+        @apply spot;
+        &:hover {
+          @apply hov;
+        }
+        &:focus {
+          @apply foc;
+        }
         &[aria-checked='true'] {
           @apply act;
         }
@@ -388,7 +519,13 @@
       }
 
       &[shape='square'] {
-        @apply spot hov foc;
+        @apply spot;
+        &:hover {
+          @apply hov;
+        }
+        &:focus {
+          @apply foc;
+        }
         &[aria-checked='true'] {
           @apply act;
         }
@@ -483,8 +620,13 @@
 
   qti-select-point-interaction {
     &::part(point) {
-      @apply hover:bg-blue-100 hover:bg-opacity-30;
-      @apply point hov foc rounded-full;
+      &:hover {
+        @apply hov;
+      }
+      &:focus {
+        @apply foc;
+      }
+      @apply point;
     }
   }
 

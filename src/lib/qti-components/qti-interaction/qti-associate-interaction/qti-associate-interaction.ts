@@ -26,14 +26,16 @@ export class QtiAssociateInteraction extends DragDropInteractionMixin(
   override render() {
     return html` <slot name="prompt"></slot>
       <slot name="qti-simple-associable-choice"></slot>
-      ${this._childrenMap.length > 0 &&
-      Array.from(Array(Math.ceil(this._childrenMap.length / 2)).keys()).map(
-        (_, index) =>
-          html`<div part="associables-container">
-            <div name="left${index}" part="drop-list" class="dl" identifier="droplist${index}_left"></div>
-            <div name="right${index}" part="drop-list" class="dl" identifier="droplist${index}_right"></div>
-          </div>`
-      )}`;
+      <div part="drop-container">
+        ${this._childrenMap.length > 0 &&
+        Array.from(Array(Math.ceil(this._childrenMap.length / 2)).keys()).map(
+          (_, index) =>
+            html`<div part="associables-container">
+              <div name="left${index}" part="drop-list" class="dl" identifier="droplist${index}_left"></div>
+              <div name="right${index}" part="drop-list" class="dl" identifier="droplist${index}_right"></div>
+            </div>`
+        )}
+      </div>`;
   }
 
   override connectedCallback() {

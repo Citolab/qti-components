@@ -6,3 +6,12 @@ qti-response-declaration {
 [view].show {
   display: block;
 }
+
+:host {
+  box-sizing: border-box;
+}
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
