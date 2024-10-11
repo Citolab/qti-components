@@ -1,43 +1,70 @@
 import styles from '../../item.css?inline';
+import { VariableValue } from '../qti-components';
 
 class QtiItem extends HTMLElement {
-  identifier?: string;
-  href?: string;
+  view?: string;
+
+  #renderRoot = null;
 
   set xmlDoc(xml: DocumentFragment) {
-    // eslint-disable-next-line wc/attach-shadow-constructor
-    this.attachShadow({ mode: 'open' });
-    const style = new CSSStyleSheet();
-    style.replaceSync(styles);
-    this.shadowRoot.adoptedStyleSheets = [style];
-    this.shadowRoot.innerHTML = ''; // Clear any existing content
-    this.shadowRoot.appendChild(xml.cloneNode(true));
+    if (!this.#renderRoot) {
+      // eslint-disable-next-line wc/attach-shadow-constructor, wc/no-closed-shadow-root
+      this.#renderRoot = this.attachShadow({ mode: 'open' }); // can not be closed, else drag and drops will not work
+      const style = new CSSStyleSheet();
+      style.replaceSync(styles);
+      this.#renderRoot.adoptedStyleSheets = [style];
+      this.#renderRoot.innerHTML = ''; // Clear any existing content
+
+      this.#renderRoot.addEventListener('qti-interaction-changed', this.#variablesChanged);
+      this.#renderRoot.addEventListener('qti-outcome-changed', this.#variablesChanged);
+    }
+
+    this.#renderRoot.innerHTML = ``;
+    this.#renderRoot.appendChild(xml.cloneNode(true));
   }
 
-  connectedCallback() {
-    // Initialize properties
-    this.identifier = this.getAttribute('identifier') || undefined;
-    this.href = this.getAttribute('href') || undefined;
-
-    // Dispatch the custom event
-    this.dispatchEvent(
-      new CustomEvent('qti-item-connected', {
-        bubbles: true,
-        composed: true,
-        detail: { identifier: this.identifier, href: this.href }
-      })
-    );
+  processResponse() {
+    this.#assessmentItem?.variables?.processResponse() || console.warn('No qti-assessment-item found');
   }
 
-  static get observedAttributes() {
-    return ['identifier', 'href'];
+  get variables(): VariableValue<string | string[] | null>[] {
+    return this.#assessmentItem?.variables || console.warn('No qti-assessment-item found');
+  }
+
+  set variables(variables: VariableValue<string | string[] | null>[]) {
+    this.#assessmentItem.variables = variables;
   }
 
   attributeChangedCallback(name: string, oldValue: string, newValue: string) {
-    if (oldValue !== newValue) {
-      this[name as 'identifier' | 'href'] = newValue;
+    switch (name) {
+      case 'view':
+        break;
+
+      default:
+        if (oldValue !== newValue) {
+          this[name as 'view'] = newValue;
+        }
+        break;
     }
   }
+
+  /* Private methods */
+  get #assessmentItem() {
+    return this.#renderRoot.querySelector('qti-assessment-item') || console.warn('No qti-assessment-item found');
+  }
+
+  #variablesChanged = (e: CustomEvent<any>) => {
+    e.stopImmediatePropagation();
+    e.stopPropagation();
+    this.dispatchEvent(
+      new CustomEvent('qti-item-variables-changed', {
+        bubbles: false,
+        detail: {
+          variables: this.#assessmentItem.variables
+        }
+      })
+    );
+  };
 }
 
 customElements.define('qti-item', QtiItem);

@@ -24,7 +24,7 @@
   <body>
     <link rel="stylesheet" href="./src/item.css" />
     <qti-assessment-item>
-      <p>Document</p>
+      <p>DOC: lightdom</p>
       <qti-item-body>
         <qti-choice-interaction>
           <qti-simple-choice identifier="A">Optie A</qti-simple-choice>
@@ -36,7 +36,7 @@
     <div>
       <template shadowrootmode="open">
         <link rel="stylesheet" href="./src/item.css" />
-        <p>Shadowroot closed</p>
+        <p>DIV: shadowdom open</p>
         <qti-assessment-item>
           <qti-item-body>
             <qti-choice-interaction>
@@ -51,7 +51,7 @@
     <div>
       <template shadowrootmode="closed">
         <link rel="stylesheet" href="./src/item.css" />
-        <p>Shadowroot closed</p>
+        <p>DIV: shadowdom closed</p>
         <qti-assessment-item>
           <qti-item-body>
             <qti-choice-interaction>
@@ -65,7 +65,7 @@
 
     <qti-item>
       <qti-assessment-item>
-        <p>QtiItem</p>
+        <p>QTI-ITEM: lightdom</p>
         <qti-item-body>
           <qti-choice-interaction>
             <qti-simple-choice identifier="A">Optie A</qti-simple-choice>
@@ -79,7 +79,7 @@
       <template shadowrootmode="closed">
         <link rel="stylesheet" href="./src/item.css" />
         <qti-assessment-item>
-          <p>QtiItem shadowroot</p>
+          <p>QTI-ITEM: shadowdom closed</p>
           <qti-item-body>
             <qti-choice-interaction>
               <qti-simple-choice identifier="A">Optie A</qti-simple-choice>
@@ -96,7 +96,7 @@
       onload = event => {
         const xml = `
       <qti-assessment-item>
-        <p>QtiItem xmlDoc</p>
+        <p>QTI-ITEM: imperative shadowdom closed</p>
         <qti-item-body>
           <qti-choice-interaction>
             <qti-simple-choice identifier="A">Optie A</qti-simple-choice>

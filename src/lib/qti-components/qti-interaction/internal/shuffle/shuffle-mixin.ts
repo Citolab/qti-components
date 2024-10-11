@@ -70,7 +70,7 @@ export const ShuffleMixin = <T extends Constructor<LitElement>>(superClass: T, s
 
       // If there are 1 or fewer non-fixed elements, throw an error (no shuffle possible)
       if (nonFixedElements.length <= 1) {
-        throw new Error('Shuffling is not possible with fewer than 2 non-fixed elements.');
+        console.warn('Shuffling is not possible with fewer than 2 non-fixed elements.');
       }
 
       let isShuffled = false;
@@ -97,7 +97,7 @@ export const ShuffleMixin = <T extends Constructor<LitElement>>(superClass: T, s
       }
 
       if (!isShuffled) {
-        throw new Error('Failed to shuffle the choices after multiple attempts.');
+        console.warn('Failed to shuffle the choices after multiple attempts.');
       }
 
       // Assign order to each element

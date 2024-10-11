@@ -34,7 +34,9 @@ const buildOptions = {
   entryPoints: [
     // NOTE: Entry points must be mapped in package.json > exports, otherwise users won't be able to import them!
     './src/lib/qti-components/index.ts',
-    './src/lib/qti-transformers/index.ts'
+    './src/lib/qti-transformers/index.ts',
+    './src/lib/qti-item/index.ts',
+    './src/lib/qti-loader/index.ts'
   ],
   external: ['@lit/react', '@lit/context', 'react', 'lit', '@lit/reactive-element', '@lit', 'lit-html/src'], // peerdependencies
   splitting: true,
