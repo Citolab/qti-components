@@ -18,28 +18,13 @@
         -moz-osx-font-smoothing: grayscale;
       }
     </style>
-    <link rel="stylesheet" href="https://unpkg.com/@citolab/qti-components@next/dist/item.css" />
-    <script type="module" src="https://unpkg.com/@citolab/qti-components@next/dist/index.js"></script>
-
-    <!-- <script type="module">
-      import { qtiTransformItem } from 'https://unpkg.com/@citolab/qti-components@next/dist/index.js';
-      onload = event => {
-        const xml = `
-        <qti-assessment-item>
-          <qti-item-body>
-            <qti-choice-interaction>
-              <qti-simple-choice identifier="A">Optie A</qti-simple-choice>
-              <qti-simple-choice identifier="B">Optie B</qti-simple-choice>
-            </qti-choice-interaction>
-          </qti-item-body>
-        </qti-assessment-item>`;
-        const item = qtiTransformItem().parse(xml).htmldoc();
-        document.getElementsByTagName('body')[0].appendChild(item);
-      };
-    </script> -->
+    <!-- <link rel="stylesheet" href="https://unpkg.com/@citolab/qti-components@next/dist/item.css" /> -->
+    <!-- <script type="module" src="https://unpkg.com/@citolab/qti-components@next/dist/index.js"></script> -->
   </head>
   <body>
+    <link rel="stylesheet" href="./src/item.css" />
     <qti-assessment-item>
+      <p>Document</p>
       <qti-item-body>
         <qti-choice-interaction>
           <qti-simple-choice identifier="A">Optie A</qti-simple-choice>
@@ -47,5 +32,83 @@
         </qti-choice-interaction>
       </qti-item-body>
     </qti-assessment-item>
+
+    <div>
+      <template shadowrootmode="open">
+        <link rel="stylesheet" href="./src/item.css" />
+        <p>Shadowroot closed</p>
+        <qti-assessment-item>
+          <qti-item-body>
+            <qti-choice-interaction>
+              <qti-simple-choice identifier="A">Optie A</qti-simple-choice>
+              <qti-simple-choice identifier="B">Optie B</qti-simple-choice>
+            </qti-choice-interaction>
+          </qti-item-body>
+        </qti-assessment-item>
+      </template>
+    </div>
+
+    <div>
+      <template shadowrootmode="closed">
+        <link rel="stylesheet" href="./src/item.css" />
+        <p>Shadowroot closed</p>
+        <qti-assessment-item>
+          <qti-item-body>
+            <qti-choice-interaction>
+              <qti-simple-choice identifier="A">Optie A</qti-simple-choice>
+              <qti-simple-choice identifier="B">Optie B</qti-simple-choice>
+            </qti-choice-interaction>
+          </qti-item-body>
+        </qti-assessment-item>
+      </template>
+    </div>
+
+    <qti-item>
+      <qti-assessment-item>
+        <p>QtiItem</p>
+        <qti-item-body>
+          <qti-choice-interaction>
+            <qti-simple-choice identifier="A">Optie A</qti-simple-choice>
+            <qti-simple-choice identifier="B">Optie B</qti-simple-choice>
+          </qti-choice-interaction>
+        </qti-item-body>
+      </qti-assessment-item>
+    </qti-item>
+
+    <qti-item>
+      <template shadowrootmode="closed">
+        <link rel="stylesheet" href="./src/item.css" />
+        <qti-assessment-item>
+          <p>QtiItem shadowroot</p>
+          <qti-item-body>
+            <qti-choice-interaction>
+              <qti-simple-choice identifier="A">Optie A</qti-simple-choice>
+              <qti-simple-choice identifier="B">Optie B</qti-simple-choice>
+            </qti-choice-interaction>
+          </qti-item-body>
+        </qti-assessment-item>
+      </template>
+    </qti-item>
+
+    <qti-item id="imperative"></qti-item>
+    <script type="module">
+      import { qtiTransformItem } from './src/lib/qti-transformers';
+      onload = event => {
+        const xml = `
+      <qti-assessment-item>
+        <p>QtiItem xmlDoc</p>
+        <qti-item-body>
+          <qti-choice-interaction>
+            <qti-simple-choice identifier="A">Optie A</qti-simple-choice>
+            <qti-simple-choice identifier="B">Optie B</qti-simple-choice>
+          </qti-choice-interaction>
+        </qti-item-body>
+      </qti-assessment-item>`;
+        const item = qtiTransformItem().parse(xml).htmldoc();
+        document.getElementById('imperative').xmlDoc = item;
+      };
+    </script>
+
+    <script type="module" src="./src/index.ts"></script>
   </body>
 </html>

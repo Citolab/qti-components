@@ -21,16 +21,11 @@ export const fetchItemFromManifest = async (
     '/' +
     itemsFromTest[index].href;
 
-  const itemHTML = await qtiTransformItem()
+  const xmlDoc = await qtiTransformItem()
     .load(itemUri, cancelPreviousRequest)
-    .then(api =>
-      api
-        .path(itemUri.substring(0, itemUri.lastIndexOf('/')))
-        .stripStyleSheets()
-        .html()
-    );
+    .then(api => api.path(itemUri.substring(0, itemUri.lastIndexOf('/'))).stripStyleSheets());
 
-  return { itemXML: itemHTML, items: itemsFromTest };
+  return { itemHTMLDoc: xmlDoc.htmldoc(), itemHTML: xmlDoc.html(), items: itemsFromTest };
 };
 
 export const fetchAssessmentFromManifest = async (packageUri: string): Promise<any> => {
