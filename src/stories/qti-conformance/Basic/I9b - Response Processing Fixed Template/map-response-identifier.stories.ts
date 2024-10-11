@@ -1,11 +1,11 @@
+import { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
+import { action } from '@storybook/addon-actions';
 import { expect } from '@storybook/test';
 import { screen, userEvent } from '@storybook/testing-library';
-import { action } from '@storybook/addon-actions';
 import type { Meta, StoryObj } from '@storybook/web-components';
-import { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
 import { html } from 'lit';
-import { fetchItem } from 'src/stories/fetch-item';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
+import { getItemByUri } from '../../../../lib/qti-loader';
 
 type Story = StoryObj;
 
@@ -59,7 +59,7 @@ export const Default: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await fetchItem(`assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
+      xml: await getItemByUri(`assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
     })
   ]
 };
@@ -110,7 +110,7 @@ export const D2: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await fetchItem(`assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
+      xml: await getItemByUri(`assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
     })
   ]
 };
@@ -163,7 +163,7 @@ export const D3: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await fetchItem(`assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
+      xml: await getItemByUri(`assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
     })
   ]
 };
@@ -217,7 +217,7 @@ export const D4: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await fetchItem(`assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
+      xml: await getItemByUri(`assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
     })
   ]
 };
@@ -270,7 +270,7 @@ export const D5: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await fetchItem(`assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
+      xml: await getItemByUri(`assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
     })
   ]
 };
@@ -323,7 +323,7 @@ export const D6: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await fetchItem(`assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
+      xml: await getItemByUri(`assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
     })
   ]
 };
@@ -378,7 +378,7 @@ export const D7: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await fetchItem(`assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
+      xml: await getItemByUri(`assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
     })
   ]
 };
@@ -434,7 +434,7 @@ export const D8: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await fetchItem(`assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
+      xml: await getItemByUri(`assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
     })
   ]
 };
@@ -490,7 +490,7 @@ export const D9: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await fetchItem(`assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
+      xml: await getItemByUri(`assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
     })
   ]
 };
@@ -549,7 +549,7 @@ export const D10: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await fetchItem(`assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
+      xml: await getItemByUri(`assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
     })
   ]
 };
@@ -621,7 +621,7 @@ export const D11: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await fetchItem(`assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
+      xml: await getItemByUri(`assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
     })
   ]
 };

@@ -1,11 +1,11 @@
+import { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
+import { action } from '@storybook/addon-actions';
 import { expect } from '@storybook/test';
 import { screen, userEvent } from '@storybook/testing-library';
-import { action } from '@storybook/addon-actions';
 import type { Meta, StoryObj } from '@storybook/web-components';
-import { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
 import { html } from 'lit';
-import { fetchItem } from 'src/stories/fetch-item';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
+import { getItemByUri } from '../../../../lib/qti-loader';
 
 type Story = StoryObj;
 
@@ -61,7 +61,7 @@ export const Default: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await fetchItem(`assets/qti-conformance/Basic/I9b/match-correct-identifier.xml`)
+      xml: await getItemByUri(`assets/qti-conformance/Basic/I9b/match-correct-identifier.xml`)
     })
   ]
 };
@@ -116,7 +116,7 @@ export const D13: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await fetchItem(`assets/qti-conformance/Basic/I9b/match-correct-identifier.xml`)
+      xml: await getItemByUri(`assets/qti-conformance/Basic/I9b/match-correct-identifier.xml`)
     })
   ]
 };
@@ -171,7 +171,7 @@ export const D14: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await fetchItem(`assets/qti-conformance/Basic/I9b/match-correct-identifier.xml`)
+      xml: await getItemByUri(`assets/qti-conformance/Basic/I9b/match-correct-identifier.xml`)
     })
   ]
 };
