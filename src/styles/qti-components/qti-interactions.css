@@ -343,6 +343,11 @@
         flex-direction: column;
       }
 
+      & qti-simple-associable-choice img {
+        max-width: 100%;
+        height: auto;
+      }
+
       & qti-simple-associable-choice[enabled] {
         @apply foc;
       }
