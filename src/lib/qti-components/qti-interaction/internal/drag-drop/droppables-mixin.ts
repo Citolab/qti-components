@@ -103,8 +103,12 @@ export const DroppablesMixin = <T extends Constructor<LitElement>>(
       ev.preventDefault();
       const droppable = ev.currentTarget as HTMLElement;
       const draggable = this.findDraggable(ev.dataTransfer.getData('text'));
+      // console.log(this.isValidDrop(droppable, draggable));
 
-      if (!draggable || !this.isValidDrop(droppable, draggable)) return false;
+      if (!draggable || !this.isValidDrop(droppable, draggable)) {
+        draggable.style.transform = 'translate(0, 0)';
+        return false;
+      }
 
       await this.moveDraggableToDroppable(draggable, droppable);
       this.deactivateDroppable(droppable);

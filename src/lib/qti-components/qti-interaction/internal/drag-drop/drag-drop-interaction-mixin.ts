@@ -151,9 +151,9 @@ export const DragDropInteractionMixin = <T extends Constructor<LitElement>>(
       const targetIndex = Math.min(index, parent.children.length);
 
       const moveDraggable = (draggable: HTMLElement, parent: HTMLElement, index: number) => {
-        draggable.style.transform = 'translate(0, 0)';
         const targetIndex = Math.min(index, parent.children.length);
         parent.insertBefore(draggable, parent.children[targetIndex]);
+        draggable.style.transform = 'translate(0, 0)';
       };
 
       // Fallback if view transitions are not supported
@@ -167,7 +167,9 @@ export const DragDropInteractionMixin = <T extends Constructor<LitElement>>(
         draggable.style.transform = '';
         moveDraggable(draggable, parent, index);
       });
-      await transition.finished;
+      // transition.finished.then(() => {
+      //   draggable.style.transition = '';
+      // });
 
       this.saveResponse();
       this.checkMaxAssociations();

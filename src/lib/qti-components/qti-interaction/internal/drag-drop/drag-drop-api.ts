@@ -38,6 +38,7 @@ export class TouchDragAndDrop {
   private readonly MIN_DRAG_DISTANCE = 5; // Minimum pixel movement to start dragging
   private readonly DRAG_CLONE_OPACITY = 1; // Opacity of the drag clone element
   private readonly ORIGINAL_OPACITY = 0.7; // Original opacity of the dragged element
+  initialTransition: string;
 
   constructor() {
     if (TouchDragAndDrop.instance) {
@@ -79,6 +80,12 @@ export class TouchDragAndDrop {
       // Save initial transform
       const computedStyle = window.getComputedStyle(this.dragSource);
       this.initialTransform = computedStyle.transform === 'none' ? '' : computedStyle.transform;
+
+      // Save the original transition style
+      this.initialTransition = computedStyle.transition || '';
+
+      // Disable transitions
+      this.dragSource.style.transition = 'none';
 
       // Calculate clone offset
       const rect = this.dragSource.getBoundingClientRect();
@@ -144,9 +151,10 @@ export class TouchDragAndDrop {
         const deltaY = currentTouch.clientY - this.touchStartPoint.y;
 
         // Apply boundaries
-        const { boundedDeltaX, boundedDeltaY } = this.applyTransformBoundaries(deltaX, deltaY);
+        // const { boundedDeltaX, boundedDeltaY } = this.applyTransformBoundaries(deltaX, deltaY);
+        // this.dragSource.style.transform = `${this.initialTransform} translate(${boundedDeltaX}px, ${boundedDeltaY}px)`;
 
-        this.dragSource.style.transform = `${this.initialTransform} translate(${boundedDeltaX}px, ${boundedDeltaY}px)`;
+        this.dragSource.style.transform = `${this.initialTransform} translate(${deltaX}px, ${deltaY}px)`;
 
         if (!this.hasDispatchedDragStart) {
           this.dispatchCustomEvent(this.dragSource, 'dragstart');
@@ -172,8 +180,9 @@ export class TouchDragAndDrop {
     this.isDraggable = false;
     let dropFound = false;
 
+    // console.log('dropFound', dropFound);
+
     if (this.currentDropTarget) {
-      console.log(this.currentDropTarget);
       this.dispatchCustomEvent(this.currentDropTarget, 'drop');
       this.dispatchCustomEvent(this.dragSource, 'dragend');
       dropFound = true;
@@ -339,11 +348,15 @@ export class TouchDragAndDrop {
         this.dragSource.style.opacity = '1.0';
         this.dragClone?.parentElement.removeChild(this.dragClone);
       } else {
-        console.log('dropFound', dropFound);
         // Restore original styles
-        if (!dropFound) this.dragSource.style.transform = this.initialTransform;
+        if (!dropFound) this.dragSource.style.transform = 'translate(0, 0)';
         this.dragSource.style.zIndex = '';
         this.dragSource.style.pointerEvents = '';
+        // Restore the original transition style
+        this.dragSource.style.transition = this.initialTransition;
+
+        // Reset the original transition property
+        this.initialTransition = '';
       }
     }
 

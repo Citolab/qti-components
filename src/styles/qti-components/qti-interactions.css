@@ -324,7 +324,7 @@
       & qti-simple-associable-choice {
         @apply drag;
         transition:
-          /* transform 2s, */
+          transform 200ms ease-out,
           box-shadow 200ms ease-out,
           rotate 200ms ease-out;
 
