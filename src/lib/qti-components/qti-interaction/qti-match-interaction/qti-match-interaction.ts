@@ -1,4 +1,4 @@
-import { css, html, LitElement } from 'lit';
+import { CSSResultGroup, html, LitElement } from 'lit';
 import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-interaction-mixin';
 
 import { customElement, property, state } from 'lit/decorators.js';
@@ -6,6 +6,7 @@ import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { ResponseInteraction } from '../../internal/expression-result';
 import '../qti-simple-associable-choice';
 import { QtiSimpleAssociableChoice } from '../qti-simple-associable-choice';
+import styles from './qti-match-interaction.styles';
 
 interface Column {
   id: number;
@@ -25,37 +26,21 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
   false,
   'qti-simple-match-set:last-of-type qti-simple-associable-choice'
 ) {
-  static override styles = [
-    css`
-      .match {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-      }
-
-      :host(.qti-choices-top) .match {
-        flex-direction: column;
-      }
-      :host(.qti-choices-bottom) .match {
-        flex-direction: column-reverse;
-      }
-      :host(.qti-choices-left) .match {
-        flex-direction: row;
-      }
-      :host(.qti-choices-right) .match {
-        flex-direction: row-reverse;
-      }
-      slot[name='prompt'] {
-        display: block;
-      }
-    `
-  ];
+  static styles: CSSResultGroup = styles;
 
   rows: QtiSimpleAssociableChoice[];
   cols: QtiSimpleAssociableChoice[];
   lastCheckedRadio: HTMLInputElement | null = null;
 
-  @state() response = [];
+  @state() _response: string | string[] = [];
+  get response(): string | string[] {
+    if (!this.classList.contains('qti-match-tabular')) return super.response;
+    else return this._response;
+  }
+  set response(val: string | string[]) {
+    if (!this.classList.contains('qti-match-tabular')) super.response = val;
+    else this._response = val;
+  }
   @state() correctOptions: string[] = [];
   @property({ type: String, attribute: 'response-identifier' }) responseIdentifier: string = '';
 

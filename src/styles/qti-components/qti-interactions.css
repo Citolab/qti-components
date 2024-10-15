@@ -314,23 +314,30 @@
   }
 
   qti-match-interaction:not(.qti-match-tabular) {
+    /* The draggables */
     & qti-simple-match-set:first-of-type {
       display: flex;
       flex-wrap: wrap;
-      gap: var(--qti-gap-size); /* gap-2 */
-      padding-bottom: 1rem; /* pb-4 */
+      align-items: flex-start; /* Prevents children from stretching */
+      gap: var(--qti-gap-size);
 
       & qti-simple-associable-choice {
         @apply drag;
+
         &:hover {
           @apply hov;
         }
         &:focus {
           @apply foc;
         }
+        &[dragging] {
+          opacity: 0.5 !important;
+          pointer-events: none;
+        }
       }
     }
 
+    /* The droppables */
     & qti-simple-match-set:last-of-type {
       display: grid;
       grid-auto-columns: 1fr; /* auto-cols-fr */
@@ -343,49 +350,66 @@
         flex-direction: column;
       }
 
-      & qti-simple-associable-choice img {
-        max-width: 100%;
-        height: auto;
-      }
+      & > qti-simple-associable-choice {
+        /* a droppable qti-simple-associable-choice */
+        box-sizing: border-box;
+        display: grid;
+        grid-row: 2 / 4;
+        grid-template-rows: subgrid;
 
-      & qti-simple-associable-choice[enabled] {
-        @apply foc;
-      }
-
-      & qti-simple-associable-choice[active] {
-        @apply act;
-      }
-
-      & qti-simple-associable-choice::part(dropslot) {
-        @apply drop;
-        &:hover {
-          @apply hov;
+        & img {
+          max-width: 100%;
+          height: auto;
         }
-        &:focus {
-          @apply foc;
+        &[enabled] {
+          &::part(dropslot) {
+            @apply foc;
+          }
         }
-        display: flex;
-        flex-direction: column;
-        min-height: 6rem;
-      }
-
-      & qti-simple-associable-choice > qti-simple-associable-choice::part(dropslot) {
-        display: none;
-      }
-
-      & qti-simple-associable-choice > *:not(qti-simple-associable-choice) {
-        pointer-events: none;
-      }
-
-      & qti-simple-associable-choice > qti-simple-associable-choice {
-        @apply drag;
-        &:hover {
-          @apply hov;
+        &[active] {
+          &::part(dropslot) {
+            @apply act;
+          }
         }
-        &:focus {
-          @apply foc;
+        &::part(dropslot) {
+          @apply drop;
+          &:hover {
+            @apply hov;
+          }
+          &:focus {
+            @apply foc;
+          }
+          min-height: 6rem;
+          box-sizing: border-box;
         }
-        flex-basis: fit-content;
+
+        & > *:not(qti-simple-associable-choice) {
+          pointer-events: none;
+        }
+
+        & [match-max='1'] {
+          height: 100%;
+
+          &::part(slot) {
+            height: 100%;
+            display: grid;
+            place-items: center;
+          }
+        }
+
+        & > qti-simple-associable-choice {
+          @apply drag;
+          &::part(dropslot) {
+            display: none;
+          }
+          &:hover {
+            @apply hov;
+          }
+          &:focus {
+            @apply foc;
+          }
+          flex-basis: fit-content;
+        }
       }
     }
   }

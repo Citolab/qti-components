@@ -1,9 +1,9 @@
 import '@citolab/qti-components/qti-components';
 
-import { render } from 'lit';
-import { Tabular, TabularMultiple } from './qti-match-interaction.stories';
 import { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
 import { userEvent } from '@storybook/test';
+import { render } from 'lit';
+import { Tabular, TabularMultiple } from './qti-match-interaction.stories';
 
 const getChoices = () => {
   const matchInteractionShadowRoot = document.body.querySelector('qti-match-interaction').shadowRoot;
@@ -100,4 +100,11 @@ describe('qti-match-interaction', () => {
       expect(response.value.length).toBe(2);
     });
   });
+  // describe('play', () => {
+  //   beforeEach(async () => {
+  //     // render(TabularMultiple.render(), document.body);
+
+  //     render(Play.render({ 'max-choices': 3, 'min-choices': 2 }), document.body);
+  //   });
+  // });
 });

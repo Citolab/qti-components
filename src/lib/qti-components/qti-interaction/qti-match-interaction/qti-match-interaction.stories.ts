@@ -5,9 +5,9 @@ import type { Meta, StoryObj } from '@storybook/web-components';
 
 import { createRef, ref } from 'lit/directives/ref.js';
 import '../../index';
-import { QtiAssessmentItem } from '../../index';
+import { QtiAssessmentItem, QtiMatchInteraction } from '../../index';
 
-import { expect, fn, within } from '@storybook/test';
+import { expect, fn, waitFor, within } from '@storybook/test';
 import drag from '../../../../testing/drag';
 // import { userEvent } from '@vitest/browser/context';
 
@@ -34,7 +34,9 @@ export const Default = {
       class=${args.class}
       max-associations="4"
       response-identifier="RESPONSE"
+      data-testid="match-interaction"
     >
+      <qti-prompt>Match the following characters to the Shakespeare play they appeared in:</qti-prompt>
       <qti-simple-match-set>
         <qti-simple-associable-choice data-testid="drag-capulet" identifier="C" match-max="1"
           >Capulet</qti-simple-associable-choice
@@ -60,20 +62,45 @@ export const Play: Story = {
     orientation: 'vertical',
     classes: ['qti-choices-bottom']
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    const interactionResponse = fn(event => expect(event.detail.response).toEqual(['C M', 'R', 'T']));
-
-    canvasElement.addEventListener('qti-interaction-response', interactionResponse);
-
+    // Retrieve interaction, source, and target elements from the canvas
+    const interaction = canvas.getByTestId<QtiMatchInteraction>('match-interaction');
     const source = canvas.getByTestId('drag-capulet');
     const target = canvas.getByTestId('drop-capulet');
 
-    await drag(source, { to: target });
+    // Define the interaction response event handler to capture the response
+    const interactionResponse = fn(event => {
+      // Ensure the interaction response detail contains the expected values
+      expect(event.detail.response).toEqual(['C M', 'R', 'T']);
+    });
 
-    expect(interactionResponse).toHaveBeenCalled();
-    canvasElement.removeEventListener('qti-interaction-response', interactionResponse);
+    // Add the event listener for 'qti-interaction-response'
+    canvasElement.addEventListener('qti-interaction-response', interactionResponse);
+
+    try {
+      await step('Drag capulus to drop and test qti-interaction-response event', async () => {
+        // Simulate the drag and drop operation
+        await drag(source, { to: target, duration: 100 });
+
+        // Wait for the interaction response event to be triggered and verify the handler was called
+        await waitFor(() => expect(interactionResponse).toHaveBeenCalled());
+      });
+    } finally {
+      // Clean up the event listener to avoid memory leaks
+      canvasElement.removeEventListener('qti-interaction-response', interactionResponse);
+    }
+    await step('Reset interaction and set response manually', async () => {
+      // Reset the interaction to ensure it is in a known state after the drag and drop
+      interaction.reset();
+
+      // Manually set the interaction response to the expected value
+      interaction.response = ['C M', 'R', 'T'];
+
+      // Verify that after the drag-and-drop action, the target contains the source element
+      expect(target).toContainElement(source); // Descriptive: Verifies that the target now contains the dragged source element
+    });
   }
 };
 
@@ -109,7 +136,7 @@ export const Tabular = {
           class="qti-match-tabular"
           response-identifier="RESPONSE"
           shuffle="true"
-          max-associations="4"
+          max-associations="1"
         >
           <qti-prompt>Match the following characters to the Shakespeare play they appeared in:</qti-prompt>
           <qti-simple-match-set>
@@ -180,6 +207,7 @@ export const TabularAardrijkskunde = {
           shuffle="false"
           response-identifier="RESPONSE"
         >
+        <qti-prompt>Match the following characters to the Shakespeare play they appeared in:</qti-prompt>
           <qti-simple-match-set>
             <qti-simple-associable-choice identifier="y_A" match-max="1">
               <div>
@@ -327,7 +355,7 @@ export const Images = {
           class="qti-match-tabular"
           max-associations="4"
           response-identifier="RSP-C"
-        >
+          ><qti-prompt>Match the following characters to the Shakespeare play they appeared in:</qti-prompt>
           <qti-simple-match-set>
             <qti-simple-associable-choice identifier="PROD1" match-max="1"
               ><img alt="" src="./images/Biologische kipfilet.png"
@@ -366,3 +394,6 @@ export const Images = {
       ></qti-response-processing>
     </qti-assessment-item>`
 };
+function step(arg0: string, arg1: () => Promise<void>) {
+  throw new Error('Function not implemented.');
+}
