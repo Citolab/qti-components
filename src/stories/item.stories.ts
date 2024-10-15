@@ -70,7 +70,13 @@ export const QtiItem: Story = {
     return html`
       <qti-item @qti-item-variables-changed=${action('qti-item-variables-changed')} .xmlDoc=${xml.itemHTMLDoc}>
       </qti-item>
-      <button @click=${() => item?.processResponse()}>processResponse</button>
+      <button
+        @click=${() => {
+          item?.processResponse();
+        }}
+      >
+        processResponse
+      </button>
     `;
   },
   loaders: [
