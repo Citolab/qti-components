@@ -29,13 +29,14 @@ window.customElements.define('button-component', ButtonComponent);
 
 // grid grid-cols-6 gap-4
 const components = (mod: string) => html`
-  <div style="display:grid;grid-template-columns: repeat(6, minmax(0, 1fr));gap:2rem;">
+  <div style="display:grid;grid-template-columns: repeat(7, minmax(0, 1fr));gap:2rem;">
     <div>button</div>
     <div>hover</div>
     <div>focus</div>
     <div>active</div>
     <div>active+focus</div>
     <div>disabled</div>
+    <div>dragging</div>
 
     <button-component ch="check-radio" cha="" class="check ${mod}">check</button-component>
     <button-component ch="check-radio" cha="" class="check hov ${mod}">check</button-component>
@@ -43,6 +44,7 @@ const components = (mod: string) => html`
     <button-component ch="check-radio" cha="check-radio-checked" class="check act ${mod}">check</button-component>
     <button-component ch="check-radio" cha="check-radio-checked" class="check foc act ${mod}">check</button-component>
     <button-component ch="check-radio" cha="check-radio-checked dis" class="check dis ${mod}">check</button-component>
+    <div></div>
 
     <button-component ch="check-checkbox" cha="" class="check ${mod}">check</button-component>
     <button-component ch="check-checkbox" cha="" class="check hov ${mod}">check</button-component>
@@ -54,6 +56,7 @@ const components = (mod: string) => html`
     <button-component ch="check-checkbox" cha="check-checkbox-checked dis" class="check dis ${mod}"
       >check</button-component
     >
+    <div></div>
 
     <div class="button ${mod}">button</div>
     <div class="button ${mod} hov ">button</div>
@@ -61,6 +64,7 @@ const components = (mod: string) => html`
     <div class="button ${mod} act ">button</div>
     <div class="button ${mod} foc act ">button</div>
     <div class="button ${mod} dis ">button</div>
+    <div></div>
 
     <div class="spot ${mod}"></div>
     <div class="spot ${mod} hov "></div>
@@ -68,6 +72,7 @@ const components = (mod: string) => html`
     <div class="spot ${mod} act "></div>
     <div class="spot ${mod} foc act "></div>
     <div class="spot ${mod} dis "></div>
+    <div></div>
 
     <div class="drag ${mod}">drag</div>
     <div class="drag hov ${mod}">drag</div>
@@ -75,6 +80,7 @@ const components = (mod: string) => html`
     <div class="drag act ${mod}">drag</div>
     <div class="drag foc act ${mod}">drag</div>
     <div class="drag dis ${mod}">drag</div>
+    <div class="drag dragging ${mod}">drag</div>
 
     <div class="drop ${mod}"></div>
     <div class="drop hov ${mod}"></div>
@@ -82,6 +88,7 @@ const components = (mod: string) => html`
     <div class="drop act ${mod}"></div>
     <div class="drop foc act ${mod}"></div>
     <div class="drop dis ${mod}"></div>
+    <div></div>
 
     <div class="drop ${mod}"><div class="drag ${mod}">drag</div></div>
     <div class="drop hov ${mod}"><div class="drag ${mod}">drag</div></div>
@@ -89,6 +96,7 @@ const components = (mod: string) => html`
     <div class="drop act ${mod}"><div class="drag ${mod}">drag</div></div>
     <div class="drop foc act ${mod}"><div class="drag ${mod}">drag</div></div>
     <div class="drop dis ${mod}"><div class="drag ${mod}">drag</div></div>
+    <div></div>
 
     <div class="drop ${mod}">
       With text
@@ -114,6 +122,7 @@ const components = (mod: string) => html`
       With text
       <div class="drag ${mod}">drag</div>
     </div>
+    <div></div>
 
     <input type="text" class="text ${mod}" value="Button text" />
     <input type="text" class="text hov ${mod}" value="Button text" />
@@ -121,6 +130,7 @@ const components = (mod: string) => html`
     <input type="text" class="text act ${mod}" value="Button text" />
     <input type="text" class="text foc act ${mod}" value="Button text" />
     <input type="text" class="text dis ${mod}" value="Button text" />
+    <div></div>
 
     <select class="select ${mod}">
       <option>Button text</option>
@@ -140,6 +150,7 @@ const components = (mod: string) => html`
     <select class="select dis ${mod}">
       <option>Button text</option>
     </select>
+    <div></div>
   </div>
 
   <h1>Header 1</h1>

@@ -324,6 +324,9 @@
       & qti-simple-associable-choice {
         @apply drag;
 
+        &[dragging] {
+          @apply dragging;
+        }
         &:hover {
           @apply hov;
         }
@@ -362,6 +365,12 @@
             @apply foc;
           }
         }
+        &[disabled] {
+          &::part(dropslot) {
+            background-color: red;
+          }
+        }
+
         &[active] {
           &::part(dropslot) {
             @apply act;
@@ -370,13 +379,11 @@
         &::part(dropslot) {
           @apply drop;
 
-          &:hover {
-            @apply hov;
-          }
           &:focus {
             @apply foc;
           }
           min-height: 6rem;
+          gap: var(--qti-gap-size);
           box-sizing: border-box;
           display: flex;
           justify-content: center;

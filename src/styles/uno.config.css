@@ -18,6 +18,7 @@
   --qti-bg-gray-50: #f9fafb;
   --qti-bg-primary: var(--qti-primary);
   --qti-bg-gray-100: #f3f4f6;
+  --qti-bg-white: white;
 
   --qti-text-gray-500: #6b7280;
   --qti-text-white: white;
@@ -58,7 +59,6 @@
   background-repeat: repeat-y;
   background-position: left 2px;
   background-size: 14px 8px; */
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
 }
 
 .check-mask {
@@ -145,14 +145,6 @@
     box-shadow 200ms ease-out,
     rotate 200ms ease-out;
 
-  /* & [dragging] {
-    pointer-events: none;
-    rotate: -2deg;
-    box-shadow:
-      0 8px 12px rgba(0, 0, 0, 0.2),
-      0 4px 8px rgba(0, 0, 0, 0.1);
-  } */
-
   border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color-gray);
   outline: none;
   padding: var(--qti-padding-md) var(--qti-padding-lg) var(--qti-padding-md) var(--qti-padding-xl); /* Padding shorthand */
@@ -163,6 +155,14 @@
   font-weight: var(--qti-font-weight-semibold);
 }
 
+.dragging {
+  pointer-events: none;
+  rotate: -2deg;
+  box-shadow:
+    0 8px 12px rgba(0, 0, 0, 0.2),
+    0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 .drop {
   @apply bordered;
   background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7" stroke="%23CCCCCC" stroke-width="1" fill="transparent" /></svg>')
@@ -171,8 +171,7 @@
   outline: none;
   border-radius: var(--qti-border-radius-lg);
   position: relative;
-  background-color: var(--qti-bg-gray-50);
-  margin: 1px; /* m-px */
+  background-color: var(--qti-bg-white);
 }
 
 .order {

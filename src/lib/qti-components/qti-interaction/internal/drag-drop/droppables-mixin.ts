@@ -129,6 +129,7 @@ export const DroppablesMixin = <T extends Constructor<LitElement>>(
       const moveElement = (): void => {
         draggable.style.transform = 'translate(0, 0)';
         droppable.appendChild(draggable);
+        this['checkMaxAssociations']();
       };
 
       if (!document.startViewTransition) {
@@ -138,6 +139,8 @@ export const DroppablesMixin = <T extends Constructor<LitElement>>(
 
       const transition = document.startViewTransition(moveElement);
       await transition.finished;
+
+      // this['checkMaxAssociations']();
     }
 
     private deactivateDroppable(droppable: HTMLElement): void {

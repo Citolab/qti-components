@@ -27,7 +27,7 @@ export default {
   title: 'styles/themes'
 };
 export const Interactions = args => html`
-  <h2>gap-match-interaction</h2>
+  <h2>qti-gap-match-interaction</h2>
   ${GapMatch.render({})}
   <h2>qti-match-interaction</h2>
   ${Match.render({})}
@@ -38,7 +38,7 @@ export const Interactions = args => html`
   <h2>qti-graphic-gap-match-interaction</h2>
   ${GraphicGapMatch.render({})}
 
-  <h2>choice-interaction</h2>
+  <h2>qti-choice-interaction</h2>
   <qti-layout-row>
     <qti-layout-col6>${Choice.render({})}</qti-layout-col6>
     <qti-layout-col6> ${Choice.render({ disabled: true, 'max-choices': 2 })}</qti-layout-col6>
@@ -48,9 +48,9 @@ export const Interactions = args => html`
     classes: ['qti-input-control-hidden', 'qti-choices-stacking-2']
   })}
 
-  <h2>text-entry-interaction</h2>
+  <h2>qti-text-entry-interaction</h2>
   ${TextEntry.render({})}
-  <h2>extended-text-interaction</h2>
+  <h2>qti-extended-text-interaction</h2>
   ${ExtendedText.render({})}
 
   <h2>qti-hotspot-interaction</h2>

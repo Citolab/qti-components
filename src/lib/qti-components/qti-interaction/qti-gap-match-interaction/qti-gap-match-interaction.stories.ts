@@ -48,6 +48,7 @@ export default meta;
 export const Default = {
   render: args =>
     html`<qti-gap-match-interaction
+      identifier="gap-match-interaction"
       response-identifier=${ifDefined(args['response-identifier'])}
       @qti-register-interaction=${action(`qti-register-interaction`)}
       @qti-interaction-response=${action(`qti-interaction-response`)}

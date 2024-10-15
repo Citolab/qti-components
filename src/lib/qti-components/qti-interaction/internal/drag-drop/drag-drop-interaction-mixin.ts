@@ -44,7 +44,7 @@ export const DragDropInteractionMixin = <T extends Constructor<LitElement>>(
     @property({ type: Number, reflect: true, attribute: 'max-associations' }) maxAssociations = 1;
 
     @liveQuery(draggablesSelector)
-    handleDraggablesChange(dragsAdded: Element[], dragsRemoved: Element[]) {
+    handleDraggablesChange(dragsAdded: HTMLElement[], dragsRemoved: Element[]) {
       if (this.isMatchTabular()) return;
       const newDraggables = this.filterExistingDraggables(dragsAdded);
 
@@ -93,7 +93,7 @@ export const DragDropInteractionMixin = <T extends Constructor<LitElement>>(
         parent: draggable.parentElement,
         index
       });
-      draggable.style.viewTransitionName = `drag-${index}`;
+      draggable.style.viewTransitionName = `drag-${index}-${this.getAttribute('identifier')}`;
       draggable.setAttribute('qti-draggable', 'true');
       draggable.addEventListener('dragstart', this.handleDragStart);
       draggable.addEventListener('dragend', this.handleDragEnd);
@@ -126,7 +126,6 @@ export const DragDropInteractionMixin = <T extends Constructor<LitElement>>(
       }
       if (this.wasMoved(ev)) {
         this.saveResponse();
-        this.checkMaxAssociations();
       }
     };
 
@@ -154,6 +153,8 @@ export const DragDropInteractionMixin = <T extends Constructor<LitElement>>(
         const targetIndex = Math.min(index, parent.children.length);
         parent.insertBefore(draggable, parent.children[targetIndex]);
         draggable.style.transform = 'translate(0, 0)';
+        this.checkMaxAssociations();
+        this.saveResponse();
       };
 
       // Fallback if view transitions are not supported
@@ -170,17 +171,13 @@ export const DragDropInteractionMixin = <T extends Constructor<LitElement>>(
       // transition.finished.then(() => {
       //   draggable.style.transition = '';
       // });
-
-      this.saveResponse();
-      this.checkMaxAssociations();
     }
 
     protected checkMaxAssociations(): void {
-      this.droppables.forEach(d => {
+      this.droppables.forEach((d, index) => {
         const maxMatch = +(d.getAttribute('match-max') || 1);
         const currentAssociations = d.querySelectorAll('[qti-draggable="true"]').length;
         const disableDroppable = currentAssociations >= maxMatch;
-
         disableDroppable ? this.disableDroppable(d) : this.enableDroppable(d);
       });
     }
@@ -221,6 +218,7 @@ export const DragDropInteractionMixin = <T extends Constructor<LitElement>>(
       const moveElement = (): void => {
         draggable.style.transform = 'translate(0, 0)';
         droppable.appendChild(draggable);
+        this.checkMaxAssociations();
       };
 
       if (!document.startViewTransition) {
@@ -229,8 +227,6 @@ export const DragDropInteractionMixin = <T extends Constructor<LitElement>>(
         const transition = document.startViewTransition(moveElement);
         await transition.finished;
       }
-
-      this.checkMaxAssociations();
     }
 
     validate(): boolean {
