@@ -48,7 +48,7 @@
 }
 
 .handle {
-  background-image: radial-gradient(
+  /* background-image: radial-gradient(
     circle at center,
     rgba(0, 0, 0, 0.1) 0,
     rgb(0, 0, 0, 0.1) 2px,
@@ -57,7 +57,8 @@
   );
   background-repeat: repeat-y;
   background-position: left 2px;
-  background-size: 14px 8px;
+  background-size: 14px 8px; */
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
 }
 
 .check-mask {
@@ -138,6 +139,20 @@
 
 .drag {
   @apply bordered handle;
+
+  transition:
+    transform 200ms ease-out,
+    box-shadow 200ms ease-out,
+    rotate 200ms ease-out;
+
+  /* & [dragging] {
+    pointer-events: none;
+    rotate: -2deg;
+    box-shadow:
+      0 8px 12px rgba(0, 0, 0, 0.2),
+      0 4px 8px rgba(0, 0, 0, 0.1);
+  } */
+
   border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color-gray);
   outline: none;
   padding: var(--qti-padding-md) var(--qti-padding-lg) var(--qti-padding-md) var(--qti-padding-xl); /* Padding shorthand */
@@ -150,6 +165,8 @@
 
 .drop {
   @apply bordered;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7" stroke="%23CCCCCC" stroke-width="1" fill="transparent" /></svg>')
+    center no-repeat;
   border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color-gray);
   outline: none;
   border-radius: var(--qti-border-radius-lg);

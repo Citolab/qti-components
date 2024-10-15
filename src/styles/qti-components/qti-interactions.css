@@ -323,25 +323,12 @@
 
       & qti-simple-associable-choice {
         @apply drag;
-        transition:
-          transform 200ms ease-out,
-          box-shadow 200ms ease-out,
-          rotate 200ms ease-out;
 
         &:hover {
           @apply hov;
         }
         &:focus {
           @apply foc;
-        }
-        &[dragging] {
-          /* opacity: 0.5 !important; */
-          pointer-events: none;
-          rotate: -2deg;
-          /* give me a nice boxshadow for dragging elements */
-          box-shadow:
-            0 8px 12px rgba(0, 0, 0, 0.2),
-            0 4px 8px rgba(0, 0, 0, 0.1);
         }
       }
     }
@@ -382,6 +369,7 @@
         }
         &::part(dropslot) {
           @apply drop;
+
           &:hover {
             @apply hov;
           }

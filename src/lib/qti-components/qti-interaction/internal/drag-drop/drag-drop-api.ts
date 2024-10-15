@@ -204,7 +204,13 @@ export class TouchDragAndDrop {
     return this.getDropTargetAtPoint(document, x, y);
   }
 
-  private getDropTargetAtPoint(root: DocumentOrShadowRoot, x: number, y: number): Element | null {
+  private getDropTargetAtPoint(root: DocumentOrShadowRoot, x: number, y: number, depth: number = 0): Element | null {
+    // Limit the recursion depth
+    const MAX_DEPTH = 2;
+    if (depth > MAX_DEPTH) {
+      return null;
+    }
+
     const element = root.elementFromPoint(x, y) as HTMLElement;
 
     if (!element) {
@@ -224,9 +230,9 @@ export class TouchDragAndDrop {
       currentElement = currentElement.parentElement;
     }
 
-    // If the element is inside a Shadow DOM, check its shadow root
-    if (element.shadowRoot) {
-      const shadowElement = this.getDropTargetAtPoint(element.shadowRoot, x, y);
+    // If the element has a Shadow DOM and depth limit not reached, traverse it
+    if (element.shadowRoot && depth < MAX_DEPTH) {
+      const shadowElement = this.getDropTargetAtPoint(element.shadowRoot, x, y, depth + 1);
       if (shadowElement) {
         return shadowElement;
       }
