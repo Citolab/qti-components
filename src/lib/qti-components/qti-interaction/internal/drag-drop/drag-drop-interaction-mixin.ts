@@ -108,8 +108,9 @@ export const DragDropInteractionMixin = <T extends Constructor<LitElement>>(
     }
 
     private handleDragStart = (ev: DragEvent) => {
-      ev.dataTransfer.setData('text', ev.currentTarget.getAttribute('identifier'));
-      ev.currentTarget.setAttribute('dragging', '');
+      const target = ev.currentTarget as HTMLElement;
+      ev.dataTransfer.setData('text', target.getAttribute('identifier'));
+      target.setAttribute('dragging', '');
       this.activateDroppables();
     };
 
