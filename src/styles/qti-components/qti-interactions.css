@@ -323,6 +323,10 @@
 
       & qti-simple-associable-choice {
         @apply drag;
+        transition:
+          /* transform 2s, */
+          box-shadow 200ms ease-out,
+          rotate 200ms ease-out;
 
         &:hover {
           @apply hov;
@@ -331,8 +335,13 @@
           @apply foc;
         }
         &[dragging] {
-          opacity: 0.5 !important;
+          /* opacity: 0.5 !important; */
           pointer-events: none;
+          rotate: -2deg;
+          /* give me a nice boxshadow for dragging elements */
+          box-shadow:
+            0 8px 12px rgba(0, 0, 0, 0.2),
+            0 4px 8px rgba(0, 0, 0, 0.1);
         }
       }
     }
@@ -381,13 +390,16 @@
           }
           min-height: 6rem;
           box-sizing: border-box;
+          display: flex;
+          justify-content: center;
+          align-items: center;
         }
 
         & > *:not(qti-simple-associable-choice) {
           pointer-events: none;
         }
 
-        & [match-max='1'] {
+        /* & [match-max='1'] {
           height: 100%;
 
           &::part(slot) {
@@ -395,7 +407,7 @@
             display: grid;
             place-items: center;
           }
-        }
+        } */
 
         & > qti-simple-associable-choice {
           @apply drag;

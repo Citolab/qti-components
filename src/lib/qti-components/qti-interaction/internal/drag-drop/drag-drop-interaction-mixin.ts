@@ -151,6 +151,7 @@ export const DragDropInteractionMixin = <T extends Constructor<LitElement>>(
       const targetIndex = Math.min(index, parent.children.length);
 
       const moveDraggable = (draggable: HTMLElement, parent: HTMLElement, index: number) => {
+        draggable.style.transform = 'translate(0, 0)';
         const targetIndex = Math.min(index, parent.children.length);
         parent.insertBefore(draggable, parent.children[targetIndex]);
       };
@@ -162,7 +163,10 @@ export const DragDropInteractionMixin = <T extends Constructor<LitElement>>(
       }
 
       // Use view transitions if supported
-      const transition = document.startViewTransition(() => moveDraggable(draggable, parent, index));
+      const transition = document.startViewTransition(() => {
+        draggable.style.transform = '';
+        moveDraggable(draggable, parent, index);
+      });
       await transition.finished;
 
       this.saveResponse();
@@ -213,6 +217,7 @@ export const DragDropInteractionMixin = <T extends Constructor<LitElement>>(
         return;
       }
       const moveElement = (): void => {
+        draggable.style.transform = 'translate(0, 0)';
         droppable.appendChild(draggable);
       };
 
@@ -265,6 +270,7 @@ export const DragDropInteractionMixin = <T extends Constructor<LitElement>>(
 
     private async resetDroppables(): Promise<void> {
       const moveDraggable = (draggable: HTMLElement, parent: HTMLElement, index: number) => {
+        draggable.style.transform = 'translate(0, 0)';
         const targetIndex = Math.min(index, parent.children.length);
         parent.insertBefore(draggable, parent.children[targetIndex]);
       };

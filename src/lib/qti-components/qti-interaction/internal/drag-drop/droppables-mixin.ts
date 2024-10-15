@@ -123,6 +123,7 @@ export const DroppablesMixin = <T extends Constructor<LitElement>>(
 
     private async moveDraggableToDroppable(draggable: HTMLElement, droppable: HTMLElement): Promise<void> {
       const moveElement = (): void => {
+        draggable.style.transform = 'translate(0, 0)';
         droppable.appendChild(draggable);
       };
 
