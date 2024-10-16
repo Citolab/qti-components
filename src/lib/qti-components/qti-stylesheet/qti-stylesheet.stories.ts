@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 
 import '../qti-assessment-item/qti-assessment-item';
-import '../qti-interaction/internal/choice/choice.mixin';
+import '../qti-interaction/internal/active-element/active-element.mixin';
 import '../qti-interaction/qti-choice-interaction/qti-choice-interaction';
 import '../qti-item-body/qti-item-body';
 import '../qti-stylesheet/qti-stylesheet';

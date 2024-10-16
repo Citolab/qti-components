@@ -1,10 +1,14 @@
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { ActiveElementMixin } from './internal/active-element/active-element.mixin';
 
-// THIS IS NOT USED IN TABULAR MATCH INTERACTION
+/* 
+qti-match-interaction
+qti-associate-interaction
+*/
 @customElement('qti-simple-associable-choice')
 // tslint:disable: indent
-export class QtiSimpleAssociableChoice extends LitElement {
+export class QtiSimpleAssociableChoice extends ActiveElementMixin(LitElement, 'qti-simple-associable-choice') {
   static styles = css`
     :host {
       display: flex;

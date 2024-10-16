@@ -462,33 +462,29 @@
   }
 
   qti-associate-interaction {
-    &::part(qti-simple-associable-choice),
-    & qti-simple-associable-choice {
-      /* drags in drops */
+    & qti-simple-associable-choice, /* drags when in lightdom */
+    &::part(qti-simple-associable-choice) /* drags when in shadowdom */ {
       @apply drag;
-      display: flex;
-      overflow: hidden;
-      align-items: center;
-      text-overflow: ellipsis;
+      &:hover {
+        @apply hov;
+      }
+      &:focus {
+        @apply foc;
+      }
+      &[dragging] {
+        @apply dragging;
+      }
     }
-    &::part(associables-container) {
-      display: flex;
-      justify-content: space-between;
-      background: linear-gradient(
-        180deg,
-        rgb(0 0 0 / 0%) calc(50% - 1px),
-        var(--qti-border-color-gray) calc(50%),
-        rgb(0 0 0 / 0%) calc(50% + 1px)
-      );
-    }
-    &::part(active) {
-      @apply act;
-    }
-    &::part(drop-container) {
+
+    /* display: flex;
+    overflow: hidden;
+    align-items: center; */
+    /* &::part(drop-container) {
       display: flex;
       flex-direction: column;
       gap: var(--qti-gap-size);
-    }
+    } */
+
     &::part(drop-list) {
       @apply drop;
       &:focus {
@@ -498,6 +494,9 @@
       height: 3rem;
       min-width: 10rem;
     }
+    /* &::part(drop-list) {
+      @apply act;
+    } */
   }
 
   qti-graphic-order-interaction {

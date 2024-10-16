@@ -1,13 +1,13 @@
 import { css, html, LitElement, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { ChoiceMixin } from './internal/choice/choice.mixin';
+import { ActiveElementMixin } from './internal/active-element/active-element.mixin';
 
 /**
  * qti-order-interaction
  * qti-choice-interaction
  */
 @customElement('qti-simple-choice')
-export class QtiSimpleChoice extends ChoiceMixin(LitElement, 'qti-simple-choice') {
+export class QtiSimpleChoice extends ActiveElementMixin(LitElement, 'qti-simple-choice') {
   static styles = css`
     :host {
       display: flex;

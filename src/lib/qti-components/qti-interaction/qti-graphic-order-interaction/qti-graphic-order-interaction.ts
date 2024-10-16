@@ -76,13 +76,13 @@ export class QtiGraphicOrderInteraction extends ChoicesMixin(LitElement, 'qti-ho
 
   override connectedCallback(): void {
     super.connectedCallback();
-    this.addEventListener('qti-choice-element-selected', this.setHotspotOrder);
-    this.addEventListener('qti-register-choice', this.positionHotspotOnRegister);
+    this.addEventListener('activate-qti-hotspot-choice', this.setHotspotOrder);
+    this.addEventListener('register-qti-hotspot-choice', this.positionHotspotOnRegister);
   }
   override disconnectedCallback() {
     super.disconnectedCallback();
-    this.removeEventListener('qti-choice-element-selected', this.setHotspotOrder);
-    this.removeEventListener('qti-register-choice', this.positionHotspotOnRegister);
+    this.removeEventListener('activate-qti-hotspot-choice', this.setHotspotOrder);
+    this.removeEventListener('register-qti-hotspot-choice', this.positionHotspotOnRegister);
   }
 }
 

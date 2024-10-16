@@ -27,7 +27,7 @@ const ariaBooleanConverter: ComplexAttributeConverter<boolean, boolean> = {
  * @param type - The type of the choice, used in event names.
  * @returns A new class extending the base class with choice functionality.
  */
-export function ChoiceMixin<T extends Constructor<LitElement>>(Base: T, type: string) {
+export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, type: string) {
   class QtiChoice extends Base {
     @property({ type: String })
     public identifier = '';

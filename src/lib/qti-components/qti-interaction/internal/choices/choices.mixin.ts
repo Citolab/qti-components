@@ -1,7 +1,7 @@
 import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import { watch } from '../../../../decorators/watch';
-import { ChoiceInterface } from '../choice/choice.mixin';
+import { ChoiceInterface } from '../active-element/active-element.mixin';
 
 type Constructor<T = {}> = new (...args: any[]) => T;
 

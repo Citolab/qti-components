@@ -1,7 +1,9 @@
-import { LitElement, css, html } from 'lit';
+import { CSSResultGroup, LitElement, html } from 'lit';
 
 import { customElement, state } from 'lit/decorators.js';
 import { DragDropInteractionMixin } from '../internal/drag-drop';
+import { QtiSimpleAssociableChoice } from '../qti-simple-associable-choice';
+import styles from './qti-associate-interaction.styles';
 
 @customElement('qti-associate-interaction')
 export class QtiAssociateInteraction extends DragDropInteractionMixin(
@@ -10,18 +12,9 @@ export class QtiAssociateInteraction extends DragDropInteractionMixin(
   true,
   '.dl'
 ) {
-  @state() private _childrenMap: Element[];
+  @state() private _childrenMap: Element[] = [];
 
-  static override styles = css`
-    :host {
-      display: block; /* necessary to calculate scaling position */
-    }
-    slot[name='qti-simple-associable-choice'] {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-  `;
+  static styles: CSSResultGroup = styles;
 
   override render() {
     return html` <slot name="prompt"></slot>
@@ -38,9 +31,21 @@ export class QtiAssociateInteraction extends DragDropInteractionMixin(
       </div>`;
   }
 
-  override connectedCallback() {
-    super.connectedCallback();
-    this._childrenMap = Array.from(this.querySelectorAll('qti-simple-associable-choice'));
+  constructor() {
+    super();
+    this.addEventListener('register-qti-simple-associable-choice', (event: CustomEvent) => {
+      const choice = event.target as QtiSimpleAssociableChoice;
+      this._childrenMap.push(choice);
+    });
+
+    // this.addEventListener('unregister-qti-simple-associable-choice', (event: CustomEvent) => {
+    //   console.log('test');
+    //   const choice = event.target as QtiSimpleAssociableChoice;
+    //   const index = this._childrenMap.indexOf(choice);
+    //   if (index !== -1) {
+    //     this._childrenMap.splice(index, 1);
+    //   }
+    // });
   }
 }
 
