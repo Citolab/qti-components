@@ -11,9 +11,8 @@
  * qti-choice-interaction
  * qti-match-interaction
  */
-import { html, LitElement, PropertyValues } from 'lit';
+import { LitElement, PropertyValues } from 'lit';
 import { property } from 'lit/decorators.js';
-import { QtiChoice } from '../choice/qti-choice';
 import { QtiSimpleChoice } from '../../qti-simple-choice';
 
 type Constructor<T = {}> = new (...args: any[]) => T;

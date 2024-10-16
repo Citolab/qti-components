@@ -1,5 +1,5 @@
 import { css, html, LitElement } from 'lit';
-import { ChoicesMixin } from '../internal/choices/choices';
+import { ChoicesMixin } from '../internal/choices/choices.mixin';
 import { QtiHotspotChoice } from '../qti-hotspot-choice';
 
 import { customElement } from 'lit/decorators.js';

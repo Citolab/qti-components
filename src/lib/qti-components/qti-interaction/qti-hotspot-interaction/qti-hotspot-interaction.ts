@@ -1,6 +1,6 @@
 import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import { ChoicesMixin } from '../internal/choices/choices';
+import { ChoicesMixin } from '../internal/choices/choices.mixin';
 import { positionHotspots } from '../internal/hotspots/hotspot';
 import { QtiHotspotChoice } from '../qti-hotspot-choice';
 
@@ -44,11 +44,11 @@ export class QtiHotspotInteraction extends ChoicesMixin(LitElement, 'qti-hotspot
 
   override connectedCallback(): void {
     super.connectedCallback();
-    this.addEventListener('qti-register-choice', this.positionHotspotOnRegister);
+    this.addEventListener('register-qti-hotspot-choice', this.positionHotspotOnRegister);
   }
   override disconnectedCallback() {
     super.disconnectedCallback();
-    this.removeEventListener('qti-register-choice', this.positionHotspotOnRegister);
+    this.removeEventListener('register-qti-hotspot-choice', this.positionHotspotOnRegister);
   }
 }
 

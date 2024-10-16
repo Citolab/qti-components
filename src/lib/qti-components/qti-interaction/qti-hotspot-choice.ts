@@ -1,11 +1,11 @@
-import { css } from 'lit';
+import { css, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { QtiChoice } from './internal/choice/qti-choice';
+import { QtiChoiceMixin } from './internal/choice/choice.mixin';
 
 // type shape = { shape: 'rect' | 'circle' | 'poly'; coords: number[] };
 
 @customElement('qti-hotspot-choice')
-export class QtiHotspotChoice extends QtiChoice {
+export class QtiHotspotChoice extends QtiChoiceMixin(LitElement, 'qti-hotspot-choice') {
   static styles = css`
     :host {
       display: flex;

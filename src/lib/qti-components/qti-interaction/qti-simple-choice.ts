@@ -1,21 +1,13 @@
-import { css, html, nothing } from 'lit';
+import { css, html, LitElement, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { QtiChoice } from './internal/choice/qti-choice';
+import { QtiChoiceMixin } from './internal/choice/choice.mixin';
 
 /**
- * @summary Short summary of the component's intended use.
- * @documentation https://www.imsglobal.org/spec/qti/v3p0/impl#h.j9nu1oa1tu3b
- * @status stable
- * @since 4.0
- *
- * @event qti-choice-element-selected - Emitted when a choice is selected.
- * @event qti-register-choice - Emitted when an choice is added
- * @event qti-loose-choice - Emitted when a choice is removed
- *
- * @slot - The default slot.
+ * qti-order-interaction
+ * qti-choice-interaction
  */
 @customElement('qti-simple-choice')
-export class QtiSimpleChoice extends QtiChoice {
+export class QtiSimpleChoice extends QtiChoiceMixin(LitElement, 'qti-simple-choice') {
   static styles = css`
     :host {
       display: flex;

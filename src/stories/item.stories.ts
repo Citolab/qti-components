@@ -13,6 +13,10 @@ const meta: Meta = {
       options: packages.packages,
       control: { type: 'radio' }
     },
+    view: {
+      options: ['candidate', 'author'],
+      control: { type: 'radio' }
+    },
     disabled: { control: { type: 'boolean' } },
     itemIndex: { control: { type: 'number' } }
   },
@@ -66,9 +70,16 @@ export const QtiItem: Story = {
   render: ({ disabled, view }, { argTypes, loaded: { xml } }) => {
     item && (item.disabled = disabled);
     item && (item.view = view);
-
     return html`
-      <qti-item @qti-item-variables-changed=${action('qti-item-variables-changed')} .xmlDoc=${xml.itemHTMLDoc}>
+      <qti-item
+        @qti-assessment-item-connected=${e => {
+          item = e.detail;
+          item.disabled = disabled;
+          item.view = view;
+        }}
+        @qti-item-variables-changed=${action('qti-item-variables-changed')}
+        .xmlDoc=${xml.itemHTMLDoc}
+      >
       </qti-item>
       <button
         @click=${() => {

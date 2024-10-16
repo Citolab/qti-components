@@ -2,7 +2,7 @@ import '../../qti-simple-choice';
 
 import { getByTestId, userEvent } from '@storybook/test';
 import { html, LitElement, render } from 'lit';
-import { ChoicesMixin } from './choices';
+import { ChoicesMixin } from './choices.mixin';
 
 class TestElement extends ChoicesMixin(LitElement, 'qti-simple-choice') {
   render() {
@@ -65,14 +65,18 @@ describe('ChoicesMixin', () => {
     });
 
     it('should have role attribute set to "radio" for the first child element', async () => {
+      const choiceA = getByTestId(document.body, 'A');
+      const choiceB = getByTestId(document.body, 'B');
+
       expect(element.children[0].getAttribute('role')).toBe('radio');
       expect(element.validate()).toBeFalsy();
-      await userEvent.click(getByTestId(document.body, 'A'));
-      expect(getByTestId(document.body, 'A').getAttribute('aria-checked')).toBe('true');
-      expect(getByTestId(document.body, 'B').getAttribute('aria-checked')).toBe('false');
-      await userEvent.click(getByTestId(document.body, 'B'));
-      // expect(getByTestId(document.body, 'A').getAttribute('aria-checked')).toBe('false');
-      expect(getByTestId(document.body, 'B').getAttribute('aria-checked')).toBe('true');
+
+      await userEvent.click(choiceA);
+      expect(choiceA.getAttribute('aria-checked')).toBe('true');
+      expect(choiceB.getAttribute('aria-checked')).toBe('false');
+
+      await userEvent.click(choiceB);
+      expect(choiceB.getAttribute('aria-checked')).toBe('true');
       expect(element.validate()).toBeTruthy();
     });
   });

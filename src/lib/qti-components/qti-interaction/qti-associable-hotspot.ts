@@ -13,7 +13,6 @@ export class QtiAssociableHotspot extends LitElement {
 
   override connectedCallback() {
     super.connectedCallback();
-
     this.dispatchEvent(
       new CustomEvent('qti-register-hotspot', {
         bubbles: true,

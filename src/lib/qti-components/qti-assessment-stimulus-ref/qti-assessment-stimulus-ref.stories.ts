@@ -5,7 +5,7 @@ import { createRef, ref } from 'lit/directives/ref.js';
 import '../qti-assessment-item/qti-assessment-item';
 import '../qti-assessment-stimulus-ref/qti-assessment-stimulus-ref';
 import { QtiAssessmentStimulusRef } from '../qti-assessment-stimulus-ref/qti-assessment-stimulus-ref';
-import '../qti-interaction/internal/choice/qti-choice';
+import '../qti-interaction/internal/choice/choice.mixin';
 import '../qti-interaction/qti-choice-interaction/qti-choice-interaction';
 import '../qti-item-body/qti-item-body';
 
