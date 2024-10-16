@@ -10,7 +10,7 @@ export class TouchDragAndDrop {
   private initialTransform = ''; // Original transform style
   private hasDispatchedDragStart = false; // Flag to ensure dragstart event is dispatched once
 
-  private rootNode: DocumentOrShadowRoot = null; // Root node for boundary calculations
+  private rootNode: Node = null; // Root node for boundary calculations
 
   private dataTransfer = {
     data: {},
@@ -33,11 +33,8 @@ export class TouchDragAndDrop {
   dragOnClickEnabled = false;
   useDragClone = false; // Set to true to drag with a clone; set to false to drag the original element
 
-  private readonly DOUBLE_CLICK_DELAY = 500; // Max delay for a double-click
-  private readonly CONTEXT_MENU_DELAY = 1000; // Delay before context menu is shown
   private readonly MIN_DRAG_DISTANCE = 5; // Minimum pixel movement to start dragging
   private readonly DRAG_CLONE_OPACITY = 1; // Opacity of the drag clone element
-  private readonly ORIGINAL_OPACITY = 0.7; // Original opacity of the dragged element
   initialTransition: string;
 
   constructor() {
@@ -94,7 +91,8 @@ export class TouchDragAndDrop {
 
       // Set higher z-index to bring it on top
       this.dragSource.style.zIndex = '9999';
-      this.dragSource.style.pointerEvents = 'none'; // So it doesn't block events
+      // this.dragSource.style.pointerEvents = 'none'; // So it doesn't block events
+      this.dragSource.focus();
     }
 
     e.preventDefault();
@@ -106,6 +104,7 @@ export class TouchDragAndDrop {
       const currentTouch = { clientX: x, clientY: y };
 
       if (this.calculateDragDistance(currentTouch) >= this.MIN_DRAG_DISTANCE) {
+        this.dragSource.style.pointerEvents = 'none'; // So it doesn't block events
         this.isDragging = true;
       }
 
