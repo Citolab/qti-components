@@ -15,7 +15,7 @@ export interface ChoicesInterface {
 
 export const ChoicesMixin = <T extends Constructor<LitElement>>(superClass: T, selector: string) => {
   class ChoicesMixinElement extends superClass implements ChoicesInterface {
-    public _choiceElements = [];
+    public _choiceElements: Choice[] = [];
 
     @property({ attribute: 'response-identifier' })
     public responseIdentifier = '';
@@ -46,7 +46,7 @@ export const ChoicesMixin = <T extends Constructor<LitElement>>(superClass: T, s
     }
 
     public validate(): boolean {
-      const selectedCount = this._choiceElements.filter(choice => choice.checked).length;
+      const selectedCount = this._choiceElements.filter(choice => this._getChoiceChecked(choice)).length;
       if (this.maxChoices !== 0 && selectedCount > this.maxChoices) {
         return false;
       }
@@ -56,7 +56,7 @@ export const ChoicesMixin = <T extends Constructor<LitElement>>(superClass: T, s
     public set response(responseValue: string | string[]) {
       const responseArray = Array.isArray(responseValue) ? responseValue : [responseValue];
       this._choiceElements.forEach(choice => {
-        choice.checked = responseArray.includes(choice.identifier);
+        this._setChoiceChecked(choice, responseArray.includes(choice.identifier));
       });
     }
 
@@ -77,7 +77,7 @@ export const ChoicesMixin = <T extends Constructor<LitElement>>(superClass: T, s
       super.connectedCallback();
       this.addEventListener(`register-${selector}`, this._registerChoiceElement);
       this.addEventListener(`unregister-${selector}`, this._unregisterChoiceElement);
-      this.addEventListener(`click-${selector}`, this._choiceElementSelectedHandler);
+      this.addEventListener(`activate-${selector}`, this._choiceElementSelectedHandler);
       this.dispatchEvent(
         new CustomEvent(`qti-register-interaction`, {
           bubbles: true,
@@ -90,7 +90,7 @@ export const ChoicesMixin = <T extends Constructor<LitElement>>(superClass: T, s
       super.disconnectedCallback();
       this.removeEventListener(`register-${selector}`, this._registerChoiceElement);
       this.removeEventListener(`unregister-${selector}`, this._unregisterChoiceElement);
-      this.removeEventListener(`click-${selector}`, this._choiceElementSelectedHandler);
+      this.removeEventListener(`activate-${selector}`, this._choiceElementSelectedHandler);
     }
 
     private _registerChoiceElement(event: CustomEvent) {
@@ -116,30 +116,57 @@ export const ChoicesMixin = <T extends Constructor<LitElement>>(superClass: T, s
       choiceElement.setAttribute('role', this.maxChoices === 1 ? 'radio' : 'checkbox');
     }
 
-    protected _choiceElementSelectedHandler(event: CustomEvent<{ identifier: string; checked: boolean }>) {
+    protected _choiceElementSelectedHandler(event: CustomEvent<{ identifier: string }>) {
+      this._toggleChoiceChecked(event.target as Choice);
       if (this.maxChoices === 1) {
         this._choiceElements.forEach(choice => {
           if (choice.identifier !== event.detail.identifier) {
-            choice.checked = false;
+            this._setChoiceChecked(choice, false);
           }
         });
       }
       this._handleChoiceSelection();
     }
 
+    private _setChoiceChecked(choice: Choice, checked: boolean) {
+      choice.setAttribute('aria-checked', checked.toString());
+    }
+
+    private _getChoiceChecked(choice: Choice): boolean {
+      return choice.getAttribute('aria-checked') === 'true';
+    }
+
+    private _toggleChoiceChecked(choice: Choice) {
+      const checked = this._getChoiceChecked(choice);
+      this._setChoiceChecked(choice, !checked);
+    }
+
+    /**
+     * Handles the selection of choices.
+     *
+     * This method filters the choice elements based on their checked state and retrieves the selected identifiers.
+     * If the `maxChoices` property is set to a value greater than 1 and not equal to 0, it disables unselected choices
+     * when the maximum number of choices is reached.
+     * Finally, it saves the response based on the `maxChoices` property.
+     */
     protected _handleChoiceSelection() {
-      const selectedChoices = this._choiceElements.filter(choice => choice.checked);
+      const selectedChoices = this._choiceElements.filter(choice => this._getChoiceChecked(choice));
       const selectedIdentifiers = selectedChoices.map(choice => choice.identifier);
 
       if (this.maxChoices > 1 && this.maxChoices !== 0) {
         const disableUnselected = selectedChoices.length >= this.maxChoices;
         this._choiceElements.forEach(choice => {
-          if (!choice.checked) {
+          if (!this._getChoiceChecked(choice)) {
             choice.disabled = disableUnselected;
           }
         });
       }
 
+      /**
+       * The response from the interaction.
+       * If `maxChoices` is 1, it will be the selected identifier or `undefined` if no identifier is selected.
+       * If `maxChoices` is greater than 1, it will be an array of selected identifiers.
+       */
       const response = this.maxChoices === 1 ? selectedIdentifiers[0] || undefined : selectedIdentifiers;
       this._saveResponse(response);
     }

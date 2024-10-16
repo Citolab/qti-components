@@ -1,9 +1,9 @@
 import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import { QtiChoiceMixin } from './internal/choice/choice.mixin';
+import { ChoiceMixin } from './internal/choice/choice.mixin';
 
 @customElement('qti-hottext')
-export class QtiHottext extends QtiChoiceMixin(LitElement, 'qti-hottext') {
+export class QtiHottext extends ChoiceMixin(LitElement, 'qti-hottext') {
   static styles = css`
     :host {
       display: flex;

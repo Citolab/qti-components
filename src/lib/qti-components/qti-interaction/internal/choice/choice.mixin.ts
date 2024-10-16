@@ -8,7 +8,6 @@ export interface ChoiceInterface {
   identifier: string;
   disabled: boolean;
   readonly: boolean;
-  checked: boolean;
 }
 
 /**
@@ -28,7 +27,7 @@ const ariaBooleanConverter: ComplexAttributeConverter<boolean, boolean> = {
  * @param type - The type of the choice, used in event names.
  * @returns A new class extending the base class with choice functionality.
  */
-export function QtiChoiceMixin<T extends Constructor<LitElement>>(Base: T, type: string) {
+export function ChoiceMixin<T extends Constructor<LitElement>>(Base: T, type: string) {
   class QtiChoice extends Base {
     @property({ type: String })
     public identifier = '';
@@ -52,19 +51,26 @@ export function QtiChoiceMixin<T extends Constructor<LitElement>>(Base: T, type:
     })
     public readonly = false;
 
-    @property({
-      type: Boolean,
-      reflect: true,
-      attribute: 'aria-checked',
-      converter: ariaBooleanConverter
-    })
-    public checked = false;
+    private _internals: ElementInternals;
 
     @watch('disabled', { waitUntilFirstUpdate: true })
     handleDisabledChange(_oldValue: boolean, disabled: boolean) {
       this.tabIndex = disabled ? -1 : 0;
       if (disabled) {
         this.blur();
+      }
+    }
+
+    constructor(...args: any[]) {
+      super(...args);
+      this._internals = this.attachInternals();
+    }
+
+    public setInternalState(key: string, value: boolean) {
+      if (value && !this._internals.states.has(key)) {
+        this._internals.states.add(key);
+      } else if (!value && this._internals.states.has(key)) {
+        this._internals.states.delete(key);
       }
     }
 
@@ -96,34 +102,27 @@ export function QtiChoiceMixin<T extends Constructor<LitElement>>(Base: T, type:
       );
     }
 
-    /** Resets the choice to its initial state. */
-    public reset() {
-      this.checked = false;
-      this.disabled = false;
-    }
-
     private _onKeyUp(event: KeyboardEvent) {
       if (event.altKey) return;
 
       if (event.code === 'Space') {
         event.preventDefault();
-        this._toggleChecked();
+        this._activate();
       }
     }
 
     private _onClick() {
-      this._toggleChecked();
+      this._activate();
     }
 
-    private _toggleChecked() {
+    private _activate() {
       if (this.disabled || this.readonly) return;
-      this.checked = !this.checked;
 
       this.dispatchEvent(
-        new CustomEvent(`click-${type}`, {
+        new CustomEvent<{ identifier: string }>(`activate-${type}`, {
           bubbles: true,
           composed: true,
-          detail: { identifier: this.identifier, checked: this.checked }
+          detail: { identifier: this.identifier }
         })
       );
     }

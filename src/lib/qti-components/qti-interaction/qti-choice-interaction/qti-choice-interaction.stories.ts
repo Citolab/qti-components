@@ -87,9 +87,9 @@ export const MinChoices1: Story = {
   args: {
     minChoices: 1
   },
-  play: ({ canvasElement }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    userEvent.click(canvas.getByTestId('choice-2'));
+    await userEvent.click(canvas.getByTestId('choice-2'));
     expect(canvas.getByTestId('choice-2').getAttribute('aria-checked')).toBeTruthy();
   }
 };
