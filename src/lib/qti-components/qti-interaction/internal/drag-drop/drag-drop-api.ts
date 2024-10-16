@@ -9,8 +9,11 @@ export class TouchDragAndDrop {
   private isDragging = false; // Whether a drag operation is ongoing
   private initialTransform = ''; // Original transform style
   private hasDispatchedDragStart = false; // Flag to ensure dragstart event is dispatched once
-
   private rootNode: Node = null; // Root node for boundary calculations
+
+  private focusedElement: HTMLElement = null; // To keep track of the currently focused draggable element
+  private focusableDropZones: HTMLElement[] = []; // All dropzones for keyboard navigation
+  private currentDropZoneIndex = -1; // Index for tabbing through drop zones
 
   private dataTransfer = {
     data: {},
@@ -36,6 +39,7 @@ export class TouchDragAndDrop {
   private readonly MIN_DRAG_DISTANCE = 5; // Minimum pixel movement to start dragging
   private readonly DRAG_CLONE_OPACITY = 1; // Opacity of the drag clone element
   initialTransition: string;
+  droppables: Element[];
 
   constructor() {
     if (TouchDragAndDrop.instance) {
@@ -49,12 +53,31 @@ export class TouchDragAndDrop {
     document.addEventListener('touchend', this.handleTouchEnd.bind(this), { passive: false });
     document.addEventListener('mouseup', this.handleTouchEnd.bind(this), { passive: false });
     document.addEventListener('touchcancel', this.handleTouchCancel.bind(this), { passive: false });
+
+    document.addEventListener('keydown', this.handleKeyDown.bind(this));
+    document.addEventListener('keyup', this.handleKeyUp.bind(this));
   }
 
   addDraggableElements(draggables: Element[]) {
     draggables.forEach(el => {
+      el.setAttribute('tabindex', '0'); // Make draggable elements focusable
+      el.addEventListener('focus', () => (this.focusedElement = el as HTMLElement));
+      el.addEventListener('blur', () => (this.focusedElement = null));
+
       el.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: false });
       el.addEventListener('mousedown', this.handleTouchStart.bind(this), { passive: false });
+    });
+  }
+
+  addDroppableElements(droppables: Element[]) {
+    this.droppables = droppables;
+    droppables.forEach(el => {
+      el.setAttribute('tabindex', '0'); // Make draggable elements focusable
+      el.addEventListener('focus', () => (this.focusedElement = el as HTMLElement));
+      el.addEventListener('blur', () => (this.focusedElement = null));
+
+      // el.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: false });
+      // el.addEventListener('mousedown', this.handleTouchStart.bind(this), { passive: false });
     });
   }
 
@@ -239,6 +262,61 @@ export class TouchDragAndDrop {
 
     // No element with 'dropzone' found
     return null;
+  }
+
+  private handleKeyDown(e: KeyboardEvent) {
+    if (this.focusedElement) {
+      if (e.key === ' ' && !this.isDragging) {
+        // Spacebar pressed to start dragging
+        e.preventDefault();
+        this.isDraggable = true;
+        this.dragSource = this.focusedElement;
+        this.isDragging = true;
+
+        // Store the drop zones for navigation
+        this.collectDropZones();
+
+        // Trigger dragstart event
+        this.dispatchCustomEvent(this.dragSource, 'dragstart');
+      } else if (e.key === 'Tab' && this.isDragging) {
+        // Tab key to navigate through drop zones
+        e.preventDefault();
+        this.moveToNextDropZone();
+      }
+    }
+  }
+
+  private handleKeyUp(e: KeyboardEvent) {
+    if (e.key === ' ' && this.isDragging && this.currentDropTarget) {
+      // Spacebar pressed again to drop the element
+      e.preventDefault();
+      this.dispatchCustomEvent(this.currentDropTarget, 'drop');
+      this.dispatchCustomEvent(this.dragSource, 'dragend');
+      this.resetDragState(true);
+    }
+  }
+
+  private collectDropZones() {
+    // Collect all elements with dropzone attribute
+    this.focusableDropZones = this.droppables; // Array.from(document.querySelectorAll('[dropzone]')) as HTMLElement[];
+    this.currentDropZoneIndex = -1; // Reset navigation index
+  }
+
+  private moveToNextDropZone() {
+    if (this.focusableDropZones.length === 0) return;
+
+    // Update index for the next drop zone
+    this.currentDropZoneIndex = (this.currentDropZoneIndex + 1) % this.focusableDropZones.length;
+
+    // Focus the next drop zone
+    const nextDropZone = this.focusableDropZones[this.currentDropZoneIndex];
+    nextDropZone.focus();
+
+    // Update current drop target
+    this.currentDropTarget = nextDropZone;
+
+    // Dispatch dragenter event
+    this.dispatchCustomEvent(nextDropZone, 'dragenter');
   }
 
   private getEventCoordinates(event, page = false) {

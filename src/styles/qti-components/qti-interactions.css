@@ -362,7 +362,7 @@
         }
         &[enabled] {
           &::part(dropslot) {
-            @apply foc;
+            @apply dropping;
           }
         }
         &[disabled] {
@@ -378,7 +378,9 @@
         }
         &::part(dropslot) {
           @apply drop;
-
+          &[dragging] {
+            @apply dragging;
+          }
           &:focus {
             @apply foc;
           }
@@ -393,16 +395,6 @@
         & > *:not(qti-simple-associable-choice) {
           pointer-events: none;
         }
-
-        /* & [match-max='1'] {
-          height: 100%;
-
-          &::part(slot) {
-            height: 100%;
-            display: grid;
-            place-items: center;
-          }
-        } */
 
         & > qti-simple-associable-choice {
           @apply drag;
@@ -487,12 +479,15 @@
 
     &::part(drop-list) {
       @apply drop;
-      &:focus {
-        @apply foc;
-      }
       display: grid;
       height: 3rem;
       min-width: 10rem;
+    }
+    &::part(drop-list):focus {
+      @apply foc;
+    }
+    &::part(drop-list)[dragging] {
+      @apply act;
     }
     /* &::part(drop-list) {
       @apply act;

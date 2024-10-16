@@ -22,7 +22,8 @@ export class QtiGraphicGapMatchInteraction extends DragDropInteractionMixin(
   `;
 
   override render() {
-    return html` <slot></slot>
+    return html` <slot name="prompt"></slot>
+      <slot></slot>
       <slot name="qti-gap-img"></slot>`;
   }
 

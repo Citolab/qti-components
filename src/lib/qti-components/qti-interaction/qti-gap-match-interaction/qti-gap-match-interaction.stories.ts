@@ -60,6 +60,7 @@ export const Default = {
       ?readonly=${args.readonly}
       ?disabled=${args.disabled}
     >
+      <qti-prompt>Fill all the slots</qti-prompt>
       <qti-gap-text identifier="W" match-max="1">winter</qti-gap-text>
       <qti-gap-text identifier="Sp" match-max="1">spring</qti-gap-text>
       <qti-gap-text identifier="Su" match-max="1">summer</qti-gap-text>

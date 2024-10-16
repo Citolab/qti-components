@@ -1,6 +1,6 @@
 :root,
 :host {
-  --qti-primary-light: #ffbebe;
+  --qti-primary-light: #ffeaea;
   --qti-primary: #f86d70;
   --qti-primary-dark: #a1616a;
 
@@ -159,6 +159,10 @@
   border-radius: var(--qti-border-radius-lg);
   position: relative;
   background-color: var(--qti-bg-white);
+}
+
+.dropping {
+  background-color: var(--qti-primary-light);
 }
 
 .order {

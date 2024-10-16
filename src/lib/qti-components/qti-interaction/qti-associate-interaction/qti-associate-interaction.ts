@@ -4,7 +4,6 @@ import { customElement, state } from 'lit/decorators.js';
 import { DragDropInteractionMixin } from '../internal/drag-drop';
 import { QtiSimpleAssociableChoice } from '../qti-simple-associable-choice';
 import styles from './qti-associate-interaction.styles';
-
 @customElement('qti-associate-interaction')
 export class QtiAssociateInteraction extends DragDropInteractionMixin(
   LitElement,
@@ -15,6 +14,7 @@ export class QtiAssociateInteraction extends DragDropInteractionMixin(
   @state() private _childrenMap: Element[] = [];
 
   static styles: CSSResultGroup = styles;
+  // dragDropApi: TouchDragAndDrop;
 
   override render() {
     return html` <slot name="prompt"></slot>
@@ -30,6 +30,14 @@ export class QtiAssociateInteraction extends DragDropInteractionMixin(
         )}
       </div>`;
   }
+
+  // async connectedCallback(): Promise<void> {
+  //   super.connectedCallback();
+  //   await this.updateComplete;
+  //   this.dragDropApi = new TouchDragAndDrop();
+  //   this.dragDropApi.addDraggableElements(this.querySelectorAll('qti-simple-associable-choice'));
+  //   this.dragDropApi.addDroppableElements(this.shadowRoot.querySelectorAll('.dl'));
+  // }
 
   constructor() {
     super();

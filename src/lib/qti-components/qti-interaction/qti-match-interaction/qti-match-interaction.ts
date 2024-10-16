@@ -4,6 +4,7 @@ import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-intera
 import { customElement, property, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { ResponseInteraction } from '../../internal/expression-result';
+// import { TouchDragAndDrop } from '../internal/drag-drop';
 import '../qti-simple-associable-choice';
 import { QtiSimpleAssociableChoice } from '../qti-simple-associable-choice';
 import styles from './qti-match-interaction.styles';
@@ -33,6 +34,7 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
   lastCheckedRadio: HTMLInputElement | null = null;
 
   @state() _response: string | string[] = [];
+  // dragDropApi: TouchDragAndDrop;
   get response(): string | string[] {
     if (!this.classList.contains('qti-match-tabular')) return super.response;
     else return this._response;
@@ -44,8 +46,16 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
   @state() correctOptions: string[] = [];
   @property({ type: String, attribute: 'response-identifier' }) responseIdentifier: string = '';
 
-  connectedCallback(): void {
+  async connectedCallback(): Promise<void> {
     super.connectedCallback();
+    // await this.updateComplete;
+    // this.dragDropApi = new TouchDragAndDrop();
+    // this.dragDropApi.addDraggableElements(
+    //   this.querySelectorAll('qti-simple-match-set:first-of-type qti-simple-associable-choice')
+    // );
+    // this.dragDropApi.addDroppableElements(
+    //   this.querySelectorAll('qti-simple-match-set:last-of-type qti-simple-associable-choice')
+    // );
     this.rows = Array.from<QtiSimpleAssociableChoice>(
       // eslint-disable-next-line wc/no-child-traversal-in-connectedcallback
       this.querySelectorAll('qti-simple-match-set:first-of-type qti-simple-associable-choice')
@@ -114,7 +124,7 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
 
   override render() {
     if (!this.classList.contains('qti-match-tabular')) {
-      return html`<slot name="prompt"></slot> <slot class=".match"></slot>`;
+      return html`<slot name="prompt"></slot> <slot></slot>`;
     }
     return html`
       <slot name="prompt"></slot>
