@@ -51,16 +51,16 @@
 }
 
 .handle {
-  /* background-image: radial-gradient(
+  background-image: radial-gradient(
     circle at center,
     rgba(0, 0, 0, 0.1) 0,
-    rgb(0, 0, 0, 0.1) 2px,
+    rgb(0, 0, 0, 0.2) 2px,
     white 2px,
     white 100%
   );
-  background-repeat: repeat-y;
-  background-position: left 2px;
-  background-size: 14px 8px; */
+  background-repeat: no-repeat;
+  background-position: bottom center;
+  background-size: 14px 8px;
 }
 
 .check-mask {
