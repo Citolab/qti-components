@@ -67,7 +67,7 @@
     "----hooks----": "-",
     "prepublishOnly": "echo 'calling prepublishOnly as npm lifecycle hook to build-lib!' && npm run build-lib",
     "postpublish": "echo 'posthook for prosperity, does nothing for now!'",
-    "test:browser": "vitest",
+    "test:browser": "vitest --browser.headless=false",
     "chromatic": "node chromatic-runner.cjs"
   },
   "wireit": {

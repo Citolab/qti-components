@@ -64,10 +64,10 @@ export const Default = {
         <p>Which of the following features are <strong>new</strong> to QTI 3?</p>
         <p>Pick 1 choice.</p></qti-prompt
       >
-      <qti-simple-choice data-testid="choice-0" identifier="choice-0">I think you can use WorkFlow.</qti-simple-choice>
-      <qti-simple-choice data-testid="choice-1" identifier="choice-1" fixed>You should use FlowChart</qti-simple-choice>
-      <qti-simple-choice data-testid="choice-2" identifier="choice-2">No you should use Workload</qti-simple-choice>
-      <qti-simple-choice data-testid="choice-3" identifier="choice-3">I would recommend Chart Up.</qti-simple-choice>
+      <qti-simple-choice data-testid="A" identifier="A">Option A</qti-simple-choice>
+      <qti-simple-choice data-testid="B" identifier="B" fixed>Option B</qti-simple-choice>
+      <qti-simple-choice data-testid="C" identifier="C">Option C</qti-simple-choice>
+      <qti-simple-choice data-testid="D" identifier="D">Option D</qti-simple-choice>
     </qti-choice-interaction>`;
   }
 };
@@ -77,8 +77,8 @@ export const Standard: Story = {
   args: {},
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    userEvent.click(canvas.getByTestId('choice-2'));
-    expect(canvas.getByTestId('choice-2').getAttribute('aria-checked')).toBeTruthy();
+    userEvent.click(canvas.getByTestId('B'));
+    expect(canvas.getByTestId('B').getAttribute('aria-checked')).toBeTruthy();
   }
 };
 
@@ -89,8 +89,30 @@ export const MinChoices1: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await userEvent.click(canvas.getByTestId('choice-2'));
-    expect(canvas.getByTestId('choice-2').getAttribute('aria-checked')).toBeTruthy();
+    await userEvent.click(canvas.getByTestId('B'));
+    expect(canvas.getByTestId('B').getAttribute('aria-checked')).toBeTruthy();
+  }
+};
+
+export const MaxChoices1: Story = {
+  render: Default.render,
+  args: {
+    maxChoices: 1
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const choiceA = canvas.getByTestId('A');
+    const choiceB = canvas.getByTestId('B');
+
+    expect(choiceA.getAttribute('role')).toBe('radio');
+    // expect(element.validate()).toBeFalsy();
+
+    await userEvent.click(choiceA);
+    expect(choiceA.getAttribute('aria-checked')).toBe('true');
+
+    await userEvent.click(choiceB);
+    expect(choiceB.getAttribute('aria-checked')).toBe('true');
+    expect(choiceA.getAttribute('aria-checked')).toBe('false');
   }
 };
 
@@ -123,7 +145,7 @@ export const CorrectResponse: Story = {
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const el = canvas.getByTestId('qti-choice-interaction') as QtiChoiceInteraction;
-    el.correctResponse = ['choice-1', 'choice-2'];
+    el.correctResponse = ['A', 'B'];
   }
 };
 
@@ -185,7 +207,7 @@ export const VocabularyLowerAlphaSuffixDotAndCorrectStory = {
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const el = canvas.getByTestId('qti-choice-interaction') as QtiChoiceInteraction;
-    el.correctResponse = ['choice-1', 'choice-2'];
+    el.correctResponse = ['A', 'B'];
   }
 };
 
@@ -195,10 +217,10 @@ export const ContentEditable = {
       <div contenteditable="true">
         <qti-choice-interaction response-identifier="RESPONSE">
           <qti-prompt>Can you start editting one of these simplechoices</qti-prompt>
-          <qti-simple-choice identifier="choice-1"> I think you can use WorkFlow. </qti-simple-choice>
-          <qti-simple-choice identifier="choice-2"><br /></qti-simple-choice>
-          <qti-simple-choice identifier="choice-3"> No you should use Workload Rage. </qti-simple-choice>
-          <qti-simple-choice identifier="choice-4"><br /></qti-simple-choice>
+          <qti-simple-choice identifier="A"> I think you can use WorkFlow. </qti-simple-choice>
+          <qti-simple-choice identifier="B"><br /></qti-simple-choice>
+          <qti-simple-choice identifier="C"> No you should use Workload Rage. </qti-simple-choice>
+          <qti-simple-choice identifier="D"><br /></qti-simple-choice>
         </qti-choice-interaction>
       </div>
     `;
