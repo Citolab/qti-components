@@ -87,6 +87,7 @@
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.15.4",
+    "@chromatic-com/storybook": "^2.0.2",
     "@custom-elements-manifest/analyzer": "^0.10.3",
     "@lit-labs/preact-signals": "^1.0.2",
     "@lit/context": "^1.1.2",
