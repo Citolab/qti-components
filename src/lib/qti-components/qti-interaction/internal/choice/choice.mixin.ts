@@ -90,10 +90,8 @@ export function ChoiceMixin<T extends Constructor<LitElement>>(Base: T, type: st
 
     override disconnectedCallback() {
       super.disconnectedCallback();
-
       this.removeEventListener('keyup', this._onKeyUp);
       this.removeEventListener('click', this._onClick);
-
       this.dispatchEvent(
         new CustomEvent(`unregister-${type}`, {
           bubbles: true,
@@ -112,6 +110,7 @@ export function ChoiceMixin<T extends Constructor<LitElement>>(Base: T, type: st
     }
 
     private _onClick() {
+      this.focus();
       this._activate();
     }
 
