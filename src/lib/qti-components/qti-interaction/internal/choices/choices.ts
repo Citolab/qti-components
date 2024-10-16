@@ -28,18 +28,21 @@ export const ChoicesMixin = <T extends Constructor<LitElement>>(superClass: T, s
       type: Number,
       attribute: 'max-choices'
     })
+    @watch('maxChoices', { waitUntilFirstUpdate: true })
+    _handleMaxChoicesChange = () => this._determineInputType();
     public maxChoices: number = 1;
 
+    @property({ reflect: true, type: Boolean }) disabled = false;
     @watch('disabled', { waitUntilFirstUpdate: true })
-    _handleDisabledChange = (_: boolean, disabled: boolean) =>
+    _handleDisabledChange = (_: boolean, disabled: boolean) => {
+      console.log('disabled', disabled);
       this._choiceElements.forEach(ch => (ch.disabled = disabled));
+    };
 
+    @property({ reflect: true, type: Boolean }) readonly = false;
     @watch('readonly', { waitUntilFirstUpdate: true })
     _handleReadonlyChange = (_: boolean, readonly: boolean) =>
       this._choiceElements.forEach(ch => (ch.readonly = readonly));
-
-    @watch('maxChoices', { waitUntilFirstUpdate: true })
-    _handleMaxChoicesChange = () => this._determineInputType();
 
     constructor(...args: any[]) {
       super(...args);
