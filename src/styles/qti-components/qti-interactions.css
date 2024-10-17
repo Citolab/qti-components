@@ -34,7 +34,7 @@
       & qti-simple-choice {
         @apply check;
 
-        &:hover {
+        &:not([aria-disabled='true'], [aria-readonly='true']):hover {
           @apply hov;
         }
 
@@ -255,14 +255,12 @@
   }
 
   qti-hottext-interaction {
-    qti-hottext {
-      display: inline-flex;
-      align-items: center;
-    }
-
     /* &:not(.qti-input-control-hidden),
     &:not(.qti-unselected-hidden) { */
     qti-hottext {
+      display: inline-flex;
+      align-items: center;
+
       @apply check;
 
       &:hover {

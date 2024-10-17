@@ -52,24 +52,24 @@ export default meta;
 
 export const Default = {
   render: args => {
-    return html` <qti-choice-interaction
+    return html`<qti-choice-interaction
       data-testid="qti-choice-interaction"
       data-max-selections-message="Too little selections made"
       data-min-selections-message="Too much selections made"
-      response-identifier=${args['response-identifier']}
+      response-identifier="RESPONSE"
       @qti-register-interaction=${action(`qti-register-interaction`)}
       @qti-interaction-response=${action(`qti-interaction-response`)}
       class=${ifDefined(args.classes ? args.classes.join(' ') : undefined)}
       min-choices=${ifDefined(args['min-choices'])}
       max-choices=${ifDefined(args['max-choices'])}
       orientation=${ifDefined(args.orientation)}
-      shuffle=${args.shuffle}
+      ?shuffle=${args.shuffle}
       ?readonly=${args.readonly}
       .disabled=${args.disabled}
       ><qti-prompt>
         <p>Which of the following features are <strong>new</strong> to QTI 3?</p>
-        <p>Pick 1 choice.</p></qti-prompt
-      >
+        <p>Pick 1 choice.</p>
+      </qti-prompt>
       <qti-simple-choice data-testid="A" identifier="A">Option A</qti-simple-choice>
       <qti-simple-choice data-testid="B" identifier="B" fixed>Option B</qti-simple-choice>
       <qti-simple-choice data-testid="C" identifier="C">Option C</qti-simple-choice>
@@ -86,6 +86,18 @@ export const Standard: Story = {
     userEvent.click(canvas.getByTestId('B'));
     expect(canvas.getByTestId('B').getAttribute('aria-checked')).toBeTruthy();
   }
+};
+
+export const Disabled: Story = {
+  render: Default.render,
+  args: {
+    disabled: true
+  }
+};
+
+export const Readonly: Story = {
+  render: Default.render,
+  args: { readonly: true }
 };
 
 export const MinChoices1: Story = {
@@ -122,7 +134,7 @@ export const MaxChoices1: Story = {
   }
 };
 
-export const Simple: Story = {
+export const ControlHidden: Story = {
   render: Default.render,
   args: {
     orientation: 'vertical',

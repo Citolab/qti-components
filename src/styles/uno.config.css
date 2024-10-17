@@ -1,38 +1,66 @@
 :root,
 :host {
+  /* Primary colors */
   --qti-primary-light: #ffeaea;
   --qti-primary: #f86d70;
   --qti-primary-dark: #a1616a;
+
+  /* Secondary colors */
   --qti-secondary-light: #bed4ff;
   --qti-secondary: #6daef8;
   --qti-secondary-dark: #3a449d;
+
+  /* Background colors */
+  --qti-bg-gray-50: #f9fafb;
+  --qti-bg-gray-100: #f3f4f6;
+  --qti-bg-white: white;
+  --qti-bg-primary: var(--qti-primary);
+
+  /* Text colors */
+  --qti-text-gray-500: #6b7280;
+  --qti-text-white: white;
+
+  /* Border properties */
   --qti-border-thickness: 1.5px;
   --qti-border-style: solid;
   --qti-border-color-gray: #c6cad0; /* Corresponding to border-gray-400 */
   --qti-border-radius-md: 0.375rem;
   --qti-border-radius-lg: 0.5rem;
   --qti-border-radius-full: 9999px;
-  --qti-bg-gray-50: #f9fafb;
-  --qti-bg-primary: var(--qti-primary);
-  --qti-bg-gray-100: #f3f4f6;
-  --qti-bg-white: white;
-  --qti-line-height: 2.5;
-  --qti-text-gray-500: #6b7280;
-  --qti-text-white: white;
+
+  /* Padding */
   --qti-padding-sm: 0.125rem; /* py-0.5 */
   --qti-padding-md: 0.5rem; /* py-2 */
   --qti-padding-lg: 0.75rem; /* p-3 */
   --qti-padding-xl: 1rem; /* pl-4 */
+
+  /* Form & layout */
+  --qti-form-size: 1rem;
+  --qti-gap-size: 0.5rem;
+
+  /* Typography */
   --qti-font-weight-semibold: 600;
+  --qti-line-height: 2.5;
+
+  /* Focus & active states */
   --qti-active: blue;
   --qti-focus-color: #bddcff7e;
   --qti-focus-border-width: 5px;
+
+  /* Correct/Incorrect feedback */
   --qti-correct: rgb(74 222 128);
   --qti-correct-light: rgb(220 252 231);
   --qti-incorrect: rgb(248 113 113);
   --qti-incorrect-light: rgb(254 226 226);
-  --qti-form-size: 1rem;
-  --qti-gap-size: 0.5rem;
+
+  /* ---- */
+  --box-shadow: 0 0.125rem 0.25rem rgb(0 0 0 / 7.5%);
+  --box-shadow-lg: 0 0.5rem 1rem rgb(0 0 0 / 15%);
+  --table-border-color: var(--qti-border-color-gray);
+  --foreground: var(--qti-bg-gray-50);
+  --well-bg: var(--qti-bg-gray-50);
+  --well-border: var(--qti-border-color-gray);
+  --well-box-shadow: var(--box-shadow);
 }
 
 .chevron {
@@ -82,7 +110,7 @@
   @apply bordered;
 
   border-radius: var(--qti-border-radius-md);
-  padding: var(--qti-padding-sm) var(--qti-padding-md);
+  padding: var(--qti-padding-md) var(--qti-padding-md);
   font-weight: var(--qti-font-weight-semibold);
 }
 

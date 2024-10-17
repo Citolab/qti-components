@@ -1,4 +1,4 @@
-import { Canvas, Meta } from '@storybook/blocks';
+import { Canvas, Controls, Meta } from '@storybook/blocks';
 
 import * as Stories from './qti-choice-interaction.stories';
 
@@ -6,6 +6,19 @@ import * as Stories from './qti-choice-interaction.stories';
 
 # qti-choice-interaction
 
-<Canvas of={Stories.Default} />
+<Canvas of={Stories.Standard} />
+<Canvas of={Stories.Disabled} />
+<Canvas of={Stories.MinChoices1} />
+<Canvas of={Stories.MaxChoices1} />
+<Canvas of={Stories.ControlHidden} />
+<Canvas of={Stories.Multiple} />
 
-<Canvas of={Stories.Simple} />
+<Canvas of={Stories.VocabularyDecimal} />
+<Canvas of={Stories.VocabularyLowerAlphaStory} />
+<Canvas of={Stories.VocabularyUpperAlphaStory} />
+
+<Canvas of={Stories.VocabularyLowerAlphaSuffixDotStory} />
+<Canvas of={Stories.VocabularyLowerAlphaSuffixDotAndCorrectStory} />
+
+<Canvas of={Stories.Default} />
+<Controls of={Stories.Default} />

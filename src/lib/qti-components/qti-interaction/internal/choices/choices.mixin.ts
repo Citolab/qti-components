@@ -96,6 +96,7 @@ export const ChoicesMixin = <T extends Constructor<LitElement>>(superClass: T, s
     private _registerChoiceElement(event: CustomEvent) {
       event.stopPropagation();
       const choiceElement = event.target as Choice;
+      choiceElement.disabled = this.disabled;
       this._choiceElements.push(choiceElement);
       this._setInputType(choiceElement);
     }

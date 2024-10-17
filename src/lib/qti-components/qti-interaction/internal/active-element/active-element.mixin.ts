@@ -110,6 +110,7 @@ export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, t
     }
 
     private _onClick() {
+      if (this.disabled || this.readonly) return;
       this.focus();
       this._activate();
     }
