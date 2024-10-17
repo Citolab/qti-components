@@ -39,7 +39,7 @@ export class TouchDragAndDrop {
   private readonly MIN_DRAG_DISTANCE = 5; // Minimum pixel movement to start dragging
   private readonly DRAG_CLONE_OPACITY = 1; // Opacity of the drag clone element
   initialTransition: string;
-  droppables: Element[];
+  // droppables: Element[];
 
   constructor() {
     if (TouchDragAndDrop.instance) {
@@ -69,17 +69,17 @@ export class TouchDragAndDrop {
     });
   }
 
-  addDroppableElements(droppables: Element[]) {
-    this.droppables = droppables;
-    droppables.forEach(el => {
-      el.setAttribute('tabindex', '0'); // Make draggable elements focusable
-      el.addEventListener('focus', () => (this.focusedElement = el as HTMLElement));
-      el.addEventListener('blur', () => (this.focusedElement = null));
+  // addDroppableElements(droppables: Element[]) {
+  //   // this.droppables = droppables;
+  //   droppables.forEach(el => {
+  //     el.setAttribute('tabindex', '0'); // Make draggable elements focusable
+  //     el.addEventListener('focus', () => (this.focusedElement = el as HTMLElement));
+  //     el.addEventListener('blur', () => (this.focusedElement = null));
 
-      // el.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: false });
-      // el.addEventListener('mousedown', this.handleTouchStart.bind(this), { passive: false });
-    });
-  }
+  //     // el.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: false });
+  //     // el.addEventListener('mousedown', this.handleTouchStart.bind(this), { passive: false });
+  //   });
+  // }
 
   private handleTouchStart(e) {
     this.touchStartTime = Date.now();
@@ -298,7 +298,7 @@ export class TouchDragAndDrop {
 
   private collectDropZones() {
     // Collect all elements with dropzone attribute
-    this.focusableDropZones = this.droppables; // Array.from(document.querySelectorAll('[dropzone]')) as HTMLElement[];
+    this.focusableDropZones = Array.from(document.querySelectorAll('[dropzone]')) as HTMLElement[]; // Array.from(this.droppables);
     this.currentDropZoneIndex = -1; // Reset navigation index
   }
 

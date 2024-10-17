@@ -35,11 +35,11 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
 
   @state() _response: string | string[] = [];
   // dragDropApi: TouchDragAndDrop;
-  get response(): string | string[] {
-    if (!this.classList.contains('qti-match-tabular')) return super.response;
-    else return this._response;
+  get response(): string[] {
+    if (!this.classList.contains('qti-match-tabular')) return super.response as string[];
+    else return this._response as string[];
   }
-  set response(val: string | string[]) {
+  set response(val: string[]) {
     if (!this.classList.contains('qti-match-tabular')) super.response = val;
     else this._response = val;
   }
