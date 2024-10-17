@@ -3,41 +3,53 @@
     &.qti-input-control-hidden {
       & qti-simple-choice {
         @apply button;
+
         &:hover {
           @apply hov;
         }
+
         &:focus {
           @apply foc;
         }
+
         &::part(ch) {
           display: none;
         }
+
         &[aria-checked='true'] {
           @apply act;
         }
+
         &[aria-readonly='true'] {
           @apply rdo;
         }
+
         &[aria-disabled='true'] {
           @apply dis;
         }
       }
     }
+
     &:not(.qti-input-control-hidden) {
       & qti-simple-choice {
         @apply check;
+
         &:hover {
           @apply hov;
         }
+
         &:focus {
           @apply foc;
         }
+
         &[aria-checked='true'] {
           @apply act;
         }
+
         &[aria-readonly='true'] {
           @apply rdo;
         }
+
         &[aria-disabled='true'] {
           @apply dis;
         }
@@ -45,20 +57,25 @@
         &::part(cha) {
           @apply check-size;
         }
+
         &[role='radio']::part(ch) {
           @apply check-radio;
         }
+
         &[role='radio'][aria-checked='true']::part(cha) {
           @apply check-radio-checked;
         }
+
         &[role='checkbox']::part(ch) {
           @apply check-checkbox;
         }
+
         &[role='checkbox'][aria-checked='true']::part(cha) {
           @apply check-checkbox-checked;
         }
       }
     }
+
     & qti-simple-choice {
       &[data-correct-response='true'] {
         &::after {
@@ -78,9 +95,11 @@
     &:hover {
       @apply hov;
     }
+
     &:focus-within {
       @apply foc;
     }
+
     &::part(input) {
       @apply text;
     }
@@ -90,9 +109,11 @@
     &::part(textarea) {
       @apply text;
     }
+
     &:hover {
       @apply hov;
     }
+
     &:focus-within {
       @apply foc;
     }
@@ -105,23 +126,28 @@
       &:hover {
         @apply hov;
       }
+
       &:focus {
         @apply foc;
       }
     }
+
     & qti-gap {
       @apply drop;
+
       display: inline-flex;
       width: 8rem; /* w-32 */
-      &:empty:after {
+      &:empty::after {
         padding: var(--qti-padding-md) var(--qti-padding-lg); /* Padding shorthand */
         content: '\0000a0'; /* when empty, put a space in it */
       }
+
       &:not(:empty) {
         display: inline-flex;
         padding: 0;
         width: auto;
       }
+
       &:not(:empty) > * {
         flex: 1;
         transform: rotate(0); /* rotate-0 */
@@ -134,43 +160,56 @@
     & qti-hotspot-choice {
       &[shape='circle'] {
         @apply spot;
+
         &:hover {
           @apply hov;
         }
+
         &:focus {
           @apply foc;
         }
+
         &[aria-checked='true'] {
           @apply act;
         }
+
         &[aria-readonly='true'] {
           @apply rdo;
         }
+
         &[aria-disabled='true'] {
           @apply dis;
         }
       }
+
       &[shape='rect'] {
         @apply spot;
+
         &:hover {
           @apply hov;
         }
+
         &:focus {
           @apply foc;
         }
+
         &[aria-checked='true'] {
           @apply act;
         }
+
         &[aria-readonly='true'] {
           @apply rdo;
         }
+
         &[aria-disabled='true'] {
           @apply dis;
         }
       }
+
       &[shape='poly'] {
         &:hover::after {
           @apply act;
+
           content: '';
           width: 100%;
           height: 100%;
@@ -184,8 +223,9 @@
           display: block;
         }
 
-        &[aria-checked='true']:after {
+        &[aria-checked='true']::after {
           @apply act;
+
           content: '';
           width: 100%;
           height: 100%;
@@ -202,9 +242,11 @@
         &[aria-checked='true'] {
           @apply act;
         }
+
         &[aria-readonly='true'] {
           @apply rdo;
         }
+
         &[aria-disabled='true'] {
           @apply dis;
         }
@@ -217,32 +259,41 @@
       display: inline-flex;
       align-items: center;
     }
+
     /* &:not(.qti-input-control-hidden),
     &:not(.qti-unselected-hidden) { */
     qti-hottext {
       @apply check;
+
       &:hover {
         @apply hov;
       }
+
       &:focus {
         @apply foc;
       }
+
       &::part(cha) {
         @apply check-size;
       }
+
       &[role='radio']::part(ch) {
         @apply check-radio;
       }
+
       &[role='radio'][aria-checked='true']::part(cha) {
         @apply check-radio-checked;
       }
+
       &[role='checkbox']::part(ch) {
         @apply check-checkbox;
       }
+
       &[role='checkbox'][aria-checked='true']::part(cha) {
         @apply check-checkbox-checked;
       }
     }
+
     /* } */
 
     &.qti-input-control-hidden {
@@ -253,26 +304,33 @@
         --qti-border-thickness: 1px;
         --qti-font-weight-semibold: 400; */
         @apply button;
+
         &:hover {
           @apply hov;
         }
+
         &:focus {
           @apply foc;
         }
+
         /* @layer qti-variants { */
         &::part(ch) {
           display: none;
         }
+
         &[aria-checked='true'] {
           @apply act;
         }
+
         &[aria-readonly='true'] {
           @apply rdo;
         }
+
         &[aria-disabled='true'] {
           @apply dis;
         }
       }
+
       /* } */
     }
 
@@ -281,19 +339,25 @@
         &:hover {
           @apply hov;
         }
+
         &:focus {
           @apply foc;
         }
+
         cursor: pointer;
+
         &::part(ch) {
           display: none;
         }
+
         &[aria-checked='true'] {
           background-color: var(--qti-primary-light); /* bg-blue-200 */
         }
+
         &[aria-readonly='true'] {
           @apply rdo;
         }
+
         &[aria-disabled='true'] {
           @apply dis;
         }
@@ -304,9 +368,11 @@
   qti-inline-choice-interaction {
     &::part(select) {
       @apply select;
+
       &:hover {
         @apply hov;
       }
+
       &:focus {
         @apply foc;
       }
@@ -327,9 +393,11 @@
         &[dragging] {
           @apply dragging;
         }
+
         &:hover {
           @apply hov;
         }
+
         &:focus {
           @apply foc;
         }
@@ -360,11 +428,13 @@
           max-width: 100%;
           height: auto;
         }
+
         &[enabled] {
           &::part(dropslot) {
             @apply dropping;
           }
         }
+
         &[disabled] {
           &::part(dropslot) {
             background-color: red;
@@ -376,14 +446,18 @@
             @apply act;
           }
         }
+
         &::part(dropslot) {
           @apply drop;
+
           &[dragging] {
             @apply dragging;
           }
+
           &:focus {
             @apply foc;
           }
+
           min-height: 6rem;
           gap: var(--qti-gap-size);
           box-sizing: border-box;
@@ -398,15 +472,19 @@
 
         & > qti-simple-associable-choice {
           @apply drag;
+
           &::part(dropslot) {
             display: none;
           }
+
           &:hover {
             @apply hov;
           }
+
           &:focus {
             @apply foc;
           }
+
           flex-basis: fit-content;
         }
       }
@@ -417,13 +495,16 @@
     &::part(qti-simple-choice),
     & qti-simple-choice {
       @apply drag;
+
       &:hover {
         @apply hov;
       }
+
       &:focus {
         @apply foc;
       }
     }
+
     &::part(qti-simple-choice) {
       display: flex;
       overflow: hidden;
@@ -431,23 +512,30 @@
       width: 100%;
       text-overflow: ellipsis;
     }
+
     &::part(drops) {
       gap: 0.5rem; /* gap-2 */
     }
+
     &::part(drags) {
       gap: 0.5rem; /* gap-2 */
     }
+
     &::part(drop-list) {
       @apply drop;
+
       &:hover {
         @apply hov;
       }
+
       &:focus {
         @apply foc;
       }
+
       display: flex;
       min-height: 4rem;
     }
+
     &::part(active) {
       @apply act;
     }
@@ -457,12 +545,15 @@
     & qti-simple-associable-choice, /* drags when in lightdom */
     &::part(qti-simple-associable-choice) /* drags when in shadowdom */ {
       @apply drag;
+
       &:hover {
         @apply hov;
       }
+
       &:focus {
         @apply foc;
       }
+
       &[dragging] {
         @apply dragging;
       }
@@ -471,6 +562,7 @@
     /* display: flex;
     overflow: hidden;
     align-items: center; */
+
     /* &::part(drop-container) {
       display: flex;
       flex-direction: column;
@@ -479,16 +571,20 @@
 
     &::part(drop-list) {
       @apply drop;
+
       display: grid;
       height: 3rem;
       min-width: 10rem;
     }
+
     &::part(drop-list):focus {
       @apply foc;
     }
+
     &::part(drop-list)[dragging] {
       @apply act;
     }
+
     /* &::part(drop-list) {
       @apply act;
     } */
@@ -497,27 +593,35 @@
   qti-graphic-order-interaction {
     & qti-hotspot-choice {
       @apply spot;
+
       &:hover {
         @apply hov;
       }
+
       &:focus {
         @apply foc;
       }
+
       &[aria-checked='true'] {
         @apply act;
       }
+
       &[aria-readonly='true'] {
         @apply rdo;
       }
+
       &[aria-disabled='true'] {
         @apply dis;
       }
+
       &[aria-ordervalue] {
         @apply order;
+
         display: flex;
         justify-content: center;
         align-items: center;
       }
+
       &[aria-ordervalue]::after {
         content: attr(aria-ordervalue) !important;
       }
@@ -531,18 +635,23 @@
     & qti-associable-hotspot {
       &[shape='circle'] {
         @apply spot;
+
         &:hover {
           @apply hov;
         }
+
         &:focus {
           @apply foc;
         }
+
         &[aria-checked='true'] {
           @apply act;
         }
+
         &[aria-readonly='true'] {
           @apply rdo;
         }
+
         &[aria-disabled='true'] {
           @apply dis;
         }
@@ -550,18 +659,23 @@
 
       &[shape='square'] {
         @apply spot;
+
         &:hover {
           @apply hov;
         }
+
         &:focus {
           @apply foc;
         }
+
         &[aria-checked='true'] {
           @apply act;
         }
+
         &[aria-readonly='true'] {
           @apply rdo;
         }
+
         &[aria-disabled='true'] {
           @apply dis;
         }
@@ -571,6 +685,7 @@
 
   qti-graphic-gap-match-interaction {
     position: relative;
+
     & img {
       margin: 0;
       padding: 0;
@@ -580,7 +695,7 @@
   qti-slider-interaction {
     display: block;
 
-    --qti-tick-color: rgb(229 231 235 / 1);
+    --qti-tick-color: rgb(229 231 235 / 100%);
     --qti-tick-width: 1px;
 
     &::part(slider) {
@@ -591,6 +706,7 @@
     }
 
     --show-bounds: true;
+
     &::part(bounds) {
       display: flex;
       width: 100%;
@@ -599,6 +715,7 @@
     }
 
     --show-ticks: true;
+
     &::part(ticks) {
       margin-left: 0.125rem; /* mx-0.5 */
       margin-right: 0.125rem;
@@ -634,6 +751,7 @@
     }
 
     --show-value: true;
+
     &::part(value) {
       position: absolute;
       bottom: 2rem; /* bottom-8 */
@@ -653,9 +771,11 @@
       &:hover {
         @apply hov;
       }
+
       &:focus {
         @apply foc;
       }
+
       @apply point;
     }
   }

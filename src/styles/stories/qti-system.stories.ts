@@ -30,6 +30,34 @@ window.customElements.define('button-component', ButtonComponent);
 // grid grid-cols-6 gap-4
 const components = (mod: string) => html`
   <div style="display:grid;grid-template-columns: repeat(7, minmax(0, 1fr));gap:2rem;">
+    <style>
+      @scope {
+        [class] {
+          position: relative;
+          &:hover::before {
+            content: attr(class);
+            font-size: 0.8rem;
+            color: #666;
+            position: absolute;
+            text-transform: lowercase;
+            white-space: nowrap;
+            /* background-color: red; */
+            left: 0;
+            top: 0;
+            /* bottom: 0; */
+            z-index: 1000;
+            transform: translateY(-150%);
+            top: anchor(--myAnchor bottom);
+          }
+        }
+        [clip] {
+          width: 100%;
+          height: 50px;
+          clip-path: polygon(50% 0, 0% 100%, 100% 100%);
+        }
+      }
+    </style>
+
     <div>button</div>
     <div>hover</div>
     <div>focus</div>
@@ -72,7 +100,15 @@ const components = (mod: string) => html`
     <div class="spot ${mod} act "></div>
     <div class="spot ${mod} foc act "></div>
     <div class="spot ${mod} dis "></div>
-    <div></div>
+    <div>&#x200B;</div>
+
+    <div clip class="spot ${mod}"></div>
+    <div clip class="spot ${mod} hov "></div>
+    <div clip class="spot ${mod} foc "></div>
+    <div clip class="spot ${mod} act "></div>
+    <div clip class="spot ${mod} foc act "></div>
+    <div clip class="spot ${mod} dis "></div>
+    <div>&#x200B;</div>
 
     <div class="drag ${mod}">drag</div>
     <div class="drag hov ${mod}">drag</div>
@@ -88,7 +124,7 @@ const components = (mod: string) => html`
     <div class="drop act ${mod}"></div>
     <div class="drop foc act ${mod}"></div>
     <div class="drop dis ${mod}"></div>
-    <div></div>
+    <div class="drag dropping ${mod}">drop</div>
 
     <div class="drop ${mod}"><div class="drag ${mod}">drag</div></div>
     <div class="drop hov ${mod}"><div class="drag ${mod}">drag</div></div>

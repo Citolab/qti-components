@@ -29,10 +29,16 @@ const meta: Meta = {
       description: 'supported classes',
       control: 'inline-check',
       options: [
+        'qti-choices-stacking-1',
         'qti-choices-stacking-2',
         'qti-choices-stacking-3',
         'qti-choices-stacking-4',
         'qti-choices-stacking-5',
+
+        'qti-labels-suffix-none',
+        'qti-labels-suffix-period',
+        'qti-labels-suffix-parenthesis',
+
         'qti-orientation-horizontal',
         'qti-input-control-hidden'
       ],

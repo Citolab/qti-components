@@ -3,6 +3,7 @@ qti-outcome-declaration,
 qti-response-declaration {
   display: none;
 }
+
 [view].show {
   display: block;
 }
@@ -10,8 +11,9 @@ qti-response-declaration {
 :host {
   box-sizing: border-box;
 }
+
 *,
-*:before,
-*:after {
+*::before,
+*::after {
   box-sizing: inherit;
 }
