@@ -7,7 +7,7 @@ import packages from '../assets/packages.json';
 import { getItemByIndex } from '../lib/qti-loader';
 
 const meta: Meta = {
-  title: 'Item',
+  title: 'Items',
   argTypes: {
     qtipkg: {
       options: packages.packages,
@@ -66,7 +66,7 @@ let item;
 //   ]
 // };
 
-export const QtiItem: Story = {
+export const Items: Story = {
   render: ({ disabled, view }, { argTypes, loaded: { xml } }) => {
     item && (item.disabled = disabled);
     item && (item.view = view);

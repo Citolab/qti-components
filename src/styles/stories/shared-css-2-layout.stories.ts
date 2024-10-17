@@ -1,10 +1,10 @@
 import { html } from 'lit';
 
 export default {
-  title: 'styles/layout'
+  title: 'styles/Shared CSS 2 Layout'
 };
 
-export const FixedContainer = () => html`
+export const SharedCSS2Layout = () => html`
   <style>
     /* Utility CSS to demonstrate column virtual borders - no effect on layout. */
     [class*='qti-layout-col'] {
@@ -175,9 +175,7 @@ export const FixedContainer = () => html`
 
     <hr />
   </div>
-`;
 
-export const FluidContainer = () => html`
   <div class="container-fluid">
     <h3 style="margin-top:0;">Fluid Container, qti-layout-row, qti-layout-col</h3>
 

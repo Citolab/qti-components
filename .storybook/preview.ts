@@ -45,7 +45,19 @@ const preview: Preview = {
     controls: {
       expanded: true
     },
-    viewport: { viewports: customViewports }
+    viewport: { viewports: customViewports },
+    options: {
+      storySort: {
+        order: [
+          'qti-conformance',
+          'styles',
+          'qti-interactions-basic',
+          'qti-interactions-advanced',
+          'qti-interactions-wip',
+          'lib'
+        ]
+      }
+    }
   }
 };
 

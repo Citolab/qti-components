@@ -1,3 +1,5 @@
+import { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
+import { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import { Default as Associate } from '../../lib/qti-components/qti-interaction/qti-associate-interaction/qti-associate-interaction.stories';
 import { Default as Choice } from '../../lib/qti-components/qti-interaction/qti-choice-interaction/qti-choice-interaction.stories';
@@ -21,11 +23,15 @@ import { Default as TextEntry } from '../../lib/qti-components/qti-interaction/q
 // import { Default as EndAttempt } from '../lib/qti-components/qti-interaction/qti-end-attempt-interaction/qti-end-attempt-interaction.stories';
 // import { Default as Custom } from '../lib/qti-components/qti-interaction/qti-custom-interaction/qti-custom-interaction.stories';
 
-export { Choice };
+// export { Choice };
 
-export default {
-  title: 'styles/themes'
+type Story = StoryObj;
+
+const meta: Meta<QtiAssessmentItem> = {
+  title: 'Interactions'
 };
+export default meta;
+
 export const Interactions = args => html`
   <h2>qti-gap-match-interaction</h2>
   ${GapMatch.render({})}

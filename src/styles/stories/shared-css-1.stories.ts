@@ -1,10 +1,10 @@
 import { html } from 'lit';
 
 export default {
-  title: 'styles/utilities'
+  title: 'styles/Shared CSS 1'
 };
 
-export const QtiUtilities = () => html`
+export const SharedCSS1 = () => html`
   <qti-item-body>
     <h4>Underline an Element</h4>
 

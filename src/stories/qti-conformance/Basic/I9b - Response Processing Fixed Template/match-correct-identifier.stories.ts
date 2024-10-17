@@ -10,7 +10,7 @@ import { getItemByUri } from '../../../../lib/qti-loader';
 type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {
-  component: 'qti-conformance/basic/I9b Response Processing Fixed Template/match-correct-identifier',
+  title: 'qti-conformance/basic/I9b Response Processing Fixed Template/match-correct-identifier',
   beforeEach: async ({ args }) => {}
 };
 export default meta;

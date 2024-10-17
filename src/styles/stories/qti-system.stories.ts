@@ -1,9 +1,14 @@
+import { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
+import { Meta, StoryObj } from '@storybook/web-components';
 import { html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 
-export default {
-  title: 'styles/themes'
+type Story = StoryObj;
+
+const meta: Meta<QtiAssessmentItem> = {
+  title: 'Theme'
 };
+export default meta;
 
 class ButtonComponent extends LitElement {
   @property({ type: String }) ch: string;
@@ -28,7 +33,7 @@ class ButtonComponent extends LitElement {
 window.customElements.define('button-component', ButtonComponent);
 
 // grid grid-cols-6 gap-4
-const components = (mod: string) => html`
+export const Theme = (mod: string) => html`
   <div style="display:grid;grid-template-columns: repeat(7, minmax(0, 1fr));gap:2rem;">
     <style>
       @scope {
@@ -420,8 +425,6 @@ const components = (mod: string) => html`
   </p>
   <p>What I've written here is probably long enough, but adding this final sentence can't hurt.</p>
 `;
-
-export const Components = args => html` ${components('')}`;
 
 // ${components('sm')}
 // export const Components = args => html`<button class="button">asasd</button> <button class="button-in">asasd</button>`;
