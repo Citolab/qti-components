@@ -20,12 +20,13 @@ const meta: Meta = {
       control: { type: 'radio' }
     },
     disabled: { control: { type: 'boolean' } },
-    itemIndex: { control: { type: 'number' } }
+    itemIndex: { control: { type: 'number' } },
+    scoreBackend: { control: { type: 'boolean' } },
   },
   args: {
     serverLocation: 'http://localhost:3000/api',
     qtipkg: 'examples',
-    itemIndex: 0
+    itemIndex: 0,
   },
   parameters: {
     controls: {
@@ -46,16 +47,25 @@ export const Api: Story = {
     }
 
     const { loaded } = context;
+
     const testRef = createRef<QtiItem>();
 
     const processResponse = () => {
-      if (args.scorebackend) {
-        const item = args.items[args.itemIndex];
-        fetch(`${args.serverLocation}/response/${args.qtipkg}/${item.href}?identifier=${item.identifier}`, {
+      if (args.scoreBackend) {
+        const identifier = loaded.item.identifier;
+        fetch(`${args.serverLocation}/response/${args.qtipkg}/${loaded.item.href}?identifier=${loaded.item.identifier}`, {
           method: 'POST',
-          body: item.variables,
+          body: JSON.stringify(testRef.value.variables),
           headers: { 'Content-type': 'application/json; charset=UTF-8' }
         });
+
+
+
+        fetch(`${args.serverLocation}/score/${args.qtipkg}/${loaded.item.href}?identifier=${loaded.item.identifier}`, {
+          method: 'GET',
+        }).then(response => response.json())
+        
+
       } else {
         testRef?.value.processResponse();
       }
@@ -66,7 +76,7 @@ export const Api: Story = {
         ${ref(testRef)}
         @qti-interaction-changed=${action('qti-interaction-changed')}
         @qti-outcomes-changed=${action('qti-outcomes-changed')}
-        .xmlDoc=${loaded.loaded}
+        .xmlDoc=${loaded.itemHtmlDoc}
       >
       </qti-item>
       <button @click="${processResponse}">processResponse</button>
@@ -77,10 +87,10 @@ export const Api: Story = {
       try {
         const fetchJson = url => fetch(url).then(res => (res.ok ? res.json() : Promise.reject('error')));
         const { items } = await fetchJson(`${args.serverLocation}/${args.qtipkg}/items.json`);
-        const a = await qtiTransformItem()
-          .load(`${args.serverLocation}/${args.qtipkg}/items/${items[args.itemIndex].href}?noresponsexml=true`)
+        const itemHtmlDoc = await qtiTransformItem()
+          .load(`${args.serverLocation}/${args.qtipkg}/items/${items[args.itemIndex].href}${args.scoreBackend ? '?scorebackend=true' : ''}`)
           .then(api => api.path(`${args.serverLocation}/${args.qtipkg}/static/`).htmldoc());
-        return { loaded: a };
+        return { itemHtmlDoc: itemHtmlDoc, item: items[args.itemIndex] };
       } catch (error) {
         console.log(error);
       }
