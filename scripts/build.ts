@@ -24,7 +24,7 @@ const buildOptions = {
   clean: false,
   target: 'es2017',
   dts: true,
-  format: ['esm','cjs'],
+  format: ['esm'],
   minify: true,
   bundle: true,
   sourcemap: 'inline',
@@ -51,6 +51,7 @@ export const watchOptions = {
   ...buildOptions,
   minify: false,
   bundle: true,
+  format: ['iife'],
   pure: [],
   drop: [],
   define: {
@@ -68,6 +69,10 @@ export const completeOptions = {
   sourcemap: false,
   minify: true,
   bundle: true,
+  format: ['iife'],  // IIFE format for browser-like environments
+  globalName: 'QtiComponents',  // Name to use for the global variable in IIFE
+  target: 'es5',  // Target ES5 to ensure compatibility with older environments
+  shims: false,  // Disable shims (optional based on your need)
   entryPoints: ['./src/index.ts'],
   define: {
     'process.env.NODE_ENV': '"production"'
