@@ -3,6 +3,8 @@ import '@citolab/qti-components/qti-components';
 import { action } from '@storybook/addon-actions';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
+import { createRef, ref } from 'lit/directives/ref.js';
+import { QtiItem } from 'src/lib/qti-item';
 import packages from '../assets/packages.json';
 import { getItemByIndex } from '../lib/qti-loader';
 
@@ -37,77 +39,30 @@ type Story = StoryObj;
 
 let item;
 
-// export const Div: Story = {
-//   render: ({ disabled, view }, { argTypes, loaded: { xml } }) => {
-//     const onInteractionChangedAction = action('qti-interaction-changed');
-//     const onOutcomeChangedAction = action('qti-outcome-changed');
-//     const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => {
-//       item = qtiAssessmentItem;
-//       action('qti-assessment-item-connected');
-//     };
-
-//     item && (item.disabled = disabled);
-//     item && (item.view = view);
-
-//     return html`
-//       <div
-//         class="item"
-//         @qti-interaction-changed=${onInteractionChangedAction}
-//         @qti-outcome-changed=${onOutcomeChangedAction}
-//         @qti-assessment-item-connected=${onItemFirstUpdated}
-//       >
-//         ${unsafeHTML(xml.itemHTML)}
-//       </div>
-//       <button @click=${() => item?.processResponse()}>Submit</button>
-//     `;
-//   },
-//   loaders: [
-//     async ({ args }) => ({ xml: await getItemByIndex(`${args.serverLocation}/${args.qtipkg}`, args.itemIndex) })
-//   ]
-// };
-
 export const Items: Story = {
   render: ({ disabled, view }, { argTypes, loaded: { xml } }) => {
-    item && (item.disabled = disabled);
-    item && (item.view = view);
+    // const { loaded } = context;
+    const qtiItemRef = ref(null);
+
+    const testRef = createRef<QtiItem>();
+
+    const processResponse = () => {
+      testRef?.value.processResponse();
+    };
+
     return html`
       <qti-item
-        @qti-assessment-item-connected=${e => {
-          item = e.detail;
-          item.disabled = disabled;
-          item.view = view;
-        }}
+        ${ref(testRef)}
+        @qti-interaction-changed=${action('qti-interaction-changed')}
+        @qti-outcomes-changed=${action('qti-outcomes-changed')}
         @qti-item-variables-changed=${action('qti-item-variables-changed')}
         .xmlDoc=${xml.itemHTMLDoc}
       >
       </qti-item>
-      <button
-        @click=${() => {
-          item?.processResponse();
-        }}
-      >
-        processResponse
-      </button>
+      <button @click="${processResponse}">processResponse</button>
     `;
   },
   loaders: [
     async ({ args }) => ({ xml: await getItemByIndex(`${args.serverLocation}/${args.qtipkg}`, args.itemIndex) })
   ]
 };
-
-// export const QtiItemImperativeDeclarative: Story = {
-//   render: (args, { argTypes, loaded: { xml } }) => {
-//     return `
-//       <qti-item class="item">
-//         <template>
-//             <style>
-//               ${styles}
-//             </style>
-//         ${xml.itemHTML} </template>
-//       </qti-item>
-//     `;
-//   },
-//   loaders: [
-//     async ({ args }) => ({ xml: await getItemByIndex(`${args.serverLocation}/${args.qtipkg}`, args.itemIndex) })
-//   ]
-// };

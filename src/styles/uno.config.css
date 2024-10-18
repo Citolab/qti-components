@@ -17,7 +17,7 @@
   --qti-bg-primary: var(--qti-primary);
 
   /* Text colors */
-  --qti-text-gray-500: #6b7280;
+  --qti-text-gray-500: #45484f;
   --qti-text-white: white;
 
   /* Border properties */
@@ -261,8 +261,7 @@
   background-color: var(--qti-bg-gray-100);
   color: var(--qti-text-gray-500);
   border-color: var(--qti-border-color-gray);
-
-  /* outline: 2px solid var(--qti-bg-gray-100); */
+  outline: 4px solid var(--qti-bg-gray-100);
 
   /* outline-color: var(--qti-text-gray-50); */
 }
