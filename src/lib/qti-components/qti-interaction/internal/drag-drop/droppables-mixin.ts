@@ -130,6 +130,9 @@ export const DroppablesMixin = <T extends Constructor<LitElement>>(
         draggable.style.transform = 'translate(0, 0)';
         droppable.appendChild(draggable);
         this['checkMaxAssociations']();
+      
+        this['saveResponse']();
+      
       };
 
       if (!document.startViewTransition) {
