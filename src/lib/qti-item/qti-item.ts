@@ -1,10 +1,11 @@
 import styles from '../../item.css?inline';
 import { VariableValue } from '../qti-components';
 
-class QtiItem extends HTMLElement {
+export class QtiItem extends HTMLElement {
   view?: string;
 
   #renderRoot = null;
+  #assessmentItem = null;
 
   set xmlDoc(xml: DocumentFragment) {
     if (!this.#renderRoot) {
@@ -14,9 +15,12 @@ class QtiItem extends HTMLElement {
       style.replaceSync(styles);
       this.#renderRoot.adoptedStyleSheets = [style];
       this.#renderRoot.innerHTML = ''; // Clear any existing content
-
-      this.#renderRoot.addEventListener('qti-interaction-changed', this.#variablesChanged);
-      this.#renderRoot.addEventListener('qti-outcome-changed', this.#variablesChanged);
+      // this.#renderRoot.addEventListener('qti-interaction-changed', this.#variablesChanged);
+      // this.#renderRoot.addEventListener('qti-outcome-changed', this.#variablesChanged);
+      this.#renderRoot.addEventListener(
+        'qti-assessment-item-connected',
+        ({ target }) => (this.#assessmentItem = target)
+      );
     }
 
     this.#renderRoot.innerHTML = ``;
@@ -24,7 +28,7 @@ class QtiItem extends HTMLElement {
   }
 
   processResponse() {
-    this.#assessmentItem?.variables?.processResponse() || console.warn('No qti-assessment-item found');
+    this.#assessmentItem?.processResponse() || console.warn('No qti-assessment-item found');
   }
 
   get variables(): VariableValue<string | string[] | null>[] {
@@ -49,22 +53,22 @@ class QtiItem extends HTMLElement {
   }
 
   /* Private methods */
-  get #assessmentItem() {
-    return this.#renderRoot.querySelector('qti-assessment-item') || console.warn('No qti-assessment-item found');
-  }
+  // get #assessmentItem() {
+  //   return this.querySelector('qti-assessment-item') || console.warn('No qti-assessment-item found');
+  // }
 
-  #variablesChanged = (e: CustomEvent<any>) => {
-    e.stopImmediatePropagation();
-    e.stopPropagation();
-    this.dispatchEvent(
-      new CustomEvent('qti-item-variables-changed', {
-        bubbles: false,
-        detail: {
-          variables: this.#assessmentItem.variables
-        }
-      })
-    );
-  };
+  // #variablesChanged = (e: CustomEvent<any>) => {
+  //   e.stopImmediatePropagation();
+  //   e.stopPropagation();
+  //   this.dispatchEvent(
+  //     new CustomEvent('qti-item-variables-changed', {
+  //       bubbles: false,
+  //       detail: {
+  //         variables: this.#assessmentItem.variables
+  //       }
+  //     })
+  //   );
+  // };
 }
 
 customElements.define('qti-item', QtiItem);

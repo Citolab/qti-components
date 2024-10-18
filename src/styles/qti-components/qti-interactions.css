@@ -435,7 +435,7 @@
 
         &[disabled] {
           &::part(dropslot) {
-            background-color: red;
+            @apply dis;
           }
         }
 
