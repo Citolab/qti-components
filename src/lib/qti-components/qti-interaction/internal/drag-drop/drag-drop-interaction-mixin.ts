@@ -124,9 +124,7 @@ export const DragDropInteractionMixin = <T extends Constructor<LitElement>>(
           this.restoreInitialDraggablePosition(draggable);
         }
       }
-      if (this.wasMoved(ev)) {
-        this.saveResponse();
-      }
+
     };
 
     private activateDroppables(): void {

@@ -50,7 +50,7 @@ export abstract class QtiExpression<T> extends LitElement implements QtiExpressi
           case 'qti-base-value': {
             return {
               baseType: e.getAttribute('base-type'),
-              value: e.textContent,
+              value: e.textContent.trim(),
               cardinality: 'single'
             } as ResponseVariable;
           }
