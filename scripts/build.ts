@@ -24,7 +24,7 @@ const buildOptions = {
   clean: false,
   target: 'es2017',
   dts: true,
-  format: ['esm'],
+  format: ['esm','cjs'],
   minify: true,
   bundle: true,
   sourcemap: 'inline',
