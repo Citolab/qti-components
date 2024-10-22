@@ -1,8 +1,8 @@
 @layer qti-base, qti-components, qti-utilities, qti-variants, qti-extended;
 
+@import './styles/uno.config.css';
+
 /* base */
-@import '@unocss/reset/normalize.css';
-@import './styles/qti-base/item-prose';
 @import './styles/qti-base/item-layout';
 @import './styles/qti-base/item-view';
 @import './styles/qti-base/item-popup';
@@ -16,10 +16,3 @@
 /* variants */
 @import './styles/qti-variants/qti-input-width';
 @import './styles/qti-variants/qti-interactions';
-
-/* @unocss; */
-
-:root {
-  --qti-primary-color: cornflowerblue;
-  --qti-secondary-color: rgb(155, 140, 25);
-}

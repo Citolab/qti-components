@@ -54,10 +54,10 @@ export const ShuffleMixin = <T extends Constructor<LitElement>>(superClass: T, s
     }
 
     private _shuffleChoices() {
-      const choices = Array.from(this.querySelectorAll(selector));
+      const choices = Array.from(this.querySelectorAll<HTMLElement>(selector));
 
-      const fixedElements = [];
-      const nonFixedElements = [];
+      const fixedElements: Array<{ element: HTMLElement; index: number }> = [];
+      const nonFixedElements: Array<HTMLElement> = [];
 
       // Separate fixed and non-fixed elements
       choices.forEach((choice, index) => {
@@ -104,10 +104,10 @@ export const ShuffleMixin = <T extends Constructor<LitElement>>(superClass: T, s
       let order = 1;
       choices.forEach((choice: HTMLElement, index) => {
         if (choice.hasAttribute('fixed')) {
-          choice.style.order = String(order++);
+          choice.style.setProperty('order', String(order++)); // choice.style.order = String(order++);
         } else {
           const nonFixedChoice = nonFixedElements.shift();
-          nonFixedChoice!.style.order = String(order++);
+          nonFixedChoice!.style.setProperty('order', String(order++)); // nonFixedChoice!.style.order = String(order++);
         }
       });
     }
@@ -115,7 +115,7 @@ export const ShuffleMixin = <T extends Constructor<LitElement>>(superClass: T, s
     private _resetShuffleChoices() {
       const choices = Array.from(this.querySelectorAll('qti-simple-choice'));
       choices.forEach((choice, index) => {
-        choice.style.order = 'initial';
+        choice.style.setProperty('order', 'initial'); // choice.style.order = 'initial';
       });
     }
   }
