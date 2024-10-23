@@ -102,10 +102,12 @@ export const DroppablesMixin = <T extends Constructor<LitElement>>(
     private async dropHandler(ev: DragEvent): Promise<boolean> {
       ev.preventDefault();
       const droppable = ev.currentTarget as HTMLElement;
-      const draggable = this.findDraggable(ev.dataTransfer.getData('text'));
+      const identifier = ev.dataTransfer.getData('text');
+      const draggable = this.findDraggable(identifier);
       // console.log(this.isValidDrop(droppable, draggable));
 
-      if (!draggable || !this.isValidDrop(droppable, draggable)) {
+      if (!draggable) return false;
+      if (draggable && !this.isValidDrop(droppable, draggable)) {
         draggable.style.transform = 'translate(0, 0)';
         return false;
       }
@@ -116,6 +118,7 @@ export const DroppablesMixin = <T extends Constructor<LitElement>>(
     }
 
     private findDraggable(identifier: string): HTMLElement | null {
+      if (!identifier) return null;
       return (
         this.querySelector(`[identifier=${identifier}]`) || this.shadowRoot.querySelector(`[identifier=${identifier}]`)
       );
@@ -130,9 +133,8 @@ export const DroppablesMixin = <T extends Constructor<LitElement>>(
         draggable.style.transform = 'translate(0, 0)';
         droppable.appendChild(draggable);
         this['checkMaxAssociations']();
-      
+
         this['saveResponse']();
-      
       };
 
       if (!document.startViewTransition) {

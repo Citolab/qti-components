@@ -21,16 +21,25 @@ export const decorators = [
 ];
 
 // Helper function to remove Lit comments
-function removeLitComments(element) {
-  // Convert the element's inner HTML to a string
-  const htmlContent = element.innerHTML;
+function removeLitComments(element: HTMLElement) {
+  const walker = document.createTreeWalker(element, NodeFilter.SHOW_COMMENT, {
+    acceptNode(node) {
+      // Accept Lit-specific comments or empty comments
+      if (node.nodeValue) {
+        if (/^\?lit\$/.test(node.nodeValue) || node.nodeValue === '') {
+          return NodeFilter.FILTER_ACCEPT;
+        }
+        return NodeFilter.FILTER_REJECT;
+      }
+      return NodeFilter.FILTER_ACCEPT;
+    }
+  });
 
-  // Use regex to remove both Lit comments and empty comments
-  const cleanedHtml = htmlContent.replace(/<!--\?lit\$[^\-]*\$-->|<!---->/g, '');
-  // Re-apply the cleaned HTML back into the element
-  element.innerHTML = cleanedHtml;
+  let currentNode: Node | null;
+  while ((currentNode = walker.nextNode())) {
+    currentNode.parentNode?.removeChild(currentNode);
+  }
 }
-
 const preview: Preview = {
   globalTypes: {
     pseudo: {}

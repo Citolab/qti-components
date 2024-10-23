@@ -1,7 +1,8 @@
-import { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
+import { QtiAssessmentItem, QtiSimpleChoice } from '@citolab/qti-components/qti-components';
 import { action } from '@storybook/addon-actions';
-import { expect } from '@storybook/test';
-import { screen, userEvent } from '@storybook/testing-library';
+import { expect, waitFor } from '@storybook/test';
+import { screen } from '@storybook/testing-library';
+import { fireEvent } from '@storybook/testing-library';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
@@ -14,8 +15,6 @@ const meta: Meta<QtiAssessmentItem> = {
   beforeEach: async ({ args }) => {}
 };
 export default meta;
-
-const timeout = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 export const Default: Story = {
   name: 'I9-L1-D1',
@@ -53,7 +52,7 @@ export const Default: Story = {
     const score = assessmentItem.variables.find(v => v.identifier === 'SCORE').value;
     const response = assessmentItem.variables.find(v => v.identifier === 'RESPONSE').value;
     //
-    userEvent.click(submitButton);
+    fireEvent.click(submitButton);
     expect(+score, 'SCORE = 0').toBe(0);
     expect(response, 'RESPONSE = NULL').toBe(null);
   },
@@ -97,13 +96,13 @@ export const D2: Story = {
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
     assessmentItem.querySelector('qti-prompt').textContent =
       'I9-L1-D2: If the value of the RESPONSE Response Variable is set to a Multiple Container [choice_a], the value of the SCORE OutcomeVariable is set to 1.';
+    await assessmentItem.updateComplete;
 
-    const choiceA = canvasElement.querySelector('qti-simple-choice[identifier="choice_a"]');
-    userEvent.click(choiceA);
-    await timeout(200);
-    userEvent.click(submitButton);
-    await timeout(200);
+    const choiceA = canvasElement.querySelector('qti-simple-choice[identifier="choice_a"]') as QtiSimpleChoice;
+    fireEvent.click(choiceA);
+    fireEvent.click(submitButton);
     const score = assessmentItem.variables.find(v => v.identifier === 'SCORE').value;
+    // const score = await waitFor(() => assessmentItem.variables.find(v => v.identifier === 'SCORE').value);
     const response = assessmentItem.variables.find(v => v.identifier === 'RESPONSE').value;
     expect(+score, 'SCORE = 1').toBe(1);
     expect(response, 'RESPONSE = choice_a').toEqual(['choice_a']);
@@ -150,11 +149,9 @@ export const D3: Story = {
       'I9-L1-D3: If the value of the RESPONSE Response Variable is set to a Multiple Container [choice_b], the value of the SCORE OutcomeVariable is set to 2.';
 
     const choiceB = canvasElement.querySelector('qti-simple-choice[identifier="choice_b"]');
-    userEvent.click(choiceB);
-    await timeout(200);
 
-    userEvent.click(submitButton);
-    await timeout(200);
+    fireEvent.click(choiceB);
+    fireEvent.click(submitButton);
 
     const score = assessmentItem.variables.find(v => v.identifier === 'SCORE').value;
     const response = assessmentItem.variables.find(v => v.identifier === 'RESPONSE').value;
@@ -204,11 +201,8 @@ export const D4: Story = {
 
     const choiceC = canvasElement.querySelector('qti-simple-choice[identifier="choice_c"]');
     // I9-L1-D4: If the value of the RESPONSE Response Variable is set to a Multiple Container [choice_c], the value of the SCORE OutcomeVariable is set to 5.
-    userEvent.click(choiceC);
-    await timeout(200);
-
-    userEvent.click(submitButton);
-    await timeout(200);
+    fireEvent.click(choiceC);
+    fireEvent.click(submitButton);
 
     const score = assessmentItem.variables.find(v => v.identifier === 'SCORE').value;
     const response = assessmentItem.variables.find(v => v.identifier === 'RESPONSE').value;
@@ -257,11 +251,8 @@ export const D5: Story = {
       'I9-L1-D5: If the value of the RESPONSE Response Variable is set to a Multiple Container [choice_d], the value of the SCORE OutcomeVariable is set to 0.';
 
     const choiceD = canvasElement.querySelector('qti-simple-choice[identifier="choice_d"]');
-    userEvent.click(choiceD);
-    await timeout(200);
-
-    userEvent.click(submitButton);
-    await timeout(200);
+    fireEvent.click(choiceD);
+    fireEvent.click(submitButton);
 
     const score = assessmentItem.variables.find(v => v.identifier === 'SCORE').value;
     const response = assessmentItem.variables.find(v => v.identifier === 'RESPONSE').value;
@@ -310,11 +301,8 @@ export const D6: Story = {
       'I9-L1-D6: If the value of the RESPONSE Response Variable is set to a Multiple Container [choice_e], the value of the SCORE OutcomeVariable is set to 0.';
 
     const choiceE = canvasElement.querySelector('qti-simple-choice[identifier="choice_e"]');
-    userEvent.click(choiceE);
-    await timeout(200);
-
-    userEvent.click(submitButton);
-    await timeout(200);
+    fireEvent.click(choiceE);
+    fireEvent.click(submitButton);
 
     const score = assessmentItem.variables.find(v => v.identifier === 'SCORE').value;
     const response = assessmentItem.variables.find(v => v.identifier === 'RESPONSE').value;
@@ -364,12 +352,9 @@ export const D7: Story = {
 
     const choiceA = canvasElement.querySelector('qti-simple-choice[identifier="choice_a"]');
     const choiceB = canvasElement.querySelector('qti-simple-choice[identifier="choice_b"]');
-    userEvent.click(choiceA);
-    userEvent.click(choiceB);
-    await timeout(200);
-
-    userEvent.click(submitButton);
-    await timeout(200);
+    fireEvent.click(choiceA);
+    fireEvent.click(choiceB);
+    fireEvent.click(submitButton);
 
     const score = assessmentItem.variables.find(v => v.identifier === 'SCORE').value;
     const response = assessmentItem.variables.find(v => v.identifier === 'RESPONSE').value;
@@ -420,12 +405,10 @@ export const D8: Story = {
 
     const choiceB = canvasElement.querySelector('qti-simple-choice[identifier="choice_b"]');
     const choiceC = canvasElement.querySelector('qti-simple-choice[identifier="choice_c"]');
-    userEvent.click(choiceB);
-    userEvent.click(choiceC);
-    await timeout(200);
 
-    userEvent.click(submitButton);
-    await timeout(200);
+    fireEvent.click(choiceB);
+    fireEvent.click(choiceC);
+    fireEvent.click(submitButton);
 
     const score = assessmentItem.variables.find(v => v.identifier === 'SCORE').value;
     const response = assessmentItem.variables.find(v => v.identifier === 'RESPONSE').value;
@@ -476,13 +459,9 @@ export const D9: Story = {
 
     const choiceC = canvasElement.querySelector('qti-simple-choice[identifier="choice_c"]');
     const choiceD = canvasElement.querySelector('qti-simple-choice[identifier="choice_d"]');
-    userEvent.click(choiceC);
-    userEvent.click(choiceD);
-    await timeout(200);
-
-    userEvent.click(submitButton);
-    await timeout(200);
-
+    fireEvent.click(choiceC);
+    fireEvent.click(choiceD);
+    fireEvent.click(submitButton);
     const score = assessmentItem.variables.find(v => v.identifier === 'SCORE').value;
     const response = assessmentItem.variables.find(v => v.identifier === 'RESPONSE').value;
     expect(+score, 'SCORE = 4').toBe(4);
@@ -534,13 +513,10 @@ export const D10: Story = {
     const choiceE = canvasElement.querySelector('qti-simple-choice[identifier="choice_e"]');
     const choiceF = canvasElement.querySelector('qti-simple-choice[identifier="choice_f"]');
 
-    userEvent.click(choiceD);
-    userEvent.click(choiceE);
-    userEvent.click(choiceF);
-    await timeout(200);
-
-    userEvent.click(submitButton);
-    await timeout(200);
+    fireEvent.click(choiceD);
+    fireEvent.click(choiceE);
+    fireEvent.click(choiceF);
+    fireEvent.click(submitButton);
 
     const score = assessmentItem.variables.find(v => v.identifier === 'SCORE').value;
     const response = assessmentItem.variables.find(v => v.identifier === 'RESPONSE').value;
@@ -595,17 +571,14 @@ export const D11: Story = {
     const choiceE = canvasElement.querySelector('qti-simple-choice[identifier="choice_e"]');
     const choiceF = canvasElement.querySelector('qti-simple-choice[identifier="choice_f"]');
 
-    userEvent.click(choiceA);
-    userEvent.click(choiceB);
-    userEvent.click(choiceC);
-    userEvent.click(choiceD);
-    userEvent.click(choiceE);
-    userEvent.click(choiceF);
+    fireEvent.click(choiceA);
+    fireEvent.click(choiceB);
+    fireEvent.click(choiceC);
+    fireEvent.click(choiceD);
+    fireEvent.click(choiceE);
+    fireEvent.click(choiceF);
 
-    await timeout(200);
-
-    userEvent.click(submitButton);
-    await timeout(200);
+    fireEvent.click(submitButton);
 
     const score = assessmentItem.variables.find(v => v.identifier === 'SCORE').value;
     const response = assessmentItem.variables.find(v => v.identifier === 'RESPONSE').value;

@@ -48,7 +48,36 @@ describe('ShuffleMixin', () => {
     expect(initialOrder).not.to.deep.equal(resetOrder);
   });
 
-  // TODO: fix me!!
+  it('should shuffle non-fixed choices 20 times and ensure at least one shuffle is different', async () => {
+    element = document.querySelector('test-element') as TestElement;
+    await element.updateComplete;
+
+    const choices = Array.from(element.querySelectorAll('qti-simple-choice'));
+    const initialOrder = choices.map((choice, i) => String(i + 1));
+
+    let isDifferent = false;
+    const shuffleCount = 20;
+
+    for (let i = 0; i < shuffleCount; i++) {
+      // Reset shuffle
+      element.shuffle = true;
+      await element.updateComplete;
+
+      const shuffledOrder = choices.map(choice => choice.style.order);
+
+      console.log(`Shuffle ${i + 1} Order:`, shuffledOrder);
+
+      // Check if the shuffled order is different from the initial order
+      if (!initialOrder.every((val, index) => val === shuffledOrder[index])) {
+        isDifferent = true;
+        break;
+      }
+    }
+
+    // At least one shuffle should produce a different order
+    expect(isDifferent).to.be.true;
+  });
+
   it('should not shuffle choices when shuffle is false', async () => {
     element = document.querySelector('test-element') as TestElement;
     const choices = Array.from(element.querySelectorAll('qti-simple-choice'));

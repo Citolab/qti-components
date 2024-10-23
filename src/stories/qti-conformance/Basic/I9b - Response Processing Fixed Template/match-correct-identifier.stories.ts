@@ -1,7 +1,7 @@
 import { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
 import { action } from '@storybook/addon-actions';
 import { expect } from '@storybook/test';
-import { screen, userEvent } from '@storybook/testing-library';
+import { screen, fireEvent } from '@storybook/testing-library';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
@@ -14,8 +14,6 @@ const meta: Meta<QtiAssessmentItem> = {
   beforeEach: async ({ args }) => {}
 };
 export default meta;
-
-const timeout = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 export const Default: Story = {
   name: 'I9-L1-D12',
@@ -51,8 +49,7 @@ export const Default: Story = {
     assessmentItem.querySelector('qti-prompt').textContent =
       'I9-L1-D12: If the value of the RESPONSE Response Variable is set to NULL when ending the attempt, the value of the SCORE Outcome Variable is set to 0.';
     //
-    userEvent.click(submitButton);
-    await timeout(200);
+    fireEvent.click(submitButton);
     const score = assessmentItem.variables.find(v => v.identifier === 'SCORE').value;
     const response = assessmentItem.variables.find(v => v.identifier === 'RESPONSE').value;
 
@@ -103,10 +100,8 @@ export const D13: Story = {
 
     //
     const choiceA = canvasElement.querySelector('qti-simple-choice[identifier="choice_a"]');
-    userEvent.click(choiceA);
-    await timeout(200);
-    userEvent.click(submitButton);
-    await timeout(200);
+    fireEvent.click(choiceA);
+    fireEvent.click(submitButton);
 
     const score = assessmentItem.variables.find(v => v.identifier === 'SCORE').value;
     const response = assessmentItem.variables.find(v => v.identifier === 'RESPONSE').value;
@@ -158,10 +153,8 @@ export const D14: Story = {
 
     //
     const choiceB = canvasElement.querySelector('qti-simple-choice[identifier="choice_b"]');
-    userEvent.click(choiceB);
-    await timeout(200);
-    userEvent.click(submitButton);
-    await timeout(200);
+    fireEvent.click(choiceB);
+    fireEvent.click(submitButton);
 
     const score = assessmentItem.variables.find(v => v.identifier === 'SCORE').value;
     const response = assessmentItem.variables.find(v => v.identifier === 'RESPONSE').value;

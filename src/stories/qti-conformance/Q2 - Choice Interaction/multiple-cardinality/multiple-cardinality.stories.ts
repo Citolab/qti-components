@@ -1,7 +1,7 @@
 import { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
 import { action } from '@storybook/addon-actions';
 import { expect } from '@storybook/test';
-import { screen, userEvent } from '@storybook/testing-library';
+import { screen, fireEvent } from '@storybook/testing-library';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
@@ -14,8 +14,6 @@ const meta: Meta<QtiAssessmentItem> = {
   beforeEach: async ({ args }) => {}
 };
 export default meta;
-
-const timeout = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 export const Default: Story = {
   name: 'Q2-L1-D1',
@@ -52,8 +50,7 @@ export const Default: Story = {
       'Q2-L1-D1: For file multiple-cardinality.xml after ending the attempt without selecting any SimpleChoices, the RESPONSE Response Variable is set with the NULL value OR an empty Multiple Container.';
 
     //
-    userEvent.click(submitButton);
-    timeout(200);
+    fireEvent.click(submitButton);
     const response = assessmentItem.variables.find(v => v.identifier === 'RESPONSE').value;
     expect(response, 'RESPONSE = NULL').toBe(null);
   },

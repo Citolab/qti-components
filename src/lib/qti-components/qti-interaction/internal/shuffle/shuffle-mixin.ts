@@ -55,7 +55,6 @@ export const ShuffleMixin = <T extends Constructor<LitElement>>(superClass: T, s
 
     private _shuffleChoices() {
       const choices = Array.from(this.querySelectorAll<HTMLElement>(selector));
-
       const fixedElements: Array<{ element: HTMLElement; index: number }> = [];
       const nonFixedElements: Array<HTMLElement> = [];
 
@@ -71,11 +70,15 @@ export const ShuffleMixin = <T extends Constructor<LitElement>>(superClass: T, s
       // If there are 1 or fewer non-fixed elements, throw an error (no shuffle possible)
       if (nonFixedElements.length <= 1) {
         console.warn('Shuffling is not possible with fewer than 2 non-fixed elements.');
+        return;
       }
 
       let isShuffled = false;
       const maxAttempts = 10; // Max attempts to prevent infinite loops
       let attempt = 0;
+
+      // Create a copy of the original order for comparison
+      const originalOrder = [...nonFixedElements];
 
       // Shuffle until the result is different or maxAttempts is reached
       while (!isShuffled && attempt < maxAttempts) {
@@ -88,10 +91,7 @@ export const ShuffleMixin = <T extends Constructor<LitElement>>(superClass: T, s
         }
 
         // Check if the shuffled result is different from the original order
-        isShuffled = nonFixedElements.some((choice, index) => {
-          const originalIndex = choices.indexOf(choice);
-          return originalIndex !== index;
-        });
+        isShuffled = !nonFixedElements.every((choice, index) => choice === originalOrder[index]);
 
         if (isShuffled) break;
       }
@@ -104,10 +104,10 @@ export const ShuffleMixin = <T extends Constructor<LitElement>>(superClass: T, s
       let order = 1;
       choices.forEach((choice: HTMLElement, index) => {
         if (choice.hasAttribute('fixed')) {
-          choice.style.setProperty('order', String(order++)); // choice.style.order = String(order++);
+          choice.style.setProperty('order', String(order++));
         } else {
           const nonFixedChoice = nonFixedElements.shift();
-          nonFixedChoice!.style.setProperty('order', String(order++)); // nonFixedChoice!.style.order = String(order++);
+          nonFixedChoice!.style.setProperty('order', String(order++));
         }
       });
     }

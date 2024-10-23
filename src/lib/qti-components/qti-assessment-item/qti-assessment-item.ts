@@ -46,7 +46,6 @@ export class QtiAssessmentItem extends LitElement {
     this._interactionElements.forEach(ch => (ch.readonly = readonly));
 
   @provide({ context: itemContext })
-  // @property({ attribute: false })
   private _context: ItemContext = {
     identifier: this.getAttribute('identifier'),
     variables: itemContextVariables
@@ -69,7 +68,6 @@ export class QtiAssessmentItem extends LitElement {
       console.warn('variables property should be an array of VariableDeclaration');
       return;
     }
-
     this._context = {
       ...this._context,
       variables: this._context.variables.map(variable => {

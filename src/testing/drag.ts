@@ -36,7 +36,7 @@ const sleep = (ms: number): Promise<void> => {
 };
 
 /**
- * Drags an element to a specified location or by a specified delta.
+ * Drags an element to a specified location or by a specified delta, and drops it.
  * @param element - The element to be dragged.
  * @param options - The drag options.
  * @param options.to - The target element or coordinates to drag to.
@@ -77,17 +77,67 @@ export default async function drag(
     clientY: from.y
   };
 
-  fireEvent.mouseEnter(element, current);
-  fireEvent.mouseOver(element, current);
-  fireEvent.mouseMove(element, current);
-  fireEvent.mouseDown(element, current);
+  // Create a native DataTransfer object
+  const dataTransfer = new DataTransfer();
 
+  // Set identifier for the draggable element in the native DataTransfer
+  const identifier = element.getAttribute('identifier');
+  if (identifier) {
+    dataTransfer.setData('text', identifier);
+  }
+
+  // Simulate drag start
+  const dragStartEvent = new DragEvent('dragstart', {
+    clientX: current.clientX,
+    clientY: current.clientY,
+    dataTransfer
+  });
+  element.dispatchEvent(dragStartEvent);
+
+  // Simulate drag movement
   for (let i = 0; i < steps; i++) {
     current.clientX += step.x;
     current.clientY += step.y;
     await sleep(duration / steps);
-    fireEvent.mouseMove(element, current);
+    dataTransfer.dropEffect = 'move'; // Manually set the dropEffect property
+    const dragEvent = new DragEvent('drag', {
+      clientX: current.clientX,
+      clientY: current.clientY,
+      dataTransfer
+    });
+    element.dispatchEvent(dragEvent);
+    fireEvent.mouseMove(element, { ...current, dataTransfer });
   }
 
-  fireEvent.mouseUp(element, current);
+  // Add a dragover handler to the drop target to set dropEffect
+  if (to && isElement(to)) {
+    (to as Element).addEventListener('dragover', (event: DragEvent) => {
+      event.preventDefault(); // Allow the drop
+      event.dataTransfer.dropEffect = 'move'; // Set drop effect to move
+    });
+  }
+
+  // Manually call the dropHandler
+  const dropEvent = new DragEvent('drop', {
+    clientX: current.clientX,
+    clientY: current.clientY,
+    dataTransfer
+  });
+
+  // Dispatch drop event to the target element
+  if (to && isElement(to)) {
+    (to as Element).dispatchEvent(dropEvent);
+  }
+
+  // Simulate drag end
+  await sleep(200);
+
+  const dragEndEvent = new DragEvent('dragend', {
+    clientX: current.clientX,
+    clientY: current.clientY,
+    dataTransfer
+  });
+  element.dispatchEvent(dragEndEvent);
+
+  fireEvent.mouseUp(element, { ...current, dataTransfer });
 }

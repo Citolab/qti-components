@@ -2,13 +2,14 @@ import { action } from '@storybook/addon-actions';
 import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
-import { expect, userEvent, within } from '@storybook/test';
+import { expect, within } from '@storybook/test';
 
 import type { Meta, StoryObj } from '@storybook/web-components';
 
 import '@citolab/qti-components/qti-components';
 
 import { QtiChoiceInteraction } from '../../index';
+import { fireEvent } from '@storybook/testing-library';
 
 type Story = StoryObj; // <Props>;
 
@@ -83,7 +84,7 @@ export const Standard: Story = {
   args: {},
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    userEvent.click(canvas.getByTestId('B'));
+    fireEvent.click(canvas.getByTestId('B'));
     expect(canvas.getByTestId('B').getAttribute('aria-checked')).toBeTruthy();
   }
 };
@@ -107,7 +108,7 @@ export const MinChoices1: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await userEvent.click(canvas.getByTestId('B'));
+    await fireEvent.click(canvas.getByTestId('B'));
     expect(canvas.getByTestId('B').getAttribute('aria-checked')).toBeTruthy();
   }
 };
@@ -125,10 +126,10 @@ export const MaxChoices1: Story = {
     expect(choiceA.getAttribute('role')).toBe('radio');
     // expect(element.validate()).toBeFalsy();
 
-    await userEvent.click(choiceA);
+    await fireEvent.click(choiceA);
     expect(choiceA.getAttribute('aria-checked')).toBe('true');
 
-    await userEvent.click(choiceB);
+    await fireEvent.click(choiceB);
     expect(choiceB.getAttribute('aria-checked')).toBe('true');
     expect(choiceA.getAttribute('aria-checked')).toBe('false');
   }

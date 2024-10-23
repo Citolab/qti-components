@@ -9,7 +9,6 @@ import { QtiAssessmentItem, QtiMatchInteraction } from '../../index';
 
 import { expect, fn, waitFor, within } from '@storybook/test';
 import drag from '../../../../testing/drag';
-// import { userEvent } from '@vitest/browser/context';
 
 type Story = StoryObj; // <Props>;
 
@@ -38,20 +37,30 @@ export const Default = {
     >
       <qti-prompt>Match the following characters to the Shakespeare play they appeared in:</qti-prompt>
       <qti-simple-match-set>
-        <qti-simple-associable-choice data-testid="drag-capulet" identifier="C" match-max="1"
+        <qti-simple-associable-choice data-testid="drag-c" identifier="C" match-max="1"
           >Capulet</qti-simple-associable-choice
         >
-        <qti-simple-associable-choice identifier="D" match-max="1">Demetrius</qti-simple-associable-choice>
-        <qti-simple-associable-choice identifier="L" match-max="1">Lysander</qti-simple-associable-choice>
-        <qti-simple-associable-choice identifier="P" match-max="1">Prospero</qti-simple-associable-choice>
+        <qti-simple-associable-choice data-testid="drag-d" identifier="D" match-max="1"
+          >Demetrius</qti-simple-associable-choice
+        >
+        <qti-simple-associable-choice data-testid="drag-l" identifier="L" match-max="1"
+          >Lysander</qti-simple-associable-choice
+        >
+        <qti-simple-associable-choice data-testid="drag-p" identifier="P" match-max="1"
+          >Prospero</qti-simple-associable-choice
+        >
       </qti-simple-match-set>
 
       <qti-simple-match-set>
-        <qti-simple-associable-choice data-testid="drop-capulet" identifier="M" match-max="2"
+        <qti-simple-associable-choice data-testid="drop-m" identifier="M" match-max="2"
           >A Midsummer-Night's</qti-simple-associable-choice
         >
-        <qti-simple-associable-choice identifier="R" match-max="2">Romeo and Juliet</qti-simple-associable-choice>
-        <qti-simple-associable-choice identifier="T" match-max="2">The Tempest</qti-simple-associable-choice>
+        <qti-simple-associable-choice data-testid="drop-r" identifier="R" match-max="2"
+          >Romeo and Juliet</qti-simple-associable-choice
+        >
+        <qti-simple-associable-choice identifier="T" data-testid="drop-t" match-max="2"
+          >The Tempest</qti-simple-associable-choice
+        >
       </qti-simple-match-set>
     </qti-match-interaction>`
 };
@@ -67,13 +76,13 @@ export const Play: Story = {
 
     // Retrieve interaction, source, and target elements from the canvas
     const interaction = canvas.getByTestId<QtiMatchInteraction>('match-interaction');
-    const source = canvas.getByTestId('drag-capulet');
-    const target = canvas.getByTestId('drop-capulet');
+    const source = canvas.getByTestId('drag-c');
+    const target = canvas.getByTestId('drop-m');
 
     // Define the interaction response event handler to capture the response
     const interactionResponse = fn(event => {
       // Ensure the interaction response detail contains the expected values
-      expect(event.detail.response).toEqual(['C M', 'R', 'T']);
+      expect(event.detail.response).toEqual(['C M']);
     });
 
     // Add the event listener for 'qti-interaction-response'
@@ -96,11 +105,60 @@ export const Play: Story = {
       interaction.reset();
 
       // Manually set the interaction response to the expected value
-      interaction.response = ['C M', 'R', 'T'];
+      interaction.response = ['C M'];
 
       // Verify that after the drag-and-drop action, the target contains the source element
       expect(target).toContainElement(source); // Descriptive: Verifies that the target now contains the dragged source element
     });
+  }
+};
+
+export const PlayTwoOneZero: Story = {
+  render: Default.render,
+  args: {
+    orientation: 'vertical',
+    classes: ['qti-choices-bottom']
+  },
+  play: async ({ args, canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    // Retrieve interaction, source, and target elements from the canvas
+    const interaction = canvas.getByTestId<QtiMatchInteraction>('match-interaction');
+    const dragC = canvas.getByTestId('drag-c');
+    const dragD = canvas.getByTestId('drag-d');
+    const dragL = canvas.getByTestId('drag-l');
+
+    const dropM = canvas.getByTestId('drop-m');
+    const dropR = canvas.getByTestId('drop-r');
+
+    // // Define the interaction response event handler to capture the response
+    const interactionResponse = fn(event => {
+      // Ensure the interaction response detail contains the expected values
+      console.log(event.detail.response);
+    });
+
+    // Add the event listener for 'qti-interaction-response'
+    canvasElement.addEventListener('qti-interaction-response', interactionResponse);
+
+    try {
+      await step('Drag 1 to drop and test qti-interaction-response event', async () => {
+        // Simulate the drag and drop operation
+        await drag(dragC, { to: dropM, duration: 100 });
+      });
+      await step('Drag 2 to drop and test qti-interaction-response event', async () => {
+        // Simulate the drag and drop operation
+        await drag(dragD, { to: dropM, duration: 100 });
+      });
+      await step('Drag 3 to drop and test qti-interaction-response event', async () => {
+        // Simulate the drag and drop operation
+        await drag(dragL, { to: dropR, duration: 100 });
+      });
+    } finally {
+      // Clean up the event listener to avoid memory leaks
+      canvasElement.removeEventListener('qti-interaction-response', interactionResponse);
+    }
+    const correctArray = ['C M', 'D M', 'L R'];
+    expect(interaction.response).toEqual(correctArray);
   }
 };
 
@@ -114,6 +172,7 @@ export const Tabular = {
       title="Characters and Plays"
       adaptive="false"
       time-dependent="false"
+      data-testid="qti-assessment-item"
     >
       <qti-response-declaration identifier="RESPONSE" cardinality="multiple" base-type="directedPair">
         <qti-correct-response>

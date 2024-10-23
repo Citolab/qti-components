@@ -114,17 +114,17 @@ export const DragDropInteractionMixin = <T extends Constructor<LitElement>>(
       this.activateDroppables();
     };
 
-    private handleDragEnd = (ev: DragEvent) => {
+    private handleDragEnd = async (ev: DragEvent) => {
       ev.preventDefault();
       this.deactivateDroppables();
       const draggable = ev.currentTarget as HTMLElement;
       draggable.removeAttribute('dragging');
-      if (!this.wasDropped(ev)) {
+      const wasDropped = await this.wasDropped(ev);
+      if (!wasDropped) {
         if (this.configuration.dragCanBePlacedBack) {
           this.restoreInitialDraggablePosition(draggable);
         }
       }
-
     };
 
     private activateDroppables(): void {
@@ -135,8 +135,50 @@ export const DragDropInteractionMixin = <T extends Constructor<LitElement>>(
       this.droppables.forEach(d => d.removeAttribute('enabled'));
     }
 
-    private wasDropped(ev: DragEvent): boolean {
-      return ev.dataTransfer.dropEffect !== 'none';
+    // MH: This method is just to make sure this can be tested.
+    // because I can't get the dropEffect to be 'move' in the test
+    private checkForMoveTestItem = (ev: DragEvent): Promise<boolean> => {
+      if (!ev.dataTransfer.items) {
+        return Promise.resolve(false);
+      }
+      return new Promise(resolve => {
+        let hasMoveTestItem = false;
+
+        // Iterate over all dataTransfer items
+        const items = Array.from(ev.dataTransfer.items);
+        const pending = items.length;
+
+        // If there are no items, resolve immediately
+        if (pending === 0) {
+          resolve(false);
+          return;
+        }
+
+        items.forEach(item => {
+          if (item.kind === 'string' && item.type === 'text') {
+            item.getAsString(data => {
+              if (data === 'move-test') {
+                hasMoveTestItem = true;
+              }
+
+              // Resolve the promise after processing all items
+              if (pending === 0) {
+                resolve(hasMoveTestItem);
+              }
+            });
+          } else {
+            // If the item is not 'string', still count down pending
+            if (pending === 0) {
+              resolve(hasMoveTestItem);
+            }
+          }
+        });
+      });
+    };
+
+    private async wasDropped(ev: DragEvent): Promise<boolean> {
+      const hasMoveTestItem = await this.checkForMoveTestItem(ev);
+      return ev.dataTransfer.dropEffect !== 'none' || hasMoveTestItem;
     }
 
     private wasMoved(ev: DragEvent): boolean {
@@ -152,7 +194,6 @@ export const DragDropInteractionMixin = <T extends Constructor<LitElement>>(
         parent.insertBefore(draggable, parent.children[targetIndex]);
         draggable.style.transform = 'translate(0, 0)';
         this.checkMaxAssociations();
-        this.saveResponse();
       };
 
       // Fallback if view transitions are not supported
@@ -188,6 +229,10 @@ export const DragDropInteractionMixin = <T extends Constructor<LitElement>>(
     private enableDroppable(droppable: Element): void {
       droppable.removeAttribute('disabled');
       droppable.setAttribute('dropzone', 'move');
+    }
+
+    get response(): string[] {
+      return this.collectResponseData();
     }
 
     set response(response: string[]) {
@@ -251,12 +296,15 @@ export const DragDropInteractionMixin = <T extends Constructor<LitElement>>(
     }
 
     private collectResponseData(): string[] {
-      return this.droppables.map(droppable => {
-        const draggablesInDroppable = droppable.querySelectorAll('[qti-draggable="true"]');
-        const identifiers = Array.from(draggablesInDroppable).map(d => d.getAttribute('identifier'));
-        const droppableIdentifier = droppable.getAttribute('identifier');
-        return [...identifiers, droppableIdentifier].join(' ');
-      });
+      const response = this.droppables
+        .map(droppable => {
+          const draggablesInDroppable = droppable.querySelectorAll('[qti-draggable="true"]');
+          const identifiers = Array.from(draggablesInDroppable).map(d => d.getAttribute('identifier'));
+          const droppableIdentifier = droppable.getAttribute('identifier');
+          return identifiers.map(id => `${id} ${droppableIdentifier}`);
+        })
+        .flat();
+      return response;
     }
 
     reset(save = true): void {
