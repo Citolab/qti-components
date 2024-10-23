@@ -1,6 +1,5 @@
 import { CSSResultGroup, html, LitElement } from 'lit';
 import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-interaction-mixin';
-
 import { customElement, property, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { ResponseInteraction } from '../../internal/expression-result';
