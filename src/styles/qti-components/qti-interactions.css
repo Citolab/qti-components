@@ -92,6 +92,8 @@
   }
 
   qti-text-entry-interaction {
+    display: inline-block;
+
     &:hover {
       @apply hov;
     }
@@ -106,6 +108,8 @@
   }
 
   qti-extended-text-interaction {
+    display: block;
+
     &::part(textarea) {
       @apply text;
     }

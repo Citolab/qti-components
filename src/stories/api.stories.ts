@@ -59,15 +59,17 @@ export const Api: Story = {
           headers: { 'Content-type': 'application/json; charset=UTF-8' }
         });
 
-
-
         fetch(`${args.serverLocation}/score/${args.qtipkg}/${loaded.item.href}?identifier=${loaded.item.identifier}`, {
           method: 'GET',
-        }).then(response => response.json())
-        
+        }).then(async response => { 
+          const serverVariables = await response.json();
+          console.log('server', serverVariables);
+          testRef.value.variables = serverVariables;
+        })
 
       } else {
         testRef?.value.processResponse();
+        console.log('client', testRef.value.variables);
       }
     };
 
