@@ -63,7 +63,7 @@ export const qtiTransformItem = (): {
             node.setAttribute('base-url', uri);
             node.setAttribute(
               'module',
-              documentPath + '/' + encodeURIComponent(srcValue + (srcValue.endsWith('.js') ? '' : '.js'))
+              documentPath + '/' + encodeURI(srcValue + (srcValue.endsWith('.js') ? '' : '.js'))
             );
           }
         });
@@ -303,7 +303,7 @@ function setLocation(xmlFragment: DocumentFragment, location: string) {
     const attrValue = elWithSrc.getAttribute(attr)?.trim();
 
     if (!attrValue.startsWith('data:') && !attrValue.startsWith('http')) {
-      const newSrcValue = location + encodeURIComponent(attrValue);
+      const newSrcValue = location + encodeURI(attrValue);
       elWithSrc.setAttribute(attr, newSrcValue);
     }
   });
