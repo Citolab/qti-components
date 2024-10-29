@@ -1,7 +1,7 @@
 import { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
 import { action } from '@storybook/addon-actions';
 import { expect } from '@storybook/test';
-import { screen, fireEvent } from '@storybook/testing-library';
+import { fireEvent, screen } from '@storybook/testing-library';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
@@ -21,7 +21,7 @@ export const Default: Story = {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
-    const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => {
+    const onItemConnected = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
       action('qti-assessment-item-connected');
     };
@@ -31,7 +31,7 @@ export const Default: Story = {
         class="item"
         @qti-interaction-changed=${onInteractionChangedAction}
         @qti-outcome-changed=${onOutcomeChangedAction}
-        @qti-assessment-item-connected=${onItemFirstUpdated}
+        @qti-assessment-item-connected=${onItemConnected}
       >
         ${unsafeHTML(xml)}
       </div>
