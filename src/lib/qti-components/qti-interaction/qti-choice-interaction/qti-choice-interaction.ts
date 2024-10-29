@@ -21,7 +21,9 @@ export class QtiChoiceInteraction
   public orientation: 'horizontal' | 'vertical';
 
   render() {
-    return html` <slot name="prompt"></slot><slot part="slot"></slot>`;
+    return html` <slot name="prompt"></slot><slot part="slot"></slot>
+    <div role="alert" id="validationMessage"></div>
+    `;
   }
 }
 

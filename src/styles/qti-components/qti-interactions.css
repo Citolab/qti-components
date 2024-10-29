@@ -16,6 +16,7 @@
           display: none;
         }
 
+        &:state(checked),
         &[aria-checked='true'] {
           @apply act;
         }
@@ -42,6 +43,7 @@
           @apply foc;
         }
 
+        &:state(checked),
         &[aria-checked='true'] {
           @apply act;
         }
@@ -62,6 +64,7 @@
           @apply check-radio;
         }
 
+        &[role='radio']:state(checked)::part(cha),
         &[role='radio'][aria-checked='true']::part(cha) {
           @apply check-radio-checked;
         }
@@ -70,6 +73,7 @@
           @apply check-checkbox;
         }
 
+        &[role='checkbox']:state(checked)::part(cha),
         &[role='checkbox'][aria-checked='true']::part(cha) {
           @apply check-checkbox-checked;
         }
@@ -77,6 +81,7 @@
     }
 
     & qti-simple-choice {
+      &:state(correct-response),
       &[data-correct-response='true'] {
         &::after {
           content: '\02714';

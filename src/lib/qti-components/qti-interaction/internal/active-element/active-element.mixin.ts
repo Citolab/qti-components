@@ -51,7 +51,7 @@ export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, t
     })
     public readonly = false;
 
-    private _internals: ElementInternals;
+    public internals: ElementInternals;
 
     @watch('disabled', { waitUntilFirstUpdate: true })
     handleDisabledChange(_oldValue: boolean, disabled: boolean) {
@@ -63,15 +63,7 @@ export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, t
 
     constructor(...args: any[]) {
       super(...args);
-      this._internals = this.attachInternals();
-    }
-
-    public setInternalState(key: string, value: boolean) {
-      if (value && !this._internals.states.has(key)) {
-        this._internals.states.add(key);
-      } else if (!value && this._internals.states.has(key)) {
-        this._internals.states.delete(key);
-      }
+      this.internals = this.attachInternals();
     }
 
     override connectedCallback() {

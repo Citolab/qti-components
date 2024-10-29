@@ -8,8 +8,8 @@ import type { Meta, StoryObj } from '@storybook/web-components';
 
 import '@citolab/qti-components/qti-components';
 
-import { QtiChoiceInteraction } from '../../index';
 import { fireEvent } from '@storybook/testing-library';
+import { QtiChoiceInteraction, QtiSimpleChoice } from '../../index';
 
 type Story = StoryObj; // <Props>;
 
@@ -54,28 +54,29 @@ export default meta;
 export const Default = {
   render: args => {
     return html`<qti-choice-interaction
-      data-testid="qti-choice-interaction"
-      data-max-selections-message="Too little selections made"
-      data-min-selections-message="Too much selections made"
-      response-identifier="RESPONSE"
-      @qti-register-interaction=${action(`qti-register-interaction`)}
-      @qti-interaction-response=${action(`qti-interaction-response`)}
-      class=${ifDefined(args.classes ? args.classes.join(' ') : undefined)}
-      min-choices=${ifDefined(args['min-choices'])}
-      max-choices=${ifDefined(args['max-choices'])}
-      orientation=${ifDefined(args.orientation)}
-      ?shuffle=${args.shuffle}
-      ?readonly=${args.readonly}
-      .disabled=${args.disabled}
-      ><qti-prompt>
-        <p>Which of the following features are <strong>new</strong> to QTI 3?</p>
-        <p>Pick 1 choice.</p>
-      </qti-prompt>
-      <qti-simple-choice data-testid="A" identifier="A">Option A</qti-simple-choice>
-      <qti-simple-choice data-testid="B" identifier="B" fixed>Option B</qti-simple-choice>
-      <qti-simple-choice data-testid="C" identifier="C">Option C</qti-simple-choice>
-      <qti-simple-choice data-testid="D" identifier="D">Option D</qti-simple-choice>
-    </qti-choice-interaction>`;
+        name="choice"
+        data-testid="qti-choice-interaction"
+        data-max-selections-message="Too much selections made"
+        data-min-selections-message="Too little selections made"
+        response-identifier="RESPONSE"
+        @qti-register-interaction=${action(`qti-register-interaction`)}
+        @qti-interaction-response=${action(`qti-interaction-response`)}
+        class=${ifDefined(args.classes ? args.classes.join(' ') : undefined)}
+        min-choices=${ifDefined(args['min-choices'])}
+        max-choices=${ifDefined(args['max-choices'])}
+        orientation=${ifDefined(args.orientation)}
+        ?shuffle=${args.shuffle}
+        ?readonly=${args.readonly}
+        .disabled=${args.disabled}
+        ><qti-prompt>
+          <p>Which of the following features are <strong>new</strong> to QTI 3?</p>
+          <p>Pick 1 choice.</p>
+        </qti-prompt>
+        <qti-simple-choice data-testid="A" identifier="A">Option A</qti-simple-choice>
+        <qti-simple-choice data-testid="B" identifier="B" fixed>Option B</qti-simple-choice>
+        <qti-simple-choice data-testid="C" identifier="C">Option C</qti-simple-choice>
+        <qti-simple-choice data-testid="D" identifier="D">Option D</qti-simple-choice>
+      </qti-choice-interaction>`;
   }
 };
 
@@ -85,7 +86,7 @@ export const Standard: Story = {
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement);
     fireEvent.click(canvas.getByTestId('B'));
-    expect(canvas.getByTestId('B').getAttribute('aria-checked')).toBeTruthy();
+    expect(canvas.getByTestId<QtiSimpleChoice>('B').checked).toBeTruthy();
   }
 };
 
@@ -109,29 +110,33 @@ export const MinChoices1: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await fireEvent.click(canvas.getByTestId('B'));
-    expect(canvas.getByTestId('B').getAttribute('aria-checked')).toBeTruthy();
+    expect(canvas.getByTestId<QtiSimpleChoice>('B').checked).toBeTruthy();
   }
 };
 
-export const MaxChoices1: Story = {
+export const MaxChoices2: Story = {
   render: Default.render,
   args: {
-    maxChoices: 1
+    'min-choices': 1,
+    'max-choices': 2
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const choiceA = canvas.getByTestId('A');
-    const choiceB = canvas.getByTestId('B');
+    const choiceA = canvas.getByTestId<QtiSimpleChoice>('A');
+    const choiceB = canvas.getByTestId<QtiSimpleChoice>('B');
+    const choiceC = canvas.getByTestId<QtiSimpleChoice>('C');
 
-    expect(choiceA.getAttribute('role')).toBe('radio');
+    expect(choiceA.getAttribute('role')).toBe('checkbox');
     // expect(element.validate()).toBeFalsy();
 
     await fireEvent.click(choiceA);
-    expect(choiceA.getAttribute('aria-checked')).toBe('true');
+    expect(choiceA.checked).toBeTruthy();
 
     await fireEvent.click(choiceB);
-    expect(choiceB.getAttribute('aria-checked')).toBe('true');
-    expect(choiceA.getAttribute('aria-checked')).toBe('false');
+    expect(choiceB.checked).toBeTruthy();
+    expect(choiceA.checked).toBeTruthy();
+
+    await fireEvent.click(choiceC);
   }
 };
 
@@ -230,18 +235,45 @@ export const VocabularyLowerAlphaSuffixDotAndCorrectStory = {
   }
 };
 
-export const ContentEditable = {
+export const Form: Story = {
   render: () => {
     return html`
-      <div contenteditable="true">
-        <qti-choice-interaction response-identifier="RESPONSE">
-          <qti-prompt>Can you start editting one of these simplechoices</qti-prompt>
-          <qti-simple-choice identifier="A"> I think you can use WorkFlow. </qti-simple-choice>
-          <qti-simple-choice identifier="B"><br /></qti-simple-choice>
-          <qti-simple-choice identifier="C"> No you should use Workload Rage. </qti-simple-choice>
-          <qti-simple-choice identifier="D"><br /></qti-simple-choice>
-        </qti-choice-interaction>
-      </div>
+      <form name="choice-form" @submit=${(e) => e.preventDefault()}>
+        ${Default.render({
+          'min-choices': 1,
+          'max-choices': 2
+        })}
+        <input type="submit" value="submit" />
+      </form>
     `;
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const choiceA = canvas.getByTestId<QtiSimpleChoice>('A');
+    const choiceB = canvas.getByTestId<QtiSimpleChoice>('B');
+    const form = canvas.getByRole<HTMLFormElement>('form');
+
+    await fireEvent.click(choiceA);
+    await fireEvent.click(choiceB);
+    
+    await fireEvent.submit(form);
+
+    const formData = new FormData(form);
+    const submittedValues = Array.from(formData.entries());
+
+    // Define expected values for assertion
+    const expectedValues = [
+      ['choice', 'A'],
+      ['choice', 'B']
+    ];
+
+    // Check that form data contains the expected values
+    expect(submittedValues).toEqual(expect.arrayContaining(expectedValues));
+  }
+};
+
+export const ContentEditable = {
+  render: () => {
+    return html` <div contenteditable="true">${Default.render({})}</div> `;
   }
 };

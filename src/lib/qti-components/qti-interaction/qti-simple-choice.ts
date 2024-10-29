@@ -30,6 +30,11 @@ export class QtiSimpleChoice extends ActiveElementMixin(LitElement, 'qti-simple-
   @property({ type: String, attribute: false })
   public marker: string;
 
+
+  get checked() {
+    return this['internals'].states.has('checked');
+  }
+
   override render() {
     return html`<div part="ch">
         <div part="cha"></div>
