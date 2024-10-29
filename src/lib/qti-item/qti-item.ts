@@ -1,77 +1,39 @@
-import styles from '../../item.css?inline';
-import { VariableValue } from '../qti-components';
+import type { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
+import { LitElement, html } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 
-export class QtiItem extends HTMLElement {
-  view?: string;
+@customElement('qti-item')
+export class QtiItem extends LitElement {
+  @property({ type: String, reflect: true }) identifier?: string;
+  @property({ type: String }) href?: string;
 
-  #renderRoot = null;
-  #assessmentItem = null;
+  @property({ type: Object, attribute: false })
+  xmlDoc: DocumentFragment; // the XMLDocument
 
-  set xmlDoc(xml: DocumentFragment) {
-    if (!this.#renderRoot) {
-      // eslint-disable-next-line wc/attach-shadow-constructor, wc/no-closed-shadow-root
-      this.#renderRoot = this.attachShadow({ mode: 'open' }); // can not be closed, else drag and drops will not work
-      const style = new CSSStyleSheet();
-      style.replaceSync(styles);
-      this.#renderRoot.adoptedStyleSheets = [style];
-      this.#renderRoot.innerHTML = ''; // Clear any existing content
-      // this.#renderRoot.addEventListener('qti-interaction-changed', this.#variablesChanged);
-      // this.#renderRoot.addEventListener('qti-outcome-changed', this.#variablesChanged);
-      this.#renderRoot.addEventListener(
-        'qti-assessment-item-connected',
-        ({ target }) => (this.#assessmentItem = target)
-      );
-    }
-
-    this.#renderRoot.innerHTML = ``;
-    this.#renderRoot.appendChild(xml.cloneNode(true));
+  protected createRenderRoot(): HTMLElement | DocumentFragment {
+    return this;
   }
 
-  processResponse() {
-    this.#assessmentItem?.processResponse() || console.warn('No qti-assessment-item found');
+  get assessmentItem(): QtiAssessmentItem | null {
+    return this.renderRoot?.querySelector('qti-assessment-item');
   }
 
-  get variables(): VariableValue<string | string[] | null>[] {
-    return this.#assessmentItem?.variables || console.warn('No qti-assessment-item found');
+  async connectedCallback(): Promise<void> {
+    super.connectedCallback();
+    await this.updateComplete;
+    this.dispatchEvent(
+      new CustomEvent('qti-item-connected', {
+        bubbles: true,
+        composed: true,
+        detail: { identifier: this.identifier, href: this.href }
+      })
+    );
   }
 
-  set variables(variables: VariableValue<string | string[] | null>[]) {
-    this.#assessmentItem.variables = variables;
+  render() {
+    return html`${this.xmlDoc}`;
   }
-
-  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
-    switch (name) {
-      case 'view':
-        break;
-
-      default:
-        if (oldValue !== newValue) {
-          this[name as 'view'] = newValue;
-        }
-        break;
-    }
-  }
-
-  /* Private methods */
-  // get #assessmentItem() {
-  //   return this.querySelector('qti-assessment-item') || console.warn('No qti-assessment-item found');
-  // }
-
-  // #variablesChanged = (e: CustomEvent<any>) => {
-  //   e.stopImmediatePropagation();
-  //   e.stopPropagation();
-  //   this.dispatchEvent(
-  //     new CustomEvent('qti-item-variables-changed', {
-  //       bubbles: false,
-  //       detail: {
-  //         variables: this.#assessmentItem.variables
-  //       }
-  //     })
-  //   );
-  // };
 }
-
-customElements.define('qti-item', QtiItem);
 
 declare global {
   interface HTMLElementTagNameMap {

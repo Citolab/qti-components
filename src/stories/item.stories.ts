@@ -41,21 +41,17 @@ let item;
 
 export const Items: Story = {
   render: ({ disabled, view }, { argTypes, loaded: { xml } }) => {
-    // const { loaded } = context;
-    const qtiItemRef = ref(null);
-
-    const testRef = createRef<QtiItem>();
+    const qtiItemRef = createRef<QtiItem>();
 
     const processResponse = () => {
-      testRef?.value.processResponse();
+      qtiItemRef?.value.assessmentItem.processResponse();
     };
 
     return html`
       <qti-item
-        ${ref(testRef)}
+        ${ref(qtiItemRef)}
         @qti-interaction-changed=${action('qti-interaction-changed')}
         @qti-outcomes-changed=${action('qti-outcomes-changed')}
-        @qti-item-variables-changed=${action('qti-item-variables-changed')}
         .xmlDoc=${xml.itemHTMLDoc}
       >
       </qti-item>
