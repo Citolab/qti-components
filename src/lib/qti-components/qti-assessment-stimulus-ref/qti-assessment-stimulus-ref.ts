@@ -50,7 +50,8 @@ export class QtiAssessmentStimulusRef extends LitElement {
       .then(api => api.path(path).htmldoc());
     if (stimulus) {      
       const elements = stimulus.querySelectorAll('qti-stimulus-body, qti-stylesheet');
-      stimulusRef.append(...elements);      
+      stimulusRef.innerHTML = '';
+      stimulusRef.append(...elements);
       const title = (stimulus.querySelector('qti-assessment-stimulus') as HTMLElement)?.title;
       if (title.includes('(lijst)')) {
         stimulusRef.classList.add('qti-stimulus-list');

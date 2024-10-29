@@ -51,7 +51,7 @@ export const watchOptions = {
   ...buildOptions,
   minify: false,
   bundle: true,
-  format: ['iife'],
+  format: ['esm'],
   pure: [],
   drop: [],
   define: {
