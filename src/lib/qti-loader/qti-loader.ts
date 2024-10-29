@@ -1,5 +1,17 @@
 import { qtiTransformItem, qtiTransformManifest, qtiTransformTest } from '../qti-transformers';
 
+export type ManifestData = {
+  itemLocation: string;
+  testIdentifier: string;
+  assessmentXML: DocumentFragment;
+  assessmentLocation: string;
+  items: {
+      identifier: string;
+      href: string;
+      category: string;
+  }[];
+};
+
 // Utility function to ensure package URIs end with a '/'
 const normalizeUri = (uri: string) => (uri.endsWith('/') ? uri : `${uri}/`);
 
@@ -29,7 +41,7 @@ export const getItemByIndex = async (packageUri: string, index: number, cancelPr
 };
 
 // Fetches assessment data from the manifest
-export const getAssessmentData = async (packageUri: string): Promise<any> => {
+export const getAssessmentData = async (packageUri: string): Promise<ManifestData> => {
   const normalizedUri = normalizeUri(packageUri);
 
   const test = await qtiTransformManifest()
