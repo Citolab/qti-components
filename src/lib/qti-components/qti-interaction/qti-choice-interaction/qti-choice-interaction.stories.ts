@@ -2,14 +2,14 @@ import { action } from '@storybook/addon-actions';
 import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
-import { expect, within } from '@storybook/test';
+import { expect, fn, within } from '@storybook/test';
 
 import type { Meta, StoryObj } from '@storybook/web-components';
 
 import '@citolab/qti-components/qti-components';
 
-import { QtiChoiceInteraction } from '../../index';
 import { fireEvent } from '@storybook/testing-library';
+import { QtiChoiceInteraction } from '../../index';
 
 type Story = StoryObj; // <Props>;
 
@@ -82,10 +82,16 @@ export const Default = {
 export const Standard: Story = {
   render: Default.render,
   args: {},
-  play: ({ canvasElement }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    fireEvent.click(canvas.getByTestId('B'));
-    expect(canvas.getByTestId('B').getAttribute('aria-checked')).toBeTruthy();
+    const choiceB = canvas.getByTestId('B');
+
+
+    // Simulate clicking choiceB
+    await fireEvent.click(choiceB);
+
+    // Check that choiceB was selected
+    expect(choiceB.getAttribute('aria-checked')).toBeTruthy();
   }
 };
 
@@ -150,6 +156,40 @@ export const Multiple: Story = {
     classes: ['qti-choices-stacking-2'],
     'min-choices': 1,
     'max-choices': 2
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const choiceA = canvas.getByTestId('A');
+    const choiceB = canvas.getByTestId('B');
+
+    // Set up a spy to check if 'qti-interaction-changed' event is triggered
+    const interactionChangedSpy = fn();
+    canvasElement.addEventListener('qti-interaction-response', interactionChangedSpy);
+
+    // Simulate clicking choiceB
+    await fireEvent.click(choiceA);
+    await fireEvent.click(choiceB);
+
+    expect(choiceA.getAttribute('aria-checked')).toBe('true');
+    expect(choiceB.getAttribute('aria-checked')).toBe('true');
+
+    // Check that choiceB was selected
+    expect(choiceB.getAttribute('aria-checked')).toBeTruthy();
+
+    // Assert that the 'qti-interaction-changed' event was called
+    expect(interactionChangedSpy).toHaveBeenCalled();
+
+    // Extract the event data from the spy's first call
+    const event = interactionChangedSpy.mock.calls[1][0];
+    
+    // Define expected detail data
+    const expectedDetail = {
+      responseIdentifier: 'RESPONSE', // replace with actual response identifier if available
+      response: ['A','B'] // assuming "B" is the expected response; adjust as needed
+    };
+
+    // Check that the event's detail matches expected data
+    expect(event.detail).toEqual(expectedDetail);
   }
 };
 
