@@ -231,7 +231,7 @@ export const ChoicesMixin = <T extends Constructor<LitElement>>(superClass: T, s
        * If `maxChoices` is 1, it will be the selected identifier or `undefined` if no identifier is selected.
        * If `maxChoices` is greater than 1, it will be an array of selected identifiers.
        */
-      this.response = this.maxChoices === 1 ? selectedIdentifiers[0] || undefined : selectedIdentifiers;
+      this._response = this.maxChoices === 1 ? selectedIdentifiers[0] || undefined : selectedIdentifiers;
       this.validate();
       this._saveResponse();
     }
@@ -243,7 +243,7 @@ export const ChoicesMixin = <T extends Constructor<LitElement>>(superClass: T, s
           composed: true,
           detail: {
             responseIdentifier: this.responseIdentifier,
-            response: this.response
+            response: this._response
           }
         })
       );

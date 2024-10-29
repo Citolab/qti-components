@@ -158,8 +158,8 @@ export const Multiple: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const choiceA = canvas.getByTestId('A');
-    const choiceB = canvas.getByTestId('B');
+    const choiceA = canvas.getByTestId<QtiSimpleChoice>('A');
+    const choiceB = canvas.getByTestId<QtiSimpleChoice>('B');
 
     // Set up a spy to check if 'qti-interaction-changed' event is triggered
     const interactionChangedSpy = fn();
@@ -169,16 +169,13 @@ export const Multiple: Story = {
     await fireEvent.click(choiceA);
     await fireEvent.click(choiceB);
 
-    expect(choiceA.getAttribute('aria-checked')).toBe('true');
-    expect(choiceB.getAttribute('aria-checked')).toBe('true');
-
-    // Check that choiceB was selected
-    expect(choiceB.getAttribute('aria-checked')).toBeTruthy();
+    expect(choiceA.checked).toBeTruthy();
+    expect(choiceB.checked).toBeTruthy();
 
     // Assert that the 'qti-interaction-changed' event was called
     expect(interactionChangedSpy).toHaveBeenCalled();
 
-    // Extract the event data from the spy's first call
+    // Extract the event data from the spy's second call
     const event = interactionChangedSpy.mock.calls[1][0];
     
     // Define expected detail data
@@ -301,6 +298,10 @@ export const Form: Story = {
       ['choice', 'B']
     ];
 
+    const selectedOptions = formData.getAll('options'); // Returns an array, e.g., ['A', 'B']
+
+    console.log('Selected Options:', selectedOptions);
+    
     // Check that form data contains the expected values
     expect(submittedValues).toEqual(expect.arrayContaining(expectedValues));
   }
