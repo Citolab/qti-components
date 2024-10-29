@@ -4,8 +4,8 @@ import { action } from '@storybook/addon-actions';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
-import { QtiItem } from 'src/lib/qti-item';
 import packages from '../assets/packages.json';
+import { QtiItem } from '../lib/qti-item';
 import { getItemByIndex } from '../lib/qti-loader';
 
 const meta: Meta = {
