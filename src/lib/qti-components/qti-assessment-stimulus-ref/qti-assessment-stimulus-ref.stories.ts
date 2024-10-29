@@ -33,7 +33,6 @@ export const StimulusWithRef: Story = {
             <qti-choice-interaction
               class="qti-orientation-horizontal qti-input-control-hidden"
               max-choices="1"
-              shuffle="false"
             >
               <qti-simple-choice identifier="A"> Boer </qti-simple-choice>
               <qti-simple-choice identifier="B"> Doek </qti-simple-choice>
@@ -68,7 +67,6 @@ export const StimulusDeliveryPlatform: Story = {
             <qti-choice-interaction
               class="qti-orientation-horizontal qti-input-control-hidden"
               max-choices="1"
-              shuffle="false"
             >
               <qti-simple-choice identifier="A"> Boer </qti-simple-choice>
               <qti-simple-choice identifier="B"> Doek </qti-simple-choice>
