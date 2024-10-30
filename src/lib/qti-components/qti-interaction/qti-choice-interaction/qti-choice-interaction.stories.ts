@@ -141,6 +141,14 @@ export const MaxChoices1: Story = {
   }
 };
 
+
+export const OrientationHorizontal: Story = {
+  render: Default.render,
+  args: {
+    orientation: 'horizontal',
+  }
+};
+
 export const ControlHidden: Story = {
   render: Default.render,
   args: {
