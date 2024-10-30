@@ -1,6 +1,6 @@
 import { LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import { QtiItemMixin } from './qit-item.mixin';
+import { QtiItemMixin } from './qti-item.mixin';
 
 @customElement('qti-item')
 export class QtiItem extends QtiItemMixin(LitElement) {}

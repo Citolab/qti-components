@@ -4,7 +4,12 @@ import { property } from 'lit/decorators.js';
 
 type Constructor<T = {}> = new (...args: any[]) => T;
 
-declare class QtiItemMixinInterface {}
+declare class QtiItemMixinInterface {
+  identifier?: string;
+  href?: string;
+  xmlDoc: DocumentFragment;
+  assessmentItem: QtiAssessmentItem | null;
+}
 export const QtiItemMixin = <T extends Constructor<LitElement>>(superClass: T) => {
   class QtiItemMixinClass extends superClass {
     @property({ type: String, reflect: true }) identifier?: string;

@@ -1,2 +1,3 @@
-export * from './qit-item.mixin';
 export * from './qti-item';
+export * from './qti-item.mixin';
+
