@@ -1,31 +1,32 @@
-import type { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
 import { LitElement, html } from 'lit';
 import { property } from 'lit/decorators.js';
+import { QtiAssessmentItem } from '../qti-components';
 
 type Constructor<T = {}> = new (...args: any[]) => T;
 
-declare class QtiItemMixinInterface {
+export interface QtiItemInterface {
   identifier?: string;
   href?: string;
   xmlDoc: DocumentFragment;
   assessmentItem: QtiAssessmentItem | null;
 }
-export const QtiItemMixin = <T extends Constructor<LitElement>>(superClass: T) => {
-  class QtiItemMixinClass extends superClass {
+
+export function QtiItemMixin<T extends Constructor<LitElement>>(Base: T) {
+  class QtiItemClass extends Base {
     @property({ type: String, reflect: true }) identifier?: string;
     @property({ type: String }) href?: string;
-  
+
     @property({ type: Object, attribute: false })
     xmlDoc!: DocumentFragment; // the XMLDocument
-  
+
     protected createRenderRoot(): HTMLElement | DocumentFragment {
       return this;
     }
-  
+
     get assessmentItem(): QtiAssessmentItem | null {
       return this.renderRoot?.querySelector('qti-assessment-item');
     }
-  
+
     async connectedCallback(): Promise<void> {
       super.connectedCallback();
       await this.updateComplete;
@@ -37,11 +38,10 @@ export const QtiItemMixin = <T extends Constructor<LitElement>>(superClass: T) =
         })
       );
     }
-  
+
     render() {
       return html`${this.xmlDoc}`;
     }
   }
-
-  return QtiItemMixinClass as Constructor<QtiItemMixinInterface> & T;
-};
+  return QtiItemClass as Constructor<QtiItemInterface> & T;
+}

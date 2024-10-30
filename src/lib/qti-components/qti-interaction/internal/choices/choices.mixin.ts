@@ -41,10 +41,6 @@ export const ChoicesMixin = <T extends Constructor<LitElement>>(superClass: T, s
       this._choiceElements.forEach(choice => (choice.readonly = readonly));
     };
 
-    constructor(...args: any[]) {
-      super(...args);
-    }
-
     public validate(): boolean {
       const selectedCount = this._choiceElements.filter(choice => this._getChoiceChecked(choice)).length;
       if (this.maxChoices !== 0 && selectedCount > this.maxChoices) {
