@@ -1,3 +1,4 @@
+/* stylelint-disable number-max-precision */
 @layer qti-base {
   .qti-layout-row {
     display: flex;
@@ -6,8 +7,13 @@
     gap: 2.1276595745%;
   }
 
-  .qti-layout-row [class*='qti-layout-col'] {
+  .qti-layout-row [class*='qti-layout-col']:not(:empty) {
     box-sizing: border-box;
+  }
+
+  .qti-layout-row [class*='qti-layout-col']:empty {
+    width: 0;
+    overflow: hidden; /* to fully collapse if there’s padding or borders */
   }
 
   .qti-layout-col1 {
