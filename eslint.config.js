@@ -24,7 +24,10 @@ export default [
       'no-unused-vars': 'off',
       'import/no-dynamic-require': 'warn',
       'import/no-nodejs-modules': 'warn',
-      'import/no-unresolved': 'error'
+      'import/no-unresolved': 'error',
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-empty-object-type': 'off',
+      '@typescript-eslint/no-unused-vars': 'off'
     },
     settings: {
       'import/parsers': {
