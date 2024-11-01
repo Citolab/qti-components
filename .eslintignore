@@ -1,7 +1,0 @@
-.cache
-dist
-node_modules
-scripts
-vite.config.ts
-vitest.config.ts
-uno.config.ts
