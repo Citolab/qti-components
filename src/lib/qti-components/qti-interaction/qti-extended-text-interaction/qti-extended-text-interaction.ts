@@ -7,9 +7,8 @@ import { watch } from '../../../decorators/watch';
 
 @customElement('qti-extended-text-interaction')
 export class QtiExtendedTextInteraction extends Interaction {
-  // public static rowHeightClass = [];
-
-  textareaRef = createRef<HTMLTextAreaElement>();
+  @state()
+  private _rows = 5;
 
   /** expected length is mapped to the property maxlength on the textarea */
   @property({ type: Number, attribute: 'expected-length' }) expectedLength: number;
@@ -23,15 +22,13 @@ export class QtiExtendedTextInteraction extends Interaction {
   private _value = '';
 
   @property({ type: String, attribute: 'class' }) classNames;
-  @watch('classNames', { waitUntilFirstUpdate: true })
-  handleclassNamesChange(old, disabled: boolean) {
-    const classNames = this.classNames.split(' ');
+  @watch('classNames')
+  handleclassNamesChange(old, classes: string) {
+    const classNames = classes.split(' ');
     classNames.forEach((className: string) => {
-      if (className.startsWith('qti-height-lines')) {
+      if (className.startsWith('qti-height-lines-')) {
         const nrRows = className.replace('qti-height-lines-', '');
-        if (this.textareaRef) {
-          this.textareaRef.value.rows = parseInt(nrRows);
-        }
+        this._rows = parseInt(nrRows);
       }
     });
   }
@@ -65,7 +62,6 @@ export class QtiExtendedTextInteraction extends Interaction {
     return html`<slot name="prompt"></slot
       ><textarea
         part="textarea"
-        ${ref(this.textareaRef)}
         spellcheck="false"
         autocomplete="off"
         @keydown="${event => event.stopImmediatePropagation()}"
@@ -83,6 +79,7 @@ export class QtiExtendedTextInteraction extends Interaction {
         placeholder="${ifDefined(this.placeholderText ? this.placeholderText : undefined)}"
         maxlength="${ifDefined(this.expectedLength ? this.expectedLength : undefined)}"
         pattern="${ifDefined(this.patternMask ? this.patternMask : undefined)}"
+        rows="${this._rows}"
         ?disabled="${this.disabled}"
         ?readonly="${this.readonly}"
         .value=${this._value}

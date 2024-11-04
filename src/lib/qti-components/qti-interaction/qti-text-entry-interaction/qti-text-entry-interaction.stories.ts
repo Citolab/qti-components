@@ -14,6 +14,12 @@ const inputWidthClass = [
   'qti-input-width-10',
   'qti-input-width-15',
   'qti-input-width-20',
+  'qti-input-width-25',
+  'qti-input-width-30',
+  'qti-input-width-35',
+  'qti-input-width-40',
+  'qti-input-width-45',
+  'qti-input-width-50',
   'qti-input-width-72'
 ];
 

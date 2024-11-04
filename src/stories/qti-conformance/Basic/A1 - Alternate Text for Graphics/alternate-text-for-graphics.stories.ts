@@ -10,7 +10,7 @@ import { getItemByUri } from '../../../../lib/qti-loader';
 type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {
-  title: 'qti-conformance/basic/a1/alternate-text-for-graphics'
+  title: 'qti-conformance/basic/A1 - Alternate Text for Graphics/alternate-text-for-graphics'
 };
 export default meta;
 

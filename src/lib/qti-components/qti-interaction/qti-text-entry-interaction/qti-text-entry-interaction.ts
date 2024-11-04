@@ -1,12 +1,15 @@
 import { css, html } from 'lit';
+import type { CSSResultGroup } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { createRef } from 'lit/directives/ref.js';
 import { watch } from '../../../decorators';
 import { Interaction } from '../internal/interaction/interaction';
-
+import styles from './qti-text-entry-interaction.styles';
 @customElement('qti-text-entry-interaction')
 export class QtiTextEntryInteraction extends Interaction {
+  static styles: CSSResultGroup = styles;
+
   @property({ type: Number, attribute: 'expected-length' }) expectedLength: number;
 
   @property({ type: String, attribute: 'pattern-mask' }) patternMask: string;
@@ -19,22 +22,7 @@ export class QtiTextEntryInteraction extends Interaction {
   @state()
   private _correctValue = '';
 
-  @state()
-  private _size = 5;
-
   inputRef = createRef<HTMLInputElement>();
-
-  @property({ type: String, attribute: 'class' }) classNames;
-  @watch('classNames')
-  handleclassNamesChange(old, classes: string) {
-    const classNames = classes.split(' ');
-    classNames.forEach((className: string) => {
-      if (className.startsWith('qti-input-width')) {
-        const nrRows = className.replace('qti-input-width-', '');
-        this._size = parseInt(nrRows);
-      }
-    });
-  }
 
   public set response(value: string | undefined) {
     this._value = value !== undefined ? value : '';
@@ -42,17 +30,6 @@ export class QtiTextEntryInteraction extends Interaction {
 
   public validate() {
     return this._value !== '';
-  }
-
-  static override get styles() {
-    return [
-      css`
-        [part='correct'] {
-          position: absolute;
-          width: 100%;
-        }
-      `
-    ];
   }
 
   set correctResponse(value: string) {
@@ -80,7 +57,6 @@ export class QtiTextEntryInteraction extends Interaction {
         type="${this.patternMask == '[0-9]*' ? 'number' : 'text'}"
         placeholder="${ifDefined(this.placeholderText ? this.placeholderText : undefined)}"
         .value="${this._value}"
-        size="${this._size}"
         pattern="${ifDefined(this.patternMask ? this.patternMask : undefined)}"
         ?disabled="${this.disabled}"
         ?readonly="${this.readonly}"

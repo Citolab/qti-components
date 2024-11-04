@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-item
+    xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+    identifier="q2-choice-interaction-multiple-sv-3c"
+    title="Choice Interaction - Multiple (SV 3c) - label/suffix options"
+    adaptive="false" time-dependent="false">
+    <qti-response-declaration identifier="RESPONSE" cardinality="multiple" base-type="identifier" />
+    <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float" />
+    <qti-item-body>
+        <p>Which of the following elements are used to form water?</p>
+
+        <qti-choice-interaction class="qti-labels-lower-alpha qti-labels-suffix-none"
+            response-identifier="RESPONSE" max-choices="0">
+            <qti-prompt>Demonstrates qti-labels-lower-alpha and qti-labels-suffix-none.</qti-prompt>
+            <qti-simple-choice identifier="H" fixed="false">Hydrogen</qti-simple-choice>
+            <qti-simple-choice identifier="He" fixed="false">Helium</qti-simple-choice>
+            <qti-simple-choice identifier="C" fixed="false">Carbon</qti-simple-choice>
+            <qti-simple-choice identifier="O" fixed="false">Oxygen</qti-simple-choice>
+            <qti-simple-choice identifier="N" fixed="false">Nitrogen</qti-simple-choice>
+            <qti-simple-choice identifier="Cl" fixed="false">Chlorine</qti-simple-choice>
+        </qti-choice-interaction>
+    </qti-item-body>
+</qti-assessment-item>
