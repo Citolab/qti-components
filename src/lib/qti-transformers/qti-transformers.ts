@@ -90,6 +90,7 @@ export const qtiTransformItem = (): {
             element.replaceWith(createElementWithNewTagName(element, newTagName));
           });
       });
+      return api;
     },
     customInteraction(baseRef: string, baseItem: string): typeof api {
       const qtiCustomInteraction = xmlFragment.querySelector('qti-custom-interaction');
