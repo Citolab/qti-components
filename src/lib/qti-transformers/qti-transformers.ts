@@ -34,7 +34,7 @@ export const qtiTransformItem = (): {
   let xmlFragment: XMLDocument;
 
   const api = {
-    async load(uri: string, cancelPreviousRequest = false) {
+    async load(uri: string, cancelPreviousRequest = false):Promise<typeof api> {
       return new Promise<typeof api>((resolve, reject) => {
         loadXML(uri, cancelPreviousRequest).then(xml => {
           xmlFragment = xml;
