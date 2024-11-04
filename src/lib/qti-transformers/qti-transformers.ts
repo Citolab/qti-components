@@ -16,13 +16,16 @@ const xml = String.raw;
  * qtiTransformItem().parse(storyXML).html()
  */
 
-export const qtiTransformItem = (): {
+export const qtiTransformItem = () => {
+  let xmlFragment: XMLDocument;
+
+  const api: {
   load: (uri: string, cancelPreviousRequest?: boolean) => Promise<typeof api>;
   parse: (xmlString: string) => typeof api;
   path: (location: string) => typeof api;
   fn: (fn: (xmlFragment: XMLDocument) => void) => typeof api;
   pciHooks: (uri: string) => typeof api;
-  customTypes: (param: string) => typeof api;
+  customTypes: (param?: string) => typeof api;
   customInteraction: (baseRef: string, baseItem: string) => typeof api;
   convertCDATAtoComment: () => typeof api;
   stripStyleSheets: () => typeof api;
@@ -30,10 +33,7 @@ export const qtiTransformItem = (): {
   xml: () => string;
   htmldoc: () => DocumentFragment;
   xmldoc: () => XMLDocument;
-} => {
-  let xmlFragment: XMLDocument;
-
-  const api = {
+} = {
     async load(uri: string, cancelPreviousRequest = false):Promise<typeof api> {
       return new Promise<typeof api>((resolve, reject) => {
         loadXML(uri, cancelPreviousRequest).then(xml => {
@@ -75,20 +75,29 @@ export const qtiTransformItem = (): {
       return api;
     },
     customTypes: (param: string = 'type'): typeof api => {
-      const createElementWithNewTagName = (element, newTagName) => {
+      function createElementWithNewTagName(element, newTagName) {
         const newElement = document.createElement(newTagName);
-        [...element.attributes].forEach(attr => newElement.setAttribute(attr.name, attr.value));
-        newElement.append(...element.childNodes);
+        // Copy attributes
+        for (const attr of element.attributes) {
+          newElement.setAttribute(attr.name, attr.value);
+        }
+        // Copy child nodes
+        while (element.firstChild) {
+          newElement.appendChild(element.firstChild);
+        }
         return newElement;
-      };
+      }
 
-      xmlFragment.querySelectorAll('*').forEach(element => {
-        [...element.classList]
-          .filter(cls => cls.startsWith(`${param}:`))
-          .forEach(cls => {
-            const newTagName = `${element.nodeName}-${cls.slice(param.length).toUpperCase()}`;
-            element.replaceWith(createElementWithNewTagName(element, newTagName));
+      xmlFragment.querySelectorAll('*').forEach((element) => {
+        const classList = element.classList;
+        if (classList) {
+          classList.forEach(str => {
+            if (str.startsWith(`${param}:`)) {              
+              const newElement = createElementWithNewTagName(element, element.nodeName + '-' + str.slice(`${param}:`.length).toUpperCase());
+              element.replaceWith(newElement);              
+            }
           });
+        }
       });
       return api;
     },
