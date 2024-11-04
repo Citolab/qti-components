@@ -33,7 +33,6 @@ export const StimulusWithRef: Story = {
             <qti-choice-interaction
               class="qti-orientation-horizontal qti-input-control-hidden"
               max-choices="1"
-              shuffle="false"
             >
               <qti-simple-choice identifier="A"> Boer </qti-simple-choice>
               <qti-simple-choice identifier="B"> Doek </qti-simple-choice>
@@ -53,7 +52,7 @@ export const StimulusDeliveryPlatform: Story = {
       @qti-assessment-stimulus-ref-connected=${async (e: Event) => {
         e.preventDefault(); // this prevents the default behaviour of the item to set the stimulus content
         const stimulusRef = e.target as QtiAssessmentStimulusRef;
-        stimulusRef.loadAndAppendStimulus(placeholderRef.value);
+        stimulusRef.updateStimulusRef(placeholderRef.value);
       }}
     >
       <div class="qti-shared-stimulus" ${ref(placeholderRef)}></div>
@@ -68,7 +67,6 @@ export const StimulusDeliveryPlatform: Story = {
             <qti-choice-interaction
               class="qti-orientation-horizontal qti-input-control-hidden"
               max-choices="1"
-              shuffle="false"
             >
               <qti-simple-choice identifier="A"> Boer </qti-simple-choice>
               <qti-simple-choice identifier="B"> Doek </qti-simple-choice>

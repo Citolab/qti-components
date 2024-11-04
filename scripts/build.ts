@@ -51,7 +51,7 @@ export const watchOptions = {
   ...buildOptions,
   minify: false,
   bundle: true,
-  format: ['iife'],
+  format: ['esm'],
   pure: [],
   drop: [],
   define: {
@@ -69,7 +69,7 @@ export const completeOptions = {
   sourcemap: false,
   minify: true,
   bundle: true,
-  format: ['iife'],  // IIFE format for browser-like environments
+  format: ['iife', 'esm'], // IIFE format for browser-like environments
   globalName: 'QtiComponents',  // Name to use for the global variable in IIFE
   target: 'es5',  // Target ES5 to ensure compatibility with older environments
   shims: false,  // Disable shims (optional based on your need)

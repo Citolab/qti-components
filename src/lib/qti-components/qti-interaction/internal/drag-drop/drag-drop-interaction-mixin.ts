@@ -93,7 +93,7 @@ export const DragDropInteractionMixin = <T extends Constructor<LitElement>>(
         parent: draggable.parentElement,
         index
       });
-      draggable.style.viewTransitionName = `drag-${index}-${this.getAttribute('identifier')}`;
+      draggable.style.viewTransitionName = `drag-${index}-${this.getAttribute('identifier') || crypto.randomUUID()}`;
       draggable.setAttribute('qti-draggable', 'true');
       draggable.addEventListener('dragstart', this.handleDragStart);
       draggable.addEventListener('dragend', this.handleDragEnd);

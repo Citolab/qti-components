@@ -16,21 +16,25 @@ const xml = String.raw;
  * qtiTransformItem().parse(storyXML).html()
  */
 
-export const qtiTransformItem = (): {
+export const qtiTransformItem = () => {
+  let xmlFragment: XMLDocument;
+
+  const api: {
   load: (uri: string, cancelPreviousRequest?: boolean) => Promise<typeof api>;
   parse: (xmlString: string) => typeof api;
   path: (location: string) => typeof api;
   fn: (fn: (xmlFragment: XMLDocument) => void) => typeof api;
+  pciHooks: (uri: string) => typeof api;
+  customTypes: (param?: string) => typeof api;
   customInteraction: (baseRef: string, baseItem: string) => typeof api;
+  convertCDATAtoComment: () => typeof api;
+  stripStyleSheets: () => typeof api;
   html: () => string;
   xml: () => string;
   htmldoc: () => DocumentFragment;
   xmldoc: () => XMLDocument;
-} => {
-  let xmlFragment: XMLDocument;
-
-  const api = {
-    async load(uri: string, cancelPreviousRequest = false) {
+} = {
+    async load(uri: string, cancelPreviousRequest = false):Promise<typeof api> {
       return new Promise<typeof api>((resolve, reject) => {
         loadXML(uri, cancelPreviousRequest).then(xml => {
           xmlFragment = xml;
@@ -38,19 +42,19 @@ export const qtiTransformItem = (): {
         });
       });
     },
-    parse(xmlString: string) {
+    parse(xmlString: string): typeof api {
       xmlFragment = parseXML(xmlString);
       return api;
     },
-    path: (location: string) => {
+    path: (location: string): typeof api => {
       setLocation(xmlFragment, location);
       return api;
     },
-    fn(fn: (xmlFragment: XMLDocument) => void) {
+    fn(fn: (xmlFragment: XMLDocument) => void): typeof api {
       fn(xmlFragment);
       return api;
     },
-    pciHooks(uri: string) {
+    pciHooks(uri: string): typeof api {
       const attributes = ['hook', 'module'];
       const documentPath = uri.substring(0, uri.lastIndexOf('/'));
       for (const attribute of attributes) {
@@ -70,7 +74,34 @@ export const qtiTransformItem = (): {
       }
       return api;
     },
-    customInteraction(baseRef: string, baseItem: string) {
+    customTypes: (param: string = 'type'): typeof api => {
+      function createElementWithNewTagName(element, newTagName) {
+        const newElement = document.createElement(newTagName);
+        // Copy attributes
+        for (const attr of element.attributes) {
+          newElement.setAttribute(attr.name, attr.value);
+        }
+        // Copy child nodes
+        while (element.firstChild) {
+          newElement.appendChild(element.firstChild);
+        }
+        return newElement;
+      }
+
+      xmlFragment.querySelectorAll('*').forEach((element) => {
+        const classList = element.classList;
+        if (classList) {
+          classList.forEach(str => {
+            if (str.startsWith(`${param}:`)) {              
+              const newElement = createElementWithNewTagName(element, element.nodeName + '-' + str.slice(`${param}:`.length).toUpperCase());
+              element.replaceWith(newElement);              
+            }
+          });
+        }
+      });
+      return api;
+    },
+    customInteraction(baseRef: string, baseItem: string): typeof api {
       const qtiCustomInteraction = xmlFragment.querySelector('qti-custom-interaction');
       const qtiCustomInteractionObject = qtiCustomInteraction.querySelector('object');
 
@@ -83,11 +114,11 @@ export const qtiTransformItem = (): {
       qtiCustomInteraction.removeChild(qtiCustomInteractionObject);
       return api;
     },
-    convertCDATAtoComment() {
+    convertCDATAtoComment(): typeof api {
       convertCDATAtoComment(xmlFragment);
       return api;
     },
-    stripStyleSheets() {
+    stripStyleSheets(): typeof api {
       stripStyleSheets(xmlFragment);
       return api;
     },

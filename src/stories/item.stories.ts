@@ -4,8 +4,8 @@ import { action } from '@storybook/addon-actions';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
-import { QtiItem } from 'src/lib/qti-item';
 import packages from '../assets/packages.json';
+import { QtiItem } from '../lib/qti-item';
 import { getItemByIndex } from '../lib/qti-loader';
 
 const meta: Meta = {
@@ -41,21 +41,17 @@ let item;
 
 export const Items: Story = {
   render: ({ disabled, view }, { argTypes, loaded: { xml } }) => {
-    // const { loaded } = context;
-    const qtiItemRef = ref(null);
-
-    const testRef = createRef<QtiItem>();
+    const qtiItemRef = createRef<QtiItem>();
 
     const processResponse = () => {
-      testRef?.value.processResponse();
+      qtiItemRef?.value.assessmentItem.processResponse();
     };
 
     return html`
       <qti-item
-        ${ref(testRef)}
+        ${ref(qtiItemRef)}
         @qti-interaction-changed=${action('qti-interaction-changed')}
         @qti-outcomes-changed=${action('qti-outcomes-changed')}
-        @qti-item-variables-changed=${action('qti-item-variables-changed')}
         .xmlDoc=${xml.itemHTMLDoc}
       >
       </qti-item>

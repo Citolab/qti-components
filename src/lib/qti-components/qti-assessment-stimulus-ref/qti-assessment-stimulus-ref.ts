@@ -32,7 +32,7 @@ export class QtiAssessmentStimulusRef extends LitElement {
 
       const stimulusRef = item.querySelector(`[data-stimulus-idref=${this.identifier}]`);
       if (stimulusRef) {
-        await this.loadAndAppendStimulus(stimulusRef);
+        await this.updateStimulusRef(stimulusRef);
       } else {
         console.warn(`Stimulus with data-stimulus-idref ${this.identifier} not found`);
       }
@@ -43,18 +43,15 @@ export class QtiAssessmentStimulusRef extends LitElement {
    * Loads and appends the stimulus to the specified element.
    * @param stimulusRef - The element to which the stimulus will be appended.
    */
-  public async loadAndAppendStimulus(stimulusRef: Element) {
+  public async updateStimulusRef(stimulusRef: Element) {
     const path = this.href.substring(0, this.href.lastIndexOf('/'));
     const stimulus = await qtiTransformItem()
       .load(this.href)
       .then(api => api.path(path).htmldoc());
     if (stimulus) {      
       const elements = stimulus.querySelectorAll('qti-stimulus-body, qti-stylesheet');
-      stimulusRef.append(...elements);      
-      const title = (stimulus.querySelector('qti-assessment-stimulus') as HTMLElement)?.title;
-      if (title.includes('(lijst)')) {
-        stimulusRef.classList.add('qti-stimulus-list');
-      }
+      stimulusRef.innerHTML = '';
+      stimulusRef.append(...elements);
     }
   }
 }
