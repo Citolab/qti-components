@@ -70,6 +70,23 @@ export const qtiTransformItem = (): {
       }
       return api;
     },
+    customTypes: (param: string = 'type') => {
+      const createElementWithNewTagName = (element, newTagName) => {
+        const newElement = document.createElement(newTagName);
+        [...element.attributes].forEach(attr => newElement.setAttribute(attr.name, attr.value));
+        newElement.append(...element.childNodes);
+        return newElement;
+      };
+
+      xmlFragment.querySelectorAll('*').forEach(element => {
+        [...element.classList]
+          .filter(cls => cls.startsWith(`${param}:`))
+          .forEach(cls => {
+            const newTagName = `${element.nodeName}-${cls.slice(param.length).toUpperCase()}`;
+            element.replaceWith(createElementWithNewTagName(element, newTagName));
+          });
+      });
+    },
     customInteraction(baseRef: string, baseItem: string) {
       const qtiCustomInteraction = xmlFragment.querySelector('qti-custom-interaction');
       const qtiCustomInteractionObject = qtiCustomInteraction.querySelector('object');
