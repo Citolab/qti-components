@@ -21,7 +21,11 @@ export const qtiTransformItem = (): {
   parse: (xmlString: string) => typeof api;
   path: (location: string) => typeof api;
   fn: (fn: (xmlFragment: XMLDocument) => void) => typeof api;
+  pciHooks: (uri: string) => typeof api;
+  customTypes: (param: string) => typeof api;
   customInteraction: (baseRef: string, baseItem: string) => typeof api;
+  convertCDATAtoComment: () => typeof api;
+  stripStyleSheets: () => typeof api;
   html: () => string;
   xml: () => string;
   htmldoc: () => DocumentFragment;
@@ -38,19 +42,19 @@ export const qtiTransformItem = (): {
         });
       });
     },
-    parse(xmlString: string) {
+    parse(xmlString: string): typeof api {
       xmlFragment = parseXML(xmlString);
       return api;
     },
-    path: (location: string) => {
+    path: (location: string): typeof api => {
       setLocation(xmlFragment, location);
       return api;
     },
-    fn(fn: (xmlFragment: XMLDocument) => void) {
+    fn(fn: (xmlFragment: XMLDocument) => void): typeof api {
       fn(xmlFragment);
       return api;
     },
-    pciHooks(uri: string) {
+    pciHooks(uri: string): typeof api {
       const attributes = ['hook', 'module'];
       const documentPath = uri.substring(0, uri.lastIndexOf('/'));
       for (const attribute of attributes) {
@@ -70,7 +74,7 @@ export const qtiTransformItem = (): {
       }
       return api;
     },
-    customTypes: (param: string = 'type') => {
+    customTypes: (param: string = 'type'): typeof api => {
       const createElementWithNewTagName = (element, newTagName) => {
         const newElement = document.createElement(newTagName);
         [...element.attributes].forEach(attr => newElement.setAttribute(attr.name, attr.value));
@@ -87,7 +91,7 @@ export const qtiTransformItem = (): {
           });
       });
     },
-    customInteraction(baseRef: string, baseItem: string) {
+    customInteraction(baseRef: string, baseItem: string): typeof api {
       const qtiCustomInteraction = xmlFragment.querySelector('qti-custom-interaction');
       const qtiCustomInteractionObject = qtiCustomInteraction.querySelector('object');
 
@@ -100,11 +104,11 @@ export const qtiTransformItem = (): {
       qtiCustomInteraction.removeChild(qtiCustomInteractionObject);
       return api;
     },
-    convertCDATAtoComment() {
+    convertCDATAtoComment(): typeof api {
       convertCDATAtoComment(xmlFragment);
       return api;
     },
-    stripStyleSheets() {
+    stripStyleSheets(): typeof api {
       stripStyleSheets(xmlFragment);
       return api;
     },
