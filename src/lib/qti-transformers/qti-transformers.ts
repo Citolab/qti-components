@@ -18,7 +18,6 @@ const xml = String.raw;
 
 export type transformItemApi = {
   load: (uri: string, cancelPreviousRequest?: boolean) => Promise<transformItemApi>;
-  set(xmlDocument: XMLDocument): transformItemApi;
   parse: (xmlString: string) => transformItemApi;
   path: (location: string) => transformItemApi;
   fn: (fn: (xmlFragment: XMLDocument) => void) => transformItemApi;
@@ -45,10 +44,6 @@ export const qtiTransformItem = () => {
           return resolve(api);
         });
       });
-    },
-    set(xmlDocument: XMLDocument): typeof api {
-      xmlFragment = xmlDocument;
-      return api;
     },
     parse(xmlString: string): typeof api {
       xmlFragment = parseXML(xmlString);
@@ -163,39 +158,37 @@ export const qtiTransformManifest = (): {
  * const html = qtiTransformer.html();
  * const xml = qtiTransformer.xml();
  */
-export const qtiTransformTest = (): {
-  load: (uri: string) => Promise<typeof api>;
-  set: (xmlDocument: XMLDocument) => typeof api;
-  parse: (xmlString: string) => typeof api;
-  extendElementName: (elementName: string, extend: string) => transformItemApi;
-  fn: (fn: (xmlFragment: XMLDocument) => void) => typeof api;
+
+export type transformTestApi = {
+  load: (uri: string) => Promise<transformTestApi>;
+  parse: (xmlString: string) => transformTestApi;
+  extendElementName: (tagName: string, extend: string) => transformTestApi;
+  fn: (fn: (xmlFragment: XMLDocument) => void) => transformTestApi;
   items: () => { identifier: string; href: string; category: string }[];
   html: () => string;
   xml: () => string;
   htmldoc: () => DocumentFragment;
   xmldoc: () => XMLDocument;
-} => {
+}
+
+export const qtiTransformTest = (): transformTestApi => {
   let xmlFragment: XMLDocument;
 
-  const api = {
+  const api:transformTestApi = {
     async load(uri) {
-      return new Promise<typeof api>((resolve, reject) => {
+      return new Promise<transformTestApi>((resolve, reject) => {
         loadXML(uri).then(xml => {
           xmlFragment = xml;
           return resolve(api);
         });
       });
     },
-    set(xmlDocument: XMLDocument): typeof api {
-      xmlFragment = xmlDocument;
-      return api;
-    },
     parse(xmlString: string) {
       xmlFragment = parseXML(xmlString);
       return api;
     },
-    extendElementName: (tagName: string, extension: string): typeof api => {
-      extendElementName(xmlFragment, tagName, extension);
+    extendElementName: (tagName: string, extend: string) => {
+      extendElementName(xmlFragment, tagName, extend);
       return api;
     },
     fn(fn: (xmlFragment: XMLDocument) => void) {
