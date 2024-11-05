@@ -70,13 +70,13 @@ export const getAssessmentData = async (packageUri: string): Promise<ManifestDat
 };
 
 // Fetches a single item by URI
-export const getItemByUri = async (itemUri: string, cancelPreviousRequest = true): Promise<DocumentFragment> => {
+export const getItemByUri = async (itemUri: string, cancelPreviousRequest = true): Promise<Element> => {
   return qtiTransformItem()
     .load(itemUri, cancelPreviousRequest)
     .then(api =>
       api
         .path(itemUri.substring(0, itemUri.lastIndexOf('/')))
         .stripStyleSheets()
-        .htmldoc()
+        .htmldoc().firstElementChild
     );
 };

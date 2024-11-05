@@ -1,7 +1,7 @@
 import { QtiAssessmentItem, QtiSimpleChoice } from '@citolab/qti-components/qti-components';
 import { action } from '@storybook/addon-actions';
-import { expect } from '@storybook/test';
-import { fireEvent, screen } from '@storybook/testing-library';
+import { expect, within } from '@storybook/test';
+import { fireEvent } from '@storybook/testing-library';
 import type { ArgTypes, Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import { getItemByUri } from '../../../../lib/qti-loader';
@@ -16,7 +16,7 @@ export default meta;
 
 export const Default: Story = {
   name: 'I9-L1-D1',
-  render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', DocumentFragment> }) => {
+  render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
     
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
@@ -41,8 +41,9 @@ export const Default: Story = {
   args: {
     // docsHint: 'I9-L1-D1: If the value of the RESPONSE Response Variable is set to NULL or an empty Multiple Container when ending the attempt, the value of the SCORE Outcome Variable is set to 0.'
   },
-  play: ({ canvasElement }) => {
-    const submitButton = screen.getByRole('button', {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const submitButton = canvas.getByRole('button', {
       name: 'Submit'
     });
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
@@ -64,7 +65,7 @@ export const Default: Story = {
 
 export const D2: Story = {
   name: 'I9-L1-D2',
-  render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', DocumentFragment> }) => {    let item: QtiAssessmentItem;
+  render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {    let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
     const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => {
@@ -88,7 +89,8 @@ export const D2: Story = {
     // docsHint: 'I9-L1-D2: If the value of the RESPONSE Response Variable is set to a Multiple Container [choice_a], the value of the SCORE OutcomeVariable is set to 1.'
   },
   play: async ({ canvasElement }) => {
-    const submitButton = screen.getByRole('button', {
+    const canvas = within(canvasElement);
+    const submitButton = canvas.getByRole('button', {
       name: 'Submit'
     });
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
@@ -114,7 +116,7 @@ export const D2: Story = {
 
 export const D3: Story = {
   name: 'I9-L1-D3',
-  render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', DocumentFragment> }) => {    let item: QtiAssessmentItem;
+  render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {    let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
     const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => {
@@ -138,7 +140,8 @@ export const D3: Story = {
     // docsHint: 'I9-L1-D3: If the value of the RESPONSE Response Variable is set to a Multiple Container [choice_b], the value of the SCORE OutcomeVariable is set to 2.'
   },
   play: async ({ canvasElement }) => {
-    const submitButton = screen.getByRole('button', {
+    const canvas = within(canvasElement);
+    const submitButton = canvas.getByRole('button', {
       name: 'Submit'
     });
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
@@ -164,7 +167,7 @@ export const D3: Story = {
 
 export const D4: Story = {
   name: 'I9-L1-D4',
-  render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', DocumentFragment> }) => {    let item: QtiAssessmentItem;
+  render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {    let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
     const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => {
@@ -188,7 +191,8 @@ export const D4: Story = {
     // docsHint: I9-L1-D4: If the value of the RESPONSE Response Variable is set to a Multiple Container [choice_c], the value of the SCORE OutcomeVariable is set to 5.
   },
   play: async ({ canvasElement }) => {
-    const submitButton = screen.getByRole('button', {
+    const canvas = within(canvasElement);
+    const submitButton = canvas.getByRole('button', {
       name: 'Submit'
     });
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
@@ -214,7 +218,7 @@ export const D4: Story = {
 
 export const D5: Story = {
   name: 'I9-L1-D5',
-    render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', DocumentFragment> }) => {
+    render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
@@ -239,7 +243,8 @@ export const D5: Story = {
     // docsHint: I9-L1-D5: If the value of the RESPONSE Response Variable is set to a Multiple Container [choice_d], the value of the SCORE OutcomeVariable is set to 0.
   },
   play: async ({ canvasElement }) => {
-    const submitButton = screen.getByRole('button', {
+    const canvas = within(canvasElement);
+    const submitButton = canvas.getByRole('button', {
       name: 'Submit'
     });
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
@@ -264,7 +269,7 @@ export const D5: Story = {
 
 export const D6: Story = {
   name: 'I9-L1-D6',
-    render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', DocumentFragment> }) => {
+    render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
@@ -289,7 +294,8 @@ export const D6: Story = {
     // docsHint: I9-L1-D6: If the value of the RESPONSE Response Variable is set to a Multiple Container [choice_e], the value of the SCORE OutcomeVariable is set to 0.
   },
   play: async ({ canvasElement }) => {
-    const submitButton = screen.getByRole('button', {
+    const canvas = within(canvasElement);
+    const submitButton = canvas.getByRole('button', {
       name: 'Submit'
     });
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
@@ -314,7 +320,7 @@ export const D6: Story = {
 
 export const D7: Story = {
   name: 'I9-L1-D7',
-    render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', DocumentFragment> }) => {
+    render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
@@ -339,7 +345,8 @@ export const D7: Story = {
     // docsHint: I9-L1-D7: If the value of the RESPONSE Response Variable is set to a Multiple Container [choice_a,choice_b], the value of the SCORE OutcomeVariable is set to 3.
   },
   play: async ({ canvasElement }) => {
-    const submitButton = screen.getByRole('button', {
+    const canvas = within(canvasElement);
+    const submitButton = canvas.getByRole('button', {
       name: 'Submit'
     });
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
@@ -366,7 +373,7 @@ export const D7: Story = {
 
 export const D8: Story = {
   name: 'I9-L1-D8',
-    render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', DocumentFragment> }) => {
+    render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
@@ -392,7 +399,8 @@ export const D8: Story = {
     // docsHint:I9-L1-D8: If the value of the RESPONSE Response Variable is set to a Multiple Container [choice_b,choice_c], the value of the SCORE OutcomeVariable is set to 6.
   },
   play: async ({ canvasElement }) => {
-    const submitButton = screen.getByRole('button', {
+    const canvas = within(canvasElement);
+    const submitButton = canvas.getByRole('button', {
       name: 'Submit'
     });
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
@@ -420,7 +428,7 @@ export const D8: Story = {
 
 export const D9: Story = {
   name: 'I9-L1-D9',
-    render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', DocumentFragment> }) => {
+    render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
@@ -446,7 +454,8 @@ export const D9: Story = {
     // docsHint:I9-L1-D7: I9-L1-D9:If the value of the RESPONSE Response Variable is set to a Multiple Container [choice_c,choice_d], the value of the SCORE OutcomeVariable is set to 4.
   },
   play: async ({ canvasElement }) => {
-    const submitButton = screen.getByRole('button', {
+    const canvas = within(canvasElement);
+    const submitButton = canvas.getByRole('button', {
       name: 'Submit'
     });
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
@@ -472,7 +481,7 @@ export const D9: Story = {
 
 export const D10: Story = {
   name: 'I9-L1-D10',
-    render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', DocumentFragment> }) => {
+    render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
@@ -498,7 +507,8 @@ export const D10: Story = {
     // docsHint:I9-L1-D10:If the value of the RESPONSE Response Variable is set to a Multiple Container [choice_d, choice_e, choice_f], the value of the SCORE OutcomeVariable is set to 0.
   },
   play: async ({ canvasElement }) => {
-    const submitButton = screen.getByRole('button', {
+    const canvas = within(canvasElement);
+    const submitButton = canvas.getByRole('button', {
       name: 'Submit'
     });
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
@@ -528,7 +538,7 @@ export const D10: Story = {
 
 export const D11: Story = {
   name: 'I9-L1-D11',
-    render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', DocumentFragment> }) => {
+    render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
@@ -554,7 +564,8 @@ export const D11: Story = {
     // docsHint:I9-L1-D11:If the value of the RESPONSE Response Variable is set to a Multiple Container [choice_a, choice_b, choice_c, choice_d, choice_e, choice_f], the value of the SCORE OutcomeVariable is set to 0.
   },
   play: async ({ canvasElement }) => {
-    const submitButton = screen.getByRole('button', {
+    const canvas = within(canvasElement);
+    const submitButton = canvas.getByRole('button', {
       name: 'Submit'
     });
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;

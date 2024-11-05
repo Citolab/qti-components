@@ -1,7 +1,7 @@
 import { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
 import { action } from '@storybook/addon-actions';
-import { expect } from '@storybook/test';
-import { fireEvent, screen } from '@storybook/testing-library';
+import { expect, within } from '@storybook/test';
+import { fireEvent } from '@storybook/testing-library';
 import type { ArgTypes, Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import { getItemByUri } from '../../../../lib/qti-loader';
@@ -16,7 +16,7 @@ export default meta;
 
 export const Default: Story = {
   name: 'I9-L1-D12',
-  render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', DocumentFragment> }) => {
+  render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
 
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
@@ -42,7 +42,8 @@ export const Default: Story = {
     // docsHint:  If the value of the RESPONSE Response Variable is set to NULL when ending the attempt, the value of the SCORE Outcome Variable is set to 0.
   },
   play: async ({ canvasElement }) => {
-    const submitButton = screen.getByRole('button', {
+    const canvas = within(canvasElement);
+    const submitButton = canvas.getByRole('button', {
       name: 'Submit'
     });
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
@@ -66,7 +67,7 @@ export const Default: Story = {
 export const D13: Story = {
   name: 'I9-L1-D13',
 
-  render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', DocumentFragment> }) => {
+  render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
 
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
@@ -92,7 +93,8 @@ export const D13: Story = {
     // docsHint:  I9-L1-D13: If the value of the RESPONSE Response Variable is set to choice_a when ending the attempt, the value of the SCORE Outcome Variable is set to 1.
   },
   play: async ({ canvasElement }) => {
-    const submitButton = screen.getByRole('button', {
+    const canvas = within(canvasElement);
+    const submitButton = canvas.getByRole('button', {
       name: 'Submit'
     });
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
@@ -120,7 +122,7 @@ export const D13: Story = {
 export const D14: Story = {
   name: 'I9-L1-D14',
 
-  render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', DocumentFragment> }) => {
+  render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
 
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
@@ -146,7 +148,8 @@ export const D14: Story = {
     // docsHint:  I9-L1-D14: If the value of the RESPONSE Response Variable is set to choice_b when ending the attempt, the value of the SCORE Outcome Variable is set to 0.
   },
   play: async ({ canvasElement }) => {
-    const submitButton = screen.getByRole('button', {
+    const canvas = within(canvasElement);
+    const submitButton = canvas.getByRole('button', {
       name: 'Submit'
     });
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;

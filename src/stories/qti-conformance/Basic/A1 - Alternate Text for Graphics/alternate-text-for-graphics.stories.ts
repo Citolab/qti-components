@@ -1,7 +1,6 @@
 import { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
 import { action } from '@storybook/addon-actions';
-import { expect } from '@storybook/test';
-import { screen } from '@storybook/testing-library';
+import { expect, within } from '@storybook/test';
 import type { ArgTypes, Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import { getItemByUri } from '../../../../lib/qti-loader';
@@ -14,7 +13,7 @@ const meta: Meta<QtiAssessmentItem> = {
 export default meta;
 
 export const Default: Story = {
-  render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', DocumentFragment> }) => {
+  render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
 
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
@@ -40,10 +39,10 @@ export const Default: Story = {
     // docsHint: 'Some other value than the default'
   },
   play: ({ canvasElement }) => {
-    // const canvas = within(canvasElement);
+    const canvas = within(canvasElement);
 
     // const qtiAssessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
-    const image = screen.getByAltText('Here the alt text');
+    const image = canvas.getByAltText('Here the alt text');
     // Assert if the element is visible
     expect(image).toBeInTheDocument();
     expect(image).toBeVisible();
