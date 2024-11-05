@@ -246,8 +246,7 @@ https://www.imsglobal.org/spec/qti/v3p0/impl#h.e0onr51nghyl
 }
 
 .hov {
-  /* background-color: var(--qti-bg-gray-50); */
-  box-shadow: 0 2px 4px rgb(0 0 0 / 20%);
+  background-color: var(--qti-bg-gray-50);
 }
 
 .foc {
@@ -256,6 +255,8 @@ https://www.imsglobal.org/spec/qti/v3p0/impl#h.e0onr51nghyl
 
 .act {
   border-color: var(--qti-bg-primary); /* border-primary */
+  background-color: var(--qti-primary-light);
+
 }
 
 .rdo {

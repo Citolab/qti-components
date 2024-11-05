@@ -1,19 +1,13 @@
 @layer qti-base, qti-components, qti-utilities, qti-variants, qti-extended;
 
-@import './styles/uno.config.css';
+@import url('./styles/uno.config.css');
 
 /* base */
-@import './styles/qti-base/qti3p0.css';
-@import './styles/qti-base/item-layout';
-@import './styles/qti-base/item-view';
-@import './styles/qti-base/item-popup';
+@import url('./styles/qti-base/qti3p0.css');
+@import url('./styles/qti-base/item-layout');
+@import url('./styles/qti-base/item-view');
+@import url('./styles/qti-base/item-popup');
 
 /* components */
-@import './styles/qti-components/qti-interactions';
+@import url('./styles/qti-components/qti-interactions');
 
-/* utilities */
-/* @import './styles/qti-utilities/qti-styles'; */
-
-/* variants */
-/* @import './styles/qti-variants/qti-input-width'; */
-/* @import './styles/qti-variants/qti-interactions'; */
