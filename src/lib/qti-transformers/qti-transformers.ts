@@ -18,6 +18,7 @@ const xml = String.raw;
 
 export type transformItemApi = {
   load: (uri: string, cancelPreviousRequest?: boolean) => Promise<transformItemApi>;
+  set(xmlDocument: XMLDocument): transformItemApi;
   parse: (xmlString: string) => transformItemApi;
   path: (location: string) => transformItemApi;
   fn: (fn: (xmlFragment: XMLDocument) => void) => transformItemApi;
@@ -44,6 +45,10 @@ export const qtiTransformItem = () => {
           return resolve(api);
         });
       });
+    },
+    set(xmlDocument: XMLDocument): typeof api {
+      xmlFragment = xmlDocument;
+      return api;
     },
     parse(xmlString: string): typeof api {
       xmlFragment = parseXML(xmlString);
@@ -160,6 +165,7 @@ export const qtiTransformManifest = (): {
  */
 export const qtiTransformTest = (): {
   load: (uri: string) => Promise<typeof api>;
+  set: (xmlDocument: XMLDocument) => typeof api;
   parse: (xmlString: string) => typeof api;
   extendElementName: (elementName: string, extend: string) => transformItemApi;
   fn: (fn: (xmlFragment: XMLDocument) => void) => typeof api;
@@ -179,6 +185,10 @@ export const qtiTransformTest = (): {
           return resolve(api);
         });
       });
+    },
+    set(xmlDocument: XMLDocument): typeof api {
+      xmlFragment = xmlDocument;
+      return api;
     },
     parse(xmlString: string) {
       xmlFragment = parseXML(xmlString);

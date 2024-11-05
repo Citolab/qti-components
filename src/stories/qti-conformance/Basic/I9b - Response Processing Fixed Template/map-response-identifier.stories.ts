@@ -1,11 +1,9 @@
 import { QtiAssessmentItem, QtiSimpleChoice } from '@citolab/qti-components/qti-components';
 import { action } from '@storybook/addon-actions';
-import { expect, waitFor } from '@storybook/test';
-import { screen } from '@storybook/testing-library';
-import { fireEvent } from '@storybook/testing-library';
-import type { Meta, StoryObj } from '@storybook/web-components';
+import { expect } from '@storybook/test';
+import { fireEvent, screen } from '@storybook/testing-library';
+import type { ArgTypes, Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
-import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { getItemByUri } from '../../../../lib/qti-loader';
 
 type Story = StoryObj;
@@ -18,7 +16,8 @@ export default meta;
 
 export const Default: Story = {
   name: 'I9-L1-D1',
-  render: ({ disabled, view }, { argTypes, loaded: { xml } }) => {
+  render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', DocumentFragment> }) => {
+    
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
@@ -34,7 +33,7 @@ export const Default: Story = {
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemFirstUpdated}
       >
-        ${unsafeHTML(xml)}
+        ${xml}
       </div>
       <button @click=${() => item?.processResponse()}>Submit</button>
     `;
@@ -65,8 +64,7 @@ export const Default: Story = {
 
 export const D2: Story = {
   name: 'I9-L1-D2',
-  render: ({ disabled, view }, { argTypes, loaded: { xml } }) => {
-    let item: QtiAssessmentItem;
+  render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', DocumentFragment> }) => {    let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
     const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => {
@@ -81,7 +79,7 @@ export const D2: Story = {
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemFirstUpdated}
       >
-        ${unsafeHTML(xml)}
+        ${xml}
       </div>
       <button @click=${() => item?.processResponse()}>Submit</button>
     `;
@@ -116,8 +114,7 @@ export const D2: Story = {
 
 export const D3: Story = {
   name: 'I9-L1-D3',
-  render: ({ disabled, view }, { argTypes, loaded: { xml } }) => {
-    let item: QtiAssessmentItem;
+  render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', DocumentFragment> }) => {    let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
     const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => {
@@ -132,7 +129,7 @@ export const D3: Story = {
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemFirstUpdated}
       >
-        ${unsafeHTML(xml)}
+        ${xml}
       </div>
       <button @click=${() => item?.processResponse()}>Submit</button>
     `;
@@ -167,8 +164,7 @@ export const D3: Story = {
 
 export const D4: Story = {
   name: 'I9-L1-D4',
-  render: ({ disabled, view }, { argTypes, loaded: { xml } }) => {
-    let item: QtiAssessmentItem;
+  render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', DocumentFragment> }) => {    let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
     const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => {
@@ -183,7 +179,7 @@ export const D4: Story = {
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemFirstUpdated}
       >
-        ${unsafeHTML(xml)}
+        ${xml}
       </div>
       <button @click=${() => item?.processResponse()}>Submit</button>
     `;
@@ -218,7 +214,7 @@ export const D4: Story = {
 
 export const D5: Story = {
   name: 'I9-L1-D5',
-  render: ({ disabled, view }, { argTypes, loaded: { xml } }) => {
+    render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', DocumentFragment> }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
@@ -234,7 +230,7 @@ export const D5: Story = {
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemFirstUpdated}
       >
-        ${unsafeHTML(xml)}
+        ${xml}
       </div>
       <button @click=${() => item?.processResponse()}>Submit</button>
     `;
@@ -268,7 +264,7 @@ export const D5: Story = {
 
 export const D6: Story = {
   name: 'I9-L1-D6',
-  render: ({ disabled, view }, { argTypes, loaded: { xml } }) => {
+    render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', DocumentFragment> }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
@@ -284,7 +280,7 @@ export const D6: Story = {
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemFirstUpdated}
       >
-        ${unsafeHTML(xml)}
+        ${xml}
       </div>
       <button @click=${() => item?.processResponse()}>Submit</button>
     `;
@@ -318,7 +314,7 @@ export const D6: Story = {
 
 export const D7: Story = {
   name: 'I9-L1-D7',
-  render: ({ disabled, view }, { argTypes, loaded: { xml } }) => {
+    render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', DocumentFragment> }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
@@ -334,7 +330,7 @@ export const D7: Story = {
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemFirstUpdated}
       >
-        ${unsafeHTML(xml)}
+        ${xml}
       </div>
       <button @click=${() => item?.processResponse()}>Submit</button>
     `;
@@ -370,7 +366,7 @@ export const D7: Story = {
 
 export const D8: Story = {
   name: 'I9-L1-D8',
-  render: ({ disabled, view }, { argTypes, loaded: { xml } }) => {
+    render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', DocumentFragment> }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
@@ -387,7 +383,7 @@ export const D8: Story = {
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemFirstUpdated}
       >
-        ${unsafeHTML(xml)}
+        ${xml}
       </div>
       <button @click=${() => item?.processResponse()}>Submit</button>
     `;
@@ -424,7 +420,7 @@ export const D8: Story = {
 
 export const D9: Story = {
   name: 'I9-L1-D9',
-  render: ({ disabled, view }, { argTypes, loaded: { xml } }) => {
+    render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', DocumentFragment> }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
@@ -441,7 +437,7 @@ export const D9: Story = {
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemFirstUpdated}
       >
-        ${unsafeHTML(xml)}
+        ${xml}
       </div>
       <button @click=${() => item?.processResponse()}>Submit</button>
     `;
@@ -476,7 +472,7 @@ export const D9: Story = {
 
 export const D10: Story = {
   name: 'I9-L1-D10',
-  render: ({ disabled, view }, { argTypes, loaded: { xml } }) => {
+    render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', DocumentFragment> }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
@@ -493,7 +489,7 @@ export const D10: Story = {
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemFirstUpdated}
       >
-        ${unsafeHTML(xml)}
+        ${xml}
       </div>
       <button @click=${() => item?.processResponse()}>Submit</button>
     `;
@@ -532,7 +528,7 @@ export const D10: Story = {
 
 export const D11: Story = {
   name: 'I9-L1-D11',
-  render: ({ disabled, view }, { argTypes, loaded: { xml } }) => {
+    render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', DocumentFragment> }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
@@ -549,7 +545,7 @@ export const D11: Story = {
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemFirstUpdated}
       >
-        ${unsafeHTML(xml)}
+        ${xml}
       </div>
       <button @click=${() => item?.processResponse()}>Submit</button>
     `;
