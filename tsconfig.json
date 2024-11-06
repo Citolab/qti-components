@@ -24,7 +24,7 @@
     "paths": {
       "@citolab/qti-components/qti-components": ["src/lib/qti-components"]
     },
-    "types": ["vitest/globals","@types/dom-view-transitions"]
+    "types": ["vitest/globals","@types/dom-view-transitions","./test/vitest.d.ts"]
   },
   "include": ["src/**/*.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]

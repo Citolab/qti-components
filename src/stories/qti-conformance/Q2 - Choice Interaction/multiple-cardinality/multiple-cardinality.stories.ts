@@ -1,10 +1,9 @@
 import { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
 import { action } from '@storybook/addon-actions';
-import { expect } from '@storybook/test';
-import { fireEvent, screen } from '@storybook/testing-library';
-import type { Meta, StoryObj } from '@storybook/web-components';
+import { expect, within } from '@storybook/test';
+import { fireEvent } from '@storybook/testing-library';
+import type { ArgTypes, Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
-import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { getItemByUri } from '../../../../lib/qti-loader';
 
 type Story = StoryObj;
@@ -17,7 +16,8 @@ export default meta;
 
 export const Default: Story = {
   name: 'Q2-L1-D1',
-  render: ({ disabled, view }, { argTypes, loaded: { xml } }) => {
+  render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
+
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
@@ -33,7 +33,7 @@ export const Default: Story = {
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemConnected}
       >
-        ${unsafeHTML(xml)}
+        ${xml}
       </div>
       <button @click=${() => item?.processResponse()}>Submit</button>
     `;
@@ -41,8 +41,9 @@ export const Default: Story = {
   args: {
     // docsHint: 'Q2-L1-D1: For file multiple-cardinality.xml after ending the attempt without selecting any SimpleChoices, the RESPONSE Response Variable is set with the NULL value OR an empty Multiple Container.'
   },
-  play: ({ canvasElement }) => {
-    const submitButton = screen.getByRole('button', {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const submitButton = canvas.getByRole('button', {
       name: 'Submit'
     });
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;

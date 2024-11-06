@@ -1,15 +1,13 @@
 import { css, html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { Interaction } from '../internal/interaction/interaction';
-import { ref, createRef } from 'lit/directives/ref.js';
 import { customElement, property, state } from 'lit/decorators.js';
 import { watch } from '../../../decorators/watch';
 
 @customElement('qti-extended-text-interaction')
 export class QtiExtendedTextInteraction extends Interaction {
-  // public static rowHeightClass = [];
-
-  textareaRef = createRef<HTMLTextAreaElement>();
+  @state()
+  private _rows = 5;
 
   /** expected length is mapped to the property maxlength on the textarea */
   @property({ type: Number, attribute: 'expected-length' }) expectedLength: number;
@@ -25,23 +23,21 @@ export class QtiExtendedTextInteraction extends Interaction {
   private _value = '';
 
   @property({ type: String, attribute: 'class' }) classNames;
-  @watch('classNames', { waitUntilFirstUpdate: true })
-  handleclassNamesChange(old, disabled: boolean) {
-    const classNames = this.classNames.split(' ');
+  @watch('classNames')
+  handleclassNamesChange(old, classes: string) {
+    const classNames = classes.split(' ');
     let rowsSet = false;
     classNames.forEach((className: string) => {
-      if (className.startsWith('qti-height-lines')) {
+      if (className.startsWith('qti-height-lines-')) {
         const nrRows = className.replace('qti-height-lines-', '');
-        if (this.textareaRef) {
-          this.textareaRef.value.rows = parseInt(nrRows);
-          rowsSet = true;
-        }
+        this._rows = parseInt(nrRows);
+        rowsSet = true;
       }
     });
     // If no qti-height-lines class is set, calculate rows based on expectedLength
-    if (!rowsSet && this.textareaRef && this.expectedLength) {
+    if (!rowsSet && this.expectedLength) {
       const estimatedRows = Math.ceil(this.expectedLength / 50); //  '50' based on an estimate for characters per row
-      this.textareaRef.value.rows = estimatedRows;
+      this._rows = estimatedRows;
     }
   }
 
@@ -120,7 +116,6 @@ export class QtiExtendedTextInteraction extends Interaction {
     return html`<slot name="prompt"></slot
       ><textarea
         part="textarea"
-        ${ref(this.textareaRef)}
         name="${this.responseIdentifier}"
         spellcheck="false"
         autocomplete="off"
@@ -132,6 +127,8 @@ export class QtiExtendedTextInteraction extends Interaction {
           this.reportValidity();
         }}"
         placeholder="${ifDefined(this.placeholderText ? this.placeholderText : undefined)}"
+        maxlength="${10000}"
+        rows="${this._rows}"
         ?disabled="${this.disabled}"
         ?readonly="${this.readonly}"
         .value=${this._value}

@@ -16,25 +16,28 @@ const xml = String.raw;
  * qtiTransformItem().parse(storyXML).html()
  */
 
-export const qtiTransformItem = () => {
-  let xmlFragment: XMLDocument;
-
-  const api: {
-  load: (uri: string, cancelPreviousRequest?: boolean) => Promise<typeof api>;
-  parse: (xmlString: string) => typeof api;
-  path: (location: string) => typeof api;
-  fn: (fn: (xmlFragment: XMLDocument) => void) => typeof api;
-  pciHooks: (uri: string) => typeof api;
-  customTypes: (param?: string) => typeof api;
-  customInteraction: (baseRef: string, baseItem: string) => typeof api;
-  convertCDATAtoComment: () => typeof api;
-  stripStyleSheets: () => typeof api;
+export type transformItemApi = {
+  load: (uri: string, cancelPreviousRequest?: boolean) => Promise<transformItemApi>;
+  parse: (xmlString: string) => transformItemApi;
+  path: (location: string) => transformItemApi;
+  fn: (fn: (xmlFragment: XMLDocument) => void) => transformItemApi;
+  pciHooks: (uri: string) => transformItemApi;
+  extendElementName: (elementName: string, extend: string) => transformItemApi;
+  extendElementsWithClass: (param?: string) => transformItemApi;
+  customInteraction: (baseRef: string, baseItem: string) => transformItemApi;
+  convertCDATAtoComment: () => transformItemApi;
+  stripStyleSheets: () => transformItemApi;
   html: () => string;
   xml: () => string;
   htmldoc: () => DocumentFragment;
   xmldoc: () => XMLDocument;
-} = {
-    async load(uri: string, cancelPreviousRequest = false):Promise<typeof api> {
+};
+
+export const qtiTransformItem = () => {
+  let xmlFragment: XMLDocument;
+
+  const api: transformItemApi = {
+    async load(uri: string, cancelPreviousRequest = false): Promise<typeof api> {
       return new Promise<typeof api>((resolve, reject) => {
         loadXML(uri, cancelPreviousRequest).then(xml => {
           xmlFragment = xml;
@@ -74,31 +77,12 @@ export const qtiTransformItem = () => {
       }
       return api;
     },
-    customTypes: (param: string = 'type'): typeof api => {
-      function createElementWithNewTagName(element, newTagName) {
-        const newElement = document.createElement(newTagName);
-        // Copy attributes
-        for (const attr of element.attributes) {
-          newElement.setAttribute(attr.name, attr.value);
-        }
-        // Copy child nodes
-        while (element.firstChild) {
-          newElement.appendChild(element.firstChild);
-        }
-        return newElement;
-      }
-
-      xmlFragment.querySelectorAll('*').forEach((element) => {
-        const classList = element.classList;
-        if (classList) {
-          classList.forEach(str => {
-            if (str.startsWith(`${param}:`)) {              
-              const newElement = createElementWithNewTagName(element, element.nodeName + '-' + str.slice(`${param}:`.length).toUpperCase());
-              element.replaceWith(newElement);              
-            }
-          });
-        }
-      });
+    extendElementName: (tagName: string, extension: string): typeof api => {
+      extendElementName(xmlFragment, tagName, extension);
+      return api;
+    },
+    extendElementsWithClass: (param: string = 'extend'): typeof api => {
+      extendElementsWithClass(xmlFragment, param);
       return api;
     },
     customInteraction(baseRef: string, baseItem: string): typeof api {
@@ -174,21 +158,25 @@ export const qtiTransformManifest = (): {
  * const html = qtiTransformer.html();
  * const xml = qtiTransformer.xml();
  */
-export const qtiTransformTest = (): {
-  load: (uri: string) => Promise<typeof api>;
-  parse: (xmlString: string) => typeof api;
-  fn: (fn: (xmlFragment: XMLDocument) => void) => typeof api;
+
+export type transformTestApi = {
+  load: (uri: string) => Promise<transformTestApi>;
+  parse: (xmlString: string) => transformTestApi;
+  extendElementName: (tagName: string, extend: string) => transformTestApi;
+  fn: (fn: (xmlFragment: XMLDocument) => void) => transformTestApi;
   items: () => { identifier: string; href: string; category: string }[];
   html: () => string;
   xml: () => string;
   htmldoc: () => DocumentFragment;
   xmldoc: () => XMLDocument;
-} => {
+}
+
+export const qtiTransformTest = (): transformTestApi => {
   let xmlFragment: XMLDocument;
 
-  const api = {
+  const api:transformTestApi = {
     async load(uri) {
-      return new Promise<typeof api>((resolve, reject) => {
+      return new Promise<transformTestApi>((resolve, reject) => {
         loadXML(uri).then(xml => {
           xmlFragment = xml;
           return resolve(api);
@@ -197,6 +185,10 @@ export const qtiTransformTest = (): {
     },
     parse(xmlString: string) {
       xmlFragment = parseXML(xmlString);
+      return api;
+    },
+    extendElementName: (tagName: string, extend: string) => {
+      extendElementName(xmlFragment, tagName, extend);
       return api;
     },
     fn(fn: (xmlFragment: XMLDocument) => void) {
@@ -258,6 +250,46 @@ const xmlToHTML = xml`<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org
   </xsl:element>
 </xsl:template>
 </xsl:stylesheet>`;
+
+// Function to extend elements with a specific tag name by adding an extension suffix
+function extendElementName(xmlFragment: XMLDocument, tagName: string, extension: string) {
+  xmlFragment.querySelectorAll(tagName).forEach(element => {
+    const newTagName = `${tagName}-${extension}`;
+    const newElement = createElementWithNewTagName(element, newTagName);
+    element.replaceWith(newElement);
+  });
+}
+
+// Function to extend any element with a specific class pattern (e.g., "extend:suffix")
+function extendElementsWithClass(xmlFragment: XMLDocument, classNamePattern: string) {
+  xmlFragment.querySelectorAll('*').forEach(element => {
+    const classList = element.classList;
+    if (classList) {
+      classList.forEach(className => {
+        if (className.startsWith(`${classNamePattern}:`)) {
+          const suffix = className.slice(`${classNamePattern}:`.length);
+          const newTagName = `${element.nodeName}-${suffix}`;
+          const newElement = createElementWithNewTagName(element, newTagName);
+          element.replaceWith(newElement);
+        }
+      });
+    }
+  });
+}
+
+// Helper function to create a new element with a new tag name and copy attributes and children
+function createElementWithNewTagName(element, newTagName) {
+  const newElement = document.createElement(newTagName);
+  // Copy attributes
+  for (const attr of element.attributes) {
+    newElement.setAttribute(attr.name, attr.value);
+  }
+  // Copy child nodes
+  while (element.firstChild) {
+    newElement.appendChild(element.firstChild);
+  }
+  return newElement;
+}
 
 function itemsFromTest(xmlFragment: DocumentFragment) {
   const items: { identifier: string; href: string; category: string }[] = [];

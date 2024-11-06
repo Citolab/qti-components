@@ -11,6 +11,7 @@ export class QtiSimpleChoice extends ActiveElementMixin(LitElement, 'qti-simple-
   static styles = css`
     :host {
       display: flex;
+      align-items: center;
       user-select: none;
     }
     slot {
