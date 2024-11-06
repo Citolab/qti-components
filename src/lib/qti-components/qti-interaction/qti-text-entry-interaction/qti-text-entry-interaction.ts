@@ -1,9 +1,10 @@
-import { css, html } from 'lit';
+import { CSSResultGroup, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { createRef } from 'lit/directives/ref.js';
 import { watch } from '../../../decorators';
 import { Interaction } from '../internal/interaction/interaction';
+import styles from './qti-text-entry-interaction.styles';
 
 @customElement('qti-text-entry-interaction')
 export class QtiTextEntryInteraction extends Interaction {
@@ -21,6 +22,8 @@ export class QtiTextEntryInteraction extends Interaction {
 
   @state()
   private _size = 5;
+
+  static styles: CSSResultGroup = styles;
 
   inputRef = createRef<HTMLInputElement>();
 
@@ -44,16 +47,7 @@ export class QtiTextEntryInteraction extends Interaction {
     return this._value !== '';
   }
 
-  static override get styles() {
-    return [
-      css`
-        [part='correct'] {
-          position: absolute;
-          width: 100%;
-        }
-      `
-    ];
-  }
+
 
   set correctResponse(value: string) {
     this._correctValue = value;
