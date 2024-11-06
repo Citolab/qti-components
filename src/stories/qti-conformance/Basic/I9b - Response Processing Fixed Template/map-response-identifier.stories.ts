@@ -14,10 +14,8 @@ const meta: Meta<QtiAssessmentItem> = {
 };
 export default meta;
 
-export const Default: Story = {
-  name: 'I9-L1-D1',
+const Default = {
   render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
-    
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
@@ -37,7 +35,12 @@ export const Default: Story = {
       </div>
       <button @click=${() => item?.processResponse()}>Submit</button>
     `;
-  },
+  }
+};
+
+export const D1: Story = {
+  name: 'I9-L1-D1',
+  render: Default.render,
   args: {
     // docsHint: 'I9-L1-D1: If the value of the RESPONSE Response Variable is set to NULL or an empty Multiple Container when ending the attempt, the value of the SCORE Outcome Variable is set to 0.'
   },
@@ -65,26 +68,7 @@ export const Default: Story = {
 
 export const D2: Story = {
   name: 'I9-L1-D2',
-  render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {    let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
-    const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => {
-      item = qtiAssessmentItem;
-      action('qti-assessment-item-connected');
-    };
-
-    return html`
-      <div
-        class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
-        @qti-assessment-item-connected=${onItemFirstUpdated}
-      >
-        ${xml}
-      </div>
-      <button @click=${() => item?.processResponse()}>Submit</button>
-    `;
-  },
+  render: Default.render,
   args: {
     // docsHint: 'I9-L1-D2: If the value of the RESPONSE Response Variable is set to a Multiple Container [choice_a], the value of the SCORE OutcomeVariable is set to 1.'
   },
@@ -116,26 +100,7 @@ export const D2: Story = {
 
 export const D3: Story = {
   name: 'I9-L1-D3',
-  render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {    let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
-    const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => {
-      item = qtiAssessmentItem;
-      action('qti-assessment-item-connected');
-    };
-
-    return html`
-      <div
-        class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
-        @qti-assessment-item-connected=${onItemFirstUpdated}
-      >
-        ${xml}
-      </div>
-      <button @click=${() => item?.processResponse()}>Submit</button>
-    `;
-  },
+  render: Default.render,
   args: {
     // docsHint: 'I9-L1-D3: If the value of the RESPONSE Response Variable is set to a Multiple Container [choice_b], the value of the SCORE OutcomeVariable is set to 2.'
   },
@@ -167,26 +132,7 @@ export const D3: Story = {
 
 export const D4: Story = {
   name: 'I9-L1-D4',
-  render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {    let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
-    const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => {
-      item = qtiAssessmentItem;
-      action('qti-assessment-item-connected');
-    };
-
-    return html`
-      <div
-        class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
-        @qti-assessment-item-connected=${onItemFirstUpdated}
-      >
-        ${xml}
-      </div>
-      <button @click=${() => item?.processResponse()}>Submit</button>
-    `;
-  },
+  render: Default.render,
   args: {
     // docsHint: I9-L1-D4: If the value of the RESPONSE Response Variable is set to a Multiple Container [choice_c], the value of the SCORE OutcomeVariable is set to 5.
   },
@@ -218,27 +164,7 @@ export const D4: Story = {
 
 export const D5: Story = {
   name: 'I9-L1-D5',
-    render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
-    let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
-    const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => {
-      item = qtiAssessmentItem;
-      action('qti-assessment-item-connected');
-    };
-
-    return html`
-      <div
-        class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
-        @qti-assessment-item-connected=${onItemFirstUpdated}
-      >
-        ${xml}
-      </div>
-      <button @click=${() => item?.processResponse()}>Submit</button>
-    `;
-  },
+  render: Default.render,
   args: {
     // docsHint: I9-L1-D5: If the value of the RESPONSE Response Variable is set to a Multiple Container [choice_d], the value of the SCORE OutcomeVariable is set to 0.
   },
@@ -269,27 +195,7 @@ export const D5: Story = {
 
 export const D6: Story = {
   name: 'I9-L1-D6',
-    render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
-    let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
-    const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => {
-      item = qtiAssessmentItem;
-      action('qti-assessment-item-connected');
-    };
-
-    return html`
-      <div
-        class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
-        @qti-assessment-item-connected=${onItemFirstUpdated}
-      >
-        ${xml}
-      </div>
-      <button @click=${() => item?.processResponse()}>Submit</button>
-    `;
-  },
+  render: Default.render,
   args: {
     // docsHint: I9-L1-D6: If the value of the RESPONSE Response Variable is set to a Multiple Container [choice_e], the value of the SCORE OutcomeVariable is set to 0.
   },
@@ -320,27 +226,7 @@ export const D6: Story = {
 
 export const D7: Story = {
   name: 'I9-L1-D7',
-    render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
-    let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
-    const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => {
-      item = qtiAssessmentItem;
-      action('qti-assessment-item-connected');
-    };
-
-    return html`
-      <div
-        class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
-        @qti-assessment-item-connected=${onItemFirstUpdated}
-      >
-        ${xml}
-      </div>
-      <button @click=${() => item?.processResponse()}>Submit</button>
-    `;
-  },
+  render: Default.render,
   args: {
     // docsHint: I9-L1-D7: If the value of the RESPONSE Response Variable is set to a Multiple Container [choice_a,choice_b], the value of the SCORE OutcomeVariable is set to 3.
   },
@@ -373,28 +259,7 @@ export const D7: Story = {
 
 export const D8: Story = {
   name: 'I9-L1-D8',
-    render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
-    let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
-
-    const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => {
-      item = qtiAssessmentItem;
-      action('qti-assessment-item-connected');
-    };
-
-    return html`
-      <div
-        class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
-        @qti-assessment-item-connected=${onItemFirstUpdated}
-      >
-        ${xml}
-      </div>
-      <button @click=${() => item?.processResponse()}>Submit</button>
-    `;
-  },
+  render: Default.render,
   args: {
     // docsHint:I9-L1-D8: If the value of the RESPONSE Response Variable is set to a Multiple Container [choice_b,choice_c], the value of the SCORE OutcomeVariable is set to 6.
   },
@@ -428,28 +293,7 @@ export const D8: Story = {
 
 export const D9: Story = {
   name: 'I9-L1-D9',
-    render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
-    let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
-
-    const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => {
-      item = qtiAssessmentItem;
-      action('qti-assessment-item-connected');
-    };
-
-    return html`
-      <div
-        class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
-        @qti-assessment-item-connected=${onItemFirstUpdated}
-      >
-        ${xml}
-      </div>
-      <button @click=${() => item?.processResponse()}>Submit</button>
-    `;
-  },
+  render: Default.render,
   args: {
     // docsHint:I9-L1-D7: I9-L1-D9:If the value of the RESPONSE Response Variable is set to a Multiple Container [choice_c,choice_d], the value of the SCORE OutcomeVariable is set to 4.
   },
@@ -481,28 +325,7 @@ export const D9: Story = {
 
 export const D10: Story = {
   name: 'I9-L1-D10',
-    render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
-    let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
-
-    const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => {
-      item = qtiAssessmentItem;
-      action('qti-assessment-item-connected');
-    };
-
-    return html`
-      <div
-        class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
-        @qti-assessment-item-connected=${onItemFirstUpdated}
-      >
-        ${xml}
-      </div>
-      <button @click=${() => item?.processResponse()}>Submit</button>
-    `;
-  },
+  render: Default.render,
   args: {
     // docsHint:I9-L1-D10:If the value of the RESPONSE Response Variable is set to a Multiple Container [choice_d, choice_e, choice_f], the value of the SCORE OutcomeVariable is set to 0.
   },
@@ -538,28 +361,7 @@ export const D10: Story = {
 
 export const D11: Story = {
   name: 'I9-L1-D11',
-    render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
-    let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
-
-    const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => {
-      item = qtiAssessmentItem;
-      action('qti-assessment-item-connected');
-    };
-
-    return html`
-      <div
-        class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
-        @qti-assessment-item-connected=${onItemFirstUpdated}
-      >
-        ${xml}
-      </div>
-      <button @click=${() => item?.processResponse()}>Submit</button>
-    `;
-  },
+  render: Default.render,
   args: {
     // docsHint:I9-L1-D11:If the value of the RESPONSE Response Variable is set to a Multiple Container [choice_a, choice_b, choice_c, choice_d, choice_e, choice_f], the value of the SCORE OutcomeVariable is set to 0.
   },

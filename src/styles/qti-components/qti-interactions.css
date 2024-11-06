@@ -126,6 +126,10 @@
     & qti-gap-text {
       @apply drag;
 
+      &[dragging] {
+        @apply dragging;
+      }
+
       &:hover {
         @apply hov;
       }
@@ -137,6 +141,18 @@
 
     & qti-gap {
       @apply drop;
+
+      &[enabled] {
+        @apply dropping;
+      }
+
+      &[disabled] {
+        @apply dis;
+      }
+
+      &[active] {
+        @apply act;
+      }
 
       display: inline-flex;
       width: 8rem; /* w-32 */
@@ -497,6 +513,10 @@
     & qti-simple-choice {
       @apply drag;
 
+      &[dragging] {
+        @apply dragging;
+      }
+      
       &:hover {
         @apply hov;
       }
@@ -522,8 +542,14 @@
       gap: 0.5rem; /* gap-2 */
     }
 
+
+    
     &::part(drop-list) {
       @apply drop;
+
+      &[enabled] {
+        @apply dropping;
+      }
 
       &:hover {
         @apply hov;
