@@ -13,20 +13,20 @@ export default meta;
 class ButtonComponent extends LitElement {
   @property({ type: String }) ch: string;
   @property({ type: String }) cha: string;
-  private initialChildren?: Element[];
+  private placeChild = this.firstChild;
 
   protected createRenderRoot(): HTMLElement | DocumentFragment {
     return this;
   }
 
-  render() {
-    console.log(this.initialChildren);
-    if (this.initialChildren === undefined) {
-      this.initialChildren = Array.from(this.children);
-    }
-    return html`<div class=${this.ch}><div class=${`check-size ${this.cha}`}></div></div>
-      ${this.initialChildren}
+  constructor() {
+    super();
+    this.placeChild?.remove();
+  }
 
+  render() {
+    return html`<div class=${this.ch}><div class=${`check-size ${this.cha}`}></div></div>
+      <div>${this.placeChild}</div>
       <div part="drop"></div>`;
   }
 }
@@ -36,25 +36,11 @@ window.customElements.define('button-component', ButtonComponent);
 export const Theme = (mod: string) => html`
   <div style="display:grid;grid-template-columns: repeat(7, minmax(0, 1fr));gap:2rem;">
     <style>
+      button-component {
+        display: flex;
+        align-items: center;
+      }
       @scope {
-        [class] {
-          position: relative;
-          &:hover::before {
-            content: attr(class);
-            font-size: 0.8rem;
-            color: #666;
-            position: absolute;
-            text-transform: lowercase;
-            white-space: nowrap;
-            /* background-color: red; */
-            left: 0;
-            top: 0;
-            /* bottom: 0; */
-            z-index: 1000;
-            transform: translateY(-150%);
-            top: anchor(--myAnchor bottom);
-          }
-        }
         [clip] {
           width: 100%;
           height: 50px;
@@ -71,124 +57,124 @@ export const Theme = (mod: string) => html`
     <div>disabled</div>
     <div>dragging</div>
 
-    <button-component ch="check-radio" cha="" class="check ${mod}">check</button-component>
-    <button-component ch="check-radio" cha="" class="check hov ${mod}">check</button-component>
-    <button-component ch="check-radio" cha="" class="check foc ${mod}">check</button-component>
-    <button-component ch="check-radio" cha="check-radio-checked" class="check act ${mod}">check</button-component>
-    <button-component ch="check-radio" cha="check-radio-checked" class="check foc act ${mod}">check</button-component>
-    <button-component ch="check-radio" cha="check-radio-checked dis" class="check dis ${mod}">check</button-component>
+    <button-component ch="check-radio" cha="" class="check">check</button-component>
+    <button-component ch="check-radio" cha="" class="check hov">check</button-component>
+    <button-component ch="check-radio" cha="" class="check foc">check</button-component>
+    <button-component ch="check-radio" cha="check-radio-checked" class="check act">check</button-component>
+    <button-component ch="check-radio" cha="check-radio-checked" class="check foc act">check</button-component>
+    <button-component ch="check-radio" cha="check-radio-checked dis" class="check dis">check</button-component>
     <div></div>
 
-    <button-component ch="check-checkbox" cha="" class="check ${mod}">check</button-component>
-    <button-component ch="check-checkbox" cha="" class="check hov ${mod}">check</button-component>
-    <button-component ch="check-checkbox" cha="" class="check foc ${mod}">check</button-component>
-    <button-component ch="check-checkbox" cha="check-checkbox-checked" class="check act ${mod}">check</button-component>
-    <button-component ch="check-checkbox" cha="check-checkbox-checked" class="check foc act ${mod}"
+    <button-component ch="check-checkbox" cha="" class="check">check</button-component>
+    <button-component ch="check-checkbox" cha="" class="check hov">check</button-component>
+    <button-component ch="check-checkbox" cha="" class="check foc">check</button-component>
+    <button-component ch="check-checkbox" cha="check-checkbox-checked" class="check act">check</button-component>
+    <button-component ch="check-checkbox" cha="check-checkbox-checked" class="check foc act"
       >check</button-component
     >
-    <button-component ch="check-checkbox" cha="check-checkbox-checked dis" class="check dis ${mod}"
+    <button-component ch="check-checkbox" cha="check-checkbox-checked dis" class="check dis"
       >check</button-component
     >
     <div></div>
 
-    <div class="button ${mod}">button</div>
-    <div class="button ${mod} hov ">button</div>
-    <div class="button ${mod} foc ">button</div>
-    <div class="button ${mod} act ">button</div>
-    <div class="button ${mod} foc act ">button</div>
-    <div class="button ${mod} dis ">button</div>
+    <div class="button">button</div>
+    <div class="button hov ">button</div>
+    <div class="button foc ">button</div>
+    <div class="button act ">button</div>
+    <div class="button foc act ">button</div>
+    <div class="button dis ">button</div>
     <div></div>
 
-    <div class="spot ${mod}"></div>
-    <div class="spot ${mod} hov "></div>
-    <div class="spot ${mod} foc "></div>
-    <div class="spot ${mod} act "></div>
-    <div class="spot ${mod} foc act "></div>
-    <div class="spot ${mod} dis "></div>
+    <div class="spot"></div>
+    <div class="spot hov "></div>
+    <div class="spot foc "></div>
+    <div class="spot act "></div>
+    <div class="spot foc act "></div>
+    <div class="spot dis "></div>
     <div>&#x200B;</div>
 
-    <div clip class="spot ${mod}"></div>
-    <div clip class="spot ${mod} hov "></div>
-    <div clip class="spot ${mod} foc "></div>
-    <div clip class="spot ${mod} act "></div>
-    <div clip class="spot ${mod} foc act "></div>
-    <div clip class="spot ${mod} dis "></div>
+    <div clip class="spot"></div>
+    <div clip class="spot hov "></div>
+    <div clip class="spot foc "></div>
+    <div clip class="spot act "></div>
+    <div clip class="spot foc act "></div>
+    <div clip class="spot dis "></div>
     <div>&#x200B;</div>
 
-    <div class="drag ${mod}">drag</div>
-    <div class="drag hov ${mod}">drag</div>
-    <div class="drag foc ${mod}">drag</div>
-    <div class="drag act ${mod}">drag</div>
-    <div class="drag foc act ${mod}">drag</div>
-    <div class="drag dis ${mod}">drag</div>
-    <div class="drag dragging ${mod}">drag</div>
+    <div class="drag">drag</div>
+    <div class="drag hov">drag</div>
+    <div class="drag foc">drag</div>
+    <div class="drag act">drag</div>
+    <div class="drag foc act">drag</div>
+    <div class="drag dis">drag</div>
+    <div class="drag dragging">drag</div>
 
-    <div class="drop ${mod}"></div>
-    <div class="drop hov ${mod}"></div>
-    <div class="drop foc ${mod}"></div>
-    <div class="drop act ${mod}"></div>
-    <div class="drop foc act ${mod}"></div>
-    <div class="drop dis ${mod}"></div>
-    <div class="drag dropping ${mod}">drop</div>
+    <div class="drop"></div>
+    <div class="drop hov"></div>
+    <div class="drop foc"></div>
+    <div class="drop act"></div>
+    <div class="drop foc act"></div>
+    <div class="drop dis"></div>
+    <div class="drag dropping">drop</div>
 
-    <div class="drop ${mod}"><div class="drag ${mod}">drag</div></div>
-    <div class="drop hov ${mod}"><div class="drag ${mod}">drag</div></div>
-    <div class="drop foc ${mod}"><div class="drag ${mod}">drag</div></div>
-    <div class="drop act ${mod}"><div class="drag ${mod}">drag</div></div>
-    <div class="drop foc act ${mod}"><div class="drag ${mod}">drag</div></div>
-    <div class="drop dis ${mod}"><div class="drag ${mod}">drag</div></div>
+    <div class="drop"><div class="drag">drag</div></div>
+    <div class="drop hov"><div class="drag">drag</div></div>
+    <div class="drop foc"><div class="drag">drag</div></div>
+    <div class="drop act"><div class="drag">drag</div></div>
+    <div class="drop foc act"><div class="drag">drag</div></div>
+    <div class="drop dis"><div class="drag">drag</div></div>
     <div></div>
 
-    <div class="drop ${mod}">
+    <div class="drop">
       With text
-      <div class="drag ${mod}">drag</div>
+      <div class="drag">drag</div>
     </div>
-    <div class="drop hov ${mod}">
+    <div class="drop hov">
       With text
-      <div class="drag ${mod}">drag</div>
+      <div class="drag">drag</div>
     </div>
-    <div class="drop foc ${mod}">
+    <div class="drop foc">
       With text
-      <div class="drag ${mod}">drag</div>
+      <div class="drag">drag</div>
     </div>
-    <div class="drop act ${mod}">
+    <div class="drop act">
       With text
-      <div class="drag ${mod}">drag</div>
+      <div class="drag">drag</div>
     </div>
-    <div class="drop foc act ${mod}">
+    <div class="drop foc act">
       With text
-      <div class="drag ${mod}">drag</div>
+      <div class="drag">drag</div>
     </div>
-    <div class="drop dis ${mod}">
+    <div class="drop dis">
       With text
-      <div class="drag ${mod}">drag</div>
+      <div class="drag">drag</div>
     </div>
     <div></div>
 
-    <input type="text" class="text ${mod}" value="Button text" />
-    <input type="text" class="text hov ${mod}" value="Button text" />
-    <input type="text" class="text foc ${mod}" value="Button text" />
-    <input type="text" class="text act ${mod}" value="Button text" />
-    <input type="text" class="text foc act ${mod}" value="Button text" />
-    <input type="text" class="text dis ${mod}" value="Button text" />
+    <input type="text" class="text" value="Button text" />
+    <input type="text" class="text hov" value="Button text" />
+    <input type="text" class="text foc" value="Button text" />
+    <input type="text" class="text act" value="Button text" />
+    <input type="text" class="text foc act" value="Button text" />
+    <input type="text" class="text dis" value="Button text" />
     <div></div>
 
-    <select class="select ${mod}">
+    <select class="select">
       <option>Button text</option>
     </select>
-    <select class="select hov ${mod}">
+    <select class="select hov">
       <option>Button text</option>
     </select>
-    <select class="select foc ${mod}">
+    <select class="select foc">
       <option>Button text</option>
     </select>
-    <select class="select act ${mod}">
+    <select class="select act">
       <option>Button text</option>
     </select>
-    <select class="select foc act ${mod}">
+    <select class="select foc act">
       <option>Button text</option>
     </select>
-    <select class="select dis ${mod}">
+    <select class="select dis">
       <option>Button text</option>
     </select>
     <div></div>
@@ -428,3 +414,23 @@ export const Theme = (mod: string) => html`
 
 // ${components('sm')}
 // export const Components = args => html`<button class="button">asasd</button> <button class="button-in">asasd</button>`;
+
+
+/*
+      [class] {
+          position: relative;
+          &:hover::before {
+            content: attr(class);
+            font-size: 0.8rem;
+            color: #666;
+            position: absolute;
+            text-transform: lowercase;
+            white-space: nowrap;
+            left: 0;
+            top: 0;
+            z-index: 1000;
+            transform: translateY(-150%);
+            top: anchor(--myAnchor bottom);
+          }
+        }
+        */
