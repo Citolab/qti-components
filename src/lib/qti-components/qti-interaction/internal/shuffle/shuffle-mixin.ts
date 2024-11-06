@@ -13,12 +13,13 @@
  */
 import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
+import { Interaction } from '../interaction/interaction';
 
-type Constructor<T = {}> = new (...args: any[]) => T;
+type Constructor<T = {}> = abstract new (...args: any[]) => T;
 
 declare class ShuffleInterface {}
-export const ShuffleMixin = <T extends Constructor<LitElement>>(superClass: T, selector: string) => {
-  class ShuffleElement extends superClass {
+export const ShuffleMixin = <T extends Constructor<Interaction>>(superClass: T, selector: string) => {
+  abstract class ShuffleElement extends superClass {
     private _shuffle: boolean = false;
 
     // Define the property with the custom converter

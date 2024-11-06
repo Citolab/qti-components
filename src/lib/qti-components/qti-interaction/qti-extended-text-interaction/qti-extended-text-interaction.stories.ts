@@ -2,9 +2,14 @@ import './qti-extended-text-interaction';
 
 import { html } from 'lit';
 import { action } from '@storybook/addon-actions';
-import { Meta, StoryObj } from '@storybook/web-components';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import '../../qti-prompt/qti-prompt';
+
+import { expect, fn, within } from '@storybook/test';
+import type { Meta, StoryObj } from '@storybook/web-components';
+import { fireEvent } from '@storybook/testing-library';
+import { waitFor } from '@testing-library/dom';
+
 type Story = StoryObj;
 
 const meta: Meta = {
@@ -55,6 +60,49 @@ export const PatternMask = {
   render: Default.render,
   args: {
     'pattern-mask': '[A-Za-z]{3}',
-    'data-pattern-mask-message': 'Alleen maar 3 letters toegestaan'
+    'data-pattern-mask-message': 'Please enter 3 letters'
+  }
+};
+
+export const Form: Story = {
+  render: () => {
+    return html`
+      <form name="form" @submit=${e => e.preventDefault()}>
+        ${Default.render({
+          'pattern-mask': '[A-Za-z]{3}',
+          'data-pattern-mask-message': 'Please enter exact 3 letters',
+          'response-identifier': 'RESPONSE'
+        })}
+        <input type="submit" value="submit" />
+      </form>
+    `;
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const extendedTextInteraction = canvasElement.querySelector('qti-extended-text-interaction').shadowRoot;
+    const textarea = extendedTextInteraction.querySelector('textarea');
+    const form = canvas.getByRole<HTMLFormElement>('form');
+
+    const expectedValue = 'abc';
+    // type in the input
+    await fireEvent.keyUp(textarea, { target: { value: expectedValue } });
+    await fireEvent.submit(form);
+
+    const formData = new FormData(form);
+    const value = formData.get('RESPONSE');
+    // Check that form data contains the expected values
+    expect(value).toEqual(expectedValue);
+    let isValid = form.reportValidity();
+    expect(isValid).toBe(true);
+
+    await fireEvent.keyUp(textarea, { target: { value: '123' } });
+
+    isValid = form.reportValidity();
+    expect(isValid).toBe(false);
+
+    await fireEvent.keyUp(textarea, { target: { value: expectedValue } });
+    isValid = form.reportValidity();
+    expect(isValid).toBe(true);
+    // Define expected values for assertion
   }
 };

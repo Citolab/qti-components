@@ -1,16 +1,17 @@
 import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
+import { Interaction } from '../interaction/interaction';
 
-type Constructor<T> = new (...args: any[]) => T;
+type Constructor<T = {}> = abstract new (...args: any[]) => T;
 
 declare class DroppablesInterface {}
 
-export const DroppablesMixin = <T extends Constructor<LitElement>>(
+export const DroppablesMixin = <T extends Constructor<Interaction>>(
   superClass: T,
   useShadowRoot: boolean,
   droppablesSelector: string
 ) => {
-  class DroppablesElement extends superClass {
+  abstract class DroppablesElement extends superClass {
     private observer: MutationObserver;
 
     @property({ type: Boolean, reflect: true }) disabled = false;
@@ -132,9 +133,10 @@ export const DroppablesMixin = <T extends Constructor<LitElement>>(
       const moveElement = (): void => {
         draggable.style.transform = 'translate(0, 0)';
         droppable.appendChild(draggable);
-        this['checkMaxAssociations']();
 
-        this['saveResponse']();
+        // checkMaxAssociations and saveResponse are defined/overridden in a mixin
+        this['checkMaxAssociations']();
+        this['saveResponse'](null); //
       };
 
       if (!document.startViewTransition) {

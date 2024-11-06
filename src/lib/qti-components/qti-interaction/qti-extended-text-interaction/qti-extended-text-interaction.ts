@@ -19,6 +19,8 @@ export class QtiExtendedTextInteraction extends Interaction {
   /** text appearing in the extended-text-nteraction if it is empty */
   @property({ type: String, attribute: 'placeholder-text' }) placeholderText: string;
 
+  @property({ type: String, attribute: 'data-patternmask-message' }) dataPatternmaskMessage: string;
+
   @state()
   private _value = '';
 
@@ -26,22 +28,75 @@ export class QtiExtendedTextInteraction extends Interaction {
   @watch('classNames', { waitUntilFirstUpdate: true })
   handleclassNamesChange(old, disabled: boolean) {
     const classNames = this.classNames.split(' ');
+    let rowsSet = false;
     classNames.forEach((className: string) => {
       if (className.startsWith('qti-height-lines')) {
         const nrRows = className.replace('qti-height-lines-', '');
         if (this.textareaRef) {
           this.textareaRef.value.rows = parseInt(nrRows);
+          rowsSet = true;
         }
       }
     });
+    // If no qti-height-lines class is set, calculate rows based on expectedLength
+    if (!rowsSet && this.textareaRef && this.expectedLength) {
+      const estimatedRows = Math.ceil(this.expectedLength / 50); //  '50' based on an estimate for characters per row
+      this.textareaRef.value.rows = estimatedRows;
+    }
   }
 
-  public set response(value: string) {
-    this._value = value !== undefined ? value : '';
+  get value(): string | string[] {
+    return this._value;
+  }
+  set value(val: string | string[]) {
+    if (typeof val === 'string') {
+      this._value = val;
+      const formData = new FormData();
+      formData.append(this.responseIdentifier, val);
+      this._internals.setFormValue(formData);
+      this.validate();
+    } else {
+      throw new Error('Value must be a string');
+    }
   }
 
-  public validate() {
-    return this._value !== '';
+  public override validate() {
+    const textarea = this.shadowRoot.querySelector('textarea');
+    if (!textarea) return false;
+
+    if (this.patternMask && this.dataPatternmaskMessage) {
+      // Clear any custom error initially
+      this._internals.setValidity({});
+      textarea.setCustomValidity('');
+      const patternSource =
+        this.patternMask.startsWith('^') && this.patternMask.endsWith('$') ? this.patternMask : `^${this.patternMask}$`;
+
+      const pattern = new RegExp(patternSource);
+      const isValid = textarea.checkValidity() && pattern.test(textarea.value);
+
+      if (!isValid) {
+        // Set custom error if invalid
+        this._internals.setValidity({ customError: true }, this.dataPatternmaskMessage);
+        textarea.setCustomValidity(this.dataPatternmaskMessage);
+      }
+    } else {
+      const isValid = textarea.checkValidity();
+      this._internals.setValidity(isValid ? {} : { customError: false });
+    }
+
+    return this._value !== '' && textarea.checkValidity();
+  }
+
+  override reportValidity() {
+    const textarea = this.shadowRoot.querySelector('textarea');
+    if (!textarea) return false;
+
+    // Run the validate function to ensure the custom validity state is up to date
+    const isValid = this.validate();
+    if (!isValid) {
+      textarea.reportValidity();
+    }
+    return isValid;
   }
 
   static override get styles() {
@@ -66,23 +121,17 @@ export class QtiExtendedTextInteraction extends Interaction {
       ><textarea
         part="textarea"
         ${ref(this.textareaRef)}
+        name="${this.responseIdentifier}"
         spellcheck="false"
         autocomplete="off"
+        maxlength="${5000}"
         @keydown="${event => event.stopImmediatePropagation()}"
         @keyup="${this.textChanged}"
         @change="${this.textChanged}"
         @blur="${(event: FocusEvent) => {
-          const input = event.target as HTMLInputElement;
-          if (!input.checkValidity()) {
-            input.setCustomValidity(this.dataset.patternmaskMessage || 'Invalid input');
-            input.reportValidity(); // Show the validation message
-          } else {
-            input.setCustomValidity(''); // Clear the custom validity message
-          }
+          this.reportValidity();
         }}"
         placeholder="${ifDefined(this.placeholderText ? this.placeholderText : undefined)}"
-        maxlength="${ifDefined(this.expectedLength ? this.expectedLength : undefined)}"
-        pattern="${ifDefined(this.patternMask ? this.patternMask : undefined)}"
         ?disabled="${this.disabled}"
         ?readonly="${this.readonly}"
         .value=${this._value}
@@ -94,13 +143,10 @@ export class QtiExtendedTextInteraction extends Interaction {
     const input = event.target as HTMLInputElement;
     this.setEmptyAttribute(input.value);
     if (this._value !== input.value) {
-      this._value = input.value;
+      this.value = input.value;
+      const isValid = this.validate();
       this.saveResponse(input.value);
     }
-  }
-
-  reset(): void {
-    this._value = '';
   }
 
   private setEmptyAttribute(text: string) {

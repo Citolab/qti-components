@@ -3,6 +3,10 @@ import { action } from '@storybook/addon-actions';
 
 import { QtiTextEntryInteraction } from './qti-text-entry-interaction';
 import './qti-text-entry-interaction';
+import { expect, fireEvent, fn, within } from '@storybook/test';
+import type { Meta, StoryObj } from '@storybook/web-components';
+
+type Story = StoryObj; // <Props>;
 
 const inputWidthClass = [
   '',
@@ -52,7 +56,48 @@ export const PatternMask = {
   render: Default.render,
   args: {
     patternMask: '[A-Za-z]{3}',
-    dataPatternmaskMessage: 'Alleen maar 3 letters toegestaan'
+    dataPatternmaskMessage: 'Please enter 3 letters'
+  }
+};
+
+export const Form: Story = {
+  render: () => {
+    return html`
+      <form name="form" @submit=${e => e.preventDefault()}>
+        ${Default.render({
+          patternMask: '[A-Za-z]{3}',
+          dataPatternmaskMessage: 'Please enter exact 3 letters'
+        })}
+        <input type="submit" value="submit" />
+      </form>
+    `;
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const textEntryInteraction = canvasElement.querySelector('qti-text-entry-interaction').shadowRoot;
+    const input = textEntryInteraction.querySelector('input');
+    const form = canvas.getByRole<HTMLFormElement>('form');
+
+    const expectedValue = 'abc';
+    // type in the input
+    await fireEvent.keyUp(input, { target: { value: expectedValue } });
+    await fireEvent.submit(form);
+
+    const formData = new FormData(form);
+    const value = formData.get('RESPONSE');
+    // Check that form data contains the expected values
+    expect(value).toEqual(expectedValue);
+    let isValid = form.reportValidity();
+    expect(isValid).toBe(true);
+
+    await fireEvent.keyUp(input, { target: { value: '123' } });
+    isValid = form.reportValidity();
+    expect(isValid).toBe(false);
+
+    await fireEvent.keyUp(input, { target: { value: expectedValue } });
+    isValid = form.reportValidity();
+    expect(isValid).toBe(true);
+    // Define expected values for assertion
   }
 };
 

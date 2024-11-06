@@ -3,12 +3,12 @@ import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { expect, fn, within } from '@storybook/test';
-
 import type { Meta, StoryObj } from '@storybook/web-components';
+import { fireEvent } from '@storybook/testing-library';
+import { waitFor } from '@testing-library/dom';
 
 import '@citolab/qti-components/qti-components';
 
-import { fireEvent } from '@storybook/testing-library';
 import { QtiChoiceInteraction, QtiSimpleChoice } from '../../index';
 
 type Story = StoryObj; // <Props>;
@@ -53,30 +53,34 @@ export default meta;
 
 export const Default = {
   render: args => {
+    const maxChoices = args['max-choices'] || 0;
     return html`<qti-choice-interaction
-        name="choice"
-        data-testid="qti-choice-interaction"
-        data-max-selections-message="Too much selections made"
-        data-min-selections-message="Too little selections made"
-        response-identifier="RESPONSE"
-        @qti-register-interaction=${action(`qti-register-interaction`)}
-        @qti-interaction-response=${action(`qti-interaction-response`)}
-        class=${ifDefined(args.classes ? args.classes.join(' ') : undefined)}
-        min-choices=${ifDefined(args['min-choices'])}
-        max-choices=${ifDefined(args['max-choices'])}
-        orientation=${ifDefined(args.orientation)}
-        ?shuffle=${args.shuffle}
-        ?readonly=${args.readonly}
-        .disabled=${args.disabled}
-        ><qti-prompt>
-          <p>Which of the following features are <strong>new</strong> to QTI 3?</p>
-          <p>Pick 1 choice.</p>
-        </qti-prompt>
-        <qti-simple-choice data-testid="A" identifier="A">Option A</qti-simple-choice>
-        <qti-simple-choice data-testid="B" identifier="B" fixed>Option B</qti-simple-choice>
-        <qti-simple-choice data-testid="C" identifier="C">Option C</qti-simple-choice>
-        <qti-simple-choice data-testid="D" identifier="D">Option D</qti-simple-choice>
-      </qti-choice-interaction>`;
+      name="choice"
+      data-testid="qti-choice-interaction"
+      data-max-selections-message="Too much selections made"
+      data-min-selections-message="Too little selections made"
+      response-identifier="RESPONSE"
+      @qti-register-interaction=${action(`qti-register-interaction`)}
+      @qti-interaction-response=${action(`qti-interaction-response`)}
+      class=${ifDefined(args.classes ? args.classes.join(' ') : undefined)}
+      min-choices=${ifDefined(args['min-choices'])}
+      max-choices=${ifDefined(maxChoices)}
+      orientation=${ifDefined(args.orientation)}
+      ?shuffle=${args.shuffle}
+      ?readonly=${args.readonly}
+      .disabled=${args.disabled}
+      ><qti-prompt>
+        <p>Which of the following features are <strong>new</strong> to QTI 3?</p>
+        <p>
+          Pick
+          ${maxChoices === 1 ? `<span>1 choice</span>` : maxChoices === 0 ? 'some choices' : `${maxChoices} choices`}.
+        </p>
+      </qti-prompt>
+      <qti-simple-choice data-testid="A" identifier="A">Option A</qti-simple-choice>
+      <qti-simple-choice data-testid="B" identifier="B" fixed>Option B</qti-simple-choice>
+      <qti-simple-choice data-testid="C" identifier="C">Option C</qti-simple-choice>
+      <qti-simple-choice data-testid="D" identifier="D">Option D</qti-simple-choice>
+    </qti-choice-interaction>`;
   }
 };
 
@@ -137,14 +141,20 @@ export const MaxChoices2: Story = {
     expect(choiceA.checked).toBeTruthy();
 
     await fireEvent.click(choiceC);
+    // Check if the validation message is shown
+    const choiceInteraction = canvas.getByTestId<QtiChoiceInteraction>('qti-choice-interaction');
+    const validationMessage = choiceInteraction.shadowRoot.querySelector('[role="alert"]');
+
+    await waitFor(() => expect(validationMessage).toBeVisible());
+
+    expect(validationMessage.textContent).toBe('Too much selections made');
   }
 };
-
 
 export const OrientationHorizontal: Story = {
   render: Default.render,
   args: {
-    orientation: 'horizontal',
+    orientation: 'horizontal'
   }
 };
 
@@ -185,11 +195,11 @@ export const Multiple: Story = {
 
     // Extract the event data from the spy's second call
     const event = interactionChangedSpy.mock.calls[1][0];
-    
+
     // Define expected detail data
     const expectedDetail = {
       responseIdentifier: 'RESPONSE', // replace with actual response identifier if available
-      response: ['A','B'] // assuming "B" is the expected response; adjust as needed
+      response: ['A', 'B'] // assuming "B" is the expected response; adjust as needed
     };
 
     // Check that the event's detail matches expected data
@@ -277,7 +287,7 @@ export const VocabularyLowerAlphaSuffixDotAndCorrectStory = {
 export const Form: Story = {
   render: () => {
     return html`
-      <form name="choice-form" @submit=${(e) => e.preventDefault()}>
+      <form name="choice-form" @submit=${e => e.preventDefault()}>
         ${Default.render({
           'min-choices': 1,
           'max-choices': 2
@@ -294,22 +304,15 @@ export const Form: Story = {
 
     await fireEvent.click(choiceA);
     await fireEvent.click(choiceB);
-    
     await fireEvent.submit(form);
 
     const formData = new FormData(form);
-    const submittedValues = Array.from(formData.entries());
+
+    const submittedValues = formData.getAll('RESPONSE');
 
     // Define expected values for assertion
-    const expectedValues = [
-      ['choice', 'A'],
-      ['choice', 'B']
-    ];
+    const expectedValues = ['A', 'B'];
 
-    const selectedOptions = formData.getAll('options'); // Returns an array, e.g., ['A', 'B']
-
-    console.log('Selected Options:', selectedOptions);
-    
     // Check that form data contains the expected values
     expect(submittedValues).toEqual(expect.arrayContaining(expectedValues));
   }

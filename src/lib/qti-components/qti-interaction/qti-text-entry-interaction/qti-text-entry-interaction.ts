@@ -13,11 +13,10 @@ export class QtiTextEntryInteraction extends Interaction {
 
   @property({ type: String, attribute: 'placeholder-text' }) placeholderText: string;
 
-  @state()
-  private _value = '';
+  @property({ type: String, attribute: 'data-patternmask-message' }) dataPatternmaskMessage: string;
 
   @state()
-  private _correctValue = '';
+  private _value = '';
 
   @state()
   private _size = 5;
@@ -36,43 +35,50 @@ export class QtiTextEntryInteraction extends Interaction {
     });
   }
 
-  public set response(value: string | undefined) {
-    this._value = value !== undefined ? value : '';
+  get value(): string | string[] {
+    return this._value;
+  }
+  set value(val: string | string[]) {
+    if (typeof val === 'string') {
+      this._value = val;
+      const formData = new FormData();
+      formData.append(this.responseIdentifier, val);
+      this._internals.setFormValue(formData);
+      this.validate();
+    } else {
+      throw new Error('Value must be a string');
+    }
   }
 
-  public validate() {
-    return this._value !== '';
-  }
-
-  static override get styles() {
-    return [
-      css`
-        [part='correct'] {
-          position: absolute;
-          width: 100%;
-        }
-      `
-    ];
-  }
-
-  set correctResponse(value: string) {
-    this._correctValue = value;
+  public override validate() {
+    const input = this.shadowRoot.querySelector('input');
+    if (!input) return false;
+    if (this.patternMask && this.dataPatternmaskMessage) {
+      // Clear any custom error if the input is valid
+      this._internals.setValidity({});
+      input.setCustomValidity(''); // Clear the custom message
+      const isValid = input.checkValidity();
+      if (!isValid) {
+        // Set custom error if invalid
+        this._internals.setValidity({ customError: true }, this.dataPatternmaskMessage);
+        input.setCustomValidity(this.dataPatternmaskMessage); // Set custom message only if invalid
+      }
+    } else {
+      const isValid = input.checkValidity();
+      this._internals.setValidity(isValid ? {} : { customError: false });
+    }
+    return this._value !== '' && input.checkValidity();
   }
 
   override render() {
     return html`
       <input
         part="input"
+        name="${this.responseIdentifier}"
         spellcheck="false"
         autocomplete="off"
         @blur="${(event: FocusEvent) => {
-          const input = event.target as HTMLInputElement;
-          if (!input.checkValidity()) {
-            input.setCustomValidity(this.dataset.patternmaskMessage || 'Invalid input');
-            input.reportValidity(); // Show the validation message
-          } else {
-            input.setCustomValidity(''); // Clear the custom validity message
-          }
+          this.reportValidity();
         }}"
         @keydown="${event => event.stopImmediatePropagation()}"
         @keyup="${this.textChanged}"
@@ -81,24 +87,35 @@ export class QtiTextEntryInteraction extends Interaction {
         placeholder="${ifDefined(this.placeholderText ? this.placeholderText : undefined)}"
         .value="${this._value}"
         size="${this._size}"
+        maxlength=${1000}
         pattern="${ifDefined(this.patternMask ? this.patternMask : undefined)}"
         ?disabled="${this.disabled}"
         ?readonly="${this.readonly}"
       />
-      <div part="correct">${this._correctValue}</div>
+      <div part="correct">${this._correctResponse}</div>
     `;
   }
-  //
-  // maxlength="${ifDefined(this.expectedLength ? this.expectedLength : undefined)}"
-
   protected textChanged(event: Event) {
     if (this.disabled || this.readonly) return;
     const input = event.target as HTMLInputElement;
     this.setEmptyAttribute(input.value);
     if (this._value !== input.value) {
-      this._value = input.value;
+      this.value = input.value;
+      const isValid = this.validate();
       this.saveResponse(input.value);
     }
+  }
+
+  override reportValidity() {
+    const input = this.shadowRoot.querySelector('input');
+    if (!input) return false;
+
+    // Run the validate function to ensure the custom validity state is up to date
+    const isValid = this.validate();
+    if (!isValid) {
+      input.reportValidity();
+    }
+    return isValid;
   }
 
   reset(): void {

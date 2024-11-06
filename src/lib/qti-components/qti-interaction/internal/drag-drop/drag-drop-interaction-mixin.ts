@@ -6,8 +6,9 @@ import { FlippablesMixin } from './flippables-mixin';
 import { property } from 'lit/decorators.js';
 import { liveQuery } from '../../../../decorators/live-query';
 import { TouchDragAndDrop } from './drag-drop-api';
+import { Interaction } from '../interaction/interaction';
 
-type Constructor<T> = new (...args: any[]) => T;
+type Constructor<T = {}> = abstract new (...args: any[]) => T;
 
 interface InteractionConfiguration {
   copyStylesDragClone: boolean;
@@ -15,13 +16,13 @@ interface InteractionConfiguration {
   dragOnClick: boolean;
 }
 
-export const DragDropInteractionMixin = <T extends Constructor<LitElement>>(
+export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
   superClass: T,
   draggablesSelector: string,
   useShadowRootForDroppables: boolean,
   droppablesSelector: string
 ) => {
-  class DragDropInteractionElement extends FlippablesMixin(
+  abstract class DragDropInteractionElement extends FlippablesMixin(
     DroppablesMixin(superClass, useShadowRootForDroppables, droppablesSelector),
     droppablesSelector,
     draggablesSelector
@@ -281,7 +282,7 @@ export const DragDropInteractionMixin = <T extends Constructor<LitElement>>(
       return this.droppables.filter(d => d.childElementCount > 0).length;
     }
 
-    protected saveResponse(): void {
+    public saveResponse(): void {
       const response = this.collectResponseData();
       this.dispatchEvent(
         new CustomEvent('qti-interaction-response', {
