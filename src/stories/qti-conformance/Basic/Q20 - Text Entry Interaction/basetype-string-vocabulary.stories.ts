@@ -27,7 +27,7 @@ export const Q20_L1_D101: Story = {
       item = qtiAssessmentItem;
     };
 
-    return html` <div class="item" @qti-assessment-item-connected=${onItemConnected}>${unsafeHTML(xml)}</div> `;
+    return html` <div class="item" @qti-assessment-item-connected=${onItemConnected}>${xml}</div> `;
   },
   play: async ({ canvasElement }) => {
     const assessmentItem = canvasElement.querySelector('qti-assessment-item');
@@ -58,7 +58,7 @@ export const Q20_L1_D102: Story = {
       item = qtiAssessmentItem;
     };
 
-    return html` <div class="item" @qti-assessment-item-connected=${onItemConnected}>${unsafeHTML(xml)}</div> `;
+    return html` <div class="item" @qti-assessment-item-connected=${onItemConnected}>${xml}</div> `;
   },
   play: async ({ canvasElement }) => {
     const assessmentItem = canvasElement.querySelector('qti-assessment-item');
@@ -87,7 +87,7 @@ export const Q20_L1_D103: Story = {
       item = qtiAssessmentItem;
     };
 
-    return html` <div class="item" @qti-assessment-item-connected=${onItemConnected}>${unsafeHTML(xml)}</div> `;
+    return html` <div class="item" @qti-assessment-item-connected=${onItemConnected}>${xml}</div> `;
   },
   play: async ({ canvasElement }) => {
     const assessmentItem = canvasElement.querySelector('qti-assessment-item');
@@ -115,7 +115,7 @@ export const Q20_L1_D104: Story = {
       item = qtiAssessmentItem;
     };
 
-    return html` <div class="item" @qti-assessment-item-connected=${onItemConnected}>${unsafeHTML(xml)}</div> `;
+    return html` <div class="item" @qti-assessment-item-connected=${onItemConnected}>${xml}</div> `;
   },
   play: async ({ canvasElement }) => {
     const assessmentItem = canvasElement.querySelector('qti-assessment-item');
@@ -146,7 +146,7 @@ export const Q20_L1_D105: Story = {
       item = qtiAssessmentItem;
     };
 
-    return html` <div class="item" @qti-assessment-item-connected=${onItemConnected}>${unsafeHTML(xml)}</div> `;
+    return html` <div class="item" @qti-assessment-item-connected=${onItemConnected}>${xml}</div> `;
   },
   play: async ({ canvasElement }) => {
     const assessmentItem = canvasElement.querySelector('qti-assessment-item');
@@ -178,7 +178,7 @@ export const Q20_L1_D105: Story = {
 //       item = qtiAssessmentItem;
 //     };
 
-//     return html` <div class="item" @qti-assessment-item-connected=${onItemConnected}>${unsafeHTML(xml)}</div> `;
+//     return html` <div class="item" @qti-assessment-item-connected=${onItemConnected}>${xml}</div> `;
 //   },
 //   play: async ({ canvasElement }) => {
 //     const assessmentItem = canvasElement.querySelector('qti-assessment-item');
@@ -208,7 +208,7 @@ export const Q20_L1_D106: Story = {
       item = qtiAssessmentItem;
     };
 
-    return html` <div class="item" @qti-assessment-item-connected=${onItemConnected}>${unsafeHTML(xml)}</div> `;
+    return html` <div class="item" @qti-assessment-item-connected=${onItemConnected}>${xml}</div> `;
   },
   play: async ({ canvasElement }) => {
     const assessmentItem = canvasElement.querySelector('qti-assessment-item');
@@ -238,7 +238,7 @@ export const Q20_L1_D107: Story = {
       item = qtiAssessmentItem;
     };
 
-    return html` <div class="item" @qti-assessment-item-connected=${onItemConnected}>${unsafeHTML(xml)}</div> `;
+    return html` <div class="item" @qti-assessment-item-connected=${onItemConnected}>${xml}</div> `;
   },
   play: async ({ canvasElement }) => {
     const assessmentItem = canvasElement.querySelector('qti-assessment-item');
@@ -268,7 +268,7 @@ export const Q20_L1_D108: Story = {
       item = qtiAssessmentItem;
     };
 
-    return html` <div class="item" @qti-assessment-item-connected=${onItemConnected}>${unsafeHTML(xml)}</div> `;
+    return html` <div class="item" @qti-assessment-item-connected=${onItemConnected}>${xml}</div> `;
   },
   play: async ({ canvasElement }) => {
     const assessmentItem = canvasElement.querySelector('qti-assessment-item');
@@ -298,7 +298,7 @@ export const Q20_L1_D109: Story = {
       item = qtiAssessmentItem;
     };
 
-    return html` <div class="item" @qti-assessment-item-connected=${onItemConnected}>${unsafeHTML(xml)}</div> `;
+    return html` <div class="item" @qti-assessment-item-connected=${onItemConnected}>${xml}</div> `;
   },
   play: async ({ canvasElement }) => {
     const assessmentItem = canvasElement.querySelector('qti-assessment-item');
@@ -328,7 +328,7 @@ export const Q20_L1_D113: Story = {
       item = qtiAssessmentItem;
     };
 
-    return html` <div class="item" @qti-assessment-item-connected=${onItemConnected}>${unsafeHTML(xml)}</div> `;
+    return html` <div class="item" @qti-assessment-item-connected=${onItemConnected}>${xml}</div> `;
   },
   play: async ({ canvasElement }) => {
     const assessmentItem = canvasElement.querySelector('qti-assessment-item');
@@ -358,7 +358,7 @@ export const Q20_L1_D114: Story = {
       item = qtiAssessmentItem;
     };
 
-    return html` <div class="item" @qti-assessment-item-connected=${onItemConnected}>${unsafeHTML(xml)}</div> `;
+    return html` <div class="item" @qti-assessment-item-connected=${onItemConnected}>${xml}</div> `;
   },
   play: async ({ canvasElement }) => {
     const assessmentItem = canvasElement.querySelector('qti-assessment-item');
@@ -388,7 +388,7 @@ export const Q20_L1_D115: Story = {
       item = qtiAssessmentItem;
     };
 
-    return html` <div class="item" @qti-assessment-item-connected=${onItemConnected}>${unsafeHTML(xml)}</div> `;
+    return html` <div class="item" @qti-assessment-item-connected=${onItemConnected}>${xml}</div> `;
   },
   play: async ({ canvasElement }) => {
     const assessmentItem = canvasElement.querySelector('qti-assessment-item');
@@ -417,7 +417,7 @@ export const Q20_L1_D116: Story = {
       item = qtiAssessmentItem;
     };
 
-    return html` <div class="item" @qti-assessment-item-connected=${onItemConnected}>${unsafeHTML(xml)}</div> `;
+    return html` <div class="item" @qti-assessment-item-connected=${onItemConnected}>${xml}</div> `;
   },
   play: async ({ canvasElement }) => {
     const assessmentItem = canvasElement.querySelector('qti-assessment-item');
@@ -446,7 +446,7 @@ export const Q20_L1_D117: Story = {
       item = qtiAssessmentItem;
     };
 
-    return html` <div class="item" @qti-assessment-item-connected=${onItemConnected}>${unsafeHTML(xml)}</div> `;
+    return html` <div class="item" @qti-assessment-item-connected=${onItemConnected}>${xml}</div> `;
   },
   play: async ({ canvasElement }) => {
     const assessmentItem = canvasElement.querySelector('qti-assessment-item');
@@ -475,7 +475,7 @@ export const Q20_L1_D118: Story = {
       item = qtiAssessmentItem;
     };
 
-    return html` <div class="item" @qti-assessment-item-connected=${onItemConnected}>${unsafeHTML(xml)}</div> `;
+    return html` <div class="item" @qti-assessment-item-connected=${onItemConnected}>${xml}</div> `;
   },
   play: async ({ canvasElement }) => {
     const assessmentItem = canvasElement.querySelector('qti-assessment-item');
@@ -504,7 +504,7 @@ export const Q20_L1_D110: Story = {
       item = qtiAssessmentItem;
     };
 
-    return html` <div class="item" @qti-assessment-item-connected=${onItemConnected}>${unsafeHTML(xml)}</div> `;
+    return html` <div class="item" @qti-assessment-item-connected=${onItemConnected}>${xml}</div> `;
   },
   play: async ({ canvasElement }) => {
     const assessmentItem = canvasElement.querySelector('qti-assessment-item');
@@ -533,7 +533,7 @@ export const Q20_L1_D111: Story = {
       item = qtiAssessmentItem;
     };
 
-    return html` <div class="item" @qti-assessment-item-connected=${onItemConnected}>${unsafeHTML(xml)}</div> `;
+    return html` <div class="item" @qti-assessment-item-connected=${onItemConnected}>${xml}</div> `;
   },
   play: async ({ canvasElement }) => {
     const assessmentItem = canvasElement.querySelector('qti-assessment-item');
