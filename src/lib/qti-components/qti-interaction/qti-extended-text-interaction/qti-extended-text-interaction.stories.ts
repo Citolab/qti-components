@@ -8,7 +8,6 @@ import '../../qti-prompt/qti-prompt';
 import { expect, fn, within } from '@storybook/test';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { fireEvent } from '@storybook/testing-library';
-import { waitFor } from '@testing-library/dom';
 
 type Story = StoryObj;
 

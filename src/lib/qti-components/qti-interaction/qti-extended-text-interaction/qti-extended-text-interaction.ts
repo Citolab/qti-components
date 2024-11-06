@@ -127,7 +127,6 @@ export class QtiExtendedTextInteraction extends Interaction {
           this.reportValidity();
         }}"
         placeholder="${ifDefined(this.placeholderText ? this.placeholderText : undefined)}"
-        maxlength="${10000}"
         rows="${this._rows}"
         ?disabled="${this.disabled}"
         ?readonly="${this.readonly}"
