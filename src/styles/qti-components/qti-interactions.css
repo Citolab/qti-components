@@ -34,7 +34,7 @@
       & qti-simple-choice {
         @apply check;
 
-        &:not([aria-disabled='true'], [aria-readonly='true']):hover {
+        &:not([aria-disabled='true'], [aria-readonly='true'], [aria-checked='true']):hover {
           @apply hov;
         }
 
@@ -77,6 +77,9 @@
     }
 
     & qti-simple-choice {
+      width: fit-content;
+      cursor: pointer;
+
       &[data-correct-response='true'] {
         &::after {
           content: '\02714';
@@ -86,8 +89,8 @@
     }
 
     & qti-simple-choice > p {
-      margin: 0;
-      padding: 0;
+      margin: 0 !important;
+      padding: 0 !important;
     }
   }
 

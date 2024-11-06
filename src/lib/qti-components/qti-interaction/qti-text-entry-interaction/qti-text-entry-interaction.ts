@@ -1,5 +1,4 @@
-import { css, html } from 'lit';
-import type { CSSResultGroup } from 'lit';
+import { CSSResultGroup, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { createRef } from 'lit/directives/ref.js';
@@ -21,6 +20,9 @@ export class QtiTextEntryInteraction extends Interaction {
 
   @state()
   private _correctValue = '';
+
+  @state()
+  private _size = 5;
 
   inputRef = createRef<HTMLInputElement>();
 

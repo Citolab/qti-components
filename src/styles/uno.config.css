@@ -33,6 +33,7 @@ https://www.imsglobal.org/spec/qti/v3p0/impl#h.e0onr51nghyl
   --qti-border-thickness: 1.5px;
   --qti-border-style: solid;
   --qti-border-color-gray: #c6cad0; /* Corresponding to border-gray-400 */
+  --qti-border-radius-sm: 0.1rem;
   --qti-border-radius-md: 0.375rem;
   --qti-border-radius-lg: 0.5rem;
   --qti-border-radius-full: 9999px;
@@ -106,9 +107,10 @@ https://www.imsglobal.org/spec/qti/v3p0/impl#h.e0onr51nghyl
 .form {
   @apply bordered;
 
+  display: grid;
+  place-content: center;
   width: var(--qti-form-size);
   height: var(--qti-form-size);
-  align-self: 1;
 }
 
 .p-lg {
@@ -206,18 +208,15 @@ https://www.imsglobal.org/spec/qti/v3p0/impl#h.e0onr51nghyl
 }
 
 .check-size {
-  width: calc(var(--qti-form-size) - 4px);
-  height: calc(var(--qti-form-size) - 4px);
+  width: calc(var(--qti-form-size) - 6px);
+  height: calc(var(--qti-form-size) - 6px);
 }
 
 .check {
-  /* display: flex; */
-
-  /* align-items: center; */
   gap: 0.5rem;
+  border-radius: var(--qti-border-radius-md);
   padding: var(--qti-padding-md) var(--qti-padding-md); /* Padding shorthand */
   outline: none;
-  border-radius: var(--qti-border-radius-md);
   cursor: pointer;
 }
 
@@ -235,7 +234,9 @@ https://www.imsglobal.org/spec/qti/v3p0/impl#h.e0onr51nghyl
 .check-checkbox {
   @apply form;
 
-  border-radius: var(--qti-border-radius-md);
+  display: flex;
+  place-items: center;
+  border-radius: var(--qti-border-radius-sm);
 }
 
 .check-checkbox-checked {
@@ -246,8 +247,7 @@ https://www.imsglobal.org/spec/qti/v3p0/impl#h.e0onr51nghyl
 }
 
 .hov {
-  /* background-color: var(--qti-bg-gray-50); */
-  box-shadow: 0 2px 4px rgb(0 0 0 / 20%);
+  background-color: var(--qti-bg-gray-50);
 }
 
 .foc {
@@ -256,6 +256,8 @@ https://www.imsglobal.org/spec/qti/v3p0/impl#h.e0onr51nghyl
 
 .act {
   border-color: var(--qti-bg-primary); /* border-primary */
+  background-color: var(--qti-primary-light);
+
 }
 
 .rdo {
