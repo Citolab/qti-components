@@ -33,7 +33,7 @@ export const Q22_L1_D51: Story = {
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemConnected}
       >
-        ${unsafeHTML(xml)}
+        ${xml}
       </div>
       <button @click=${() => item?.processResponse()}>Submit</button>
     `;
@@ -72,7 +72,7 @@ export const Q22_L1_D52: Story = {
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemConnected}
       >
-        ${unsafeHTML(xml)}
+        ${xml}
       </div>
       <button @click=${() => item?.processResponse()}>Submit</button>
     `;
@@ -114,7 +114,7 @@ export const Q22_L1_D53: Story = {
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemConnected}
       >
-        ${unsafeHTML(xml)}
+        ${xml}
       </div>
       <button @click=${() => item?.processResponse()}>Submit</button>
     `;
@@ -155,7 +155,7 @@ export const Q22_L1_D54: Story = {
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemConnected}
       >
-        ${unsafeHTML(xml)}
+        ${xml}
       </div>
       <button @click=${() => item?.processResponse()}>Submit</button>
     `;
@@ -196,7 +196,7 @@ export const Q22_L1_D55: Story = {
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemConnected}
       >
-        ${unsafeHTML(xml)}
+        ${xml}
       </div>
       <button @click=${() => item?.processResponse()}>Submit</button>
     `;
@@ -237,7 +237,7 @@ export const Q22_L1_D56: Story = {
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemConnected}
       >
-        ${unsafeHTML(xml)}
+        ${xml}
       </div>
     `;
   },

@@ -7,7 +7,7 @@ export default css`
   [part='correct'] {
     position: absolute;
     width: 100%;
-
+  }
   :host(.qti-input-width-1) [part='input'] {
     width: 1.1rem;
     min-width: 1.1rem;

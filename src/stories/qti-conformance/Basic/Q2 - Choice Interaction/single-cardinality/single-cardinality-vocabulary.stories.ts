@@ -33,7 +33,7 @@ export const Q22_L1_D201: Story = {
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemConnected}
       >
-        ${unsafeHTML(xml)}
+        ${xml}
       </div>
     `;
   },
@@ -73,7 +73,7 @@ export const Q22_L1_D202: Story = {
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemConnected}
       >
-        ${unsafeHTML(xml)}
+        ${xml}
       </div>
     `;
   },
@@ -111,7 +111,7 @@ export const Q22_L1_D203: Story = {
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemConnected}
       >
-        ${unsafeHTML(xml)}
+        ${xml}
       </div>
     `;
   },
@@ -150,7 +150,7 @@ export const Q22_L1_D204: Story = {
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemConnected}
       >
-        ${unsafeHTML(xml)}
+        ${xml}
       </div>
     `;
   },
@@ -189,7 +189,7 @@ export const Q22_L1_D205: Story = {
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemConnected}
       >
-        ${unsafeHTML(xml)}
+        ${xml}
       </div>
     `;
   },
@@ -227,7 +227,7 @@ export const Q22_L1_D206: Story = {
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemConnected}
       >
-        ${unsafeHTML(xml)}
+        ${xml}
       </div>
     `;
   },
@@ -265,7 +265,7 @@ export const Q22_L1_D207: Story = {
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemConnected}
       >
-        ${unsafeHTML(xml)}
+        ${xml}
       </div>
     `;
   },
@@ -303,7 +303,7 @@ export const Q22_L1_D208: Story = {
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemConnected}
       >
-        ${unsafeHTML(xml)}
+        ${xml}
       </div>
     `;
   },
@@ -341,7 +341,7 @@ export const Q22_L1_I209: Story = {
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemConnected}
       >
-        ${unsafeHTML(xml)}
+        ${xml}
       </div>
     `;
   },
@@ -379,7 +379,7 @@ export const Q22_L1_I210: Story = {
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemConnected}
       >
-        ${unsafeHTML(xml)}
+        ${xml}
       </div>
     `;
   },
@@ -417,7 +417,7 @@ export const Q22_L1_I211: Story = {
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemConnected}
       >
-        ${unsafeHTML(xml)}
+        ${xml}
       </div>
     `;
   },
@@ -455,7 +455,7 @@ export const Q22_L1_I212: Story = {
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemConnected}
       >
-        ${unsafeHTML(xml)}
+        ${xml}
       </div>
     `;
   },
@@ -493,7 +493,7 @@ export const Q22_L1_I213: Story = {
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemConnected}
       >
-        ${unsafeHTML(xml)}
+        ${xml}
       </div>
     `;
   },
@@ -531,7 +531,7 @@ export const Q22_L1_I214: Story = {
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemConnected}
       >
-        ${unsafeHTML(xml)}
+        ${xml}
       </div>
     `;
   },
@@ -569,7 +569,7 @@ export const Q22_L1_I215: Story = {
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemConnected}
       >
-        ${unsafeHTML(xml)}
+        ${xml}
       </div>
     `;
   },
@@ -606,7 +606,7 @@ export const Q22_L1_I216: Story = {
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemConnected}
       >
-        ${unsafeHTML(xml)}
+        ${xml}
       </div>
     `;
   },
@@ -644,7 +644,7 @@ export const Q22_L1_I217: Story = {
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemConnected}
       >
-        ${unsafeHTML(xml)}
+        ${xml}
       </div>
     `;
   },

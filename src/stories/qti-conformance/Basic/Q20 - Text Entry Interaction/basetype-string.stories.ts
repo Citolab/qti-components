@@ -33,7 +33,7 @@ export const Q20_L1_D1: Story = {
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemConnected}
       >
-        ${unsafeHTML(xml)}
+        ${xml}
       </div>
       <button @click=${() => item?.processResponse()}>Submit</button>
     `;
@@ -78,7 +78,7 @@ export const Q20_L1_D2: Story = {
         @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemConnected}
       >
-        ${unsafeHTML(xml)}
+        ${xml}
       </div>
       <button @click=${() => item?.processResponse()}>Submit</button>
     `;
