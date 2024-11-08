@@ -31,16 +31,11 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     protected droppables: HTMLElement[] = [];
     dragDropApi: TouchDragAndDrop;
 
-    @property({ type: String, attribute: 'response-identifier' }) responseIdentifier = '';
-
     @property({ attribute: false, type: Object }) configuration: InteractionConfiguration = {
       copyStylesDragClone: true,
       dragCanBePlacedBack: true,
       dragOnClick: false
     };
-
-    @property({ type: Boolean, reflect: true }) disabled = false;
-    @property({ type: Boolean, reflect: true }) readonly = false;
     @property({ type: Number, reflect: true, attribute: 'min-associations' }) minAssociations = 1;
     @property({ type: Number, reflect: true, attribute: 'max-associations' }) maxAssociations = 1;
 
@@ -218,7 +213,11 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
         const maxMatch = +(d.getAttribute('match-max') || 1);
         const currentAssociations = d.querySelectorAll('[qti-draggable="true"]').length;
         const disableDroppable = currentAssociations >= maxMatch;
-        disableDroppable ? this.disableDroppable(d) : this.enableDroppable(d);
+        if (disableDroppable) {
+          this.disableDroppable(d);
+        } else {
+          this.enableDroppable(d);
+        }
       });
     }
 
@@ -232,15 +231,15 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       droppable.setAttribute('dropzone', 'move');
     }
 
-    get response(): string[] {
+    get value(): string[] {
       return this.collectResponseData();
     }
 
-    set response(response: string[]) {
+    set value(value: string[]) {
       if (this.isMatchTabular()) return;
 
       this.resetDroppables();
-      response?.forEach(entry => this.placeResponse(entry));
+      value?.forEach(entry => this.placeResponse(entry));
     }
 
     private placeResponse(response: string): void {
@@ -341,4 +340,3 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
   return DragDropInteractionElement as Constructor<IInteraction> & T;
 };
-``;

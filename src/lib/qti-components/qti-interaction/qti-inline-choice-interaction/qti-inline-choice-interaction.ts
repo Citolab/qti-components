@@ -73,16 +73,6 @@ export class QtiInlineChoiceInteraction extends Interaction {
     `;
   }
 
-  /*
-    <details class="anchor">
-      <summary>${this.dataPrompt}</summary>
-
-      <div role="menu" part="menu" class="positionedElement">
-        <slot></slot>
-      </div>
-    </details>
-    */
-
   connectedCallback() {
     super.connectedCallback();
     this.addEventListener('on-dropdown-selected', this.choiceSelected);
@@ -114,14 +104,19 @@ export class QtiInlineChoiceInteraction extends Interaction {
     this.options = this.options.map((option, i) => ({ ...option, selected: i === 0 }));
   }
 
-  public set response(value: string) {
+  public set value(value: string) {
     this.options = this.options.map(option => {
-      value === option.value && (option.selected = true);
+      if (value === option.value) {
+        option.selected = true;
+      }
       return option;
     });
   }
+  get value(): string {
+    return this.options.find(option => option.selected).value;
+  }
 
-  set correctResponse(value: Readonly<string | string[]>) {
+  set correctResponse(value: string | string[]) {
     if (value === '') {
       this.correctOption = '';
       return;

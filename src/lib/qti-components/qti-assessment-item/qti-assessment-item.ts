@@ -178,7 +178,9 @@ export class QtiAssessmentItem extends LitElement {
       const interaction: Interaction | undefined = this._interactionElements.find(
         i => i.getAttribute('response-identifier') === response.responseIdentifier
       );
-      interaction && (interaction.correctResponse = show ? response.response : '');
+      if (interaction) {
+        interaction.correctResponse = show ? response.response : '';
+      }
     }
   }
 
@@ -201,11 +203,12 @@ export class QtiAssessmentItem extends LitElement {
       this.updateOutcomeVariable('completionStatus', this._getCompletionStatus());
     }
 
-    countNumAttempts &&
+    if (countNumAttempts) {
       this.updateOutcomeVariable(
         'numAttempts',
         (+this._context.variables.find(v => v.identifier === 'numAttempts')?.value + 1).toString()
       );
+    }
 
     this._emit('qti-response-processed');
     return true;

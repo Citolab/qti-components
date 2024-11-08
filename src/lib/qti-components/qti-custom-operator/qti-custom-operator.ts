@@ -18,6 +18,7 @@ import { ItemContext, itemContext } from '../qti-assessment-item/qti-assessment-
  */
 @customElement('qti-custom-operator')
 export class QtiCustomOperator extends LitElement implements Calculate {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   private operatorFunction: Function;
 
   @consume({ context: itemContext, subscribe: true })

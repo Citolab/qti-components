@@ -59,10 +59,13 @@ export class QtiGraphicAssociateInteraction extends Interaction {
   validate(): boolean {
     return this._lines.length > 0;
   }
-  set response(val: string | string[]) {
+  set value(val: string | string[]) {
     if (Array.isArray(val)) {
       this._lines = val;
     }
+  }
+  get value(): string | string[] {
+    return this._lines;
   }
 
   override render() {

@@ -10,11 +10,17 @@ export class QtiEndAttemptInteraction extends Interaction {
   public title: 'end attempt';
 
   validate(): boolean {
-    // throw new Error('Method not implemented.');
+    // not implemented by design
     return true;
   }
-  set response(val: undefined) {
+
+  get value(): string | string[] {
     // throw new Error('Method not implemented.');
+    return '';
+  }
+
+  set value(val: string | string[]) {
+    // not implemented by design
   }
 
   override render() {

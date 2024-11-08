@@ -1,9 +1,10 @@
 import { html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { ChoicesMixin } from '../internal/choices/choices.mixin';
+import { Interaction } from '../internal/interaction/interaction';
 
 @customElement('qti-hottext-interaction')
-export class QtiHottextInteraction extends ChoicesMixin(LitElement, 'qti-hottext') {
+export class QtiHottextInteraction extends ChoicesMixin(Interaction, 'qti-hottext') {
   override connectedCallback() {
     super.connectedCallback();
     this.setAttribute('qti-hottext-interaction', '');

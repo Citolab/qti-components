@@ -3,9 +3,10 @@ import { customElement } from 'lit/decorators.js';
 import { ChoicesMixin } from '../internal/choices/choices.mixin';
 import { positionHotspots } from '../internal/hotspots/hotspot';
 import { QtiHotspotChoice } from '../qti-hotspot-choice';
+import { Interaction } from '../internal/interaction/interaction';
 
 @customElement('qti-hotspot-interaction')
-export class QtiHotspotInteraction extends ChoicesMixin(LitElement, 'qti-hotspot-choice') {
+export class QtiHotspotInteraction extends ChoicesMixin(Interaction, 'qti-hotspot-choice') {
   // do not select ( highlight blue, the image)
   // target the main slot make it relative and fit with the conten
   static override styles = [
@@ -44,11 +45,11 @@ export class QtiHotspotInteraction extends ChoicesMixin(LitElement, 'qti-hotspot
 
   override connectedCallback(): void {
     super.connectedCallback();
-    this.addEventListener('register-qti-hotspot-choice', this.positionHotspotOnRegister);
+    this.addEventListener('qti-register-choice', this.positionHotspotOnRegister);
   }
   override disconnectedCallback() {
     super.disconnectedCallback();
-    this.removeEventListener('register-qti-hotspot-choice', this.positionHotspotOnRegister);
+    this.removeEventListener('qti-register-choice', this.positionHotspotOnRegister);
   }
 }
 

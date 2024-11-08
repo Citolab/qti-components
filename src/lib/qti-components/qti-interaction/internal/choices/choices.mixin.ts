@@ -69,7 +69,7 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
     }
 
     public get correctResponse(): string | string[] {
-      return 
+      return this._correctResponse;
     }
 
     public set correctResponse(value: string | string[]) {

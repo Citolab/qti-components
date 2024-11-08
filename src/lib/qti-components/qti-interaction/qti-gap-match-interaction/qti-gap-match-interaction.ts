@@ -1,9 +1,10 @@
 import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-interaction-mixin';
+import { Interaction } from '../internal/interaction/interaction';
 
 @customElement('qti-gap-match-interaction')
-export class QtiGapMatchInteraction extends DragDropInteractionMixin(LitElement, 'qti-gap-text', false, 'qti-gap') {
+export class QtiGapMatchInteraction extends DragDropInteractionMixin(Interaction, 'qti-gap-text', false, 'qti-gap') {
   static override styles = [
     css`
       :host {
@@ -39,7 +40,7 @@ export class QtiGapMatchInteraction extends DragDropInteractionMixin(LitElement,
     return html`<slot name="prompt"> </slot><slot part="drags" name="qti-gap-text"></slot> <slot part="drops"></slot>`;
   }
 
-  set correctResponse(value: Readonly<string | string[]>) {
+  set correctResponse(value: string | string[]) {
     let matches: { text: string; gap: string }[] = [];
     const response = Array.isArray(value) ? value : [value];
 

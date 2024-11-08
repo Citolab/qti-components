@@ -4,7 +4,6 @@ import { IInteraction } from './interaction.interface';
 
 export abstract class Interaction extends LitElement implements IInteraction {
   static formAssociated = true; // Enable form association
-
   @property({ type: String, attribute: 'response-identifier' }) responseIdentifier = '';
   /** disabled should be exposed to the attributes and accessible as property */
   @property({ reflect: true, type: Boolean }) disabled = false;

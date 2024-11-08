@@ -4,9 +4,10 @@ import { customElement, state } from 'lit/decorators.js';
 import { DragDropInteractionMixin } from '../internal/drag-drop';
 import { QtiSimpleAssociableChoice } from '../qti-simple-associable-choice';
 import styles from './qti-associate-interaction.styles';
+import { Interaction } from '../internal/interaction/interaction';
 @customElement('qti-associate-interaction')
 export class QtiAssociateInteraction extends DragDropInteractionMixin(
-  LitElement,
+  Interaction,
   'qti-simple-associable-choice',
   true,
   '.dl'
@@ -15,6 +16,19 @@ export class QtiAssociateInteraction extends DragDropInteractionMixin(
 
   static styles: CSSResultGroup = styles;
   // dragDropApi: TouchDragAndDrop;
+
+  private _registerChoiceHandler: (event: CustomEvent) => void;
+
+  constructor() {
+    super();
+    this._registerChoiceHandler = this._registerChoice.bind(this);
+    this.addEventListener('register-qti-simple-associable-choice', this._registerChoiceHandler);
+  }
+
+  private _registerChoice(event: CustomEvent) {
+    const choice = event.target as QtiSimpleAssociableChoice;
+    this._childrenMap.push(choice);
+  }
 
   override render() {
     return html` <slot name="prompt"></slot>
@@ -31,29 +45,9 @@ export class QtiAssociateInteraction extends DragDropInteractionMixin(
       </div>`;
   }
 
-  // async connectedCallback(): Promise<void> {
-  //   super.connectedCallback();
-  //   await this.updateComplete;
-  //   this.dragDropApi = new TouchDragAndDrop();
-  //   this.dragDropApi.addDraggableElements(this.querySelectorAll('qti-simple-associable-choice'));
-  //   this.dragDropApi.addDroppableElements(this.shadowRoot.querySelectorAll('.dl'));
-  // }
-
-  constructor() {
-    super();
-    this.addEventListener('register-qti-simple-associable-choice', (event: CustomEvent) => {
-      const choice = event.target as QtiSimpleAssociableChoice;
-      this._childrenMap.push(choice);
-    });
-
-    // this.addEventListener('unregister-qti-simple-associable-choice', (event: CustomEvent) => {
-    //   console.log('test');
-    //   const choice = event.target as QtiSimpleAssociableChoice;
-    //   const index = this._childrenMap.indexOf(choice);
-    //   if (index !== -1) {
-    //     this._childrenMap.splice(index, 1);
-    //   }
-    // });
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.removeEventListener('register-qti-simple-associable-choice', this._registerChoiceHandler);
   }
 }
 

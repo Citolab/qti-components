@@ -4,10 +4,11 @@ import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-interaction-mixin';
 import { ShuffleMixin } from '../internal/shuffle/shuffle-mixin'; // Import the mixin
 import { QtiSimpleChoice } from '../qti-simple-choice';
+import { Interaction } from '../internal/interaction/interaction';
 
 @customElement('qti-order-interaction')
 export class QtiOrderInteraction extends ShuffleMixin(
-  DragDropInteractionMixin(LitElement, `qti-simple-choice`, true, 'drop-list'),
+  DragDropInteractionMixin(Interaction, `qti-simple-choice`, true, 'drop-list'),
   'qti-simple-choice'
 ) {
   childrenMap: Element[];
@@ -93,7 +94,7 @@ export class QtiOrderInteraction extends ShuffleMixin(
       </div>`;
   }
 
-  set correctResponse(value: Readonly<string | string[]>) {
+  set correctResponse(value: string | string[]) {
     if (value === '') {
       this.showCorrectResponses = false;
       return;
@@ -120,6 +121,7 @@ export class QtiOrderInteraction extends ShuffleMixin(
   // this is called from the drag and drop mixin class
   // you have to implement your own getResponse method in the superclass
   // cause they are different for some interactions.
+  // MH: is this function called? Shouldn't we use getValue?
   protected getResponse(): string[] {
     const droppables = Array.from<QtiSimpleChoice>(this.shadowRoot.querySelectorAll('drop-list'));
 

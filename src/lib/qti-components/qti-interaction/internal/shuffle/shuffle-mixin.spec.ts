@@ -1,8 +1,15 @@
 import { html, LitElement, render } from 'lit';
 import { ShuffleMixin } from './shuffle-mixin';
+import { Interaction } from '../interaction/interaction';
 
-class TestElement extends ShuffleMixin(LitElement, 'qti-simple-choice') {
+class TestElement extends ShuffleMixin(Interaction, 'qti-simple-choice') {
   shuffle: boolean;
+  validate(): boolean {
+    return true;
+  }
+  get value() {
+    return '';
+  }
   render() {
     return html` <slot></slot> `;
   }

@@ -83,8 +83,11 @@ export class QtiSelectPointInteraction extends Interaction {
     return this._points.length >= this.minChoices && this._points.length <= this.maxChoices;
   }
 
-  set response(val: string | string[]) {
+  set value(val: string | string[]) {
     this._points = Array.isArray(val) ? val : [val];
+  }
+  get value(): string | string[] {
+    return this._points;
   }
 
   override firstUpdated(): void {

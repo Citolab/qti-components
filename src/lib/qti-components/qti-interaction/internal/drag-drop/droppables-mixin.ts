@@ -64,7 +64,11 @@ export const DroppablesMixin = <T extends Constructor<Interaction>>(
 
     private toggleDroppableHandlers(droppable: Element): void {
       const disabled = droppable.hasAttribute('disabled');
-      disabled ? this.removeEventListeners(droppable) : this.attachEventListeners(droppable);
+      if (disabled) {
+        this.removeEventListeners(droppable);
+      } else {
+        this.attachEventListeners(droppable);
+      }
     }
 
     private attachEventListeners(droppable: Element): void {

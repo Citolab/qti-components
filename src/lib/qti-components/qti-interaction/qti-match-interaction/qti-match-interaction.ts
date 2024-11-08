@@ -7,6 +7,7 @@ import { ResponseInteraction } from '../../internal/expression-result';
 import '../qti-simple-associable-choice';
 import { QtiSimpleAssociableChoice } from '../qti-simple-associable-choice';
 import styles from './qti-match-interaction.styles';
+import { Interaction } from '../internal/interaction/interaction';
 
 interface Column {
   id: number;
@@ -21,7 +22,7 @@ interface Row {
 
 @customElement('qti-match-interaction')
 export class QtiMatchInteraction extends DragDropInteractionMixin(
-  LitElement,
+  Interaction,
   'qti-simple-match-set:first-of-type qti-simple-associable-choice',
   false,
   'qti-simple-match-set:last-of-type qti-simple-associable-choice'
@@ -34,12 +35,12 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
 
   @state() _response: string | string[] = [];
   // dragDropApi: TouchDragAndDrop;
-  get response(): string[] {
-    if (!this.classList.contains('qti-match-tabular')) return super.response as string[];
+  get value(): string[] {
+    if (!this.classList.contains('qti-match-tabular')) return super.value as string[];
     else return this._response as string[];
   }
-  set response(val: string[]) {
-    if (!this.classList.contains('qti-match-tabular')) super.response = val;
+  set value(val: string[]) {
+    if (!this.classList.contains('qti-match-tabular')) super.value = val;
     else this._response = val;
   }
   @state() correctOptions: string[] = [];
@@ -56,15 +57,13 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
     //   this.querySelectorAll('qti-simple-match-set:last-of-type qti-simple-associable-choice')
     // );
     this.rows = Array.from<QtiSimpleAssociableChoice>(
-      // eslint-disable-next-line wc/no-child-traversal-in-connectedcallback
       this.querySelectorAll('qti-simple-match-set:first-of-type qti-simple-associable-choice')
     );
     this.cols = Array.from<QtiSimpleAssociableChoice>(
-      // eslint-disable-next-line wc/no-child-traversal-in-connectedcallback
       this.querySelectorAll('qti-simple-match-set:last-of-type qti-simple-associable-choice')
     );
 
-    this.response = [];
+    this.value = [];
   }
 
   handleRadioClick = e => {
@@ -85,17 +84,17 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
     const type = checkbox.type;
 
     if (checkbox.checked) {
-      if (!this.response) {
-        this.response = [value];
-      } else if (this.response.indexOf(value) === -1) {
+      if (!this.value) {
+        this.value = [value];
+      } else if (this.value.indexOf(value) === -1) {
         if (type === 'radio') {
-          this.response = this.response.filter(v => v.indexOf(name) === -1);
+          this.value = this.value.filter(v => v.indexOf(name) === -1);
         }
-        this.response = [...this.response, value];
+        this.value = [...this.value, value];
       }
       this.lastCheckedRadio = checkbox;
     } else {
-      this.response = this.response.filter(v => v !== value);
+      this.value = this.value.filter(v => v !== value);
       this.lastCheckedRadio = null;
     }
 
@@ -106,7 +105,7 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
         composed: true,
         detail: {
           responseIdentifier: this.responseIdentifier,
-          response: Array.isArray(this.response) ? [...this.response] : this.response
+          response: Array.isArray(this.value) ? [...this.value] : this.value
         }
       })
     );
@@ -141,8 +140,8 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
                 const rowId = row.getAttribute('identifier');
                 const colId = col.getAttribute('identifier');
                 const value = `${rowId} ${colId}`;
-                const selectedInRowCount = this.response.filter(v => v.split(' ')[0] === rowId).length || 0;
-                const checked = this.response.includes(value);
+                const selectedInRowCount = this.value.filter(v => v.split(' ')[0] === rowId).length || 0;
+                const checked = this.value.includes(value);
                 const part = `rb ${checked ? 'rb-checked' : ''} ${this.correctOptions.includes(value) ? 'rb-correct' : ''}`;
                 // disable if match max is greater than 1 and max is reached
                 const disable =

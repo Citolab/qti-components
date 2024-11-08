@@ -58,7 +58,7 @@ export class QtiPortableCustomInteraction extends Interaction {
       if (stringified !== this.rawResponse) {
         this.rawResponse = stringified;
         const value = this.convertQtiVariableJSON(newResponse);
-        this.response = value;
+        this.value = value;
         this.saveResponse(value);
       }
     }, 200);
@@ -73,8 +73,11 @@ export class QtiPortableCustomInteraction extends Interaction {
   validate(): boolean {
     return true; // FOR NOW
   }
-  set response(val: Readonly<string | string[]>) {
+  set value(val: string | string[]) {
     // Only set state is supported in a PCI
+  }
+  get value(): string | string[] {
+    return this.rawResponse;
   }
 
   getTAOConfig(node) {
@@ -139,11 +142,11 @@ export class QtiPortableCustomInteraction extends Interaction {
             }
           }
         : this.getTAOConfig(this);
-
-    type == 'IMS'
-      ? pci.getInstance(dom, config, undefined)
-      : (pci as any).initialize(this.customInteractionTypeIdentifier, dom.firstElementChild, config);
-
+    if (type == 'IMS') {
+      pci.getInstance(dom, config, undefined);
+    } else {
+      (pci as any).initialize(this.customInteractionTypeIdentifier, dom.firstElementChild, config);
+    }
     if (type == 'TAO') {
       const links = Array.from(this.querySelectorAll('link')).map(acc => acc.getAttribute('href'));
       links.forEach(link => {
