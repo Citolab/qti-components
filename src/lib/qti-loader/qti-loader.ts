@@ -1,4 +1,6 @@
-import { qtiTransformItem, qtiTransformManifest, qtiTransformTest } from '../qti-transformers';
+import { QtiAssessmentItem } from '../qti-components';
+import { qtiTransformItem, qtiTransformTest } from '../qti-transformers';
+import { qtiTransformManifest } from '../qti-transformers/qti-transform-manifest';
 
 export type ManifestData = {
   itemLocation: string;
@@ -70,13 +72,12 @@ export const getAssessmentData = async (packageUri: string): Promise<ManifestDat
 };
 
 // Fetches a single item by URI
-export const getItemByUri = async (itemUri: string, cancelPreviousRequest = true): Promise<Element> => {
+export const getItemByUri = async (itemUri: string, cancelPreviousRequest = true): Promise<QtiAssessmentItem> => {
   return qtiTransformItem()
     .load(itemUri, cancelPreviousRequest)
     .then(api =>
       api
         .path(itemUri.substring(0, itemUri.lastIndexOf('/')))
-        .stripStyleSheets()
-        .htmldoc().firstElementChild
+        .htmldoc().firstElementChild as QtiAssessmentItem
     );
 };

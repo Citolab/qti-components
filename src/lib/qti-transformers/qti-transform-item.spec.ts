@@ -1,7 +1,7 @@
 const xml = String.raw;
 const html = String.raw;
 
-import { qtiTransformItem } from './qti-transformers';
+import { qtiTransformItem } from './qti-transform-item';
 
 describe('qtiTransformItem API Methods', () => {
   it('should apply customInteraction correctly', async () => {
