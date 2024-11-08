@@ -7,7 +7,7 @@ import { IInteraction } from '../interaction/interaction.interface';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 
-type Choice = HTMLElement & ChoiceInterface & { internals: ElementInternals };
+export type Choice = HTMLElement & ChoiceInterface & { internals: ElementInternals };
 
 export interface ChoicesInterface extends IInteraction {
   _choiceElements: Array<Choice>;
