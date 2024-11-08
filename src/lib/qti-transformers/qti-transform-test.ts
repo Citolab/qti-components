@@ -10,18 +10,17 @@
  * const xml = qtiTransformer.xml();
  */
 
-import { extendElementName, itemsFromTest, loadXML, parseXML, toHTML } from "./qti-transformers";
+import { itemsFromTest, loadXML, parseXML, toHTML } from "./qti-transformers";
 
 export type transformTestApi = {
     load: (uri: string) => Promise<transformTestApi>;
     parse: (xmlString: string) => transformTestApi;
-    extendElementName: (tagName: string, extend: string) => transformTestApi;
     fn: (fn: (xmlFragment: XMLDocument) => void) => transformTestApi;
     items: () => { identifier: string; href: string; category: string }[];
     html: () => string;
     xml: () => string;
-    htmldoc: () => DocumentFragment;
-    xmldoc: () => XMLDocument;
+    htmlDoc: () => DocumentFragment;
+    xmlDoc: () => XMLDocument;
   }
   
   export const qtiTransformTest = (): transformTestApi => {
@@ -40,10 +39,6 @@ export type transformTestApi = {
         xmlFragment = parseXML(xmlString);
         return api;
       },
-      extendElementName: (tagName: string, extend: string) => {
-        extendElementName(xmlFragment, tagName, extend);
-        return api;
-      },
       fn(fn: (xmlFragment: XMLDocument) => void) {
         fn(xmlFragment);
         return api;
@@ -57,10 +52,10 @@ export type transformTestApi = {
       xml(): string {
         return new XMLSerializer().serializeToString(xmlFragment);
       },
-      htmldoc() {
+      htmlDoc() {
         return toHTML(xmlFragment);
       },
-      xmldoc(): XMLDocument {
+      xmlDoc(): XMLDocument {
         return xmlFragment;
       }
     };

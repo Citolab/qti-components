@@ -1,6 +1,6 @@
 /* eslint-disable lit-a11y/obj-alt */
 /* eslint-disable lit/no-invalid-html */
-import { html, render } from 'lit';
+import { html } from 'lit';
 
 import { qtiTransformItem } from 'src/lib/qti-transformers';
 import './qti-custom-interaction';
@@ -64,7 +64,7 @@ export const TransformXML = {
       </qti-custom-interaction>`
       )
       .customInteraction('/qti-custom-interaction/', 'items/')
-      .htmldoc()
+      .htmlDoc()
 };
 
 export const TransformItem = {
@@ -73,5 +73,5 @@ export const TransformItem = {
       .parse(itemXML)
       .path('/qti-custom-interaction/items/')
       .customInteraction('/qti-custom-interaction/', 'items/')
-      .htmldoc()
+      .htmlDoc()
 };

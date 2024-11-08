@@ -31,8 +31,8 @@ export type transformItemApi = {
     stripStyleSheets: () => transformItemApi;
     html: () => string;
     xml: () => string;
-    htmldoc: () => DocumentFragment;
-    xmldoc: () => XMLDocument;
+    htmlDoc: () => DocumentFragment;
+    xmlDoc: () => XMLDocument;
   };
   
   export const qtiTransformItem = () => {
@@ -43,6 +43,9 @@ export type transformItemApi = {
         return new Promise<typeof api>((resolve, reject) => {
           loadXML(uri, cancelPreviousRequest).then(xml => {
             xmlFragment = xml;
+            // set the base path for images and other resources, 
+            // you probably want to set the base path to the document root else you can use the path method to set it
+            api.path(uri.substring(0, uri.lastIndexOf('/'))); 
             return resolve(api);
           });
         });
@@ -114,10 +117,10 @@ export type transformItemApi = {
       xml(): string {
         return new XMLSerializer().serializeToString(xmlFragment);
       },
-      htmldoc() {
+      htmlDoc() {
         return toHTML(xmlFragment);
       },
-      xmldoc(): XMLDocument {
+      xmlDoc(): XMLDocument {
         return xmlFragment; // new XMLSerializer().serializeToString(xmlFragment);
       }
     };
