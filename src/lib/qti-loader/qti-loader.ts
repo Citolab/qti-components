@@ -2,11 +2,12 @@ import { QtiAssessmentItem } from '../qti-components';
 import { qtiTransformItem, qtiTransformTest } from '../qti-transformers';
 import { qtiTransformManifest } from '../qti-transformers/qti-transform-manifest';
 
-export type ManifestData = {
-  itemLocation: string;
+export type ManifestInfo = {
+  itemsURI: string;
   testIdentifier: string;
-  assessmentXML: DocumentFragment;
-  assessmentLocation: string;
+  testHTMLDoc: DocumentFragment;
+  testURI: string;
+  testURL: string;
   items: {
       identifier: string;
       href: string;
@@ -16,6 +17,37 @@ export type ManifestData = {
 
 // Utility function to ensure package URIs end with a '/'
 const normalizeUri = (uri: string) => (uri.endsWith('/') ? uri : `${uri}/`);
+
+// Fetches assessment data from the manifest
+export const getManifestInfo = async (manifestUri: string): Promise<ManifestInfo> => {
+  const normalizedUri = normalizeUri(manifestUri);
+
+  const test = await qtiTransformManifest()
+    .load(`${normalizedUri}`)
+    .then(api => api.assessmentTest());
+
+  const testHTMLDoc = await qtiTransformTest()
+    .load(`${normalizedUri}${test.href}`)
+    .then(api => api.htmldoc());
+
+  const items = await qtiTransformTest()
+    .load(`${normalizedUri}${test.href}`)
+    .then(api => api.items());
+
+  const baseUri = normalizedUri.substring(0, normalizedUri.lastIndexOf('/'));
+  const testURL = `${baseUri}/${test.href}`;
+  const testURI = `${baseUri}/${test.href.substring(0, test.href.lastIndexOf('/'))}`;
+  const itemURI = `${testURI}/${items[0].href.substring(0, items[0].href.lastIndexOf('/'))}`;
+
+  return {
+    testHTMLDoc,
+    itemsURI: itemURI,
+    testURI,
+    testURL,
+    items,
+    testIdentifier: test.identifier
+  };
+};
 
 // Fetches an item from a manifest by index
 export const getItemByIndex = async (packageUri: string, index: number, cancelPreviousRequest = true): Promise<any> => {
@@ -39,35 +71,6 @@ export const getItemByIndex = async (packageUri: string, index: number, cancelPr
     itemHTMLDoc: itemDoc.htmldoc(),
     itemHTML: itemDoc.html(),
     items
-  };
-};
-
-// Fetches assessment data from the manifest
-export const getAssessmentData = async (packageUri: string): Promise<ManifestData> => {
-  const normalizedUri = normalizeUri(packageUri);
-
-  const test = await qtiTransformManifest()
-    .load(`${normalizedUri}imsmanifest.xml`)
-    .then(api => api.assessmentTest());
-
-  const assessmentDoc = await qtiTransformTest()
-    .load(`${normalizedUri}${test.href}`)
-    .then(api => api.htmldoc());
-
-  const items = await qtiTransformTest()
-    .load(`${normalizedUri}${test.href}`)
-    .then(api => api.items());
-
-  const baseUri = normalizedUri.substring(0, normalizedUri.lastIndexOf('/'));
-  const assessmentLocation = `${baseUri}/${test.href.substring(0, test.href.lastIndexOf('/'))}`;
-  const itemLocation = `${assessmentLocation}/${items[0].href.substring(0, items[0].href.lastIndexOf('/'))}`;
-
-  return {
-    assessmentXML: assessmentDoc,
-    itemLocation,
-    assessmentLocation,
-    items,
-    testIdentifier: test.identifier
   };
 };
 
