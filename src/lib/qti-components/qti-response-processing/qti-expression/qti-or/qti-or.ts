@@ -11,7 +11,7 @@ export class QtiOr extends QtiConditionExpression {
         return null;
       }
       const value = condition.calculate();
-      let val;
+      let val = false;
       // convert string value to boolean and return null if not possible
       if (typeof value === 'string') {
         if (value === 'true') {
@@ -21,6 +21,10 @@ export class QtiOr extends QtiConditionExpression {
         } else {
           console.error('unexpected val in qti-or, expected boolean');
           return null;
+        }
+      } else {
+        if (typeof value === 'boolean') {
+          val = value;
         }
       }
       return val;

@@ -115,22 +115,26 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
         validityMessage = this.dataset.minSelectionsMessage || `You must select at least ${this.minChoices} choices.`;
       }
 
-      this._internals.setValidity(
-        isValid ? {} : { customError: true },
-        validityMessage,
-        selectedChoices[selectedCount - 1] || this._choiceElements[0] || this
-      );
+      if (selectedChoices.length > 0) {
+        this._internals.setValidity(
+          isValid ? {} : { customError: true },
+          validityMessage,
+          selectedChoices[selectedCount - 1] || this._choiceElements[0] || this
+        );
+      }
       this.reportValidity();
       return isValid;
     }
 
     override reportValidity() {
-      if (!this._internals.validity.valid) {
-        this._validationMessageElement.textContent = this._internals.validationMessage;
-        this._validationMessageElement.style.display = 'block';
-      } else {
-        this._validationMessageElement.textContent = '';
-        this._validationMessageElement.style.display = 'none';
+      if (this._validationMessageElement) {
+        if (!this._internals.validity.valid) {
+          this._validationMessageElement.textContent = this._internals.validationMessage;
+          this._validationMessageElement.style.display = 'block';
+        } else {
+          this._validationMessageElement.textContent = '';
+          this._validationMessageElement.style.display = 'none';
+        }
       }
       return this._internals.validity.valid;
     }

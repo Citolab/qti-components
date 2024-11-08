@@ -2,7 +2,7 @@ import '../../qti-simple-choice';
 
 import { getByTestId, userEvent } from '@storybook/test';
 import { html, LitElement, render } from 'lit';
-import { ChoicesMixin } from './choices.mixin';
+import { Choice, ChoicesMixin } from './choices.mixin';
 import { Interaction } from '../interaction/interaction';
 
 class TestElement extends ChoicesMixin(Interaction, 'qti-simple-choice') {
@@ -28,10 +28,10 @@ describe('ChoicesMixin', () => {
       render(
         html`
           <test-element>
-            <qti-simple-choice data-testid="A">Option A</qti-simple-choice>
-            <qti-simple-choice data-testid="B">Option B</qti-simple-choice>
-            <qti-simple-choice data-testid="C">Option C</qti-simple-choice>
-            <qti-simple-choice data-testid="D">Option D</qti-simple-choice>
+            <qti-simple-choice identifier="A" data-testid="A">Option A</qti-simple-choice>
+            <qti-simple-choice identifier="B" data-testid="B">Option B</qti-simple-choice>
+            <qti-simple-choice identifier="C" data-testid="C">Option C</qti-simple-choice>
+            <qti-simple-choice identifier="D" data-testid="D">Option D</qti-simple-choice>
           </test-element>
         `,
         document.body
@@ -53,10 +53,10 @@ describe('ChoicesMixin', () => {
       render(
         html`
           <test-element max-choices="1">
-            <qti-simple-choice data-testid="A">Option A</qti-simple-choice>
-            <qti-simple-choice data-testid="B">Option B</qti-simple-choice>
-            <qti-simple-choice data-testid="C">Option C</qti-simple-choice>
-            <qti-simple-choice data-testid="D">Option D</qti-simple-choice>
+            <qti-simple-choice identifier="A" data-testid="A">Option A</qti-simple-choice>
+            <qti-simple-choice identifier="B" data-testid="B">Option B</qti-simple-choice>
+            <qti-simple-choice identifier="C" data-testid="C">Option C</qti-simple-choice>
+            <qti-simple-choice identifier="D" data-testid="D">Option D</qti-simple-choice>
           </test-element>
         `,
         document.body
@@ -66,20 +66,19 @@ describe('ChoicesMixin', () => {
     });
 
     it('should have role attribute set to "radio" for the first child element', async () => {
-      const choiceA = getByTestId(document.body, 'A');
-      const choiceB = getByTestId(document.body, 'B');
+      const choiceA = getByTestId(document.body, 'A') as Choice;
+      const choiceB = getByTestId(document.body, 'B') as Choice;
 
       expect(choiceA.getAttribute('role')).toBe('radio');
-      // expect(element.validate()).toBeFalsy();
 
       await userEvent.click(choiceA);
-      expect(choiceA.getAttribute('aria-checked')).toBe('true');
+
+      expect(choiceA.internals.states.has('checked')).toBe(true);
+      expect(choiceA.internals.ariaChecked).toBe('true');
 
       await userEvent.click(choiceB);
-      expect(choiceB.getAttribute('aria-checked')).toBe('true');
-
-      // expect(choiceA.getAttribute('aria-checked')).toBe('false');
-      // expect(element.validate()).toBeTruthy();
+      expect(choiceB.internals.states.has('checked')).toBe(true);
+      expect(choiceB.internals.ariaChecked).toBe('true');
     });
   });
 
@@ -88,10 +87,10 @@ describe('ChoicesMixin', () => {
       render(
         html`
           <test-element min-choices="1" max-choices="2">
-            <qti-simple-choice data-testid="A">Option A</qti-simple-choice>
-            <qti-simple-choice data-testid="B">Option B</qti-simple-choice>
-            <qti-simple-choice data-testid="C">Option C</qti-simple-choice>
-            <qti-simple-choice data-testid="D">Option D</qti-simple-choice>
+            <qti-simple-choice identifier="A" data-testid="A">Option A</qti-simple-choice>
+            <qti-simple-choice identifier="B" data-testid="B">Option B</qti-simple-choice>
+            <qti-simple-choice identifier="C" data-testid="C">Option C</qti-simple-choice>
+            <qti-simple-choice identifier="D" data-testid="D">Option D</qti-simple-choice>
           </test-element>
         `,
         document.body
@@ -104,9 +103,13 @@ describe('ChoicesMixin', () => {
       expect(element.children[0].getAttribute('role')).toBe('checkbox');
       expect(element.validate()).toBeFalsy();
       await userEvent.click(element.children[0]);
-      expect(getByTestId(document.body, 'A').getAttribute('aria-checked')).toBe('true');
+      const choiceA = getByTestId(document.body, 'A') as Choice;
+      expect(choiceA.internals.states.has('checked')).toBe(true);
+      expect(choiceA.internals.ariaChecked).toBe('true');
       await userEvent.click(element.children[1]);
-      expect(getByTestId(document.body, 'B').getAttribute('aria-checked')).toBe('true');
+      const choiceB = getByTestId(document.body, 'B') as Choice;
+      expect(choiceB.internals.states.has('checked')).toBe(true);
+      expect(choiceB.internals.ariaChecked).toBe('true');
     });
   });
 });
