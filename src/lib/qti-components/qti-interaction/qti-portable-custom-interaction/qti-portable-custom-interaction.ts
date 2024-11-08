@@ -178,6 +178,7 @@ export class QtiPortableCustomInteraction extends Interaction {
     const config = this.buildRequireConfig();
     const requirePCI = requirejs.config(config);
     requirePCI(['require'], require => {
+      // eslint-disable-next-line import/no-dynamic-require
       require([this.module]);
     });
   }

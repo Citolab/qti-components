@@ -3,13 +3,11 @@ import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { expect, fn, within } from '@storybook/test';
+import { fireEvent, waitFor } from '@storybook/testing-library';
 import type { Meta, StoryObj } from '@storybook/web-components';
-import { fireEvent } from '@storybook/testing-library';
-import { waitFor } from '@testing-library/dom';
 
-import '@citolab/qti-components/qti-components';
+import { QtiChoiceInteraction, QtiSimpleChoice } from '@citolab/qti-components/qti-components';
 
-import { QtiChoiceInteraction, QtiSimpleChoice } from '../../index';
 
 type Story = StoryObj; // <Props>;
 

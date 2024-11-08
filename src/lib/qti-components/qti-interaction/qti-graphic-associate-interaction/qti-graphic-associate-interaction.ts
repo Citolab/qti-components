@@ -1,4 +1,3 @@
-/* eslint-disable lit/no-invalid-html */
 import { css, html, svg } from 'lit';
 import { customElement, query, queryAssignedElements, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';

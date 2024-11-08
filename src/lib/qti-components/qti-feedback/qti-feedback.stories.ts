@@ -10,7 +10,7 @@ export default {
   component: 'qti-feedback-inline'
 };
 
-export const inline = () => {
+export const Inline = () => {
   const assessmentItemRef = createRef<QtiAssessmentItem>();
 
   const processResponse = () => {
@@ -90,7 +90,7 @@ export const inline = () => {
   </qti-assessment-item>`;
 };
 
-export const modal = () => {
+export const Modal = () => {
   const assessmentItemRef = createRef<QtiAssessmentItem>();
 
   const processResponse = () => {
@@ -161,7 +161,7 @@ export const modal = () => {
   </qti-assessment-item>`;
 };
 
-export const woordmars = () => {
+export const Woordmars = () => {
   const assessmentItemRef = createRef<QtiAssessmentItem>();
 
   const processResponse = () => {
@@ -257,7 +257,7 @@ export const woordmars = () => {
   `;
 };
 
-export const kringloop = () => {
+export const Kringloop = () => {
   const assessmentItemRef = createRef<QtiAssessmentItem>();
 
   const processResponse = () => {

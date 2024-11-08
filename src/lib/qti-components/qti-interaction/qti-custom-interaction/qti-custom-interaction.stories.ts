@@ -1,6 +1,4 @@
-/* eslint-disable lit-a11y/obj-alt */
-/* eslint-disable lit/no-invalid-html */
-import { html, render } from 'lit';
+import { html } from 'lit';
 
 import { qtiTransformItem } from 'src/lib/qti-transformers';
 import './qti-custom-interaction';
@@ -29,15 +27,18 @@ export const Default = {
 export const AbsolutePaths = {
   render: args => {
     return html`<qti-assessment-item time-dependent="false" label="32la7n">
-    <qti-item-body class="defaultBody" xml:lang="nl-NL"><div class="content">      
-                           <qti-custom-interaction response-identifier="RESPONSE"
-              id="I5e526eed-d47d-44cb-b693-b684c0c1f7f2"
-              data-base-ref="http://localhost:3333/application/convert-online/package/b8f677c918bc247c4fc5675eae33c666a74f635968483382b805f0516342e930"
-              data-base-item="http://localhost:3333/application/convert-online/package/b8f677c918bc247c4fc5675eae33c666a74f635968483382b805f0516342e930"
-              data="http://localhost:3333/application/convert-online/package/b8f677c918bc247c4fc5675eae33c666a74f635968483382b805f0516342e930/ref/9051-NaBB-duimpiano_1/json/manifest.json"
-              width="454" height="505"></qti-custom-interaction>
-        </qti-item-body>
-      </qti-assessment-item>`;
+      <qti-item-body class="defaultBody" xml:lang="nl-NL">
+        <qti-custom-interaction
+          response-identifier="RESPONSE"
+          id="I5e526eed-d47d-44cb-b693-b684c0c1f7f2"
+          data-base-ref="http://localhost:3333/application/convert-online/package/b8f677c918bc247c4fc5675eae33c666a74f635968483382b805f0516342e930"
+          data-base-item="http://localhost:3333/application/convert-online/package/b8f677c918bc247c4fc5675eae33c666a74f635968483382b805f0516342e930"
+          data="http://localhost:3333/application/convert-online/package/b8f677c918bc247c4fc5675eae33c666a74f635968483382b805f0516342e930/ref/9051-NaBB-duimpiano_1/json/manifest.json"
+          width="454"
+          height="505"
+        ></qti-custom-interaction>
+      </qti-item-body>
+    </qti-assessment-item>`;
   },
   parameters: {
     chromatic: { disableSnapshot: true }

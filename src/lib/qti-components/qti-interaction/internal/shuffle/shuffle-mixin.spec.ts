@@ -1,6 +1,6 @@
-import { html, LitElement, render } from 'lit';
-import { ShuffleMixin } from './shuffle-mixin';
+import { html, render } from 'lit';
 import { Interaction } from '../interaction/interaction';
+import { ShuffleMixin } from './shuffle-mixin';
 
 class TestElement extends ShuffleMixin(Interaction, 'qti-simple-choice') {
   shuffle: boolean;
@@ -82,7 +82,7 @@ describe('ShuffleMixin', () => {
     }
 
     // At least one shuffle should produce a different order
-    expect(isDifferent).to.be.true;
+    expect(isDifferent).toBeTruthy();
   });
 
   it('should not shuffle choices when shuffle is false', async () => {

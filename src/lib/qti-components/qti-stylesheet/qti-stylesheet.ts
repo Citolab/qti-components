@@ -12,7 +12,7 @@ export class QtiStylesheet extends LitElement {
   protected firstUpdated(_changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
     super.firstUpdated(_changedProperties);
 
-    const item = this;
+    const item = this.getRootNode();
     const link = this.getAttribute('href');
 
     if (link !== null) {

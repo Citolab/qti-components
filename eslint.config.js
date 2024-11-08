@@ -25,6 +25,7 @@ export default [
       'import/no-dynamic-require': 'warn',
       'import/no-nodejs-modules': 'warn',
       'import/no-unresolved': 'error',
+      'import/no-duplicates': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-empty-object-type': 'off',
       '@typescript-eslint/no-unused-vars': 'off'

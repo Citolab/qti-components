@@ -10,7 +10,7 @@ export class QtiOr extends QtiConditionExpression {
         console.error("Element doesn't implement QtiConditionExpression");
         return null;
       }
-      let value = condition.calculate() as Boolean;
+      let value = condition.calculate() as boolean;
       // convert string value to boolean and return null if not possible
       if (typeof value === 'string') {
         if (value === 'true') {
