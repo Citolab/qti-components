@@ -2,10 +2,11 @@ import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-interaction-mixin';
 import { QtiHotspotChoice } from '../qti-hotspot-choice';
+import { Interaction } from '../internal/interaction/interaction';
 
 @customElement('qti-graphic-gap-match-interaction')
 export class QtiGraphicGapMatchInteraction extends DragDropInteractionMixin(
-  LitElement,
+  Interaction,
   'qti-gap-img',
   false,
   'qti-associable-hotspot'
