@@ -35,7 +35,7 @@
       & qti-simple-choice {
         @apply check;
 
-        &:not([aria-disabled='true'], [aria-readonly='true'], [aria-checked='true']):hover {
+        &:not([aria-disabled='true'], [aria-readonly='true'], :state(checked)):hover {
           @apply hov;
         }
 
