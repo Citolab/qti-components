@@ -9,7 +9,8 @@ export default css`
   }
 
   ::slotted(qti-simple-choice) {
-    flex: 0 0 calc((100% - (var(--qti-gap-size) * var(--choice-interactions-stacking))) / var(--choice-interactions-stacking)) !important; 
+    flex: 0 0
+      calc((100% - (var(--qti-gap-size) * var(--choice-interactions-stacking))) / var(--choice-interactions-stacking)) !important;
     box-sizing: border-box !important;
   }
 

@@ -9,7 +9,6 @@ export class QtiCorrect extends QtiExpression<string | string[]> {
   override getResult() {
     const identifier = this.getAttribute('identifier') || '';
     const responseVariable = (this.closest('qti-assessment-item') as QtiAssessmentItem).getResponse(identifier);
-    responseVariable.correctResponse;
     if (responseVariable.cardinality !== 'single') {
       return responseVariable.correctResponse.length > 0 ? responseVariable.correctResponse[0] : '';
     } else {

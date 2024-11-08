@@ -3,13 +3,13 @@ import { QtiConditionExpression } from '../qti-condition-expression';
 import './qti-or';
 import { QtiOr } from './qti-or';
 class MockChild extends QtiConditionExpression {
-  response = false;
+  value = false;
   override connectedCallback() {
     super.connectedCallback();
-    this.response = this.getAttribute('response') == 'true';
+    this.value = this.getAttribute('response') == 'true';
   }
   public override calculate() {
-    return this.response;
+    return this.value;
   }
 }
 window.customElements.define('mock-child', MockChild);
@@ -24,7 +24,6 @@ describe('all true', () => {
       </qti-or>
     `;
     render(template(), document.body);
-
     const qtiOr = document.body.querySelector('qti-or') as QtiOr;
     expect(qtiOr.calculate()).toBeTruthy();
   });

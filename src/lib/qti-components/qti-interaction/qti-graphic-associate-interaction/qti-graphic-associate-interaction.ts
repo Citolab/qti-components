@@ -1,4 +1,3 @@
-/* eslint-disable lit/no-invalid-html */
 import { css, html, svg } from 'lit';
 import { customElement, query, queryAssignedElements, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
@@ -59,10 +58,13 @@ export class QtiGraphicAssociateInteraction extends Interaction {
   validate(): boolean {
     return this._lines.length > 0;
   }
-  set response(val: string | string[]) {
+  set value(val: string | string[]) {
     if (Array.isArray(val)) {
       this._lines = val;
     }
+  }
+  get value(): string | string[] {
+    return this._lines;
   }
 
   override render() {

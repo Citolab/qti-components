@@ -4,16 +4,26 @@ import { Interaction } from '../internal/interaction/interaction';
 
 @customElement('qti-media-interaction')
 export class QtiMediaInteraction extends Interaction {
-  value = 0;
+  private _value = 0;
   reset() {
     // throw new Error('Method not implemented.');
   }
   validate(): boolean {
-    // throw new Error('Method not implemented.');
     return true;
+    // maybe check if the media has been played?
   }
-  set response(val: undefined) {
-    // throw new Error('Method not implemented.');
+
+  get value(): string | string[] {
+    return this._value.toString();
+  }
+
+  set value(val: string | string[]) {
+    const isNumber = !isNaN(parseInt(val.toString()));
+    if (isNumber) {
+      this._value = parseInt(val.toString());
+    } else {
+      throw new Error('Value must be a number');
+    }
   }
 
   static override get properties() {
@@ -48,8 +58,9 @@ export class QtiMediaInteraction extends Interaction {
       // listen to ended event
       mediaObject.addEventListener('ended', () => {
         // set value to 0
-        this.value++;
-        this.saveResponse(this.value.toString());
+        // check if this.value is a number
+        this._value++;
+        this.saveResponse(this.value);
       });
     }
   }

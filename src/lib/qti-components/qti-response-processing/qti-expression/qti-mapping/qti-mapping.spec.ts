@@ -32,6 +32,7 @@ describe('qti-mapping', () => {
     assessmentItem.updateResponseVariable('RESPONSE', ['H', 'O']);
 
     const mapResponse = assessmentItem.querySelector('qti-map-response') as QtiMapResponse;
+
     const score = mapResponse.calculate();
     expect(score).toEqual(2);
   });
@@ -59,7 +60,6 @@ describe('qti-mapping', () => {
         </qti-response-processing>
       </qti-assessment-item>`;
     render(template(), document.body);
-
     const assessmentItem = document.body.querySelector('qti-assessment-item') as QtiAssessmentItem;
     assessmentItem.updateResponseVariable('RESPONSE', ['H']);
 

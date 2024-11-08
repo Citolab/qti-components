@@ -184,8 +184,17 @@ export class QtiCustomInteraction extends Interaction {
     return this.rawResponse !== '';
   }
 
-  set response(val: Readonly<string | string[]>) {
-    this.rawResponse = val as string;
+  get value(): string | string[] {
+    return this.rawResponse;
+  }
+
+  set value(val: string | string[]) {
+    if (typeof val === 'string') {
+      this.rawResponse = val;
+      this.saveResponse(val);
+    } else {
+      throw new Error('Value must be a string');
+    }
   }
 
   override disconnectedCallback(): void {

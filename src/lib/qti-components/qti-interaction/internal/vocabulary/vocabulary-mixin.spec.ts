@@ -2,11 +2,18 @@ import { html, LitElement, render } from 'lit';
 import { VocabularyMixin } from './vocabulary-mixin';
 import '../../qti-simple-choice';
 import { ShuffleMixin } from '../shuffle/shuffle-mixin';
-class TestElement extends VocabularyMixin(ShuffleMixin(LitElement, 'qti-simple-choice'), 'qti-simple-choice') {
+import { Interaction } from '../interaction/interaction';
+class TestElement extends VocabularyMixin(ShuffleMixin(Interaction, 'qti-simple-choice'), 'qti-simple-choice') {
   class: string;
   shuffle: boolean;
   render() {
     return html` <slot></slot> `;
+  }
+  validate(): boolean {
+    return true;
+  }
+  get value() {
+    return '';
   }
 }
 customElements.define('test-element', TestElement);

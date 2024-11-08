@@ -2,7 +2,7 @@ import { ComplexAttributeConverter, LitElement, html } from 'lit';
 import { property } from 'lit/decorators.js';
 import { watch } from '../../../../decorators/watch';
 
-type Constructor<T = {}> = new (...args: any[]) => T;
+type Constructor<T = {}> = abstract new (...args: any[]) => T;
 
 export interface ChoiceInterface {
   identifier: string;
@@ -28,7 +28,7 @@ const ariaBooleanConverter: ComplexAttributeConverter<boolean, boolean> = {
  * @returns A new class extending the base class with choice functionality.
  */
 export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, type: string) {
-  class QtiChoice extends Base {
+  abstract class QtiChoice extends Base {
     @property({ type: String })
     public identifier = '';
 
@@ -51,7 +51,7 @@ export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, t
     })
     public readonly = false;
 
-    private _internals: ElementInternals;
+    public internals: ElementInternals;
 
     @watch('disabled', { waitUntilFirstUpdate: true })
     handleDisabledChange(_oldValue: boolean, disabled: boolean) {
@@ -63,15 +63,7 @@ export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, t
 
     constructor(...args: any[]) {
       super(...args);
-      this._internals = this.attachInternals();
-    }
-
-    public setInternalState(key: string, value: boolean) {
-      if (value && !this._internals.states.has(key)) {
-        this._internals.states.add(key);
-      } else if (!value && this._internals.states.has(key)) {
-        this._internals.states.delete(key);
-      }
+      this.internals = this.attachInternals();
     }
 
     override connectedCallback() {

@@ -6,8 +6,9 @@ import { FlippablesMixin } from './flippables-mixin';
 import { property } from 'lit/decorators.js';
 import { liveQuery } from '../../../../decorators/live-query';
 import { TouchDragAndDrop } from './drag-drop-api';
+import { Interaction } from '../interaction/interaction';
 
-type Constructor<T> = new (...args: any[]) => T;
+type Constructor<T = {}> = abstract new (...args: any[]) => T;
 
 interface InteractionConfiguration {
   copyStylesDragClone: boolean;
@@ -15,13 +16,13 @@ interface InteractionConfiguration {
   dragOnClick: boolean;
 }
 
-export const DragDropInteractionMixin = <T extends Constructor<LitElement>>(
+export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
   superClass: T,
   draggablesSelector: string,
   useShadowRootForDroppables: boolean,
   droppablesSelector: string
 ) => {
-  class DragDropInteractionElement extends FlippablesMixin(
+  abstract class DragDropInteractionElement extends FlippablesMixin(
     DroppablesMixin(superClass, useShadowRootForDroppables, droppablesSelector),
     droppablesSelector,
     draggablesSelector
@@ -30,16 +31,11 @@ export const DragDropInteractionMixin = <T extends Constructor<LitElement>>(
     protected droppables: HTMLElement[] = [];
     dragDropApi: TouchDragAndDrop;
 
-    @property({ type: String, attribute: 'response-identifier' }) responseIdentifier = '';
-
     @property({ attribute: false, type: Object }) configuration: InteractionConfiguration = {
       copyStylesDragClone: true,
       dragCanBePlacedBack: true,
       dragOnClick: false
     };
-
-    @property({ type: Boolean, reflect: true }) disabled = false;
-    @property({ type: Boolean, reflect: true }) readonly = false;
     @property({ type: Number, reflect: true, attribute: 'min-associations' }) minAssociations = 1;
     @property({ type: Number, reflect: true, attribute: 'max-associations' }) maxAssociations = 1;
 
@@ -217,7 +213,11 @@ export const DragDropInteractionMixin = <T extends Constructor<LitElement>>(
         const maxMatch = +(d.getAttribute('match-max') || 1);
         const currentAssociations = d.querySelectorAll('[qti-draggable="true"]').length;
         const disableDroppable = currentAssociations >= maxMatch;
-        disableDroppable ? this.disableDroppable(d) : this.enableDroppable(d);
+        if (disableDroppable) {
+          this.disableDroppable(d);
+        } else {
+          this.enableDroppable(d);
+        }
       });
     }
 
@@ -231,15 +231,15 @@ export const DragDropInteractionMixin = <T extends Constructor<LitElement>>(
       droppable.setAttribute('dropzone', 'move');
     }
 
-    get response(): string[] {
+    get value(): string[] {
       return this.collectResponseData();
     }
 
-    set response(response: string[]) {
+    set value(value: string[]) {
       if (this.isMatchTabular()) return;
 
       this.resetDroppables();
-      response?.forEach(entry => this.placeResponse(entry));
+      value?.forEach(entry => this.placeResponse(entry));
     }
 
     private placeResponse(response: string): void {
@@ -281,7 +281,7 @@ export const DragDropInteractionMixin = <T extends Constructor<LitElement>>(
       return this.droppables.filter(d => d.childElementCount > 0).length;
     }
 
-    protected saveResponse(): void {
+    public saveResponse(): void {
       const response = this.collectResponseData();
       this.dispatchEvent(
         new CustomEvent('qti-interaction-response', {
@@ -340,4 +340,3 @@ export const DragDropInteractionMixin = <T extends Constructor<LitElement>>(
 
   return DragDropInteractionElement as Constructor<IInteraction> & T;
 };
-``;

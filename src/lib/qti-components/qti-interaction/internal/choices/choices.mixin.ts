@@ -1,71 +1,90 @@
-import { LitElement } from 'lit';
-import { property } from 'lit/decorators.js';
+import { property, query } from 'lit/decorators.js';
 import { watch } from '../../../../decorators/watch';
+
 import { ChoiceInterface } from '../active-element/active-element.mixin';
+import { Interaction } from '../interaction/interaction';
+import { IInteraction } from '../interaction/interaction.interface';
 
-type Constructor<T = {}> = new (...args: any[]) => T;
+type Constructor<T = {}> = abstract new (...args: any[]) => T;
 
-type Choice = HTMLElement & ChoiceInterface;
+export type Choice = HTMLElement & ChoiceInterface & { internals: ElementInternals };
 
-export interface ChoicesInterface {
-  validate(): boolean;
+export interface ChoicesInterface extends IInteraction {
   _choiceElements: Array<Choice>;
   correctResponse: string | string[];
 }
 
-export const ChoicesMixin = <T extends Constructor<LitElement>>(superClass: T, selector: string) => {
-  class ChoicesMixinElement extends superClass implements ChoicesInterface {
+export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, selector: string) => {
+  abstract class ChoicesMixinElement extends superClass implements ChoicesInterface {
     public _choiceElements: Choice[] = [];
 
-    @property({ attribute: 'response-identifier' })
-    public responseIdentifier = '';
+    @query('#validationMessage')
+    private _validationMessageElement!: HTMLElement;
 
     @property({ type: Number, attribute: 'min-choices' })
     public minChoices = 0;
 
-    @property({ type: Number, attribute: 'max-choices' }) maxChoices = 1;
+    @property({ type: Number, attribute: 'max-choices' })
+    public maxChoices = 1;
+
     @watch('maxChoices', { waitUntilFirstUpdate: true })
     _handleMaxChoicesChange(_oldValue: number, _newValue: number) {
       this._determineInputType();
     }
 
-    @property({ reflect: true, type: Boolean }) disabled = false;
     @watch('disabled', { waitUntilFirstUpdate: true })
     _handleDisabledChange = (_: boolean, disabled: boolean) => {
       this._choiceElements.forEach(ch => (ch.disabled = disabled));
     };
 
-    @property({ reflect: true, type: Boolean }) readonly = false;
     @watch('readonly', { waitUntilFirstUpdate: true })
     _handleReadonlyChange = (_: boolean, readonly: boolean) => {
       this._choiceElements.forEach(choice => (choice.readonly = readonly));
     };
 
-    public validate(): boolean {
-      const selectedCount = this._choiceElements.filter(choice => this._getChoiceChecked(choice)).length;
-      if (this.maxChoices !== 0 && selectedCount > this.maxChoices) {
-        return false;
+    private _value: string | string[] = '';
+
+    get value(): string | string[] {
+      return Array.isArray(this._value) ? this._value.join(',') : this._value;
+    }
+
+    set value(val: string | string[]) {
+      if (this.maxChoices > 1 && typeof val === 'string') {
+        this._value = val.split(',');
+      } else {
+        this._value = val;
       }
-      return selectedCount >= this.minChoices;
-    }
-
-    public set response(responseValue: string | string[]) {
-      const responseArray = Array.isArray(responseValue) ? responseValue : [responseValue];
-      this._choiceElements.forEach(choice => {
-        this._setChoiceChecked(choice, responseArray.includes(choice.identifier));
-      });
-    }
-
-    public set correctResponse(responseValue: string | string[]) {
-      const responseArray = Array.isArray(responseValue) ? responseValue : [responseValue];
-      if (responseArray.length === 0) {
-        this._choiceElements.forEach(choice => {
-          choice.removeAttribute('data-correct-response');
+      // Assuming this.value is an array of strings
+      if (Array.isArray(this._value)) {
+        const formData = new FormData();
+        this._value.forEach(response => {
+          formData.append(this.responseIdentifier, response);
         });
-        return;
+        this._internals.setFormValue(formData);
+      } else {
+        // Handle the case where this.value is not an array
+        this._internals.setFormValue(this._value);
       }
+      this._updateChoiceSelection();
+    }
+
+    public get correctResponse(): string | string[] {
+      return this._correctResponse;
+    }
+
+    public set correctResponse(value: string | string[]) {
+      this._correctResponse = value;
+      const responseArray = Array.isArray(value) ? value : [value];
       this._choiceElements.forEach(choice => {
-        choice.setAttribute('data-correct-response', responseArray.includes(choice.identifier) ? 'true' : 'false');
+        choice.internals.states.delete('correct-response');
+        choice.internals.states.delete('incorrect-response');
+        if (responseArray.length > 0) {
+          if (responseArray.includes(choice.identifier)) {
+            choice.internals.states.add('correct-response');
+          } else {
+            choice.internals.states.add('incorrect-response');
+          }
+        }
       });
     }
 
@@ -74,12 +93,6 @@ export const ChoicesMixin = <T extends Constructor<LitElement>>(superClass: T, s
       this.addEventListener(`register-${selector}`, this._registerChoiceElement);
       this.addEventListener(`unregister-${selector}`, this._unregisterChoiceElement);
       this.addEventListener(`activate-${selector}`, this._choiceElementSelectedHandler);
-      this.dispatchEvent(
-        new CustomEvent(`qti-register-interaction`, {
-          bubbles: true,
-          composed: true
-        })
-      );
     }
 
     override disconnectedCallback() {
@@ -87,6 +100,43 @@ export const ChoicesMixin = <T extends Constructor<LitElement>>(superClass: T, s
       this.removeEventListener(`register-${selector}`, this._registerChoiceElement);
       this.removeEventListener(`unregister-${selector}`, this._unregisterChoiceElement);
       this.removeEventListener(`activate-${selector}`, this._choiceElementSelectedHandler);
+    }
+
+    public validate(): boolean {
+      const selectedChoices = this._choiceElements.filter(choice => this._getChoiceChecked(choice));
+      const selectedCount = selectedChoices.length;
+      let isValid = true;
+      let validityMessage = '';
+      if (this.maxChoices !== 0 && selectedCount > this.maxChoices) {
+        isValid = false;
+        validityMessage = this.dataset.maxSelectionsMessage || `You can select at most ${this.maxChoices} choices.`;
+      } else if (selectedCount < this.minChoices) {
+        isValid = false;
+        validityMessage = this.dataset.minSelectionsMessage || `You must select at least ${this.minChoices} choices.`;
+      }
+
+      if (selectedChoices.length > 0) {
+        this._internals.setValidity(
+          isValid ? {} : { customError: true },
+          validityMessage,
+          selectedChoices[selectedCount - 1] || this._choiceElements[0] || this
+        );
+      }
+      this.reportValidity();
+      return isValid;
+    }
+
+    override reportValidity() {
+      if (this._validationMessageElement) {
+        if (!this._internals.validity.valid) {
+          this._validationMessageElement.textContent = this._internals.validationMessage;
+          this._validationMessageElement.style.display = 'block';
+        } else {
+          this._validationMessageElement.textContent = '';
+          this._validationMessageElement.style.display = 'none';
+        }
+      }
+      return this._internals.validity.valid;
     }
 
     private _registerChoiceElement(event: CustomEvent) {
@@ -126,11 +176,17 @@ export const ChoicesMixin = <T extends Constructor<LitElement>>(superClass: T, s
     }
 
     private _setChoiceChecked(choice: Choice, checked: boolean) {
-      choice.setAttribute('aria-checked', checked.toString());
+      if (checked) {
+        choice.internals.states.add('checked');
+        choice.internals.ariaChecked = 'true';
+      } else {
+        choice.internals.states.delete('checked');
+        choice.internals.ariaChecked = 'false';
+      }
     }
 
     private _getChoiceChecked(choice: Choice): boolean {
-      return choice.getAttribute('aria-checked') === 'true';
+      return choice.internals.states.has('checked');
     }
 
     private _toggleChoiceChecked(choice: Choice) {
@@ -138,47 +194,24 @@ export const ChoicesMixin = <T extends Constructor<LitElement>>(superClass: T, s
       this._setChoiceChecked(choice, !checked);
     }
 
-    /**
-     * Handles the selection of choices.
-     *
-     * This method filters the choice elements based on their checked state and retrieves the selected identifiers.
-     * If the `maxChoices` property is set to a value greater than 1 and not equal to 0, it disables unselected choices
-     * when the maximum number of choices is reached.
-     * Finally, it saves the response based on the `maxChoices` property.
-     */
-    protected _handleChoiceSelection() {
+    private _handleChoiceSelection() {
       const selectedChoices = this._choiceElements.filter(choice => this._getChoiceChecked(choice));
       const selectedIdentifiers = selectedChoices.map(choice => choice.identifier);
 
-      if (this.maxChoices > 1 && this.maxChoices !== 0) {
-        const disableUnselected = selectedChoices.length >= this.maxChoices;
-        this._choiceElements.forEach(choice => {
-          if (!this._getChoiceChecked(choice)) {
-            choice.disabled = disableUnselected;
-          }
-        });
-      }
-
-      /**
-       * The response from the interaction.
-       * If `maxChoices` is 1, it will be the selected identifier or `undefined` if no identifier is selected.
-       * If `maxChoices` is greater than 1, it will be an array of selected identifiers.
-       */
-      const response = this.maxChoices === 1 ? selectedIdentifiers[0] || undefined : selectedIdentifiers;
-      this._saveResponse(response);
+      this.value = this.maxChoices === 1 ? selectedIdentifiers[0] || '' : selectedIdentifiers;
+      this.validate();
+      this.saveResponse(this._value);
     }
 
-    protected _saveResponse(response: string | string[] | undefined) {
-      this.dispatchEvent(
-        new CustomEvent('qti-interaction-response', {
-          bubbles: true,
-          composed: true,
-          detail: {
-            responseIdentifier: this.responseIdentifier,
-            response
-          }
-        })
-      );
+    /**
+     * Updates the selection state of each choice element based on the current response.
+     */
+    private _updateChoiceSelection() {
+      const responseArray = Array.isArray(this._value) ? this._value : [this._value];
+      this._choiceElements.forEach(choice => {
+        const isSelected = responseArray.includes(choice.identifier);
+        this._setChoiceChecked(choice, isSelected);
+      });
     }
   }
   return ChoicesMixinElement as Constructor<ChoicesInterface> & T;

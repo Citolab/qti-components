@@ -105,7 +105,7 @@ export const Play: Story = {
       interaction.reset();
 
       // Manually set the interaction response to the expected value
-      interaction.response = ['C M'];
+      interaction.value = ['C M'];
 
       // Verify that after the drag-and-drop action, the target contains the source element
       expect(target).toContainElement(source); // Descriptive: Verifies that the target now contains the dragged source element
@@ -158,7 +158,7 @@ export const PlayTwoOneZero: Story = {
       canvasElement.removeEventListener('qti-interaction-response', interactionResponse);
     }
     const correctArray = ['C M', 'D M', 'L R'];
-    expect(interaction.response).toEqual(correctArray);
+    expect(interaction.value).toEqual(correctArray);
   }
 };
 
