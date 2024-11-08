@@ -115,7 +115,7 @@ export const Theme = (mod: string) => html`
     <div class="drop act"></div>
     <div class="drop foc act"></div>
     <div class="drop dis"></div>
-    <div class="drag dropping">drop</div>
+    <div class="drop dropping">drop</div>
 
     <div class="drop"><div class="drag">drag</div></div>
     <div class="drop hov"><div class="drag">drag</div></div>

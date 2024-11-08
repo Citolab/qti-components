@@ -17,7 +17,6 @@ export default meta;
 export const Default: Story = {
   name: 'I9-L1-D12',
   render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
-
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
