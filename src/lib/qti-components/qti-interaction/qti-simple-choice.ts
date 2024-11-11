@@ -33,7 +33,7 @@ export class QtiSimpleChoice extends ActiveElementMixin(LitElement, 'qti-simple-
 
 
   get checked() {
-    return this['internals'].states.has('checked');
+    return this['internals'].states.has('--checked');
   }
 
   override render() {

@@ -21,10 +21,12 @@
           @apply act;
         }
 
+        &:state(readonly),
         &[aria-readonly='true'] {
           @apply rdo;
         }
 
+        &:state(disabled),
         &[aria-disabled='true'] {
           @apply dis;
         }
@@ -48,10 +50,12 @@
           @apply act;
         }
 
+        &:state(readonly),
         &[aria-readonly='true'] {
           @apply rdo;
         }
 
+        &:state(disabled),
         &[aria-disabled='true'] {
           @apply dis;
         }
@@ -60,21 +64,19 @@
           @apply check-size;
         }
 
-        &[role='radio']::part(ch) {
+        &:state(radio)::part(ch) {
           @apply check-radio;
         }
 
-        &[role='radio']:state(checked)::part(cha),
-        &[role='radio'][aria-checked='true']::part(cha) {
+        &:state(radio):state(--checked)::part(cha) {
           @apply check-radio-checked;
         }
 
-        &[role='checkbox']::part(ch) {
+        &:state(checkbox)::part(ch) {
           @apply check-checkbox;
         }
 
-        &[role='checkbox']:state(checked)::part(cha),
-        &[role='checkbox'][aria-checked='true']::part(cha) {
+        &:state(checkbox):state(--checked)::part(cha) {
           @apply check-checkbox-checked;
         }
       }

@@ -143,6 +143,9 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       event.stopPropagation();
       const choiceElement = event.target as Choice;
       choiceElement.disabled = this.disabled;
+
+
+      
       this._choiceElements.push(choiceElement);
       this._setInputType(choiceElement);
     }
@@ -160,7 +163,11 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
     }
 
     private _setInputType(choiceElement: Choice) {
-      choiceElement.setAttribute('role', this.maxChoices === 1 ? 'radio' : 'checkbox');
+      // choiceElement.setAttribute('role', this.maxChoices === 1 ? 'radio' : 'checkbox');
+      choiceElement.internals.role = this.maxChoices === 1 ? 'radio' : 'checkbox';
+      choiceElement.internals.states.add(choiceElement.internals.role)
+      // choiceElement.internals.ariaChecked = 'false';
+      // choiceElement.ariaReadOnly = this.readonly == true ? 'true' : 'false';
     }
 
     protected _choiceElementSelectedHandler(event: CustomEvent<{ identifier: string }>) {
