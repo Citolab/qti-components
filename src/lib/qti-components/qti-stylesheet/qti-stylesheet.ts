@@ -3,45 +3,74 @@ import { customElement } from 'lit/decorators.js';
 
 @customElement('qti-stylesheet')
 export class QtiStylesheet extends LitElement {
-  private styleLink: HTMLStyleElement | HTMLLinkElement;
-
-  // protected createRenderRoot(): HTMLElement | DocumentFragment {
-  //   return this;
-  // }
+  private styleElement: HTMLStyleElement | null = null;
 
   protected firstUpdated(_changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
     super.firstUpdated(_changedProperties);
 
-    const item = this.getRootNode();
     const link = this.getAttribute('href');
 
     if (link !== null) {
-      const styles = document.createElement('link');
-      styles.rel = 'stylesheet';
-      styles.type = 'text/css';
-      styles.media = 'screen';
-      styles.href = link;
-      item.appendChild(styles);
-      this.styleLink = styles;
+      // Fetch the stylesheet content
+      fetch(link)
+        .then(response => response.text())
+        .then(cssContent => {
+          // Minify the CSS content by removing whitespace and comments
+          const minifiedCss = this.minifyCss(cssContent);
+
+          // Create a <style> element with @scope surrounding the minified CSS
+          this.styleElement = document.createElement('style');
+          this.styleElement.media = 'screen';
+          this.styleElement.textContent = `@scope {${minifiedCss}}`;
+          
+          // Append the style element to the parent element of this component
+          if (this.parentElement) {
+            this.parentElement.appendChild(this.styleElement);
+          } else {
+            console.warn('No parent element to append the scoped stylesheet to.');
+          }
+        })
+        .catch(error => {
+          console.error('Failed to load stylesheet:', error);
+        });
     }
 
-    if (this.textContent !== null) {
-      const styles = document.createElement('style');
-      styles.media = 'screen';
-      styles.textContent = this.textContent;
-      item.appendChild(styles);
-      this.styleLink = styles;
+    if (this.textContent !== null && this.textContent.trim() !== '') {
+      // Minify the inline CSS content
+      const minifiedCss = this.minifyCss(this.textContent);
+
+      // Directly create a <style> element with the @scope surrounding the minified inline styles
+      this.styleElement = document.createElement('style');
+      this.styleElement.media = 'screen';
+      this.styleElement.textContent = `@scope {${minifiedCss}}`;
+
+      // Append the style element to the parent element of this component
+      if (this.parentElement) {
+        this.parentElement.appendChild(this.styleElement);
+      } else {
+        console.warn('No parent element to append the scoped stylesheet to.');
+      }
     }
   }
 
+  private minifyCss(cssContent: string): string {
+    // Remove comments, whitespace, and newline characters
+    return cssContent
+      .replace(/\/\*[\s\S]*?\*\//g, '') // Remove comments
+      .replace(/\s+/g, ' ') // Collapse whitespace
+      .replace(/\s*([{}:;])\s*/g, '$1') // Remove spaces around {}, :, ;
+      .trim(); // Trim leading/trailing whitespace
+  }
+
   override disconnectedCallback() {
-    if (this.styleLink) {
+    if (this.styleElement) {
       try {
-        this.styleLink.remove();
+        this.styleElement.remove();
       } catch (error) {
-        console.log('could not remove stylesheet');
+        console.error('Could not remove stylesheet:', error);
       }
     }
+    super.disconnectedCallback();
   }
 }
 
