@@ -1,9 +1,9 @@
 import '../../qti-simple-choice';
 
 import { getByTestId, userEvent } from '@storybook/test';
-import { html, LitElement, render } from 'lit';
-import { Choice, ChoicesMixin } from './choices.mixin';
+import { html, render } from 'lit';
 import { Interaction } from '../interaction/interaction';
+import { Choice, ChoicesMixin } from './choices.mixin';
 
 class TestElement extends ChoicesMixin(Interaction, 'qti-simple-choice') {
   render() {
@@ -41,7 +41,10 @@ describe('ChoicesMixin', () => {
     });
 
     it('should have role attribute set to "radio" for the first child element', async () => {
-      expect(element.children[0].getAttribute('role')).toBe('radio');
+      const choiceA = getByTestId(document.body, 'A') as Choice;
+      const choiceB = getByTestId(document.body, 'B') as Choice;
+
+      expect(choiceA.internals.role).toBe('radio');
       expect(element.validate()).toBeTruthy();
       await userEvent.click(element.children[0]);
       expect(element.validate()).toBeTruthy();
@@ -69,7 +72,7 @@ describe('ChoicesMixin', () => {
       const choiceA = getByTestId(document.body, 'A') as Choice;
       const choiceB = getByTestId(document.body, 'B') as Choice;
 
-      expect(choiceA.getAttribute('role')).toBe('radio');
+      expect(choiceA.internals.role).toBe('radio');
 
       await userEvent.click(choiceA);
 
@@ -100,14 +103,16 @@ describe('ChoicesMixin', () => {
     });
 
     it('should have role attribute set to "checkbox" for the first child element', async () => {
-      expect(element.children[0].getAttribute('role')).toBe('checkbox');
+      const choiceA = getByTestId(document.body, 'A') as Choice;
+      const choiceB = getByTestId(document.body, 'B') as Choice;
+
+      expect(choiceA.internals.role).toBe('checkbox');
+      // expect(element.children[0].getAttribute('role')).toBe('checkbox');
       expect(element.validate()).toBeFalsy();
       await userEvent.click(element.children[0]);
-      const choiceA = getByTestId(document.body, 'A') as Choice;
       expect(choiceA.internals.states.has('--checked')).toBe(true);
       expect(choiceA.internals.ariaChecked).toBe('true');
       await userEvent.click(element.children[1]);
-      const choiceB = getByTestId(document.body, 'B') as Choice;
       expect(choiceB.internals.states.has('--checked')).toBe(true);
       expect(choiceB.internals.ariaChecked).toBe('true');
     });

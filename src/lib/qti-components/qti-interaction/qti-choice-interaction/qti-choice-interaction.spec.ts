@@ -1,6 +1,6 @@
 import '@citolab/qti-components/qti-components';
-import { userEvent, page } from '@vitest/browser/context';
 
+import { QtiSimpleChoice } from '@citolab/qti-components/qti-components';
 import { render } from 'lit';
 import { Default } from './qti-choice-interaction.stories';
 
@@ -18,8 +18,9 @@ describe('qti-choice-interaction', () => {
     });
 
     it('should show as checkbox', () => {
-      const input = Array.from(getQtiSimpleChoices())[0];
-      expect(input.getAttribute('role')).toBe('checkbox');
+      const input = Array.from(getQtiSimpleChoices())[0] as QtiSimpleChoice;
+      expect(input.internals.role).toBe('checkbox');
+
     });
   });
 
@@ -33,8 +34,9 @@ describe('qti-choice-interaction', () => {
     });
 
     it('should show as radiobutton', async () => {
-      const el = getQtiSimpleChoices()[0];
-      expect(el.getAttribute('role')).toMatch('radio');
+      const el = getQtiSimpleChoices()[0] as QtiSimpleChoice;
+      expect(el.internals.role).toBe('radio');
+
     });
   });
 
