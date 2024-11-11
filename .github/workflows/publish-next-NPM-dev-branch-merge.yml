@@ -31,11 +31,11 @@ jobs:
         run: npx playwright install  --with-deps
       - name: Test build
         run: npm run test
-      - name: Run Chromatic
-        uses: chromaui/action@latest
-        with:
+      # - name: Run Chromatic
+        # uses: chromaui/action@latest
+        # with:
           # ⚠️ Make sure to configure a `CHROMATIC_PROJECT_TOKEN` repository secret
-          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          # projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
       - name: Version to prerelease
         run: npm version prerelease --preid=beta
 
