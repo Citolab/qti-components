@@ -49,6 +49,4 @@ export const getManifestInfo = async (manifestURL: string): Promise<ManifestInfo
 export const getItemByUri = async (itemUri: string): Promise<QtiAssessmentItem> =>
   qtiTransformItem()
     .load(itemUri)
-    .then(
-      api => api.path(itemUri.substring(0, itemUri.lastIndexOf('/'))).htmlDoc().firstElementChild as QtiAssessmentItem
-    );
+    .then(api => api.htmlDoc().firstElementChild as QtiAssessmentItem);
