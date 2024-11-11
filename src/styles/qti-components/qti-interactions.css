@@ -341,7 +341,7 @@
           display: none;
         }
 
-        :state(--checked) {
+        &:state(--checked) {
           @apply act;
         }
 
@@ -373,7 +373,7 @@
           display: none;
         }
 
-        :state(--checked) {
+        &:state(--checked) {
           background-color: var(--qti-primary-light); /* bg-blue-200 */
         }
 
