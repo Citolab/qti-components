@@ -300,19 +300,19 @@
         @apply check-size;
       }
 
-      &[role='radio']::part(ch) {
+      &:state(radio)::part(ch) {
         @apply check-radio;
       }
 
-      &[role='radio'][aria-checked='true']::part(cha) {
+      &:state(radio):state(--checked)::part(cha) {
         @apply check-radio-checked;
       }
 
-      &[role='checkbox']::part(ch) {
+      &:state(checkbox)::part(ch) {
         @apply check-checkbox;
       }
 
-      &[role='checkbox'][aria-checked='true']::part(cha) {
+      &:state(checkbox):state(--checked)::part(cha) {
         @apply check-checkbox-checked;
       }
     }
@@ -341,7 +341,7 @@
           display: none;
         }
 
-        &[aria-checked='true'] {
+        :state(--checked) {
           @apply act;
         }
 
@@ -373,7 +373,7 @@
           display: none;
         }
 
-        &[aria-checked='true'] {
+        :state(--checked) {
           background-color: var(--qti-primary-light); /* bg-blue-200 */
         }
 
