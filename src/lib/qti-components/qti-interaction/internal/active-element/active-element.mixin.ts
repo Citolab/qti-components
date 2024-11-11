@@ -27,6 +27,15 @@ const ariaBooleanConverter: ComplexAttributeConverter<boolean, boolean> = {
  * @param type - The type of the choice, used in event names.
  * @returns A new class extending the base class with choice functionality.
  */
+export interface ActiveElementMixinInterface {
+  identifier: string;
+  tabIndex: number;
+  disabled: boolean;
+  readonly: boolean;
+  internals: ElementInternals;
+}
+
+
 export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, type: string) {
   abstract class QtiChoice extends Base {
     @property({ type: String })
@@ -123,5 +132,5 @@ export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, t
       return html`<slot></slot>`;
     }
   }
-  return QtiChoice as Constructor<ChoiceInterface> & T;
+  return QtiChoice as Constructor<ActiveElementMixinInterface> & T;
 }
