@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<qti-assessment-item xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" title="Dit is een &quot;combineer tekst&quot; vraag" identifier="_e473b0ff-ebaf-5198-9204-1e06ed1703d3" adaptive="false" time-dependent="false" xml:lang="nl-NL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd http://www.w3.org/1998/Math/MathML https://purl.imsglobal.org/spec/mathml/v3p0/schema/xsd/mathml3.xsd">
+<qti-assessment-item xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+  title="Dit is een &quot;combineer tekst&quot; vraag" identifier="ITEM003" adaptive="false"
+  time-dependent="false" xml:lang="nl-NL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd
+                      http://www.w3.org/1998/Math/MathML https://purl.imsglobal.org/spec/mathml/v3p0/schema/xsd/mathml3.xsd">
   <qti-response-declaration identifier="RESPONSE" cardinality="multiple" base-type="identifier">
     <qti-correct-response>
       <qti-value>A1 B1</qti-value>
@@ -7,12 +11,13 @@
       <qti-value>A3 B3</qti-value>
     </qti-correct-response>
     <qti-mapping>
-      <qti-map-entry map-key="A1 B1" mapped-value="1"/>
-      <qti-map-entry map-key="A2 B2" mapped-value="1"/>
-      <qti-map-entry map-key="A3 B3" mapped-value="1"/>
+      <qti-map-entry map-key="A1 B1" mapped-value="1" />
+      <qti-map-entry map-key="A2 B2" mapped-value="1" />
+      <qti-map-entry map-key="A3 B3" mapped-value="1" />
     </qti-mapping>
   </qti-response-declaration>
-  <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single" normal-minimum="1.0" normal-maximum="5.0">
+  <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single"
+    normal-minimum="1.0" normal-maximum="5.0">
     <qti-default-value>
       <qti-value>1</qti-value>
     </qti-default-value>
@@ -22,9 +27,10 @@
       <qti-value>5</qti-value>
     </qti-default-value>
   </qti-outcome-declaration>
-  <qti-outcome-declaration identifier="FEEDBACK" base-type="identifier" cardinality="single"/>
+  <qti-outcome-declaration identifier="FEEDBACK" base-type="identifier" cardinality="single" />
   <qti-item-body>
-    <qti-match-interaction response-identifier="RESPONSE" shuffle="true" max-associations="3" class="qti-choices-right">
+    <qti-match-interaction response-identifier="RESPONSE" shuffle="true" max-associations="3"
+      class="qti-choices-right">
       <qti-prompt>Combineer deze dingen</qti-prompt>
       <qti-simple-match-set>
         <qti-simple-associable-choice identifier="A1" match-max="1">Zee</qti-simple-associable-choice>
@@ -48,7 +54,7 @@
     <qti-response-condition>
       <qti-response-if>
         <qti-match>
-          <qti-map-response identifier="RESPONSE"/>
+          <qti-map-response identifier="RESPONSE" />
           <qti-base-value base-type="float">3</qti-base-value>
         </qti-match>
         <qti-set-outcome-value identifier="SCORE">
@@ -64,7 +70,7 @@
     <qti-response-condition>
       <qti-response-if>
         <qti-match>
-          <qti-map-response identifier="RESPONSE"/>
+          <qti-map-response identifier="RESPONSE" />
           <qti-base-value base-type="float">3</qti-base-value>
         </qti-match>
         <qti-set-outcome-value identifier="FEEDBACK">
