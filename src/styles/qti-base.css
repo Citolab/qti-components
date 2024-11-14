@@ -1,13 +1,13 @@
 :root,
 :host {
-  /* active colors */
-  --qti-bg-active: #ffecec; /* lighter shade of active */
+  /* Active colors */
+  --qti-bg-active: #ffecec;
   --qti-border-active: #f86d70;
 
   /* Background colors */
-  --qti-bg-white: white;
+  --qti-bg: white;
   --qti-hover-bg: #f9fafb;
-   
+
   /* Disabled colors */
   --qti-disabled-bg: #f3f4f6;
   --qti-disabled-color: #45484f;
@@ -17,7 +17,7 @@
   --qti-border-style: solid;
   --qti-border-color: #c6cad0;
   --qti-border-radius: 0.3rem;
-  --qti-drop-border-radius: calc(var(--qti-border-radius) + var(--qti-border-thickness) );
+  --qti-drop-border-radius: calc(var(--qti-border-radius) + var(--qti-border-thickness));
 
   /* Typography */
   --qti-font-weight-semibold: 600;
@@ -25,6 +25,41 @@
   /* Focus & active states */
   --qti-focus-border-width: 5px;
   --qti-focus-color: #bddcff7e;
+
+  /* Class-specific variables */
+
+  /* Form elements */
+  --qti-form-size: 1rem;
+
+  /* Point elements */
+  --qti-point-size: 2rem;
+
+  /* Order buttons */
+  --qti-order-size: 2rem;
+
+  /* Generic padding for all elements */
+  --qti-padding-vertical: 0.5rem; /* py-2 */
+  --qti-padding-horizontal: 0.5rem; /* px-2 */
+
+  /* Button elements */
+  --qti-button-padding-vertical: var(--qti-padding-vertical);
+  --qti-button-padding-horizontal: var(--qti-padding-horizontal);
+
+  /* Select dropdown */
+  --qti-select-padding-vertical: var(--qti-padding-vertical);
+  --qti-select-padding-horizontal: var(--qti-padding-horizontal);
+
+  /* Text inputs */
+  --qti-text-padding-vertical: var(--qti-padding-vertical);
+  --qti-text-padding-horizontal: var(--qti-padding-horizontal);
+
+  /* Draggable elements */
+  --qti-drag-padding-vertical: var(--qti-padding-vertical);
+  --qti-drag-padding-horizontal: var(--qti-padding-horizontal);
+
+  /* Checkbox elements */
+  --qti-check-padding-vertical: var(--qti-padding-vertical);
+  --qti-check-padding-horizontal: var(--qti-padding-horizontal);
 }
 
 /* SVG masks and backgrounds */
@@ -55,16 +90,14 @@
   The @apply directive is used to apply these classes to elements
 */
 
-/* apply .border to an element */
+/* Apply .bordered to an element */
 .bordered {
   border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color);
   outline: none;
 }
 
-/* apply .form rules for checkbox and radiobutton */
+/* Apply .form rules for checkbox and radiobutton */
 .form {
-  --qti-form-size: 1rem;
-
   @apply bordered;
 
   display: grid;
@@ -73,11 +106,8 @@
   height: var(--qti-form-size);
 }
 
-/* apply .button rules for button-like elements, such as drags and buttons */
+/* Apply .button rules for button-like elements, such as drags and buttons */
 .button {
-  --qti-button-padding-vertical: 0.5rem; /* py-2 */
-  --qti-button-padding-horizontal: 0.5rem; /* px-2 */
-
   @apply bordered;
 
   border-radius: var(--qti-border-radius);
@@ -85,34 +115,28 @@
   font-weight: var(--qti-font-weight-semibold);
 }
 
-/* apply .select for the select dropdown element */
+/* Apply .select for the select dropdown element */
 .select {
-  --qti-select-padding-top: 0.5rem;
-  --qti-select-padding-right: 1.75rem;
-  --qti-select-padding-bottom: 0.5rem;
-  --qti-select-padding-left: 0.75rem;
-
   @apply bordered chevron;
 
   border-radius: var(--qti-border-radius);
   position: relative;
   appearance: none;
-  padding: var(--qti-select-padding-top) var(--qti-select-padding-right) var(--qti-select-padding-bottom) var(--qti-select-padding-left); 
+  padding: var(--qti-select-padding-vertical) var(--qti-select-padding-horizontal);
+  padding-right: calc(var(--qti-select-padding-horizontal) + 1.5rem); /* 1.5rem for the chevron */
 }
 
-/* apply .text for the input text and textarea */
+/* Apply .text for the input text and textarea */
 .text {
-  --qti-text-padding: 0.75rem; /* Equal padding on all sides */
-
   @apply bordered;
 
   border-radius: 0;
   cursor: text;
-  padding: var(--qti-text-padding);
+  padding: var(--qti-text-padding-vertical) var(--qti-text-padding-horizontal);
   background: unset;
 }
 
-/* apply .spot for hotspot shapes */
+/* Apply .spot for hotspot shapes */
 .spot {
   @apply bordered;
 
@@ -122,40 +146,31 @@
   padding: 0;
 }
 
-/* apply .point for circular small hotspots */
+/* Apply .point for circular small hotspots */
 .point {
-  --qti-point-size: 1.5rem;
-
   @apply bordered;
 
   border-radius: 100%;
-  width: var(--qti-point-size); /* w-6 */
+  width: var(--qti-point-size);
   height: var(--qti-point-size);
   background-color: transparent;
   padding: 0;
 }
 
-/* apply .drag for draggable elements */
+/* Apply .drag for draggable elements */
 .drag {
-  --qti-drag-padding-top: 0.5rem;
-  --qti-drag-padding-right: 1rem;
-  --qti-drag-padding-bottom: 0.5rem;
-  --qti-drag-padding-left: 1rem;
-
-  @apply bordered handle;
+  @apply button bordered handle;
 
   transition:
     transform 200ms ease-out,
     box-shadow 200ms ease-out,
     rotate 200ms ease-out;
-  padding: var(--qti-drag-padding-top) var(--qti-drag-padding-right) var(--qti-drag-padding-bottom) var(--qti-drag-padding-left); /* Padding shorthand */
-  border-radius: var(--qti-border-radius);
   cursor: grab;
-  background-color: var(--qti-bg-white);
-  font-weight: var(--qti-font-weight-semibold);
+  background-color: var(--qti-bg);
+  padding-left: calc(var(--qti-drag-padding-horizontal) + 0.5rem) !important; /* 1.5rem for the drag */
 }
 
-/* apply .dragging for the dragging state of a draggable element */
+/* Apply .dragging for the dragging state of a draggable element */
 .dragging {
   pointer-events: none;
   rotate: -2deg;
@@ -164,7 +179,7 @@
     0 4px 8px rgb(0 0 0 / 10%);
 }
 
-/* apply .drop for an element where you can drop the draggable */
+/* Apply .drop for an element where you can drop the draggable */
 .drop {
   @apply bordered;
 
@@ -172,18 +187,16 @@
     center no-repeat;
   border-radius: var(--qti-drop-border-radius);
   position: relative;
-  background-color: var(--qti-bg-white);
+  background-color: var(--qti-bg);
 }
 
-/* apply .dropping for an indicator where you can drop the draggable */
+/* Apply .dropping for an indicator where you can drop the draggable */
 .dropping {
   background-color: var(--qti-bg-active);
 }
 
-/* apply .order for a small circular button */
+/* Apply .order for a small circular button */
 .order {
-  --qti-order-size: 1.5rem;
-
   @apply bordered;
 
   display: grid;
@@ -191,42 +204,39 @@
 
   /* background-color: var(--qti-bg-active); */
   border-radius: 100%;
-  width: var(--qti-order-size); /* w-6 */
+  width: var(--qti-order-size);
   height: var(--qti-order-size);
 }
 
-/* apply .check-size for radio and checkbox size */
+/* Apply .check-size for radio and checkbox size */
 .check-size {
   width: calc(var(--qti-form-size) - 6px);
   height: calc(var(--qti-form-size) - 6px);
 }
 
-/* apply .check for checkbox */
+/* Apply .check for checkbox */
 .check {
-  --qti-check-padding-vertical: 0.5rem;
-  --qti-check-padding-horizontal: 0.5rem;
-
   gap: 0.5rem;
   border-radius: var(--qti-border-radius);
-  padding: var(--qti-check-padding-vertical) var(--qti-check-padding-horizontal); /* Padding shorthand */
+  padding: var(--qti-check-padding-vertical) var(--qti-check-padding-horizontal);
   outline: none;
   cursor: pointer;
 }
 
-/* apply .check-radio for outer circle of the radio buttons */
+/* Apply .check-radio for outer circle of the radio buttons */
 .check-radio {
   @apply form;
 
   border-radius: 100%;
 }
 
-/* apply .check-radio-checked for the inner checked radio */
+/* Apply .check-radio-checked for the inner checked radio */
 .check-radio-checked {
   background-color: var(--qti-border-active);
   border-radius: 100%;
 }
 
-/* apply .check-checkbox for outer square of the checkbox */
+/* Apply .check-checkbox for outer square of the checkbox */
 .check-checkbox {
   @apply form;
 
@@ -235,41 +245,41 @@
   border-radius: var(--qti-border-radius);
 }
 
-/* apply .check-checkbox-checked for the inner checkmark */
+/* Apply .check-checkbox-checked for the inner checkmark */
 .check-checkbox-checked {
   background-color: var(--qti-border-active);
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='currentColor' width='100%' height='100%' viewBox='0 0 24 24'%3E%3Cpath d='M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z'/%3E%3C/svg%3E");
 }
 
-/* apply .hov for hover state */
+/* Apply .hov for hover state */
 .hov {
   background-color: var(--qti-hover-bg);
 }
 
-/* apply .foc for focus state */
+/* Apply .foc for focus state */
 .foc {
   outline: var(--qti-focus-border-width) solid var(--qti-focus-color);
 }
 
-/* apply .act for active state */
+/* Apply .act for active state */
 .act {
-  border-color: var(--qti-border-active); /* border-active */
+  border-color: var(--qti-border-active);
   background-color: var(--qti-bg-active);
 }
 
-/* apply .rdo for readonly state */
+/* Apply .rdo for readonly state */
 .rdo {
   cursor: pointer;
-  background-color: var(--qti-bg-white);
+  background-color: var(--qti-bg);
   outline: 0;
   border: none;
 }
 
-/* apply .dis for disabled state */
+/* Apply .dis for disabled state */
 .dis {
   cursor: not-allowed;
-  background-color: var(--qti-bg-gray-100);
-  color: var(--qti-text-gray-500);
+  background-color: var(--qti-disabled-bg);
+  color: var(--qti-disabled-color);
   border-color: var(--qti-border-color);
-  outline: 4px solid var(--qti-bg-gray-100);
+  outline: 4px solid var(--qti-disabled-bg);
 }

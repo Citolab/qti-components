@@ -6,7 +6,7 @@ import { property } from 'lit/decorators.js';
 type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {
-  title: 'Theme',
+  title: 'styles/Theme',
   parameters: {
     cssprops: {
       "qti-primary-light": {
