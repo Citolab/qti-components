@@ -9,20 +9,85 @@ const meta: Meta<QtiAssessmentItem> = {
   title: 'styles/Theme',
   parameters: {
     cssprops: {
-      "qti-primary-light": {
-        value: "hsl(120deg 100% 25% / 49%)",
-        description: "Optional description",
+      "qti-bg-active": {
+        value: "#ffecec",
+        description: "Background color for active states",
+      },
+      "qti-border-active": {
+        value: "#f86d70",
+        description: "Border color for active states",
+      },
+      "qti-gap-size": {
+        value: "1rem",
+        description: "Gap size between elements",
+      },
+      "qti-bg": {
+        value: "white",
+        description: "Default background color",
+      },
+      "qti-hover-bg": {
+        value: "#f9fafb",
+        description: "Background color on hover",
+      },
+      "qti-disabled-bg": {
+        value: "#f3f4f6",
+        description: "Background color for disabled elements",
+      },
+      "qti-disabled-color": {
+        value: "#45484f",
+        description: "Text color for disabled elements",
       },
       "qti-border-thickness": {
         value: "2px",
-        description: "Optional description",
+        description: "Thickness of borders",
       },
-      "qti-gap-size": {
+      "qti-border-style": {
+        value: "solid",
+        description: "Style of borders",
+      },
+      "qti-border-color": {
+        value: "#c6cad0",
+        description: "Color of borders",
+      },
+      "qti-border-radius": {
+        value: "0.3rem",
+        description: "Radius of borders",
+      },
+      "qti-drop-border-radius": {
+        value: "calc(var(--qti-border-radius) + var(--qti-border-thickness))",
+        description: "Radius of borders for drop areas",
+      },
+      "qti-focus-border-width": {
+        value: "5px",
+        description: "Width of border on focus",
+      },
+      "qti-focus-color": {
+        value: "#bddcff7e",
+        description: "Color for focus states",
+      },
+      "qti-form-size": {
+        value: "1rem",
+        description: "Size for form elements",
+      },
+      "qti-point-size": {
+        value: "2rem",
+        description: "Size for point elements",
+      },
+      "qti-order-size": {
+        value: "2rem",
+        description: "Size for order buttons",
+      },
+      "qti-padding-vertical": {
         value: "0.5rem",
-        description: "Optional description",
+        description: "Vertical padding for all elements",
+      },
+      "qti-padding-horizontal": {
+        value: "0.5rem",
+        description: "Horizontal padding for all elements",
       },
     }
-  },
+  }
+  
 };
 export default meta;
 
