@@ -16,7 +16,7 @@
           display: none;
         }
 
-        &:state(checked),
+        &:state(--checked),
         &[aria-checked='true'] {
           @apply act;
         }
@@ -37,7 +37,7 @@
       & qti-simple-choice {
         @apply check;
 
-        &:not([aria-disabled='true'], [aria-readonly='true'], :state(checked)):hover {
+        &:not([aria-disabled='true'], [aria-readonly='true'], :state(--checked)):hover {
           @apply hov;
         }
 
@@ -45,7 +45,7 @@
           @apply foc;
         }
 
-        &:state(checked),
+        &:state(--checked),
         &[aria-checked='true'] {
           @apply act;
         }
@@ -635,6 +635,7 @@
         @apply foc;
       }
 
+      &:state(--checked),
       &[aria-checked='true'] {
         @apply act;
       }
@@ -648,11 +649,8 @@
       }
 
       &[aria-ordervalue] {
-        @apply order;
-
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        display: grid;
+        place-content: center;
       }
 
       &[aria-ordervalue]::after {

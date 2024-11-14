@@ -6,7 +6,23 @@ import { property } from 'lit/decorators.js';
 type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {
-  title: 'Theme'
+  title: 'Theme',
+  parameters: {
+    cssprops: {
+      "qti-primary-light": {
+        value: "hsl(120deg 100% 25% / 49%)",
+        description: "Optional description",
+      },
+      "qti-border-thickness": {
+        value: "2px",
+        description: "Optional description",
+      },
+      "qti-gap-size": {
+        value: "0.5rem",
+        description: "Optional description",
+      },
+    }
+  },
 };
 export default meta;
 
@@ -34,6 +50,7 @@ window.customElements.define('button-component', ButtonComponent);
 
 // grid grid-cols-6 gap-4
 export const Theme = (mod: string) => html`
+<css-variable-editor></css-variable-editor>
   <div style="display:grid;grid-template-columns: repeat(7, minmax(0, 1fr));gap:2rem;">
     <style>
       button-component {
@@ -100,6 +117,14 @@ export const Theme = (mod: string) => html`
     <div clip class="spot foc act "></div>
     <div clip class="spot dis "></div>
     <div>&#x200B;</div>
+
+    <div class="order">1</div>
+    <div class="order hov">1</div>
+    <div class="order foc">1</div>
+    <div class="order act">1</div>
+    <div class="order foc act">1</div>
+    <div class="order dis">1</div>
+    <div class=""></div>
 
     <div class="drag">drag</div>
     <div class="drag hov">drag</div>

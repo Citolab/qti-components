@@ -1,78 +1,33 @@
-/* 
-Base variables on PNP 
-https://www.imsglobal.org/spec/qti/v3p0/impl#h.x51afjl5r8gl
-font-face
-https://www.imsglobal.org/spec/qti/v3p0/impl#h.r3hufj74r1do
-line-spacing
-https://www.imsglobal.org/spec/qti/v3p0/impl#h.e0onr51nghyl
-*/
-
 :root,
 :host {
-  /* Primary colors */
-  --qti-primary-light: #ffeaea;
-  --qti-primary: #f86d70;
-  --qti-primary-dark: #a1616a;
-
-  /* Secondary colors */
-  --qti-secondary-light: #bed4ff;
-  --qti-secondary: #6daef8;
-  --qti-secondary-dark: #3a449d;
+  /* active colors */
+  --qti-bg-active: #ffecec; /* lighter shade of active */
+  --qti-border-active: #f86d70;
 
   /* Background colors */
-  --qti-bg-gray-50: #f9fafb;
-  --qti-bg-gray-100: #f3f4f6;
   --qti-bg-white: white;
-  --qti-bg-primary: var(--qti-primary);
-
-  /* Text colors */
-  --qti-text-gray-500: #45484f;
-  --qti-text-white: white;
+  --qti-hover-bg: #f9fafb;
+   
+  /* Disabled colors */
+  --qti-disabled-bg: #f3f4f6;
+  --qti-disabled-color: #45484f;
 
   /* Border properties */
-  --qti-border-thickness: 1.5px;
+  --qti-border-thickness: 2px;
   --qti-border-style: solid;
-  --qti-border-color-gray: #c6cad0; /* Corresponding to border-gray-400 */
-  --qti-border-radius-sm: 0.1rem;
-  --qti-border-radius-md: 0.375rem;
-  --qti-border-radius-lg: 0.5rem;
-  --qti-border-radius-full: 9999px;
-
-  /* Padding */
-  --qti-padding-sm: 0.125rem; /* py-0.5 */
-  --qti-padding-md: 0.5rem; /* py-2 */
-  --qti-padding-lg: 0.75rem; /* p-3 */
-  --qti-padding-xl: 1rem; /* pl-4 */
-
-  /* Form & layout */
-  --qti-form-size: 1rem;
-  --qti-gap-size: 0.5rem;
+  --qti-border-color: #c6cad0;
+  --qti-border-radius: 0.3rem;
+  --qti-drop-border-radius: calc(var(--qti-border-radius) + var(--qti-border-thickness) );
 
   /* Typography */
   --qti-font-weight-semibold: 600;
-  --qti-line-height: 2.5;
 
   /* Focus & active states */
-  --qti-active: blue;
-  --qti-focus-color: #bddcff7e;
   --qti-focus-border-width: 5px;
-
-  /* Correct/Incorrect feedback */
-  --qti-correct: rgb(74 222 128);
-  --qti-correct-light: rgb(220 252 231);
-  --qti-incorrect: rgb(248 113 113);
-  --qti-incorrect-light: rgb(254 226 226);
-
-  /* ---- */
-  --box-shadow: 0 0.125rem 0.25rem rgb(0 0 0 / 7.5%);
-  --box-shadow-lg: 0 0.5rem 1rem rgb(0 0 0 / 15%);
-  --table-border-color: var(--qti-border-color-gray);
-  --foreground: var(--qti-bg-gray-50);
-  --well-bg: var(--qti-bg-gray-50);
-  --well-border: var(--qti-border-color-gray);
-  --well-box-shadow: var(--box-shadow);
+  --qti-focus-color: #bddcff7e;
 }
 
+/* SVG masks and backgrounds */
 .chevron {
   background: url("data:image/svg+xml,%3Csvg fill='currentColor' width='22' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg' aria-hidden='true'%3E%3Cpath clip-rule='evenodd' fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z'%3E%3C/path%3E%3C/svg%3E")
     no-repeat center right 6px;
@@ -95,16 +50,21 @@ https://www.imsglobal.org/spec/qti/v3p0/impl#h.e0onr51nghyl
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='currentColor' width='100%' height='100%' viewBox='0 0 24 24'%3E%3Cpath d='M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z'/%3E%3C/svg%3E");
 }
 
+/* 
+  Following are classes that can be applied to elements and element states, so they are not used directly 
+  The @apply directive is used to apply these classes to elements
+*/
+
+/* apply .border to an element */
 .bordered {
-  border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color-gray);
+  border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color);
   outline: none;
 }
 
-.borderinvisible {
-  border-color: transparent;
-}
-
+/* apply .form rules for checkbox and radiobutton */
 .form {
+  --qti-form-size: 1rem;
+
   @apply bordered;
 
   display: grid;
@@ -113,36 +73,46 @@ https://www.imsglobal.org/spec/qti/v3p0/impl#h.e0onr51nghyl
   height: var(--qti-form-size);
 }
 
-.p-lg {
-  padding: var(--qti-padding-md) var(--qti-padding-lg) var(--qti-padding-md) var(--qti-padding-xl); /* Padding shorthand */
-}
-
+/* apply .button rules for button-like elements, such as drags and buttons */
 .button {
+  --qti-button-padding-vertical: 0.5rem; /* py-2 */
+  --qti-button-padding-horizontal: 0.5rem; /* px-2 */
+
   @apply bordered;
 
-  border-radius: var(--qti-border-radius-md);
-  padding: var(--qti-padding-md) var(--qti-padding-md);
+  border-radius: var(--qti-border-radius);
+  padding: var(--qti-button-padding-vertical) var(--qti-button-padding-horizontal);
   font-weight: var(--qti-font-weight-semibold);
 }
 
+/* apply .select for the select dropdown element */
 .select {
+  --qti-select-padding-top: 0.5rem;
+  --qti-select-padding-right: 1.75rem;
+  --qti-select-padding-bottom: 0.5rem;
+  --qti-select-padding-left: 0.75rem;
+
   @apply bordered chevron;
 
-  border-radius: var(--qti-border-radius-md);
+  border-radius: var(--qti-border-radius);
   position: relative;
   appearance: none;
-  padding: var(--qti-padding-md) 1.75rem var(--qti-padding-md) var(--qti-padding-lg); /* Padding shorthand */
+  padding: var(--qti-select-padding-top) var(--qti-select-padding-right) var(--qti-select-padding-bottom) var(--qti-select-padding-left); 
 }
 
+/* apply .text for the input text and textarea */
 .text {
+  --qti-text-padding: 0.75rem; /* Equal padding on all sides */
+
   @apply bordered;
 
   border-radius: 0;
   cursor: text;
-  padding: var(--qti-padding-lg); /* Equal padding on all sides */
+  padding: var(--qti-text-padding);
   background: unset;
 }
 
+/* apply .spot for hotspot shapes */
 .spot {
   @apply bordered;
 
@@ -152,31 +122,40 @@ https://www.imsglobal.org/spec/qti/v3p0/impl#h.e0onr51nghyl
   padding: 0;
 }
 
-/* qti-select-point-interaction */
+/* apply .point for circular small hotspots */
 .point {
+  --qti-point-size: 1.5rem;
+
   @apply bordered;
 
-  border-radius: var(--qti-border-radius-full);
-  width: 1.5rem; /* w-6 */
-  height: 1.5rem;
+  border-radius: 100%;
+  width: var(--qti-point-size); /* w-6 */
+  height: var(--qti-point-size);
   background-color: transparent;
   padding: 0;
 }
 
+/* apply .drag for draggable elements */
 .drag {
+  --qti-drag-padding-top: 0.5rem;
+  --qti-drag-padding-right: 1rem;
+  --qti-drag-padding-bottom: 0.5rem;
+  --qti-drag-padding-left: 1rem;
+
   @apply bordered handle;
 
   transition:
     transform 200ms ease-out,
     box-shadow 200ms ease-out,
     rotate 200ms ease-out;
-  padding: var(--qti-padding-md) var(--qti-padding-lg) var(--qti-padding-md) var(--qti-padding-xl); /* Padding shorthand */
-  border-radius: var(--qti-border-radius-md);
+  padding: var(--qti-drag-padding-top) var(--qti-drag-padding-right) var(--qti-drag-padding-bottom) var(--qti-drag-padding-left); /* Padding shorthand */
+  border-radius: var(--qti-border-radius);
   cursor: grab;
-  background-color: white;
+  background-color: var(--qti-bg-white);
   font-weight: var(--qti-font-weight-semibold);
 }
 
+/* apply .dragging for the dragging state of a draggable element */
 .dragging {
   pointer-events: none;
   rotate: -2deg;
@@ -185,94 +164,112 @@ https://www.imsglobal.org/spec/qti/v3p0/impl#h.e0onr51nghyl
     0 4px 8px rgb(0 0 0 / 10%);
 }
 
+/* apply .drop for an element where you can drop the draggable */
 .drop {
   @apply bordered;
 
   background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7" stroke="%23CCCCCC" stroke-width="1" fill="transparent" /></svg>')
     center no-repeat;
-  border-radius: var(--qti-border-radius-lg);
+  border-radius: var(--qti-drop-border-radius);
   position: relative;
   background-color: var(--qti-bg-white);
 }
 
+/* apply .dropping for an indicator where you can drop the draggable */
 .dropping {
-  background-color: var(--qti-primary-light);
+  background-color: var(--qti-bg-active);
 }
 
+/* apply .order for a small circular button */
 .order {
-  background-color: var(--qti-bg-primary);
-  border-radius: var(--qti-border-radius-full);
-  width: 1.5rem; /* w-6 */
-  height: 1.5rem;
-  color: var(--qti-text-white);
+  --qti-order-size: 1.5rem;
+
+  @apply bordered;
+
+  display: grid;
+  place-content: center;
+
+  /* background-color: var(--qti-bg-active); */
+  border-radius: 100%;
+  width: var(--qti-order-size); /* w-6 */
+  height: var(--qti-order-size);
 }
 
+/* apply .check-size for radio and checkbox size */
 .check-size {
   width: calc(var(--qti-form-size) - 6px);
   height: calc(var(--qti-form-size) - 6px);
 }
 
+/* apply .check for checkbox */
 .check {
+  --qti-check-padding-vertical: 0.5rem;
+  --qti-check-padding-horizontal: 0.5rem;
+
   gap: 0.5rem;
-  border-radius: var(--qti-border-radius-md);
-  padding: var(--qti-padding-md) var(--qti-padding-md); /* Padding shorthand */
+  border-radius: var(--qti-border-radius);
+  padding: var(--qti-check-padding-vertical) var(--qti-check-padding-horizontal); /* Padding shorthand */
   outline: none;
   cursor: pointer;
 }
 
+/* apply .check-radio for outer circle of the radio buttons */
 .check-radio {
   @apply form;
 
-  border-radius: var(--qti-border-radius-full);
+  border-radius: 100%;
 }
 
+/* apply .check-radio-checked for the inner checked radio */
 .check-radio-checked {
-  background-color: var(--qti-bg-primary);
-  border-radius: var(--qti-border-radius-full);
+  background-color: var(--qti-border-active);
+  border-radius: 100%;
 }
 
+/* apply .check-checkbox for outer square of the checkbox */
 .check-checkbox {
   @apply form;
 
   display: flex;
   place-items: center;
-  border-radius: var(--qti-border-radius-sm);
+  border-radius: var(--qti-border-radius);
 }
 
+/* apply .check-checkbox-checked for the inner checkmark */
 .check-checkbox-checked {
-  @apply check-mask;
-
-  background-color: var(--qti-bg-primary);
-  mask-image: var(--check-mask); /* check-mask */
+  background-color: var(--qti-border-active);
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='currentColor' width='100%' height='100%' viewBox='0 0 24 24'%3E%3Cpath d='M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z'/%3E%3C/svg%3E");
 }
 
+/* apply .hov for hover state */
 .hov {
-  background-color: var(--qti-bg-gray-50);
+  background-color: var(--qti-hover-bg);
 }
 
+/* apply .foc for focus state */
 .foc {
   outline: var(--qti-focus-border-width) solid var(--qti-focus-color);
 }
 
+/* apply .act for active state */
 .act {
-  border-color: var(--qti-bg-primary); /* border-primary */
-  background-color: var(--qti-primary-light);
-
+  border-color: var(--qti-border-active); /* border-active */
+  background-color: var(--qti-bg-active);
 }
 
+/* apply .rdo for readonly state */
 .rdo {
   cursor: pointer;
-  background-color: white;
+  background-color: var(--qti-bg-white);
   outline: 0;
   border: none;
 }
 
+/* apply .dis for disabled state */
 .dis {
   cursor: not-allowed;
   background-color: var(--qti-bg-gray-100);
   color: var(--qti-text-gray-500);
-  border-color: var(--qti-border-color-gray);
+  border-color: var(--qti-border-color);
   outline: 4px solid var(--qti-bg-gray-100);
-
-  /* outline-color: var(--qti-text-gray-50); */
 }
