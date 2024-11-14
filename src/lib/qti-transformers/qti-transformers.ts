@@ -90,7 +90,7 @@ export function itemsFromTest(xmlFragment: DocumentFragment) {
 
 let currentRequest: XMLHttpRequest | null = null;
 
-export function loadXML(url, cancelPreviousRequest = true) {
+export function loadXML(url, cancelPreviousRequest = false) {
   if (cancelPreviousRequest && currentRequest !== null) {
     currentRequest.abort(); // Abort the ongoing request if there is one
   }

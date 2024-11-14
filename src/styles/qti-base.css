@@ -4,6 +4,9 @@
   --qti-bg-active: #ffecec;
   --qti-border-active: #f86d70;
 
+  /* Gap size */
+  --qti-gap-size: 1rem;
+
   /* Background colors */
   --qti-bg: white;
   --qti-hover-bg: #f9fafb;
@@ -18,9 +21,6 @@
   --qti-border-color: #c6cad0;
   --qti-border-radius: 0.3rem;
   --qti-drop-border-radius: calc(var(--qti-border-radius) + var(--qti-border-thickness));
-
-  /* Typography */
-  --qti-font-weight-semibold: 600;
 
   /* Focus & active states */
   --qti-focus-border-width: 5px;
@@ -112,7 +112,6 @@
 
   border-radius: var(--qti-border-radius);
   padding: var(--qti-button-padding-vertical) var(--qti-button-padding-horizontal);
-  font-weight: var(--qti-font-weight-semibold);
 }
 
 /* Apply .select for the select dropdown element */
@@ -159,7 +158,7 @@
 
 /* Apply .drag for draggable elements */
 .drag {
-  @apply button bordered handle;
+  @apply bordered handle;
 
   transition:
     transform 200ms ease-out,
@@ -167,6 +166,8 @@
     rotate 200ms ease-out;
   cursor: grab;
   background-color: var(--qti-bg);
+  padding: var(--qti-drag-padding-vertical) var(--qti-drag-padding-horizontal);
+  border-radius: var(--qti-border-radius);
   padding-left: calc(var(--qti-drag-padding-horizontal) + 0.5rem) !important; /* 1.5rem for the drag */
 }
 
