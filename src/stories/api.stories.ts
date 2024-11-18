@@ -85,17 +85,20 @@ export const Api: Story = {
     `;
   },
   loaders: [
-    async ({ args }) => {
-      try {
-        const fetchJson = url => fetch(url).then(res => (res.ok ? res.json() : Promise.reject('error')));
-        const { items } = await fetchJson(`${args.serverLocation}/${args.qtipkg}/items.json`);
-        const itemHtmlDoc = await qtiTransformItem()
-          .load(`${args.serverLocation}/${args.qtipkg}/items/${items[args.itemIndex].href}${args.scoreBackend ? '?scorebackend=true' : ''}`)
-          .then(api => api.path(`${args.serverLocation}/${args.qtipkg}/static/`).htmldoc());
-        return { itemHtmlDoc: itemHtmlDoc, item: items[args.itemIndex] };
-      } catch (error) {
-        console.log(error);
+      async ({ args }) => {
+        try {
+          const fetchJson = url => fetch(url).then(res => (res.ok ? res.json() : Promise.reject('error')));
+          const { items } = await fetchJson(`${args.serverLocation}/${args.qtipkg}/items.json`);
+          const itemHtmlDoc = await qtiTransformItem()
+            .load(`${args.serverLocation}/${args.qtipkg}/items/${items[args.itemIndex].href}${args.scoreBackend ? '?scorebackend=true' : ''}`)
+            .then(api => api.path(`${args.serverLocation}/${args.qtipkg}/static/`).htmlDoc());
+          return { itemHtmlDoc: itemHtmlDoc, item: items[args.itemIndex] };
+        } catch (error) {
+          console.log(error);
+        }
+        
+        // Add a return statement here
+        return null;
       }
-    }
-  ]
+    ]
 };
