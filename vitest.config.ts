@@ -7,7 +7,6 @@ export default defineConfig({
   test: {
     setupFiles: './test/setup/customMatchers.js',
     include: ['src/**/*.spec.ts', 'src/**/*.test.ts'],
-    dangerouslyIgnoreUnhandledErrors: true,
     globals: true,
     browser: {
       enabled: true,
