@@ -17,6 +17,7 @@ const config: StorybookConfig = {
         }
       }
     },
+    '@ljcl/storybook-addon-cssprops',
     '@chromatic-com/storybook'
   ],
   framework: {
