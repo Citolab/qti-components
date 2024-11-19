@@ -66,7 +66,7 @@ export const Default = {
   },
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement);
-
+debugger;
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
     assessmentItem.updateResponseVariable('RAW_SCORE', '3');
 

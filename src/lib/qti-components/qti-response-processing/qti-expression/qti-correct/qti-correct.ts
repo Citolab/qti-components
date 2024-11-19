@@ -1,4 +1,4 @@
-import { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
+import { ResponseVariable } from 'src/lib/qti-components/internal/variables';
 import { QtiExpression } from '../qti-expression';
 
 export class QtiCorrect extends QtiExpression<string | string[]> {
@@ -8,7 +8,7 @@ export class QtiCorrect extends QtiExpression<string | string[]> {
 
   override getResult() {
     const identifier = this.getAttribute('identifier') || '';
-    const responseVariable = (this.closest('qti-assessment-item') as QtiAssessmentItem).getResponse(identifier);
+    const responseVariable: ResponseVariable = this.context.variables.find(v => v.identifier === identifier) || null;
     if (responseVariable.cardinality !== 'single') {
       return responseVariable.correctResponse.length > 0 ? responseVariable.correctResponse[0] : '';
     } else {

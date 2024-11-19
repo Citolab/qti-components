@@ -128,7 +128,7 @@ export const MaxChoices2: Story = {
     const choiceB = canvas.getByTestId<QtiSimpleChoice>('B');
     const choiceC = canvas.getByTestId<QtiSimpleChoice>('C');
 
-    expect(choiceA.getAttribute('role')).toBe('checkbox');
+    expect(choiceA.internals.role).toBe('checkbox');
     // expect(element.validate()).toBeFalsy();
 
     await fireEvent.click(choiceA);
