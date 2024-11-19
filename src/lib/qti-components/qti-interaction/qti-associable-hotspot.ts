@@ -16,8 +16,8 @@ export class QtiAssociableHotspot extends LitElement {
     this.dispatchEvent(
       new CustomEvent('qti-register-hotspot', {
         bubbles: true,
-        cancelable: false,
-        composed: true
+        composed: true,
+        cancelable: false
       })
     );
   }
