@@ -46,8 +46,8 @@ export abstract class Interaction extends LitElement implements IInteraction {
     this.dispatchEvent(
       new CustomEvent('qti-register-interaction', {
         bubbles: true,
-        cancelable: false,
-        composed: true
+        composed: true,
+        cancelable: false
       })
     );
   }
@@ -56,8 +56,8 @@ export abstract class Interaction extends LitElement implements IInteraction {
     this.dispatchEvent(
       new CustomEvent('qti-interaction-response', {
         bubbles: true,
-        cancelable: false,
         composed: true,
+        cancelable: false,
         detail: {
           responseIdentifier: this.responseIdentifier,
           response: Array.isArray(value) ? [...value] : value

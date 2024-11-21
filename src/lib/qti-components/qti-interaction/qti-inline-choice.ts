@@ -25,8 +25,8 @@ export class QtiInlineChoice extends LitElement {
     this.dispatchEvent(
       new CustomEvent('qti-inline-choice-register', {
         bubbles: true,
-        cancelable: false,
-        composed: true
+        composed: true,
+        cancelable: false
       })
     );
   }

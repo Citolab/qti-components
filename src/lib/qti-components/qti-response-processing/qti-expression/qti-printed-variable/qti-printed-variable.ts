@@ -2,7 +2,7 @@ import { consume } from '@lit/context';
 import { LitElement, html } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
-import { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
+import { VariableDeclaration } from 'src/lib/qti-components/internal/variables';
 import { ItemContext, itemContext } from '../../../qti-assessment-item/qti-assessment-item.context';
 
 export class QtiPrintedVariable extends LitElement {
@@ -11,17 +11,15 @@ export class QtiPrintedVariable extends LitElement {
 
   @consume({ context: itemContext, subscribe: true })
   @state()
-  public itemContext?: ItemContext;
+  protected context?: ItemContext;
 
   override render() {
-    const value = this.itemContext?.variables.find(v => v.identifier === this.identifier)?.value;
+    const value = this.context?.variables.find(v => v.identifier === this.identifier)?.value;
     return html`${JSON.stringify(value, null, 2)}`;
   }
 
-  public calculate(): Readonly<string | string[]> {
-    const assessmentItem = this.closest('qti-assessment-item') as QtiAssessmentItem;
-    const identifier = this.identifier;
-    const result = assessmentItem.getVariable(identifier).value;
+  public calculate(): VariableDeclaration<string | string[]> {
+    const result = this.context.variables.find(v => v.identifier === this.identifier) || null;
     return result;
   }
 }
