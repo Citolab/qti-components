@@ -81,7 +81,7 @@
     "storybook:test": "test-storybook",
     "chromatic": "node chromatic-runner.cjs",
     "----hooks----": "-",
-    "prepublishOnly": "echo 'calling prepublishOnly as npm lifecycle hook to build-lib!' && npm run build-lib",
+    "prepublishOnly": "npm run build",
     "prepare": "husky"
   },
   "wireit": {
