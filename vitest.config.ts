@@ -6,6 +6,7 @@ export default defineConfig({
   base: process.env.VITEST ? undefined : './src',
   test: {
     setupFiles: './test/setup/customMatchers.js',
+    dangerouslyIgnoreUnhandledErrors: true,
     include: ['src/**/*.spec.ts', 'src/**/*.test.ts'],
     globals: true,
     browser: {

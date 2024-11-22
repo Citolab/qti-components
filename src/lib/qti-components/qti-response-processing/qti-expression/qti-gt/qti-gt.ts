@@ -7,7 +7,10 @@ export class QtiGt extends QtiExpression<boolean> {
       const values = this.getVariables() as ResponseVariable[];
       const value1 = values[0];
       const value2 = values[1];
-      if (value1.baseType === value2.baseType && (value1.baseType === 'integer' || value1.baseType === 'float')) {
+      if (
+        (value1.baseType === 'integer' || value1.baseType === 'float') &&
+        (value2.baseType === 'integer' || value2.baseType === 'float')
+      ) {
         return +value1.value > +value2.value;
       } else {
         console.error('unexpected baseType or cardinality in qti gt');

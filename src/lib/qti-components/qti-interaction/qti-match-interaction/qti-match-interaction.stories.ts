@@ -453,6 +453,3 @@ export const Images = {
       ></qti-response-processing>
     </qti-assessment-item>`
 };
-function step(arg0: string, arg1: () => Promise<void>) {
-  throw new Error('Function not implemented.');
-}
