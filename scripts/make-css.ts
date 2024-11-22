@@ -1,10 +1,9 @@
-//
-// This script compiles scss to css
-//
 import chalk from 'chalk';
 import fs, { mkdirSync } from 'fs';
 import path from 'path';
 import postcss from 'postcss';
+
+console.log('Building the css...');
 
 import postcssConfig from '../postcss.config.mjs';
 

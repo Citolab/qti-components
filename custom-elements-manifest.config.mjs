@@ -1,40 +1,48 @@
-import { customElementVsCodePlugin } from "custom-element-vs-code-integration";
+import { customElementVsCodePlugin } from 'custom-element-vs-code-integration';
+import { customEsLintRuleGeneratorPlugin } from 'custom-element-eslint-rule-generator';
+import { customElementJsxPlugin } from 'custom-element-jsx-integration';
 
-const outdir = './'
+console.log('Building the custom element manifest...');
+
+const outdir = './dist';
 
 const options = {};
 
 export default {
-  // blijkbaar mag ik niet ['src/lib/**/qti-*.ts'] doen, omdat inherited props dan niet mee worden genomen
-  // zoals de props in choices die overgeerfd wordt in qti-choice-interaction
-  globs: ['src/lib/**'],
-  exclude: [
-    'src/**/qti-*.stories.ts',
-    'src/**/qti-*.test.ts',
-    'src/**/qti-*.spec.ts',
-    'src/**/qti-*.styles.ts'
-  ],
-  outdir: '',
+  globs: ['src/lib/qti-components/**/*.ts', 'src/lib/qti-item/**/*.ts'],
+  exclude: ['src/**/qti-*.stories.ts', 'src/**/qti-*.test.ts', 'src/**/qti-*.spec.ts', 'src/**/qti-*.styles.ts'],
+  outdir: outdir,
   litelement: true,
   plugins: [
-    {
-      name: 'qti-strip-attributes',
-      packageLinkPhase({ customElementsManifest }) {
-        customElementsManifest?.modules?.forEach((module) => {
-          module?.declarations?.forEach((declaration) => {
-            Object.keys(declaration).forEach((key) => {
-              if (Array.isArray(declaration[key])) {
-                if (key == "members") declaration[key] = [];
-                // declaration[key] = declaration[key].filter((member) => member.hasOwnProperty('attribute'));
-                declaration[key] = declaration[key].filter((member) => !member.privacy?.includes('private'));
-                declaration[key] = declaration[key].filter((member) => !member.privacy?.includes('protected'));
-                declaration[key] = declaration[key].filter((member) => !member.name?.startsWith('_'));
-              }
-            });
-          });
-        });
-      }
-    },
-    customElementVsCodePlugin(options)
-  ],
+    customElementVsCodePlugin({
+      outdir: outdir
+    }),
+    customElementJsxPlugin({
+      outdir: outdir,
+      exclude: [],
+      fileName: `qti-components-jsx.d.ts`
+    }),
+    customEsLintRuleGeneratorPlugin({
+      outdir: outdir
+    })
+  ]
 };
+
+// {
+//   name: 'qti-strip-attributes',
+//   packageLinkPhase({ customElementsManifest }) {
+//     customElementsManifest?.modules?.forEach(module => {
+//       module?.declarations?.forEach(declaration => {
+//         Object.keys(declaration).forEach(key => {
+//           if (Array.isArray(declaration[key])) {
+//             if (key == 'members') declaration[key] = [];
+//             // declaration[key] = declaration[key].filter((member) => member.hasOwnProperty('attribute'));
+//             declaration[key] = declaration[key].filter(member => !member.privacy?.includes('private'));
+//             declaration[key] = declaration[key].filter(member => !member.privacy?.includes('protected'));
+//             declaration[key] = declaration[key].filter(member => !member.name?.startsWith('_'));
+//           }
+//         });
+//       });
+//     });
+//   }
+// },
