@@ -8,7 +8,7 @@ export class QtiAnd extends qtiAndMixin(QtiConditionExpression as unknown as Con
   }
 }
 
-export type MockQtiExpression<T> = { calculate: () => T };
+type MockQtiExpression<T> = { calculate: () => T };
 type MockConstructor = new (...args: any[]) => {};
 export function qtiAndMixin<TBase extends MockConstructor>(Base: TBase) {
   return class MockQtiAnd extends Base {

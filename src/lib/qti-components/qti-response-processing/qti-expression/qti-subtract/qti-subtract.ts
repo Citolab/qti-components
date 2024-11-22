@@ -9,7 +9,7 @@ export class QtiSubtract extends qtiSubtractMixin(QtiExpression<any> as unknown 
   }
 }
 
-export type MockQtiExpression<T> = { calculate: () => T };
+type MockQtiExpression<T> = { calculate: () => T };
 type MockConstructor = new (...args: any[]) => {};
 
 export function qtiSubtractMixin<TBase extends MockConstructor>(Base: TBase) {
