@@ -1,7 +1,29 @@
 import { defineConfig, Options } from 'tsup';
-import { InlineCSSPlugin } from './scripts/inline-css-plugin';
 
-console.log('Building the project...');
+import fs from 'fs';
+import { join } from 'path';
+import postcss from 'postcss';
+import postcssConfig from './postcss.config.mjs';
+
+export const InlineCSSPlugin = {
+  name: 'inline-css',
+  setup({ onResolve, onLoad }) {
+    onResolve({ filter: /\.css\?inline$/ }, args => ({
+      namespace: 'inline',
+      path: join(args.resolveDir, args.path.replace(/\?inline$/, ''))
+    }));
+
+    onLoad({ filter: /.*/, namespace: 'inline' }, async ({ path }) => {
+      try {
+        const cssContent = fs.readFileSync(path, 'utf8');
+        const result = await postcss(postcssConfig.plugins).process(cssContent, { from: path });
+        return { contents: result.css, loader: 'text' };
+      } catch (error) {
+        return { errors: [{ text: error.message }] };
+      }
+    });
+  }
+};
 
 import pkgJson from './package.json' assert { type: 'json' };
 
