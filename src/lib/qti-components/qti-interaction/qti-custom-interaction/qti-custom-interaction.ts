@@ -23,9 +23,6 @@ export class QtiCustomInteraction extends Interaction {
     this.handlePostMessage = this.handlePostMessage.bind(this);
   }
 
-  @property({ type: String, attribute: 'response-identifier' })
-  responseIdentifier: string;
-
   @property({ type: String, attribute: 'data' })
   data: string;
 

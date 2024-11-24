@@ -13,9 +13,6 @@ export class QtiPortableCustomInteraction extends Interaction {
 
   private pci: IMSpci<unknown>;
 
-  @property({ type: String, attribute: 'response-identifier' })
-  responseIdentifier: string;
-
   @property({ type: String, attribute: 'module' })
   module: string;
 
