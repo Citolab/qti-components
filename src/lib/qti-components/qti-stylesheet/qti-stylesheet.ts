@@ -22,7 +22,7 @@ export class QtiStylesheet extends LitElement {
           this.styleElement = document.createElement('style');
           this.styleElement.media = 'screen';
           this.styleElement.textContent = `@scope {${minifiedCss}}`;
-          
+
           // Append the style element to the parent element of this component
           if (this.parentElement) {
             this.parentElement.appendChild(this.styleElement);

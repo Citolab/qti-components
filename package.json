@@ -76,6 +76,7 @@
     "lint": "wireit",
     "cem": "wireit",
     "css": "wireit",
+    "stylelint": "stylelint \"src/**/*.css\"",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "storybook:test": "test-storybook",

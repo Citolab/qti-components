@@ -717,7 +717,7 @@
   qti-graphic-gap-match-interaction {
     position: relative;
 
-    & img {
+    &img {
       margin: 0;
       padding: 0;
     }
@@ -752,9 +752,8 @@
       margin-right: 0.125rem;
       margin-bottom: 0.25rem; /* mb-1 */
       height: 0.5rem; /* h-2 */
-      background-position: 0 center;
-      background: linear-gradient(to right, var(--qti-tick-color) var(--qti-tick-width), transparent 1px) repeat-x;
-      background-size: calc(calc(100% - var(--qti-tick-width)) / ((var(--max) - var(--min)) / var(--step))) 100%;
+      background: linear-gradient(to right, var(--qti-tick-color) var(--qti-tick-width), transparent 1px) repeat-x 0
+        center / calc(calc(100% - var(--qti-tick-width)) / ((var(--max) - var(--min)) / var(--step))) 100%;
     }
 
     &::part(rail) {
