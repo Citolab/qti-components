@@ -1,11 +1,11 @@
 import '@citolab/qti-components/qti-components';
+import { qtiTransformItem } from '@citolab/qti-components/qti-transformers';
 
 import { action } from '@storybook/addon-actions';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { QtiItem } from 'src/lib/qti-item';
-import { qtiTransformItem } from 'src/lib/qti-transformers';
 
 const meta: Meta = {
   title: 'Api',
@@ -21,12 +21,12 @@ const meta: Meta = {
     },
     disabled: { control: { type: 'boolean' } },
     itemIndex: { control: { type: 'number' } },
-    scoreBackend: { control: { type: 'boolean' } },
+    scoreBackend: { control: { type: 'boolean' } }
   },
   args: {
     serverLocation: 'http://localhost:3000/api',
     qtipkg: 'examples',
-    itemIndex: 0,
+    itemIndex: 0
   },
   parameters: {
     controls: {
@@ -53,20 +53,22 @@ export const Api: Story = {
     const processResponse = () => {
       if (args.scoreBackend) {
         const identifier = loaded.item.identifier;
-        fetch(`${args.serverLocation}/response/${args.qtipkg}/${loaded.item.href}?identifier=${loaded.item.identifier}`, {
-          method: 'POST',
-          body: JSON.stringify(testRef.value.assessmentItem.variables),
-          headers: { 'Content-type': 'application/json; charset=UTF-8' }
-        });
+        fetch(
+          `${args.serverLocation}/response/${args.qtipkg}/${loaded.item.href}?identifier=${loaded.item.identifier}`,
+          {
+            method: 'POST',
+            body: JSON.stringify(testRef.value.assessmentItem.variables),
+            headers: { 'Content-type': 'application/json; charset=UTF-8' }
+          }
+        );
 
         fetch(`${args.serverLocation}/score/${args.qtipkg}/${loaded.item.href}?identifier=${loaded.item.identifier}`, {
-          method: 'GET',
-        }).then(async response => { 
+          method: 'GET'
+        }).then(async response => {
           const serverVariables = await response.json();
           console.log('server', serverVariables);
           testRef.value.assessmentItem.variables = serverVariables;
-        })
-
+        });
       } else {
         testRef?.value.assessmentItem.processResponse();
         console.log('client', testRef.value.assessmentItem.variables);
@@ -85,20 +87,22 @@ export const Api: Story = {
     `;
   },
   loaders: [
-      async ({ args }) => {
-        try {
-          const fetchJson = url => fetch(url).then(res => (res.ok ? res.json() : Promise.reject('error')));
-          const { items } = await fetchJson(`${args.serverLocation}/${args.qtipkg}/items.json`);
-          const itemHtmlDoc = await qtiTransformItem()
-            .load(`${args.serverLocation}/${args.qtipkg}/items/${items[args.itemIndex].href}${args.scoreBackend ? '?scorebackend=true' : ''}`)
-            .then(api => api.path(`${args.serverLocation}/${args.qtipkg}/static/`).htmlDoc());
-          return { itemHtmlDoc: itemHtmlDoc, item: items[args.itemIndex] };
-        } catch (error) {
-          console.log(error);
-        }
-        
-        // Add a return statement here
-        return null;
+    async ({ args }) => {
+      try {
+        const fetchJson = url => fetch(url).then(res => (res.ok ? res.json() : Promise.reject('error')));
+        const { items } = await fetchJson(`${args.serverLocation}/${args.qtipkg}/items.json`);
+        const itemHtmlDoc = await qtiTransformItem()
+          .load(
+            `${args.serverLocation}/${args.qtipkg}/items/${items[args.itemIndex].href}${args.scoreBackend ? '?scorebackend=true' : ''}`
+          )
+          .then(api => api.path(`${args.serverLocation}/${args.qtipkg}/static/`).htmlDoc());
+        return { itemHtmlDoc: itemHtmlDoc, item: items[args.itemIndex] };
+      } catch (error) {
+        console.log(error);
       }
-    ]
+
+      // Add a return statement here
+      return null;
+    }
+  ]
 };
