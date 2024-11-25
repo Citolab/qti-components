@@ -40,26 +40,6 @@
   /* Generic padding for all elements */
   --qti-padding-vertical: 0.5rem; /* py-2 */
   --qti-padding-horizontal: 0.5rem; /* px-2 */
-
-  /* Button elements */
-  --qti-button-padding-vertical: var(--qti-padding-vertical);
-  --qti-button-padding-horizontal: var(--qti-padding-horizontal);
-
-  /* Select dropdown */
-  --qti-select-padding-vertical: var(--qti-padding-vertical);
-  --qti-select-padding-horizontal: var(--qti-padding-horizontal);
-
-  /* Text inputs */
-  --qti-text-padding-vertical: var(--qti-padding-vertical);
-  --qti-text-padding-horizontal: var(--qti-padding-horizontal);
-
-  /* Draggable elements */
-  --qti-drag-padding-vertical: var(--qti-padding-vertical);
-  --qti-drag-padding-horizontal: var(--qti-padding-horizontal);
-
-  /* Checkbox elements */
-  --qti-check-padding-vertical: var(--qti-padding-vertical);
-  --qti-check-padding-horizontal: var(--qti-padding-horizontal);
 }
 
 /* SVG masks and backgrounds */
@@ -111,7 +91,7 @@
   @apply bordered;
 
   border-radius: var(--qti-border-radius);
-  padding: var(--qti-button-padding-vertical) var(--qti-button-padding-horizontal);
+  padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
 }
 
 /* Apply .select for the select dropdown element */
@@ -121,8 +101,8 @@
   border-radius: var(--qti-border-radius);
   position: relative;
   appearance: none;
-  padding: var(--qti-select-padding-vertical) var(--qti-select-padding-horizontal);
-  padding-right: calc(var(--qti-select-padding-horizontal) + 1.5rem); /* 1.5rem for the chevron */
+  padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
+  padding-right: calc(var(--qti-padding-horizontal) + 1.5rem); /* 1.5rem for the chevron */
 }
 
 /* Apply .text for the input text and textarea */
@@ -131,7 +111,7 @@
 
   border-radius: 0;
   cursor: text;
-  padding: var(--qti-text-padding-vertical) var(--qti-text-padding-horizontal);
+  padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
   background: unset;
 }
 
@@ -166,9 +146,9 @@
     rotate 200ms ease-out;
   cursor: grab;
   background-color: var(--qti-bg);
-  padding: var(--qti-drag-padding-vertical) var(--qti-drag-padding-horizontal);
+  padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
   border-radius: var(--qti-border-radius);
-  padding-left: calc(var(--qti-drag-padding-horizontal) + 0.5rem) !important; /* 1.5rem for the drag */
+  padding-left: calc(var(--qti-padding-horizontal) + 0.5rem) !important; /* 1.5rem for the drag */
 }
 
 /* Apply .dragging for the dragging state of a draggable element */
@@ -186,7 +166,7 @@
 
   background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7" stroke="%23CCCCCC" stroke-width="1" fill="transparent" /></svg>')
     center no-repeat;
-  border-radius: var(--qti-drop-border-radius);
+  border-radius: var(--qti-border-radius);
   position: relative;
   background-color: var(--qti-bg);
 }
@@ -219,7 +199,7 @@
 .check {
   gap: 0.5rem;
   border-radius: var(--qti-border-radius);
-  padding: var(--qti-check-padding-vertical) var(--qti-check-padding-horizontal);
+  padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
   outline: none;
   cursor: pointer;
 }
@@ -259,7 +239,7 @@
 
 /* Apply .foc for focus state */
 .foc {
-  outline: var(--qti-focus-border-width) solid var(--qti-focus-color);
+  box-shadow: 0 0 0 var(--qti-focus-border-width) var(--qti-focus-color);
 }
 
 /* Apply .act for active state */
