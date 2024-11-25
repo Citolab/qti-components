@@ -125,7 +125,9 @@
     }
 
     &:focus-within {
-      @apply foc;
+      &::part(textarea) {
+        @apply foc;
+      }
     }
   }
 
@@ -381,7 +383,7 @@
         }
 
         &:state(--checked) {
-          background-color: var(--qti-primary-light); /* bg-blue-200 */
+          background-color: var(--qti-bg-active);
         }
 
         &[aria-readonly='true'] {
