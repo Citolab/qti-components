@@ -248,6 +248,14 @@
   background-color: var(--qti-bg-active);
 }
 
+.act-bg {
+  background-color: var(--qti-bg-active);
+}
+
+.act-bor {
+  border-color: var(--qti-border-active);
+}
+
 /* Apply .rdo for readonly state */
 .rdo {
   cursor: pointer;
