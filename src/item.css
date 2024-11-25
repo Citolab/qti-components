@@ -6,8 +6,6 @@
 @import url('./styles/qti-base/qti3p0.css');
 @import url('./styles/qti-base/item-layout');
 @import url('./styles/qti-base/item-view');
-@import url('./styles/qti-base/item-popup');
 
 /* components */
 @import url('./styles/qti-components/qti-interactions');
-
