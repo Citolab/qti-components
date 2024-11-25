@@ -101,6 +101,15 @@
     }
   }
 
+  qti-graphic-gap-match-interaction {
+    position: relative;
+
+    & img {
+      margin: 0;
+      padding: 0;
+    }
+  }
+
   qti-text-entry-interaction {
     &::part(input) {
       @apply text;
@@ -711,15 +720,6 @@
           @apply dis;
         }
       }
-    }
-  }
-
-  qti-graphic-gap-match-interaction {
-    position: relative;
-
-    &img {
-      margin: 0;
-      padding: 0;
     }
   }
 
