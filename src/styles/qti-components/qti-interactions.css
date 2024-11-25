@@ -86,6 +86,7 @@
       width: fit-content;
       cursor: pointer;
 
+      &:state(correct-response),
       &[data-correct-response='true'] {
         &::after {
           content: '\02714';
@@ -194,14 +195,17 @@
           @apply foc;
         }
 
+        &:state(--checked),
         &[aria-checked='true'] {
           @apply act;
         }
 
+        &:state(--readonly),
         &[aria-readonly='true'] {
           @apply rdo;
         }
 
+        &:state(--disabled),
         &[aria-disabled='true'] {
           @apply dis;
         }
@@ -218,6 +222,7 @@
           @apply foc;
         }
 
+        &:state(--checked),
         &[aria-checked='true'] {
           @apply act;
         }
@@ -248,6 +253,7 @@
           display: block;
         }
 
+        &:state(--checked)::after,
         &[aria-checked='true']::after {
           @apply act;
 
@@ -264,6 +270,7 @@
           display: block;
         }
 
+        &:state(--checked),
         &[aria-checked='true'] {
           @apply act;
         }
@@ -522,7 +529,7 @@
       &[dragging] {
         @apply dragging;
       }
-      
+
       &:hover {
         @apply hov;
       }
@@ -548,8 +555,6 @@
       gap: 0.5rem; /* gap-2 */
     }
 
-
-    
     &::part(drop-list) {
       @apply drop;
 

@@ -1,4 +1,3 @@
-import '@citolab/qti-components/qti-components';
 import type { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
