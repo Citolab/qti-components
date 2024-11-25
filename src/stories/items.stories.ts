@@ -1,5 +1,3 @@
-import '@citolab/qti-components/qti-components';
-
 import { action } from '@storybook/addon-actions';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';

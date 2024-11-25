@@ -1,4 +1,3 @@
-import '@citolab/qti-components/qti-components';
 import { qtiTransformItem } from '@citolab/qti-components/qti-transformers';
 
 import { action } from '@storybook/addon-actions';
@@ -37,8 +36,6 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
-
-let item;
 
 export const Api: Story = {
   render: (args, context) => {

@@ -21,14 +21,14 @@ export const customViewports = {
     }
   },
   phone: {
-    name: 'Viewport Telefoon patrick',
+    name: 'Phone',
     styles: {
       width: '412px',
       height: '780px'
     }
   },
   laptop: {
-    name: 'Viewport Laptop Mies',
+    name: 'Laptop',
     styles: {
       width: '1257px',
       height: '598px'
