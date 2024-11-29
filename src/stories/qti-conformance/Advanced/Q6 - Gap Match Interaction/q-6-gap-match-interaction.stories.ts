@@ -4,7 +4,7 @@ import { expect, fireEvent, within } from '@storybook/test';
 import type { ArgTypes, Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import { getItemByUri } from '../../../../lib/qti-loader';
-import drag from 'src/testing/drag';
+import drag from '../../../../testing/drag';
 
 type Story = StoryObj;
 
