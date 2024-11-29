@@ -63,19 +63,19 @@ export const Default: Story = {
     const gapG2 = assessmentItem.querySelector('qti-gap[identifier="G2"]') as QtiGapText;
     await step('drag Winter to G1', async () => {
       // Simulate the drag and drop operation
-      await drag(gapTextWinter, { to: gapG1, duration: 100 });
+      await drag(gapTextWinter, { to: gapG1, duration: 300 });
     });
     await step('drag Spring to G1', async () => {
       // Simulate the drag and drop operation
-      await drag(gapTextSpring, { to: gapG1, duration: 100 });
+      await drag(gapTextSpring, { to: gapG1, duration: 300 });
     });
     await step('drag Summer to G2', async () => {
       // Simulate the drag and drop operation
-      await drag(gapTextSummer, { to: gapG2, duration: 100 });
+      await drag(gapTextSummer, { to: gapG2, duration: 300 });
     });
     await step('drag Autumn to G2', async () => {
       // Simulate the drag and drop operation
-      await drag(gapTextAutumn, { to: gapG2, duration: 100 });
+      await drag(gapTextAutumn, { to: gapG2, duration: 300 });
     });
 
     // check if the first dragged value is in the gap
@@ -122,7 +122,7 @@ export const D2: Story = {
 
     await step('drag Winter to G1', async () => {
       // Simulate the drag and drop operation
-      await drag(gapTextWinter, { to: gapG1, duration: 100 });
+      await drag(gapTextWinter, { to: gapG1, duration: 300 });
     });
 
     await fireEvent.click(submitButton);
@@ -133,7 +133,7 @@ export const D2: Story = {
 
     await step('drag Summer to G2', async () => {
       // Simulate the drag and drop operation
-      await drag(gapTextSummer, { to: gapG2, duration: 100 });
+      await drag(gapTextSummer, { to: gapG2, duration: 300 });
     });
 
     await fireEvent.click(submitButton);
@@ -247,10 +247,10 @@ export const D4: Story = {
 
     await step('fill in correct response', async () => {
       // Simulate the drag and drop operation
-      await drag(gapTextS1, { to: gapT1, duration: 100 });
-      await drag(gapTextS5, { to: gapT2, duration: 100 });
-      await drag(gapTextS2, { to: gapT3, duration: 100 });
-      await drag(gapTextS3, { to: gapT4, duration: 100 });
+      await drag(gapTextS1, { to: gapT1, duration: 300 });
+      await drag(gapTextS5, { to: gapT2, duration: 300 });
+      await drag(gapTextS2, { to: gapT3, duration: 300 });
+      await drag(gapTextS3, { to: gapT4, duration: 300 });
     });
 
     await fireEvent.click(submitButton);

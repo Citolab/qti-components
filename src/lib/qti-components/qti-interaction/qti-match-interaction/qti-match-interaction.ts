@@ -122,7 +122,8 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
 
   override render() {
     if (!this.classList.contains('qti-match-tabular')) {
-      return html`<slot name="prompt"></slot> <slot></slot>`;
+      return html`<slot name="prompt"></slot> <slot></slot>
+        <div role="alert" id="validationMessage"></div>`;
     }
     return html`
       <slot name="prompt"></slot>

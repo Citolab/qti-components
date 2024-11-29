@@ -35,6 +35,7 @@ export class QtiGraphicOrderInteraction extends ChoicesMixin(Interaction, 'qti-h
       <!-- slot for the prompt -->
       <slot></slot>
       <!-- slot for the image and hotspots -->
+      <div role="alert" id="validationMessage"></div>
     `;
   }
 

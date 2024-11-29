@@ -101,6 +101,14 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
           ? this.shadowRoot.querySelectorAll(droppablesSelector)
           : this.querySelectorAll(droppablesSelector)
       );
+      // get data attribue data-choices-container-width
+      const choicesContainerWidth = this.dataset.choicesContainerWidth;
+      if (choicesContainerWidth) {
+        this.droppables.forEach(d => {
+          d.style.width = `${choicesContainerWidth}px`;
+          d.style.boxSizing = `border-box`;
+        });
+      }
     }
 
     private handleDragStart = (ev: DragEvent) => {
@@ -116,6 +124,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       const draggable = ev.currentTarget as HTMLElement;
       draggable.removeAttribute('dragging');
       const wasDropped = await this.wasDropped(ev);
+      console.log('wasDropped', wasDropped);
       if (!wasDropped) {
         if (this.configuration.dragCanBePlacedBack) {
           this.restoreInitialDraggablePosition(draggable);
@@ -131,50 +140,9 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       this.droppables.forEach(d => d.removeAttribute('enabled'));
     }
 
-    // MH: This method is just to make sure this can be tested.
-    // because I can't get the dropEffect to be 'move' in the test
-    private checkForMoveTestItem = (ev: DragEvent): Promise<boolean> => {
-      if (!ev.dataTransfer.items) {
-        return Promise.resolve(false);
-      }
-      return new Promise(resolve => {
-        let hasMoveTestItem = false;
-
-        // Iterate over all dataTransfer items
-        const items = Array.from(ev.dataTransfer.items);
-        const pending = items.length;
-
-        // If there are no items, resolve immediately
-        if (pending === 0) {
-          resolve(false);
-          return;
-        }
-
-        items.forEach(item => {
-          if (item.kind === 'string' && item.type === 'text') {
-            item.getAsString(data => {
-              if (data === 'move-test') {
-                hasMoveTestItem = true;
-              }
-
-              // Resolve the promise after processing all items
-              if (pending === 0) {
-                resolve(hasMoveTestItem);
-              }
-            });
-          } else {
-            // If the item is not 'string', still count down pending
-            if (pending === 0) {
-              resolve(hasMoveTestItem);
-            }
-          }
-        });
-      });
-    };
-
     private async wasDropped(ev: DragEvent): Promise<boolean> {
-      const hasMoveTestItem = await this.checkForMoveTestItem(ev);
-      return ev.dataTransfer.dropEffect !== 'none' || hasMoveTestItem;
+      // const hasMoveTestItem = await this.checkForMoveTestItem(ev);
+      return ev.dataTransfer.dropEffect !== 'none';
     }
 
     private wasMoved(ev: DragEvent): boolean {
@@ -208,6 +176,44 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       // });
     }
 
+    validate(): boolean {
+      const validAssociations = this.getValidAssociations();
+      let isValid = true;
+      let validityMessage = '';
+
+      if (this.maxAssociations > 0 && validAssociations > this.maxAssociations) {
+        isValid = false;
+        validityMessage =
+          this.dataset.maxSelectionsMessage ||
+          `You've selected too many associations. Maximum allowed is ${this.maxAssociations}.`;
+      } else if (this.minAssociations > 0 && validAssociations < this.minAssociations) {
+        isValid = false;
+        validityMessage =
+          this.dataset.minSelectionsMessage ||
+          `You haven't selected enough associations. Minimum required is ${this.minAssociations}.`;
+      }
+      const lastElementChild = this.lastElementChild as HTMLElement;
+      // Use null for the third argument if no specific anchor is needed
+      this._internals.setValidity(isValid ? {} : { customError: true }, validityMessage, lastElementChild);
+
+      this.reportValidity();
+      return isValid;
+    }
+
+    override reportValidity(): boolean {
+      const validationMessageElement = this.shadowRoot.querySelector('#validationMessage') as HTMLElement;
+      if (validationMessageElement) {
+        if (!this._internals.validity.valid) {
+          validationMessageElement.textContent = this._internals.validationMessage;
+          validationMessageElement.style.display = 'block';
+        } else {
+          validationMessageElement.textContent = '';
+          validationMessageElement.style.display = 'none';
+        }
+      }
+      return this._internals.validity.valid;
+    }
+
     protected checkMaxAssociations(): void {
       this.droppables.forEach((d, index) => {
         const maxMatch = +(d.getAttribute('match-max') || 1);
@@ -237,9 +243,20 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
     set value(value: string[]) {
       if (this.isMatchTabular()) return;
-
       this.resetDroppables();
       value?.forEach(entry => this.placeResponse(entry));
+
+      // Assuming this.value is an array of strings
+      if (Array.isArray(value)) {
+        const formData = new FormData();
+        value.forEach(response => {
+          formData.append(this.responseIdentifier, response);
+        });
+        this._internals.setFormValue(formData);
+      } else {
+        // Handle the case where this.value is not an array
+        this._internals.setFormValue(value);
+      }
     }
 
     private placeResponse(response: string): void {
@@ -272,16 +289,12 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       }
     }
 
-    validate(): boolean {
-      const validAssociations = this.getValidAssociations();
-      return this.minAssociations <= 0 || this.minAssociations <= validAssociations;
-    }
-
     private getValidAssociations(): number {
       return this.droppables.filter(d => d.childElementCount > 0).length;
     }
 
     public saveResponse(): void {
+      this.validate();
       const response = this.collectResponseData();
       this.dispatchEvent(
         new CustomEvent('qti-interaction-response', {

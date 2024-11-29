@@ -148,6 +148,7 @@ export class QtiAssessmentItem extends LitElement {
     });
     this.addEventListener('end-attempt', (e: CustomEvent<{ responseIdentifier: string; countAttempt: boolean }>) => {
       const { responseIdentifier, countAttempt } = e.detail;
+      this.validate();
       this.updateResponseVariable(responseIdentifier, 'true');
       this.processResponse(countAttempt);
     });
@@ -285,9 +286,16 @@ export class QtiAssessmentItem extends LitElement {
     });
   }
 
+  public validate(): boolean | null {
+    if (this._interactionElements.every(interactionElement => interactionElement.validate())) return true;
+    if (this._interactionElements.some(interactionElement => interactionElement.validate())) return false;
+    return null;
+  }
+
   private _getCompletionStatus(): 'completed' | 'incomplete' | 'not_attempted' | 'unknown' {
-    if (this._interactionElements.every(interactionElement => interactionElement.validate())) return 'completed';
-    if (this._interactionElements.some(interactionElement => interactionElement.validate())) return 'incomplete';
+    const valid = this.validate();
+    if (valid === true) return 'completed';
+    if (valid === false) return 'incomplete';
     return 'not_attempted';
   }
 

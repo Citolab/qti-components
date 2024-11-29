@@ -37,7 +37,10 @@ export class QtiGapMatchInteraction extends DragDropInteractionMixin(Interaction
   ];
 
   override render() {
-    return html`<slot name="prompt"> </slot><slot part="drags" name="qti-gap-text"></slot> <slot part="drops"></slot>`;
+    return html`<slot name="prompt"> </slot>
+      <slot part="drags" name="qti-gap-text"></slot>
+      <slot part="drops"></slot>
+      <div role="alert" id="validationMessage"></div>`;
   }
 
   set correctResponse(value: string | string[]) {

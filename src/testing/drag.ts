@@ -36,7 +36,7 @@ const sleep = (ms: number): Promise<void> => {
 };
 
 /**
- * Drags an element to a specified location or by a specified delta, and drops it.
+ * Drags an element to a specified location or by a specified delta.
  * @param element - The element to be dragged.
  * @param options - The drag options.
  * @param options.to - The target element or coordinates to drag to.
@@ -51,7 +51,7 @@ export default async function drag(
     to,
     delta,
     steps = 20,
-    duration = 500
+    duration = 100
   }: {
     to?: Element | Coords;
     delta?: { x: number; y: number };
@@ -59,85 +59,54 @@ export default async function drag(
     duration?: number;
   }
 ): Promise<void> {
-  const from = getElementClientCenter(element);
-  const toCoords = delta
-    ? {
-        x: from.x + delta.x,
-        y: from.y + delta.y
-      }
-    : getCoords(to);
+  const fromCoords = getCoords(element);
+  let toCoords = to ? getCoords(to) : null;
+  if (delta) {
+    // Use delta if provided
+    toCoords = {
+      x: fromCoords.x + delta.x,
+      y: fromCoords.y + delta.y
+    };
+  } else if (to) {
+    // Calculate center of the target element
+    toCoords = getCoords(to);
+  } else {
+    throw new Error('Either "to" or "delta" must be provided.');
+  }
 
+  // Calculate the step increments
   const step = {
-    x: (toCoords.x - from.x) / steps,
-    y: (toCoords.y - from.y) / steps
+    x: (toCoords.x - fromCoords.x) / steps,
+    y: (toCoords.y - fromCoords.y) / steps
   };
 
   const current = {
-    clientX: from.x,
-    clientY: from.y
+    clientX: fromCoords.x,
+    clientY: fromCoords.y
   };
 
-  // Create a native DataTransfer object
-  const dataTransfer = new DataTransfer();
-
-  // Set identifier for the draggable element in the native DataTransfer
-  const identifier = element.getAttribute('identifier');
-  if (identifier) {
-    dataTransfer.setData('text', identifier);
-  }
-
   // Simulate drag start
-  const dragStartEvent = new DragEvent('dragstart', {
-    clientX: current.clientX,
-    clientY: current.clientY,
-    dataTransfer
-  });
-  element.dispatchEvent(dragStartEvent);
+  fireEvent.mouseEnter(element, current);
+  fireEvent.mouseOver(element, current);
+  fireEvent.mouseMove(element, current);
+  fireEvent.mouseDown(element, current);
 
-  // Simulate drag movement
+  // Simulate drag movement in steps
   for (let i = 0; i < steps; i++) {
-    current.clientX += step.x;
-    current.clientY += step.y;
+    if (i === steps - 1) {
+      // Ensure the last step lands exactly at toCoords
+      current.clientX = toCoords.x;
+      current.clientY = toCoords.y;
+    } else {
+      // Incrementally move toward toCoords
+      current.clientX += step.x;
+      current.clientY += step.y;
+    }
     await sleep(duration / steps);
-    dataTransfer.dropEffect = 'move'; // Manually set the dropEffect property
-    const dragEvent = new DragEvent('drag', {
-      clientX: current.clientX,
-      clientY: current.clientY,
-      dataTransfer
-    });
-    element.dispatchEvent(dragEvent);
-    fireEvent.mouseMove(element, { ...current, dataTransfer });
-  }
-
-  // Add a dragover handler to the drop target to set dropEffect
-  if (to && isElement(to)) {
-    (to as Element).addEventListener('dragover', (event: DragEvent) => {
-      event.preventDefault(); // Allow the drop
-      event.dataTransfer.dropEffect = 'move'; // Set drop effect to move
-    });
-  }
-
-  // Manually call the dropHandler
-  const dropEvent = new DragEvent('drop', {
-    clientX: current.clientX,
-    clientY: current.clientY,
-    dataTransfer
-  });
-
-  // Dispatch drop event to the target element
-  if (to && isElement(to)) {
-    (to as Element).dispatchEvent(dropEvent);
+    fireEvent.mouseMove(element, current);
   }
 
   // Simulate drag end
-  await sleep(200);
-
-  const dragEndEvent = new DragEvent('dragend', {
-    clientX: current.clientX,
-    clientY: current.clientY,
-    dataTransfer
-  });
-  element.dispatchEvent(dragEndEvent);
-
-  fireEvent.mouseUp(element, { ...current, dataTransfer });
+  fireEvent.mouseUp(element, current);
+  await sleep(100);
 }

@@ -25,7 +25,8 @@ export class QtiGraphicGapMatchInteraction extends DragDropInteractionMixin(
   override render() {
     return html` <slot name="prompt"></slot>
       <slot></slot>
-      <slot name="qti-gap-img"></slot>`;
+      <slot name="qti-gap-img"></slot>
+      <div role="alert" id="validationMessage"></div>`;
   }
 
   private positionHotspotOnRegister(e: CustomEvent<null>): void {

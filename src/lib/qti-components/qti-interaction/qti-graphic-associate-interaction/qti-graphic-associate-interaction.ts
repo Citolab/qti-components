@@ -107,7 +107,8 @@ export class QtiGraphicAssociateInteraction extends Interaction {
           />`}
         </svg>
         <slot></slot>
-      </line-container>`;
+      </line-container>
+      <div role="alert" id="validationMessage"></div>`;
   }
 
   private positionHotspotOnRegister(e: CustomEvent<QtiHotspotChoice>): void {
