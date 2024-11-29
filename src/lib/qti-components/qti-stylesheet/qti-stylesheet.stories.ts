@@ -8,7 +8,7 @@ import '../qti-item-body/qti-item-body';
 import '../qti-stylesheet/qti-stylesheet';
 import { QtiStylesheet } from '../qti-stylesheet/qti-stylesheet';
 
-import inlineCSS from './inline.css?raw';
+import inlineCSS from '../../../../public/assets/qti-stylesheet/linked.css?inline';
 
 const meta = {
   component: 'qti-stylesheet'

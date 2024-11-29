@@ -1,7 +1,7 @@
 import { QtiAssessmentItem, QtiSimpleChoice } from '@citolab/qti-components/qti-components';
 import { action } from '@storybook/addon-actions';
 import { expect, within } from '@storybook/test';
-import { fireEvent } from '@storybook/testing-library';
+import { fireEvent } from '@storybook/test';
 import type { ArgTypes, Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import { getItemByUri } from '../../../../lib/qti-loader';

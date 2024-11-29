@@ -35,3 +35,4 @@ public/assets/api/test
 .env
 public/assets/api/conformance
 *__screenshots__/
+.eslintcache

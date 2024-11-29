@@ -45,11 +45,11 @@ export class QtiHotspotInteraction extends ChoicesMixin(Interaction, 'qti-hotspo
 
   override connectedCallback(): void {
     super.connectedCallback();
-    this.addEventListener('qti-register-choice', this.positionHotspotOnRegister);
+    this.addEventListener('register-qti-hotspot-choice', this.positionHotspotOnRegister);
   }
   override disconnectedCallback() {
     super.disconnectedCallback();
-    this.removeEventListener('qti-register-choice', this.positionHotspotOnRegister);
+    this.removeEventListener('unregister-qti-hotspot-choice', this.positionHotspotOnRegister);
   }
 }
 

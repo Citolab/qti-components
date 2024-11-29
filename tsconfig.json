@@ -1,28 +1,29 @@
 {
   "compilerOptions": {
-    "target": "es2017",
+    "target": "ES2020",
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "declaration": true,
-    // "emitDeclarationOnly": true,
     "outDir": "./build",
     "strict": false,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "module": "es2020",
     "moduleResolution": "Bundler",
-    "isolatedModules": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
-    "useDefineForClassFields": false,
-    "skipLibCheck": true,
+    "allowArbitraryExtensions": true,
+    // "strictNullChecks": false,
+    // "exactOptionalPropertyTypes": false,
+    "downlevelIteration": true,
     "baseUrl": "./",
     "paths": {
-      "@citolab/qti-components/qti-components": ["src/lib/qti-components"]
+      "@citolab/qti-components/qti-components": ["src/lib/qti-components"],
+      "@citolab/qti-components/qti-item": ["src/lib/qti-item"],
+      "@citolab/qti-components/qti-transformers": ["src/lib/qti-transformers"],
+      "@citolab/qti-components/qti-loader": ["src/lib/qti-loader"]
     },
     "types": ["vitest/globals","@types/dom-view-transitions","./test/vitest.d.ts"]
   },

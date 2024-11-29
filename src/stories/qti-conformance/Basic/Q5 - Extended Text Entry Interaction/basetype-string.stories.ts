@@ -6,7 +6,7 @@ import {
 } from '@citolab/qti-components/qti-components';
 import { action } from '@storybook/addon-actions';
 import { expect } from '@storybook/test';
-import { fireEvent, screen, userEvent } from '@storybook/testing-library';
+import { fireEvent, screen, userEvent } from '@storybook/test';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';

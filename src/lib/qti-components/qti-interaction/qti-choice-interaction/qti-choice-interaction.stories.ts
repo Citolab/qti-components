@@ -2,12 +2,10 @@ import { action } from '@storybook/addon-actions';
 import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
-import { expect, fn, within } from '@storybook/test';
-import { fireEvent, waitFor } from '@storybook/testing-library';
+import { expect, fireEvent, fn, waitFor, within } from '@storybook/test';
 import type { Meta, StoryObj } from '@storybook/web-components';
 
 import { QtiChoiceInteraction, QtiSimpleChoice } from '@citolab/qti-components/qti-components';
-
 
 type Story = StoryObj; // <Props>;
 

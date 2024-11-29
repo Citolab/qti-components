@@ -21,14 +21,29 @@
   "engines": {
     "node": ">=20.0.0"
   },
-  "version": "6.9.1-beta.65",
+  "version": "6.9.1-beta.75",
   "type": "module",
   "exports": {
-    "./qti-components": "./dist/qti-components/index.js",
-    "./qti-transformers": "./dist/qti-transformers/index.js",
-    "./qti-item": "./dist/qti-item/index.js",
-    "./qti-loader": "./dist/qti-loader/index.js",
-    "./item.css": "./dist/item.css"
+    "./qti-components": {
+      "import": "./dist/qti-components/index.js",
+      "require": "./dist/qti-components/index.cjs"
+    },
+    "./qti-transformers": {
+      "import": "./dist/qti-transformers/index.js",
+      "require": "./dist/qti-transformers/index.cjs"
+    },
+    "./qti-item": {
+      "import": "./dist/qti-item/index.js",
+      "require": "./dist/qti-item/index.cjs"
+    },
+    "./qti-loader": {
+      "import": "./dist/qti-loader/index.js",
+      "require": "./dist/qti-loader/index.cjs"
+    },
+    "./item.css": "./dist/item.css",
+    "./index.js": "./dist/index.js",
+    "./index.min.js": "./dist/index.min.js",
+    "./index.global.js": "./dist/index.global.js"
   },
   "types": "./dist/qti-components/index.d.ts",
   "typesVersions": {
@@ -53,107 +68,134 @@
     "./dist/item.css"
   ],
   "scripts": {
-    "test": "vitest run",
     "dev": "vite",
+    "test": "vitest run",
     "build": "wireit",
-    "build-lib": "tsx scripts/build.ts",
-    "watch-lib": "nodemon --watch \"src/**\" --ext \"ts,json,css\" --ignore \"src/**/*.spec.ts\" --exec \"tsx scripts/build.ts\" watch",
+    "watch": "wireit",
+    "attw": "wireit",
+    "lint": "wireit",
+    "cem": "wireit",
+    "css": "wireit",
+    "stylelint": "stylelint \"src/**/*.css\"",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "storybook:build": "storybook build",
     "storybook:test": "test-storybook",
-    "cem": "cem analyze --watch",
-    "lint": "eslint src/lib/**",
-    "arethetypeswrong": "wireit",
-    "----hooks----": "-",
-    "prepublishOnly": "echo 'calling prepublishOnly as npm lifecycle hook to build-lib!' && npm run build-lib",
-    "postpublish": "echo 'posthook for prosperity, does nothing for now!'",
-    "test:browser": "vitest --browser.headless=false",
     "chromatic": "node chromatic-runner.cjs",
+    "----hooks----": "-",
+    "prepublishOnly": "npm run build",
     "prepare": "husky"
   },
   "wireit": {
-    "build": {
-      "command": "tsc"
+    "watch": {
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "command": "tsup",
+      "output": [
+        "dist"
+      ]
     },
-    "arethetypeswrong": {
-      "command": "attw --pack",
+    "build": {
+      "env": {
+        "NODE_ENV": "production"
+      },
+      "command": "tsup --silent",
       "dependencies": [
-        "build-lib"
+        "cem",
+        "css"
+      ],
+      "clean": true
+    },
+    "lint": {
+      "command": "eslint --color --cache --cache-location .eslintcache src/lib/**/*.ts"
+    },
+    "cem": {
+      "command": "cem analyze --litelement --outdir \"dist\""
+    },
+    "css": {
+      "command": "postcss src/item.css -d dist -m"
+    },
+    "attw": {
+      "command": "attw --pack --exclude-entrypoints ./item.css ./index.js ./index.global.js ./index.min.js",
+      "dependencies": [
+        "build"
       ]
     }
   },
   "peerDependencies": {
     "@lit/context": "^1.1.2",
-    "lit": "^3.2.0"
+    "lit": "^3.2.0",
+    "lit-html": "^3.2.1"
   },
   "devDependencies": {
-    "@arethetypeswrong/cli": "^0.16.4",
+    "@arethetypeswrong/cli": "^0.17.0",
     "@chromatic-com/storybook": "^3.2.2",
     "@custom-elements-manifest/analyzer": "^0.10.3",
-    "@eslint/js": "^9.13.0",
-    "@lit-labs/preact-signals": "^1.0.2",
+    "@eslint/js": "^9.15.0",
     "@lit/context": "^1.1.3",
     "@ljcl/storybook-addon-cssprops": "^4.0.0",
-    "@storybook/addon-a11y": "^8.4.2",
-    "@storybook/addon-essentials": "^8.4.2",
-    "@storybook/addon-interactions": "^8.4.2",
-    "@storybook/addon-links": "^8.4.2",
-    "@storybook/blocks": "^8.4.2",
-    "@storybook/preview-api": "^8.4.2",
-    "@storybook/test": "^8.4.2",
-    "@storybook/test-runner": "^0.19.1",
-    "@storybook/testing-library": "^0.2.2",
-    "@storybook/web-components": "^8.4.2",
-    "@storybook/web-components-vite": "^8.4.2",
+    "@storybook/addon-a11y": "^8.4.5",
+    "@storybook/addon-essentials": "^8.4.5",
+    "@storybook/addon-interactions": "^8.4.5",
+    "@storybook/addon-links": "^8.4.5",
+    "@storybook/blocks": "^8.4.5",
+    "@storybook/preview-api": "^8.4.5",
+    "@storybook/test": "^8.4.5",
+    "@storybook/test-runner": "^0.20.0",
+    "@storybook/web-components": "^8.4.5",
+    "@storybook/web-components-vite": "^8.4.5",
+    "@swc/core": "^1.9.3",
     "@testing-library/dom": "^10.4.0",
     "@types/dom-view-transitions": "^1.0.5",
-    "@types/node": "^22.8.6",
-    "@typescript-eslint/eslint-plugin": "^8.12.2",
-    "@typescript-eslint/parser": "^8.12.2",
-    "@vitest/browser": "^2.1.4",
-    "@wdio/cli": "^9.2.6",
+    "@types/node": "^22.9.3",
+    "@typescript-eslint/eslint-plugin": "^8.15.0",
+    "@typescript-eslint/parser": "^8.15.0",
+    "@vitest/browser": "^2.1.5",
     "autoprefixer": "^10.4.20",
-    "chromatic": "^11.16.3",
+    "chromatic": "^11.18.1",
+    "custom-element-eslint-rule-generator": "^1.0.1",
+    "custom-element-jsx-integration": "^1.5.3",
+    "custom-element-react-wrappers": "^1.6.8",
     "custom-element-vs-code-integration": "^1.4.1",
     "dotenv": "^16.4.5",
-    "eslint": "^9.13.0",
+    "eslint": "^9.15.0",
     "eslint-import-resolver-typescript": "^3.6.3",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-lit": "^1.15.0",
     "eslint-plugin-lit-a11y": "^4.1.4",
     "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-sort-imports-es6-autofix": "^0.6.0",
-    "eslint-plugin-storybook": "^0.11.0",
+    "eslint-plugin-storybook": "^0.11.1",
     "eslint-plugin-wc": "^2.2.0",
-    "globals": "^15.11.0",
+    "fast-xml-parser": "^4.5.0",
+    "globals": "^15.12.0",
     "husky": "^9.1.7",
     "lit": "^3.2.1",
     "nodemon": "^3.1.7",
-    "np": "^10.0.7",
+    "np": "^10.1.0",
     "path-browserify": "^1.0.1",
-    "playwright": "^1.48.2",
-    "postcss": "^8.4.47",
+    "playwright": "^1.49.0",
+    "postcss": "^8.4.49",
     "postcss-class-apply": "^4.0.1",
+    "postcss-cli": "^11.0.0",
     "postcss-import": "^16.1.0",
     "postcss-nesting": "^13.0.1",
     "prettier": "3.3.3",
     "remark-gfm": "^4.0.0",
-    "storybook": "^8.4.2",
+    "storybook": "^8.4.5",
     "stylelint": "^16.10.0",
     "stylelint-config-standard": "^36.0.1",
     "stylelint-prettier": "^5.0.2",
     "tsup": "^8.3.5",
     "tsx": "^4.19.2",
-    "typescript": "^5.6.3",
-    "typescript-eslint": "^8.12.2",
-    "vite": "^5.4.10",
-    "vite-tsconfig-paths": "^5.0.1",
-    "vitest": "^2.1.4",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.15.0",
+    "vite": "^5.4.11",
+    "vitest": "^2.1.5",
     "wireit": "^0.14.9"
   },
   "optionalDependencies": {
-    "@rollup/rollup-linux-x64-gnu": "^4.24.3"
+    "@rollup/rollup-linux-x64-gnu": "^4.27.4"
   },
   "customElements": "custom-elements.json",
   "bugs": {

@@ -1,6 +1,6 @@
 import pluginJs from '@eslint/js';
 import globals from 'globals';
-import tseslint from 'typescript-eslint';
+import { configs } from 'typescript-eslint';
 
 import importPlugin from 'eslint-plugin-import';
 import litPlugin from 'eslint-plugin-lit';
@@ -12,7 +12,7 @@ export default [
   { files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'] },
   { languageOptions: { globals: globals.browser } },
   pluginJs.configs.recommended,
-  ...tseslint.configs.recommended,
+  ...configs.recommended,
   importPlugin.flatConfigs.recommended,
   {
     files: ['**/*.{js,mjs,cjs,ts,tsx}'],
@@ -23,7 +23,7 @@ export default [
     rules: {
       'no-unused-vars': 'off',
       'import/no-dynamic-require': 'warn',
-      'import/no-nodejs-modules': 'warn',
+      'import/no-nodejs-modules': ['error', { allow: ['path', 'fs'] }],
       'import/no-unresolved': 'error',
       'import/no-duplicates': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
@@ -39,9 +39,7 @@ export default [
         // See also https://github.com/import-js/eslint-import-resolver-typescript#configuration
         typescript: {
           alwaysTryTypes: true, // always try to resolve types under `<root>@types` directory even it doesn't contain any source code, like `@types/unist`
-
           // Choose from one of the "project" configs below or omit to use <root>/tsconfig.json by default
-
           // use <root>/path/to/folder/tsconfig.json
           project: 'tsconfig.json'
         }

@@ -1,7 +1,7 @@
 import { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
 import { action } from '@storybook/addon-actions';
 import { expect, within } from '@storybook/test';
-import { fireEvent } from '@storybook/testing-library';
+import { fireEvent } from '@storybook/test';
 import type { ArgTypes, Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import { getItemByUri } from '../../../../lib/qti-loader';
@@ -67,7 +67,6 @@ export const D13: Story = {
   name: 'I9-L1-D13',
 
   render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
-
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
@@ -122,7 +121,6 @@ export const D14: Story = {
   name: 'I9-L1-D14',
 
   render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
-
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
