@@ -5,9 +5,8 @@ import { action } from '@storybook/addon-actions';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import '../../qti-prompt/qti-prompt';
 
-import { expect, fn, within } from '@storybook/test';
+import { expect, fireEvent, fn, within } from '@storybook/test';
 import type { Meta, StoryObj } from '@storybook/web-components';
-import { fireEvent } from '@storybook/testing-library';
 
 type Story = StoryObj;
 

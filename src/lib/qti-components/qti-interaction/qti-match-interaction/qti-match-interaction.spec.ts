@@ -1,5 +1,3 @@
-import '@citolab/qti-components/qti-components';
-
 import { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
 import { userEvent } from '@storybook/test';
 import { render } from 'lit';

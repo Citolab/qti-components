@@ -1,8 +1,8 @@
 import { html } from 'lit';
 
-import { qtiTransformItem } from 'src/lib/qti-transformers';
 import './qti-custom-interaction';
 import itemXML from './qti-custom-interaction.xml?raw';
+import { qtiTransformItem } from '@citolab/qti-components/qti-transformers';
 export default {
   component: 'qti-custom-interaction'
 };

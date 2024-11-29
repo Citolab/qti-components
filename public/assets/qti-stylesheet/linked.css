@@ -1,32 +1,33 @@
-qti-assessment-item qti-simple-choice {
+qti-simple-choice {
   position: relative !important;
   margin: 20px !important;
-  background: #ffffff ;
-  color: rgb(63, 63, 63) !important;
+  background: #fff;
+  color: rgb(63 63 63) !important;
   font-size: 20px !important;
-  font-weight: bold !important;
   line-height: 1.3em !important;
-  border: 2px dashed rgb(172, 172, 172) !important;
+  border: 2px dashed rgb(172 172 172) !important;
   border-radius: 10px !important;
   font-weight: 800 !important;
-  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
-qti-assessment-item qti-simple-choice:nth-child(0) {
+
+qti-simple-choice:first-child {
   transform: rotate(1deg);
 }
-qti-assessment-item qti-simple-choice:nth-child(1) {
+
+qti-simple-choice:nth-child(1) {
   transform: rotate(-2deg);
 }
-qti-assessment-item qti-simple-choice:nth-child(2) {
+
+qti-simple-choice:nth-child(2) {
   transform: rotate(3deg);
 }
 
-qti-assessment-item qti-simple-choice[aria-checked='true'] {
-  background-color: aqua!important;
-  /* animation: zoom 0.2s ease-in; */
+qti-simple-choice[aria-checked='true'] {
+  background-color: aqua !important;
 }
 
-qti-assessment-item qti-simple-choice:hover {
+qti-simple-choice:hover {
   animation-name: wiggle;
   animation-duration: 1.4s;
   animation-direction: infinite;
@@ -38,6 +39,7 @@ qti-assessment-item qti-simple-choice:hover {
   0% {
     transform: scale(1);
   }
+
   100% {
     transform: scale(1.2);
   }
@@ -47,15 +49,17 @@ qti-assessment-item qti-simple-choice:hover {
   0% {
     /* transform: rotate(6deg); */
   }
+
   50% {
     transform: rotate(-6deg);
   }
+
   100% {
     /* transform: rotate(6deg); */
   }
 }
 
-qti-assessment-item button:active {
-  transform: translate(0px, 5px);
+button:active {
+  transform: translate(0, 5px);
   border-bottom: 1px solid;
 }
