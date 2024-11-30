@@ -34,12 +34,12 @@ const meta: Meta = {
         'qti-input-width-15',
         'qti-input-width-20',
         'qti-input-width-72',
-        'data-choices-container-width'
+        'data-choices-container-width',
+        'data-max-selections-message',
+        'data-min-selections-message'
       ],
       table: { category: 'QTI' }
-    },
-    'data-max-selections-message': { description: 'unsupported', table: { category: 'QTI' } },
-    'data-min-selections-message': { description: 'unsupported', table: { category: 'QTI' } }
+    }
   }
 };
 export default meta;
