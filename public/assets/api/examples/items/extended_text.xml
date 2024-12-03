@@ -4,9 +4,15 @@
 <qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
 	xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
-	identifier="extendedText" title="Writing a Postcard" adaptive="false" time-dependent="false">
+	identifier="ITM-extended_text" title="Writing a Postcard" adaptive="false"
+	time-dependent="false">
 	<qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="string" />
 	<qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float" />
+	<qti-outcome-declaration identifier="MAXSCORE" cardinality="single" base-type="float" external-scored="human">
+		<qti-default-value>
+			<qti-value>4</qti-value>
+		</qti-default-value>
+	</qti-outcome-declaration>
 	<qti-item-body>
 		<p>Read this postcard from your English pen-friend, Sam.</p>
 		<div>
