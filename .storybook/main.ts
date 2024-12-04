@@ -30,6 +30,7 @@ const config: StorybookConfig = {
   async viteFinal(config, { configType }) {
     return {
       ...config,
+      plugins: [...config.plugins!, tsconfigPaths.default()],
       resolve: { ...config.resolve, alias: { ...config!.resolve!.alias, path: require.resolve('path-browserify') } }
     };
   }

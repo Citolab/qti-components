@@ -1,4 +1,5 @@
 import { defineConfig } from 'vitest/config';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
   base: process.env.VITEST ? undefined : './src',
@@ -16,6 +17,14 @@ export default defineConfig({
           args: ['--remote-debugging-port=9222']
         }
       }
+    }
+  },
+  plugins: [tsconfigPaths()],
+  /* FIXME: This is a workaround for the issue with Vite 2.6.0 */
+  /* See: https://github.com/vitest-dev/vscode/discussions/337 */
+  server: {
+    fs: {
+      strict: process.env.VITEST_VSCODE ? false : true
     }
   }
 });

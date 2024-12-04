@@ -1,15 +1,19 @@
 import type { Preview } from '@storybook/web-components';
 
-import '../src/index.ts';
+import { setCustomElementsManifest } from '@storybook/web-components';
+import customElements from '../dist/custom-elements.json';
+setCustomElementsManifest(customElements);
+
+import '../src/lib/qti-components';
+import '../src/lib/qti-test';
+import '../src/lib/qti-item';
 import '../src/item.css';
 import { customViewports } from './custom-viewport-sizes';
-// setCustomElementsManifest(customElements);
 
 const preview: Preview = {
   globalTypes: {
     pseudo: {}
   },
-  // https://storybook.js.org/docs/web-components/essentials/controls#custom-control-type-matchers
   parameters: {
     controls: {
       expanded: true
