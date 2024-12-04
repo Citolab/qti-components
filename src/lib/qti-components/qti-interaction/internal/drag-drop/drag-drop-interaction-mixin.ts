@@ -118,7 +118,8 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
         ev.dataTransfer.setData('responseIdentifier', this.responseIdentifier);
       }
       target.setAttribute('dragging', '');
-      this.activateDroppables();
+
+      this.activateDroppables(target);
     };
 
     private handleDragEnd = async (ev: DragEvent) => {
@@ -135,8 +136,16 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       }
     };
 
-    private activateDroppables(): void {
-      this.droppables.forEach(d => d.setAttribute('enabled', ''));
+    private activateDroppables(target: HTMLElement): void {
+      this.droppables.forEach(d => {
+        d.setAttribute('enabled', '');
+        if (d.hasAttribute('disabled')) {
+          if (d.contains(target) || (d.shadowRoot && d.shadowRoot.contains(target))) {
+            d.removeAttribute('disabled');
+            d.setAttribute('dropzone', 'move');
+          }
+        }
+      });
     }
 
     private deactivateDroppables(): void {

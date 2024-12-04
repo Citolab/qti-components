@@ -140,8 +140,8 @@ export const DroppablesMixin = <T extends Constructor<Interaction>>(
 
     private isValidDrop(droppable: HTMLElement, draggable: HTMLElement, responseIdentifierDraggable: string): boolean {
       return (
-        this.responseIdentifier === responseIdentifierDraggable &&
-        draggable.parentElement.getAttribute('identifier') !== droppable.getAttribute('identifier')
+        this.responseIdentifier === responseIdentifierDraggable
+        // && draggable.parentElement.getAttribute('identifier') !== droppable.getAttribute('identifier')
       );
     }
 
