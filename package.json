@@ -76,7 +76,7 @@
   ],
   "scripts": {
     "dev": "vite",
-    "test": "vitest",
+    "test": "vitest run",
     "build": "wireit",
     "watch": "wireit",
     "attw": "wireit",
