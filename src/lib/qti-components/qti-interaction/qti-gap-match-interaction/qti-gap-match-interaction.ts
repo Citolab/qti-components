@@ -1,10 +1,12 @@
-import { css, html, LitElement } from 'lit';
+import { css, html, LitElement, PropertyValues } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-interaction-mixin';
 import { Interaction } from '../internal/interaction/interaction';
 
 @customElement('qti-gap-match-interaction')
 export class QtiGapMatchInteraction extends DragDropInteractionMixin(Interaction, 'qti-gap-text', false, 'qti-gap') {
+  private observer: MutationObserver | null = null;
+  private resizeObserver: ResizeObserver | null = null;
   static override styles = [
     css`
       :host {
@@ -27,10 +29,14 @@ export class QtiGapMatchInteraction extends DragDropInteractionMixin(Interaction
         flex-direction: row-reverse;
       }
       /* [part='drops'] , */
-      [part='drags'] {
+
+      [name='qti-gap-text'] {
         display: flex;
         align-items: flex-start;
         flex: 1;
+        border: 2px solid transparent;
+        padding: 0.3rem;
+        border-radius: 0.3rem;
         gap: 0.5rem;
       }
     `
@@ -41,6 +47,58 @@ export class QtiGapMatchInteraction extends DragDropInteractionMixin(Interaction
       <slot part="drags" name="qti-gap-text"></slot>
       <slot part="drops"></slot>
       <div role="alert" id="validationMessage"></div>`;
+  }
+
+  override firstUpdated(_changedProperties: PropertyValues) {
+    super.firstUpdated(_changedProperties);
+    this.updateMinDimensionsForDrowZones();
+
+    // MutationObserver to observe changes in child elements
+    this.observer = new MutationObserver(() => this.updateMinDimensionsForDrowZones());
+    this.observer.observe(this, { childList: true, subtree: true });
+
+    // ResizeObserver to monitor size changes of `gapTexts`
+    this.resizeObserver = new ResizeObserver(() => this.updateMinDimensionsForDrowZones());
+    const gapTexts = this.querySelectorAll('qti-gap-text');
+    gapTexts.forEach(gapText => this.resizeObserver?.observe(gapText));
+  }
+
+  override disconnectedCallback() {
+    super.disconnectedCallback();
+
+    // Cleanup MutationObserver
+    if (this.observer) {
+      this.observer.disconnect();
+      this.observer = null;
+    }
+
+    // Cleanup ResizeObserver
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+      this.resizeObserver = null;
+    }
+  }
+
+  private updateMinDimensionsForDrowZones() {
+    const gapTexts = this.querySelectorAll('qti-gap-text');
+    const gaps = this.querySelectorAll('qti-gap');
+    let maxHeight = 0;
+    let maxWidth = 0;
+    gapTexts.forEach(gapText => {
+      const rect = gapText.getBoundingClientRect();
+      maxHeight = Math.max(maxHeight, rect.height);
+      maxWidth = Math.max(maxWidth, rect.width);
+    });
+
+    const dragSlot = this.shadowRoot?.querySelector('[part="drags"]') as HTMLElement;
+    if (dragSlot) {
+      dragSlot.style.minHeight = `${maxHeight}px`;
+      dragSlot.style.minWidth = `${maxWidth}px`;
+    }
+    for (const gap of gaps) {
+      gap.style.minHeight = `${maxHeight}px`;
+      gap.style.minWidth = `${maxWidth}px`;
+    }
   }
 
   set correctResponse(value: string | string[]) {

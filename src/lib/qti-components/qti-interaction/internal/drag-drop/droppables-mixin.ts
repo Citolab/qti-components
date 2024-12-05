@@ -104,6 +104,7 @@ export const DroppablesMixin = <T extends Constructor<Interaction>>(
     }
 
     private activateDroppable(droppable: HTMLElement): void {
+      this.removeAttribute('dragzone-active');
       droppable.setAttribute('active', '');
     }
 
@@ -120,7 +121,7 @@ export const DroppablesMixin = <T extends Constructor<Interaction>>(
         return false;
       }
       await this.moveDraggableToDroppable(draggable, droppable);
-      this.deactivateDroppable(droppable);
+      this.deactivateDroppable(droppable, false);
       return false;
     }
 
@@ -165,7 +166,10 @@ export const DroppablesMixin = <T extends Constructor<Interaction>>(
       // this['checkMaxAssociations']();
     }
 
-    private deactivateDroppable(droppable: HTMLElement): void {
+    private deactivateDroppable(droppable: HTMLElement, makeDragzoneActive = true): void {
+      if (makeDragzoneActive) {
+        this.setAttribute('dragzone-active', '');
+      }
       droppable.removeAttribute('active');
     }
 

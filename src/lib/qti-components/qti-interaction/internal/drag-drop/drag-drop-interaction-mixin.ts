@@ -117,18 +117,20 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       if (this.responseIdentifier) {
         ev.dataTransfer.setData('responseIdentifier', this.responseIdentifier);
       }
+      this.setAttribute('dragzone-active', '');
       target.setAttribute('dragging', '');
-
+      this.activateDragLocation();
       this.activateDroppables(target);
     };
 
     private handleDragEnd = async (ev: DragEvent) => {
       ev.preventDefault();
+      this.removeAttribute('dragzone-active');
+      this.deactivateDragLocation();
       this.deactivateDroppables();
       const draggable = ev.currentTarget as HTMLElement;
       draggable.removeAttribute('dragging');
       const wasDropped = await this.wasDropped(ev);
-      console.log('wasDropped', wasDropped);
       if (!wasDropped) {
         if (this.configuration.dragCanBePlacedBack) {
           this.restoreInitialDraggablePosition(draggable);
@@ -146,6 +148,14 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
           }
         }
       });
+    }
+
+    private activateDragLocation(): void {
+      this.setAttribute('dragzone-enabled', '');
+    }
+
+    private deactivateDragLocation(): void {
+      this.removeAttribute('dragzone-enabled');
     }
 
     private deactivateDroppables(): void {

@@ -169,8 +169,6 @@
   border-radius: var(--qti-border-radius);
   position: relative;
   background-color: var(--qti-bg);
-  width: 100px;
-  height: 50px;
 }
 
 /* Apply .dropping for an indicator where you can drop the draggable */

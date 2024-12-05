@@ -9,12 +9,12 @@ import drag from '../../../../testing/drag';
 type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {
-  title: 'qti-conformance/advanced/Q-6 Gap Match Interaction'
+  component: 'qti-match-interaction'
 };
 export default meta;
 
-export const Q6Xtra: Story = {
-  name: 'Q6-L2-X-Not-Allowed-To-Drop-In-Other-Interaction',
+export const Default: Story = {
+  name: 'Not-Allowed-To-Drop-In-Other-Interaction',
   render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
@@ -77,8 +77,8 @@ export const Q6Xtra: Story = {
   ]
 };
 
-export const Q6Xtra2: Story = {
-  name: 'Q6-L2-X-Can-Redrop-In-Same-Gap',
+export const CanRedrop: Story = {
+  name: 'Can-Redrop-In-Same-Gap',
   render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
@@ -145,3 +145,71 @@ export const Q6Xtra2: Story = {
     })
   ]
 };
+
+export const DraggableContainerHasDropInDication: Story = {
+  name: 'Dropzone-has-drop-indication',
+  render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
+    let item: QtiAssessmentItem;
+    const onInteractionChangedAction = action('qti-interaction-changed');
+    const onOutcomeChangedAction = action('qti-outcome-changed');
+    const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => {
+      item = qtiAssessmentItem;
+      action('qti-assessment-item-connected');
+    };
+
+    return html`
+      <div
+        class="item"
+        @qti-interaction-changed=${onInteractionChangedAction}
+        @qti-outcome-changed=${onOutcomeChangedAction}
+        @qti-assessment-item-connected=${onItemFirstUpdated}
+      >
+        ${xml}
+      </div>
+      <button
+        @click=${() => {
+          item?.processResponse();
+        }}
+      >
+        Submit
+      </button>
+    `;
+  },
+  args: {
+    // docsHint: 'Some other value than the default'
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
+    assessmentItem.querySelector('qti-prompt').innerHTML = `
+      When a draggable is dragged, the dragzone should indicate that it can be dropped`;
+
+    const gapTextWinter = assessmentItem.querySelector('qti-gap-text[identifier="W"]') as QtiGapText;
+    // const gapTextSpring = assessmentItem.querySelector('qti-gap-text[identifier="Sp"]') as QtiGapText;
+    // const gapTextSummer = assessmentItem.querySelector('qti-gap-text[identifier="Su"]') as QtiGapText;
+    // const gapTextAutumn = assessmentItem.querySelector('qti-gap-text[identifier="A"]') as QtiGapText;
+
+    const gapG1 = assessmentItem.querySelector('qti-gap[identifier="G1"]') as QtiGapText;
+    // const gapG2 = assessmentItem.querySelector('qti-gap[identifier="G2"]') as QtiGapText;
+    await step('drag Winter to G1', async () => {
+      // Simulate the drag and drop operation
+
+      const QtiGapMatchInteraction = assessmentItem.querySelector('qti-gap-match-interaction');
+      drag(gapTextWinter, { to: gapG1, duration: 300 }).then(async () => {
+        await timeoutPromise(200);
+        expect(QtiGapMatchInteraction.hasAttribute('dragzone-enabled')).toBe(false);
+        expect(QtiGapMatchInteraction.hasAttribute('dragzone-active')).toBe(false);
+      });
+      await timeoutPromise(50);
+      expect(QtiGapMatchInteraction.hasAttribute('dragzone-enabled')).toBe(true);
+      expect(QtiGapMatchInteraction.hasAttribute('dragzone-active')).toBe(true);
+    });
+  },
+  loaders: [
+    async ({ args }) => ({
+      xml: await getItemByUri(`assets/qti-conformance/Advanced/Q6/gap-match-example-1-removed.xml`)
+    })
+  ]
+};
+
+const timeoutPromise = (timeout: number) => new Promise(resolve => setTimeout(resolve, timeout));

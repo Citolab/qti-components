@@ -142,6 +142,14 @@
     }
   }
 
+  qti-gap-match-interaction[dragzone-enabled]::part(drags) {
+    @apply dropping;
+  }
+
+  qti-gap-match-interaction[dragzone-active]::part(drags) {
+    @apply act;
+  }
+
   qti-gap-match-interaction {
     & qti-gap-text {
       @apply drag;
@@ -175,7 +183,8 @@
       }
 
       display: inline-flex;
-      width: 8rem; /* w-32 */
+      align-items: center;
+
       &:empty::after {
         padding: var(--qti-padding-md) var(--qti-padding-lg); /* Padding shorthand */
         content: '\0000a0'; /* when empty, put a space in it */
