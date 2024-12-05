@@ -12,6 +12,8 @@ type HotspotChoice = Choice & { order: number };
 export class QtiGraphicOrderInteraction extends ChoicesMixin(Interaction, 'qti-hotspot-choice') {
   choiceOrdering: boolean;
 
+  protected _choiceElements: Choice[] = [];
+
   // do not select ( highlight blue, the image)
   // target the main slot make it relative and fit with the conten
   static override styles = [

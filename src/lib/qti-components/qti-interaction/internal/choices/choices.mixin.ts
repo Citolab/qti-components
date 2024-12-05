@@ -10,13 +10,12 @@ type Constructor<T = {}> = abstract new (...args: any[]) => T;
 export type Choice = HTMLElement & ChoiceInterface & { internals: ElementInternals };
 
 export interface ChoicesInterface extends IInteraction {
-  _choiceElements: Array<Choice>;
   correctResponse: string | string[];
 }
 
 export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, selector: string) => {
   abstract class ChoicesMixinElement extends superClass implements ChoicesInterface {
-    public _choiceElements: Choice[] = [];
+    protected _choiceElements: Choice[] = [];
 
     @query('#validationMessage')
     private _validationMessageElement!: HTMLElement;
@@ -28,17 +27,17 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
     public maxChoices = 1;
 
     @watch('maxChoices', { waitUntilFirstUpdate: true })
-    _handleMaxChoicesChange(_oldValue: number, _newValue: number) {
+    protected _handleMaxChoicesChange(_oldValue: number, _newValue: number) {
       this._determineInputType();
     }
 
     @watch('disabled', { waitUntilFirstUpdate: true })
-    _handleDisabledChange = (_: boolean, disabled: boolean) => {
+    protected _handleDisabledChange = (_: boolean, disabled: boolean) => {
       this._choiceElements.forEach(ch => (ch.disabled = disabled));
     };
 
     @watch('readonly', { waitUntilFirstUpdate: true })
-    _handleReadonlyChange = (_: boolean, readonly: boolean) => {
+    protected _handleReadonlyChange = (_: boolean, readonly: boolean) => {
       this._choiceElements.forEach(choice => (choice.readonly = readonly));
     };
 
@@ -144,8 +143,6 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       const choiceElement = event.target as Choice;
       choiceElement.disabled = this.disabled;
 
-
-      
       this._choiceElements.push(choiceElement);
       this._setInputType(choiceElement);
     }
@@ -163,11 +160,10 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
     }
 
     private _setInputType(choiceElement: Choice) {
-      // choiceElement.setAttribute('role', this.maxChoices === 1 ? 'radio' : 'checkbox');
+      this._internals.ariaLabel = this.maxChoices === 1 ? 'radio-group' : 'checkbox-group';
+
       choiceElement.internals.role = this.maxChoices === 1 ? 'radio' : 'checkbox';
-      choiceElement.internals.states.add(choiceElement.internals.role)
-      // choiceElement.internals.ariaChecked = 'false';
-      // choiceElement.ariaReadOnly = this.readonly == true ? 'true' : 'false';
+      choiceElement.internals.states.add(choiceElement.internals.role);
     }
 
     protected _choiceElementSelectedHandler(event: CustomEvent<{ identifier: string }>) {
