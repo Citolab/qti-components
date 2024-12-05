@@ -1,10 +1,9 @@
-import { qtiTransformItem } from '@citolab/qti-components/qti-transformers';
-
 import { action } from '@storybook/addon-actions';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { QtiItem } from 'src/lib/qti-item';
+import { qtiTransformItem } from '../lib/qti-transformers/';
 
 const meta: Meta = {
   title: 'Api',
