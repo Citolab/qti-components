@@ -43,7 +43,7 @@ const docTheme = create({
 });
 
 addons.setConfig({
-  navSize: 400,
+  navSize: 300,
   bottomPanelHeight: 300,
   rightPanelWidth: 300,
   panelPosition: 'bottom',
@@ -54,7 +54,10 @@ addons.setConfig({
   selectedPanel: undefined,
   initialActive: 'canvas',
   sidebar: {
-    showRoots: true
+    showRoots: true,
+    filters: {
+      items: item => !item.tags?.includes('hidden-docs')
+    }
     // collapsedRoots: ['other']
   }
   // toolbar: {
