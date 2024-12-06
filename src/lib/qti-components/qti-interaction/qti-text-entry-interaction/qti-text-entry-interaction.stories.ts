@@ -1,12 +1,30 @@
 import { html } from 'lit';
-import { action } from '@storybook/addon-actions';
-
-import { QtiTextEntryInteraction } from './qti-text-entry-interaction';
-import './qti-text-entry-interaction';
-import { expect, fireEvent, fn, within } from '@storybook/test';
+import { expect, fireEvent, within } from '@storybook/test';
+import { getWcStorybookHelpers } from 'wc-storybook-helpers';
 import type { Meta, StoryObj } from '@storybook/web-components';
+import type { QtiTextEntryInteraction } from '@citolab/qti-components/qti-components';
 
-type Story = StoryObj; // <Props>;
+const { events, args, argTypes, template } = getWcStorybookHelpers('qti-text-entry-interaction');
+
+type Story = StoryObj<QtiTextEntryInteraction & typeof args>;
+
+const meta: Meta<QtiTextEntryInteraction> = {
+  component: 'qti-text-entry-interaction',
+  args,
+  argTypes,
+  parameters: {
+    actions: {
+      handles: events
+    }
+  }
+};
+export default meta;
+
+export const Default = {
+  render: args => {
+    return html` ${template(args)} `;
+  }
+};
 
 const inputWidthClass = [
   '',
@@ -26,37 +44,6 @@ const inputWidthClass = [
   'qti-input-width-50',
   'qti-input-width-72'
 ];
-
-export default {
-  component: 'qti-text-entry-interaction',
-  argTypes: {
-    // response: { type: 'string' },
-    // expectedLength: { type: 'number' },
-    // readonly: { description: 'attr: qti-inline-choice-interaction', type: 'boolean' },
-    // disabled: { description: 'attr: qti-inline-choice-interaction', type: 'boolean' },
-  }
-};
-
-export const Default = {
-  render: args => {
-    return html`
-      <qti-text-entry-interaction
-        @qti-register-interaction="${action(`qti-register-interaction`)}"
-        @qti-interaction-response="${action(`qti-interaction-response`)}"
-        .response=${args.response}
-        ?disabled=${args.disabled}
-        ?readonly=${args.readonly}
-        placeholder-text="totaal"
-        class="text-entry-interaction ${inputWidthClass}"
-        expected-length=${args.expectedLength}
-        pattern-mask=${args.patternMask}
-        data-patternmask-message=${args.dataPatternmaskMessage}
-        response-identifier="RESPONSE"
-      >
-      </qti-text-entry-interaction>
-    `;
-  }
-};
 
 export const PatternMask = {
   render: Default.render,

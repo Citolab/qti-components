@@ -88,7 +88,7 @@
     "storybook": "wireit",
     "build-storybook": "storybook build",
     "storybook:test": "test-storybook",
-    "storybook-docs": "storybook dev --docs -c .storybook-docs",
+    "storybook:docs": "wireit",
     "chromatic": "node chromatic-runner.cjs",
     "----hooks----": "-",
     "prepublishOnly": "npm run build",
@@ -112,6 +112,12 @@
     },
     "storybook": {
       "command": "storybook dev -p 6006",
+      "dependencies": [
+        "cem:watch"
+      ]
+    },
+    "storybook:docs": {
+      "command": "storybook dev --docs -c .storybook-docs",
       "dependencies": [
         "cem:watch"
       ]

@@ -1,13 +1,11 @@
-import { Canvas, Meta } from '@storybook/blocks';
+import { Canvas, Meta, Controls } from '@storybook/blocks';
 
 import * as Stories from './qti-text-entry-interaction.stories';
 
-<Meta title="qti-interactions-basic/qti-text-entry-interaction" tags={['hidden-docs']} />
+<Meta title="interactions/qti-text-entry-interaction" />
 
 # qti-text-entry-interaction
 
 <Canvas of={Stories.Default} />
 
-<Canvas of={Stories.Sizes} />
-
-<Canvas of={Stories.Formula} />
+<Controls of={Stories.Default} />
