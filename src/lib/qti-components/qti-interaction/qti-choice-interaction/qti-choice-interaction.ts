@@ -7,6 +7,8 @@ import { VocabularyMixin } from '../internal/vocabulary/vocabulary-mixin';
 import styles from './qti-choice-interaction.styles';
 import { Interaction } from '../internal/interaction/interaction';
 
+export type Orientation = 'horizontal' | 'vertical' | undefined;
+
 @customElement('qti-choice-interaction')
 export class QtiChoiceInteraction
   extends VocabularyMixin(
@@ -17,9 +19,14 @@ export class QtiChoiceInteraction
 {
   static styles: CSSResultGroup = styles;
 
+  constructor() {
+    super();
+    this._internals.role = 'group';
+  }
+
   /** orientation of choices */
   @property({ type: String })
-  public orientation: 'horizontal' | 'vertical';
+  public orientation: Orientation;
 
   render() {
     return html`

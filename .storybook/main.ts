@@ -36,13 +36,3 @@ const config: StorybookConfig = {
   }
 };
 export default config;
-
-// PK: to get UnoCSS to work with vite and not the postcss plugin we had to overcome some problems
-// first issue integrating in storybook, second issue, UnoCSS is esm only
-// https://github.com/unocss/unocss/issues/150
-// https://github.com/storybookjs/storybook/issues/23972#issuecomment-1948534058
-// plugins: [
-//   ...config.plugins!,
-//   tsconfigPaths.default()
-//   // (await import('unocss/vite')).default() // { mode: 'shadow-dom' }
-// ],
