@@ -3,6 +3,7 @@ import { setCustomElementsManifest } from '@storybook/web-components';
 import customElements from '../dist/custom-elements.json';
 import { setWcStorybookHelpersConfig } from 'wc-storybook-helpers';
 import { withActions } from '@storybook/addon-actions/decorator';
+import { themes } from '@storybook/theming';
 
 setWcStorybookHelpersConfig({
   hideArgRef: false,

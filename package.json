@@ -81,6 +81,7 @@
     "storybook": "wireit",
     "build-storybook": "storybook build",
     "storybook:test": "test-storybook",
+    "storybook-docs": "storybook dev --docs -c .storybook-docs",
     "chromatic": "node chromatic-runner.cjs",
     "----hooks----": "-",
     "prepublishOnly": "npm run build",
