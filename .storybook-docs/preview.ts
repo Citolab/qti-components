@@ -13,7 +13,7 @@ export default {
     docs: { theme: docTheme },
     options: {
       storySort: {
-        order: ['QTI Components', 'Get started', 'qti-item', 'qti-test', 'qti-choice-interaction']
+        order: ['QTI Test', 'QTI Item', 'qti-item', 'qti-test', 'qti-choice-interaction']
       }
     }
   }

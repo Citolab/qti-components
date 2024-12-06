@@ -21,42 +21,6 @@ export const Unstyled: Story = {
       <test-next> next </test-next>
     </qti-test>
   `
-  // play: async ({ canvasElement }) => {
-  //   const nextButton = canvasElement.querySelector('test-next');
-  //   await findByShadowTitle(canvasElement, 'Info Start');
-  //   await new Promise(resolve => setTimeout(resolve, 500));
-  //   await fireEvent.click(nextButton);
-  //   await new Promise(resolve => setTimeout(resolve, 500));
-  //   await fireEvent.click(nextButton);
-  //   await new Promise(resolve => setTimeout(resolve, 500));
-  //   await fireEvent.click(nextButton);
-  //   await new Promise(resolve => setTimeout(resolve, 500));
-  //   await fireEvent.click(nextButton);
-  //   await new Promise(resolve => setTimeout(resolve, 500));
-  //   await fireEvent.click(nextButton);
-  //   await new Promise(resolve => setTimeout(resolve, 500));
-  //   await fireEvent.click(nextButton);
-  //   await new Promise(resolve => setTimeout(resolve, 500));
-  //   await fireEvent.click(nextButton);
-  //   await new Promise(resolve => setTimeout(resolve, 500));
-  //   await fireEvent.click(nextButton);
-  //   await new Promise(resolve => setTimeout(resolve, 500));
-  //   await fireEvent.click(nextButton);
-  //   await new Promise(resolve => setTimeout(resolve, 500));
-  //   await fireEvent.click(nextButton);
-  //   await new Promise(resolve => setTimeout(resolve, 500));
-  //   await fireEvent.click(nextButton);
-  //   await new Promise(resolve => setTimeout(resolve, 500));
-  //   await fireEvent.click(nextButton);
-  //   await new Promise(resolve => setTimeout(resolve, 500));
-  //   await fireEvent.click(nextButton);
-  //   await new Promise(resolve => setTimeout(resolve, 500));
-  //   await fireEvent.click(nextButton);
-  //   await new Promise(resolve => setTimeout(resolve, 500));
-  //   await fireEvent.click(nextButton);
-  //   await new Promise(resolve => setTimeout(resolve, 500));
-  //   await fireEvent.click(nextButton);
-  // }
 };
 
 export const Styled: Story = {
