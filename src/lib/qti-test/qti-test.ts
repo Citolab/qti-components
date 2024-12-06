@@ -39,9 +39,6 @@ import { TestBase } from './test-base';
  *
  * - **Dynamic Template Loading**:
  *   If a `<template>` element is included as a child of `<qti-test>`, its content is dynamically appended to the shadow DOM.
- *
- * - **Extensibility**:
- *   Built on a mixin architecture for modular functionality.
  */
 @customElement('qti-test')
 export class QtiTest extends TestLoaderMixin(TestNavigationMixin(TestViewMixin(TestBase))) {

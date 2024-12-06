@@ -7,25 +7,6 @@ console.log('Building the custom element manifest...');
 
 const outdir = './';
 
-const removePrivateMembers = {
-  name: 'qti-strip-attributes',
-  packageLinkPhase({ customElementsManifest }) {
-    customElementsManifest?.modules?.forEach(module => {
-      module?.declarations?.forEach(declaration => {
-        Object.keys(declaration).forEach(key => {
-          if (Array.isArray(declaration[key])) {
-            if (key == 'members') declaration[key] = [];
-            // declaration[key] = declaration[key].filter((member) => member.hasOwnProperty('attribute'));
-            declaration[key] = declaration[key].filter(member => !member.privacy?.includes('private'));
-            declaration[key] = declaration[key].filter(member => !member.privacy?.includes('protected'));
-            declaration[key] = declaration[key].filter(member => !member.name?.startsWith('_'));
-          }
-        });
-      });
-    });
-  }
-};
-
 export default {
   /** Globs to analyze */
   globs: ['src/lib/qti-components/**/*.ts', 'src/lib/qti-item/**/*.ts', 'src/lib/qti-test/**/*.ts'],

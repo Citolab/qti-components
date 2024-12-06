@@ -1,12 +1,35 @@
 import { Canvas, Meta, Story } from '@storybook/blocks';
-import * as CheckboxStories from './test.stories';
+import * as QtiTestStories from './test.stories';
+import { Source } from '@storybook/blocks';
 
-<Meta title="qti-test" />
+<Meta title="QTI Test" />
 
 # 👋 HI QTI
 
 A set of test interactions to be used in the educational field.
 
-{/* <Story of={CheckboxStories.Default} autoplay /> */}
+<Story of={QtiTestStories.Styled} autoplay={true} />
 
-<Canvas of={CheckboxStories.Default} />
+<Canvas of={QtiTestStories.Unstyled} />
+
+## Quick Start
+
+Add the following code to your page.
+
+```html
+<script type="module" src="https://cdn.jsdelivr.net/npm/@citolab/qti-components@latest/dist/index.js"></script>
+```
+
+Now you you can navigate your qti assesment test
+
+<Source of={QtiTestStories.Unstyled} dark={true} />
+
+You can style the test with your favorite css
+
+<Canvas of={QtiTestStories.Styled} />
+
+Just add, for example, bootstrap classess to the test components
+
+<Source of={QtiTestStories.Styled} dark={true} />
+
+There are several components to use in your test to navigate the questions

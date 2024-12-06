@@ -13,7 +13,53 @@ const meta: Meta<QtiTest> = {
 };
 export default meta;
 
-export const Default: Story = {
+export const Unstyled: Story = {
+  render: () => html`
+    <qti-test testURL="/assets/api/examples/assessment.xml">
+      <test-container></test-container>
+      <test-prev> previous </test-prev>
+      <test-next> next </test-next>
+    </qti-test>
+  `
+  // play: async ({ canvasElement }) => {
+  //   const nextButton = canvasElement.querySelector('test-next');
+  //   await findByShadowTitle(canvasElement, 'Info Start');
+  //   await new Promise(resolve => setTimeout(resolve, 500));
+  //   await fireEvent.click(nextButton);
+  //   await new Promise(resolve => setTimeout(resolve, 500));
+  //   await fireEvent.click(nextButton);
+  //   await new Promise(resolve => setTimeout(resolve, 500));
+  //   await fireEvent.click(nextButton);
+  //   await new Promise(resolve => setTimeout(resolve, 500));
+  //   await fireEvent.click(nextButton);
+  //   await new Promise(resolve => setTimeout(resolve, 500));
+  //   await fireEvent.click(nextButton);
+  //   await new Promise(resolve => setTimeout(resolve, 500));
+  //   await fireEvent.click(nextButton);
+  //   await new Promise(resolve => setTimeout(resolve, 500));
+  //   await fireEvent.click(nextButton);
+  //   await new Promise(resolve => setTimeout(resolve, 500));
+  //   await fireEvent.click(nextButton);
+  //   await new Promise(resolve => setTimeout(resolve, 500));
+  //   await fireEvent.click(nextButton);
+  //   await new Promise(resolve => setTimeout(resolve, 500));
+  //   await fireEvent.click(nextButton);
+  //   await new Promise(resolve => setTimeout(resolve, 500));
+  //   await fireEvent.click(nextButton);
+  //   await new Promise(resolve => setTimeout(resolve, 500));
+  //   await fireEvent.click(nextButton);
+  //   await new Promise(resolve => setTimeout(resolve, 500));
+  //   await fireEvent.click(nextButton);
+  //   await new Promise(resolve => setTimeout(resolve, 500));
+  //   await fireEvent.click(nextButton);
+  //   await new Promise(resolve => setTimeout(resolve, 500));
+  //   await fireEvent.click(nextButton);
+  //   await new Promise(resolve => setTimeout(resolve, 500));
+  //   await fireEvent.click(nextButton);
+  // }
+};
+
+export const Styled: Story = {
   render: () => html`
     <qti-test testURL="/assets/api/examples/assessment.xml" class="d-flex h-100 w-full flex-column">
       <test-container class="overflow-auto aspect-16/9"></test-container>
@@ -27,41 +73,5 @@ export const Default: Story = {
         </test-next>
       </div>
     </qti-test>
-  `,
-  play: async ({ canvasElement }) => {
-    const nextButton = canvasElement.querySelector('test-next');
-    await findByShadowTitle(canvasElement, 'Info Start');
-    await new Promise(resolve => setTimeout(resolve, 500));
-    await fireEvent.click(nextButton);
-    await new Promise(resolve => setTimeout(resolve, 500));
-    await fireEvent.click(nextButton);
-    await new Promise(resolve => setTimeout(resolve, 500));
-    await fireEvent.click(nextButton);
-    await new Promise(resolve => setTimeout(resolve, 500));
-    await fireEvent.click(nextButton);
-    await new Promise(resolve => setTimeout(resolve, 500));
-    await fireEvent.click(nextButton);
-    await new Promise(resolve => setTimeout(resolve, 500));
-    await fireEvent.click(nextButton);
-    await new Promise(resolve => setTimeout(resolve, 500));
-    await fireEvent.click(nextButton);
-    await new Promise(resolve => setTimeout(resolve, 500));
-    await fireEvent.click(nextButton);
-    await new Promise(resolve => setTimeout(resolve, 500));
-    await fireEvent.click(nextButton);
-    await new Promise(resolve => setTimeout(resolve, 500));
-    await fireEvent.click(nextButton);
-    await new Promise(resolve => setTimeout(resolve, 500));
-    await fireEvent.click(nextButton);
-    await new Promise(resolve => setTimeout(resolve, 500));
-    await fireEvent.click(nextButton);
-    await new Promise(resolve => setTimeout(resolve, 500));
-    await fireEvent.click(nextButton);
-    await new Promise(resolve => setTimeout(resolve, 500));
-    await fireEvent.click(nextButton);
-    await new Promise(resolve => setTimeout(resolve, 500));
-    await fireEvent.click(nextButton);
-    await new Promise(resolve => setTimeout(resolve, 500));
-    await fireEvent.click(nextButton);
-  }
+  `
 };
