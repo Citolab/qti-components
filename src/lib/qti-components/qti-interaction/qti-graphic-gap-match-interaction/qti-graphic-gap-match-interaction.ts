@@ -7,7 +7,7 @@ import { Interaction } from '../internal/interaction/interaction';
 @customElement('qti-graphic-gap-match-interaction')
 export class QtiGraphicGapMatchInteraction extends DragDropInteractionMixin(
   Interaction,
-  'qti-gap-img',
+  'qti-gap-img, qti-gap-text',
   false,
   'qti-associable-hotspot'
 ) {
@@ -16,7 +16,7 @@ export class QtiGraphicGapMatchInteraction extends DragDropInteractionMixin(
       display: inline-block;
       position: relative;
     }
-    slot[name='qti-gap-img'] {
+    slot[name='drags'] {
       border: 2px solid transparent;
       display: inline-flex;
       gap: 1rem;
@@ -38,7 +38,7 @@ export class QtiGraphicGapMatchInteraction extends DragDropInteractionMixin(
   override render() {
     return html` <slot name="prompt"></slot>
       <slot part="image"></slot>
-      <slot part="qti-gap-img" name="qti-gap-img"></slot>
+      <slot part="drags" name="drags"></slot>
       <div role="alert" id="validationMessage"></div>`;
   }
 
@@ -52,16 +52,16 @@ export class QtiGraphicGapMatchInteraction extends DragDropInteractionMixin(
 
     // ResizeObserver to monitor size changes of `gapTexts`
     this.resizeObserver = new ResizeObserver(() => this.updateMinDimensionsForDrowZones());
-    const gapImages = this.querySelectorAll('qti-gap-img');
-    gapImages.forEach(gapText => this.resizeObserver?.observe(gapText));
+    const draggableGaps = this.querySelectorAll('qti-gap-img, qti-gap-text');
+    draggableGaps.forEach(gapText => this.resizeObserver?.observe(gapText));
   }
 
   private updateMinDimensionsForDrowZones() {
-    const gapImages = this.querySelectorAll('qti-gap-img');
+    const draggableGaps = this.querySelectorAll('qti-gap-img, qti-gap-text');
     const gaps = this.querySelectorAll('qti-associable-hotspot');
     let maxHeight = 0;
     let maxWidth = 0;
-    gapImages.forEach(gapText => {
+    draggableGaps.forEach(gapText => {
       const rect = gapText.getBoundingClientRect();
       maxHeight = Math.max(maxHeight, rect.height);
       maxWidth = Math.max(maxWidth, rect.width);

@@ -30,7 +30,7 @@ export class QtiGapMatchInteraction extends DragDropInteractionMixin(Interaction
       }
       /* [part='drops'] , */
 
-      [name='qti-gap-text'] {
+      [name='drags'] {
         display: flex;
         align-items: flex-start;
         flex: 1;
@@ -44,7 +44,7 @@ export class QtiGapMatchInteraction extends DragDropInteractionMixin(Interaction
 
   override render() {
     return html`<slot name="prompt"> </slot>
-      <slot part="drags" name="qti-gap-text"></slot>
+      <slot part="drags" name="drags"></slot>
       <slot part="drops"></slot>
       <div role="alert" id="validationMessage"></div>`;
   }

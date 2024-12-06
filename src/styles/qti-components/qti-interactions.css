@@ -101,18 +101,19 @@
     }
   }
 
-  qti-graphic-gap-match-interaction.dragzone-enabled::part(qti-gap-img) {
+  qti-graphic-gap-match-interaction.dragzone-enabled::part(drags) {
     @apply dropping;
   }
 
-  qti-graphic-gap-match-interaction.dragzone-active::part(qti-gap-img) {
+  qti-graphic-gap-match-interaction.dragzone-active::part(drags) {
     @apply act;
   }
 
   qti-graphic-gap-match-interaction {
     position: relative;
 
-    & qti-gap-img {
+    & qti-gap-img,
+    qti-gap-text {
       display: flex;
       justify-content: center;
       align-items: center;

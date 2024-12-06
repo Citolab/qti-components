@@ -13,7 +13,7 @@ export class QtiGapImg extends LitElement {
   @property({ type: Number, reflect: true }) tabindex: number | undefined = 0;
 
   connectedCallback() {
-    this.setAttribute('slot', 'qti-gap-img');
+    this.setAttribute('slot', 'drags');
   }
 }
 

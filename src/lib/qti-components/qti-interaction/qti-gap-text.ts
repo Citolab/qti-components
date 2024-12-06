@@ -15,7 +15,7 @@ export class QtiGapText extends ActiveElementMixin(LitElement, 'qti-gap-text') {
 
   override connectedCallback(): void {
     super.connectedCallback();
-    this.setAttribute('slot', 'qti-gap-text');
+    this.setAttribute('slot', 'drags');
   }
 
   override render() {
