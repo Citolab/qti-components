@@ -8,18 +8,23 @@ import { QtiTest } from '@citolab/qti-components/qti-test';
 type Story = StoryObj<QtiTest>;
 
 const meta: Meta<QtiTest> = {
-  component: 'qti-test'
+  component: 'qti-test',
+  tags: ['autodocs', '!dev', 'hidden-docs']
 };
 export default meta;
 
 export const Default: Story = {
   render: () => html`
-    <qti-test class="flex h-full w-full flex-col" testURL="/assets/api/examples/assessment.xml">
-      <test-container class="relative flex-1 overflow-auto"> </test-container>
+    <qti-test testURL="/assets/api/examples/assessment.xml" class="d-flex h-100 w-full flex-column">
+      <test-container class="overflow-auto aspect-16/9"></test-container>
+      <div class="d-flex align-items-center justify-content-between">
+        <test-prev class="d-flex flex-nowrap btn btn-lg btn-success">
+          <i class="bi bi-arrow-left-short me-2"></i>previous
+        </test-prev>
 
-      <div class="flex items-center justify-between gap-2">
-        <test-prev>volgende</test-prev>
-        <test-next>volgende</test-next>
+        <test-next class="d-flex flex-nowrap btn btn-lg btn-success">
+          next<i class="bi bi-arrow-right-short ms-2"></i>
+        </test-next>
       </div>
     </qti-test>
   `,

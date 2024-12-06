@@ -21,7 +21,7 @@
   "engines": {
     "node": ">=20.0.0"
   },
-  "version": "6.9.1-beta.78",
+  "version": "6.9.1-beta.79",
   "type": "module",
   "exports": {
     "./qti-components": {

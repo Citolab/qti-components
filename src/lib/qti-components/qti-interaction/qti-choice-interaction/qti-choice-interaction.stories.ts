@@ -10,7 +10,6 @@ const { events, args, argTypes, template } = getWcStorybookHelpers('qti-choice-i
 type Story = StoryObj<QtiChoiceInteraction & typeof args>;
 
 const meta: Meta<QtiChoiceInteraction> = {
-  title: 'qti-choice-interaction',
   component: 'qti-choice-interaction',
   args,
   argTypes,

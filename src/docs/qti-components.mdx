@@ -1,94 +1,33 @@
-import { Canvas, Meta } from '@storybook/blocks';
+import { Canvas, Meta, Story } from '@storybook/blocks';
+import * as CheckboxStories from './test.stories';
 
 <Meta title="QTI Components" />
 
-# QTI Components
+# 👋 HI QTI
 
-Webcomponents for QTI
+A set of test interactions to be used in the educational field.
 
-import * as QtiChoiceInteractionStory from '../lib/qti-components/qti-interaction/qti-choice-interaction/qti-choice-interaction.stories';
+{/* <Story of={CheckboxStories.Default} autoplay /> */}
 
-## Features
+<Canvas of={CheckboxStories.Default} />
 
-## Principles
+## Quick Start
 
-- Offline first
-- Composable, leave out what you do not need
-- Zero configuration
-- Zero option flags
-- Composable, just like lego bricks you can you make your own player, review or builder
-- Serverless, rendering and scoring can be done on the frontend
-- Responsive, support for different screen resolutions
-- Extensible
-- No clever code (ie hacks!)
-- Embraces different platforms ( touch/mouse ) and their way of input
-- Pluggable responseprocessing ( see qti-components-responseprocessing )
-- Framework agnostic, use with Vue, React, Angular, Vanilla, or in HTML
-- Lightweight
-- Few dependencies, only one dependency on @Lit
-- Expose relevant components to light dom for easy styling
-- Typescript
+Add the following code to your page.
 
-## Source code
-
-[![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Citolab/qti-components/)
-
-[![License](https://img.shields.io/badge/license-GPL-blue.svg)](https://opensource.org/license/gpl-2-0/)
-
-## Installation
-
-[![npm version](https://badge.fury.io/js/%40citolab%2Fqti-components.svg)](https://badge.fury.io/js/%40citolab%2Fqti-components)
-
-## CDN versions
-
-```js
-import * as QTI from 'https://unpkg.com/@citolab/qti-components@latest/dist/index.js';
+```html
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@%VERSION%/%CDNDIR%/themes/light.css"
+/>
+<script
+  type="module"
+  src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@%VERSION%/%CDNDIR%/shoelace-autoloader.js"
+></script>
 ```
 
-```css
-@import 'https://unpkg.com/@citolab/qti-components@latest/dist/styles.bundled.css';
+Now you have access to all of Shoelace's components! Try adding a button:
+
+```html:preview:expanded:no-codepen
+<sl-button>Click me</sl-button>
 ```
-
-## Development
-
-Installation
-
-```sh
-npm install @citolab/qti-components@latest
-```
-
-Import the webcomponents
-
-```js
-import '@citolab/qti-components/qti-components';
-```
-
-Use the transformers, from QTI XML to HTML5
-
-```js
-import { qtiTransformItem } from '@citolab/qti-components/qti-transformers';
-```
-
-```js
-const itemXML = '<qti-assessment-item>...</qti-assessment-item>';
-const itemHTML = await qtiTransformItem().parse(itemXML).path('./relative-path-to-item-assets').html();
-```
-
-<iframe
-  width="100%"
-  height="500"
-  src="//jsfiddle.net/mrklein/s97Ld0gn/embedded/html,result/"
-  allowFullScreen="allowfullscreen"
-></iframe>
-
-## Contact
-
-Here you can find contact information about the team behind QTI Components.
-
-<a href="https://cito.nl/onderzoek-innovatie/over-citolab/onze-teams/team-prototypes/">CitoLab</a>
-
-Or email us at:
-
-<a href="mailto:getinspiredbycitolab@gmail.com">
-  ![Gmail](https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white)
-</a>
