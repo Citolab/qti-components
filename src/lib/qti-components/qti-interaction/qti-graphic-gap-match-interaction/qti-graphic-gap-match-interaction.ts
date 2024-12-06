@@ -1,4 +1,4 @@
-import { css, html, LitElement } from 'lit';
+import { css, html, PropertyValues } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-interaction-mixin';
 import { QtiHotspotChoice } from '../qti-hotspot-choice';
@@ -17,16 +17,65 @@ export class QtiGraphicGapMatchInteraction extends DragDropInteractionMixin(
       position: relative;
     }
     slot[name='qti-gap-img'] {
-      display: flex;
+      border: 2px solid transparent;
+      display: inline-flex;
       gap: 1rem;
+      padding: 0.5rem;
+    }
+    [part='image'] {
+      display: block;
+      position: relative;
+    }
+    ::slotted(img) {
+      display: inline-block;
+      user-select: none;
+      pointer-events: none;
     }
   `;
+  private observer: MutationObserver | null = null;
+  private resizeObserver: ResizeObserver | null = null;
 
   override render() {
     return html` <slot name="prompt"></slot>
-      <slot></slot>
-      <slot name="qti-gap-img"></slot>
+      <slot part="image"></slot>
+      <slot part="qti-gap-img" name="qti-gap-img"></slot>
       <div role="alert" id="validationMessage"></div>`;
+  }
+
+  override firstUpdated(_changedProperties: PropertyValues) {
+    super.firstUpdated(_changedProperties);
+    this.updateMinDimensionsForDrowZones();
+
+    // MutationObserver to observe changes in child elements
+    this.observer = new MutationObserver(() => this.updateMinDimensionsForDrowZones());
+    this.observer.observe(this, { childList: true, subtree: true });
+
+    // ResizeObserver to monitor size changes of `gapTexts`
+    this.resizeObserver = new ResizeObserver(() => this.updateMinDimensionsForDrowZones());
+    const gapImages = this.querySelectorAll('qti-gap-img');
+    gapImages.forEach(gapText => this.resizeObserver?.observe(gapText));
+  }
+
+  private updateMinDimensionsForDrowZones() {
+    const gapImages = this.querySelectorAll('qti-gap-img');
+    const gaps = this.querySelectorAll('qti-associable-hotspot');
+    let maxHeight = 0;
+    let maxWidth = 0;
+    gapImages.forEach(gapText => {
+      const rect = gapText.getBoundingClientRect();
+      maxHeight = Math.max(maxHeight, rect.height);
+      maxWidth = Math.max(maxWidth, rect.width);
+    });
+
+    const dragSlot = this.shadowRoot?.querySelector('[name="qti-gap-img"]') as HTMLElement;
+    if (dragSlot) {
+      dragSlot.style.minHeight = `${maxHeight}px`;
+      dragSlot.style.minWidth = `${maxWidth}px`;
+    }
+    for (const gap of gaps) {
+      gap.style.minHeight = `${maxHeight}px`;
+      gap.style.minWidth = `${maxWidth}px`;
+    }
   }
 
   private positionHotspotOnRegister(e: CustomEvent<null>): void {

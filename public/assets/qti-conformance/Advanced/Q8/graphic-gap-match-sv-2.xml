@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-item 
+  xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd" 
+  identifier="q8-graphic-gap-match-sv-2" title="Q8 GGM - (SV 2) - container width"
+  adaptive="false" time-dependent="false">
+  <qti-response-declaration base-type="directedPair" cardinality="multiple" identifier="RESPONSE1">
+    <qti-correct-response>
+      <qti-value>DraggerD B</qti-value>
+      <qti-value>DraggerC C</qti-value>
+      <qti-value>DraggerA D</qti-value>
+      <qti-value>DraggerB A</qti-value>
+    </qti-correct-response>
+  </qti-response-declaration>
+  <qti-response-declaration base-type="directedPair" cardinality="multiple" identifier="RESPONSE2"/>
+  <qti-outcome-declaration base-type="float" cardinality="single" identifier="SCORE"/>
+  <qti-item-body>
+    <div>
+      
+    <qti-graphic-gap-match-interaction class="qti-choices-top" max-associations="0" data-choices-container-width="188" response-identifier="RESPONSE1">
+      <qti-prompt>Demonstrates qti-choices-top and data-choices-container-width="188"</qti-prompt>
+      <img alt="timeline" src="images/timeline-558.png" height="326" width="558"/>
+      <qti-gap-img identifier="DraggerA" match-max="1">
+        <img src="images/a-cw.png" alt="a-cw" height="63" width="78"/>
+      </qti-gap-img>
+      <qti-gap-img identifier="DraggerB" match-max="1">
+        <img src="images/b-ww2.png" alt="b-ww2" height="63" width="78"/>
+      </qti-gap-img>
+      <qti-gap-img identifier="DraggerC" match-max="1">
+        <img src="images/c-vietnam.png" alt="c-vietnam" height="63" width="78"/>
+      </qti-gap-img>
+      <qti-gap-img identifier="DraggerD" match-max="1">
+        <img src="images/d-bay.png" alt="d-bay" height="63" width="78"/>
+      </qti-gap-img>
+      <qti-associable-hotspot coords="55,256,135,321" identifier="A" match-max="1" shape="rect"/>
+      <qti-associable-hotspot coords="190,256,270,321" identifier="B" match-max="1" shape="rect"/>
+      <qti-associable-hotspot coords="309,256,389,321" identifier="C" match-max="1" shape="rect"/>
+      <qti-associable-hotspot coords="450,256,530,321" identifier="D" match-max="1" shape="rect"/>
+    </qti-graphic-gap-match-interaction>
+    
+    <br/>
+    
+    <qti-graphic-gap-match-interaction class="qti-choices-left" max-associations="0" data-choices-container-width="100" response-identifier="RESPONSE2">
+      <qti-prompt>Demonstrates qti-choices-left and data-choices-container-width="100"</qti-prompt>
+      <img alt="timeline" src="images/timeline-558.png" height="326" width="558"/>
+      <qti-gap-img identifier="DraggerA" match-max="1">
+        <img src="images/a-cw.png" alt="a-cw" height="63" width="78"/>
+      </qti-gap-img>
+      <qti-gap-img identifier="DraggerB" match-max="1">
+        <img src="images/b-ww2.png" alt="b-ww2" height="63" width="78"/>
+      </qti-gap-img>
+      <qti-gap-img identifier="DraggerC" match-max="1">
+        <img src="images/c-vietnam.png" alt="c-vietnam" height="63" width="78"/>
+      </qti-gap-img>
+      <qti-gap-img identifier="DraggerD" match-max="1">
+        <img src="images/d-bay.png" alt="d-bay" height="63" width="78"/>
+      </qti-gap-img>
+      <qti-associable-hotspot coords="55,256,135,321" identifier="A" match-max="1" shape="rect"/>
+      <qti-associable-hotspot coords="190,256,270,321" identifier="B" match-max="1" shape="rect"/>
+      <qti-associable-hotspot coords="309,256,389,321" identifier="C" match-max="1" shape="rect"/>
+      <qti-associable-hotspot coords="450,256,530,321" identifier="D" match-max="1" shape="rect"/>
+    </qti-graphic-gap-match-interaction>
+    
+    </div>
+  </qti-item-body>
+</qti-assessment-item>

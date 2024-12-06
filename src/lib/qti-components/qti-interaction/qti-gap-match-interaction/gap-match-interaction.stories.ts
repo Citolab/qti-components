@@ -197,12 +197,12 @@ export const DraggableContainerHasDropInDication: Story = {
       const QtiGapMatchInteraction = assessmentItem.querySelector('qti-gap-match-interaction');
       drag(gapTextWinter, { to: gapG1, duration: 300 }).then(async () => {
         await timeoutPromise(200);
-        expect(QtiGapMatchInteraction.hasAttribute('dragzone-enabled')).toBe(false);
-        expect(QtiGapMatchInteraction.hasAttribute('dragzone-active')).toBe(false);
+        expect(QtiGapMatchInteraction.classList.contains('dragzone-enabled')).toBe(false);
+        expect(QtiGapMatchInteraction.classList.contains('dragzone-active')).toBe(false);
       });
       await timeoutPromise(50);
-      expect(QtiGapMatchInteraction.hasAttribute('dragzone-enabled')).toBe(true);
-      expect(QtiGapMatchInteraction.hasAttribute('dragzone-active')).toBe(true);
+      expect(QtiGapMatchInteraction.classList.contains('dragzone-enabled')).toBe(true);
+      expect(QtiGapMatchInteraction.classList.contains('dragzone-active')).toBe(true);
     });
   },
   loaders: [
