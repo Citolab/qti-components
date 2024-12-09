@@ -10,7 +10,6 @@ export default {
   ...preview,
   parameters: {
     ...preview.parameters,
-    docs: { ...preview.parameters?.doc, toc: true },
     options: {
       storySort: {
         order: ['👋 Hi QTI', 'QTI-Test', 'QTI-Item']
