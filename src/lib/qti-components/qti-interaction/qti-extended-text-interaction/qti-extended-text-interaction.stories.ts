@@ -1,57 +1,33 @@
 import './qti-extended-text-interaction';
 
 import { html } from 'lit';
-import { action } from '@storybook/addon-actions';
-import { ifDefined } from 'lit/directives/if-defined.js';
-import '../../qti-prompt/qti-prompt';
 
 import { expect, fireEvent, fn, within } from '@storybook/test';
+
+import { getWcStorybookHelpers } from 'wc-storybook-helpers';
 import type { Meta, StoryObj } from '@storybook/web-components';
+import type { QtiExtendedTextInteraction } from '@citolab/qti-components/qti-components';
 
-type Story = StoryObj;
+const { events, args, argTypes, template } = getWcStorybookHelpers('qti-extended-text-interaction');
 
-const meta: Meta = {
+type Story = StoryObj<QtiExtendedTextInteraction & typeof args>;
+
+const meta: Meta<QtiExtendedTextInteraction> = {
   component: 'qti-extended-text-interaction',
-
-  argTypes: {
-    base: { description: 'unsupported' },
-    'string-identifier': { description: 'unsupported' },
-    'expected-length': { control: { type: 'number' } },
-    'pattern-mask': { control: { type: 'text' } },
-    'placeholder-text': { control: { type: 'text' } },
-    'max-strings': { description: 'unsupported' },
-    'min-strings': { description: 'unsupported' },
-    'expected-lines': { description: 'unsupported' },
-    format: { options: ['plain', 'preformatted', 'xhtml'], description: 'unsupported' },
-    'response-identifier': { control: { type: 'text' } },
-    class: {
-      options: ['', 'qti-height-lines-3', 'qti-height-lines-6', 'qti-height-lines-15'],
-      control: { type: 'select' }
-    },
-    readonly: { control: { type: 'boolean' } },
-    disabled: { control: { type: 'boolean' } }
+  args,
+  argTypes,
+  parameters: {
+    actions: {
+      handles: events
+    }
   }
 };
 export default meta;
 
 export const Default = {
-  render: args => html`
-    <qti-extended-text-interaction
-      @qti-register-interaction="${action(`qti-register-interaction`)}"
-      @qti-interaction-response="${action(`qti-interaction-response`)}"
-      response-identifier=${args['response-identifier']}
-      .response=${args.response}
-      ?disabled=${args.disabled}
-      ?readonly=${args.readonly}
-      placeholder-text=${ifDefined(args['placeholder-text'])}
-      class="${args.class}"
-      expected-length=${ifDefined(args['expected-length'])}
-      pattern-mask=${ifDefined(args['pattern-mask'])}
-      data-patternmask-message=${ifDefined(args['data-pattern-mask-message'])}
-    >
-      <qti-prompt>Write Sam a postcard. Answer the questions. Write 25-35 words.</qti-prompt>
-    </qti-extended-text-interaction>
-  `
+  render: args => {
+    return html` ${template(args)} `;
+  }
 };
 
 export const PatternMask = {

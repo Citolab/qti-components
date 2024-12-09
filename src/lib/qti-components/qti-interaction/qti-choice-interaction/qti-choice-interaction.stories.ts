@@ -1,82 +1,49 @@
-import { action } from '@storybook/addon-actions';
 import { html } from 'lit';
-import { ifDefined } from 'lit/directives/if-defined.js';
-
+import { getWcStorybookHelpers } from 'wc-storybook-helpers';
 import { expect, fireEvent, fn, waitFor, within } from '@storybook/test';
 import type { Meta, StoryObj } from '@storybook/web-components';
-
 import { QtiChoiceInteraction, QtiSimpleChoice } from '@citolab/qti-components/qti-components';
+import { getByShadowRole } from 'shadow-dom-testing-library';
 
-type Story = StoryObj; // <Props>;
+const { events, args, argTypes, template } = getWcStorybookHelpers('qti-choice-interaction');
 
-const meta: Meta = {
+type Story = StoryObj<QtiChoiceInteraction & typeof args>;
+
+/**
+ *
+ * ### [3.2.2 Choice Interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.j9nu1oa1tu3b)
+ * The ChoiceInteraction.Type (qti-choice-interaction) interaction presents a collection of choices to the candidate. The candidate's task is to select one or more of the choices, up to a maximum of max-choices. The interaction is always initialized with no choices selected.
+ *
+ */
+const meta: Meta<QtiChoiceInteraction> = {
   component: 'qti-choice-interaction',
-  argTypes: {
-    'min-choices': { control: { type: 'number' }, table: { category: 'QTI' } },
-    'max-choices': { control: { type: 'number' }, table: { category: 'QTI' } },
-    orientation: {
-      control: { type: 'radio' },
-      options: ['horizontal', 'vertical'],
-      table: { category: 'QTI' }
-    },
-    readonly: { control: { type: 'boolean' } },
-    disabled: { control: { type: 'boolean' } },
-    shuffle: { control: { type: 'boolean' }, table: { category: 'QTI' } },
-    classes: {
-      description: 'supported classes',
-      control: 'inline-check',
-      options: [
-        'qti-choices-stacking-1',
-        'qti-choices-stacking-2',
-        'qti-choices-stacking-3',
-        'qti-choices-stacking-4',
-        'qti-choices-stacking-5',
-
-        'qti-labels-suffix-none',
-        'qti-labels-suffix-period',
-        'qti-labels-suffix-parenthesis',
-
-        'qti-orientation-horizontal',
-        'qti-input-control-hidden'
-      ],
-      table: { category: 'QTI' }
-    },
-    'data-max-selections-message': { description: 'unsupported', table: { category: 'QTI' } },
-    'data-min-selections-message': { description: 'unsupported', table: { category: 'QTI' } }
-  }
+  args,
+  argTypes,
+  parameters: {
+    actions: {
+      handles: events
+    }
+  },
+  tags: ['autodocs']
 };
 export default meta;
 
 export const Default = {
   render: args => {
     const maxChoices = args['max-choices'] || 0;
-    return html`<qti-choice-interaction
-      name="choice"
-      data-testid="qti-choice-interaction"
-      data-max-selections-message="Too much selections made"
-      data-min-selections-message="Too little selections made"
-      response-identifier="RESPONSE"
-      @qti-register-interaction=${action(`qti-register-interaction`)}
-      @qti-interaction-response=${action(`qti-interaction-response`)}
-      class=${ifDefined(args.classes ? args.classes.join(' ') : undefined)}
-      min-choices=${ifDefined(args['min-choices'])}
-      max-choices=${ifDefined(maxChoices)}
-      orientation=${ifDefined(args.orientation)}
-      ?shuffle=${args.shuffle}
-      ?readonly=${args.readonly}
-      .disabled=${args.disabled}
-      ><qti-prompt>
-        <p>Which of the following features are <strong>new</strong> to QTI 3?</p>
-        <p>
-          Pick
-          ${maxChoices === 1 ? `<span>1 choice</span>` : maxChoices === 0 ? 'some choices' : `${maxChoices} choices`}.
-        </p>
-      </qti-prompt>
-      <qti-simple-choice data-testid="A" identifier="A">Option A</qti-simple-choice>
-      <qti-simple-choice data-testid="B" identifier="B" fixed>Option B</qti-simple-choice>
-      <qti-simple-choice data-testid="C" identifier="C">Option C</qti-simple-choice>
-      <qti-simple-choice data-testid="D" identifier="D">Option D</qti-simple-choice>
-    </qti-choice-interaction>`;
+    return html`
+      ${template(
+        args,
+        html` <qti-prompt>
+            <p>Which of the following features are <strong>new</strong> to QTI 3?</p>
+            <p>Pick ${maxChoices === 1 ? `1 choice` : maxChoices === 0 ? 'some choices' : `${maxChoices} choices`}.</p>
+          </qti-prompt>
+          <qti-simple-choice data-testid="A" identifier="A">Option A</qti-simple-choice>
+          <qti-simple-choice data-testid="B" identifier="B" fixed>Option B</qti-simple-choice>
+          <qti-simple-choice data-testid="C" identifier="C">Option C</qti-simple-choice>
+          <qti-simple-choice data-testid="D" identifier="D">Option D</qti-simple-choice>`
+      )}
+    `;
   }
 };
 
@@ -137,13 +104,11 @@ export const MaxChoices2: Story = {
     expect(choiceA.checked).toBeTruthy();
 
     await fireEvent.click(choiceC);
-    // Check if the validation message is shown
-    const choiceInteraction = canvas.getByTestId<QtiChoiceInteraction>('qti-choice-interaction');
-    const validationMessage = choiceInteraction.shadowRoot.querySelector('[role="alert"]');
+    const validationMessage = getByShadowRole(canvasElement, 'alert');
 
     await waitFor(() => expect(validationMessage).toBeVisible());
 
-    expect(validationMessage.textContent).toBe('Too much selections made');
+    expect(validationMessage.textContent).toBe('You can select at most 2 choices.');
   }
 };
 
@@ -158,15 +123,16 @@ export const ControlHidden: Story = {
   render: Default.render,
   args: {
     orientation: 'vertical',
-    classes: ['qti-input-control-hidden', 'qti-choices-stacking-2']
+    class: ['qti-input-control-hidden', 'qti-choices-stacking-2'].join(' ')
   }
 };
 
 export const Multiple: Story = {
   render: Default.render,
   args: {
+    'response-identifier': 'RESPONSE',
     orientation: 'vertical',
-    classes: ['qti-choices-stacking-2'],
+    class: ['qti-choices-stacking-2'].join(' '),
     'min-choices': 1,
     'max-choices': 2
   },
@@ -207,14 +173,14 @@ export const CorrectResponse: Story = {
   render: Default.render,
   args: {
     orientation: 'vertical',
-    classes: ['qti-input-control-hidden', 'qti-choices-stacking-2'],
+    class: ['qti-input-control-hidden', 'qti-choices-stacking-2'].join(' '),
     'min-choices': 1,
     'max-choices': 2
   },
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const el = canvas.getByTestId('qti-choice-interaction') as QtiChoiceInteraction;
-    el.correctResponse = ['A', 'B'];
+    const choiceInteraction = canvas.getByRole<QtiChoiceInteraction>('group');
+    choiceInteraction.correctResponse = ['A', 'B'];
   }
 };
 
@@ -222,7 +188,7 @@ export const VocabularyDecimal: Story = {
   render: Default.render,
   args: {
     orientation: 'vertical',
-    classes: ['qti-labels-decimal'],
+    class: ['qti-labels-decimal'].join(' '),
     'min-choices': 1,
     'max-choices': 1
   },
@@ -239,7 +205,7 @@ export const VocabularyLowerAlphaStory = {
   render: Default.render,
   args: {
     orientation: 'vertical',
-    classes: ['qti-labels-lower-alpha'],
+    class: ['qti-labels-lower-alpha'].join(' '),
     'min-choices': 1,
     'max-choices': 1
   }
@@ -249,7 +215,7 @@ export const VocabularyUpperAlphaStory = {
   render: Default.render,
   args: {
     orientation: 'vertical',
-    classes: ['qti-labels-upper-alpha'],
+    class: ['qti-labels-upper-alpha'].join(' '),
     'min-choices': 1,
     'max-choices': 1
   }
@@ -259,7 +225,7 @@ export const VocabularyLowerAlphaSuffixDotStory = {
   render: Default.render,
   args: {
     orientation: 'vertical',
-    classes: ['qti-labels-lower-alpha', 'qti-labels-suffix-period'],
+    class: ['qti-labels-lower-alpha', 'qti-labels-suffix-period'].join(' '),
     'min-choices': 1,
     'max-choices': 1
   }
@@ -269,13 +235,13 @@ export const VocabularyLowerAlphaSuffixDotAndCorrectStory = {
   render: Default.render,
   args: {
     orientation: 'vertical',
-    classes: ['qti-labels-lower-alpha', 'qti-labels-suffix-period'],
+    class: ['qti-labels-lower-alpha', 'qti-labels-suffix-period'].join(' '),
     'min-choices': 1,
     'max-choices': 1
   },
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const el = canvas.getByTestId('qti-choice-interaction') as QtiChoiceInteraction;
+    const el = canvas.getByRole<QtiChoiceInteraction>('group');
     el.correctResponse = ['A', 'B'];
   }
 };
@@ -285,6 +251,7 @@ export const Form: Story = {
     return html`
       <form name="choice-form" @submit=${e => e.preventDefault()}>
         ${Default.render({
+          'response-identifier': 'RESPONSE',
           'min-choices': 1,
           'max-choices': 2
         })}
