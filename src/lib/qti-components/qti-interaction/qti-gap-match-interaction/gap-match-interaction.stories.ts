@@ -13,6 +13,42 @@ const meta: Meta<QtiAssessmentItem> = {
 };
 export default meta;
 
+// Function to check if a specific style is applied
+function isStyleApplied(element, property, expectedValue) {
+  const computedStyle = window.getComputedStyle(element);
+  return computedStyle.getPropertyValue(property) === expectedValue;
+}
+
+// Compare the RGB values
+const rgbIsEqual = (color1: { r: number; g: number; b: number }, color2: { r: number; g: number; b: number }) =>
+  color1 && color2 && color1.r === color2.r && color1.g === color2.g && color1.b === color2.b;
+
+// Utility function to convert hex color to RGB
+function hexToRgb(hex) {
+  const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+  hex = hex.replace(shorthandRegex, (m, r, g, b) => r + r + g + g + b + b);
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result
+    ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+      }
+    : null;
+}
+
+// Utility function to convert RGB string to RGB object
+function rgbStringToRgb(rgbString) {
+  const result = /^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/.exec(rgbString);
+  return result
+    ? {
+        r: parseInt(result[1], 10),
+        g: parseInt(result[2], 10),
+        b: parseInt(result[3], 10)
+      }
+    : null;
+}
+
 export const Default: Story = {
   name: 'Not-Allowed-To-Drop-In-Other-Interaction',
   render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
@@ -183,27 +219,49 @@ export const DraggableContainerHasDropInDication: Story = {
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
     assessmentItem.querySelector('qti-prompt').innerHTML = `
       When a draggable is dragged, the dragzone should indicate that it can be dropped`;
-
+    const rootElement = document.documentElement;
+    const rootStyles = window.getComputedStyle(rootElement);
+    const qtiBorderActive = rootStyles.getPropertyValue('--qti-border-active').trim();
     const gapTextWinter = assessmentItem.querySelector('qti-gap-text[identifier="W"]') as QtiGapText;
     // const gapTextSpring = assessmentItem.querySelector('qti-gap-text[identifier="Sp"]') as QtiGapText;
     // const gapTextSummer = assessmentItem.querySelector('qti-gap-text[identifier="Su"]') as QtiGapText;
     // const gapTextAutumn = assessmentItem.querySelector('qti-gap-text[identifier="A"]') as QtiGapText;
 
     const gapG1 = assessmentItem.querySelector('qti-gap[identifier="G1"]') as QtiGapText;
+
     // const gapG2 = assessmentItem.querySelector('qti-gap[identifier="G2"]') as QtiGapText;
     await step('drag Winter to G1', async () => {
       // Simulate the drag and drop operation
 
-      const QtiGapMatchInteraction = assessmentItem.querySelector('qti-gap-match-interaction');
+      const qtiGapMatchInteraction = assessmentItem.querySelector('qti-gap-match-interaction');
+      const slots = qtiGapMatchInteraction.shadowRoot.querySelectorAll('slot');
+      const dragsPart = Array.from(slots).find(slot => slot.getAttribute('part') === 'drags');
+      // Convert both colors to RGB
+      const dragStyles = window.getComputedStyle(dragsPart);
+      const borderColorOrg = dragStyles.getPropertyValue('border-color').trim();
+      const qtiBorderActiveRgb = rgbStringToRgb(qtiBorderActive) || hexToRgb(qtiBorderActive);
+
       drag(gapTextWinter, { to: gapG1, duration: 300 }).then(async () => {
-        await timeoutPromise(200);
-        expect(QtiGapMatchInteraction.classList.contains('dragzone-enabled')).toBe(false);
-        expect(QtiGapMatchInteraction.classList.contains('dragzone-active')).toBe(false);
+        const computedStylesGap1 = window.getComputedStyle(gapG1);
+        const borderColorGap1 = computedStylesGap1.getPropertyValue('border-color').trim();
+        const borderColorGap1Rgb = rgbStringToRgb(borderColorGap1) || hexToRgb(borderColorGap1);
+        expect(rgbIsEqual(qtiBorderActiveRgb, borderColorGap1Rgb)).toBe(true);
+        await timeoutPromise(50);
+
+        // Convert both colors to RGB
+        const computedStyles = window.getComputedStyle(dragsPart);
+        const borderColor = computedStyles.getPropertyValue('border-color').trim();
+        expect(borderColor).toBe(borderColorOrg);
       });
       await timeoutPromise(50);
-      expect(QtiGapMatchInteraction.classList.contains('dragzone-enabled')).toBe(true);
-      expect(QtiGapMatchInteraction.classList.contains('dragzone-active')).toBe(true);
+      // Convert both colors to RGB
+      const computedStyles = window.getComputedStyle(dragsPart);
+      const borderColor = computedStyles.getPropertyValue('border-color').trim();
+      const borderColorRgb = rgbStringToRgb(borderColor) || hexToRgb(borderColor);
+      expect(rgbIsEqual(qtiBorderActiveRgb, borderColorRgb)).toBe(true);
     });
+
+    // --qti-border-active
   },
   loaders: [
     async ({ args }) => ({

@@ -197,12 +197,12 @@
     }
   }
 
-  qti-gap-match-interaction::part(drags):state(--dragzone-enabled) {
-    @apply dropping;
+  qti-gap-match-interaction:state(--dragzone-active)::part(drags) {
+    @apply act;
   }
 
-  qti-gap-match-interaction::part(drags):state(--dragzone-active) {
-    @apply act;
+  qti-gap-match-interaction:state(--dragzone-enabled)::part(drags) {
+    @apply dropping;
   }
 
   qti-gap-match-interaction {
