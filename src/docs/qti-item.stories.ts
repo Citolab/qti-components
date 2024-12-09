@@ -9,7 +9,7 @@ type Story = StoryObj<QtiTest>;
 
 const meta: Meta<QtiTest> = {
   component: 'qti-test',
-  tags: ['autodocs', '!dev', 'hidden-docs']
+  tags: ['!autodocs', '!dev']
 };
 export default meta;
 

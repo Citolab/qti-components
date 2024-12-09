@@ -1,8 +1,6 @@
 import { html } from 'lit';
 
-export default {
-  title: 'styles/Shared CSS 2 Layout'
-};
+export default {};
 
 export const SharedCSS2Layout = () => html`
   <style>

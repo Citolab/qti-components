@@ -8,7 +8,6 @@ const { events, args, argTypes, template } = getWcStorybookHelpers('test-paging-
 type Story = StoryObj<TestPagingButtonsStamp & typeof args>;
 
 const meta: Meta<TestPagingButtonsStamp> = {
-  title: 'qti-test/test-components/test-paging-buttons-stamp',
   component: 'test-paging-buttons-stamp',
   args,
   argTypes,

@@ -11,7 +11,6 @@ import { QtiTest } from '../qti-test';
 type Story = StoryObj;
 
 const meta: Meta<QtiTest> = {
-  title: 'qti-test/test-components/test-next',
   component: 'test-next'
 };
 export default meta;

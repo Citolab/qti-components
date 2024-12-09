@@ -18,29 +18,27 @@ import '../src/lib/qti-item';
 import '../src/item.css';
 
 const preview: Preview = {
-  globalTypes: {
-    pseudo: {}
-  },
   decorators: [withActions],
   parameters: {
     docs: { toc: true },
     controls: {
       expanded: true
     },
-    viewport: { viewports: customViewports },
-    options: {
-      storySort: {
-        order: [
-          'qti-conformance',
-          'styles',
-          'qti-interactions-basic',
-          'qti-interactions-advanced',
-          'qti-interactions-wip',
-          'lib'
-        ]
-      }
-    }
+    viewport: { viewports: customViewports }
   }
 };
 
 export default preview;
+
+// options: {
+//   storySort: {
+//     order: [
+//       'qti-conformance',
+//       'styles',
+//       'qti-interactions-basic',
+//       'qti-interactions-advanced',
+//       'qti-interactions-wip',
+//       'lib'
+//     ]
+//   }
+// }

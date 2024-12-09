@@ -10,7 +10,6 @@ const { events, args, argTypes, template } = getWcStorybookHelpers('test-view');
 type Story = StoryObj<TestViewClass & typeof args>;
 
 const meta: Meta<TestViewClass> = {
-  title: 'qti-test/test-components/test-view',
   component: 'test-view',
   args,
   argTypes,

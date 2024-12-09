@@ -12,7 +12,6 @@ const { events, args, argTypes, template } = getWcStorybookHelpers('test-prev');
 type Story = StoryObj<TestPrevClass & typeof args>;
 
 const meta: Meta<TestPrevClass> = {
-  title: 'qti-test/test-components/test-prev',
   component: 'test-prev',
   args,
   argTypes,
