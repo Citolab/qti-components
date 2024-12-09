@@ -20,7 +20,8 @@ const meta: Meta<QtiExtendedTextInteraction> = {
     actions: {
       handles: events
     }
-  }
+  },
+  tags: ['autodocs']
 };
 export default meta;
 

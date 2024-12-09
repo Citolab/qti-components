@@ -3,12 +3,12 @@ import { create } from '@storybook/theming/create';
 
 const docTheme = create({
   base: 'light',
-  // Typography
   fontBase: '"pt-sans-pro", sans-serif'
 });
 export default {
   ...preview,
   parameters: {
+    docs: { theme: docTheme },
     ...preview.parameters,
     options: {
       storySort: {
