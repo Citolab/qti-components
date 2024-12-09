@@ -1,12 +1,73 @@
-import { Canvas, Meta, Story } from '@storybook/blocks';
-import * as CheckboxStories from './test.stories';
+import { Canvas, Meta, Story, ArgTypes, Description } from '@storybook/blocks';
+import * as Stories from './qti-test.stories';
+import { Source } from '@storybook/blocks';
+import { QtiTest } from '../lib/qti-test';
 
-<Meta title="qti-test" />
+<Meta component={QtiTest} />
 
-# 👋 HI QTI
+<ArgTypes of={Stories} />
 
-A set of test interactions to be used in the educational field.
+# QTI-Test
 
-{/* <Story of={CheckboxStories.Default} autoplay /> */}
+`<qti-test> | QtiTest`
 
-<Canvas of={CheckboxStories.Default} />
+The `<qti-test></qti-test>` component is used to render a complete qti-assessment-test including navigation.
+
+<Source of={Stories.Unstyled} dark={true} />
+
+<a id="setup"></a>
+### Setup
+
+<a id="load-test"></a>
+### Load test
+
+Use a `<test-container></test-container>` to load and encapsulate the `qti-assessment-test` webcomponents.
+
+Use the following file structure
+A qti-test loads a QTI3.0 assessmenttest.xml file from a package folder.
+
+```plaintext
+Root/
+├── index.html
+└── /assets/api/examples/
+    ├── assessmenttest.xml
+    └── imsmanifest.xml
+
+```
+
+<Canvas of={Stories.Unstyled} />
+
+<a id="components"></a>
+### Test components
+
+Use test components inside the qti-test component for added functionality.
+
+<a id="test-next"></a>
+### Test next
+`<test-next> | TestNext`
+
+<a id="test-prev"></a>
+### Test prev
+`<test-prev> | TestPrev`
+
+<a id="styling"></a>
+### Styling
+
+The
+
+<a id="style-test"></a>
+## Styling the test
+
+The test can be styled with your own favorite library or css framework.
+
+<Canvas of={Stories.Styled} sourceState="shown" />
+
+---
+
+<a id="style-items"></a>
+## Styling the items
+
+see [qti-item](./qti-item.mdx) for more information on styling the items.
+
+<ArgTypes of={Stories.Styled} />
+<Description of={Stories.Styled} />

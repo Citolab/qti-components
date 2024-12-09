@@ -1,9 +1,38 @@
 import { Canvas, Meta } from '@storybook/blocks';
+import { QtiItem } from '../lib/qti-item';
 
-<Meta title="qti-item" />
+<Meta component={QtiItem} />
 
-# QTI Interactions
+# QTI-Item
 
-QTI
+`<qti-item> | QtiItem`
 
-- Interactions should be tied to the QTI specification
+The `qti-item` webcomponent can load and render a single `<qti-assessment-item>...</qti-assessment-item>`.
+
+This can be handy when
+
+    - You want to implement a light-weight player.
+    - Or to show an item inside an item bank.
+    - Or for scoring purposes where you want the qti-item visible to the scorer.
+
+```html
+<qti-item item-url=""></qti-item>
+```
+
+The items layout, position and functionality is styled within classes of the
+[qti-shared-vocabulary](https://www.imsglobal.org/spec/qti/v3p0/vocab#:~:text=The%20QTI%20shared%20vocabulary%20is,for%20a%20screen%2Dreader%20candidate)
+
+```xml
+<qti-assessment-item>
+  <qti-item-body>
+    <p>Look at the text in the picture.</p>
+    <p><img src="images/sign.png" alt="NEVER LEAVE LUGGAGE UNATTENDED" /></p>
+    <qti-choice-interaction max-choices="1" response-identifier="RESPONSE">
+      <qti-prompt>What does it say?</qti-prompt>
+      <qti-simple-choice identifier="A">You must stay with your luggage at all times.</qti-simple-choice>
+      <qti-simple-choice identifier="B">Do not let someone else look after your luggage.</qti-simple-choice>
+      <qti-simple-choice identifier="C">Remember your luggage when you leave.</qti-simple-choice>
+    </qti-choice-interaction>
+  </qti-item-body>
+</qti-assessment-item>
+```

@@ -19,7 +19,7 @@ export default {
   /** Run in watch mode, runs on file changes */
   watch: false,
   /** Include third party custom elements manifests */
-  dependencies: true,
+  dependencies: false,
   /** Output CEM path to `package.json`, defaults to true */
   packagejson: false,
   /** Enable special handling for litelement */
@@ -31,18 +31,20 @@ export default {
   },
 
   plugins: [
-    // removePrivateMembers,
+    expandTypesPlugin({
+      outdir: outdir
+    }),
     customElementVsCodePlugin({
       outdir: outdir + 'dist'
     }),
     customElementJsxPlugin({
+      globs: ['src/lib/qti-test/*.ts'],
       outdir: outdir + 'dist',
       exclude: [],
       fileName: `qti-components-jsx.d.ts`
     }),
     customEsLintRuleGeneratorPlugin({
       outdir: outdir + 'dist'
-    }),
-    expandTypesPlugin()
+    })
   ]
 };

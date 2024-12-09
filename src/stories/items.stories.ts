@@ -8,7 +8,6 @@ import { getManifestInfo } from '@citolab/qti-components/qti-loader';
 import { qtiTransformItem } from '@citolab/qti-components/qti-transformers';
 
 const meta: Meta = {
-  title: 'Items',
   argTypes: {
     qtipkg: {
       options: packages.packages,

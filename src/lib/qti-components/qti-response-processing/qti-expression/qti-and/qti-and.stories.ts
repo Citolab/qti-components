@@ -1,4 +1,3 @@
-import '@citolab/qti-components/qti-components';
 import { QtiAnd, QtiConditionExpression } from '@citolab/qti-components/qti-components';
 import { expect, within } from '@storybook/test';
 import type { Meta, StoryObj } from '@storybook/web-components';

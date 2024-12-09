@@ -6,7 +6,6 @@ import { QtiItem } from 'src/lib/qti-item';
 import { qtiTransformItem } from '../lib/qti-transformers/';
 
 const meta: Meta = {
-  title: 'Api',
   argTypes: {
     qtipkg: {
       options: ['biologie', 'kennisnet-1', 'kennisnet-2'],

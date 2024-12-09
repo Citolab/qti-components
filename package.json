@@ -36,6 +36,10 @@
       "import": "./dist/qti-item/index.js",
       "require": "./dist/qti-item/index.cjs"
     },
+    "./qti-test": {
+      "import": "./dist/qti-test/index.js",
+      "require": "./dist/qti-test/index.cjs"
+    },
     "./qti-loader": {
       "import": "./dist/qti-loader/index.js",
       "require": "./dist/qti-loader/index.cjs"
@@ -56,6 +60,9 @@
       ],
       "qti-item": [
         "./dist/qti-item/index.d.ts"
+      ],
+      "qti-test": [
+        "./dist/qti-test/index.d.ts"
       ],
       "qti-loader": [
         "./dist/qti-loader/index.d.ts"
@@ -81,7 +88,7 @@
     "storybook": "wireit",
     "build-storybook": "storybook build",
     "storybook:test": "test-storybook",
-    "storybook-docs": "storybook dev --docs -c .storybook-docs",
+    "storybook:docs": "wireit",
     "chromatic": "node chromatic-runner.cjs",
     "----hooks----": "-",
     "prepublishOnly": "npm run build",
@@ -105,6 +112,12 @@
     },
     "storybook": {
       "command": "storybook dev -p 6006",
+      "dependencies": [
+        "cem:watch"
+      ]
+    },
+    "storybook:docs": {
+      "command": "storybook dev --docs -c .storybook-docs",
       "dependencies": [
         "cem:watch"
       ]
@@ -193,8 +206,10 @@
     "fast-xml-parser": "^4.5.0",
     "globals": "^15.12.0",
     "husky": "^9.1.7",
+    "i": "^0.3.7",
     "lit": "^3.2.1",
     "np": "^10.1.0",
+    "npm": "^10.9.1",
     "path-browserify": "^1.0.1",
     "playwright": "^1.49.0",
     "postcss": "^8.4.49",
@@ -226,5 +241,8 @@
   "bugs": {
     "url": "https://github.com/Citolab/qti-components/issues"
   },
-  "homepage": "https://github.com/Citolab/qti-components#readme"
+  "homepage": "https://github.com/Citolab/qti-components#readme",
+  "dependencies": {
+    "stampino": "^0.8.3"
+  }
 }

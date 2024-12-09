@@ -1,5 +1,5 @@
 import type { CSSResultGroup } from 'lit';
-import { html, LitElement } from 'lit';
+import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { ChoicesInterface, ChoicesMixin } from '../internal/choices/choices.mixin';
 import { ShuffleMixin } from '../internal/shuffle/shuffle-mixin';
@@ -24,7 +24,10 @@ export class QtiChoiceInteraction
     this._internals.role = 'group';
   }
 
-  /** orientation of choices */
+  /**
+   * The orientation characteristic provides a hint to rendering systems that the choices have an inherent vertical or horizontal interpretation.
+   * [5.30.4](https://www.imsglobal.org/sites/default/files/spec/qti/v3/info/index.html#DataCharacteristic_ChoiceInteraction.Attr_orientation)
+   */
   @property({ type: String })
   public orientation: Orientation;
 

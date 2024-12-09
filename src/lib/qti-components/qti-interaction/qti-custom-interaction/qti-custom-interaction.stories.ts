@@ -3,13 +3,54 @@ import { html } from 'lit';
 import './qti-custom-interaction';
 import itemXML from './qti-custom-interaction.xml?raw';
 import { qtiTransformItem } from '@citolab/qti-components/qti-transformers';
-export default {
-  component: 'qti-custom-interaction'
+import { QtiCustomInteraction } from './qti-custom-interaction';
+import { getWcStorybookHelpers } from 'wc-storybook-helpers';
+import { Meta, StoryObj } from '@storybook/web-components';
+
+const { events, args, argTypes, template } = getWcStorybookHelpers('qti-custom-interaction');
+
+type Story = StoryObj<QtiCustomInteraction & typeof args>;
+
+/**
+ *
+ *
+ * # qti-custom-interaction
+ *
+ * [qti-custom-interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.ml3l73qfo5e3)
+ *
+ * The qti-custom-interaction renders a custom interaction that is not part of the QTI specification.
+ * This is part of Facet's custom interaction implementation, which is documented here: [Custom Interactions](<https://qti-components.citolab.nl/documentation/Custom Script Interaction API Reference 1.0.pdf>).
+ *
+ */
+const meta: Meta<QtiCustomInteraction> = {
+  component: 'qti-custom-interaction',
+  args,
+  argTypes,
+  parameters: {
+    actions: {
+      handles: events
+    }
+  },
+  tags: ['autodocs']
 };
+export default meta;
 
 const xml = String.raw;
 
-export const Default = {
+/**
+ * before it enters the dom it is transformed
+ *
+ * The attributes of the `<object>` element are copied to the `qti-custom-interaction` element.
+ * The `<object>` element is then removed from the xml.
+ * We add the following
+ *
+ * - `data-base-item`: the base-url for the item, so it can reference the `manifest`, pointed to in the `data` attribute to the correct location
+ * - `data-base-ref`: the base-url for the links in the manifest.json, so it can reference files in the manifest.
+ *
+ * > **Warning**
+ * > This is needed because the files in the manifest.json points to an absolute path, which is not correct in the context of the item.
+ */
+export const Default: Story = {
   render: args =>
     html` <qti-custom-interaction
       response-identifier="RESPONSE"
@@ -24,7 +65,7 @@ export const Default = {
     </qti-custom-interaction>`
 };
 
-export const AbsolutePaths = {
+export const AbsolutePaths: Story = {
   render: args => {
     return html`<qti-assessment-item time-dependent="false" label="32la7n">
       <qti-item-body class="defaultBody" xml:lang="nl-NL">
@@ -45,7 +86,7 @@ export const AbsolutePaths = {
   }
 };
 
-export const TransformXML = {
+export const TransformXML: Story = {
   render: args =>
     qtiTransformItem()
       .parse(
@@ -68,7 +109,13 @@ export const TransformXML = {
       .htmlDoc()
 };
 
-export const TransformItem = {
+/**
+ * We supply the following function in qti-transformers to transform the xml of the item, including a step to transform the custom interaction.
+ * In the following example, we also adjust the relative path from the iten in path.
+ * then we deliver the html of the item.
+ * the html of the item is then rendered in browser.
+ */
+export const TransformItem: Story = {
   render: args =>
     qtiTransformItem()
       .parse(itemXML)

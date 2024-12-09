@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest xmlns="http://www.imsglobal.org/xsd/qti/qtiv3p0/imscp_v1p1" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:imsmd="http://ltsc.ieee.org/xsd/LOM" 
+        xsi:schemaLocation="http://www.imsglobal.org/xsd/qti/qtiv3p0/imscp_v1p1 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqtiv3p0_imscpv1p2_v1p0.xsd http://ltsc.ieee.org/xsd/LOM https://purl.imsglobal.org/spec/md/v1p3/schema/xsd/imsmd_loose_v1p3p2.xsd"
+  identifier="qti3-l1-T1-test-entry">
+  <metadata>
+    <schema>QTI Package</schema>
+    <schemaversion>3.0.0</schemaversion>
+  </metadata>
+  <organizations/>
+  <resources>
+    <resource identifier="t1-test-entry-item1" type="imsqti_item_xmlv3p0" href="items/choice-single-cardinality.xml">   
+      <file href="items/choice-single-cardinality.xml"/>
+    </resource>
+    <resource identifier="t1-test-entry-item2" type="imsqti_item_xmlv3p0" href="items/choice-multiple-cardinality.xml">   
+      <file href="items/choice-multiple-cardinality.xml"/>
+    </resource>
+    <resource identifier="t1-test-entry-item3" type="imsqti_item_xmlv3p0" href="items/text-entry.xml">   
+      <file href="items/text-entry.xml"/>
+    </resource> 
+    <resource identifier="t1-test-entry-item4" type="imsqti_item_xmlv3p0" href="items/extended-text.xml">   
+      <file href="items/extended-text.xml"/>
+    </resource>
+    <resource identifier="t1-test-entry" type="imsqti_test_xmlv3p0" href="assessment.xml">
+      <file href="assessment.xml"/>
+      <dependency identifierref="t1-test-entry-item1"/>
+      <dependency identifierref="t1-test-entry-item2"/>
+      <dependency identifierref="t1-test-entry-item3"/>
+      <dependency identifierref="t1-test-entry-item4"/>
+    </resource>
+  </resources>
+</manifest>

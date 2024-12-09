@@ -1,8 +1,6 @@
 import { html } from 'lit';
 
-export default {
-  title: 'styles/Shared CSS 1'
-};
+export default {};
 
 export const SharedCSS1 = () => html`
   <qti-item-body>
