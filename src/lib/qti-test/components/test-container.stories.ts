@@ -23,7 +23,12 @@ export default meta;
 
 export const Default: Story = {
   render: args =>
-    html` <qti-test testURL="/assets/qti-conformance/Basic/T4-T7/assessment.xml"> ${template(args)} </qti-test>`,
+    html` <qti-test>
+      ${template(args)}
+      <script>
+        component.testURL = '/assets/qti-conformance/Basic/T4-T7/assessment.xml';
+      </script>
+    </qti-test>`,
   args: {},
   play: async ({ canvasElement }) => {
     const itemElement = await findByShadowTitle(canvasElement, 'T1 - Test Entry - Item 1');

@@ -19,8 +19,8 @@ import { TestBase } from './test-base';
  *
  * With navigation buttons:
  * ```html
- * <qti-test test="./path/to/assessment.xml">
- *   <test-container></test-container>
+ * <qti-test >
+ *   <test-container test-url="./path/to/assessment.xml"></test-container>
  *   <div class="flex">
  *      <test-prev></test-prev>
  *      <test-next></test-next>

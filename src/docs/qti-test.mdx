@@ -5,8 +5,6 @@ import { QtiTest } from '../lib/qti-test';
 
 <Meta component={QtiTest} />
 
-<ArgTypes of={Stories} />
-
 # QTI-Test
 
 `<qti-test> | QtiTest`
@@ -15,10 +13,8 @@ The `<qti-test></qti-test>` component is used to render a complete qti-assessmen
 
 <Source of={Stories.Unstyled} dark={true} />
 
-<a id="setup"></a>
 ### Setup
 
-<a id="load-test"></a>
 ### Load test
 
 Use a `<test-container></test-container>` to load and encapsulate the `qti-assessment-test` webcomponents.
@@ -37,37 +33,31 @@ Root/
 
 <Canvas of={Stories.Unstyled} />
 
-<a id="components"></a>
 ### Test components
 
 Use test components inside the qti-test component for added functionality.
 
-<a id="test-next"></a>
 ### Test next
+
 `<test-next> | TestNext`
 
-<a id="test-prev"></a>
 ### Test prev
+
 `<test-prev> | TestPrev`
 
-<a id="styling"></a>
 ### Styling
-
-The
-
-<a id="style-test"></a>
-## Styling the test
 
 The test can be styled with your own favorite library or css framework.
 
 <Canvas of={Stories.Styled} sourceState="shown" />
 
----
+The items can be styled with css variables.
+
+<Source of={Stories.ItemsStyled} dark={true} />
+
+<Canvas of={Stories.ItemsStyled} />
 
 <a id="style-items"></a>
-## Styling the items
+### Styling the items
 
 see [qti-item](./qti-item.mdx) for more information on styling the items.
-
-<ArgTypes of={Stories.Styled} />
-<Description of={Stories.Styled} />
