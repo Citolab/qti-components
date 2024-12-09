@@ -147,7 +147,7 @@ export default defineConfig([
         {
           // (index.global.js) CDN IFFE ES5 (jsdom)
           ...iffeBundleOptions,
-          entry: { 'cdn/index.global': './src/index.ts' }
+          entry: { 'cdn/index': './src/index.ts' }
         }
       ]
     : [])
