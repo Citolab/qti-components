@@ -130,18 +130,25 @@ export default defineConfig([
   ...(process.env.NODE_ENV === 'production'
     ? [
         {
-          ...esmBundleOptions, // minified ESM bundled version
-          minify: true,
-          sourcemap: false,
-          entry: { 'index.min': './src/index.ts' }
-        },
-        {
-          ...esmBundleOptions, // dev ESM bundled version
+          // (index.js) CDN ESM Sourcemap
+          ...esmBundleOptions,
           minify: false,
           sourcemap: 'inline' as const,
-          entry: { index: './src/index.ts' }
+          entry: { 'cdn/index': './src/index.ts' }
         },
-        iffeBundleOptions // IFFE version for jsdom
+        {
+          // (index.min) CDN ESM Minified
+          ...esmBundleOptions,
+          minify: true,
+          sourcemap: false,
+          entry: { 'cdn/index.min': './src/index.ts' }
+        },
+
+        {
+          // (index.global.js) CDN IFFE ES5 (jsdom)
+          ...iffeBundleOptions,
+          entry: { 'cdn/index.global': './src/index.ts' }
+        }
       ]
     : [])
 ]);

@@ -45,9 +45,9 @@
       "require": "./dist/qti-loader/index.cjs"
     },
     "./item.css": "./dist/item.css",
-    "./index.js": "./dist/index.js",
-    "./index.min.js": "./dist/index.min.js",
-    "./index.global.js": "./dist/index.global.js"
+    "./cdn/index.js": "./dist/cdn/index.js",
+    "./cdn/index.min.js": "./dist/cnd/index.min.js",
+    "./cdn/index.global.js": "./dist/cdn/index.global.js"
   },
   "types": "./dist/qti-components/index.d.ts",
   "typesVersions": {
@@ -69,11 +69,7 @@
       ]
     }
   },
-  "files": [
-    "dist",
-    "types",
-    "./dist/item.css"
-  ],
+  "files": [],
   "scripts": {
     "dev": "vite",
     "test": "wireit",
@@ -126,7 +122,7 @@
       "env": {
         "NODE_ENV": "production"
       },
-      "command": "tsup --silent",
+      "command": "tsup",
       "dependencies": [
         "cem",
         "css"
