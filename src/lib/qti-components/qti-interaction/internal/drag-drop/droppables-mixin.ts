@@ -104,7 +104,7 @@ export const DroppablesMixin = <T extends Constructor<Interaction>>(
     }
 
     private activateDroppable(droppable: HTMLElement): void {
-      this.classList.remove('dragzone-active');
+      this._internals.states.delete('--dragzone-active');
       droppable.setAttribute('active', '');
     }
 
@@ -168,7 +168,7 @@ export const DroppablesMixin = <T extends Constructor<Interaction>>(
 
     private deactivateDroppable(droppable: HTMLElement, makeDragzoneActive = true): void {
       if (makeDragzoneActive) {
-        this.classList.add('dragzone-active');
+        this._internals.states.add('--dragzone-active');
       }
       droppable.removeAttribute('active');
     }
