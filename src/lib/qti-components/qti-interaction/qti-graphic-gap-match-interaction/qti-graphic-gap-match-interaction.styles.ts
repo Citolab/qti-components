@@ -22,9 +22,21 @@ export default css`
   }
   :host(.qti-choices-left) {
     flex-direction: row-reverse;
+    & [name='drags'] {
+      width: 25%;
+    }
+    & [part='image'] {
+      width: 75%;
+    }
   }
   :host(.qti-choices-right) {
     flex-direction: row;
+    & [name='drags'] {
+      width: 25%;
+    }
+    & [part='image'] {
+      width: 75%;
+    }
   }
   [part='image'] {
     display: block;
@@ -35,6 +47,7 @@ export default css`
   [name='drags'] {
     display: flex;
     align-items: flex-start;
+    flex-wrap: wrap;
     flex: 1;
     border: 2px solid transparent;
     padding: 0.3rem;

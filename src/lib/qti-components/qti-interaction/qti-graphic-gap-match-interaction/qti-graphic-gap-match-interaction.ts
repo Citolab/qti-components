@@ -47,8 +47,8 @@ export class QtiGraphicGapMatchInteraction extends DragDropInteractionMixin(
       maxHeight = Math.max(maxHeight, rect.height);
       maxWidth = Math.max(maxWidth, rect.width);
     });
-
-    const dragSlot = this.shadowRoot?.querySelector('[name="drags]') as HTMLElement;
+    const slots = this.shadowRoot.querySelectorAll('slot');
+    const dragSlot = Array.from(slots).find(slot => slot.name === 'drags') as HTMLElement;
     if (dragSlot) {
       dragSlot.style.minHeight = `${maxHeight}px`;
       dragSlot.style.minWidth = `${maxWidth}px`;
