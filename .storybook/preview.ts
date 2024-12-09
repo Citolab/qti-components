@@ -19,12 +19,15 @@ import '../src/item.css';
 
 const preview: Preview = {
   decorators: [withActions],
+
   parameters: {
     controls: {
       expanded: true
     },
     viewport: { viewports: customViewports }
-  }
+  },
+
+  tags: ['!autodocs']
 };
 
 export default preview;
