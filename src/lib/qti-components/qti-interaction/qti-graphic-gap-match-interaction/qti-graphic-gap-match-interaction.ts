@@ -1,9 +1,9 @@
-import { css, html, PropertyValues } from 'lit';
+import { css, CSSResultGroup, html, PropertyValues } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-interaction-mixin';
 import { QtiHotspotChoice } from '../qti-hotspot-choice';
 import { Interaction } from '../internal/interaction/interaction';
-
+import styles from './qti-graphic-gap-match-interaction.styles';
 @customElement('qti-graphic-gap-match-interaction')
 export class QtiGraphicGapMatchInteraction extends DragDropInteractionMixin(
   Interaction,
@@ -11,27 +11,8 @@ export class QtiGraphicGapMatchInteraction extends DragDropInteractionMixin(
   false,
   'qti-associable-hotspot'
 ) {
-  static override styles = css`
-    :host {
-      display: inline-block;
-      position: relative;
-    }
-    slot[name='drags'] {
-      border: 2px solid transparent;
-      display: inline-flex;
-      gap: 1rem;
-      padding: 0.5rem;
-    }
-    [part='image'] {
-      display: block;
-      position: relative;
-    }
-    ::slotted(img) {
-      display: inline-block;
-      user-select: none;
-      pointer-events: none;
-    }
-  `;
+  static styles: CSSResultGroup = styles;
+
   private observer: MutationObserver | null = null;
   private resizeObserver: ResizeObserver | null = null;
 
@@ -67,7 +48,7 @@ export class QtiGraphicGapMatchInteraction extends DragDropInteractionMixin(
       maxWidth = Math.max(maxWidth, rect.width);
     });
 
-    const dragSlot = this.shadowRoot?.querySelector('[name="qti-gap-img"]') as HTMLElement;
+    const dragSlot = this.shadowRoot?.querySelector('[name="drags]') as HTMLElement;
     if (dragSlot) {
       dragSlot.style.minHeight = `${maxHeight}px`;
       dragSlot.style.minWidth = `${maxWidth}px`;

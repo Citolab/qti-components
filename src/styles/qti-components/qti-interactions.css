@@ -231,6 +231,10 @@
 
       &[disabled] {
         @apply dis;
+
+        &:not(:empty) {
+          cursor: default !important;
+        }
       }
 
       &[active] {

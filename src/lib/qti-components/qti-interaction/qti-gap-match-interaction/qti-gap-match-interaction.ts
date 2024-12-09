@@ -1,46 +1,14 @@
-import { css, html, LitElement, PropertyValues } from 'lit';
+import { css, CSSResultGroup, html, LitElement, PropertyValues } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-interaction-mixin';
 import { Interaction } from '../internal/interaction/interaction';
-
+import styles from './qti-gap-match-interaction.styles';
 @customElement('qti-gap-match-interaction')
 export class QtiGapMatchInteraction extends DragDropInteractionMixin(Interaction, 'qti-gap-text', false, 'qti-gap') {
   private observer: MutationObserver | null = null;
   private resizeObserver: ResizeObserver | null = null;
-  static override styles = [
-    css`
-      :host {
-        display: flex;
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 0.5rem;
-      }
 
-      :host(.qti-choices-top) {
-        flex-direction: column;
-      }
-      :host(.qti-choices-bottom) {
-        flex-direction: column-reverse;
-      }
-      :host(.qti-choices-left) {
-        flex-direction: row;
-      }
-      :host(.qti-choices-right) {
-        flex-direction: row-reverse;
-      }
-      /* [part='drops'] , */
-
-      [name='drags'] {
-        display: flex;
-        align-items: flex-start;
-        flex: 1;
-        border: 2px solid transparent;
-        padding: 0.3rem;
-        border-radius: 0.3rem;
-        gap: 0.5rem;
-      }
-    `
-  ];
+  static styles: CSSResultGroup = styles;
 
   override render() {
     return html`<slot name="prompt"> </slot>
