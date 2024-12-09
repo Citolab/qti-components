@@ -69,7 +69,9 @@
       ]
     }
   },
-  "files": [],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "vite",
     "test": "wireit",
@@ -147,7 +149,7 @@
       "command": "postcss src/item.css -d dist -m"
     },
     "attw": {
-      "command": "attw --pack --exclude-entrypoints ./item.css ./index.js ./index.global.js ./index.min.js",
+      "command": "attw --pack --exclude-entrypoints ./item.css ./cdn/index.js ./cdn/index.global.js ./cdn/index.min.js",
       "dependencies": [
         "build"
       ]
