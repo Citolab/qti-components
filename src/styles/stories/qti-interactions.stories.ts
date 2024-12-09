@@ -27,9 +27,7 @@ import { Default as TextEntry } from '../../lib/qti-components/qti-interaction/q
 
 type Story = StoryObj;
 
-const meta: Meta<QtiAssessmentItem> = {
-  title: 'Interactions'
-};
+const meta: Meta<QtiAssessmentItem> = {};
 export default meta;
 
 export const Interactions = args => html`

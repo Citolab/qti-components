@@ -15,15 +15,14 @@
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
     "allowArbitraryExtensions": true,
-    // "strictNullChecks": false,
-    // "exactOptionalPropertyTypes": false,
     "downlevelIteration": true,
     "baseUrl": "./",
     "paths": {
-      "@citolab/qti-components/qti-components": ["src/lib/qti-components"],
-      "@citolab/qti-components/qti-item": ["src/lib/qti-item"],
-      "@citolab/qti-components/qti-transformers": ["src/lib/qti-transformers"],
-      "@citolab/qti-components/qti-loader": ["src/lib/qti-loader"]
+      "@citolab/qti-components/qti-components": ["./src/lib/qti-components"],
+      "@citolab/qti-components/qti-item": ["./src/lib/qti-item"],
+      "@citolab/qti-components/qti-transformers": ["./src/lib/qti-transformers"],
+      "@citolab/qti-components/qti-loader": ["./src/lib/qti-loader"],
+      "@citolab/qti-components/qti-test": ["./src/lib/qti-test"]
     },
     "types": ["vitest/globals","@types/dom-view-transitions","./test/vitest.d.ts"]
   },

@@ -21,7 +21,7 @@
   "engines": {
     "node": ">=20.0.0"
   },
-  "version": "6.9.1-beta.77",
+  "version": "6.9.1-beta.81",
   "type": "module",
   "exports": {
     "./qti-components": {
@@ -36,14 +36,18 @@
       "import": "./dist/qti-item/index.js",
       "require": "./dist/qti-item/index.cjs"
     },
+    "./qti-test": {
+      "import": "./dist/qti-test/index.js",
+      "require": "./dist/qti-test/index.cjs"
+    },
     "./qti-loader": {
       "import": "./dist/qti-loader/index.js",
       "require": "./dist/qti-loader/index.cjs"
     },
     "./item.css": "./dist/item.css",
-    "./index.js": "./dist/index.js",
-    "./index.min.js": "./dist/index.min.js",
-    "./index.global.js": "./dist/index.global.js"
+    "./cdn/index.js": "./dist/cdn/index.js",
+    "./cdn/index.min.js": "./dist/cnd/index.min.js",
+    "./cdn/index.global.js": "./dist/cdn/index.global.js"
   },
   "types": "./dist/qti-components/index.d.ts",
   "typesVersions": {
@@ -57,15 +61,16 @@
       "qti-item": [
         "./dist/qti-item/index.d.ts"
       ],
+      "qti-test": [
+        "./dist/qti-test/index.d.ts"
+      ],
       "qti-loader": [
         "./dist/qti-loader/index.d.ts"
       ]
     }
   },
   "files": [
-    "dist",
-    "types",
-    "./dist/item.css"
+    "dist"
   ],
   "scripts": {
     "dev": "vite",
@@ -81,6 +86,7 @@
     "storybook": "wireit",
     "build-storybook": "storybook build",
     "storybook:test": "test-storybook",
+    "storybook:docs": "wireit",
     "chromatic": "node chromatic-runner.cjs",
     "----hooks----": "-",
     "prepublishOnly": "npm run build",
@@ -108,11 +114,17 @@
         "cem:watch"
       ]
     },
+    "storybook:docs": {
+      "command": "storybook dev --docs -c .storybook-docs",
+      "dependencies": [
+        "cem:watch"
+      ]
+    },
     "build": {
       "env": {
         "NODE_ENV": "production"
       },
-      "command": "tsup --silent",
+      "command": "tsup",
       "dependencies": [
         "cem",
         "css"
@@ -137,7 +149,7 @@
       "command": "postcss src/item.css -d dist -m"
     },
     "attw": {
-      "command": "attw --pack --exclude-entrypoints ./item.css ./index.js ./index.global.js ./index.min.js",
+      "command": "attw --pack --exclude-entrypoints ./item.css ./cdn/index.js ./cdn/index.global.js ./cdn/index.min.js",
       "dependencies": [
         "build"
       ]
@@ -149,39 +161,39 @@
     "lit-html": "^3.2.1"
   },
   "devDependencies": {
-    "@arethetypeswrong/cli": "^0.17.0",
+    "@arethetypeswrong/cli": "^0.17.1",
     "@chromatic-com/storybook": "^3.2.2",
     "@custom-elements-manifest/analyzer": "^0.10.3",
-    "@eslint/js": "^9.15.0",
+    "@eslint/js": "^9.16.0",
     "@lit/context": "^1.1.3",
     "@ljcl/storybook-addon-cssprops": "^4.0.0",
-    "@storybook/addon-a11y": "^8.4.6",
-    "@storybook/addon-essentials": "^8.4.6",
-    "@storybook/addon-interactions": "^8.4.6",
-    "@storybook/addon-links": "^8.4.6",
-    "@storybook/addon-storysource": "^8.4.6",
-    "@storybook/blocks": "^8.4.6",
-    "@storybook/preview-api": "^8.4.6",
-    "@storybook/test": "^8.4.6",
-    "@storybook/web-components": "^8.4.6",
-    "@storybook/web-components-vite": "^8.4.6",
-    "@swc/core": "^1.9.3",
+    "@storybook/addon-a11y": "^8.4.7",
+    "@storybook/addon-essentials": "^8.4.7",
+    "@storybook/addon-interactions": "^8.4.7",
+    "@storybook/addon-links": "^8.4.7",
+    "@storybook/addon-storysource": "^8.4.7",
+    "@storybook/blocks": "^8.4.7",
+    "@storybook/preview-api": "^8.4.7",
+    "@storybook/test": "^8.4.7",
+    "@storybook/web-components": "^8.4.7",
+    "@storybook/web-components-vite": "^8.4.7",
+    "@swc/core": "^1.10.1",
     "@testing-library/dom": "^10.4.0",
     "@types/dom-view-transitions": "^1.0.5",
-    "@types/node": "^22.9.3",
-    "@typescript-eslint/eslint-plugin": "^8.15.0",
-    "@typescript-eslint/parser": "^8.15.0",
+    "@types/node": "^22.10.1",
+    "@typescript-eslint/eslint-plugin": "^8.17.0",
+    "@typescript-eslint/parser": "^8.17.0",
     "@vitest/browser": "^2.1.8",
     "autoprefixer": "^10.4.20",
     "cem-plugin-expanded-types": "^1.3.3",
-    "chromatic": "^11.18.1",
+    "chromatic": "^11.20.0",
     "custom-element-eslint-rule-generator": "^1.0.1",
-    "custom-element-jsx-integration": "^1.5.3",
+    "custom-element-jsx-integration": "^1.5.4",
     "custom-element-react-wrappers": "^1.6.8",
     "custom-element-vs-code-integration": "^1.4.1",
-    "dotenv": "^16.4.5",
-    "eslint": "^9.15.0",
-    "eslint-import-resolver-typescript": "^3.6.3",
+    "dotenv": "^16.4.7",
+    "eslint": "^9.16.0",
+    "eslint-import-resolver-typescript": "^3.7.0",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-lit": "^1.15.0",
     "eslint-plugin-lit-a11y": "^4.1.4",
@@ -190,10 +202,12 @@
     "eslint-plugin-storybook": "^0.11.1",
     "eslint-plugin-wc": "^2.2.0",
     "fast-xml-parser": "^4.5.0",
-    "globals": "^15.12.0",
+    "globals": "^15.13.0",
     "husky": "^9.1.7",
+    "i": "^0.3.7",
     "lit": "^3.2.1",
     "np": "^10.1.0",
+    "npm": "^10.9.2",
     "path-browserify": "^1.0.1",
     "playwright": "^1.49.0",
     "postcss": "^8.4.49",
@@ -201,29 +215,32 @@
     "postcss-cli": "^11.0.0",
     "postcss-import": "^16.1.0",
     "postcss-nesting": "^13.0.1",
-    "prettier": "3.3.3",
+    "prettier": "3.4.2",
     "remark-gfm": "^4.0.0",
     "shadow-dom-testing-library": "^1.11.3",
     "stampino": "^0.8.3",
-    "storybook": "^8.4.6",
-    "stylelint": "^16.10.0",
+    "storybook": "^8.4.7",
+    "stylelint": "^16.11.0",
     "stylelint-config-standard": "^36.0.1",
     "stylelint-prettier": "^5.0.2",
     "tsup": "^8.3.5",
     "typescript": "^5.7.2",
-    "typescript-eslint": "^8.15.0",
-    "vite": "^6.0.2",
-    "vite-tsconfig-paths": "^5.1.3",
+    "typescript-eslint": "^8.17.0",
+    "vite": "^6.0.3",
+    "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^2.1.8",
     "wc-storybook-helpers": "^2.0.4",
     "wireit": "^0.14.9"
   },
   "optionalDependencies": {
-    "@rollup/rollup-linux-x64-gnu": "^4.27.4"
+    "@rollup/rollup-linux-x64-gnu": "^4.28.1"
   },
   "customElements": "custom-elements.json",
   "bugs": {
     "url": "https://github.com/Citolab/qti-components/issues"
   },
-  "homepage": "https://github.com/Citolab/qti-components#readme"
+  "homepage": "https://github.com/Citolab/qti-components#readme",
+  "dependencies": {
+    "stampino": "^0.8.3"
+  }
 }

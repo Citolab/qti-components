@@ -30,22 +30,26 @@ jobs:
         run: npm run build
       - name: Test build
         run: npm run test
+
       # - name: Run Chromatic
         # uses: chromaui/action@latest
         # with:
           # ⚠️ Make sure to configure a `CHROMATIC_PROJECT_TOKEN` repository secret
           # projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-      - name: Version to prerelease
-        run: npm version prerelease --preid=beta
 
-      # Push repository changes
-      - name: Push changes to repository
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: git push origin && git push --tags
 
-      - name: Publish with tag next
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm publish --tag next
+      # - name: Version to prerelease
+      #   run: npm version prerelease --preid=beta
 
+      # - name: Push changes to repository
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   run: git push origin && git push --tags
+
+      # - name: Publish with tag next
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      #   run: npm publish --tag next
+
+      - name: Create pkgr release
+        run: npx pkg-pr-new publish

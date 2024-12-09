@@ -6,88 +6,86 @@ import { property } from 'lit/decorators.js';
 type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {
-  title: 'styles/Theme',
   parameters: {
     cssprops: {
-      "qti-bg-active": {
-        value: "#ffecec",
-        description: "Background color for active states",
+      'qti-bg-active': {
+        value: '#ffecec',
+        description: 'Background color for active states'
       },
-      "qti-border-active": {
-        value: "#f86d70",
-        description: "Border color for active states",
+      'qti-border-active': {
+        value: '#f86d70',
+        description: 'Border color for active states'
       },
-      "qti-gap-size": {
-        value: "1rem",
-        description: "Gap size between elements",
+      'qti-gap-size': {
+        value: '1rem',
+        description: 'Gap size between elements'
       },
-      "qti-bg": {
-        value: "white",
-        description: "Default background color",
+      'qti-bg': {
+        value: 'white',
+        description: 'Default background color'
       },
-      "qti-hover-bg": {
-        value: "#f9fafb",
-        description: "Background color on hover",
+      'qti-hover-bg': {
+        value: '#f9fafb',
+        description: 'Background color on hover'
       },
-      "qti-disabled-bg": {
-        value: "#f3f4f6",
-        description: "Background color for disabled elements",
+      'qti-disabled-bg': {
+        value: '#f3f4f6',
+        description: 'Background color for disabled elements'
       },
-      "qti-disabled-color": {
-        value: "#45484f",
-        description: "Text color for disabled elements",
+      'qti-disabled-color': {
+        value: '#45484f',
+        description: 'Text color for disabled elements'
       },
-      "qti-border-thickness": {
-        value: "2px",
-        description: "Thickness of borders",
+      'qti-border-thickness': {
+        value: '2px',
+        description: 'Thickness of borders'
       },
-      "qti-border-style": {
-        value: "solid",
-        description: "Style of borders",
+      'qti-border-style': {
+        value: 'solid',
+        description: 'Style of borders'
       },
-      "qti-border-color": {
-        value: "#c6cad0",
-        description: "Color of borders",
+      'qti-border-color': {
+        value: '#c6cad0',
+        description: 'Color of borders'
       },
-      "qti-border-radius": {
-        value: "0.3rem",
-        description: "Radius of borders",
+      'qti-border-radius': {
+        value: '0.3rem',
+        description: 'Radius of borders'
       },
-      "qti-drop-border-radius": {
-        value: "calc(var(--qti-border-radius) + var(--qti-border-thickness))",
-        description: "Radius of borders for drop areas",
+      'qti-drop-border-radius': {
+        value: 'calc(var(--qti-border-radius) + var(--qti-border-thickness))',
+        description: 'Radius of borders for drop areas'
       },
-      "qti-focus-border-width": {
-        value: "5px",
-        description: "Width of border on focus",
+      'qti-focus-border-width': {
+        value: '5px',
+        description: 'Width of border on focus'
       },
-      "qti-focus-color": {
-        value: "#bddcff7e",
-        description: "Color for focus states",
+      'qti-focus-color': {
+        value: '#bddcff7e',
+        description: 'Color for focus states'
       },
-      "qti-form-size": {
-        value: "1rem",
-        description: "Size for form elements",
+      'qti-form-size': {
+        value: '1rem',
+        description: 'Size for form elements'
       },
-      "qti-point-size": {
-        value: "2rem",
-        description: "Size for point elements",
+      'qti-point-size': {
+        value: '2rem',
+        description: 'Size for point elements'
       },
-      "qti-order-size": {
-        value: "2rem",
-        description: "Size for order buttons",
+      'qti-order-size': {
+        value: '2rem',
+        description: 'Size for order buttons'
       },
-      "qti-padding-vertical": {
-        value: "0.5rem",
-        description: "Vertical padding for all elements",
+      'qti-padding-vertical': {
+        value: '0.5rem',
+        description: 'Vertical padding for all elements'
       },
-      "qti-padding-horizontal": {
-        value: "0.5rem",
-        description: "Horizontal padding for all elements",
-      },
+      'qti-padding-horizontal': {
+        value: '0.5rem',
+        description: 'Horizontal padding for all elements'
+      }
     }
   }
-  
 };
 export default meta;
 
@@ -115,7 +113,7 @@ window.customElements.define('button-component', ButtonComponent);
 
 // grid grid-cols-6 gap-4
 export const Theme = (mod: string) => html`
-<css-variable-editor></css-variable-editor>
+  <css-variable-editor></css-variable-editor>
   <div style="display:grid;grid-template-columns: repeat(7, minmax(0, 1fr));gap:2rem;">
     <style>
       button-component {
@@ -151,12 +149,8 @@ export const Theme = (mod: string) => html`
     <button-component ch="check-checkbox" cha="" class="check hov">check</button-component>
     <button-component ch="check-checkbox" cha="" class="check foc">check</button-component>
     <button-component ch="check-checkbox" cha="check-checkbox-checked" class="check act">check</button-component>
-    <button-component ch="check-checkbox" cha="check-checkbox-checked" class="check foc act"
-      >check</button-component
-    >
-    <button-component ch="check-checkbox" cha="check-checkbox-checked dis" class="check dis"
-      >check</button-component
-    >
+    <button-component ch="check-checkbox" cha="check-checkbox-checked" class="check foc act">check</button-component>
+    <button-component ch="check-checkbox" cha="check-checkbox-checked dis" class="check dis">check</button-component>
     <div></div>
 
     <div class="button">button</div>
@@ -504,7 +498,6 @@ export const Theme = (mod: string) => html`
 
 // ${components('sm')}
 // export const Components = args => html`<button class="button">asasd</button> <button class="button-in">asasd</button>`;
-
 
 /*
       [class] {
