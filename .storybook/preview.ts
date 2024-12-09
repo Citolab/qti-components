@@ -23,6 +23,7 @@ const preview: Preview = {
   },
   decorators: [withActions],
   parameters: {
+    docs: { toc: true },
     controls: {
       expanded: true
     },

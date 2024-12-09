@@ -10,10 +10,10 @@ export default {
   ...preview,
   parameters: {
     ...preview.parameters,
-    docs: { theme: docTheme },
+    docs: { ...preview.parameters?.doc, toc: true },
     options: {
       storySort: {
-        order: ['QTI Test', 'QTI Item', 'qti-item', 'qti-test', 'qti-choice-interaction']
+        order: ['👋 Hi QTI', 'QTI-Test', 'QTI-Item']
       }
     }
   }

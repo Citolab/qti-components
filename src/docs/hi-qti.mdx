@@ -1,15 +1,19 @@
-import { Canvas, Meta, Story } from '@storybook/blocks';
-import * as CheckboxStories from './test.stories';
+import { Canvas, Meta, Story, Source } from '@storybook/blocks';
+import * as Stories from './qti-test.stories';
 
-<Meta title="Get started" tags={['hidden-docs']} />
+<Meta title="👋 Hi QTI" />
 
 # 👋 HI QTI
 
 A set of test interactions to be used in the educational field.
 
+- use the interactions in standard form elements
+- use qti-item to render test questions with advanced scoring
+- use qti-test to render a complete qti-test including navigation
+
 {/* <Story of={CheckboxStories.Default} autoplay /> */}
 
-<Canvas of={CheckboxStories.Default} />
+<Canvas of={Stories.Unstyled} />
 
 ## Source code
 
@@ -22,14 +26,6 @@ A set of test interactions to be used in the educational field.
 [![npm version](https://badge.fury.io/js/%40citolab%2Fqti-components.svg)](https://badge.fury.io/js/%40citolab%2Fqti-components)
 
 ## CDN versions
-
-```js
-import * as QTI from 'https://unpkg.com/@citolab/qti-components@latest/dist/index.js';
-```
-
-```css
-@import 'https://unpkg.com/@citolab/qti-components@latest/dist/styles.bundled.css';
-```
 
 ## Development
 
@@ -45,6 +41,28 @@ Import the webcomponents
 import '@citolab/qti-components/qti-components';
 ```
 
+## Quick Start
+
+Add the following code to your page.
+
+```html
+<script type="module" src="https://cdn.jsdelivr.net/npm/@citolab/qti-components@latest/dist/index.js"></script>
+```
+
+Now you you can navigate your qti assesment test
+
+<Source of={Stories.Unstyled} dark={true} />
+
+You can style the test with your favorite css
+
+<Canvas of={Stories.Styled} />
+
+Just add, for example, bootstrap classess to the test components
+
+<Source of={Stories.Styled} dark={true} />
+
+There are several components to use in your test to navigate the questions
+
 Use the transformers, from QTI XML to HTML5
 
 ```js
@@ -55,13 +73,6 @@ import { qtiTransformItem } from '@citolab/qti-components/qti-transformers';
 const itemXML = '<qti-assessment-item>...</qti-assessment-item>';
 const itemHTML = await qtiTransformItem().parse(itemXML).path('./relative-path-to-item-assets').html();
 ```
-
-<iframe
-  width="100%"
-  height="500"
-  src="//jsfiddle.net/mrklein/s97Ld0gn/embedded/html,result/"
-  allowFullScreen="allowfullscreen"
-></iframe>
 
 ## Contact
 

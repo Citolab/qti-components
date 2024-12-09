@@ -54,10 +54,10 @@ addons.setConfig({
   selectedPanel: undefined,
   initialActive: 'canvas',
   sidebar: {
-    showRoots: true,
-    filters: {
-      items: item => !item.tags?.includes('hidden-docs')
-    }
+    showRoots: true
+    // filters: {
+    //   items: item => !item.tags?.includes('hidden-docs')
+    // }
     // collapsedRoots: ['other']
   }
   // toolbar: {
