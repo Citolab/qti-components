@@ -160,9 +160,9 @@ export const Q8_L2_D110: Story = {
 
     // Test for exceeding max associations
     await step('Attempt to make more than 1 association', async () => {
-      // TODO. check why the first time it's not working so drag twice
-      await drag(gapChoices[1], { to: responseHotspots[2], duration: 300 });
-      await drag(gapChoices[1], { to: qtiGapMatchInteraction, duration: 300 });
+      // // TODO. check why the first time it's not working so drag twice
+      // await drag(gapChoices[1], { to: responseHotspots[2], duration: 300 });
+      // await drag(gapChoices[1], { to: qtiGapMatchInteraction, duration: 300 });
 
       // Drag and drop to make 2 associations
       await drag(gapChoices[1], { to: responseHotspots[2], duration: 300 });

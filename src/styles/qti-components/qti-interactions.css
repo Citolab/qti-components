@@ -109,6 +109,28 @@
     @apply dropping;
   }
 
+  /* Active state */
+  qti-graphic-gap-match-interaction.qti-selections-light:state(--dragzone-active)::part(drags) {
+    background-color: var(--qti-light-bg-active);
+    border-color: var(--qti-light-border-active);
+  }
+
+  qti-graphic-gap-match-interaction.qti-selections-dark:state(--dragzone-active)::part(drags) {
+    background-color: var(--qti-dark-bg-active);
+    border-color: var(--qti-dark-border-active);
+  }
+
+  /* Enabled state */
+  qti-graphic-gap-match-interaction.qti-selections-light:state(--dragzone-enabled)::part(drags) {
+    background-color: var(--qti-light-bg-active);
+    border-color: var(--qti-light-border-active);
+  }
+
+  qti-graphic-gap-match-interaction.qti-selections-dark:state(--dragzone-enabled)::part(drags) {
+    background-color: var(--qti-dark-bg-active);
+    border-color: var(--qti-dark-border-active);
+  }
+
   qti-graphic-gap-match-interaction {
     position: relative;
 
@@ -127,7 +149,35 @@
       border: 2px solid transparent;
 
       &[enabled] {
-        @apply dropping;
+        @apply droping;
+
+        /* Light theme override */
+        .qti-selections-light & {
+          background-color: var(--qti-light-bg-active);
+          border-color: var(--qti-light-border-active);
+        }
+
+        /* Dark theme override */
+        .qti-selections-dark & {
+          background-color: var(--qti-dark-bg-active);
+          border-color: var(--qti-dark-border-active);
+        }
+      }
+
+      &[active] {
+        @apply act;
+
+        /* Light theme override */
+        .qti-selections-light & {
+          background-color: var(--qti-light-bg-active);
+          border-color: var(--qti-light-border-active);
+        }
+
+        /* Dark theme override */
+        .qti-selections-dark & {
+          background-color: var(--qti-dark-bg-active);
+          border-color: var(--qti-dark-border-active);
+        }
       }
 
       &[disabled] {
@@ -136,10 +186,6 @@
         &:not(:empty) {
           cursor: default !important;
         }
-      }
-
-      &[active] {
-        @apply act;
       }
 
       &:empty::after {

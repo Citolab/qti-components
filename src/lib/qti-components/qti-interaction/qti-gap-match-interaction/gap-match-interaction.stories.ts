@@ -13,12 +13,6 @@ const meta: Meta<QtiAssessmentItem> = {
 };
 export default meta;
 
-// Function to check if a specific style is applied
-function isStyleApplied(element, property, expectedValue) {
-  const computedStyle = window.getComputedStyle(element);
-  return computedStyle.getPropertyValue(property) === expectedValue;
-}
-
 // Compare the RGB values
 const rgbIsEqual = (color1: { r: number; g: number; b: number }, color2: { r: number; g: number; b: number }) =>
   color1 && color2 && color1.r === color2.r && color1.g === color2.g && color1.b === color2.b;
