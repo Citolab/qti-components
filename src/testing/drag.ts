@@ -51,12 +51,14 @@ export default async function drag(
     to,
     delta,
     steps = 20,
-    duration = 100
+    duration = 100,
+    offset = { x: 0, y: 0 }
   }: {
     to?: Element | Coords;
     delta?: { x: number; y: number };
     steps?: number;
     duration?: number;
+    offset?: { x: number; y: number };
   }
 ): Promise<void> {
   const fromCoords = getCoords(element);
@@ -73,7 +75,10 @@ export default async function drag(
   } else {
     throw new Error('Either "to" or "delta" must be provided.');
   }
-
+  if (offset) {
+    toCoords.x += offset.x;
+    toCoords.y += offset.y;
+  }
   // Calculate the step increments
   const step = {
     x: (toCoords.x - fromCoords.x) / steps,
