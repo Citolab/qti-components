@@ -4,6 +4,9 @@ import { expect, fireEvent, fn, waitFor, within } from '@storybook/test';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { QtiChoiceInteraction, QtiSimpleChoice } from '@citolab/qti-components/qti-components';
 import { getByShadowRole } from 'shadow-dom-testing-library';
+import { ar } from 'vitest/dist/chunks/reporters.D7Jzd9GS.js';
+import { useArgs } from '@storybook/preview-api';
+import { InputType } from '@storybook/core/types';
 
 const { events, args, argTypes, template } = getWcStorybookHelpers('qti-choice-interaction');
 
@@ -15,10 +18,29 @@ type Story = StoryObj<QtiChoiceInteraction & typeof args>;
  * The ChoiceInteraction.Type (qti-choice-interaction) interaction presents a collection of choices to the candidate. The candidate's task is to select one or more of the choices, up to a maximum of max-choices. The interaction is always initialized with no choices selected.
  *
  */
-const meta: Meta<QtiChoiceInteraction> = {
+const meta: Meta<
+  QtiChoiceInteraction & { classLabel: InputType; classLabelSuffix: InputType; classOrientation: InputType }
+> = {
   component: 'qti-choice-interaction',
   args,
-  argTypes,
+  argTypes: {
+    ...argTypes,
+    classLabel: {
+      options: ['qti-labels-none', 'qti-labels-decimal', 'qti-labels-lower-alpha', 'qti-labels-upper-alpha'],
+      control: { type: 'select' },
+      table: { category: 'Styling' }
+    },
+    classLabelSuffix: {
+      options: ['qti-labels-suffix-none', 'qti-labels-suffix-period', 'qti-labels-suffix-parenthesis'],
+      control: { type: 'select' },
+      table: { category: 'Styling' }
+    },
+    classOrientation: {
+      options: ['qti-orientation-horizontal', 'qti-orientation-vertical'],
+      control: { type: 'select' },
+      table: { category: 'Styling' }
+    }
+  },
   parameters: {
     actions: {
       handles: events
@@ -30,13 +52,12 @@ export default meta;
 
 export const Default = {
   render: args => {
-    const maxChoices = args['max-choices'] || 0;
+    const [{ shuffle }, updateArgs, resetArgs] = useArgs();
     return html`
       ${template(
         args,
         html` <qti-prompt>
             <p>Which of the following features are <strong>new</strong> to QTI 3?</p>
-            <p>Pick ${maxChoices === 1 ? `1 choice` : maxChoices === 0 ? 'some choices' : `${maxChoices} choices`}.</p>
           </qti-prompt>
           <qti-simple-choice data-testid="A" identifier="A">Option A</qti-simple-choice>
           <qti-simple-choice data-testid="B" identifier="B" fixed>Option B</qti-simple-choice>
