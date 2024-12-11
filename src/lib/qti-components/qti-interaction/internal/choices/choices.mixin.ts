@@ -162,8 +162,10 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
     private _setInputType(choiceElement: Choice) {
       this._internals.ariaLabel = this.maxChoices === 1 ? 'radio-group' : 'checkbox-group';
 
-      choiceElement.internals.role = this.maxChoices === 1 ? 'radio' : 'checkbox';
-      choiceElement.internals.states.add(choiceElement.internals.role);
+      const role = this.maxChoices === 1 ? 'radio' : 'checkbox';
+      choiceElement.internals.role = role;
+      choiceElement.internals.states.delete(role === 'radio' ? 'checkbox' : 'radio');
+      choiceElement.internals.states.add(role);
     }
 
     protected _choiceElementSelectedHandler(event: CustomEvent<{ identifier: string }>) {

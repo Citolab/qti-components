@@ -26,27 +26,14 @@ export default meta;
 const PlayerTemplate = (args: any) => html`
   <qti-test
     data-testid="qti-player"
-    testURL="/assets/qti-conformance/Basic/T4-T7/assessment.xml"
     .context=${{
       navItemId: 't1-test-entry-item4'
     } as TestContext}
   >
-    <test-container></test-container>
+    <test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"></test-container>
     <test-prev>vorige</test-prev>
   </qti-test>
 `;
-
-// const PlayerTemplate = (args: any) =>
-//   html`<qti-test
-//     data-testid="qti-player"
-//     testURL="/assets/api/conformance/assessment.xml"
-//     .context=${{
-//       navItemId: 't1-test-entry-item4'
-//     } as TestContext}
-//   >
-//     <test-container></test-container>
-//     ${template(args, html`vorige`)}
-//   </qti-test>`;
 
 export const TestPrev: Story = {
   render: PlayerTemplate.bind({}),

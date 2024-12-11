@@ -3,7 +3,7 @@ import { Interaction } from '../interaction/interaction';
 import { ShuffleMixin } from './shuffle-mixin';
 
 class TestElement extends ShuffleMixin(Interaction, 'qti-simple-choice') {
-  shuffle: boolean;
+  shuffle: string;
   validate(): boolean {
     return true;
   }
@@ -47,7 +47,7 @@ describe('ShuffleMixin', () => {
     const initialOrder = choices.map((choice, i) => String(i + 1));
 
     // Reset shuffle
-    element.shuffle = true;
+    element.shuffle = 'true';
     await element.updateComplete;
 
     const resetOrder = choices.map(choice => choice.style.order);
@@ -67,12 +67,12 @@ describe('ShuffleMixin', () => {
 
     for (let i = 0; i < shuffleCount; i++) {
       // Reset shuffle
-      element.shuffle = true;
+      element.shuffle = 'true';
       await element.updateComplete;
 
       const shuffledOrder = choices.map(choice => choice.style.order);
 
-      console.log(`Shuffle ${i + 1} Order:`, shuffledOrder);
+      // console.log(`Shuffle ${i + 1} Order:`, shuffledOrder);
 
       // Check if the shuffled order is different from the initial order
       if (!initialOrder.every((val, index) => val === shuffledOrder[index])) {
@@ -94,7 +94,7 @@ describe('ShuffleMixin', () => {
     const initialOrder = nonFixedChoices.map(choice => choice.style.order);
 
     // Enable shuffle
-    element.shuffle = true;
+    element.shuffle = 'true';
     await element.updateComplete;
 
     const orderAfterShuffle = nonFixedChoices.map(choice => choice.style.order);
@@ -102,7 +102,7 @@ describe('ShuffleMixin', () => {
     expect(initialOrder).not.to.deep.equal(orderAfterShuffle);
 
     // Disable shuffle
-    element.shuffle = false;
+    element.shuffle = 'false';
     await element.updateComplete;
 
     const orderAfterShuffleDisabled = nonFixedChoices.map(choice => choice.style.order);

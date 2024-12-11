@@ -27,9 +27,9 @@ export const T4_T7: Story = {
     const qtiPlayerRef = createRef<QtiTest | undefined | null>();
 
     return html`
-      <qti-test ${ref(qtiPlayerRef)} testURL="${manifestInfo.testURL}" class="flex h-full w-full flex-col">
+      <qti-test ${ref(qtiPlayerRef)} class="flex h-full w-full flex-col">
         <div class="relative flex-1 overflow-auto">
-          <test-container class="block"></test-container>
+          <test-container test-url="${manifestInfo.testURL}" class="block"></test-container>
         </div>
 
         <div class="flex w-full items-center justify-between gap-2">

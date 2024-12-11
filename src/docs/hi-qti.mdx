@@ -1,5 +1,5 @@
 import { Canvas, Meta, Story, Source } from '@storybook/blocks';
-import * as Stories from './qti-test.stories';
+import * as Stories from './hi-qti.stories';
 
 <Meta title="👋 Hi QTI" />
 
@@ -13,7 +13,7 @@ A set of test interactions to be used in the educational field.
 
 {/* <Story of={CheckboxStories.Default} autoplay /> */}
 
-<Canvas of={Stories.Unstyled} />
+<Canvas of={Stories.Default} />
 
 ## Source code
 
@@ -50,18 +50,6 @@ Add the following code to your page.
 ```
 
 Now you you can navigate your qti assesment test
-
-<Source of={Stories.Unstyled} dark={true} />
-
-You can style the test with your favorite css
-
-<Canvas of={Stories.Styled} />
-
-Just add, for example, bootstrap classess to the test components
-
-<Source of={Stories.Styled} dark={true} />
-
-There are several components to use in your test to navigate the questions
 
 Use the transformers, from QTI XML to HTML5
 

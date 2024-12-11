@@ -16,7 +16,8 @@ const meta: Meta<QtiTextEntryInteraction> = {
     actions: {
       handles: events
     }
-  }
+  },
+  tags: ['autodocs']
 };
 export default meta;
 
