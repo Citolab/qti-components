@@ -76,10 +76,6 @@ export class TouchDragAndDrop {
   }
 
   private handleTouchStart(e) {
-    const interaction = this.getInteraction(e.target);
-    const drags = (interaction.querySelector(`[part='drags']`) ||
-      interaction.shadowRoot.querySelector(`[part='drags']`)) as HTMLElement;
-    this.allDropzones = [...(Array.from(interaction.querySelectorAll('[dropzone]')) as HTMLElement[]), drags];
     this.touchStartTime = Date.now();
     const { x, y } = this.getEventCoordinates(e);
     this.touchStartPoint = { x, y };
@@ -121,6 +117,11 @@ export class TouchDragAndDrop {
 
   private handleTouchMove(e) {
     if (this.isDraggable && this.dragSource) {
+      const interaction = this.getInteraction(e.target);
+      this.allDropzones = [
+        ...(Array.from(interaction.querySelectorAll('[dropzone]')) as HTMLElement[]),
+        ...(Array.from(interaction.shadowRoot?.querySelectorAll('[dropzone]')) as HTMLElement[])
+      ];
       const { x, y } = this.getEventCoordinates(e);
       const currentTouch = { clientX: x, clientY: y };
 
@@ -427,6 +428,7 @@ export class TouchDragAndDrop {
     this.touchStartTime = 0;
     this.touchStartPoint = null;
     this.touchEndTriggered = false;
+    this.allDropzones = [];
     this.dataTransfer = {
       data: {},
       setData(type, val) {

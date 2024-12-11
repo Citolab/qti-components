@@ -123,12 +123,10 @@
   /* Enabled state */
   qti-graphic-gap-match-interaction.qti-selections-light:state(--dragzone-enabled)::part(drags) {
     background-color: var(--qti-light-bg-active);
-    border-color: var(--qti-light-border-active);
   }
 
   qti-graphic-gap-match-interaction.qti-selections-dark:state(--dragzone-enabled)::part(drags) {
     background-color: var(--qti-dark-bg-active);
-    border-color: var(--qti-dark-border-active);
   }
 
   qti-graphic-gap-match-interaction {
@@ -149,18 +147,16 @@
       border: 2px solid transparent;
 
       &[enabled] {
-        @apply droping;
+        @apply dropping;
 
         /* Light theme override */
         .qti-selections-light & {
           background-color: var(--qti-light-bg-active);
-          border-color: var(--qti-light-border-active);
         }
 
         /* Dark theme override */
         .qti-selections-dark & {
           background-color: var(--qti-dark-bg-active);
-          border-color: var(--qti-dark-border-active);
         }
       }
 
@@ -273,6 +269,16 @@
 
       &[enabled] {
         @apply dropping;
+
+        /* Light theme override */
+        .qti-selections-light & {
+          border-color: var(--qti-light-border-active);
+        }
+
+        /* Dark theme override */
+        .qti-selections-dark & {
+          border-color: var(--qti-dark-border-active);
+        }
       }
 
       &[disabled] {
@@ -285,6 +291,18 @@
 
       &[active] {
         @apply act;
+
+        /* Light theme override */
+        .qti-selections-light & {
+          background-color: var(--qti-light-bg-active);
+          border-color: var(--qti-light-border-active);
+        }
+
+        /* Dark theme override */
+        .qti-selections-dark & {
+          background-color: var(--qti-dark-bg-active);
+          border-color: var(--qti-dark-border-active);
+        }
       }
 
       display: inline-flex;
@@ -678,6 +696,16 @@
 
       &[enabled] {
         @apply dropping;
+
+        /* Light theme override */
+        .qti-selections-light & {
+          border-color: var(--qti-light-border-active);
+        }
+
+        /* Dark theme override */
+        .qti-selections-dark & {
+          border-color: var(--qti-dark-border-active);
+        }
       }
 
       &:hover {

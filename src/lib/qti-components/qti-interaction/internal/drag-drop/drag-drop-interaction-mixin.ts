@@ -138,7 +138,26 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       }
     };
 
+    private getDragContainers() {
+      const draggleble = Array.from(this.querySelectorAll(`[part='drags']`) || []);
+      const dragglebleShadow = this.shadowRoot
+        ? Array.from(this.shadowRoot.querySelectorAll(`[part='drags']`) || [])
+        : [];
+      return draggleble.concat(dragglebleShadow);
+    }
+
     private activateDroppables(target: HTMLElement): void {
+      const dragContainers = this.getDragContainers();
+      dragContainers.forEach(d => {
+        d.setAttribute('enabled', '');
+        d.setAttribute('dropzone', 'move');
+        if (d.hasAttribute('disabled')) {
+          if (d.contains(target) || (d.shadowRoot && d.shadowRoot.contains(target))) {
+            d.removeAttribute('disabled');
+            d.setAttribute('dropzone', 'move');
+          }
+        }
+      });
       this.droppables.forEach(d => {
         d.setAttribute('enabled', '');
         if (d.hasAttribute('disabled')) {
@@ -159,6 +178,10 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
 
     private deactivateDroppables(): void {
+      const dragContainers = this.getDragContainers();
+      dragContainers.forEach(d => {
+        d.removeAttribute('enabled');
+      });
       this.droppables.forEach(d => d.removeAttribute('enabled'));
     }
 
