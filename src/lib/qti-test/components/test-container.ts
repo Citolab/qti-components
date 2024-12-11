@@ -1,5 +1,5 @@
 import { LitElement, html } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import { until } from 'lit/directives/until.js';
 
 import itemCss from '../../../item.css?inline';
@@ -29,6 +29,9 @@ export class TestContainer extends LitElement {
   @state()
   private content: Promise<DocumentFragment>;
 
+  @property({ type: String, attribute: 'test-url' })
+  testURL = '';
+
   /**
    * Preloaded content from a `<template>` child, if present.
    */
@@ -56,11 +59,12 @@ export class TestContainer extends LitElement {
       await this.updateComplete;
 
       // Dispatch a custom event to request test content
-      const event = new CustomEvent<{ promise: Promise<DocumentFragment> }>('qti-load-test-request', {
+      const event = new CustomEvent<{ promise: Promise<DocumentFragment>; testURL: string }>('qti-load-test-request', {
         bubbles: true,
         composed: true,
         detail: {
-          promise: null
+          promise: null,
+          testURL: this.testURL
         }
       });
 

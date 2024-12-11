@@ -10,14 +10,20 @@ type Constructor<T = {}> = abstract new (...args: any[]) => T;
 declare class TestLoaderInterface {}
 export const TestLoaderMixin = <T extends Constructor<LitElement>>(superClass: T) => {
   abstract class TestLoaderClass extends superClass {
-    @property({ type: String })
-    testURL = '';
+    private testURL = '';
 
     constructor(...args: any[]) {
       super(...args);
 
       this.addEventListener('qti-load-test-request', (e: CustomEvent /* 1. Request the test */) => {
-        if (!this.testURL) return;
+        const { testURL } = e.detail;
+        if (!testURL) {
+          console.warn(
+            'No test found, there should be an aattribute test-url with the path to the test on the test-container'
+          );
+        } else {
+          this.testURL = testURL;
+        }
 
         e.detail.promise = (async () => {
           e.preventDefault(); /* indicates that the event was catched and handled */

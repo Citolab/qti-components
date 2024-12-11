@@ -20,7 +20,8 @@ const meta: Meta<QtiExtendedTextInteraction> = {
     actions: {
       handles: events
     }
-  }
+  },
+  tags: ['autodocs']
 };
 export default meta;
 
@@ -34,7 +35,8 @@ export const PatternMask = {
   render: Default.render,
   args: {
     'pattern-mask': '[A-Za-z]{3}',
-    'data-pattern-mask-message': 'Please enter 3 letters'
+    'data-patternmask-message': 'Please enter exact 3 letters',
+    'response-identifier': 'RESPONSE'
   }
 };
 
@@ -44,7 +46,7 @@ export const Form: Story = {
       <form name="form" @submit=${e => e.preventDefault()}>
         ${Default.render({
           'pattern-mask': '[A-Za-z]{3}',
-          'data-pattern-mask-message': 'Please enter exact 3 letters',
+          'data-patternmask-message': 'Please enter exact 3 letters',
           'response-identifier': 'RESPONSE'
         })}
         <input type="submit" value="submit" />

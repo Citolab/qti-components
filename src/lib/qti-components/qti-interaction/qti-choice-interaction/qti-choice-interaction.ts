@@ -24,10 +24,7 @@ export class QtiChoiceInteraction
     this._internals.role = 'group';
   }
 
-  /**
-   * The orientation characteristic provides a hint to rendering systems that the choices have an inherent vertical or horizontal interpretation.
-   * [5.30.4](https://www.imsglobal.org/sites/default/files/spec/qti/v3/info/index.html#DataCharacteristic_ChoiceInteraction.Attr_orientation)
-   */
+  /** @deprecated, use 'qti-orientation-horizontal' or 'qti-orientation-vertical' instead */
   @property({ type: String })
   public orientation: Orientation;
 

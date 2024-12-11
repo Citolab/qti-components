@@ -23,8 +23,8 @@ export default meta;
 
 export const TestView: Story = {
   render: args =>
-    html` <qti-test testURL="/assets/api/conformance/assessment.xml">
-      <test-container></test-container>
+    html` <qti-test>
+      <test-container test-url="/assets/api/conformance/assessment.xml"></test-container>
       ${template(args)}
     </qti-test>`,
 

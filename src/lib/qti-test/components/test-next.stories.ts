@@ -17,8 +17,8 @@ export default meta;
 
 export const Default: Story = {
   render: () => html`
-    <qti-test testURL="/assets/qti-conformance/Basic/T4-T7/assessment.xml">
-      <test-container> </test-container>
+    <qti-test>
+      <test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"> </test-container>
       <test-next>volgende</test-next>
     </qti-test>
   `
