@@ -82,6 +82,7 @@
     "cem": "wireit",
     "cem:watch": "wireit",
     "css": "wireit",
+    "act": "act",
     "stylelint": "stylelint \"src/**/*.css\"",
     "storybook": "wireit",
     "build-storybook": "storybook build",
