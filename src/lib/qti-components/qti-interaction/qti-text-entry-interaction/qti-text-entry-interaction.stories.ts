@@ -49,8 +49,9 @@ const inputWidthClass = [
 export const PatternMask = {
   render: Default.render,
   args: {
-    patternMask: '[A-Za-z]{3}',
-    dataPatternmaskMessage: 'Please enter 3 letters'
+    'pattern-mask': '[A-Za-z]{3}',
+    'data-patternmask-message': 'Please enter exact 3 letters',
+    'response-identifier': 'RESPONSE'
   }
 };
 
@@ -59,8 +60,9 @@ export const Form: Story = {
     return html`
       <form name="form" @submit=${e => e.preventDefault()}>
         ${Default.render({
-          patternMask: '[A-Za-z]{3}',
-          dataPatternmaskMessage: 'Please enter exact 3 letters'
+          'pattern-mask': '[A-Za-z]{3}',
+          'data-patternmask-message': 'Please enter exact 3 letters',
+          'response-identifier': 'RESPONSE'
         })}
         <input type="submit" value="submit" />
       </form>

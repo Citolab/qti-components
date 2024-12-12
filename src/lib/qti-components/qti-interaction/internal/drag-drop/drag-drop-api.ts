@@ -1,3 +1,5 @@
+type Point = { x: number; y: number };
+
 export class TouchDragAndDrop {
   private touchStartTime = 0; // Timestamp of the first touch
   private touchStartPoint = null; // Point of the first touch
@@ -11,9 +13,7 @@ export class TouchDragAndDrop {
   private hasDispatchedDragStart = false; // Flag to ensure dragstart event is dispatched once
   private rootNode: Node = null; // Root node for boundary calculations
 
-  private focusedElement: HTMLElement = null; // To keep track of the currently focused draggable element
-  private focusableDropZones: HTMLElement[] = []; // All dropzones for keyboard navigation
-  private currentDropZoneIndex = -1; // Index for tabbing through drop zones
+  private allDropzones: HTMLElement[] = []; // All dropzones for keyboard navigation
 
   private dataTransfer = {
     data: {},
@@ -53,33 +53,27 @@ export class TouchDragAndDrop {
     document.addEventListener('touchend', this.handleTouchEnd.bind(this), { passive: false });
     document.addEventListener('mouseup', this.handleTouchEnd.bind(this), { passive: false });
     document.addEventListener('touchcancel', this.handleTouchCancel.bind(this), { passive: false });
-
-    document.addEventListener('keydown', this.handleKeyDown.bind(this));
-    document.addEventListener('keyup', this.handleKeyUp.bind(this));
   }
 
   addDraggableElements(draggables: Element[]) {
     draggables.forEach(el => {
       el.setAttribute('tabindex', '0'); // Make draggable elements focusable
-      el.addEventListener('focus', () => (this.focusedElement = el as HTMLElement));
-      el.addEventListener('blur', () => (this.focusedElement = null));
+      // el.addEventListener('focus', () => (this.focusedElement = el as HTMLElement));
+      // el.addEventListener('blur', () => (this.focusedElement = null));
 
       el.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: false });
       el.addEventListener('mousedown', this.handleTouchStart.bind(this), { passive: false });
     });
   }
 
-  // addDroppableElements(droppables: Element[]) {
-  //   // this.droppables = droppables;
-  //   droppables.forEach(el => {
-  //     el.setAttribute('tabindex', '0'); // Make draggable elements focusable
-  //     el.addEventListener('focus', () => (this.focusedElement = el as HTMLElement));
-  //     el.addEventListener('blur', () => (this.focusedElement = null));
-
-  //     // el.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: false });
-  //     // el.addEventListener('mousedown', this.handleTouchStart.bind(this), { passive: false });
-  //   });
-  // }
+  private getInteraction(el: HTMLElement) {
+    // Find the closest parent where the tagname ends with '-interaction'
+    let parent = el;
+    while (parent && !parent.tagName.toLocaleLowerCase().endsWith('-interaction')) {
+      parent = parent.parentElement;
+    }
+    return parent;
+  }
 
   private handleTouchStart(e) {
     this.touchStartTime = Date.now();
@@ -123,6 +117,11 @@ export class TouchDragAndDrop {
 
   private handleTouchMove(e) {
     if (this.isDraggable && this.dragSource) {
+      const interaction = this.getInteraction(e.target);
+      this.allDropzones = [
+        ...(Array.from(interaction.querySelectorAll('[dropzone]')) as HTMLElement[]),
+        ...(Array.from(interaction.shadowRoot?.querySelectorAll('[dropzone]')) as HTMLElement[])
+      ];
       const { x, y } = this.getEventCoordinates(e);
       const currentTouch = { clientX: x, clientY: y };
 
@@ -133,6 +132,23 @@ export class TouchDragAndDrop {
 
       this.createDragClone(e, currentTouch);
       e.preventDefault();
+
+      // Determine the closest dropzone using the closest corners algorithm
+      const closestDropzone = this.findClosestDropzone();
+      this.currentDropTarget = closestDropzone;
+      if (closestDropzone !== this.lastTarget) {
+        if (this.lastTarget) {
+          this.dispatchCustomEvent(this.lastTarget, 'dragleave');
+        }
+        if (closestDropzone) {
+          this.dispatchCustomEvent(closestDropzone, 'dragenter');
+        }
+        this.lastTarget = closestDropzone;
+      }
+
+      if (this.lastTarget) {
+        this.dispatchCustomEvent(this.lastTarget, 'dragover');
+      }
     }
   }
 
@@ -185,7 +201,7 @@ export class TouchDragAndDrop {
       }
     }
 
-    const dropTarget = this.findDropTarget(e);
+    const dropTarget = this.currentDropTarget;
 
     if (dropTarget !== this.lastTarget) {
       this.dispatchCustomEvent(dropTarget, 'dragenter');
@@ -198,6 +214,7 @@ export class TouchDragAndDrop {
   }
 
   private handleTouchEnd(e) {
+    this.allDropzones = [];
     this.touchEndTriggered = true;
     this.isDraggable = false;
     let dropFound = false;
@@ -219,6 +236,54 @@ export class TouchDragAndDrop {
 
   private handleTouchCancel(e) {
     this.resetDragState();
+  }
+
+  private findClosestDropzone(): HTMLElement | null {
+    if (!this.dragSource || this.allDropzones.length === 0) return null;
+
+    const dragRect = this.dragSource.getBoundingClientRect();
+    const dragCorners = this.getCorners(dragRect);
+
+    let closestDropzone: HTMLElement | null = null;
+    let minDistance = Infinity;
+
+    for (const dropzone of this.allDropzones) {
+      const dropRect = dropzone.getBoundingClientRect();
+      const dropCorners = this.getCorners(dropRect);
+
+      const totalDistance = this.calculateTotalCornerDistance(dragCorners, dropCorners);
+
+      if (totalDistance < minDistance) {
+        minDistance = totalDistance;
+        closestDropzone = dropzone;
+      }
+    }
+
+    return closestDropzone;
+  }
+
+  private getCorners(rect: DOMRect): { topLeft: Point; topRight: Point; bottomLeft: Point; bottomRight: Point } {
+    return {
+      topLeft: { x: rect.left, y: rect.top },
+      topRight: { x: rect.right, y: rect.top },
+      bottomLeft: { x: rect.left, y: rect.bottom },
+      bottomRight: { x: rect.right, y: rect.bottom }
+    };
+  }
+
+  private calculateTotalCornerDistance(cornersA, cornersB): number {
+    return (
+      this.calculateDistance(cornersA.topLeft, cornersB.topLeft) +
+      this.calculateDistance(cornersA.topRight, cornersB.topRight) +
+      this.calculateDistance(cornersA.bottomLeft, cornersB.bottomLeft) +
+      this.calculateDistance(cornersA.bottomRight, cornersB.bottomRight)
+    );
+  }
+
+  private calculateDistance(pointA: Point, pointB: Point): number {
+    const dx = pointA.x - pointB.x;
+    const dy = pointA.y - pointB.y;
+    return Math.sqrt(dx * dx + dy * dy);
   }
 
   private findDropTarget(event) {
@@ -264,61 +329,6 @@ export class TouchDragAndDrop {
     return null;
   }
 
-  private handleKeyDown(e: KeyboardEvent) {
-    if (this.focusedElement) {
-      if (e.key === ' ' && !this.isDragging) {
-        // Spacebar pressed to start dragging
-        e.preventDefault();
-        this.isDraggable = true;
-        this.dragSource = this.focusedElement;
-        this.isDragging = true;
-
-        // Store the drop zones for navigation
-        this.collectDropZones();
-
-        // Trigger dragstart event
-        this.dispatchCustomEvent(this.dragSource, 'dragstart');
-      } else if (e.key === 'Tab' && this.isDragging) {
-        // Tab key to navigate through drop zones
-        e.preventDefault();
-        this.moveToNextDropZone();
-      }
-    }
-  }
-
-  private handleKeyUp(e: KeyboardEvent) {
-    if (e.key === ' ' && this.isDragging && this.currentDropTarget) {
-      // Spacebar pressed again to drop the element
-      e.preventDefault();
-      this.dispatchCustomEvent(this.currentDropTarget, 'drop');
-      this.dispatchCustomEvent(this.dragSource, 'dragend');
-      this.resetDragState(true);
-    }
-  }
-
-  private collectDropZones() {
-    // Collect all elements with dropzone attribute
-    this.focusableDropZones = Array.from(document.querySelectorAll('[dropzone]')) as HTMLElement[]; // Array.from(this.droppables);
-    this.currentDropZoneIndex = -1; // Reset navigation index
-  }
-
-  private moveToNextDropZone() {
-    if (this.focusableDropZones.length === 0) return;
-
-    // Update index for the next drop zone
-    this.currentDropZoneIndex = (this.currentDropZoneIndex + 1) % this.focusableDropZones.length;
-
-    // Focus the next drop zone
-    const nextDropZone = this.focusableDropZones[this.currentDropZoneIndex];
-    nextDropZone.focus();
-
-    // Update current drop target
-    this.currentDropTarget = nextDropZone;
-
-    // Dispatch dragenter event
-    this.dispatchCustomEvent(nextDropZone, 'dragenter');
-  }
-
   private getEventCoordinates(event, page = false) {
     const touch = event.touches ? event.touches[0] : event;
     return {
@@ -354,38 +364,6 @@ export class TouchDragAndDrop {
       this.dragClone.style.left = `${boundedLeft}px`;
       this.dragClone.style.top = `${boundedTop}px`;
     });
-  }
-
-  private applyTransformBoundaries(deltaX: number, deltaY: number) {
-    // Get the boundaries of the root node
-    let boundaryRect: DOMRect;
-    if (this.rootNode instanceof ShadowRoot) {
-      boundaryRect = this.rootNode.host.getBoundingClientRect();
-    } else if (this.rootNode instanceof Document) {
-      boundaryRect = document.documentElement.getBoundingClientRect();
-    } else {
-      // Default to viewport
-      boundaryRect = new DOMRect(0, 0, window.innerWidth, window.innerHeight);
-    }
-
-    // Get the dimensions and position of the element
-    const elementRect = this.dragSource.getBoundingClientRect();
-    const elementWidth = elementRect.width;
-    const elementHeight = elementRect.height;
-
-    // Calculate potential new position
-    const newLeft = elementRect.left + deltaX;
-    const newTop = elementRect.top + deltaY;
-
-    // Limit the new position within the boundaries
-    const boundedLeft = Math.max(boundaryRect.left, Math.min(newLeft, boundaryRect.right - elementWidth));
-    const boundedTop = Math.max(boundaryRect.top, Math.min(newTop, boundaryRect.bottom - elementHeight));
-
-    // Calculate the bounded delta values
-    const boundedDeltaX = boundedLeft - elementRect.left;
-    const boundedDeltaY = boundedTop - elementRect.top;
-
-    return { boundedDeltaX, boundedDeltaY };
   }
 
   private applyBoundaries(newLeft: number, newTop: number, element: HTMLElement) {
@@ -450,6 +428,7 @@ export class TouchDragAndDrop {
     this.touchStartTime = 0;
     this.touchStartPoint = null;
     this.touchEndTriggered = false;
+    this.allDropzones = [];
     this.dataTransfer = {
       data: {},
       setData(type, val) {

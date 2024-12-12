@@ -11,6 +11,14 @@
   --qti-bg: white;
   --qti-hover-bg: #f9fafb;
 
+  /* Light theme colors */
+  --qti-light-bg-active: #f0f0f0; /* Light gray */
+  --qti-light-border-active: #d0d0d0; /* Medium gray */
+
+  /* Dark theme colors */
+  --qti-dark-bg-active: #1f2937; /* Dark gray */
+  --qti-dark-border-active: #64748b; /* Medium gray */
+
   /* Disabled colors */
   --qti-disabled-bg: #f3f4f6;
   --qti-disabled-color: #45484f;

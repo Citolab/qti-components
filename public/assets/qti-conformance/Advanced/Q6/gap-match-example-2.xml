@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-item
+  xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd http://www.w3.org/1998/Math/MathML https://purl.imsglobal.org/spec/mathml/v3p0/schema/xsd/mathml3.xsd" 
+  identifier="gap-match-example-2" title="Gap Match Example 2" 
+  adaptive="false" time-dependent="false">
+  <qti-response-declaration base-type="directedPair" cardinality="multiple" identifier="RESPONSE">
+    <qti-correct-response>
+      <qti-value>s1 t1</qti-value>
+      <qti-value>s2 t3</qti-value>
+      <qti-value>s3 t5</qti-value>
+      <qti-value>s4 t2</qti-value>
+    </qti-correct-response>
+    <qti-mapping default-value="0" lower-bound="0.00" upper-bound="4">
+      <qti-map-entry map-key="s1 t1" mapped-value="1"/>
+      <qti-map-entry map-key="s1 t3" mapped-value="1"/>
+      <qti-map-entry map-key="s1 t5" mapped-value="1"/>
+      <qti-map-entry map-key="s1 t7" mapped-value="1"/>
+      <qti-map-entry map-key="s2 t1" mapped-value="1"/>
+      <qti-map-entry map-key="s2 t3" mapped-value="1"/>
+      <qti-map-entry map-key="s2 t5" mapped-value="1"/>
+      <qti-map-entry map-key="s2 t7" mapped-value="1"/>
+      <qti-map-entry map-key="s3 t1" mapped-value="1"/>
+      <qti-map-entry map-key="s3 t3" mapped-value="1"/>
+      <qti-map-entry map-key="s3 t5" mapped-value="1"/>
+      <qti-map-entry map-key="s3 t7" mapped-value="1"/>
+      <qti-map-entry map-key="s4 t2" mapped-value="1"/>
+      <qti-map-entry map-key="s4 t4" mapped-value="1"/>
+      <qti-map-entry map-key="s4 t6" mapped-value="1"/>
+      <qti-map-entry map-key="s4 t8" mapped-value="1"/>
+    </qti-mapping>
+  </qti-response-declaration>
+  <qti-outcome-declaration base-type="float" cardinality="single" identifier="SCORE">
+    <qti-default-value>
+      <qti-value>0</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-item-body>
+    <div>
+      <p>Indicate whether each of the following numbers is rational or irrational.</p>
+    </div>
+    <qti-gap-match-interaction max-associations="4" response-identifier="RESPONSE">
+      <qti-gap-text identifier="s1" match-max="1">
+        <span><math xmlns="http://www.w3.org/1998/Math/MathML" alttext="ee to the power of zero" display="inline" overflow="scroll"><mstyle><mrow><msup><mrow><mi>e</mi></mrow><mrow><mn>0</mn></mrow></msup></mrow></mstyle></math></span>
+      </qti-gap-text>
+      <qti-gap-text identifier="s2" match-max="1">
+        <span><math xmlns="http://www.w3.org/1998/Math/MathML" alttext="cosine of pie" display="inline" overflow="scroll"><mstyle><mrow><mrow><mi>cos</mi><mrow><mo>(</mo><mi>π</mi><mo>)</mo></mrow></mrow></mrow></mstyle></math></span>
+      </qti-gap-text>
+      <qti-gap-text identifier="s3" match-max="1">
+        <span><math xmlns="http://www.w3.org/1998/Math/MathML" alttext="fraction, numerator absolute value of negative twenty one, denominator 3" display="inline" overflow="scroll"><mstyle><mrow><mfrac><mrow><mo>|</mo><mo>−</mo><mn>21</mn><mo>|</mo></mrow><mrow><mn>3</mn></mrow></mfrac></mrow></mstyle></math></span>
+      </qti-gap-text>
+      <qti-gap-text identifier="s4" match-max="1">
+        <span><math xmlns="http://www.w3.org/1998/Math/MathML" alttext="square root of 5" display="inline" overflow="scroll"><mstyle><mrow><msqrt><mrow><mn>5</mn></mrow></msqrt></mrow></mstyle></math></span>
+      </qti-gap-text>
+      
+      <div>
+        <table>
+          <thead>
+            <tr>
+              <th/>
+              <th><strong>Category 1: Rational</strong></th>
+              <th><strong>Category 2: Irrational</strong></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th/>
+              <td><p><qti-gap identifier="t1"/></p></td>
+              <td><p><qti-gap identifier="t2"/></p></td>
+            </tr>
+            <tr>
+              <th/>
+              <td><p><qti-gap identifier="t3"/></p></td>
+              <td><p><qti-gap identifier="t4"/></p></td>
+            </tr>
+            <tr>
+              <th/>
+              <td><p><qti-gap identifier="t5"/></p></td>
+              <td><p><qti-gap identifier="t6"/></p></td>
+            </tr>
+            <tr>
+              <th/>
+              <td><p><qti-gap identifier="t7"/></p></td>
+              <td><p><qti-gap identifier="t8"/></p></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </qti-gap-match-interaction>
+    <div>
+      <p>Move each number to the response area for the appropriate category.</p>
+    </div>
+  </qti-item-body>
+  <qti-response-processing>
+    <qti-response-condition>
+      <qti-response-if>
+        <qti-is-null><qti-variable identifier="RESPONSE"/></qti-is-null>
+        <qti-set-outcome-value identifier="SCORE">
+          <qti-base-value base-type="float">0.00</qti-base-value>
+        </qti-set-outcome-value>
+      </qti-response-if>
+      <qti-response-else-if>
+        <qti-gte>
+          <qti-map-response identifier="RESPONSE"/>
+          <qti-base-value base-type="float">4</qti-base-value>
+        </qti-gte>
+        <qti-set-outcome-value identifier="SCORE">
+          <qti-subtract>
+            <qti-map-response identifier="RESPONSE"/>
+            <qti-base-value base-type="float">0</qti-base-value>
+          </qti-subtract>
+        </qti-set-outcome-value>
+      </qti-response-else-if>
+      <qti-response-else>
+        <qti-set-outcome-value identifier="SCORE">
+          <qti-base-value base-type="float">0.00</qti-base-value>
+        </qti-set-outcome-value>
+      </qti-response-else>
+    </qti-response-condition>
+  </qti-response-processing>
+</qti-assessment-item>

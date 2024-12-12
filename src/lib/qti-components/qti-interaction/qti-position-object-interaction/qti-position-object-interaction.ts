@@ -1,6 +1,6 @@
 import { LitElement, css, html } from 'lit';
 
-export class QtiSPositionObjectInteraction extends LitElement {
+export class QtiPositionObjectInteraction extends LitElement {
   override render() {
     return html`<slot></slot>`;
   }
@@ -21,4 +21,4 @@ export class QtiSPositionObjectInteraction extends LitElement {
   ];
 }
 
-customElements.define('qti-position-object-interaction', QtiSPositionObjectInteraction);
+customElements.define('qti-position-object-interaction', QtiPositionObjectInteraction);

@@ -35,12 +35,11 @@ export default {
         'qti-labels-upper-alpha',
         'qti-labels-suffix-none',
         'qti-labels-suffix-period',
-        'qti-labels-suffix-parenthesis'
+        'qti-labels-suffix-parenthesis',
+        'data-choices-container-width'
       ],
       table: { category: 'QTI' }
     },
-
-    'data-choices-container-width': { description: 'unsupported', table: { category: 'QTI' } },
     'data-max-selections-message': { description: 'unsupported', table: { category: 'QTI' } },
     'data-min-selections-message': { description: 'unsupported', table: { category: 'QTI' } }
   }

@@ -11,7 +11,13 @@ export class QtiMember extends QtiExpression<boolean | null> {
 
     const [value1, value2] = values;
 
-    if (!(value1.baseType === value2.baseType)) {
+    if (
+      !(
+        value1.baseType === value2.baseType ||
+        (value1.baseType === 'integer' && value2.baseType === 'float') ||
+        (value1.baseType === 'float' && value2.baseType === 'integer')
+      )
+    ) {
       console.warn('Which must both have the same base-type');
     }
     if (!(value2.cardinality === 'multiple' || value2.cardinality === 'ordered')) {

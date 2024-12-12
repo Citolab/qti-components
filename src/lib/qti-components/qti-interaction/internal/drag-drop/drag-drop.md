@@ -104,7 +104,7 @@ false,
   >↳
   <qti-associable-hotspot coords="55,256,133,319" identifier="A" match-max="1" shape="rect"></qti-associable-hotspot>
 </slot>
-<slot name="qti-gap-img">
+<slot part="drags" name="drags"></slot>
   ↳
   <qti-gap-img identifier="DraggerD" match-max="1">
     <img src="qti-graphic-gap-match-interaction/d-bay.png" alt="Choice D, Bay of Pigs" height="63" width="78" />
@@ -132,4 +132,4 @@ true,
 
 'qti-gap-img',
 false,
-'qti-associable-hotspot' -> <slot name="qti-gap-img"></slot>
+'qti-associable-hotspot' -> <slot part="drags" name="drags"></slot>

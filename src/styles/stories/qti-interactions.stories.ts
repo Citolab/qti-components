@@ -4,7 +4,7 @@ import { html } from 'lit';
 import { Default as Associate } from '../../lib/qti-components/qti-interaction/qti-associate-interaction/qti-associate-interaction.stories';
 import { Default as Choice } from '../../lib/qti-components/qti-interaction/qti-choice-interaction/qti-choice-interaction.stories';
 import { Default as ExtendedText } from '../../lib/qti-components/qti-interaction/qti-extended-text-interaction/qti-extended-text-interaction.stories';
-import { Default as GapMatch } from '../../lib/qti-components/qti-interaction/qti-gap-match-interaction/qti-gap-match-interaction.stories';
+import { Default as GapMatch } from '../../lib/qti-components/qti-interaction/qti-gap-match-interaction/gap-match-interaction.stories';
 import { Default as GraphicAssociate } from '../../lib/qti-components/qti-interaction/qti-graphic-associate-interaction/qti-graphic-associate-interaction.stories';
 import { Default as GraphicGapMatch } from '../../lib/qti-components/qti-interaction/qti-graphic-gap-match-interaction/qti-graphic-gap-match-interaction.stories';
 import { Default as GraphicOrder } from '../../lib/qti-components/qti-interaction/qti-graphic-order-interaction/qti-graphic-order-interaction.stories';

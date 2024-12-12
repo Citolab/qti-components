@@ -94,13 +94,17 @@ export const DroppablesMixin = <T extends Constructor<Interaction>>(
     }
 
     private dragoverHandler(ev: DragEvent): boolean {
+      const responseIdentifierDraggable = ev.dataTransfer.getData('responseIdentifier');
       ev.preventDefault();
-      this.activateDroppable(ev.currentTarget as HTMLElement);
-      ev.dataTransfer.dropEffect = 'move';
+      if (responseIdentifierDraggable === this.responseIdentifier) {
+        this.activateDroppable(ev.currentTarget as HTMLElement);
+        ev.dataTransfer.dropEffect = 'move';
+      }
       return false;
     }
 
     private activateDroppable(droppable: HTMLElement): void {
+      this._internals.states.delete('--dragzone-active');
       droppable.setAttribute('active', '');
     }
 
@@ -108,36 +112,44 @@ export const DroppablesMixin = <T extends Constructor<Interaction>>(
       ev.preventDefault();
       const droppable = ev.currentTarget as HTMLElement;
       const identifier = ev.dataTransfer.getData('text');
-      const draggable = this.findDraggable(identifier);
-      // console.log(this.isValidDrop(droppable, draggable));
+      const responseIdentifierDraggable = ev.dataTransfer.getData('responseIdentifier');
+      const draggable = this.findDraggable(responseIdentifierDraggable, identifier);
 
       if (!draggable) return false;
-      if (draggable && !this.isValidDrop(droppable, draggable)) {
+      if (draggable && !this.isValidDrop(droppable, draggable, responseIdentifierDraggable)) {
         draggable.style.transform = 'translate(0, 0)';
         return false;
       }
-
       await this.moveDraggableToDroppable(draggable, droppable);
-      this.deactivateDroppable(droppable);
+      this.deactivateDroppable(droppable, false);
       return false;
     }
 
-    private findDraggable(identifier: string): HTMLElement | null {
+    private findDraggable(responseIdentifier: string, identifier: string): HTMLElement | null {
       if (!identifier) return null;
-      return (
-        this.querySelector(`[identifier=${identifier}]`) || this.shadowRoot.querySelector(`[identifier=${identifier}]`)
-      );
+      if (responseIdentifier === this.responseIdentifier) {
+        return (
+          this.querySelector(`[identifier=${identifier}]`) ||
+          this.shadowRoot.querySelector(`[identifier=${identifier}]`)
+        );
+      } else {
+        const assessmentItem = this.closest('qti-assessment-item');
+        const interaction = assessmentItem.querySelector(`[response-identifier=${responseIdentifier}]`);
+        return interaction.querySelector(`[identifier=${identifier}]`);
+      }
     }
 
-    private isValidDrop(droppable: HTMLElement, draggable: HTMLElement): boolean {
-      return draggable.parentElement.getAttribute('identifier') !== droppable.getAttribute('identifier');
+    private isValidDrop(droppable: HTMLElement, draggable: HTMLElement, responseIdentifierDraggable: string): boolean {
+      return (
+        this.responseIdentifier === responseIdentifierDraggable
+        // && draggable.parentElement.getAttribute('identifier') !== droppable.getAttribute('identifier')
+      );
     }
 
     private async moveDraggableToDroppable(draggable: HTMLElement, droppable: HTMLElement): Promise<void> {
       const moveElement = (): void => {
         draggable.style.transform = 'translate(0, 0)';
         droppable.appendChild(draggable);
-
         // checkMaxAssociations and saveResponse are defined/overridden in a mixin
         this['checkMaxAssociations']();
         this['saveResponse'](null); //
@@ -154,7 +166,10 @@ export const DroppablesMixin = <T extends Constructor<Interaction>>(
       // this['checkMaxAssociations']();
     }
 
-    private deactivateDroppable(droppable: HTMLElement): void {
+    private deactivateDroppable(droppable: HTMLElement, makeDragzoneActive = true): void {
+      if (makeDragzoneActive) {
+        this._internals.states.add('--dragzone-active');
+      }
       droppable.removeAttribute('active');
     }
 

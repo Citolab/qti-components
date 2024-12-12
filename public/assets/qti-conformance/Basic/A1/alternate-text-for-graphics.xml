@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qti-assessment-item xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+    adaptive="false" time-dependent="false"
+    identifier="a1-alttext-graphics" title="A1 AltText For Graphics">
+    <qti-response-declaration base-type="string" cardinality="single" identifier="RESPONSE" />
+    <qti-outcome-declaration base-type="float" cardinality="single" identifier="SCORE" />
+    <qti-item-body>
+        <div>
+            <img alt="Here the alt text"
+                src="images/logo.jpeg" />
+        </div>
+        <p>Write something about CitoLab.</p>
+        <qti-extended-text-interaction response-identifier="RESPONSE" />
+    </qti-item-body>
+</qti-assessment-item>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qti-assessment-item 
+  xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd" 
+  identifier="q6-gap-match-interaction-sv-2" title="Gap Match - (SV 2) - container width" 
+  adaptive="false" time-dependent="false">
+  <qti-response-declaration identifier="RESPONSE1" cardinality="multiple" base-type="directedPair">
+    <qti-correct-response>
+      <qti-value>W G1</qti-value>
+      <qti-value>Su G2</qti-value>
+    </qti-correct-response>
+    <qti-mapping default-value="-1" lower-bound="0">
+      <qti-map-entry map-key="W G1" mapped-value="1"/>
+      <qti-map-entry map-key="Su G2" mapped-value="2"/>
+    </qti-mapping>
+  </qti-response-declaration>
+  <qti-response-declaration identifier="RESPONSE2" cardinality="multiple" base-type="directedPair"/>
+  <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float"/>
+  <qti-item-body>
+    
+    <p>
+      A common implementation of the gap match interaction is to place the gap choices in a so-called "gap choices container".  
+      If the gap choices are implemented with responsive design, then one can achieve a visual equivalent of gap choices stacking 
+      by manipulating the gap choices container width.    
+    </p>
+    
+    <div class="qti-layout-row">
+      <div class="qti-layout-col5">
+    
+        <qti-gap-match-interaction class="qti-choices-top" max-associations="0" data-choices-container-width="200" response-identifier="RESPONSE1">
+          <qti-prompt>Demonstrates qti-choices-top and  data-choices-container-width="200"</qti-prompt>
+          <qti-gap-text identifier="W" match-max="1">winter</qti-gap-text>
+          <qti-gap-text identifier="Sp" match-max="1">spring</qti-gap-text>
+          <qti-gap-text identifier="Su" match-max="1">summer</qti-gap-text>
+          <qti-gap-text identifier="A" match-max="1">autumn</qti-gap-text>
+          <blockquote>
+            <p>
+              Now is the <qti-gap identifier="G1"/> of our discontent<br/>
+              Made glorious <qti-gap identifier="G2"/> by this sun of York;<br/> 
+              And all the clouds that lour'd upon our house<br/>
+              In the deep bosom of the ocean buried.
+            </p>
+          </blockquote>
+        </qti-gap-match-interaction>
+   
+      </div>
+    </div>
+    <div class="qti-layout-row">
+      <div class="qti-layout-col9">
+    
+        <qti-gap-match-interaction class="qti-choices-left" max-associations="0" data-choices-container-width="100" response-identifier="RESPONSE2">
+          <qti-prompt>Demonstrates qti-choices-left and  data-choices-container-width="100"</qti-prompt>
+          <qti-gap-text identifier="W" match-max="1">winter</qti-gap-text>
+          <qti-gap-text identifier="Sp" match-max="1">spring</qti-gap-text>
+          <qti-gap-text identifier="Su" match-max="1">summer</qti-gap-text>
+          <qti-gap-text identifier="A" match-max="1">autumn</qti-gap-text>
+          <blockquote>
+            <p>
+              Now is the <qti-gap identifier="G1"/> of our discontent<br/>
+              Made glorious <qti-gap identifier="G2"/> by this sun of York;<br/> 
+              And all the clouds that lour'd upon our house<br/>
+              In the deep bosom of the ocean buried.
+            </p>
+          </blockquote>
+        </qti-gap-match-interaction>
+
+      </div>
+    </div>
+  </qti-item-body>
+</qti-assessment-item>

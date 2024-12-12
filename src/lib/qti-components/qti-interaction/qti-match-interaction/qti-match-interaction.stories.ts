@@ -78,7 +78,7 @@ export const Play: Story = {
     const interaction = canvas.getByTestId<QtiMatchInteraction>('match-interaction');
     const source = canvas.getByTestId('drag-c');
     const target = canvas.getByTestId('drop-m');
-
+    const dropTarget = target.shadowRoot.querySelector('[part="dropslot"]');
     // Define the interaction response event handler to capture the response
     const interactionResponse = fn(event => {
       // Ensure the interaction response detail contains the expected values
@@ -91,7 +91,7 @@ export const Play: Story = {
     try {
       await step('Drag capulus to drop and test qti-interaction-response event', async () => {
         // Simulate the drag and drop operation
-        await drag(source, { to: target, duration: 100 });
+        await drag(source, { to: dropTarget, duration: 300 });
 
         // Wait for the interaction response event to be triggered and verify the handler was called
         await waitFor(() => expect(interactionResponse).toHaveBeenCalled());
@@ -143,15 +143,15 @@ export const PlayTwoOneZero: Story = {
     try {
       await step('Drag 1 to drop and test qti-interaction-response event', async () => {
         // Simulate the drag and drop operation
-        await drag(dragC, { to: dropM, duration: 100 });
+        await drag(dragC, { to: dropM, duration: 500 });
       });
       await step('Drag 2 to drop and test qti-interaction-response event', async () => {
         // Simulate the drag and drop operation
-        await drag(dragD, { to: dropM, duration: 100 });
+        await drag(dragD, { to: dropM, duration: 500 });
       });
       await step('Drag 3 to drop and test qti-interaction-response event', async () => {
         // Simulate the drag and drop operation
-        await drag(dragL, { to: dropR, duration: 100 });
+        await drag(dragL, { to: dropR, duration: 500 });
       });
     } finally {
       // Clean up the event listener to avoid memory leaks
@@ -453,6 +453,3 @@ export const Images = {
       ></qti-response-processing>
     </qti-assessment-item>`
 };
-function step(arg0: string, arg1: () => Promise<void>) {
-  throw new Error('Function not implemented.');
-}

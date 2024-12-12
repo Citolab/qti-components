@@ -19,8 +19,9 @@ export default class QtiResponseProcessing extends LitElement {
   }
 
   public process() {
+    const assessmentItem = this.closest('qti-assessment-item');
+    if (!assessmentItem) return;
     const rules = [...this.children] as QtiRule[];
-
     for (const rule of rules) {
       rule.process();
     }

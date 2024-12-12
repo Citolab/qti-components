@@ -101,8 +101,105 @@
     }
   }
 
+  qti-graphic-gap-match-interaction:state(--dragzone-active)::part(drags) {
+    @apply act;
+  }
+
+  qti-graphic-gap-match-interaction:state(--dragzone-enabled)::part(drags) {
+    @apply dropping;
+  }
+
+  /* Active state */
+  qti-graphic-gap-match-interaction.qti-selections-light:state(--dragzone-active)::part(drags) {
+    background-color: var(--qti-light-bg-active);
+    border-color: var(--qti-light-border-active);
+  }
+
+  qti-graphic-gap-match-interaction.qti-selections-dark:state(--dragzone-active)::part(drags) {
+    background-color: var(--qti-dark-bg-active);
+    border-color: var(--qti-dark-border-active);
+  }
+
+  /* Enabled state */
+  qti-graphic-gap-match-interaction.qti-selections-light:state(--dragzone-enabled)::part(drags) {
+    background-color: var(--qti-light-bg-active);
+  }
+
+  qti-graphic-gap-match-interaction.qti-selections-dark:state(--dragzone-enabled)::part(drags) {
+    background-color: var(--qti-dark-bg-active);
+  }
+
   qti-graphic-gap-match-interaction {
     position: relative;
+
+    & qti-gap-img,
+    qti-gap-text {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: grab;
+    }
+
+    & qti-associable-hotspot {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 2px solid transparent;
+
+      &[enabled] {
+        @apply dropping;
+
+        /* Light theme override */
+        .qti-selections-light & {
+          background-color: var(--qti-light-bg-active);
+        }
+
+        /* Dark theme override */
+        .qti-selections-dark & {
+          background-color: var(--qti-dark-bg-active);
+        }
+      }
+
+      &[active] {
+        @apply act;
+
+        /* Light theme override */
+        .qti-selections-light & {
+          background-color: var(--qti-light-bg-active);
+          border-color: var(--qti-light-border-active);
+        }
+
+        /* Dark theme override */
+        .qti-selections-dark & {
+          background-color: var(--qti-dark-bg-active);
+          border-color: var(--qti-dark-border-active);
+        }
+      }
+
+      &[disabled] {
+        @apply dis;
+
+        &:not(:empty) {
+          cursor: default !important;
+        }
+      }
+
+      &:empty::after {
+        padding: var(--qti-padding-md) var(--qti-padding-lg); /* Padding shorthand */
+        content: '\0000a0'; /* when empty, put a space in it */
+      }
+
+      &:not(:empty) {
+        padding: 0;
+        width: auto;
+      }
+
+      &:not(:empty) > * {
+        flex: 1;
+        transform: rotate(0); /* rotate-0 */
+        box-shadow: 0 0 0 1px #e5e7eb; /* ring-gray-200 */
+      }
+    }
 
     & img {
       margin: 0;
@@ -142,6 +239,14 @@
     }
   }
 
+  qti-gap-match-interaction:state(--dragzone-active)::part(drags) {
+    @apply act;
+  }
+
+  qti-gap-match-interaction:state(--dragzone-enabled)::part(drags) {
+    @apply dropping;
+  }
+
   qti-gap-match-interaction {
     & qti-gap-text {
       @apply drag;
@@ -164,18 +269,45 @@
 
       &[enabled] {
         @apply dropping;
+
+        /* Light theme override */
+        .qti-selections-light & {
+          border-color: var(--qti-light-border-active);
+        }
+
+        /* Dark theme override */
+        .qti-selections-dark & {
+          border-color: var(--qti-dark-border-active);
+        }
       }
 
       &[disabled] {
         @apply dis;
+
+        &:not(:empty) {
+          cursor: default !important;
+        }
       }
 
       &[active] {
         @apply act;
+
+        /* Light theme override */
+        .qti-selections-light & {
+          background-color: var(--qti-light-bg-active);
+          border-color: var(--qti-light-border-active);
+        }
+
+        /* Dark theme override */
+        .qti-selections-dark & {
+          background-color: var(--qti-dark-bg-active);
+          border-color: var(--qti-dark-border-active);
+        }
       }
 
       display: inline-flex;
-      width: 8rem; /* w-32 */
+      align-items: center;
+
       &:empty::after {
         padding: var(--qti-padding-md) var(--qti-padding-lg); /* Padding shorthand */
         content: '\0000a0'; /* when empty, put a space in it */
@@ -564,6 +696,16 @@
 
       &[enabled] {
         @apply dropping;
+
+        /* Light theme override */
+        .qti-selections-light & {
+          border-color: var(--qti-light-border-active);
+        }
+
+        /* Dark theme override */
+        .qti-selections-dark & {
+          border-color: var(--qti-dark-border-active);
+        }
       }
 
       &:hover {

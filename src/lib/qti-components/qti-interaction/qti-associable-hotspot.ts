@@ -23,7 +23,7 @@ export class QtiAssociableHotspot extends LitElement {
   }
 
   override render() {
-    return html` <slot name="qti-gap-img"></slot> `;
+    return html` <slot name="drags"></slot> `;
   }
 }
 
