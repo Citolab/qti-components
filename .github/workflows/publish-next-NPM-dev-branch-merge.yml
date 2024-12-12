@@ -52,4 +52,4 @@ jobs:
       #   run: npm publish --tag next
 
       - name: Create pkgr release
-        run: npx pkg-pr-new publish
+        run: npx pkg-pr-new publish --comment=update
