@@ -8,8 +8,9 @@
 // https://lit.dev/docs/composition/mixins/
 
 import { LitElement } from 'lit';
+import { Interaction } from '../interaction/interaction';
 
-type Constructor<T> = new (...args: any[]) => T;
+type Constructor<T = {}> = abstract new (...args: any[]) => T;
 
 export declare class FlippablesInterface {
   connectedCallback(): void;
@@ -18,12 +19,12 @@ export declare class FlippablesInterface {
 
 // just a conversion of a angular FLIP directive, made as a Mixin
 // https://ng-run.com/edit/9MGr5dYWA20AiJtpy5az?open=app%2Fapp.component.html
-export const FlippablesMixin = <T extends Constructor<LitElement>>(
+export const FlippablesMixin = <T extends Constructor<Interaction>>(
   superClass: T,
   droppablesSel: string,
   draggablesSel: string
 ) => {
-  class FlippablesElement extends superClass {
+  abstract class FlippablesElement extends superClass {
     // private state = new Map<Element, any>();
     // private observer: MutationObserver;
     // flippablesSelector: string;

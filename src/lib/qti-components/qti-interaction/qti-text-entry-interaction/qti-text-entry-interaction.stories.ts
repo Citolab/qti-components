@@ -1,8 +1,31 @@
 import { html } from 'lit';
-import { action } from '@storybook/addon-actions';
+import { expect, fireEvent, within } from '@storybook/test';
+import { getWcStorybookHelpers } from 'wc-storybook-helpers';
+import type { Meta, StoryObj } from '@storybook/web-components';
+import type { QtiTextEntryInteraction } from '@citolab/qti-components/qti-components';
 
-import { QtiTextEntryInteraction } from './qti-text-entry-interaction';
-import './qti-text-entry-interaction';
+const { events, args, argTypes, template } = getWcStorybookHelpers('qti-text-entry-interaction');
+
+type Story = StoryObj<QtiTextEntryInteraction & typeof args>;
+
+const meta: Meta<QtiTextEntryInteraction> = {
+  component: 'qti-text-entry-interaction',
+  args,
+  argTypes,
+  parameters: {
+    actions: {
+      handles: events
+    }
+  },
+  tags: ['autodocs']
+};
+export default meta;
+
+export const Default = {
+  render: args => {
+    return html` ${template(args)} `;
+  }
+};
 
 const inputWidthClass = [
   '',
@@ -14,38 +37,64 @@ const inputWidthClass = [
   'qti-input-width-10',
   'qti-input-width-15',
   'qti-input-width-20',
+  'qti-input-width-25',
+  'qti-input-width-30',
+  'qti-input-width-35',
+  'qti-input-width-40',
+  'qti-input-width-45',
+  'qti-input-width-50',
   'qti-input-width-72'
 ];
 
-export default {
-  component: 'qti-text-entry-interaction',
-  argTypes: {
-    // response: { type: 'string' },
-    // expectedLength: { type: 'number' },
-    // readonly: { description: 'attr: qti-inline-choice-interaction', type: 'boolean' },
-    // disabled: { description: 'attr: qti-inline-choice-interaction', type: 'boolean' },
+export const PatternMask = {
+  render: Default.render,
+  args: {
+    'pattern-mask': '[A-Za-z]{3}',
+    'data-patternmask-message': 'Please enter exact 3 letters',
+    'response-identifier': 'RESPONSE'
   }
 };
 
-export const Default = {
-  render: args => html`
-    <qti-text-entry-interaction
-      @qti-register-interaction="${action(`qti-register-interaction`)}"
-      @qti-interaction-response="${action(`qti-interaction-response`)}"
-      .response=${args.response}
-      ?disabled=${args.disabled}
-      ?readonly=${args.readonly}
-      placeholder-text="totaal"
-      class="text-entry-interaction ${inputWidthClass}"
-      expected-length=${args.expectedLength}
-      pattern-mask=${args.patternMask}
-      data-patternmask-message=${args.dataPatternmaskMessage}
-      response-identifier="RESPONSE"
-    >
-    </qti-text-entry-interaction>
-  `,
+export const Form: Story = {
+  render: () => {
+    return html`
+      <form name="form" @submit=${e => e.preventDefault()}>
+        ${Default.render({
+          'pattern-mask': '[A-Za-z]{3}',
+          'data-patternmask-message': 'Please enter exact 3 letters',
+          'response-identifier': 'RESPONSE'
+        })}
+        <input type="submit" value="submit" />
+      </form>
+    `;
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const textEntryInteraction = canvasElement.querySelector('qti-text-entry-interaction').shadowRoot;
+    const input = textEntryInteraction.querySelector('input');
+    const form = canvas.getByRole<HTMLFormElement>('form');
 
-  args: {}
+    const expectedValue = 'abc';
+    // type in the input
+    await fireEvent.keyUp(input, { target: { value: expectedValue } });
+    await fireEvent.submit(form);
+
+    const formData = new FormData(form);
+    const value = formData.get('RESPONSE');
+    // Check that form data contains the expected values
+    expect(value).toEqual(expectedValue);
+    let isValid = form.reportValidity();
+    expect(isValid).toBe(true);
+
+    await fireEvent.keyUp(input, { target: { value: '123' } });
+    isValid = form.reportValidity();
+    expect(isValid).toBe(false);
+
+    await fireEvent.keyUp(input, { target: { value: expectedValue } });
+    isValid = form.reportValidity();
+    expect(isValid).toBe(true);
+    // Define expected values for assertion
+  }
 };
 
 export const Sizes = {

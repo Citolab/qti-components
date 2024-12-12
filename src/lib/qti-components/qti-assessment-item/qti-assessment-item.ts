@@ -10,6 +10,7 @@ import type { QtiFeedback } from '../qti-feedback/qti-feedback';
 import type { Interaction } from '../qti-interaction/internal/interaction/interaction';
 import type { QtiResponseProcessing } from '../qti-response-processing';
 import { ItemContext, itemContext, itemContextVariables } from './qti-assessment-item.context';
+import QtiRegisterVariable from '../internal/events/qti-register-variable';
 
 /**
  * @summary The qti-assessment-item element contains all the other QTI 3 item structures.
@@ -32,7 +33,7 @@ export class QtiAssessmentItem extends LitElement {
   @property({ type: String }) title: string;
   @property({ type: String }) identifier: string = '';
   @property({ type: String }) adaptive: 'true' | 'false' = 'false';
-  @property({ type: String }) timeDependent: 'true' | 'false' = 'false';
+  @property({ type: String }) timeDependent: 'true' | 'false' | null = null;
 
   @property({ type: Boolean }) disabled: boolean;
   @watch('disabled', { waitUntilFirstUpdate: true })
@@ -46,14 +47,21 @@ export class QtiAssessmentItem extends LitElement {
     this._interactionElements.forEach(ch => (ch.readonly = readonly));
 
   @provide({ context: itemContext })
-  // @property({ attribute: false })
   private _context: ItemContext = {
     identifier: this.getAttribute('identifier'),
     variables: itemContextVariables
   };
 
   public get variables(): VariableValue<string | string[] | null>[] {
-    return this._context.variables.map(v => ({ identifier: v.identifier, value: v.value, type: v.type }));
+    return this._context.variables.map(v => ({
+      identifier: v.identifier,
+      value: v.value,
+      type: v.type,
+      // add externalscored, a fixed prop to the test, so the testcontext can read and decide how to score this item
+      ...(v.type === 'outcome' && v.identifier === 'SCORE'
+        ? { externalScored: (v as OutcomeVariable).externalScored }
+        : {})
+    }));
   }
 
   public set variables(value: VariableValue<string | string[] | null>[]) {
@@ -61,7 +69,6 @@ export class QtiAssessmentItem extends LitElement {
       console.warn('variables property should be an array of VariableDeclaration');
       return;
     }
-
     this._context = {
       ...this._context,
       variables: this._context.variables.map(variable => {
@@ -79,7 +86,7 @@ export class QtiAssessmentItem extends LitElement {
           (el: Interaction) => el.responseIdentifier === variable.identifier
         );
         if (interactionElement) {
-          interactionElement.response = variable.value;
+          interactionElement.value = variable.value as string | string[];
         }
       }
 
@@ -112,7 +119,7 @@ export class QtiAssessmentItem extends LitElement {
           i => i.getAttribute('response-identifier') === response.responseIdentifier
         );
         if (interaction) {
-          interaction.response = response.response;
+          interaction.value = response.response;
         }
       }
     }
@@ -124,7 +131,7 @@ export class QtiAssessmentItem extends LitElement {
 
   constructor() {
     super();
-    this.addEventListener('qti-register-variable', e => {
+    this.addEventListener('qti-register-variable', (e: QtiRegisterVariable) => {
       this._context = { ...this._context, variables: [...this._context.variables, e.detail.variable] };
       this._initialContext = this._context;
       e.stopPropagation();
@@ -141,6 +148,7 @@ export class QtiAssessmentItem extends LitElement {
     });
     this.addEventListener('end-attempt', (e: CustomEvent<{ responseIdentifier: string; countAttempt: boolean }>) => {
       const { responseIdentifier, countAttempt } = e.detail;
+      this.validate();
       this.updateResponseVariable(responseIdentifier, 'true');
       this.processResponse(countAttempt);
     });
@@ -172,12 +180,15 @@ export class QtiAssessmentItem extends LitElement {
       const interaction: Interaction | undefined = this._interactionElements.find(
         i => i.getAttribute('response-identifier') === response.responseIdentifier
       );
-      interaction && (interaction.correctResponse = show ? response.response : '');
+      if (interaction) {
+        interaction.correctResponse = show ? response.response : '';
+      }
     }
   }
 
   public processResponse(countNumAttempts: boolean = true): boolean {
-    const responseProcessor = this.querySelector('qti-response-processing') as unknown as QtiResponseProcessing;
+    this.validate();
+    const responseProcessor = this.querySelector<QtiResponseProcessing>('qti-response-processing');
     if (!responseProcessor) {
       // console.info('Client side response processing template not available');
       return false;
@@ -191,15 +202,16 @@ export class QtiAssessmentItem extends LitElement {
     responseProcessor.process();
 
     if (this.adaptive === 'false') {
-      // if adapative, completionStatus is set by the processing template
+      // if adaptive, completionStatus is set by the processing template
       this.updateOutcomeVariable('completionStatus', this._getCompletionStatus());
     }
 
-    countNumAttempts &&
+    if (countNumAttempts) {
       this.updateOutcomeVariable(
         'numAttempts',
         (+this._context.variables.find(v => v.identifier === 'numAttempts')?.value + 1).toString()
       );
+    }
 
     this._emit('qti-response-processed');
     return true;
@@ -237,7 +249,7 @@ export class QtiAssessmentItem extends LitElement {
     this._emit<InteractionChangedDetails>('qti-interaction-changed', {
       item: this.identifier,
       responseIdentifier: identifier,
-      response: value
+      response: Array.isArray(value) ? [...value] : value
     });
 
     if (this.adaptive === 'false') {
@@ -248,6 +260,7 @@ export class QtiAssessmentItem extends LitElement {
 
   public updateOutcomeVariable(identifier: string, value: string | string[] | undefined) {
     const outcomeVariable = this.getOutcome(identifier);
+
     if (!outcomeVariable) {
       console.warn(`Can not set qti-outcome-identifier: ${identifier}, it is not available`);
       return;
@@ -265,7 +278,6 @@ export class QtiAssessmentItem extends LitElement {
         };
       })
     };
-
     this._feedbackElements.forEach(fe => fe.checkShowFeedback(identifier));
 
     this._emit<OutcomeChangedDetails>('qti-outcome-changed', {
@@ -275,9 +287,16 @@ export class QtiAssessmentItem extends LitElement {
     });
   }
 
+  public validate(): boolean | null {
+    if (this._interactionElements.every(interactionElement => interactionElement.validate())) return true;
+    if (this._interactionElements.some(interactionElement => interactionElement.validate())) return false;
+    return null;
+  }
+
   private _getCompletionStatus(): 'completed' | 'incomplete' | 'not_attempted' | 'unknown' {
-    if (this._interactionElements.every(interactionElement => interactionElement.validate())) return 'completed';
-    if (this._interactionElements.some(interactionElement => interactionElement.validate())) return 'incomplete';
+    const valid = this.validate();
+    if (valid === true) return 'completed';
+    if (valid === false) return 'incomplete';
     return 'not_attempted';
   }
 

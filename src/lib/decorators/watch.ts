@@ -4,7 +4,7 @@ type UpdateHandler = (prev?: unknown, next?: unknown) => void;
 
 type NonUndefined<A> = A extends undefined ? never : A;
 
-type UpdateHandlerFunctionKeys<T extends object> = {
+export type UpdateHandlerFunctionKeys<T extends object> = {
   [K in keyof T]-?: NonUndefined<T[K]> extends UpdateHandler ? K : never;
 }[keyof T];
 
@@ -32,7 +32,10 @@ export function watch(propertyName: string | string[], options?: WatchOptions) {
     waitUntilFirstUpdate: false,
     ...options
   };
-  return <ElemClass extends LitElement>(proto: ElemClass, decoratedFnName: UpdateHandlerFunctionKeys<ElemClass>) => {
+  return <ElemClass extends LitElement>(
+    proto: ElemClass,
+    decoratedFnName: UpdateHandlerFunctionKeys<ElemClass> | any
+  ) => {
     // @ts-expect-error - update is a protected property
     const { update } = proto;
     const watchedProperties = Array.isArray(propertyName) ? propertyName : [propertyName];

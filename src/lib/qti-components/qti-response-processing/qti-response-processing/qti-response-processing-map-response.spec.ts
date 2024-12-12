@@ -25,7 +25,7 @@ const unitTestItem = html`<qti-assessment-item
   </qti-response-declaration>
   <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float"></qti-outcome-declaration>
   <qti-item-body>
-    <qti-choice-interaction response-identifier="RESPONSE" shuffle="true" max-choices="0">
+    <qti-choice-interaction response-identifier="RESPONSE" max-choices="0">
       <qti-prompt>Which of the following elements are used to form water?</qti-prompt>
       <qti-simple-choice identifier="H" fixed="false">Hydrogen</qti-simple-choice>
       <qti-simple-choice identifier="He" fixed="false">Helium</qti-simple-choice>

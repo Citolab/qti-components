@@ -54,6 +54,12 @@ export interface ModuleResolutionConfig {
   context?: string;
   catchError?: boolean;
   paths: {
-    [key: string]: string;
+    [key: string]: string | string[];
+  };
+  shim?: {
+    [key: string]: {
+      deps?: string[]; // Array of dependencies
+      exports?: string; // The global variable to use as the module's value
+    };
   };
 }

@@ -20,8 +20,7 @@ describe('qti-mapping', () => {
         </qti-response-declaration>
         <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float"></qti-outcome-declaration>
         <qti-item-body>
-          <qti-choice-interaction response-identifier="RESPONSE" shuffle="true" max-choices="0">
-          </qti-choice-interaction>
+          <qti-choice-interaction response-identifier="RESPONSE" max-choices="0"> </qti-choice-interaction>
         </qti-item-body>
         <qti-response-processing>
           <qti-map-response identifier="RESPONSE"> </qti-map-response>
@@ -33,6 +32,7 @@ describe('qti-mapping', () => {
     assessmentItem.updateResponseVariable('RESPONSE', ['H', 'O']);
 
     const mapResponse = assessmentItem.querySelector('qti-map-response') as QtiMapResponse;
+
     const score = mapResponse.calculate();
     expect(score).toEqual(2);
   });
@@ -53,15 +53,13 @@ describe('qti-mapping', () => {
         </qti-response-declaration>
         <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float"></qti-outcome-declaration>
         <qti-item-body>
-          <qti-choice-interaction response-identifier="RESPONSE" shuffle="true" max-choices="0">
-          </qti-choice-interaction>
+          <qti-choice-interaction response-identifier="RESPONSE" max-choices="0"> </qti-choice-interaction>
         </qti-item-body>
         <qti-response-processing>
           <qti-map-response identifier="RESPONSE"> </qti-map-response>
         </qti-response-processing>
       </qti-assessment-item>`;
     render(template(), document.body);
-
     const assessmentItem = document.body.querySelector('qti-assessment-item') as QtiAssessmentItem;
     assessmentItem.updateResponseVariable('RESPONSE', ['H']);
 
@@ -86,8 +84,7 @@ describe('qti-mapping', () => {
         </qti-response-declaration>
         <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float"></qti-outcome-declaration>
         <qti-item-body>
-          <qti-choice-interaction response-identifier="RESPONSE" shuffle="true" max-choices="0">
-          </qti-choice-interaction>
+          <qti-choice-interaction response-identifier="RESPONSE" max-choices="0"> </qti-choice-interaction>
         </qti-item-body>
         <qti-response-processing>
           <qti-map-response identifier="RESPONSE"> </qti-map-response>
@@ -120,8 +117,7 @@ describe('qti-mapping', () => {
         </qti-response-declaration>
         <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float"></qti-outcome-declaration>
         <qti-item-body>
-          <qti-choice-interaction response-identifier="RESPONSE" shuffle="true" max-choices="0">
-          </qti-choice-interaction>
+          <qti-choice-interaction response-identifier="RESPONSE" max-choices="0"> </qti-choice-interaction>
         </qti-item-body>
         <qti-response-processing>
           <qti-map-response identifier="RESPONSE"> </qti-map-response>
@@ -154,11 +150,7 @@ describe('qti-mapping', () => {
         </qti-response-declaration>
         <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float"></qti-outcome-declaration>
         <qti-item-body>
-          <qti-choice-interaction
-            response-identifier="RESPONSE"
-            shuffle="true"
-            max-choices="0"
-          ></qti-choice-interaction>
+          <qti-choice-interaction response-identifier="RESPONSE" max-choices="0"></qti-choice-interaction>
         </qti-item-body>
         <qti-response-processing>
           <qti-map-response identifier="RESPONSE"> </qti-map-response>

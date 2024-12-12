@@ -10,19 +10,24 @@ export class QtiOr extends QtiConditionExpression {
         console.error("Element doesn't implement QtiConditionExpression");
         return null;
       }
-      let value = condition.calculate() as Boolean;
+      const value = condition.calculate();
+      let val = false;
       // convert string value to boolean and return null if not possible
       if (typeof value === 'string') {
         if (value === 'true') {
-          value = true;
+          val = true;
         } else if (value === 'false') {
-          value = false;
+          val = false;
         } else {
-          console.error('unexpected value in qti-or, expected boolean');
+          console.error('unexpected val in qti-or, expected boolean');
           return null;
         }
+      } else {
+        if (typeof value === 'boolean') {
+          val = value;
+        }
       }
-      return value;
+      return val;
     });
     return values.some(e => {
       return typeof e === 'boolean' && e;

@@ -1,7 +1,8 @@
-import { LitElement, css, html } from 'lit';
+import { consume } from '@lit/context';
+import { css, html, LitElement } from 'lit';
 import { state } from 'lit/decorators.js';
 import { ResponseVariable, VariableDeclaration } from '../../internal/variables';
-import { QtiAssessmentItem } from '../../qti-assessment-item/qti-assessment-item';
+import { itemContext, ItemContext } from '../../qti-assessment-item/qti-assessment-item.context';
 import { QtiMultiple } from './qti-multiple/qti-multiple';
 
 export interface QtiExpressionBase<T> {
@@ -36,9 +37,9 @@ export abstract class QtiExpression<T> extends LitElement implements QtiExpressi
     throw new Error('Not implemented');
   }
 
-  get assessmentItem(): QtiAssessmentItem {
-    return this.closest('qti-assessment-item') as QtiAssessmentItem;
-  }
+  @consume({ context: itemContext, subscribe: true })
+  @state()
+  protected context?: ItemContext;
 
   getVariables = (): VariableDeclaration<number | string | (number | string)[] | null>[] =>
     // FIXME: if this itself is multiple, this will never enter the qti-multiple switch
@@ -50,13 +51,13 @@ export abstract class QtiExpression<T> extends LitElement implements QtiExpressi
           case 'qti-base-value': {
             return {
               baseType: e.getAttribute('base-type'),
-              value: e.textContent,
+              value: e.textContent.trim(),
               cardinality: 'single'
             } as ResponseVariable;
           }
           case 'qti-variable': {
             const identifier = e.getAttribute('identifier') || '';
-            const variable = this.assessmentItem.getVariable(identifier);
+            const variable = this.context.variables.find(v => v.identifier === identifier) || null;
             return variable;
           }
           case 'qti-multiple': {
@@ -75,7 +76,7 @@ export abstract class QtiExpression<T> extends LitElement implements QtiExpressi
           }
           case 'qti-correct': {
             const identifier = e.getAttribute('identifier') || '';
-            const responseVariable = this.assessmentItem.getResponse(identifier);
+            const responseVariable: ResponseVariable = this.context.variables.find(v => v.identifier === identifier) || null;
             return {
               baseType: responseVariable.baseType,
               value: responseVariable.correctResponse,

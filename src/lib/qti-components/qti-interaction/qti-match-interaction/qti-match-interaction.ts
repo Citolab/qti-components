@@ -1,11 +1,13 @@
-import { html, LitElement, PropertyValues } from 'lit';
+import { CSSResultGroup, html, LitElement } from 'lit';
 import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-interaction-mixin';
-
 import { customElement, property, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { ResponseInteraction } from '../../internal/expression-result';
+// import { TouchDragAndDrop } from '../internal/drag-drop';
 import '../qti-simple-associable-choice';
 import { QtiSimpleAssociableChoice } from '../qti-simple-associable-choice';
+import styles from './qti-match-interaction.styles';
+import { Interaction } from '../internal/interaction/interaction';
 
 interface Column {
   id: number;
@@ -20,31 +22,48 @@ interface Row {
 
 @customElement('qti-match-interaction')
 export class QtiMatchInteraction extends DragDropInteractionMixin(
-  LitElement,
+  Interaction,
   'qti-simple-match-set:first-of-type qti-simple-associable-choice',
   false,
   'qti-simple-match-set:last-of-type qti-simple-associable-choice'
 ) {
-  static override styles = [];
+  static styles: CSSResultGroup = styles;
+
   rows: QtiSimpleAssociableChoice[];
   cols: QtiSimpleAssociableChoice[];
   lastCheckedRadio: HTMLInputElement | null = null;
 
-  @state() response = [];
+  @state() _response: string | string[] = [];
+  // dragDropApi: TouchDragAndDrop;
+  get value(): string[] {
+    if (!this.classList.contains('qti-match-tabular')) return super.value as string[];
+    else return this._response as string[];
+  }
+  set value(val: string[]) {
+    if (!this.classList.contains('qti-match-tabular')) super.value = val;
+    else this._response = val;
+  }
+  @state() correctOptions: string[] = [];
   @property({ type: String, attribute: 'response-identifier' }) responseIdentifier: string = '';
 
-  connectedCallback(): void {
+  async connectedCallback(): Promise<void> {
     super.connectedCallback();
+    // await this.updateComplete;
+    // this.dragDropApi = new TouchDragAndDrop();
+    // this.dragDropApi.addDraggableElements(
+    //   this.querySelectorAll('qti-simple-match-set:first-of-type qti-simple-associable-choice')
+    // );
+    // this.dragDropApi.addDroppableElements(
+    //   this.querySelectorAll('qti-simple-match-set:last-of-type qti-simple-associable-choice')
+    // );
     this.rows = Array.from<QtiSimpleAssociableChoice>(
-      // eslint-disable-next-line wc/no-child-traversal-in-connectedcallback
       this.querySelectorAll('qti-simple-match-set:first-of-type qti-simple-associable-choice')
     );
     this.cols = Array.from<QtiSimpleAssociableChoice>(
-      // eslint-disable-next-line wc/no-child-traversal-in-connectedcallback
       this.querySelectorAll('qti-simple-match-set:last-of-type qti-simple-associable-choice')
     );
 
-    this.response = [];
+    this.value = [];
   }
 
   handleRadioClick = e => {
@@ -61,13 +80,24 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
   handleRadioChange = e => {
     const checkbox = e.target as HTMLInputElement;
     const value = checkbox.value;
+    const name = checkbox.name;
+    const type = checkbox.type;
+
     if (checkbox.checked) {
-      this.response.push(value);
+      if (!this.value) {
+        this.value = [value];
+      } else if (this.value.indexOf(value) === -1) {
+        if (type === 'radio') {
+          this.value = this.value.filter(v => v.indexOf(name) === -1);
+        }
+        this.value = [...this.value, value];
+      }
       this.lastCheckedRadio = checkbox;
     } else {
-      this.response = this.response.filter(v => v !== value);
+      this.value = this.value.filter(v => v !== value);
       this.lastCheckedRadio = null;
     }
+
     this.requestUpdate();
     this.dispatchEvent(
       new CustomEvent<ResponseInteraction>('qti-interaction-response', {
@@ -75,15 +105,25 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
         composed: true,
         detail: {
           responseIdentifier: this.responseIdentifier,
-          response: this.response
+          response: Array.isArray(this.value) ? [...this.value] : this.value
         }
       })
     );
   };
 
+  set correctResponse(responseValue: string | string[]) {
+    if (responseValue === '') {
+      this.correctOptions = [];
+      return;
+    } else if (Array.isArray(responseValue)) {
+      this.correctOptions = responseValue;
+    }
+  }
+
   override render() {
     if (!this.classList.contains('qti-match-tabular')) {
-      return html`<slot name="prompt"></slot> <slot></slot>`;
+      return html`<slot name="prompt"></slot> <slot></slot>
+        <div role="alert" id="validationMessage"></div>`;
     }
     return html`
       <slot name="prompt"></slot>
@@ -101,18 +141,23 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
                 const rowId = row.getAttribute('identifier');
                 const colId = col.getAttribute('identifier');
                 const value = `${rowId} ${colId}`;
-                const selectedInRowCount = this.response.filter(v => v.split(' ')[0] === rowId).length || 0;
-                const checked = this.response.includes(value);
+                const selectedInRowCount = this.value.filter(v => v.split(' ')[0] === rowId).length || 0;
+                const checked = this.value.includes(value);
+                const part = `rb ${checked ? 'rb-checked' : ''} ${this.correctOptions.includes(value) ? 'rb-correct' : ''}`;
                 // disable if match max is greater than 1 and max is reached
-                const disable = row.matchMax === 1 ? false : selectedInRowCount >= row.matchMax && !checked;
+                const disable =
+                  this.correctOptions.length > 0
+                    ? true
+                    : row.matchMax === 1
+                      ? false
+                      : selectedInRowCount >= row.matchMax && !checked;
                 return html`<td>
                   <input
                     type=${row.matchMax === 1 ? 'radio' : `checkbox`}
-                    role="id"
+                    part=${part}
                     name=${rowId}
                     value=${value}
                     .disabled=${disable}
-                    .checked=${checked}
                     @change=${e => this.handleRadioChange(e)}
                     @click=${e => (row.matchMax === 1 ? this.handleRadioClick(e) : null)}
                   />

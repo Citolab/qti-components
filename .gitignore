@@ -30,3 +30,11 @@ storybook-static/
 
 vscode.html-custom-data.json
 vscode.css-custom-data.json
+
+public/assets/api/test
+.env
+public/assets/api/conformance
+*__screenshots__/
+.eslintcache
+cdn
+docs

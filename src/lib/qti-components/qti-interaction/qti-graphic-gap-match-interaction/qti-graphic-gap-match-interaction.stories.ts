@@ -1,9 +1,9 @@
-import { html } from 'lit';
 import { action } from '@storybook/addon-actions';
+import { html } from 'lit';
 
-import './qti-graphic-gap-match-interaction';
 import '../qti-associable-hotspot';
 import '../qti-gap-img';
+import './qti-graphic-gap-match-interaction';
 
 const responses = ['[]', '["G1"]', '["W G1"]', '["Su G1","A G2"]'];
 
@@ -26,6 +26,12 @@ export default {
 
 export const Default = {
   render: args => html`
+    <qti-prompt>
+      <p>
+        Some of the labels on the following diagram are missing: can you identify the correct three-letter codes for the
+        unlabelled airports?
+      </p>
+    </qti-prompt>
     <qti-graphic-gap-match-interaction
       @qti-register-interaction="${e => action(JSON.stringify(e.detail.responseIdentifier))()}"
       @qti-interaction-response="${e => action(JSON.stringify(e.detail))()}"

@@ -30,6 +30,7 @@ import { Interaction } from '../internal/interaction/interaction';
 
 @customElement('qti-slider-interaction')
 export class QtiSliderInteraction extends Interaction {
+  private _value = 0;
   csLive: CSSStyleDeclaration;
 
   @query('#knob')
@@ -38,8 +39,6 @@ export class QtiSliderInteraction extends Interaction {
   @query('#rail')
   private _rail: HTMLElement;
 
-  @property({ type: Number }) value: number;
-
   @property({ type: Boolean, attribute: 'step-label' }) stepLabel = false;
 
   @property({ type: Boolean }) reverse = false;
@@ -47,7 +46,7 @@ export class QtiSliderInteraction extends Interaction {
   private _min: number;
   @property({ type: Number, attribute: 'lower-bound' }) set min(value: number) {
     this._min = value;
-    this.value = value;
+    this._value = value;
     this.style.setProperty('--min', `${this._min}`);
   }
   get min(): number {
@@ -85,6 +84,19 @@ export class QtiSliderInteraction extends Interaction {
     return true;
   }
 
+  get value(): string | string[] {
+    return this._value.toString();
+  }
+
+  set value(val: string | string[]) {
+    const isNumber = !isNaN(parseInt(val.toString()));
+    if (isNumber) {
+      this._value = parseInt(val.toString());
+    } else {
+      throw new Error('Value must be a number');
+    }
+  }
+
   // static shadowRootOptions: ShadowRootInit = { ...LitElement.shadowRootOptions, delegatesFocus: true, mode: 'open' };
 
   constructor() {
@@ -104,16 +116,20 @@ export class QtiSliderInteraction extends Interaction {
       console.error('QtiSliderInteraction: response is not a number');
       return;
     }
-    this.value = value;
+    this._value = value;
   }
 
   static override styles = [css``];
 
   override render() {
     // convert the value, which is the real slider value to a percentage for the dom.
-    this.value < this.min && (this.value = this.min);
-    this.value > this.max && (this.value = this.max);
-    const valuePercentage = ((this.value - this.min) / (this.max - this.min)) * 100;
+    if (this._value < this.min) {
+      this._value = this.min;
+    }
+    if (this._value > this.max) {
+      this._value = this.max;
+    }
+    const valuePercentage = ((this._value - this.min) / (this.max - this.min)) * 100;
     this.style.setProperty('--value-percentage', `${valuePercentage}%`);
     this.setAttribute('aria-valuenow', this.value.toString());
 
@@ -199,7 +215,7 @@ export class QtiSliderInteraction extends Interaction {
   private calculateValue(diffX: number) {
     const valueNow = this.min + ((this.max - this.min) * diffX) / this._rail.getBoundingClientRect().width;
     const roundedStepValue = this.min + Math.round((valueNow - this.min) / this._step) * this._step;
-    this.value = roundedStepValue;
+    this._value = roundedStepValue;
   }
 
   private getPositionFromEvent(e: any): {

@@ -6,7 +6,7 @@ export * from './internal/variables';
 /* only exported to override or extend for specific purposes */
 export * from './qti-assessment-item/qti-assessment-item';
 export * from './qti-assessment-stimulus-ref/qti-assessment-stimulus-ref';
-export * from './qti-interaction/internal/choice/qti-choice';
+export * from './qti-interaction/internal/active-element/active-element.mixin';
 export * from './qti-item-body/qti-item-body';
 export * from './qti-prompt/qti-prompt';
 export * from './qti-stylesheet/qti-stylesheet';

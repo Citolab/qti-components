@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-item xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" title="" identifier="INTRODUCTION" adaptive="false" time-dependent="false" xml:lang="nl-NL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd http://www.w3.org/1998/Math/MathML https://purl.imsglobal.org/spec/mathml/v3p0/schema/xsd/mathml3.xsd">
+	<qti-stylesheet href="resources/stylesheet.css" type="text/css" />
+	<qti-item-body>
+		<p class="qti-align-center">
+			Welkom bij de demotoets!
+		</p>
+		<p class="qti-align-center">
+			<img alt="" src="resources/6252e5ce8e58323a85f41570136c191d.png" width="256" height="256" />
+		</p>
+	</qti-item-body>
+</qti-assessment-item>

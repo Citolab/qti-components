@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest xmlns="http://www.imsglobal.org/xsd/qti/qtiv3p0/imscp_v1p1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+          identifier="level1-test-entry" 
+          xsi:schemaLocation="http://www.imsglobal.org/xsd/qti/qtiv3p0/imscp_v1p1 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqtiv3p0_imscpv1p2_v1p0.xsd">
+    <metadata>
+        <schema>QTI Package</schema>
+        <schemaversion>3.0.0</schemaversion>
+    </metadata>
+    <organizations/>
+    <resources>
+        <resource identifier="graphic-gap-match-item1" type="imsqti_item_xmlv3p0" href="graphic-gap-match-interaction-1.xml">   
+            <file href="graphic-gap-match-interaction-1.xml"/>
+            <file href="images/cbg.png"/>
+            <file href="images/ebg.png"/>
+            <file href="images/edi.png"/>
+            <file href="images/gla.png"/>
+            <file href="images/man.png"/>
+            <file href="images/mch.png"/>
+            <file href="images/ukairtags.png"/>
+        </resource>
+        <resource identifier="graphic-gap-match-item2" type="imsqti_item_xmlv3p0" href="graphic-gap-match-interaction-2.xml">   
+            <file href="graphic-gap-match-interaction-2.xml"/>
+            <file href="images/ukairtags.png"/>
+        </resource>
+        <resource identifier="q8-graphic-gap-match-sv-1" type="imsqti_item_xmlv3p0" href="graphic-gap-match-sv-1.xml">
+            <file href="graphic-gap-match-sv-1.xml"/>
+            <file href="images/a-cw.png"/>
+            <file href="images/b-ww2.png"/>
+            <file href="images/c-vietnam.png"/>
+            <file href="images/d-bay.png"/>
+            <file href="images/timeline-558.png"/>
+        </resource>
+        <resource identifier="q8-graphic-gap-match-sv-2" type="imsqti_item_xmlv3p0" href="graphic-gap-match-sv-2.xml">
+            <file href="graphic-gap-match-sv-2.xml"/>
+            <file href="images/a-cw.png"/>
+            <file href="images/b-ww2.png"/>
+            <file href="images/c-vietnam.png"/>
+            <file href="images/d-bay.png"/>
+            <file href="images/timeline-558.png"/>
+        </resource>
+        <resource identifier="q8-graphic-gap-match-sv-3" type="imsqti_item_xmlv3p0" href="graphic-gap-match-sv-3.xml">
+            <file href="graphic-gap-match-sv-3.xml"/>
+            <file href="images/a-cw.png"/>
+            <file href="images/b-ww2.png"/>
+            <file href="images/c-vietnam.png"/>
+            <file href="images/d-bay.png"/>
+            <file href="images/timeline-558.png"/>
+        </resource>
+        <resource identifier="q8-graphic-gap-match-sv-4" type="imsqti_item_xmlv3p0" href="graphic-gap-match-sv-4.xml">
+            <file href="graphic-gap-match-sv-4.xml"/>
+            <file href="images/a-cw.png"/>
+            <file href="images/b-ww2.png"/>
+            <file href="images/c-vietnam.png"/>
+            <file href="images/d-bay.png"/>
+            <file href="images/timeline-558.png"/>
+        </resource>
+        
+        <!-- This is a test for convenience...to display all graphic gap match items in a single assessment -->
+	<resource identifier="L2-Q8-GGM-Interaction-Test" type="imsqti_test_xmlv3p0" href="assessment.xml">
+	    <file href="assessment.xml"/>
+        </resource>
+    </resources>
+</manifest>

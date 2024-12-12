@@ -1,32 +1,54 @@
-import { customElement, property } from 'lit/decorators.js';
-import { html } from 'lit';
-import styles from './qti-choice-interaction.styles';
 import type { CSSResultGroup } from 'lit';
-import { Choices } from '../internal/choices/choices';
+import { html } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
+import { ChoicesInterface, ChoicesMixin } from '../internal/choices/choices.mixin';
+import { ShuffleMixin } from '../internal/shuffle/shuffle-mixin';
+import { VocabularyMixin } from '../internal/vocabulary/vocabulary-mixin';
+import styles from './qti-choice-interaction.styles';
+import { Interaction } from '../internal/interaction/interaction';
+
+export type Orientation = 'horizontal' | 'vertical' | undefined;
 
 /**
- * @summary The ChoiceInteraction.Type (qti-choice-interaction) interaction presents a collection of choices to the candidate.
- * @documentation https://www.imsglobal.org/spec/qti/v3p0/impl#h.j9nu1oa1tu3b
- * @status stable
- * @since 6.0
+ * An sample element.
  *
- * @event qti-register-interaction - emitted when the interaction wants to register itself
- * @event qti-interaction-response - emitted when the interaction changes
+ * @slot - default slot of the choices
+ * @slot prompt - slot of the prompt
  *
- * @slot - The default slot where <qti-simple-choice> must be placed.
- * @slot prompt - slot where the prompt is placed.
+ * @csspart slot - The choice elements
+ * @csspart prompt - The prompt
+ * @csspart message - The validation message
+ *
+ * @cssprop [--qti-bg-active=#ffecec] - The active background color
+ * @cssprop [--qti-border-active=#f86d70] - The active border color
+ * @cssprop [--qti-padding-horizontal=1px] - The option horizontal padding
+ * @cssprop [--qti-padding-vertical=solid] - The option vertical padding
+ * @cssprop [--qti-border-radius=8px] - The option border radius
  */
-
 @customElement('qti-choice-interaction')
-export class QtiChoiceInteraction extends Choices {
+export class QtiChoiceInteraction
+  extends VocabularyMixin(
+    ShuffleMixin(ChoicesMixin(Interaction, 'qti-simple-choice'), 'qti-simple-choice'),
+    'qti-simple-choice'
+  )
+  implements ChoicesInterface
+{
   static styles: CSSResultGroup = styles;
 
-  /** orientation of choices */
+  constructor() {
+    super();
+    this._internals.role = 'group';
+  }
+
+  /** @deprecated, use 'qti-orientation-horizontal' or 'qti-orientation-vertical' instead */
   @property({ type: String })
-  public orientation: 'horizontal' | 'vertical';
+  public orientation: Orientation;
 
   render() {
-    return html` <slot name="prompt"></slot><slot part="slot"></slot>`;
+    return html`
+      <slot part="prompt" name="prompt"></slot><slot part="slot"></slot>
+      <div part="message" role="alert" id="validationMessage"></div>
+    `;
   }
 }
 

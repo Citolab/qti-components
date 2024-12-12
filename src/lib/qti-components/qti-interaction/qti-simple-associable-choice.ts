@@ -1,10 +1,28 @@
-import { html, LitElement } from 'lit';
+import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { ActiveElementMixin } from './internal/active-element/active-element.mixin';
 
-// THIS IS NOT USED IN TABULAR MATCH INTERACTION
+/* 
+qti-match-interaction
+qti-associate-interaction
+*/
 @customElement('qti-simple-associable-choice')
 // tslint:disable: indent
-export class QtiSimpleAssociableChoice extends LitElement {
+export class QtiSimpleAssociableChoice extends ActiveElementMixin(LitElement, 'qti-simple-associable-choice') {
+  static styles = css`
+    :host {
+      display: flex;
+      user-select: none;
+    }
+    slot {
+      width: 100%;
+      display: block;
+    }
+    slot[name='qti-simple-associable-choice'] {
+      width: 100%;
+    }
+  `;
+
   /** the minimal number of selections a candidate must make */
   @property({
     type: Number,
@@ -40,8 +58,8 @@ export class QtiSimpleAssociableChoice extends LitElement {
   // And we have slot for content like in this associate interaction
   override render() {
     return html`
-      <slot></slot>
-      <slot name="qti-simple-associable-choice"></slot>
+      <slot part="slot"></slot>
+      <slot part="dropslot" name="qti-simple-associable-choice"></slot>
     `;
   }
 }

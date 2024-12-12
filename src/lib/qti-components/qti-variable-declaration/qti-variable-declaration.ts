@@ -15,7 +15,7 @@ export class QtiVariableDeclaration extends LitElement {
       return null;
     }
 
-    const defaultValues = htmlValues.map(n => n.innerHTML);
+    const defaultValues = htmlValues.map(n => n.innerHTML.trim());
     if (defaultValues.length > 1 || variable.cardinality === 'multiple' || variable.cardinality === 'ordered') {
       return defaultValues;
     }

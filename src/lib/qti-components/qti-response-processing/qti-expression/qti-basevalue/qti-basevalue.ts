@@ -5,7 +5,7 @@ export class QtiBaseValue extends QtiExpression<string> {
   @property({ type: String, attribute: 'base-type' }) baseType: BaseType = 'string';
 
   public override getResult(): string {
-    const value = this.textContent;
+    const value = this.textContent.trim();
     return value;
   }
 }

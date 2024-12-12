@@ -1,140 +1,182 @@
 import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
+import { Interaction } from '../interaction/interaction';
 
-type Constructor<T> = new (...args: any[]) => T;
+type Constructor<T = {}> = abstract new (...args: any[]) => T;
 
 declare class DroppablesInterface {}
 
-// https://ng-run.com/edit/9MGr5dYWA20AiJtpy5az?open=app%2Fapp.component.html
-export const DroppablesMixin = <T extends Constructor<LitElement>>(
+export const DroppablesMixin = <T extends Constructor<Interaction>>(
   superClass: T,
-  droppablesInShadowRoot: boolean,
+  useShadowRoot: boolean,
   droppablesSelector: string
 ) => {
-  class DroppablesElement extends superClass {
+  abstract class DroppablesElement extends superClass {
     private observer: MutationObserver;
 
     @property({ type: Boolean, reflect: true }) disabled = false;
 
     override firstUpdated(changedProps): void {
-      // for qti-match-interaction the drag interaction can be replace with a qti-match-tabular class
-      // which shows the data in a a tabular way, so no drag drop should be involved then
-      if (this.classList.contains('qti-match-tabular')) return;
-
+      if (this.isMatchTabular()) return;
       super.firstUpdated(changedProps);
 
-      const droppables = Array.from(
-        droppablesInShadowRoot
-          ? this.shadowRoot.querySelectorAll(droppablesSelector)
-          : this.querySelectorAll(droppablesSelector)
-      );
+      const droppables = this.getDroppableElements();
+      this.initializeEventHandlers();
+      droppables.forEach(droppable => {
+        this.prepareDroppable(droppable);
+        this.observeDroppableAttributes(droppable);
+      });
+    }
 
+    private isMatchTabular(): boolean {
+      return this.classList.contains('qti-match-tabular');
+    }
+
+    private getDroppableElements(): Element[] {
+      return Array.from(
+        useShadowRoot ? this.shadowRoot.querySelectorAll(droppablesSelector) : this.querySelectorAll(droppablesSelector)
+      );
+    }
+
+    private initializeEventHandlers(): void {
       this.dragoverHandler = this.dragoverHandler.bind(this);
       this.dragleaveHandler = this.dragleaveHandler.bind(this);
       this.dragenterHandler = this.dragenterHandler.bind(this);
-
       this.dropHandler = this.dropHandler.bind(this);
+    }
 
-      droppables.forEach(d => {
-        d.setAttribute('dropzone', 'move');
-        d.addEventListener('dragleave', this.dragleaveHandler);
+    private prepareDroppable(droppable: Element): void {
+      droppable.setAttribute('dropzone', 'move');
+      droppable.addEventListener('dragleave', this.dragleaveHandler);
+      this.attachEventListeners(droppable);
+    }
 
-        this.attachHandler(d);
+    private observeDroppableAttributes(droppable: Element): void {
+      this.observer = new MutationObserver(mutations => {
+        mutations.forEach(({ attributeName }) => {
+          if (attributeName === 'disabled') {
+            this.toggleDroppableHandlers(droppable);
+          }
+        });
       });
-      for (const droppable of droppables) {
-        this.observer = new MutationObserver(mutations => {
-          mutations.forEach(mutation => {
-            if (mutation.type === 'attributes') {
-              const propName = mutation.attributeName;
-              switch (propName) {
-                case 'disabled': {
-                  const disabled = droppable.hasAttribute('disabled');
-                  if (!disabled) {
-                    this.attachHandler(droppable);
-                  } else {
-                    this.removeHandler(droppable);
-                  }
-                  break;
-                }
-              }
-            }
-          });
-        });
-        this.observer.observe(droppable, {
-          attributes: true //configure it to listen to attribute changes
-        });
+      this.observer.observe(droppable, { attributes: true });
+    }
+
+    private toggleDroppableHandlers(droppable: Element): void {
+      const disabled = droppable.hasAttribute('disabled');
+      if (disabled) {
+        this.removeEventListeners(droppable);
+      } else {
+        this.attachEventListeners(droppable);
       }
     }
 
-    private attachHandler(droppable: Element) {
+    private attachEventListeners(droppable: Element): void {
       droppable.addEventListener('dragover', this.dragoverHandler);
       droppable.addEventListener('dragenter', this.dragenterHandler);
       droppable.addEventListener('drop', this.dropHandler);
     }
 
-    private removeHandler(droppable: Element) {
+    private removeEventListeners(droppable: Element): void {
       droppable.removeEventListener('dragover', this.dragoverHandler);
       droppable.removeEventListener('dragenter', this.dragenterHandler);
       droppable.removeEventListener('drop', this.dropHandler);
     }
 
-    override disconnectedCallback() {
-      // for qti-match-interaction the drag interaction can be replace with a qti-match-tabular class
-      // which shows the data in a a tabular way, so no drag drop should be involved then
-      if (this.classList.contains('qti-match-tabular')) return;
-
+    override disconnectedCallback(): void {
+      if (this.isMatchTabular()) return;
       super.disconnectedCallback();
       this.observer?.disconnect();
     }
 
-    dragenterHandler(ev: DragEvent) {
+    private dragenterHandler(ev: DragEvent): void {
       ev.preventDefault();
     }
 
-    dragoverHandler(ev: DragEvent) {
+    private dragoverHandler(ev: DragEvent): boolean {
+      const responseIdentifierDraggable = ev.dataTransfer.getData('responseIdentifier');
       ev.preventDefault();
-      const droppable = ev.currentTarget as HTMLElement;
-      // droppablesInShadowRoot
-      // ? droppable.setAttribute('part', droppable.getAttribute('part') + ' active') :
-      droppable.setAttribute('active', '');
-
-      ev.dataTransfer.dropEffect = 'move';
-
-      return false;
-    }
-
-    dropHandler(ev: DragEvent) {
-      ev.preventDefault();
-      const droppable = ev.currentTarget as HTMLElement;
-      // pk: draggables in light dom can be dragged to shadowdom, this is one of the rules of webcomponents.
-      // They may not create new elements in light dom. Some sometimess drop zones should be generated
-      // by the webcomponent. Then a draggable ( which is always already created by a webcomponent )
-      // can be in light dom, en can be dragged to shadow dom.
-      // thinking of another way where we just change slots. Maybe thats better..
-      const draggableInLightDom = this.querySelector(`[identifier=${ev.dataTransfer.getData('text')}`);
-      const draggable = draggableInLightDom
-        ? draggableInLightDom
-        : this.shadowRoot.querySelector(`[identifier=${ev.dataTransfer.getData('text')}`);
-
-      if (!droppable) {
-        console.error(`cannot find droppable, target: ${ev.target ? JSON.stringify(ev.target) : 'null'}`);
-      } else if (draggable.parentElement.getAttribute('identifier') !== droppable.getAttribute('identifier')) {
-        droppable.appendChild(draggable);
+      if (responseIdentifierDraggable === this.responseIdentifier) {
+        this.activateDroppable(ev.currentTarget as HTMLElement);
+        ev.dataTransfer.dropEffect = 'move';
       }
-      // droppablesInShadowRoot
-      // ? droppable.setAttribute('part', droppable.getAttribute('part').replace('active', '').trim()) :
-      droppable.removeAttribute('active');
-
       return false;
     }
 
-    dragleaveHandler(ev: DragEvent) {
+    private activateDroppable(droppable: HTMLElement): void {
+      this._internals.states.delete('--dragzone-active');
+      droppable.setAttribute('active', '');
+    }
+
+    private async dropHandler(ev: DragEvent): Promise<boolean> {
       ev.preventDefault();
-
       const droppable = ev.currentTarget as HTMLElement;
-      droppable.removeAttribute('active');
-      ev.dataTransfer.dropEffect = 'none';
+      const identifier = ev.dataTransfer.getData('text');
+      const responseIdentifierDraggable = ev.dataTransfer.getData('responseIdentifier');
+      const draggable = this.findDraggable(responseIdentifierDraggable, identifier);
 
+      if (!draggable) return false;
+      if (draggable && !this.isValidDrop(droppable, draggable, responseIdentifierDraggable)) {
+        draggable.style.transform = 'translate(0, 0)';
+        return false;
+      }
+      await this.moveDraggableToDroppable(draggable, droppable);
+      this.deactivateDroppable(droppable, false);
+      return false;
+    }
+
+    private findDraggable(responseIdentifier: string, identifier: string): HTMLElement | null {
+      if (!identifier) return null;
+      if (responseIdentifier === this.responseIdentifier) {
+        return (
+          this.querySelector(`[identifier=${identifier}]`) ||
+          this.shadowRoot.querySelector(`[identifier=${identifier}]`)
+        );
+      } else {
+        const assessmentItem = this.closest('qti-assessment-item');
+        const interaction = assessmentItem.querySelector(`[response-identifier=${responseIdentifier}]`);
+        return interaction.querySelector(`[identifier=${identifier}]`);
+      }
+    }
+
+    private isValidDrop(droppable: HTMLElement, draggable: HTMLElement, responseIdentifierDraggable: string): boolean {
+      return (
+        this.responseIdentifier === responseIdentifierDraggable
+        // && draggable.parentElement.getAttribute('identifier') !== droppable.getAttribute('identifier')
+      );
+    }
+
+    private async moveDraggableToDroppable(draggable: HTMLElement, droppable: HTMLElement): Promise<void> {
+      const moveElement = (): void => {
+        draggable.style.transform = 'translate(0, 0)';
+        droppable.appendChild(draggable);
+        // checkMaxAssociations and saveResponse are defined/overridden in a mixin
+        this['checkMaxAssociations']();
+        this['saveResponse'](null); //
+      };
+
+      if (!document.startViewTransition) {
+        moveElement();
+        return;
+      }
+
+      const transition = document.startViewTransition(moveElement);
+      await transition.finished;
+
+      // this['checkMaxAssociations']();
+    }
+
+    private deactivateDroppable(droppable: HTMLElement, makeDragzoneActive = true): void {
+      if (makeDragzoneActive) {
+        this._internals.states.add('--dragzone-active');
+      }
+      droppable.removeAttribute('active');
+    }
+
+    private dragleaveHandler(ev: DragEvent): boolean {
+      ev.preventDefault();
+      this.deactivateDroppable(ev.currentTarget as HTMLElement);
+      ev.dataTransfer.dropEffect = 'none';
       return false;
     }
   }

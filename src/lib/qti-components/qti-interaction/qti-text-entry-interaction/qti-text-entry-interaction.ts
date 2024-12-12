@@ -1,95 +1,107 @@
-import { css, html } from 'lit';
+import { CSSResultGroup, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { createRef } from 'lit/directives/ref.js';
 import { watch } from '../../../decorators';
 import { Interaction } from '../internal/interaction/interaction';
-
+import styles from './qti-text-entry-interaction.styles';
 @customElement('qti-text-entry-interaction')
 export class QtiTextEntryInteraction extends Interaction {
+  static styles: CSSResultGroup = styles;
+
   @property({ type: Number, attribute: 'expected-length' }) expectedLength: number;
 
   @property({ type: String, attribute: 'pattern-mask' }) patternMask: string;
 
   @property({ type: String, attribute: 'placeholder-text' }) placeholderText: string;
 
+  @property({ type: String, attribute: 'data-patternmask-message' }) dataPatternmaskMessage: string;
+
   @state()
   private _value = '';
 
-  @state()
-  private _correctValue = '';
-
-  @state()
-  private _size = 5;
-
   inputRef = createRef<HTMLInputElement>();
 
-  @property({ type: String, attribute: 'class' }) classNames;
-  @watch('classNames')
-  handleclassNamesChange(old, classes: string) {
-    const classNames = classes.split(' ');
-    classNames.forEach((className: string) => {
-      if (className.startsWith('qti-input-width')) {
-        const nrRows = className.replace('qti-input-width-', '');
-        this._size = parseInt(nrRows);
+  get value(): string | string[] {
+    return this._value;
+  }
+  set value(val: string | string[]) {
+    if (typeof val === 'string') {
+      this._value = val;
+      const formData = new FormData();
+      formData.append(this.responseIdentifier, val);
+      this._internals.setFormValue(formData);
+      this.validate();
+    } else {
+      throw new Error('Value must be a string');
+    }
+  }
+
+  public override validate() {
+    const input = this.shadowRoot.querySelector('input');
+    if (!input) return false;
+    if (this.patternMask && this.dataPatternmaskMessage) {
+      // Clear any custom error if the input is valid
+      this._internals.setValidity({});
+      input.setCustomValidity(''); // Clear the custom message
+      const isValid = input.checkValidity();
+      if (!isValid) {
+        // Set custom error if invalid
+        this._internals.setValidity({ customError: true }, this.dataPatternmaskMessage);
+        input.setCustomValidity(this.dataPatternmaskMessage); // Set custom message only if invalid
       }
-    });
-  }
-
-  public set response(value: string | undefined) {
-    this._value = value !== undefined ? value : '';
-  }
-
-  public validate() {
-    return this._value !== '';
-  }
-
-  static override get styles() {
-    return [
-      css`
-        [part='correct'] {
-          position: absolute;
-          width: 100%;
-        }
-      `
-    ];
-  }
-
-  set correctResponse(value: string) {
-    this._correctValue = value;
+    } else {
+      const isValid = input.checkValidity();
+      this._internals.setValidity(isValid ? {} : { customError: false });
+    }
+    return this._value !== '' && input.checkValidity();
   }
 
   override render() {
     return html`
-      <div part="correct">${this._correctValue}</div>
       <input
         part="input"
+        name="${this.responseIdentifier}"
         spellcheck="false"
         autocomplete="off"
+        @blur="${(event: FocusEvent) => {
+          this.reportValidity();
+        }}"
         @keydown="${event => event.stopImmediatePropagation()}"
         @keyup="${this.textChanged}"
         @change="${this.textChanged}"
         type="${this.patternMask == '[0-9]*' ? 'number' : 'text'}"
         placeholder="${ifDefined(this.placeholderText ? this.placeholderText : undefined)}"
         .value="${this._value}"
-        size="${this._size}"
         pattern="${ifDefined(this.patternMask ? this.patternMask : undefined)}"
+        maxlength=${1000}
         ?disabled="${this.disabled}"
         ?readonly="${this.readonly}"
       />
+      <div part="correct">${this._correctResponse}</div>
     `;
   }
-  //
-  // maxlength="${ifDefined(this.expectedLength ? this.expectedLength : undefined)}"
-
   protected textChanged(event: Event) {
     if (this.disabled || this.readonly) return;
     const input = event.target as HTMLInputElement;
     this.setEmptyAttribute(input.value);
     if (this._value !== input.value) {
-      this._value = input.value;
+      this.value = input.value;
+      const isValid = this.validate();
       this.saveResponse(input.value);
     }
+  }
+
+  override reportValidity() {
+    const input = this.shadowRoot.querySelector('input');
+    if (!input) return false;
+
+    // Run the validate function to ensure the custom validity state is up to date
+    const isValid = this.validate();
+    if (!isValid) {
+      input.reportValidity();
+    }
+    return isValid;
   }
 
   reset(): void {

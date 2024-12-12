@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-item 
+  xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd" 
+  identifier="q6-gap-match-interaction-sv-4" title="Gap Match - (SV 4) - gap widths" 
+  adaptive="false" time-dependent="false">
+  <qti-response-declaration identifier="RESPONSE1" cardinality="multiple" base-type="directedPair" />
+  <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float"/>
+  <qti-item-body>
+    
+    <p>
+      To specify gap element widths, use the class attribute and qti-input-width-1|2|3|4|6|10|15|20|72
+      The gap element widths are intended to provide a general visual impression. By default, in the absence of any shared 
+      vocabulary, the presentation width of a gap element is left to the Delivery Platform.
+    </p>
+   
+    <div class="qti-layout-row">
+      <div class="qti-layout-col12">
+
+        <qti-gap-match-interaction class="qti-choices-top" max-associations="0" response-identifier="RESPONSE1">
+          <qti-prompt>Demonstrates all gap element qti-input-width's: 1|2|3|4|6|10|15|20|72</qti-prompt>
+          <qti-gap-text identifier="gt1" match-max="1">M</qti-gap-text>
+          <qti-gap-text identifier="gt2" match-max="1">MM</qti-gap-text>
+          <qti-gap-text identifier="gt3" match-max="1">MMM</qti-gap-text>
+          <qti-gap-text identifier="gt4" match-max="1">MMMM</qti-gap-text>
+          <qti-gap-text identifier="gt6" match-max="1">MMMMMM</qti-gap-text>
+          <p>
+            qti-input-width-1 :  <qti-gap class="qti-input-width-1" identifier="G1"/><br/>
+            qti-input-width-2 :  <qti-gap class="qti-input-width-2" identifier="G2"/><br/>
+            qti-input-width-3 :  <qti-gap class="qti-input-width-3" identifier="G3"/><br/>
+            qti-input-width-4 :  <qti-gap class="qti-input-width-4" identifier="G4"/><br/>
+            qti-input-width-6 :  <qti-gap class="qti-input-width-6" identifier="G6"/><br/>
+            qti-input-width-10 : <qti-gap class="qti-input-width-10" identifier="G10"/><br/>
+            qti-input-width-15 : <qti-gap class="qti-input-width-15" identifier="G15"/><br/>
+            qti-input-width-20 : <qti-gap class="qti-input-width-20" identifier="G20"/><br/>
+            qti-input-width-72 : <qti-gap class="qti-input-width-72" identifier="G72"/>
+          </p>
+        </qti-gap-match-interaction>
+    
+      </div>
+    </div>
+  </qti-item-body>
+</qti-assessment-item>

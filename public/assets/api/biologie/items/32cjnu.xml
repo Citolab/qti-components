@@ -1,143 +1,115 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<qti-assessment-item
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd
-																							   http://www.duo.nl/schema/dep_extension ../dep_extension.xsd"
-  title="32cjnu"
-  identifier="ITM-32cjnu"
-  time-dependent="false"
-  label="32cjnu"
-  xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
-  xmlns:dep="http://www.duo.nl/schema/dep_extension"
->
-  <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="string">
-    <qti-correct-response interpretation="P#p">
-      <qti-value>P</qti-value>
-    </qti-correct-response>
-  </qti-response-declaration>
-  <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float">
-    <qti-default-value>
-      <qti-value>0</qti-value>
-    </qti-default-value>
-  </qti-outcome-declaration>
-  <qti-outcome-declaration identifier="MAXSCORE" cardinality="single" base-type="float">
-    <qti-default-value>
-      <qti-value>1</qti-value>
-    </qti-default-value>
-  </qti-outcome-declaration>
-  <qti-companion-materials-info>
-    <qti-calculator>
-      <qti-calculator-type>basic</qti-calculator-type>
-      <qti-description />
-    </qti-calculator>
-    <dep:dep-calculator>
-      <dep:dep-description />
-      <dep:dep-calculator-type>basic</dep:dep-calculator-type>
-      <dep:dep-switch>true</dep:dep-switch>
-    </dep:dep-calculator>
-    <dep:dep-symbolPicker>
-      <dep:dep-description />
-      <dep:dep-symbols>€èéëêïöàá§±→←↑↓↔↕</dep:dep-symbols>
-    </dep:dep-symbolPicker>
-    <dep:dep-textMarker>
-      <dep:dep-description />
-    </dep:dep-textMarker>
-  </qti-companion-materials-info>
-  <qti-stylesheet href="../css/cito_itemstyle.css" type="text/css" />
-  <qti-stylesheet href="../css/cito_userstyle.css" type="text/css" />
-  <qti-item-body class="defaultBody" xml:lang="nl-NL">
-    <div class="content">
-      <div class="qti-layout-row">
-        <div class="qti-layout-col6">
-          <div id="leftbody">
-            <p>
-              <strong>Met open mond</strong>
-            </p>
-            <p>
-              Je ziet een foto van een geopende mond met de huig.
-              <br />
-              De afbeelding is een schematische doorsnede van een hoofd.
-            </p>
-            <p>
-              <img
-                id="Id-IMG_33c91d34-2a87-4916-998f-5f4dcaaf7615"
-                src="../img/mond_met_huig_1.jpg"
-                width="320"
-                height="203"
-                alt=""
-              />
-            </p>
-            <p>
-              <img
-                id="Id-IMG_f37a1954-3ccf-4f44-aad3-d52385130b16"
-                src="../img/biBB10cbt-47.gif"
-                width="320"
-                height="289"
-                alt=""
-              />
-            </p>
-          </div>
-        </div>
-
-        <div class="qti-layout-col6">
-          <div id="itemquestion">
-            <p>
-              <strong>Welke letter geeft in de afbeelding de huig aan?</strong>
-            </p>
-          </div>
-
-          <div id="questionwithinlinecontrol">
-            <p>
-              <qti-text-entry-interaction
-                class="qti-input-width-1"
-                pattern-mask="^.{0,1}$"
-                response-identifier="RESPONSE"
-                expected-length="1"
-              />
-            </p>
-          </div>
-
-          <div id="answer" />
-        </div>
-      </div>
-    </div>
-  </qti-item-body>
-  <qti-response-processing>
-    <qti-response-condition>
-      <qti-response-if>
-        <qti-or>
-          <qti-string-match case-sensitive="true">
-            <qti-variable identifier="RESPONSE" />
-            <qti-base-value base-type="string">P</qti-base-value>
-          </qti-string-match>
-          <qti-string-match case-sensitive="true">
-            <qti-variable identifier="RESPONSE" />
-            <qti-base-value base-type="string">p</qti-base-value>
-          </qti-string-match>
-        </qti-or>
-        <qti-set-outcome-value identifier="SCORE">
-          <qti-sum>
-            <qti-base-value base-type="float">1</qti-base-value>
-            <qti-variable identifier="SCORE" />
-          </qti-sum>
-        </qti-set-outcome-value>
-      </qti-response-if>
-    </qti-response-condition>
-    <qti-response-condition>
-      <qti-response-if>
-        <qti-gte>
-          <qti-variable identifier="SCORE" />
-          <qti-base-value base-type="float">1</qti-base-value>
-        </qti-gte>
-        <qti-set-outcome-value identifier="SCORE">
-          <qti-base-value base-type="float">1</qti-base-value>
-        </qti-set-outcome-value>
-      </qti-response-if>
-      <qti-response-else>
-        <qti-set-outcome-value identifier="SCORE">
-          <qti-base-value base-type="float">0</qti-base-value>
-        </qti-set-outcome-value>
-      </qti-response-else>
-    </qti-response-condition>
-  </qti-response-processing>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd" title="32cjnu" identifier="ITM-32cjnu" time-dependent="false" label="32cjnu" xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" xmlns:dep="http://www.duo.nl/schema/dep_extension">
+	<qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="string">
+		<qti-correct-response interpretation="P#p">
+			<qti-value>
+				P
+			</qti-value>
+		</qti-correct-response>
+	</qti-response-declaration>
+	<qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float">
+		<qti-default-value>
+			<qti-value>
+				0
+			</qti-value>
+		</qti-default-value>
+	</qti-outcome-declaration>
+	<qti-outcome-declaration identifier="MAXSCORE" cardinality="single" base-type="float">
+		<qti-default-value>
+			<qti-value>
+				1
+			</qti-value>
+		</qti-default-value>
+	</qti-outcome-declaration>
+	<qti-item-body class="defaultBody" xml:lang="nl-NL">
+		<div class="content">
+			<div class="qti-layout-row">
+				<div class="qti-layout-col6">
+					<div id="leftbody">
+						<p>
+							<strong>
+								Met open mond
+							</strong>
+						</p>
+						<p>
+							Je ziet een foto van een geopende mond met de huig.
+							<br />
+							De afbeelding is een schematische doorsnede van een hoofd.
+						</p>
+						<p>
+							<img id="Id-IMG_33c91d34-2a87-4916-998f-5f4dcaaf7615" src="../img/mond_met_huig_1.jpg" width="320" height="203" alt="" />
+						</p>
+						<p>
+							<img id="Id-IMG_f37a1954-3ccf-4f44-aad3-d52385130b16" src="../img/biBB10cbt-47.gif" width="320" height="289" alt="" />
+						</p>
+					</div>
+				</div>
+				<div class="qti-layout-col6">
+					<div id="itemquestion">
+						<p>
+							<strong>
+								Welke letter geeft in de afbeelding de huig aan?
+							</strong>
+						</p>
+					</div>
+					<div id="questionwithinlinecontrol">
+						<p>
+							<qti-text-entry-interaction class="qti-input-width-1" pattern-mask="^.{0,1}$" response-identifier="RESPONSE" expected-length="1" />
+						</p>
+					</div>
+					<div id="answer" />
+				</div>
+			</div>
+		</div>
+	</qti-item-body>
+	<qti-response-processing>
+		<qti-response-condition>
+			<qti-response-if>
+				<qti-or>
+					<qti-string-match case-sensitive="true">
+						<qti-variable identifier="RESPONSE" />
+						<qti-base-value base-type="string">
+							P
+						</qti-base-value>
+					</qti-string-match>
+					<qti-string-match case-sensitive="true">
+						<qti-variable identifier="RESPONSE" />
+						<qti-base-value base-type="string">
+							p
+						</qti-base-value>
+					</qti-string-match>
+				</qti-or>
+				<qti-set-outcome-value identifier="SCORE">
+					<qti-sum>
+						<qti-base-value base-type="float">
+							1
+						</qti-base-value>
+						<qti-variable identifier="SCORE" />
+					</qti-sum>
+				</qti-set-outcome-value>
+			</qti-response-if>
+		</qti-response-condition>
+		<qti-response-condition>
+			<qti-response-if>
+				<qti-gte>
+					<qti-variable identifier="SCORE" />
+					<qti-base-value base-type="float">
+						1
+					</qti-base-value>
+				</qti-gte>
+				<qti-set-outcome-value identifier="SCORE">
+					<qti-base-value base-type="float">
+						1
+					</qti-base-value>
+				</qti-set-outcome-value>
+			</qti-response-if>
+			<qti-response-else>
+				<qti-set-outcome-value identifier="SCORE">
+					<qti-base-value base-type="float">
+						0
+					</qti-base-value>
+				</qti-set-outcome-value>
+			</qti-response-else>
+		</qti-response-condition>
+	</qti-response-processing>
 </qti-assessment-item>

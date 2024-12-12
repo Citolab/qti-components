@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-test xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" identifier="L2-Q8-GGM-Interaction-Test" title="L2 / Q8 / GGM Interaction Test" xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd">
+    <qti-test-part identifier="testPart-1" navigation-mode="linear" submission-mode="individual">
+        <qti-assessment-section identifier="assessmentSection-1" required="true" title="Section 1" visible="true" keep-together="true">
+            <!-- shared vocab items -->
+            <qti-assessment-item-ref identifier="graphic-gap-match-item1" href="graphic-gap-match-interaction-1.xml" />
+            <qti-assessment-item-ref identifier="graphic-gap-match-item2" href="graphic-gap-match-interaction-2.xml" />
+            <qti-assessment-item-ref identifier="q8-graphic-gap-match-sv-1" href="graphic-gap-match-sv-1.xml" />
+            <qti-assessment-item-ref identifier="q8-graphic-gap-match-sv-2" href="graphic-gap-match-sv-2.xml" />
+            <qti-assessment-item-ref identifier="q8-graphic-gap-match-sv-3" href="graphic-gap-match-sv-3.xml" />
+            <qti-assessment-item-ref identifier="q8-graphic-gap-match-sv-4" href="graphic-gap-match-sv-4.xml" />
+        </qti-assessment-section>
+    </qti-test-part>
+</qti-assessment-test>

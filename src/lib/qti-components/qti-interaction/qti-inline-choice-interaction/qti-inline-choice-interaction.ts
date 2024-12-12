@@ -11,6 +11,34 @@ interface OptionType {
 
 @customElement('qti-inline-choice-interaction')
 export class QtiInlineChoiceInteraction extends Interaction {
+  static override get styles() {
+    return [
+      css`
+        :host {
+          display: inline-block;
+        }
+        slot {
+          display: flex;
+          flex-direction: column;
+        }
+        [role='menu'] {
+          position: absolute;
+          z-index: 1000;
+        }
+        .anchor {
+          /* anchor-name: --infobox; */
+          width: fit-content;
+        }
+
+        .positionedElement {
+          position: absolute;
+          /* position-anchor: --infobox; */
+          /* top: anchor(bottom); */
+        }
+      `
+    ];
+  }
+
   public static inputWidthClass = [
     '',
     'qti-input-width-2',
@@ -30,16 +58,6 @@ export class QtiInlineChoiceInteraction extends Interaction {
 
   @property({ attribute: 'data-prompt', type: String })
   dataPrompt: string = 'select';
-
-  static override get styles() {
-    return [
-      css`
-        :host {
-          display: inline-block;
-        }
-      `
-    ];
-  }
 
   override render() {
     return html`
@@ -86,14 +104,19 @@ export class QtiInlineChoiceInteraction extends Interaction {
     this.options = this.options.map((option, i) => ({ ...option, selected: i === 0 }));
   }
 
-  public set response(value: string) {
+  public set value(value: string) {
     this.options = this.options.map(option => {
-      value === option.value && (option.selected = true);
+      if (value === option.value) {
+        option.selected = true;
+      }
       return option;
     });
   }
+  get value(): string {
+    return this.options.find(option => option.selected).value;
+  }
 
-  set correctResponse(value: Readonly<string | string[]>) {
+  set correctResponse(value: string | string[]) {
     if (value === '') {
       this.correctOption = '';
       return;

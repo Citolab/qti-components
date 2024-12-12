@@ -55,6 +55,12 @@
   }
 
   .qti-well {
-    @apply bordered inline-block rounded border border-gray-300 bg-gray-100 px-3 py-2 text-gray-600;
+    display: inline-block;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.25rem;
+    border-width: 1px;
+    border-color: #d1d5db;
+    color: #4b5563;
+    background-color: #f3f4f6;
   }
 }

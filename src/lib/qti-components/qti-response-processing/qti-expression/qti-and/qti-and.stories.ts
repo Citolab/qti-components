@@ -1,8 +1,8 @@
-import '@citolab/qti-components/qti-components';
-import { QtiAnd, QtiConditionExpression } from '@citolab/qti-components/qti-components';
+import { QtiAnd } from './qti-and';
 import { expect, within } from '@storybook/test';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
+import { QtiConditionExpression } from '../qti-condition-expression';
 
 type Story = StoryObj; // <Props>;
 
@@ -12,7 +12,7 @@ const meta: Meta = {
 export default meta;
 
 export const AllTrueResultsInTrue: Story = {
-  render: args =>
+  render: () =>
     html` <qti-and>
       <mock-child response="true"></mock-child>
       <mock-child response="true"></mock-child>

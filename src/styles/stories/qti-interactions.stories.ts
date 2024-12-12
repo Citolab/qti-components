@@ -1,3 +1,5 @@
+import { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
+import { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import { Default as Associate } from '../../lib/qti-components/qti-interaction/qti-associate-interaction/qti-associate-interaction.stories';
 import { Default as Choice } from '../../lib/qti-components/qti-interaction/qti-choice-interaction/qti-choice-interaction.stories';
@@ -21,13 +23,15 @@ import { Default as TextEntry } from '../../lib/qti-components/qti-interaction/q
 // import { Default as EndAttempt } from '../lib/qti-components/qti-interaction/qti-end-attempt-interaction/qti-end-attempt-interaction.stories';
 // import { Default as Custom } from '../lib/qti-components/qti-interaction/qti-custom-interaction/qti-custom-interaction.stories';
 
-export { Choice };
+// export { Choice };
 
-export default {
-  title: 'styles/themes'
-};
+type Story = StoryObj;
+
+const meta: Meta<QtiAssessmentItem> = {};
+export default meta;
+
 export const Interactions = args => html`
-  <h2>gap-match-interaction</h2>
+  <h2>qti-gap-match-interaction</h2>
   ${GapMatch.render({})}
   <h2>qti-match-interaction</h2>
   ${Match.render({})}
@@ -38,7 +42,7 @@ export const Interactions = args => html`
   <h2>qti-graphic-gap-match-interaction</h2>
   ${GraphicGapMatch.render({})}
 
-  <h2>choice-interaction</h2>
+  <h2>qti-choice-interaction</h2>
   <qti-layout-row>
     <qti-layout-col6>${Choice.render({})}</qti-layout-col6>
     <qti-layout-col6> ${Choice.render({ disabled: true, 'max-choices': 2 })}</qti-layout-col6>
@@ -48,9 +52,9 @@ export const Interactions = args => html`
     classes: ['qti-input-control-hidden', 'qti-choices-stacking-2']
   })}
 
-  <h2>text-entry-interaction</h2>
+  <h2>qti-text-entry-interaction</h2>
   ${TextEntry.render({})}
-  <h2>extended-text-interaction</h2>
+  <h2>qti-extended-text-interaction</h2>
   ${ExtendedText.render({})}
 
   <h2>qti-hotspot-interaction</h2>

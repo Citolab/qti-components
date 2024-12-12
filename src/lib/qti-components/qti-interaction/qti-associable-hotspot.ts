@@ -3,25 +3,27 @@ import { customElement } from 'lit/decorators.js';
 
 @customElement('qti-associable-hotspot')
 export class QtiAssociableHotspot extends LitElement {
-  override connectedCallback() {
-    super.connectedCallback();
-
-    this.dispatchEvent(
-      new CustomEvent('qti-register-hotspot', {
-        bubbles: true,
-        cancelable: false,
-        composed: true
-      })
-    );
-  }
-  static override styles = css`
+  static styles = css`
     :host {
+      display: flex;
+      user-select: none;
       position: absolute;
     }
   `;
 
+  override connectedCallback() {
+    super.connectedCallback();
+    this.dispatchEvent(
+      new CustomEvent('qti-register-hotspot', {
+        bubbles: true,
+        composed: true,
+        cancelable: false
+      })
+    );
+  }
+
   override render() {
-    return html` <slot name="qti-gap-img"></slot> `;
+    return html` <slot name="drags"></slot> `;
   }
 }
 

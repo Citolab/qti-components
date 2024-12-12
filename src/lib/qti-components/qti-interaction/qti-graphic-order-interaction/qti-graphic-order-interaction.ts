@@ -1,13 +1,18 @@
 import { css, html } from 'lit';
-import { Choices } from '../internal/choices/choices';
+import { Choice, ChoicesMixin } from '../internal/choices/choices.mixin';
 import { QtiHotspotChoice } from '../qti-hotspot-choice';
 
 import { customElement } from 'lit/decorators.js';
 import { positionHotspots } from '../internal/hotspots/hotspot';
+import { Interaction } from '../internal/interaction/interaction';
+
+type HotspotChoice = Choice & { order: number };
 
 @customElement('qti-graphic-order-interaction')
-export class QtiGraphicOrderInteraction extends Choices {
+export class QtiGraphicOrderInteraction extends ChoicesMixin(Interaction, 'qti-hotspot-choice') {
   choiceOrdering: boolean;
+
+  protected _choiceElements: Choice[] = [];
 
   // do not select ( highlight blue, the image)
   // target the main slot make it relative and fit with the conten
@@ -32,27 +37,28 @@ export class QtiGraphicOrderInteraction extends Choices {
       <!-- slot for the prompt -->
       <slot></slot>
       <!-- slot for the image and hotspots -->
+      <div role="alert" id="validationMessage"></div>
     `;
   }
 
   private setHotspotOrder(e: CustomEvent<{ identifier: string; checked: boolean }>): void {
     const { identifier } = e.detail;
 
-    const hotspot = this._choiceElements.find(el => el.getAttribute('identifier') === identifier) as QtiHotspotChoice;
+    const hotspot = this._choiceElements.find(el => el.getAttribute('identifier') === identifier) as HotspotChoice;
 
     const maxSelection = this._choiceElements.length;
     if (!this.choiceOrdering) {
       this.choiceOrdering = true;
       if (hotspot.order == null) {
-        if ((this._choiceElements as QtiHotspotChoice[]).filter(i => i.order > 0).length >= maxSelection) {
+        if ((this._choiceElements as HotspotChoice[]).filter(i => i.order > 0).length >= maxSelection) {
           this.choiceOrdering = false;
           return; // don't do anything if user already selected 5 images.
         }
-        hotspot.order = (this._choiceElements as QtiHotspotChoice[]).filter(i => !!i.order).length + 1;
+        hotspot.order = (this._choiceElements as HotspotChoice[]).filter(i => !!i.order).length + 1;
         this.choiceOrdering = false;
         return;
       } else {
-        (this._choiceElements as QtiHotspotChoice[]).forEach(hotspot => {
+        (this._choiceElements as HotspotChoice[]).forEach(hotspot => {
           if (hotspot.order > hotspot.order) {
             hotspot.order--;
           }
@@ -76,13 +82,13 @@ export class QtiGraphicOrderInteraction extends Choices {
 
   override connectedCallback(): void {
     super.connectedCallback();
-    this.addEventListener('qti-choice-element-selected', this.setHotspotOrder);
-    this.addEventListener('qti-register-choice', this.positionHotspotOnRegister);
+    this.addEventListener('activate-qti-hotspot-choice', this.setHotspotOrder);
+    this.addEventListener('register-qti-hotspot-choice', this.positionHotspotOnRegister);
   }
   override disconnectedCallback() {
     super.disconnectedCallback();
-    this.removeEventListener('qti-choice-element-selected', this.setHotspotOrder);
-    this.removeEventListener('qti-register-choice', this.positionHotspotOnRegister);
+    this.removeEventListener('activate-qti-hotspot-choice', this.setHotspotOrder);
+    this.removeEventListener('register-qti-hotspot-choice', this.positionHotspotOnRegister);
   }
 }
 

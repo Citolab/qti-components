@@ -1,12 +1,9 @@
-import {
-  itemContext,
-  type Calculate,
-  type ItemContext,
-  type ResponseVariable
-} from '@citolab/qti-components/qti-components';
 import { consume } from '@lit/context';
 import { LitElement, html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
+import { Calculate } from '../internal/expression-result';
+import { ResponseVariable } from '../internal/variables';
+import { ItemContext, itemContext } from '../qti-assessment-item/qti-assessment-item.context';
 
 /**
  * https://www.imsglobal.org/spec/qti/v3p0/impl#h.fi29q8dubjgw
@@ -21,6 +18,7 @@ import { customElement, state } from 'lit/decorators.js';
  */
 @customElement('qti-custom-operator')
 export class QtiCustomOperator extends LitElement implements Calculate {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   private operatorFunction: Function;
 
   @consume({ context: itemContext, subscribe: true })
@@ -65,8 +63,21 @@ export class QtiCustomOperator extends LitElement implements Calculate {
             }
           })
         );
+      },
+      updateResponseVariable: (responseIdentifier: string, response: string | string[]) => {
+        this.dispatchEvent(
+          new CustomEvent<{ responseIdentifier: string; response: string | string[] }>('qti-interaction-response', {
+            bubbles: true,
+            composed: true,
+            detail: {
+              responseIdentifier,
+              response
+            }
+          })
+        );
       }
     };
+
     return this.operatorFunction(this._context, fn, item);
   }
 }

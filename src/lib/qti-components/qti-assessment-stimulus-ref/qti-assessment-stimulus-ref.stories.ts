@@ -4,8 +4,8 @@ import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import '../qti-assessment-item/qti-assessment-item';
 import '../qti-assessment-stimulus-ref/qti-assessment-stimulus-ref';
-import { QtiAssessmentStimulusRef } from '../qti-assessment-stimulus-ref/qti-assessment-stimulus-ref';
-import '../qti-interaction/internal/choice/qti-choice';
+import type { QtiAssessmentStimulusRef } from '../qti-assessment-stimulus-ref/qti-assessment-stimulus-ref';
+import '../qti-interaction/internal/active-element/active-element.mixin';
 import '../qti-interaction/qti-choice-interaction/qti-choice-interaction';
 import '../qti-item-body/qti-item-body';
 
@@ -30,11 +30,7 @@ export const StimulusWithRef: Story = {
             <div class="qti-shared-stimulus" data-stimulus-idref="Stimulus1"></div>
           </div>
           <div class="qti-layout-col6">
-            <qti-choice-interaction
-              class="qti-orientation-horizontal qti-input-control-hidden"
-              max-choices="1"
-              shuffle="false"
-            >
+            <qti-choice-interaction class="qti-orientation-horizontal qti-input-control-hidden" max-choices="1">
               <qti-simple-choice identifier="A"> Boer </qti-simple-choice>
               <qti-simple-choice identifier="B"> Doek </qti-simple-choice>
               <qti-simple-choice identifier="C"> Voet </qti-simple-choice>
@@ -53,7 +49,7 @@ export const StimulusDeliveryPlatform: Story = {
       @qti-assessment-stimulus-ref-connected=${async (e: Event) => {
         e.preventDefault(); // this prevents the default behaviour of the item to set the stimulus content
         const stimulusRef = e.target as QtiAssessmentStimulusRef;
-        stimulusRef.loadAndAppendStimulus(placeholderRef.value);
+        stimulusRef.updateStimulusRef(placeholderRef.value);
       }}
     >
       <div class="qti-shared-stimulus" ${ref(placeholderRef)}></div>
@@ -65,11 +61,7 @@ export const StimulusDeliveryPlatform: Story = {
         <div class="qti-layout-row">
           <div class="qti-layout-col6"></div>
           <div class="qti-layout-col6">
-            <qti-choice-interaction
-              class="qti-orientation-horizontal qti-input-control-hidden"
-              max-choices="1"
-              shuffle="false"
-            >
+            <qti-choice-interaction class="qti-orientation-horizontal qti-input-control-hidden" max-choices="1">
               <qti-simple-choice identifier="A"> Boer </qti-simple-choice>
               <qti-simple-choice identifier="B"> Doek </qti-simple-choice>
               <qti-simple-choice identifier="C"> Voet </qti-simple-choice>

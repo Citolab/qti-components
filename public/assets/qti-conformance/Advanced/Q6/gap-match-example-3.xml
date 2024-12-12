@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-item
+  xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+  identifier="gap-match-example-3" title="Gap Match Example 3" adaptive="false"
+  time-dependent="false">
+  <qti-response-declaration base-type="directedPair" cardinality="multiple" identifier="RESPONSE">
+    <qti-correct-response>
+      <qti-value>s1 t1</qti-value>
+      <qti-value>s5 t2</qti-value>
+      <qti-value>s2 t3</qti-value>
+      <qti-value>s3 t4</qti-value>
+    </qti-correct-response>
+    <qti-mapping default-value="0" lower-bound="0.00" upper-bound="4">
+      <qti-map-entry map-key="s1 t1" mapped-value="1" />
+      <qti-map-entry map-key="s5 t2" mapped-value="1" />
+      <qti-map-entry map-key="s2 t3" mapped-value="1" />
+      <qti-map-entry map-key="s3 t4" mapped-value="1" />
+    </qti-mapping>
+  </qti-response-declaration>
+  <qti-outcome-declaration base-type="float" cardinality="single" identifier="SCORE">
+    <qti-default-value>
+      <qti-value>0</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-item-body>
+    <div>
+      <p>Complete the following sentences using the words or phrases provided. Not all words or
+      phrases will be used and some words or phrases may be used more than once.</p>
+    </div>
+    <qti-gap-match-interaction max-associations="4" response-identifier="RESPONSE">
+      <qti-gap-text identifier="s1" match-max="0">Earth</qti-gap-text>
+      <qti-gap-text identifier="s2" match-max="0">Mars</qti-gap-text>
+      <qti-gap-text identifier="s3" match-max="0">Mercury</qti-gap-text>
+      <qti-gap-text identifier="s4" match-max="0">the Moon</qti-gap-text>
+      <qti-gap-text identifier="s5" match-max="0">the Sun</qti-gap-text>
+      <div>
+        <p>One full revolution of <qti-gap identifier="t1" /> around <qti-gap identifier="t2" />
+        takes 365.25 days. Because <qti-gap identifier="t3" /> is farther out from the center of the
+        solar system, the planet takes almost 687 days to complete its orbit, far longer than the
+        orbit of <qti-gap class="ets-target" identifier="t4" /> , which is 88 days.</p>
+      </div>
+    </qti-gap-match-interaction>
+    <div>
+      <p>Select a choice and move it to a blank.</p>
+    </div>
+  </qti-item-body>
+  <qti-response-processing>
+    <qti-response-condition>
+      <qti-response-if>
+        <qti-is-null>
+          <qti-variable identifier="RESPONSE" />
+        </qti-is-null>
+        <qti-set-outcome-value identifier="SCORE">
+          <qti-base-value base-type="float">0.00</qti-base-value>
+        </qti-set-outcome-value>
+      </qti-response-if>
+      <qti-response-else-if>
+        <qti-gte>
+          <qti-map-response identifier="RESPONSE" />
+          <qti-base-value base-type="float">4</qti-base-value>
+        </qti-gte>
+        <qti-set-outcome-value identifier="SCORE">
+          <qti-subtract>
+            <qti-map-response identifier="RESPONSE" />
+            <qti-base-value base-type="float">3</qti-base-value>
+          </qti-subtract>
+        </qti-set-outcome-value>
+      </qti-response-else-if>
+      <qti-response-else>
+        <qti-set-outcome-value identifier="SCORE">
+          <qti-base-value base-type="float">0.00</qti-base-value>
+        </qti-set-outcome-value>
+      </qti-response-else>
+    </qti-response-condition>
+  </qti-response-processing>
+</qti-assessment-item>

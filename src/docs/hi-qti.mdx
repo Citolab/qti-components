@@ -1,0 +1,75 @@
+import { Canvas, Meta, Story, Source } from '@storybook/blocks';
+import * as Stories from './hi-qti.stories';
+
+<Meta title="👋 Hi QTI" />
+
+# 👋 HI QTI
+
+A set of test interactions to be used in the educational field.
+
+- use the interactions in standard form elements
+- use qti-item to render test questions with advanced scoring
+- use qti-test to render a complete qti-test including navigation
+
+{/* <Story of={CheckboxStories.Default} autoplay /> */}
+
+<Canvas of={Stories.Default} />
+
+## Source code
+
+[![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Citolab/qti-components/)
+
+[![License](https://img.shields.io/badge/license-GPL-blue.svg)](https://opensource.org/license/gpl-2-0/)
+
+## Installation
+
+[![npm version](https://badge.fury.io/js/%40citolab%2Fqti-components.svg)](https://badge.fury.io/js/%40citolab%2Fqti-components)
+
+## CDN versions
+
+## Development
+
+Installation
+
+```sh
+npm install @citolab/qti-components@latest
+```
+
+Import the webcomponents
+
+```js
+import '@citolab/qti-components/qti-components';
+```
+
+## Quick Start
+
+Add the following code to your page.
+
+```html
+<script type="module" src="https://cdn.jsdelivr.net/npm/@citolab/qti-components@latest/dist/index.js"></script>
+```
+
+Now you you can navigate your qti assesment test
+
+Use the transformers, from QTI XML to HTML5
+
+```js
+import { qtiTransformItem } from '@citolab/qti-components/qti-transformers';
+```
+
+```js
+const itemXML = '<qti-assessment-item>...</qti-assessment-item>';
+const itemHTML = await qtiTransformItem().parse(itemXML).path('./relative-path-to-item-assets').html();
+```
+
+## Contact
+
+Here you can find contact information about the team behind QTI Components.
+
+<a href="https://cito.nl/onderzoek-innovatie/over-citolab/onze-teams/team-prototypes/">CitoLab</a>
+
+Or email us at:
+
+<a href="mailto:getinspiredbycitolab@gmail.com">
+  ![Gmail](https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white)
+</a>

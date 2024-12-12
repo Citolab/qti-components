@@ -14,7 +14,7 @@ import type { CSSResultGroup } from 'lit';
  *
  */
 @customElement('qti-item-body')
-export default class QtiItemBody extends LitElement {
+export class QtiItemBody extends LitElement {
   static styles: CSSResultGroup = styles;
 
   override render() {

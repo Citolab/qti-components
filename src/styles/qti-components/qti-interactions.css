@@ -2,16 +2,31 @@
   qti-choice-interaction {
     &.qti-input-control-hidden {
       & qti-simple-choice {
-        @apply button hover:hov focus:foc;
-        &::part(ch) {
-          @apply !hidden;
+        @apply button;
+
+        &:hover {
+          @apply hov;
         }
+
+        &:focus {
+          @apply foc;
+        }
+
+        &::part(ch) {
+          display: none;
+        }
+
+        &:state(--checked),
         &[aria-checked='true'] {
           @apply act;
         }
+
+        &:state(readonly),
         &[aria-readonly='true'] {
           @apply rdo;
         }
+
+        &:state(disabled),
         &[aria-disabled='true'] {
           @apply dis;
         }
@@ -20,116 +35,386 @@
 
     &:not(.qti-input-control-hidden) {
       & qti-simple-choice {
-        @apply check hover:hov focus:foc;
+        @apply check;
+
+        &:not([aria-disabled='true'], [aria-readonly='true'], :state(--checked)):hover {
+          @apply hov;
+        }
+
+        &:focus {
+          @apply foc;
+        }
+
+        &:state(--checked),
         &[aria-checked='true'] {
           @apply act;
         }
+
+        &:state(readonly),
         &[aria-readonly='true'] {
           @apply rdo;
         }
+
+        &:state(disabled),
         &[aria-disabled='true'] {
           @apply dis;
         }
 
         &::part(cha) {
-          /* let the checkmark or radio circle already take up space, else when checking everyhing collapses */
-          @apply h-2/3 w-2/3;
+          @apply check-size;
         }
-        &[role='radio']::part(ch) {
+
+        &:state(radio)::part(ch) {
           @apply check-radio;
         }
-        &[role='radio'][aria-checked='true']::part(cha) {
+
+        &:state(radio):state(--checked)::part(cha) {
           @apply check-radio-checked;
         }
-        &[role='checkbox']::part(ch) {
+
+        &:state(checkbox)::part(ch) {
           @apply check-checkbox;
         }
-        &[role='checkbox'][aria-checked='true']::part(cha) {
+
+        &:state(checkbox):state(--checked)::part(cha) {
           @apply check-checkbox-checked;
         }
       }
     }
 
     & qti-simple-choice {
+      width: fit-content;
+      cursor: pointer;
+
+      &:state(correct-response),
       &[data-correct-response='true'] {
         &::after {
           content: '\02714';
-          @apply text-green-600;
+          color: #16a34a; /* text-green-600 */
         }
       }
     }
 
     & qti-simple-choice > p {
-      @apply m-0 p-0;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+  }
+
+  qti-graphic-gap-match-interaction:state(--dragzone-active)::part(drags) {
+    @apply act;
+  }
+
+  qti-graphic-gap-match-interaction:state(--dragzone-enabled)::part(drags) {
+    @apply dropping;
+  }
+
+  /* Active state */
+  qti-graphic-gap-match-interaction.qti-selections-light:state(--dragzone-active)::part(drags) {
+    background-color: var(--qti-light-bg-active);
+    border-color: var(--qti-light-border-active);
+  }
+
+  qti-graphic-gap-match-interaction.qti-selections-dark:state(--dragzone-active)::part(drags) {
+    background-color: var(--qti-dark-bg-active);
+    border-color: var(--qti-dark-border-active);
+  }
+
+  /* Enabled state */
+  qti-graphic-gap-match-interaction.qti-selections-light:state(--dragzone-enabled)::part(drags) {
+    background-color: var(--qti-light-bg-active);
+  }
+
+  qti-graphic-gap-match-interaction.qti-selections-dark:state(--dragzone-enabled)::part(drags) {
+    background-color: var(--qti-dark-bg-active);
+  }
+
+  qti-graphic-gap-match-interaction {
+    position: relative;
+
+    & qti-gap-img,
+    qti-gap-text {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: grab;
+    }
+
+    & qti-associable-hotspot {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 2px solid transparent;
+
+      &[enabled] {
+        @apply dropping;
+
+        /* Light theme override */
+        .qti-selections-light & {
+          background-color: var(--qti-light-bg-active);
+        }
+
+        /* Dark theme override */
+        .qti-selections-dark & {
+          background-color: var(--qti-dark-bg-active);
+        }
+      }
+
+      &[active] {
+        @apply act;
+
+        /* Light theme override */
+        .qti-selections-light & {
+          background-color: var(--qti-light-bg-active);
+          border-color: var(--qti-light-border-active);
+        }
+
+        /* Dark theme override */
+        .qti-selections-dark & {
+          background-color: var(--qti-dark-bg-active);
+          border-color: var(--qti-dark-border-active);
+        }
+      }
+
+      &[disabled] {
+        @apply dis;
+
+        &:not(:empty) {
+          cursor: default !important;
+        }
+      }
+
+      &:empty::after {
+        padding: var(--qti-padding-md) var(--qti-padding-lg); /* Padding shorthand */
+        content: '\0000a0'; /* when empty, put a space in it */
+      }
+
+      &:not(:empty) {
+        padding: 0;
+        width: auto;
+      }
+
+      &:not(:empty) > * {
+        flex: 1;
+        transform: rotate(0); /* rotate-0 */
+        box-shadow: 0 0 0 1px #e5e7eb; /* ring-gray-200 */
+      }
+    }
+
+    & img {
+      margin: 0;
+      padding: 0;
     }
   }
 
   qti-text-entry-interaction {
     &::part(input) {
-      @apply text hover:hov focus:foc;
+      @apply text;
+    }
+
+    &:hover {
+      @apply hov;
+    }
+
+    &:focus-within {
+      &::part(input) {
+        @apply foc act-bor;
+      }
     }
   }
 
   qti-extended-text-interaction {
     &::part(textarea) {
-      @apply text hover:hov focus:foc;
+      @apply text;
     }
+
+    &:hover {
+      @apply hov;
+    }
+
+    &:focus-within {
+      &::part(textarea) {
+        @apply foc act-bor;
+      }
+    }
+  }
+
+  qti-gap-match-interaction:state(--dragzone-active)::part(drags) {
+    @apply act;
+  }
+
+  qti-gap-match-interaction:state(--dragzone-enabled)::part(drags) {
+    @apply dropping;
   }
 
   qti-gap-match-interaction {
     & qti-gap-text {
-      @apply drag hover:hov focus:foc;
+      @apply drag;
+
+      &[dragging] {
+        @apply dragging;
+      }
+
+      &:hover {
+        @apply hov;
+      }
+
+      &:focus {
+        @apply foc;
+      }
     }
+
     & qti-gap {
-      @apply drop hover:hov focus:foc p-lg inline-flex;
-      @apply w-32; /* PK: should be set in the javascript, default 100px, or listening to data-width attribute according to the spec */
-      &:empty:after {
+      @apply drop;
+
+      &[enabled] {
+        @apply dropping;
+
+        /* Light theme override */
+        .qti-selections-light & {
+          border-color: var(--qti-light-border-active);
+        }
+
+        /* Dark theme override */
+        .qti-selections-dark & {
+          border-color: var(--qti-dark-border-active);
+        }
+      }
+
+      &[disabled] {
+        @apply dis;
+
+        &:not(:empty) {
+          cursor: default !important;
+        }
+      }
+
+      &[active] {
+        @apply act;
+
+        /* Light theme override */
+        .qti-selections-light & {
+          background-color: var(--qti-light-bg-active);
+          border-color: var(--qti-light-border-active);
+        }
+
+        /* Dark theme override */
+        .qti-selections-dark & {
+          background-color: var(--qti-dark-bg-active);
+          border-color: var(--qti-dark-border-active);
+        }
+      }
+
+      display: inline-flex;
+      align-items: center;
+
+      &:empty::after {
+        padding: var(--qti-padding-md) var(--qti-padding-lg); /* Padding shorthand */
         content: '\0000a0'; /* when empty, put a space in it */
       }
+
       &:not(:empty) {
-        @apply inline-flex w-auto p-0;
+        display: inline-flex;
+        padding: 0;
+        width: auto;
       }
+
       &:not(:empty) > * {
-        @apply flex-1 rotate-0 ring-gray-200;
+        flex: 1;
+        transform: rotate(0); /* rotate-0 */
+        box-shadow: 0 0 0 1px #e5e7eb; /* ring-gray-200 */
       }
     }
   }
 
   qti-hotspot-interaction {
     & qti-hotspot-choice {
-      @apply hover:bg-blue-100 hover:bg-opacity-30;
       &[shape='circle'] {
-        @apply spot hover:hov-ring focus:foc  rounded-full;
-        &[aria-checked='true'] {
-          @apply act;
+        @apply spot;
+
+        &:hover {
+          @apply hov;
         }
+
+        &:focus {
+          @apply foc;
+        }
+
+        &:state(--checked),
+        &[aria-checked='true'] {
+          @apply act-bor;
+        }
+
+        &:state(--readonly),
         &[aria-readonly='true'] {
           @apply rdo;
         }
+
+        &:state(--disabled),
         &[aria-disabled='true'] {
           @apply dis;
         }
       }
+
       &[shape='rect'] {
-        @apply spot hover:hov-ring focus:foc;
-        &[aria-checked='true'] {
-          @apply act;
+        @apply spot;
+
+        /* &:hover {
+          @apply hov;
+        } */
+
+        &:focus {
+          @apply foc;
         }
+
+        &:state(--checked),
+        &[aria-checked='true'] {
+          @apply act-bor;
+        }
+
         &[aria-readonly='true'] {
           @apply rdo;
         }
+
         &[aria-disabled='true'] {
           @apply dis;
         }
       }
+
       &[shape='poly'] {
-        @apply hover:hov focus:foc;
-        &[aria-checked='true'] {
-          @apply act;
+        &:hover::after {
+          content: '';
+          width: 100%;
+          height: 100%;
+          background: repeating-linear-gradient(
+            45deg,
+            var(--qti-border-active),
+            var(--qti-border-active) 5px,
+            transparent 5px,
+            transparent 10px
+          );
+          display: block;
         }
+
+        &:state(--checked)::after,
+        &[aria-checked='true']::after {
+          content: '';
+          width: 100%;
+          height: 100%;
+          background: repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 5px,
+            var(--qti-border-active) 5px,
+            var(--qti-border-active) 10px
+          );
+          display: block;
+        }
+
         &[aria-readonly='true'] {
           @apply rdo;
         }
+
         &[aria-disabled='true'] {
           @apply dis;
         }
@@ -138,59 +423,107 @@
   }
 
   qti-hottext-interaction {
+    /* &:not(.qti-input-control-hidden),
+    &:not(.qti-unselected-hidden) { */
+    qti-hottext {
+      display: inline-flex;
+      align-items: center;
+
+      @apply check;
+
+      &:hover {
+        @apply hov;
+      }
+
+      &:focus {
+        @apply foc;
+      }
+
+      &::part(cha) {
+        @apply check-size;
+      }
+
+      &:state(radio)::part(ch) {
+        @apply check-radio;
+      }
+
+      &:state(radio):state(--checked)::part(cha) {
+        @apply check-radio-checked;
+      }
+
+      &:state(checkbox)::part(ch) {
+        @apply check-checkbox;
+      }
+
+      &:state(checkbox):state(--checked)::part(cha) {
+        @apply check-checkbox-checked;
+      }
+    }
+
+    /* } */
+
     &.qti-input-control-hidden {
       qti-hottext {
-        @apply button hover:hov  focus:foc inline-flex;
-        &::part(ch) {
-          @apply !hidden;
+        /* --qti-padding-md: 0.1rem;
+        --qti-padding-lg: 0.2rem;
+        --qti-border-radius-md: 0.3rem;
+        --qti-border-thickness: 1px;
+        --qti-font-weight-semibold: 400; */
+        @apply button;
+
+        &:hover {
+          @apply hov;
         }
-        &[aria-checked='true'] {
+
+        &:focus {
+          @apply foc;
+        }
+
+        /* @layer qti-variants { */
+        &::part(ch) {
+          display: none;
+        }
+
+        &:state(--checked) {
           @apply act;
         }
+
         &[aria-readonly='true'] {
           @apply rdo;
         }
+
         &[aria-disabled='true'] {
           @apply dis;
         }
       }
-    }
 
-    &:not(.qti-input-control-hidden),
-    &:not(.qti-unselected-hidden) {
-      qti-hottext {
-        @apply check hover:hov focus:foc inline-flex;
-        &::part(cha) {
-          /* let the checkmark or radio circle already take up space, else when checking everyhing collapses */
-          @apply h-2/3 w-2/3;
-        }
-        &[role='radio']::part(ch) {
-          @apply check-radio;
-        }
-        &[role='radio'][aria-checked='true']::part(cha) {
-          @apply check-radio-checked;
-        }
-        &[role='checkbox']::part(ch) {
-          @apply check-checkbox;
-        }
-        &[role='checkbox'][aria-checked='true']::part(cha) {
-          @apply check-checkbox-checked;
-        }
-      }
+      /* } */
     }
 
     &.qti-unselected-hidden {
       qti-hottext {
-        @apply bordered borderinvisible cursor-pointer hover:bordered  focus:foc inline-flex;
+        &:hover {
+          @apply hov;
+        }
+
+        &:focus {
+          @apply foc;
+        }
+
+        cursor: pointer;
+
         &::part(ch) {
-          @apply !hidden;
+          display: none;
         }
-        &[aria-checked='true'] {
-          @apply bg-blue-200;
+
+        &:state(--checked) {
+          background-color: var(--qti-bg-active);
         }
+
         &[aria-readonly='true'] {
           @apply rdo;
         }
+
         &[aria-disabled='true'] {
           @apply dis;
         }
@@ -200,30 +533,126 @@
 
   qti-inline-choice-interaction {
     &::part(select) {
-      @apply select hover:hov focus:foc; /* aria-checked:act aria-readonly:rdo aria-disabled:dis; */
+      @apply select;
+
+      &:hover {
+        @apply hov;
+      }
+
+      &:focus {
+        @apply foc;
+      }
     }
   }
 
   qti-match-interaction:not(.qti-match-tabular) {
+    /* The draggables */
     & qti-simple-match-set:first-of-type {
-      @apply flex flex-wrap gap-2 pb-4;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start; /* Prevents children from stretching */
+      gap: var(--qti-gap-size);
 
       & qti-simple-associable-choice {
-        @apply drag hover:hov focus:foc;
+        @apply drag;
+
+        &[dragging] {
+          @apply dragging;
+        }
+
+        &:hover {
+          @apply hov;
+        }
+
+        &:focus {
+          @apply foc;
+        }
       }
     }
 
+    /* The droppables */
     & qti-simple-match-set:last-of-type {
-      @apply grid auto-cols-fr grid-flow-col gap-2;
+      display: grid;
+      grid-auto-columns: 1fr; /* auto-cols-fr */
+      grid-auto-flow: column; /* grid-flow-col */
+      gap: var(--qti-gap-size); /* gap-2 */
+      width: 100%; /* w-full */
 
       & qti-simple-associable-choice {
-        @apply drop hover:hov focus:foc;
-        @apply flex h-32 flex-col;
+        display: flex;
+        flex-direction: column;
       }
 
-      & qti-simple-associable-choice > qti-simple-associable-choice {
-        @apply drag hover:hov focus:foc;
-        flex-basis: fit-content;
+      & > qti-simple-associable-choice {
+        /* a droppable qti-simple-associable-choice */
+        box-sizing: border-box;
+        display: grid;
+        grid-row: 2 / 4;
+        grid-template-rows: subgrid;
+
+        & img {
+          max-width: 100%;
+          height: auto;
+        }
+
+        &[enabled] {
+          &::part(dropslot) {
+            @apply dropping;
+          }
+        }
+
+        &[disabled] {
+          &::part(dropslot) {
+            @apply dis;
+          }
+        }
+
+        &[active] {
+          &::part(dropslot) {
+            @apply act;
+          }
+        }
+
+        &::part(dropslot) {
+          @apply drop;
+
+          &[dragging] {
+            @apply dragging;
+          }
+
+          &:focus {
+            @apply foc;
+          }
+
+          min-height: 6rem;
+          gap: var(--qti-gap-size);
+          box-sizing: border-box;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        & > *:not(qti-simple-associable-choice) {
+          pointer-events: none;
+        }
+
+        & > qti-simple-associable-choice {
+          @apply drag;
+
+          &::part(dropslot) {
+            display: none;
+          }
+
+          &:hover {
+            @apply hov;
+          }
+
+          &:focus {
+            @apply foc;
+          }
+
+          flex-basis: fit-content;
+        }
       }
     }
   }
@@ -231,62 +660,150 @@
   qti-order-interaction {
     &::part(qti-simple-choice),
     & qti-simple-choice {
-      @apply drag hover:hov focus:foc;
+      @apply drag;
+
+      &[dragging] {
+        @apply dragging;
+      }
+
+      &:hover {
+        @apply hov;
+      }
+
+      &:focus {
+        @apply foc;
+      }
     }
+
     &::part(qti-simple-choice) {
-      @apply flex w-full items-center overflow-hidden text-ellipsis;
+      display: flex;
+      overflow: hidden;
+      align-items: center;
+      width: 100%;
+      text-overflow: ellipsis;
     }
+
     &::part(drops) {
-      @apply gap-2;
+      gap: 0.5rem; /* gap-2 */
     }
+
     &::part(drags) {
-      @apply gap-2;
+      gap: 0.5rem; /* gap-2 */
     }
+
     &::part(drop-list) {
-      @apply drop hover:hov focus:foc flex min-h-[4rem];
+      @apply drop;
+
+      &[enabled] {
+        @apply dropping;
+
+        /* Light theme override */
+        .qti-selections-light & {
+          border-color: var(--qti-light-border-active);
+        }
+
+        /* Dark theme override */
+        .qti-selections-dark & {
+          border-color: var(--qti-dark-border-active);
+        }
+      }
+
+      &:hover {
+        @apply hov;
+      }
+
+      &:focus {
+        @apply foc;
+      }
+
+      display: flex;
+      min-height: 4rem;
     }
+
     &::part(active) {
       @apply act;
     }
   }
 
   qti-associate-interaction {
-    &::part(qti-simple-associable-choice),
-    & qti-simple-associable-choice {
-      @apply drag hover:hov focus:foc flex items-center overflow-hidden text-ellipsis;
+    & qti-simple-associable-choice, /* drags when in lightdom */
+    &::part(qti-simple-associable-choice) /* drags when in shadowdom */ {
+      @apply drag;
+
+      &:hover {
+        @apply hov;
+      }
+
+      &:focus {
+        @apply foc;
+      }
+
+      &[dragging] {
+        @apply dragging;
+      }
     }
-    &::part(associables-container) {
-      @apply my-2 flex w-full justify-between;
-      background: linear-gradient(
-        180deg,
-        rgb(0 0 0 / 0%) calc(50% - 1px),
-        #000000 calc(50%),
-        rgb(0 0 0 / 0%) calc(50% + 1px)
-      );
+
+    /* display: flex;
+    overflow: hidden;
+    align-items: center; */
+
+    /* &::part(drop-container) {
+      display: flex;
+      flex-direction: column;
+      gap: var(--qti-gap-size);
+    } */
+
+    &::part(drop-list) {
+      @apply drop;
+
+      display: grid;
+      height: 3rem;
+      min-width: 10rem;
     }
-    &::part(active) {
+
+    &::part(drop-list):focus {
+      @apply foc;
+    }
+
+    &::part(drop-list)[dragging] {
       @apply act;
     }
-    &::part(drop-list) {
-      @apply drop grid h-[3rem] w-1/3;
-    }
+
+    /* &::part(drop-list) {
+      @apply act;
+    } */
   }
 
   qti-graphic-order-interaction {
     & qti-hotspot-choice {
-      @apply spot hover:hov focus:foc;
+      @apply spot;
+
+      &:hover {
+        @apply hov;
+      }
+
+      &:focus {
+        @apply foc;
+      }
+
+      &:state(--checked),
       &[aria-checked='true'] {
         @apply act;
       }
+
       &[aria-readonly='true'] {
         @apply rdo;
       }
+
       &[aria-disabled='true'] {
         @apply dis;
       }
+
       &[aria-ordervalue] {
-        @apply order flex items-center justify-center;
+        display: grid;
+        place-content: center;
       }
+
       &[aria-ordervalue]::after {
         content: attr(aria-ordervalue) !important;
       }
@@ -294,34 +811,53 @@
   }
 
   qti-graphic-associate-interaction {
-    @apply relative block;
+    position: relative;
+    display: block;
 
     & qti-associable-hotspot {
       &[shape='circle'] {
-        /* border-radius: 100%;
-        background-color: green; */
-        @apply spot hover:hov focus:foc;
+        @apply spot;
+
+        &:hover {
+          @apply hov;
+        }
+
+        &:focus {
+          @apply foc;
+        }
+
         &[aria-checked='true'] {
           @apply act;
         }
+
         &[aria-readonly='true'] {
           @apply rdo;
         }
+
         &[aria-disabled='true'] {
           @apply dis;
         }
       }
 
       &[shape='square'] {
-        /* border-radius: 0; */
-        /* background-color: green; */
-        @apply spot hover:hov focus:foc;
+        @apply spot;
+
+        &:hover {
+          @apply hov;
+        }
+
+        &:focus {
+          @apply foc;
+        }
+
         &[aria-checked='true'] {
           @apply act;
         }
+
         &[aria-readonly='true'] {
           @apply rdo;
         }
+
         &[aria-disabled='true'] {
           @apply dis;
         }
@@ -329,73 +865,102 @@
     }
   }
 
-  qti-graphic-gap-match-interaction {
-    @apply relative;
-    & img {
-      @apply m-0 p-0;
-    }
-  }
-
   qti-slider-interaction {
-    @apply block; /* else no screenshot will be made with html-to-image */
+    display: block;
 
-    --qti-tick-color: rgb(229 231 235 / 1);
+    --qti-tick-color: rgb(229 231 235 / 100%);
     --qti-tick-width: 1px;
 
     &::part(slider) {
-      @apply mx-8; /* so the slider stays INSIDE of the qti-slider-interaction */
-      @apply pb-4 pt-5; /* this keeps all content in the qti-slider interaction, also for html-to-image */
+      margin-left: 2rem; /* mx-8 */
+      margin-right: 2rem;
+      padding-bottom: 1rem; /* pb-4 */
+      padding-top: 1.25rem; /* pt-5 */
     }
 
     --show-bounds: true;
+
     &::part(bounds) {
-      @apply flex w-full justify-between; /* the two divs with value lower and upper will now be at start and end of this bounds container */
-      @apply mb-2; /* just so it aligns with the value 'knob' */
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+      margin-bottom: 0.5rem; /* mb-2 */
     }
 
     --show-ticks: true;
+
     &::part(ticks) {
-      @apply mx-0.5 mb-1 h-2; /* absolute height for the ticks, and keep distance of the rail. push them 0.5 inward */
-      background-position: 0 center;
-      background: linear-gradient(to right, var(--qti-tick-color) var(--qti-tick-width), transparent 1px) repeat-x;
-      background-size: calc(calc(100% - var(--qti-tick-width)) / ((var(--max) - var(--min)) / var(--step))) 100%;
+      margin-left: 0.125rem; /* mx-0.5 */
+      margin-right: 0.125rem;
+      margin-bottom: 0.25rem; /* mb-1 */
+      height: 0.5rem; /* h-2 */
+      background: linear-gradient(to right, var(--qti-tick-color) var(--qti-tick-width), transparent 1px) repeat-x 0
+        center / calc(calc(100% - var(--qti-tick-width)) / ((var(--max) - var(--min)) / var(--step))) 100%;
     }
 
     &::part(rail) {
-      @apply flex items-center; /* so the knob is neatly centered vertically */
-      /* DESIGN */
-      @apply box-border; /* if you have a border in the design apply, this box-border will make the border stay INSIDE the rail */
-      @apply h-1.5 w-full cursor-pointer rounded-full border border-solid border-gray-300 bg-gray-200;
+      display: flex;
+      align-items: center;
+      box-sizing: border-box;
+      height: 0.375rem; /* h-1.5 */
+      width: 100%;
+      cursor: pointer;
+      border-radius: 9999px; /* rounded-full */
+      border: 1px solid #d1d5db; /* border-gray-300 */
+      background-color: #e5e7eb; /* bg-gray-200 */
     }
 
     &::part(knob) {
-      @apply bg-primary relative h-4 w-4 origin-center -translate-x-1/2 cursor-pointer rounded-full;
+      background-color: var(--qti-primary);
+      position: relative;
+      height: 1rem; /* h-4 */
+      width: 1rem; /* w-4 */
+      transform-origin: center;
+      transform: translateX(-50%);
+      cursor: pointer;
+      border-radius: 9999px; /* rounded-full */
       left: var(--value-percentage);
     }
 
     --show-value: true;
+
     &::part(value) {
-      @apply absolute bottom-8; /* align the value, which you can drag, on top of the knob, so it aligns with the rest of the values */
-      @apply left-2; /* should be half width of the knob if you want to center these two */
-      @apply -translate-x-1/2 cursor-pointer rounded bg-gray-100 px-2 py-1 text-center text-gray-500;
+      position: absolute;
+      bottom: 2rem; /* bottom-8 */
+      left: 0.5rem; /* left-2 */
+      transform: translateX(-50%);
+      cursor: pointer;
+      border-radius: 0.25rem; /* rounded */
+      background-color: #f3f4f6; /* bg-gray-100 */
+      padding: 0.25rem 0.5rem; /* px-2 py-1 */
+      text-align: center;
+      color: #6b7280; /* text-gray-500 */
     }
   }
 
   qti-select-point-interaction {
     &::part(point) {
-      @apply hover:bg-blue-100 hover:bg-opacity-30;
-      @apply point hover:hov-ring focus:foc rounded-full; /* aria-checked:act aria-readonly:rdo aria-disabled:dis ;*/
+      &:hover {
+        @apply hov;
+      }
+
+      &:focus {
+        @apply foc;
+      }
+
+      @apply point;
     }
   }
 
   qti-position-object-stage {
     & qti-position-object-interaction {
       /* no styles necessary, only layout styles, defined in the component */
-      /* height: 40px; */
     }
   }
 
   qti-prompt {
-    @apply my-2 block w-full;
+    margin: 0.5rem 0; /* my-2 */
+    display: block;
+    width: 100%;
   }
 }

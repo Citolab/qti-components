@@ -1,19 +1,31 @@
-import * as tsconfigPaths from 'vite-tsconfig-paths';
 import { defineConfig } from 'vitest/config';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
-  plugins: [tsconfigPaths.default()],
   base: process.env.VITEST ? undefined : './src',
   test: {
+    setupFiles: './test/setup/customMatchers.js',
+    dangerouslyIgnoreUnhandledErrors: true,
     include: ['src/**/*.spec.ts', 'src/**/*.test.ts'],
     globals: true,
-    // environmentMatchGlobs: [
-    //   ['src/**/', 'jsdom'] // all tests in tests/dom will run in jsdom
-    // ],
     browser: {
-      provider: 'playwright', // or 'webdriverio'
       enabled: true,
-      name: 'webkit' // browser name is required
+      name: 'chromium',
+      provider: 'playwright',
+      headless: true, // Both modes work fine
+      providerOptions: {
+        launch: {
+          args: ['--remote-debugging-port=9222']
+        }
+      }
+    }
+  },
+  plugins: [tsconfigPaths()],
+  /* FIXME: This is a workaround for the issue with Vite 2.6.0 */
+  /* See: https://github.com/vitest-dev/vscode/discussions/337 */
+  server: {
+    fs: {
+      strict: process.env.VITEST_VSCODE ? false : true
     }
   }
 });

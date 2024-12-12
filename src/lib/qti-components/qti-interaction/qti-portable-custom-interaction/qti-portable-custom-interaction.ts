@@ -13,9 +13,6 @@ export class QtiPortableCustomInteraction extends Interaction {
 
   private pci: IMSpci<unknown>;
 
-  @property({ type: String, attribute: 'response-identifier' })
-  responseIdentifier: string;
-
   @property({ type: String, attribute: 'module' })
   module: string;
 
@@ -58,7 +55,7 @@ export class QtiPortableCustomInteraction extends Interaction {
       if (stringified !== this.rawResponse) {
         this.rawResponse = stringified;
         const value = this.convertQtiVariableJSON(newResponse);
-        this.response = value;
+        this.value = value;
         this.saveResponse(value);
       }
     }, 200);
@@ -73,8 +70,11 @@ export class QtiPortableCustomInteraction extends Interaction {
   validate(): boolean {
     return true; // FOR NOW
   }
-  set response(val: Readonly<string | string[]>) {
+  set value(val: string | string[]) {
     // Only set state is supported in a PCI
+  }
+  get value(): string | string[] {
+    return this.rawResponse;
   }
 
   getTAOConfig(node) {
@@ -139,11 +139,11 @@ export class QtiPortableCustomInteraction extends Interaction {
             }
           }
         : this.getTAOConfig(this);
-
-    type == 'IMS'
-      ? pci.getInstance(dom, config, undefined)
-      : (pci as any).initialize(this.customInteractionTypeIdentifier, dom.firstElementChild, config);
-
+    if (type == 'IMS') {
+      pci.getInstance(dom, config, undefined);
+    } else {
+      (pci as any).initialize(this.customInteractionTypeIdentifier, dom.firstElementChild, config);
+    }
     if (type == 'TAO') {
       const links = Array.from(this.querySelectorAll('link')).map(acc => acc.getAttribute('href'));
       links.forEach(link => {
@@ -160,101 +160,78 @@ export class QtiPortableCustomInteraction extends Interaction {
 
   override connectedCallback(): void {
     super.connectedCallback();
-    const requireConfig: ModuleResolutionConfig = {
-      context: this.customInteractionTypeIdentifier,
-      catchError: true,
-      paths: {}
-    };
 
-    // pk: c'est tres ugly.. typescript whyunospread add props?!?
-    if (window['requirePaths'] && window['requireShim']) {
-      requireConfig['paths'] = window['requirePaths'];
-      requireConfig['shim'] = window['requireShim'];
-    }
-    if (!globalThis.require) {
-      this._errorMessage = `requirejs not found, load with cdn: https://cdnjs.com/libraries/require.js`;
-      return;
-    }
-    // Initial check in case the children are already present
-    this.registerModules(requireConfig).then(() => {
-      const requirePCI = requirejs.config(requireConfig);
-
-      requirePCI(
-        ['require'],
-        require => {
-          !require.defined('qtiCustomInteractionContext') &&
-            define('qtiCustomInteractionContext', () => {
-              return {
-                register: ctxA => {
-                  this.register(ctxA);
-                },
-                notifyReady: () => {
-                  /* only used in the TAO version */
-                }
-              };
-            });
-          // PK: this is a hack to make sure that the interaction is only registered once
-          // If it was previsouly loaded, the register will nog kick in, because the class is already defined
-          // and in the constructor of the PCI, the register is called.
-          // So now it is alreadly defined, we just register it ourselves.
-
-          const wasPreviouslyLoaded = require.defined(this.module);
-
-          require([this.module], ctxA => {
-            // register it because it was previously loaded
-            wasPreviouslyLoaded && this.register(ctxA);
-          }, err => {
-            this._errorMessage = err;
-          });
+    define('qtiCustomInteractionContext', () => {
+      return {
+        register: ctxA => {
+          this.register(ctxA);
         },
-        err => {
-          this._errorMessage = err;
+        notifyReady: () => {
+          /* only used in the TAO version */
         }
-      );
+      };
+    });
+
+    const config = this.buildRequireConfig();
+    const requirePCI = requirejs.config(config);
+    requirePCI(['require'], require => {
+      // eslint-disable-next-line import/no-dynamic-require
+      require([this.module]);
     });
   }
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
+    requirejs.undef(this.customInteractionTypeIdentifier);
+    // Clear the modules in the context
+    const context = requirejs.s.contexts;
+    delete context[this.customInteractionTypeIdentifier];
     this.stopChecking();
   }
 
-  async registerModules(config: ModuleResolutionConfig) {
-    // get the value of attribute: data-base-url
-    const baseUrl = this.getAttribute('data-base-url');
-    if (baseUrl) {
-      const moduleResolutionPath = `${baseUrl}/modules/module_resolution.js`;
-      const moduleResolutionFallbackPath = `${baseUrl}/modules/module_resolution_fallback.js`;
-      if (moduleResolutionPath) {
-        const primaryConfig = await this.loadConfig(moduleResolutionPath, baseUrl);
-        await this.mergeConfigs(config, primaryConfig, moduleResolutionFallbackPath);
-      }
+  buildRequireConfig() {
+    // Set RequireJS paths and shim configuration if available
+    const config: ModuleResolutionConfig = {
+      context: this.customInteractionTypeIdentifier,
+      catchError: true,
+      paths: window['requirePaths'] || {},
+      shim: window['requireShim'] || {}
+    };
+    // Check if RequireJS is available, if not, set an error message
+    if (!globalThis.require) {
+      this._errorMessage = `RequireJS not found. Please load it via CDN: https://cdnjs.com/libraries/require.js`;
+      return null;
     }
-    // Get the qti-interaction-modules element
+    const baseUrl = this.getAttribute('data-base-url');
     const interactionModules = this.querySelector('qti-interaction-modules');
+
     if (interactionModules) {
-      // Get all qti-interaction-module elements
       const modules = interactionModules.querySelectorAll('qti-interaction-module');
-      // Loop through each module and register it with RequireJS
       for (const module of modules) {
         const moduleId = module.getAttribute('id');
         const primaryPath = module.getAttribute('primary-path');
         const fallbackPath = module.getAttribute('fallback-path');
-        const primaryConfig: ModuleResolutionConfig = primaryPath
-          ? {
-              paths: { ...config['paths'], ...{ [moduleId]: this.getResolvablePath(primaryPath, baseUrl) } }
-            }
-          : null;
-        const fallbackConfig: ModuleResolutionConfig = fallbackPath
-          ? {
-              paths: { ...config['paths'], ...{ [moduleId]: this.getResolvablePath(fallbackPath, baseUrl) } }
-            }
-          : null;
-        if (moduleId && primaryConfig) {
-          await this.mergeConfigs(config, primaryConfig, fallbackConfig);
+
+        if (moduleId && primaryPath) {
+          // Set the paths using RequireJS's fallback array
+          const paths = fallbackPath
+            ? this.combineRequireResolvePaths(
+                this.getResolvablePath(primaryPath, baseUrl),
+                this.getResolvablePath(fallbackPath, baseUrl)
+              )
+            : this.getResolvablePath(primaryPath, baseUrl);
+          const existingPath = config.paths[moduleId] || [];
+          config.paths[moduleId] = this.combineRequireResolvePaths(existingPath, paths);
         }
       }
     }
+    return config;
+  }
+
+  private combineRequireResolvePaths(path1: string | string[], path2: string | string[]) {
+    const path1Array = Array.isArray(path1) ? path1 : [path1];
+    const path2Array = Array.isArray(path2) ? path2 : [path2];
+    return path1Array.concat(path2Array);
   }
 
   private removeDoubleSlashes(str: string) {
@@ -286,55 +263,17 @@ export class QtiPortableCustomInteraction extends Interaction {
     return null;
   };
 
-  getResolvablePath = (path: string, basePath?: string) => {
+  getResolvablePathString = (path: string, basePath?: string) => {
+    path = path.replace(/\.js$/, '');
     return path?.toLocaleLowerCase().startsWith('http') || !basePath
       ? path
       : this.removeDoubleSlashes(`${basePath}/${path}`);
   };
 
-  mergeConfigs = async (
-    config: ModuleResolutionConfig,
-    primaryConfig: ModuleResolutionConfig,
-    fallback: string | ModuleResolutionConfig
-  ) => {
-    for (const moduleId in primaryConfig?.paths) {
-      // Check if the key is already in the config
-      if (!config.paths[moduleId]) {
-        // check if file exists
-        let failedToResolve = false;
-        try {
-          const pathWithExtension = primaryConfig.paths[moduleId]?.toLocaleLowerCase().endsWith('.js')
-            ? primaryConfig.paths[moduleId]
-            : primaryConfig.paths[moduleId] + '.js';
-          const m = await fetch(pathWithExtension);
-          if (m.ok) {
-            config.paths[moduleId] = primaryConfig.paths[moduleId].replace(/\.js$/, '');
-          } else {
-            failedToResolve = true;
-          }
-        } catch {
-          failedToResolve = true;
-        }
-        if (failedToResolve && fallback) {
-          if (typeof fallback === 'string') {
-            try {
-              const fallbackConfig = await this.loadConfig(fallback);
-              if (fallbackConfig?.paths[moduleId]) {
-                config.paths[moduleId] = fallbackConfig.paths[moduleId].replace(/\.js$/, '');
-              }
-            } catch {
-              // ignore error
-            }
-          } else if (typeof fallback === 'object') {
-            if (fallback?.paths[moduleId]) {
-              config.paths[moduleId] = fallback.paths[moduleId].replace(/\.js$/, '');
-            }
-          }
-        } else if (failedToResolve) {
-          console.error('Failed to resolve module: ' + moduleId);
-        }
-      }
-    }
+  getResolvablePath = (path: string | string[], basePath?: string) => {
+    return Array.isArray(path)
+      ? path.map(p => this.getResolvablePathString(p, basePath))
+      : this.getResolvablePathString(path, basePath);
   };
 
   override render() {

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-item xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" title="Wijs de kat aan" identifier="ITEM005" adaptive="false" time-dependent="false" xml:lang="nl-NL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd http://www.w3.org/1998/Math/MathML https://purl.imsglobal.org/spec/mathml/v3p0/schema/xsd/mathml3.xsd">
+	<qti-response-declaration identifier="RESPONSE" cardinality="multiple" base-type="point">
+		<qti-area-mapping default-value="0">
+			<qti-area-map-entry shape="circle" coords="407,426,51" mapped-value="1" />
+		</qti-area-mapping>
+	</qti-response-declaration>
+	<qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single" external-scored="human" normal-minimum="0.0" normal-maximum="1.0">
+		<qti-default-value>
+			<qti-value>
+				0
+			</qti-value>
+		</qti-default-value>
+	</qti-outcome-declaration>
+	<qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
+		<qti-default-value>
+			<qti-value>
+				1
+			</qti-value>
+		</qti-default-value>
+	</qti-outcome-declaration>
+	<qti-outcome-declaration identifier="FEEDBACK" base-type="identifier" cardinality="single" />
+	<qti-stylesheet href="resources/stylesheet.css" type="text/css" />
+	<qti-item-body>
+		<qti-select-point-interaction max-choices="1" response-identifier="RESPONSE">
+			<qti-prompt>
+				Wijs de kat aan
+			</qti-prompt>
+			<img src="resources/22fd50d1cc707e413ce3ca889c831f57.jpg" width="1024" height="1024" alt="" />
+		</qti-select-point-interaction>
+	</qti-item-body>
+	<qti-response-processing>
+		<qti-response-condition>
+			<qti-response-if>
+				<qti-match>
+					<qti-map-response identifier="RESPONSE" />
+					<qti-base-value base-type="float">
+						1
+					</qti-base-value>
+				</qti-match>
+				<qti-set-outcome-value identifier="SCORE">
+					<qti-base-value base-type="float">
+						1
+					</qti-base-value>
+				</qti-set-outcome-value>
+			</qti-response-if>
+			<qti-response-else>
+				<qti-set-outcome-value identifier="SCORE">
+					<qti-base-value base-type="float">
+						0
+					</qti-base-value>
+				</qti-set-outcome-value>
+			</qti-response-else>
+		</qti-response-condition>
+		<qti-response-condition>
+			<qti-response-if>
+				<qti-match>
+					<qti-map-response identifier="RESPONSE" />
+					<qti-base-value base-type="float">
+						1
+					</qti-base-value>
+				</qti-match>
+				<qti-set-outcome-value identifier="FEEDBACK">
+					<qti-base-value base-type="identifier">
+						correct
+					</qti-base-value>
+				</qti-set-outcome-value>
+			</qti-response-if>
+			<qti-response-else>
+				<qti-set-outcome-value identifier="FEEDBACK">
+					<qti-base-value base-type="identifier">
+						incorrect
+					</qti-base-value>
+				</qti-set-outcome-value>
+			</qti-response-else>
+		</qti-response-condition>
+	</qti-response-processing>
+</qti-assessment-item>

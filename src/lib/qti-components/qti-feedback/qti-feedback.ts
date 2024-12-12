@@ -1,7 +1,8 @@
-import { LitElement, PropertyValueMap } from 'lit';
-import { property } from 'lit/decorators.js';
-import { QtiAssessmentItem } from '../qti-assessment-item/qti-assessment-item';
+import { consume } from '@lit/context';
+import { LitElement } from 'lit';
+import { property, state } from 'lit/decorators.js';
 import { IsNullOrUndefined } from '../internal/utils';
+import { itemContext, ItemContext } from '../qti-assessment-item/qti-assessment-item.context';
 
 export abstract class QtiFeedback extends LitElement {
   @property({ type: String, attribute: 'show-hide' })
@@ -16,6 +17,10 @@ export abstract class QtiFeedback extends LitElement {
   @property({ type: String, attribute: false })
   public showStatus: string;
 
+  @consume({ context: itemContext, subscribe: true })
+  @state()
+  private _context?: ItemContext;
+
   public override connectedCallback() {
     super.connectedCallback();
     this.dispatchEvent(
@@ -28,7 +33,7 @@ export abstract class QtiFeedback extends LitElement {
   }
 
   public checkShowFeedback(outcomeIdentifier: string) {    
-    const outcomeVariable = (this.closest('qti-assessment-item') as QtiAssessmentItem).getOutcome(outcomeIdentifier);
+    const outcomeVariable = this._context.variables.find(v => v.identifier === outcomeIdentifier) || null;;
 
     if (this.outcomeIdentifier !== outcomeIdentifier || !outcomeVariable) return;
     let isFound = false;

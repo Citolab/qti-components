@@ -1,0 +1,63 @@
+import { Canvas, Meta, Story, ArgTypes, Description } from '@storybook/blocks';
+import * as Stories from './qti-test.stories';
+import { Source } from '@storybook/blocks';
+import { QtiTest } from '../lib/qti-test';
+
+<Meta component={QtiTest} />
+
+# QTI-Test
+
+`<qti-test> | QtiTest`
+
+The `<qti-test></qti-test>` component is used to render a complete qti-assessment-test including navigation.
+
+<Source of={Stories.Unstyled} dark={true} />
+
+### Setup
+
+### Load test
+
+Use a `<test-container></test-container>` to load and encapsulate the `qti-assessment-test` webcomponents.
+
+Use the following file structure
+A qti-test loads a QTI3.0 assessmenttest.xml file from a package folder.
+
+```plaintext
+Root/
+├── index.html
+└── /assets/api/examples/
+    ├── assessmenttest.xml
+    └── imsmanifest.xml
+
+```
+
+<Canvas of={Stories.Unstyled} />
+
+### Test components
+
+Use test components inside the qti-test component for added functionality.
+
+### Test next
+
+`<test-next> | TestNext`
+
+### Test prev
+
+`<test-prev> | TestPrev`
+
+### Styling
+
+The test can be styled with your own favorite library or css framework.
+
+<Canvas of={Stories.Styled} sourceState="shown" />
+
+The items can be styled with css variables.
+
+<Source of={Stories.ItemsStyled} dark={true} />
+
+<Canvas of={Stories.ItemsStyled} />
+
+<a id="style-items"></a>
+### Styling the items
+
+see [qti-item](./qti-item.mdx) for more information on styling the items.
