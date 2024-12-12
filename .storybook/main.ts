@@ -17,7 +17,6 @@ const config: StorybookConfig = {
         }
       }
     },
-    '@ljcl/storybook-addon-cssprops',
     '@chromatic-com/storybook'
   ],
   framework: {
@@ -25,14 +24,14 @@ const config: StorybookConfig = {
     options: {}
   },
   staticDirs: ['../public/assets'],
-  docs: {},
+  docs: {}
 
-  async viteFinal(config, { configType }) {
-    return {
-      ...config,
-      plugins: [...config.plugins!, tsconfigPaths.default()],
-      resolve: { ...config.resolve, alias: { ...config!.resolve!.alias, path: require.resolve('path-browserify') } }
-    };
-  }
+  // async viteFinal(config, { configType }) {
+  //   return {
+  //     ...config,
+  //     plugins: [...config.plugins!, tsconfigPaths.default()],
+  //     resolve: { ...config.resolve, alias: { ...config!.resolve!.alias, path: require.resolve('path-browserify') } }
+  //   };
+  // }
 };
 export default config;

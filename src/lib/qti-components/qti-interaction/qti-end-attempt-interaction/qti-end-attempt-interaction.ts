@@ -19,14 +19,14 @@ export class QtiEndAttemptInteraction extends Interaction {
     return '';
   }
 
-  set value(val: string | string[]) {
+  set value(_: string | string[]) {
     // not implemented by design
   }
 
   override render() {
     return html`<button ?disabled=${this.disabled} part="button" @click=${this.endAttempt}>${this.title}</button>`;
   }
-  public endAttempt(e: Event) {
+  public endAttempt(_: Event) {
     this.dispatchEvent(
       new CustomEvent('end-attempt', {
         bubbles: true,

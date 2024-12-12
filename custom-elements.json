@@ -5413,18 +5413,7 @@
             },
             {
               "kind": "method",
-              "name": "handleclassNamesChange",
-              "parameters": [
-                {
-                  "name": "old"
-                },
-                {
-                  "name": "disabled",
-                  "type": {
-                    "text": "boolean"
-                  }
-                }
-              ]
+              "name": "handleclassNamesChange"
             }
           ],
           "attributes": [
@@ -6092,7 +6081,10 @@
               "name": "handleclassNamesChange",
               "parameters": [
                 {
-                  "name": "old"
+                  "name": "_",
+                  "type": {
+                    "text": "any"
+                  }
                 },
                 {
                   "name": "classes",
@@ -13530,7 +13522,7 @@
               "privacy": "public",
               "parameters": [
                 {
-                  "name": "e",
+                  "name": "_",
                   "type": {
                     "text": "Event"
                   }
@@ -20879,12 +20871,7 @@
             },
             {
               "kind": "method",
-              "name": "removeMoveListener",
-              "parameters": [
-                {
-                  "name": "event"
-                }
-              ]
+              "name": "removeMoveListener"
             }
           ],
           "superclass": {
@@ -21295,14 +21282,6 @@
               "type": {
                 "text": "CSSStyleDeclaration"
               }
-            },
-            {
-              "kind": "field",
-              "name": "_knob",
-              "type": {
-                "text": "HTMLElement"
-              },
-              "privacy": "private"
             },
             {
               "kind": "field",
@@ -21748,15 +21727,7 @@
             },
             {
               "kind": "method",
-              "name": "handleSlotChange",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "Event"
-                  }
-                }
-              ]
+              "name": "handleSlotChange"
             },
             {
               "kind": "method",

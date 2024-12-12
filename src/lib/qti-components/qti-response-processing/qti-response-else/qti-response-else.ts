@@ -7,7 +7,6 @@ export class QtiResponseElse extends LitElement {
   }
 
   public calculate() {
-    const result = true;
     return true;
   }
 

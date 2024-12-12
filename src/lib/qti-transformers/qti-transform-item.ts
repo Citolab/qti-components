@@ -47,7 +47,7 @@ export const qtiTransformItem = () => {
 
   const api: transformItemApi = {
     async load(uri: string, cancelPreviousRequest = false): Promise<typeof api> {
-      return new Promise<typeof api>((resolve, reject) => {
+      return new Promise<typeof api>(resolve => {
         loadXML(uri, cancelPreviousRequest).then(xml => {
           xmlFragment = xml;
           // set the base path for images and other resources,

@@ -1,4 +1,4 @@
-import { css, CSSResultGroup, html, PropertyValues } from 'lit';
+import { CSSResultGroup, html, PropertyValues } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-interaction-mixin';
 import { QtiHotspotChoice } from '../qti-hotspot-choice';
@@ -60,7 +60,6 @@ export class QtiGraphicGapMatchInteraction extends DragDropInteractionMixin(
   }
 
   private positionHotspotOnRegister(e: CustomEvent<null>): void {
-    const img = this.querySelector('img') as HTMLImageElement;
     const hotspot = e.target as QtiHotspotChoice;
     const coords = hotspot.getAttribute('coords');
     const shape = hotspot.getAttribute('shape');

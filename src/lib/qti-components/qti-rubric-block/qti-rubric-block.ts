@@ -12,7 +12,7 @@ export class QtiRubricBlock extends LitElement {
 
   @property({ type: String, attribute: 'class' }) classNames;
   @watch('classNames', { waitUntilFirstUpdate: true })
-  handleclassNamesChange(old, disabled: boolean) {
+  handleclassNamesChange() {
     const classNames = this.classNames.split(' ');
     classNames.forEach((className: string) => {
       switch (className) {

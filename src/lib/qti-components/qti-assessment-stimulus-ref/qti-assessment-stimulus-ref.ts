@@ -44,7 +44,6 @@ export class QtiAssessmentStimulusRef extends LitElement {
    * @param stimulusRef - The element to which the stimulus will be appended.
    */
   public async updateStimulusRef(stimulusRef: Element) {
-    const path = this.href.substring(0, this.href.lastIndexOf('/'));
     const stimulus = await qtiTransformItem()
       .load(this.href)
       .then(api => api.htmlDoc());

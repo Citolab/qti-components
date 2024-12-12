@@ -1,5 +1,5 @@
-import { css, html, LitElement } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
+import { css, html } from 'lit';
+import { customElement } from 'lit/decorators.js';
 import { TestComponent } from './test-component.abstract';
 import * as styles from './styles';
 
