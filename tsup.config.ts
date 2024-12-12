@@ -143,7 +143,6 @@ export default defineConfig([
           sourcemap: false,
           entry: { 'cdn/index.min': './src/index.ts' }
         },
-
         {
           // (index.global.js) CDN IFFE ES5 (jsdom)
           ...iffeBundleOptions,
