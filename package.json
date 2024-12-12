@@ -90,6 +90,7 @@
     "build-storybook": "storybook build",
     "storybook:test": "test-storybook",
     "storybook:docs": "wireit",
+    "storybook:docs:build": "wireit",
     "chromatic": "node chromatic-runner.cjs",
     "----hooks----": "-",
     "prepare": "husky"
@@ -130,6 +131,12 @@
       "command": "storybook dev --docs -c .storybook-docs",
       "dependencies": [
         "cem:watch"
+      ]
+    },
+    "storybook:docs:build": {
+      "command": "storybook build --docs -c .storybook-docs --output-dir docs",
+      "dependencies": [
+        "cem"
       ]
     },
     "lint": {

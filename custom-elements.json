@@ -9879,6 +9879,42 @@
             },
             {
               "kind": "method",
+              "name": "getCenter",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Point"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "rect",
+                  "type": {
+                    "text": "DOMRect"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getRectDiagonal",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "rect",
+                  "type": {
+                    "text": "DOMRect"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "getCorners",
               "privacy": "private",
               "return": {
@@ -23018,78 +23054,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-interaction/qti-gap-match-interaction/gap-match-interaction.stories.ts",
-      "declarations": [
-        {
-          "kind": "variable",
-          "name": "meta",
-          "type": {
-            "text": "Meta<QtiAssessmentItem>"
-          },
-          "default": "{ component: 'qti-match-interaction' }"
-        },
-        {
-          "kind": "variable",
-          "name": "Default",
-          "type": {
-            "text": "Story"
-          },
-          "default": "{ name: 'Not-Allowed-To-Drop-In-Other-Interaction', render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => { let item: QtiAssessmentItem; const onInteractionChangedAction = action('qti-interaction-changed'); const onOutcomeChangedAction = action('qti-outcome-changed'); const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => { item = qtiAssessmentItem; action('qti-assessment-item-connected'); }; return html` <div class=\"item\" @qti-interaction-changed=${onInteractionChangedAction} @qti-outcome-changed=${onOutcomeChangedAction} @qti-assessment-item-connected=${onItemFirstUpdated} > ${xml} </div> <button @click=${() => { item?.processResponse(); }} > Submit </button> `; }, args: { // docsHint: 'Some other value than the default' }, play: async ({ canvasElement, step }) => { const canvas = within(canvasElement); const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem; assessmentItem.querySelector('qti-prompt').innerHTML = ` Don't allow to drop a Gap from interaction 1 to interaction 2. ${assessmentItem.querySelector('qti-prompt').textContent} `; const interaction1 = assessmentItem.querySelector(`qti-gap-match-interaction[response-identifier='RESPONSE1'`); const dragContainerInteraction1 = interaction1.shadowRoot.querySelector('slot[part=\"drags\"]') as HTMLSlotElement; const interaction2 = assessmentItem.querySelector(`qti-gap-match-interaction[response-identifier='RESPONSE2'`); const gapTextWinter1 = interaction1.querySelector('qti-gap-text[identifier=\"W\"]') as QtiGapText; const dropInteraction2 = interaction2.querySelector('qti-gap[identifier=\"G1\"]') as QtiGapText; await step('drag a Gap from interaction 1 to interaction 2', async () => { // Simulate the drag and drop operation await drag(gapTextWinter1, { to: dropInteraction2, duration: 300 }); }); // check if the first dragged value is in the gap expect(dropInteraction2.textContent).toBe(''); // check if the second dragged value is in the gap expect(dragContainerInteraction1.assignedNodes({ flatten: true }).length).toBe(4); }, loaders: [ async ({ args }) => ({ xml: await getItemByUri(`assets/qti-conformance/Advanced/Q6/gap-match-sv-1.xml`) }) ] }"
-        },
-        {
-          "kind": "variable",
-          "name": "CanRedrop",
-          "type": {
-            "text": "Story"
-          },
-          "default": "{ name: 'Can-Redrop-In-Same-Gap', render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => { let item: QtiAssessmentItem; const onInteractionChangedAction = action('qti-interaction-changed'); const onOutcomeChangedAction = action('qti-outcome-changed'); const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => { item = qtiAssessmentItem; action('qti-assessment-item-connected'); }; return html` <div class=\"item\" @qti-interaction-changed=${onInteractionChangedAction} @qti-outcome-changed=${onOutcomeChangedAction} @qti-assessment-item-connected=${onItemFirstUpdated} > ${xml} </div> <button @click=${() => { item?.processResponse(); }} > Submit </button> `; }, args: { // docsHint: 'Some other value than the default' }, play: async ({ canvasElement, step }) => { const canvas = within(canvasElement); const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem; assessmentItem.querySelector('qti-prompt').innerHTML = ` For gap-match-example-1.xml, each Gap can have at most one choice associated with it.`; const gapTextWinter = assessmentItem.querySelector('qti-gap-text[identifier=\"W\"]') as QtiGapText; // const gapTextSpring = assessmentItem.querySelector('qti-gap-text[identifier=\"Sp\"]') as QtiGapText; // const gapTextSummer = assessmentItem.querySelector('qti-gap-text[identifier=\"Su\"]') as QtiGapText; // const gapTextAutumn = assessmentItem.querySelector('qti-gap-text[identifier=\"A\"]') as QtiGapText; const gapG1 = assessmentItem.querySelector('qti-gap[identifier=\"G1\"]') as QtiGapText; // const gapG2 = assessmentItem.querySelector('qti-gap[identifier=\"G2\"]') as QtiGapText; await step('drag Winter to G1', async () => { // Simulate the drag and drop operation await drag(gapTextWinter, { to: gapG1, duration: 300 }); }); await step('drag Winter to G1 again', async () => { // Second drag: Pick up and drag within the target // Ensure at least 1 pixel of movement await drag(gapTextWinter, { delta: { x: 1, y: 1 } }); }); // check if the first dragged value is in the gap expect(gapG1.textContent).toBe('winter'); expect(gapG1.hasAttribute('disabled')).toBe(true); expect(gapG1.hasAttribute('enable')).toBe(false); expect(gapG1.hasAttribute('dropzone')).toBe(false); }, loaders: [ async ({ args }) => ({ xml: await getItemByUri(`assets/qti-conformance/Advanced/Q6/gap-match-example-1.xml`) }) ] }"
-        },
-        {
-          "kind": "variable",
-          "name": "DraggableContainerHasDropInDication",
-          "type": {
-            "text": "Story"
-          },
-          "default": "{ name: 'Dropzone-has-drop-indication', render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => { let item: QtiAssessmentItem; const onInteractionChangedAction = action('qti-interaction-changed'); const onOutcomeChangedAction = action('qti-outcome-changed'); const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => { item = qtiAssessmentItem; action('qti-assessment-item-connected'); }; return html` <div class=\"item\" @qti-interaction-changed=${onInteractionChangedAction} @qti-outcome-changed=${onOutcomeChangedAction} @qti-assessment-item-connected=${onItemFirstUpdated} > ${xml} </div> <button @click=${() => { item?.processResponse(); }} > Submit </button> `; }, args: { // docsHint: 'Some other value than the default' }, play: async ({ canvasElement, step }) => { const canvas = within(canvasElement); const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem; assessmentItem.querySelector('qti-prompt').innerHTML = ` When a draggable is dragged, the dragzone should indicate that it can be dropped`; const rootElement = document.documentElement; const rootStyles = window.getComputedStyle(rootElement); const qtiBorderActive = rootStyles.getPropertyValue('--qti-border-active').trim(); const gapTextWinter = assessmentItem.querySelector('qti-gap-text[identifier=\"W\"]') as QtiGapText; // const gapTextSpring = assessmentItem.querySelector('qti-gap-text[identifier=\"Sp\"]') as QtiGapText; // const gapTextSummer = assessmentItem.querySelector('qti-gap-text[identifier=\"Su\"]') as QtiGapText; // const gapTextAutumn = assessmentItem.querySelector('qti-gap-text[identifier=\"A\"]') as QtiGapText; const gapG1 = assessmentItem.querySelector('qti-gap[identifier=\"G1\"]') as QtiGapText; // const gapG2 = assessmentItem.querySelector('qti-gap[identifier=\"G2\"]') as QtiGapText; await step('drag Winter to G1', async () => { // Simulate the drag and drop operation const qtiGapMatchInteraction = assessmentItem.querySelector('qti-gap-match-interaction'); const slots = qtiGapMatchInteraction.shadowRoot.querySelectorAll('slot'); const dragsPart = Array.from(slots).find(slot => slot.getAttribute('part') === 'drags'); // Convert both colors to RGB const dragStyles = window.getComputedStyle(dragsPart); const borderColorOrg = dragStyles.getPropertyValue('border-color').trim(); const qtiBorderActiveRgb = rgbStringToRgb(qtiBorderActive) || hexToRgb(qtiBorderActive); drag(gapTextWinter, { to: gapG1, duration: 300 }).then(async () => { const computedStylesGap1 = window.getComputedStyle(gapG1); const borderColorGap1 = computedStylesGap1.getPropertyValue('border-color').trim(); const borderColorGap1Rgb = rgbStringToRgb(borderColorGap1) || hexToRgb(borderColorGap1); expect(rgbIsEqual(qtiBorderActiveRgb, borderColorGap1Rgb)).toBe(true); await timeoutPromise(50); // Convert both colors to RGB const computedStyles = window.getComputedStyle(dragsPart); const borderColor = computedStyles.getPropertyValue('border-color').trim(); expect(borderColor).toBe(borderColorOrg); }); await timeoutPromise(50); // Convert both colors to RGB const computedStyles = window.getComputedStyle(dragsPart); const borderColor = computedStyles.getPropertyValue('border-color').trim(); const borderColorRgb = rgbStringToRgb(borderColor) || hexToRgb(borderColor); expect(rgbIsEqual(qtiBorderActiveRgb, borderColorRgb)).toBe(true); }); // --qti-border-active }, loaders: [ async ({ args }) => ({ xml: await getItemByUri(`assets/qti-conformance/Advanced/Q6/gap-match-example-1-removed.xml`) }) ] }"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "meta",
-            "module": "src/lib/qti-components/qti-interaction/qti-gap-match-interaction/gap-match-interaction.stories.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "Default",
-          "declaration": {
-            "name": "Default",
-            "module": "src/lib/qti-components/qti-interaction/qti-gap-match-interaction/gap-match-interaction.stories.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "CanRedrop",
-          "declaration": {
-            "name": "CanRedrop",
-            "module": "src/lib/qti-components/qti-interaction/qti-gap-match-interaction/gap-match-interaction.stories.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "DraggableContainerHasDropInDication",
-          "declaration": {
-            "name": "DraggableContainerHasDropInDication",
-            "module": "src/lib/qti-components/qti-interaction/qti-gap-match-interaction/gap-match-interaction.stories.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "src/lib/qti-components/qti-interaction/internal/choices/choices.spec.ts",
       "declarations": [
         {
@@ -27333,7 +27297,7 @@
           "type": {
             "text": "Story"
           },
-          "default": "{ render: args => html` <qti-test> <test-container test-url=\"/assets/api/conformance/assessment.xml\"></test-container> ${template(args)} </qti-test>`, play: async ({ canvasElement }) => { const selectElement = getByShadowLabelText(canvasElement, 'view'); // 1 Wait for the item to load const itemElement = await findByShadowTitle(canvasElement, 'T1 - Test Entry - Item 1'); expect(itemElement).toBeInTheDocument(); // 2 Assume the candidate rubric is not visible const rubricElement = getByShadowText(canvasElement, 'candidate rubric block'); expect(rubricElement).toBeVisible(); // 3 Select the candidate view await userEvent.selectOptions(selectElement, 'candidate'); // 4 Wait for the candidate rubric to be visible expect(rubricElement).toBeVisible(); // 5 Assume correctResponse is not set const firstChoiceElement = await findByShadowText(canvasElement, 'Correct'); const afterStyle = getComputedStyle(firstChoiceElement, '::after'); expect(afterStyle.content).toBe('none'); // 6 Set the view to scorer await userEvent.selectOptions(selectElement, 'scorer'); // Expect the correctResponse to be visible expect(afterStyle.content).not.toBe('none'); } }"
+          "default": "{ render: args => html` <qti-test> <test-container test-url=\"/assets/api/conformance/assessment.xml\"></test-container> ${template(args)} </qti-test>`, play: async ({ canvasElement }) => { const selectElement = getByShadowLabelText(canvasElement, 'view'); debugger; // 1 Wait for the item to load const itemElement = await findByShadowTitle(canvasElement, 'T1 - Test Entry - Item 1'); expect(itemElement).toBeInTheDocument(); // 2 Assume the candidate rubric is not visible const rubricElement = getByShadowText(canvasElement, 'candidate rubric block'); expect(rubricElement).toBeVisible(); // 3 Select the candidate view await userEvent.selectOptions(selectElement, 'candidate'); // 4 Wait for the candidate rubric to be visible expect(rubricElement).toBeVisible(); // 5 Assume correctResponse is not set const firstChoiceElement = await findByShadowText(canvasElement, 'Correct'); const afterStyle = getComputedStyle(firstChoiceElement, '::after'); expect(afterStyle.content).toBe('none'); // 6 Set the view to scorer await userEvent.selectOptions(selectElement, 'scorer'); // Expect the correctResponse to be visible expect(afterStyle.content).not.toBe('none'); } }"
         }
       ],
       "exports": [
