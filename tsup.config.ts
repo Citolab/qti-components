@@ -91,63 +91,49 @@ const peerdependencies = Object.keys(pkgJson.peerDependencies || {});
 // minify: process.env.NODE_ENV === 'production',
 // sourcemap: process.env.NODE_ENV === 'development' ? 'inline' : false,
 
-const buildOptions: Options = {
-  clean: false,
-  target: 'es2017',
-  dts: true,
-  format: ['esm', 'cjs'],
-  sourcemap: 'inline',
-  entry: Object.values(tsconfigJson.compilerOptions.paths).map(paths => `${paths[0]}/index.ts`),
-  external: peerdependencies,
+const bundleOptions: Options = {
   splitting: false,
-  esbuildPlugins: [InlineCSSPlugin],
-  outDir: 'dist'
-};
-
-// Complete build for standalone usage (e.g., in browser)
-const esmBundleOptions: Options = {
-  ...buildOptions,
-  dts: false,
-  external: [],
-  noExternal: [/(.*)/],
-  splitting: false,
-  sourcemap: false,
-  minify: true,
-  format: ['esm'], // ESM for inline in browser
-  shims: false,
-  entry: ['./src/index.ts']
-};
-
-const iffeBundleOptions: Options = {
-  ...esmBundleOptions,
-  format: ['iife'], // IIFE for jsdom environment
-  globalName: 'QtiComponents',
-  target: 'es5'
+  esbuildPlugins: [InlineCSSPlugin]
 };
 
 export default defineConfig([
-  buildOptions,
+  {
+    // Development build, including types, non minified source and sourcemaps
+    // "src/lib/qti-components","src/lib/qti-item","src/lib/qti-transformers","src/lib/qti-loader","src/lib/qti-test"]
+    ...bundleOptions,
+    dts: true,
+    format: ['esm', 'cjs'],
+    outDir: 'dist',
+    entry: Object.values(tsconfigJson.compilerOptions.paths).map(paths => `${paths[0]}/index.ts`),
+    minify: false,
+    external: peerdependencies,
+    sourcemap: true
+  } as Options,
+
   ...(process.env.NODE_ENV === 'production'
     ? [
         {
-          // (index.js) CDN ESM Sourcemap
-          ...esmBundleOptions,
-          minify: false,
-          sourcemap: 'inline' as const,
-          entry: { 'cdn/index': './src/index.ts' }
-        },
+          // (src/index.ts -> dist/cdn/index.min) CDN ESM Minified
+          ...bundleOptions,
+          format: ['esm', 'cjs'],
+          outDir: './',
+          entry: { 'cdn/index.min': './src/index.ts' },
+          noExternal: [/(.*)/],
+          minify: true,
+          sourcemap: false
+        } as Options,
         {
-          // (index.min) CDN ESM Minified
-          ...esmBundleOptions,
+          // (src/index.ts -> dist/cdn/index.global.js) CDN IFFE ES5 (jsdom)
+          ...bundleOptions,
+          format: ['iife'],
+          outDir: './',
+          entry: { 'cdn/index': './src/index.ts' },
+          noExternal: [/(.*)/],
           minify: true,
           sourcemap: false,
-          entry: { 'cdn/index.min': './src/index.ts' }
-        },
-        {
-          // (index.global.js) CDN IFFE ES5 (jsdom)
-          ...iffeBundleOptions,
-          entry: { 'cdn/index': './src/index.ts' }
-        }
+          globalName: 'QtiComponents',
+          target: 'es5'
+        } as Options
       ]
     : [])
 ]);

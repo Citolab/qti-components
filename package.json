@@ -46,7 +46,7 @@
     },
     "./item.css": "./dist/item.css",
     "./cdn/index.js": "./dist/cdn/index.js",
-    "./cdn/index.min.js": "./dist/cnd/index.min.js",
+    "./cdn/index.min.js": "./dist/cdn/index.min.js",
     "./cdn/index.global.js": "./dist/cdn/index.global.js"
   },
   "types": "./dist/qti-components/index.d.ts",
@@ -70,12 +70,15 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "cdn"
   ],
   "scripts": {
-    "test": "wireit",
+    "dev": "wireit",
     "build": "wireit",
-    "watch": "wireit",
+    "preview": "wireit",
+    "---": "-",
+    "test": "wireit",
     "attw": "wireit",
     "lint": "wireit",
     "cem": "wireit",
@@ -84,39 +87,16 @@
     "act": "act",
     "vite": "vite",
     "stylelint": "stylelint \"src/**/*.css\"",
-    "storybook": "wireit",
     "build-storybook": "storybook build",
     "storybook:test": "test-storybook",
     "storybook:docs": "wireit",
     "chromatic": "node chromatic-runner.cjs",
     "----hooks----": "-",
-    "prepublishOnly": "npm run build",
     "prepare": "husky"
   },
   "wireit": {
-    "test": {
-      "command": "vitest run",
-      "dependencies": [
-        "build"
-      ]
-    },
-    "watch": {
-      "env": {
-        "NODE_ENV": "development"
-      },
-      "command": "tsup",
-      "output": [
-        "dist"
-      ]
-    },
-    "storybook": {
+    "dev": {
       "command": "storybook dev -p 6006",
-      "dependencies": [
-        "cem:watch"
-      ]
-    },
-    "storybook:docs": {
-      "command": "storybook dev --docs -c .storybook-docs",
       "dependencies": [
         "cem:watch"
       ]
@@ -129,8 +109,28 @@
       "dependencies": [
         "cem",
         "css"
-      ],
-      "clean": true
+      ]
+    },
+    "preview": {
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "command": "vite preview",
+      "dependencies": [
+        "build"
+      ]
+    },
+    "test": {
+      "command": "vitest run",
+      "dependencies": [
+        "build"
+      ]
+    },
+    "storybook:docs": {
+      "command": "storybook dev --docs -c .storybook-docs",
+      "dependencies": [
+        "cem:watch"
+      ]
     },
     "lint": {
       "command": "eslint --color --cache --cache-location .eslintcache src/lib/**/*.ts"
