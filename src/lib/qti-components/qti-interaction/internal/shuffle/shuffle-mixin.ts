@@ -11,7 +11,6 @@
  * qti-choice-interaction
  * qti-match-interaction
  */
-import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import { Interaction } from '../interaction/interaction';
 
@@ -20,6 +19,7 @@ type Constructor<T = {}> = abstract new (...args: any[]) => T;
 declare class ShuffleInterface {}
 export const ShuffleMixin = <T extends Constructor<Interaction>>(superClass: T, selector: string) => {
   abstract class ShuffleElement extends superClass {
+    /** <span style="color:blue">some *blue* text</span>. Does not work in storybook */
     @property({ type: String, reflect: true })
     shuffle: 'true' | 'false' = 'false'; // Defaults to 'false'
 

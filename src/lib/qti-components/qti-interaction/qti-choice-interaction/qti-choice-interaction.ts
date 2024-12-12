@@ -9,6 +9,22 @@ import { Interaction } from '../internal/interaction/interaction';
 
 export type Orientation = 'horizontal' | 'vertical' | undefined;
 
+/**
+ * An sample element.
+ *
+ * @slot - default slot of the choices
+ * @slot prompt - slot of the prompt
+ *
+ * @csspart slot - The choice elements
+ * @csspart prompt - The prompt
+ * @csspart message - The validation message
+ *
+ * @cssprop [--qti-bg-active=#ffecec] - The active background color
+ * @cssprop [--qti-border-active=#f86d70] - The active border color
+ * @cssprop [--qti-padding-horizontal=1px] - The option horizontal padding
+ * @cssprop [--qti-padding-vertical=solid] - The option vertical padding
+ * @cssprop [--qti-border-radius=8px] - The option border radius
+ */
 @customElement('qti-choice-interaction')
 export class QtiChoiceInteraction
   extends VocabularyMixin(
@@ -30,8 +46,8 @@ export class QtiChoiceInteraction
 
   render() {
     return html`
-      <slot name="prompt"></slot><slot part="slot"></slot>
-      <div role="alert" id="validationMessage"></div>
+      <slot part="prompt" name="prompt"></slot><slot part="slot"></slot>
+      <div part="message" role="alert" id="validationMessage"></div>
     `;
   }
 }
