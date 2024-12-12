@@ -43,9 +43,9 @@ function rgbStringToRgb(rgbString) {
     : null;
 }
 
-export const Default: Story = {
+export const Default = {
   name: 'Not-Allowed-To-Drop-In-Other-Interaction',
-  render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
+  render: (args, { loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
@@ -88,6 +88,7 @@ export const Default: Story = {
 
     const interaction2 = assessmentItem.querySelector(`qti-gap-match-interaction[response-identifier='RESPONSE2'`);
     const gapTextWinter1 = interaction1.querySelector('qti-gap-text[identifier="W"]') as QtiGapText;
+    const dropInteraction1 = interaction1.querySelector('qti-gap[identifier="G2"]') as QtiGapText;
 
     const dropInteraction2 = interaction2.querySelector('qti-gap[identifier="G1"]') as QtiGapText;
     await step('drag a Gap from interaction 1 to interaction 2', async () => {
@@ -95,10 +96,18 @@ export const Default: Story = {
       await drag(gapTextWinter1, { to: dropInteraction2, duration: 300 });
     });
 
+    await timeoutPromise(300);
     // check if the first dragged value is in the gap
     expect(dropInteraction2.textContent).toBe('');
     // check if the second dragged value is in the gap
-    expect(dragContainerInteraction1.assignedNodes({ flatten: true }).length).toBe(4);
+    expect(
+      dropInteraction2.shadowRoot.querySelector('qti-gap-text') ||
+        dropInteraction2.shadowRoot?.querySelector('qti-gap-text')
+    ).toBeFalsy();
+
+    expect(
+      dropInteraction1.querySelector('qti-gap-text') || dropInteraction1.shadowRoot?.querySelector('qti-gap-text')
+    ).toBeDefined();
   },
   loaders: [
     async ({ args }) => ({

@@ -117,7 +117,7 @@ export class TouchDragAndDrop {
 
   private handleTouchMove(e) {
     if (this.isDraggable && this.dragSource) {
-      const interaction = this.getInteraction(e.target);
+      const interaction = this.getInteraction(this.dragSource);
       this.allDropzones = [
         ...(Array.from(interaction.querySelectorAll('[dropzone]')) as HTMLElement[]),
         ...(Array.from(interaction.shadowRoot?.querySelectorAll('[dropzone]')) as HTMLElement[])
@@ -243,6 +243,7 @@ export class TouchDragAndDrop {
 
     const dragRect = this.dragSource.getBoundingClientRect();
     const dragCorners = this.getCorners(dragRect);
+    const dragCenter = this.getCenter(dragRect);
 
     let closestDropzone: HTMLElement | null = null;
     let minDistance = Infinity;
@@ -250,8 +251,17 @@ export class TouchDragAndDrop {
     for (const dropzone of this.allDropzones) {
       const dropRect = dropzone.getBoundingClientRect();
       const dropCorners = this.getCorners(dropRect);
+      const dropCenter = this.getCenter(dropRect);
 
-      const totalDistance = this.calculateTotalCornerDistance(dragCorners, dropCorners);
+      // Calculate normalized corner distances
+      const cornerDistance =
+        this.calculateTotalCornerDistance(dragCorners, dropCorners) / this.getRectDiagonal(dropRect);
+
+      // Calculate center-to-center distance
+      const centerDistance = this.calculateDistance(dragCenter, dropCenter);
+
+      // Combine distances with weights
+      const totalDistance = cornerDistance * 0.5 + centerDistance * 0.5;
 
       if (totalDistance < minDistance) {
         minDistance = totalDistance;
@@ -260,6 +270,17 @@ export class TouchDragAndDrop {
     }
 
     return closestDropzone;
+  }
+
+  private getCenter(rect: DOMRect): Point {
+    return {
+      x: rect.left + rect.width / 2,
+      y: rect.top + rect.height / 2
+    };
+  }
+
+  private getRectDiagonal(rect: DOMRect): number {
+    return Math.sqrt(rect.width ** 2 + rect.height ** 2);
   }
 
   private getCorners(rect: DOMRect): { topLeft: Point; topRight: Point; bottomLeft: Point; bottomRight: Point } {

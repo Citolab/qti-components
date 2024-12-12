@@ -30,6 +30,7 @@ export const TestView: Story = {
 
   play: async ({ canvasElement }) => {
     const selectElement = getByShadowLabelText(canvasElement, 'view');
+    debugger;
     // 1 Wait for the item to load
     const itemElement = await findByShadowTitle(canvasElement, 'T1 - Test Entry - Item 1');
     expect(itemElement).toBeInTheDocument();
