@@ -117,7 +117,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       if (this.responseIdentifier) {
         ev.dataTransfer.setData('responseIdentifier', this.responseIdentifier);
       }
-      this._internals.states.add('--dragzone-active');
+      this._internals.states.add('--dragzone-enabled');
       target.setAttribute('dragging', '');
       this.activateDragLocation();
       this.activateDroppables(target);
@@ -125,6 +125,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
     private handleDragEnd = async (ev: DragEvent) => {
       ev.preventDefault();
+      this._internals.states.delete('--dragzone-enabled');
       this._internals.states.delete('--dragzone-active');
       this.deactivateDragLocation();
       this.deactivateDroppables();
