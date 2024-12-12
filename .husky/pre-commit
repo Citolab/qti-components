@@ -4,4 +4,3 @@ npm run test
 npm run lint
 npm run attw
 npm run stylelint
-npm run prepublishOnly
