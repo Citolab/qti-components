@@ -110,15 +110,18 @@
       "dependencies": [
         "cem",
         "css"
-      ]
-    },
-    "preview": {
-      "env": {
-        "NODE_ENV": "development"
-      },
-      "command": "vite preview",
-      "dependencies": [
-        "build"
+      ],
+      "files": [
+        "src/**/*.{ts,css}",
+        "!src/**/*.{test,spec,stories}.ts"
+      ],
+      "output": [
+        "dist/**/*",
+        "cdn/**/*",
+        "!dist/item.css",
+        "!dist/vscode.*",
+        "!dist/qti-components-jsx.d.ts",
+        "!dist/custom-element-eslint-rules.js"
       ]
     },
     "test": {
