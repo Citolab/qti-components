@@ -92,7 +92,7 @@
     "storybook:docs:build": "wireit",
     "chromatic": "node chromatic-runner.cjs",
     "----hooks----": "-",
-    "prepublishOnly": "build",
+    "prepublishOnly": "npm run build",
     "prepare": "husky"
   },
   "wireit": {
