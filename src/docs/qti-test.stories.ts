@@ -5,7 +5,6 @@ import { QtiTest } from '@citolab/qti-components/qti-test';
 type Story = StoryObj<QtiTest>;
 
 const meta: Meta<QtiTest> = {
-  component: 'qti-test',
   tags: ['!autodocs', '!dev']
 };
 export default meta;

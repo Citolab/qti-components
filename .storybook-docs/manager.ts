@@ -8,7 +8,7 @@ const docTheme = create({
   fontBase: '"pt-sans-pro", sans-serif',
   fontCode: '"Fira Code", monospace', // Font for code blocks
 
-  brandTitle: 'My custom Storybook',
+  brandTitle: 'QTI Components',
   brandUrl: 'https://example.com',
   brandImage: 'https://storybook.js.org/images/placeholders/350x150.png',
   brandTarget: '_self',

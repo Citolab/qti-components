@@ -27,6 +27,7 @@ const preview: Preview = {
   decorators: [withActions],
 
   parameters: {
+    docs: { toc: true },
     viewport: { viewports: customViewports },
     controls: {
       expanded: true,
