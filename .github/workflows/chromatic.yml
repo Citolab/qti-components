@@ -1,4 +1,4 @@
-name: Run storybook test for conformance branche
+name: Chromatic (ci, chromatic)
 
 on:
   push:
