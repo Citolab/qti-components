@@ -19,16 +19,6 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-
-  release:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: "marvinpinto/action-automatic-releases@v1.2.1"
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          prerelease: false
-
-  # Single deploy job since we're just deploying
   docs:
     environment:
       name: github-pages
