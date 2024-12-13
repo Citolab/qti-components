@@ -1,6 +1,10 @@
 type Point = { x: number; y: number };
 
 export class TouchDragAndDrop {
+  public draggables: HTMLElement[] = [];
+  public droppables: HTMLElement[] = [];
+  public dragContainers: HTMLElement[] = [];
+
   private touchStartTime = 0; // Timestamp of the first touch
   private touchStartPoint = null; // Point of the first touch
   private lastClickTime = 0; // Timestamp of the previous click
@@ -12,7 +16,6 @@ export class TouchDragAndDrop {
   private initialTransform = ''; // Original transform style
   private hasDispatchedDragStart = false; // Flag to ensure dragstart event is dispatched once
   private rootNode: Node = null; // Root node for boundary calculations
-
   private allDropzones: HTMLElement[] = []; // All dropzones for keyboard navigation
 
   private dataTransfer = {
@@ -55,24 +58,58 @@ export class TouchDragAndDrop {
     document.addEventListener('touchcancel', this.handleTouchCancel.bind(this), { passive: false });
   }
 
-  addDraggableElements(draggables: Element[]) {
-    draggables.forEach(el => {
-      el.setAttribute('tabindex', '0'); // Make draggable elements focusable
-      // el.addEventListener('focus', () => (this.focusedElement = el as HTMLElement));
-      // el.addEventListener('blur', () => (this.focusedElement = null));
-
-      el.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: false });
-      el.addEventListener('mousedown', this.handleTouchStart.bind(this), { passive: false });
-    });
+  dragContainersModified(addedDragContainers: HTMLElement[], removedDragContainers: HTMLElement[]) {
+    for (const removedContainer of removedDragContainers) {
+      if (this.dragContainers.includes(removedContainer)) {
+        this.dragContainers = this.dragContainers.filter(container => container !== removedContainer);
+        this.allDropzones = this.allDropzones.filter(dropzone => dropzone !== removedContainer);
+      }
+    }
+    for (const dragContainer of addedDragContainers) {
+      if (!this.dragContainers.includes(dragContainer)) {
+        this.dragContainers.push(dragContainer);
+        this.allDropzones.push(dragContainer);
+      }
+    }
   }
 
-  private getInteraction(el: HTMLElement) {
-    // Find the closest parent where the tagname ends with '-interaction'
-    let parent = el;
-    while (parent && !parent.tagName.toLocaleLowerCase().endsWith('-interaction')) {
-      parent = parent.parentElement;
+  draggablesModified(addedDraggables: HTMLElement[], removedDraggables: HTMLElement[]) {
+    for (const removedDraggable of removedDraggables) {
+      if (this.draggables.includes(removedDraggable)) {
+        this.draggables = this.draggables.filter(draggable => draggable !== removedDraggable);
+        removedDraggable.removeAttribute('tabindex');
+        removedDraggable.removeEventListener('touchstart', this.handleTouchStart.bind(this));
+        removedDraggable.removeEventListener('mousedown', this.handleTouchStart.bind(this));
+      }
     }
-    return parent;
+    for (const draggable of addedDraggables) {
+      if (!this.draggables.includes(draggable)) {
+        this.draggables.push(draggable);
+        // draggables.forEach(el => {
+        draggable.setAttribute('tabindex', '0'); // Make draggable elements focusable
+        // el.addEventListener('focus', () => (this.focusedElement = el as HTMLElement));
+        // el.addEventListener('blur', () => (this.focusedElement = null));
+
+        draggable.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: false });
+        draggable.addEventListener('mousedown', this.handleTouchStart.bind(this), { passive: false });
+        // });
+      }
+    }
+  }
+
+  droppablesModified(addedDroppables: HTMLElement[], removedDroppables: HTMLElement[]) {
+    for (const removedDroppable of removedDroppables) {
+      if (this.droppables.includes(removedDroppable)) {
+        this.droppables = this.droppables.filter(droppable => droppable !== removedDroppable);
+        this.allDropzones = this.allDropzones.filter(dropzone => dropzone !== removedDroppable);
+      }
+    }
+    for (const droppable of addedDroppables) {
+      if (!this.droppables.includes(droppable)) {
+        this.droppables.push(droppable);
+        this.allDropzones.push(droppable);
+      }
+    }
   }
 
   private handleTouchStart(e) {
@@ -117,11 +154,6 @@ export class TouchDragAndDrop {
 
   private handleTouchMove(e) {
     if (this.isDraggable && this.dragSource) {
-      const interaction = this.getInteraction(this.dragSource);
-      this.allDropzones = [
-        ...(Array.from(interaction.querySelectorAll('[dropzone]')) as HTMLElement[]),
-        ...(Array.from(interaction.shadowRoot?.querySelectorAll('[dropzone]')) as HTMLElement[])
-      ];
       const { x, y } = this.getEventCoordinates(e);
       const currentTouch = { clientX: x, clientY: y };
 
@@ -214,13 +246,12 @@ export class TouchDragAndDrop {
   }
 
   private handleTouchEnd(e) {
-    this.allDropzones = [];
+    // this.allDropzones = [];
     this.touchEndTriggered = true;
     this.isDraggable = false;
     let dropFound = false;
 
     // console.log('dropFound', dropFound);
-
     if (this.currentDropTarget) {
       this.dispatchCustomEvent(this.currentDropTarget, 'drop');
       this.dispatchCustomEvent(this.dragSource, 'dragend');
@@ -325,14 +356,14 @@ export class TouchDragAndDrop {
       return null;
     }
 
-    if (element.hasAttribute('dropzone')) {
+    if (this.allDropzones.includes(element)) {
       return element;
     }
 
-    // Traverse up the DOM tree to find an ancestor with 'dropzone' attribute
+    // Traverse up the DOM tree to find an ancestor that is included in all dropzones
     let currentElement = element.parentElement;
     while (currentElement) {
-      if (currentElement.hasAttribute('dropzone')) {
+      if (this.allDropzones.includes(currentElement)) {
         return currentElement;
       }
       currentElement = currentElement.parentElement;
@@ -346,7 +377,7 @@ export class TouchDragAndDrop {
       }
     }
 
-    // No element with 'dropzone' found
+    // No dropzone found
     return null;
   }
 
@@ -449,7 +480,6 @@ export class TouchDragAndDrop {
     this.touchStartTime = 0;
     this.touchStartPoint = null;
     this.touchEndTriggered = false;
-    this.allDropzones = [];
     this.dataTransfer = {
       data: {},
       setData(type, val) {

@@ -9,8 +9,8 @@ import { Interaction } from '../internal/interaction/interaction';
 export class QtiAssociateInteraction extends DragDropInteractionMixin(
   Interaction,
   'qti-simple-associable-choice',
-  true,
-  '.dl'
+  '.dl',
+  `slot[name='qti-simple-associable-choice']`
 ) {
   @state() private _childrenMap: Element[] = [];
 

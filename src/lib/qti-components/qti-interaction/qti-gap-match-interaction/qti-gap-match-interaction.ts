@@ -4,7 +4,12 @@ import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-intera
 import { Interaction } from '../internal/interaction/interaction';
 import styles from './qti-gap-match-interaction.styles';
 @customElement('qti-gap-match-interaction')
-export class QtiGapMatchInteraction extends DragDropInteractionMixin(Interaction, 'qti-gap-text', false, 'qti-gap') {
+export class QtiGapMatchInteraction extends DragDropInteractionMixin(
+  Interaction,
+  'qti-gap-text',
+  'qti-gap',
+  `slot[part='drags']`
+) {
   private observer: MutationObserver | null = null;
   private resizeObserver: ResizeObserver | null = null;
 
