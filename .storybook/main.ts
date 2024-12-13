@@ -1,6 +1,6 @@
 import type { StorybookConfig } from '@storybook/web-components-vite';
 import remarkGfm from 'remark-gfm';
-import * as tsconfigPaths from 'vite-tsconfig-paths';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
@@ -24,14 +24,11 @@ const config: StorybookConfig = {
     options: {}
   },
   staticDirs: ['../public/assets'],
-  docs: {}
-
-  // async viteFinal(config, { configType }) {
-  //   return {
-  //     ...config,
-  //     plugins: [...config.plugins!, tsconfigPaths.default()],
-  //     resolve: { ...config.resolve, alias: { ...config!.resolve!.alias, path: require.resolve('path-browserify') } }
-  //   };
-  // }
+  async viteFinal(config, { configType }) {
+    return {
+      ...config,
+      plugins: [...config.plugins!, tsconfigPaths()]
+    };
+  }
 };
 export default config;

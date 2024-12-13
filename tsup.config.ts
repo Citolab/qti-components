@@ -96,6 +96,9 @@ const bundleOptions: Options = {
   esbuildPlugins: [InlineCSSPlugin]
 };
 
+// const entries = Object.values(tsconfigJson.compilerOptions.paths).map(paths => `${paths[0]}/index.ts`);
+// console.log('entries', entries);
+
 export default defineConfig([
   {
     // Development build, including types, non minified source and sourcemaps
@@ -104,7 +107,13 @@ export default defineConfig([
     dts: true,
     format: ['esm', 'cjs'],
     outDir: 'dist',
-    entry: Object.values(tsconfigJson.compilerOptions.paths).map(paths => `${paths[0]}/index.ts`),
+    entry: [
+      './src/lib/qti-components/index.ts',
+      './src/lib/qti-item/index.ts',
+      './src/lib/qti-transformers/index.ts',
+      './src/lib/qti-loader/index.ts',
+      './src/lib/qti-test/index.ts'
+    ],
     minify: false,
     external: peerdependencies,
     sourcemap: true

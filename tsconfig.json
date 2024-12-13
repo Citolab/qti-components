@@ -27,6 +27,6 @@
     },
     "types": ["vitest/globals","@types/dom-view-transitions","./test/vitest.d.ts"]
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

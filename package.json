@@ -74,7 +74,7 @@
     "cdn"
   ],
   "scripts": {
-    "dev": "wireit",
+    "storybook": "wireit",
     "build": "wireit",
     "preview": "wireit",
     "---": "-",
@@ -96,7 +96,7 @@
     "prepare": "husky"
   },
   "wireit": {
-    "dev": {
+    "storybook": {
       "command": "storybook dev -p 6006",
       "dependencies": [
         "cem:watch"
