@@ -5,6 +5,9 @@ on:
   push:
     tags:
       - "v7.*"
+  workflow_dispatch: # Allows manual triggering from the UI
+
+
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
