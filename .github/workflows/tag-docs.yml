@@ -4,10 +4,7 @@ on:
   push:
     tags:
       - "v7.*"
-  workflow_dispatch: # Allows manual triggering from the UI
-
-
-
+      
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
