@@ -1,5 +1,9 @@
 import { Canvas, Meta, Story, Source, Markdown } from '@storybook/blocks';
 import * as Stories from './hi-qti.stories';
+import pkg from '../package.json';
+import ReadMe from '../../README.md?raw';
+
+<p>Version: {pkg.version}</p>;
 
 <Meta title="👋 Hi QTI" />
 
@@ -73,3 +77,5 @@ Or email us at:
 <a href="mailto:getinspiredbycitolab@gmail.com">
   ![Gmail](https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white)
 </a>
+
+<Markdown>{ReadMe}</Markdown>
