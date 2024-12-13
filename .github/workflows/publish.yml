@@ -3,10 +3,10 @@ name: Publish @next to NPM on dev branch merge
 on:
   push:
     branches:
-      - dev  # Trigger on push to the dev branch, adjust as needed
+      - dev
 
 jobs:
-  publish-npm:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - name: Git configuration
@@ -30,13 +30,6 @@ jobs:
         run: npm run build
       - name: Test build
         run: npm run test
-
-      # - name: Run Chromatic
-        # uses: chromaui/action@latest
-        # with:
-          # ⚠️ Make sure to configure a `CHROMATIC_PROJECT_TOKEN` repository secret
-          # projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-
 
       # - name: Version to prerelease
       #   run: npm version prerelease --preid=beta
