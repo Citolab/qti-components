@@ -29,7 +29,7 @@ export class QtiCustomOperator extends LitElement implements Calculate {
     return html`<slot @slotchange=${this.handleSlotChange}></slot>`;
   }
 
-  handleSlotChange(event: Event) {
+  handleSlotChange() {
     // expecting <[!CDATA[ ... ]]> is converted into <!-- ... --> with qti-transform: cDataToComment
     const commentNode = Array.from(this.firstElementChild?.childNodes ?? []).find(
       node => node.nodeType === Node.COMMENT_NODE

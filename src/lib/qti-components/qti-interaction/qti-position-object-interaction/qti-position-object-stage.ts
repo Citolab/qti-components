@@ -67,7 +67,7 @@ export class QtiPositionObjectStage extends LitElement {
     document.addEventListener('mouseup', this.removeMoveListener);
   }
 
-  removeMoveListener(event) {
+  removeMoveListener() {
     document.removeEventListener('mousemove', this.dragElementHandler, true);
   }
 

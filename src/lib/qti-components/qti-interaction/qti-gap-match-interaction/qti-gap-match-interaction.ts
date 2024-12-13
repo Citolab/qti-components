@@ -1,4 +1,4 @@
-import { css, CSSResultGroup, html, LitElement, PropertyValues } from 'lit';
+import { CSSResultGroup, html, PropertyValues } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-interaction-mixin';
 import { Interaction } from '../internal/interaction/interaction';
@@ -86,7 +86,7 @@ export class QtiGapMatchInteraction extends DragDropInteractionMixin(
     }
 
     const gaps = this.querySelectorAll('qti-gap');
-    gaps.forEach((gap, index) => {
+    gaps.forEach(gap => {
       const identifier = gap.getAttribute('identifier');
       const textIdentifier = matches.find(x => x.gap === identifier)?.text;
       const text = this.querySelector(`qti-gap-text[identifier="${textIdentifier}"]`)?.textContent.trim();

@@ -67,7 +67,6 @@ export class QtiCustomInteraction extends Interaction {
   // Therefor we need to use the new CES API to communicates via the broadcast API
   setupCES() {
     const iframe = this.shadowRoot.querySelector('#pciContainer') as HTMLIFrameElement,
-      iframeWin = iframe.contentWindow || iframe,
       iframeDoc = iframe.contentDocument;
 
     // const channel = new BroadcastChannel('ces_channel');

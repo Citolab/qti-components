@@ -30,11 +30,16 @@
   },
   "extensions": {
     "recommendations": [
-      "runem.lit-plugin",
       "dbaeumer.vscode-eslint",
+      "github.vscode-github-actions",
+      "runem.lit-plugin",
+      "hugo-vrijswijk.vscode-lit-xml",
+      "unifiedjs.vscode-mdx",
       "esbenp.prettier-vscode",
-      "bierner.lit-html",
-      "johnpapa.vscode-peacock"
+      "stylelint.vscode-stylelint",
+      "google.wireit",
+      "redhat.vscode-xml",
+      "joshbolduc.commitlint"
     ]
   }
 }

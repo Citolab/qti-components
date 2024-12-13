@@ -1,4 +1,4 @@
-import { css, html, LitElement } from 'lit';
+import { css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-interaction-mixin';
@@ -103,7 +103,7 @@ export class QtiOrderInteraction extends ShuffleMixin(
     if (this.correctResponses.length === 0) {
       const responses = Array.isArray(value) ? value : [value];
 
-      responses.forEach((response, index) => {
+      responses.forEach(response => {
         let simpleChoice = this.querySelector(`qti-simple-choice[identifier="${response}"]`);
         if (!simpleChoice) {
           simpleChoice = this.shadowRoot.querySelector(`qti-simple-choice[identifier="${response}"]`);

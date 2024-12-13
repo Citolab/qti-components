@@ -70,7 +70,7 @@ export class QtiPortableCustomInteraction extends Interaction {
   validate(): boolean {
     return true; // FOR NOW
   }
-  set value(val: string | string[]) {
+  set value(_: string | string[]) {
     // Only set state is supported in a PCI
   }
   get value(): string | string[] {

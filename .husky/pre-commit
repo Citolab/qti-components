@@ -2,6 +2,5 @@ npm ci
 npm run build
 npm run test
 npm run lint
-npm run attw
 npm run stylelint
-npm run prepublishOnly
+npm run attw

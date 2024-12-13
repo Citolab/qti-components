@@ -20,7 +20,6 @@ export default defineConfig({
       }
     }
   },
-  plugins: [tsconfigPaths()],
   /* FIXME: This is a workaround for the issue with Vite 2.6.0 */
   /* See: https://github.com/vitest-dev/vscode/discussions/337 */
   server: {

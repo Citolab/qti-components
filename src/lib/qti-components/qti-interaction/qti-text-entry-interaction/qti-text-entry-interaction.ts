@@ -2,7 +2,6 @@ import { CSSResultGroup, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { createRef } from 'lit/directives/ref.js';
-import { watch } from '../../../decorators';
 import { Interaction } from '../internal/interaction/interaction';
 import styles from './qti-text-entry-interaction.styles';
 @customElement('qti-text-entry-interaction')
@@ -64,7 +63,7 @@ export class QtiTextEntryInteraction extends Interaction {
         name="${this.responseIdentifier}"
         spellcheck="false"
         autocomplete="off"
-        @blur="${(event: FocusEvent) => {
+        @blur="${(_: FocusEvent) => {
           this.reportValidity();
         }}"
         @keydown="${event => event.stopImmediatePropagation()}"
@@ -87,7 +86,6 @@ export class QtiTextEntryInteraction extends Interaction {
     this.setEmptyAttribute(input.value);
     if (this._value !== input.value) {
       this.value = input.value;
-      const isValid = this.validate();
       this.saveResponse(input.value);
     }
   }

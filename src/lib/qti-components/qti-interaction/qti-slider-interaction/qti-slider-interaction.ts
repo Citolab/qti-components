@@ -33,8 +33,8 @@ export class QtiSliderInteraction extends Interaction {
   private _value = 0;
   csLive: CSSStyleDeclaration;
 
-  @query('#knob')
-  private _knob: HTMLElement;
+  // @query('#knob')
+  // private _knob: HTMLElement;
 
   @query('#rail')
   private _rail: HTMLElement;
@@ -72,10 +72,10 @@ export class QtiSliderInteraction extends Interaction {
   }
 
   @watch('disabled', { waitUntilFirstUpdate: true })
-  _handleDisabledChange = (old, disabled) => {};
+  _handleDisabledChange = () => {};
 
   @watch('readonly', { waitUntilFirstUpdate: true })
-  _handleReadonlyChange = (old, readonly) => {};
+  _handleReadonlyChange = () => {};
 
   reset() {
     // throw new Error('Method not implemented.');

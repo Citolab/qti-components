@@ -1,24 +1,12 @@
-import { CSSResultGroup, html, LitElement } from 'lit';
+import { CSSResultGroup, html } from 'lit';
 import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-interaction-mixin';
 import { customElement, property, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { ResponseInteraction } from '../../internal/expression-result';
-// import { TouchDragAndDrop } from '../internal/drag-drop';
 import '../qti-simple-associable-choice';
 import { QtiSimpleAssociableChoice } from '../qti-simple-associable-choice';
 import styles from './qti-match-interaction.styles';
 import { Interaction } from '../internal/interaction/interaction';
-
-interface Column {
-  id: number;
-  name: string;
-}
-
-interface Row {
-  id: number;
-  name: string;
-  isChecked: boolean;
-}
 
 @customElement('qti-match-interaction')
 export class QtiMatchInteraction extends DragDropInteractionMixin(
@@ -130,14 +118,14 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
       <table>
         <tr>
           <td></td>
-          ${this.cols.map((col, i) => html`<th part="r-header">${unsafeHTML(col.innerHTML)}</th>`)}
+          ${this.cols.map(col => html`<th part="r-header">${unsafeHTML(col.innerHTML)}</th>`)}
         </tr>
 
         ${this.rows.map(
-          (row, rIndex) =>
+          row =>
             html`<tr>
               <td part="c-header">${unsafeHTML(row.innerHTML)}</td>
-              ${this.cols.map((col, cIndex) => {
+              ${this.cols.map(col => {
                 const rowId = row.getAttribute('identifier');
                 const colId = col.getAttribute('identifier');
                 const value = `${rowId} ${colId}`;

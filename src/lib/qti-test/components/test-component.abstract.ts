@@ -1,5 +1,5 @@
 import { consume } from '@lit/context';
-import { LitElement, css } from 'lit';
+import { LitElement } from 'lit';
 import { state } from 'lit/decorators.js';
 import { propInternalState } from '../../decorators';
 import { testContext, testElement, TestElement, TestContext } from '../context';

@@ -46,7 +46,7 @@
     },
     "./item.css": "./dist/item.css",
     "./cdn/index.js": "./dist/cdn/index.js",
-    "./cdn/index.min.js": "./dist/cnd/index.min.js",
+    "./cdn/index.min.js": "./dist/cdn/index.min.js",
     "./cdn/index.global.js": "./dist/cdn/index.global.js"
   },
   "types": "./dist/qti-components/index.d.ts",
@@ -70,53 +70,34 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "cdn"
   ],
   "scripts": {
-    "dev": "vite",
-    "test": "wireit",
+    "storybook": "wireit",
+    "watch:build": "npm run build --watch",
+    "npm:publish": "np",
+    "---": "-",
     "build": "wireit",
-    "watch": "wireit",
+    "test": "wireit",
     "attw": "wireit",
     "lint": "wireit",
     "cem": "wireit",
-    "cem:watch": "wireit",
-    "css": "wireit",
     "act": "act",
+    "vite": "vite",
     "stylelint": "stylelint \"src/**/*.css\"",
-    "storybook": "wireit",
     "build-storybook": "storybook build",
     "storybook:test": "test-storybook",
     "storybook:docs": "wireit",
+    "storybook:docs:build": "wireit",
     "chromatic": "node chromatic-runner.cjs",
     "----hooks----": "-",
-    "prepublishOnly": "npm run build",
+    "prepublishOnly": "build",
     "prepare": "husky"
   },
   "wireit": {
-    "test": {
-      "command": "vitest run",
-      "dependencies": [
-        "build"
-      ]
-    },
-    "watch": {
-      "env": {
-        "NODE_ENV": "development"
-      },
-      "command": "tsup",
-      "output": [
-        "dist"
-      ]
-    },
     "storybook": {
       "command": "storybook dev -p 6006",
-      "dependencies": [
-        "cem:watch"
-      ]
-    },
-    "storybook:docs": {
-      "command": "storybook dev --docs -c .storybook-docs",
       "dependencies": [
         "cem:watch"
       ]
@@ -129,17 +110,43 @@
       "dependencies": [
         "cem",
         "css"
-      ],
-      "clean": true
+      ]
+    },
+    "preview": {
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "command": "vite preview",
+      "dependencies": [
+        "build"
+      ]
+    },
+    "test": {
+      "command": "vitest run",
+      "dependencies": [
+        "build"
+      ]
+    },
+    "storybook:docs": {
+      "command": "storybook dev --docs -c .storybook-docs",
+      "dependencies": [
+        "cem:watch"
+      ]
+    },
+    "storybook:docs:build": {
+      "command": "storybook build --docs -c .storybook-docs --output-dir docs",
+      "dependencies": [
+        "cem"
+      ]
     },
     "lint": {
       "command": "eslint --color --cache --cache-location .eslintcache src/lib/**/*.ts"
     },
     "cem": {
-      "command": "cem analyze --litelement --outdir \"dist\""
+      "command": "cem analyze"
     },
     "cem:watch": {
-      "command": "cem analyze --litelement --outdir \"dist\" --watch",
+      "command": "cem analyze --watch",
       "service": {
         "readyWhen": {
           "lineMatches": "Created new manifest."
@@ -158,16 +165,22 @@
   },
   "peerDependencies": {
     "@lit/context": "^1.1.2",
-    "lit": "^3.2.0",
-    "lit-html": "^3.2.1"
+    "lit": "^3.2.1",
+    "stampino": "^0.8.3"
+  },
+  "dependencies": {
+    "@lit/context": "^1.1.2",
+    "lit": "^3.2.1",
+    "stampino": "^0.8.3"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.17.1",
     "@chromatic-com/storybook": "^3.2.2",
+    "@commitlint/cli": "^19.6.0",
+    "@commitlint/config-conventional": "^19.6.0",
     "@custom-elements-manifest/analyzer": "^0.10.3",
     "@eslint/js": "^9.16.0",
     "@lit/context": "^1.1.3",
-    "@ljcl/storybook-addon-cssprops": "^4.0.0",
     "@storybook/addon-a11y": "^8.4.7",
     "@storybook/addon-essentials": "^8.4.7",
     "@storybook/addon-interactions": "^8.4.7",
@@ -206,11 +219,10 @@
     "fast-xml-parser": "^4.5.0",
     "globals": "^15.13.0",
     "husky": "^9.1.7",
-    "i": "^0.3.7",
-    "lit": "^3.2.1",
     "np": "^10.1.0",
     "npm": "^10.9.2",
     "path-browserify": "^1.0.1",
+    "pkg-pr-new": "^0.0.37",
     "playwright": "^1.49.0",
     "postcss": "^8.4.49",
     "postcss-class-apply": "^4.0.1",
@@ -220,14 +232,13 @@
     "prettier": "3.4.2",
     "remark-gfm": "^4.0.0",
     "shadow-dom-testing-library": "^1.11.3",
-    "stampino": "^0.8.3",
     "storybook": "^8.4.7",
     "stylelint": "^16.11.0",
     "stylelint-config-standard": "^36.0.1",
     "stylelint-prettier": "^5.0.2",
     "tsup": "^8.3.5",
     "typescript": "^5.7.2",
-    "typescript-eslint": "^8.17.0",
+    "typescript-eslint": "^8.18.0",
     "vite": "^6.0.3",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^2.1.8",
@@ -241,8 +252,5 @@
   "bugs": {
     "url": "https://github.com/Citolab/qti-components/issues"
   },
-  "homepage": "https://github.com/Citolab/qti-components#readme",
-  "dependencies": {
-    "stampino": "^0.8.3"
-  }
+  "homepage": "https://github.com/Citolab/qti-components#readme"
 }

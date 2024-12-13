@@ -24,7 +24,7 @@ export class QtiExtendedTextInteraction extends Interaction {
 
   @property({ type: String, attribute: 'class' }) classNames;
   @watch('classNames')
-  handleclassNamesChange(old, classes: string) {
+  handleclassNamesChange(_: any, classes: string) {
     const classNames = classes.split(' ');
     let rowsSet = false;
     classNames.forEach((className: string) => {
@@ -123,7 +123,7 @@ export class QtiExtendedTextInteraction extends Interaction {
         @keydown="${event => event.stopImmediatePropagation()}"
         @keyup="${this.textChanged}"
         @change="${this.textChanged}"
-        @blur="${(event: FocusEvent) => {
+        @blur="${(_: FocusEvent) => {
           this.reportValidity();
         }}"
         placeholder="${ifDefined(this.placeholderText ? this.placeholderText : undefined)}"
@@ -140,7 +140,6 @@ export class QtiExtendedTextInteraction extends Interaction {
     this.setEmptyAttribute(input.value);
     if (this._value !== input.value) {
       this.value = input.value;
-      const isValid = this.validate();
       this.saveResponse(input.value);
     }
   }

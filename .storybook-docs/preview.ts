@@ -8,7 +8,7 @@ const docTheme = create({
 export default {
   ...preview,
   parameters: {
-    docs: { theme: docTheme },
+    docs: { ...preview, toc: true },
     ...preview.parameters,
     options: {
       storySort: {

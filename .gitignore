@@ -36,3 +36,6 @@ public/assets/api/test
 public/assets/api/conformance
 *__screenshots__/
 .eslintcache
+cdn
+docs
+unpublish.sh
