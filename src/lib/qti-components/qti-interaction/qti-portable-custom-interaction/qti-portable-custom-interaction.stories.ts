@@ -7,7 +7,7 @@ export default {
 };
 
 export const Default = {
-  render: args =>
+  render: () =>
     html`<qti-portable-custom-interaction
       response-identifier="RESPONSE"
       module="pci-getallen"
@@ -29,7 +29,7 @@ export const Default = {
 };
 
 export const FallbackPath = {
-  render: args =>
+  render: () =>
     html`<div>
       Mary is saving to buy a birthday present for her mother. Every week she counts the money she has saved into piles
       of $5. At the end of the first week Mary had saved $10 and was planning to buy her mother a present worth $30.
@@ -107,7 +107,7 @@ export const FallbackPath = {
 };
 
 export const GraphAmpIO = {
-  render: args =>
+  render: () =>
     html`<qti-portable-custom-interaction
       custom-interaction-type-identifier="GraphAmpIO"
       data-height="360"
@@ -141,7 +141,7 @@ export const GraphAmpIO = {
 };
 
 export const TapToReveal = {
-  render: args =>
+  render: () =>
     html`<qti-portable-custom-interaction
       class="hmh-tap-border-rounded"
       custom-interaction-type-identifier="tapToReveal"

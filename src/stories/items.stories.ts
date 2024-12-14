@@ -36,7 +36,7 @@ export default meta;
 type Story = StoryObj;
 
 export const Items: Story = {
-  render: ({ disabled, view }, { argTypes, loaded: { xml } }) => {
+  render: (_, { loaded: { xml } }) => {
     const qtiItemRef = createRef<QtiItem>();
 
     const processResponse = () => {

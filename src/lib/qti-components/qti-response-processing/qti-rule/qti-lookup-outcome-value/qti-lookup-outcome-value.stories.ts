@@ -60,7 +60,7 @@ export default meta;
 
 export const Default = {
   args: {},
-  render: args => {
+  render: () => {
     return html`${unsafeHTML(storyXML)}`;
   },
   play: ({ canvasElement }) => {

@@ -20,7 +20,7 @@ const rgbIsEqual = (color1: { r: number; g: number; b: number }, color2: { r: nu
 // Utility function to convert hex color to RGB
 function hexToRgb(hex) {
   const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-  hex = hex.replace(shorthandRegex, (m, r, g, b) => r + r + g + g + b + b);
+  hex = hex.replace(shorthandRegex, (_m, r, g, b) => r + r + g + g + b + b);
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   return result
     ? {
@@ -45,7 +45,7 @@ function rgbStringToRgb(rgbString) {
 
 export const Default = {
   name: 'Not-Allowed-To-Drop-In-Other-Interaction',
-  render: (args, { loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
+  render: (_args, { loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
@@ -110,7 +110,7 @@ export const Default = {
     ).toBeDefined();
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri(`assets/qti-conformance/Advanced/Q6/gap-match-sv-1.xml`)
     })
   ]
@@ -118,7 +118,7 @@ export const Default = {
 
 export const CanRedrop: Story = {
   name: 'Can-Redrop-In-Same-Gap',
-  render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
+  render: (_args, { loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
@@ -187,7 +187,7 @@ export const CanRedrop: Story = {
 
 export const DraggableContainerHasDropInDication: Story = {
   name: 'Dropzone-has-drop-indication',
-  render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
+  render: (_args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');

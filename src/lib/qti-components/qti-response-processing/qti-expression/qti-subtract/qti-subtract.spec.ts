@@ -1,6 +1,5 @@
 import { html, render } from 'lit';
 // import '../qti-basevalue/qti-basevalue';
-import { ItemContext, QtiAssessmentItem } from 'src';
 import '../../../qti-assessment-item/qti-assessment-item';
 import '../../../qti-variable-declaration/qti-outcome-declaration/qti-outcome-declaration';
 import '../../qti-response-processing/qti-response-processing';
@@ -8,12 +7,18 @@ import './../../qti-rule/qti-set-outcome-value/qti-set-outcome-value';
 import './../qti-basevalue/qti-basevalue';
 import './index';
 import { QtiSubtract } from './qti-subtract';
+import { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
+import { ItemContext } from '../../../qti-assessment-item/qti-assessment-item.context';
 
 describe('QtiComponent qti-subtract', () => {
   it('should calculate the difference of two values', () => {
     const template = () => html`
       <qti-assessment-item>
-        <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="identifier">
+        <qti-outcome-declaration
+          identifier="SCORE"
+          cardinality="single"
+          base-type="identifier"
+        ></qti-outcome-declaration>
         <qti-response-processing>
           <qti-set-outcome-value identifier="SCORE">
             <qti-subtract>

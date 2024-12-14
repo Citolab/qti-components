@@ -18,7 +18,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: args =>
+  render: () =>
     html`<qti-assessment-item>
       <qti-stylesheet href="/qti-stylesheet/linked.css" type="text/css"></qti-stylesheet>
       <qti-item-body>
@@ -36,7 +36,7 @@ export const Default: Story = {
 };
 
 export const Inline: Story = {
-  render: args =>
+  render: () =>
     html`<qti-assessment-item>
       <qti-stylesheet type="text/css">${inlineCSS}</qti-stylesheet>
       <qti-item-body>

@@ -12,7 +12,7 @@ const meta: Meta = {
 export default meta;
 
 export const Single: Story = {
-  render: args => {
+  render: _args => {
     return html` <qti-assessment-item data-testid="qti-assessment-item">
       <qti-outcome-declaration base-type="string" cardinality="single" identifier="OUTCOME">
         <qti-default-value>
@@ -42,7 +42,7 @@ function sleep(ms: number) {
 }
 
 export const Multiple: Story = {
-  render: args => {
+  render: _args => {
     return html` <qti-assessment-item data-testid="qti-assessment-item">
       <qti-outcome-declaration base-type="string" cardinality="multiple" identifier="OUTCOME">
         <qti-default-value>

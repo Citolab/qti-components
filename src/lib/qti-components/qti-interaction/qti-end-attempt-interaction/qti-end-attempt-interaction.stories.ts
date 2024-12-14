@@ -9,7 +9,7 @@ export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
-  render: args => html`
+  render: () => html`
     <qti-assessment-item
       @qti-register-interaction="${action(`qti-register-interaction`)}"
       @qti-interaction-response="${action(`qti-interaction-response`)}"

@@ -119,14 +119,28 @@ export default defineConfig([
     sourcemap: true
   } as Options,
 
+  {
+    // Development build, including types, non minified source and sourcemaps
+    // "src/lib/qti-components","src/lib/qti-item","src/lib/qti-transformers","src/lib/qti-loader","src/lib/qti-test"]
+    ...bundleOptions,
+    dts: true,
+    format: ['esm'],
+    outDir: 'dist',
+    entry: ['./src/index.ts'],
+    minify: false,
+    external: [],
+    noExternal: [/(.*)/],
+    sourcemap: 'inline' as const
+  } as Options,
+
   ...(process.env.NODE_ENV === 'production'
     ? [
         {
           // (src/index.ts -> dist/cdn/index.min) CDN ESM Minified
           ...bundleOptions,
-          format: ['esm', 'cjs'],
+          format: ['esm'],
           outDir: './',
-          entry: { 'cdn/index.min': './src/index.ts' },
+          entry: { 'cdn/index': './src/index.ts' },
           noExternal: [/(.*)/],
           minify: true,
           sourcemap: false

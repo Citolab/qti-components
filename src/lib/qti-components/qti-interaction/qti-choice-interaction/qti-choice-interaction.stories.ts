@@ -212,9 +212,6 @@ export const VocabularyDecimal: Story = {
     class: ['qti-labels-decimal'].join(' '),
     'min-choices': 1,
     'max-choices': 1
-  },
-  play: ({ canvasElement }) => {
-    // check if screenshots match
   }
 };
 

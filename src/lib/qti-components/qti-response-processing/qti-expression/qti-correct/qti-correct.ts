@@ -1,4 +1,4 @@
-import { ResponseVariable } from 'src/lib/qti-components/internal/variables';
+import { ResponseVariable } from '../../../internal/variables';
 import { QtiExpression } from '../qti-expression';
 
 export class QtiCorrect extends QtiExpression<string | string[]> {

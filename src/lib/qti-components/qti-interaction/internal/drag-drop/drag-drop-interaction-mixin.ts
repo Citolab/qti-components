@@ -40,7 +40,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     @property({ type: Number, reflect: true, attribute: 'max-associations' }) maxAssociations = 1;
 
     @liveQuery(draggablesSelector)
-    handleDraggablesChange(dragsAdded: HTMLElement[], dragsRemoved: Element[]) {
+    handleDraggablesChange(dragsAdded: HTMLElement[], _dragsRemoved: Element[]) {
       if (this.isMatchTabular()) return;
       const newDraggables = this.filterExistingDraggables(dragsAdded);
 
@@ -261,7 +261,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
 
     protected checkMaxAssociations(): void {
-      this.droppables.forEach((d, index) => {
+      this.droppables.forEach(d => {
         const maxMatch = +(d.getAttribute('match-max') || 1);
         const currentAssociations = d.querySelectorAll('[qti-draggable="true"]').length;
         const disableDroppable = currentAssociations >= maxMatch;
