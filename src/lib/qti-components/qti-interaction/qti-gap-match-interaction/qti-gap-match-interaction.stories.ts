@@ -44,6 +44,52 @@ function rgbStringToRgb(rgbString) {
 }
 
 export const Default = {
+  name: 'qti-gap-match-interaction',
+  render: args => {
+    let item: QtiAssessmentItem;
+    const onInteractionChangedAction = action('qti-interaction-changed');
+    const onOutcomeChangedAction = action('qti-outcome-changed');
+    const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => {
+      item = qtiAssessmentItem;
+      action('qti-assessment-item-connected');
+    };
+
+    return html`
+  <qti-gap-match-interaction
+        @qti-register-interaction="${e => action(JSON.stringify(e.detail.responseIdentifier))()}"
+        @qti-interaction-response="${e => action(JSON.stringify(e.detail))()}"
+        max-associations="0"
+        response-identifier="RESPONSE"
+        class="qti-choices-top"
+      >
+        <qti-prompt>Identify the missing words in this famous quote from Shakespeare's Richard III.</qti-prompt>
+        <qti-gap-text identifier="W" match-max="1">winter</qti-gap-text>
+        <qti-gap-text identifier="Sp" match-max="1">spring</qti-gap-text>
+        <qti-gap-text identifier="Su" match-max="1">summer</qti-gap-text>
+        <qti-gap-text identifier="A" match-max="1">autumn</qti-gap-text>
+        <blockquote>
+          <p>
+            Now is the <qti-gap identifier="G1" ></qti-gap> of our discontent<br />
+            Made glorious <qti-gap identifier="G2" ></qti-gap>  by this sun of York;<br />
+            And all the clouds that lour'd upon our house<br />
+            In the deep bosom of the ocean buried.
+          </p>
+        </blockquote>
+      </qti-gap-match-interaction>
+    </qti-graphic-gap-match-interaction>
+    `;
+  },
+  args: {
+    // docsHint: 'Some other value than the default'
+  },
+  loaders: [
+    async ({ args }) => ({
+      xml: await getItemByUri(`assets/qti-conformance/Advanced/Q6/gap-match-sv-1.xml`)
+    })
+  ]
+};
+
+export const DontDropInOtherInteraction = {
   name: 'Not-Allowed-To-Drop-In-Other-Interaction',
   render: (_args, { loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
     let item: QtiAssessmentItem;
@@ -176,7 +222,6 @@ export const CanRedrop: Story = {
     expect(gapG1.textContent).toBe('winter');
     expect(gapG1.hasAttribute('disabled')).toBe(true);
     expect(gapG1.hasAttribute('enable')).toBe(false);
-    expect(gapG1.hasAttribute('dropzone')).toBe(false);
   },
   loaders: [
     async ({ args }) => ({

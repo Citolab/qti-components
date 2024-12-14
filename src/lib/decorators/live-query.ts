@@ -42,7 +42,9 @@ export function liveQuery(querySelector: string, options?: LiveQueryOptions) {
     proto.connectedCallback = function (this: ElemClass) {
       connectedCallback.call(this);
       const callback = (mutationList: MutationRecord[]) => {
-        const elementsToWatch = Array.from(this.querySelectorAll(querySelector));
+        const elementsToWatch = Array.from(this.querySelectorAll(querySelector)).concat(
+          Array.from(this.shadowRoot?.querySelectorAll(querySelector) || [])
+        );
         for (const mutation of mutationList) {
           const addedNodes = Array.from(mutation.addedNodes).map(e => e as Element);
           const removedNodes = Array.from(mutation.addedNodes).map(e => e as Element);
@@ -54,7 +56,9 @@ export function liveQuery(querySelector: string, options?: LiveQueryOptions) {
       observer = new MutationObserver(callback);
       observer.observe(this, { childList: true, subtree: true });
 
-      const elementsAdded = this.querySelectorAll(querySelector) ?? [];
+      const elementsAdded = Array.from(this.querySelectorAll(querySelector)).concat(
+        Array.from(this.shadowRoot?.querySelectorAll(querySelector) || [])
+      );
       (this[decoratedFnName] as unknown as UpdateHandler)(Array.from(elementsAdded), []);
     };
 

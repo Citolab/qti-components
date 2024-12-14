@@ -8,7 +8,7 @@ import { Interaction } from '../internal/interaction/interaction';
 
 @customElement('qti-order-interaction')
 export class QtiOrderInteraction extends ShuffleMixin(
-  DragDropInteractionMixin(Interaction, `qti-simple-choice`, true, 'drop-list'),
+  DragDropInteractionMixin(Interaction, `qti-simple-choice`, 'drop-list', `slot[part='drags']`),
   'qti-simple-choice'
 ) {
   childrenMap: Element[];

@@ -101,6 +101,10 @@
     }
   }
 
+  .hover-border {
+    border: 2px solid #000; /* Adjust the border style and color as needed */
+  }
+
   qti-graphic-gap-match-interaction:state(--dragzone-active)::part(drags) {
     @apply act;
   }

@@ -6,11 +6,7 @@ type Constructor<T = {}> = abstract new (...args: any[]) => T;
 
 declare class DroppablesInterface {}
 
-export const DroppablesMixin = <T extends Constructor<Interaction>>(
-  superClass: T,
-  useShadowRoot: boolean,
-  droppablesSelector: string
-) => {
+export const DroppablesMixin = <T extends Constructor<Interaction>>(superClass: T, droppablesSelector: string) => {
   abstract class DroppablesElement extends superClass {
     private observer: MutationObserver;
 
@@ -33,8 +29,8 @@ export const DroppablesMixin = <T extends Constructor<Interaction>>(
     }
 
     private getDroppableElements(): Element[] {
-      return Array.from(
-        useShadowRoot ? this.shadowRoot.querySelectorAll(droppablesSelector) : this.querySelectorAll(droppablesSelector)
+      return Array.from(this.shadowRoot?.querySelectorAll(droppablesSelector) || []).concat(
+        Array.from(this.querySelectorAll(droppablesSelector) || [])
       );
     }
 
@@ -46,7 +42,6 @@ export const DroppablesMixin = <T extends Constructor<Interaction>>(
     }
 
     private prepareDroppable(droppable: Element): void {
-      droppable.setAttribute('dropzone', 'move');
       droppable.addEventListener('dragleave', this.dragleaveHandler);
       this.attachEventListeners(droppable);
     }
@@ -151,9 +146,15 @@ export const DroppablesMixin = <T extends Constructor<Interaction>>(
     }
 
     private async moveDraggableToDroppable(draggable: HTMLElement, droppable: HTMLElement): Promise<void> {
+      console.log(`moveDraggableToDroppable, draggable: ${draggable.tagName}, droppable: ${droppable.tagName}`);
       const moveElement = (): void => {
         draggable.style.transform = 'translate(0, 0)';
-        droppable.appendChild(draggable);
+        if (droppable.tagName === 'SLOT') {
+          draggable.setAttribute('slot', droppable.getAttribute('name'));
+        } else {
+          droppable.appendChild(draggable);
+        }
+
         // checkMaxAssociations and saveResponse are defined/overridden in a mixin
         this['checkMaxAssociations']();
         this['saveResponse'](null); //

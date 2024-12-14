@@ -8,8 +8,8 @@ import styles from './qti-graphic-gap-match-interaction.styles';
 export class QtiGraphicGapMatchInteraction extends DragDropInteractionMixin(
   Interaction,
   'qti-gap-img, qti-gap-text',
-  false,
-  'qti-associable-hotspot'
+  'qti-associable-hotspot',
+  `slot[part='drags']`
 ) {
   static styles: CSSResultGroup = styles;
 
@@ -19,7 +19,7 @@ export class QtiGraphicGapMatchInteraction extends DragDropInteractionMixin(
   override render() {
     return html` <slot name="prompt"></slot>
       <slot part="image"></slot>
-      <slot part="drags" name="drags"></slot>
+      <slot part="drags" name="drags" class="hover-border"></slot>
       <div role="alert" id="validationMessage"></div>`;
   }
 

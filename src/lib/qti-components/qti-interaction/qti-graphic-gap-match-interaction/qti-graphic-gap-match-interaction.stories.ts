@@ -33,15 +33,16 @@ export const Default = {
       </p>
     </qti-prompt>
     <qti-graphic-gap-match-interaction
-      @qti-register-interaction="${e => action(JSON.stringify(e.detail.responseIdentifier))()}"
+      @qti-register-interaction="${e => {
+        action(JSON.stringify(e.detail.responseIdentifier))();
+      }}"
       @qti-interaction-response="${e => action(JSON.stringify(e.detail))()}"
-      class="qti-choices-top qti-selections-dark"
+      class="qti-choices-top"
       response-identifier="RESPONSE"
       shuffle="false"
       min-associations="0"
       max-associations="4"
       ?disabled="${args.disabled}"
-      data-choices-container-width="376"
     >
       <img
         alt="timeline from 1939 to 1991"

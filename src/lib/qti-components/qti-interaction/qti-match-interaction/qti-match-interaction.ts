@@ -12,8 +12,8 @@ import { Interaction } from '../internal/interaction/interaction';
 export class QtiMatchInteraction extends DragDropInteractionMixin(
   Interaction,
   'qti-simple-match-set:first-of-type qti-simple-associable-choice',
-  false,
-  'qti-simple-match-set:last-of-type qti-simple-associable-choice'
+  'qti-simple-match-set:last-of-type qti-simple-associable-choice',
+  'qti-simple-match-set'
 ) {
   static styles: CSSResultGroup = styles;
 

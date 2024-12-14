@@ -47,7 +47,10 @@ export abstract class Interaction extends LitElement implements IInteraction {
       new CustomEvent('qti-register-interaction', {
         bubbles: true,
         composed: true,
-        cancelable: false
+        cancelable: false,
+        detail: {
+          responseIdentifier: this.responseIdentifier
+        }
       })
     );
   }
