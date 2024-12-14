@@ -5,12 +5,13 @@ import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-intera
 import { ShuffleMixin } from '../internal/shuffle/shuffle-mixin'; // Import the mixin
 import { QtiSimpleChoice } from '../qti-simple-choice';
 import { Interaction } from '../internal/interaction/interaction';
-
+import styles from './qti-order-interaction.styles';
 @customElement('qti-order-interaction')
 export class QtiOrderInteraction extends ShuffleMixin(
   DragDropInteractionMixin(Interaction, `qti-simple-choice`, 'drop-list', `slot[part='drags']`),
   'qti-simple-choice'
 ) {
+  static styles = styles;
   childrenMap: Element[];
 
   @state() nrChoices: number = 0;
@@ -20,58 +21,6 @@ export class QtiOrderInteraction extends ShuffleMixin(
   /** orientation of choices */
   @property({ type: String })
   public orientation: 'horizontal' | 'vertical';
-
-  static override styles = [
-    css`
-      [part='drags'] {
-        display: flex;
-        align-items: flex-start;
-        flex: 1;
-      }
-
-      [part='drops'] {
-        flex: 1;
-        display: grid;
-        grid-auto-flow: column;
-        grid-auto-columns: 1fr;
-      }
-
-      :host([orientation='horizontal']) [part='drags'] {
-        flex-direction: row;
-      }
-      :host([orientation='horizontal']) [part='drops'] {
-        grid-auto-flow: column;
-      }
-      :host([orientation='vertical']) [part='drags'] {
-        flex-direction: column;
-      }
-      :host([orientation='vertical']) [part='drops'] {
-        grid-auto-flow: row;
-      }
-
-      [part='drop-list'] {
-        display: block;
-        flex: 1;
-      }
-
-      [part='container'] {
-        display: flex;
-        gap: 0.5rem;
-      }
-      :host(.qti-choices-top) [part='container'] {
-        flex-direction: column;
-      }
-      :host(.qti-choices-bottom) [part='container'] {
-        flex-direction: column-reverse;
-      }
-      :host(.qti-choices-left) [part='container'] {
-        flex-direction: row;
-      }
-      :host(.qti-choices-right) [part='container'] {
-        flex-direction: row-reverse;
-      }
-    `
-  ];
 
   override render() {
     const choices = Array.from(this.querySelectorAll('qti-simple-choice'));

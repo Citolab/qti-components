@@ -105,36 +105,39 @@
     border: 2px solid #000; /* Adjust the border style and color as needed */
   }
 
-  qti-graphic-gap-match-interaction:state(--dragzone-active)::part(drags) {
-    @apply act;
-  }
-
-  qti-graphic-gap-match-interaction:state(--dragzone-enabled)::part(drags) {
-    @apply dropping;
-  }
-
-  /* Active state */
-  qti-graphic-gap-match-interaction.qti-selections-light:state(--dragzone-active)::part(drags) {
-    background-color: var(--qti-light-bg-active);
-    border-color: var(--qti-light-border-active);
-  }
-
-  qti-graphic-gap-match-interaction.qti-selections-dark:state(--dragzone-active)::part(drags) {
-    background-color: var(--qti-dark-bg-active);
-    border-color: var(--qti-dark-border-active);
-  }
-
-  /* Enabled state */
-  qti-graphic-gap-match-interaction.qti-selections-light:state(--dragzone-enabled)::part(drags) {
-    background-color: var(--qti-light-bg-active);
-  }
-
-  qti-graphic-gap-match-interaction.qti-selections-dark:state(--dragzone-enabled)::part(drags) {
-    background-color: var(--qti-dark-bg-active);
-  }
-
   qti-graphic-gap-match-interaction {
     position: relative;
+
+    &.qti-selections-light {
+      &:state(--dragzone-active)::part(drags) {
+        background-color: var(--qti-light-bg-active);
+        border-color: var(--qti-light-border-active);
+      }
+
+      &:state(--dragzone-enabled)::part(drags) {
+        background-color: var(--qti-light-bg-active);
+      }
+    }
+
+    &.qti-selections-dark {
+      &:state(--dragzone-active)::part(drags) {
+        background-color: var(--qti-dark-bg-active);
+        border-color: var(--qti-dark-border-active);
+      }
+
+      &:state(--dragzone-enabled)::part(drags) {
+        background-color: var(--qti-dark-bg-active);
+      }
+    }
+
+    /* General styles for active and enabled states */
+    &:state(--dragzone-active)::part(drags) {
+      @apply act;
+    }
+
+    &:state(--dragzone-enabled)::part(drags) {
+      @apply dropping;
+    }
 
     & qti-gap-img,
     qti-gap-text {
@@ -243,15 +246,38 @@
     }
   }
 
-  qti-gap-match-interaction:state(--dragzone-active)::part(drags) {
-    @apply act;
-  }
-
-  qti-gap-match-interaction:state(--dragzone-enabled)::part(drags) {
-    @apply dropping;
-  }
-
   qti-gap-match-interaction {
+    &.qti-selections-light {
+      &:state(--dragzone-active)::part(drags) {
+        background-color: var(--qti-light-bg-active);
+        border-color: var(--qti-light-border-active);
+      }
+
+      &:state(--dragzone-enabled)::part(drags) {
+        background-color: var(--qti-light-bg-active);
+      }
+    }
+
+    &.qti-selections-dark {
+      &:state(--dragzone-active)::part(drags) {
+        background-color: var(--qti-dark-bg-active);
+        border-color: var(--qti-dark-border-active);
+      }
+
+      &:state(--dragzone-enabled)::part(drags) {
+        background-color: var(--qti-dark-bg-active);
+      }
+    }
+
+    /* General styles for active and enabled states */
+    &:state(--dragzone-active)::part(drags) {
+      @apply act;
+    }
+
+    &:state(--dragzone-enabled)::part(drags) {
+      @apply dropping;
+    }
+
     & qti-gap-text {
       @apply drag;
 
@@ -661,6 +687,14 @@
     }
   }
 
+  qti-order-interaction:state(--dragzone-active)::part(drags) {
+    @apply act;
+  }
+
+  qti-order-interaction:state(--dragzone-enabled)::part(drags) {
+    @apply dropping;
+  }
+
   qti-order-interaction {
     &::part(qti-simple-choice),
     & qti-simple-choice {
@@ -726,6 +760,56 @@
 
     &::part(active) {
       @apply act;
+    }
+
+    & drop-list {
+      &[shape='circle'] {
+        @apply spot;
+
+        &:hover {
+          @apply hov;
+        }
+
+        &:focus {
+          @apply foc;
+        }
+
+        &[aria-checked='true'] {
+          @apply act;
+        }
+
+        &[aria-readonly='true'] {
+          @apply rdo;
+        }
+
+        &[aria-disabled='true'] {
+          @apply dis;
+        }
+      }
+
+      &[shape='square'] {
+        @apply spot;
+
+        &:hover {
+          @apply hov;
+        }
+
+        &:focus {
+          @apply foc;
+        }
+
+        &[aria-checked='true'] {
+          @apply act;
+        }
+
+        &[aria-readonly='true'] {
+          @apply rdo;
+        }
+
+        &[aria-disabled='true'] {
+          @apply dis;
+        }
+      }
     }
   }
 
@@ -812,6 +896,37 @@
         content: attr(aria-ordervalue) !important;
       }
     }
+
+    &.qti-selections-light {
+      &:state(--dragzone-active)::part(drags) {
+        background-color: var(--qti-light-bg-active);
+        border-color: var(--qti-light-border-active);
+      }
+
+      &:state(--dragzone-enabled)::part(drags) {
+        background-color: var(--qti-light-bg-active);
+      }
+    }
+
+    &.qti-selections-dark {
+      &:state(--dragzone-active)::part(drags) {
+        background-color: var(--qti-dark-bg-active);
+        border-color: var(--qti-dark-border-active);
+      }
+
+      &:state(--dragzone-enabled)::part(drags) {
+        background-color: var(--qti-dark-bg-active);
+      }
+    }
+
+    /* General styles for active and enabled states */
+    &:state(--dragzone-active)::part(drags) {
+      @apply act;
+    }
+
+    &:state(--dragzone-enabled)::part(drags) {
+      @apply dropping;
+    }
   }
 
   qti-graphic-associate-interaction {
@@ -866,6 +981,37 @@
           @apply dis;
         }
       }
+    }
+
+    &.qti-selections-light {
+      &:state(--dragzone-active)::part(drags) {
+        background-color: var(--qti-light-bg-active);
+        border-color: var(--qti-light-border-active);
+      }
+
+      &:state(--dragzone-enabled)::part(drags) {
+        background-color: var(--qti-light-bg-active);
+      }
+    }
+
+    &.qti-selections-dark {
+      &:state(--dragzone-active)::part(drags) {
+        background-color: var(--qti-dark-bg-active);
+        border-color: var(--qti-dark-border-active);
+      }
+
+      &:state(--dragzone-enabled)::part(drags) {
+        background-color: var(--qti-dark-bg-active);
+      }
+    }
+
+    /* General styles for active and enabled states */
+    &:state(--dragzone-active)::part(drags) {
+      @apply act;
+    }
+
+    &:state(--dragzone-enabled)::part(drags) {
+      @apply dropping;
     }
   }
 

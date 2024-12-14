@@ -9566,6 +9566,33 @@
           "members": [
             {
               "kind": "field",
+              "name": "draggables",
+              "type": {
+                "text": "HTMLElement[]"
+              },
+              "privacy": "public",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "droppables",
+              "type": {
+                "text": "HTMLElement[]"
+              },
+              "privacy": "public",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "dragContainers",
+              "type": {
+                "text": "HTMLElement[]"
+              },
+              "privacy": "public",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
               "name": "touchStartTime",
               "type": {
                 "text": "number"
@@ -9780,25 +9807,54 @@
             },
             {
               "kind": "method",
-              "name": "addDraggableElements",
+              "name": "dragContainersModified",
               "parameters": [
                 {
-                  "name": "draggables",
+                  "name": "addedDragContainers",
                   "type": {
-                    "text": "Element[]"
+                    "text": "HTMLElement[]"
+                  }
+                },
+                {
+                  "name": "removedDragContainers",
+                  "type": {
+                    "text": "HTMLElement[]"
                   }
                 }
               ]
             },
             {
               "kind": "method",
-              "name": "getInteraction",
-              "privacy": "private",
+              "name": "draggablesModified",
               "parameters": [
                 {
-                  "name": "el",
+                  "name": "addedDraggables",
                   "type": {
-                    "text": "HTMLElement"
+                    "text": "HTMLElement[]"
+                  }
+                },
+                {
+                  "name": "removedDraggables",
+                  "type": {
+                    "text": "HTMLElement[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "droppablesModified",
+              "parameters": [
+                {
+                  "name": "addedDroppables",
+                  "type": {
+                    "text": "HTMLElement[]"
+                  }
+                },
+                {
+                  "name": "removedDroppables",
+                  "type": {
+                    "text": "HTMLElement[]"
                   }
                 }
               ]
@@ -10497,12 +10553,6 @@
               }
             },
             {
-              "name": "useShadowRoot",
-              "type": {
-                "text": "boolean"
-              }
-            },
-            {
               "name": "droppablesSelector",
               "type": {
                 "text": "string"
@@ -10593,15 +10643,6 @@
             },
             {
               "kind": "field",
-              "name": "droppables",
-              "type": {
-                "text": "HTMLElement[]"
-              },
-              "privacy": "protected",
-              "default": "[]"
-            },
-            {
-              "kind": "field",
               "name": "dragDropApi",
               "type": {
                 "text": "TouchDragAndDrop"
@@ -10637,6 +10678,24 @@
             },
             {
               "kind": "method",
+              "name": "handleDraggableContainerChange",
+              "parameters": [
+                {
+                  "name": "dragContainersAdded",
+                  "type": {
+                    "text": "HTMLElement[]"
+                  }
+                },
+                {
+                  "name": "dragContainersRemoved",
+                  "type": {
+                    "text": "HTMLElement[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "handleDraggablesChange",
               "parameters": [
                 {
@@ -10648,10 +10707,43 @@
                 {
                   "name": "dragsRemoved",
                   "type": {
-                    "text": "Element[]"
+                    "text": "HTMLElement[]"
                   }
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "handleDroppablesChange",
+              "parameters": [
+                {
+                  "name": "dropsAdded",
+                  "type": {
+                    "text": "HTMLElement[]"
+                  }
+                },
+                {
+                  "name": "dropsRemoved",
+                  "type": {
+                    "text": "HTMLElement[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "dragContainersModified",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "draggablesModified",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "droppablesModified",
+              "privacy": "private"
             },
             {
               "kind": "method",
@@ -10674,42 +10766,6 @@
             },
             {
               "kind": "method",
-              "name": "filterExistingDraggables",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "HTMLElement[]"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "draggables",
-                  "type": {
-                    "text": "HTMLElement[]"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "addNewDraggables",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "draggables",
-                  "type": {
-                    "text": "HTMLElement[]"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
               "name": "storeDraggable",
               "privacy": "private",
               "return": {
@@ -10727,16 +10783,6 @@
               ]
             },
             {
-              "kind": "method",
-              "name": "initializeDroppables",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
               "kind": "field",
               "name": "handleDragStart",
               "privacy": "private"
@@ -10744,11 +10790,6 @@
             {
               "kind": "field",
               "name": "handleDragEnd",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "getDragContainers",
               "privacy": "private"
             },
             {
@@ -11498,13 +11539,13 @@
               }
             },
             {
-              "name": "useShadowRootForDroppables",
+              "name": "droppablesSelector",
               "type": {
-                "text": "boolean"
+                "text": "string"
               }
             },
             {
-              "name": "droppablesSelector",
+              "name": "dragContainersSelector",
               "type": {
                 "text": "string"
               }
@@ -11903,19 +11944,6 @@
             },
             {
               "kind": "field",
-              "name": "droppables",
-              "type": {
-                "text": "HTMLElement[]"
-              },
-              "privacy": "protected",
-              "default": "[]",
-              "inheritedFrom": {
-                "name": "DragDropInteractionMixin",
-                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
               "name": "dragDropApi",
               "type": {
                 "text": "TouchDragAndDrop"
@@ -11967,6 +11995,28 @@
             },
             {
               "kind": "method",
+              "name": "handleDraggableContainerChange",
+              "parameters": [
+                {
+                  "name": "dragContainersAdded",
+                  "type": {
+                    "text": "HTMLElement[]"
+                  }
+                },
+                {
+                  "name": "dragContainersRemoved",
+                  "type": {
+                    "text": "HTMLElement[]"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "handleDraggablesChange",
               "parameters": [
                 {
@@ -11978,10 +12028,59 @@
                 {
                   "name": "dragsRemoved",
                   "type": {
-                    "text": "Element[]"
+                    "text": "HTMLElement[]"
                   }
                 }
               ],
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "handleDroppablesChange",
+              "parameters": [
+                {
+                  "name": "dropsAdded",
+                  "type": {
+                    "text": "HTMLElement[]"
+                  }
+                },
+                {
+                  "name": "dropsRemoved",
+                  "type": {
+                    "text": "HTMLElement[]"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dragContainersModified",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "draggablesModified",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "droppablesModified",
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "DragDropInteractionMixin",
                 "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
@@ -12012,50 +12111,6 @@
             },
             {
               "kind": "method",
-              "name": "filterExistingDraggables",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "HTMLElement[]"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "draggables",
-                  "type": {
-                    "text": "HTMLElement[]"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "DragDropInteractionMixin",
-                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "addNewDraggables",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "draggables",
-                  "type": {
-                    "text": "HTMLElement[]"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "DragDropInteractionMixin",
-                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
               "name": "storeDraggable",
               "privacy": "private",
               "return": {
@@ -12077,20 +12132,6 @@
               }
             },
             {
-              "kind": "method",
-              "name": "initializeDroppables",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "inheritedFrom": {
-                "name": "DragDropInteractionMixin",
-                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
-              }
-            },
-            {
               "kind": "field",
               "name": "handleDragStart",
               "privacy": "private",
@@ -12102,15 +12143,6 @@
             {
               "kind": "field",
               "name": "handleDragEnd",
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "DragDropInteractionMixin",
-                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "getDragContainers",
               "privacy": "private",
               "inheritedFrom": {
                 "name": "DragDropInteractionMixin",
@@ -13825,19 +13857,6 @@
             },
             {
               "kind": "field",
-              "name": "droppables",
-              "type": {
-                "text": "HTMLElement[]"
-              },
-              "privacy": "protected",
-              "default": "[]",
-              "inheritedFrom": {
-                "name": "DragDropInteractionMixin",
-                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
               "name": "dragDropApi",
               "type": {
                 "text": "TouchDragAndDrop"
@@ -13889,6 +13908,28 @@
             },
             {
               "kind": "method",
+              "name": "handleDraggableContainerChange",
+              "parameters": [
+                {
+                  "name": "dragContainersAdded",
+                  "type": {
+                    "text": "HTMLElement[]"
+                  }
+                },
+                {
+                  "name": "dragContainersRemoved",
+                  "type": {
+                    "text": "HTMLElement[]"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "handleDraggablesChange",
               "parameters": [
                 {
@@ -13900,10 +13941,59 @@
                 {
                   "name": "dragsRemoved",
                   "type": {
-                    "text": "Element[]"
+                    "text": "HTMLElement[]"
                   }
                 }
               ],
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "handleDroppablesChange",
+              "parameters": [
+                {
+                  "name": "dropsAdded",
+                  "type": {
+                    "text": "HTMLElement[]"
+                  }
+                },
+                {
+                  "name": "dropsRemoved",
+                  "type": {
+                    "text": "HTMLElement[]"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dragContainersModified",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "draggablesModified",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "droppablesModified",
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "DragDropInteractionMixin",
                 "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
@@ -13934,50 +14024,6 @@
             },
             {
               "kind": "method",
-              "name": "filterExistingDraggables",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "HTMLElement[]"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "draggables",
-                  "type": {
-                    "text": "HTMLElement[]"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "DragDropInteractionMixin",
-                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "addNewDraggables",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "draggables",
-                  "type": {
-                    "text": "HTMLElement[]"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "DragDropInteractionMixin",
-                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
               "name": "storeDraggable",
               "privacy": "private",
               "return": {
@@ -13999,20 +14045,6 @@
               }
             },
             {
-              "kind": "method",
-              "name": "initializeDroppables",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "inheritedFrom": {
-                "name": "DragDropInteractionMixin",
-                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
-              }
-            },
-            {
               "kind": "field",
               "name": "handleDragStart",
               "privacy": "private",
@@ -14024,15 +14056,6 @@
             {
               "kind": "field",
               "name": "handleDragEnd",
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "DragDropInteractionMixin",
-                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "getDragContainers",
               "privacy": "private",
               "inheritedFrom": {
                 "name": "DragDropInteractionMixin",
@@ -15663,19 +15686,6 @@
             },
             {
               "kind": "field",
-              "name": "droppables",
-              "type": {
-                "text": "HTMLElement[]"
-              },
-              "privacy": "protected",
-              "default": "[]",
-              "inheritedFrom": {
-                "name": "DragDropInteractionMixin",
-                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
               "name": "dragDropApi",
               "type": {
                 "text": "TouchDragAndDrop"
@@ -15727,6 +15737,28 @@
             },
             {
               "kind": "method",
+              "name": "handleDraggableContainerChange",
+              "parameters": [
+                {
+                  "name": "dragContainersAdded",
+                  "type": {
+                    "text": "HTMLElement[]"
+                  }
+                },
+                {
+                  "name": "dragContainersRemoved",
+                  "type": {
+                    "text": "HTMLElement[]"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "handleDraggablesChange",
               "parameters": [
                 {
@@ -15738,10 +15770,59 @@
                 {
                   "name": "dragsRemoved",
                   "type": {
-                    "text": "Element[]"
+                    "text": "HTMLElement[]"
                   }
                 }
               ],
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "handleDroppablesChange",
+              "parameters": [
+                {
+                  "name": "dropsAdded",
+                  "type": {
+                    "text": "HTMLElement[]"
+                  }
+                },
+                {
+                  "name": "dropsRemoved",
+                  "type": {
+                    "text": "HTMLElement[]"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dragContainersModified",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "draggablesModified",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "droppablesModified",
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "DragDropInteractionMixin",
                 "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
@@ -15772,50 +15853,6 @@
             },
             {
               "kind": "method",
-              "name": "filterExistingDraggables",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "HTMLElement[]"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "draggables",
-                  "type": {
-                    "text": "HTMLElement[]"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "DragDropInteractionMixin",
-                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "addNewDraggables",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "draggables",
-                  "type": {
-                    "text": "HTMLElement[]"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "DragDropInteractionMixin",
-                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
               "name": "storeDraggable",
               "privacy": "private",
               "return": {
@@ -15837,20 +15874,6 @@
               }
             },
             {
-              "kind": "method",
-              "name": "initializeDroppables",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "inheritedFrom": {
-                "name": "DragDropInteractionMixin",
-                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
-              }
-            },
-            {
               "kind": "field",
               "name": "handleDragStart",
               "privacy": "private",
@@ -15862,15 +15885,6 @@
             {
               "kind": "field",
               "name": "handleDragEnd",
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "DragDropInteractionMixin",
-                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "getDragContainers",
               "privacy": "private",
               "inheritedFrom": {
                 "name": "DragDropInteractionMixin",
@@ -18075,19 +18089,6 @@
             },
             {
               "kind": "field",
-              "name": "droppables",
-              "type": {
-                "text": "HTMLElement[]"
-              },
-              "privacy": "protected",
-              "default": "[]",
-              "inheritedFrom": {
-                "name": "DragDropInteractionMixin",
-                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
               "name": "dragDropApi",
               "type": {
                 "text": "TouchDragAndDrop"
@@ -18139,6 +18140,28 @@
             },
             {
               "kind": "method",
+              "name": "handleDraggableContainerChange",
+              "parameters": [
+                {
+                  "name": "dragContainersAdded",
+                  "type": {
+                    "text": "HTMLElement[]"
+                  }
+                },
+                {
+                  "name": "dragContainersRemoved",
+                  "type": {
+                    "text": "HTMLElement[]"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "handleDraggablesChange",
               "parameters": [
                 {
@@ -18150,10 +18173,59 @@
                 {
                   "name": "dragsRemoved",
                   "type": {
-                    "text": "Element[]"
+                    "text": "HTMLElement[]"
                   }
                 }
               ],
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "handleDroppablesChange",
+              "parameters": [
+                {
+                  "name": "dropsAdded",
+                  "type": {
+                    "text": "HTMLElement[]"
+                  }
+                },
+                {
+                  "name": "dropsRemoved",
+                  "type": {
+                    "text": "HTMLElement[]"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dragContainersModified",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "draggablesModified",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "droppablesModified",
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "DragDropInteractionMixin",
                 "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
@@ -18184,50 +18256,6 @@
             },
             {
               "kind": "method",
-              "name": "filterExistingDraggables",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "HTMLElement[]"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "draggables",
-                  "type": {
-                    "text": "HTMLElement[]"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "DragDropInteractionMixin",
-                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "addNewDraggables",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "draggables",
-                  "type": {
-                    "text": "HTMLElement[]"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "DragDropInteractionMixin",
-                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
               "name": "storeDraggable",
               "privacy": "private",
               "return": {
@@ -18249,20 +18277,6 @@
               }
             },
             {
-              "kind": "method",
-              "name": "initializeDroppables",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "inheritedFrom": {
-                "name": "DragDropInteractionMixin",
-                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
-              }
-            },
-            {
               "kind": "field",
               "name": "handleDragStart",
               "privacy": "private",
@@ -18274,15 +18288,6 @@
             {
               "kind": "field",
               "name": "handleDragEnd",
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "DragDropInteractionMixin",
-                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "getDragContainers",
               "privacy": "private",
               "inheritedFrom": {
                 "name": "DragDropInteractionMixin",
@@ -19602,19 +19607,6 @@
             },
             {
               "kind": "field",
-              "name": "droppables",
-              "type": {
-                "text": "HTMLElement[]"
-              },
-              "privacy": "protected",
-              "default": "[]",
-              "inheritedFrom": {
-                "name": "DragDropInteractionMixin",
-                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
               "name": "dragDropApi",
               "type": {
                 "text": "TouchDragAndDrop"
@@ -19666,6 +19658,28 @@
             },
             {
               "kind": "method",
+              "name": "handleDraggableContainerChange",
+              "parameters": [
+                {
+                  "name": "dragContainersAdded",
+                  "type": {
+                    "text": "HTMLElement[]"
+                  }
+                },
+                {
+                  "name": "dragContainersRemoved",
+                  "type": {
+                    "text": "HTMLElement[]"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "handleDraggablesChange",
               "parameters": [
                 {
@@ -19677,10 +19691,59 @@
                 {
                   "name": "dragsRemoved",
                   "type": {
-                    "text": "Element[]"
+                    "text": "HTMLElement[]"
                   }
                 }
               ],
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "handleDroppablesChange",
+              "parameters": [
+                {
+                  "name": "dropsAdded",
+                  "type": {
+                    "text": "HTMLElement[]"
+                  }
+                },
+                {
+                  "name": "dropsRemoved",
+                  "type": {
+                    "text": "HTMLElement[]"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dragContainersModified",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "draggablesModified",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "droppablesModified",
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "DragDropInteractionMixin",
                 "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
@@ -19711,50 +19774,6 @@
             },
             {
               "kind": "method",
-              "name": "filterExistingDraggables",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "HTMLElement[]"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "draggables",
-                  "type": {
-                    "text": "HTMLElement[]"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "DragDropInteractionMixin",
-                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "addNewDraggables",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "draggables",
-                  "type": {
-                    "text": "HTMLElement[]"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "DragDropInteractionMixin",
-                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
               "name": "storeDraggable",
               "privacy": "private",
               "return": {
@@ -19776,20 +19795,6 @@
               }
             },
             {
-              "kind": "method",
-              "name": "initializeDroppables",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "inheritedFrom": {
-                "name": "DragDropInteractionMixin",
-                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
-              }
-            },
-            {
               "kind": "field",
               "name": "handleDragStart",
               "privacy": "private",
@@ -19801,15 +19806,6 @@
             {
               "kind": "field",
               "name": "handleDragEnd",
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "DragDropInteractionMixin",
-                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "getDragContainers",
               "privacy": "private",
               "inheritedFrom": {
                 "name": "DragDropInteractionMixin",
@@ -27268,7 +27264,7 @@
           "type": {
             "text": "Story"
           },
-          "default": "{ render: args => html` <qti-test> <test-container test-url=\"/assets/api/conformance/assessment.xml\"></test-container> ${template(args)} </qti-test>`, play: async ({ canvasElement }) => { const selectElement = getByShadowLabelText(canvasElement, 'view'); debugger; // 1 Wait for the item to load const itemElement = await findByShadowTitle(canvasElement, 'T1 - Test Entry - Item 1'); expect(itemElement).toBeInTheDocument(); // 2 Assume the candidate rubric is not visible const rubricElement = getByShadowText(canvasElement, 'candidate rubric block'); expect(rubricElement).toBeVisible(); // 3 Select the candidate view await userEvent.selectOptions(selectElement, 'candidate'); // 4 Wait for the candidate rubric to be visible expect(rubricElement).toBeVisible(); // 5 Assume correctResponse is not set const firstChoiceElement = await findByShadowText(canvasElement, 'Correct'); const afterStyle = getComputedStyle(firstChoiceElement, '::after'); expect(afterStyle.content).toBe('none'); // 6 Set the view to scorer await userEvent.selectOptions(selectElement, 'scorer'); // Expect the correctResponse to be visible expect(afterStyle.content).not.toBe('none'); } }"
+          "default": "{ render: args => html` <qti-test> <test-container test-url=\"/assets/api/conformance/assessment.xml\"></test-container> ${template(args)} </qti-test>`, play: async ({ canvasElement }) => { const selectElement = getByShadowLabelText(canvasElement, 'view'); // 1 Wait for the item to load const itemElement = await findByShadowTitle(canvasElement, 'T1 - Test Entry - Item 1'); expect(itemElement).toBeInTheDocument(); // 2 Assume the candidate rubric is not visible const rubricElement = getByShadowText(canvasElement, 'candidate rubric block'); expect(rubricElement).toBeVisible(); // 3 Select the candidate view await userEvent.selectOptions(selectElement, 'candidate'); // 4 Wait for the candidate rubric to be visible expect(rubricElement).toBeVisible(); // 5 Assume correctResponse is not set const firstChoiceElement = await findByShadowText(canvasElement, 'Correct'); const afterStyle = getComputedStyle(firstChoiceElement, '::after'); expect(afterStyle.content).toBe('none'); // 6 Set the view to scorer await userEvent.selectOptions(selectElement, 'scorer'); // Expect the correctResponse to be visible expect(afterStyle.content).not.toBe('none'); } }"
         }
       ],
       "exports": [
