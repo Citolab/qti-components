@@ -27,7 +27,7 @@ export const AllTrueResultsInTrue: Story = {
 };
 
 export const OneFalseResultsInFalse: Story = {
-  render: args =>
+  render: _args =>
     html` <qti-and>
       <mock-child response="true"></mock-child>
       <mock-child response="false"></mock-child>

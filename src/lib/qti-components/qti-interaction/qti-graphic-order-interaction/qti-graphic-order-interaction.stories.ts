@@ -8,7 +8,7 @@ export default {
 };
 
 export const Default = {
-  render: args =>
+  render: () =>
     html` <qti-graphic-order-interaction max-choices="0" response-identifier="RESPONSE1">
       <img src="qti-graphic-order-interaction/uk.png" height="280" width="206" />
       <qti-hotspot-choice coords="78,102,8" identifier="A" shape="circle"></qti-hotspot-choice>

@@ -50,7 +50,7 @@ const xml = String.raw;
  * > This is needed because the files in the manifest.json points to an absolute path, which is not correct in the context of the item.
  */
 export const Default: Story = {
-  render: args =>
+  render: _args =>
     html` <qti-custom-interaction
       response-identifier="RESPONSE"
       id="Ie855768e-179b-4226-a30e-6ead190c14b7"
@@ -65,7 +65,7 @@ export const Default: Story = {
 };
 
 export const AbsolutePaths: Story = {
-  render: args => {
+  render: () => {
     return html`<qti-assessment-item time-dependent="false" label="32la7n">
       <qti-item-body class="defaultBody" xml:lang="nl-NL">
         <qti-custom-interaction
@@ -86,7 +86,7 @@ export const AbsolutePaths: Story = {
 };
 
 export const TransformXML: Story = {
-  render: args =>
+  render: () =>
     qtiTransformItem()
       .parse(
         xml`<qti-custom-interaction
@@ -115,7 +115,7 @@ export const TransformXML: Story = {
  * the html of the item is then rendered in browser.
  */
 export const TransformItem: Story = {
-  render: args =>
+  render: () =>
     qtiTransformItem()
       .parse(itemXML)
       .path('/qti-custom-interaction/items/')

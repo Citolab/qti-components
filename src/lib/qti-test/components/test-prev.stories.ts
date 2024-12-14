@@ -23,7 +23,7 @@ const meta: Meta<TestPrevClass> = {
 };
 export default meta;
 
-const PlayerTemplate = (args: any) => html`
+const PlayerTemplate = (_args: any) => html`
   <qti-test
     data-testid="qti-player"
     .context=${{

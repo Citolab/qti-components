@@ -2,8 +2,8 @@ import { action } from '@storybook/addon-actions';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
-import { QtiItem } from 'src/lib/qti-item';
 import { qtiTransformItem } from '../lib/qti-transformers/';
+import { QtiItem } from '../lib/qti-item/qti-item';
 
 const meta: Meta = {
   argTypes: {

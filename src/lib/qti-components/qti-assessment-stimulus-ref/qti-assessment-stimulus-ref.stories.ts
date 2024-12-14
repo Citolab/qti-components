@@ -17,7 +17,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const StimulusWithRef: Story = {
-  render: args =>
+  render: _args =>
     html`<qti-assessment-item>
       <qti-assessment-stimulus-ref
         identifier="Stimulus1"
@@ -43,7 +43,7 @@ export const StimulusWithRef: Story = {
 
 /* An example of how to use the qti-assessment-stimulus-ref component to load a stimulus and append it to a placeholder element */
 export const StimulusDeliveryPlatform: Story = {
-  render: args => {
+  render: _args => {
     const placeholderRef = createRef<HTMLElement>();
     return html` <div
       @qti-assessment-stimulus-ref-connected=${async (e: Event) => {

@@ -275,7 +275,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
 
     protected checkMaxAssociations(): void {
-      this.dragDropApi.droppables.forEach((d, index) => {
+      this.dragDropApi.droppables.forEach(d => {
         const maxMatch = +(d.getAttribute('match-max') || 1);
         const currentAssociations = d.querySelectorAll('[qti-draggable="true"]').length;
         const disableDroppable = currentAssociations >= maxMatch;

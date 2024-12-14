@@ -8,7 +8,7 @@ export default {
 };
 
 export const Default = {
-  render: args =>
+  render: () =>
     html`<qti-position-object-stage>
       <img src="https://qti-convert.web.app/images/uk.png" width="206" height="280" />
       <qti-position-object-interaction response-identifier="RESPONSE" max-choices="3">

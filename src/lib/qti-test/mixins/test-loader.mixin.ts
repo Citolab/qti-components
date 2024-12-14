@@ -47,7 +47,7 @@ export const TestLoaderMixin = <T extends Constructor<LitElement>>(superClass: T
         })();
       });
 
-      this.addEventListener('qti-interaction-changed', e => {
+      this.addEventListener('qti-interaction-changed', _e => {
         /* 8. Interaction changed */
         // const scoreOutcomeIdentifier = qtiAssessmentItem.variables.find(v => v.identifier === 'SCORE') as OutcomeVariable;
         // if (scoreOutcomeIdentifier.externalScored === null && qtiAssessmentItem.adaptive === 'false') {

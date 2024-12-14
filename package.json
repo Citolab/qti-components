@@ -21,7 +21,8 @@
   "engines": {
     "node": ">=20.0.0"
   },
-  "version": "6.9.1-beta.81",
+  "version": "7.0.1",
+  "main": "dist/index.js",
   "type": "module",
   "exports": {
     "./qti-components": {
@@ -81,7 +82,7 @@
     "build": "wireit",
     "test": "wireit",
     "attw": "wireit",
-    "lint": "wireit",
+    "lint": "eslint src/**/*.ts",
     "cem": "wireit",
     "act": "act",
     "vite": "vite",
@@ -92,7 +93,7 @@
     "storybook:docs:build": "wireit",
     "chromatic": "node chromatic-runner.cjs",
     "----hooks----": "-",
-    "prepublishOnly": "build",
+    "prepublishOnly": "npm run build",
     "prepare": "husky"
   },
   "wireit": {
@@ -110,15 +111,18 @@
       "dependencies": [
         "cem",
         "css"
-      ]
-    },
-    "preview": {
-      "env": {
-        "NODE_ENV": "development"
-      },
-      "command": "vite preview",
-      "dependencies": [
-        "build"
+      ],
+      "files": [
+        "src/**/*.{ts,css}",
+        "!src/**/*.{test,spec,stories}.ts"
+      ],
+      "output": [
+        "dist/**/*",
+        "cdn/**/*",
+        "!dist/item.css",
+        "!dist/vscode.*",
+        "!dist/qti-components-jsx.d.ts",
+        "!dist/custom-element-eslint-rules.js"
       ]
     },
     "test": {
@@ -138,9 +142,6 @@
       "dependencies": [
         "cem"
       ]
-    },
-    "lint": {
-      "command": "eslint --color --cache --cache-location .eslintcache src/lib/**/*.ts"
     },
     "cem": {
       "command": "cem analyze"

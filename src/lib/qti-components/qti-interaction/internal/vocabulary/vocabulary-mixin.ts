@@ -23,7 +23,7 @@ type LabelSuffixType = 'qti-labels-suffix-period' | 'qti-labels-suffix-parenthes
 
 declare class VocabularyInterface {}
 
-export const VocabularyMixin = <T extends Constructor<Interaction>>(superClass: T, selector: string) => {
+export const VocabularyMixin = <T extends Constructor<Interaction>>(superClass: T, _selector: string) => {
   abstract class VocabularyElement extends superClass {
     private _classes: string[] = [];
     private _allLabels = ['qti-labels-decimal', 'qti-labels-lower-alpha', 'qti-labels-upper-alpha'];

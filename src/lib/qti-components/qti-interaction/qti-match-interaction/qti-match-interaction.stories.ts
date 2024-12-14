@@ -71,7 +71,7 @@ export const Play: Story = {
     orientation: 'vertical',
     classes: ['qti-choices-bottom']
   },
-  play: async ({ args, canvasElement, step }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
     // Retrieve interaction, source, and target elements from the canvas
@@ -119,7 +119,7 @@ export const PlayTwoOneZero: Story = {
     orientation: 'vertical',
     classes: ['qti-choices-bottom']
   },
-  play: async ({ args, canvasElement, step }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
     // Retrieve interaction, source, and target elements from the canvas

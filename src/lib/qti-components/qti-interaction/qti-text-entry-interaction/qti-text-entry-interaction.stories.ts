@@ -98,7 +98,7 @@ export const Form: Story = {
 };
 
 export const Sizes = {
-  render: args =>
+  render: () =>
     html`<p>
         qti-input-width-1 :
         <qti-text-entry-interaction
@@ -182,7 +182,7 @@ export const Sizes = {
 };
 
 export const Formula = {
-  render: args =>
+  render: () =>
     html`<p>Hoeveel kilo CO2 wordt jaarlijks bespaard door 8 zonnepanelen?</p>
       <ul>
         <li>Levensduur zonnepaneel 25 jaar</li>

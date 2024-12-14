@@ -16,7 +16,7 @@ export default {
 };
 
 export const Default = {
-  render: args => html`
+  render: () => html`
     <qti-graphic-associate-interaction
       response-identifier="RESPONSE"
       @qti-register-interaction=${action(`qti-register-interaction`)}

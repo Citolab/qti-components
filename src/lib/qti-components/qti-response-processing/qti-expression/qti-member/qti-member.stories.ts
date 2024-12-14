@@ -2,7 +2,6 @@ import { action } from '@storybook/addon-actions';
 import { within } from '@storybook/test';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
-import '../../../index';
 import { QtiMember } from './qti-member';
 
 type Story = StoryObj; // <Props>;
@@ -13,7 +12,7 @@ const meta: Meta = {
 export default meta;
 
 export const MemberFail: Story = {
-  render: args => {
+  render: () => {
     return html` <qti-assessment-item data-testid="qti-assessment">
       <qti-outcome-declaration base-type="duration" cardinality="single" identifier="BODY">
         <qti-default-value>
@@ -36,7 +35,7 @@ export const MemberFail: Story = {
 };
 
 export const MemberCorrect: Story = {
-  render: args => {
+  render: () => {
     return html` <qti-assessment-item>
       <qti-outcome-declaration base-type="string" cardinality="multiple" identifier="BODY">
         <qti-default-value>
@@ -59,7 +58,7 @@ export const MemberCorrect: Story = {
 };
 
 export const AssessmentCorrect: Story = {
-  render: args => {
+  render: () => {
     return html` <qti-assessment-item
       data-testid="qti-assessment-item"
       @qti-outcome-changed=${action(`qti-outcome-changed`)}

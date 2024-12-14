@@ -112,7 +112,7 @@ class ButtonComponent extends LitElement {
 window.customElements.define('button-component', ButtonComponent);
 
 // grid grid-cols-6 gap-4
-export const Theme = (mod: string) => html`
+export const Theme = (_mod: string) => html`
   <css-variable-editor></css-variable-editor>
   <div style="display:grid;grid-template-columns: repeat(7, minmax(0, 1fr));gap:2rem;">
     <style>

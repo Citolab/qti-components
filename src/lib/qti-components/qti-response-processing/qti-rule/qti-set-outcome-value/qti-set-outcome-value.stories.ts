@@ -10,7 +10,7 @@ const meta: Meta = {
 export default meta;
 
 export const MemberFail: Story = {
-  render: args => {
+  render: () => {
     return html` <qti-assessment-item>
       <qti-outcome-declaration base-type="identifier" cardinality="multiple" identifier="BODY">
         <qti-default-value>

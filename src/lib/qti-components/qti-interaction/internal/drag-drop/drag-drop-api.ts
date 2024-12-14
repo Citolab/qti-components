@@ -184,7 +184,7 @@ export class TouchDragAndDrop {
     }
   }
 
-  private createDragClone(e, currentTouch: { clientX: number; clientY: number }) {
+  private createDragClone(_e, currentTouch: { clientX: number; clientY: number }) {
     if (!this.isDragging) return;
 
     if (this.useDragClone) {
@@ -245,7 +245,7 @@ export class TouchDragAndDrop {
     if (this.currentDropTarget) this.dispatchCustomEvent(dropTarget, 'dragover');
   }
 
-  private handleTouchEnd(e) {
+  private handleTouchEnd(_e) {
     // this.allDropzones = [];
     this.touchEndTriggered = true;
     this.isDraggable = false;
@@ -265,7 +265,7 @@ export class TouchDragAndDrop {
     this.resetDragState(dropFound);
   }
 
-  private handleTouchCancel(e) {
+  private handleTouchCancel(_e) {
     this.resetDragState();
   }
 

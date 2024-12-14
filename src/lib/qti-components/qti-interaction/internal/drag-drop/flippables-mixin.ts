@@ -21,8 +21,8 @@ export declare class FlippablesInterface {
 // https://ng-run.com/edit/9MGr5dYWA20AiJtpy5az?open=app%2Fapp.component.html
 export const FlippablesMixin = <T extends Constructor<Interaction>>(
   superClass: T,
-  droppablesSel: string,
-  draggablesSel: string
+  _droppablesSel: string,
+  _draggablesSel: string
 ) => {
   abstract class FlippablesElement extends superClass {
     // private state = new Map<Element, any>();

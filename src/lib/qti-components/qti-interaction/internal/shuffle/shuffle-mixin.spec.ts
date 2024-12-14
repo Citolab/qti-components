@@ -44,7 +44,7 @@ describe('ShuffleMixin', () => {
     await element.updateComplete;
 
     const choices = Array.from(element.querySelectorAll('qti-simple-choice'));
-    const initialOrder = choices.map((choice, i) => String(i + 1));
+    const initialOrder = choices.map((_choice, i) => String(i + 1));
 
     // Reset shuffle
     element.shuffle = 'true';
@@ -60,7 +60,7 @@ describe('ShuffleMixin', () => {
     await element.updateComplete;
 
     const choices = Array.from(element.querySelectorAll('qti-simple-choice'));
-    const initialOrder = choices.map((choice, i) => String(i + 1));
+    const initialOrder = choices.map((_choice, i) => String(i + 1));
 
     let isDifferent = false;
     const shuffleCount = 20;

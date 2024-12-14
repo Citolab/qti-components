@@ -2,8 +2,8 @@ import { consume } from '@lit/context';
 import { LitElement, html } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
-import { VariableDeclaration } from 'src/lib/qti-components/internal/variables';
 import { ItemContext, itemContext } from '../../../qti-assessment-item/qti-assessment-item.context';
+import { VariableDeclaration } from '../../../internal/variables';
 
 export class QtiPrintedVariable extends LitElement {
   @property({ type: String })
