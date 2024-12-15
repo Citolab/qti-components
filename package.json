@@ -58,7 +58,7 @@
   ],
   "scripts": {
     "storybook": "wireit",
-    "watch:build": "npm run build -- --watch",
+    "build:watch": "npm run build --watch",
     "npm:publish": "np",
     "---": "-",
     "build": "wireit",
@@ -99,37 +99,19 @@
         "src/**/*.{ts}",
         "tsconfig.json",
         "!src/**/*.{test,spec,stories}.ts"
-      ],
-      "output": [
-        "dist/**/*",
-        "cdn/**/*",
-        "!dist/item.css",
-        "!dist/vscode.*",
-        "!dist/qti-components-jsx.d.ts",
-        "!dist/custom-element-eslint-rules.js",
-        "!dist/custom-element-eslint-rules.js",
-        "!dist/custom-elements.json"
       ]
     },
     "cem": {
       "command": "cem analyze",
       "files": [
-        "src/**/*.{ts}",
+        "src/**/*.ts",
         "!src/**/*.{test,spec,stories}.ts"
-      ],
-      "output": [
-        "dist/qti-components-jsx.d.ts",
-        "dist/custom-element-eslint-rules.js",
-        "dist/custom-elements.json"
       ]
     },
     "css": {
       "command": "postcss src/item.css -d dist -m",
       "files": [
         "src/**/*.css"
-      ],
-      "output": [
-        "dist/item.css"
       ]
     },
     "test": {
