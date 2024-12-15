@@ -48,12 +48,15 @@ jobs:
         run: npm run build
       - name: Test build
         run: npm run test
+      - name: Create docs folder for pkg.pr
+        run: |
+          mkdir -p docs
       - name: Create pkgr release
         run: npx pkg-pr-new publish --json docs/pkg.pr.json --comment=off
-
       - name: Upload artifact
         uses: peaceiris/actions-gh-pages@v4
+        if: github.ref == 'refs/heads/main'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs/pkg.pr.json
+          publish_dir: ./docs
           keep_files: true
