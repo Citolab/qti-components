@@ -25,3 +25,29 @@ export const Default: Story = {
     </qti-test>
   `
 };
+
+export const PkgPr: Story = {
+  render: (_args, context) => {
+    if (context.loaded?.pkgpr) {
+      return html`<pre>${context.loaded.pkgpr.packages[0]?.url || 'No URL available'}</pre>`;
+    } else if (context.error) {
+      return html`<p>Error: ${context.error}</p>`;
+    } else {
+      return html`<p>No pkg pr URL available</p>`;
+    }
+  },
+  loaders: [
+    async () => {
+      try {
+        const response = await fetch('./pkg.pr.json');
+        if (!response.ok) {
+          throw new Error(`Failed to load: ${response.statusText}`);
+        }
+        const pkgpr = await response.json();
+        return { pkgpr };
+      } catch (error) {
+        return { error: error.message || 'An error occurred while fetching the file.' };
+      }
+    }
+  ]
+};
