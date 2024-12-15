@@ -46,4 +46,4 @@ jobs:
       - name: Test build
         run: npm run test
       - name: Create pkgr release
-        run: npm run pkg-pr-new publish --json pkg.pr.json --comment=off
+        run: npx pkg-pr-new publish --json pkg.pr.json --comment=off
