@@ -27,8 +27,14 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
+      - name: Git configuration
+        run: |
+          git config --global user.email "patrick.deklein@cito.nl"
+          git config --global user.name "patrickdeklein"
+
       - name: Checkout
         uses: actions/checkout@v4
+        
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
