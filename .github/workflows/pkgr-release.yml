@@ -2,6 +2,8 @@ name: Dev (ci, build, test, pkg.pr)
 
 on:
   push:
+    branches:
+      - '**'
     paths: 
       - 'src/**/*.ts'
       - 'src/**/*.css'
@@ -9,6 +11,8 @@ on:
       - '!src/**/*.spec.ts'
       - '!src/**/*.stories.ts'
   pull_request:
+    branches:
+      - '**'
     paths: 
       - 'src/**/*.ts'
       - 'src/**/*.css'
