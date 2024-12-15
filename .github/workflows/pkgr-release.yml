@@ -53,9 +53,3 @@ jobs:
           mkdir -p docs
       - name: Create pkgr release
         run: npx pkg-pr-new publish --json docs/pkg.pr.json --comment=off
-      - name: Upload artifact
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs
-          keep_files: true
