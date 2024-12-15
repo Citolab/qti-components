@@ -23,12 +23,12 @@ const config: StorybookConfig = {
     name: '@storybook/web-components-vite',
     options: {}
   },
-  staticDirs: ['../public/assets'],
-  async viteFinal(config, { configType }) {
-    return {
-      ...config,
-      plugins: [...config.plugins!, tsconfigPaths()]
-    };
-  }
+  staticDirs: ['../public/assets']
+  // async viteFinal(config, { configType }) {
+  //   return {
+  //     ...config,
+  //     plugins: [...config.plugins!, tsconfigPaths()]
+  //   };
+  // }
 };
 export default config;

@@ -4,9 +4,7 @@ import { action } from '@storybook/addon-actions';
 import './qti-slider-interaction';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
-import { StoryObj, Meta } from '@storybook/web-components';
-
-type Story = StoryObj; // <Props>;
+import { Meta } from '@storybook/web-components';
 
 const meta: Meta = {
   component: 'qti-slider-interaction',
@@ -22,18 +20,6 @@ const meta: Meta = {
   }
 };
 export default meta;
-
-type Interaction = {
-  min: number;
-  max: number;
-  step: number;
-  orientation: 'horizontal' | 'vertical';
-  stepLabel: boolean;
-  reverse: boolean;
-  response: string;
-  readonly: boolean;
-  disabled: boolean;
-};
 
 export const Default = {
   render: args => {

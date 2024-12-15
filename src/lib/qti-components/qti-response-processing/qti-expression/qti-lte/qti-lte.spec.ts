@@ -1,5 +1,4 @@
-import '@citolab/qti-components/qti-components';
-
+import '../../../../../index';
 import { html, render } from 'lit';
 import { QtiLte } from './qti-lte';
 describe('qti-lte', () => {

@@ -2,11 +2,10 @@ import { html } from 'lit';
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
 import { expect, fireEvent, fn, waitFor, within } from '@storybook/test';
 import type { Meta, StoryObj } from '@storybook/web-components';
-import { QtiChoiceInteraction, QtiSimpleChoice } from '@citolab/qti-components/qti-components';
 import { getByShadowRole } from 'shadow-dom-testing-library';
-import { ar } from 'vitest/dist/chunks/reporters.D7Jzd9GS.js';
-import { useArgs } from '@storybook/preview-api';
 import { InputType } from '@storybook/core/types';
+import { QtiSimpleChoice } from '../qti-simple-choice';
+import { QtiChoiceInteraction } from './qti-choice-interaction';
 
 const { events, args, argTypes, template } = getWcStorybookHelpers('qti-choice-interaction');
 
@@ -52,7 +51,6 @@ export default meta;
 
 export const Default = {
   render: args => {
-    const [{ shuffle }, updateArgs, resetArgs] = useArgs();
     return html`
       ${template(
         args,

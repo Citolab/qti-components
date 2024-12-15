@@ -1,5 +1,5 @@
-import { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
-import { Meta, StoryObj } from '@storybook/web-components';
+import '../../index';
+import { Meta } from '@storybook/web-components';
 import { html } from 'lit';
 import { Default as Associate } from '../../lib/qti-components/qti-interaction/qti-associate-interaction/qti-associate-interaction.stories';
 import { Default as Choice } from '../../lib/qti-components/qti-interaction/qti-choice-interaction/qti-choice-interaction.stories';
@@ -18,14 +18,13 @@ import { Default as PositionObject } from '../../lib/qti-components/qti-interact
 import { Default as SelectPoint } from '../../lib/qti-components/qti-interaction/qti-select-point-interaction/qti-select-point-interaction.stories';
 import { Default as Slider } from '../../lib/qti-components/qti-interaction/qti-slider-interaction/qti-slider-interaction.stories';
 import { Default as TextEntry } from '../../lib/qti-components/qti-interaction/qti-text-entry-interaction/qti-text-entry-interaction.stories';
+import { QtiAssessmentItem } from '../../index';
 // import { Default as Upload } from '../lib/qti-components/qti-interaction/qti-upload-interaction/qti-upload-interaction.stories';
 // import { Default as Drawing } from '../lib/qti-components/qti-interaction/qti-drawing-interaction/qti-drawing-interaction.stories';
 // import { Default as EndAttempt } from '../lib/qti-components/qti-interaction/qti-end-attempt-interaction/qti-end-attempt-interaction.stories';
 // import { Default as Custom } from '../lib/qti-components/qti-interaction/qti-custom-interaction/qti-custom-interaction.stories';
 
 // export { Choice };
-
-type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {};
 export default meta;

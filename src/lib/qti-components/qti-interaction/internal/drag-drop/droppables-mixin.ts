@@ -1,4 +1,3 @@
-import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import { Interaction } from '../interaction/interaction';
 

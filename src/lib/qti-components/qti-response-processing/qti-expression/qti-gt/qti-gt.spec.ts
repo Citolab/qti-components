@@ -1,4 +1,4 @@
-import '@citolab/qti-components/qti-components';
+import '../../../../../index';
 import { html, render } from 'lit';
 import { QtiGt } from './qti-gt';
 describe('qti-gt', () => {

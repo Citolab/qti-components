@@ -6,7 +6,6 @@ import '../../qti-response-processing/qti-response-processing';
 import './../../qti-rule/qti-set-outcome-value/qti-set-outcome-value';
 import './../qti-basevalue/qti-basevalue';
 import './index';
-import { QtiSubtract } from './qti-subtract';
 import { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
 import { ItemContext } from '../../../qti-assessment-item/qti-assessment-item.context';
 

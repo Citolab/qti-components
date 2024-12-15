@@ -1,5 +1,4 @@
-import '@citolab/qti-components/qti-components';
-
+import '../../../../../index';
 import { html, render } from 'lit';
 import { QtiAssessmentItem, QtiMapResponse } from '../../../../../index';
 

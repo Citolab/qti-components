@@ -1,5 +1,4 @@
-import type { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
-import type { PropertyValues } from 'lit';
+import { QtiAssessmentItem } from '../../qti-components';
 import { TestBase } from '../test-base';
 
 export type View = 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor' | '';

@@ -1,5 +1,3 @@
-import { ResponseInteraction } from '../expression-result';
-
 type QtiAssessmentItemLogEvent = CustomEvent<{ type: string; content: string }>;
 
 declare global {

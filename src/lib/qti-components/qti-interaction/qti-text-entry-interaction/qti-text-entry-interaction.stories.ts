@@ -2,7 +2,7 @@ import { html } from 'lit';
 import { expect, fireEvent, within } from '@storybook/test';
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
 import type { Meta, StoryObj } from '@storybook/web-components';
-import type { QtiTextEntryInteraction } from '@citolab/qti-components/qti-components';
+import { QtiTextEntryInteraction } from './qti-text-entry-interaction';
 
 const { events, args, argTypes, template } = getWcStorybookHelpers('qti-text-entry-interaction');
 
@@ -26,25 +26,6 @@ export const Default = {
     return html` ${template(args)} `;
   }
 };
-
-const inputWidthClass = [
-  '',
-  'qti-input-width-1',
-  'qti-input-width-2',
-  'qti-input-width-3',
-  'qti-input-width-4',
-  'qti-input-width-6',
-  'qti-input-width-10',
-  'qti-input-width-15',
-  'qti-input-width-20',
-  'qti-input-width-25',
-  'qti-input-width-30',
-  'qti-input-width-35',
-  'qti-input-width-40',
-  'qti-input-width-45',
-  'qti-input-width-50',
-  'qti-input-width-72'
-];
 
 export const PatternMask = {
   render: Default.render,

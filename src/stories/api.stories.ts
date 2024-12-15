@@ -47,7 +47,6 @@ export const Api: Story = {
 
     const processResponse = () => {
       if (args.scoreBackend) {
-        const identifier = loaded.item.identifier;
         fetch(
           `${args.serverLocation}/response/${args.qtipkg}/${loaded.item.href}?identifier=${loaded.item.identifier}`,
           {

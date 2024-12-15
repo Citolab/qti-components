@@ -1,5 +1,5 @@
 import { QtiAnd } from './qti-and';
-import { expect, within } from '@storybook/test';
+import { expect } from '@storybook/test';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import { QtiConditionExpression } from '../qti-condition-expression';
@@ -19,8 +19,6 @@ export const AllTrueResultsInTrue: Story = {
       <mock-child response="true"></mock-child>
     </qti-and>`,
   play: ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-
     const qtiAnd = canvasElement.querySelector('qti-and') as QtiAnd;
     expect(qtiAnd.calculate()).toBeTruthy();
   }
@@ -34,8 +32,6 @@ export const OneFalseResultsInFalse: Story = {
       <mock-child response="true"></mock-child>
     </qti-and>`,
   play: ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-
     const qtiAnd = canvasElement.querySelector('qti-and') as QtiAnd;
     expect(qtiAnd.calculate()).toBeFalsy();
   }

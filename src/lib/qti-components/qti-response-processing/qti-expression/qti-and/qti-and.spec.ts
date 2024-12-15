@@ -1,4 +1,4 @@
-import '@citolab/qti-components/qti-components';
+import '../../../../../index';
 
 import { render } from 'lit';
 import Meta, {
@@ -6,8 +6,8 @@ import Meta, {
   OneFalseResultsInFalse as OneFalseResultsInFalseStory
 } from './qti-and.stories';
 
-import { QtiAnd } from '@citolab/qti-components/qti-components';
 import { composeStory } from '@storybook/preview-api';
+import { QtiAnd } from './qti-and';
 
 const allTrueStory = composeStory(AllTrueResultsInTrueStory, Meta);
 

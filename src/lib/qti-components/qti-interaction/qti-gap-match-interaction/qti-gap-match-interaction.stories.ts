@@ -1,10 +1,11 @@
-import { QtiAssessmentItem, QtiGap, QtiGapText } from '@citolab/qti-components/qti-components';
 import { action } from '@storybook/addon-actions';
-import { expect, fireEvent, within } from '@storybook/test';
+import { expect } from '@storybook/test';
 import type { ArgTypes, Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import { getItemByUri } from '../../../../lib/qti-loader';
 import drag from '../../../../testing/drag';
+import { QtiAssessmentItem } from '../../qti-assessment-item/qti-assessment-item';
+import { QtiGapText } from '../qti-gap-text';
 
 type Story = StoryObj;
 
@@ -46,8 +47,6 @@ function rgbStringToRgb(rgbString) {
 export const Default = {
   name: 'qti-gap-match-interaction',
   render: () => {
-    let item: QtiAssessmentItem;
-
     return html`
   <qti-gap-match-interaction
         @qti-register-interaction="${e => action(JSON.stringify(e.detail.responseIdentifier))()}"

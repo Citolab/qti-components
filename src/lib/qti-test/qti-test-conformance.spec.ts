@@ -1,5 +1,4 @@
-import '@citolab/qti-components/qti-components';
-import '@citolab/qti-components/qti-test';
+import '../../index';
 
 import { composeStory } from '@storybook/preview-api';
 import { render } from 'lit';

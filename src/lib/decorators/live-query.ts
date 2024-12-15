@@ -28,11 +28,11 @@ interface LiveQueryOptions {
    */
 }
 
-export function liveQuery(querySelector: string, options?: LiveQueryOptions) {
+export function liveQuery(querySelector: string, _options?: LiveQueryOptions) {
   let observer: MutationObserver;
-  const resolvedOptions: Required<LiveQueryOptions> = {
-    ...options
-  };
+  // const resolvedOptions: Required<LiveQueryOptions> = {
+  //   ...options
+  // };
   return <ElemClass extends LitElement>(
     proto: ElemClass,
     decoratedFnName: UpdateHandlerFunctionKeys<ElemClass>

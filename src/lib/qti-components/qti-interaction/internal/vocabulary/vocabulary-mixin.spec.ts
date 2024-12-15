@@ -1,4 +1,4 @@
-import { html, LitElement, render } from 'lit';
+import { html, render } from 'lit';
 import { VocabularyMixin } from './vocabulary-mixin';
 import '../../qti-simple-choice';
 import { ShuffleMixin } from '../shuffle/shuffle-mixin';

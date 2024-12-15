@@ -1,5 +1,5 @@
-import { qtiTransformItem, qtiTransformTest } from '@citolab/qti-components/qti-transformers';
 import { LitElement } from 'lit';
+import { qtiTransformItem, qtiTransformTest } from '../../qti-transformers';
 
 // const setSessionData = <T>(key: string, value?: T): void => sessionStorage.setItem(key, JSON.stringify(value));
 // const getSessionData = <T>(key: string): T | null => (sessionStorage.getItem(key) ? JSON.parse(sessionStorage.getItem(key)!) : null);

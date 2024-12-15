@@ -1,10 +1,10 @@
-import '@citolab/qti-components/qti-components';
-import { QtiAssessmentItem, QtiLookupOutcomeValue } from '@citolab/qti-components/qti-components';
+import '../../../../../index';
 import { expect } from '@storybook/test';
 import { Default } from './qti-lookup-outcome-value.stories';
 
 import { composeStory } from '@storybook/preview-api';
 import { render } from 'lit';
+import { QtiAssessmentItem, QtiLookupOutcomeValue } from '../../../../../index';
 
 const composedStory = composeStory(Default, Default.args);
 

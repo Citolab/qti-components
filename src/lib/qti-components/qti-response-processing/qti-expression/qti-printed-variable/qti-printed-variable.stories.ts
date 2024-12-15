@@ -36,11 +36,6 @@ export const Single: Story = {
   }
 };
 
-// Function to emulate pausing between interactions
-function sleep(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 export const Multiple: Story = {
   render: _args => {
     return html` <qti-assessment-item data-testid="qti-assessment-item">

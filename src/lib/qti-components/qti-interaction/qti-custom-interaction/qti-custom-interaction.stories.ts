@@ -2,12 +2,12 @@ import { html } from 'lit';
 
 import './qti-custom-interaction';
 import itemXML from './qti-custom-interaction.xml?raw';
-import { qtiTransformItem } from '@citolab/qti-components/qti-transformers';
 import { QtiCustomInteraction } from './qti-custom-interaction';
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
 import { Meta, StoryObj } from '@storybook/web-components';
+import { qtiTransformItem } from '../../../qti-transformers';
 
-const { events, args, argTypes, template } = getWcStorybookHelpers('qti-custom-interaction');
+const { events, args, argTypes } = getWcStorybookHelpers('qti-custom-interaction');
 
 type Story = StoryObj<QtiCustomInteraction & typeof args>;
 

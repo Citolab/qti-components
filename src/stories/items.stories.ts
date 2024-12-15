@@ -4,8 +4,8 @@ import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import packages from '../assets/packages.json';
 import { QtiItem } from '../lib/qti-item';
-import { getManifestInfo } from '@citolab/qti-components/qti-loader';
-import { qtiTransformItem } from '@citolab/qti-components/qti-transformers';
+import { getManifestInfo } from '../lib/qti-loader';
+import { qtiTransformItem } from '../lib/qti-transformers';
 
 const meta: Meta = {
   argTypes: {

@@ -2,11 +2,11 @@ import './qti-extended-text-interaction';
 
 import { html } from 'lit';
 
-import { expect, fireEvent, fn, within } from '@storybook/test';
+import { expect, fireEvent, within } from '@storybook/test';
 
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
 import type { Meta, StoryObj } from '@storybook/web-components';
-import type { QtiExtendedTextInteraction } from '@citolab/qti-components/qti-components';
+import { QtiExtendedTextInteraction } from './qti-extended-text-interaction';
 
 const { events, args, argTypes, template } = getWcStorybookHelpers('qti-extended-text-interaction');
 

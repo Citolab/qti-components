@@ -1,7 +1,7 @@
-import { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
 import { userEvent } from '@storybook/test';
 import { render } from 'lit';
 import { Tabular, TabularMultiple } from './qti-match-interaction.stories';
+import { QtiAssessmentItem } from '../../qti-assessment-item/qti-assessment-item';
 
 const getChoices = () => {
   const matchInteractionShadowRoot = document.body.querySelector('qti-match-interaction').shadowRoot;

@@ -7,7 +7,7 @@ import { getWcStorybookHelpers } from 'wc-storybook-helpers';
 import { TestPrev as TestPrevClass } from './test-prev';
 import { TestContext } from '../context/test.context';
 
-const { events, args, argTypes, template } = getWcStorybookHelpers('test-prev');
+const { events, args, argTypes } = getWcStorybookHelpers('test-prev');
 
 type Story = StoryObj<TestPrevClass & typeof args>;
 

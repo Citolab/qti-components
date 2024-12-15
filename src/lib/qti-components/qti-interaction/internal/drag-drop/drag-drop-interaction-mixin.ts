@@ -1,4 +1,3 @@
-import { LitElement } from 'lit';
 import { IInteraction } from '../interaction/interaction.interface';
 import { DroppablesMixin } from './droppables-mixin';
 import { FlippablesMixin } from './flippables-mixin';
@@ -203,14 +202,8 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       return ev.dataTransfer.dropEffect !== 'none';
     }
 
-    private wasMoved(ev: DragEvent): boolean {
-      return ev.dataTransfer.dropEffect === 'move';
-    }
-
     private async restoreInitialDraggablePosition(draggable: HTMLElement): Promise<void> {
       const { parent, index } = this.draggables.get(draggable);
-
-      const targetIndex = Math.min(index, parent.children.length);
 
       const moveDraggable = (draggable: HTMLElement, parent: HTMLElement, index: number) => {
         console.log('moveDraggable', draggable, parent, index);
@@ -227,10 +220,6 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       }
 
       // Use view transitions if supported
-      const transition = document.startViewTransition(() => {
-        draggable.style.transform = '';
-        moveDraggable(draggable, parent, index);
-      });
       // transition.finished.then(() => {
       //   draggable.style.transition = '';
       // });

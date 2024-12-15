@@ -1,9 +1,9 @@
-import { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
-import { expect, within } from '@storybook/test';
+import { expect } from '@storybook/test';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
+import { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
 
 // import storyXML from './qti-lookup-outcome-value.xml?raw';
 const storyXML = `<qti-assessment-item
@@ -58,14 +58,12 @@ const meta: Meta = {
 };
 export default meta;
 
-export const Default = {
+export const Default: Story = {
   args: {},
   render: () => {
     return html`${unsafeHTML(storyXML)}`;
   },
   play: ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
     assessmentItem.updateResponseVariable('RAW_SCORE', '3');
 

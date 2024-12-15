@@ -1,5 +1,4 @@
-import '@citolab/qti-components/qti-components';
-import '@citolab/qti-components/qti-test';
+import '../../../index';
 
 import { expect, fireEvent, waitFor } from '@storybook/test';
 import type { Meta, StoryObj } from '@storybook/web-components';
@@ -41,7 +40,6 @@ export const PlayWithDelay: Story = {
   render: Default.render,
   play: async ({ canvasElement }) => {
     const nextButton = canvasElement.querySelector('test-next');
-    const testContainer = canvasElement.querySelector('test-container');
     // expect(nextButton).toBeDisabled();
     await waitFor(() => expect(nextButton).toBeEnabled());
     await new Promise(resolve => setTimeout(resolve, 500));

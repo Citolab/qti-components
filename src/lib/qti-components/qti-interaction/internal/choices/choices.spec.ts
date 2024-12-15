@@ -42,7 +42,6 @@ describe('ChoicesMixin', () => {
 
     it('should have role attribute set to "radio" for the first child element', async () => {
       const choiceA = getByTestId(document.body, 'A') as Choice;
-      const choiceB = getByTestId(document.body, 'B') as Choice;
 
       expect(choiceA.internals.role).toBe('radio');
       expect(element.validate()).toBeTruthy();

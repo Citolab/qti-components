@@ -1,10 +1,9 @@
-import '@citolab/qti-components/qti-components';
-
+import '../../../../../index';
 import { render } from 'lit';
 import Meta, { Default as DefaultStory } from './qti-lookup-outcome-value.stories';
 
-import { QtiLookupOutcomeValue } from '@citolab/qti-components/qti-components';
 import { composeStory } from '@storybook/preview-api';
+import { QtiLookupOutcomeValue } from '../../../../../index';
 
 const composedStory = composeStory(DefaultStory, Meta);
 

@@ -1,9 +1,9 @@
-import type { ItemContext, QtiAssessmentItem, VariableValue } from '@citolab/qti-components/qti-components';
 import { provide } from '@lit/context';
 import { LitElement } from 'lit';
 import { state } from 'lit/decorators.js';
 import { TestContext, testContext, TestElement, testElement } from './context';
 import { QtiAssessmentTest } from './qti-assessment-test';
+import { ItemContext, QtiAssessmentItem, VariableValue } from '../qti-components';
 
 export abstract class TestBase extends LitElement {
   @state()
@@ -66,7 +66,10 @@ export abstract class TestBase extends LitElement {
     });
   }
 
-  private _updateItemVariablesInTestContext(identifier: string, variables: VariableValue<string | string[] | null>[]): void {
+  private _updateItemVariablesInTestContext(
+    identifier: string,
+    variables: VariableValue<string | string[] | null>[]
+  ): void {
     // Update the test context with modified variables for the specified item
     this._testContext = {
       ...this._testContext, // Spread existing test context properties

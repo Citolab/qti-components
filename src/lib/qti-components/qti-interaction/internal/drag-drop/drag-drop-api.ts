@@ -5,9 +5,7 @@ export class TouchDragAndDrop {
   public droppables: HTMLElement[] = [];
   public dragContainers: HTMLElement[] = [];
 
-  private touchStartTime = 0; // Timestamp of the first touch
   private touchStartPoint = null; // Point of the first touch
-  private lastClickTime = 0; // Timestamp of the previous click
   private isDraggable = false; // Whether a draggable element is active
   private dragSource: HTMLElement = null; // The source element being dragged
   private dragClone: HTMLElement = null; // Clone of drag source for visual feedback
@@ -32,7 +30,6 @@ export class TouchDragAndDrop {
 
   private lastTarget = null; // Last touch target
   private currentDropTarget = null; // Current droppable element
-  private allowClick = true; // Flag to allow or prevent click
   private static instance: TouchDragAndDrop;
 
   copyStylesForDragClone = true;
@@ -113,7 +110,6 @@ export class TouchDragAndDrop {
   }
 
   private handleTouchStart(e) {
-    this.touchStartTime = Date.now();
     const { x, y } = this.getEventCoordinates(e);
     this.touchStartPoint = { x, y };
     this.dragSource = e.currentTarget;
@@ -338,49 +334,6 @@ export class TouchDragAndDrop {
     return Math.sqrt(dx * dx + dy * dy);
   }
 
-  private findDropTarget(event) {
-    const { x, y } = this.getEventCoordinates(event);
-    return this.getDropTargetAtPoint(document, x, y);
-  }
-
-  private getDropTargetAtPoint(root: DocumentOrShadowRoot, x: number, y: number, depth: number = 0): Element | null {
-    // Limit the recursion depth
-    const MAX_DEPTH = 2;
-    if (depth > MAX_DEPTH) {
-      return null;
-    }
-
-    const element = root.elementFromPoint(x, y) as HTMLElement;
-
-    if (!element) {
-      return null;
-    }
-
-    if (this.allDropzones.includes(element)) {
-      return element;
-    }
-
-    // Traverse up the DOM tree to find an ancestor that is included in all dropzones
-    let currentElement = element.parentElement;
-    while (currentElement) {
-      if (this.allDropzones.includes(currentElement)) {
-        return currentElement;
-      }
-      currentElement = currentElement.parentElement;
-    }
-
-    // If the element has a Shadow DOM and depth limit not reached, traverse it
-    if (element.shadowRoot && depth < MAX_DEPTH) {
-      const shadowElement = this.getDropTargetAtPoint(element.shadowRoot, x, y, depth + 1);
-      if (shadowElement) {
-        return shadowElement;
-      }
-    }
-
-    // No dropzone found
-    return null;
-  }
-
   private getEventCoordinates(event, page = false) {
     const touch = event.touches ? event.touches[0] : event;
     return {
@@ -477,7 +430,6 @@ export class TouchDragAndDrop {
     this.dragSource = null;
     this.dragClone = null;
     this.isDraggable = false;
-    this.touchStartTime = 0;
     this.touchStartPoint = null;
     this.touchEndTriggered = false;
     this.dataTransfer = {
@@ -493,7 +445,6 @@ export class TouchDragAndDrop {
     this.cloneOffset = { x: 0, y: 0 };
     this.lastTarget = null;
     this.currentDropTarget = null;
-    this.allowClick = true;
     this.initialTransform = '';
     this.hasDispatchedDragStart = false;
 
