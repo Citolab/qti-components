@@ -2,9 +2,19 @@ name: Dev (ci, build, test, pkg.pr)
 
 on:
   push:
-    paths: ['src/**/*.{ts,css}', '!src/**/*.{test,spec,stories}.ts']
+    paths: 
+      - 'src/**/*.ts'
+      - 'src/**/*.css'
+      - '!src/**/*.test.ts'
+      - '!src/**/*.spec.ts'
+      - '!src/**/*.stories.ts'
   pull_request:
-    paths: ['src/**/*.{ts,css}', '!src/**/*.{test,spec,stories}.ts']
+    paths: 
+      - 'src/**/*.ts'
+      - 'src/**/*.css'
+      - '!src/**/*.test.ts'
+      - '!src/**/*.spec.ts'
+      - '!src/**/*.stories.ts'
 
 jobs:
   publish:
