@@ -66,9 +66,11 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
         if (!navItemId) return;
         this._clearLoadedItems();
 
-        const itemRefEl = this.testElement.el.querySelector<QtiAssessmentItemRef>(`qti-assessment-item-ref[identifier="${navItemId}"]`);
+        const itemRefEl = this.testElement.el.querySelector<QtiAssessmentItemRef>(
+          `qti-assessment-item-ref[identifier="${navItemId}"]`
+        );
 
-        const promise = this._loadItemRequest(itemRefEl.href, true);
+        const promise = this._loadItemRequest(itemRefEl.href, false);
 
         const navPartId = itemRefEl.closest('qti-test-part').identifier;
         const navSectionId = itemRefEl.closest('qti-assessment-section').identifier;
@@ -78,7 +80,9 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
           promise
             .then(doc => {
               itemRefEl.xmlDoc = doc;
-              requestAnimationFrame(() => this.dispatchEvent(new CustomEvent('qti-item-connected', { bubbles: true, composed: true })));
+              requestAnimationFrame(() =>
+                this.dispatchEvent(new CustomEvent('qti-item-connected', { bubbles: true, composed: true }))
+              );
               this._testContext = { ...this._testContext, navItemLoading: false };
             })
             .catch(error => console.error('Failed to load item:', error));
@@ -93,7 +97,9 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
           const itemRefEl = this.testElement.el.querySelector<QtiAssessmentItemRef>('qti-assessment-item-ref');
           navItemId = itemRefEl.identifier;
         }
-        this.dispatchEvent(new CustomEvent('qti-request-test-item', { detail: navItemId, bubbles: true, composed: true }));
+        this.dispatchEvent(
+          new CustomEvent('qti-request-test-item', { detail: navItemId, bubbles: true, composed: true })
+        );
       });
     }
 

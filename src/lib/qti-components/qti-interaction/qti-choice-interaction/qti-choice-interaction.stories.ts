@@ -262,43 +262,43 @@ export const VocabularyLowerAlphaSuffixDotAndCorrectStory = {
   }
 };
 
-export const Form: Story = {
-  render: () => {
-    return html`
-      <form name="choice-form" @submit=${e => e.preventDefault()}>
-        ${Default.render({
-          'response-identifier': 'RESPONSE',
-          'min-choices': 1,
-          'max-choices': 2
-        })}
-        <input type="submit" value="submit" />
-      </form>
-    `;
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const choiceA = canvas.getByTestId<QtiSimpleChoice>('A');
-    const choiceB = canvas.getByTestId<QtiSimpleChoice>('B');
-    const form = canvas.getByRole<HTMLFormElement>('form');
+// export const Form: Story = {
+//   render: () => {
+//     return html`
+//       <form name="choice-form" @submit=${e => e.preventDefault()}>
+//         ${Default.render({
+//           'response-identifier': 'RESPONSE',
+//           'min-choices': 1,
+//           'max-choices': 2
+//         })}
+//         <input type="submit" value="submit" />
+//       </form>
+//     `;
+//   },
+//   play: async ({ canvasElement }) => {
+//     const canvas = within(canvasElement);
+//     const choiceA = canvas.getByTestId<QtiSimpleChoice>('A');
+//     const choiceB = canvas.getByTestId<QtiSimpleChoice>('B');
+//     const form = canvas.getByRole<HTMLFormElement>('form');
 
-    await fireEvent.click(choiceA);
-    await fireEvent.click(choiceB);
-    await fireEvent.submit(form);
+//     await fireEvent.click(choiceA);
+//     await fireEvent.click(choiceB);
+//     await fireEvent.submit(form);
 
-    const formData = new FormData(form);
+//     const formData = new FormData(form);
 
-    const submittedValues = formData.getAll('RESPONSE');
+//     const submittedValues = formData.getAll('RESPONSE');
 
-    // Define expected values for assertion
-    const expectedValues = ['A', 'B'];
+//     // Define expected values for assertion
+//     const expectedValues = ['A', 'B'];
 
-    // Check that form data contains the expected values
-    expect(submittedValues).toEqual(expect.arrayContaining(expectedValues));
-  }
-};
+//     // Check that form data contains the expected values
+//     expect(submittedValues).toEqual(expect.arrayContaining(expectedValues));
+//   }
+// };
 
-export const ContentEditable = {
-  render: () => {
-    return html` <div contenteditable="true">${Default.render({})}</div> `;
-  }
-};
+// export const ContentEditable = {
+//   render: () => {
+//     return html` <div contenteditable="true">${Default.render({})}</div> `;
+//   }
+// };

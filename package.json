@@ -58,6 +58,7 @@
   ],
   "scripts": {
     "storybook": "wireit",
+    "storybook:docs": "wireit",
     "build:watch": "npm run build --watch",
     "npm:publish": "np",
     "---": "-",
@@ -72,7 +73,6 @@
     "stylelint": "stylelint \"src/**/*.css\"",
     "build-storybook": "storybook build",
     "storybook:test": "test-storybook",
-    "storybook:docs": "wireit",
     "storybook:docs:build": "wireit",
     "chromatic": "node chromatic-runner.cjs",
     "----hooks----": "-",
