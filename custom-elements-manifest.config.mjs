@@ -5,7 +5,7 @@ import { expandTypesPlugin, getTsProgram } from 'cem-plugin-expanded-types';
 
 console.log('Building the custom element manifest...');
 
-const outdir = './';
+const outdir = './dist';
 
 export default {
   /** Globs to analyze */
@@ -35,16 +35,16 @@ export default {
       outdir: outdir
     }),
     customElementVsCodePlugin({
-      outdir: outdir + 'dist'
+      outdir: outdir
     }),
     customElementJsxPlugin({
       globs: ['src/lib/qti-test/*.ts'],
-      outdir: outdir + 'dist',
+      outdir: outdir,
       exclude: [],
       fileName: `qti-components-jsx.d.ts`
     }),
     customEsLintRuleGeneratorPlugin({
-      outdir: outdir + 'dist'
+      outdir: outdir
     })
   ]
 };

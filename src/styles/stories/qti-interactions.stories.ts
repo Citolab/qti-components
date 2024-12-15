@@ -30,9 +30,9 @@ type Story = StoryObj;
 const meta: Meta<QtiAssessmentItem> = {};
 export default meta;
 
-export const Interactions = args => html`
+export const Interactions = () => html`
   <h2>qti-gap-match-interaction</h2>
-  ${GapMatch.render({})}
+  ${GapMatch.render()}
   <h2>qti-match-interaction</h2>
   ${Match.render({})}
   <h2>qti-order-interaction</h2>
@@ -65,13 +65,13 @@ export const Interactions = args => html`
   <h2>qti-inline-choice-interaction</h2>
   ${InlineChoice.render({})}
   <h2>qti-graphic-order-interaction</h2>
-  ${GraphicOrder.render({})}
+  ${GraphicOrder.render()}
   <h2>qti-graphic-associate-interaction</h2>
-  ${GraphicAssociate.render({})}
+  ${GraphicAssociate.render()}
   <h2>qti-media-interaction</h2>
   ${Media.render({})}
   <h2>qti-position-object-interaction</h2>
-  ${PositionObject.render({})}
+  ${PositionObject.render()}
   <h2>qti-select-point-interaction</h2>
   ${SelectPoint.render({})}
   <h2>qti-slider-interaction</h2>

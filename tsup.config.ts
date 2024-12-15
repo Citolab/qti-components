@@ -100,24 +100,24 @@ const bundleOptions: Options = {
 // console.log('entries', entries);
 
 export default defineConfig([
-  {
-    // Development build, including types, non minified source and sourcemaps
-    // "src/lib/qti-components","src/lib/qti-item","src/lib/qti-transformers","src/lib/qti-loader","src/lib/qti-test"]
-    ...bundleOptions,
-    dts: true,
-    format: ['esm', 'cjs'],
-    outDir: 'dist',
-    entry: [
-      './src/lib/qti-components/index.ts',
-      './src/lib/qti-item/index.ts',
-      './src/lib/qti-transformers/index.ts',
-      './src/lib/qti-loader/index.ts',
-      './src/lib/qti-test/index.ts'
-    ],
-    minify: false,
-    external: peerdependencies,
-    sourcemap: true
-  } as Options,
+  // {
+  //   // Development build, including types, non minified source and sourcemaps
+  //   // "src/lib/qti-components","src/lib/qti-item","src/lib/qti-transformers","src/lib/qti-loader","src/lib/qti-test"]
+  //   ...bundleOptions,
+  //   dts: true,
+  //   format: ['esm', 'cjs'],
+  //   outDir: 'dist',
+  //   entry: [
+  //     './src/lib/qti-components/index.ts',
+  //     './src/lib/qti-item/index.ts',
+  //     './src/lib/qti-transformers/index.ts',
+  //     './src/lib/qti-loader/index.ts',
+  //     './src/lib/qti-test/index.ts'
+  //   ],
+  //   minify: false,
+  //   external: peerdependencies,
+  //   sourcemap: true
+  // } as Options,
 
   {
     // Development build, including types, non minified source and sourcemaps
@@ -126,11 +126,16 @@ export default defineConfig([
     dts: true,
     format: ['esm'],
     outDir: 'dist',
-    entry: ['./src/index.ts'],
+    entry: {
+      index: './src/index.ts',
+      'transformers/index': './src/lib/qti-transformers/index.ts',
+      'loader/index': './src/lib/qti-loader/index.ts'
+    },
     minify: false,
-    external: [],
+    bundle: true,
+    external: peerdependencies,
     noExternal: [/(.*)/],
-    sourcemap: 'inline' as const
+    sourcemap: true
   } as Options,
 
   ...(process.env.NODE_ENV === 'production'

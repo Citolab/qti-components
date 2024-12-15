@@ -14,14 +14,10 @@
     "noEmit": true,
 
     "strict": false,
-    "noUnusedLocals": false,
+    "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
-
-    "outDir": "./dist",
-    "rootDir": "./src",
-    
     "paths": {
       "@citolab/qti-components/qti-components": ["./src/lib/qti-components"],
       "@citolab/qti-components/qti-item": ["./src/lib/qti-item"],

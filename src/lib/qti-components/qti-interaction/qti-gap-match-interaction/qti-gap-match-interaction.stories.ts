@@ -45,14 +45,8 @@ function rgbStringToRgb(rgbString) {
 
 export const Default = {
   name: 'qti-gap-match-interaction',
-  render: args => {
+  render: () => {
     let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
-    const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => {
-      item = qtiAssessmentItem;
-      action('qti-assessment-item-connected');
-    };
 
     return html`
   <qti-gap-match-interaction
@@ -83,7 +77,7 @@ export const Default = {
     // docsHint: 'Some other value than the default'
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri(`assets/qti-conformance/Advanced/Q6/gap-match-sv-1.xml`)
     })
   ]
@@ -122,7 +116,6 @@ export const DontDropInOtherInteraction = {
     // docsHint: 'Some other value than the default'
   },
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
     assessmentItem.querySelector('qti-prompt').innerHTML = `
       Don't allow to drop a Gap from interaction 1 to interaction 2.
@@ -130,7 +123,6 @@ export const DontDropInOtherInteraction = {
       ${assessmentItem.querySelector('qti-prompt').textContent}
     `;
     const interaction1 = assessmentItem.querySelector(`qti-gap-match-interaction[response-identifier='RESPONSE1'`);
-    const dragContainerInteraction1 = interaction1.shadowRoot.querySelector('slot[part="drags"]') as HTMLSlotElement;
 
     const interaction2 = assessmentItem.querySelector(`qti-gap-match-interaction[response-identifier='RESPONSE2'`);
     const gapTextWinter1 = interaction1.querySelector('qti-gap-text[identifier="W"]') as QtiGapText;
@@ -195,7 +187,6 @@ export const CanRedrop: Story = {
     // docsHint: 'Some other value than the default'
   },
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
     assessmentItem.querySelector('qti-prompt').innerHTML = `
       For gap-match-example-1.xml, each Gap can have at most one choice associated with it.`;
@@ -224,7 +215,7 @@ export const CanRedrop: Story = {
     expect(gapG1.hasAttribute('enable')).toBe(false);
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri(`assets/qti-conformance/Advanced/Q6/gap-match-example-1.xml`)
     })
   ]
@@ -232,7 +223,7 @@ export const CanRedrop: Story = {
 
 export const DraggableContainerHasDropInDication: Story = {
   name: 'Dropzone-has-drop-indication',
-  render: (_args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
+  render: (_args, { loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
@@ -263,7 +254,6 @@ export const DraggableContainerHasDropInDication: Story = {
     // docsHint: 'Some other value than the default'
   },
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
     assessmentItem.querySelector('qti-prompt').innerHTML = `
       When a draggable is dragged, the dragzone should indicate that it can be dropped`;
@@ -312,7 +302,7 @@ export const DraggableContainerHasDropInDication: Story = {
     // --qti-border-active
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri(`assets/qti-conformance/Advanced/Q6/gap-match-example-1-removed.xml`)
     })
   ]

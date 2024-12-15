@@ -25,48 +25,30 @@
   "main": "dist/index.js",
   "type": "module",
   "exports": {
-    "./qti-components": {
-      "import": "./dist/qti-components/index.js",
-      "require": "./dist/qti-components/index.cjs"
+    ".": {
+      "import": "./dist/index.js"
     },
-    "./qti-transformers": {
-      "import": "./dist/qti-transformers/index.js",
-      "require": "./dist/qti-transformers/index.cjs"
+    "./transformers": {
+      "import": "./dist/transformers/index.js"
     },
-    "./qti-item": {
-      "import": "./dist/qti-item/index.js",
-      "require": "./dist/qti-item/index.cjs"
-    },
-    "./qti-test": {
-      "import": "./dist/qti-test/index.js",
-      "require": "./dist/qti-test/index.cjs"
-    },
-    "./qti-loader": {
-      "import": "./dist/qti-loader/index.js",
-      "require": "./dist/qti-loader/index.cjs"
+    "./loader": {
+      "import": "./dist/loader/index.js"
     },
     "./item.css": "./dist/item.css",
-    "./cdn/index.js": "./dist/cdn/index.js",
-    "./cdn/index.min.js": "./dist/cdn/index.min.js",
-    "./cdn/index.global.js": "./dist/cdn/index.global.js"
+    "./cdn/index.js": "./cdn/index.js",
+    "./cdn/index.global.js": "./cdn/index.global.js"
   },
   "types": "./dist/qti-components/index.d.ts",
   "typesVersions": {
     "*": {
-      "qti-components": [
-        "./dist/qti-components/index.d.ts"
+      ".": [
+        "./dist/index.d.ts"
       ],
-      "qti-transformers": [
-        "./dist/qti-transformers/index.d.ts"
+      "transformers": [
+        "./dist/transformers/index.d.ts"
       ],
-      "qti-item": [
-        "./dist/qti-item/index.d.ts"
-      ],
-      "qti-test": [
-        "./dist/qti-test/index.d.ts"
-      ],
-      "qti-loader": [
-        "./dist/qti-loader/index.d.ts"
+      "loader": [
+        "./dist/loader/index.d.ts"
       ]
     }
   },
@@ -76,7 +58,7 @@
   ],
   "scripts": {
     "storybook": "wireit",
-    "watch:build": "npm run build --watch",
+    "watch:build": "npm run build -- --watch",
     "npm:publish": "np",
     "---": "-",
     "build": "wireit",
@@ -84,6 +66,7 @@
     "attw": "wireit",
     "lint": "eslint src/**/*.ts",
     "cem": "wireit",
+    "css": "wireit",
     "act": "act",
     "vite": "vite",
     "stylelint": "stylelint \"src/**/*.css\"",
@@ -100,7 +83,7 @@
     "storybook": {
       "command": "storybook dev -p 6006",
       "dependencies": [
-        "cem:watch"
+        "storybook:cem:watch"
       ]
     },
     "build": {
@@ -113,7 +96,7 @@
         "css"
       ],
       "files": [
-        "src/**/*.{ts,css}",
+        "src/**/*.{ts}",
         "!src/**/*.{test,spec,stories}.ts"
       ],
       "output": [
@@ -122,7 +105,30 @@
         "!dist/item.css",
         "!dist/vscode.*",
         "!dist/qti-components-jsx.d.ts",
-        "!dist/custom-element-eslint-rules.js"
+        "!dist/custom-element-eslint-rules.js",
+        "!dist/custom-element-eslint-rules.js",
+        "!dist/custom-elements.json"
+      ]
+    },
+    "cem": {
+      "command": "cem analyze",
+      "files": [
+        "src/**/*.{ts}",
+        "!src/**/*.{test,spec,stories}.ts"
+      ],
+      "output": [
+        "dist/qti-components-jsx.d.ts",
+        "dist/custom-element-eslint-rules.js",
+        "dist/custom-elements.json"
+      ]
+    },
+    "css": {
+      "command": "postcss src/item.css -d dist -m",
+      "files": [
+        "src/**/*.css"
+      ],
+      "output": [
+        "dist/item.css"
       ]
     },
     "test": {
@@ -134,7 +140,7 @@
     "storybook:docs": {
       "command": "storybook dev --docs -c .storybook-docs",
       "dependencies": [
-        "cem:watch"
+        "storybook:cem:watch"
       ]
     },
     "storybook:docs:build": {
@@ -143,10 +149,7 @@
         "cem"
       ]
     },
-    "cem": {
-      "command": "cem analyze"
-    },
-    "cem:watch": {
+    "storybook:cem:watch": {
       "command": "cem analyze --watch",
       "service": {
         "readyWhen": {
@@ -154,11 +157,8 @@
         }
       }
     },
-    "css": {
-      "command": "postcss src/item.css -d dist -m"
-    },
     "attw": {
-      "command": "attw --pack --exclude-entrypoints ./item.css ./cdn/index.js ./cdn/index.global.js ./cdn/index.min.js",
+      "command": "attw --profile esm-only --pack --exclude-entrypoints  ./item.css ./cdn/index.js ./cdn/index.global.js ./cdn/index.min.js",
       "dependencies": [
         "build"
       ]
@@ -249,7 +249,7 @@
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "^4.28.1"
   },
-  "customElements": "custom-elements.json",
+  "customElements": "dist/custom-elements.json",
   "bugs": {
     "url": "https://github.com/Citolab/qti-components/issues"
   },

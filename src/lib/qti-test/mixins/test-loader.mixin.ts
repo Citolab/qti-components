@@ -1,5 +1,4 @@
 import { qtiTransformItem, qtiTransformTest } from '@citolab/qti-components/qti-transformers';
-import { property } from 'lit/decorators.js';
 import { LitElement } from 'lit';
 
 // const setSessionData = <T>(key: string, value?: T): void => sessionStorage.setItem(key, JSON.stringify(value));
@@ -19,7 +18,7 @@ export const TestLoaderMixin = <T extends Constructor<LitElement>>(superClass: T
         const { testURL } = e.detail;
         if (!testURL) {
           console.warn(
-            'No test found, there should be an aattribute test-url with the path to the test on the test-container'
+            'No test found, there should be an attribute test-url with the path to the test on the test-container'
           );
         } else {
           this.testURL = testURL;
