@@ -1,0 +1,10 @@
+{
+  "packages": [
+    {
+      "name": "@citolab/qti-components",
+      "url": "https://pkg.pr.new/Citolab/qti-components/@citolab/qti-components@70136b565d8c549f9b41d364294f77b0dc16cffa",
+      "shasum": "cc80836a1a05a2500cf8719b2d29bd143f72352e"
+    }
+  ],
+  "templates": []
+}
