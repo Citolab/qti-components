@@ -297,6 +297,14 @@
     & qti-gap {
       @apply drop;
 
+      &[disabled] {
+        @apply dis;
+
+        &:not(:empty) {
+          cursor: default !important;
+        }
+      }
+
       &[enabled] {
         @apply dropping;
 
@@ -308,14 +316,6 @@
         /* Dark theme override */
         .qti-selections-dark & {
           border-color: var(--qti-dark-border-active);
-        }
-      }
-
-      &[disabled] {
-        @apply dis;
-
-        &:not(:empty) {
-          cursor: default !important;
         }
       }
 
@@ -576,12 +576,21 @@
   }
 
   qti-match-interaction:not(.qti-match-tabular) {
+    &:state(--dragzone-enabled) qti-simple-match-set:first-of-type {
+      @apply dropping;
+    }
+
+    &:state(--dragzone-active) qti-simple-match-set:first-of-type {
+      @apply act;
+    }
+
     /* The draggables */
     & qti-simple-match-set:first-of-type {
       display: flex;
       flex-wrap: wrap;
       align-items: flex-start; /* Prevents children from stretching */
       gap: var(--qti-gap-size);
+      border: 2px solid transparent;
 
       & qti-simple-associable-choice {
         @apply drag;
@@ -814,6 +823,15 @@
   }
 
   qti-associate-interaction {
+    /* General styles for active and enabled states */
+    &:state(--dragzone-active) slot[name='qti-simple-associable-choice'] {
+      @apply act;
+    }
+
+    &:state(--dragzone-enabled) slot[name='qti-simple-associable-choice'] {
+      @apply dropping;
+    }
+
     & qti-simple-associable-choice, /* drags when in lightdom */
     &::part(qti-simple-associable-choice) /* drags when in shadowdom */ {
       @apply drag;

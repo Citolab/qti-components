@@ -1,4 +1,4 @@
-import { CSSResultGroup, html, PropertyValues } from 'lit';
+import { CSSResultGroup, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-interaction-mixin';
 import { QtiHotspotChoice } from '../qti-hotspot-choice';
@@ -13,50 +13,11 @@ export class QtiGraphicGapMatchInteraction extends DragDropInteractionMixin(
 ) {
   static styles: CSSResultGroup = styles;
 
-  private observer: MutationObserver | null = null;
-  private resizeObserver: ResizeObserver | null = null;
-
   override render() {
     return html` <slot name="prompt"></slot>
       <slot part="image"></slot>
       <slot part="drags" name="drags" class="hover-border"></slot>
       <div role="alert" id="validationMessage"></div>`;
-  }
-
-  override firstUpdated(_changedProperties: PropertyValues) {
-    super.firstUpdated(_changedProperties);
-    this.updateMinDimensionsForDrowZones();
-
-    // MutationObserver to observe changes in child elements
-    this.observer = new MutationObserver(() => this.updateMinDimensionsForDrowZones());
-    this.observer.observe(this, { childList: true, subtree: true });
-
-    // ResizeObserver to monitor size changes of `gapTexts`
-    this.resizeObserver = new ResizeObserver(() => this.updateMinDimensionsForDrowZones());
-    const draggableGaps = this.querySelectorAll('qti-gap-img, qti-gap-text');
-    draggableGaps.forEach(gapText => this.resizeObserver?.observe(gapText));
-  }
-
-  private updateMinDimensionsForDrowZones() {
-    const draggableGaps = this.querySelectorAll('qti-gap-img, qti-gap-text');
-    const gaps = this.querySelectorAll('qti-associable-hotspot');
-    let maxHeight = 0;
-    let maxWidth = 0;
-    draggableGaps.forEach(gapText => {
-      const rect = gapText.getBoundingClientRect();
-      maxHeight = Math.max(maxHeight, rect.height);
-      maxWidth = Math.max(maxWidth, rect.width);
-    });
-    const slots = this.shadowRoot.querySelectorAll('slot');
-    const dragSlot = Array.from(slots).find(slot => slot.name === 'drags') as HTMLElement;
-    if (dragSlot) {
-      dragSlot.style.minHeight = `${maxHeight}px`;
-      dragSlot.style.minWidth = `${maxWidth}px`;
-    }
-    for (const gap of gaps) {
-      gap.style.minHeight = `${maxHeight}px`;
-      gap.style.minWidth = `${maxWidth}px`;
-    }
   }
 
   private positionHotspotOnRegister(e: CustomEvent<null>): void {

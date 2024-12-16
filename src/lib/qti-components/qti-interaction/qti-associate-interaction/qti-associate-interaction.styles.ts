@@ -8,6 +8,7 @@ export default css`
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
+    border: 2px solid transparent;
   }
 
   :host::part(associables-container) {

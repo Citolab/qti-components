@@ -1,14 +1,15 @@
 import { action } from '@storybook/addon-actions';
 import { html } from 'lit';
 
-import type { Meta, StoryObj } from '@storybook/web-components';
+import type { ArgTypes, Meta, StoryObj } from '@storybook/web-components';
 
 import { createRef, ref } from 'lit/directives/ref.js';
 import '../../index';
-import { QtiAssessmentItem, QtiMatchInteraction } from '../../index';
+import { Interaction, QtiAssessmentItem, QtiMatchInteraction } from '../../index';
 
-import { expect, fn, waitFor, within } from '@storybook/test';
+import { expect, fireEvent, fn, waitFor, within } from '@storybook/test';
 import drag from '../../../../testing/drag';
+import { getItemByUri } from '../../../qti-loader';
 
 type Story = StoryObj; // <Props>;
 
@@ -382,74 +383,154 @@ export const TabularMultiple = {
     </qti-assessment-item>`
 };
 
-export const Images = {
-  render: () =>
-    html`<qti-assessment-item
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
-      xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
-      identifier="match"
-      title="Characters and Plays"
-      adaptive="false"
-      time-dependent="false"
-    >
-      <qti-response-declaration identifier="RESPONSE" cardinality="multiple" base-type="directedPair">
-        <qti-correct-response>
-          <qti-value>C R</qti-value>
-          <qti-value>D M</qti-value>
-          <qti-value>L M</qti-value>
-          <qti-value>P T</qti-value>
-        </qti-correct-response>
-        <qti-mapping default-value="0">
-          <qti-map-entry map-key="C R" mapped-value="1"></qti-map-entry>
-          <qti-map-entry map-key="D M" mapped-value="0.5"></qti-map-entry>
-          <qti-map-entry map-key="L M" mapped-value="0.5"></qti-map-entry>
-          <qti-map-entry map-key="P T" mapped-value="1"></qti-map-entry>
-        </qti-mapping>
-      </qti-response-declaration>
-      <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float"></qti-outcome-declaration>
-      <qti-item-body>
-        <qti-match-interaction
-          @qti-interaction-response="${action(`qti-interaction-response`)}"
-          class="qti-match-tabular"
-          max-associations="4"
-          response-identifier="RSP-C"
-          ><qti-prompt>Match the following characters to the Shakespeare play they appeared in:</qti-prompt>
-          <qti-simple-match-set>
-            <qti-simple-associable-choice identifier="PROD1" match-max="1"
-              ><img alt="" src="./images/Biologische kipfilet.png"
-            /></qti-simple-associable-choice>
-            <qti-simple-associable-choice identifier="PROD2" match-max="1"
-              ><img alt="" src="./images/Verantwoorde wilde zalmfilets.png"
-            /></qti-simple-associable-choice>
-            <qti-simple-associable-choice identifier="PROD3" match-max="1"
-              ><img alt="" src="./images/Duurzamer geproduceerde melk.png"
-            /></qti-simple-associable-choice>
-          </qti-simple-match-set>
-          <qti-simple-match-set>
-            <qti-simple-associable-choice identifier="BINA" match-max="2"
-              ><img alt="" src="./images/asc.png"
-            /></qti-simple-associable-choice>
-            <qti-simple-associable-choice identifier="BINB" match-max="2"
-              ><img alt="" src="./images/EU-Biologisch.png"
-            /></qti-simple-associable-choice>
-            <qti-simple-associable-choice identifier="BINC" match-max="2"
-              ><img alt="" src="./images/Rainforest Alliance.png"
-            /></qti-simple-associable-choice>
-            <qti-simple-associable-choice identifier="BIND" match-max="2"
-              ><img alt="" src="./images/MSC.png"
-            /></qti-simple-associable-choice>
-            <qti-simple-associable-choice identifier="BINE" match-max="2"
-              ><img alt="" src="./images/Planet proof.png"
-            /></qti-simple-associable-choice>
-            <qti-simple-associable-choice identifier="BINF" match-max="2"
-              ><img alt="" src="./images/Fartrade.png"
-            /></qti-simple-associable-choice>
-          </qti-simple-match-set>
-        </qti-match-interaction>
-      </qti-item-body>
-      <qti-response-processing
-        template="https://purl.imsglobal.org/spec/qti/v3p0/rptemplates/map_response.xml"
-      ></qti-response-processing>
-    </qti-assessment-item>`
+export const ImagesAbove: Story = {
+  name: 'ImagesAbove',
+  render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
+    let item: QtiAssessmentItem;
+    const onInteractionChangedAction = action('qti-interaction-changed');
+    const onOutcomeChangedAction = action('qti-outcome-changed');
+    const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => {
+      item = qtiAssessmentItem;
+      action('qti-assessment-item-connected')();
+    };
+
+    return html`
+      <div
+        class="item"
+        @qti-interaction-changed=${onInteractionChangedAction}
+        @qti-outcome-changed=${onOutcomeChangedAction}
+        @qti-assessment-item-connected=${onItemFirstUpdated}
+      >
+        ${xml}
+      </div>
+      <button
+        @click=${() => {
+          item?.processResponse();
+        }}
+      >
+        Submit
+      </button>
+    `;
+  },
+  args: {},
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
+
+    const interaction = assessmentItem.querySelector('qti-match-interaction') as Interaction;
+    interaction.value = ['A1 B1'];
+    // const validationMessageElement = qtiGapMatchInteraction.shadowRoot.querySelector(
+    //   '#validationMessage'
+    // ) as HTMLElement;
+
+    // const gapChoices = Array.from(qtiGapMatchInteraction.querySelectorAll('qti-gap-img'));
+    // const responseHotspots = Array.from(qtiGapMatchInteraction.querySelectorAll('qti-associable-hotspot'));
+
+    // // Ensure elements exist
+    // expect(qtiGapMatchInteraction).not.toBeNull();
+    // expect(validationMessageElement).not.toBeNull();
+    // expect(gapChoices.length).toBeGreaterThan(0);
+    // expect(responseHotspots.length).toBeGreaterThan(1);
+
+    // // Test for exceeding max associations
+    // await step('Attempt to make more than 1 association', async () => {
+    //   // Drag and drop to make 2 associations
+    //   await drag(gapChoices[0], { to: responseHotspots[0], duration: 300 });
+    //   await drag(gapChoices[1], { to: responseHotspots[1], duration: 300 });
+
+    //   // Check validation message for exceeding max selections
+    //   expect(validationMessageElement.textContent).toContain('default max-selections-message');
+    //   expect(validationMessageElement).toBeVisible();
+
+    //   action('Displayed platform default max selections message')();
+    // });
+
+    // // Acknowledge the message
+    // await step('Acknowledge max selections message', async () => {
+    //   const closeButton = validationMessageElement.querySelector('button[part="close"]');
+    //   expect(closeButton).not.toBeNull();
+
+    //   await fireEvent.click(closeButton!);
+    //   expect(validationMessageElement).not.toBeVisible();
+
+    //   action('Acknowledged platform default max selections message')();
+    // });
+  },
+  loaders: [
+    async ({ args }) => ({
+      xml: await getItemByUri(`assets/api/kennisnet-1/ITEM002.xml`)
+    })
+  ]
 };
+
+// export const Images = {
+//   render: () =>
+//     html`<qti-assessment-item
+//       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+//       xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+//       xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+//       identifier="match"
+//       title="Characters and Plays"
+//       adaptive="false"
+//       time-dependent="false"
+//     >
+//       <qti-response-declaration identifier="RESPONSE" cardinality="multiple" base-type="directedPair">
+//         <qti-correct-response>
+//           <qti-value>C R</qti-value>
+//           <qti-value>D M</qti-value>
+//           <qti-value>L M</qti-value>
+//           <qti-value>P T</qti-value>
+//         </qti-correct-response>
+//         <qti-mapping default-value="0">
+//           <qti-map-entry map-key="C R" mapped-value="1"></qti-map-entry>
+//           <qti-map-entry map-key="D M" mapped-value="0.5"></qti-map-entry>
+//           <qti-map-entry map-key="L M" mapped-value="0.5"></qti-map-entry>
+//           <qti-map-entry map-key="P T" mapped-value="1"></qti-map-entry>
+//         </qti-mapping>
+//       </qti-response-declaration>
+//       <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float"></qti-outcome-declaration>
+//       <qti-item-body>
+//         <qti-match-interaction
+//           @qti-interaction-response="${action(`qti-interaction-response`)}"
+//           class="qti-match-tabular"
+//           max-associations="4"
+//           response-identifier="RSP-C"
+//           ><qti-prompt>Match the following characters to the Shakespeare play they appeared in:</qti-prompt>
+//           <qti-simple-match-set>
+//             <qti-simple-associable-choice identifier="PROD1" match-max="1"
+//               ><img alt="" src="./images/Biologische kipfilet.png"
+//             /></qti-simple-associable-choice>
+//             <qti-simple-associable-choice identifier="PROD2" match-max="1"
+//               ><img alt="" src="./images/Verantwoorde wilde zalmfilets.png"
+//             /></qti-simple-associable-choice>
+//             <qti-simple-associable-choice identifier="PROD3" match-max="1"
+//               ><img alt="" src="./images/Duurzamer geproduceerde melk.png"
+//             /></qti-simple-associable-choice>
+//           </qti-simple-match-set>
+//           <qti-simple-match-set>
+//             <qti-simple-associable-choice identifier="BINA" match-max="2"
+//               ><img alt="" src="./images/asc.png"
+//             /></qti-simple-associable-choice>
+//             <qti-simple-associable-choice identifier="BINB" match-max="2"
+//               ><img alt="" src="./images/EU-Biologisch.png"
+//             /></qti-simple-associable-choice>
+//             <qti-simple-associable-choice identifier="BINC" match-max="2"
+//               ><img alt="" src="./images/Rainforest Alliance.png"
+//             /></qti-simple-associable-choice>
+//             <qti-simple-associable-choice identifier="BIND" match-max="2"
+//               ><img alt="" src="./images/MSC.png"
+//             /></qti-simple-associable-choice>
+//             <qti-simple-associable-choice identifier="BINE" match-max="2"
+//               ><img alt="" src="./images/Planet proof.png"
+//             /></qti-simple-associable-choice>
+//             <qti-simple-associable-choice identifier="BINF" match-max="2"
+//               ><img alt="" src="./images/Fartrade.png"
+//             /></qti-simple-associable-choice>
+//           </qti-simple-match-set>
+//         </qti-match-interaction>
+//       </qti-item-body>
+//       <qti-response-processing
+//         template="https://purl.imsglobal.org/spec/qti/v3p0/rptemplates/map_response.xml"
+//       ></qti-response-processing>
+//     </qti-assessment-item>`
+// };
