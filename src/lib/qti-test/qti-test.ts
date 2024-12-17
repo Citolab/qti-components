@@ -33,8 +33,6 @@ import { TestBase } from './test-base';
  *
  * @attr {string} testURL - the relative location to the QTI assessment.xml file
  *
- * @tag qti-player
- *
  * ### Features
  *
  * - **Dynamic Template Loading**:
