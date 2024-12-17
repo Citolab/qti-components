@@ -168,7 +168,6 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
       draggable.removeAttribute('dragging');
       const wasDropped = await this.wasDropped(ev);
-      console.log('wasDropped', wasDropped);
       if (!wasDropped) {
         if (this.configuration.dragCanBePlacedBack) {
           this.restoreInitialDraggablePosition(draggable);
