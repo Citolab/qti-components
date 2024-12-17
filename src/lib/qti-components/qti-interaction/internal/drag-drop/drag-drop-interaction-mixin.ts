@@ -27,6 +27,8 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     draggablesSelector
   ) {
     protected draggables = new Map<HTMLElement, { parent: HTMLElement; index: number }>();
+    private observer: MutationObserver | null = null;
+    private resizeObserver: ResizeObserver | null = null;
     dragDropApi: TouchDragAndDrop;
 
     @property({ attribute: false, type: Object }) configuration: InteractionConfiguration = {
@@ -75,6 +77,17 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       this.dragContainersModified(dragContainers, []);
       this.droppablesModified(droppables, []);
       this.draggablesModified(draggables, []);
+
+      this.updateMinDimensionsForDropZones();
+
+      // MutationObserver to observe changes in child elements
+      this.observer = new MutationObserver(() => this.updateMinDimensionsForDropZones());
+      this.observer.observe(this, { childList: true, subtree: true });
+
+      // ResizeObserver to monitor size changes of `gapTexts`
+      this.resizeObserver = new ResizeObserver(() => this.updateMinDimensionsForDropZones());
+      const gapTexts = this.querySelectorAll('qti-gap-text');
+      gapTexts.forEach(gapText => this.resizeObserver?.observe(gapText));
     }
 
     private dragContainersModified = (dragContainersAdded: HTMLElement[], dragContainersRemoved: HTMLElement[]) => {
@@ -147,19 +160,46 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
     private handleDragEnd = async (ev: DragEvent) => {
       ev.preventDefault();
+      const draggable = ev.currentTarget as HTMLElement;
       this._internals.states.delete('--dragzone-enabled');
       this._internals.states.delete('--dragzone-active');
       this.deactivateDragLocation();
       this.deactivateDroppables();
-      const draggable = ev.currentTarget as HTMLElement;
+
       draggable.removeAttribute('dragging');
       const wasDropped = await this.wasDropped(ev);
+      console.log('wasDropped', wasDropped);
       if (!wasDropped) {
         if (this.configuration.dragCanBePlacedBack) {
           this.restoreInitialDraggablePosition(draggable);
         }
       }
     };
+
+    private updateMinDimensionsForDropZones() {
+      const gapTexts = this.querySelectorAll(draggablesSelector);
+      const gaps = Array.from(this.querySelectorAll(droppablesSelector)).map(d => d as HTMLElement);
+      let maxHeight = 0;
+      let maxWidth = 0;
+      gapTexts.forEach(gapText => {
+        const rect = gapText.getBoundingClientRect();
+        maxHeight = Math.max(maxHeight, rect.height);
+        maxWidth = Math.max(maxWidth, rect.width);
+      });
+
+      const dragContainer =
+        (this.querySelector(dragContainersSelector) as HTMLElement) ||
+        (this.shadowRoot?.querySelector(dragContainersSelector) as HTMLElement);
+
+      if (dragContainer) {
+        dragContainer.style.minHeight = `${maxHeight}px`;
+        dragContainer.style.minWidth = `${maxWidth}px`;
+      }
+      for (const gap of gaps) {
+        gap.style.minHeight = `${maxHeight}px`;
+        gap.style.minWidth = `${maxWidth}px`;
+      }
+    }
 
     private activateDroppables(target: HTMLElement): void {
       const dragContainers = this.dragDropApi.dragContainers;
@@ -197,16 +237,14 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       this.dragDropApi.droppables.forEach(d => d.removeAttribute('enabled'));
     }
 
-    private async wasDropped(ev: DragEvent): Promise<boolean> {
-      // const hasMoveTestItem = await this.checkForMoveTestItem(ev);
-      return ev.dataTransfer.dropEffect !== 'none';
+    private wasDropped(ev: DragEvent) {
+      return ev.dataTransfer.dropEffect && ev.dataTransfer.dropEffect !== 'none';
     }
 
     private async restoreInitialDraggablePosition(draggable: HTMLElement): Promise<void> {
       const { parent, index } = this.draggables.get(draggable);
 
       const moveDraggable = (draggable: HTMLElement, parent: HTMLElement, index: number) => {
-        console.log('moveDraggable', draggable, parent, index);
         const targetIndex = Math.min(index, parent.children.length);
         parent.insertBefore(draggable, parent.children[targetIndex]);
         draggable.style.transform = 'translate(0, 0)';
@@ -220,9 +258,29 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       }
 
       // Use view transitions if supported
+      const transition = document.startViewTransition(() => {
+        draggable.style.transform = '';
+        moveDraggable(draggable, parent, index);
+      });
       // transition.finished.then(() => {
       //   draggable.style.transition = '';
       // });
+    }
+
+    override disconnectedCallback() {
+      super.disconnectedCallback();
+
+      // Cleanup MutationObserver
+      if (this.observer) {
+        this.observer.disconnect();
+        this.observer = null;
+      }
+
+      // Cleanup ResizeObserver
+      if (this.resizeObserver) {
+        this.resizeObserver.disconnect();
+        this.resizeObserver = null;
+      }
     }
 
     validate(): boolean {
