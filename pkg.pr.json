@@ -2,8 +2,8 @@
   "packages": [
     {
       "name": "@citolab/qti-components",
-      "url": "https://pkg.pr.new/Citolab/qti-components/@citolab/qti-components@188503f76d7e98e7224510335a6f005ec401bdef",
-      "shasum": "79b6401a39e7c765b83ccdd60cad4a5459daa80e"
+      "url": "https://pkg.pr.new/Citolab/qti-components/@citolab/qti-components@34fb9225ed3bdade6e88a802efe350c8d13d065f",
+      "shasum": "1c907ff5da123b1485d4edc7d2391cdca324aa7a"
     }
   ],
   "templates": []
