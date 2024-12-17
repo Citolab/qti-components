@@ -11,7 +11,7 @@ export default {
   /** Globs to analyze */
   globs: ['src/lib/qti-components/**/*.ts', 'src/lib/qti-item/**/*.ts', 'src/lib/qti-test/**/*.ts'],
   /** Globs to exclude */
-  exclude: ['src/**/qti-*.stories.ts', 'src/**/qti-*.test.ts', 'src/**/qti-*.spec.ts', 'src/**/qti-*.styles.ts'],
+  exclude: ['src/**/qti-*.stories.ts', 'src/**/qti-*.spec.ts', 'src/**/qti-*.styles.ts'],
   /** Directory to output CEM to */
   outdir: outdir,
   /** Run in dev mode, provides extra logging */
@@ -38,7 +38,6 @@ export default {
       outdir: outdir
     }),
     customElementJsxPlugin({
-      globs: ['src/lib/qti-test/*.ts'],
       outdir: outdir,
       exclude: [],
       fileName: `qti-components-jsx.d.ts`
