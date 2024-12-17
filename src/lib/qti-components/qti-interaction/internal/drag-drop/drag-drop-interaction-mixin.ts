@@ -168,6 +168,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
       draggable.removeAttribute('dragging');
       const wasDropped = await this.wasDropped(ev);
+      console.log('wasDropped', wasDropped);
       if (!wasDropped) {
         if (this.configuration.dragCanBePlacedBack) {
           this.restoreInitialDraggablePosition(draggable);
@@ -236,9 +237,8 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       this.dragDropApi.droppables.forEach(d => d.removeAttribute('enabled'));
     }
 
-    private async wasDropped(ev: DragEvent): Promise<boolean> {
-      // const hasMoveTestItem = await this.checkForMoveTestItem(ev);
-      return ev.dataTransfer.dropEffect !== 'none';
+    private wasDropped(ev: DragEvent) {
+      return ev.dataTransfer.dropEffect && ev.dataTransfer.dropEffect !== 'none';
     }
 
     private async restoreInitialDraggablePosition(draggable: HTMLElement): Promise<void> {
