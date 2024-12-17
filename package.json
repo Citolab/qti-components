@@ -36,7 +36,8 @@
     },
     "./item.css": "./dist/item.css",
     "./cdn/index.js": "./cdn/index.js",
-    "./cdn/index.global.js": "./cdn/index.global.js"
+    "./cdn/index.global.js": "./cdn/index.global.js",
+    "./react": "./dist//qti-components-jsx.d.ts"
   },
   "types": "./dist/qti-components/index.d.ts",
   "typesVersions": {
@@ -98,7 +99,8 @@
       "files": [
         "src/**/*.{ts}",
         "tsconfig.json",
-        "!src/**/*.{test,spec,stories}.ts"
+        "!src/**/*.{test,spec,stories}.ts",
+        "package.json"
       ]
     },
     "cem": {
