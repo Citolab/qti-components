@@ -234,7 +234,7 @@
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "^4.28.1"
   },
-  "customElements": "dist/custom-elements.json",
+  "customElements": "custom-elements.json",
   "bugs": {
     "url": "https://github.com/Citolab/qti-components/issues"
   },

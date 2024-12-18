@@ -30,6 +30,7 @@ storybook-static/
 
 vscode.html-custom-data.json
 vscode.css-custom-data.json
+custom-elements.json
 
 public/assets/api/test
 .env
