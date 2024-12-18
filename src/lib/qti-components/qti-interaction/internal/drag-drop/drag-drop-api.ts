@@ -268,34 +268,20 @@ export class TouchDragAndDrop {
   private findClosestDropzone(): HTMLElement | null {
     if (!this.dragSource || this.allDropzones.length === 0) return null;
 
-    const dragRect = this.dragSource.getBoundingClientRect();
-    const dragCorners = this.getCorners(dragRect);
-    const dragCenter = this.getCenter(dragRect);
+    const dragCenter = this.getCenter(this.dragSource.getBoundingClientRect());
 
     let closestDropzone: HTMLElement | null = null;
     let minDistance = Infinity;
 
     for (const dropzone of this.allDropzones) {
-      const dropRect = dropzone.getBoundingClientRect();
-      const dropCorners = this.getCorners(dropRect);
-      const dropCenter = this.getCenter(dropRect);
+      const dropCenter = this.getCenter(dropzone.getBoundingClientRect());
+      const distance = this.calculateDistance(dragCenter, dropCenter);
 
-      // Calculate normalized corner distances
-      const cornerDistance =
-        this.calculateTotalCornerDistance(dragCorners, dropCorners) / this.getRectDiagonal(dropRect);
-
-      // Calculate center-to-center distance
-      const centerDistance = this.calculateDistance(dragCenter, dropCenter);
-
-      // Combine distances with weights
-      const totalDistance = cornerDistance * 0.5 + centerDistance * 0.5;
-
-      if (totalDistance < minDistance) {
-        minDistance = totalDistance;
+      if (distance < minDistance) {
+        minDistance = distance;
         closestDropzone = dropzone;
       }
     }
-
     return closestDropzone;
   }
 
@@ -304,28 +290,6 @@ export class TouchDragAndDrop {
       x: rect.left + rect.width / 2,
       y: rect.top + rect.height / 2
     };
-  }
-
-  private getRectDiagonal(rect: DOMRect): number {
-    return Math.sqrt(rect.width ** 2 + rect.height ** 2);
-  }
-
-  private getCorners(rect: DOMRect): { topLeft: Point; topRight: Point; bottomLeft: Point; bottomRight: Point } {
-    return {
-      topLeft: { x: rect.left, y: rect.top },
-      topRight: { x: rect.right, y: rect.top },
-      bottomLeft: { x: rect.left, y: rect.bottom },
-      bottomRight: { x: rect.right, y: rect.bottom }
-    };
-  }
-
-  private calculateTotalCornerDistance(cornersA, cornersB): number {
-    return (
-      this.calculateDistance(cornersA.topLeft, cornersB.topLeft) +
-      this.calculateDistance(cornersA.topRight, cornersB.topRight) +
-      this.calculateDistance(cornersA.bottomLeft, cornersB.bottomLeft) +
-      this.calculateDistance(cornersA.bottomRight, cornersB.bottomRight)
-    );
   }
 
   private calculateDistance(pointA: Point, pointB: Point): number {

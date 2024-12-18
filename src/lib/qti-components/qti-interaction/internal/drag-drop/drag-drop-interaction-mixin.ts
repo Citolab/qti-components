@@ -29,9 +29,9 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     protected draggables = new Map<HTMLElement, { parent: HTMLElement; index: number }>();
     private observer: MutationObserver | null = null;
     private resizeObserver: ResizeObserver | null = null;
-    dragDropApi: TouchDragAndDrop;
+    private dragDropApi: TouchDragAndDrop;
 
-    @property({ attribute: false, type: Object }) configuration: InteractionConfiguration = {
+    @property({ attribute: false, type: Object }) protected configuration: InteractionConfiguration = {
       copyStylesDragClone: true,
       dragCanBePlacedBack: true,
       dragOnClick: false
@@ -168,7 +168,6 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
       draggable.removeAttribute('dragging');
       const wasDropped = await this.wasDropped(ev);
-      console.log('wasDropped', wasDropped);
       if (!wasDropped) {
         if (this.configuration.dragCanBePlacedBack) {
           this.restoreInitialDraggablePosition(draggable);
@@ -284,6 +283,8 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
 
     validate(): boolean {
+      if (!this.shadowRoot) return false;
+
       const validAssociations = this.getValidAssociations();
       let isValid = true;
       let validityMessage = '';
@@ -349,10 +350,9 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     set value(value: string[]) {
       if (this.isMatchTabular()) return;
       this.resetDroppables();
-      value?.forEach(entry => this.placeResponse(entry));
-
       // Assuming this.value is an array of strings
       if (Array.isArray(value)) {
+        value?.forEach(entry => this.placeResponse(entry));
         const formData = new FormData();
         value.forEach(response => {
           formData.append(this.responseIdentifier, response);

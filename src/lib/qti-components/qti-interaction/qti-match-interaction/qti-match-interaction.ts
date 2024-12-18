@@ -1,4 +1,4 @@
-import { CSSResultGroup, html } from 'lit';
+import { CSSResultGroup, html, nothing } from 'lit';
 import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-interaction-mixin';
 import { customElement, property, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
@@ -17,11 +17,12 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
 ) {
   static styles: CSSResultGroup = styles;
 
-  rows: QtiSimpleAssociableChoice[];
-  cols: QtiSimpleAssociableChoice[];
-  lastCheckedRadio: HTMLInputElement | null = null;
+  protected rows: QtiSimpleAssociableChoice[];
+  protected cols: QtiSimpleAssociableChoice[];
+  protected lastCheckedRadio: HTMLInputElement | null = null;
 
-  @state() _response: string | string[] = [];
+  @property({ type: String }) class: string = '';
+  @state() protected _response: string | string[] = [];
   // dragDropApi: TouchDragAndDrop;
   get value(): string[] {
     if (!this.classList.contains('qti-match-tabular')) return super.value as string[];
@@ -31,19 +32,11 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
     if (!this.classList.contains('qti-match-tabular')) super.value = val;
     else this._response = val;
   }
-  @state() correctOptions: string[] = [];
   @property({ type: String, attribute: 'response-identifier' }) responseIdentifier: string = '';
+  @state() protected correctOptions: string[] = [];
 
   async connectedCallback(): Promise<void> {
     super.connectedCallback();
-    // await this.updateComplete;
-    // this.dragDropApi = new TouchDragAndDrop();
-    // this.dragDropApi.addDraggableElements(
-    //   this.querySelectorAll('qti-simple-match-set:first-of-type qti-simple-associable-choice')
-    // );
-    // this.dragDropApi.addDroppableElements(
-    //   this.querySelectorAll('qti-simple-match-set:last-of-type qti-simple-associable-choice')
-    // );
     this.rows = Array.from<QtiSimpleAssociableChoice>(
       this.querySelectorAll('qti-simple-match-set:first-of-type qti-simple-associable-choice')
     );
@@ -54,7 +47,7 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
     this.value = [];
   }
 
-  handleRadioClick = e => {
+  protected handleRadioClick = e => {
     const radio = e.target as HTMLInputElement;
     if (this.lastCheckedRadio === radio) {
       radio.checked = false;
@@ -65,7 +58,7 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
     }
   };
 
-  handleRadioChange = e => {
+  protected handleRadioChange = e => {
     const checkbox = e.target as HTMLInputElement;
     const value = checkbox.value;
     const name = checkbox.name;
@@ -109,51 +102,56 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
   }
 
   override render() {
-    if (!this.classList.contains('qti-match-tabular')) {
-      return html`<slot name="prompt"></slot> <slot></slot>
-        <div role="alert" id="validationMessage"></div>`;
-    }
+    const isTabular = this.class.split(' ').includes('qti-match-tabular');
     return html`
       <slot name="prompt"></slot>
-      <table>
-        <tr>
-          <td></td>
-          ${this.cols.map(col => html`<th part="r-header">${unsafeHTML(col.innerHTML)}</th>`)}
-        </tr>
+      <slot ?hidden=${isTabular}></slot>
 
-        ${this.rows.map(
-          row =>
-            html`<tr>
-              <td part="c-header">${unsafeHTML(row.innerHTML)}</td>
-              ${this.cols.map(col => {
-                const rowId = row.getAttribute('identifier');
-                const colId = col.getAttribute('identifier');
-                const value = `${rowId} ${colId}`;
-                const selectedInRowCount = this.value.filter(v => v.split(' ')[0] === rowId).length || 0;
-                const checked = this.value.includes(value);
-                const part = `rb ${checked ? 'rb-checked' : ''} ${this.correctOptions.includes(value) ? 'rb-correct' : ''}`;
-                // disable if match max is greater than 1 and max is reached
-                const disable =
-                  this.correctOptions.length > 0
-                    ? true
-                    : row.matchMax === 1
-                      ? false
-                      : selectedInRowCount >= row.matchMax && !checked;
-                return html`<td>
-                  <input
-                    type=${row.matchMax === 1 ? 'radio' : `checkbox`}
-                    part=${part}
-                    name=${rowId}
-                    value=${value}
-                    .disabled=${disable}
-                    @change=${e => this.handleRadioChange(e)}
-                    @click=${e => (row.matchMax === 1 ? this.handleRadioClick(e) : null)}
-                  />
-                </td>`;
-              })}
-            </tr>`
-        )}
-      </table>
+      ${isTabular
+        ? html`
+            <table>
+              <tr>
+                <td></td>
+                ${this.cols.map(col => html`<th part="r-header">${unsafeHTML(col.innerHTML)}</th>`)}
+              </tr>
+
+              ${this.rows.map(
+                row =>
+                  html`<tr>
+                    <td part="c-header">${unsafeHTML(row.innerHTML)}</td>
+                    ${this.cols.map(col => {
+                      const rowId = row.getAttribute('identifier');
+                      const colId = col.getAttribute('identifier');
+                      const value = `${rowId} ${colId}`;
+                      const selectedInRowCount = this.value.filter(v => v.split(' ')[0] === rowId).length || 0;
+                      const checked = this.value.includes(value);
+                      const part = `rb ${checked ? 'rb-checked' : ''} ${this.correctOptions.includes(value) ? 'rb-correct' : ''}`;
+                      // disable if match max is greater than 1 and max is reached
+                      const disable =
+                        this.correctOptions.length > 0
+                          ? true
+                          : row.matchMax === 1
+                            ? false
+                            : selectedInRowCount >= row.matchMax && !checked;
+                      return html`<td>
+                        <input
+                          type=${row.matchMax === 1 ? 'radio' : `checkbox`}
+                          part=${part}
+                          name=${rowId}
+                          value=${value}
+                          .disabled=${disable}
+                          @change=${e => this.handleRadioChange(e)}
+                          @click=${e => (row.matchMax === 1 ? this.handleRadioClick(e) : null)}
+                        />
+                      </td>`;
+                    })}
+                  </tr>`
+              )}
+            </table>
+          `
+        : nothing}
+
+      <div role="alert" id="validationMessage"></div>
     `;
   }
 }

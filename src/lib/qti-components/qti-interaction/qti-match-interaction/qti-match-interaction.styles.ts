@@ -3,7 +3,7 @@ import { css } from 'lit';
 
 /* ${componentStyles} */
 export default css`
-  slot {
+  slot:not([hidden]) {
     /* slot where the */
     display: flex;
     flex-direction: column;

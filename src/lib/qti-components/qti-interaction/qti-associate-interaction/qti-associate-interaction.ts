@@ -15,7 +15,6 @@ export class QtiAssociateInteraction extends DragDropInteractionMixin(
   @state() private _childrenMap: Element[] = [];
 
   static styles: CSSResultGroup = styles;
-  // dragDropApi: TouchDragAndDrop;
 
   private _registerChoiceHandler: (event: CustomEvent) => void;
 

@@ -88,12 +88,12 @@ export const DroppablesMixin = <T extends Constructor<Interaction>>(superClass: 
     }
 
     private dragoverHandler(ev: DragEvent): boolean {
-      const responseIdentifierDraggable = ev.dataTransfer.getData('responseIdentifier');
+      // const responseIdentifierDraggable = ev.dataTransfer.getData('responseIdentifier');
       ev.preventDefault();
-      if (responseIdentifierDraggable === this.responseIdentifier) {
-        this.activateDroppable(ev.currentTarget as HTMLElement);
-        ev.dataTransfer.dropEffect = 'move';
-      }
+      // if (responseIdentifierDraggable === this.responseIdentifier) {
+      this.activateDroppable(ev.currentTarget as HTMLElement);
+      ev.dataTransfer.dropEffect = 'move';
+      // }
       return false;
     }
 
@@ -121,16 +121,11 @@ export const DroppablesMixin = <T extends Constructor<Interaction>>(superClass: 
 
     private findDraggable(responseIdentifier: string, identifier: string): HTMLElement | null {
       if (!identifier) return null;
-      if (responseIdentifier === this.responseIdentifier) {
-        return (
-          this.querySelector(`[identifier=${identifier}]`) ||
-          this.shadowRoot.querySelector(`[identifier=${identifier}]`)
-        );
-      } else {
-        const assessmentItem = this.closest('qti-assessment-item');
-        const interaction = assessmentItem.querySelector(`[response-identifier=${responseIdentifier}]`);
-        return interaction.querySelector(`[identifier=${identifier}]`);
-      }
+      // if (responseIdentifier === this.responseIdentifier) {
+      return (
+        this.querySelector(`[identifier=${identifier}]`) || this.shadowRoot.querySelector(`[identifier=${identifier}]`)
+      );
+      // }
     }
 
     private isValidDrop(
@@ -138,10 +133,10 @@ export const DroppablesMixin = <T extends Constructor<Interaction>>(superClass: 
       _draggable: HTMLElement,
       responseIdentifierDraggable: string
     ): boolean {
-      return (
-        this.responseIdentifier === responseIdentifierDraggable
-        // && draggable.parentElement.getAttribute('identifier') !== droppable.getAttribute('identifier')
-      );
+      // debugger;
+      return true;
+      // this.responseIdentifier === responseIdentifierDraggable
+      // && draggable.parentElement.getAttribute('identifier') !== droppable.getAttribute('identifier')
     }
 
     private async moveDraggableToDroppable(draggable: HTMLElement, droppable: HTMLElement): Promise<void> {
