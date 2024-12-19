@@ -161,6 +161,131 @@ export const Modal = () => {
   </qti-assessment-item>`;
 };
 
+export const ModalKennisnet = () => {
+  const assessmentItemRef = createRef<QtiAssessmentItem>();
+
+  const processResponse = () => {
+    assessmentItemRef.value?.processResponse();
+  };
+
+  return html`<qti-assessment-item
+    identifier="blah"
+    ${ref(assessmentItemRef)}
+    @qti-outcome-changed="${e => {
+      action(JSON.stringify(e.detail))();
+    }}"
+    @qti-interaction-changed="${e => {
+      processResponse();
+      action(JSON.stringify(e.detail))();
+    }}"
+  >
+    <qti-assessment-item
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+      xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+      title="Plantenanatomie"
+      time-dependent="false"
+      identifier="QUE_2_1"
+    >
+      <qti-response-declaration identifier="RESPONSE" base-type="identifier" cardinality="single">
+        <qti-correct-response>
+          <qti-value>choice2</qti-value>
+        </qti-correct-response>
+        <qti-mapping lower-bound="0" upper-bound="2" default-value="-2">
+          <qti-map-entry map-key="choice1" mapped-value="0"></qti-map-entry>
+          <qti-map-entry map-key="choice2" mapped-value="2"></qti-map-entry>
+          <qti-map-entry map-key="choice3" mapped-value="0"></qti-map-entry>
+          <qti-map-entry map-key="choice4" mapped-value="0"></qti-map-entry>
+        </qti-mapping>
+      </qti-response-declaration>
+      <qti-outcome-declaration
+        identifier="SCORE"
+        base-type="float"
+        cardinality="single"
+        normal-minimum="0"
+        normal-maximum="2"
+      >
+        <qti-default-value>
+          <qti-value>0</qti-value>
+        </qti-default-value>
+      </qti-outcome-declaration>
+      <qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
+        <qti-default-value>
+          <qti-value>2</qti-value>
+        </qti-default-value>
+      </qti-outcome-declaration>
+      <qti-outcome-declaration identifier="FEEDBACK" base-type="identifier" cardinality="single">
+      </qti-outcome-declaration>
+      <qti-item-body>
+        <div>
+          <p>
+            <strong>Uitdroging bij planten.</strong><br /><br />Bij bladeren van planten kunnen de volgende
+            eigenschappen voorkomen:<br /><br />1. diep verzonken huidmondjes,<br />2. huidmondjes aan de bovenkant,<br />3.
+            groot oppervlak met veel huidmondjes,<br />4. klein oppervlak met een waslaag.<br /><br />Welke van
+            bovenstaande eigenschappen beschermen het meest tegen uitdroging?
+          </p>
+        </div>
+        <qti-choice-interaction response-identifier="RESPONSE" shuffle="true" min-choices="0" max-choices="1">
+          <qti-simple-choice identifier="choice1" fixed="false" show-hide="show">
+            <div>
+              <p>1 en 3</p>
+            </div>
+          </qti-simple-choice>
+          <qti-simple-choice identifier="choice2" fixed="false" show-hide="show">
+            <div>
+              <p>1 en 4</p>
+            </div>
+          </qti-simple-choice>
+          <qti-simple-choice identifier="choice3" fixed="false" show-hide="show">
+            <div>
+              <p>2 en 3</p>
+            </div>
+          </qti-simple-choice>
+          <qti-simple-choice identifier="choice4" fixed="false" show-hide="show">
+            <div>
+              <p>2 en 4</p>
+            </div>
+          </qti-simple-choice>
+        </qti-choice-interaction>
+      </qti-item-body>
+      <qti-response-processing>
+        <qti-response-condition>
+          <qti-response-if>
+            <qti-match>
+              <qti-variable identifier="RESPONSE"></qti-variable>
+              <qti-correct identifier="RESPONSE"></qti-correct>
+            </qti-match>
+            <qti-set-outcome-value identifier="SCORE">
+              <qti-variable identifier="MAXSCORE"></qti-variable>
+            </qti-set-outcome-value>
+          </qti-response-if>
+        </qti-response-condition>
+        <qti-set-outcome-value identifier="FEEDBACK">
+          <qti-variable identifier="RESPONSE"></qti-variable>
+        </qti-set-outcome-value>
+      </qti-response-processing>
+      <qti-modal-feedback identifier="choice1" outcome-identifier="FEEDBACK" show-hide="show">
+        <qti-content-body> </qti-content-body>
+      </qti-modal-feedback>
+      <qti-modal-feedback identifier="choice2" outcome-identifier="FEEDBACK" show-hide="show">
+        <qti-content-body> </qti-content-body>
+      </qti-modal-feedback>
+      <qti-modal-feedback identifier="choice3" outcome-identifier="FEEDBACK" show-hide="show">
+        <qti-content-body> </qti-content-body>
+      </qti-modal-feedback>
+      <qti-modal-feedback identifier="choice4" outcome-identifier="FEEDBACK" show-hide="show">
+        <qti-content-body> </qti-content-body>
+      </qti-modal-feedback>
+      <qti-modal-feedback identifier="choice2" outcome-identifier="FEEDBACK" show-hide="hide">
+        <qti-content-body>
+          Het juiste antwoord is:
+          <p>1 en 4</p>
+        </qti-content-body>
+      </qti-modal-feedback>
+    </qti-assessment-item></qti-assessment-item
+  >`;
+};
+
 export const Woordmars = () => {
   const assessmentItemRef = createRef<QtiAssessmentItem>();
 
