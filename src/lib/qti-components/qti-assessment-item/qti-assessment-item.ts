@@ -79,7 +79,6 @@ export class QtiAssessmentItem extends LitElement {
         return variable;
       })
     };
-
     this._context.variables.forEach(variable => {
       if (variable.type === 'response') {
         const interactionElement = this._interactionElements.find(
@@ -88,10 +87,6 @@ export class QtiAssessmentItem extends LitElement {
         if (interactionElement) {
           interactionElement.value = variable.value as string | string[];
         }
-      }
-
-      if (variable.type === 'outcome') {
-        this._feedbackElements.forEach(fe => fe.checkShowFeedback(variable.identifier));
       }
     });
   }
@@ -140,7 +135,10 @@ export class QtiAssessmentItem extends LitElement {
       e.stopPropagation();
       const feedbackElement = e.detail;
       this._feedbackElements.push(feedbackElement);
-      feedbackElement.checkShowFeedback(feedbackElement.outcomeIdentifier);
+      const numAttempts = Number(this._context.variables.find(v => v.identifier === 'numAttempts')?.value) || 0;
+      if (numAttempts > 0) {
+        feedbackElement.checkShowFeedback(feedbackElement.outcomeIdentifier);
+      }
     });
     this.addEventListener('qti-register-interaction', (e: CustomEvent<null>) => {
       e.stopPropagation();
