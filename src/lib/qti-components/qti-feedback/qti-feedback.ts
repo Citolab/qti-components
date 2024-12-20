@@ -32,9 +32,8 @@ export abstract class QtiFeedback extends LitElement {
     );
   }
 
-  public checkShowFeedback(outcomeIdentifier: string) {    
-    const outcomeVariable = this._context.variables.find(v => v.identifier === outcomeIdentifier) || null;;
-
+  public checkShowFeedback(outcomeIdentifier: string) {
+    const outcomeVariable = this._context.variables.find(v => v.identifier === outcomeIdentifier) || null;
     if (this.outcomeIdentifier !== outcomeIdentifier || !outcomeVariable) return;
     let isFound = false;
     if (Array.isArray(outcomeVariable.value)) {
@@ -50,7 +49,7 @@ export abstract class QtiFeedback extends LitElement {
     this.showFeedback(isFound);
   }
 
-  private showFeedback(value: boolean) {    
-    this.showStatus = (value && this.showHide === 'show') || (!value && this.showHide === 'hide') ? 'on' : 'off';    
+  private showFeedback(value: boolean) {
+    this.showStatus = (value && this.showHide === 'show') || (!value && this.showHide === 'hide') ? 'on' : 'off';
   }
 }
