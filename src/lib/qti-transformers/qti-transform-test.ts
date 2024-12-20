@@ -9,11 +9,12 @@
  * const xml = qtiTransformer.xml();
  */
 
-import { itemsFromTest, loadXML, parseXML, toHTML } from './qti-transformers';
+import { itemsFromTest, loadXML, parseXML, setLocation, toHTML } from './qti-transformers';
 
 export type transformTestApi = {
   load: (uri: string) => Promise<transformTestApi>;
   parse: (xmlString: string) => transformTestApi;
+  path: (location: string) => transformTestApi;
   fn: (fn: (xmlFragment: XMLDocument) => void) => transformTestApi;
   items: () => { identifier: string; href: string; category: string }[];
   html: () => string;
@@ -30,12 +31,18 @@ export const qtiTransformTest = (): transformTestApi => {
       return new Promise<transformTestApi>((resolve, _) => {
         loadXML(uri).then(xml => {
           xmlFragment = xml;
+
+          api.path(uri.substring(0, uri.lastIndexOf('/')));
           return resolve(api);
         });
       });
     },
     parse(xmlString: string) {
       xmlFragment = parseXML(xmlString);
+      return api;
+    },
+    path: (location: string): typeof api => {
+      setLocation(xmlFragment, location);
       return api;
     },
     fn(fn: (xmlFragment: XMLDocument) => void) {

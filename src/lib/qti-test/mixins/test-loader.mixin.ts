@@ -14,32 +14,32 @@ export const TestLoaderMixin = <T extends Constructor<LitElement>>(superClass: T
     constructor(...args: any[]) {
       super(...args);
 
-      this.addEventListener('qti-load-test-request', (e: CustomEvent /* 1. Request the test */) => {
-        const { testURL } = e.detail;
-        if (!testURL) {
-          console.warn(
-            'No test found, there should be an attribute test-url with the path to the test on the test-container'
-          );
-        } else {
-          this.testURL = testURL;
-        }
+      // this.addEventListener('qti-load-test-request', (e: CustomEvent /* 1. Request the test */) => {
+      //   const { testURL } = e.detail;
+      //   if (!testURL) {
+      //     console.warn(
+      //       'No test found, there should be an attribute test-url with the path to the test on the test-container'
+      //     );
+      //   } else {
+      //     this.testURL = testURL;
+      //   }
 
-        e.detail.promise = (async () => {
-          e.preventDefault(); /* indicates that the event was catched and handled */
-          const api = await qtiTransformTest().load(`${this.testURL}`); /* 6. load the item */
-          return api.htmlDoc(); /* 3. Return html version of the assessment.xml */
-        })();
-      });
+      //   e.detail.promise = (async () => {
+      //     e.preventDefault(); /* indicates that the event was catched and handled */
+      //     const api = await qtiTransformTest().load(`${this.testURL}`); /* 6. load the item */
+      //     return api.htmlDoc(); /* 3. Return html version of the assessment.xml */
+      //   })();
+      // });
 
       this.addEventListener('qti-assessment-test-connected', () => {
         // this.context = getSessionData(`testcontext-${this.testURL}`); /* 4. Set the context */
       });
 
       this.addEventListener('qti-load-item-request' /* 5. Request the item */, ({ detail }: CustomEvent) => {
-        if (!this.testURL) return;
+        // if (!this.testURL) return;
         detail.promise = (async () => {
           const api = await qtiTransformItem().load(
-            `${this.testURL.slice(0, this.testURL.lastIndexOf('/'))}/${detail.href}`,
+            `${detail.href}`,
             detail.cancelPreviousRequest
           ); /* 6. load the item */
           return api.htmlDoc(); /* 7. Return HTML version of the item.xml */

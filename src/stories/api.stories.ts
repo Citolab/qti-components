@@ -1,9 +1,9 @@
-import { action } from '@storybook/addon-actions';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { qtiTransformItem } from '../lib/qti-transformers/';
 import { QtiItem } from '../lib/qti-item/qti-item';
+import { QtiAssessmentItem } from '../lib/qti-components';
 
 const meta: Meta = {
   argTypes: {
@@ -41,6 +41,7 @@ export const Api: Story = {
       return html`<div>Loading...</div>`;
     }
 
+    let assessmentItem: QtiAssessmentItem = null;
     const { loaded } = context;
 
     const testRef = createRef<QtiItem>();
@@ -51,7 +52,7 @@ export const Api: Story = {
           `${args.serverLocation}/response/${args.qtipkg}/${loaded.item.href}?identifier=${loaded.item.identifier}`,
           {
             method: 'POST',
-            body: JSON.stringify(testRef.value.assessmentItem.variables),
+            body: JSON.stringify(assessmentItem.variables),
             headers: { 'Content-type': 'application/json; charset=UTF-8' }
           }
         );
@@ -61,21 +62,17 @@ export const Api: Story = {
         }).then(async response => {
           const serverVariables = await response.json();
           console.log('server', serverVariables);
-          testRef.value.assessmentItem.variables = serverVariables;
+          assessmentItem.variables = serverVariables;
         });
       } else {
-        testRef?.value.assessmentItem.processResponse();
-        console.log('client', testRef.value.assessmentItem.variables);
+        assessmentItem.processResponse();
+        console.log('client', assessmentItem.variables);
       }
     };
 
     return html`
-      <qti-item
-        ${ref(testRef)}
-        @qti-interaction-changed=${action('qti-interaction-changed')}
-        @qti-outcomes-changed=${action('qti-outcomes-changed')}
-        .xmlDoc=${loaded.itemHtmlDoc}
-      >
+      <qti-item ${ref(testRef)} @qti-assessment-item-connected=${e => (assessmentItem = e.detail)}>
+        <item-container .itemDoc=${loaded.itemHtmlDoc}></item-container>
       </qti-item>
       <button @click="${processResponse}">processResponse</button>
     `;
@@ -94,8 +91,6 @@ export const Api: Story = {
       } catch (error) {
         console.log(error);
       }
-
-      // Add a return statement here
       return null;
     }
   ]

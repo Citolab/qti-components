@@ -3,55 +3,55 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { until } from 'lit/directives/until.js';
 import { watch } from '../../decorators/watch';
 import itemCss from '../../../item.css?inline';
-import { qtiTransformTest } from '../../qti-transformers';
+import { qtiTransformItem } from '../../qti-transformers';
 
 /**
- * `<test-container>` is a custom element designed for hosting the qti-assessment-item.
- * The `qti-assessment-test` will be placed inside the shadow DOM of this element.
+ * `<item-container>` is a custom element designed for hosting the qti-assessment-item.
+ * The `qti-assessment-item` will be placed inside the shadow DOM of this element.
  * The element loads the item from the provided URL and renders it inside the shadow DOM.
  *
  * ### Styling
  * Add a class to the element for styling.
  *
  * ```html
- * <qti-test>
- *   <test-container class="m-4 bg-white" test-url="./path/to/item.xml"></test-container>
- * </qti-test>
+ * <qti-item>
+ *   <item-container class="m-4 bg-white" item-url="./path/to/item.xml"></item-container>
+ * </qti-item>
  * ```
  */
-@customElement('test-container')
-export class TestContainer extends LitElement {
+@customElement('item-container')
+export class ItemContainer extends LitElement {
   /** URL of the item to load */
-  @property({ type: String, attribute: 'test-url' })
-  testURL: string = null;
+  @property({ type: String, attribute: 'item-url' })
+  itemURL: string = null;
 
   /** A parsed HTML document */
   @state()
-  testDoc: DocumentFragment = null;
+  itemDoc: DocumentFragment = null;
 
   /** The raw XML string */
   @state()
-  testXML: string = null;
+  itemXML: string = null;
 
   /** Template content if provided */
   private templateContent = null;
 
-  @watch('testURL', { waitUntilFirstUpdate: true })
-  protected async handleTestURLChange() {
-    if (!this.testURL) return;
+  @watch('itemURL', { waitUntilFirstUpdate: true })
+  protected async handleItemURLChange() {
+    if (!this.itemURL) return;
     try {
-      const api = await qtiTransformTest().load(this.testURL);
-      this.testDoc = api.htmlDoc();
+      const api = await qtiTransformItem().load(this.itemURL);
+      this.itemDoc = api.htmlDoc();
     } catch (error) {
       console.error('Error loading or parsing XML:', error);
     }
   }
 
-  @watch('testXML', { waitUntilFirstUpdate: true })
-  protected handleTestXMLChange() {
-    if (!this.testXML) return;
+  @watch('itemXML', { waitUntilFirstUpdate: true })
+  protected handleItemXMLChange() {
+    if (!this.itemXML) return;
     try {
-      this.testDoc = qtiTransformTest().parse(this.testXML).htmlDoc();
+      this.itemDoc = qtiTransformItem().parse(this.itemXML).htmlDoc();
     } catch (error) {
       console.error('Error parsing XML:', error);
     }
@@ -61,11 +61,11 @@ export class TestContainer extends LitElement {
     super.connectedCallback();
     this.initializeTemplateContent();
     this.applyStyles();
-    if (this.testURL) {
-      this.handleTestURLChange();
+    if (this.itemURL) {
+      this.handleItemURLChange();
     }
-    if (this.testXML) {
-      this.handleTestXMLChange();
+    if (this.itemXML) {
+      this.handleItemXMLChange();
     }
   }
 
@@ -84,13 +84,13 @@ export class TestContainer extends LitElement {
     return html`
       ${this.templateContent}
       <slot></slot>
-      ${until(this.testDoc, html`<span>Loading...</span>`)}
+      ${until(this.itemDoc, html`<span>Loading...</span>`)}
     `;
   }
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    'test-container': TestContainer;
+    'item-container': ItemContainer;
   }
 }
