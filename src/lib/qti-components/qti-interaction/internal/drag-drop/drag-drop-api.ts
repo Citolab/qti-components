@@ -268,21 +268,45 @@ export class TouchDragAndDrop {
   private findClosestDropzone(): HTMLElement | null {
     if (!this.dragSource || this.allDropzones.length === 0) return null;
 
-    const dragCenter = this.getCenter(this.dragSource.getBoundingClientRect());
+    const dragRect = this.dragSource.getBoundingClientRect();
 
     let closestDropzone: HTMLElement | null = null;
-    let minDistance = Infinity;
+    let maxOverlapArea = 0;
 
     for (const dropzone of this.allDropzones) {
-      const dropCenter = this.getCenter(dropzone.getBoundingClientRect());
-      const distance = this.calculateDistance(dragCenter, dropCenter);
+      const dropRect = dropzone.getBoundingClientRect();
+      const overlapArea = this.calculateOverlapArea(dragRect, dropRect);
 
-      if (distance < minDistance) {
-        minDistance = distance;
+      if (overlapArea > maxOverlapArea) {
+        maxOverlapArea = overlapArea;
         closestDropzone = dropzone;
       }
     }
+
+    // If no overlap is found, fallback to center-based distance detection
+    if (maxOverlapArea === 0) {
+      const dragCenter = this.getCenter(dragRect);
+      let minDistance = Infinity;
+
+      for (const dropzone of this.allDropzones) {
+        const dropCenter = this.getCenter(dropzone.getBoundingClientRect());
+        const distance = this.calculateDistance(dragCenter, dropCenter);
+
+        if (distance < minDistance) {
+          minDistance = distance;
+          closestDropzone = dropzone;
+        }
+      }
+    }
+
     return closestDropzone;
+  }
+
+  private calculateOverlapArea(rect1: DOMRect, rect2: DOMRect): number {
+    const xOverlap = Math.max(0, Math.min(rect1.right, rect2.right) - Math.max(rect1.left, rect2.left));
+    const yOverlap = Math.max(0, Math.min(rect1.bottom, rect2.bottom) - Math.max(rect1.top, rect2.top));
+
+    return xOverlap * yOverlap;
   }
 
   private getCenter(rect: DOMRect): Point {
