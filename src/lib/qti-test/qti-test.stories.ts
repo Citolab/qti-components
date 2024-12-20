@@ -16,7 +16,7 @@ const meta: Meta<typeof QtiTest> = {
       handles: events
     }
   },
-  tags: ['autodocs']
+  tags: ['autodocs', 'new']
 };
 export default meta;
 

@@ -27,7 +27,6 @@ export const TestView: Story = {
       <test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"></test-container>
       ${template(args)}
     </qti-test>`,
-
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const selectElement = await canvas.findByShadowLabelText('view');
@@ -49,5 +48,8 @@ export const TestView: Story = {
     await userEvent.selectOptions(selectElement, 'scorer');
     // Expect the correctResponse to be visible
     expect(afterStyle.content).not.toBe('none');
+  },
+  args: {
+    'view-options': 'candidate, scorer'
   }
 };

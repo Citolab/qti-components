@@ -16,7 +16,7 @@ const meta: Meta<QtiUploadInteraction> = {
       handles: events
     }
   },
-  tags: ['autodocs']
+  tags: ['!autodocs']
 };
 export default meta;
 

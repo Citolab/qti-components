@@ -67,7 +67,5 @@ export const Default = {
       <qti-simple-choice identifier="DriverB">Jenson</qti-simple-choice>
       <qti-simple-choice identifier="DriverC">Michael</qti-simple-choice>
     </qti-order-interaction>
-  `,
-
-  args: {}
+  `
 };

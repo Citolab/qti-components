@@ -9,11 +9,11 @@ export default {
   ...preview,
   parameters: {
     docs: { ...preview, toc: true },
-    ...preview.parameters,
-    options: {
-      storySort: {
-        order: ['👋 Hi QTI', 'QTI-Test', 'QTI-Item']
-      }
-    }
+    ...preview.parameters
+    // options: {
+    //   storySort: {
+    //     order: ['👋 Hi QTI', 'qti-tem', 'qti-test']
+    //   }
+    // }
   }
 };

@@ -15,11 +15,11 @@ export abstract class TestComponent extends LitElement {
 
   @state()
   @consume({ context: testContext, subscribe: true })
-  public _testContext?: TestContext;
+  protected _testContext?: TestContext;
 
   @state()
   @consume({ context: testElement, subscribe: true })
-  public _testElement?: TestElement;
+  protected _testElement?: TestElement;
   @watch('_testElement')
   _handleTestElementChange(_oldValue: TestElement, newValue: TestElement) {
     if (newValue.el) {
@@ -38,7 +38,7 @@ export abstract class TestComponent extends LitElement {
     this._internals = this.attachInternals();
   }
 
-  willUpdate(changedProperties: Map<string | number | symbol, unknown>) {
+  protected willUpdate(changedProperties: Map<string | number | symbol, unknown>) {
     if (changedProperties.has('_testContext')) {
       const { items = [], navItemId } = this._testContext ?? {};
       this.itemIndex = items.findIndex(item => item.identifier === navItemId);

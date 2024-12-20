@@ -19,4 +19,8 @@ const meta: Meta<QtiSliderInteraction> = {
 };
 export default meta;
 
-export const Default = (args: any) => html` ${template(args)} `;
+export const Default: Story = {
+  render: args => {
+    return html` ${template(args)} `;
+  }
+};

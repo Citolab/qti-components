@@ -49,7 +49,7 @@ const meta: Meta<
 };
 export default meta;
 
-export const Default = {
+export const Default: Story = {
   render: args => {
     return html`
       ${template(
