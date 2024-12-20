@@ -1,9 +1,19 @@
-import { html } from 'lit';
+import { css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { TestComponent } from './test-component.abstract';
+import * as styles from './styles';
 
 @customElement('test-item-link')
 export class TestItemLink extends TestComponent {
+  static styles = css`
+    :host {
+      ${styles.btn};
+    }
+    :host([disabled]) {
+      ${styles.dis};
+    }
+  `;
+
   @property({ type: String, attribute: 'item-id' })
   private itemId: string = null;
 
