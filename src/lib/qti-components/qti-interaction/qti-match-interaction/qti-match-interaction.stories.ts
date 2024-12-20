@@ -83,8 +83,6 @@ export const Play: Story = {
       });
 
       await step('Drag capulus to drop and test qti-interaction-response event', async () => {
-        console.log('DAAR GAAN WE', dropM);
-
         // Simulate the drag and drop operation
         await drag(dragC, { to: dropM, duration: 500 });
 

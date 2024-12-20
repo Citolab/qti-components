@@ -143,7 +143,7 @@
       }
     },
     "attw": {
-      "command": "attw --profile esm-only --pack --exclude-entrypoints  ./item.css ./cdn/index.js ./cdn/index.global.js ./cdn/index.min.js",
+      "command": "attw --profile esm-only --format table --pack --exclude-entrypoints  ./item.css ./cdn/index.js ./cdn/index.global.js ./cdn/index.min.js",
       "dependencies": [
         "build"
       ]

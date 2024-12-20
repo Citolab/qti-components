@@ -157,12 +157,12 @@
         @apply dropping;
 
         /* Light theme override */
-        .qti-selections-light & {
+        .qti-selections-light {
           background-color: var(--qti-light-bg-active);
         }
 
         /* Dark theme override */
-        .qti-selections-dark & {
+        .qti-selections-dark {
           background-color: var(--qti-dark-bg-active);
         }
       }
@@ -171,13 +171,13 @@
         @apply act;
 
         /* Light theme override */
-        .qti-selections-light & {
+        .qti-selections-light {
           background-color: var(--qti-light-bg-active);
           border-color: var(--qti-light-border-active);
         }
 
         /* Dark theme override */
-        .qti-selections-dark & {
+        .qti-selections-dark {
           background-color: var(--qti-dark-bg-active);
           border-color: var(--qti-dark-border-active);
         }
@@ -309,12 +309,12 @@
         @apply dropping;
 
         /* Light theme override */
-        .qti-selections-light & {
+        .qti-selections-light {
           border-color: var(--qti-light-border-active);
         }
 
         /* Dark theme override */
-        .qti-selections-dark & {
+        .qti-selections-dark {
           border-color: var(--qti-dark-border-active);
         }
       }
@@ -323,13 +323,13 @@
         @apply act;
 
         /* Light theme override */
-        .qti-selections-light & {
+        .qti-selections-light {
           background-color: var(--qti-light-bg-active);
           border-color: var(--qti-light-border-active);
         }
 
         /* Dark theme override */
-        .qti-selections-dark & {
+        .qti-selections-dark {
           background-color: var(--qti-dark-bg-active);
           border-color: var(--qti-dark-border-active);
         }
@@ -745,12 +745,12 @@
         @apply dropping;
 
         /* Light theme override */
-        .qti-selections-light & {
+        .qti-selections-light {
           border-color: var(--qti-light-border-active);
         }
 
         /* Dark theme override */
-        .qti-selections-dark & {
+        .qti-selections-dark {
           border-color: var(--qti-dark-border-active);
         }
       }

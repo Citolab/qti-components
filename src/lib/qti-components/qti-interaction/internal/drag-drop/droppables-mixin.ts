@@ -140,7 +140,7 @@ export const DroppablesMixin = <T extends Constructor<Interaction>>(superClass: 
     }
 
     private async moveDraggableToDroppable(draggable: HTMLElement, droppable: HTMLElement): Promise<void> {
-      console.log(`moveDraggableToDroppable, draggable: ${draggable.tagName}, droppable: ${droppable.tagName}`);
+      // console.log(`moveDraggableToDroppable, draggable: ${draggable.tagName}, droppable: ${droppable.tagName}`);
       const moveElement = (): void => {
         draggable.style.transform = 'translate(0, 0)';
         if (droppable.tagName === 'SLOT') {

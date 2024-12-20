@@ -73,11 +73,11 @@ export * from './qti-interaction/qti-inline-choice';
 export * from './qti-interaction/qti-simple-associable-choice';
 export * from './qti-interaction/qti-simple-choice';
 
-console.log(
-  '%cC¿TO%cLab%c: qti-components loaded',
-  'font-weight:bold; color:green',
-  'font-family: "PT Sans", font-weight:bold; color:green; font-size: smaller;vertical-align: sub',
-  'font-weight:unset'
-);
+// console.info(
+//   '%cC¿TO%cLab%c: qti-components loaded',
+//   'font-weight:bold; color:green',
+//   'font-family: "PT Sans", font-weight:bold; color:green; font-size: smaller;vertical-align: sub',
+//   'font-weight:unset'
+// );
 
 // css for font pt-sans and subscript and green
