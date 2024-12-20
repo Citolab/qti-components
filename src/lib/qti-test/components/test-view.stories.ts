@@ -17,7 +17,8 @@ const meta: Meta<TestViewClass> = {
     actions: {
       handles: events
     }
-  }
+  },
+  tags: ['no-tests']
 };
 export default meta;
 

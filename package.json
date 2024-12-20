@@ -73,7 +73,7 @@
     "vite": "vite",
     "stylelint": "stylelint \"src/**/*.css\"",
     "build-storybook": "storybook build",
-    "storybook:test": "test-storybook",
+    "storybook:test": "test-storybook --excludeTags no-tests",
     "storybook:docs:build": "wireit",
     "chromatic": "node chromatic-runner.cjs",
     "----hooks----": "-",

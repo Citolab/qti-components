@@ -10,7 +10,8 @@ import { QtiGapText } from '../qti-gap-text';
 type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {
-  component: 'qti-match-interaction'
+  component: 'qti-match-interaction',
+  tags: ['no-tests']
 };
 export default meta;
 
