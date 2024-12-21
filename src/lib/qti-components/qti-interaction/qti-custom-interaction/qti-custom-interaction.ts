@@ -17,9 +17,10 @@ export class QtiCustomInteraction extends Interaction {
   // Because we also want to run this in storybook, we cannot use window.top because to send messages there, because in case of storybook that is not the top window.
   // So we send messages to all parent windows
   private rawResponse: string;
-
+  @state() private hasPortableInteraction = false;
   constructor() {
     super();
+
     this.handlePostMessage = this.handlePostMessage.bind(this);
   }
 
@@ -45,6 +46,14 @@ export class QtiCustomInteraction extends Interaction {
 
   override connectedCallback(): void {
     super.connectedCallback();
+
+    // Check if a qti-portable-interaction is present
+    const portableInteraction =
+      this.querySelector('qti-portable-interaction') || this.shadowRoot?.querySelector('qti-portable-interaction');
+    this.hasPortableInteraction = Boolean(portableInteraction);
+    if (this.hasPortableInteraction) {
+      return;
+    }
 
     const uriToManifest = this.data.startsWith('http')
       ? this.data
@@ -199,6 +208,9 @@ export class QtiCustomInteraction extends Interaction {
   }
 
   override render() {
+    if (this.hasPortableInteraction) {
+      return html`<slot></slot>`;
+    }
     return html`<iframe
         width=${this.getAttribute('width')}
         height=${this.getAttribute('height')}
