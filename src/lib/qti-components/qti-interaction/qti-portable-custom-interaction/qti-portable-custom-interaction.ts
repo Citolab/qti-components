@@ -10,6 +10,7 @@ declare const define: any;
 export class QtiPortableCustomInteraction extends Interaction {
   private intervalId: any;
   private rawResponse: string;
+  private pciType: 'IMS' | 'TAO' = 'IMS';
 
   private pci: IMSpci<unknown>;
 
@@ -121,17 +122,17 @@ export class QtiPortableCustomInteraction extends Interaction {
   register(pci: IMSpci<unknown>) {
     this.pci = pci;
 
-    const type = this.parentElement.tagName === 'QTI-CUSTOM-INTERACTION' ? 'TAO' : 'IMS';
+    this.pciType = this.parentElement.tagName === 'QTI-CUSTOM-INTERACTION' ? 'TAO' : 'IMS';
     const dom: HTMLElement =
-      type == 'IMS' ? this.querySelector('qti-interaction-markup') : this.querySelector('markup');
+      this.pciType == 'IMS' ? this.querySelector('qti-interaction-markup') : this.querySelector('markup');
     dom.classList.add('qti-customInteraction');
 
-    if (type == 'TAO' && this.querySelector('properties')) {
+    if (this.pciType == 'TAO' && this.querySelector('properties')) {
       (this.querySelector('properties') as HTMLElement).style.display = 'none';
     }
 
     const config: any =
-      type == 'IMS'
+      this.pciType == 'IMS'
         ? {
             properties: this.dataset,
             onready: () => {
@@ -139,12 +140,12 @@ export class QtiPortableCustomInteraction extends Interaction {
             }
           }
         : this.getTAOConfig(this);
-    if (type == 'IMS') {
+    if (this.pciType == 'IMS') {
       pci.getInstance(dom, config, undefined);
     } else {
       (pci as any).initialize(this.customInteractionTypeIdentifier, dom.firstElementChild, config);
     }
-    if (type == 'TAO') {
+    if (this.pciType == 'TAO') {
       const links = Array.from(this.querySelectorAll('link')).map(acc => acc.getAttribute('href'));
       links.forEach(link => {
         const styles = document.createElement('link');
@@ -160,24 +161,86 @@ export class QtiPortableCustomInteraction extends Interaction {
 
   override connectedCallback(): void {
     super.connectedCallback();
-
-    define('qtiCustomInteractionContext', () => {
-      return {
-        register: ctxA => {
-          this.register(ctxA);
-        },
-        notifyReady: () => {
-          /* only used in the TAO version */
-        }
+    this.pciType = this.parentElement.tagName === 'QTI-CUSTOM-INTERACTION' ? 'TAO' : 'IMS';
+    if (this.pciType === 'TAO') {
+      if (!this.responseIdentifier) {
+        this.responseIdentifier = this.parentElement.getAttribute('response-identifier');
+      }
+      this.dataset.responseIdentifier = this.responseIdentifier;
+      const baseUrl = this.dataset.baseUrl;
+      const requireConfig = {
+        context: this.customInteractionTypeIdentifier,
+        baseUrl: baseUrl,
+        catchError: true
       };
-    });
+      // pk: c'est tres ugly.. typescript whyunospread add props?!?
+      if (window['requirePaths'] && window['requireShim']) {
+        requireConfig['paths'] = window['requirePaths'];
+        requireConfig['shim'] = window['requireShim'];
+      }
+      if (!globalThis.require) {
+        this._errorMessage = `requirejs not found, load with cdn: https://cdnjs.com/libraries/require.js`;
+        return;
+      }
+      if (!globalThis.require) {
+        this._errorMessage = `requirejs not found, load with cdn: https://cdnjs.com/libraries/require.js`;
+        return;
+      }
 
-    const config = this.buildRequireConfig();
-    const requirePCI = requirejs.config(config);
-    requirePCI(['require'], require => {
-      // eslint-disable-next-line import/no-dynamic-require
-      require([this.module]);
-    });
+      const requirePCI = requirejs.config(requireConfig);
+      requirePCI(
+        ['require'],
+        require => {
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+          !require.defined('qtiCustomInteractionContext') &&
+            define('qtiCustomInteractionContext', () => {
+              return {
+                register: ctxA => {
+                  this.register(ctxA);
+                },
+                notifyReady: () => {
+                  /* only used in the TAO version */
+                }
+              };
+            });
+          // PK: this is a hack to make sure that the interaction is only registered once
+          // If it was previsouly loaded, the register will nog kick in, because the class is already defined
+          // and in the constructor of the PCI, the register is called.
+          // So now it is alreadly defined, we just register it ourselves.
+          const wasPreviouslyLoaded = require.defined(this.module);
+          // eslint-disable-next-line import/no-dynamic-require
+          require([this.module], ctxA => {
+            // register it because it was previously loaded
+            if (wasPreviouslyLoaded) {
+              this.register(ctxA);
+            }
+          }, err => {
+            this._errorMessage = err;
+          });
+        },
+        err => {
+          this._errorMessage = err;
+        }
+      );
+    } else {
+      define('qtiCustomInteractionContext', () => {
+        return {
+          register: ctxA => {
+            this.register(ctxA);
+          },
+          notifyReady: () => {
+            /* only used in the TAO version */
+          }
+        };
+      });
+
+      const config = this.buildRequireConfig();
+      const requirePCI = requirejs.config(config);
+      requirePCI(['require'], require => {
+        // eslint-disable-next-line import/no-dynamic-require
+        require([this.module]);
+      });
+    }
   }
 
   override disconnectedCallback(): void {

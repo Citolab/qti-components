@@ -49,7 +49,8 @@ export class QtiCustomInteraction extends Interaction {
 
     // Check if a qti-portable-interaction is present
     const portableInteraction =
-      this.querySelector('qti-portable-interaction') || this.shadowRoot?.querySelector('qti-portable-interaction');
+      this.querySelector('qti-portable-custom-interaction') ||
+      this.shadowRoot?.querySelector('qti-portable-custom-interaction');
     this.hasPortableInteraction = Boolean(portableInteraction);
     if (this.hasPortableInteraction) {
       return;
