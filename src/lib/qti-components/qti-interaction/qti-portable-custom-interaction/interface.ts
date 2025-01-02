@@ -52,6 +52,7 @@ export declare type QtiVariableJSON = {
 export interface ModuleResolutionConfig {
   waitSeconds?: number;
   context?: string;
+  baseUrl?: string;
   catchError?: boolean;
   paths: {
     [key: string]: string | string[];

@@ -8,36 +8,28 @@ declare const define: any;
 
 @customElement('qti-portable-custom-interaction')
 export class QtiPortableCustomInteraction extends Interaction {
-  private intervalId: any;
-  private rawResponse: string;
-  private pciType: 'IMS' | 'TAO' = 'IMS';
-
+  private intervalId: ReturnType<typeof setInterval> | null = null;
+  private rawResponse: string = '';
   private pci: IMSpci<unknown>;
 
   @property({ type: String, attribute: 'module' })
-  module: string;
+  module!: string;
 
   @property({ type: String, attribute: 'custom-interaction-type-identifier' })
-  customInteractionTypeIdentifier: string;
+  customInteractionTypeIdentifier!: string;
 
   @state()
-  private _errorMessage: string = null;
+  private _errorMessage: string | null = null;
 
-  private convertQtiVariableJSON(input: QtiVariableJSON): string | string[] {
-    for (const topLevelKey in input) {
-      // eslint-disable-next-line no-prototype-builtins
-      if (input.hasOwnProperty(topLevelKey)) {
-        const nestedObject = input[topLevelKey as 'list' | 'base'];
+  private convertQtiVariableJSON(input: QtiVariableJSON): string | string[] | null {
+    for (const key in input) {
+      if (Object.prototype.hasOwnProperty.call(input, key)) {
+        const nestedObject = input[key as 'list' | 'base'];
         if (nestedObject) {
           for (const nestedKey in nestedObject) {
-            // eslint-disable-next-line no-prototype-builtins
-            if (nestedObject.hasOwnProperty(nestedKey)) {
+            if (Object.prototype.hasOwnProperty.call(nestedObject, nestedKey)) {
               const value = nestedObject[nestedKey as keyof typeof nestedObject];
-              if (Array.isArray(value)) {
-                return value.map(String); // Convert each element in the array to string
-              } else if (value !== undefined && value !== null) {
-                return String(value); // Convert the single value to string
-              }
+              return Array.isArray(value) ? value.map(String) : value ? String(value) : null;
             }
           }
         }
@@ -47,304 +39,112 @@ export class QtiPortableCustomInteraction extends Interaction {
   }
 
   private startChecking(): void {
-    // because the pci doesn't have a method to check for changes we'll use an interval
-    // to check if the response has changed. If changed we'll save the response
     this.intervalId = setInterval(() => {
       const response = this.pci.getResponse();
-      const newResponse = this.pci.getResponse();
-      const stringified = JSON.stringify(response);
-      if (stringified !== this.rawResponse) {
-        this.rawResponse = stringified;
-        const value = this.convertQtiVariableJSON(newResponse);
-        this.value = value;
+      const stringifiedResponse = JSON.stringify(response);
+
+      if (stringifiedResponse !== this.rawResponse) {
+        this.rawResponse = stringifiedResponse;
+        const value = this.convertQtiVariableJSON(response);
         this.saveResponse(value);
       }
     }, 200);
   }
 
   private stopChecking(): void {
-    if (this.intervalId !== undefined) {
+    if (this.intervalId) {
       clearInterval(this.intervalId);
+      this.intervalId = null;
     }
   }
 
   validate(): boolean {
-    return true; // FOR NOW
+    return true; // Add validation logic here if necessary
   }
+
   set value(_: string | string[]) {
-    // Only set state is supported in a PCI
+    // No direct state setting supported
   }
+
   get value(): string | string[] {
     return this.rawResponse;
   }
 
-  getTAOConfig(node) {
-    const a = node.querySelectorAll('properties');
-    let config = {};
-
-    const getPropertyValue = el => {
-      const property = {};
-      const key = el.getAttribute('key');
-      if (key) {
-        const children = Array.from(el.children);
-        const allKey = children.map((c: HTMLElement) => c.getAttribute('key'));
-        const isArray = allKey.length > 0 && !allKey.find(k => !Number.isInteger(+k));
-        if (isArray) {
-          property[key] = children.map(c => getChildProperties(c));
-        } else {
-          property[key] = el.textContent;
-        }
-      }
-      return property;
-    };
-
-    const getChildProperties = (el): {} | void => {
-      if (el) {
-        let properties = {};
-        for (const child of el.children) {
-          properties = { ...properties, ...getPropertyValue(child) };
-        }
-        return properties;
-      }
-    };
-
-    for (const properties of a) {
-      const key = properties.getAttribute('key');
-      if (!key) {
-        config = { ...config, ...getChildProperties(properties) };
-      }
-      return config;
-    }
-    console.log('Can not find qti-custom-interaction config');
-    return null;
-  }
-
-  register(pci: IMSpci<unknown>) {
+  private registerPCI(pci: IMSpci<unknown>): void {
     this.pci = pci;
 
-    this.pciType = this.parentElement.tagName === 'QTI-CUSTOM-INTERACTION' ? 'TAO' : 'IMS';
-    const dom: HTMLElement =
-      this.pciType == 'IMS' ? this.querySelector('qti-interaction-markup') : this.querySelector('markup');
+    const dom = this.querySelector('qti-interaction-markup') as HTMLElement | null;
+    if (!dom) {
+      this._errorMessage = 'Required DOM element not found';
+      return;
+    }
+
     dom.classList.add('qti-customInteraction');
 
-    if (this.pciType == 'TAO' && this.querySelector('properties')) {
-      (this.querySelector('properties') as HTMLElement).style.display = 'none';
-    }
+    const config = {
+      properties: this.dataset,
+      onready: () => console.log('PCI ready')
+    };
 
-    const config: any =
-      this.pciType == 'IMS'
-        ? {
-            properties: this.dataset,
-            onready: () => {
-              console.log('onready');
-            }
-          }
-        : this.getTAOConfig(this);
-    if (this.pciType == 'IMS') {
-      pci.getInstance(dom, config, undefined);
-    } else {
-      (pci as any).initialize(this.customInteractionTypeIdentifier, dom.firstElementChild, config);
-    }
-    if (this.pciType == 'TAO') {
-      const links = Array.from(this.querySelectorAll('link')).map(acc => acc.getAttribute('href'));
-      links.forEach(link => {
-        const styles = document.createElement('link');
-        styles.rel = 'stylesheet';
-        styles.type = 'text/css';
-        styles.media = 'screen';
-        styles.href = link;
-        dom.appendChild(styles);
-      });
-    }
+    pci.getInstance(dom, config, undefined);
+
     this.startChecking();
   }
 
   override connectedCallback(): void {
     super.connectedCallback();
-    this.pciType = this.parentElement.tagName === 'QTI-CUSTOM-INTERACTION' ? 'TAO' : 'IMS';
-    if (this.pciType === 'TAO') {
-      if (!this.responseIdentifier) {
-        this.responseIdentifier = this.parentElement.getAttribute('response-identifier');
-      }
-      this.dataset.responseIdentifier = this.responseIdentifier;
-      const baseUrl = this.dataset.baseUrl;
-      const requireConfig = {
-        context: this.customInteractionTypeIdentifier,
-        baseUrl: baseUrl,
-        catchError: true
-      };
-      // pk: c'est tres ugly.. typescript whyunospread add props?!?
-      if (window['requirePaths'] && window['requireShim']) {
-        requireConfig['paths'] = window['requirePaths'];
-        requireConfig['shim'] = window['requireShim'];
-      }
-      if (!globalThis.require) {
-        this._errorMessage = `requirejs not found, load with cdn: https://cdnjs.com/libraries/require.js`;
-        return;
-      }
-      if (!globalThis.require) {
-        this._errorMessage = `requirejs not found, load with cdn: https://cdnjs.com/libraries/require.js`;
-        return;
-      }
 
-      const requirePCI = requirejs.config(requireConfig);
-      requirePCI(
-        ['require'],
-        require => {
-          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-          !require.defined('qtiCustomInteractionContext') &&
-            define('qtiCustomInteractionContext', () => {
-              return {
-                register: ctxA => {
-                  this.register(ctxA);
-                },
-                notifyReady: () => {
-                  /* only used in the TAO version */
-                }
-              };
-            });
-          // PK: this is a hack to make sure that the interaction is only registered once
-          // If it was previsouly loaded, the register will nog kick in, because the class is already defined
-          // and in the constructor of the PCI, the register is called.
-          // So now it is alreadly defined, we just register it ourselves.
-          const wasPreviouslyLoaded = require.defined(this.module);
-          // eslint-disable-next-line import/no-dynamic-require
-          require([this.module], ctxA => {
-            // register it because it was previously loaded
-            if (wasPreviouslyLoaded) {
-              this.register(ctxA);
-            }
-          }, err => {
-            this._errorMessage = err;
-          });
-        },
-        err => {
-          this._errorMessage = err;
-        }
-      );
-    } else {
-      define('qtiCustomInteractionContext', () => {
-        return {
-          register: ctxA => {
-            this.register(ctxA);
-          },
-          notifyReady: () => {
-            /* only used in the TAO version */
-          }
-        };
-      });
-
-      const config = this.buildRequireConfig();
-      const requirePCI = requirejs.config(config);
-      requirePCI(['require'], require => {
-        // eslint-disable-next-line import/no-dynamic-require
-        require([this.module]);
-      });
+    if (!globalThis.require) {
+      this._errorMessage = 'RequireJS is not available. Please include it via CDN.';
+      return;
     }
-  }
 
-  override disconnectedCallback(): void {
-    super.disconnectedCallback();
-    requirejs.undef(this.customInteractionTypeIdentifier);
-    // Clear the modules in the context
-    const context = requirejs.s.contexts;
-    delete context[this.customInteractionTypeIdentifier];
-    this.stopChecking();
-  }
-
-  buildRequireConfig() {
-    // Set RequireJS paths and shim configuration if available
-    const config: ModuleResolutionConfig = {
+    const baseUrl = this.dataset.baseUrl || '/';
+    const requireConfig: ModuleResolutionConfig = {
       context: this.customInteractionTypeIdentifier,
+      baseUrl,
       catchError: true,
       paths: window['requirePaths'] || {},
       shim: window['requireShim'] || {}
     };
-    // Check if RequireJS is available, if not, set an error message
-    if (!globalThis.require) {
-      this._errorMessage = `RequireJS not found. Please load it via CDN: https://cdnjs.com/libraries/require.js`;
-      return null;
-    }
-    const baseUrl = this.getAttribute('data-base-url');
-    const interactionModules = this.querySelector('qti-interaction-modules');
 
-    if (interactionModules) {
-      const modules = interactionModules.querySelectorAll('qti-interaction-module');
-      for (const module of modules) {
-        const moduleId = module.getAttribute('id');
-        const primaryPath = module.getAttribute('primary-path');
-        const fallbackPath = module.getAttribute('fallback-path');
+    const requirePCI = requirejs.config(requireConfig);
 
-        if (moduleId && primaryPath) {
-          // Set the paths using RequireJS's fallback array
-          const paths = fallbackPath
-            ? this.combineRequireResolvePaths(
-                this.getResolvablePath(primaryPath, baseUrl),
-                this.getResolvablePath(fallbackPath, baseUrl)
-              )
-            : this.getResolvablePath(primaryPath, baseUrl);
-          const existingPath = config.paths[moduleId] || [];
-          config.paths[moduleId] = this.combineRequireResolvePaths(existingPath, paths);
-        }
+    requirePCI(['require'], require => {
+      if (!require.defined('qtiCustomInteractionContext')) {
+        define('qtiCustomInteractionContext', () => ({
+          register: (ctx: IMSpci<unknown>) => this.registerPCI(ctx)
+        }));
       }
-    }
-    return config;
+
+      // eslint-disable-next-line import/no-dynamic-require
+      require([this.module], (pci: IMSpci<unknown>) => {
+        this.registerPCI(pci);
+      }, (error: any) => {
+        this._errorMessage = `Error loading PCI module: ${error.message}`;
+      });
+    });
   }
 
-  private combineRequireResolvePaths(path1: string | string[], path2: string | string[]) {
-    const path1Array = Array.isArray(path1) ? path1 : [path1];
-    const path2Array = Array.isArray(path2) ? path2 : [path2];
-    return path1Array.concat(path2Array);
+  override disconnectedCallback(): void {
+    super.disconnectedCallback();
+    this.stopChecking();
+    requirejs.undef(this.customInteractionTypeIdentifier);
+    delete requirejs.s.contexts[this.customInteractionTypeIdentifier];
   }
-
-  private removeDoubleSlashes(str: string) {
-    const singleForwardSlashes = str
-      .replace(/([^:]\/)\/+/g, '$1')
-      .replace(/\/\//g, '/')
-      .replace('http:/', 'http://')
-      .replace('https:/', 'https://');
-    return singleForwardSlashes;
-  }
-
-  loadConfig = async (url: string, baseUrl?: string): Promise<ModuleResolutionConfig> => {
-    url = this.removeDoubleSlashes(url);
-    try {
-      const requireConfig = await fetch(url);
-      if (requireConfig.ok) {
-        const config = await requireConfig.json();
-        const moduleCong = config as ModuleResolutionConfig;
-        for (const moduleId in moduleCong.paths) {
-          if (baseUrl) {
-            moduleCong.paths[moduleId] = this.getResolvablePath(moduleCong.paths[moduleId], baseUrl);
-          }
-        }
-        return moduleCong;
-      }
-    } catch (e) {
-      // do nothing
-    }
-    return null;
-  };
-
-  getResolvablePathString = (path: string, basePath?: string) => {
-    path = path.replace(/\.js$/, '');
-    return path?.toLocaleLowerCase().startsWith('http') || !basePath
-      ? path
-      : this.removeDoubleSlashes(`${basePath}/${path}`);
-  };
-
-  getResolvablePath = (path: string | string[], basePath?: string) => {
-    return Array.isArray(path)
-      ? path.map(p => this.getResolvablePathString(p, basePath))
-      : this.getResolvablePathString(path, basePath);
-  };
 
   override render() {
-    return html`<slot></slot>${this._errorMessage &&
-      html`<div style="color:red">
-        <h1>Error</h1>
-        ${this._errorMessage}
-      </div>`}`;
+    return html`
+      <slot></slot>
+      ${this._errorMessage
+        ? html`
+            <div style="color: red;">
+              <h1>Error</h1>
+              <p>${this._errorMessage}</p>
+            </div>
+          `
+        : ''}
+    `;
   }
 }
 

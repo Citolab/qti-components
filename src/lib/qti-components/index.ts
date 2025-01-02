@@ -42,10 +42,10 @@ export * from './qti-outcome-processing/qti-outcome-processing';
 export * from './qti-response-processing';
 /* start custom interactions */
 export * from './qti-interaction/qti-portable-custom-interaction/qti-portable-custom-interaction';
+export * from './qti-interaction/qti-portable-custom-interaction/interface';
 /* end custom interactions */
 /* start only preview items */
 export * from './qti-interaction/qti-associate-interaction/qti-associate-interaction';
-export * from './qti-interaction/qti-custom-interaction/qti-custom-interaction';
 export * from './qti-interaction/qti-end-attempt-interaction/qti-end-attempt-interaction';
 export * from './qti-interaction/qti-gap-match-interaction/qti-gap-match-interaction';
 export * from './qti-interaction/qti-graphic-associate-interaction/qti-graphic-associate-interaction';
