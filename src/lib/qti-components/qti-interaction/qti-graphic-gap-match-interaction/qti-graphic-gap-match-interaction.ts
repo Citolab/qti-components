@@ -4,6 +4,7 @@ import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-intera
 import { QtiHotspotChoice } from '../qti-hotspot-choice';
 import { Interaction } from '../internal/interaction/interaction';
 import styles from './qti-graphic-gap-match-interaction.styles';
+
 @customElement('qti-graphic-gap-match-interaction')
 export class QtiGraphicGapMatchInteraction extends DragDropInteractionMixin(
   Interaction,

@@ -1,27 +1,16 @@
-import { html } from 'lit';
+import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { Interaction } from '../internal/interaction/interaction';
 @customElement('qti-end-attempt-interaction')
-export class QtiEndAttemptInteraction extends Interaction {
+export class QtiEndAttemptInteraction extends LitElement {
+  @property({ type: String, attribute: 'response-identifier' }) responseIdentifier;
+
+  @property({ reflect: true, type: Boolean }) disabled = false;
+
   @property({ type: String, attribute: 'count-attempt' })
-  public countAttempt: string = 'true';
+  public countAttempt: 'true' | 'false';
 
   @property({ type: String })
-  public title: 'end attempt';
-
-  validate(): boolean {
-    // not implemented by design
-    return true;
-  }
-
-  get value(): string | string[] {
-    // throw new Error('Method not implemented.');
-    return '';
-  }
-
-  set value(_: string | string[]) {
-    // not implemented by design
-  }
+  public title: string = 'end attempt';
 
   override render() {
     return html`<button ?disabled=${this.disabled} part="button" @click=${this.endAttempt}>${this.title}</button>`;

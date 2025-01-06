@@ -18,7 +18,7 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
     protected _choiceElements: Choice[] = [];
 
     @query('#validationMessage')
-    private _validationMessageElement!: HTMLElement;
+    protected _validationMessageElement!: HTMLElement;
 
     @property({ type: Number, attribute: 'min-choices' })
     public minChoices = 0;
@@ -41,7 +41,7 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       this._choiceElements.forEach(choice => (choice.readonly = readonly));
     };
 
-    private _value: string | string[] = '';
+    protected _value: string | string[] = '';
 
     get value(): string | string[] {
       return Array.isArray(this._value) ? this._value.join(',') : this._value;
@@ -138,7 +138,7 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       return this._internals.validity.valid;
     }
 
-    private _registerChoiceElement(event: CustomEvent) {
+    protected _registerChoiceElement(event: CustomEvent) {
       event.stopPropagation();
       const choiceElement = event.target as Choice;
       choiceElement.disabled = this.disabled;
@@ -147,19 +147,19 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       this._setInputType(choiceElement);
     }
 
-    private _unregisterChoiceElement(event: CustomEvent) {
+    protected _unregisterChoiceElement(event: CustomEvent) {
       event.stopPropagation();
       const choiceElement = event.target as Choice;
       this._choiceElements = this._choiceElements.filter(choice => choice !== choiceElement);
     }
 
-    private _determineInputType() {
+    protected _determineInputType() {
       this._choiceElements.forEach(choice => {
         this._setInputType(choice);
       });
     }
 
-    private _setInputType(choiceElement: Choice) {
+    protected _setInputType(choiceElement: Choice) {
       this._internals.ariaLabel = this.maxChoices === 1 ? 'radio-group' : 'checkbox-group';
 
       const role = this.maxChoices === 1 ? 'radio' : 'checkbox';
@@ -180,7 +180,7 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       this._handleChoiceSelection();
     }
 
-    private _setChoiceChecked(choice: Choice, checked: boolean) {
+    protected _setChoiceChecked(choice: Choice, checked: boolean) {
       if (choice.internals?.states) {
         if (checked) {
           choice.internals.states.add('--checked');
@@ -192,16 +192,16 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       }
     }
 
-    private _getChoiceChecked(choice: Choice): boolean {
+    protected _getChoiceChecked(choice: Choice): boolean {
       return choice.internals.states.has('--checked');
     }
 
-    private _toggleChoiceChecked(choice: Choice) {
+    protected _toggleChoiceChecked(choice: Choice) {
       const checked = this._getChoiceChecked(choice);
       this._setChoiceChecked(choice, !checked);
     }
 
-    private _handleChoiceSelection() {
+    protected _handleChoiceSelection() {
       const selectedChoices = this._choiceElements.filter(choice => this._getChoiceChecked(choice));
       const selectedIdentifiers = selectedChoices.map(choice => choice.identifier);
 
@@ -213,7 +213,7 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
     /**
      * Updates the selection state of each choice element based on the current response.
      */
-    private _updateChoiceSelection() {
+    protected _updateChoiceSelection() {
       const responseArray = Array.isArray(this._value) ? this._value : [this._value];
       this._choiceElements.forEach(choice => {
         const isSelected = responseArray.includes(choice.identifier);

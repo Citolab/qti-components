@@ -6,11 +6,23 @@ import { getItemByUri } from '../../../../lib/qti-loader';
 import drag from '../../../../testing/drag';
 import { QtiAssessmentItem } from '../../qti-assessment-item/qti-assessment-item';
 import { QtiGapText } from '../qti-gap-text';
+import { QtiGapMatchInteraction } from './qti-gap-match-interaction';
+import { getWcStorybookHelpers } from 'wc-storybook-helpers';
 
-type Story = StoryObj;
+const { events, args, argTypes, template } = getWcStorybookHelpers('qti-gap-match-interaction');
 
-const meta: Meta<QtiAssessmentItem> = {
-  component: 'qti-match-interaction',
+type Story = StoryObj<QtiGapMatchInteraction & typeof args>;
+
+const meta: Meta<QtiGapMatchInteraction> = {
+  component: 'qti-gap-match-interaction',
+  title: 'components/qti-gap-match-interaction',
+  args,
+  argTypes,
+  parameters: {
+    actions: {
+      handles: events
+    }
+  },
   tags: ['no-tests']
 };
 export default meta;
@@ -45,42 +57,28 @@ function rgbStringToRgb(rgbString) {
     : null;
 }
 
-export const Default = {
+export const Default: Story = {
   name: 'qti-gap-match-interaction',
   render: () => {
     return html`
-  <qti-gap-match-interaction
-        @qti-register-interaction="${e => action(JSON.stringify(e.detail.responseIdentifier))()}"
-        @qti-interaction-response="${e => action(JSON.stringify(e.detail))()}"
-        max-associations="0"
-        response-identifier="RESPONSE"
-        class="qti-choices-top"
-      >
-        <qti-prompt>Identify the missing words in this famous quote from Shakespeare's Richard III.</qti-prompt>
-        <qti-gap-text identifier="W" match-max="1">winter</qti-gap-text>
-        <qti-gap-text identifier="Sp" match-max="1">spring</qti-gap-text>
-        <qti-gap-text identifier="Su" match-max="1">summer</qti-gap-text>
-        <qti-gap-text identifier="A" match-max="1">autumn</qti-gap-text>
-        <blockquote>
-          <p>
-            Now is the <qti-gap identifier="G1" ></qti-gap> of our discontent<br />
-            Made glorious <qti-gap identifier="G2" ></qti-gap>  by this sun of York;<br />
-            And all the clouds that lour'd upon our house<br />
-            In the deep bosom of the ocean buried.
-          </p>
-        </blockquote>
-      </qti-gap-match-interaction>
-    </qti-graphic-gap-match-interaction>
+      ${template(
+        args,
+        html`<qti-prompt>Identify the missing words in this famous quote from Shakespeare's Richard III.</qti-prompt>
+          <qti-gap-text identifier="W" match-max="1">winter</qti-gap-text>
+          <qti-gap-text identifier="Sp" match-max="1">spring</qti-gap-text>
+          <qti-gap-text identifier="Su" match-max="1">summer</qti-gap-text>
+          <qti-gap-text identifier="A" match-max="1">autumn</qti-gap-text>
+          <blockquote>
+            <p>
+              Now is the <qti-gap identifier="G1"></qti-gap> of our discontent<br />
+              Made glorious <qti-gap identifier="G2"></qti-gap> by this sun of York;<br />
+              And all the clouds that lour'd upon our house<br />
+              In the deep bosom of the ocean buried.
+            </p>
+          </blockquote>`
+      )}
     `;
-  },
-  args: {
-    // docsHint: 'Some other value than the default'
-  },
-  loaders: [
-    async () => ({
-      xml: await getItemByUri(`assets/qti-conformance/Advanced/Q6/gap-match-sv-1.xml`)
-    })
-  ]
+  }
 };
 
 export const DontDropInOtherInteraction = {
@@ -111,9 +109,6 @@ export const DontDropInOtherInteraction = {
         Submit
       </button>
     `;
-  },
-  args: {
-    // docsHint: 'Some other value than the default'
   },
   play: async ({ canvasElement, step }) => {
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;

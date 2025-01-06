@@ -1,66 +1,54 @@
-import { action } from '@storybook/addon-actions';
+import { StoryObj, Meta } from '@storybook/web-components';
 import { html } from 'lit';
+import { getWcStorybookHelpers } from 'wc-storybook-helpers';
+import { QtiHottextInteraction } from './qti-hottext-interaction';
 
-import { ifDefined } from 'lit/directives/if-defined.js';
-import '../qti-hottext';
-import './qti-hottext-interaction';
+const { events, args, argTypes, template } = getWcStorybookHelpers('qti-hottext-interaction');
 
-const responses = ['[]', '["a"]', '"b"', '["d","e"]'];
+type Story = StoryObj<QtiHottextInteraction & typeof args>;
 
-export default {
+const meta: Meta<QtiHottextInteraction> = {
   component: 'qti-hottext-interaction',
+  title: 'components/qti-hottext-interaction',
+  args,
+  argTypes,
   parameters: {
     actions: {
-      handles: ['saveResponse']
-    },
-    response: {
-      control: { type: 'select', options: responses }
+      handles: events
     }
   }
 };
+export default meta;
 
-export const Default = {
-  render: args => html`
-    <qti-hottext-interaction
-      @qti-interaction-response="${e => {
-        action(JSON.stringify(e.detail))();
-      }}"
-      .response=${args.response}
-      class=${ifDefined(args.classes ? args.classes.join(' ') : undefined)}
-      max-choices=${args['max-choices']}
-      response-identifier="RESPONSE"
-    >
-      <p>
-        Sponsors of the Olympic Games
-        <qti-hottext identifier="A">who bought</qti-hottext> advertising time on United States television
-        <qti-hottext identifier="B">includes</qti-hottext>
-        <qti-hottext identifier="C">at least</qti-hottext> a dozen international firms
-        <qti-hottext identifier="D">whose</qti-hottext> names are familiar to American consumers.
-        <qti-hottext identifier="E">No error.</qti-hottext>
-      </p>
-    </qti-hottext-interaction>
-  `,
-
-  args: {
-    maxChoices: 1,
-    classes: ''
-  }
+export const Default: Story = {
+  render: args =>
+    template(
+      args,
+      html`
+        <p>
+          Sponsors of the Olympic Games
+          <qti-hottext identifier="A">who bought</qti-hottext> advertising time on United States television
+          <qti-hottext identifier="B">includes</qti-hottext>
+          <qti-hottext identifier="C">at least</qti-hottext> a dozen international firms
+          <qti-hottext identifier="D">whose</qti-hottext> names are familiar to American consumers.
+          <qti-hottext identifier="E">No error.</qti-hottext>
+        </p>
+      `
+    )
 };
 
 export const Button = {
   render: Default.render,
-
   args: {
     maxChoices: 1,
-    classes: ['qti-input-control-hidden']
+    class: ['qti-input-control-hidden']
   }
 };
 
 export const Hidden = {
   render: Default.render,
-
   args: {
     maxChoices: 1,
-    classes: ['qti-unselected-hidden']
+    class: ['qti-unselected-hidden']
   }
 };

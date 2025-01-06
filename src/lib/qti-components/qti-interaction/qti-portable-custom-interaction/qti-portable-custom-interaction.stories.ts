@@ -1,9 +1,8 @@
 import { html } from 'lit';
 
-import './qti-portable-custom-interaction';
-
 export default {
-  component: 'qti-portable-custom-interaction'
+  component: 'qti-portable-custom-interaction',
+  title: 'components/qti-portable-custom-interaction'
 };
 
 export const Default = {

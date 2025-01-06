@@ -1,10 +1,5 @@
 import { css } from 'lit';
-// import componentStyles from '../../utilities/styles/component.styles';
-// :host {
-//   display: inline-block;
-//   position: relative;
-// }
-/* ${componentStyles} */
+
 export default css`
   :host {
     display: flex;

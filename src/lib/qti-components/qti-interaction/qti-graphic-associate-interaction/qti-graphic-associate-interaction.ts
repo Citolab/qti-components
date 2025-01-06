@@ -1,51 +1,23 @@
-import { css, html, svg } from 'lit';
-import { customElement, query, queryAssignedElements, state } from 'lit/decorators.js';
+import { CSSResultGroup, html, svg } from 'lit';
+import { customElement, queryAssignedElements, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { positionHotspots } from '../internal/hotspots/hotspot';
 import { Interaction } from '../internal/interaction/interaction';
 import { QtiHotspotChoice } from '../qti-hotspot-choice';
+import styles from './qti-graphic-associate-interaction.styles';
 
 @customElement('qti-graphic-associate-interaction')
 export class QtiGraphicAssociateInteraction extends Interaction {
-  choiceOrdering: boolean;
-  hotspots;
-  startPoint = null;
-  endPoint = null;
-  @state() _lines = [];
-  @state() startCoord: { x: any; y: any };
-  @state() mouseCoord: { x: number; y: number };
-  @query('svg') svgContainer;
-  @queryAssignedElements({ selector: 'img' }) grImage;
+  static styles: CSSResultGroup = styles;
 
-  // target the main slot make it relative and fit with the conten
-  static override styles = [
-    css`
-      slot:not([name='prompt']) {
-        // position: relative; /* qti-hotspot-choice relative to the slot */
-        display: block;
-        width: fit-content; /* hotspots not stretching further if image is at max size */
-      }
-      ::slotted(img) {
-        /* image not selectable anymore */
-        pointer-events: none;
-        user-select: none;
-      }
-      ::slotted(qti-associable-hotspot) {
-        transform: translate(-50%, -50%);
-      }
-      line-container {
-        display: block;
-        position: relative;
-      }
-      svg {
-        position: absolute;
-        top: 0px;
-        left: 0px;
-      }
-    `
-  ];
-  svg: SVGSVGElement;
+  private hotspots;
+  private startPoint = null;
+  private endPoint = null;
+  @state() private _lines = [];
+  @state() private startCoord: { x: any; y: any };
+  @state() private mouseCoord: { x: number; y: number };
+  @queryAssignedElements({ selector: 'img' }) private grImage;
 
   constructor() {
     super();

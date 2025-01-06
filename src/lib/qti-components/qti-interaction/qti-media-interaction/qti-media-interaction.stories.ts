@@ -1,40 +1,37 @@
 import { html } from 'lit';
-import { action } from '@storybook/addon-actions';
+import { QtiMediaInteraction } from './qti-media-interaction';
+import { StoryObj, Meta } from '@storybook/web-components';
+import { getWcStorybookHelpers } from 'wc-storybook-helpers';
 
-export default {
-  component: 'qti-media-interaction',
-  argTypes: {
-    autostart: { type: 'boolean', description: '' },
-    minPlays: { type: 'number', description: '' },
-    maxPlays: { type: 'number', description: '' },
-    loop: { type: 'boolean', description: '' }
-    // coords: { type: 'object', description: '' },
-  }
-  // args: { autostart: false, minPlays: 0, maxPlays: 0, loop: false },
+const { events, args, argTypes, template } = getWcStorybookHelpers('qti-media-interaction');
+
+type Story = StoryObj<QtiMediaInteraction & typeof args>;
+
+const meta: Meta<QtiMediaInteraction> = {
+  component: 'qti-match-interaction',
+  args,
+  argTypes,
+  parameters: {
+    actions: {
+      handles: events
+    }
+  },
+  tags: ['autodocs', 'no-tests']
 };
+export default meta;
 
-export const Default = {
-  render: args => html`
-    <qti-media-interaction
-      autostart="false"
-      loop=${args.loop}
-      min-plays=${args.minPlays}
-      max-plays=${args.maxPlays}
-      response-identifier="RESPONSE"
-      @qti-interaction-response="${e => {
-        action(e);
-      }}"
-      .response=${args.response}
-      ?disabled=${args.disabled}
-      ?readonly=${args.readonly}
-    >
-      <qti-prompt>Play this video.</qti-prompt>
-      <video width="320" height="240" controls>
-        <source src="qti-media-interaction/earth.mp4" type="video/mp4" />
-        Your browser does not support the video tag
-      </video>
-    </qti-media-interaction>
-  `,
+export const Default: Story = {
+  render: args =>
+    template(
+      args,
+      html`
+        <qti-prompt>Play this video.</qti-prompt>
+        <video width="320" height="240" controls>
+          <source src="qti-media-interaction/earth.mp4" type="video/mp4" />
+          Your browser does not support the video tag
+        </video>
+      `
+    ),
 
   args: {},
   parameters: {

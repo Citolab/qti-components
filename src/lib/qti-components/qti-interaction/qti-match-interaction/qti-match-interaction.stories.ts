@@ -36,8 +36,8 @@ const meta: Meta<QtiMatchInteraction & { class: InputType; 'response-identifier'
 export default meta;
 
 export const Default: Story = {
-  render: args => html`
-    ${template(
+  render: args =>
+    template(
       /* add data-testid to args, without adding it to the controls of the story */
       { ...args, 'data-testid': 'match-interaction' },
       html`<qti-prompt>Match the following characters to the Shakespeare play they appeared in:</qti-prompt>
@@ -53,8 +53,7 @@ export const Default: Story = {
           <qti-simple-associable-choice identifier="R" match-max="2">Romeo and Juliet</qti-simple-associable-choice>
           <qti-simple-associable-choice identifier="T" match-max="2">The Tempest</qti-simple-associable-choice>
         </qti-simple-match-set>`
-    )}
-  `
+    )
 };
 
 export const Play: Story = {
