@@ -1,35 +1,19 @@
-import { css, html } from 'lit';
+import { CSSResultGroup, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { ChoicesMixin } from '../internal/choices/choices.mixin';
 import { positionHotspots } from '../internal/hotspots/hotspot';
 import { QtiHotspotChoice } from '../qti-hotspot-choice';
 import { Interaction } from '../internal/interaction/interaction';
+import styles from './qti-hotspot-interaction.styles';
 
 @customElement('qti-hotspot-interaction')
 export class QtiHotspotInteraction extends ChoicesMixin(Interaction, 'qti-hotspot-choice') {
-  // do not select ( highlight blue, the image)
-  // target the main slot make it relative and fit with the conten
-  static override styles = [
-    css`
-      slot:not([name='prompt']) {
-        position: relative; /* qti-hotspot-choice relative to the slot */
-        display: block;
-        width: fit-content; /* hotspots not stretching further if image is at max size */
-      }
-      ::slotted(img) {
-        /* image not selectable anymore */
-        pointer-events: none;
-        user-select: none;
-        /* width:100%; */
-      }
-    `
-  ];
+  static styles: CSSResultGroup = styles;
+
   override render() {
     return html`
       <slot name="prompt"></slot>
-      <!-- slot for the prompt -->
       <slot></slot>
-      <!-- slot for the image and hotspots -->
     `;
   }
 

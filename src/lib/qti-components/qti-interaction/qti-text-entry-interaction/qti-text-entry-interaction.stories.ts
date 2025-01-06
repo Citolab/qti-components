@@ -17,17 +17,15 @@ const meta: Meta<QtiTextEntryInteraction> = {
       handles: events
     }
   },
-  tags: ['autodocs']
+  tags: ['autodocs', 'no-tests']
 };
 export default meta;
 
-export const Default = {
-  render: args => {
-    return html` ${template(args)} `;
-  }
+export const Default: Story = {
+  render: args => template(args)
 };
 
-export const PatternMask = {
+export const PatternMask: Story = {
   render: Default.render,
   args: {
     'pattern-mask': '[A-Za-z]{3}',
@@ -40,14 +38,14 @@ export const Form: Story = {
   render: () => {
     return html`
       <form name="form" @submit=${e => e.preventDefault()}>
-        ${Default.render({
-          'pattern-mask': '[A-Za-z]{3}',
-          'data-patternmask-message': 'Please enter exact 3 letters',
-          'response-identifier': 'RESPONSE'
-        })}
         <input type="submit" value="submit" />
       </form>
     `;
+  },
+  args: {
+    'pattern-mask': '[A-Za-z]{3}',
+    'data-patternmask-message': 'Please enter exact 3 letters',
+    'response-identifier': 'RESPONSE'
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

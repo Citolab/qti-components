@@ -21,17 +21,17 @@ export default meta;
 type Story = StoryObj;
 
 export const Items: Story = {
-  render: (args, { loaded: { items, testURI } }) => {
+  render: (args, { loaded: { items } }) => {
     return html`
       <qti-item>
-        <item-container item-url="${testURI}${items[args.itemIndex].href}"></item-container>
+        <item-container item-url="${items[args.itemIndex].href}"></item-container>
       </qti-item>
     `;
   },
   loaders: [
     async ({ args }) => {
-      const { items, testURI } = await getManifestInfo(`${args.serverLocation}/${args.qtipkg}/imsmanifest.xml`);
-      return { items, testURI };
+      const { items } = await getManifestInfo(`${args.serverLocation}/${args.qtipkg}/imsmanifest.xml`);
+      return { items };
     }
   ]
 };

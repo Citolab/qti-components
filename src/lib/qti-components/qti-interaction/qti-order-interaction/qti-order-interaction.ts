@@ -12,9 +12,9 @@ export class QtiOrderInteraction extends ShuffleMixin(
   'qti-simple-choice'
 ) {
   static styles = styles;
-  childrenMap: Element[];
+  protected childrenMap: Element[];
 
-  @state() nrChoices: number = 0;
+  @state() protected nrChoices: number = 0;
   @state() correctResponses: string[] = [];
   @state() showCorrectResponses: boolean = false;
 

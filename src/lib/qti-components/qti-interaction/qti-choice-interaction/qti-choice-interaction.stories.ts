@@ -21,6 +21,8 @@ const meta: Meta<
   QtiChoiceInteraction & { classLabel: InputType; classLabelSuffix: InputType; classOrientation: InputType }
 > = {
   component: 'qti-choice-interaction',
+  title: 'components/qti-choice-interaction',
+
   args,
   argTypes: {
     ...argTypes,
@@ -49,7 +51,7 @@ const meta: Meta<
 };
 export default meta;
 
-export const Default = {
+export const Default: Story = {
   render: args => {
     return html`
       ${template(

@@ -1,18 +1,31 @@
 import { html } from 'lit';
+import { QtiPositionObjectInteraction } from './qti-position-object-interaction';
+import { StoryObj, Meta } from '@storybook/web-components';
+import { getWcStorybookHelpers } from 'wc-storybook-helpers';
 
-import './qti-position-object-interaction';
-import './qti-position-object-stage';
+const { events, args, argTypes, template } = getWcStorybookHelpers('qti-position-object-interaction');
 
-export default {
-  component: 'qti-select-point-interaction'
+type Story = StoryObj<QtiPositionObjectInteraction & typeof args>;
+
+const meta: Meta<QtiPositionObjectInteraction> = {
+  component: 'qti-position-object-interaction',
+  title: 'components/qti-position-object-interaction',
+  args,
+  argTypes,
+  parameters: {
+    actions: {
+      handles: events
+    }
+  },
+  tags: ['autodocs']
 };
+export default meta;
 
-export const Default = {
-  render: () =>
+export const Default: Story = {
+  render: args =>
     html`<qti-position-object-stage>
       <img src="https://qti-convert.web.app/images/uk.png" width="206" height="280" />
-      <qti-position-object-interaction response-identifier="RESPONSE" max-choices="3">
-        <img src="https://qti-convert.web.app/images/airport.png" alt="Drop Zone" />
+      ${template(args, html`<img src="https://qti-convert.web.app/images/airport.png" alt="Drop Zone" />`)}
       </qti-position-object-interaction>
     </qti-position-object-stage>`
 };

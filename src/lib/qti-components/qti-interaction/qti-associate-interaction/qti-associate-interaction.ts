@@ -12,11 +12,10 @@ export class QtiAssociateInteraction extends DragDropInteractionMixin(
   '.dl',
   `slot[name='qti-simple-associable-choice']`
 ) {
-  @state() private _childrenMap: Element[] = [];
-
   static styles: CSSResultGroup = styles;
+  @state() protected _childrenMap: Element[] = [];
 
-  private _registerChoiceHandler: (event: CustomEvent) => void;
+  protected _registerChoiceHandler: (event: CustomEvent) => void;
 
   constructor() {
     super();
@@ -24,7 +23,7 @@ export class QtiAssociateInteraction extends DragDropInteractionMixin(
     this.addEventListener('register-qti-simple-associable-choice', this._registerChoiceHandler);
   }
 
-  private _registerChoice(event: CustomEvent) {
+  protected _registerChoice(event: CustomEvent) {
     const choice = event.target as QtiSimpleAssociableChoice;
     this._childrenMap.push(choice);
   }

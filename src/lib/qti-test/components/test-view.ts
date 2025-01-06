@@ -1,5 +1,5 @@
 import { html } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import { TestComponent } from './test-component.abstract';
 import { watch } from '../../decorators/watch';
 
@@ -7,32 +7,33 @@ import { watch } from '../../decorators/watch';
 export class TestView extends TestComponent {
   static DEFAULT_VIEW_OPTIONS = ['author', 'candidate', 'proctor', 'scorer', 'testConstructor', 'tutor'];
 
+  /** label accompanying the select view dropdown  */
   @property({ type: String })
   label = 'view';
 
-  @property({ type: String, attribute: 'view-options' }) viewOptions = '';
-  @watch('viewOptions')
-  _handleViewOptionsChange = (_: string, viewOptions: string) => {
-    console.log(viewOptions);
+  /** The options to display in the dropdown, default: ['author', 'candidate', 'proctor', 'scorer', 'testConstructor', 'tutor'] */
+  @property({ type: String, attribute: 'view-options' }) viewOptions;
+  @watch('viewOptions', { waitUntilFirstUpdate: true })
+  protected _handleViewOptionsChange = () => {
+    this.updateViewOptions();
   };
 
+  connectedCallback(): void {
+    super.connectedCallback();
+    this.updateViewOptions();
+  }
+
+  @state()
   private _viewOptions: string[] = TestView.DEFAULT_VIEW_OPTIONS;
 
-  // updated(changedProperties: PropertyValues) {
-  //   super.updated(changedProperties);
-  //   if (changedProperties.has('viewOptionsString')) {
-  //     this._updateViewOptions();
-  //   }
-  // }
-
-  // private _updateViewOptions() {
-  //   if (this.viewOptionsString) {
-  //     const options = this.viewOptionsString.split(',').map(opt => opt.trim());
-  //     this.viewOptions = options.filter(opt => TestView.DEFAULT_VIEW_OPTIONS.includes(opt));
-  //   } else {
-  //     this.viewOptions = TestView.DEFAULT_VIEW_OPTIONS;
-  //   }
-  // }
+  private updateViewOptions() {
+    if (this.viewOptions) {
+      const options = this.viewOptions.split(',').map(opt => opt.trim());
+      this._viewOptions = options.filter(opt => TestView.DEFAULT_VIEW_OPTIONS.includes(opt));
+    } else {
+      this._viewOptions = TestView.DEFAULT_VIEW_OPTIONS;
+    }
+  }
 
   render() {
     return html`

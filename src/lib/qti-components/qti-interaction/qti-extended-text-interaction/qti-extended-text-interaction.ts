@@ -1,13 +1,16 @@
-import { css, html } from 'lit';
+import { CSSResultGroup, html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { Interaction } from '../internal/interaction/interaction';
 import { customElement, property, state } from 'lit/decorators.js';
 import { watch } from '../../../decorators/watch';
+import styles from './qti-extended-text-interaction.styles';
 
 @customElement('qti-extended-text-interaction')
 export class QtiExtendedTextInteraction extends Interaction {
+  static styles: CSSResultGroup = styles;
+
   @state()
-  private _rows = 5;
+  protected _rows = 5;
 
   /** expected length is mapped to the property maxlength on the textarea */
   @property({ type: Number, attribute: 'expected-length' }) expectedLength: number;
@@ -20,7 +23,7 @@ export class QtiExtendedTextInteraction extends Interaction {
   @property({ type: String, attribute: 'data-patternmask-message' }) dataPatternmaskMessage: string;
 
   @state()
-  private _value = '';
+  protected _value = '';
 
   @property({ type: String, attribute: 'class' }) classNames;
   @watch('classNames')
@@ -95,23 +98,6 @@ export class QtiExtendedTextInteraction extends Interaction {
     return isValid;
   }
 
-  static override get styles() {
-    return [
-      css`
-        /* PK: display host as block, else design will be collapsed */
-        :host {
-          display: block;
-        }
-        textarea {
-          box-sizing: border-box;
-          width: 100%;
-          height: 100%;
-          border: 0;
-        }
-      `
-    ];
-  }
-
   override render() {
     return html`<slot name="prompt"></slot
       ><textarea
@@ -144,7 +130,7 @@ export class QtiExtendedTextInteraction extends Interaction {
     }
   }
 
-  private setEmptyAttribute(text: string) {
+  protected setEmptyAttribute(text: string) {
     this.setAttribute('empty', text === '' ? 'true' : 'false');
   }
 }

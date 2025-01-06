@@ -73,7 +73,7 @@
     "vite": "vite",
     "stylelint": "stylelint \"src/**/*.css\"",
     "build-storybook": "storybook build",
-    "test-storybook": "test-storybook --excludeTags no-tests",
+    "test-storybook": "wireit",
     "storybook:docs:build": "wireit",
     "chromatic": "node chromatic-runner.cjs",
     "----hooks----": "-",
@@ -110,6 +110,9 @@
         "!src/**/*.{test,spec,stories}.ts"
       ]
     },
+    "test-storybook": {
+      "command": "test-storybook --excludeTags no-tests"
+    },
     "css": {
       "command": "postcss src/item.css -d dist -m",
       "files": [
@@ -143,7 +146,7 @@
       }
     },
     "attw": {
-      "command": "attw --profile esm-only --pack --exclude-entrypoints  ./item.css ./cdn/index.js ./cdn/index.global.js ./cdn/index.min.js",
+      "command": "attw --profile esm-only --format table --pack --exclude-entrypoints  ./item.css ./cdn/index.js ./cdn/index.global.js ./cdn/index.min.js",
       "dependencies": [
         "build"
       ]
@@ -175,7 +178,7 @@
     "@storybook/blocks": "^8.4.7",
     "@storybook/preview-api": "^8.4.7",
     "@storybook/test": "^8.4.7",
-    "@storybook/test-runner": "^0.20.1",
+    "@storybook/test-runner": "^0.21.0",
     "@storybook/web-components": "^8.4.7",
     "@storybook/web-components-vite": "^8.4.7",
     "@swc/core": "^1.10.1",
@@ -206,7 +209,6 @@
     "globals": "^15.13.0",
     "husky": "^9.1.7",
     "np": "^10.1.0",
-    "npm": "^10.9.2",
     "path-browserify": "^1.0.1",
     "pkg-pr-new": "^0.0.37",
     "playwright": "^1.49.0",

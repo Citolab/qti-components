@@ -36,27 +36,24 @@ const meta: Meta<QtiMatchInteraction & { class: InputType; 'response-identifier'
 export default meta;
 
 export const Default: Story = {
-  render: args => {
-    return html`
-      ${template(
-        /* add data-testid to args, without adding it to the controls of the story */
-        { ...args, 'data-testid': 'match-interaction' },
-        html`<qti-prompt>Match the following characters to the Shakespeare play they appeared in:</qti-prompt>
-          <qti-simple-match-set>
-            <qti-simple-associable-choice identifier="C" match-max="1">Capulet</qti-simple-associable-choice>
-            <qti-simple-associable-choice identifier="D" match-max="1">Demetrius</qti-simple-associable-choice>
-            <qti-simple-associable-choice identifier="L" match-max="1">Lysander</qti-simple-associable-choice>
-            <qti-simple-associable-choice identifier="P" match-max="1">Prospero</qti-simple-associable-choice>
-          </qti-simple-match-set>
+  render: args =>
+    template(
+      /* add data-testid to args, without adding it to the controls of the story */
+      { ...args, 'data-testid': 'match-interaction' },
+      html`<qti-prompt>Match the following characters to the Shakespeare play they appeared in:</qti-prompt>
+        <qti-simple-match-set>
+          <qti-simple-associable-choice identifier="C" match-max="1">Capulet</qti-simple-associable-choice>
+          <qti-simple-associable-choice identifier="D" match-max="1">Demetrius</qti-simple-associable-choice>
+          <qti-simple-associable-choice identifier="L" match-max="1">Lysander</qti-simple-associable-choice>
+          <qti-simple-associable-choice identifier="P" match-max="1">Prospero</qti-simple-associable-choice>
+        </qti-simple-match-set>
 
-          <qti-simple-match-set>
-            <qti-simple-associable-choice identifier="M" match-max="2">A Midsummer-Nights</qti-simple-associable-choice>
-            <qti-simple-associable-choice identifier="R" match-max="2">Romeo and Juliet</qti-simple-associable-choice>
-            <qti-simple-associable-choice identifier="T" match-max="2">The Tempest</qti-simple-associable-choice>
-          </qti-simple-match-set>`
-      )}
-    `;
-  }
+        <qti-simple-match-set>
+          <qti-simple-associable-choice identifier="M" match-max="2">A Midsummer-Nights</qti-simple-associable-choice>
+          <qti-simple-associable-choice identifier="R" match-max="2">Romeo and Juliet</qti-simple-associable-choice>
+          <qti-simple-associable-choice identifier="T" match-max="2">The Tempest</qti-simple-associable-choice>
+        </qti-simple-match-set>`
+    )
 };
 
 export const Play: Story = {
@@ -85,8 +82,6 @@ export const Play: Story = {
       });
 
       await step('Drag capulus to drop and test qti-interaction-response event', async () => {
-        console.log('DAAR GAAN WE', dropM);
-
         // Simulate the drag and drop operation
         await drag(dragC, { to: dropM, duration: 500 });
 

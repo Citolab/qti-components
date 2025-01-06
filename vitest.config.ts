@@ -17,13 +17,9 @@ export default defineConfig({
           args: ['--remote-debugging-port=9222']
         }
       }
-    }
-  },
-  /* FIXME: This is a workaround for the issue with Vite 2.6.0 */
-  /* See: https://github.com/vitest-dev/vscode/discussions/337 */
-  server: {
-    fs: {
-      strict: process.env.VITEST_VSCODE ? false : true
+    },
+    onConsoleLog(log: string, type: 'stdout' | 'stderr'): boolean | void {
+      return !log.includes('Lit is in dev mode');
     }
   }
 });

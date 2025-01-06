@@ -1,42 +1,25 @@
-import { css, html } from 'lit';
+import { CSSResultGroup, html } from 'lit';
 import { Choice, ChoicesMixin } from '../internal/choices/choices.mixin';
 import { QtiHotspotChoice } from '../qti-hotspot-choice';
-
 import { customElement } from 'lit/decorators.js';
 import { positionHotspots } from '../internal/hotspots/hotspot';
 import { Interaction } from '../internal/interaction/interaction';
+import styles from './qti-graphic-order-interaction.styles';
 
 type HotspotChoice = Choice & { order: number };
 
 @customElement('qti-graphic-order-interaction')
 export class QtiGraphicOrderInteraction extends ChoicesMixin(Interaction, 'qti-hotspot-choice') {
-  choiceOrdering: boolean;
+  static styles: CSSResultGroup = styles;
+
+  protected choiceOrdering: boolean;
 
   protected _choiceElements: Choice[] = [];
-
-  // do not select ( highlight blue, the image)
-  // target the main slot make it relative and fit with the conten
-  static override styles = [
-    css`
-      slot:not([name='prompt']) {
-        position: relative; /* qti-hotspot-choice relative to the slot */
-        display: block;
-        width: fit-content; /* hotspots not stretching further if image is at max size */
-      }
-      ::slotted(img) {
-        /* image not selectable anymore */
-        pointer-events: none;
-        user-select: none;
-      }
-    `
-  ];
 
   override render() {
     return html`
       <slot name="prompt"></slot>
-      <!-- slot for the prompt -->
       <slot></slot>
-      <!-- slot for the image and hotspots -->
       <div role="alert" id="validationMessage"></div>
     `;
   }

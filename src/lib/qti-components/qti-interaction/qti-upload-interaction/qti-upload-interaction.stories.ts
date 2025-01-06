@@ -16,20 +16,15 @@ const meta: Meta<QtiUploadInteraction> = {
       handles: events
     }
   },
-  tags: ['autodocs']
+  tags: ['!autodocs']
 };
 export default meta;
 
-export const Default = {
-  render: args => html`
-    <qti-upload-interaction
-      response-identifier="RESPONSE"
-      @qti-interaction-response="${e => {
-        console.log('File uploaded:', e.detail);
-      }}"
-      ?disabled=${args.disabled}
-      ?readonly=${args.readonly}
-    >
+export const Default: Story = {
+  render: args =>
+    template(
+      args,
+      html`
       <qti-prompt>
         <p>
           Build a spreadsheet to simulate 50 cartons of chocolates when each carton contains 10 chocolates, and when
@@ -38,12 +33,9 @@ export const Default = {
         </p>
       </qti-prompt>
     </qti-upload-interaction>
-  `,
+  `
+    ),
 
-  args: {
-    disabled: false,
-    readonly: false
-  },
   parameters: {
     chromatic: { disableSnapshot: true }
   }

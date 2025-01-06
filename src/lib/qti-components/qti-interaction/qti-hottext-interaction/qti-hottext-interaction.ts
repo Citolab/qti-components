@@ -5,11 +5,6 @@ import { Interaction } from '../internal/interaction/interaction';
 
 @customElement('qti-hottext-interaction')
 export class QtiHottextInteraction extends ChoicesMixin(Interaction, 'qti-hottext') {
-  override connectedCallback() {
-    super.connectedCallback();
-    this.setAttribute('qti-hottext-interaction', '');
-  }
-
   override render = () => html`<slot></slot>`;
 }
 
