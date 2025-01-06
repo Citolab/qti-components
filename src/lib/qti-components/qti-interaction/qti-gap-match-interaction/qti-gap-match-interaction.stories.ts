@@ -59,7 +59,7 @@ function rgbStringToRgb(rgbString) {
 
 export const Default: Story = {
   name: 'qti-gap-match-interaction',
-  render: () => {
+  render: args => {
     return html`
       ${template(
         args,

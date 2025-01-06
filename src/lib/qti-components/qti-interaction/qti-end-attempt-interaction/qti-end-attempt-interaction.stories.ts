@@ -22,13 +22,27 @@ const meta: Meta<QtiEndAttemptInteraction> = {
 export default meta;
 
 export const Default: Story = {
-  render: () => html`
+  render: args => html`
     <qti-assessment-item>
+      <qti-outcome-declaration base-type="string" cardinality="single" identifier="PROCESSOR"></qti-outcome-declaration>
+
       <qti-item-body>
         <qti-printed-variable class="qti-well" identifier="numAttempts"></qti-printed-variable>
         ${template(args)}
+
+        <qti-printed-variable class="qti-well" identifier="PROCESSOR"></qti-printed-variable>
       </qti-item-body>
-      <qti-response-processing> </qti-response-processing>
+      <qti-response-processing>
+        <qti-set-outcome-value identifier="PROCESSOR">
+          <qti-base-value base-type="string">Processed!</qti-base-value>
+        </qti-set-outcome-value>
+      </qti-response-processing>
     </qti-assessment-item>
   `
+};
+
+/** Count attempt increases the numAttempts response variable */
+export const CountAttempt: Story = {
+  render: Default.render,
+  args: { 'count-attempt': 'true' }
 };

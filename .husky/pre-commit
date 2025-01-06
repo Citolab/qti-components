@@ -1,7 +1,14 @@
-npm run build-storybook --quiet
-npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
-"npx http-server storybook-static --port 6006 --silent" \
-"npx wait-on tcp:127.0.0.1:6006 && npm run test-storybook"
+#!/bin/bash
+# Check if something is running on port 6006
+if lsof -i:6006 > /dev/null; then
+  echo "Port 6006 is already in use. Skipping http-server."
+else
+  echo "Starting http-server on port 6006..."
+  npm run build-storybook --quiet
+  npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
+  "npx http-server storybook-static --port 6006 --silent" \
+  "npx wait-on tcp:127.0.0.1:6006 && npm run test-storybook"
+fi
 npm ci
 npm run build
 npm run test

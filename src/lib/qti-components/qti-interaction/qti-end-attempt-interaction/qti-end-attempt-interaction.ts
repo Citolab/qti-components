@@ -6,8 +6,9 @@ export class QtiEndAttemptInteraction extends LitElement {
 
   @property({ reflect: true, type: Boolean }) disabled = false;
 
+  /** Defines the number of attempts that a user can make using the 'endAttemptInteraction' mechanism (this can be used to limit the number of hints, etc.). [More information](https://www.imsglobal.org/sites/default/files/spec/qti/v3/info/index.html#DataCharacteristic_EndAttemptInteraction.Attr_count-attempt) */
   @property({ type: String, attribute: 'count-attempt' })
-  public countAttempt: 'true' | 'false';
+  public countAttempt: 'true' | 'false' | null = null;
 
   @property({ type: String })
   public title: string = 'end attempt';
