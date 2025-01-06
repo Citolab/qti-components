@@ -35,7 +35,7 @@ export class QtiCustomOperator extends LitElement implements Calculate {
       node => node.nodeType === Node.COMMENT_NODE
     );
     try {
-      this.operatorFunction = new Function('context', 'fn', 'item', commentNode.textContent ?? '');
+      this.operatorFunction = new Function('context', 'fn', 'item', commentNode?.textContent ?? '');
     } catch (e) {
       console.error('custom-operator contains invalid javascript code', e);
     }
