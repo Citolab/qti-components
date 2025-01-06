@@ -42,11 +42,6 @@ export class TouchDragAndDrop {
   // droppables: Element[];
 
   constructor() {
-    if (TouchDragAndDrop.instance) {
-      return TouchDragAndDrop.instance;
-    }
-    TouchDragAndDrop.instance = this;
-
     // Add event listeners for touch and mouse interactions
     document.addEventListener('touchmove', this.handleTouchMove.bind(this), { passive: false });
     document.addEventListener('mousemove', this.handleTouchMove.bind(this), { passive: false });
