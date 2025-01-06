@@ -10,7 +10,7 @@ type Story = StoryObj<QtiEndAttemptInteraction & typeof args>;
 const meta: Meta<QtiEndAttemptInteraction> = {
   component: 'qti-end-attempt-interaction',
   title: 'components/qti-end-attempt-interaction',
-  args: { ...args, title: 'end attempt' },
+  args: { ...args, title: 'end attempt', countAttempt: 'true' },
   argTypes,
   parameters: {
     actions: {
@@ -22,7 +22,7 @@ const meta: Meta<QtiEndAttemptInteraction> = {
 export default meta;
 
 export const Default: Story = {
-  render: () => html`
+  render: args => html`
     <qti-assessment-item>
       <qti-item-body>
         <qti-printed-variable class="qti-well" identifier="numAttempts"></qti-printed-variable>

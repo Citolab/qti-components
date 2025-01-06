@@ -1,5 +1,4 @@
 import { html } from 'lit';
-import { action } from '@storybook/addon-actions';
 import { QtiGraphicAssociateInteraction } from './qti-graphic-associate-interaction';
 import { StoryObj, Meta } from '@storybook/web-components';
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
