@@ -38,7 +38,7 @@ export const Default: Story = {
           height="326"
           width="558"
         />
-        <qti-gap-img identifier="DraggerA" match-max="1">
+        <qti-gap-img identifier="DraggerA" match-max="2">
           <img
             src="qti-graphic-gap-match-interaction/a-cw.png"
             alt="Choice A, The Cold War Ends"
@@ -68,7 +68,7 @@ export const Default: Story = {
         <qti-associable-hotspot
           coords="55,256,133,319"
           identifier="A"
-          match-max="1"
+          match-max="2"
           shape="rect"
         ></qti-associable-hotspot>
         <qti-associable-hotspot

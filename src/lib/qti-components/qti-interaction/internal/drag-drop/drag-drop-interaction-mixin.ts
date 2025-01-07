@@ -3,7 +3,6 @@ import { FlippablesMixin } from './flippables-mixin';
 
 import { property } from 'lit/decorators.js';
 import { liveQuery } from '../../../../decorators/live-query';
-import { TouchDragAndDrop } from './drag-drop-api';
 import { Interaction } from '../interaction/interaction';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
@@ -25,11 +24,38 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     droppablesSelector,
     draggablesSelector
   ) {
-    protected draggables = new Map<HTMLElement, { parent: HTMLElement; index: number }>();
+    // protected draggables = new Map<HTMLElement, { parent: HTMLElement; index: number }>();
     private observer: MutationObserver | null = null;
     private droppableObsever: MutationObserver | null = null;
     private resizeObserver: ResizeObserver | null = null;
-    private dragDropApi: TouchDragAndDrop;
+    private draggables: HTMLElement[] = [];
+    private droppables: HTMLElement[] = [];
+    private dragContainers: HTMLElement[] = [];
+    private dragClone: HTMLElement = null; // Clone of drag source for visual feedback
+    private dragSource: HTMLElement = null; // The source element being dragged
+
+    private touchStartPoint = null; // Point of the first touch
+    private isDraggable = false; // Whether a draggable element is active
+    private cloneOffset = { x: 0, y: 0 }; // Offset for positioning the drag clone
+    private isDragging = false; // Whether a drag operation is ongoing
+    private rootNode: Node = null; // Root node for boundary calculations
+    private allDropzones: HTMLElement[] = []; // All dropzones for keyboard navigation
+    private lastTarget = null; // Last touch target
+    private currentDropTarget = null; // Current droppable element
+
+    private readonly MIN_DRAG_DISTANCE = 5; // Minimum pixel movement to start dragging
+    private readonly DRAG_CLONE_OPACITY = 1; // Opacity of the drag clone element
+
+    private dataTransfer = {
+      data: {},
+      setData(type, val) {
+        this.data[type] = val;
+      },
+      getData(type) {
+        return this.data[type];
+      },
+      effectAllowed: 'move'
+    };
 
     @property({ attribute: false, type: Object }) protected configuration: InteractionConfiguration = {
       copyStylesDragClone: true,
@@ -45,6 +71,21 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
       if (dragContainersAdded.length > 0 || dragContainersRemoved.length > 0) {
         this.dragContainersModified(dragContainersAdded || [], dragContainersRemoved || []);
+      }
+    }
+
+    dragContainersModified(addedDragContainers: HTMLElement[], removedDragContainers: HTMLElement[]) {
+      for (const removedContainer of removedDragContainers) {
+        if (this.dragContainers.includes(removedContainer)) {
+          this.dragContainers = this.dragContainers.filter(container => container !== removedContainer);
+          this.allDropzones = this.allDropzones.filter(dropzone => dropzone !== removedContainer);
+        }
+      }
+      for (const dragContainer of addedDragContainers) {
+        if (!this.dragContainers.includes(dragContainer)) {
+          this.dragContainers.push(dragContainer);
+          this.allDropzones.push(dragContainer);
+        }
       }
     }
 
@@ -66,6 +107,13 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
     override firstUpdated(changedProps): void {
       super.firstUpdated(changedProps);
+
+      document.addEventListener('touchmove', this.handleTouchMove.bind(this), { passive: false });
+      document.addEventListener('mousemove', this.handleTouchMove.bind(this), { passive: false });
+      document.addEventListener('touchend', this.handleTouchEnd.bind(this), { passive: false });
+      document.addEventListener('mouseup', this.handleTouchEnd.bind(this), { passive: false });
+      document.addEventListener('touchcancel', this.handleTouchCancel.bind(this), { passive: false });
+
       const draggables = Array.from(this.querySelectorAll(draggablesSelector) || []).concat(
         Array.from(this.shadowRoot?.querySelectorAll(draggablesSelector) || [])
       ) as HTMLElement[];
@@ -91,27 +139,54 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       gapTexts.forEach(gapText => this.resizeObserver?.observe(gapText));
     }
 
-    private dragContainersModified = (dragContainersAdded: HTMLElement[], dragContainersRemoved: HTMLElement[]) => {
-      this.dragDropApi.dragContainersModified(dragContainersAdded, dragContainersRemoved);
-    };
+    private draggablesModified = (addedDraggables: HTMLElement[], removedDraggables: HTMLElement[]) => {
+      for (const removedDraggable of removedDraggables) {
+        if (this.draggables.includes(removedDraggable)) {
+          this.draggables = this.draggables.filter(draggable => draggable !== removedDraggable);
+          removedDraggable.removeAttribute('tabindex');
+          removedDraggable.removeEventListener('touchstart', this.handleTouchStart.bind(this));
+          removedDraggable.removeEventListener('mousedown', this.handleTouchStart.bind(this));
+        }
+      }
+      for (const draggable of addedDraggables) {
+        if (!this.draggables.includes(draggable)) {
+          this.draggables.push(draggable);
+          // draggables.forEach(el => {
+          draggable.setAttribute('tabindex', '0'); // Make draggable elements focusable
+          // el.addEventListener('focus', () => (this.focusedElement = el as HTMLElement));
+          // el.addEventListener('blur', () => (this.focusedElement = null));
 
-    private draggablesModified = (dragsAdded: HTMLElement[], dragsRemoved: HTMLElement[]) => {
-      this.dragDropApi.draggablesModified(dragsAdded, dragsRemoved);
-      this.dragDropApi.draggables.forEach(draggable => {
-        this.storeDraggable(draggable);
+          draggable.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: false });
+          draggable.addEventListener('mousedown', this.handleTouchStart.bind(this), { passive: false });
+          // });
+        }
+      }
+      let index = 0;
+      this.draggables.forEach(draggable => {
+        draggable.style.viewTransitionName = `drag-${index}-${this.getAttribute('identifier') || crypto.randomUUID()}`;
+        draggable.setAttribute('qti-draggable', 'true');
+        draggable.addEventListener('dragstart', this.handleDragStart);
+        draggable.addEventListener('dragend', this.handleDragEnd);
+        index++;
       });
     };
 
-    private droppablesModified = (dropsAdded: HTMLElement[], dropsRemoved: HTMLElement[]) => {
-      this.dragDropApi.droppablesModified(dropsAdded, dropsRemoved);
-
+    private droppablesModified = (addedDroppables: HTMLElement[], removedDroppables: HTMLElement[]) => {
+      for (const removedDroppable of removedDroppables) {
+        if (this.droppables.includes(removedDroppable)) {
+          this.droppables = this.droppables.filter(droppable => droppable !== removedDroppable);
+          this.allDropzones = this.allDropzones.filter(dropzone => dropzone !== removedDroppable);
+        }
+      }
+      for (const droppable of addedDroppables) {
+        if (!this.droppables.includes(droppable)) {
+          this.droppables.push(droppable);
+          this.allDropzones.push(droppable);
+        }
+      }
       this.initializeEventHandlers();
-      // droppables.forEach(droppable => {
-      //   this.prepareDroppable(droppable);
-      //   this.observeDroppableAttributes(droppable);
-      // });
 
-      for (const droppable of this.dragDropApi.droppables) {
+      for (const droppable of this.droppables) {
         this.prepareDroppable(droppable);
         this.observeDroppableAttributes(droppable);
         if (this.dataset.choicesContainerWidth) {
@@ -172,24 +247,21 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
         this.checkAllMaxAssociations();
         this.saveResponse(); //
       };
+      // debugger;
+      // if (!document.startViewTransition) {
+      moveElement();
+      return;
+      // }
 
-      if (!document.startViewTransition) {
-        moveElement();
-        return;
-      }
-
-      const transition = document.startViewTransition(moveElement);
-      await transition.finished;
+      // const transition = document.startViewTransition(moveElement);
+      // await transition.finished;
     }
 
     private async dropHandler(ev: DragEvent): Promise<boolean> {
       ev.preventDefault();
       const droppable = ev.currentTarget as HTMLElement;
-      const identifier = ev.dataTransfer.getData('text');
       const responseIdentifierDraggable = ev.dataTransfer.getData('responseIdentifier');
-      const draggable = this.dragDropApi.draggables.find(d => {
-        return d.getAttribute('identifier') === identifier;
-      });
+      const draggable = this.dragClone;
       if (!draggable) return false;
       if (draggable && !this.isValidDrop(droppable, draggable, responseIdentifierDraggable)) {
         draggable.style.transform = 'translate(0, 0)';
@@ -240,7 +312,6 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
     override connectedCallback() {
       super.connectedCallback();
-      this.initializeDragDropApi();
     }
 
     private initializeEventHandlers(): void {
@@ -248,17 +319,6 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       this.dragleaveHandler = this.dragleaveHandler.bind(this);
       this.dragenterHandler = this.dragenterHandler.bind(this);
       this.dropHandler = this.dropHandler.bind(this);
-    }
-
-    private initializeDragDropApi() {
-      this.dragDropApi = new TouchDragAndDrop();
-      this.dispatchEvent(
-        new CustomEvent<DragDropInteractionElement>('qti-register-interaction', {
-          bubbles: true,
-          composed: true,
-          detail: this
-        })
-      );
     }
 
     private isMatchTabular(): boolean {
@@ -270,19 +330,19 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       this.attachEventListeners(droppable);
     }
 
-    private storeDraggable(draggable: HTMLElement): void {
-      const index = Array.from(draggable.parentNode.children).indexOf(draggable);
-      if (!this.draggables.has(draggable)) {
-        this.draggables.set(draggable, {
-          parent: draggable.parentElement,
-          index
-        });
-      }
-      draggable.style.viewTransitionName = `drag-${index}-${this.getAttribute('identifier') || crypto.randomUUID()}`;
-      draggable.setAttribute('qti-draggable', 'true');
-      draggable.addEventListener('dragstart', this.handleDragStart);
-      draggable.addEventListener('dragend', this.handleDragEnd);
-    }
+    // private storeDraggable(draggable: HTMLElement): void {
+    //   const index = Array.from(draggable.parentNode.children).indexOf(draggable);
+    //   if (!this.draggables.has(draggable)) {
+    //     this.draggables.set(draggable, {
+    //       parent: draggable.parentElement,
+    //       index
+    //     });
+    //   }
+    //   draggable.style.viewTransitionName = `drag-${index}-${this.getAttribute('identifier') || crypto.randomUUID()}`;
+    //   draggable.setAttribute('qti-draggable', 'true');
+    //   draggable.addEventListener('dragstart', this.handleDragStart);
+    //   draggable.addEventListener('dragend', this.handleDragEnd);
+    // }
 
     private handleDragStart = (ev: DragEvent) => {
       const target = ev.currentTarget as HTMLElement;
@@ -306,12 +366,12 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       this.deactivateDroppables();
 
       draggable.removeAttribute('dragging');
-      const wasDropped = await this.wasDropped(ev);
-      if (!wasDropped) {
-        if (this.configuration.dragCanBePlacedBack) {
-          this.restoreInitialDraggablePosition(draggable);
-        }
-      }
+      // const wasDropped = await this.wasDropped(ev);
+      // if (!wasDropped) {
+      //   if (this.configuration.dragCanBePlacedBack) {
+      //     this.restoreInitialDraggablePosition(draggable);
+      //   }
+      // }
     };
 
     private updateMinDimensionsForDropZones() {
@@ -340,7 +400,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
 
     private activateDroppables(target: HTMLElement): void {
-      const dragContainers = this.dragDropApi.dragContainers;
+      const dragContainers = this.dragContainers;
       dragContainers.forEach(d => {
         d.setAttribute('enabled', '');
         if (d.hasAttribute('disabled')) {
@@ -349,7 +409,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
           }
         }
       });
-      this.dragDropApi.droppables.forEach(d => {
+      this.droppables.forEach(d => {
         d.setAttribute('enabled', '');
         if (d.hasAttribute('disabled')) {
           if (d.contains(target) || (d.shadowRoot && d.shadowRoot.contains(target))) {
@@ -368,42 +428,11 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
 
     private deactivateDroppables(): void {
-      const dragContainers = this.dragDropApi.dragContainers;
+      const dragContainers = this.dragContainers;
       dragContainers.forEach(d => {
         d.removeAttribute('enabled');
       });
-      this.dragDropApi.droppables.forEach(d => d.removeAttribute('enabled'));
-    }
-
-    private wasDropped(ev: DragEvent) {
-      return ev.dataTransfer.dropEffect && ev.dataTransfer.dropEffect !== 'none';
-    }
-
-    private async restoreInitialDraggablePosition(draggable: HTMLElement): Promise<void> {
-      const { parent, index } = this.draggables.get(draggable);
-
-      const moveDraggable = (draggable: HTMLElement, parent: HTMLElement, index: number) => {
-        const targetIndex = Math.min(index, parent.children.length);
-        parent.insertBefore(draggable, parent.children[targetIndex]);
-        draggable.style.transform = 'translate(0, 0)';
-        this.checkAllMaxAssociations();
-      };
-
-      // Fallback if view transitions are not supported
-      if (!document.startViewTransition) {
-        moveDraggable(draggable, parent, index);
-        return;
-      }
-
-      // Use view transitions if supported
-      const transition = document.startViewTransition(() => {
-        draggable.style.transform = '';
-        moveDraggable(draggable, parent, index);
-      });
-      transition.finished.then(() => {
-        draggable.style.transition = '';
-        this.saveResponse();
-      });
+      this.droppables.forEach(d => d.removeAttribute('enabled'));
     }
 
     override disconnectedCallback() {
@@ -425,6 +454,51 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
         this.resizeObserver.disconnect();
         this.resizeObserver = null;
       }
+    }
+
+    private handleTouchMove(e) {
+      if (this.isDraggable && this.dragClone) {
+        const { x, y } = this.getEventCoordinates(e);
+        const currentTouch = { clientX: x, clientY: y };
+
+        if (this.calculateDragDistance(currentTouch) >= this.MIN_DRAG_DISTANCE) {
+          this.isDragging = true;
+          this.updateDragClonePosition(currentTouch);
+        }
+
+        const closestDropzone = this.findClosestDropzone();
+        this.currentDropTarget = closestDropzone;
+
+        if (closestDropzone !== this.lastTarget) {
+          if (this.lastTarget) {
+            this.dispatchCustomEvent(this.lastTarget, 'dragleave');
+          }
+          if (closestDropzone) {
+            this.dispatchCustomEvent(closestDropzone, 'dragenter');
+          }
+          this.lastTarget = closestDropzone;
+        }
+
+        if (this.lastTarget) {
+          this.dispatchCustomEvent(this.lastTarget, 'dragover');
+        }
+
+        e.preventDefault();
+      }
+    }
+
+    private handleTouchEnd(_e) {
+      console.log('handleTouchEnd');
+      if (this.currentDropTarget) {
+        this.dispatchCustomEvent(this.currentDropTarget, 'drop');
+      }
+      this.dispatchCustomEvent(this.dragClone, 'dragend');
+
+      this.resetDragState();
+    }
+
+    private handleTouchCancel(_e) {
+      this.resetDragState();
     }
 
     validate(): boolean {
@@ -473,8 +547,36 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       return unlimitedAssociations || currentAssociations >= maxMatch;
     }
 
+    private resetDragState() {
+      if (this.dragClone) {
+        // copy styles from dragSource to dragClone
+        const isDropped = this.currentDropTarget !== null;
+        if (isDropped) {
+          const computedStyles = window.getComputedStyle(this.dragSource);
+          for (let i = 0; i < computedStyles.length; i++) {
+            const key = computedStyles[i];
+            this.dragClone.style.setProperty(key, computedStyles.getPropertyValue(key));
+          }
+        } else {
+          this.dragClone.remove();
+        }
+      }
+      if (this.dragSource) {
+        // TODO: remove if match-max is reached
+        this.dragSource.style.opacity = '1.0';
+      }
+
+      this.isDragging = false;
+      this.isDraggable = false;
+      this.dragSource = null;
+      this.dragClone = null;
+      this.touchStartPoint = null;
+      this.currentDropTarget = null;
+      this.lastTarget = null;
+    }
+
     protected checkAllMaxAssociations(): void {
-      this.dragDropApi.droppables.forEach(d => {
+      this.droppables.forEach(d => {
         const maxAssociationsReached = this.checkMaxAssociations(d);
         if (maxAssociationsReached) {
           this.disableDroppable(d);
@@ -498,7 +600,6 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
     set value(value: string[]) {
       if (this.isMatchTabular()) return;
-      this.resetDroppables();
       // Assuming this.value is an array of strings
       if (Array.isArray(value)) {
         value?.forEach(entry => this.placeResponse(entry));
@@ -520,7 +621,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
 
     private findDroppableById(identifier: string): Element | undefined {
-      return this.dragDropApi.droppables.find(drop => drop.getAttribute('identifier') === identifier);
+      return this.droppables.find(drop => drop.getAttribute('identifier') === identifier);
     }
 
     private async placeDraggableInDroppable(dragId: string, droppable: Element): Promise<void> {
@@ -544,7 +645,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
 
     private getValidAssociations(): number {
-      return this.dragDropApi.droppables.filter(d => d.childElementCount > 0).length;
+      return this.droppables.filter(d => d.childElementCount > 0).length;
     }
 
     public saveResponse(): void {
@@ -563,7 +664,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
 
     private collectResponseData(): string[] {
-      const response = this.dragDropApi.droppables
+      const response = this.droppables
         .map(droppable => {
           const draggablesInDroppable = droppable.querySelectorAll('[qti-draggable="true"]');
           const identifiers = Array.from(draggablesInDroppable).map(d => d.getAttribute('identifier'));
@@ -575,33 +676,128 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
 
     reset(save = true): void {
-      this.resetDroppables();
+      // this.resetDroppables();
       if (save) this.saveResponse();
     }
 
-    private async resetDroppables(): Promise<void> {
-      const moveDraggable = (draggable: HTMLElement, parent: HTMLElement, index: number) => {
-        draggable.style.transform = 'translate(0, 0)';
-        const targetIndex = Math.min(index, parent.children.length);
-        parent.insertBefore(draggable, parent.children[targetIndex]);
-      };
+    private updateDragClonePosition(touch) {
+      if (!this.isDragging || !this.dragClone) return;
 
-      if (!document.startViewTransition) {
-        // Fallback if view transitions are not supported
-        this.draggables.forEach(({ parent, index }, draggable) => {
-          moveDraggable(draggable, parent, index);
-        });
-        return;
+      const newLeft = touch.clientX - this.cloneOffset.x;
+      const newTop = touch.clientY - this.cloneOffset.y;
+
+      const { newLeft: boundedLeft, newTop: boundedTop } = this.applyBoundaries(newLeft, newTop, this.dragClone);
+
+      this.dragClone.style.left = `${boundedLeft}px`;
+      this.dragClone.style.top = `${boundedTop}px`;
+    }
+
+    private getEventCoordinates(event, page = false) {
+      const touch = event.touches ? event.touches[0] : event;
+      return {
+        x: page ? touch.pageX : touch.clientX,
+        y: page ? touch.pageY : touch.clientY
+      };
+    }
+
+    private calculateDragDistance(touch): number {
+      const xDist = Math.abs(touch.clientX - this.touchStartPoint.x);
+      const yDist = Math.abs(touch.clientY - this.touchStartPoint.y);
+      return xDist + yDist;
+    }
+
+    private applyBoundaries(newLeft: number, newTop: number, element: HTMLElement) {
+      let boundaryRect: DOMRect = new DOMRect(0, 0, window.innerWidth, window.innerHeight);
+      if (this.rootNode instanceof ShadowRoot) {
+        boundaryRect = this.rootNode.host.getBoundingClientRect();
+      } else if (this.rootNode instanceof Document) {
+        boundaryRect = document.documentElement.getBoundingClientRect();
       }
 
-      // Use view transitions if supported
-      const transition = document.startViewTransition(() => {
-        this.draggables.forEach(({ parent, index }, draggable) => {
-          moveDraggable(draggable, parent, index);
-        });
-      });
+      const elementRect = element.getBoundingClientRect();
+      const elementWidth = elementRect.width;
+      const elementHeight = elementRect.height;
 
-      await transition.finished;
+      const boundedLeft = Math.max(boundaryRect.left, Math.min(newLeft, boundaryRect.right - elementWidth));
+      const boundedTop = Math.max(boundaryRect.top, Math.min(newTop, boundaryRect.bottom - elementHeight));
+
+      return { newLeft: boundedLeft, newTop: boundedTop };
+    }
+
+    private findClosestDropzone(): HTMLElement | null {
+      if (!this.dragClone || this.allDropzones.length === 0) return null;
+
+      const dragRect = this.dragClone.getBoundingClientRect();
+      let closestDropzone: HTMLElement | null = null;
+      let maxOverlapArea = 0;
+
+      for (const dropzone of this.allDropzones) {
+        const dropRect = dropzone.getBoundingClientRect();
+        const overlapArea = this.calculateOverlapArea(dragRect, dropRect);
+
+        if (overlapArea > maxOverlapArea) {
+          maxOverlapArea = overlapArea;
+          closestDropzone = dropzone;
+        }
+      }
+
+      return closestDropzone;
+    }
+
+    private calculateOverlapArea(rect1: DOMRect, rect2: DOMRect): number {
+      const xOverlap = Math.max(0, Math.min(rect1.right, rect2.right) - Math.max(rect1.left, rect2.left));
+      const yOverlap = Math.max(0, Math.min(rect1.bottom, rect2.bottom) - Math.max(rect1.top, rect2.top));
+      return xOverlap * yOverlap;
+    }
+
+    private dispatchCustomEvent(element, eventType, bubble = true) {
+      if (!element) return;
+      const event = new CustomEvent(eventType, { bubbles: bubble, cancelable: true });
+      event['dataTransfer'] = this.dataTransfer;
+      element.dispatchEvent(event);
+    }
+
+    private handleTouchStart(e) {
+      const { x, y } = this.getEventCoordinates(e);
+      this.touchStartPoint = { x, y };
+      this.dragSource = e.currentTarget;
+      this.isDraggable = true;
+      this.rootNode = this.dragSource.getRootNode();
+
+      // Create and position the drag clone
+      const rect = this.dragSource.getBoundingClientRect();
+      this.cloneOffset.x = x - rect.left;
+      this.cloneOffset.y = y - rect.top;
+
+      // clone the element if it is not in a dropzone
+      const parent = this.dragSource.parentElement;
+      if (!this.droppables.includes(parent)) {
+        // TODO: check if this is a correct check in all cases
+        this.dragClone = this.dragSource.cloneNode(true) as HTMLElement;
+        this.setDragCloneStyles(rect);
+
+        if (this.rootNode instanceof ShadowRoot) {
+          this.rootNode.host.appendChild(this.dragClone);
+        } else if (this.rootNode instanceof Document) {
+          document.body.appendChild(this.dragClone);
+        }
+
+        this.dragSource.style.opacity = '0.5'; // Reduce visibility of the original
+        e.preventDefault();
+      } else {
+        this.dragClone = this.dragSource;
+      }
+    }
+
+    private setDragCloneStyles(rect: DOMRect) {
+      this.dragClone.style.position = 'fixed';
+      this.dragClone.style.top = `${rect.top}px`;
+      this.dragClone.style.left = `${rect.left}px`;
+      this.dragClone.style.width = `${rect.width}px`;
+      this.dragClone.style.height = `${rect.height}px`;
+      this.dragClone.style.zIndex = '9999';
+      this.dragClone.style.pointerEvents = 'none';
+      this.dragClone.style.opacity = this.DRAG_CLONE_OPACITY.toString();
     }
   }
 
