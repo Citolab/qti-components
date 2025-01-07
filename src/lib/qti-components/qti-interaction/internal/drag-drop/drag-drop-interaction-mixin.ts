@@ -531,6 +531,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
         // copy styles from dragSource to dragClone
         const isDropped = this.currentDropTarget !== null;
         const droppedInDragContainer = !isDropped || this.dragContainers.includes(this.currentDropTarget);
+
         if (!droppedInDragContainer) {
           const computedStyles = window.getComputedStyle(this.dragSource);
           for (let i = 0; i < computedStyles.length; i++) {
@@ -781,7 +782,37 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
         e.preventDefault();
       } else {
         this.dragClone = this.dragSource;
+        this.dragSource = this.findDraggableInDraggableContainer(this.dragSource.getAttribute('identifier'));
+        this.setDragCloneStyles(rect);
       }
+    }
+
+    private findDraggableInDraggableContainer(identifier: string): HTMLElement | undefined {
+      // Flatten all drag containers
+      const allDragContainers = this.dragContainers.flat();
+
+      // Iterate through each drag container
+      for (const container of allDragContainers) {
+        // Check if the container itself has the identifier
+        if (container.getAttribute('identifier') === identifier) {
+          // Return the container itself if it matches
+          return container;
+        }
+
+        // If the container is a slot element, get assigned elements
+        const assignedElements = Array.from((container as HTMLSlotElement).assignedElements() || []) as HTMLElement[];
+
+        // Search for a matching child element inside the container
+        const foundElement = assignedElements.find(e => e.getAttribute('identifier') === identifier);
+
+        // If a matching element is found, return it
+        if (foundElement) {
+          return foundElement;
+        }
+      }
+
+      // Return undefined if no matching element is found
+      return undefined;
     }
 
     private setDragCloneStyles(rect: DOMRect) {
