@@ -330,20 +330,6 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       this.attachEventListeners(droppable);
     }
 
-    // private storeDraggable(draggable: HTMLElement): void {
-    //   const index = Array.from(draggable.parentNode.children).indexOf(draggable);
-    //   if (!this.draggables.has(draggable)) {
-    //     this.draggables.set(draggable, {
-    //       parent: draggable.parentElement,
-    //       index
-    //     });
-    //   }
-    //   draggable.style.viewTransitionName = `drag-${index}-${this.getAttribute('identifier') || crypto.randomUUID()}`;
-    //   draggable.setAttribute('qti-draggable', 'true');
-    //   draggable.addEventListener('dragstart', this.handleDragStart);
-    //   draggable.addEventListener('dragend', this.handleDragEnd);
-    // }
-
     private handleDragStart = (ev: DragEvent) => {
       const target = ev.currentTarget as HTMLElement;
       ev.dataTransfer.setData('text', target.getAttribute('identifier'));
@@ -366,12 +352,6 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       this.deactivateDroppables();
 
       draggable.removeAttribute('dragging');
-      // const wasDropped = await this.wasDropped(ev);
-      // if (!wasDropped) {
-      //   if (this.configuration.dragCanBePlacedBack) {
-      //     this.restoreInitialDraggablePosition(draggable);
-      //   }
-      // }
     };
 
     private updateMinDimensionsForDropZones() {
@@ -488,7 +468,6 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
 
     private handleTouchEnd(_e) {
-      console.log('handleTouchEnd');
       if (this.currentDropTarget) {
         this.dispatchCustomEvent(this.currentDropTarget, 'drop');
       }
@@ -541,7 +520,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
 
     private checkMaxAssociations(droppable: HTMLElement): boolean {
-      const maxMatch = +(droppable.getAttribute('match-max') || 1);
+      const maxMatch = this.getMatchMaxValue(droppable);
       const currentAssociations = droppable.querySelectorAll('[qti-draggable="true"]').length;
       const unlimitedAssociations = maxMatch === 0;
       return unlimitedAssociations || currentAssociations >= maxMatch;
@@ -557,24 +536,31 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
             const key = computedStyles[i];
             this.dragClone.style.setProperty(key, computedStyles.getPropertyValue(key));
           }
+          this.dragClone.style.opacity = '1.0';
         } else {
           this.dragClone.remove();
         }
       }
       if (this.dragSource) {
-        // TODO: remove if match-max is reached
-        this.dragSource.style.opacity = '1.0';
+        const matchMax = this.getMatchMaxValue(this.dragSource);
+        const currentDraggables = this.draggables.filter(
+          d => d.getAttribute('identifier') === this.dragSource.getAttribute('identifier')
+        );
+        if (matchMax !== 0 && currentDraggables.length >= matchMax) {
+          this.dragSource.style.display = 'none';
+        } else {
+          this.dragSource.style.opacity = '1.0';
+        }
+
+        this.isDragging = false;
+        this.isDraggable = false;
+        this.dragSource = null;
+        this.dragClone = null;
+        this.touchStartPoint = null;
+        this.currentDropTarget = null;
+        this.lastTarget = null;
       }
-
-      this.isDragging = false;
-      this.isDraggable = false;
-      this.dragSource = null;
-      this.dragClone = null;
-      this.touchStartPoint = null;
-      this.currentDropTarget = null;
-      this.lastTarget = null;
     }
-
     protected checkAllMaxAssociations(): void {
       this.droppables.forEach(d => {
         const maxAssociationsReached = this.checkMaxAssociations(d);
@@ -584,6 +570,11 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
           this.enableDroppable(d);
         }
       });
+    }
+
+    private getMatchMaxValue(el: HTMLElement): number {
+      const matchMaxRawValue = el.getAttribute('match-max');
+      return matchMaxRawValue ? parseInt(matchMaxRawValue, 10) : 1;
     }
 
     private disableDroppable(droppable: Element): void {
@@ -632,6 +623,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       }
       const moveElement = (): void => {
         draggable.style.transform = 'translate(0, 0)';
+        console.log('droppable', droppable);
         droppable.appendChild(draggable);
         this.checkAllMaxAssociations();
       };
