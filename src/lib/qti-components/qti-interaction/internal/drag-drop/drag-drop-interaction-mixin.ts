@@ -530,36 +530,39 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       if (this.dragClone) {
         // copy styles from dragSource to dragClone
         const isDropped = this.currentDropTarget !== null;
-        if (isDropped) {
+        const droppedInDragContainer = !isDropped || this.dragContainers.includes(this.currentDropTarget);
+        if (!droppedInDragContainer) {
           const computedStyles = window.getComputedStyle(this.dragSource);
           for (let i = 0; i < computedStyles.length; i++) {
             const key = computedStyles[i];
             this.dragClone.style.setProperty(key, computedStyles.getPropertyValue(key));
           }
           this.dragClone.style.opacity = '1.0';
+          if (this.dragSource) {
+            const matchMax = this.getMatchMaxValue(this.dragSource);
+            const currentDraggables = this.draggables.filter(
+              d => d.getAttribute('identifier') === this.dragSource.getAttribute('identifier')
+            );
+            if (matchMax !== 0 && currentDraggables.length >= matchMax) {
+              this.dragSource.style.display = 'none';
+            } else {
+              this.dragSource.style.opacity = '1.0';
+            }
+          }
         } else {
+          this.dragSource.style.opacity = '1.0';
+          this.dragSource.style.display = 'block';
           this.dragClone.remove();
         }
       }
-      if (this.dragSource) {
-        const matchMax = this.getMatchMaxValue(this.dragSource);
-        const currentDraggables = this.draggables.filter(
-          d => d.getAttribute('identifier') === this.dragSource.getAttribute('identifier')
-        );
-        if (matchMax !== 0 && currentDraggables.length >= matchMax) {
-          this.dragSource.style.display = 'none';
-        } else {
-          this.dragSource.style.opacity = '1.0';
-        }
 
-        this.isDragging = false;
-        this.isDraggable = false;
-        this.dragSource = null;
-        this.dragClone = null;
-        this.touchStartPoint = null;
-        this.currentDropTarget = null;
-        this.lastTarget = null;
-      }
+      this.isDragging = false;
+      this.isDraggable = false;
+      this.dragSource = null;
+      this.dragClone = null;
+      this.touchStartPoint = null;
+      this.currentDropTarget = null;
+      this.lastTarget = null;
     }
     protected checkAllMaxAssociations(): void {
       this.droppables.forEach(d => {
