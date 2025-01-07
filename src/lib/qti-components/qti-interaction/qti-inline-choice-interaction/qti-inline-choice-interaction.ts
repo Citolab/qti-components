@@ -53,10 +53,10 @@ export class QtiInlineChoiceInteraction extends Interaction {
   ];
 
   @state()
-  private options: OptionType[] = [];
+  protected options: OptionType[] = [];
 
   @state()
-  private correctOption: string = '';
+  protected correctOption: string = '';
 
   @property({ attribute: 'data-prompt', type: String })
   dataPrompt: string = 'select';
@@ -128,7 +128,7 @@ export class QtiInlineChoiceInteraction extends Interaction {
     }</span>`;
   }
 
-  private choiceSelected(event: Event) {
+  protected choiceSelected(event: Event) {
     const selectedOptionValue = (event.target as HTMLSelectElement).value;
     this.options = this.options.map(option => ({ ...option, selected: option.value === selectedOptionValue }));
     this.saveResponse(selectedOptionValue);

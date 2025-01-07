@@ -8,14 +8,11 @@ import { qtiTransformTest } from '../../qti-transformers';
 /**
  * `<test-container>` is a custom element designed for hosting the qti-assessment-item.
  * The `qti-assessment-test` will be placed inside the shadow DOM of this element.
- * The element loads the item from the provided URL and renders it inside the shadow DOM.
- *
- * ### Styling
- * Add a class to the element for styling.
+ * The element loads the test from the provided URL and renders it inside the shadow DOM.
  *
  * ```html
  * <qti-test>
- *   <test-container class="m-4 bg-white" test-url="./path/to/item.xml"></test-container>
+ *   <test-container class="m-4 bg-white" test-url="./path/to/assessmenttest.xml"></test-container>
  * </qti-test>
  * ```
  */
