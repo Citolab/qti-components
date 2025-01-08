@@ -1,5 +1,5 @@
 import { LitElement } from 'lit';
-import { qtiTransformItem, qtiTransformTest } from '../../qti-transformers';
+import { qtiTransformItem } from '../../qti-transformers';
 
 // const setSessionData = <T>(key: string, value?: T): void => sessionStorage.setItem(key, JSON.stringify(value));
 // const getSessionData = <T>(key: string): T | null => (sessionStorage.getItem(key) ? JSON.parse(sessionStorage.getItem(key)!) : null);
@@ -9,7 +9,7 @@ type Constructor<T = {}> = abstract new (...args: any[]) => T;
 declare class TestLoaderInterface {}
 export const TestLoaderMixin = <T extends Constructor<LitElement>>(superClass: T) => {
   abstract class TestLoaderClass extends superClass {
-    private testURL = '';
+    // private testURL = '';
 
     constructor(...args: any[]) {
       super(...args);

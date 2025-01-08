@@ -24,10 +24,14 @@ export class QtiAssessmentStimulusRef extends LitElement {
   public async connectedCallback(): Promise<void> {
     super.connectedCallback();
 
-    const event = new Event('qti-assessment-stimulus-ref-connected', { cancelable: true, bubbles: true });
-    const isPrevented = this.dispatchEvent(event);
+    const event = new Event('qti-assessment-stimulus-ref-connected', {
+      cancelable: true,
+      bubbles: true,
+      composed: true
+    });
+    const isNotPrevented = this.dispatchEvent(event);
 
-    if (isPrevented) {
+    if (isNotPrevented) {
       const item = this.closest('qti-assessment-item');
 
       const stimulusRef = item.querySelector(`[data-stimulus-idref=${this.identifier}]`);
