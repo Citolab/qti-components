@@ -718,8 +718,10 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
         this.dragClone = draggableInDragContainer.cloneNode(true) as HTMLElement;
         this.setDragCloneStyles(rect);
-
-        if (this.rootNode instanceof ShadowRoot) {
+        const interaction = this.findParentInteractionElement(this.dragSource);
+        if (interaction) {
+          interaction.appendChild(this.dragClone);
+        } else if (this.rootNode instanceof ShadowRoot) {
           this.rootNode.host.appendChild(this.dragClone);
         } else if (this.rootNode instanceof Document) {
           document.body.appendChild(this.dragClone);
@@ -742,6 +744,15 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
         this.dragSource = this.findDraggableInDraggableContainer(this.dragSource.getAttribute('identifier'));
         this.setDragCloneStyles(rect);
       }
+    }
+
+    private findParentInteractionElement(element: HTMLElement): HTMLElement {
+      let parent = element.parentElement;
+      // find parent where tag name endswith -interaction
+      while (parent && !parent.tagName?.toLowerCase().endsWith('-interaction')) {
+        parent = parent.parentElement;
+      }
+      return parent;
     }
 
     private findDraggableInDraggableContainer(identifier: string): HTMLElement | undefined {
@@ -776,8 +787,6 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       this.dragClone.style.position = 'fixed';
       this.dragClone.style.top = `${rect.top}px`;
       this.dragClone.style.left = `${rect.left}px`;
-      this.dragClone.style.width = `${rect.width}px`;
-      this.dragClone.style.height = `${rect.height}px`;
       this.dragClone.style.zIndex = '9999';
       this.dragClone.style.pointerEvents = 'none';
       this.dragClone.style.opacity = this.DRAG_CLONE_OPACITY.toString();
