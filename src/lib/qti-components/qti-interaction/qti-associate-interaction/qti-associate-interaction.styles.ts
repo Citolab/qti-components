@@ -6,13 +6,17 @@ export default css`
   }
   slot[name='qti-simple-associable-choice'] {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
+    align-items: flex-start;
+    flex: 1;
     border: 2px solid transparent;
+    padding: 0.3rem;
+    border-radius: 0.3rem;
+    gap: 0.5rem;
   }
 
   :host::part(associables-container) {
     display: flex;
+    padding: 0.5rem;
     justify-content: space-between;
     background: linear-gradient(
       180deg,
