@@ -811,6 +811,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       const parent = this.dragSource.parentElement;
       if (!this.droppables.includes(parent)) {
         // TODO: check if this is a correct check in all cases
+
         this.dragClone = draggableInDragContainer.cloneNode(true) as HTMLElement;
         this.setDragCloneStyles(rect);
 
@@ -832,6 +833,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
         }
         e.preventDefault();
       } else {
+        this.enableDroppable(parent);
         this.dragClone = this.dragSource;
         this.dragSource = this.findDraggableInDraggableContainer(this.dragSource.getAttribute('identifier'));
         this.setDragCloneStyles(rect);
