@@ -492,6 +492,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
         this.resetDragState();
       }
       this._internals.states.delete('--dragzone-active');
+      this.checkAllMaxAssociations();
       e.preventDefault();
     }
 
@@ -558,15 +559,20 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
             this.dragClone.style.setProperty(key, computedStyles.getPropertyValue(key));
           }
           this.dragClone.style.opacity = '1.0';
+          this.dragClone.style.display = 'block';
           if (this.dragSource) {
             const matchMax = this.getMatchMaxValue(this.dragSource);
             const currentDraggables = this.draggables.filter(
               d => d.getAttribute('identifier') === this.dragSource.getAttribute('identifier')
             );
+            const draggableInDragContainer = (this.dragSource = this.findDraggableInDraggableContainer(
+              this.dragSource.getAttribute('identifier')
+            ));
             if (matchMax !== 0 && currentDraggables.length >= matchMax) {
-              this.dragSource.style.display = 'none';
+              // debugger;
+              draggableInDragContainer.style.display = 'none';
             } else {
-              this.dragSource.style.opacity = '1.0';
+              draggableInDragContainer.style.opacity = '1.0';
             }
           }
         } else {
@@ -794,6 +800,9 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       this.rootNode = this.dragSource.getRootNode();
 
       // Create and position the drag clone
+      const draggableInDragContainer = this.findDraggableInDraggableContainer(
+        this.dragSource.getAttribute('identifier')
+      );
       const rect = this.dragSource.getBoundingClientRect();
       this.cloneOffset.x = x - rect.left;
       this.cloneOffset.y = y - rect.top;
@@ -802,7 +811,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       const parent = this.dragSource.parentElement;
       if (!this.droppables.includes(parent)) {
         // TODO: check if this is a correct check in all cases
-        this.dragClone = this.dragSource.cloneNode(true) as HTMLElement;
+        this.dragClone = draggableInDragContainer.cloneNode(true) as HTMLElement;
         this.setDragCloneStyles(rect);
 
         if (this.rootNode instanceof ShadowRoot) {
@@ -857,6 +866,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       this.dragClone.style.zIndex = '9999';
       this.dragClone.style.pointerEvents = 'none';
       this.dragClone.style.opacity = this.DRAG_CLONE_OPACITY.toString();
+      this.dragClone.style.display = 'block';
     }
   }
 
