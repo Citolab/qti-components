@@ -820,7 +820,16 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
           document.body.appendChild(this.dragClone);
         }
 
-        this.dragSource.style.opacity = '0.5'; // Reduce visibility of the original
+        // check if max associations are reached
+        const matchMax = this.getMatchMaxValue(this.dragSource);
+        const currentDraggables = this.draggables.filter(
+          d => d.getAttribute('identifier') === this.dragSource.getAttribute('identifier')
+        );
+        if (matchMax !== 0 && currentDraggables.length >= matchMax) {
+          draggableInDragContainer.style.opacity = '0.0';
+        } else {
+          draggableInDragContainer.style.opacity = '1.0';
+        }
         e.preventDefault();
       } else {
         this.dragClone = this.dragSource;
