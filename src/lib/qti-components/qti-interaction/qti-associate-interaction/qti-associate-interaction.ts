@@ -36,11 +36,12 @@ export class QtiAssociateInteraction extends DragDropInteractionMixin(
         Array.from(Array(Math.ceil(this._childrenMap.length / 2)).keys()).map(
           (_, index) =>
             html`<div part="associables-container">
-                <div name="left${index}" part="drop-list" class="dl" identifier="droplist${index}_left"></div>
-                <div name="right${index}" part="drop-list" class="dl" identifier="droplist${index}_right"></div>
-              </div>
-              <div role="alert" id="validationMessage"></div>`
+              <div name="left${index}" part="drop-list" class="dl" identifier="droplist${index}_left"></div>
+              <div name="right${index}" part="drop-list" class="dl" identifier="droplist${index}_right"></div>
+            </div>`
         )}
+
+        <div role="alert" id="validationMessage"></div>
       </div>`;
   }
 
