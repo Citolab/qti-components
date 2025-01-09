@@ -26,10 +26,6 @@ const npmOptions: Options = {
   external: peerDependencies,
   splitting: false /* DO NOT USE CODE SPLITTING, see above */,
   esbuildPlugins: [InlineCSSPlugin],
-  esbuildOptions: options => {
-    options.chunkNames = 'chunks/[name]-[hash]'; // Place chunks in the 'chunks' subfolder
-    options.entryNames = '[dir]/[name]'; // Keep entry files in the same folder structure
-  },
   sourcemap: true,
   dts: true
 };
