@@ -5,11 +5,6 @@ import { InlineCSSPlugin } from './scripts/inline-css-plugin';
 
 const peerDependencies = Object.keys(pkgJson.peerDependencies || {});
 
-const bundleOptions: Options = {
-  splitting: false,
-  esbuildPlugins: [InlineCSSPlugin]
-};
-
 const npmOptions: Options = {
   outDir: 'dist',
   format: 'esm',
@@ -18,17 +13,14 @@ const npmOptions: Options = {
     './src/lib/qti-components/index.ts',
     ...(await globby('./src/lib/qti-test/**/!(*.(style|test|stories)).ts')),
     ...(await globby('./src/lib/qti-item/**/!(*.(style|test|stories)).ts')),
-    // ...(await globby('./src/lib/qti-transformers/**/!(*.(style|test|stories)).ts')),
-    // ...(await globby('./src/lib/qti-loader/**/!(*.(style|test|stories)).ts')),
     './src/lib/qti-transformers/index.ts',
     './src/lib/qti-loader/index.ts'
   ],
   bundle: true,
-  external: undefined,
+  external: peerDependencies,
   splitting: true,
-  plugins: [],
+  esbuildPlugins: [InlineCSSPlugin],
   esbuildOptions: options => {
-    // options.outdir = 'dist/chunks'; // Set chunk output directory
     options.chunkNames = 'chunks/[name]-[hash]'; // Place chunks in the 'chunks' subfolder
     options.entryNames = '[dir]/[name]'; // Keep entry files in the same folder structure
   },

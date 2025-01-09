@@ -78,6 +78,13 @@
       "dependencies": [
         "cem",
         "css"
+      ],
+      "files": [
+        "src/**/*.{ts}",
+        "!src/**/*.{test,spec,stories}.ts",
+        "tsconfig.json",
+        "package.json",
+        "tsup.config.ts"
       ]
     },
     "cem": {
