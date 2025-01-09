@@ -5,6 +5,7 @@ import { ComposedStoryFn } from 'storybook/internal/types';
 import { WebComponentsRenderer } from '@storybook/web-components';
 import { resolveLoaders } from '../../../../.storybook/custom-story-loader';
 import { QtiTest } from '../qti-test';
+import '../../index';
 
 // Compose stories
 const storyFast: ComposedStoryFn<WebComponentsRenderer, Partial<QtiTest>> = composeStory(PlayWithDelayStory, meta);
