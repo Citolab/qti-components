@@ -349,11 +349,11 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       }
 
       // Remove global event listeners
-      document.removeEventListener('touchmove', this.handleTouchMove, { passive: false });
-      document.removeEventListener('mousemove', this.handleTouchMove, { passive: false });
-      document.removeEventListener('touchend', this.handleTouchEnd, { passive: false });
-      document.removeEventListener('mouseup', this.handleTouchEnd, { passive: false });
-      document.removeEventListener('touchcancel', this.handleTouchCancel, { passive: false });
+      document.removeEventListener('touchmove', this.handleTouchMove);
+      document.removeEventListener('mousemove', this.handleTouchMove);
+      document.removeEventListener('touchend', this.handleTouchEnd);
+      document.removeEventListener('mouseup', this.handleTouchEnd);
+      document.removeEventListener('touchcancel', this.handleTouchCancel);
     }
 
     private handleTouchMove(e) {
