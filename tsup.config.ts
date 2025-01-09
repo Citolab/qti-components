@@ -5,6 +5,12 @@ import { InlineCSSPlugin } from './scripts/inline-css-plugin';
 
 const peerDependencies = Object.keys(pkgJson.peerDependencies || {});
 
+/*
+ * DO NOT USE CODE SPLITTING
+ * https://esbuild.github.io/api/#splitting
+ * The order in which webcomponents will load will be unpredictable
+ * */
+
 const npmOptions: Options = {
   outDir: 'dist',
   format: 'esm',
@@ -18,7 +24,7 @@ const npmOptions: Options = {
   ],
   bundle: true,
   external: peerDependencies,
-  splitting: true,
+  splitting: false /* DO NOT USE CODE SPLITTING, see above */,
   esbuildPlugins: [InlineCSSPlugin],
   esbuildOptions: options => {
     options.chunkNames = 'chunks/[name]-[hash]'; // Place chunks in the 'chunks' subfolder
@@ -33,7 +39,6 @@ const cdnEs6Options: Options = {
   outDir: 'cdn',
   external: undefined,
   sourcemap: false,
-  splitting: false,
   bundle: true,
   minify: true,
   dts: false
@@ -46,7 +51,6 @@ const cndEs5Options: Options = {
   format: 'iife',
   target: 'es5',
   sourcemap: false,
-  splitting: false,
   bundle: true,
   minify: true,
   dts: false,

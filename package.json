@@ -80,8 +80,7 @@
         "css"
       ],
       "files": [
-        "src/**/*.{ts}",
-        "!src/**/*.{test,spec,stories}.ts",
+        "src/**/*.ts",
         "tsconfig.json",
         "package.json",
         "tsup.config.ts"
