@@ -265,15 +265,12 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       this.deactivateDroppables();
 
       draggable.removeAttribute('dragging');
-<<<<<<< HEAD
-=======
-      const wasDropped = await this.wasDropped(ev);
-      if (!wasDropped) {
-        if (this.configuration.dragCanBePlacedBack) {
-          this.restoreInitialDraggablePosition(draggable);
-        }
-      }
->>>>>>> 34fb9225ed3bdade6e88a802efe350c8d13d065f
+      // const wasDropped = await this.wasDropped(ev);
+      // if (!wasDropped) {
+      //   if (this.configuration.dragCanBePlacedBack) {
+      //     this.restoreInitialDraggablePosition(draggable);
+      //   }
+      // }
     };
 
     private updateMinDimensionsForDropZones() {
