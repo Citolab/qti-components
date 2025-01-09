@@ -22,36 +22,22 @@
     "node": ">=20.0.0"
   },
   "version": "7.0.4",
-  "main": "dist/index.js",
   "type": "module",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./transformers": {
-      "import": "./dist/transformers/index.js"
-    },
-    "./loader": {
-      "import": "./dist/loader/index.js"
-    },
-    "./item.css": "./dist/item.css",
-    "./cdn/index.js": "./cdn/index.js",
-    "./cdn/index.global.js": "./cdn/index.global.js",
-    "./react": "./dist//qti-components-jsx.d.ts"
-  },
-  "types": "./dist/qti-components/index.d.ts",
-  "typesVersions": {
-    "*": {
-      ".": [
-        "./dist/index.d.ts"
-      ],
-      "transformers": [
-        "./dist/transformers/index.d.ts"
-      ],
-      "loader": [
-        "./dist/loader/index.d.ts"
-      ]
-    }
+    "./qti-components": "./dist/qti-components/index.js",
+    "./qti-components/*": "./dist/qti-components/*",
+    "./qti-test": "./dist/qti-test/index.js",
+    "./qti-test/*": "./dist/qti-test/*",
+    "./qti-item": "./dist/qti-test/index.js",
+    "./qti-item/*": "./dist/qti-item/*",
+    "./loader": "./dist/qti-loader/index.js",
+    "./transformers": "./dist/qti-transformers/index.js",
+    "./react": "./dist/qti-components-jsx.d.ts",
+    "./item.css": "./dist/item.css"
   },
   "files": [
     "dist",
@@ -88,36 +74,20 @@
       ]
     },
     "build": {
-      "env": {
-        "NODE_ENV": "production"
-      },
       "command": "tsup",
       "dependencies": [
         "cem",
         "css"
-      ],
-      "files": [
-        "src/**/*.{ts}",
-        "tsconfig.json",
-        "!src/**/*.{test,spec,stories}.ts",
-        "package.json"
       ]
     },
     "cem": {
-      "command": "cem analyze",
-      "files": [
-        "src/**/*.ts",
-        "!src/**/*.{test,spec,stories}.ts"
-      ]
+      "command": "cem analyze"
     },
     "test-storybook": {
       "command": "test-storybook --excludeTags no-tests"
     },
     "css": {
-      "command": "postcss src/item.css -d dist -m",
-      "files": [
-        "src/**/*.css"
-      ]
+      "command": "postcss src/item.css -d dist -m"
     },
     "test": {
       "command": "vitest run",
@@ -146,23 +116,21 @@
       }
     },
     "attw": {
-      "command": "attw --profile esm-only --format table --pack --exclude-entrypoints  ./item.css ./cdn/index.js ./cdn/index.global.js ./cdn/index.min.js",
+      "command": "attw --profile esm-only --pack --exclude-entrypoints  ./item.css",
       "dependencies": [
         "build"
       ]
     }
   },
+  "dependencies": {},
   "peerDependencies": {
-    "@lit/context": "^1.1.2",
-    "lit": "^3.2.1",
-    "stampino": "^0.8.3"
-  },
-  "dependencies": {
-    "@lit/context": "^1.1.2",
+    "@lit/context": "^1.1.3",
     "lit": "^3.2.1",
     "stampino": "^0.8.3"
   },
   "devDependencies": {
+    "lit": "^3.2.1",
+    "stampino": "^0.8.3",
     "@arethetypeswrong/cli": "^0.17.1",
     "@chromatic-com/storybook": "^3.2.2",
     "@commitlint/cli": "^19.6.0",
@@ -189,6 +157,7 @@
     "@typescript-eslint/parser": "^8.17.0",
     "@vitest/browser": "^2.1.8",
     "autoprefixer": "^10.4.20",
+    "globby": "^14.0.2",
     "cem-plugin-expanded-types": "^1.3.3",
     "chromatic": "^11.20.0",
     "custom-element-eslint-rule-generator": "^1.0.1",

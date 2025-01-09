@@ -1,4 +1,4 @@
-import '../../../../../index';
+import '../../../../index';
 import { html, render } from 'lit';
 import { QtiLte } from './qti-lte';
 describe('qti-lte', () => {

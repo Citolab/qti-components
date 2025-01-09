@@ -1,4 +1,4 @@
-import '../../../../../index';
+import '../../../../index';
 import { html, render } from 'lit';
 import { QtiCorrect } from './qti-correct';
 describe('qti-correct', () => {

@@ -1,5 +1,3 @@
-import '../../../index';
-
 import { expect, fireEvent, waitFor } from '@storybook/test';
 import type { Meta, StoryObj } from '@storybook/web-components';
 

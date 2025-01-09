@@ -41,9 +41,9 @@ export default {
       outdir: outdir + 'dist',
       exclude: [],
       fileName: `qti-components-jsx.d.ts`
-    }),
-    customEsLintRuleGeneratorPlugin({
-      outdir: outdir + 'dist'
     })
+    // customEsLintRuleGeneratorPlugin({
+    //   outdir: outdir + 'dist'
+    // })
   ]
 };

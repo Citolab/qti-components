@@ -1,4 +1,4 @@
-import '../../../../../index';
+import '../../../../index';
 
 import { html, render } from 'lit';
 import { QtiLt } from './qti-lt';

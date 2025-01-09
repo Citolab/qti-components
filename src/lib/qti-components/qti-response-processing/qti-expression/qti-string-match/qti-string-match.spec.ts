@@ -1,4 +1,4 @@
-import '../../../../../index';
+import '../../../../index';
 import { html, render } from 'lit';
 import { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
 import { QtiStringMatch } from './qti-string-match';
