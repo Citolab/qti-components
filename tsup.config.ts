@@ -24,7 +24,7 @@ const npmOptions: Options = {
   ],
   bundle: true,
   external: peerDependencies,
-  splitting: false /* DO NOT USE CODE SPLITTING, see above */,
+  splitting: true /* DO NOT USE CODE SPLITTING, see above */,
   esbuildPlugins: [InlineCSSPlugin],
   sourcemap: true,
   dts: true
