@@ -18,9 +18,10 @@ setWcStorybookHelpersConfig({
 
 setCustomElementsManifest(customElements);
 
-import '../src/lib/qti-test';
 import '../src/lib/qti-components';
-import '../src/lib/qti-item';
+import '../src/lib/qti-test/core';
+import '../src/lib/qti-test/components';
+import '../src/lib/qti-item/core';
 import '../src/item.css';
 
 const preview: Preview = {

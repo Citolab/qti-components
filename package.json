@@ -24,18 +24,14 @@
   "version": "7.0.6-next.0",
   "type": "module",
   "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    },
     "./qti-components": "./dist/qti-components/index.js",
     "./qti-components/*": "./dist/qti-components/*",
-    "./qti-test": "./dist/qti-test/index.js",
-    "./qti-test/*": "./dist/qti-test/*",
-    "./qti-item": "./dist/qti-test/index.js",
-    "./qti-item/*": "./dist/qti-item/*",
-    "./loader": "./dist/qti-loader/index.js",
-    "./transformers": "./dist/qti-transformers/index.js",
+    "./qti-test/core": "./dist/qti-test/core/index.js",
+    "./qti-test/components/*": "./dist/qti-test/components/*",
+    "./qti-item/core": "./dist/qti-test/core/index.js",
+    "./qti-item/components/*": "./dist/qti-item/components/*",
+    "./qti-loader": "./dist/qti-loader/index.js",
+    "./qti-transformers": "./dist/qti-transformers/index.js",
     "./react": "./dist/qti-components-jsx.d.ts",
     "./item.css": "./dist/item.css"
   },
@@ -64,68 +60,6 @@
     "chromatic": "node chromatic-runner.cjs",
     "----hooks----": "-",
     "prepare": "husky"
-  },
-  "wireit": {
-    "storybook": {
-      "command": "storybook dev -p 6006",
-      "dependencies": [
-        "storybook:cem:watch"
-      ]
-    },
-    "build": {
-      "command": "tsup",
-      "dependencies": [
-        "cem",
-        "css"
-      ],
-      "files": [
-        "src/**/*.ts",
-        "tsconfig.json",
-        "package.json",
-        "tsup.config.ts"
-      ]
-    },
-    "cem": {
-      "command": "cem analyze"
-    },
-    "test-storybook": {
-      "command": "test-storybook --excludeTags no-tests"
-    },
-    "css": {
-      "command": "postcss src/item.css -d dist -m"
-    },
-    "test": {
-      "command": "vitest run",
-      "dependencies": [
-        "build"
-      ]
-    },
-    "storybook:docs": {
-      "command": "storybook dev --docs -c .storybook-docs",
-      "dependencies": [
-        "storybook:cem:watch"
-      ]
-    },
-    "storybook:docs:build": {
-      "command": "storybook build --docs -c .storybook-docs --output-dir docs",
-      "dependencies": [
-        "cem"
-      ]
-    },
-    "storybook:cem:watch": {
-      "command": "cem analyze --watch",
-      "service": {
-        "readyWhen": {
-          "lineMatches": "Created new manifest."
-        }
-      }
-    },
-    "attw": {
-      "command": "attw --profile esm-only --pack --exclude-entrypoints  ./item.css",
-      "dependencies": [
-        "build"
-      ]
-    }
   },
   "dependencies": {},
   "peerDependencies": {
@@ -215,5 +149,67 @@
   "bugs": {
     "url": "https://github.com/Citolab/qti-components/issues"
   },
-  "homepage": "https://github.com/Citolab/qti-components#readme"
+  "homepage": "https://github.com/Citolab/qti-components#readme",
+  "wireit": {
+    "storybook": {
+      "command": "storybook dev -p 6006",
+      "dependencies": [
+        "storybook:cem:watch"
+      ]
+    },
+    "build": {
+      "command": "tsup",
+      "dependencies": [
+        "cem",
+        "css"
+      ],
+      "files": [
+        "src/**/*.ts",
+        "tsconfig.json",
+        "package.json",
+        "tsup.config.ts"
+      ]
+    },
+    "cem": {
+      "command": "cem analyze"
+    },
+    "test-storybook": {
+      "command": "test-storybook --excludeTags no-tests"
+    },
+    "css": {
+      "command": "postcss src/item.css -d dist -m"
+    },
+    "test": {
+      "command": "vitest run",
+      "dependencies": [
+        "build"
+      ]
+    },
+    "storybook:docs": {
+      "command": "storybook dev --docs -c .storybook-docs",
+      "dependencies": [
+        "storybook:cem:watch"
+      ]
+    },
+    "storybook:docs:build": {
+      "command": "storybook build --docs -c .storybook-docs --output-dir docs",
+      "dependencies": [
+        "cem"
+      ]
+    },
+    "storybook:cem:watch": {
+      "command": "cem analyze --watch",
+      "service": {
+        "readyWhen": {
+          "lineMatches": "Created new manifest."
+        }
+      }
+    },
+    "attw": {
+      "command": "attw --profile esm-only --pack --exclude-entrypoints  ./item.css ./react",
+      "dependencies": [
+        "build"
+      ]
+    }
+  }
 }
