@@ -4,7 +4,7 @@ import { getWcStorybookHelpers } from 'wc-storybook-helpers';
 import { html } from 'lit';
 import { within } from 'shadow-dom-testing-library';
 import { TestContainer } from './test-container';
-import { qtiTransformTest } from '../../qti-transformers';
+import { qtiTransformTest } from '../../../qti-transformers';
 
 const { events, args, argTypes, template } = getWcStorybookHelpers('test-container');
 

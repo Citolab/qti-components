@@ -1,5 +1,5 @@
 import { LitElement } from 'lit';
-import { qtiTransformItem } from '../../qti-transformers';
+import { qtiTransformItem } from '../../../qti-transformers';
 
 // const setSessionData = <T>(key: string, value?: T): void => sessionStorage.setItem(key, JSON.stringify(value));
 // const getSessionData = <T>(key: string): T | null => (sessionStorage.getItem(key) ? JSON.parse(sessionStorage.getItem(key)!) : null);

@@ -1,6 +1,6 @@
 import { createContext } from '@lit/context';
 import { QtiAssessmentTest } from '../qti-assessment-test';
-import { ItemContext, VariableDeclaration } from '../../qti-components';
+import { ItemContext, VariableDeclaration } from '../../../qti-components';
 import { View } from '../mixins/test-view.mixin';
 
 export interface TestContext {

@@ -3,7 +3,7 @@ import { LitElement } from 'lit';
 import { state } from 'lit/decorators.js';
 import { TestContext, testContext, TestElement, testElement } from './context';
 import { QtiAssessmentTest } from './qti-assessment-test';
-import { ItemContext, QtiAssessmentItem, VariableValue } from '../qti-components';
+import { ItemContext, QtiAssessmentItem, VariableValue } from '../../qti-components';
 
 export abstract class TestBase extends LitElement {
   @state()

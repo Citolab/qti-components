@@ -5,7 +5,7 @@ import { html } from 'lit';
 import { findByShadowTitle, getByShadowText } from 'shadow-dom-testing-library';
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
 import { TestPrev as TestPrevClass } from './test-prev';
-import { TestContext } from '../context/test.context';
+import { TestContext } from '../core/context/test.context';
 
 const { events, args, argTypes } = getWcStorybookHelpers('test-prev');
 

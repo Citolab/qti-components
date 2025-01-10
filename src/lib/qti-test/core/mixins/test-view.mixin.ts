@@ -1,9 +1,9 @@
-import { QtiAssessmentItem } from '../../qti-components';
+import { QtiAssessmentItem } from '../../../qti-components';
 import { TestBase } from '../test-base';
 
 export type View = 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor' | '';
 
-declare module '../context' {
+declare module '../context/test.context' {
   interface TestContext {
     view?: View;
   }

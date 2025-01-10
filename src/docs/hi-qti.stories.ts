@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
-import { QtiTest } from '../lib/qti-test';
+import { QtiTest } from '../lib/qti-test/core';
 
 type Story = StoryObj<QtiTest>;
 
