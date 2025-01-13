@@ -9,7 +9,6 @@ const npmOptions: Options = {
   outDir: 'dist',
   format: 'esm',
   entry: [
-    './src/lib/index.ts',
     './src/lib/qti-components/index.ts',
     './src/lib/qti-test/core/index.ts',
     ...(await globby('./src/lib/qti-test/components/**/!(*.(style|test|stories)).ts')),
@@ -28,6 +27,8 @@ const npmOptions: Options = {
 
 const cdnEs6Options: Options = {
   ...npmOptions,
+  entry: ['./src/lib/qti-components/index.ts'],
+  splitting: false,
   outDir: 'cdn',
   external: undefined,
   noExternal: [/(.*)/],
@@ -38,8 +39,9 @@ const cdnEs6Options: Options = {
 
 const cndEs5Options: Options = {
   ...npmOptions,
-  outDir: 'cdn',
+  entry: ['./src/lib/qti-components/index.ts'],
   splitting: false,
+  outDir: 'cdn',
   external: undefined,
   noExternal: [/(.*)/],
   format: 'iife',

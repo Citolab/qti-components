@@ -23,9 +23,12 @@
   },
   "version": "7.0.6-next.1",
   "type": "module",
+  "main": "dist/qti-components/index.js",
   "exports": {
+    ".": {
+      "import": "./dist/index.js"
+    },
     "./qti-components": "./dist/qti-components/index.js",
-    "./qti-components/*": "./dist/qti-components/*",
     "./qti-test/core": "./dist/qti-test/core/index.js",
     "./qti-test/components/*": "./dist/qti-test/components/*",
     "./qti-item/core": "./dist/qti-test/core/index.js",
@@ -35,6 +38,14 @@
     "./react": "./dist/qti-components-jsx.d.ts",
     "./item.css": "./dist/item.css"
   },
+  "sideEffects": [
+    "./dist/qti-components/index.js",
+    "./dist/qti-test/core/index.js",
+    "./dist/qti-test/components/*",
+    "./dist/qti-test/core/index.js",
+    "./dist/qti-item/components/*",
+    "item.scss"
+  ],
   "files": [
     "dist",
     "cdn"
@@ -42,11 +53,12 @@
   "scripts": {
     "storybook": "wireit",
     "storybook:docs": "wireit",
-    "build:watch": "npm run build --watch",
+    "build:watch": "npm run yalc --watch",
     "npm:publish": "np",
     "---": "-",
     "build": "wireit",
     "test": "wireit",
+    "yalc": "wireit",
     "attw": "wireit",
     "lint": "eslint src/**/*.ts",
     "cem": "wireit",
@@ -155,6 +167,12 @@
       "command": "storybook dev -p 6006",
       "dependencies": [
         "storybook:cem:watch"
+      ]
+    },
+    "yalc": {
+      "command": "yalc push",
+      "dependencies": [
+        "build"
       ]
     },
     "build": {

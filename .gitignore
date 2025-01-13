@@ -38,3 +38,7 @@ cdn
 dev
 docs
 unpublish.sh
+
+# Yalc
+/.yalc
+yalc.lock
