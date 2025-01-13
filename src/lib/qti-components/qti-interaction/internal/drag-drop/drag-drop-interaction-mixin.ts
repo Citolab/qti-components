@@ -17,7 +17,8 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
   superClass: T,
   draggablesSelector: string,
   droppablesSelector: string,
-  dragContainersSelector: string
+  dragContainersSelector: string,
+  appendClone: 'body' | 'host' | 'interaction' | 'default' = 'default'
 ) => {
   abstract class DragDropInteractionElement extends FlippablesMixin(
     superClass,
@@ -558,7 +559,6 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       }
       const moveElement = (): void => {
         draggable.style.transform = 'translate(0, 0)';
-        console.log('droppable', droppable);
         droppable.appendChild(draggable);
         this.checkAllMaxAssociations();
       };
@@ -699,6 +699,33 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       element.dispatchEvent(event);
     }
 
+    private appendClone() {
+      const interaction = this.findParentInteractionElement(this.dragSource);
+      if (appendClone == 'default') {
+        if (interaction) {
+          interaction.appendChild(this.dragClone);
+        } else if (this.rootNode instanceof ShadowRoot) {
+          this.rootNode.host.appendChild(this.dragClone);
+        } else if (this.rootNode instanceof Document) {
+          document.body.appendChild(this.dragClone);
+        }
+      } else if (appendClone == 'interaction') {
+        if (interaction) {
+          interaction.appendChild(this.dragClone);
+        } else {
+          console.error('No interaction found to append the drag clone');
+        }
+      } else if (appendClone == 'host') {
+        if (this.rootNode instanceof ShadowRoot) {
+          this.rootNode.host.appendChild(this.dragClone);
+        } else {
+          console.error('No host found to append the drag clone');
+        }
+      } else if (appendClone == 'body') {
+        document.body.appendChild(this.dragClone);
+      }
+    }
+
     private handleTouchStart(e) {
       const { x, y } = this.getEventCoordinates(e);
       this.dropzoneOriginalParent = e.currentTarget.parentElement;
@@ -721,18 +748,15 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
         this.cloneOffset.y = y - rect.top;
 
         this.dragClone = draggableInDragContainer.cloneNode(true) as HTMLElement;
+        const computedStyles = window.getComputedStyle(this.dragSource);
+        for (let i = 0; i < computedStyles.length; i++) {
+          const key = computedStyles[i];
+          this.dragClone.style.setProperty(key, computedStyles.getPropertyValue(key));
+        }
         if (rect) {
           this.setDragCloneStyles(rect);
         }
-        const interaction = this.findParentInteractionElement(this.dragSource);
-
-        if (interaction) {
-          interaction.appendChild(this.dragClone);
-        } else if (this.rootNode instanceof ShadowRoot) {
-          this.rootNode.host.appendChild(this.dragClone);
-        } else if (this.rootNode instanceof Document) {
-          document.body.appendChild(this.dragClone);
-        }
+        this.appendClone();
 
         // check if max associations are reached
         const matchMax = this.getMatchMaxValue(this.dragSource);
@@ -750,15 +774,9 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
         this.enableDroppable(parent);
         this.dragClone = this.dragSource;
         this.dragSource = this.findDraggableInDraggableContainer(this.dragSource.getAttribute('identifier'));
-        const interaction = this.findParentInteractionElement(this.dragSource);
+
         const rect = this.dragClone.getBoundingClientRect();
-        if (interaction) {
-          interaction.appendChild(this.dragClone);
-        } else if (this.rootNode instanceof ShadowRoot) {
-          this.rootNode.host.appendChild(this.dragClone);
-        } else if (this.rootNode instanceof Document) {
-          document.body.appendChild(this.dragClone);
-        }
+        this.appendClone();
         if (rect) {
           this.setDragCloneStyles(rect);
         }
@@ -787,10 +805,18 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
         }
 
         // If the container is a slot element, get assigned elements
-        const assignedElements = Array.from((container as HTMLSlotElement).assignedElements() || []) as HTMLElement[];
+        let elements: HTMLElement[];
 
+        // Check if the container is a slot element
+        if (container instanceof HTMLSlotElement) {
+          // If it's a slot, get the assigned elements
+          elements = Array.from(container.assignedElements() || []) as HTMLElement[];
+        } else {
+          // Otherwise, query the container using draggablesSelector
+          elements = Array.from(container.querySelectorAll(draggablesSelector)) as HTMLElement[];
+        }
         // Search for a matching child element inside the container
-        const foundElement = assignedElements.find(e => e.getAttribute('identifier') === identifier);
+        const foundElement = elements.find(e => e.getAttribute('identifier') === identifier);
 
         // If a matching element is found, return it
         if (foundElement) {
