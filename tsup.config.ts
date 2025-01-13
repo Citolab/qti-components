@@ -1,4 +1,5 @@
-import { defineConfig, Options } from 'tsup';
+import type { Options } from 'tsup';
+import { defineConfig } from 'tsup';
 import { globby } from 'globby';
 import pkgJson from './package.json' assert { type: 'json' };
 import { InlineCSSPlugin } from './scripts/inline-css-plugin';
@@ -23,7 +24,10 @@ const npmOptions: Options = {
   splitting: true,
   esbuildPlugins: [InlineCSSPlugin],
   sourcemap: true,
-  dts: true
+  dts: true,
+  esbuildOptions(options) {
+    options.chunkNames = 'chunks/[name]-[hash]';
+  }
 };
 
 const cdnEs6Options: Options = {
