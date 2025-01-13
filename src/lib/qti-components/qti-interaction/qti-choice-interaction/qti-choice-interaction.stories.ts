@@ -3,9 +3,9 @@ import { getWcStorybookHelpers } from 'wc-storybook-helpers';
 import { expect, fireEvent, fn, waitFor, within } from '@storybook/test';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { getByShadowRole } from 'shadow-dom-testing-library';
-import { InputType } from '@storybook/core/types';
-import { QtiSimpleChoice } from '../qti-simple-choice';
-import { QtiChoiceInteraction } from './qti-choice-interaction';
+import type { InputType } from '@storybook/core/types';
+import type { QtiSimpleChoice } from '../qti-simple-choice';
+import type { QtiChoiceInteraction } from './qti-choice-interaction';
 
 const { events, args, argTypes, template } = getWcStorybookHelpers('qti-choice-interaction');
 

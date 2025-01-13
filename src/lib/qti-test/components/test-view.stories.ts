@@ -1,6 +1,6 @@
 import { expect, userEvent } from '@storybook/test';
 import type { Meta, StoryObj } from '@storybook/web-components';
-import { TestView as TestViewClass } from './test-view';
+import type { TestView as TestViewClass } from './test-view';
 import { html } from 'lit';
 import { within } from 'shadow-dom-testing-library';
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';

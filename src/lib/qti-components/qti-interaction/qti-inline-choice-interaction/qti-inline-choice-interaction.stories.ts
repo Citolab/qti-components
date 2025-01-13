@@ -1,6 +1,6 @@
 import { html } from 'lit';
-import { QtiInlineChoiceInteraction } from './qti-inline-choice-interaction';
-import { StoryObj, Meta } from '@storybook/web-components';
+import type { QtiInlineChoiceInteraction } from './qti-inline-choice-interaction';
+import type { StoryObj, Meta } from '@storybook/web-components';
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
 
 const { events, args, argTypes, template } = getWcStorybookHelpers('qti-inline-choice-interaction');

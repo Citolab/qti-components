@@ -1,7 +1,7 @@
 import '../../../../index';
 import { html, render } from 'lit';
-import { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
-import { QtiStringMatch } from './qti-string-match';
+import type { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
+import type { QtiStringMatch } from './qti-string-match';
 describe('qti-string-match', () => {
   it('response and correct response match', () => {
     const template = () => html`

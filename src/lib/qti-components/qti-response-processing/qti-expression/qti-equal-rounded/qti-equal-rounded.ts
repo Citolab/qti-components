@@ -1,5 +1,5 @@
 import { property } from 'lit/decorators.js';
-import { ResponseVariable } from '../../../internal/variables';
+import type { ResponseVariable } from '../../../internal/variables';
 import { QtiExpression } from '../qti-expression';
 
 export class QtiEqualRounded extends QtiExpression<boolean> {

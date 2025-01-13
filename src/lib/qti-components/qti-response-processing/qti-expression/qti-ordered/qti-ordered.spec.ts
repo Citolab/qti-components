@@ -1,7 +1,7 @@
 import { html, render } from 'lit';
 import '../qti-basevalue/qti-basevalue';
 import './qti-ordered';
-import { QtiOrdered } from './qti-ordered';
+import type { QtiOrdered } from './qti-ordered';
 describe('qti-ordered', () => {
   it('should return an array with the calculated results of its children, single child', () => {
     const template = () => html`

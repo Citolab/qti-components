@@ -1,8 +1,9 @@
-import { CSSResultGroup, html } from 'lit';
+import type { CSSResultGroup} from 'lit';
+import { html } from 'lit';
 
 import { customElement, state } from 'lit/decorators.js';
 import { DragDropInteractionMixin } from '../internal/drag-drop';
-import { QtiSimpleAssociableChoice } from '../qti-simple-associable-choice';
+import type { QtiSimpleAssociableChoice } from '../qti-simple-associable-choice';
 import styles from './qti-associate-interaction.styles';
 import { Interaction } from '../internal/interaction/interaction';
 @customElement('qti-associate-interaction')

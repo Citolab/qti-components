@@ -1,4 +1,5 @@
-import { CSSResultGroup, html } from 'lit';
+import type { CSSResultGroup} from 'lit';
+import { html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-interaction-mixin';
 import { Interaction } from '../internal/interaction/interaction';

@@ -4,7 +4,9 @@ import { state } from 'lit/decorators.js';
 import type { TestContext, TestElement } from './context';
 import { testContext, testElement } from './context';
 import type { QtiAssessmentTest } from './qti-assessment-test';
-import type { ItemContext, QtiAssessmentItem, VariableValue } from '../../qti-components/';
+import type { QtiAssessmentItem } from '../../qti-components/';
+import type { ItemContext } from '../../qti-components/qti-assessment-item/qti-assessment-item.context';
+import type { VariableValue } from '../../qti-components/internal/variables';
 
 export abstract class TestBase extends LitElement {
   @state()

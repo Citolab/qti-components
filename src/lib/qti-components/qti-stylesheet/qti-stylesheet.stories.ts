@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
-import { QtiStylesheet } from '../qti-stylesheet/qti-stylesheet';
+import type { QtiStylesheet } from '../qti-stylesheet/qti-stylesheet';
 
 import inlineCSS from '../../../../public/assets/qti-stylesheet/linked.css?inline';
 

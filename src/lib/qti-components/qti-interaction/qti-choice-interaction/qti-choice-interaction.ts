@@ -1,7 +1,8 @@
 import type { CSSResultGroup } from 'lit';
 import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { ChoicesInterface, ChoicesMixin } from '../internal/choices/choices.mixin';
+import type { ChoicesInterface} from '../internal/choices/choices.mixin';
+import { ChoicesMixin } from '../internal/choices/choices.mixin';
 import { ShuffleMixin } from '../internal/shuffle/shuffle-mixin';
 import { VocabularyMixin } from '../internal/vocabulary/vocabulary-mixin';
 import styles from './qti-choice-interaction.styles';

@@ -1,4 +1,5 @@
-import { CSSResultGroup, html } from 'lit';
+import type { CSSResultGroup} from 'lit';
+import { html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { createRef } from 'lit/directives/ref.js';

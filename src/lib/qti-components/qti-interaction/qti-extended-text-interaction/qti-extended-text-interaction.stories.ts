@@ -6,7 +6,7 @@ import { expect, fireEvent, within } from '@storybook/test';
 
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
 import type { Meta, StoryObj } from '@storybook/web-components';
-import { QtiExtendedTextInteraction } from './qti-extended-text-interaction';
+import type { QtiExtendedTextInteraction } from './qti-extended-text-interaction';
 
 const { events, args, argTypes, template } = getWcStorybookHelpers('qti-extended-text-interaction');
 

@@ -1,6 +1,6 @@
 import { html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import { VariableDeclaration } from '../internal/variables';
+import type { VariableDeclaration } from '../internal/variables';
 
 @customElement('qti-variabledeclaration')
 export class QtiVariableDeclaration extends LitElement {

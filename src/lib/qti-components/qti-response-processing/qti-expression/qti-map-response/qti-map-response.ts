@@ -1,7 +1,7 @@
 import { property } from 'lit/decorators.js';
 import { ScoringHelper } from '../../utilities/scoring-helper';
 import { QtiExpression } from '../qti-expression';
-import { ResponseVariable } from '../../../internal/variables';
+import type { ResponseVariable } from '../../../internal/variables';
 
 export class QtiMapResponse extends QtiExpression<number> {
   @property({ type: String }) identifier: string;

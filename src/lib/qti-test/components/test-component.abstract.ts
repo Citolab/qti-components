@@ -2,7 +2,8 @@ import { consume } from '@lit/context';
 import { LitElement } from 'lit';
 import { state } from 'lit/decorators.js';
 import { propInternalState } from '../../decorators';
-import { testContext, testElement, TestElement, TestContext } from '../core/context';
+import type { TestElement, TestContext } from '../core/context';
+import { testContext, testElement } from '../core/context';
 import { watch } from '../../decorators/watch';
 
 export abstract class TestComponent extends LitElement {

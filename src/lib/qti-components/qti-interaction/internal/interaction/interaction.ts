@@ -1,6 +1,6 @@
 import { property, state } from 'lit/decorators.js';
 import { LitElement } from 'lit';
-import { IInteraction } from './interaction.interface';
+import type { IInteraction } from './interaction.interface';
 
 export abstract class Interaction extends LitElement implements IInteraction {
   static formAssociated = true;

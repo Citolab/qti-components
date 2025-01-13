@@ -1,6 +1,6 @@
 import { html } from 'lit';
-import { QtiPositionObjectInteraction } from './qti-position-object-interaction';
-import { StoryObj, Meta } from '@storybook/web-components';
+import type { QtiPositionObjectInteraction } from './qti-position-object-interaction';
+import type { StoryObj, Meta } from '@storybook/web-components';
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
 
 const { events, args, argTypes, template } = getWcStorybookHelpers('qti-position-object-interaction');

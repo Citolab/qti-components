@@ -1,5 +1,5 @@
 import { QtiConditionExpression } from '../qti-condition-expression';
-import { QtiExpression } from '../qti-expression';
+import type { QtiExpression } from '../qti-expression';
 
 export class QtiOr extends QtiConditionExpression {
   public override getResult() {

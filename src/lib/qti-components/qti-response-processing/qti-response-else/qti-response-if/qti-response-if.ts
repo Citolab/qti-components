@@ -1,5 +1,5 @@
-import { QtiExpression } from '../../qti-expression/qti-expression';
-import { QtiRule } from '../../qti-rule/qti-rule';
+import type { QtiExpression } from '../../qti-expression/qti-expression';
+import type { QtiRule } from '../../qti-rule/qti-rule';
 import { QtiResponseElse } from '../qti-response-else';
 
 export class QtiResponseIf extends QtiResponseElse {

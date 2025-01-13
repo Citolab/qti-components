@@ -1,5 +1,5 @@
-import { QtiAssessmentItemRef } from '../qti-assessment-test';
-import { TestBase } from '../test-base';
+import type { QtiAssessmentItemRef } from '../qti-assessment-test';
+import type { TestBase } from '../test-base';
 
 declare module '../context/test.context' {
   interface TestContext {

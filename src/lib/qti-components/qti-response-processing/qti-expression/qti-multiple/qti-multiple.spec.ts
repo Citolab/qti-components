@@ -1,7 +1,7 @@
 import { html, render } from 'lit';
 import '../qti-basevalue/qti-basevalue';
 import './qti-multiple';
-import { QtiMultiple } from './qti-multiple';
+import type { QtiMultiple } from './qti-multiple';
 describe('qti-multiple', () => {
   it('should return an array with the calculated results of its children, single child', () => {
     const template = () => html`

@@ -1,6 +1,6 @@
 import '../../../index';
 import { html, render } from 'lit';
-import { QtiAssessmentItem } from '../../qti-assessment-item/qti-assessment-item';
+import type { QtiAssessmentItem } from '../../qti-assessment-item/qti-assessment-item';
 
 const match_correct_item = html` <qti-assessment-item identifier="choice" title="Unattended Luggage">
   <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="identifier">

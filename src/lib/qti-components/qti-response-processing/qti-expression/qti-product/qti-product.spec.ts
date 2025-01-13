@@ -1,6 +1,6 @@
 import '../../../../index';
 import { html, render } from 'lit';
-import { QtiProduct } from './qti-product';
+import type { QtiProduct } from './qti-product';
 
 describe('qti-product', () => {
   it('multiplies, the product of one or more variables', () => {

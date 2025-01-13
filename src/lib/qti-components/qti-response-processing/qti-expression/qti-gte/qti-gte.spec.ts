@@ -1,6 +1,6 @@
 import '../../../../index';
 import { html, render } from 'lit';
-import { QtiGte } from './qti-gte';
+import type { QtiGte } from './qti-gte';
 describe('qti-gte', () => {
   it('equal = true', () => {
     const template = () => html`

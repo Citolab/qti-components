@@ -1,6 +1,6 @@
 import { html } from 'lit';
-import { QtiGraphicGapMatchInteraction } from './qti-graphic-gap-match-interaction';
-import { StoryObj, Meta } from '@storybook/web-components';
+import type { QtiGraphicGapMatchInteraction } from './qti-graphic-gap-match-interaction';
+import type { StoryObj, Meta } from '@storybook/web-components';
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
 
 const { events, args, argTypes, template } = getWcStorybookHelpers('qti-graphic-gap-match-interaction');

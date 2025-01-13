@@ -1,7 +1,7 @@
 import '../../../../index';
 import { html, render } from 'lit';
-import { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
-import { QtiMapResponse } from './qti-map-response';
+import type { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
+import type { QtiMapResponse } from './qti-map-response';
 describe('qti-map-response', () => {
   it('should the value of the mapping by response value', () => {
     const template = () => html`

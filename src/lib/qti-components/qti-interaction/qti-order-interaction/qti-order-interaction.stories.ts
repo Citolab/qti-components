@@ -1,8 +1,8 @@
-import { StoryObj, Meta } from '@storybook/web-components';
+import type { StoryObj, Meta } from '@storybook/web-components';
 import { html } from 'lit';
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
-import { QtiOrderInteraction } from './qti-order-interaction';
-import { InputType } from '@storybook/core/types';
+import type { QtiOrderInteraction } from './qti-order-interaction';
+import type { InputType } from '@storybook/core/types';
 
 const { events, args, argTypes, template } = getWcStorybookHelpers('qti-order-interaction');
 

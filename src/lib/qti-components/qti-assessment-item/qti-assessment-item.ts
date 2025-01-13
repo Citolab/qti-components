@@ -5,12 +5,13 @@ import { watch } from '../../decorators/watch';
 import type { InteractionChangedDetails, OutcomeChangedDetails } from '../internal/event-types';
 import type { ResponseInteraction } from '../internal/expression-result';
 import type { VariableDeclaration, VariableValue } from '../internal/variables';
-import { OutcomeVariable, ResponseVariable } from '../internal/variables';
+import type { OutcomeVariable, ResponseVariable } from '../internal/variables';
 import type { QtiFeedback } from '../qti-feedback/qti-feedback';
 import type { Interaction } from '../qti-interaction/internal/interaction/interaction';
 import type { QtiResponseProcessing } from '../qti-response-processing';
-import { ItemContext, itemContext, itemContextVariables } from './qti-assessment-item.context';
-import QtiRegisterVariable from '../internal/events/qti-register-variable';
+import type { ItemContext} from './qti-assessment-item.context';
+import { itemContext, itemContextVariables } from './qti-assessment-item.context';
+import type QtiRegisterVariable from '../internal/events/qti-register-variable';
 
 /**
  * @summary The qti-assessment-item element contains all the other QTI 3 item structures.

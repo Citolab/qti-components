@@ -1,7 +1,7 @@
 import '../../../../index';
 
 import { html, render } from 'lit';
-import { QtiLt } from './qti-lt';
+import type { QtiLt } from './qti-lt';
 describe('qti-gt', () => {
   it('equal = false', () => {
     const template = () => html`

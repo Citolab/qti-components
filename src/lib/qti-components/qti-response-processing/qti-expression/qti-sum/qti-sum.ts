@@ -1,4 +1,5 @@
-import { QtiExpression, QtiExpressionBase } from '../qti-expression';
+import type { QtiExpressionBase } from '../qti-expression';
+import { QtiExpression } from '../qti-expression';
 
 export class QtiSum extends QtiExpression<number> {
   private _expression: QtiSumExpression;

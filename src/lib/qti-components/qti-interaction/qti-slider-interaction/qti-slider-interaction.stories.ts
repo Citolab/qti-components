@@ -1,6 +1,6 @@
 import { html } from 'lit';
-import { QtiSliderInteraction } from './qti-slider-interaction';
-import { StoryObj, Meta } from '@storybook/web-components';
+import type { QtiSliderInteraction } from './qti-slider-interaction';
+import type { StoryObj, Meta } from '@storybook/web-components';
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
 
 const { events, args, argTypes, template } = getWcStorybookHelpers('qti-slider-interaction');

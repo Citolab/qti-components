@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
-import { QtiTest } from './qti-test';
+import type { QtiTest } from './qti-test';
 const { events, args, argTypes, template } = getWcStorybookHelpers('qti-test');
 
 type Story = StoryObj<QtiTest & typeof args>;

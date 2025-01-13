@@ -1,8 +1,8 @@
 import { property } from 'lit/decorators.js';
 import { convertNumberToUniveralFormat } from '../../../internal/utils';
-import { QtiExpression } from '../../qti-expression/qti-expression';
+import type { QtiExpression } from '../../qti-expression/qti-expression';
 import { QtiRule } from '../qti-rule';
-import { OutcomeVariable } from '../../../internal/variables';
+import type { OutcomeVariable } from '../../../internal/variables';
 
 /**
  * The lookupOutcomeValue rule sets the value of an outcome variable to the value obtained

@@ -1,4 +1,4 @@
-import { ResponseVariable } from '../../../internal/variables';
+import type { ResponseVariable } from '../../../internal/variables';
 import { QtiExpression } from '../qti-expression';
 
 export class QtiGt extends QtiExpression<boolean> {

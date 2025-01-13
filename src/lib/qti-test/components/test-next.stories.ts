@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/web-components';
 
 import { html } from 'lit';
 import { findByShadowTitle } from 'shadow-dom-testing-library';
-import { QtiTest } from '../core/qti-test';
+import type { QtiTest } from '../core/qti-test';
 
 type Story = StoryObj;
 

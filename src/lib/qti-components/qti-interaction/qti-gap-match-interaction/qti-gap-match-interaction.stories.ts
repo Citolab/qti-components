@@ -4,9 +4,9 @@ import type { ArgTypes, Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import { getItemByUri } from '../../../../lib/qti-loader';
 import drag from '../../../../testing/drag';
-import { QtiAssessmentItem } from '../../qti-assessment-item/qti-assessment-item';
-import { QtiGapText } from '../qti-gap-text';
-import { QtiGapMatchInteraction } from './qti-gap-match-interaction';
+import type { QtiAssessmentItem } from '../../qti-assessment-item/qti-assessment-item';
+import type { QtiGapText } from '../qti-gap-text';
+import type { QtiGapMatchInteraction } from './qti-gap-match-interaction';
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
 
 const { events, args, argTypes, template } = getWcStorybookHelpers('qti-gap-match-interaction');

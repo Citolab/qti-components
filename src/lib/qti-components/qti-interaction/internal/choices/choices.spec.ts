@@ -3,7 +3,8 @@ import '../../qti-simple-choice';
 import { getByTestId, userEvent } from '@storybook/test';
 import { html, render } from 'lit';
 import { Interaction } from '../interaction/interaction';
-import { Choice, ChoicesMixin } from './choices.mixin';
+import type { Choice} from './choices.mixin';
+import { ChoicesMixin } from './choices.mixin';
 
 class TestElement extends ChoicesMixin(Interaction, 'qti-simple-choice') {
   render() {

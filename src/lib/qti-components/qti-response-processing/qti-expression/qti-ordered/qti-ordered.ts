@@ -1,4 +1,4 @@
-import { ResponseVariable } from '../../../internal/variables';
+import type { ResponseVariable } from '../../../internal/variables';
 import { QtiExpression } from '../qti-expression';
 export class QtiOrdered extends QtiExpression<ResponseVariable[]> {
   public override getResult(): ResponseVariable[] {

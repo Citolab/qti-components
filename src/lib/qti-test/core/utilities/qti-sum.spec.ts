@@ -1,14 +1,19 @@
 import { html, render } from 'lit';
-// import '../qti-basevalue/qti-basevalue';
-import '../../../qti-assessment-item/qti-assessment-item';
-import '../../../qti-variable-declaration/qti-outcome-declaration/qti-outcome-declaration';
-import '../../qti-response-processing/qti-response-processing';
-import './../../qti-rule/qti-set-outcome-value/qti-set-outcome-value';
-import './../qti-basevalue/qti-basevalue';
-import './qti-sum';
-import type { QtiSum } from './qti-sum';
-import type { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
-import type { ItemContext } from '../../../qti-assessment-item/qti-assessment-item.context';
+import type { QtiAssessmentItem, ItemContext, QtiSum } from '../../../qti-components';
+import { QtiConditionExpression } from '../../../qti-components';
+import '../../../qti-components';
+
+class MockChild extends QtiConditionExpression {
+  response = false;
+  override connectedCallback() {
+    super.connectedCallback();
+    this.response = this.getAttribute('response') == 'true';
+  }
+  public override calculate() {
+    return this.response;
+  }
+}
+window.customElements.define('mock-child', MockChild);
 
 describe('QtiComponent qti-sum', () => {
   it('all true', () => {

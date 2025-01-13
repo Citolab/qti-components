@@ -1,6 +1,6 @@
 import { html } from 'lit';
-import { QtiMediaInteraction } from './qti-media-interaction';
-import { StoryObj, Meta } from '@storybook/web-components';
+import type { QtiMediaInteraction } from './qti-media-interaction';
+import type { StoryObj, Meta } from '@storybook/web-components';
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
 
 const { events, args, argTypes, template } = getWcStorybookHelpers('qti-media-interaction');
