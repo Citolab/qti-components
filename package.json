@@ -37,6 +37,7 @@
     "./item.css": "./dist/item.css"
   },
   "sideEffects": [
+    "./dist/index.js",
     "./dist/qti-components/index.js",
     "./dist/qti-test/core/index.js",
     "./dist/qti-test/components/*",
