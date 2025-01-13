@@ -5,6 +5,12 @@ import { setWcStorybookHelpersConfig } from 'wc-storybook-helpers';
 import { withActions } from '@storybook/addon-actions/decorator';
 import { customViewports } from './custom-viewport-sizes';
 
+import '../src/lib/qti-components';
+import '../src/lib/qti-test/core';
+import '../src/lib/qti-test/components';
+import '../src/lib/qti-item/core';
+import '../src/item.css';
+
 setWcStorybookHelpersConfig({
   /** hides the `arg ref` label on each control */
   hideArgRef: true,
@@ -17,12 +23,6 @@ setWcStorybookHelpersConfig({
 });
 
 setCustomElementsManifest(customElements);
-
-import '../src/lib/qti-components';
-import '../src/lib/qti-test/core';
-import '../src/lib/qti-test/components';
-import '../src/lib/qti-item/core';
-import '../src/item.css';
 
 const preview: Preview = {
   decorators: [withActions],

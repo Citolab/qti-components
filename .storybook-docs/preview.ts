@@ -1,6 +1,8 @@
 import preview from '../.storybook/preview';
 import { create } from '@storybook/theming/create';
 
+import '../.storybook/preview'; // make sure imports of webcomponents are loaded
+
 const docTheme = create({
   base: 'light',
   fontBase: '"pt-sans-pro", sans-serif'
