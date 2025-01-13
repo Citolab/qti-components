@@ -9,9 +9,11 @@ import type { OutcomeVariable, ResponseVariable } from '../internal/variables';
 import type { QtiFeedback } from '../qti-feedback/qti-feedback';
 import type { Interaction } from '../qti-interaction/internal/interaction/interaction';
 import type { QtiResponseProcessing } from '../qti-response-processing';
-import type { ItemContext} from './qti-assessment-item.context';
-import { itemContext, itemContextVariables } from './qti-assessment-item.context';
+
+import { itemContext } from './qti-assessment-item.context';
 import type QtiRegisterVariable from '../internal/events/qti-register-variable';
+import type { ItemContext } from '../internal/item.context';
+import { itemContextVariables } from '../internal/item.context';
 
 /**
  * @summary The qti-assessment-item element contains all the other QTI 3 item structures.

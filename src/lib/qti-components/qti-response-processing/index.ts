@@ -10,4 +10,6 @@ export * from './qti-response-else/qti-response-else';
 export * from './qti-response-else/qti-response-if/qti-response-else-if/qti-response-else-if';
 export * from './qti-response-else/qti-response-if/qti-response-if';
 
+export * from './qti-expression';
+
 export * from './qti-rule/qti-rule';

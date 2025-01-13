@@ -3,10 +3,10 @@ import { css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import type { BaseType, Cardinality } from '../../internal/expression-result';
 import type { ResponseVariable } from '../../internal/variables';
-import type { ItemContext} from '../../qti-assessment-item/qti-assessment-item.context';
 import { itemContext } from '../../qti-assessment-item/qti-assessment-item.context';
 import type { QtiMapping } from '../../qti-response-processing/qti-expression/qti-mapping/qti-mapping';
 import { QtiVariableDeclaration } from '../qti-variable-declaration';
+import type { ItemContext } from '../../internal/item.context';
 
 @customElement('qti-response-declaration')
 export class QtiResponseDeclaration extends QtiVariableDeclaration {

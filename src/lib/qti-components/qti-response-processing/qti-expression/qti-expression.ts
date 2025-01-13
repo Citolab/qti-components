@@ -2,9 +2,9 @@ import { consume } from '@lit/context';
 import { css, html, LitElement } from 'lit';
 import { state } from 'lit/decorators.js';
 import type { ResponseVariable, VariableDeclaration } from '../../internal/variables';
-import type { ItemContext } from '../../qti-assessment-item/qti-assessment-item.context';
 import { itemContext } from '../../qti-assessment-item/qti-assessment-item.context';
 import type { QtiMultiple } from './qti-multiple/qti-multiple';
+import type { ItemContext } from '../../internal/item.context';
 
 export interface QtiExpressionBase<T> {
   // get assessmentItem(): QtiAssessmentItem;
