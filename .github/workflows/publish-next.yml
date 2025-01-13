@@ -1,4 +1,4 @@
-name: Publish @next to NPM on dev branch merge
+name: Publish @next
 
 on:
   push:

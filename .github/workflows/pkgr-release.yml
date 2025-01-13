@@ -7,6 +7,8 @@ on:
     paths: 
       - 'src/**/*.ts'
       - 'src/**/*.css'
+      - 'package.json'
+      - 'tsup.config.ts'
       - '!src/**/*.test.ts'
       - '!src/**/*.spec.ts'
       - '!src/**/*.stories.ts'
@@ -16,6 +18,8 @@ on:
     paths: 
       - 'src/**/*.ts'
       - 'src/**/*.css'
+      - 'package.json'
+      - 'tsup.config.ts'
       - '!src/**/*.test.ts'
       - '!src/**/*.spec.ts'
       - '!src/**/*.stories.ts'
