@@ -1,7 +1,7 @@
 import '../../../../index';
 import { html, render } from 'lit';
-import { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
-import { QtiEqual } from './qti-equal';
+import type { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
+import type { QtiEqual } from './qti-equal';
 
 describe('qti-equal', () => {
   it('response and correct response match', () => {

@@ -1,7 +1,7 @@
 import { html } from 'lit';
 
-import { QtiSelectPointInteraction } from '../../index';
-import { StoryObj, Meta } from '@storybook/web-components';
+import type { QtiSelectPointInteraction } from '../../components';
+import type { StoryObj, Meta } from '@storybook/web-components';
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
 
 const { events, args, argTypes, template } = getWcStorybookHelpers('qti-select-point-interaction');

@@ -1,5 +1,5 @@
 import { createContext } from '@lit/context';
-import { VariableDeclaration } from '../internal/variables';
+import type { VariableDeclaration } from '../internal/variables';
 
 export interface ItemContext {
   href?: string;

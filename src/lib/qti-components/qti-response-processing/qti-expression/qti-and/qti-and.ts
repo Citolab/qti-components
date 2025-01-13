@@ -1,5 +1,5 @@
 import { QtiConditionExpression } from '../qti-condition-expression';
-import { QtiExpression } from '../qti-expression';
+import type { QtiExpression } from '../qti-expression';
 
 type Constructor<T> = new (...args: any[]) => T;
 export class QtiAnd extends qtiAndMixin(QtiConditionExpression as unknown as Constructor<QtiConditionExpression>) {

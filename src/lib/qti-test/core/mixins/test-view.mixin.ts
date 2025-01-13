@@ -1,5 +1,5 @@
-import { QtiAssessmentItem } from '../../../qti-components';
-import { TestBase } from '../test-base';
+import type { QtiAssessmentItem } from '../../../qti-components/components';
+import type { TestBase } from '../test-base';
 
 export type View = 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor' | '';
 

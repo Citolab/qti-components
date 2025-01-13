@@ -1,12 +1,12 @@
 import { composeStory } from '@storybook/preview-api';
 import { render } from 'lit';
 import meta, { PlayFast as PlayFastStory, PlayWithDelay as PlayWithDelayStory } from './test-next.stories';
-import { ComposedStoryFn } from 'storybook/internal/types';
-import { WebComponentsRenderer } from '@storybook/web-components';
+import type { ComposedStoryFn } from 'storybook/internal/types';
+import type { WebComponentsRenderer } from '@storybook/web-components';
 import { resolveLoaders } from '../../../../.storybook/custom-story-loader';
-import { QtiTest } from '../core/qti-test';
+import type { QtiTest } from '../core/qti-test';
 
-import '../../../lib/qti-components';
+import '../../qti-components/components';
 import '../../../lib/qti-test/core';
 import '../../../lib/qti-test/components';
 import '../../../lib/qti-item/core';

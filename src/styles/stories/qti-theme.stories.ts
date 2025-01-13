@@ -1,7 +1,7 @@
-import { Meta } from '@storybook/web-components';
+import type { Meta } from '@storybook/web-components';
 import { html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
-import { QtiAssessmentItem } from '../../lib/qti-components';
+import type { QtiAssessmentItem } from '../../lib/qti-components/components';
 
 const meta: Meta<QtiAssessmentItem> = {
   title: 'Theme/Controls'

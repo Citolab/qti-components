@@ -1,9 +1,10 @@
 import { consume } from '@lit/context';
 import { css, html, LitElement } from 'lit';
 import { state } from 'lit/decorators.js';
-import { ResponseVariable, VariableDeclaration } from '../../internal/variables';
-import { itemContext, ItemContext } from '../../qti-assessment-item/qti-assessment-item.context';
-import { QtiMultiple } from './qti-multiple/qti-multiple';
+import type { ResponseVariable, VariableDeclaration } from '../../internal/variables';
+import type { ItemContext } from '../../qti-assessment-item/qti-assessment-item.context';
+import { itemContext } from '../../qti-assessment-item/qti-assessment-item.context';
+import type { QtiMultiple } from './qti-multiple/qti-multiple';
 
 export interface QtiExpressionBase<T> {
   // get assessmentItem(): QtiAssessmentItem;
@@ -76,7 +77,8 @@ export abstract class QtiExpression<T> extends LitElement implements QtiExpressi
           }
           case 'qti-correct': {
             const identifier = e.getAttribute('identifier') || '';
-            const responseVariable: ResponseVariable = this.context.variables.find(v => v.identifier === identifier) || null;
+            const responseVariable: ResponseVariable =
+              this.context.variables.find(v => v.identifier === identifier) || null;
             return {
               baseType: responseVariable.baseType,
               value: responseVariable.correctResponse,

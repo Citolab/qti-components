@@ -1,8 +1,9 @@
 import { consume } from '@lit/context';
 import { html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
-import { testContext, TestContext } from '../context';
-import { QtiAssessmentItem } from '../../../qti-components';
+import type { TestContext } from '../context';
+import { testContext } from '../context';
+import type { QtiAssessmentItem } from '../../../qti-components/components';
 
 // Converter function to interpret "true" and "false" as booleans
 const stringToBooleanConverter = {

@@ -1,4 +1,4 @@
-export * from './qti-components';
+export * from './qti-components/components';
 export * from './qti-test/core';
 export * from './qti-test/components';
 export * from './qti-item/core';
