@@ -1,4 +1,4 @@
-name: Tag (ci, docs)
+name: tag-docs
 
 on:
   push:

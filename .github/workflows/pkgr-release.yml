@@ -1,4 +1,4 @@
-name: Dev (ci, build, test, pkg.pr)
+name: pkgr-release
 
 on:
   push:

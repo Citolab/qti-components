@@ -1,9 +1,12 @@
-name: Publish @next
+name: publish-next
 
 on:
   push:
     branches:
       - next  # Trigger on push to the next branch, adjust as needed
+
+# Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
 
 jobs:
   publish-npm:
