@@ -5,8 +5,12 @@ import { ComposedStoryFn } from 'storybook/internal/types';
 import { WebComponentsRenderer } from '@storybook/web-components';
 import { resolveLoaders } from '../../../../.storybook/custom-story-loader';
 import { QtiTest } from '../core/qti-test';
-import '../core';
-import '../components';
+
+import '../../../lib/qti-components';
+import '../../../lib/qti-test/core';
+import '../../../lib/qti-test/components';
+import '../../../lib/qti-item/core';
+import '../../../item.css';
 
 // Compose stories
 const storyFast: ComposedStoryFn<WebComponentsRenderer, Partial<QtiTest>> = composeStory(PlayWithDelayStory, meta);

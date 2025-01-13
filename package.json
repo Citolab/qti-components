@@ -25,9 +25,6 @@
   "type": "module",
   "main": "dist/qti-components/index.js",
   "exports": {
-    ".": {
-      "import": "./dist/index.js"
-    },
     "./qti-components": "./dist/qti-components/index.js",
     "./qti-test/core": "./dist/qti-test/core/index.js",
     "./qti-test/components/*": "./dist/qti-test/components/*",
