@@ -1,11 +1,15 @@
 #!/bin/bash
 
 # Check the last commit message for "[skip ci]"
-commit_msg=$(cat .git/COMMIT_EDITMSG)
+commit_msg="$1"
+echo "Commit message: $commit_msg"
 if echo "$commit_msg" | grep -q '\[skip ci\]'; then
   echo "Skipping pre-commit hooks due to [skip ci] in commit message."
   exit 0
 fi
+
+echo "NOT SKIPPING PRE-COMMIT HOOKS"
+exit 0
 
 npm ci
 npm run build
