@@ -1,6 +1,8 @@
 #!/bin/bash
 
-if git log -1 --pretty=%B | grep -q '[skip ci]'; then
+# Check the last commit message for "[skip ci]"
+commit_msg=$(cat .git/COMMIT_EDITMSG)
+if echo "$commit_msg" | grep -q '\[skip ci\]'; then
   echo "Skipping pre-commit hooks due to [skip ci] in commit message."
   exit 0
 fi
