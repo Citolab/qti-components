@@ -1,0 +1,17 @@
+{
+  "html.customData": ["./vscode.html-custom-data.json"],
+  "css.customData": ["./vscode.css-custom-data.json"],
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.fixAll": "explicit"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[xml]": {
+    "editor.defaultFormatter": "redhat.vscode-xml"
+  },
+  "github-actions.workflows.pinned.workflows": []
+}
