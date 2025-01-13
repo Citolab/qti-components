@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if git log -1 --pretty=%B | grep -q '\[skip ci\]'; then
+if git log -1 --pretty=%B | grep -q '[skip ci]'; then
   echo "Skipping pre-commit hooks due to [skip ci] in commit message."
   exit 0
 fi
