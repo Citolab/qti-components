@@ -389,7 +389,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       this.deactivateDragLocation();
       this.deactivateDroppables();
 
-      this.dragClone.removeAttribute('dragging');
+      this.dragClone?.removeAttribute('dragging');
       e.preventDefault();
     }
 
