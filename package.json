@@ -21,7 +21,7 @@
   "engines": {
     "node": ">=20.0.0"
   },
-  "version": "7.0.6-beta.0",
+  "version": "7.0.6-beta.1",
   "type": "module",
   "main": "dist/index.js",
   "exports": {
@@ -32,10 +32,12 @@
     "./qti-components": "./dist/qti-components/index.js",
     "./qti-test/core": "./dist/qti-test/core/index.js",
     "./qti-test/components/*": {
+      "type": "./dist/qti-test/components/*.d.ts",
       "import": "./dist/qti-test/components/*"
     },
     "./qti-item/core": "./dist/qti-item/core/index.js",
     "./qti-item/components/*": {
+      "type": "./dist/qti-item/components/*.d.ts",
       "import": "./dist/qti-item/components/*"
     },
     "./qti-loader": "./dist/qti-loader/index.js",
@@ -43,15 +45,6 @@
     "./react": "./dist/qti-components-jsx.d.ts",
     "./item.css": "./dist/item.css"
   },
-  "sideEffects": [
-    "./dist/index.js",
-    "./dist/qti-components/index.js",
-    "./dist/qti-test/core/index.js",
-    "./dist/qti-test/components/*",
-    "./dist/qti-test/core/index.js",
-    "./dist/qti-item/components/*",
-    "item.scss"
-  ],
   "files": [
     "dist",
     "cdn"

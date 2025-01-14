@@ -1,4 +1,4 @@
-export * from './qti-and';
+export * from './qti-and/qti-and';
 export * from './qti-basevalue/qti-basevalue';
 
 export * from './qti-contains/qti-contains';
