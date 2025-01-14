@@ -32,13 +32,11 @@
     "./qti-components": "./dist/qti-components/index.js",
     "./qti-test/core": "./dist/qti-test/core/index.js",
     "./qti-test/components/*": {
-      "import": "./dist/qti-test/components/*",
-      "types": "./dist/qti-test/components/*.d.ts"
+      "import": "./dist/qti-test/components/*"
     },
     "./qti-item/core": "./dist/qti-item/core/index.js",
     "./qti-item/components/*": {
-      "import": "./dist/qti-item/components/*",
-      "types": "./dist/qti-item/components/*.d.ts"
+      "import": "./dist/qti-item/components/*"
     },
     "./qti-loader": "./dist/qti-loader/index.js",
     "./qti-transformers": "./dist/qti-transformers/index.js",
