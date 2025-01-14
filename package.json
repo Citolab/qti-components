@@ -45,15 +45,6 @@
     "./react": "./dist/qti-components-jsx.d.ts",
     "./item.css": "./dist/item.css"
   },
-  "sideEffects": [
-    "./dist/index.js",
-    "./dist/qti-components/index.js",
-    "./dist/qti-test/core/index.js",
-    "./dist/qti-test/components/*",
-    "./dist/qti-test/core/index.js",
-    "./dist/qti-item/components/*",
-    "item.scss"
-  ],
   "files": [
     "dist",
     "cdn"
