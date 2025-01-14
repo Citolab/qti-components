@@ -145,7 +145,10 @@ export class QtiAssessmentItem extends LitElement {
     });
     this.addEventListener('qti-register-interaction', (e: CustomEvent<null>) => {
       e.stopPropagation();
-      this._interactionElements.push(e.target as Interaction);
+      const composedPath = e.composedPath();
+      if (e.composedPath.length === 1) {
+        this._interactionElements.push(composedPath[0] as Interaction);
+      }
     });
     this.addEventListener('end-attempt', (e: CustomEvent<{ responseIdentifier: string; countAttempt: boolean }>) => {
       const { responseIdentifier, countAttempt } = e.detail;
