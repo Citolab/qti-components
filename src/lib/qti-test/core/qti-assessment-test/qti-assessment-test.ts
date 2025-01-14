@@ -1,7 +1,8 @@
 import { consume } from '@lit/context';
 import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { testContext, TestContext } from '../context';
+import type { TestContext } from '../context';
+import { testContext } from '../context';
 
 @customElement('qti-assessment-test')
 export class QtiAssessmentTest extends LitElement {

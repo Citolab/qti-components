@@ -1,7 +1,8 @@
 import { consume } from '@lit/context';
 import { html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
-import { testContext, TestContext } from '../context';
+import type { TestContext } from '../context';
+import { testContext } from '../context';
 
 // https://www.imsglobal.org/sites/default/files/spec/qti/v3/info/index.html#Root_AssessmentSection
 

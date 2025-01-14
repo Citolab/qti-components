@@ -26,11 +26,18 @@
   "main": "dist/index.js",
   "exports": {
     ".": "./dist/index.js",
+    "./exports/*": {
+      "import": "./dist/exports/*"
+    },
     "./qti-components": "./dist/qti-components/index.js",
     "./qti-test/core": "./dist/qti-test/core/index.js",
-    "./qti-test/components/*": "./dist/qti-test/components/*",
+    "./qti-test/components/*": {
+      "import": "./dist/qti-test/components/*"
+    },
     "./qti-item/core": "./dist/qti-item/core/index.js",
-    "./qti-item/components/*": "./dist/qti-item/components/*",
+    "./qti-item/components/*": {
+      "import": "./dist/qti-item/components/*"
+    },
     "./qti-loader": "./dist/qti-loader/index.js",
     "./qti-transformers": "./dist/qti-transformers/index.js",
     "./react": "./dist/qti-components-jsx.d.ts",
@@ -197,10 +204,7 @@
       "command": "postcss src/item.css -d dist -m"
     },
     "test": {
-      "command": "vitest run",
-      "dependencies": [
-        "build"
-      ]
+      "command": "vitest run"
     },
     "storybook:docs": {
       "command": "storybook dev --docs -c .storybook-docs",
@@ -223,10 +227,7 @@
       }
     },
     "attw": {
-      "command": "attw --profile esm-only --pack --exclude-entrypoints  ./item.css ./react",
-      "dependencies": [
-        "build"
-      ]
+      "command": "attw --profile esm-only --pack --exclude-entrypoints  ./item.css ./react"
     }
   }
 }

@@ -1,4 +1,4 @@
-import { QtiMapping } from '../qti-response-processing/qti-expression/qti-mapping/qti-mapping';
+import type { QtiMapping } from '../qti-components/qti-response-processing/qti-expression/qti-mapping/qti-mapping';
 import type { BaseType, Cardinality } from './expression-result';
 
 export interface VariableValue<T> {

@@ -1,5 +1,5 @@
 import { LitElement, html } from 'lit';
-import { QtiRule } from '../qti-rule/qti-rule';
+import type { QtiRule } from '../qti-rule/qti-rule';
 
 export class QtiResponseElse extends LitElement {
   override render() {

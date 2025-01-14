@@ -1,6 +1,6 @@
 import { property } from 'lit/decorators.js';
-import { BaseType } from '../../../internal/expression-result';
-import { QtiExpression } from '../qti-expression';
+import type { BaseType } from '../../../../exports/expression-result';
+import { QtiExpression } from '../../../../exports/qti-expression';
 export class QtiBaseValue extends QtiExpression<string> {
   @property({ type: String, attribute: 'base-type' }) baseType: BaseType = 'string';
 

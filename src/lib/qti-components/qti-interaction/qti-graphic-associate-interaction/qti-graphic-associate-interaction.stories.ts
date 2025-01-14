@@ -1,6 +1,6 @@
 import { html } from 'lit';
-import { QtiGraphicAssociateInteraction } from './qti-graphic-associate-interaction';
-import { StoryObj, Meta } from '@storybook/web-components';
+import type { QtiGraphicAssociateInteraction } from './qti-graphic-associate-interaction';
+import type { StoryObj, Meta } from '@storybook/web-components';
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
 
 const { events, args, argTypes, template } = getWcStorybookHelpers('qti-graphic-associate-interaction');

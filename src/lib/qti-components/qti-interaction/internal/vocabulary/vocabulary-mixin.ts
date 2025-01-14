@@ -11,10 +11,10 @@
  * qti-choice-interaction
  * qti-match-interaction
  */
-import { PropertyValues } from 'lit';
+import type { PropertyValues } from 'lit';
 import { property } from 'lit/decorators.js';
-import { QtiSimpleChoice } from '../../qti-simple-choice';
-import { Interaction } from '../interaction/interaction';
+import type { QtiSimpleChoice } from '../../qti-simple-choice';
+import type { Interaction } from '../interaction/interaction';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 

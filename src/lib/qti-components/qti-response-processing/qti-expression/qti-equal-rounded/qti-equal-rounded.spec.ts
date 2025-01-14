@@ -1,7 +1,7 @@
 import '../../../../index';
 import { html, render } from 'lit';
-import { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
-import { QtiEqualRounded } from './qti-equal-rounded';
+import type { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
+import type { QtiEqualRounded } from './qti-equal-rounded';
 
 describe('qti-equal-rounded', () => {
   it('rounded 3 decimals equal', () => {

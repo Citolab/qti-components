@@ -1,5 +1,5 @@
 import { html } from 'lit';
-import { QtiExpression } from '../../qti-expression/qti-expression';
+import type { QtiExpression } from '../../../../exports/qti-expression';
 import { QtiRule } from '../qti-rule';
 
 export class QtiResponseCondition extends QtiRule {

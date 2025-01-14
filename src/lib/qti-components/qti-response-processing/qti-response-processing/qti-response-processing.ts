@@ -1,11 +1,12 @@
-import { css, html, LitElement, PropertyValueMap } from 'lit';
+import type { PropertyValueMap } from 'lit';
+import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
 import { mapResponse, mapResponsePoint, matchCorrect } from '../../internal/template-strings';
 import { type QtiRule } from '../qti-rule/qti-rule';
 
 @customElement('qti-response-processing')
-export default class QtiResponseProcessing extends LitElement {
+export class QtiResponseProcessing extends LitElement {
   static styles = [
     css`
       :host {

@@ -1,6 +1,6 @@
 import '../../../../index';
 import { html, render } from 'lit';
-import { QtiMember } from './qti-member';
+import type { QtiMember } from './qti-member';
 
 describe('qti-contains', () => {
   const failTemplate = () => html`

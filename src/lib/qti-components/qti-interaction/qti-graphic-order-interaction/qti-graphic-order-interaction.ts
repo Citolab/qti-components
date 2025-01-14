@@ -1,9 +1,11 @@
-import { CSSResultGroup, html } from 'lit';
-import { Choice, ChoicesMixin } from '../internal/choices/choices.mixin';
-import { QtiHotspotChoice } from '../qti-hotspot-choice';
+import type { CSSResultGroup } from 'lit';
+import { html } from 'lit';
+import type { Choice } from '../internal/choices/choices.mixin';
+import { ChoicesMixin } from '../internal/choices/choices.mixin';
+import type { QtiHotspotChoice } from '../qti-hotspot-choice';
 import { customElement } from 'lit/decorators.js';
 import { positionHotspots } from '../internal/hotspots/hotspot';
-import { Interaction } from '../internal/interaction/interaction';
+import { Interaction } from '../../../exports/interaction';
 import styles from './qti-graphic-order-interaction.styles';
 
 type HotspotChoice = Choice & { order: number };

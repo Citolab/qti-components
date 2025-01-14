@@ -1,4 +1,4 @@
-import { QtiExpression } from '../qti-expression';
+import { QtiExpression } from '../../../../exports/qti-expression';
 
 type Constructor<T> = new (...args: any[]) => T;
 export class QtiSubtract extends qtiSubtractMixin(QtiExpression<any> as unknown as Constructor<QtiExpression<number>>) {

@@ -7,7 +7,7 @@
 // and a tutorial how to make a mixin
 // https://lit.dev/docs/composition/mixins/
 
-import { Interaction } from '../interaction/interaction';
+import type { Interaction } from '../interaction/interaction';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 

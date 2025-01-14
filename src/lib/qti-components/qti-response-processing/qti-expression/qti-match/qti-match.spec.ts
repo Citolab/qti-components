@@ -1,7 +1,7 @@
 import '../../../../index';
 import { html, render } from 'lit';
-import { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
-import { QtiMatch } from './qti-match';
+import type { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
+import type { QtiMatch } from './qti-match';
 
 describe('qti-match', () => {
   it('should check if the variable identified in the first child is contained in the second one', () => {

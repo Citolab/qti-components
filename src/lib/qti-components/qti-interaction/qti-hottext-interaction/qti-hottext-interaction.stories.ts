@@ -1,7 +1,7 @@
-import { StoryObj, Meta } from '@storybook/web-components';
+import type { StoryObj, Meta } from '@storybook/web-components';
 import { html } from 'lit';
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
-import { QtiHottextInteraction } from './qti-hottext-interaction';
+import type { QtiHottextInteraction } from './qti-hottext-interaction';
 
 const { events, args, argTypes, template } = getWcStorybookHelpers('qti-hottext-interaction');
 

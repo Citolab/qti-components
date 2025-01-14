@@ -6,9 +6,9 @@ import '../../qti-response-processing/qti-response-processing';
 import './../../qti-rule/qti-set-outcome-value/qti-set-outcome-value';
 import './../qti-basevalue/qti-basevalue';
 import './qti-sum';
-import { QtiSum } from './qti-sum';
-import { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
-import { ItemContext } from '../../../qti-assessment-item/qti-assessment-item.context';
+import type { QtiSum } from './qti-sum';
+import type { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
+import type { ItemContext } from '../../../../exports/qti-assessment-item.context';
 
 describe('QtiComponent qti-sum', () => {
   it('all true', () => {

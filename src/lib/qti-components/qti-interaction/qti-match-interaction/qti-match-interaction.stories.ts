@@ -2,11 +2,11 @@ import { action } from '@storybook/addon-actions';
 import { html } from 'lit';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { createRef, ref } from 'lit/directives/ref.js';
-import { QtiAssessmentItem, QtiMatchInteraction } from '../../index';
+import type { QtiAssessmentItem, QtiMatchInteraction } from '../../';
 
 import { expect, fn, waitFor, within } from '@storybook/test';
 import drag from '../../../../testing/drag';
-import { InputType } from '@storybook/core/types';
+import type { InputType } from '@storybook/core/types';
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
 import '../../../../item.css';
 

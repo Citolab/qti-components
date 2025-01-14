@@ -12,7 +12,7 @@
  * qti-match-interaction
  */
 import { property } from 'lit/decorators.js';
-import { Interaction } from '../interaction/interaction';
+import type { Interaction } from '../interaction/interaction';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 

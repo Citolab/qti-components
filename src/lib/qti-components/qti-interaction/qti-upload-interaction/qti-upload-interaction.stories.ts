@@ -1,7 +1,7 @@
 import { html } from 'lit';
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
 import type { Meta, StoryObj } from '@storybook/web-components';
-import { QtiUploadInteraction } from './qti-upload-interaction';
+import type { QtiUploadInteraction } from './qti-upload-interaction';
 
 const { events, args, argTypes, template } = getWcStorybookHelpers('qti-upload-interaction');
 

@@ -1,8 +1,8 @@
 import '../../../../index';
 
 import { html, render } from 'lit';
-import { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
-import { QtiContains } from './qti-contains';
+import type { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
+import type { QtiContains } from './qti-contains';
 
 describe('qti-contains', () => {
   it('should check if the variable identified in the first child is contained in the second one', () => {

@@ -1,9 +1,10 @@
 import { consume } from '@lit/context';
 import { css, html, LitElement } from 'lit';
 import { state } from 'lit/decorators.js';
-import { ResponseVariable, VariableDeclaration } from '../../internal/variables';
-import { itemContext, ItemContext } from '../../qti-assessment-item/qti-assessment-item.context';
-import { QtiMultiple } from './qti-multiple/qti-multiple';
+import type { QtiMultiple } from '..';
+import type { ItemContext } from '../../exports/item.context';
+import type { VariableDeclaration, ResponseVariable } from '../../exports/variables';
+import { itemContext } from '../../exports/qti-assessment-item.context';
 
 export interface QtiExpressionBase<T> {
   // get assessmentItem(): QtiAssessmentItem;
@@ -61,7 +62,7 @@ export abstract class QtiExpression<T> extends LitElement implements QtiExpressi
             return variable;
           }
           case 'qti-multiple': {
-            const multiple = e as QtiMultiple;
+            const multiple = e as unknown as QtiMultiple;
             const values = multiple.getResult();
             if (values.length > 0) {
               return {
@@ -76,7 +77,8 @@ export abstract class QtiExpression<T> extends LitElement implements QtiExpressi
           }
           case 'qti-correct': {
             const identifier = e.getAttribute('identifier') || '';
-            const responseVariable: ResponseVariable = this.context.variables.find(v => v.identifier === identifier) || null;
+            const responseVariable: ResponseVariable =
+              this.context.variables.find(v => v.identifier === identifier) || null;
             return {
               baseType: responseVariable.baseType,
               value: responseVariable.correctResponse,

@@ -2,7 +2,7 @@ import { html, render } from 'lit';
 import { VocabularyMixin } from './vocabulary-mixin';
 import '../../qti-simple-choice';
 import { ShuffleMixin } from '../shuffle/shuffle-mixin';
-import { Interaction } from '../interaction/interaction';
+import { Interaction } from '../../../../exports/interaction';
 class TestElement extends VocabularyMixin(ShuffleMixin(Interaction, 'qti-simple-choice'), 'qti-simple-choice') {
   class: string;
   shuffle: boolean;

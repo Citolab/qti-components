@@ -1,5 +1,5 @@
-import { ResponseVariable } from '../../../internal/variables';
-import { QtiExpression } from '../qti-expression';
+import type { ResponseVariable } from '../../../../exports/variables';
+import { QtiExpression } from '../../../../exports/qti-expression';
 export class QtiOrdered extends QtiExpression<ResponseVariable[]> {
   public override getResult(): ResponseVariable[] {
     const variables = this.getVariables() as ResponseVariable[];

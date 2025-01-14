@@ -1,4 +1,4 @@
-import { BaseType } from '../..';
+import type { BaseType } from '../../';
 
 export class ScoringHelper {
   public static compareSingleValues(value1: Readonly<string>, value2: Readonly<string>, baseType: BaseType): boolean {

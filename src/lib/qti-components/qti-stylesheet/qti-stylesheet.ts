@@ -1,4 +1,5 @@
-import { LitElement, PropertyValueMap } from 'lit';
+import type { PropertyValueMap } from 'lit';
+import { LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
 @customElement('qti-stylesheet')

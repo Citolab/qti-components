@@ -1,11 +1,11 @@
 export * from './qti-and';
 export * from './qti-basevalue/qti-basevalue';
-export * from './qti-condition-expression';
+
 export * from './qti-contains/qti-contains';
 export * from './qti-correct/qti-correct';
 export * from './qti-equal-rounded/qti-equal-rounded';
 export * from './qti-equal/qti-equal';
-export * from './qti-expression';
+
 export * from './qti-gt/qti-gt';
 export * from './qti-gte/qti-gte';
 export * from './qti-is-null/qti-is-null';
@@ -25,3 +25,7 @@ export * from './qti-subtract';
 export * from './qti-string-match/qti-string-match';
 export * from './qti-sum/qti-sum';
 export * from './qti-variable/qti-variable';
+
+// FIXME are internal and abstract
+// export * from './qti-expression';
+// export * from './qti-condition-expression';

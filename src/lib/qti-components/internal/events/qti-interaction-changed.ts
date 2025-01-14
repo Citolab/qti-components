@@ -1,4 +1,4 @@
-import { InteractionChangedDetails } from './../event-types';
+import type { InteractionChangedDetails } from './../event-types';
 
 export type QtiInteractionChanged = CustomEvent<InteractionChangedDetails>;
 

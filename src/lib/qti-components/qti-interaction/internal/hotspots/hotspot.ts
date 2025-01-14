@@ -1,4 +1,4 @@
-import { QtiHotspotChoice } from '../../qti-hotspot-choice';
+import type { QtiHotspotChoice } from '../../qti-hotspot-choice';
 
 export function positionHotspots(
   shape: string,

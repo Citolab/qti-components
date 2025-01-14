@@ -2,6 +2,7 @@ import { html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { TestLoaderMixin, TestNavigationMixin, TestViewMixin } from './mixins';
 import { TestBase } from './test-base';
+import { TestProcessingMixin } from './mixins/test-processing.mixin';
 
 /**
  * `<qti-test>` is a custom element designed for rendering and interacting with QTI (Question and Test Interoperability) tests.
@@ -50,7 +51,7 @@ import { TestBase } from './test-base';
  *
  */
 @customElement('qti-test')
-export class QtiTest extends TestLoaderMixin(TestNavigationMixin(TestViewMixin(TestBase))) {
+export class QtiTest extends TestLoaderMixin(TestProcessingMixin(TestNavigationMixin(TestViewMixin(TestBase)))) {
   /**
    * Renders the component's template.
    * Provides a default `<slot>` for content projection.

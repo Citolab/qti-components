@@ -1,8 +1,9 @@
-import { CSSResultGroup, html } from 'lit';
+import type { CSSResultGroup } from 'lit';
+import { html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-interaction-mixin';
-import { QtiHotspotChoice } from '../qti-hotspot-choice';
-import { Interaction } from '../internal/interaction/interaction';
+import type { QtiHotspotChoice } from '../qti-hotspot-choice';
+import { Interaction } from '../../../exports/interaction';
 import styles from './qti-graphic-gap-match-interaction.styles';
 
 @customElement('qti-graphic-gap-match-interaction')

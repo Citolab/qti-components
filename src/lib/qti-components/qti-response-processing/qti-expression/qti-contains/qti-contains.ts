@@ -1,5 +1,5 @@
-import { ResponseVariable } from '../../../internal/variables';
-import { QtiConditionExpression } from '../qti-condition-expression';
+import type { ResponseVariable } from '../../../../exports/variables';
+import { QtiConditionExpression } from '../../../../exports/qti-condition-expression';
 
 // PK: For the contains we assume the expressions to calculate are all directedPairs
 // I don't know it this in QTI is always the case however?

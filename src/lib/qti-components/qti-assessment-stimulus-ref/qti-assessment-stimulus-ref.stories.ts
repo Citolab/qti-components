@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 
 import { createRef, ref } from 'lit/directives/ref.js';
-import { QtiAssessmentStimulusRef } from './qti-assessment-stimulus-ref';
+import type { QtiAssessmentStimulusRef } from './qti-assessment-stimulus-ref';
 
 const meta = {
   component: 'qti-assessment-stimulus-ref'

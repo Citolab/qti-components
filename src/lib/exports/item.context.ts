@@ -1,5 +1,4 @@
-import { createContext } from '@lit/context';
-import { VariableDeclaration } from '../internal/variables';
+import type { VariableDeclaration } from './variables';
 
 export interface ItemContext {
   href?: string;
@@ -23,5 +22,3 @@ export const itemContextVariables = [
     type: 'response'
   }
 ] as VariableDeclaration<string | string[]>[];
-
-export const itemContext = createContext<ItemContext>(Symbol('item'));

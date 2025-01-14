@@ -3,8 +3,8 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-interaction-mixin';
 import { ShuffleMixin } from '../internal/shuffle/shuffle-mixin'; // Import the mixin
-import { QtiSimpleChoice } from '../qti-simple-choice';
-import { Interaction } from '../internal/interaction/interaction';
+import type { QtiSimpleChoice } from '../qti-simple-choice';
+import { Interaction } from '../../../exports/interaction';
 import styles from './qti-order-interaction.styles';
 @customElement('qti-order-interaction')
 export class QtiOrderInteraction extends ShuffleMixin(

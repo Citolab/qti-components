@@ -1,9 +1,10 @@
 import { consume } from '@lit/context';
 import { LitElement, html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-import { Calculate } from '../internal/expression-result';
-import { ResponseVariable } from '../internal/variables';
-import { ItemContext, itemContext } from '../qti-assessment-item/qti-assessment-item.context';
+import type { Calculate } from '../../exports/expression-result';
+import type { ResponseVariable } from '../../exports/variables';
+import { itemContext } from '../../exports/qti-assessment-item.context';
+import type { ItemContext } from '../../exports/item.context';
 
 /**
  * https://www.imsglobal.org/spec/qti/v3p0/impl#h.fi29q8dubjgw

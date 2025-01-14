@@ -1,4 +1,4 @@
-import { OutcomeChangedDetails } from './../event-types';
+import type { OutcomeChangedDetails } from './../event-types';
 export type QtiOutcomeChanged = CustomEvent<OutcomeChangedDetails>;
 
 declare global {

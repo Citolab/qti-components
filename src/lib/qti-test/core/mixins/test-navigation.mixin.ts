@@ -1,5 +1,5 @@
-import { QtiAssessmentItemRef } from '../qti-assessment-test';
-import { TestBase } from '../test-base';
+import type { QtiAssessmentItemRef } from '../qti-assessment-test';
+import type { TestBase } from '../test-base';
 
 declare module '../context/test.context' {
   interface TestContext {
@@ -18,48 +18,6 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
   abstract class TestNavigationClass extends superClass {
     constructor(...args: any[]) {
       super(...args);
-
-      // this.addEventListener('qti-request-test-part', (e: CustomEvent) => {
-      //   this._clearLoadedItems();
-      // });
-
-      // Load all items of a section
-      // this.addEventListener('qti-request-test-section', ({ detail: navSectionId }: CustomEvent<string>) => {
-      //   this._clearLoadedItems();
-
-      //   const sectionRefEl = this.testElement.el.querySelector<QtiAssessmentItemRef>(
-      //     `qti-assessment-section[identifier="${navSectionId}"]`
-      //   );
-
-      //   const itemRefEls = this.testElement.el.querySelectorAll(
-      //     `qti-assessment-section[identifier="${navSectionId}"] > qti-assessment-item-ref`
-      //   );
-
-      //   const navPartId = sectionRefEl.closest('qti-test-part').identifier;
-
-      //   this._testContext = { ...this._testContext, navPartId, navSectionId, navItemId: null };
-
-      //   const items = Array.from(itemRefEls).map((itemRef: QtiAssessmentItemRef) => {
-      //     return { identifier: itemRef.identifier, href: itemRef.href, element: itemRef };
-      //   });
-
-      //   const promises = items.map((item, index) => {
-      //     return new Promise((resolve, reject) => {
-      //       return this._loadItemRequest(item.href, false)
-      //         .then(doc => (item.element.xmlDoc = doc))
-      //         .then(() => resolve(item))
-      //         .catch(error => console.error('Failed to load item:', error));
-      //     });
-      //   });
-
-      //   Promise.all(promises)
-      //     .then(results => {
-      //       requestAnimationFrame(() =>
-      //         this.dispatchEvent(new CustomEvent('qti-test-connected', { detail: results, bubbles: true, composed: true }))
-      //       );
-      //     })
-      //     .catch(error => console.error('One or more promises failed:', error));
-      // });
 
       // load an item
       this.addEventListener('qti-request-test-item', ({ detail: navItemId }: CustomEvent<string>) => {
