@@ -1,4 +1,4 @@
-import type { QtiExpression } from '../../qti-expression/qti-expression';
+import type { QtiExpression } from '../../../../exports/qti-expression';
 import type { QtiRule } from '../../qti-rule/qti-rule';
 import { QtiResponseElse } from '../qti-response-else';
 

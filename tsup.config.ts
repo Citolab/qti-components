@@ -11,15 +11,15 @@ const npmOptions: Options = {
   format: 'esm',
   entry: [
     './src/lib/index.ts',
+    ...(await globby('./src/lib/exports/**/!(*.(style|test|stories)).ts')),
     './src/lib/qti-components/index.ts',
     './src/lib/qti-test/core/index.ts',
-    ...(await globby('./src/lib/qti-test/components/**/!(*.(style|test|stories)).ts')),
+    ...(await globby('./src/lib/qti-test/components/**/!(*.(style|test|spec|stories)).ts')),
     './src/lib/qti-item/core/index.ts',
-    ...(await globby('./src/lib/qti-item/components/**/!(*.(style|test|stories)).ts')),
+    ...(await globby('./src/lib/qti-item/components/**/!(*.(style|test|spec|stories)).ts')),
     './src/lib/qti-transformers/index.ts',
     './src/lib/qti-loader/index.ts'
   ],
-  bundle: true,
   external: peerDependencies,
   splitting: true,
   esbuildPlugins: [InlineCSSPlugin],
@@ -44,7 +44,7 @@ const cdnEs6Options: Options = {
 
 const cndEs5Options: Options = {
   ...npmOptions,
-  // entry: ['./src/lib/qti-components/index.ts'],
+  entry: ['./src/lib/qti-components/index.ts'],
   splitting: true,
   outDir: 'cdn',
   external: undefined,

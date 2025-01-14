@@ -1,7 +1,7 @@
 import { html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { ChoicesMixin } from '../internal/choices/choices.mixin';
-import { Interaction } from '../internal/interaction/interaction';
+import { Interaction } from '../../../exports/interaction';
 
 @customElement('qti-hottext-interaction')
 export class QtiHottextInteraction extends ChoicesMixin(Interaction, 'qti-hottext') {

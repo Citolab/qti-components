@@ -1,6 +1,6 @@
 import { html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { Interaction } from '../internal/interaction/interaction';
+import { Interaction } from '../../../exports/interaction';
 import type { IMSpci, ModuleResolutionConfig, QtiVariableJSON } from './interface';
 
 declare const requirejs: any;

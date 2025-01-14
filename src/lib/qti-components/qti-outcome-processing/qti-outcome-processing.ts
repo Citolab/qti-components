@@ -1,6 +1,6 @@
 import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import type { QtiRule, QtiRuleBase } from '../components';
+import type { QtiRule, QtiRuleBase } from '..';
 
 @customElement('qti-outcome-processing')
 export class QtiOutcomeProcessing extends LitElement {

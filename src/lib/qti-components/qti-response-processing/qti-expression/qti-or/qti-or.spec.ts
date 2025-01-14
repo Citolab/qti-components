@@ -1,5 +1,5 @@
 import { html, render } from 'lit';
-import { QtiConditionExpression } from '../qti-condition-expression';
+import { QtiConditionExpression } from '../../../../exports/qti-condition-expression';
 import './qti-or';
 import type { QtiOr } from './qti-or';
 class MockChild extends QtiConditionExpression {

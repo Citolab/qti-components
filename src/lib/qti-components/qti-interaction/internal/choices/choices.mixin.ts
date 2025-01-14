@@ -2,8 +2,8 @@ import { property, query } from 'lit/decorators.js';
 import { watch } from '../../../../decorators/watch';
 
 import type { ChoiceInterface } from '../active-element/active-element.mixin';
-import type { Interaction } from '../interaction/interaction';
-import type { IInteraction } from '../interaction/interaction.interface';
+import type { Interaction } from '../../../../exports/interaction';
+import type { IInteraction } from '../../../../exports/interaction.interface';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 

@@ -1,10 +1,10 @@
-import type { CSSResultGroup} from 'lit';
+import type { CSSResultGroup } from 'lit';
 import { html, svg } from 'lit';
 import { customElement, queryAssignedElements, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { positionHotspots } from '../internal/hotspots/hotspot';
-import { Interaction } from '../internal/interaction/interaction';
+import { Interaction } from '../../../exports/interaction';
 import type { QtiHotspotChoice } from '../qti-hotspot-choice';
 import styles from './qti-graphic-associate-interaction.styles';
 

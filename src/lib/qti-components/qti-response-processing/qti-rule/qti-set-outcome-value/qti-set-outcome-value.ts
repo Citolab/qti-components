@@ -1,5 +1,5 @@
 import { convertNumberToUniveralFormat } from '../../../internal/utils';
-import type { QtiExpression, QtiExpressionBase } from '../../qti-expression/qti-expression';
+import type { QtiExpression, QtiExpressionBase } from '../../../../exports/qti-expression';
 import type { QtiRuleBase } from '../qti-rule';
 import { QtiRule } from '../qti-rule';
 

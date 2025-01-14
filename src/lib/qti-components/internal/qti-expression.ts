@@ -1,10 +1,10 @@
 import { consume } from '@lit/context';
 import { css, html, LitElement } from 'lit';
 import { state } from 'lit/decorators.js';
-import type { ResponseVariable, VariableDeclaration } from '../../internal/variables';
-import { itemContext } from '../../qti-assessment-item/qti-assessment-item.context';
-import type { QtiMultiple } from './qti-multiple/qti-multiple';
-import type { ItemContext } from '../../internal/item.context';
+import type { QtiMultiple } from '..';
+import type { ItemContext } from '../../exports/item.context';
+import type { VariableDeclaration, ResponseVariable } from '../../exports/variables';
+import { itemContext } from '../../exports/qti-assessment-item.context';
 
 export interface QtiExpressionBase<T> {
   // get assessmentItem(): QtiAssessmentItem;
@@ -62,7 +62,7 @@ export abstract class QtiExpression<T> extends LitElement implements QtiExpressi
             return variable;
           }
           case 'qti-multiple': {
-            const multiple = e as QtiMultiple;
+            const multiple = e as unknown as QtiMultiple;
             const values = multiple.getResult();
             if (values.length > 0) {
               return {

@@ -1,4 +1,4 @@
-import type { ResponseInteraction } from '../expression-result';
+import type { ResponseInteraction } from '../../../exports/expression-result';
 
 type QtiInteractionResponse = CustomEvent<ResponseInteraction>;
 

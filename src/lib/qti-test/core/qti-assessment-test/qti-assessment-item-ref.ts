@@ -3,7 +3,7 @@ import { html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import type { TestContext } from '../context';
 import { testContext } from '../context';
-import type { QtiAssessmentItem } from '../../../qti-components/components';
+import type { QtiAssessmentItem } from '../../../qti-components';
 
 // Converter function to interpret "true" and "false" as booleans
 const stringToBooleanConverter = {

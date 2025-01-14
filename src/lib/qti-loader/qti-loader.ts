@@ -1,4 +1,4 @@
-import type { QtiAssessmentItem } from '../qti-components/components';
+import type { QtiAssessmentItem } from '../qti-components';
 import { qtiTransformItem, qtiTransformTest } from '../qti-transformers';
 import { qtiTransformManifest } from '../qti-transformers/qti-transform-manifest';
 

@@ -6,7 +6,7 @@ import type { WebComponentsRenderer } from '@storybook/web-components';
 import { resolveLoaders } from '../../../../.storybook/custom-story-loader';
 import type { QtiTest } from '../core/qti-test';
 
-import '../../qti-components/components';
+import '../../qti-components';
 import '../../../lib/qti-test/core';
 import '../../../lib/qti-test/components';
 import '../../../lib/qti-item/core';

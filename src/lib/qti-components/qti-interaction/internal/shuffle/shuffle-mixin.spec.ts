@@ -1,6 +1,6 @@
 import { html, render } from 'lit';
-import { Interaction } from '../interaction/interaction';
 import { ShuffleMixin } from './shuffle-mixin';
+import { Interaction } from '../../../../exports/interaction';
 
 class TestElement extends ShuffleMixin(Interaction, 'qti-simple-choice') {
   shuffle: string;

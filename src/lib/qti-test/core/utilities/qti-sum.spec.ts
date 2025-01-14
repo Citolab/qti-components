@@ -1,9 +1,9 @@
 import { html, render } from 'lit';
 
 import '../../../qti-components';
-import { QtiConditionExpression } from '../../../qti-components/qti-response-processing/qti-expression/qti-condition-expression';
+import { QtiConditionExpression } from '../../../exports/qti-condition-expression';
 import type { QtiAssessmentItem, QtiSum } from '../../../qti-components';
-import type { ItemContext } from '../../../qti-components/internal/item.context';
+import type { ItemContext } from '../../../exports/item.context';
 
 class MockChild extends QtiConditionExpression {
   response = false;

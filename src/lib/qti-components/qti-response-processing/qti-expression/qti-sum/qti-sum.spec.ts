@@ -8,7 +8,7 @@ import './../qti-basevalue/qti-basevalue';
 import './qti-sum';
 import type { QtiSum } from './qti-sum';
 import type { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
-import type { ItemContext } from '../../../qti-assessment-item/qti-assessment-item.context';
+import type { ItemContext } from '../../../../exports/qti-assessment-item.context';
 
 describe('QtiComponent qti-sum', () => {
   it('all true', () => {

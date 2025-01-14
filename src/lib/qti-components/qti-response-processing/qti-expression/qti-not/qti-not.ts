@@ -1,5 +1,5 @@
 import { html } from 'lit';
-import { QtiExpression } from '../qti-expression';
+import { QtiExpression } from '../../../../exports/qti-expression';
 
 export class QtiNot extends QtiExpression<boolean> {
   override render() {

@@ -2,8 +2,8 @@ import { consume } from '@lit/context';
 import { LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { IsNullOrUndefined } from '../internal/utils';
-import { itemContext } from '../qti-assessment-item/qti-assessment-item.context';
-import type { ItemContext } from '../internal/item.context';
+import { itemContext } from '../../exports/qti-assessment-item.context';
+import type { ItemContext } from '../../exports/item.context';
 
 export abstract class QtiFeedback extends LitElement {
   @property({ type: String, attribute: 'show-hide' })

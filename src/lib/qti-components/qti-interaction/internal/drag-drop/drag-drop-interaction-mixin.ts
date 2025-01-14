@@ -1,9 +1,9 @@
-import type { IInteraction } from '../interaction/interaction.interface';
 import { FlippablesMixin } from './flippables-mixin';
 
 import { property } from 'lit/decorators.js';
 import { liveQuery } from '../../../../decorators/live-query';
-import type { Interaction } from '../interaction/interaction';
+import type { Interaction } from '../../../../exports/interaction';
+import type { IInteraction } from '../../../../exports/interaction.interface';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 

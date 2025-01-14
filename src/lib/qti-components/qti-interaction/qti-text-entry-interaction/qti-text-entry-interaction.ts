@@ -1,9 +1,9 @@
-import type { CSSResultGroup} from 'lit';
+import type { CSSResultGroup } from 'lit';
 import { html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { createRef } from 'lit/directives/ref.js';
-import { Interaction } from '../internal/interaction/interaction';
+import { Interaction } from '../../../exports/interaction';
 import styles from './qti-text-entry-interaction.styles';
 @customElement('qti-text-entry-interaction')
 export class QtiTextEntryInteraction extends Interaction {

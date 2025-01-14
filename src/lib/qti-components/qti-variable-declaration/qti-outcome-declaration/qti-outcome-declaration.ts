@@ -1,11 +1,11 @@
 import { consume } from '@lit/context';
 import { css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import type { BaseType, Cardinality } from '../../internal/expression-result';
-import type { OutcomeVariable } from '../../internal/variables';
-import { itemContext } from '../../qti-assessment-item/qti-assessment-item.context';
+import type { BaseType, Cardinality } from '../../../exports/expression-result';
+import type { OutcomeVariable } from '../../../exports/variables';
+import { itemContext } from '../../../exports/qti-assessment-item.context';
 import { QtiVariableDeclaration } from '../qti-variable-declaration';
-import type { ItemContext } from '../../internal/item.context';
+import type { ItemContext } from '../../../exports/item.context';
 
 @customElement('qti-outcome-declaration')
 export class QtiOutcomeDeclaration extends QtiVariableDeclaration {

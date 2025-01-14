@@ -5,8 +5,8 @@ import type { TestContext, TestElement } from './context';
 import { testContext, testElement } from './context';
 import type { QtiAssessmentTest } from './qti-assessment-test';
 import type { QtiAssessmentItem } from '../../qti-components/';
-import type { VariableValue } from '../../qti-components/internal/variables';
-import type { ItemContext } from '../../qti-components/internal/item.context';
+import type { VariableValue } from '../../exports/variables';
+import type { ItemContext } from '../../exports/item.context';
 
 export abstract class TestBase extends LitElement {
   @state()

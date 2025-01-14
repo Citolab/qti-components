@@ -1,6 +1,6 @@
 import { html } from 'lit';
 
-import type { QtiSelectPointInteraction } from '../../components';
+import type { QtiSelectPointInteraction } from '../..';
 import type { StoryObj, Meta } from '@storybook/web-components';
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
 

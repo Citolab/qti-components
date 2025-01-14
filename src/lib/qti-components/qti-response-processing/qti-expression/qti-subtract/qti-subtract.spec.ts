@@ -7,7 +7,7 @@ import './../../qti-rule/qti-set-outcome-value/qti-set-outcome-value';
 import './../qti-basevalue/qti-basevalue';
 import './index';
 import type { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
-import type { ItemContext } from '../../../qti-assessment-item/qti-assessment-item.context';
+import type { ItemContext } from '../../../../exports/qti-assessment-item.context';
 
 describe('QtiComponent qti-subtract', () => {
   it('should calculate the difference of two values', () => {
