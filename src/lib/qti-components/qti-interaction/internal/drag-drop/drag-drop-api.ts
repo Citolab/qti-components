@@ -156,7 +156,6 @@ export class TouchDragAndDrop {
   }
 
   private handleTouchEnd(_e) {
-    console.log('handleTouchEnd');
     if (this.currentDropTarget) {
       this.dispatchCustomEvent(this.currentDropTarget, 'drop');
     }
