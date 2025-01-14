@@ -4,7 +4,7 @@ import { VariableDeclaration } from '../internal/variables';
 export interface ItemContext {
   href?: string;
   identifier: string;
-  variables: ReadonlyArray<VariableDeclaration<string | string[]>>;
+  variables: ReadonlyArray<VariableDeclaration<string | string[] | null>>;
 }
 
 export const itemContextVariables = [

@@ -525,7 +525,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       return this.collectResponseData();
     }
 
-    set value(value: string[]) {
+    set value(value: string[] | string | null) {
       if (this.isMatchTabular()) return;
       // Assuming this.value is an array of strings
       if (Array.isArray(value)) {
@@ -537,7 +537,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
         this._internals.setFormValue(formData);
       } else {
         // Handle the case where this.value is not an array
-        this._internals.setFormValue(value);
+        this._internals.setFormValue(value || '');
       }
     }
 

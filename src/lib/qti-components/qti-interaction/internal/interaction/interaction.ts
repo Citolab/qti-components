@@ -30,8 +30,8 @@ export abstract class Interaction extends LitElement implements IInteraction {
     this.value = '';
   }
 
-  abstract get value(): string | string[];
-  abstract set value(val: string | string[]);
+  abstract get value(): string | string[] | null;
+  abstract set value(val: string | string[] | null);
 
   public get correctResponse(): string | string[] {
     return this._correctResponse;

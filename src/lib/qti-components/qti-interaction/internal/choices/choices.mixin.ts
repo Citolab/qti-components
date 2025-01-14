@@ -43,15 +43,20 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
 
     protected _value: string | string[] = '';
 
-    get value(): string | string[] {
+    get value(): string | string[] | null {
+      if (Array.isArray(this._value) && this._value.length === 0) {
+        return null;
+      } else if (this._value === '') {
+        return null;
+      }
       return Array.isArray(this._value) ? this._value.join(',') : this._value;
     }
 
-    set value(val: string | string[]) {
-      if (this.maxChoices > 1 && typeof val === 'string') {
-        this._value = val.split(',');
+    set value(val: string | string[] | null) {
+      if (this.maxChoices > 1 && (typeof val === 'string' || val === null)) {
+        this._value = !val ? [] : val.toString().split(',');
       } else {
-        this._value = val;
+        this._value = val || '';
       }
       // Assuming this.value is an array of strings
       if (Array.isArray(this._value)) {

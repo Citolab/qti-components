@@ -21,8 +21,9 @@ export class QtiTextEntryInteraction extends Interaction {
 
   inputRef = createRef<HTMLInputElement>();
 
-  get value(): string | string[] {
-    return this._value;
+  get value(): string | string[] | null {
+    console.log('get value');
+    return this._value || null;
   }
   set value(val: string | string[]) {
     if (typeof val === 'string') {

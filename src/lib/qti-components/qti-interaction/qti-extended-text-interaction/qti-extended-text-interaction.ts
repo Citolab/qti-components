@@ -44,14 +44,14 @@ export class QtiExtendedTextInteraction extends Interaction {
     }
   }
 
-  get value(): string | string[] {
-    return this._value;
+  get value(): string | string[] | null {
+    return this._value || null;
   }
-  set value(val: string | string[]) {
-    if (typeof val === 'string') {
-      this._value = val;
+  set value(val: string | string[] | null) {
+    if (typeof val === 'string' || val === null) {
+      this._value = (val || '') as string;
       const formData = new FormData();
-      formData.append(this.responseIdentifier, val);
+      formData.append(this.responseIdentifier, this._value);
       this._internals.setFormValue(formData);
       this.validate();
     } else {

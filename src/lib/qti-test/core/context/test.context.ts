@@ -5,7 +5,7 @@ import { View } from '../mixins/test-view.mixin';
 
 export interface TestContext {
   items: (ItemContext & { category?: string })[];
-  testOutcomeVariables: VariableDeclaration<string | string[]>[];
+  testOutcomeVariables: VariableDeclaration<string | string[] | null>[];
   navPartId?: string | null;
   navSectionId?: string | null;
   navItemId?: string | null;
