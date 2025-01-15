@@ -17,8 +17,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
   superClass: T,
   draggablesSelector: string,
   droppablesSelector: string,
-  dragContainersSelector: string,
-  appendClone: 'body' | 'host' | 'interaction' | 'default' = 'default'
+  dragContainersSelector: string
 ) => {
   abstract class DragDropInteractionElement extends FlippablesMixin(
     superClass,
@@ -39,10 +38,8 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     private isDraggable = false; // Whether a draggable element is active
     private cloneOffset = { x: 0, y: 0 }; // Offset for positioning the drag clone
     private isDragging = false; // Whether a drag operation is ongoing
-    private rootNode: Node = null; // Root node for boundary calculations
     private allDropzones: HTMLElement[] = []; // All dropzones for keyboard navigation
     private lastTarget = null; // Last touch target
-    private dropzoneOriginalParent = null; // Original parent of the drag clone
     private currentDropTarget = null; // Current droppable element
 
     private readonly MIN_DRAG_DISTANCE = 5; // Minimum pixel movement to start dragging
@@ -446,22 +443,25 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
     private resetDragState() {
       if (this.dragClone) {
-        // copy styles from dragSource to dragClone
         const isDropped = this.currentDropTarget !== null;
         const droppedInDragContainer = !isDropped || this.dragContainers.includes(this.currentDropTarget);
+        if (isDropped && this.currentDropTarget && !droppedInDragContainer) {
+          // Create a clean clone of the original draggable without computed styles
+          const cleanClone = this.dragSource.cloneNode(true) as HTMLElement;
+          cleanClone.removeAttribute('style'); // Remove inline styles from the clone
+          // Place the clean clone into the drop target
 
-        if (!droppedInDragContainer) {
-          this.dragClone.style.opacity = '1.0';
-          this.dragClone.style.display = 'block';
-          this.dragClone.style.position = 'static';
-          this.dragClone.style.pointerEvents = 'auto';
-        } else {
+          this.currentDropTarget.appendChild(cleanClone);
+          this.draggablesModified([cleanClone], []);
+        }
+        if (droppedInDragContainer) {
           this.dragSource.style.opacity = '1.0';
           this.dragSource.style.display = 'block';
           this.dragSource.style.position = 'static';
           this.dragSource.style.pointerEvents = 'auto';
-          this.dragClone.remove();
         }
+        this.dragClone.remove();
+        this.draggablesModified([], [this.dragClone]);
       }
 
       this.isDragging = false;
@@ -471,7 +471,10 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       this.touchStartPoint = null;
       this.currentDropTarget = null;
       this.lastTarget = null;
+
+      this.deactivateDroppables();
     }
+
     protected checkAllMaxAssociations(): void {
       this.droppables.forEach(d => {
         const maxAssociationsReached = this.checkMaxAssociations(d);
@@ -609,9 +612,9 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
     private applyBoundaries(newLeft: number, newTop: number, element: HTMLElement) {
       let boundaryRect: DOMRect = new DOMRect(0, 0, window.innerWidth, window.innerHeight);
-      if (this.rootNode instanceof ShadowRoot) {
-        boundaryRect = this.rootNode.host.getBoundingClientRect();
-      } else if (this.rootNode instanceof Document) {
+      if (this.shadowRoot instanceof ShadowRoot) {
+        boundaryRect = this.shadowRoot.host.getBoundingClientRect();
+      } else if (this.getRootNode() instanceof Document) {
         boundaryRect = document.documentElement.getBoundingClientRect();
       }
 
@@ -674,39 +677,14 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
 
     private appendClone() {
-      const interaction = this.findParentInteractionElement(this.dragSource);
-      if (appendClone == 'default') {
-        if (interaction) {
-          interaction.appendChild(this.dragClone);
-        } else if (this.rootNode instanceof ShadowRoot) {
-          this.rootNode.host.appendChild(this.dragClone);
-        } else if (this.rootNode instanceof Document) {
-          document.body.appendChild(this.dragClone);
-        }
-      } else if (appendClone == 'interaction') {
-        if (interaction) {
-          interaction.appendChild(this.dragClone);
-        } else {
-          console.error('No interaction found to append the drag clone');
-        }
-      } else if (appendClone == 'host') {
-        if (this.rootNode instanceof ShadowRoot) {
-          this.rootNode.host.appendChild(this.dragClone);
-        } else {
-          console.error('No host found to append the drag clone');
-        }
-      } else if (appendClone == 'body') {
-        document.body.appendChild(this.dragClone);
-      }
+      document.body.appendChild(this.dragClone);
     }
 
     private handleTouchStart(e) {
       const { x, y } = this.getEventCoordinates(e);
-      this.dropzoneOriginalParent = e.currentTarget.parentElement;
       this.touchStartPoint = { x, y };
       this.dragSource = e.currentTarget;
       this.isDraggable = true;
-      this.rootNode = this.dragSource.getRootNode();
 
       this._internals.states.add('--dragzone-enabled');
       this._internals.states.add('--dragzone-active');
@@ -720,41 +698,48 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       );
 
       // clone the element if it is not in a dropzone
-      const parent = this.dragSource.parentElement;
-      if (!this.droppables.includes(parent)) {
-        // TODO: check if this is a correct check in all cases
-        const rect = draggableInDragContainer.getBoundingClientRect();
-        this.cloneOffset.x = x - rect.left;
-        this.cloneOffset.y = y - rect.top;
-        this.dragClone = draggableInDragContainer.cloneNode(true) as HTMLElement;
-        if (rect) {
-          this.setDragCloneStyles(rect);
-        }
-        this.appendClone();
-
-        // check if max associations are reached
-        const matchMax = this.getMatchMaxValue(this.dragSource);
-        const currentDraggables = this.draggables.filter(
-          d => d.getAttribute('identifier') === this.dragSource.getAttribute('identifier')
-        );
-        if (matchMax !== 0 && currentDraggables.length >= matchMax) {
-          draggableInDragContainer.style.opacity = '0.0';
-          draggableInDragContainer.style.pointerEvents = 'none';
-        } else {
-          draggableInDragContainer.style.opacity = '1.0';
-        }
-        e.preventDefault();
-      } else {
-        this.enableDroppable(parent);
-        this.dragClone = this.dragSource;
-        this.dragSource = this.findDraggableInDraggableContainer(this.dragSource.getAttribute('identifier'));
-
-        const rect = this.dragClone.getBoundingClientRect();
-        this.appendClone();
-        if (rect) {
-          this.setDragCloneStyles(rect);
-        }
+      const draggedFromDropzone = this.droppables.some(d =>
+        Array.from(d.children).some(child => child === this.dragSource)
+      );
+      const rect = this.dragSource.getBoundingClientRect();
+      if (draggedFromDropzone) {
+        this.dragSource.remove();
+        this.draggablesModified([], [this.dragSource]);
+        this.dragSource = draggableInDragContainer;
       }
+
+      this.cloneOffset.x = x - rect.left;
+      this.cloneOffset.y = y - rect.top;
+      this.dragClone = draggableInDragContainer.cloneNode(true) as HTMLElement;
+
+      // Copy computed styles to the clone
+      const computedStyles = window.getComputedStyle(draggableInDragContainer);
+      for (let i = 0; i < computedStyles.length; i++) {
+        const key = computedStyles[i];
+        this.dragClone.style.setProperty(key, computedStyles.getPropertyValue(key));
+      }
+      const rectOrg = draggableInDragContainer.getBoundingClientRect();
+      this.dragClone.style.width = `${rectOrg.width}px`;
+      this.dragClone.style.height = `${rectOrg.height}px`;
+      if (rect) {
+        this.setDragCloneStyles(rect);
+      }
+      this.dragClone.style.display = 'block';
+      this.dragClone.style.opacity = '1';
+      this.appendClone();
+
+      // check if max associations are reached
+      const matchMax = this.getMatchMaxValue(this.dragSource);
+      const currentDraggables = this.draggables.filter(
+        d => d.getAttribute('identifier') === this.dragSource.getAttribute('identifier')
+      );
+      if (matchMax !== 0 && currentDraggables.length >= matchMax) {
+        draggableInDragContainer.style.opacity = '0.0';
+        draggableInDragContainer.style.pointerEvents = 'none';
+      } else {
+        draggableInDragContainer.style.opacity = '1.0';
+      }
+      e.preventDefault();
       this.dragClone.setAttribute('dragging', '');
     }
 
@@ -770,7 +755,6 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     private findDraggableInDraggableContainer(identifier: string): HTMLElement | undefined {
       // Flatten all drag containers
       const allDragContainers = this.dragContainers.flat();
-
       // Iterate through each drag container
       for (const container of allDragContainers) {
         // Check if the container itself has the identifier
@@ -778,10 +762,8 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
           // Return the container itself if it matches
           return container;
         }
-
         // If the container is a slot element, get assigned elements
         let elements: HTMLElement[];
-
         // Check if the container is a slot element
         if (container instanceof HTMLSlotElement) {
           // If it's a slot, get the assigned elements
@@ -807,8 +789,8 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       this.dragClone.style.position = 'fixed';
       this.dragClone.style.top = `${rect.top}px`;
       this.dragClone.style.left = `${rect.left}px`;
-      this.dragClone.style.width = `${rect.width}px`;
-      this.dragClone.style.height = `${rect.height}px`;
+      // this.dragClone.style.width = `${rect.width}px`;
+      // this.dragClone.style.height = `${rect.height}px`;
       // set style.boxSizing = 'border-box' with important'
       this.dragClone.style.setProperty('box-sizing', 'border-box', 'important');
       this.dragClone.style.zIndex = '9999';
