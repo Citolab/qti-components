@@ -170,22 +170,29 @@ export class QtiAssessmentItem extends LitElement {
     this.addEventListener('qti-interaction-response', this.handleUpdateResponseVariable);
   }
 
-  public showCorrectResponse(show: boolean) {
-    const responseVariables = this._context.variables.filter(
-      (vari: ResponseVariable | OutcomeVariable) => 'correctResponse' in vari && vari.correctResponse
-    ) as ResponseVariable[];
-    const responses = responseVariables.map(cr => {
-      return {
-        responseIdentifier: cr.identifier,
-        response: cr.correctResponse
-      };
-    });
-    for (const response of responses) {
-      const interaction: Interaction | undefined = this._interactionElements.find(
-        i => i.getAttribute('response-identifier') === response.responseIdentifier
+  /**
+   * Toggles the display of correct responses for interactions.
+   * @param show - A boolean indicating whether to show or hide correct responses.
+   */
+  public showCorrectResponse(show: boolean): void {
+    // Process response variables with correct responses.
+    const responses = this._context.variables
+      .filter(
+        (variable: ResponseVariable | OutcomeVariable) => 'correctResponse' in variable && variable.correctResponse
+      )
+      .map((variable: ResponseVariable) => ({
+        responseIdentifier: variable.identifier,
+        response: variable.correctResponse || ''
+      }));
+
+    // Update interactions with the correct responses or clear them.
+    for (const { responseIdentifier, response } of responses) {
+      const interaction = this._interactionElements.find(
+        element => element.getAttribute('response-identifier') === responseIdentifier
       );
+
       if (interaction) {
-        interaction.correctResponse = show ? response.response : '';
+        interaction.correctResponse = show ? response : '';
       }
     }
   }

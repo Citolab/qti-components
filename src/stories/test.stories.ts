@@ -26,6 +26,7 @@ export const Test: Story = {
   render: (_, { loaded: { testURL } }) => {
     return html`
       <qti-test class="flex flex-col h-full overflow-hidden">
+        <test-view>View</test-view>
         <test-container class="flex-1 overflow-auto p-2" test-url="${testURL}"></test-container>
         <nav class="flex justify-between p-2">
           <test-end-attempt>End attempt</test-end-attempt>
