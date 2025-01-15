@@ -371,11 +371,6 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
     private handleTouchEnd(e) {
       if (this.isDragging) {
-        // Handle drop event
-        if (this.currentDropTarget) {
-          const draggable = this.dragClone;
-          this.moveDraggableToDroppable(draggable, this.currentDropTarget);
-        }
         this.resetDragState();
       }
       this._internals.states.delete('--dragzone-active');
@@ -681,6 +676,9 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
 
     private handleTouchStart(e) {
+      if (this.isDragging) {
+        return;
+      }
       const { x, y } = this.getEventCoordinates(e);
       this.touchStartPoint = { x, y };
       this.dragSource = e.currentTarget;
