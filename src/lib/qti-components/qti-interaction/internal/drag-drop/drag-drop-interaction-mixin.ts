@@ -553,7 +553,6 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
 
     public saveResponse(): void {
-      this.validate();
       const response = this.collectResponseData();
       this.dispatchEvent(
         new CustomEvent('qti-interaction-response', {
