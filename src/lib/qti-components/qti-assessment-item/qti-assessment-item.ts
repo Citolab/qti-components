@@ -14,7 +14,6 @@ import type QtiRegisterVariable from '../internal/events/qti-register-variable';
 import type { ItemContext } from '../../exports/item.context';
 import { itemContextVariables } from '../../exports/item.context';
 import type { Interaction } from '../../exports/interaction';
-
 /**
  * @summary The qti-assessment-item element contains all the other QTI 3 item structures.
  * @documentation https://www.imsglobal.org/spec/qti/v3p0/impl#h.dltnnj87l0yj
@@ -143,10 +142,14 @@ export class QtiAssessmentItem extends LitElement {
         feedbackElement.checkShowFeedback(feedbackElement.outcomeIdentifier);
       }
     });
-    this.addEventListener('qti-register-interaction', (e: CustomEvent<null>) => {
-      e.stopPropagation();
-      this._interactionElements.push(e.target as Interaction);
-    });
+    this.addEventListener(
+      'qti-register-interaction',
+      (e: CustomEvent<{ interaction: string; interactionElement: Interaction }>) => {
+        e.stopPropagation();
+
+        this._interactionElements.push(e.detail.interactionElement);
+      }
+    );
     this.addEventListener('end-attempt', (e: CustomEvent<{ responseIdentifier: string; countAttempt: boolean }>) => {
       const { responseIdentifier, countAttempt } = e.detail;
       this.validate();

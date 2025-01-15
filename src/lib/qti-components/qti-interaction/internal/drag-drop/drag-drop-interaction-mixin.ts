@@ -109,7 +109,6 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
     override firstUpdated(changedProps): void {
       super.firstUpdated(changedProps);
-
       const disabled = this.hasAttribute('disabled');
       if (!disabled) {
         document.addEventListener('touchmove', this.handleTouchMove.bind(this), { passive: false });
@@ -133,7 +132,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
       this.updateMinDimensionsForDropZones();
 
-      // MutationObserver to observe changes in child elements
+      // MutationObserver to observe changes in childrd elements
       this.observer = new MutationObserver(() => this.updateMinDimensionsForDropZones());
       this.observer.observe(this, { childList: true, subtree: true });
 
@@ -170,8 +169,6 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       this.draggables.forEach(draggable => {
         draggable.style.viewTransitionName = `drag-${index}-${this.getAttribute('identifier') || crypto.randomUUID()}`;
         draggable.setAttribute('qti-draggable', 'true');
-        draggable.addEventListener('dragstart', this.handleDragStart);
-        draggable.addEventListener('dragend', this.handleDragEnd);
         index++;
       });
     };
@@ -244,36 +241,6 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       return this.classList.contains('qti-match-tabular');
     }
 
-    private handleDragStart = (ev: DragEvent) => {
-      const target = ev.currentTarget as HTMLElement;
-      ev.dataTransfer.setData('text', target.getAttribute('identifier'));
-      if (this.responseIdentifier) {
-        ev.dataTransfer.setData('responseIdentifier', this.responseIdentifier);
-      }
-      this._internals.states.add('--dragzone-enabled');
-      this._internals.states.add('--dragzone-active');
-      target.setAttribute('dragging', '');
-      this.activateDragLocation();
-      this.activateDroppables(target);
-    };
-
-    private handleDragEnd = async (ev: DragEvent) => {
-      ev.preventDefault();
-      const draggable = ev.currentTarget as HTMLElement;
-      this._internals.states.delete('--dragzone-enabled');
-      this._internals.states.delete('--dragzone-active');
-      this.deactivateDragLocation();
-      this.deactivateDroppables();
-
-      draggable.removeAttribute('dragging');
-      // const wasDropped = await this.wasDropped(ev);
-      // if (!wasDropped) {
-      //   if (this.configuration.dragCanBePlacedBack) {
-      //     this.restoreInitialDraggablePosition(draggable);
-      //   }
-      // }
-    };
-
     private updateMinDimensionsForDropZones() {
       const gapTexts = this.querySelectorAll(draggablesSelector);
       const gaps = Array.from(this.querySelectorAll(droppablesSelector)).map(d => d as HTMLElement);
@@ -331,10 +298,13 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       const dragContainers = this.dragContainers;
       dragContainers.forEach(d => {
         d.removeAttribute('enabled');
+        d.removeAttribute('active');
       });
-      this.droppables.forEach(d => d.removeAttribute('enabled'));
+      this.droppables.forEach(d => {
+        d.removeAttribute('enabled');
+        d.removeAttribute('active');
+      });
     }
-
     override disconnectedCallback() {
       super.disconnectedCallback();
 
@@ -413,6 +383,13 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       }
       this._internals.states.delete('--dragzone-active');
       this.checkAllMaxAssociations();
+
+      this._internals.states.delete('--dragzone-enabled');
+      this._internals.states.delete('--dragzone-active');
+      this.deactivateDragLocation();
+      this.deactivateDroppables();
+
+      this.dragClone?.removeAttribute('dragging');
       e.preventDefault();
     }
 
@@ -734,6 +711,12 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       this.isDraggable = true;
       this.rootNode = this.dragSource.getRootNode();
 
+      this._internals.states.add('--dragzone-enabled');
+      this._internals.states.add('--dragzone-active');
+      this.dragSource.setAttribute('dragging', '');
+      this.activateDragLocation();
+      this.activateDroppables(this.dragSource);
+
       // Create and position the drag clone
       const draggableInDragContainer = this.findDraggableInDraggableContainer(
         this.dragSource.getAttribute('identifier')
@@ -810,7 +793,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
         // Check if the container is a slot element
         if (container instanceof HTMLSlotElement) {
           // If it's a slot, get the assigned elements
-          elements = Array.from(container.assignedElements() || []) as HTMLElement[];
+          elements = Array.from(container?.assignedElements() || []) as HTMLElement[];
         } else {
           // Otherwise, query the container using draggablesSelector
           elements = Array.from(container.querySelectorAll(draggablesSelector)) as HTMLElement[];

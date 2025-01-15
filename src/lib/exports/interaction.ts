@@ -49,6 +49,7 @@ export abstract class Interaction extends LitElement implements IInteraction {
         composed: true,
         cancelable: false,
         detail: {
+          interactionElement: this,
           responseIdentifier: this.responseIdentifier
         }
       })
