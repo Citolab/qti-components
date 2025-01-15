@@ -99,6 +99,9 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
       return;
     } else if (Array.isArray(responseValue)) {
       this.correctOptions = responseValue;
+      if (!this.class.split(' ').includes('qti-match-tabular')) {
+        this.value = responseValue;
+      }
     }
   }
 

@@ -488,9 +488,15 @@
       &:state(checkbox):state(--checked)::part(cha) {
         @apply check-checkbox-checked;
       }
-    }
 
-    /* } */
+      &:state(correct-response),
+      &[data-correct-response='true'] {
+        &::after {
+          content: '\02714';
+          color: #16a34a; /* text-green-600 */
+        }
+      }
+    }
 
     &.qti-input-control-hidden {
       qti-hottext {
