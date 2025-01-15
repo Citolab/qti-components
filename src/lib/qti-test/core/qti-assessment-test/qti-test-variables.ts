@@ -1,9 +1,10 @@
 import { consume } from '@lit/context';
-import type { QtiExpressionBase } from '../../../qti-components';
-import { QtiExpression } from '../../../qti-components';
+
 import type { TestElement, TestContext } from '../context';
 import { testContext, testElement } from '../context';
 import type { QtiAssessmentItemRef } from './qti-assessment-item-ref';
+import type { QtiExpressionBase } from '../../../exports/qti-expression';
+import { QtiExpression } from '../../../exports/qti-expression';
 
 // <qti-custom-operator definition="trim">
 export class QtiTestVariables extends QtiExpression<number> {
