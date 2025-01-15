@@ -24,7 +24,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
         if (!navItemId) return;
         this._clearLoadedItems();
 
-        const itemRefEl = this.testElement.el.querySelector<QtiAssessmentItemRef>(
+        const itemRefEl = this.testElement.querySelector<QtiAssessmentItemRef>(
           `qti-assessment-item-ref[identifier="${navItemId}"]`
         );
 
@@ -52,7 +52,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
       this.addEventListener('qti-assessment-test-connected', () => {
         let navItemId = this._testContext.navItemId;
         if (!navItemId) {
-          const itemRefEl = this.testElement.el.querySelector<QtiAssessmentItemRef>('qti-assessment-item-ref');
+          const itemRefEl = this.testElement.querySelector<QtiAssessmentItemRef>('qti-assessment-item-ref');
           navItemId = itemRefEl.identifier;
         }
         this.dispatchEvent(
@@ -62,7 +62,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
     }
 
     private _clearLoadedItems(): void {
-      const itemRefEls = this.testElement.el.querySelectorAll(`qti-assessment-test qti-assessment-item-ref`);
+      const itemRefEls = this.testElement.querySelectorAll(`qti-assessment-test qti-assessment-item-ref`);
       Array.from(itemRefEls).forEach((itemElement: QtiAssessmentItemRef) => {
         itemElement.xmlDoc = null;
       });

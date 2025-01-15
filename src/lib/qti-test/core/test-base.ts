@@ -15,7 +15,7 @@ export abstract class TestBase extends LitElement {
 
   @state()
   @provide({ context: testElement })
-  protected testElement: TestElement = { el: null };
+  protected testElement: TestElement = null;
 
   constructor() {
     super();
@@ -31,7 +31,7 @@ export abstract class TestBase extends LitElement {
           variables: [{ identifier: 'completionStatus', value: 'not_attempted', type: 'outcome' }]
         })
       );
-      this.testElement = { el: qtiAssessmentTest };
+      this.testElement = qtiAssessmentTest;
       this._testContext = { ...this._testContext, items };
     });
     this.addEventListener('qti-assessment-item-connected', (e: CustomEvent<QtiAssessmentItem>) => {
@@ -41,13 +41,6 @@ export abstract class TestBase extends LitElement {
       const assessmentitem = e.composedPath()[0] as QtiAssessmentItem;
       this._updateItemVariablesInTestContext(assessmentitem.identifier, assessmentitem.variables);
     });
-
-    // this.addEventListener(
-    //   'qti-assessment-item-ref-connected',
-    //   (e: CustomEvent<{ href: string; identifier: string; category: string }> & { target: QtiAssessmentItemRef }) => {
-    //     this._addItemToTestContext(e);
-    //   }
-    // );
   }
 
   get context(): TestContext {
@@ -145,9 +138,4 @@ export abstract class TestBase extends LitElement {
   //     });
   //   }
   // }
-
-  connectedCallback(): void {
-    super.connectedCallback();
-    this.setAttribute('qti-test', '');
-  }
 }

@@ -6,4 +6,6 @@ export * from './test-next';
 export * from './test-prev';
 export * from './test-view';
 export * from './test-item-link';
+export * from './test-end-attempt';
+export * from './test-show-correct-response';
 export * from './test-paging-buttons-stamp';

@@ -17,8 +17,6 @@ export interface TestContext {
 
 export const testContext = createContext<Readonly<TestContext>>(Symbol('test'));
 
-export type TestElement = {
-  el: QtiAssessmentTest;
-};
+export type TestElement = QtiAssessmentTest | null;
 
 export const testElement = createContext<Readonly<TestElement>>(Symbol('testElement'));

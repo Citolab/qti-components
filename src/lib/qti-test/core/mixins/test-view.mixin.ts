@@ -43,14 +43,14 @@ export const TestViewMixin = <T extends Constructor<TestBase>>(superClass: T) =>
 
     // Method to handle view updates for elements based on the current context view
     private _updateElementView() {
-      if (this.testElement && this.testElement.el) {
-        const viewElements = Array.from(this.testElement.el.querySelectorAll('[view]'));
+      if (this.testElement && this.testElement) {
+        const viewElements = Array.from(this.testElement.querySelectorAll('[view]'));
 
         viewElements.forEach((element: HTMLElement) => {
           element.classList.toggle('show', element.getAttribute('view') === this._testContext.view);
         });
 
-        const assessmentItem = this.testElement.el.querySelector<QtiAssessmentItem>(
+        const assessmentItem = this.testElement.querySelector<QtiAssessmentItem>(
           `qti-assessment-item[identifier="${this._testContext.navItemId}"]`
         );
         if (assessmentItem) {

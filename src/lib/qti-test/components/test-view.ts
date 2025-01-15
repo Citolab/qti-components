@@ -35,6 +35,16 @@ export class TestView extends TestComponent {
     }
   }
 
+  protected _switchView(view: string) {
+    this.dispatchEvent(
+      new CustomEvent('on-test-switch-view', {
+        composed: true,
+        bubbles: true,
+        detail: view
+      })
+    );
+  }
+
   render() {
     return html`
       <label part="label" for="viewSelect">${this.label}</label>

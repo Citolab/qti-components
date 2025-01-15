@@ -1,0 +1,114 @@
+html,
+body.sb-main-fullscreen,
+body.sb-main-fullscreen #storybook-root,
+body.sb-main-fullscreen #storybook-root #root-inner {
+  height: 100%;
+}
+
+.flex {
+  display: flex;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.p-2 {
+  padding: 0.5rem;
+}
+
+.m-2 {
+  margin: 0.5rem;
+}
+
+.block {
+  display: block;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}
+
+.gap-1 {
+  gap: 0.25rem;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.h-full {
+  height: 100%;
+}
+
+.h-dvh {
+  height: 100dvh;
+}
+
+.flex-1 {
+  flex: 1 1 0%;
+}
+
+.overflow-auto {
+  overflow: auto;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.relative {
+  position: relative;
+}
+
+.left-2 {
+  left: 0.5rem /* 8px */;
+}
+
+.top-2 {
+  top: 0.5rem /* 8px */;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.rounded-circle {
+  border-radius: 9999px !important;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.columns-1 {
+  columns: 1;
+}
+
+.bottom-0 {
+  bottom: 0;
+}
+
+.hidden {
+  display: none;
+}
+
+@media (width >= 768px) {
+  /* stylelint-disable-next-line selector-class-pattern */
+  .md\:columns-4 {
+    columns: 4;
+  }
+
+  /* stylelint-disable-next-line selector-class-pattern */
+  .md\:flex {
+    display: flex;
+  }
+}

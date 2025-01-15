@@ -35,7 +35,8 @@ const preview: Preview = {
       matchers: {
         color: /(background|color)$/i
       }
-    }
+    },
+    layout: 'fullscreen'
   },
 
   tags: ['!autodocs']

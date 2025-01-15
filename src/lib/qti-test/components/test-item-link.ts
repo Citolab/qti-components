@@ -22,6 +22,16 @@ export class TestItemLink extends TestComponent {
     this.addEventListener('click', () => this._requestItem(this.itemId));
   }
 
+  protected _requestItem(identifier: string): void {
+    this.dispatchEvent(
+      new CustomEvent('qti-request-test-item', {
+        composed: true,
+        bubbles: true,
+        detail: identifier
+      })
+    );
+  }
+
   render() {
     return html` <slot></slot> `;
   }

@@ -39,8 +39,18 @@ export class TestNext extends TestComponent {
   willUpdate(changedProperties: Map<string | number | symbol, unknown>) {
     super.willUpdate(changedProperties);
     if (changedProperties.has('_testContext')) {
-      this.disabled = !this._testElement?.el || this.itemIndex < 0 || this.itemIndex >= this.items.length - 1;
+      this.disabled = !this._testElement || this.itemIndex < 0 || this.itemIndex >= this.items.length - 1;
     }
+  }
+
+  protected _requestItem(identifier: string): void {
+    this.dispatchEvent(
+      new CustomEvent('qti-request-test-item', {
+        composed: true,
+        bubbles: true,
+        detail: identifier
+      })
+    );
   }
 
   render() {

@@ -16,8 +16,8 @@ const meta: Meta<QtiPositionObjectInteraction> = {
     actions: {
       handles: events
     }
-  },
-  tags: ['autodocs']
+  }
+  // tags: ['autodocs']
 };
 export default meta;
 

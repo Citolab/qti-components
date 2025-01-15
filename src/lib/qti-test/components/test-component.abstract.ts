@@ -23,7 +23,7 @@ export abstract class TestComponent extends LitElement {
   protected _testElement?: TestElement;
   @watch('_testElement')
   _handleTestElementChange(_oldValue: TestElement, newValue: TestElement) {
-    if (newValue.el) {
+    if (newValue) {
       this.disabled = false;
     }
   }
@@ -46,25 +46,5 @@ export abstract class TestComponent extends LitElement {
       this.items = items;
       this.view = this._testContext?.view;
     }
-  }
-
-  protected _switchView(view: string) {
-    this.dispatchEvent(
-      new CustomEvent('on-test-switch-view', {
-        composed: true,
-        bubbles: true,
-        detail: view
-      })
-    );
-  }
-
-  protected _requestItem(identifier: string): void {
-    this.dispatchEvent(
-      new CustomEvent('qti-request-test-item', {
-        composed: true,
-        bubbles: true,
-        detail: identifier
-      })
-    );
   }
 }
