@@ -8,6 +8,7 @@ type Story = StoryObj<QtiTest & typeof args>;
 
 const meta: Meta<typeof QtiTest> = {
   component: 'qti-test',
+  title: 'qti-test',
   subcomponents: { testContainer: 'test-container' },
   args,
   argTypes,
@@ -16,7 +17,7 @@ const meta: Meta<typeof QtiTest> = {
       handles: events
     }
   },
-  tags: ['autodocs', 'new']
+  tags: ['autodocs']
 };
 export default meta;
 

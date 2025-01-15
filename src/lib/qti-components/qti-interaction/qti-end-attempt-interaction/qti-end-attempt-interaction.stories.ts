@@ -16,8 +16,8 @@ const meta: Meta<QtiEndAttemptInteraction> = {
     actions: {
       handles: events
     }
-  },
-  tags: ['autodocs']
+  }
+  // tags: ['autodocs']
 };
 export default meta;
 

@@ -16,8 +16,8 @@ const meta: Meta<typeof QtiItem> = {
     actions: {
       handles: events
     }
-  },
-  tags: ['autodocs', 'new']
+  }
+  // tags: ['autodocs']
 };
 export default meta;
 

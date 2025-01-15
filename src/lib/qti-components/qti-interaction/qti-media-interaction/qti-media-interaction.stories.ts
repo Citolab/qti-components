@@ -8,15 +8,17 @@ const { events, args, argTypes, template } = getWcStorybookHelpers('qti-media-in
 type Story = StoryObj<QtiMediaInteraction & typeof args>;
 
 const meta: Meta<QtiMediaInteraction> = {
-  component: 'qti-match-interaction',
+  component: 'qti-media-interaction',
+  title: 'components/qti-media-interaction',
+
   args,
   argTypes,
   parameters: {
     actions: {
       handles: events
     }
-  },
-  tags: ['autodocs', 'no-tests']
+  }
+  // tags: ['autodocs', 'no-tests']
 };
 export default meta;
 

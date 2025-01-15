@@ -18,8 +18,8 @@ const meta: Meta<typeof ItemContainer & { 'item-url': string }> = {
     actions: {
       handles: events
     }
-  },
-  tags: ['autodocs', 'new']
+  }
+  // tags: ['autodocs', 'new']
 };
 export default meta;
 
