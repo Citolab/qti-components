@@ -585,10 +585,29 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       const newLeft = touch.clientX - this.cloneOffset.x;
       const newTop = touch.clientY - this.cloneOffset.y;
 
-      const { newLeft: boundedLeft, newTop: boundedTop } = this.applyBoundaries(newLeft, newTop, this.dragClone);
+      // Apply boundaries specific to the interaction element
+      const { newLeft: boundedLeft, newTop: boundedTop } = this.applyInteractionBoundaries(
+        newLeft,
+        newTop,
+        this.dragClone
+      );
 
       this.dragClone.style.left = `${boundedLeft}px`;
       this.dragClone.style.top = `${boundedTop}px`;
+    }
+
+    private applyInteractionBoundaries(newLeft: number, newTop: number, element: HTMLElement) {
+      // Get the interaction element's boundaries
+      const interactionRect = this.getBoundingClientRect();
+      const elementRect = element.getBoundingClientRect();
+      const elementWidth = elementRect.width;
+      const elementHeight = elementRect.height;
+
+      // Constrain the position to the interaction's boundaries
+      const boundedLeft = Math.max(interactionRect.left, Math.min(newLeft, interactionRect.right - elementWidth));
+      const boundedTop = Math.max(interactionRect.top, Math.min(newTop, interactionRect.bottom - elementHeight));
+
+      return { newLeft: boundedLeft, newTop: boundedTop };
     }
 
     private getEventCoordinates(event, page = false) {
@@ -603,24 +622,6 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       const xDist = Math.abs(touch.clientX - this.touchStartPoint.x);
       const yDist = Math.abs(touch.clientY - this.touchStartPoint.y);
       return xDist + yDist;
-    }
-
-    private applyBoundaries(newLeft: number, newTop: number, element: HTMLElement) {
-      let boundaryRect: DOMRect = new DOMRect(0, 0, window.innerWidth, window.innerHeight);
-      if (this.shadowRoot instanceof ShadowRoot) {
-        boundaryRect = this.shadowRoot.host.getBoundingClientRect();
-      } else if (this.getRootNode() instanceof Document) {
-        boundaryRect = document.documentElement.getBoundingClientRect();
-      }
-
-      const elementRect = element.getBoundingClientRect();
-      const elementWidth = elementRect.width;
-      const elementHeight = elementRect.height;
-
-      const boundedLeft = Math.max(boundaryRect.left, Math.min(newLeft, boundaryRect.right - elementWidth));
-      const boundedTop = Math.max(boundaryRect.top, Math.min(newTop, boundaryRect.bottom - elementHeight));
-
-      return { newLeft: boundedLeft, newTop: boundedTop };
     }
 
     private findClosestDropzone(): HTMLElement | null {
