@@ -388,8 +388,9 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       this._internals.states.delete('--dragzone-active');
       this.deactivateDragLocation();
       this.deactivateDroppables();
-
-      this.dragClone?.removeAttribute('dragging');
+      this.draggables.forEach(d => {
+        d.removeAttribute('dragging');
+      });
       e.preventDefault();
     }
 
@@ -450,17 +451,14 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
         const droppedInDragContainer = !isDropped || this.dragContainers.includes(this.currentDropTarget);
 
         if (!droppedInDragContainer) {
-          const computedStyles = window.getComputedStyle(this.dragSource);
-          for (let i = 0; i < computedStyles.length; i++) {
-            const key = computedStyles[i];
-            this.dragClone.style.setProperty(key, computedStyles.getPropertyValue(key));
-          }
           this.dragClone.style.opacity = '1.0';
           this.dragClone.style.display = 'block';
+          this.dragClone.style.position = 'static';
           this.dragClone.style.pointerEvents = 'auto';
         } else {
           this.dragSource.style.opacity = '1.0';
           this.dragSource.style.display = 'block';
+          this.dragSource.style.position = 'static';
           this.dragSource.style.pointerEvents = 'auto';
           this.dragClone.remove();
         }
@@ -712,7 +710,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
       this._internals.states.add('--dragzone-enabled');
       this._internals.states.add('--dragzone-active');
-      this.dragSource.setAttribute('dragging', '');
+
       this.activateDragLocation();
       this.activateDroppables(this.dragSource);
 
@@ -728,13 +726,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
         const rect = draggableInDragContainer.getBoundingClientRect();
         this.cloneOffset.x = x - rect.left;
         this.cloneOffset.y = y - rect.top;
-
         this.dragClone = draggableInDragContainer.cloneNode(true) as HTMLElement;
-        const computedStyles = window.getComputedStyle(this.dragSource);
-        for (let i = 0; i < computedStyles.length; i++) {
-          const key = computedStyles[i];
-          this.dragClone.style.setProperty(key, computedStyles.getPropertyValue(key));
-        }
         if (rect) {
           this.setDragCloneStyles(rect);
         }
@@ -763,6 +755,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
           this.setDragCloneStyles(rect);
         }
       }
+      this.dragClone.setAttribute('dragging', '');
     }
 
     private findParentInteractionElement(element: HTMLElement): HTMLElement {
