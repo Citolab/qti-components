@@ -371,6 +371,10 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
     private handleTouchEnd(e) {
       if (this.isDragging) {
+        if (this.currentDropTarget) {
+          const draggable = this.dragClone;
+          this.moveDraggableToDroppable(draggable, this.currentDropTarget);
+        }
         this.resetDragState();
       }
       this._internals.states.delete('--dragzone-active');
