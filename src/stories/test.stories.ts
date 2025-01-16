@@ -25,7 +25,7 @@ type Story = StoryObj;
 export const Test: Story = {
   render: (_, { loaded: { testURL } }) => {
     return html`
-      <qti-test auto-score-items class="flex h-full overflow-hidden">
+      <qti-test class="flex h-full overflow-hidden">
         <test-paging-buttons-stamp class="flex flex-col gap-2 p-2 overflow-auto" style="min-width:160px">
           <template>
             <test-item-link item-id="{{ item.identifier }}"> {{ item.identifier }} </test-item-link>
