@@ -203,7 +203,6 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
         this.checkAllMaxAssociations();
         this.saveResponse(); //
       };
-      // debugger;
       // if (!document.startViewTransition) {
       moveElement();
       return;
@@ -470,6 +469,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
           this.dragSource.style.display = 'block';
           this.dragSource.style.position = 'static';
           this.dragSource.style.pointerEvents = 'auto';
+          this.saveResponse();
         }
         this.dragClone.remove();
         this.draggablesModified([], [this.dragClone]);
@@ -518,6 +518,8 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       if (this.isMatchTabular()) return;
       // Assuming this.value is an array of strings
       if (Array.isArray(value)) {
+        this.reset();
+
         value?.forEach(entry => this.placeResponse(entry));
         const formData = new FormData();
         value.forEach(response => {
@@ -532,10 +534,12 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
     private placeResponse(response: string): void {
       const [dropId, ...dragIds] = response.split(' ').reverse();
+      const draggableArray = Array.from(this.draggables);
+      const droppableArray = Array.from(this.droppables);
 
       dragIds.forEach(dragId => {
-        const draggable = this.querySelector<HTMLElement>(`[identifier=${dragId}]`);
-        const droppable = this.querySelector<HTMLElement>(`[identifier=${dropId}]`);
+        const draggable = draggableArray.find(d => d.getAttribute('identifier') === dragId);
+        const droppable = droppableArray.find(d => d.getAttribute('identifier') === dropId);
         this.dropDraggableInDroppable(draggable, droppable);
       });
     }
@@ -561,8 +565,8 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     private collectResponseData(): string[] {
       const response = this.droppables
         .map(droppable => {
-          const draggablesInDroppable = droppable.querySelectorAll('[qti-draggable="true"]');
-          const identifiers = Array.from(draggablesInDroppable).map(d => d.getAttribute('identifier'));
+          const draggablesInDroppable = this.getDraggablesFromDroppable(droppable);
+          const identifiers = draggablesInDroppable.map(d => d.getAttribute('identifier'));
           const droppableIdentifier = droppable.getAttribute('identifier');
           return identifiers.map(id => `${id} ${droppableIdentifier}`);
         })
@@ -570,9 +574,46 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       return response;
     }
 
-    reset(save = true): void {
-      // this.resetDroppables();
-      if (save) this.saveResponse();
+    private getDraggablesFromDroppable(droppable: HTMLElement): HTMLElement[] {
+      const uniqueDraggableIds = this.draggables
+        .map(d => d.getAttribute('identifier'))
+        .filter((v, i, a) => a.indexOf(v) === i);
+
+      const draggables = uniqueDraggableIds
+        .flatMap(d => Array.from(droppable.querySelectorAll(`[identifier='${d}']`)))
+        .filter(d => !!d)
+        .map(d => d as HTMLElement);
+      return draggables;
+    }
+
+    reset(save = false): void {
+      // Remove all draggables from droppables
+      this.droppables.forEach(droppable => {
+        const draggables = this.getDraggablesFromDroppable(droppable);
+        draggables.forEach((draggable: HTMLElement) => {
+          draggable.remove();
+          this.draggablesModified([], [draggable]);
+        });
+      });
+      this.dragContainers.forEach(dragContainer => {
+        const draggables = Array.from(dragContainer.querySelectorAll('[qti-draggable="true"]')) as HTMLElement[];
+        draggables.forEach(draggable => {
+          draggable.style.opacity = '1.0';
+        });
+      });
+
+      // Reset dragClone, dragSource, and related states
+      this.dragClone = null;
+      this.dragSource = null;
+      this.isDragging = false;
+      this.isDraggable = false;
+      this.currentDropTarget = null;
+      this.lastTarget = null;
+
+      // Optionally save the reset state
+      if (save) {
+        this.saveResponse();
+      }
     }
 
     private updateDragClonePosition(touch) {
@@ -775,7 +816,6 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
           return foundElement;
         }
       }
-
       // Return undefined if no matching element is found
       return undefined;
     }
@@ -784,9 +824,6 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       this.dragClone.style.position = 'fixed';
       this.dragClone.style.top = `${rect.top}px`;
       this.dragClone.style.left = `${rect.left}px`;
-      // this.dragClone.style.width = `${rect.width}px`;
-      // this.dragClone.style.height = `${rect.height}px`;
-      // set style.boxSizing = 'border-box' with important'
       this.dragClone.style.setProperty('box-sizing', 'border-box', 'important');
       this.dragClone.style.zIndex = '9999';
       this.dragClone.style.pointerEvents = 'none';
