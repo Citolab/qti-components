@@ -436,18 +436,34 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       return unlimitedAssociations || currentAssociations >= maxMatch;
     }
 
+    private dropDraggableInDroppable(draggable: HTMLElement, droppable: HTMLElement): void {
+      // Create a clean clone of the original draggable without computed styles
+      const cleanClone = draggable.cloneNode(true) as HTMLElement;
+      cleanClone.removeAttribute('style'); // Remove inline styles from the clone
+      // Place the clean clone into the drop target
+      this.moveDraggableToDroppable(cleanClone, droppable);
+      // this.currentDropTarget.appendChild(cleanClone);
+      this.draggablesModified([cleanClone], []);
+
+      // check if max associations are reached
+      const matchMax = this.getMatchMaxValue(draggable);
+      const currentDraggables = this.draggables.filter(
+        d => d.getAttribute('identifier') === draggable.getAttribute('identifier')
+      );
+      if (matchMax !== 0 && currentDraggables.length >= matchMax) {
+        draggable.style.opacity = '0.0';
+        draggable.style.pointerEvents = 'none';
+      } else {
+        draggable.style.opacity = '1.0';
+      }
+    }
+
     private resetDragState() {
       if (this.dragClone) {
         const isDropped = this.currentDropTarget !== null;
         const droppedInDragContainer = !isDropped || this.dragContainers.includes(this.currentDropTarget);
         if (isDropped && this.currentDropTarget && !droppedInDragContainer) {
-          // Create a clean clone of the original draggable without computed styles
-          const cleanClone = this.dragSource.cloneNode(true) as HTMLElement;
-          cleanClone.removeAttribute('style'); // Remove inline styles from the clone
-          // Place the clean clone into the drop target
-          this.moveDraggableToDroppable(cleanClone, this.currentDropTarget);
-          // this.currentDropTarget.appendChild(cleanClone);
-          this.draggablesModified([cleanClone], []);
+          this.dropDraggableInDroppable(this.dragSource, this.currentDropTarget);
         }
         if (droppedInDragContainer) {
           this.dragSource.style.opacity = '1.0';
@@ -516,32 +532,12 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
     private placeResponse(response: string): void {
       const [dropId, ...dragIds] = response.split(' ').reverse();
-      const droppable = this.findDroppableById(dropId);
-      dragIds.forEach(dragId => this.placeDraggableInDroppable(dragId, droppable));
-    }
 
-    private findDroppableById(identifier: string): Element | undefined {
-      return this.droppables.find(drop => drop.getAttribute('identifier') === identifier);
-    }
-
-    private async placeDraggableInDroppable(dragId: string, droppable: Element): Promise<void> {
-      const draggable = this.querySelector<HTMLElement>(`[identifier=${dragId}]`);
-      if (!droppable || !draggable) {
-        console.error(`Cannot find draggable or droppable with the given identifier: ${dragId}`);
-        return;
-      }
-      const moveElement = (): void => {
-        draggable.style.transform = 'translate(0, 0)';
-        droppable.appendChild(draggable);
-        this.checkAllMaxAssociations();
-      };
-
-      if (!document.startViewTransition) {
-        moveElement();
-      } else {
-        const transition = document.startViewTransition(moveElement);
-        await transition.finished;
-      }
+      dragIds.forEach(dragId => {
+        const draggable = this.querySelector<HTMLElement>(`[identifier=${dragId}]`);
+        const droppable = this.querySelector<HTMLElement>(`[identifier=${dropId}]`);
+        this.dropDraggableInDroppable(draggable, droppable);
+      });
     }
 
     private getValidAssociations(): number {
