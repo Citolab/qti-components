@@ -371,10 +371,6 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
     private handleTouchEnd(e) {
       if (this.isDragging) {
-        if (this.currentDropTarget) {
-          const draggable = this.dragClone;
-          this.moveDraggableToDroppable(draggable, this.currentDropTarget);
-        }
         this.resetDragState();
       }
       this._internals.states.delete('--dragzone-active');
@@ -449,8 +445,8 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
           const cleanClone = this.dragSource.cloneNode(true) as HTMLElement;
           cleanClone.removeAttribute('style'); // Remove inline styles from the clone
           // Place the clean clone into the drop target
-
-          this.currentDropTarget.appendChild(cleanClone);
+          this.moveDraggableToDroppable(cleanClone, this.currentDropTarget);
+          // this.currentDropTarget.appendChild(cleanClone);
           this.draggablesModified([cleanClone], []);
         }
         if (droppedInDragContainer) {
