@@ -3,40 +3,33 @@ import type { Meta, StoryObj } from '@storybook/web-components';
 
 import { html } from 'lit';
 import { findByShadowTitle, getByShadowText } from 'shadow-dom-testing-library';
-import { getWcStorybookHelpers } from 'wc-storybook-helpers';
-import type { TestPrev as TestPrevClass } from './test-prev';
 import type { TestContext } from '../core/context/test.context';
+import type { QtiTest } from '../core';
 
-const { events, args, argTypes } = getWcStorybookHelpers('test-prev');
+// const { events, args, argTypes } = getWcStorybookHelpers('test-prev');
 
-type Story = StoryObj<TestPrevClass & typeof args>;
+type Story = StoryObj;
 
-const meta: Meta<TestPrevClass> = {
-  component: 'test-prev',
-  args,
-  argTypes,
-  parameters: {
-    actions: {
-      handles: events
-    }
-  }
+const meta: Meta<QtiTest> = {
+  component: 'test-next'
 };
 export default meta;
 
-const PlayerTemplate = (_args: any) => html`
-  <qti-test
-    data-testid="qti-player"
-    .context=${{
-      navItemId: 't1-test-entry-item4'
-    } as TestContext}
-  >
-    <test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"></test-container>
-    <test-prev>vorige</test-prev>
-  </qti-test>
-`;
+export const Default: Story = {
+  render: () => html`
+    <qti-test
+      .context=${{
+        navItemId: 't1-test-entry-item4'
+      } as TestContext}
+    >
+      <test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"> </test-container>
+      <test-prev>vorige</test-prev>
+    </qti-test>
+  `
+};
 
-export const TestPrev: Story = {
-  render: PlayerTemplate.bind({}),
+export const PlayFast: Story = {
+  render: Default.render,
   play: async ({ canvasElement }) => {
     const prevButton = getByShadowText(canvasElement, 'vorige');
     expect(prevButton).toBeDisabled();

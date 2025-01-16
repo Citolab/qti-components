@@ -1,15 +1,21 @@
-import type { LitElement } from 'lit';
 import { qtiTransformItem } from '../../../qti-transformers';
+import { property } from 'lit/decorators.js';
+import type { TestBase } from '../test-base';
+import type { OutcomeVariable } from '../../../exports/variables';
+import type { QtiAssessmentItemRef } from '../qti-assessment-test';
 
-// const setSessionData = <T>(key: string, value?: T): void => sessionStorage.setItem(key, JSON.stringify(value));
-// const getSessionData = <T>(key: string): T | null => (sessionStorage.getItem(key) ? JSON.parse(sessionStorage.getItem(key)!) : null);
+const setSessionData = <T>(key: string, value?: T): void => sessionStorage.setItem(key, JSON.stringify(value));
+const getSessionData = <T>(key: string): T | null =>
+  sessionStorage.getItem(key) ? JSON.parse(sessionStorage.getItem(key)!) : null;
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 
 declare class TestLoaderInterface {}
-export const TestLoaderMixin = <T extends Constructor<LitElement>>(superClass: T) => {
+export const TestLoaderMixin = <T extends Constructor<TestBase>>(superClass: T) => {
   abstract class TestLoaderClass extends superClass {
-    // private testURL = '';
+    /** Items will be scored on everyinteraction when `qti-assessment-item` is not set to adaptive, and the `SCORE` outcome identifier is not set to be "human" | "externalMachine" */
+    @property({ type: Boolean, attribute: 'auto-score-items' }) autoScoreItems = false;
+    @property({ type: Boolean, attribute: 'auto-store-restore' }) autoStoreRestoreContext = false;
 
     constructor(...args: any[]) {
       super(...args);
@@ -31,32 +37,39 @@ export const TestLoaderMixin = <T extends Constructor<LitElement>>(superClass: T
       //   })();
       // });
 
-      this.addEventListener('qti-assessment-test-connected', () => {
-        // this.context = getSessionData(`testcontext-${this.testURL}`); /* 4. Set the context */
+      this.addEventListener('qti-test-connected', () => {
+        if (this.autoStoreRestoreContext) {
+          this.context = getSessionData(`testcontext`); /* 4. Set the context */
+        }
       });
 
       this.addEventListener('qti-load-item-request' /* 5. Request the item */, ({ detail }: CustomEvent) => {
-        // if (!this.testURL) return;
         detail.promise = (async () => {
-          const api = await qtiTransformItem().load(
-            `${detail.href}`,
-            detail.cancelPreviousRequest
-          ); /* 6. load the item */
-          return api.htmlDoc(); /* 7. Return HTML version of the item.xml */
+          const api = await qtiTransformItem().load(`${detail.href}`, detail.cancelPreviousRequest);
+          return api.htmlDoc();
         })();
       });
 
-      this.addEventListener('qti-interaction-changed', _e => {
-        /* 8. Interaction changed */
-        // const scoreOutcomeIdentifier = qtiAssessmentItem.variables.find(v => v.identifier === 'SCORE') as OutcomeVariable;
-        // if (scoreOutcomeIdentifier.externalScored === null && qtiAssessmentItem.adaptive === 'false') {
-        //   qtiAssessmentItem.processResponse(); /* 9. Process the response */
-        // }
-        // setSessionData(`testcontext-${this.testURL}`, this.context); /* 10. Update the context */
-      });
-
-      this.addEventListener('qti-outcome-changed', () => {
-        // setSessionData(`testcontext-${this.testURL}`, this.context); /* 10. Update the context */
+      this.addEventListener('qti-interaction-changed', (e: CustomEvent<any>) => {
+        if (this.autoScoreItems) {
+          const qtiItemEl = this.testElement.querySelector<QtiAssessmentItemRef>(
+            `qti-assessment-item-ref[identifier="${this.context.navItemId}"]`
+          );
+          const qtiAssessmentItem = qtiItemEl.assessmentItem;
+          const scoreOutcomeIdentifier = qtiAssessmentItem.variables.find(
+            v => v.identifier === 'SCORE'
+          ) as OutcomeVariable;
+          if (scoreOutcomeIdentifier.externalScored === null && qtiAssessmentItem.adaptive === 'false') {
+            qtiAssessmentItem.processResponse();
+            if (this.autoStoreRestoreContext) {
+              setSessionData(`testcontext`, this.context);
+            }
+          }
+        } else {
+          if (this.autoStoreRestoreContext) {
+            setSessionData(`testcontext`, this.context);
+          }
+        }
       });
     }
   }

@@ -6,7 +6,6 @@ import { testContext, testElement } from './context';
 import type { QtiAssessmentTest } from './qti-assessment-test';
 import type { QtiAssessmentItem } from '../../qti-components/';
 import type { VariableValue } from '../../exports/variables';
-import type { ItemContext } from '../../exports/item.context';
 
 export abstract class TestBase extends LitElement {
   @state()
@@ -20,18 +19,31 @@ export abstract class TestBase extends LitElement {
   constructor() {
     super();
 
+    /**
+     * When the test is connected, the items are updated in the test context.
+     * An existing context item is updated with the itemRef properties if nessesary.
+     */
     this.addEventListener('qti-assessment-test-connected', (e: CustomEvent<QtiAssessmentTest>) => {
       const qtiAssessmentTest = e.detail;
-
-      const items = Array.from(qtiAssessmentTest.querySelectorAll('qti-assessment-item-ref')).map(
-        (itemRef): ItemContext & { category: string } => ({
-          href: itemRef.href,
-          identifier: itemRef.identifier,
-          category: itemRef.category,
-          variables: [{ identifier: 'completionStatus', value: 'not_attempted', type: 'outcome' }]
-        })
-      );
       this.testElement = qtiAssessmentTest;
+
+      const items = Array.from(qtiAssessmentTest.querySelectorAll('qti-assessment-item-ref')).map(itemRef => {
+        const existingItem = this._testContext.items.find(item => item.identifier === itemRef.identifier);
+
+        return {
+          ...existingItem, // Spread all existing properties
+          href: existingItem?.href || itemRef.href,
+          identifier: existingItem?.identifier || itemRef.identifier,
+          category: existingItem?.category || itemRef.category,
+          variables: existingItem?.variables || [
+            {
+              identifier: 'completionStatus',
+              value: 'not_attempted',
+              type: 'outcome'
+            }
+          ]
+        };
+      });
       this._testContext = { ...this._testContext, items };
     });
     this.addEventListener('qti-assessment-item-connected', (e: CustomEvent<QtiAssessmentItem>) => {
@@ -121,21 +133,4 @@ export abstract class TestBase extends LitElement {
       assessmentItem.variables = [...(itemContext.variables || [])];
     }
   };
-
-  // private _addItemToTestContext(
-  //   e: CustomEvent<{ href: string; identifier: string; category: string }> & { target: QtiAssessmentItemRef }
-  // ): void {
-  //   const { href, identifier, category } = e.detail;
-
-  //   // Update test context items, adding a new item if the identifier is not already in the list
-  //   if (!this._testContext.items.some(item => item.identifier === identifier)) {
-  //     this._testContext.items.push({
-  //       href,
-  //       identifier,
-  //       category,
-  //       variables: [{ identifier: 'completionStatus', value: 'not_attempted', type: 'outcome' }]
-  //       // category: e.target.category
-  //     });
-  //   }
-  // }
 }

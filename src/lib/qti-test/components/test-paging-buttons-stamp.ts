@@ -7,7 +7,7 @@ import { prepareTemplate } from 'stampino';
 @customElement('test-paging-buttons-stamp')
 export class TestPagingButtonsStamp extends TestComponent {
   @property({ type: Number, attribute: 'max-displayed-items' })
-  private maxDisplayedItems = 2;
+  private maxDisplayedItems = 20;
 
   @property({ type: String, attribute: 'skip-on-category' })
   private skipOnCategory = 'dep-informational';

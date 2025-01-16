@@ -56,6 +56,11 @@ export class QtiTest extends TestLoaderMixin(TestProcessingMixin(TestNavigationM
    * Renders the component's template.
    * Provides a default `<slot>` for content projection.
    */
+  async connectedCallback(): Promise<void> {
+    super.connectedCallback();
+    await this.updateComplete;
+    this.dispatchEvent(new CustomEvent('qti-test-connected', { detail: this }));
+  }
   render() {
     return html`<slot></slot>`;
   }
