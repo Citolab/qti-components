@@ -3,10 +3,9 @@ import type { ArgTypes, Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 
-import type { ManifestInfo } from '@citolab/qti-components/qti-loader';
-import { getManifestInfo } from '@citolab/qti-components/qti-loader';
 import { getByShadowText, findByShadowText, findByShadowRole } from 'shadow-dom-testing-library';
 import type { QtiTest } from '@citolab/qti-components/qti-test/core';
+import { getManifestInfo, type ManifestInfo } from '../../qti-loader';
 
 type Story = StoryObj;
 
