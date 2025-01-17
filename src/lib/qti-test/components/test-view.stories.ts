@@ -4,6 +4,7 @@ import type { TestView as TestViewClass } from './test-view';
 import { html } from 'lit';
 import { within } from 'shadow-dom-testing-library';
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
+import { spread } from '@open-wc/lit-helpers';
 
 const { events, args, argTypes, template } = getWcStorybookHelpers('test-view');
 
@@ -22,12 +23,21 @@ const meta: Meta<TestViewClass> = {
 };
 export default meta;
 
-export const TestView: Story = {
+export const Default: Story = {
   render: args =>
     html` <qti-test>
       <test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"></test-container>
       ${template(args)}
-    </qti-test>`,
+    </qti-test>`
+};
+
+export const Test: Story = {
+  render: args => html`
+    <qti-test>
+      <test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"> </test-container>
+      <test-view ${spread(args)}>vorige</test-view>
+    </qti-test>
+  `,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const selectElement = await canvas.findByShadowLabelText('view');

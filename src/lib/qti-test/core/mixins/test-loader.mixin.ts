@@ -15,33 +15,14 @@ export const TestLoaderMixin = <T extends Constructor<TestBase>>(superClass: T) 
   abstract class TestLoaderClass extends superClass {
     /** Items will be scored on everyinteraction when `qti-assessment-item` is not set to adaptive, and the `SCORE` outcome identifier is not set to be "human" | "externalMachine" */
     @property({ type: Boolean, attribute: 'auto-score-items' }) autoScoreItems = false;
-    @property({ type: Boolean, attribute: 'auto-store-restore' }) autoStoreRestoreContext = false;
+
+    /** TestContext will be stored in sessionStorage with given attribute value if provided */
+    @property({ type: String, attribute: 'auto-store-restore' }) autoStoreRestoreContext: string | null = null;
+
+    @property({ type: String, attribute: 'nav-item-id' }) navItemId: string | null = null;
 
     constructor(...args: any[]) {
       super(...args);
-
-      // this.addEventListener('qti-load-test-request', (e: CustomEvent /* 1. Request the test */) => {
-      //   const { testURL } = e.detail;
-      //   if (!testURL) {
-      //     console.warn(
-      //       'No test found, there should be an attribute test-url with the path to the test on the test-container'
-      //     );
-      //   } else {
-      //     this.testURL = testURL;
-      //   }
-
-      //   e.detail.promise = (async () => {
-      //     e.preventDefault(); /* indicates that the event was catched and handled */
-      //     const api = await qtiTransformTest().load(`${this.testURL}`); /* 6. load the item */
-      //     return api.htmlDoc(); /* 3. Return html version of the assessment.xml */
-      //   })();
-      // });
-
-      this.addEventListener('qti-test-connected', () => {
-        if (this.autoStoreRestoreContext) {
-          this.context = getSessionData(`testcontext`); /* 4. Set the context */
-        }
-      });
 
       this.addEventListener('qti-load-item-request' /* 5. Request the item */, ({ detail }: CustomEvent) => {
         detail.promise = (async () => {
@@ -61,16 +42,27 @@ export const TestLoaderMixin = <T extends Constructor<TestBase>>(superClass: T) 
           ) as OutcomeVariable;
           if (scoreOutcomeIdentifier.externalScored === null && qtiAssessmentItem.adaptive === 'false') {
             qtiAssessmentItem.processResponse();
-            if (this.autoStoreRestoreContext) {
-              setSessionData(`testcontext`, this.context);
-            }
-          }
-        } else {
-          if (this.autoStoreRestoreContext) {
-            setSessionData(`testcontext`, this.context);
           }
         }
       });
+    }
+
+    async connectedCallback(): Promise<void> {
+      super.connectedCallback();
+      if (this.navItemId) {
+        this._testContext = { ...this._testContext, navItemId: this.navItemId };
+      }
+      if (this.autoStoreRestoreContext) {
+        this.context = getSessionData(this.autoStoreRestoreContext); /* 4. Set the context */
+      }
+    }
+
+    updated(changedProperties: Map<string | number | symbol, unknown>) {
+      if (changedProperties.has('_testContext')) {
+        if (this.autoStoreRestoreContext) {
+          setSessionData(this.autoStoreRestoreContext, this.context);
+        }
+      }
     }
   }
 

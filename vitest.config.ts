@@ -11,7 +11,7 @@ export default defineConfig({
       enabled: true,
       name: 'chromium',
       provider: 'playwright',
-      headless: true, // Both modes work fine
+      headless: false, // Both modes work fine
       providerOptions: {
         launch: {
           args: ['--remote-debugging-port=9222']

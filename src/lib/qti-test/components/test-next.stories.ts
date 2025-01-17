@@ -3,39 +3,43 @@ import type { Meta, StoryObj } from '@storybook/web-components';
 
 import { html } from 'lit';
 import { findByShadowTitle } from 'shadow-dom-testing-library';
-import type { QtiTest } from '../core/qti-test';
 
-type Story = StoryObj;
+import { getWcStorybookHelpers } from 'wc-storybook-helpers';
+import type { TestNext } from './test-next';
+import { spread } from '@open-wc/lit-helpers';
 
-const meta: Meta<QtiTest> = {
-  component: 'test-next'
+const { events, args, argTypes, template } = getWcStorybookHelpers('test-next');
+
+type Story = StoryObj<TestNext & typeof args>;
+
+const meta: Meta<TestNext> = {
+  component: 'test-next',
+  args,
+  argTypes,
+  parameters: {
+    actions: {
+      handles: events
+    }
+  }
 };
 export default meta;
 
 export const Default: Story = {
-  render: () => html`
+  render: args => html`
     <qti-test>
       <test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"> </test-container>
-      <test-next>volgende</test-next>
+      ${template(args, html`volgende`)}
     </qti-test>
   `
 };
 
-export const PlayFast: Story = {
-  render: Default.render,
-  play: async ({ canvasElement }) => {
-    const nextButton = canvasElement.querySelector('test-next');
-    // expect(nextButton).toBeDisabled();
-    await waitFor(() => expect(nextButton).toBeEnabled());
-    await fireEvent.click(nextButton);
-    await fireEvent.click(nextButton);
-    await fireEvent.click(nextButton);
-    expect(nextButton).toBeDisabled();
-  }
-};
-
-export const PlayWithDelay: Story = {
-  render: Default.render,
+export const Test: Story = {
+  render: args => html`
+    <qti-test>
+      <test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"> </test-container>
+      <test-next ${spread(args)}>volgende</test-next>
+    </qti-test>
+  `,
   play: async ({ canvasElement }) => {
     const nextButton = canvasElement.querySelector('test-next');
     // expect(nextButton).toBeDisabled();
@@ -49,7 +53,6 @@ export const PlayWithDelay: Story = {
     const secondItem = await findByShadowTitle(canvasElement, 'T1 - Choice Interaction - Multiple Cardinality');
     expect(secondItem).toBeInTheDocument();
     await fireEvent.click(nextButton);
-    await new Promise(resolve => setTimeout(resolve, 500));
     await fireEvent.click(nextButton);
     expect(nextButton).toBeDisabled();
   }

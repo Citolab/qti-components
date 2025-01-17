@@ -1,11 +1,13 @@
-import '../../../../testing/import-storybook-cem';
-import '../qti-match-interaction/qti-match-interaction';
+import '../../../../../.storybook/import-storybook-cem';
 import { render } from 'lit';
-import Meta, { Default } from './qti-choice-interaction.stories';
 import { afterEach, beforeEach, describe } from 'vitest';
 import { composeStory } from '@storybook/preview-api';
+import type { ComposedStoryFn } from 'storybook/internal/types';
+import type { WebComponentsRenderer } from '@storybook/web-components';
+import type { QtiChoiceInteraction } from './qti-choice-interaction';
+import Meta, { Default } from './qti-choice-interaction.stories';
 
-const DefaultStory = composeStory(Default, Meta);
+const DefaultStory: ComposedStoryFn<WebComponentsRenderer, Partial<QtiChoiceInteraction>> = composeStory(Default, Meta);
 
 describe.sequential('suite', () => {
   let canvasElement;
@@ -24,6 +26,5 @@ describe.sequential('suite', () => {
 
   test('text-next fast clicking between items, cancelling previous requests', async () => {
     render(DefaultStory(), document.body);
-    if (DefaultStory.play) await DefaultStory.play({ canvasElement: document.body });
   });
 });

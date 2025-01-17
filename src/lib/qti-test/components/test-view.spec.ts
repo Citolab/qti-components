@@ -1,11 +1,11 @@
-import { resolveLoaders } from '../../../../.storybook/custom-story-loader';
 import '../../../../.storybook/import-storybook-cem'; // <-- fake storybook import
 import { composeStory } from '@storybook/preview-api';
 import { render } from 'lit';
-import meta, { Test as TestStory } from './test-next.stories';
+import meta, { Test as TestStory } from './test-view.stories';
 import type { ComposedStoryFn } from 'storybook/internal/types';
 import type { WebComponentsRenderer } from '@storybook/web-components';
-import type { TestPrev } from '.';
+import { resolveLoaders } from '../../../../.storybook/custom-story-loader';
+import type { TestView } from '.';
 
 import '../../qti-components';
 import '../core';
@@ -14,7 +14,7 @@ import '../../qti-item/core';
 import '../../../item.css';
 
 // Compose stories
-const testStory: ComposedStoryFn<WebComponentsRenderer, Partial<TestPrev>> = composeStory(TestStory, meta);
+const testStory: ComposedStoryFn<WebComponentsRenderer, Partial<TestView>> = composeStory(TestStory, meta);
 
 describe.sequential('suite', () => {
   let canvasElement;
@@ -33,11 +33,10 @@ describe.sequential('suite', () => {
 
   beforeEach(async () => {
     const loaded = await resolveLoaders(TestStory.loaders, testStory.args);
-
     render(TestStory.render!(meta.args as any, { loaded, argTypes: TestStory.argTypes } as any), canvasElement);
   });
 
-  test('text-next fast clicking between items', async () => {
+  test('changing viewer', async () => {
     await testStory.play({ canvasElement });
   });
 });
