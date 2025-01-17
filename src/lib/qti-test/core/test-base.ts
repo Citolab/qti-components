@@ -28,10 +28,11 @@ export abstract class TestBase extends LitElement {
       this.testElement = qtiAssessmentTest;
 
       const items = Array.from(qtiAssessmentTest.querySelectorAll('qti-assessment-item-ref')).map(itemRef => {
-        const existingItem = this._testContext.items.find(item => item.identifier === itemRef.identifier);
+        // Default this._testContext.items to an empty array if undefined
+        const existingItem = (this._testContext.items || []).find(item => item.identifier === itemRef.identifier);
 
         return {
-          ...existingItem, // Spread all existing properties
+          ...existingItem, // Spread all existing properties if existingItem is found
           href: existingItem?.href || itemRef.href,
           identifier: existingItem?.identifier || itemRef.identifier,
           category: existingItem?.category || itemRef.category,
@@ -44,8 +45,11 @@ export abstract class TestBase extends LitElement {
           ]
         };
       });
+
+      // Ensure this._testContext exists and update its items property
       this._testContext = { ...this._testContext, items };
     });
+
     this.addEventListener('qti-assessment-item-connected', (e: CustomEvent<QtiAssessmentItem>) => {
       this._updateItemInTestContext(e.detail);
     });
