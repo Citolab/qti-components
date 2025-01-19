@@ -6,6 +6,7 @@ import { getByShadowRole } from 'shadow-dom-testing-library';
 import type { InputType } from '@storybook/core/types';
 import type { QtiSimpleChoice } from '../qti-simple-choice';
 import type { QtiChoiceInteraction } from './qti-choice-interaction';
+import { spread } from '@open-wc/lit-helpers';
 
 const { events, args, argTypes, template } = getWcStorybookHelpers('qti-choice-interaction');
 
@@ -68,6 +69,46 @@ export const Default: Story = {
   }
 };
 
+export const Test: Story = {
+  render: () =>
+    html` <qti-choice-interaction min-choices="1" max-choices="2">
+      <qti-prompt>
+        <p>Which of the following features are <strong>new</strong> to QTI 3?</p>
+      </qti-prompt>
+      <qti-simple-choice identifier="A">Option A</qti-simple-choice>
+      <qti-simple-choice identifier="B">Option B</qti-simple-choice>
+      <qti-simple-choice identifier="C">Option C</qti-simple-choice>
+      <qti-simple-choice identifier="D">Option D</qti-simple-choice>
+    </qti-choice-interaction>`,
+  args: {
+    'min-choices': 1,
+    'max-choices': 2
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const choiceA = canvas.getByText<QtiSimpleChoice>('Option A');
+    const choiceB = canvas.getByText<QtiSimpleChoice>('Option B');
+    const choiceC = canvas.getByText<QtiSimpleChoice>('Option C');
+
+    expect(choiceA.internals.role).toBe('checkbox');
+    // expect(element.validate()).toBeFalsy();
+
+    await fireEvent.click(choiceA);
+    expect(choiceA.checked).toBeTruthy();
+
+    await fireEvent.click(choiceB);
+    expect(choiceB.checked).toBeTruthy();
+    expect(choiceA.checked).toBeTruthy();
+
+    await fireEvent.click(choiceC);
+    const validationMessage = getByShadowRole(canvasElement, 'alert');
+
+    await waitFor(() => expect(validationMessage).toBeVisible());
+
+    expect(validationMessage.textContent).toBe('You can select at most 2 choices.');
+  }
+};
+
 export const Standard: Story = {
   render: Default.render,
   args: {},
@@ -99,37 +140,6 @@ export const MinChoices1: Story = {
     const canvas = within(canvasElement);
     await fireEvent.click(canvas.getByTestId('B'));
     expect(canvas.getByTestId<QtiSimpleChoice>('B').checked).toBeTruthy();
-  }
-};
-
-export const MaxChoices2: Story = {
-  render: Default.render,
-  args: {
-    'min-choices': 1,
-    'max-choices': 2
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const choiceA = canvas.getByTestId<QtiSimpleChoice>('A');
-    const choiceB = canvas.getByTestId<QtiSimpleChoice>('B');
-    const choiceC = canvas.getByTestId<QtiSimpleChoice>('C');
-
-    expect(choiceA.internals.role).toBe('checkbox');
-    // expect(element.validate()).toBeFalsy();
-
-    await fireEvent.click(choiceA);
-    expect(choiceA.checked).toBeTruthy();
-
-    await fireEvent.click(choiceB);
-    expect(choiceB.checked).toBeTruthy();
-    expect(choiceA.checked).toBeTruthy();
-
-    await fireEvent.click(choiceC);
-    const validationMessage = getByShadowRole(canvasElement, 'alert');
-
-    await waitFor(() => expect(validationMessage).toBeVisible());
-
-    expect(validationMessage.textContent).toBe('You can select at most 2 choices.');
   }
 };
 

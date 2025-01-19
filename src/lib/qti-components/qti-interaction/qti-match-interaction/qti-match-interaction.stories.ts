@@ -58,8 +58,26 @@ export const Default: Story = {
     )
 };
 
-export const Play: Story = {
-  render: Default.render,
+const testTemplate = html`<qti-prompt
+    >Match the following characters to the Shakespeare play they appeared in:</qti-prompt
+  >
+  <qti-match-interaction data-testid="match-interaction" response-identifier="RESPONSE">
+    <qti-simple-match-set>
+      <qti-simple-associable-choice identifier="C" match-max="1">Capulet</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="D" match-max="1">Demetrius</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="L" match-max="1">Lysander</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="P" match-max="1">Prospero</qti-simple-associable-choice>
+    </qti-simple-match-set>
+
+    <qti-simple-match-set>
+      <qti-simple-associable-choice identifier="M" match-max="2">A Midsummer-Nights</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="R" match-max="2">Romeo and Juliet</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="T" match-max="2">The Tempest</qti-simple-associable-choice>
+    </qti-simple-match-set>
+  </qti-match-interaction>`;
+
+export const Test: Story = {
+  render: () => testTemplate,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
@@ -101,14 +119,16 @@ export const Play: Story = {
       // Manually set the interaction response to the expected value
       interaction.value = ['C M'];
 
-      // Verify that after the drag-and-drop action, the target contains the source element
-      expect(dropM).toContainElement(dragC); // Descriptive: Verifies that the target now contains the dragged source element
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      // Verify that after the drag-and-drop action, the target contains an element with text Capulet
+      expect(dropM).toHaveTextContent('Capulet'); // warning, do not check if it contains the draggable, since it is a clone
     });
   }
 };
 
-export const PlayTwoOneZero: Story = {
-  render: Default.render,
+export const Test2: Story = {
+  render: () => testTemplate,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 

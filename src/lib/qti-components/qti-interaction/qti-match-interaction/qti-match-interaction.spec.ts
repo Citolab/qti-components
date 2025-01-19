@@ -4,13 +4,14 @@ import { composeStory } from '@storybook/preview-api';
 
 import type { ComposedStoryFn } from 'storybook/internal/types';
 import type { WebComponentsRenderer } from '@storybook/web-components';
-import type { QtiChoiceInteraction } from './qti-choice-interaction';
-import Meta, { Test as TestStory } from './qti-choice-interaction.stories';
+import type { QtiMatchInteraction } from './qti-match-interaction';
+import Meta, { Test as TestStory, Test2 as Test2Story } from './qti-match-interaction.stories';
 
-import './qti-choice-interaction';
-import '../qti-simple-choice';
+import './qti-match-interaction';
+import '../qti-simple-associable-choice';
 
-const testStory: ComposedStoryFn<WebComponentsRenderer, Partial<QtiChoiceInteraction>> = composeStory(TestStory, Meta);
+const testStory: ComposedStoryFn<WebComponentsRenderer, Partial<QtiMatchInteraction>> = composeStory(TestStory, Meta);
+const test2Story: ComposedStoryFn<WebComponentsRenderer, Partial<QtiMatchInteraction>> = composeStory(Test2Story, Meta);
 
 describe.sequential('suite', () => {
   let canvasElement;
@@ -33,5 +34,9 @@ describe.sequential('suite', () => {
 
   test('choice-interaction min-choices="1" max-choices="2"', async () => {
     await testStory.play({ canvasElement });
+  });
+
+  test('choice-interaction min-choices="1" max-choices="2"', async () => {
+    await test2Story.play({ canvasElement });
   });
 });
