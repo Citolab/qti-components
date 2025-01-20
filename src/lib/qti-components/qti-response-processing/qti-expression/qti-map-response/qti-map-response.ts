@@ -10,8 +10,8 @@ export class QtiMapResponse extends QtiExpression<number> {
 
   public override getResult(): number {
     const response: ResponseVariable = this.context.variables.find(r => r.identifier === this.identifier);
-    if (!response) {
-      console.warn(`Response ${this.identifier} can not be found`);
+    if (!response || !response.mapping) {
+      console.error(`Response ${this.identifier} can not be found`);
       return null;
     }
     const mapping = response.mapping;
