@@ -12,10 +12,6 @@ export class TestPagingButtonsStamp extends TestComponent {
   @property({ type: String, attribute: 'skip-on-category' })
   private skipOnCategory = 'dep-informational';
 
-  protected createRenderRoot() {
-    return this;
-  }
-
   constructor() {
     super();
     this._internals.ariaLabel = 'pagination';

@@ -3,6 +3,7 @@ import { expect, fireEvent, within } from '@storybook/test';
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import type { QtiTextEntryInteraction } from './qti-text-entry-interaction';
+import { spread } from '@open-wc/lit-helpers';
 
 const { events, args, argTypes, template } = getWcStorybookHelpers('qti-text-entry-interaction');
 
@@ -36,10 +37,11 @@ export const PatternMask: Story = {
   }
 };
 
-export const Form: Story = {
+export const Test: Story = {
   render: () => {
     return html`
       <form name="form" @submit=${e => e.preventDefault()}>
+        <qti-text-entry-interaction ${spread(args)}></qti-text-entry-interaction>
         <input type="submit" value="submit" />
       </form>
     `;

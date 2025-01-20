@@ -7,6 +7,7 @@ import { expect, fireEvent, within } from '@storybook/test';
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import type { QtiExtendedTextInteraction } from './qti-extended-text-interaction';
+import { spread } from '@open-wc/lit-helpers';
 
 const { events, args, argTypes, template } = getWcStorybookHelpers('qti-extended-text-interaction');
 
@@ -41,18 +42,20 @@ export const PatternMask = {
   }
 };
 
-export const Form: Story = {
+export const Test: Story = {
   render: () => {
     return html`
       <form name="form" @submit=${e => e.preventDefault()}>
-        ${Default.render({
-          'pattern-mask': '[A-Za-z]{3}',
-          'data-patternmask-message': 'Please enter exact 3 letters',
-          'response-identifier': 'RESPONSE'
-        })}
+        <qti-extended-text-interaction ${spread(args)}></qti-extended-text-interaction>
+
         <input type="submit" value="submit" />
       </form>
     `;
+  },
+  args: {
+    'pattern-mask': '[A-Za-z]{3}',
+    'data-patternmask-message': 'Please enter exact 3 letters',
+    'response-identifier': 'RESPONSE'
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
