@@ -1,5 +1,6 @@
-import preview from '../.storybook/preview';
 import { create } from '@storybook/theming/create';
+
+import preview from '../.storybook/preview';
 
 import '../.storybook/preview'; // make sure imports of webcomponents are loaded
 

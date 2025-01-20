@@ -1,9 +1,11 @@
-import type { Preview } from '@storybook/web-components';
 import { setCustomElementsManifest } from '@storybook/web-components';
-import customElements from '../custom-elements.json';
 import { setWcStorybookHelpersConfig } from 'wc-storybook-helpers';
 import { withActions } from '@storybook/addon-actions/decorator';
+
+import customElements from '../custom-elements.json';
 import { customViewports } from './custom-viewport-sizes';
+
+import type { Preview } from '@storybook/web-components';
 
 import '../src/lib/qti-components';
 import '../src/lib/qti-test/core';
