@@ -1,10 +1,12 @@
-import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
-import type { ItemContainer } from '../components/item-container';
-import { qtiTransformItem } from '../../../qti-transformers';
 import { expect } from '@storybook/test';
 import { within } from 'shadow-dom-testing-library';
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
+
+import { qtiTransformItem } from '../../../qti-transformers';
+
+import type { ItemContainer } from '../components/item-container';
+import type { Meta, StoryObj } from '@storybook/web-components';
 
 const { events, args, argTypes, template } = getWcStorybookHelpers('item-container');
 

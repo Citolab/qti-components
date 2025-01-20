@@ -1,10 +1,12 @@
 import { expect } from '@storybook/test';
-import type { Meta, StoryObj } from '@storybook/web-components';
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
 import { html } from 'lit';
 import { within } from 'shadow-dom-testing-library';
-import type { TestContainer } from './test-container';
+
 import { qtiTransformTest } from '../../../qti-transformers';
+
+import type { TestContainer } from './test-container';
+import type { Meta, StoryObj } from '@storybook/web-components';
 
 const { events, args, argTypes, template } = getWcStorybookHelpers('test-container');
 

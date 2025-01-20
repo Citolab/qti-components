@@ -1,11 +1,11 @@
-import type { Meta, StoryObj } from '@storybook/web-components';
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
-import type { TestEndAttempt } from './test-end-attempt';
 import { expect, waitFor } from '@storybook/test';
 import { findByShadowText, findByShadowTitle } from 'shadow-dom-testing-library';
 import { spread } from '@open-wc/lit-helpers';
-
 import { html } from 'lit';
+
+import type { TestEndAttempt } from './test-end-attempt';
+import type { Meta, StoryObj } from '@storybook/web-components';
 
 const { events, args, argTypes, template } = getWcStorybookHelpers('test-end-attempt');
 

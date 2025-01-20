@@ -1,6 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
+
+import type { Meta, StoryObj } from '@storybook/web-components';
 import type { QtiItem } from './qti-item';
 
 const { events, args, argTypes, template } = getWcStorybookHelpers('qti-item');

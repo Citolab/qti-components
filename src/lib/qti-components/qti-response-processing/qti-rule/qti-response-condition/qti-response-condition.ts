@@ -1,6 +1,8 @@
 import { html } from 'lit';
-import type { QtiExpression } from '../../../../exports/qti-expression';
+
 import { QtiRule } from '../qti-rule';
+
+import type { QtiExpression } from '../../../../exports/qti-expression';
 
 export class QtiResponseCondition extends QtiRule {
   override render() {

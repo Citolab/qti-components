@@ -1,4 +1,5 @@
 import { html, render } from 'lit';
+
 import '../qti-basevalue/qti-basevalue';
 import './qti-ordered';
 import type { QtiOrdered } from './qti-ordered';

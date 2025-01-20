@@ -1,13 +1,16 @@
-import type { CSSResultGroup } from 'lit';
+import '../qti-simple-associable-choice';
+
 import { html, nothing } from 'lit';
-import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-interaction-mixin';
 import { customElement, property, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
-import type { ResponseInteraction } from '../../../exports/expression-result';
-import '../qti-simple-associable-choice';
-import type { QtiSimpleAssociableChoice } from '../qti-simple-associable-choice';
+
+import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-interaction-mixin';
 import styles from './qti-match-interaction.styles';
 import { Interaction } from '../../../exports/interaction';
+
+import type { CSSResultGroup } from 'lit';
+import type { ResponseInteraction } from '../../../exports/expression-result';
+import type { QtiSimpleAssociableChoice } from '../qti-simple-associable-choice';
 
 @customElement('qti-match-interaction')
 export class QtiMatchInteraction extends DragDropInteractionMixin(

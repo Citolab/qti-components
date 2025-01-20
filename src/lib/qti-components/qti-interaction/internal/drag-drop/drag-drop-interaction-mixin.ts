@@ -1,7 +1,8 @@
-import { FlippablesMixin } from './flippables-mixin';
-
 import { property } from 'lit/decorators.js';
+
+import { FlippablesMixin } from './flippables-mixin';
 import { liveQuery } from '../../../../decorators/live-query';
+
 import type { Interaction } from '../../../../exports/interaction';
 import type { IInteraction } from '../../../../exports/interaction.interface';
 

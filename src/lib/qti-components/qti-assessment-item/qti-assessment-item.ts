@@ -1,18 +1,19 @@
 import { provide } from '@lit/context';
 import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+
 import { watch } from '../../decorators/watch';
+import { itemContext } from '../../exports/qti-assessment-item.context';
+import { itemContextVariables } from '../../exports/item.context';
+
 import type { InteractionChangedDetails, OutcomeChangedDetails } from '../internal/event-types';
 import type { ResponseInteraction } from '../../exports/expression-result';
 import type { VariableDeclaration, VariableValue } from '../../exports/variables';
 import type { OutcomeVariable, ResponseVariable } from '../../exports/variables';
 import type { QtiFeedback } from '../qti-feedback/qti-feedback';
 import type { QtiResponseProcessing } from '../qti-response-processing';
-
-import { itemContext } from '../../exports/qti-assessment-item.context';
 import type QtiRegisterVariable from '../internal/events/qti-register-variable';
 import type { ItemContext } from '../../exports/item.context';
-import { itemContextVariables } from '../../exports/item.context';
 import type { Interaction } from '../../exports/interaction';
 /**
  * @summary The qti-assessment-item element contains all the other QTI 3 item structures.

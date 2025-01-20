@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
+
 import { TestComponent } from './test-component.abstract';
 import { watch } from '../../decorators/watch';
 

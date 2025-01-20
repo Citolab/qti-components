@@ -1,5 +1,6 @@
 import { css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+
 import { TestComponent } from './test-component.abstract';
 import * as styles from './styles';
 

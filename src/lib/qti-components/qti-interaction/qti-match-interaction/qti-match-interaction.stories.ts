@@ -1,13 +1,15 @@
 import { action } from '@storybook/addon-actions';
 import { html } from 'lit';
-import type { Meta, StoryObj } from '@storybook/web-components';
 import { createRef, ref } from 'lit/directives/ref.js';
-import type { QtiAssessmentItem, QtiMatchInteraction } from '../../';
-
 import { expect, fn, waitFor, within } from '@storybook/test';
-import drag from '../../../../testing/drag';
-import type { InputType } from '@storybook/core/types';
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
+
+import drag from '../../../../testing/drag';
+
+import type { Meta, StoryObj } from '@storybook/web-components';
+import type { QtiAssessmentItem, QtiMatchInteraction } from '../../';
+import type { InputType } from '@storybook/core/types';
+
 import '../../../../item.css';
 
 const { events, args, argTypes, template } = getWcStorybookHelpers('qti-match-interaction');

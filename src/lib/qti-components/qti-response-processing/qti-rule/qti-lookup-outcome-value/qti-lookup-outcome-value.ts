@@ -1,7 +1,9 @@
 import { property } from 'lit/decorators.js';
+
 import { convertNumberToUniveralFormat } from '../../../internal/utils';
-import type { QtiExpression } from '../../../../exports/qti-expression';
 import { QtiRule } from '../qti-rule';
+
+import type { QtiExpression } from '../../../../exports/qti-expression';
 import type { OutcomeVariable } from '../../../../exports/variables';
 
 /**

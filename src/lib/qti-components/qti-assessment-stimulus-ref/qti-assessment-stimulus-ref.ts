@@ -1,5 +1,6 @@
 import { LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+
 import { qtiTransformItem } from '../../qti-transformers';
 
 /**

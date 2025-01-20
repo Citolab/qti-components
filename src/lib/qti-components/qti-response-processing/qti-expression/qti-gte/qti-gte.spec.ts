@@ -1,5 +1,6 @@
 import '../../../../index';
 import { html, render } from 'lit';
+
 import type { QtiGte } from './qti-gte';
 describe('qti-gte', () => {
   it('equal = true', () => {

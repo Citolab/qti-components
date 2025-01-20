@@ -1,5 +1,6 @@
 import '../../../../index';
 import { html, render } from 'lit';
+
 import type { QtiMember } from './qti-member';
 
 describe('qti-contains', () => {

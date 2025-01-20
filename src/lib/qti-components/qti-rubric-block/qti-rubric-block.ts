@@ -1,5 +1,6 @@
 import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+
 import { watch } from '../../decorators/watch';
 
 @customElement('qti-rubric-block')

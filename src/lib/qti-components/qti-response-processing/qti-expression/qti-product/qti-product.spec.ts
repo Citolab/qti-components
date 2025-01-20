@@ -1,5 +1,6 @@
 import '../../../../index';
 import { html, render } from 'lit';
+
 import type { QtiProduct } from './qti-product';
 
 describe('qti-product', () => {

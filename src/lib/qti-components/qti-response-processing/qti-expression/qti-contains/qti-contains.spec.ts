@@ -1,6 +1,7 @@
 import '../../../../index';
 
 import { html, render } from 'lit';
+
 import type { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
 import type { QtiContains } from './qti-contains';
 

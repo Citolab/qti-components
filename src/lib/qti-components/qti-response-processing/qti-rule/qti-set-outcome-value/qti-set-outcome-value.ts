@@ -1,7 +1,8 @@
 import { convertNumberToUniveralFormat } from '../../../internal/utils';
+import { QtiRule } from '../qti-rule';
+
 import type { QtiExpression, QtiExpressionBase } from '../../../../exports/qti-expression';
 import type { QtiRuleBase } from '../qti-rule';
-import { QtiRule } from '../qti-rule';
 
 export class QtiSetOutcomeValue extends QtiRule {
   public override process() {

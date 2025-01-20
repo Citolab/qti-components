@@ -1,5 +1,6 @@
 import '../../../../index';
 import { html, render } from 'lit';
+
 import type { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
 import type { QtiStringMatch } from './qti-string-match';
 describe('qti-string-match', () => {

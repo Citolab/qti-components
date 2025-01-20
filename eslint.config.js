@@ -1,7 +1,6 @@
 import pluginJs from '@eslint/js';
 import globals from 'globals';
 import { configs } from 'typescript-eslint';
-
 import importPlugin from 'eslint-plugin-import';
 import litPlugin from 'eslint-plugin-lit';
 import storybook from 'eslint-plugin-storybook';
@@ -26,6 +25,22 @@ export default [
       'import/no-nodejs-modules': ['error', { allow: ['path', 'fs'] }],
       'import/no-unresolved': 'error',
       'import/no-duplicates': 'off',
+      'import/order': [
+        'error',
+        {
+          groups: ['builtin', 'external', 'internal', ['parent', 'sibling', 'index'], 'type', 'unknown'],
+          'newlines-between': 'always',
+          distinctGroup: true,
+          pathGroups: [
+            {
+              pattern: '@citolab/**',
+              group: 'external',
+              position: 'after'
+            }
+          ],
+          pathGroupsExcludedImportTypes: ['type']
+        }
+      ],
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-empty-object-type': 'off',
       '@typescript-eslint/no-unused-vars': 'off',
@@ -37,6 +52,9 @@ export default [
       ]
     },
     settings: {
+      wc: {
+        elementBaseClasses: ['LitElement'] // Recognize `LitElement` as a Custom Element base class
+      },
       'import/parsers': {
         '@typescript-eslint/parser': ['.ts', '.tsx']
       },
@@ -54,9 +72,6 @@ export default [
   },
   litPlugin.configs['flat/recommended'],
   ...storybook.configs['flat/recommended'],
-  {
-    ...wcPlugin.configs.recommended,
-    files: ['test/**/*.js']
-  },
+  // ...wcPlugin.configs.recommended,
   { ignores: ['node_modules', 'dist', 'build', 'coverage', 'public'] }
 ];

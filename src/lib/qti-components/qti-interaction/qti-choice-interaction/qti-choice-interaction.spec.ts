@@ -2,10 +2,11 @@ import '../../../../../.storybook/import-storybook-cem'; // <-- fake storybook i
 import { render } from 'lit';
 import { composeStory } from '@storybook/preview-api';
 
+import Meta, { Test as TestStory } from './qti-choice-interaction.stories';
+
 import type { ComposedStoryFn } from 'storybook/internal/types';
 import type { WebComponentsRenderer } from '@storybook/web-components';
 import type { QtiChoiceInteraction } from './qti-choice-interaction';
-import Meta, { Test as TestStory } from './qti-choice-interaction.stories';
 
 import './qti-choice-interaction';
 import '../qti-simple-choice';

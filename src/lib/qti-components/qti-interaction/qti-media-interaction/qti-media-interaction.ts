@@ -1,5 +1,6 @@
 import { css, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
+
 import { Interaction } from '../../../exports/interaction';
 
 @customElement('qti-media-interaction')

@@ -1,6 +1,7 @@
-import type { StoryObj, Meta } from '@storybook/web-components';
 import { html } from 'lit';
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
+
+import type { StoryObj, Meta } from '@storybook/web-components';
 import type { QtiOrderInteraction } from './qti-order-interaction';
 import type { InputType } from '@storybook/core/types';
 

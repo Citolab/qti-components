@@ -1,7 +1,8 @@
 import { html } from 'lit';
+import { getWcStorybookHelpers } from 'wc-storybook-helpers';
+
 import type { QtiAssociateInteraction } from './qti-associate-interaction';
 import type { Meta, StoryObj } from '@storybook/web-components';
-import { getWcStorybookHelpers } from 'wc-storybook-helpers';
 
 const { events, args, argTypes, template } = getWcStorybookHelpers('qti-associate-interaction');
 

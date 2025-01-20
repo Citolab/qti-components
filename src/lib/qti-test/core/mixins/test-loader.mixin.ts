@@ -1,5 +1,7 @@
-import { qtiTransformItem } from '../../../qti-transformers';
 import { property } from 'lit/decorators.js';
+
+import { qtiTransformItem } from '../../../qti-transformers';
+
 import type { TestBase } from '../test-base';
 import type { OutcomeVariable } from '../../../exports/variables';
 import type { QtiAssessmentItemRef } from '../qti-assessment-test';

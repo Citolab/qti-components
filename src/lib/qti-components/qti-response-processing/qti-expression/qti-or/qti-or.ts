@@ -1,4 +1,5 @@
 import { QtiConditionExpression } from '../../../../exports/qti-condition-expression';
+
 import type { QtiExpression } from '../../../../exports/qti-expression';
 
 export class QtiOr extends QtiConditionExpression {

@@ -1,12 +1,14 @@
 import { html } from 'lit';
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
 import { expect, fireEvent, fn, waitFor, within } from '@storybook/test';
-import type { Meta, StoryObj } from '@storybook/web-components';
 import { getByShadowRole } from 'shadow-dom-testing-library';
+import { spread } from '@open-wc/lit-helpers';
+
+import type { Meta, StoryObj } from '@storybook/web-components';
 import type { InputType } from '@storybook/core/types';
 import type { QtiSimpleChoice } from '../qti-simple-choice';
 import type { QtiChoiceInteraction } from './qti-choice-interaction';
-import { spread } from '@open-wc/lit-helpers';
+
 
 const { events, args, argTypes, template } = getWcStorybookHelpers('qti-choice-interaction');
 

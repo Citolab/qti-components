@@ -1,5 +1,6 @@
-import type { ResponseVariable } from '../../../../exports/variables';
 import { QtiExpression } from '../../../../exports/qti-expression';
+
+import type { ResponseVariable } from '../../../../exports/variables';
 
 export class QtiMember extends QtiExpression<boolean | null> {
   public override getResult() {

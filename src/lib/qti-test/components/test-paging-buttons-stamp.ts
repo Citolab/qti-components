@@ -1,8 +1,8 @@
 import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { prepareTemplate } from 'stampino';
 
 import { TestComponent } from './test-component.abstract';
-import { prepareTemplate } from 'stampino';
 
 @customElement('test-paging-buttons-stamp')
 export class TestPagingButtonsStamp extends TestComponent {

@@ -1,7 +1,9 @@
-import type { CSSResultGroup} from 'lit';
 import { html, LitElement } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
+
 import styles from './qti-slider-interaction.styles';
+
+import type { CSSResultGroup} from 'lit';
 
 @customElement('qti-slider-interaction')
 export class QtiSliderInteraction extends LitElement {

@@ -1,9 +1,11 @@
-import type { CSSResultGroup } from 'lit';
 import { html } from 'lit';
 import { customElement } from 'lit/decorators.js';
+
 import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-interaction-mixin';
 import { Interaction } from '../../../exports/interaction';
 import styles from './qti-gap-match-interaction.styles';
+
+import type { CSSResultGroup } from 'lit';
 @customElement('qti-gap-match-interaction')
 export class QtiGapMatchInteraction extends DragDropInteractionMixin(
   Interaction,

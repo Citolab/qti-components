@@ -1,9 +1,11 @@
 import { consume } from '@lit/context';
 import { LitElement, html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
+
+import { itemContext } from '../../exports/qti-assessment-item.context';
+
 import type { Calculate } from '../../exports/expression-result';
 import type { ResponseVariable } from '../../exports/variables';
-import { itemContext } from '../../exports/qti-assessment-item.context';
 import type { ItemContext } from '../../exports/item.context';
 
 /**

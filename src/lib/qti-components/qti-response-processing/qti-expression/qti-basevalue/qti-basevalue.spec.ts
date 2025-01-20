@@ -1,4 +1,5 @@
 import { html, render } from 'lit';
+
 import './qti-basevalue';
 import type { QtiBaseValue } from './qti-basevalue';
 describe('qti-base-value', () => {

@@ -1,8 +1,10 @@
 import { consume } from '@lit/context';
 import { css, html, LitElement } from 'lit';
 import { state } from 'lit/decorators.js';
-import type { ResponseVariable, VariableDeclaration } from './variables';
+
 import { itemContext } from './qti-assessment-item.context';
+
+import type { ResponseVariable, VariableDeclaration } from './variables';
 import type { QtiMultiple } from '../qti-components/qti-response-processing/qti-expression/qti-multiple/qti-multiple';
 import type { ItemContext } from './item.context';
 

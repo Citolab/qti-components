@@ -1,7 +1,9 @@
-import type { PropertyValueMap} from 'lit';
 import { css, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
+
 import { QtiFeedback } from '../qti-feedback';
+
+import type { PropertyValueMap} from 'lit';
 
 @customElement('qti-feedback-block')
 export class QtiFeedbackBlock extends QtiFeedback {

@@ -1,4 +1,5 @@
 import { html, render } from 'lit';
+
 import { ShuffleMixin } from './shuffle-mixin';
 import { Interaction } from '../../../../exports/interaction';
 

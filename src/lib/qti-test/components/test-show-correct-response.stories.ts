@@ -1,7 +1,9 @@
-import type { Meta, StoryObj } from '@storybook/web-components';
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
-import type { TestShowCorrectResponse } from './test-show-correct-response';
 import { html } from 'lit';
+
+import type { Meta, StoryObj } from '@storybook/web-components';
+import type { TestShowCorrectResponse } from './test-show-correct-response';
+
 
 const { events, args, argTypes, template } = getWcStorybookHelpers('test-show-correct-response');
 

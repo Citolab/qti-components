@@ -1,8 +1,10 @@
 import { provide } from '@lit/context';
 import { LitElement } from 'lit';
 import { state } from 'lit/decorators.js';
-import type { TestContext, TestElement } from '../../exports/test.context';
+
 import { testContext, testElement } from '../../exports/test.context';
+
+import type { TestContext, TestElement } from '../../exports/test.context';
 import type { QtiAssessmentTest } from './qti-assessment-test';
 import type { QtiAssessmentItem } from '../../qti-components/';
 import type { VariableValue } from '../../exports/variables';

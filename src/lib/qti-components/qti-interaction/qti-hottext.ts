@@ -1,5 +1,6 @@
 import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
+
 import { ActiveElementMixin } from './internal/active-element/active-element.mixin';
 
 @customElement('qti-hottext')

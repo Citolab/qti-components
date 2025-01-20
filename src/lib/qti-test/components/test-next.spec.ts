@@ -1,8 +1,10 @@
-import { resolveLoaders } from '../../../../.storybook/custom-story-loader';
 import '../../../../.storybook/import-storybook-cem'; // <-- fake storybook import
 import { composeStory } from '@storybook/preview-api';
 import { render } from 'lit';
+
+import { resolveLoaders } from '../../../../.storybook/custom-story-loader';
 import meta, { Test as TestStory } from './test-next.stories';
+
 import type { ComposedStoryFn } from 'storybook/internal/types';
 import type { WebComponentsRenderer } from '@storybook/web-components';
 import type { TestPrev } from '.';

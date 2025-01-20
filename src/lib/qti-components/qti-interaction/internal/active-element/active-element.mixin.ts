@@ -1,7 +1,9 @@
-import type { ComplexAttributeConverter, LitElement} from 'lit';
 import { html } from 'lit';
 import { property } from 'lit/decorators.js';
+
 import { watch } from '../../../../decorators/watch';
+
+import type { ComplexAttributeConverter, LitElement} from 'lit';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 

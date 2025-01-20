@@ -11,8 +11,9 @@
  * qti-choice-interaction
  * qti-match-interaction
  */
-import type { PropertyValues } from 'lit';
 import { property } from 'lit/decorators.js';
+
+import type { PropertyValues } from 'lit';
 import type { QtiSimpleChoice } from '../../qti-simple-choice';
 import type { Interaction } from '../interaction/interaction';
 

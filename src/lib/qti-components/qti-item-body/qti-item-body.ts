@@ -1,6 +1,8 @@
 import { customElement } from 'lit/decorators.js';
 import { html, LitElement } from 'lit';
+
 import styles from './qti-item-body.styles';
+
 import type { CSSResultGroup } from 'lit';
 
 /**

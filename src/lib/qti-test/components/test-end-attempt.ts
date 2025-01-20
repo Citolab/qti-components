@@ -1,9 +1,10 @@
 import { css, html } from 'lit';
-
 import { customElement } from 'lit/decorators.js';
-import type { QtiAssessmentItemRef } from '../core';
+
 import * as styles from './styles';
 import { TestComponent } from './test-component.abstract';
+
+import type { QtiAssessmentItemRef } from '../core';
 
 @customElement('test-end-attempt')
 export class TestEndAttempt extends TestComponent {

@@ -1,8 +1,9 @@
 // import type * as cheerio from 'cheerio';
-import type { Element } from 'domhandler';
 import { QtiTestVariablesExpression } from '../qti-assessment-test/qti-test-variables';
-import type { VariableDeclaration, QtiRuleBase, QtiExpressionBase } from '../../../qti-components';
 import { QtiSetOutcomeValueRule, QtiSumExpression, QtiOutcomeProcessingProcessor } from '../../../qti-components';
+
+import type { Element } from 'domhandler';
+import type { VariableDeclaration, QtiRuleBase, QtiExpressionBase } from '../../../qti-components';
 import type { TestContext } from '../../../exports/test.context';
 
 export const getRules = (

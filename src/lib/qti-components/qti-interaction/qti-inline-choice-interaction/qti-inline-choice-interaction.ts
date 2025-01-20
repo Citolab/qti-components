@@ -1,6 +1,7 @@
 import { css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
+
 import { Interaction } from '../../../exports/interaction';
 
 interface OptionType {

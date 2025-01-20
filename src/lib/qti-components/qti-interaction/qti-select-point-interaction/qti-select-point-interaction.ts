@@ -2,6 +2,7 @@ import { css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { styleMap } from 'lit/directives/style-map.js';
+
 import { Interaction } from '../../../exports/interaction';
 
 @customElement('qti-select-point-interaction')

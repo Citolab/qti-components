@@ -1,4 +1,5 @@
 import { property, query } from 'lit/decorators.js';
+
 import { watch } from '../../../../decorators/watch';
 
 import type { ChoiceInterface } from '../active-element/active-element.mixin';

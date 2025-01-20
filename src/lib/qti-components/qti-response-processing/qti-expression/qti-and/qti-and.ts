@@ -1,4 +1,5 @@
 import { QtiConditionExpression } from '../../../../exports/qti-condition-expression';
+
 import type { QtiExpression } from '../../../../exports/qti-expression';
 
 type Constructor<T> = new (...args: any[]) => T;

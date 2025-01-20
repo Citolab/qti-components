@@ -1,10 +1,12 @@
-import type { CSSResultGroup } from 'lit';
 import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
-import { Interaction } from '../../../exports/interaction';
 import { customElement, property, state } from 'lit/decorators.js';
+
+import { Interaction } from '../../../exports/interaction';
 import { watch } from '../../../decorators/watch';
 import styles from './qti-extended-text-interaction.styles';
+
+import type { CSSResultGroup } from 'lit';
 
 @customElement('qti-extended-text-interaction')
 export class QtiExtendedTextInteraction extends Interaction {

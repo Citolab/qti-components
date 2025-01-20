@@ -1,12 +1,14 @@
-import type { CSSResultGroup } from 'lit';
 import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import type { ChoicesInterface } from '../internal/choices/choices.mixin';
+
 import { ChoicesMixin } from '../internal/choices/choices.mixin';
 import { ShuffleMixin } from '../internal/shuffle/shuffle-mixin';
 import { VocabularyMixin } from '../internal/vocabulary/vocabulary-mixin';
 import styles from './qti-choice-interaction.styles';
 import { Interaction } from '../../../exports/interaction';
+
+import type { ChoicesInterface } from '../internal/choices/choices.mixin';
+import type { CSSResultGroup } from 'lit';
 
 export type Orientation = 'horizontal' | 'vertical' | undefined;
 

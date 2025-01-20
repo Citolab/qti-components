@@ -1,8 +1,10 @@
-import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
-import type { QtiStylesheet } from '../qti-stylesheet/qti-stylesheet';
 
 import inlineCSS from '../../../../public/assets/qti-stylesheet/linked.css?inline';
+
+import type { Meta, StoryObj } from '@storybook/web-components';
+import type { QtiStylesheet } from '../qti-stylesheet/qti-stylesheet';
+
 
 const meta = {
   component: 'qti-stylesheet'

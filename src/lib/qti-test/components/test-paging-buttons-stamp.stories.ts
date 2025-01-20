@@ -1,7 +1,9 @@
-import type { Meta, StoryObj } from '@storybook/web-components';
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
-import type { TestPagingButtonsStamp } from './test-paging-buttons-stamp';
 import { html } from 'lit';
+
+import type { Meta, StoryObj } from '@storybook/web-components';
+import type { TestPagingButtonsStamp } from './test-paging-buttons-stamp';
+
 
 const { events, args, argTypes, template } = getWcStorybookHelpers('test-paging-buttons-stamp');
 

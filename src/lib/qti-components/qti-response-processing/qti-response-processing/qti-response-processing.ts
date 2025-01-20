@@ -1,9 +1,10 @@
-import type { PropertyValueMap } from 'lit';
 import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
 import { mapResponse, mapResponsePoint, matchCorrect } from '../../internal/template-strings';
 import { type QtiRule } from '../qti-rule/qti-rule';
+
+import type { PropertyValueMap } from 'lit';
 
 @customElement('qti-response-processing')
 export class QtiResponseProcessing extends LitElement {

@@ -2,11 +2,13 @@ import '../../../../.storybook/import-storybook-cem'; // <-- fake storybook impo
 import { render } from 'lit';
 import { afterEach, beforeEach, describe } from 'vitest';
 import { composeStory } from '@storybook/preview-api';
+
 import { resolveLoaders } from '../../../../.storybook/custom-story-loader';
+import meta, { Test as TestStory } from './test-prev.stories';
+
 import type { ComposedStoryFn } from 'storybook/internal/types';
 import type { WebComponentsRenderer } from '@storybook/web-components';
 import type { TestPrev } from '.';
-import meta, { Test as TestStory } from './test-prev.stories';
 
 import '../../qti-components';
 import '../core';

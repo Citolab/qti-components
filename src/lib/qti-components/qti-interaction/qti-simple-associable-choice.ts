@@ -1,5 +1,6 @@
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+
 import { ActiveElementMixin } from './internal/active-element/active-element.mixin';
 
 /* 
