@@ -1,8 +1,8 @@
 import { createContext } from '@lit/context';
-import type { QtiAssessmentTest } from '../qti-assessment-test';
-import type { View } from '../mixins/test-view.mixin';
-import type { VariableDeclaration } from '../../../exports/variables';
-import type { ItemContext } from '../../../exports/item.context';
+import type { QtiAssessmentTest } from '../qti-test/core';
+import type { ItemContext } from './item.context';
+import type { VariableDeclaration } from './variables';
+import type { View } from '../qti-test/core/mixins/test-view.mixin';
 
 export interface TestContext {
   items: (ItemContext & { category?: string })[];

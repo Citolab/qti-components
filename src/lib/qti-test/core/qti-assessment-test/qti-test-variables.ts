@@ -1,7 +1,7 @@
 import { consume } from '@lit/context';
 
-import type { TestElement, TestContext } from '../context';
-import { testContext, testElement } from '../context';
+import type { TestElement, TestContext } from '../../../exports/test.context';
+import { testContext, testElement } from '../../../exports/test.context';
 import type { QtiAssessmentItemRef } from './qti-assessment-item-ref';
 import type { QtiExpressionBase } from '../../../exports/qti-expression';
 import { QtiExpression } from '../../../exports/qti-expression';

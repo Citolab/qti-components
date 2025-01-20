@@ -3,7 +3,7 @@ import type { Element } from 'domhandler';
 import { QtiTestVariablesExpression } from '../qti-assessment-test/qti-test-variables';
 import type { VariableDeclaration, QtiRuleBase, QtiExpressionBase } from '../../../qti-components';
 import { QtiSetOutcomeValueRule, QtiSumExpression, QtiOutcomeProcessingProcessor } from '../../../qti-components';
-import type { TestContext } from '../context/test.context';
+import type { TestContext } from '../../../exports/test.context';
 
 export const getRules = (
   $outcomeProcessing: Element,

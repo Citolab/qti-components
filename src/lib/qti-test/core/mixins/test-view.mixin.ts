@@ -3,7 +3,7 @@ import type { TestBase } from '../test-base';
 
 export type View = 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor' | '';
 
-declare module '../context/test.context' {
+declare module '../../../exports/test.context' {
   interface TestContext {
     view?: View;
   }

@@ -1,8 +1,8 @@
 import { consume } from '@lit/context';
 import { html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
-import type { TestContext } from '../context';
-import { testContext } from '../context';
+import type { TestContext } from '../../../exports/test.context';
+import { testContext } from '../../../exports/test.context';
 import type { QtiAssessmentItem } from '../../../qti-components';
 
 // Converter function to interpret "true" and "false" as booleans
