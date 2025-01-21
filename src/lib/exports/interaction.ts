@@ -21,7 +21,7 @@ export abstract class Interaction extends LitElement implements IInteraction {
     this._internals = this.attachInternals();
   }
 
-  abstract validate(reportValidity?: boolean): boolean;
+  abstract validate(): boolean;
 
   public reportValidity(): boolean {
     return this._internals.reportValidity();

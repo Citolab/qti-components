@@ -390,7 +390,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       this.resetDragState();
     }
 
-    validate(reportValidity = true): boolean {
+    validate(): boolean {
       if (!this.shadowRoot) return false;
       const validAssociations = this.getValidAssociations();
       let isValid = true;
@@ -410,9 +410,6 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       const lastElementChild = this.lastElementChild as HTMLElement;
       // Use null for the third argument if no specific anchor is needed
       this._internals.setValidity(isValid ? {} : { customError: true }, validityMessage, lastElementChild);
-      if (reportValidity) {
-        this.reportValidity();
-      }
       return isValid;
     }
 

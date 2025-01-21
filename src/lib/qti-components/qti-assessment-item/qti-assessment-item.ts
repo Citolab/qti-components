@@ -300,9 +300,16 @@ export class QtiAssessmentItem extends LitElement {
   }
 
   public validate(reportValidity = true): boolean | null {
-    if (this._interactionElements.every(interactionElement => interactionElement.validate(reportValidity))) return true;
-    if (this._interactionElements.some(interactionElement => interactionElement.validate(reportValidity))) return false;
+    if (this._interactionElements.every(interactionElement => interactionElement.validate())) return true;
+    if (this._interactionElements.some(interactionElement => interactionElement.validate())) return false;
+    if (reportValidity) this.reportValidity();
     return null;
+  }
+
+  public reportValidity() {
+    for (const interactionElement of this._interactionElements) {
+      interactionElement.reportValidity();
+    }
   }
 
   private _getCompletionStatus(): 'completed' | 'incomplete' | 'not_attempted' | 'unknown' {
