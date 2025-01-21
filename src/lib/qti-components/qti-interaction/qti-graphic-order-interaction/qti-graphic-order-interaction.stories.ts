@@ -34,3 +34,37 @@ export const Default: Story = {
       `
     )
 };
+
+export const MultipleShapes: Story = {
+  render: () =>
+    template(
+      args,
+      html`
+        <img src="qti-graphic-order-interaction/map-us.png" alt="" width="795" height="492" />
+        <qti-hotspot-choice
+          identifier="hotspot_1"
+          fixed="false"
+          shape="rect"
+          coords="74,101,234,194"
+        ></qti-hotspot-choice>
+        <qti-hotspot-choice
+          identifier="hotspot_2"
+          fixed="false"
+          shape="ellipse"
+          coords="338,259,77,73"
+        ></qti-hotspot-choice>
+        <qti-hotspot-choice
+          identifier="hotspot_3"
+          fixed="false"
+          shape="ellipse"
+          coords="444,148,47,46"
+        ></qti-hotspot-choice>
+        <qti-hotspot-choice
+          identifier="hotspot_4"
+          fixed="false"
+          shape="poly"
+          coords="114,269,146,295,181,271,154,249"
+        ></qti-hotspot-choice>
+      `
+    )
+};
