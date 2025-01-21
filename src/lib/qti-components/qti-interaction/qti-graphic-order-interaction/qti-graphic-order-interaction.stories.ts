@@ -57,7 +57,7 @@ export const MultipleShapes: Story = {
           identifier="hotspot_3"
           fixed="false"
           shape="ellipse"
-          coords="444,148,47,46"
+          coords="362,143,70,25"
         ></qti-hotspot-choice>
         <qti-hotspot-choice
           identifier="hotspot_4"
