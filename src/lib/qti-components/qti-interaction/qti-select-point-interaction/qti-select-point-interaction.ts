@@ -39,7 +39,7 @@ export class QtiSelectPointInteraction extends Interaction {
 
   // Extracted click handler method
   private _onImageClick = (event: MouseEvent) => {
-    if (this._points.length < this.maxChoices) {
+    if (this.maxChoices === 0 || this._points.length < this.maxChoices) {
       const x = event.offsetX;
       const y = event.offsetY;
 
