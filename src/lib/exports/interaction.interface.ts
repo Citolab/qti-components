@@ -4,7 +4,7 @@ export interface IInteraction {
   responseIdentifier: string;
   disabled: boolean;
   readonly: boolean;
-  validate(): boolean;
+  validate(reportValidity?: boolean): boolean;
   reportValidity(): boolean;
   reset(): void;
   saveResponse(value: string | string[]): void;

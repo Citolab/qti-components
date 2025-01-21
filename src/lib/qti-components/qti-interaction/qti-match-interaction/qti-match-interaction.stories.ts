@@ -78,6 +78,49 @@ const testTemplate = html`<qti-prompt
     </qti-simple-match-set>
   </qti-match-interaction>`;
 
+const multipleAssociationsTemplate = html` <qti-match-interaction
+  response-identifier="match_languages_countries"
+  shuffle="false"
+  max-associations="5"
+  min-associations="0"
+>
+  <qti-prompt>Can you match the cities below with the language most likely to be spoken there?</qti-prompt>
+  <qti-simple-match-set>
+    <qti-simple-associable-choice identifier="french" fixed="false" show-hide="show" match-max="0" match-min="0"
+      >French</qti-simple-associable-choice
+    >
+    <qti-simple-associable-choice identifier="hungarian" fixed="false" show-hide="show" match-max="0" match-min="0"
+      >Hungarian</qti-simple-associable-choice
+    >
+    <qti-simple-associable-choice identifier="polish" fixed="false" show-hide="show" match-max="0" match-min="0"
+      >Polish</qti-simple-associable-choice
+    >
+    <qti-simple-associable-choice identifier="dutch" fixed="false" show-hide="show" match-max="0" match-min="0"
+      >Dutch</qti-simple-associable-choice
+    >
+    <qti-simple-associable-choice identifier="lithuanian" fixed="false" show-hide="show" match-max="0" match-min="0"
+      >Lithuanian</qti-simple-associable-choice
+    >
+  </qti-simple-match-set>
+  <qti-simple-match-set>
+    <qti-simple-associable-choice identifier="budapest" fixed="false" show-hide="show" match-max="0" match-min="0"
+      >Budapest</qti-simple-associable-choice
+    >
+    <qti-simple-associable-choice identifier="vilnius" fixed="false" show-hide="show" match-max="0" match-min="0"
+      >Vilnius</qti-simple-associable-choice
+    >
+    <qti-simple-associable-choice identifier="paris" fixed="false" show-hide="show" match-max="0" match-min="0"
+      >Paris</qti-simple-associable-choice
+    >
+    <qti-simple-associable-choice identifier="amsterdam" fixed="false" show-hide="show" match-max="0" match-min="0"
+      >Amsterdam</qti-simple-associable-choice
+    >
+    <qti-simple-associable-choice identifier="warsaw" fixed="false" show-hide="show" match-max="0" match-min="0"
+      >Warsaw</qti-simple-associable-choice
+    >
+  </qti-simple-match-set>
+</qti-match-interaction>`;
+
 export const Test: Story = {
   render: () => testTemplate,
   play: async ({ canvasElement, step }) => {
@@ -171,6 +214,13 @@ export const Test2: Story = {
     }
     const correctArray = ['C M', 'D M', 'L R'];
     expect(interaction.value).toEqual(correctArray);
+  }
+};
+
+export const DragMultiple: Story = {
+  render: () => multipleAssociationsTemplate,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
   }
 };
 

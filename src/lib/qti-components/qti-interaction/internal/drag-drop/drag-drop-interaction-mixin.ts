@@ -390,7 +390,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       this.resetDragState();
     }
 
-    validate(): boolean {
+    validate(reportValidity = true): boolean {
       if (!this.shadowRoot) return false;
       const validAssociations = this.getValidAssociations();
       let isValid = true;
@@ -410,8 +410,9 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       const lastElementChild = this.lastElementChild as HTMLElement;
       // Use null for the third argument if no specific anchor is needed
       this._internals.setValidity(isValid ? {} : { customError: true }, validityMessage, lastElementChild);
-
-      this.reportValidity();
+      if (reportValidity) {
+        this.reportValidity();
+      }
       return isValid;
     }
 
@@ -433,7 +434,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       const maxMatch = this.getMatchMaxValue(droppable);
       const currentAssociations = droppable.querySelectorAll('[qti-draggable="true"]').length;
       const unlimitedAssociations = maxMatch === 0;
-      return unlimitedAssociations || currentAssociations >= maxMatch;
+      return !unlimitedAssociations && currentAssociations >= maxMatch;
     }
 
     private dropDraggableInDroppable(draggable: HTMLElement, droppable: HTMLElement): void {
@@ -488,12 +489,19 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
 
     protected checkAllMaxAssociations(): void {
+      const currentAssociations = this.getValidAssociations();
+      const maxAssociationsInterationReached =
+        this.maxAssociations !== 0 && currentAssociations >= this.maxAssociations;
       this.droppables.forEach(d => {
-        const maxAssociationsReached = this.checkMaxAssociations(d);
-        if (maxAssociationsReached) {
+        if (maxAssociationsInterationReached) {
           this.disableDroppable(d);
         } else {
-          this.enableDroppable(d);
+          const maxAssociationsReached = this.checkMaxAssociations(d);
+          if (maxAssociationsReached) {
+            this.disableDroppable(d);
+          } else {
+            this.enableDroppable(d);
+          }
         }
       });
     }
@@ -546,7 +554,11 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
 
     private getValidAssociations(): number {
-      return this.droppables.filter(d => d.childElementCount > 0).length;
+      let count = 0;
+      for (const droppable of this.droppables) {
+        count = count + this.getDraggablesFromDroppable(droppable).length;
+      }
+      return count;
     }
 
     public saveResponse(): void {
@@ -778,15 +790,6 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       }
       e.preventDefault();
       this.dragClone.setAttribute('dragging', '');
-    }
-
-    private findParentInteractionElement(element: HTMLElement): HTMLElement {
-      let parent = element.parentElement;
-      // find parent where tag name endswith -interaction
-      while (parent && !parent.tagName?.toLowerCase().endsWith('-interaction')) {
-        parent = parent.parentElement;
-      }
-      return parent;
     }
 
     private findDraggableInDraggableContainer(identifier: string): HTMLElement | undefined {

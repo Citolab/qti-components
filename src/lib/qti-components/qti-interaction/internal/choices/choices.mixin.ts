@@ -107,7 +107,7 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       this.removeEventListener(`activate-${selector}`, this._choiceElementSelectedHandler);
     }
 
-    public validate(): boolean {
+    public validate(reportValidity?: boolean): boolean {
       const selectedChoices = this._choiceElements.filter(choice => this._getChoiceChecked(choice));
       const selectedCount = selectedChoices.length;
       let isValid = true;
@@ -127,7 +127,9 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
           selectedChoices[selectedCount - 1] || this._choiceElements[0] || this
         );
       }
-      this.reportValidity();
+      if (reportValidity) {
+        this.reportValidity();
+      }
       return isValid;
     }
 
@@ -212,7 +214,7 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       const selectedIdentifiers = selectedChoices.map(choice => choice.identifier);
 
       this.value = this.maxChoices === 1 ? selectedIdentifiers[0] || '' : selectedIdentifiers;
-      this.validate();
+      this.validate(false);
       this.saveResponse(this._value);
     }
 

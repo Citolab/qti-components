@@ -299,14 +299,14 @@ export class QtiAssessmentItem extends LitElement {
     });
   }
 
-  public validate(): boolean | null {
-    if (this._interactionElements.every(interactionElement => interactionElement.validate())) return true;
-    if (this._interactionElements.some(interactionElement => interactionElement.validate())) return false;
+  public validate(reportValidity = true): boolean | null {
+    if (this._interactionElements.every(interactionElement => interactionElement.validate(reportValidity))) return true;
+    if (this._interactionElements.some(interactionElement => interactionElement.validate(reportValidity))) return false;
     return null;
   }
 
   private _getCompletionStatus(): 'completed' | 'incomplete' | 'not_attempted' | 'unknown' {
-    const valid = this.validate();
+    const valid = this.validate(false);
     if (valid === true) return 'completed';
     if (valid === false) return 'incomplete';
     return 'not_attempted';

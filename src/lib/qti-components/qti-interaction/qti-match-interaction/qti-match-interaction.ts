@@ -139,7 +139,7 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
                           ? true
                           : row.matchMax === 1
                             ? false
-                            : selectedInRowCount >= row.matchMax && !checked;
+                            : row.matchMax !== 0 && selectedInRowCount >= row.matchMax && !checked;
                       return html`<td>
                         <input
                           type=${row.matchMax === 1 ? 'radio' : `checkbox`}
