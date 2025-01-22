@@ -2,13 +2,11 @@ import { html } from 'lit';
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
 import { expect, fireEvent, fn, waitFor, within } from '@storybook/test';
 import { getByShadowRole } from 'shadow-dom-testing-library';
-import { spread } from '@open-wc/lit-helpers';
 
 import type { Meta, StoryObj } from '@storybook/web-components';
 import type { InputType } from '@storybook/core/types';
 import type { QtiSimpleChoice } from '../qti-simple-choice';
 import type { QtiChoiceInteraction } from './qti-choice-interaction';
-
 
 const { events, args, argTypes, template } = getWcStorybookHelpers('qti-choice-interaction');
 
@@ -72,16 +70,28 @@ export const Default: Story = {
 };
 
 export const Test: Story = {
-  render: () =>
-    html` <qti-choice-interaction min-choices="1" max-choices="2">
-      <qti-prompt>
-        <p>Which of the following features are <strong>new</strong> to QTI 3?</p>
-      </qti-prompt>
-      <qti-simple-choice identifier="A">Option A</qti-simple-choice>
-      <qti-simple-choice identifier="B">Option B</qti-simple-choice>
-      <qti-simple-choice identifier="C">Option C</qti-simple-choice>
-      <qti-simple-choice identifier="D">Option D</qti-simple-choice>
-    </qti-choice-interaction>`,
+  render: () => {
+    return html` <qti-choice-interaction min-choices="1" max-choices="2">
+        <qti-prompt>
+          <p>Which of the following features are <strong>new</strong> to QTI 3?</p>
+        </qti-prompt>
+        <qti-simple-choice identifier="A">Option A</qti-simple-choice>
+        <qti-simple-choice identifier="B">Option B</qti-simple-choice>
+        <qti-simple-choice identifier="C">Option C</qti-simple-choice>
+        <qti-simple-choice identifier="D">Option D</qti-simple-choice>
+      </qti-choice-interaction>
+      <button
+        id="validate-button"
+        @click=${() => {
+          const choiceInteraction = document.querySelector('qti-choice-interaction') as HTMLElement & {
+            reportValidity: () => boolean;
+          };
+          choiceInteraction?.reportValidity();
+        }}
+      >
+        Validate
+      </button>`;
+  },
   args: {
     'min-choices': 1,
     'max-choices': 2
@@ -91,6 +101,7 @@ export const Test: Story = {
     const choiceA = canvas.getByText<QtiSimpleChoice>('Option A');
     const choiceB = canvas.getByText<QtiSimpleChoice>('Option B');
     const choiceC = canvas.getByText<QtiSimpleChoice>('Option C');
+    const button = canvas.getByRole('button', { name: 'Validate' });
 
     expect(choiceA.internals.role).toBe('checkbox');
     // expect(element.validate()).toBeFalsy();
@@ -105,9 +116,11 @@ export const Test: Story = {
     await fireEvent.click(choiceC);
     const validationMessage = getByShadowRole(canvasElement, 'alert');
 
+    await fireEvent.click(button);
+
     await waitFor(() => expect(validationMessage).toBeVisible());
 
-    expect(validationMessage.textContent).toBe('You can select at most 2 choices.');
+    expect(validationMessage.textContent).toBe('Please select no more than 2 options.');
   }
 };
 

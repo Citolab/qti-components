@@ -63,7 +63,7 @@ export const Default: Story = {
 const testTemplate = html`<qti-prompt
     >Match the following characters to the Shakespeare play they appeared in:</qti-prompt
   >
-  <qti-match-interaction data-testid="match-interaction" response-identifier="RESPONSE">
+  <qti-match-interaction data-testid="match-interaction" response-identifier="RESPONSE" max-associations="3">
     <qti-simple-match-set>
       <qti-simple-associable-choice identifier="C" match-max="1">Capulet</qti-simple-associable-choice>
       <qti-simple-associable-choice identifier="D" match-max="1">Demetrius</qti-simple-associable-choice>
@@ -257,7 +257,7 @@ export const Tabular = {
           class="qti-match-tabular"
           response-identifier="RESPONSE"
           shuffle="true"
-          max-associations="1"
+          max-associations="5"
         >
           <qti-prompt>Match the following characters to the Shakespeare play they appeared in:</qti-prompt>
           <qti-simple-match-set>

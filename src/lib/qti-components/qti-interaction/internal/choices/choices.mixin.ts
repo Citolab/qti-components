@@ -114,10 +114,12 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       let validityMessage = '';
       if (this.maxChoices !== 0 && selectedCount > this.maxChoices) {
         isValid = false;
-        validityMessage = this.dataset.maxSelectionsMessage || `You can select at most ${this.maxChoices} choices.`;
+        validityMessage =
+          this.dataset.maxSelectionsMessage ||
+          `Please select no more than ${this.maxChoices} ${this.maxChoices === 1 ? 'option' : 'options'}.`;
       } else if (selectedCount < this.minChoices) {
         isValid = false;
-        validityMessage = this.dataset.minSelectionsMessage || `You must select at least ${this.minChoices} choices.`;
+        validityMessage = `Please select at least ${this.minChoices} ${this.minChoices === 1 ? 'option' : 'options'}.`;
       }
 
       if (selectedChoices.length > 0) {

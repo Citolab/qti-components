@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<qti-assessment-item 
-  xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" 
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd" 
-  identifier="q6-gap-match-interaction-sv-3" title="Gap Match - (SV 3) - custom messages" 
+<qti-assessment-item
+  xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+  identifier="q6-gap-match-interaction-sv-3" title="Gap Match - (SV 3) - custom messages"
   adaptive="false" time-dependent="false">
   <qti-response-declaration identifier="RESPONSE1" cardinality="multiple" base-type="directedPair">
     <qti-correct-response>
@@ -11,8 +11,8 @@
       <qti-value>Su G2</qti-value>
     </qti-correct-response>
     <qti-mapping default-value="-1" lower-bound="0">
-      <qti-map-entry map-key="W G1" mapped-value="1"/>
-      <qti-map-entry map-key="Su G2" mapped-value="2"/>
+      <qti-map-entry map-key="W G1" mapped-value="1" />
+      <qti-map-entry map-key="Su G2" mapped-value="2" />
     </qti-mapping>
   </qti-response-declaration>
   <qti-response-declaration identifier="RESPONSE2" cardinality="multiple" base-type="directedPair">
@@ -21,50 +21,48 @@
       <qti-value>Su G2</qti-value>
     </qti-correct-response>
     <qti-mapping default-value="-1" lower-bound="0">
-      <qti-map-entry map-key="W G1" mapped-value="1"/>
-      <qti-map-entry map-key="Su G2" mapped-value="2"/>
+      <qti-map-entry map-key="W G1" mapped-value="1" />
+      <qti-map-entry map-key="Su G2" mapped-value="2" />
     </qti-mapping>
   </qti-response-declaration>
-  <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float"/>
+  <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float" />
   <qti-item-body>
-    
-    <p>
-      A Delivery Platform's <em>default</em> min-associations and max-associations constraint violation messages are left to the 
-      Delivery Platform.  Platform <em>default</em> constraint violation messages may be overriden by using 
-      the <strong>data-max-selections-message</strong> and <strong>data-min-selections-message</strong> attributes accordingly.
-    </p>
-    
+
+    <p> A Delivery Platform's <em>default</em> min-associations and max-associations constraint
+      violation messages are left to the Delivery Platform. Platform <em>default</em> constraint
+      violation messages may be overriden by using the <strong>data-max-selections-message</strong>
+      and <strong>data-min-selections-message</strong> attributes accordingly. </p>
+
     <div class="qti-layout-row">
       <div class="qti-layout-col9">
 
-        <qti-gap-match-interaction max-associations="1" min-associations="1" data-max-selections-message="You've selected too many" data-min-selections-message="You haven't selected enough" response-identifier="RESPONSE1">
+        <qti-gap-match-interaction max-associations="1" min-associations="1"
+          data-max-selections-message="You've selected too many"
+          data-min-selections-message="You haven't selected enough" response-identifier="RESPONSE1">
           <qti-prompt>Demonstrates data-max|min-selections-messages</qti-prompt>
           <qti-gap-text identifier="W" match-max="1">winter</qti-gap-text>
           <qti-gap-text identifier="Sp" match-max="1">spring</qti-gap-text>
           <qti-gap-text identifier="Su" match-max="1">summer</qti-gap-text>
           <qti-gap-text identifier="A" match-max="1">autumn</qti-gap-text>
           <blockquote>
-            <p>
-              Now is the <qti-gap identifier="G1"/> of our discontent<br/>
-              Made glorious <qti-gap identifier="G2"/> by this sun of York;<br/> 
-              And all the clouds that lour'd upon our house<br/>
-              In the deep bosom of the ocean buried.
-            </p>
+            <p> Now is the <qti-gap identifier="G1" /> of our discontent<br /> Made glorious <qti-gap
+                identifier="G2" /> by this sun of York;<br /> And all the clouds that lour'd upon
+      our house<br /> In the deep bosom of the ocean buried. </p>
           </blockquote>
         </qti-gap-match-interaction>
 
       </div>
     </div>
-    
+
     <div>
       <hr />
     </div>
-    
-    <p>
-      The max-associations attribute is optional and defaults to a value of 1 when unspecified.  The following interaction has no 
-      max-associations attribute and no data-max-selections-message attribute.   Consequently, a Delivery Platform must trigger its
-      <em>default</em> max-associations message when the candidate attempts to make more than 1 match in the following interaction.
-    </p>
+
+    <p> The max-associations attribute is optional and defaults to a value of 1 when unspecified.
+      The following interaction has no max-associations attribute and no data-max-selections-message
+      attribute. Consequently, a Delivery Platform must trigger its <em>default</em>
+      max-associations message when the candidate attempts to make more than 1 match in the
+      following interaction. </p>
 
     <div class="qti-layout-row">
       <div class="qti-layout-col9">
@@ -75,17 +73,14 @@
           <qti-gap-text identifier="Su" match-max="1">summer</qti-gap-text>
           <qti-gap-text identifier="A" match-max="1">autumn</qti-gap-text>
           <blockquote>
-            <p>
-              Now is the <qti-gap identifier="G1"/> of our discontent<br/>
-              Made glorious <qti-gap identifier="G2"/> by this sun of York;<br/> 
-              And all the clouds that lour'd upon our house<br/>
-              In the deep bosom of the ocean buried.
-            </p>
+            <p> Now is the <qti-gap identifier="G1" /> of our discontent<br /> Made glorious <qti-gap
+                identifier="G2" /> by this sun of York;<br /> And all the clouds that lour'd upon
+      our house<br /> In the deep bosom of the ocean buried. </p>
           </blockquote>
         </qti-gap-match-interaction>
 
       </div>
     </div>
-    
+
   </qti-item-body>
 </qti-assessment-item>
