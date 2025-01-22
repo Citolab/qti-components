@@ -52,11 +52,10 @@ export class QtiPortableCustomInteraction extends Interaction {
     // to check if the response has changed. If changed we'll save the response
     this.intervalId = setInterval(() => {
       const response = this.pci.getResponse();
-      const newResponse = this.pci.getResponse();
       const stringified = JSON.stringify(response);
       if (stringified !== this.rawResponse) {
         this.rawResponse = stringified;
-        const value = this.convertQtiVariableJSON(newResponse);
+        const value = this.convertQtiVariableJSON(response);
         this.value = value;
         this.saveResponse(value);
       }
@@ -79,84 +78,22 @@ export class QtiPortableCustomInteraction extends Interaction {
     return this.rawResponse;
   }
 
-  getTAOConfig(node) {
-    const a = node.querySelectorAll('properties');
-    let config = {};
-
-    const getPropertyValue = el => {
-      const property = {};
-      const key = el.getAttribute('key');
-      if (key) {
-        const children = Array.from(el.children);
-        const allKey = children.map((c: HTMLElement) => c.getAttribute('key'));
-        const isArray = allKey.length > 0 && !allKey.find(k => !Number.isInteger(+k));
-        if (isArray) {
-          property[key] = children.map(c => getChildProperties(c));
-        } else {
-          property[key] = el.textContent;
-        }
-      }
-      return property;
-    };
-
-    const getChildProperties = (el): {} | void => {
-      if (el) {
-        let properties = {};
-        for (const child of el.children) {
-          properties = { ...properties, ...getPropertyValue(child) };
-        }
-        return properties;
-      }
-    };
-
-    for (const properties of a) {
-      const key = properties.getAttribute('key');
-      if (!key) {
-        config = { ...config, ...getChildProperties(properties) };
-      }
-      return config;
-    }
-    console.log('Can not find qti-custom-interaction config');
-    return null;
-  }
-
   register(pci: IMSpci<unknown>) {
     this.pci = pci;
-
-    const type = this.parentElement.tagName === 'QTI-CUSTOM-INTERACTION' ? 'TAO' : 'IMS';
-    const dom: HTMLElement =
-      type == 'IMS' ? this.querySelector('qti-interaction-markup') : this.querySelector('markup');
+    const dom: HTMLElement = this.querySelector('qti-interaction-markup');
     dom.classList.add('qti-customInteraction');
 
-    if (type == 'TAO' && this.querySelector('properties')) {
+    if (this.querySelector('properties')) {
       (this.querySelector('properties') as HTMLElement).style.display = 'none';
     }
 
-    const config: any =
-      type == 'IMS'
-        ? {
-            properties: this.dataset,
-            onready: () => {
-              console.log('onready');
-            }
-          }
-        : this.getTAOConfig(this);
-    if (type == 'IMS') {
-      pci.getInstance(dom, config, undefined);
-    } else {
-      (pci as any).initialize(this.customInteractionTypeIdentifier, dom.firstElementChild, config);
-    }
-    if (type == 'TAO') {
-      const links = Array.from(this.querySelectorAll('link')).map(acc => acc.getAttribute('href'));
-      links.forEach(link => {
-        const styles = document.createElement('link');
-        styles.rel = 'stylesheet';
-        styles.type = 'text/css';
-        styles.media = 'screen';
-        styles.href = link;
-        dom.appendChild(styles);
-      });
-    }
+    const config: any = {
+      properties: this.dataset,
+      onready: () => {
+        console.log('onready');
+      }
+    };
+    pci.getInstance(dom, config, undefined);
     this.startChecking();
   }
 
