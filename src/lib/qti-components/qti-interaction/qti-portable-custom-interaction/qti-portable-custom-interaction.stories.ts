@@ -197,3 +197,45 @@ export const TapToReveal = {
     chromatic: { disableSnapshot: true }
   }
 };
+
+export const ConvertedTAO = {
+  render: () =>
+    html` <qti-portable-custom-interaction
+      hook="decisiontask/runtime/decisiontask.amd.js"
+      version="0.0.10"
+      data-stimulusindex="3"
+      data-stimulus="7 + 6 = 13"
+      data-response="1"
+      data-uploaded-fname="stimuli_IIL_item.csv"
+      data-feedback="true"
+      data-tlimit="0"
+      data-level="2"
+      data-buttonlabel0="True"
+      data-buttonlabel1="False"
+      module="decisiontask"
+      response-identifier="RESPONSE"
+    >
+     <qti-interaction-modules>
+         <qti-interaction-module
+            id="decisiontask"
+            primary-path="decisiontask/runtime/decisiontask.amd.js"
+          ></qti-interaction-module>
+          <qti-interaction-module
+            id="IMSGlobal/jquery_2_1_1"
+            primary-path="IMSGlobal/jquery_2_1_1"
+          ></qti-interaction-module>
+          <qti-interaction-module
+            id="decisiontask/runtime/js/renderer"
+            primary-path="decisiontask/runtime/js/renderer"
+          ></qti-interaction-module>
+      <qti-interaction-markup>
+        <div class="decisiontask">
+          <div class="prompt"></div>
+          <div class="globalWrapper"></div>
+        </div>
+      </qti-interaction-markup>
+    </qti-portable-custom-interaction>`,
+  parameters: {
+    chromatic: { disableSnapshot: true }
+  }
+};

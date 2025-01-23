@@ -93,13 +93,74 @@ export class QtiPortableCustomInteraction extends Interaction {
         console.log('onready');
       }
     };
-    pci.getInstance(dom, config, undefined);
+    if (pci.getInstance)
+      // try {
+      pci.getInstance(dom, config, undefined);
+    else {
+      // Try the TAO custom interaction initialization.
+      const restoreTAOConfig = (element: HTMLElement): any => {
+        const config: any = {};
+
+        const parseDataAttributes = (element: HTMLElement) => {
+          const result: Record<string, any> = {};
+
+          // Separate direct attributes from nested ones
+          Object.entries(element.dataset).forEach(([key, value]) => {
+            if (!key.includes('__')) {
+              // Direct attributes (like version)
+              result[key] = value;
+            }
+          });
+
+          // Parse nested attributes
+          const nestedData: Record<string, Record<string, any>> = {};
+
+          Object.entries(element.dataset).forEach(([key, value]) => {
+            const parts = key.split('__');
+            if (parts.length > 1) {
+              const [group, index, prop] = parts;
+              nestedData[group] = nestedData[group] || {};
+              nestedData[group][index] = nestedData[group][index] || {};
+              nestedData[group][index][prop] = value;
+            }
+          });
+
+          // Convert nested groups to arrays
+          Object.entries(nestedData).forEach(([key, group]) => {
+            result[key] = Object.values(group);
+          });
+
+          return result;
+        };
+
+        const data = parseDataAttributes(element);
+        for (const key in data) {
+          if (Object.prototype.hasOwnProperty.call(data, key)) {
+            const value = data[key];
+            if (key === 'config') {
+              config[key] = JSON.parse(value);
+            } else {
+              config[key] = value;
+            }
+          }
+        }
+        return config;
+      };
+      const taoConfig = restoreTAOConfig(this);
+      (pci as any).initialize(
+        this.customInteractionTypeIdentifier,
+        dom.firstElementChild,
+        Object.keys(taoConfig).length ? taoConfig : null
+      );
+    }
+
     this.startChecking();
   }
 
   override connectedCallback(): void {
     super.connectedCallback();
 
+    console.log('connectedCallback');
     define('qtiCustomInteractionContext', () => {
       return {
         register: ctxA => {
@@ -113,9 +174,22 @@ export class QtiPortableCustomInteraction extends Interaction {
 
     const config = this.buildRequireConfig();
     const requirePCI = requirejs.config(config);
+    requirejs.onError = function (err) {
+      console.error('RequireJS error:', err);
+      if (err.requireType === 'timeout') {
+        console.error('Modules that timed out:', err.requireModules);
+      }
+      throw err;
+    };
     requirePCI(['require'], require => {
-      // eslint-disable-next-line import/no-dynamic-require
-      require([this.module]);
+      try {
+        // eslint-disable-next-line import/no-dynamic-require
+        require([this.module], () => {}, err => {
+          console.error('Error loading module:', err);
+        });
+      } catch (error) {
+        console.error('Error in require call:', error);
+      }
     });
   }
 
@@ -170,7 +244,7 @@ export class QtiPortableCustomInteraction extends Interaction {
   private combineRequireResolvePaths(path1: string | string[], path2: string | string[]) {
     const path1Array = Array.isArray(path1) ? path1 : [path1];
     const path2Array = Array.isArray(path2) ? path2 : [path2];
-    return path1Array.concat(path2Array);
+    return path1Array.concat(path2Array).filter((value, index, self) => self.indexOf(value) === index);
   }
 
   private removeDoubleSlashes(str: string) {
