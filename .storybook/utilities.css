@@ -5,6 +5,10 @@ body.sb-main-fullscreen #storybook-root #root-inner {
   height: 100%;
 }
 
+.active {
+  border: 2px solid blue;
+}
+
 .flex {
   display: flex;
 }

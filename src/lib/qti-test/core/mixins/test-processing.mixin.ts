@@ -15,9 +15,9 @@ export const TestProcessingMixin = <T extends Constructor<TestBase>>(superClass:
     constructor(...args: any[]) {
       super(...args);
       this.addEventListener('qti-register-variable', (e: CustomEvent<{ variable: any }>) => {
-        this._testContext = {
-          ...this._testContext,
-          testOutcomeVariables: [...this._testContext.testOutcomeVariables, e.detail.variable]
+        this.testContext = {
+          ...this.testContext,
+          testOutcomeVariables: [...(this.testContext.testOutcomeVariables || []), e.detail.variable]
         };
         e.stopPropagation();
       });
@@ -47,9 +47,9 @@ export const TestProcessingMixin = <T extends Constructor<TestBase>>(superClass:
         console.warn(`Can not set qti-outcome-identifier: ${identifier}, it is not available`);
         return;
       }
-      this._testContext = {
-        ...this._testContext,
-        testOutcomeVariables: this._testContext.testOutcomeVariables.map(v => {
+      this.testContext = {
+        ...this.testContext,
+        testOutcomeVariables: this.testContext.testOutcomeVariables?.map(v => {
           if (v.identifier !== identifier) {
             return v;
           }
@@ -65,7 +65,7 @@ export const TestProcessingMixin = <T extends Constructor<TestBase>>(superClass:
       return this.getVariable(identifier) as OutcomeVariable;
     }
     public getVariable(identifier: string): Readonly<VariableDeclaration<string | string[] | null>> {
-      return this._testContext.testOutcomeVariables.find(v => v.identifier === identifier) || null;
+      return this.testContext.testOutcomeVariables?.find(v => v.identifier === identifier) || null;
     }
     /* --------------------------- ENABLED WHEN UNIT TESTING OUTCOME PROCESSING ------------------------------------ */
   }

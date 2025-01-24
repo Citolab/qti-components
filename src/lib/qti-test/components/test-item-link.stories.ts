@@ -4,7 +4,6 @@ import { html } from 'lit';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import type { TestItemLink } from './test-item-link';
 
-
 const { events, args, argTypes, template } = getWcStorybookHelpers('test-item-link');
 
 type Story = StoryObj<TestItemLink & typeof args>;
@@ -24,7 +23,9 @@ export default meta;
 export const Default: Story = {
   render: args =>
     html` <qti-test>
-      <test-container test-url="/assets/api/biologie/assessment.xml"></test-container>
-      ${template(args, html`Link to item`)}
+      <test-navigation>
+        <test-container test-url="/assets/api/biologie/assessment.xml"></test-container>
+        ${template(args, html`Link to item`)}
+      </test-navigation>
     </qti-test>`
 };

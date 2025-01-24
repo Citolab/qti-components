@@ -2,9 +2,9 @@ import { LitElement, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { until } from 'lit/directives/until.js';
 
-import { watch } from '../../../decorators/watch';
-import itemCss from '../../../../item.css?inline';
-import { qtiTransformTest } from '../../../qti-transformers';
+import { watch } from '../../decorators/watch';
+import itemCss from '../../../item.css?inline';
+import { qtiTransformTest } from '../../qti-transformers';
 
 /**
  * `<test-container>` is a custom element designed for hosting the qti-assessment-item.
@@ -13,7 +13,9 @@ import { qtiTransformTest } from '../../../qti-transformers';
  *
  * ```html
  * <qti-test>
- *   <test-container class="m-4 bg-white" test-url="./path/to/assessmenttest.xml"></test-container>
+ *   <test-navigation>
+ *      <test-container class="m-4 bg-white" test-url="./path/to/assessmenttest.xml"></test-container>
+ *   </test-navigation>
  * </qti-test>
  * ```
  */

@@ -1,8 +1,12 @@
-import { css, html } from 'lit';
+import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
+import { consume } from '@lit/context';
 
 import * as styles from './styles';
-import { TestComponent } from './test-component.abstract';
+import { propInternalState, watch } from '../../decorators';
+import { computedContext } from '../../exports/computed.context';
+
+import type { ComputedContext, ComputedItem } from '../../exports/computed.context';
 
 /**
  * Represents a custom element for navigating to the next test item.
@@ -16,7 +20,27 @@ import { TestComponent } from './test-component.abstract';
  * ```
  */
 @customElement('test-next')
-export class TestNext extends TestComponent {
+export class TestNext extends LitElement {
+  @propInternalState({
+    type: Boolean,
+    reflect: true,
+    aria: 'ariaDisabled' // Maps to `aria-disabled` attribute
+  })
+  public disabled = true;
+
+  @consume({ context: computedContext, subscribe: true })
+  protected computedContext: ComputedContext;
+
+  sectionItems: ComputedItem[];
+  itemIndex: number;
+
+  @watch('computedContext')
+  _handleTestElementChange(_oldValue: ComputedContext, newValue: ComputedContext) {
+    if (newValue) {
+      this.disabled = false;
+    }
+  }
+
   static styles = css`
     :host {
       ${styles.btn};
@@ -25,23 +49,36 @@ export class TestNext extends TestComponent {
       ${styles.dis};
     }
   `;
+  private _internals: ElementInternals;
 
   constructor() {
     super();
+
+    this._internals = this.attachInternals();
     this._internals.role = 'button';
     this._internals.ariaLabel = 'Next item';
 
     this.addEventListener('click', e => {
       e.preventDefault();
-      if (!this.disabled) this._requestItem(this.items[this.itemIndex + 1].identifier);
+      if (!this.disabled) this._requestItem(this.sectionItems[this.itemIndex + 1].identifier);
     });
   }
 
-  willUpdate(changedProperties: Map<string | number | symbol, unknown>) {
-    super.willUpdate(changedProperties);
-    if (changedProperties.has('_testContext')) {
-      this.disabled = !this._testElement || this.itemIndex < 0 || this.itemIndex >= this.items.length - 1;
-    }
+  connectedCallback(): void {
+    super.connectedCallback();
+    this.checkDisabled();
+  }
+
+  willUpdate(_changedProperties: Map<string | number | symbol, unknown>) {
+    if (!this.computedContext) return;
+    const testPart = this.computedContext?.testParts.find(testPart => testPart.active);
+    this.sectionItems = testPart.sections.flatMap(section => section.items);
+    this.itemIndex = this.sectionItems.findIndex(item => item.active);
+    this.checkDisabled();
+  }
+
+  checkDisabled() {
+    this.disabled = !this.computedContext || this.itemIndex < 0 || this.itemIndex >= this.sectionItems.length - 1;
   }
 
   protected _requestItem(identifier: string): void {

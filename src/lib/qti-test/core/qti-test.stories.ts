@@ -26,8 +26,10 @@ export const Unstyled: Story = {
   render: args => {
     return html` ${template(
       args,
-      html`<test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"></test-container>
-        <nav><test-prev>Vorige</test-prev><test-next>Volgende</test-next></nav>`
+      html`<test-navigation
+        ><test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"></test-container>
+        <nav><test-prev>Vorige</test-prev><test-next>Volgende</test-next></nav></test-navigation
+      >`
     )}`;
   }
 };
@@ -35,16 +37,21 @@ export const Unstyled: Story = {
 export const BootstrapForTest: Story = {
   render: () => html`
     <qti-test class="d-flex h-100 w-full flex-column">
-      <test-container test-url="/assets/api/examples/assessment.xml" class="overflow-auto aspect-16/9"></test-container>
-      <div class="d-flex align-items-center justify-content-between">
-        <test-prev class="d-flex flex-nowrap btn  btn-success">
-          <i class="bi bi-arrow-left-short me-2"></i>previous
-        </test-prev>
+      <test-navigation>
+        <test-container
+          test-url="/assets/api/examples/assessment.xml"
+          class="overflow-auto aspect-16/9"
+        ></test-container>
+        <div class="d-flex align-items-center justify-content-between">
+          <test-prev class="d-flex flex-nowrap btn  btn-success">
+            <i class="bi bi-arrow-left-short me-2"></i>previous
+          </test-prev>
 
-        <test-next class="d-flex flex-nowrap btn  btn-success">
-          next<i class="bi bi-arrow-right-short ms-2"></i>
-        </test-next>
-      </div>
+          <test-next class="d-flex flex-nowrap btn  btn-success">
+            next<i class="bi bi-arrow-right-short ms-2"></i>
+          </test-next>
+        </div>
+      </test-navigation>
     </qti-test>
   `
 };
@@ -59,9 +66,11 @@ export const CSSVariablesForItem: Story = {
       }
     </style>
     <qti-test>
-      <test-container test-url="/assets/api/examples/assessment.xml"></test-container>
-      <test-prev> previous </test-prev>
-      <test-next> next </test-next>
+      <test-navigation>
+        <test-container test-url="/assets/api/examples/assessment.xml"></test-container>
+        <test-prev> previous </test-prev>
+        <test-next> next </test-next>
+      </test-navigation>
     </qti-test>
   `
 };

@@ -73,16 +73,18 @@ export const T4_T7: Story = {
         ${ref(qtiTestRef)}
         class="flex h-full w-full flex-col"
       >
-        <div class="relative flex-1 overflow-auto">
-          <test-container test-url="${manifestInfo.testURL}" class="block"></test-container>
-        </div>
-
-        <div class="flex w-full items-center justify-between gap-2">
-          <div class="flex items-center gap-2">
-            <test-prev class="btn btn-primary" role="button"> Vorige </test-prev>
-            <test-next class="btn btn-primary" role="button"> Volgende </test-next>
+        <test-navigation>
+          <div class="relative flex-1 overflow-auto">
+            <test-container test-url="${manifestInfo.testURL}" class="block"></test-container>
           </div>
-        </div>
+
+          <div class="flex w-full items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <test-prev class="btn btn-primary" role="button"> Vorige </test-prev>
+              <test-next class="btn btn-primary" role="button"> Volgende </test-next>
+            </div>
+          </div>
+        </test-navigation>
       </qti-test>
     `;
   },

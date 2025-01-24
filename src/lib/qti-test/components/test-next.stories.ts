@@ -26,8 +26,10 @@ export default meta;
 export const Default: Story = {
   render: args => html`
     <qti-test>
-      <test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"> </test-container>
-      ${template(args, html`volgende`)}
+      <test-navigation>
+        <test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"> </test-container>
+        ${template(args, html`volgende`)}
+      </test-navigation>
     </qti-test>
   `
 };
@@ -35,24 +37,28 @@ export const Default: Story = {
 export const Test: Story = {
   render: args => html`
     <qti-test>
-      <test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"> </test-container>
-      <test-next ${spread(args)}>volgende</test-next>
+      <test-navigation>
+        <test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"> </test-container>
+        <test-next ${spread(args)}>volgende</test-next>
+      </test-navigation>
     </qti-test>
   `,
   play: async ({ canvasElement }) => {
     const nextButton = canvasElement.querySelector('test-next');
     // expect(nextButton).toBeDisabled();
     await waitFor(() => expect(nextButton).toBeEnabled());
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise(resolve => setTimeout(resolve, 50));
     const firstItem = await findByShadowTitle(canvasElement, 'T1 - Test Entry - Item 1');
     expect(firstItem).toBeInTheDocument();
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise(resolve => setTimeout(resolve, 50));
     await fireEvent.click(nextButton);
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise(resolve => setTimeout(resolve, 50));
     const secondItem = await findByShadowTitle(canvasElement, 'T1 - Choice Interaction - Multiple Cardinality');
     expect(secondItem).toBeInTheDocument();
     await fireEvent.click(nextButton);
+    await new Promise(resolve => setTimeout(resolve, 50));
     await fireEvent.click(nextButton);
+    await new Promise(resolve => setTimeout(resolve, 50));
     expect(nextButton).toBeDisabled();
   }
 };

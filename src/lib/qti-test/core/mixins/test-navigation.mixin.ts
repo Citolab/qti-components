@@ -1,16 +1,6 @@
 import type { QtiAssessmentItemRef } from '../qti-assessment-test';
 import type { TestBase } from '../test-base';
 
-declare module '../context/test.context' {
-  interface TestContext {
-    navPartId?: string | null;
-    navSectionId?: string | null;
-    navItemId?: string | null;
-    navItemLoading?: boolean;
-    navTestLoading?: boolean;
-  }
-}
-
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 
 declare class TestNavigationInterface {}
@@ -18,7 +8,6 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
   abstract class TestNavigationClass extends superClass {
     constructor(...args: any[]) {
       super(...args);
-
       // load an item
       this.addEventListener('qti-request-test-item', ({ detail: navItemId }: CustomEvent<string>) => {
         if (!navItemId) return;
@@ -32,7 +21,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
 
         const navPartId = itemRefEl.closest('qti-test-part').identifier;
         const navSectionId = itemRefEl.closest('qti-assessment-section').identifier;
-        this._testContext = { ...this._testContext, navPartId, navSectionId, navItemId, navItemLoading: true };
+        this.sessionContext = { ...this.sessionContext, navPartId, navSectionId, navItemId, navItemLoading: true };
 
         if (promise) {
           promise
@@ -41,7 +30,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
               requestAnimationFrame(() =>
                 this.dispatchEvent(new CustomEvent('qti-item-connected', { bubbles: true, composed: true }))
               );
-              this._testContext = { ...this._testContext, navItemLoading: false };
+              this.sessionContext = { ...this.sessionContext, navItemLoading: false };
             })
             .catch(error => console.error('Failed to load item:', error));
         } else {
@@ -49,8 +38,10 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
         }
       });
 
-      this.addEventListener('qti-assessment-test-connected', () => {
-        let navItemId = this._testContext.navItemId;
+      this.addEventListener('qti-assessment-test-connected', (e: CustomEvent) => {
+        this.testElement = e.detail;
+
+        let navItemId = this.sessionContext.navItemId;
         if (!navItemId) {
           const itemRefEl = this.testElement.querySelector<QtiAssessmentItemRef>('qti-assessment-item-ref');
           navItemId = itemRefEl.identifier;

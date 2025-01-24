@@ -20,11 +20,13 @@ export const Default: Story = {
       }
     </style>
     <qti-test>
-      <test-container test-url="/assets/api/examples/assessment.xml"></test-container>
-      <div>
-        <test-prev> previous </test-prev>
-        <test-next> next </test-next>
-      </div>
+      <test-navigation>
+        <test-container test-url="/assets/api/examples/assessment.xml"></test-container>
+        <div>
+          <test-prev> previous </test-prev>
+          <test-next> next </test-next>
+        </div>
+      </test-navigation>
     </qti-test>
   `
 };

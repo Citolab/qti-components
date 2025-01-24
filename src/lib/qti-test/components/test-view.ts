@@ -1,12 +1,23 @@
-import { html } from 'lit';
+import { html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
+import { consume } from '@lit/context';
 
-import { TestComponent } from './test-component.abstract';
 import { watch } from '../../decorators/watch';
+// import { computedContext } from '../../exports/computed.context';
+import { sessionContext } from '../../exports/session.context';
+
+// import type { ComputedContext } from '../../exports/computed.context';
+import type { SessionContext } from '../../exports/session.context';
 
 @customElement('test-view')
-export class TestView extends TestComponent {
+export class TestView extends LitElement {
   static DEFAULT_VIEW_OPTIONS = ['author', 'candidate', 'proctor', 'scorer', 'testConstructor', 'tutor'];
+
+  // @consume({ context: computedContext, subscribe: true })
+  // private computedContext: ComputedContext;
+
+  @consume({ context: sessionContext, subscribe: true })
+  private sessionContext: SessionContext;
 
   /** label accompanying the select view dropdown  */
   @property({ type: String })
@@ -52,13 +63,14 @@ export class TestView extends TestComponent {
       <select
         part="select"
         id="viewSelect"
-        .disabled=${this.disabled}
         @change=${(e: Event) => {
           const el = e.target as HTMLSelectElement;
           this._switchView(el.value);
         }}
       >
-        ${this._viewOptions.map(v => html`<option value="${v}" ?selected=${v === this.view}>${v}</option>`)}
+        ${this._viewOptions.map(
+          v => html`<option value="${v}" ?selected=${v === this.sessionContext.view}>${v}</option>`
+        )}
       </select>
     `;
   }

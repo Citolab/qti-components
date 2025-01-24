@@ -16,11 +16,13 @@ import { TestProcessingMixin } from './mixins/test-processing.mixin';
  *
  * ```html
  * <qti-test>
- *   <test-container test-url="./path/to/assessment.xml"></test-container>
- *   <nav class="flex">
+ *  <test-navigation>
+ *    <test-container test-url="./path/to/assessment.xml"></test-container>
+ *    <nav class="flex">
  *      <test-prev></test-prev>
  *      <test-next></test-next>
- *   </nav>
+ *    </nav>
+ *  </test-navigation>
  * </qti-test>
  * ```
  *
@@ -52,7 +54,8 @@ import { TestProcessingMixin } from './mixins/test-processing.mixin';
  *
  */
 @customElement('qti-test')
-export class QtiTest extends TestLoaderMixin(TestProcessingMixin(TestNavigationMixin(TestViewMixin(TestBase)))) {
+export class QtiTest extends TestLoaderMixin(TestNavigationMixin(TestViewMixin(TestProcessingMixin(TestBase)))) {
+  // export class QtiTest extends TestLoaderMixin(TestNavigationMixin(TestViewMixin(TestBase))) {
   /**
    * Renders the component's template.
    * Provides a default `<slot>` for content projection.

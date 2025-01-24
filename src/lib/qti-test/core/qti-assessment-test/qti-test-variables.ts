@@ -1,20 +1,24 @@
 import { consume } from '@lit/context';
 
-import { testContext, testElement } from '../../../exports/test.context';
+import { testContext } from '../../../exports/test.context';
 import { QtiExpression } from '../../../exports/qti-expression';
 
-import type { TestElement, TestContext } from '../../../exports/test.context';
+import type { QtiAssessmentTest } from './qti-assessment-test';
+import type { TestContext } from '../../../exports/test.context';
 import type { QtiAssessmentItemRef } from './qti-assessment-item-ref';
 import type { QtiExpressionBase } from '../../../exports/qti-expression';
-
 
 // <qti-custom-operator definition="trim">
 export class QtiTestVariables extends QtiExpression<number> {
   @consume({ context: testContext, subscribe: true })
   public _testContext?: TestContext;
 
-  @consume({ context: testElement, subscribe: true })
-  public _testElement?: TestElement;
+  private _testElement: QtiAssessmentTest;
+
+  constructor() {
+    super();
+    this.addEventListener('qti-assessment-test-connected', (e: CustomEvent) => (this._testElement = e.detail));
+  }
 
   public override getResult() {
     // children can be a mix of qti-expression and qti-condition-expression
@@ -24,7 +28,7 @@ export class QtiTestVariables extends QtiExpression<number> {
     const itemVariable = this.getAttribute('variable-identifier');
 
     const itemRefEls = Array.from<QtiAssessmentItemRef>(
-      this._testElement.el.querySelectorAll<QtiAssessmentItemRef>(`qti-asssessment-test qti-assessment-item-ref`)
+      this._testElement.querySelectorAll<QtiAssessmentItemRef>(`qti-asssessment-test qti-assessment-item-ref`)
     );
 
     const includedItems = itemRefEls

@@ -358,8 +358,8 @@ describe('outcome-processing lit', () => {
     const qtiTestElement = document.body.querySelector('qti-test') as QtiTest;
 
     const contextAfterResponseProcessing = {
-      ...qtiTestElement.context,
-      items: qtiTestElement.context.items.map(itemContext => {
+      ...qtiTestElement.testContext,
+      items: qtiTestElement.testContext.items.map(itemContext => {
         if (itemContext.identifier !== 'ITM-32dal2') {
           return itemContext;
         }
@@ -378,15 +378,15 @@ describe('outcome-processing lit', () => {
       })
     };
 
-    qtiTestElement.context = contextAfterResponseProcessing;
+    qtiTestElement.testContext = contextAfterResponseProcessing;
     qtiTestElement.outcomeProcessing();
 
-    const leesvaardigheden_k3 = qtiTestElement.context.testOutcomeVariables.find(
+    const leesvaardigheden_k3 = qtiTestElement.testContext.testOutcomeVariables.find(
       v => v.identifier === 'Leervaardigheden_in_het_vak_biologie_K3_SCORE'
     );
     expect(leesvaardigheden_k3.value.toString()).toBe('0'); /* FIXME: should be 1 */
 
-    const leesvaardigheden_k4 = qtiTestElement.context.testOutcomeVariables.find(
+    const leesvaardigheden_k4 = qtiTestElement.testContext.testOutcomeVariables.find(
       v => v.identifier === 'Cellen_staan_aan_de_basis_K4_SCORE'
     );
     expect(leesvaardigheden_k4.value.toString()).toBe('0');

@@ -2,21 +2,24 @@ import { provide } from '@lit/context';
 import { LitElement } from 'lit';
 import { state } from 'lit/decorators.js';
 
-import { testContext, testElement } from '../../exports/test.context';
+import { testContext } from '../../exports/test.context';
+import { type SessionContext, sessionContext } from '../../exports/session.context';
 
-import type { TestContext, TestElement } from '../../exports/test.context';
+import type { TestContext } from '../../exports/test.context';
 import type { QtiAssessmentTest } from './qti-assessment-test';
 import type { QtiAssessmentItem } from '../../qti-components/';
-import type { VariableValue } from '../../exports/variables';
+import type { OutcomeVariable, VariableValue } from '../../exports/variables';
 
 export abstract class TestBase extends LitElement {
   @state()
   @provide({ context: testContext })
-  protected _testContext: Readonly<TestContext> = { items: [], testOutcomeVariables: [] };
+  public testContext: Readonly<TestContext> = { items: [], testOutcomeVariables: [] };
 
   @state()
-  @provide({ context: testElement })
-  protected testElement: TestElement = null;
+  @provide({ context: sessionContext })
+  public sessionContext: Readonly<SessionContext> = {};
+
+  testElement: QtiAssessmentTest;
 
   constructor() {
     super();
@@ -26,30 +29,24 @@ export abstract class TestBase extends LitElement {
      * An existing context item is updated with the itemRef properties if nessesary.
      */
     this.addEventListener('qti-assessment-test-connected', (e: CustomEvent<QtiAssessmentTest>) => {
-      const qtiAssessmentTest = e.detail;
-      this.testElement = qtiAssessmentTest;
+      if (this.testContext && this.testContext.items.length > 0) return;
 
-      const items = Array.from(qtiAssessmentTest.querySelectorAll('qti-assessment-item-ref')).map(itemRef => {
-        // Default this._testContext.items to an empty array if undefined
-        const existingItem = (this._testContext.items || []).find(item => item.identifier === itemRef.identifier);
-
+      this.testElement = e.detail;
+      const items = Array.from(this.testElement.querySelectorAll('qti-assessment-item-ref')).map(itemRef => {
         return {
-          ...existingItem, // Spread all existing properties if existingItem is found
-          href: existingItem?.href || itemRef.href,
-          identifier: existingItem?.identifier || itemRef.identifier,
-          category: existingItem?.category || itemRef.category,
-          variables: existingItem?.variables || [
+          href: itemRef.href,
+          identifier: itemRef.identifier,
+          category: itemRef.category,
+          variables: [
             {
               identifier: 'completionStatus',
               value: 'not_attempted',
               type: 'outcome'
-            }
+            } as OutcomeVariable
           ]
         };
       });
-
-      // Ensure this._testContext exists and update its items property
-      this._testContext = { ...this._testContext, items };
+      this.testContext = { ...this.testContext, items };
     });
 
     this.addEventListener('qti-assessment-item-connected', (e: CustomEvent<QtiAssessmentItem>) => {
@@ -61,33 +58,39 @@ export abstract class TestBase extends LitElement {
     });
   }
 
-  get context(): TestContext {
-    return this._testContext;
-  }
+  // get testContext(): TestContext {
+  //   return this._testContext;
+  // }
 
-  // /* restores the context by updating existing items and adding new items from the "contextToRestore" parameter into the "this._context.items" array. */
-  set context(testContext: TestContext) {
-    if (testContext === null || testContext === undefined) return;
-    this._testContext = { ...testContext }; // Clone the context to avoid modifying the original object
-    // // append the items that are not yet in the context and replace the ones that are
-    testContext.items?.forEach(itemContext => {
-      const existingItemContext = this._testContext.items.find(i => i.identifier === itemContext.identifier);
-      if (existingItemContext) {
-        existingItemContext.variables = itemContext.variables;
-      } else {
-        this._testContext.items.push(itemContext);
-      }
-    });
-  }
+  // // /* restores the context by updating existing items and adding new items from the "contextToRestore" parameter into the "this._context.items" array. */
+  // set testContext(testContext: TestContext) {
+  //   if (this._testContext.items.length > 0) {
+  //     console.warn(
+  //       'testContext already set and can not be overwritten. Set the testContext before loading the assessment test'
+  //     );
+  //     return;
+  //   }
+  //   if (testContext === null || testContext === undefined) return;
+  //   this._testContext = { ...testContext }; // Clone the context to avoid modifying the original object
+  //   // // append the items that are not yet in the context and replace the ones that are
+  //   testContext.items?.forEach(itemContext => {
+  //     const existingItemContext = this._testContext.items.find(i => i.identifier === itemContext.identifier);
+  //     if (existingItemContext) {
+  //       existingItemContext.variables = itemContext.variables;
+  //     } else {
+  //       this._testContext.items.push(itemContext);
+  //     }
+  //   });
+  // }
 
   private _updateItemVariablesInTestContext(
     identifier: string,
     variables: VariableValue<string | string[] | null>[]
   ): void {
     // Update the test context with modified variables for the specified item
-    this._testContext = {
-      ...this._testContext, // Spread existing test context properties
-      items: this._testContext.items.map(itemContext => {
+    this.testContext = {
+      ...this.testContext, // Spread existing test context properties
+      items: this.testContext.items.map(itemContext => {
         // If the item identifier doesn't match, keep it unchanged
         if (itemContext.identifier !== identifier) {
           return itemContext;
@@ -123,7 +126,7 @@ export abstract class TestBase extends LitElement {
     // console.log(this._testContext);
 
     // Find the corresponding item in the test context by identifier
-    const itemContext = this._testContext.items.find(i => i?.identifier === identifier);
+    const itemContext = this.testContext.items.find(i => i?.identifier === identifier);
 
     if (!itemContext) {
       console.warn(`Item IDs between assessment.xml and item.xml should match: ${identifier} is not found!`);

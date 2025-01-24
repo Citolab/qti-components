@@ -3,7 +3,7 @@ import { getWcStorybookHelpers } from 'wc-storybook-helpers';
 import { html } from 'lit';
 import { within } from 'shadow-dom-testing-library';
 
-import { qtiTransformTest } from '../../../qti-transformers';
+import { qtiTransformTest } from '../../qti-transformers';
 
 import type { TestContainer } from './test-container';
 import type { Meta, StoryObj } from '@storybook/web-components';
@@ -80,16 +80,18 @@ export const TestWithTemplate: Story = {
   render: args => {
     return html`
       <qti-test>
-        <test-container test-url=${args['test-url']}>
-          <template>
-            <style>
-              qti-assessment-test {
-                display: block;
-                border: 2px solid blue;
-              }
-            </style>
-          </template>
-        </test-container>
+        <test-navigation>
+          <test-container test-url=${args['test-url']}>
+            <template>
+              <style>
+                qti-assessment-test {
+                  display: block;
+                  border: 2px solid blue;
+                }
+              </style>
+            </template>
+          </test-container>
+        </test-navigation>
       </qti-test>
     `;
   },

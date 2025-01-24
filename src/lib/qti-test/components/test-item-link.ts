@@ -1,11 +1,10 @@
-import { css, html } from 'lit';
+import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
-import { TestComponent } from './test-component.abstract';
 import * as styles from './styles';
 
 @customElement('test-item-link')
-export class TestItemLink extends TestComponent {
+export class TestItemLink extends LitElement {
   static styles = css`
     :host {
       ${styles.btn};

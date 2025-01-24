@@ -26,8 +26,10 @@ export default meta;
 export const Default: Story = {
   render: () => html`
     <qti-test nav-item-id="t1-test-entry-item4">
-      <test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"> </test-container>
-      ${template(args, html`vorige`)}
+      <test-navigation>
+        <test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"> </test-container>
+        ${template(args, html`vorige`)}
+      </test-navigation>
     </qti-test>
   `
 };
@@ -35,8 +37,10 @@ export const Default: Story = {
 export const Test: Story = {
   render: args => html`
     <qti-test nav-item-id="t1-test-entry-item4">
-      <test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"> </test-container>
-      <test-prev ${spread(args)}>vorige</test-prev>
+      <test-navigation>
+        <test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"> </test-container>
+        <test-prev ${spread(args)}>vorige</test-prev>
+      </test-navigation>
     </qti-test>
   `,
   play: async ({ canvasElement }) => {

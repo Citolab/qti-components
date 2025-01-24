@@ -1,13 +1,17 @@
-import { css, html } from 'lit';
+import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
+import { consume } from '@lit/context';
 
 import * as styles from './styles';
-import { TestComponent } from './test-component.abstract';
+import { computedContext } from '../../exports/computed.context';
+import { sessionContext } from '../../exports/session.context';
 
+import type { SessionContext } from '../../exports/session.context';
+import type { ComputedContext } from '../../exports/computed.context';
 import type { QtiAssessmentItemRef } from '../core';
 
 @customElement('test-end-attempt')
-export class TestEndAttempt extends TestComponent {
+export class TestEndAttempt extends LitElement {
   static styles = css`
     :host {
       ${styles.btn};
@@ -17,9 +21,15 @@ export class TestEndAttempt extends TestComponent {
     }
   `;
 
+  @consume({ context: computedContext, subscribe: true })
+  private computedContext: ComputedContext;
+
+  @consume({ context: sessionContext, subscribe: true })
+  private sessionContext: SessionContext;
+
   _processResponse() {
-    const qtiItemEl = this._testElement.querySelector<QtiAssessmentItemRef>(
-      `qti-assessment-item-ref[identifier="${this._testContext.navItemId}"]`
+    const qtiItemEl = this.computedContext.testElement.querySelector<QtiAssessmentItemRef>(
+      `qti-assessment-item-ref[identifier="${this.sessionContext.navItemId}"]`
     );
     const qtiAssessmentItemEl = qtiItemEl.assessmentItem;
     qtiAssessmentItemEl.processResponse();
