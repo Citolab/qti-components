@@ -144,6 +144,9 @@ export class QtiPortableCustomInteraction extends Interaction {
             }
           }
         }
+        config.boundTo = {
+          [this.responseIdentifier]: this.value
+        };
         return config;
       };
       const taoConfig = restoreTAOConfig(this);
