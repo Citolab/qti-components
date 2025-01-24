@@ -54,11 +54,11 @@ export class QtiPortableCustomInteraction extends Interaction {
           string: input
         }
       };
-    } else if (input !== undefined && input !== null) {
+    } else {
       // If the input is a single value, assign it to the 'integer' property of 'base'
       return {
         base: {
-          string: input
+          string: input || ''
         }
       };
     }
@@ -110,7 +110,7 @@ export class QtiPortableCustomInteraction extends Interaction {
         console.log('onready');
       },
       responseIdentifier: this.responseIdentifier,
-      boundTo: !jsonValue ? { string: '' } : jsonValue.base ? jsonValue.base : jsonValue.list
+      boundTo: jsonValue.base || jsonValue.list
       // TODO: implement the following properties:
       //       templateVariables	An object containing all of the template variables referenced (via qti-template-variable elements) in the qti-portable-custom-interaction and their current values.The values of variables MUST follow the structure defined in Appendix C.
       // contextVariables	An object containing all of the context variables referenced (via qti-context-variable elements) in the qti-portable-custom-interaction and their current values. The values of variables MUST follow the structure defined in Appendix C.
