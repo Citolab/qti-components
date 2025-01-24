@@ -43,6 +43,15 @@ export declare type Configuration<T> = {
   */
 };
 
+export declare type ResponseType =
+  | boolean
+  | number
+  | string
+  | [number, number]
+  | [string, string]
+  | string[]
+  | [number | string][];
+
 export declare type QtiVariableJSON = {
   [K in 'list' | 'base']?: {
     [Ka in 'boolean' | 'integer' | 'float' | 'string' | 'pair' | 'directedPair' | 'identifier']?: ResponseType;

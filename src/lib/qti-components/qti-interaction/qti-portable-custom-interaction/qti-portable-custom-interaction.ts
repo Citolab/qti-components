@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
+import { b } from 'vitest/dist/chunks/suite.B2jumIFP.js';
 
 import { Interaction } from '../../../exports/interaction';
 
@@ -47,6 +48,23 @@ export class QtiPortableCustomInteraction extends Interaction {
     return null;
   }
 
+  private responseVariablesToQtiVariableJSON(input: string | string[]): QtiVariableJSON {
+    if (Array.isArray(input)) {
+      return {
+        list: {
+          string: input
+        }
+      };
+    } else if (input !== undefined && input !== null) {
+      // If the input is a single value, assign it to the 'integer' property of 'base'
+      return {
+        base: {
+          string: input
+        }
+      };
+    }
+  }
+
   private startChecking(): void {
     // because the pci doesn't have a method to check for changes we'll use an interval
     // to check if the response has changed. If changed we'll save the response
@@ -86,12 +104,17 @@ export class QtiPortableCustomInteraction extends Interaction {
     if (this.querySelector('properties')) {
       (this.querySelector('properties') as HTMLElement).style.display = 'none';
     }
-
+    const jsonValue = this.responseVariablesToQtiVariableJSON(this.value);
     const config: any = {
       properties: this.dataset,
       onready: () => {
         console.log('onready');
-      }
+      },
+      responseIdentifier: this.responseIdentifier,
+      boundTo: jsonValue.base ? jsonValue.base : jsonValue.list
+      // TODO: implement the following properties:
+      //       templateVariables	An object containing all of the template variables referenced (via qti-template-variable elements) in the qti-portable-custom-interaction and their current values.The values of variables MUST follow the structure defined in Appendix C.
+      // contextVariables	An object containing all of the context variables referenced (via qti-context-variable elements) in the qti-portable-custom-interaction and their current values. The values of variables MUST follow the structure defined in Appendix C.
     };
     if (pci.getInstance)
       // try {
@@ -144,9 +167,6 @@ export class QtiPortableCustomInteraction extends Interaction {
             }
           }
         }
-        config.boundTo = {
-          [this.responseIdentifier]: this.value
-        };
         return config;
       };
       const taoConfig = restoreTAOConfig(this);
