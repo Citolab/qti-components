@@ -1,6 +1,5 @@
 import { html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { b } from 'vitest/dist/chunks/suite.B2jumIFP.js';
 
 import { Interaction } from '../../../exports/interaction';
 
