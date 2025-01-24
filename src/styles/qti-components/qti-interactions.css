@@ -888,19 +888,22 @@
 
   qti-graphic-order-interaction {
     & qti-hotspot-choice {
-      @apply spot;
+      width: 100%;
+      height: 100%;
+      background-color: rgb(255 255 255 / 30%);
+      padding: 0;
 
       &:hover {
-        @apply hov;
+        background-color: rgb(255 255 255 / 70%);
       }
 
       &:focus {
-        @apply foc;
+        background-color: rgb(255 255 255 / 70%);
       }
 
       &:state(--checked),
       &[aria-checked='true'] {
-        @apply act;
+        background-color: rgb(255 255 255 / 70%);
       }
 
       &[aria-readonly='true'] {

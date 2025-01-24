@@ -28,31 +28,41 @@ export class QtiGraphicOrderInteraction extends ChoicesMixin(Interaction, 'qti-h
     `;
   }
 
-  private setHotspotOrder(e: CustomEvent<{ identifier: string; checked: boolean }>): void {
+  private setHotspotOrder(e: CustomEvent<{ identifier: string }>): void {
     const { identifier } = e.detail;
 
     const hotspot = this._choiceElements.find(el => el.getAttribute('identifier') === identifier) as HotspotChoice;
 
+    if (!hotspot) return;
+
     const maxSelection = this._choiceElements.length;
+
     if (!this.choiceOrdering) {
       this.choiceOrdering = true;
+
       if (hotspot.order == null) {
-        if ((this._choiceElements as HotspotChoice[]).filter(i => i.order > 0).length >= maxSelection) {
+        // Hotspot is not selected, so assign the next available order
+        const currentSelection = (this._choiceElements as HotspotChoice[]).filter(i => i.order != null).length;
+
+        if (currentSelection >= maxSelection) {
           this.choiceOrdering = false;
-          return; // don't do anything if user already selected 5 images.
+          return; // Maximum selection reached
         }
-        hotspot.order = (this._choiceElements as HotspotChoice[]).filter(i => !!i.order).length + 1;
-        this.choiceOrdering = false;
-        return;
+
+        hotspot.order = currentSelection + 1;
       } else {
+        // Hotspot is already selected, so remove its order and renumber the rest
+        const removedOrder = hotspot.order;
+
+        hotspot.order = null;
+
         (this._choiceElements as HotspotChoice[]).forEach(hotspot => {
-          if (hotspot.order > hotspot.order) {
+          if (hotspot.order != null && hotspot.order > removedOrder) {
             hotspot.order--;
           }
-          return hotspot;
         });
-        hotspot.order = null;
       }
+
       this.choiceOrdering = false;
     }
   }
