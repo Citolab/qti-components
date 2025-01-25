@@ -47,7 +47,20 @@ export class QtiPortableCustomInteraction extends Interaction {
     return null;
   }
 
-  private responseVariablesToQtiVariableJSON(input: string | string[]): QtiVariableJSON {
+  private addHyphenatedKeys(properties: Record<string, any>): Record<string, any> {
+    const updatedProperties = { ...properties };
+
+    for (const key in properties) {
+      if (Object.prototype.hasOwnProperty.call(properties, key)) {
+        const hyphenatedKey = key.replace(/[A-Z]/g, char => `-${char.toLowerCase()}`);
+        updatedProperties[hyphenatedKey] = properties[key];
+      }
+    }
+
+    return updatedProperties;
+  }
+
+  private responseVariablesToQtiVariableJSON(input: string | string[]): any {
     if (Array.isArray(input)) {
       return {
         list: {
@@ -105,9 +118,9 @@ export class QtiPortableCustomInteraction extends Interaction {
     }
     const jsonValue = this.responseVariablesToQtiVariableJSON(this.value);
     const config: any = {
-      properties: this.dataset,
-      onready: () => {
-        console.log('onready');
+      properties: this.addHyphenatedKeys({ ...this.dataset }),
+      onready: pciInstance => {
+        this.pci = pciInstance;
       },
       responseIdentifier: this.responseIdentifier,
       boundTo: jsonValue.base || jsonValue.list
@@ -115,10 +128,11 @@ export class QtiPortableCustomInteraction extends Interaction {
       //       templateVariables	An object containing all of the template variables referenced (via qti-template-variable elements) in the qti-portable-custom-interaction and their current values.The values of variables MUST follow the structure defined in Appendix C.
       // contextVariables	An object containing all of the context variables referenced (via qti-context-variable elements) in the qti-portable-custom-interaction and their current values. The values of variables MUST follow the structure defined in Appendix C.
     };
-    if (pci.getInstance)
+    if (pci.getInstance) {
       // try {
+
       pci.getInstance(dom, config, undefined);
-    else {
+    } else {
       // Try the TAO custom interaction initialization.
       const restoreTAOConfig = (element: HTMLElement): any => {
         const config: any = {};
