@@ -5,6 +5,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { itemContext } from '../../../exports/qti-assessment-item.context';
 import { QtiVariableDeclaration } from '../qti-variable-declaration';
 
+import type { QtiAreaMapping } from '../../qti-response-processing';
 import type { BaseType, Cardinality } from '../../../exports/expression-result';
 import type { ResponseVariable } from '../../../exports/variables';
 import type { QtiMapping } from '../../qti-response-processing/qti-expression/qti-mapping/qti-mapping';
@@ -44,6 +45,7 @@ export class QtiResponseDeclaration extends QtiVariableDeclaration {
       correctResponse: this.correctResponse,
       cardinality: this.cardinality || 'single',
       mapping: this.mapping,
+      areaMapping: this.areaMapping,
       value: null,
       type: 'response',
       candidateResponse: null
@@ -80,6 +82,10 @@ export class QtiResponseDeclaration extends QtiVariableDeclaration {
 
   private get mapping() {
     return this.querySelector('qti-mapping') as QtiMapping;
+  }
+
+  private get areaMapping() {
+    return this.querySelector('qti-area-mapping') as QtiAreaMapping;
   }
 }
 
