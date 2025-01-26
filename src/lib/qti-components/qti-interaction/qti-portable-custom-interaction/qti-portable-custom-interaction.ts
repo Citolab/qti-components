@@ -60,7 +60,7 @@ export class QtiPortableCustomInteraction extends Interaction {
     return updatedProperties;
   }
 
-  private responseVariablesToQtiVariableJSON(input: string | string[]): any {
+  private responseVariablesToQtiVariableJSON(input: string | string[]): QtiVariableJSON {
     if (Array.isArray(input)) {
       return {
         list: {
