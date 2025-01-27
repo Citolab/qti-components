@@ -1,10 +1,13 @@
 import { html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
+import { consume } from '@lit/context';
 
 import { Interaction } from '../../../exports/interaction';
+import { itemContext } from '../../../exports/qti-assessment-item.context';
 
 import type { BaseType, Cardinality } from '../../../exports/expression-result';
 import type { IMSpci, ModuleResolutionConfig, QtiVariableJSON, ResponseVariableType } from './interface';
+import type { ItemContext } from '../../../exports/item.context';
 
 declare const requirejs: any;
 declare const define: any;
@@ -23,6 +26,18 @@ export class QtiPortableCustomInteraction extends Interaction {
 
   @state()
   private _errorMessage: string = null;
+
+  @consume({ context: itemContext, subscribe: true })
+  @state()
+  protected context?: ItemContext;
+
+  // get responseVariable(): ResponseVariable | undefined {
+  //   const assessmentItem = this.closest('qti-assessment-item');
+  //   if (assessmentItem) {
+  //     return assessmentItem.getResponse(this.responseIdentifier);
+  //   }
+  //   return undefined;
+  // }
 
   private convertQtiVariableJSON(input: QtiVariableJSON): string | string[] {
     for (const topLevelKey in input) {
@@ -98,8 +113,8 @@ export class QtiPortableCustomInteraction extends Interaction {
   get boundTo(): Record<string, QtiVariableJSON> {
     const responseVal = this.responseVariablesToQtiVariableJSON(
       this._value,
-      this.responseVariable.cardinality,
-      this.responseVariable.baseType
+      this.context.variables?.find(v => v.identifier === this.responseIdentifier)?.cardinality || 'single',
+      this.context.variables?.find(v => v.identifier === this.responseIdentifier)?.baseType || 'string'
     );
     const responseVariable: Record<string, QtiVariableJSON> = {};
     responseVariable[this.responseIdentifier] = responseVal;

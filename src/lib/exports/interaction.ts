@@ -21,14 +21,6 @@ export abstract class Interaction extends LitElement implements IInteraction {
     super();
     this._internals = this.attachInternals();
   }
-  get responseVariable(): ResponseVariable | undefined {
-    const assessmentItem = this.closest('qti-assessment-item');
-    if (assessmentItem) {
-      return assessmentItem.getResponse(this.responseIdentifier);
-    }
-    return undefined;
-  }
-
   abstract validate(): boolean;
 
   public reportValidity(): boolean {
