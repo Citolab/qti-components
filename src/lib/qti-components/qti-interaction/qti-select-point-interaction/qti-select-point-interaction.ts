@@ -52,7 +52,7 @@ export class QtiSelectPointInteraction extends Interaction {
     return html` <slot name="prompt"></slot>
       <point-container>
         ${repeat(
-          this._points,
+          this._points.filter(point => point),
           point => point,
           (point, index) => html`
             <button
