@@ -1,17 +1,20 @@
 import { html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
+import { consume } from '@lit/context';
 
 import { Interaction } from '../../../exports/interaction';
+import { itemContext } from '../../../exports/qti-assessment-item.context';
 
-import type { IMSpci, ModuleResolutionConfig, QtiVariableJSON } from './interface';
+import type { BaseType, Cardinality } from '../../../exports/expression-result';
+import type { IMSpci, ModuleResolutionConfig, QtiVariableJSON, ResponseVariableType } from './interface';
+import type { ItemContext } from '../../../exports/item.context';
 
 declare const requirejs: any;
 declare const define: any;
 
 @customElement('qti-portable-custom-interaction')
 export class QtiPortableCustomInteraction extends Interaction {
-  private intervalId: any;
-  private rawResponse: string;
+  private _value: string | string[];
 
   private pci: IMSpci<unknown>;
 
@@ -23,6 +26,18 @@ export class QtiPortableCustomInteraction extends Interaction {
 
   @state()
   private _errorMessage: string = null;
+
+  @consume({ context: itemContext, subscribe: true })
+  @state()
+  protected context?: ItemContext;
+
+  // get responseVariable(): ResponseVariable | undefined {
+  //   const assessmentItem = this.closest('qti-assessment-item');
+  //   if (assessmentItem) {
+  //     return assessmentItem.getResponse(this.responseIdentifier);
+  //   }
+  //   return undefined;
+  // }
 
   private convertQtiVariableJSON(input: QtiVariableJSON): string | string[] {
     for (const topLevelKey in input) {
@@ -60,52 +75,50 @@ export class QtiPortableCustomInteraction extends Interaction {
     return updatedProperties;
   }
 
-  private responseVariablesToQtiVariableJSON(input: string | string[]): QtiVariableJSON {
-    if (Array.isArray(input)) {
-      return {
-        list: {
-          string: input
-        }
-      };
+  private responseVariablesToQtiVariableJSON(
+    input: string | string[],
+    cardinality: Cardinality,
+    baseType: BaseType
+  ): QtiVariableJSON {
+    if (cardinality !== 'single') {
+      const list = { list: {} };
+      list.list[baseType] = input;
+      return list;
     } else {
-      // If the input is a single value, assign it to the 'integer' property of 'base'
-      return {
-        base: {
-          string: input || ''
-        }
-      };
-    }
-  }
-
-  private startChecking(): void {
-    // because the pci doesn't have a method to check for changes we'll use an interval
-    // to check if the response has changed. If changed we'll save the response
-    this.intervalId = setInterval(() => {
-      const response = this.pci.getResponse();
-      const stringified = JSON.stringify(response);
-      if (stringified !== this.rawResponse) {
-        this.rawResponse = stringified;
-        const value = this.convertQtiVariableJSON(response);
-        this.value = value;
-        this.saveResponse(value);
-      }
-    }, 200);
-  }
-
-  private stopChecking(): void {
-    if (this.intervalId !== undefined) {
-      clearInterval(this.intervalId);
+      const base = { base: {} };
+      base.base[baseType] = input;
+      return base;
     }
   }
 
   validate(): boolean {
     return true; // FOR NOW
   }
-  set value(_: string | string[]) {
-    // Only set state is supported in a PCI
+  set value(v: string | string[]) {
+    this._value = v;
   }
   get value(): string | string[] {
-    return this.rawResponse;
+    const pciValue = this.pci?.getResponse();
+    if (pciValue) {
+      return this.convertQtiVariableJSON(pciValue);
+    }
+    return this._value;
+  }
+
+  set boundTo(newValue: Record<string, ResponseVariableType>) {
+    const value = this.convertQtiVariableJSON(newValue);
+    this._value = value;
+    this.saveResponse(value);
+  }
+  get boundTo(): Record<string, QtiVariableJSON> {
+    const responseVal = this.responseVariablesToQtiVariableJSON(
+      this._value,
+      this.context.variables?.find(v => v.identifier === this.responseIdentifier)?.cardinality || 'single',
+      this.context.variables?.find(v => v.identifier === this.responseIdentifier)?.baseType || 'string'
+    );
+    const responseVariable: Record<string, QtiVariableJSON> = {};
+    responseVariable[this.responseIdentifier] = responseVal;
+    return responseVariable;
   }
 
   register(pci: IMSpci<unknown>) {
@@ -116,14 +129,17 @@ export class QtiPortableCustomInteraction extends Interaction {
     if (this.querySelector('properties')) {
       (this.querySelector('properties') as HTMLElement).style.display = 'none';
     }
-    const jsonValue = this.responseVariablesToQtiVariableJSON(this.value);
     const config: any = {
       properties: this.addHyphenatedKeys({ ...this.dataset }),
       onready: pciInstance => {
         this.pci = pciInstance;
       },
+      ondone: (_pciInstance, response, _state, _status: 'interacting' | 'closed' | 'solution' | 'review') => {
+        this.value = this.convertQtiVariableJSON(response);
+        this.saveResponse(this.value);
+      },
       responseIdentifier: this.responseIdentifier,
-      boundTo: jsonValue.base || jsonValue.list
+      boundTo: this.boundTo
       // TODO: implement the following properties:
       //       templateVariables	An object containing all of the template variables referenced (via qti-template-variable elements) in the qti-portable-custom-interaction and their current values.The values of variables MUST follow the structure defined in Appendix C.
       // contextVariables	An object containing all of the context variables referenced (via qti-context-variable elements) in the qti-portable-custom-interaction and their current values. The values of variables MUST follow the structure defined in Appendix C.
@@ -189,8 +205,6 @@ export class QtiPortableCustomInteraction extends Interaction {
         Object.keys(taoConfig).length ? taoConfig : null
       );
     }
-
-    this.startChecking();
   }
 
   override connectedCallback(): void {
@@ -235,7 +249,6 @@ export class QtiPortableCustomInteraction extends Interaction {
     // Clear the modules in the context
     const context = requirejs.s.contexts;
     delete context[this.customInteractionTypeIdentifier];
-    this.stopChecking();
   }
 
   buildRequireConfig() {
