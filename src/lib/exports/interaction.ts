@@ -1,6 +1,7 @@
 import { property, state } from 'lit/decorators.js';
 import { LitElement } from 'lit';
 
+import type { ResponseVariable } from './variables';
 import type { IInteraction } from './interaction.interface';
 
 export abstract class Interaction extends LitElement implements IInteraction {
@@ -19,6 +20,13 @@ export abstract class Interaction extends LitElement implements IInteraction {
   constructor() {
     super();
     this._internals = this.attachInternals();
+  }
+  get responseVariable(): ResponseVariable | undefined {
+    const assessmentItem = this.closest('qti-assessment-item');
+    if (assessmentItem) {
+      return assessmentItem.getResponse(this.responseIdentifier);
+    }
+    return undefined;
   }
 
   abstract validate(): boolean;

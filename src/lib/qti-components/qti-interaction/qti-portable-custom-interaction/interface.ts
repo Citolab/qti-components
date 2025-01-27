@@ -52,10 +52,18 @@ export declare type ResponseType =
   | string[]
   | [number | string][];
 
+export declare type ResponseVariableType = {
+  string?: ResponseType;
+  boolean?: ResponseType;
+  integer?: ResponseType;
+  float?: ResponseType;
+  pair?: ResponseType;
+  directedPair?: ResponseType;
+  identifier?: ResponseType;
+};
+
 export declare type QtiVariableJSON = {
-  [K in 'list' | 'base']?: {
-    [Ka in 'boolean' | 'integer' | 'float' | 'string' | 'pair' | 'directedPair' | 'identifier']?: ResponseType;
-  };
+  [K in 'list' | 'base']?: ResponseVariableType;
 };
 
 export interface ModuleResolutionConfig {
