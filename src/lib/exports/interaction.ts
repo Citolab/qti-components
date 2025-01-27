@@ -1,7 +1,6 @@
 import { property, state } from 'lit/decorators.js';
 import { LitElement } from 'lit';
 
-import type { ResponseVariable } from './variables';
 import type { IInteraction } from './interaction.interface';
 
 export abstract class Interaction extends LitElement implements IInteraction {
