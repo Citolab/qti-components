@@ -8,9 +8,15 @@ export class QtiMapping extends LitElement {
 
   public get mapEntries() {
     return Array.from(this.querySelectorAll('qti-map-entry')).map(el => {
+      const caseSensitive = el.hasAttribute('case-sensitive')
+        ? el.getAttribute('case-sensitive') === 'false'
+          ? false
+          : true
+        : true;
       return {
         mapKey: el.getAttribute('map-key'),
-        mappedValue: +el.getAttribute('mapped-value')
+        mappedValue: +el.getAttribute('mapped-value'),
+        caseSensitive
       };
     });
   }

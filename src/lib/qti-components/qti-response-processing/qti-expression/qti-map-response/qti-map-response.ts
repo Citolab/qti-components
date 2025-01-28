@@ -18,9 +18,24 @@ export class QtiMapResponse extends QtiExpression<number> {
     const candidateResponses = !Array.isArray(response.value) ? [response.value] : response.value;
     let result = 0;
     for (const candidateResponse of candidateResponses) {
-      const mappedValue = mapping.mapEntries.find(entry => {
-        return ScoringHelper.compareSingleValues(entry.mapKey, candidateResponse, response.baseType);
+      const mappedValues = mapping.mapEntries.filter(entry => {
+        if (response.baseType === 'string' && !entry.caseSensitive) {
+          return ScoringHelper.compareSingleValues(
+            entry.mapKey.toLowerCase(),
+            candidateResponse.toLowerCase(),
+            response.baseType
+          );
+        } else {
+          return ScoringHelper.compareSingleValues(entry.mapKey, candidateResponse, response.baseType);
+        }
       });
+      // now find the mapped value with the highest value (if there are multiple)
+      const mappedValue = mappedValues.reduce(
+        (prev, current) => {
+          return prev.mappedValue > current.mappedValue ? prev : current;
+        },
+        { mapKey: null, mappedValue: null }
+      );
       if (!(mappedValue == null || mappedValue.mappedValue == undefined)) {
         result += mappedValue.mappedValue;
       } else {
