@@ -42,7 +42,7 @@ export const PatternMask = {
 };
 
 export const Test: Story = {
-  render: () => {
+  render: args => {
     return html`
       <form name="form" @submit=${e => e.preventDefault()}>
         <qti-extended-text-interaction ${spread(args)}></qti-extended-text-interaction>

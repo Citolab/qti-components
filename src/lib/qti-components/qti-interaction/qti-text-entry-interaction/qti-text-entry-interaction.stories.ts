@@ -26,7 +26,9 @@ const meta: Meta<QtiTextEntryInteraction> = {
 export default meta;
 
 export const Default: Story = {
-  render: args => template(args)
+  render: args => {
+    return template(args);
+  }
 };
 
 export const PatternMask: Story = {
@@ -39,10 +41,10 @@ export const PatternMask: Story = {
 };
 
 export const Test: Story = {
-  render: () => {
+  render: args => {
     return html`
       <form name="form" @submit=${e => e.preventDefault()}>
-        <qti-text-entry-interaction ${spread(args)}></qti-text-entry-interaction>
+        <qti-text-entry-interaction ${spread(args)}> </qti-text-entry-interaction>
         <input type="submit" value="submit" />
       </form>
     `;
