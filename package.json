@@ -54,6 +54,7 @@
     "storybook:docs": "wireit",
     "build:watch": "npm run yalc --watch",
     "npm:publish": "np",
+    "vitest ui": "npx vitest",
     "---": "-",
     "build": "wireit",
     "test": "wireit",

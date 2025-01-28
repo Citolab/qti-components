@@ -35,7 +35,10 @@ describe.sequential('suite', () => {
 
   beforeEach(async () => {
     const loaded = await resolveLoaders(TestStory.loaders, testStory.args);
-    render(TestStory.render!(meta.args as any, { loaded, argTypes: TestStory.argTypes } as any), canvasElement);
+    render(
+      TestStory.render!({ ...meta.args, ...TestStory.args } as any, { loaded, argTypes: TestStory.argTypes } as any),
+      canvasElement
+    );
   });
 
   test('changing viewer', async () => {

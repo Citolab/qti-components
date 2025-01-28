@@ -30,7 +30,10 @@ describe.sequential('suite', () => {
   });
 
   beforeEach(async () => {
-    render(TestStory.render!(Meta.args as any, { argTypes: TestStory.argTypes } as any), canvasElement);
+    render(
+      TestStory.render!({ ...Meta.args, ...TestStory.args } as any, { argTypes: TestStory.argTypes } as any),
+      canvasElement
+    );
   });
 
   test('choice-interaction min-choices="1" max-choices="2"', async () => {

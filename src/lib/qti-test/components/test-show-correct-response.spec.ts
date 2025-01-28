@@ -1,10 +1,9 @@
 import '../../../../.storybook/import-storybook-cem'; // <-- fake storybook import
-import { render } from 'lit';
-import { afterEach, beforeEach, describe } from 'vitest';
 import { composeStory } from '@storybook/preview-api';
+import { render } from 'lit';
 
 import { resolveLoaders } from '../../../../.storybook/custom-story-loader';
-import meta, { Test as TestStory } from './test-prev.stories';
+import meta, { Test as TestStory } from './test-show-correct-response.stories';
 
 import type { ComposedStoryFn } from 'storybook/internal/types';
 import type { WebComponentsRenderer } from '@storybook/web-components';
@@ -36,13 +35,14 @@ describe.sequential('suite', () => {
 
   beforeEach(async () => {
     const loaded = await resolveLoaders(TestStory.loaders, testStory.args);
+
     render(
       TestStory.render!({ ...meta.args, ...TestStory.args } as any, { loaded, argTypes: TestStory.argTypes } as any),
       canvasElement
     );
   });
 
-  test('text-prev fast clicking between items, cancelling previous requests', async () => {
+  test('text-next fast clicking between items', async () => {
     await testStory.play({ canvasElement });
   });
 });

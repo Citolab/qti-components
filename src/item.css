@@ -9,3 +9,9 @@
 
 /* components */
 @import url('./styles/qti-components/qti-interactions');
+
+qti-test-part:not(:has(qti-assessment-item)),
+qti-assessment-section:not(:has(qti-assessment-item)),
+qti-assessment-item-ref:not(:has(qti-assessment-item)) {
+  display: none;
+}

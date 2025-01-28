@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<qti-assessment-test
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+  identifier="Examples"
+  title="Examples"
+  xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+>
+  <qti-test-part identifier="test-part-1" navigation-mode="nonlinear" submission-mode="individual">
+
+
+    <qti-assessment-section identifier="info-start" title="start" visible="true">
+      <qti-assessment-item-ref identifier="ITM-info_start" href="items/info_start.xml"
+        category="info" />
+    </qti-assessment-section>
+
+    <qti-assessment-section identifier="basic" title="1. Basic Level" visible="true">
+
+      <qti-rubric-block use="instructions" view="candidate">
+        <qti-content-body>
+          <h2>1. Basic Level</h2>
+        </qti-content-body>
+      </qti-rubric-block>
+
+
+      <qti-assessment-item-ref identifier="ITM-choice" href="items/choice.xml" />
+      <qti-assessment-item-ref identifier="ITM-choice_multiple" href="items/choice_multiple.xml" />
+      <qti-assessment-item-ref identifier="ITM-extended_text" href="items/extended_text.xml" />
+      <qti-assessment-item-ref identifier="ITM-text_entry" href="items/text_entry.xml" />
+    </qti-assessment-section>
+
+    <qti-assessment-section identifier="basic" title="2. Advanced Level" visible="true">
+
+      <qti-rubric-block use="instructions" view="candidate">
+        <qti-content-body>
+          <h2>2. Advanced Level</h2>
+        </qti-content-body>
+      </qti-rubric-block>
+
+      <qti-assessment-item-ref identifier="ITM-gap_match" href="items/gap_match.xml" />
+      <qti-assessment-item-ref identifier="ITM-graphic_associate" href="items/graphic_associate.xml" />
+      <qti-assessment-item-ref identifier="ITM-graphic_gap_match" href="items/graphic_gap_match.xml" />
+      <qti-assessment-item-ref identifier="ITM-hotspot" href="items/hotspot.xml" />
+      <qti-assessment-item-ref identifier="ITM-inline_choice" href="items/inline_choice.xml" />
+      <qti-assessment-item-ref identifier="ITM-match" href="items/match.xml" />
+      <qti-assessment-item-ref identifier="ITM-math" href="items/math.xml" />
+      <qti-assessment-item-ref identifier="ITM-order" href="items/order.xml" />
+      <qti-assessment-item-ref identifier="ITM-position_object" href="items/position_object.xml" />
+      <qti-assessment-item-ref identifier="ITM-select_point" href="items/select_point.xml" />
+      <qti-assessment-item-ref identifier="ITM-slider" href="items/slider.xml" />
+
+    </qti-assessment-section>
+
+    <qti-assessment-section identifier="info-end" title="end" visible="true">
+      <qti-assessment-item-ref identifier="ITM-info_end" href="items/info_end.xml" category="info" />
+    </qti-assessment-section>
+
+  </qti-test-part>
+</qti-assessment-test>

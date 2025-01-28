@@ -8,3 +8,4 @@ export * from './test-show-correct-response';
 export * from './test-paging-buttons-stamp';
 export * from './test-navigation';
 export * from './test-container';
+export * from './test-print-item-variables';

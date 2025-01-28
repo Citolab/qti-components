@@ -40,7 +40,6 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
 
       this.addEventListener('qti-assessment-test-connected', (e: CustomEvent) => {
         this.testElement = e.detail;
-
         let navItemId = this.sessionContext.navItemId;
         if (!navItemId) {
           const itemRefEl = this.testElement.querySelector<QtiAssessmentItemRef>('qti-assessment-item-ref');

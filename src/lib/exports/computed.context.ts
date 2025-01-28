@@ -14,11 +14,14 @@ export type ComputedItem = {
   incorrect?: boolean;
   completed?: boolean;
   index?: number;
+  adaptive?: boolean;
+  timeDependent?: boolean;
+  title?: string;
   value?: Readonly<string | string[]>;
 };
 
 export type ComputedContext = {
-  testElement?: HTMLElement;
+  // testElement?: HTMLElement;
   testParts: {
     active?: boolean;
     identifier: string;

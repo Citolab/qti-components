@@ -1,6 +1,6 @@
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
-import { expect, waitFor } from '@storybook/test';
-import { findByShadowText, findByShadowTitle } from 'shadow-dom-testing-library';
+import { expect, userEvent, waitFor } from '@storybook/test';
+import { findByShadowText, findByShadowTitle, within } from 'shadow-dom-testing-library';
 import { spread } from '@open-wc/lit-helpers';
 import { html } from 'lit';
 
@@ -25,9 +25,10 @@ export default meta;
 
 export const Default: Story = {
   render: args =>
-    html` <qti-test>
+    html` <qti-test nav-item-id="ITM-text_entry">
       <test-navigation>
-        <test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"></test-container>
+        <!-- <test-print-item-variables></test-print-item-variables> -->
+        <test-container test-url="/assets/qti-test-package/assessment.xml"></test-container>
         ${template(args, html`End Attempt`)}
         <test-next>Volgende</test-next>
       </test-navigation>
@@ -36,16 +37,40 @@ export const Default: Story = {
 
 export const Test: Story = {
   render: args => html`
-    <qti-test nav-item-id="t1-test-entry-item3">
-      <test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"> </test-container>
-      <test-end-attempt ${spread(args)}>End Attempt</test-end-attempt>
-      <test-next>Volgende</test-next>
+    <qti-test nav-item-id="ITM-text_entry">
+      <test-navigation>
+        <!-- <test-print-item-variables>  </test-print-item-variables> -->
+        <test-container test-url="/assets/qti-test-package/assessment.xml"> </test-container>
+        <test-end-attempt ${spread(args)}>End Attempt</test-end-attempt>
+        <test-next>Volgende</test-next>
+      </test-navigation>
     </qti-test>
   `,
   play: async ({ canvasElement }) => {
-    const nextButton = await findByShadowText(canvasElement, 'Volgende');
+    const canvas = within(canvasElement);
+
+    const nextButton = await canvas.findByShadowText('Volgende');
     await waitFor(() => expect(nextButton).toBeEnabled());
-    const firstItem = await findByShadowTitle(canvasElement, 'T1 - Text Entry Interaction');
+    const firstItem = await findByShadowTitle(canvasElement, 'Richard III (Take 3)');
     expect(firstItem).toBeInTheDocument();
+    // click end attempt
+    const endAttemptButton = await findByShadowText(canvasElement, 'End Attempt');
+    endAttemptButton.click();
+    await new Promise(resolve => setTimeout(resolve, 0)); /* why is this necessary */
+
+    // check if incorrect feedback block is visible
+    const incorrect = await canvas.findByShadowText('Incorrect');
+    expect(incorrect.assignedSlot).toBeVisible();
+
+    // type York in the text field
+    const textEntryInteraction = await canvas.findByShadowRole<HTMLInputElement>('textbox');
+    await userEvent.type(textEntryInteraction, 'York');
+
+    endAttemptButton.click();
+    await new Promise(resolve => setTimeout(resolve, 0)); /* why is this necessary */
+
+    // check if correct feedback block is visible
+    const correct = await canvas.findByShadowText('Correct');
+    expect(correct.assignedSlot).toBeVisible();
   }
 };

@@ -1,7 +1,7 @@
 import { expect, fireEvent, userEvent, waitFor } from '@storybook/test';
 import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
-import { getByShadowText, findByShadowText, findByShadowRole } from 'shadow-dom-testing-library';
+import { getByShadowText, findByShadowText, findByShadowRole, within } from 'shadow-dom-testing-library';
 
 import { getManifestInfo, type ManifestInfo } from '../../qti-loader';
 
@@ -89,6 +89,8 @@ export const T4_T7: Story = {
     `;
   },
   play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
     const responses = [
       'correct',
       ['choice_a', 'choice_b'],
@@ -97,7 +99,7 @@ export const T4_T7: Story = {
 Whispers on the windowpane,
 Nature’s lullaby.`
     ];
-    const qtiPlayer = canvasElement.querySelector<QtiTest>('qti-test');
+    const qtiTest = canvasElement.querySelector<QtiTest>('qti-test');
     const prevButton = canvasElement.querySelector('test-prev') as HTMLElement;
     const nextButton = canvasElement.querySelector('test-next') as HTMLElement;
     const testContainer = canvasElement.querySelector('test-container') as HTMLElement;
@@ -131,7 +133,7 @@ Nature’s lullaby.`
       expect(textEntryInteraction2.value).toBe(responses[2].toString());
     });
     // Now check the context
-    const context = qtiPlayer.context;
+    const context = qtiTest.testContext;
     let itemIndex = 0;
     for (const item of context.items) {
       const response = item.variables.find(v => v.identifier === 'RESPONSE');

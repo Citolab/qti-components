@@ -4,9 +4,9 @@ import { customElement, property, state } from 'lit/decorators.js';
 
 import { testContext } from '../../exports/test.context';
 import { sessionContext } from '../../exports/session.context';
-import { configContext } from '../../exports/config.context';
 import { computedContext } from '../../exports/computed.context';
 
+import type { QtiAssessmentItem } from '../../qti-components';
 import type { OutcomeVariable } from '../../exports/variables';
 import type { ComputedContext } from '../../exports/computed.context';
 import type { PropertyValues } from 'lit';
@@ -15,8 +15,19 @@ import type { ConfigContext } from '../../exports/config.context';
 import type { SessionContext } from '../../exports/session.context';
 import type { TestContext } from '../../exports/test.context';
 
+type CustomEventMap = {
+  'test-end-attempt': CustomEvent;
+  'test-show-correct-response': CustomEvent<{ value: boolean }>;
+};
+
+declare global {
+  interface GlobalEventHandlersEventMap extends CustomEventMap {}
+}
+
 @customElement('test-navigation')
 export class TestNavigation extends LitElement {
+  @property({ type: String }) identifier = undefined;
+
   @state()
   public initContext: { identifier: string; [key: string]: any }[] = [];
 
@@ -29,7 +40,6 @@ export class TestNavigation extends LitElement {
   public _sessionContext?: SessionContext;
 
   @state()
-  @provide({ context: configContext })
   public configContext: ConfigContext = {};
 
   @state()
@@ -38,17 +48,38 @@ export class TestNavigation extends LitElement {
 
   @property({ type: Boolean, attribute: 'auto-score-items' }) autoScoreItems = false;
 
-  testElement: QtiAssessmentTest;
+  private _testElement: QtiAssessmentTest;
 
   constructor() {
     super();
     this.addEventListener('qti-assessment-test-connected', this._handleTestConnected.bind(this));
+    this.addEventListener('qti-assessment-item-connected', this._handleItemConnected.bind(this));
+
     this.addEventListener('qti-interaction-changed', this._handleInteractionChanged.bind(this));
+
+    this.addEventListener('test-end-attempt', this._handleTestEndAttempt.bind(this));
+    this.addEventListener('test-show-correct-response', this._handleTestShowCorrectResponse.bind(this));
+  }
+
+  private _handleTestEndAttempt(_event: CustomEvent) {
+    const qtiItemEl = this._testElement.querySelector<QtiAssessmentItemRef>(
+      `qti-assessment-item-ref[identifier="${this._sessionContext.navItemId}"]`
+    );
+    const qtiAssessmentItemEl = qtiItemEl.assessmentItem;
+    qtiAssessmentItemEl.processResponse();
+  }
+
+  private _handleTestShowCorrectResponse(event: CustomEvent) {
+    const qtiItemEl = this._testElement.querySelector<QtiAssessmentItemRef>(
+      `qti-assessment-item-ref[identifier="${this._sessionContext.navItemId}"]`
+    );
+    const qtiAssessmentItemEl = qtiItemEl.assessmentItem;
+    qtiAssessmentItemEl.showCorrectResponse(event.detail);
   }
 
   _handleInteractionChanged(_event: CustomEvent) {
     if (this.autoScoreItems) {
-      const qtiItemEl = this.testElement.querySelector<QtiAssessmentItemRef>(
+      const qtiItemEl = this._testElement.querySelector<QtiAssessmentItemRef>(
         `qti-assessment-item-ref[identifier="${this._sessionContext.navItemId}"]`
       );
       const qtiAssessmentItem = qtiItemEl.assessmentItem;
@@ -63,11 +94,11 @@ export class TestNavigation extends LitElement {
     return html`<slot></slot>`;
   }
 
+  /* PK: on test connected we can build the computed context */
   _handleTestConnected(event: CustomEvent) {
-    this.testElement = event.detail as QtiAssessmentTest;
-    const testPartElements = Array.from(this.testElement?.querySelectorAll<QtiTestPart>(`qti-test-part`) || []);
+    this._testElement = event.detail as QtiAssessmentTest;
+    const testPartElements = Array.from(this._testElement?.querySelectorAll<QtiTestPart>(`qti-test-part`) || []);
     this.computedContext = {
-      testElement: this.testElement,
       testParts: testPartElements.map((testPart, indexTestPart) => {
         const sectionElements = [...testPart.querySelectorAll<QtiAssessmentSection>(`qti-assessment-section`)];
         return {
@@ -93,6 +124,35 @@ export class TestNavigation extends LitElement {
     };
   }
 
+  /* PK: on item connected we can add item only properties in the xml */
+  _handleItemConnected(event: CustomEvent) {
+    const itemElement = event.detail as QtiAssessmentItem;
+    this.computedContext = {
+      ...this.computedContext,
+      testParts: this.computedContext.testParts.map(testPart => {
+        return {
+          ...testPart,
+          sections: testPart.sections.map(section => {
+            return {
+              ...section,
+              items: section.items.map(item =>
+                item.identifier === itemElement.identifier
+                  ? {
+                      ...item,
+                      title: itemElement.title,
+                      adaptive: itemElement.adaptive == 'true' || false,
+                      timeDependent: itemElement.timeDependent == 'true' || false
+                    }
+                  : item
+              )
+            };
+          })
+        };
+      })
+    };
+  }
+
+  /* PK: on every change of the candidate we will recomputed the computedContext */
   protected willUpdate(_changedProperties: PropertyValues): void {
     if (!this.computedContext) return;
 
@@ -114,24 +174,24 @@ export class TestNavigation extends LitElement {
                     ?.variables.find(v => v.identifier === 'completionStatus').value === 'completed'
               ),
 
-              items: section.items.map(itemRef => {
-                const itemContext = this._testContext?.items.find(i => i.identifier === itemRef.identifier);
-                let item;
+              items: section.items.map(item => {
+                const itemContext = this._testContext?.items.find(i => i.identifier === item.identifier);
+                let computedItem;
 
                 if (this.initContext) {
-                  const initContext = this.initContext.find(i => i.identifier === itemRef.identifier);
-                  item = { ...itemContext, ...initContext };
+                  const initContext = this.initContext.find(i => i.identifier === item.identifier);
+                  computedItem = { ...item, ...itemContext, ...initContext };
                 } else {
-                  item = itemContext;
+                  computedItem = { ...item, ...itemContext };
                 }
 
-                const rawscore = item.variables?.find(vr => vr.identifier == 'SCORE')?.value;
+                const rawscore = computedItem.variables?.find(vr => vr.identifier == 'SCORE')?.value;
                 const score = parseInt(rawscore?.toString());
-                const completionStatus = item.variables?.find(v => v.identifier === 'completionStatus')?.value;
-                const categories = item.category ? item.category?.split(' ') : [];
+                const completionStatus = computedItem.variables?.find(v => v.identifier === 'completionStatus')?.value;
+                const categories = computedItem.category ? computedItem.category?.split(' ') : [];
 
                 const type = categories.includes(this.configContext?.infoItemCategory) ? 'info' : 'regular'; // rounded-full
-                const active = this._sessionContext?.navItemId === item.identifier || false; // !border-sky-600
+                const active = this._sessionContext?.navItemId === computedItem.identifier || false; // !border-sky-600
 
                 const correct =
                   // this._testContext.view === 'scorer' &&
@@ -143,12 +203,12 @@ export class TestNavigation extends LitElement {
                   // this._testContext.view === 'candidate' &&
                   completionStatus === 'completed';
                 // || item.category === this.host._configContext?.infoItemCategory || false
-                const response = item.variables?.find(v => v.identifier === 'RESPONSE')?.value || '';
+                const response = computedItem.variables?.find(v => v.identifier === 'RESPONSE')?.value || '';
 
                 const index = categories.includes(this.configContext?.infoItemCategory) ? null : itemIndex++;
 
                 return {
-                  ...item,
+                  ...computedItem,
                   //   rawscore, // not necessary for outside world
                   //   score, // not necessary for outside world
                   //   completionStatus, // not necessary for outside world

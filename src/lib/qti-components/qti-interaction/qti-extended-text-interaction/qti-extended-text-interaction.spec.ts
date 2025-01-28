@@ -2,16 +2,18 @@ import '../../../../../.storybook/import-storybook-cem'; // <-- fake storybook i
 import { render } from 'lit';
 import { composeStory } from '@storybook/preview-api';
 
-import Meta, { Test as TestStory } from './qti-choice-interaction.stories';
+import Meta, { Test as TestStory } from './qti-extended-text-interaction.stories';
 
 import type { ComposedStoryFn } from 'storybook/internal/types';
 import type { WebComponentsRenderer } from '@storybook/web-components';
-import type { QtiChoiceInteraction } from './qti-choice-interaction';
+import type { QtiExtendedTextInteraction } from './qti-extended-text-interaction';
 
-import './qti-choice-interaction';
-import '../qti-simple-choice';
+import './qti-extended-text-interaction';
 
-const testStory: ComposedStoryFn<WebComponentsRenderer, Partial<QtiChoiceInteraction>> = composeStory(TestStory, Meta);
+const testStory: ComposedStoryFn<WebComponentsRenderer, Partial<QtiExtendedTextInteraction>> = composeStory(
+  TestStory,
+  Meta
+);
 
 describe.sequential('suite', () => {
   let canvasElement;
@@ -35,7 +37,7 @@ describe.sequential('suite', () => {
     );
   });
 
-  test('choice-interaction min-choices="1" max-choices="2"', async () => {
+  test('extended-text', async () => {
     await testStory.play({ canvasElement });
   });
 });
