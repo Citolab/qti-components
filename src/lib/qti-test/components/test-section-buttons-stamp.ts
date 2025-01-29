@@ -8,8 +8,8 @@ import { computedContext } from '../../exports/computed.context';
 import type { ComputedContext } from '../../exports/computed.context';
 import type { TemplateFunction } from 'stampino';
 
-@customElement('test-paging-buttons-stamp')
-export class TestPagingButtonsStamp extends LitElement {
+@customElement('test-section-buttons-stamp')
+export class TestSectionButtonsStamp extends LitElement {
   @consume({ context: computedContext, subscribe: true })
   private computedContext: ComputedContext;
 
@@ -34,16 +34,14 @@ export class TestPagingButtonsStamp extends LitElement {
 
   render() {
     if (!this.computedContext) return html``;
-    const items = this.computedContext.testParts.flatMap(testPart =>
-      testPart.sections.flatMap(section => section.items)
-    );
+    const sections = this.computedContext.testParts.flatMap(testPart => testPart.sections);
 
-    return html` ${items.map(item => this.myTemplate({ item }))} `;
+    return html` ${sections.map(item => this.myTemplate({ item }))} `;
   }
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    'test-paging-buttons-stamp': TestPagingButtonsStamp;
+    'test-section-buttons-stamp': TestSectionButtonsStamp;
   }
 }

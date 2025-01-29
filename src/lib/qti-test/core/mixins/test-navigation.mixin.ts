@@ -15,38 +15,55 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
     constructor(...args: any[]) {
       super(...args);
 
-      // Load either a single item or all items in a section
       this.addEventListener(
         'qti-request-navigation',
-        ({ detail }: CustomEvent<{ type: 'item' | 'section'; id: string }>) => {
+        async ({ detail }: CustomEvent<{ type: 'item' | 'section'; id: string }>) => {
           if (!detail?.id) return;
-          this._clearLoadedItems();
 
           if (detail.type === 'item') {
-            this._loadSingleItem(detail.id);
+            await this._loadItems([detail.id]);
+
+            const navItemId = detail.id;
+            const itemRefEl = this._testElement?.querySelector<QtiAssessmentItemRef>(
+              `qti-assessment-item-ref[identifier="${detail.id}"]`
+            );
+            const navPartId = itemRefEl.closest('qti-test-part')?.identifier;
+            const navSectionId = itemRefEl.closest('qti-assessment-section')?.identifier;
+
+            this.sessionContext = { ...this.sessionContext, navPartId, navSectionId, navItemId, navItemLoading: false };
           } else if (detail.type === 'section') {
-            this._loadSectionItems(detail.id);
+            const itemIds = this._getSectionItemIds(detail.id);
+            await this._loadItems(itemIds);
+
+            const navSectionId = detail.id;
+            const sectionRefEl = this._testElement?.querySelector<QtiAssessmentSection>(
+              `qti-assessment-section[identifier="${navSectionId}"]`
+            );
+            const navPartId = sectionRefEl.closest('qti-test-part')?.identifier;
+
+            this.sessionContext = {
+              ...this.sessionContext,
+              navPartId,
+              navSectionId,
+              navItemId: null,
+              navItemLoading: false
+            };
           }
         }
       );
 
       this.addEventListener('qti-assessment-test-connected', (e: CustomEvent<QtiAssessmentTest>) => {
         this._testElement = e.detail;
-
-        // Determine the navigation target
         let id: string | undefined;
 
         if (this.navigate === 'section') {
-          // Navigate to the first section if navigation mode is 'section'
           id = this._testElement.querySelector<QtiAssessmentSection>('qti-assessment-section')?.identifier;
         } else {
-          // Use the session context navigation ID if available, otherwise fallback to the first item
           id =
             this.sessionContext.navItemId ??
             this._testElement.querySelector<QtiAssessmentItemRef>('qti-assessment-item-ref')?.identifier;
         }
 
-        // Dispatch navigation event if an ID is found
         if (id) {
           this.dispatchEvent(
             new CustomEvent('qti-request-navigation', {
@@ -59,74 +76,66 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
       });
     }
 
-    private _loadSingleItem(navItemId: string, cancelPreviousRequest = true): Promise<void> {
-      return new Promise((resolve, reject) => {
-        const itemRefEl = this._testElement?.querySelector<QtiAssessmentItemRef>(
-          `qti-assessment-item-ref[identifier="${navItemId}"]`
-        );
+    private async _loadItems(itemIds: string[]): Promise<void> {
+      let results;
+      if (!this._testElement || itemIds.length === 0) return;
 
-        if (!itemRefEl) {
-          console.warn(`Item with identifier "${navItemId}" not found.`);
-          return reject(new Error(`Item not found: ${navItemId}`));
-        }
+      const itemRefEls = itemIds.map(id =>
+        this._testElement!.querySelector<QtiAssessmentItemRef>(`qti-assessment-item-ref[identifier="${id}"]`)
+      );
 
-        const href = itemRefEl.href;
-        const navPartId = itemRefEl.closest('qti-test-part')?.identifier;
-        const navSectionId = itemRefEl.closest('qti-assessment-section')?.identifier;
+      if (itemRefEls.includes(null)) {
+        console.warn(`One or more items not found: ${itemIds}`);
+        return;
+      }
 
-        this.sessionContext = { ...this.sessionContext, navPartId, navSectionId, navItemId, navItemLoading: true };
-        const promise = this._loadItemRequest(href, cancelPreviousRequest);
+      this._clearLoadedItems();
+      this.sessionContext = { ...this.sessionContext, navItemLoading: true };
 
-        promise
-          ?.then(doc => {
-            itemRefEl.xmlDoc = doc;
-            requestAnimationFrame(() =>
-              this.dispatchEvent(
-                new CustomEvent('qti-test-connected', {
-                  detail: [{ identifier: navItemId, element: itemRefEl }],
-                  bubbles: true,
-                  composed: true
-                })
-              )
-            );
-            this.sessionContext = { ...this.sessionContext, navItemLoading: false };
-            resolve();
-          })
-          .catch(error => {
-            console.error('Failed to load item:', error);
-            reject(error);
-          });
+      const itemLoadPromises = itemRefEls.map(async itemRef => {
+        if (!itemRef) return null;
+        return { itemRef, doc: await this._loadItemRequest(itemRef.href) };
       });
+
+      try {
+        results = await Promise.all(itemLoadPromises);
+
+        results.forEach(({ itemRef, doc }) => {
+          if (itemRef && doc) itemRef.xmlDoc = doc;
+        });
+
+        requestAnimationFrame(() => {
+          this.dispatchEvent(
+            new CustomEvent('qti-test-connected', {
+              detail: results.map(({ itemRef }) => ({ identifier: itemRef?.identifier, element: itemRef })),
+              bubbles: true,
+              composed: true
+            })
+          );
+
+          console.info(`Loaded ${results.length} items successfully.`);
+        });
+      } catch (error) {
+        console.error('Error loading items:', error);
+      }
+      return results;
     }
 
-    private _loadSectionItems(navSectionId: string): void {
-      const sectionRefEl = this._testElement?.querySelector<QtiAssessmentItemRef>(
+    private _getSectionItemIds(navSectionId: string): string[] {
+      const sectionRefEl = this._testElement?.querySelector<QtiAssessmentSection>(
         `qti-assessment-section[identifier="${navSectionId}"]`
       );
 
       if (!sectionRefEl) {
         console.warn(`Section with identifier "${navSectionId}" not found.`);
-        return;
+        return [];
       }
 
-      const itemRefEls = this._testElement?.querySelectorAll<QtiAssessmentItemRef>(
-        `qti-assessment-section[identifier="${navSectionId}"] > qti-assessment-item-ref`
-      );
-
-      const navPartId = sectionRefEl.closest('qti-test-part')?.identifier;
-      this.sessionContext = { ...this.sessionContext, navPartId, navSectionId, navItemId: null };
-
-      const items = Array.from(itemRefEls || []).map(itemRef => itemRef.identifier);
-
-      const promises = items.map(itemId => this._loadSingleItem(itemId, false));
-
-      Promise.all(promises)
-        .then(results => {
-          console.info('All items in section loaded successfully.');
-        })
-        .catch(error => {
-          console.error('One or more items failed to load:', error);
-        });
+      return Array.from(
+        this._testElement!.querySelectorAll<QtiAssessmentItemRef>(
+          `qti-assessment-section[identifier="${navSectionId}"] > qti-assessment-item-ref`
+        )
+      ).map(itemRef => itemRef.identifier);
     }
 
     private _clearLoadedItems(): void {
@@ -138,18 +147,13 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
       });
     }
 
-    private _loadItemRequest(href: string, cancelPreviousRequest: boolean = true): Promise<DocumentFragment> {
+    private _loadItemRequest(href: string): Promise<DocumentFragment> {
       const event = new CustomEvent('qti-load-item-request', {
         bubbles: true,
         composed: true,
-        detail: {
-          href,
-          promise: null,
-          cancelPreviousRequest
-        }
+        detail: { href, promise: null }
       });
       this.dispatchEvent(event);
-
       return event.detail.promise;
     }
   }
