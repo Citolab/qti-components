@@ -4,6 +4,8 @@ import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
 import { Interaction } from '../../../exports/interaction';
 
+import type { ResponseVariable } from '../../../exports/variables';
+
 interface OptionType {
   textContent: string;
   value: string;
@@ -119,13 +121,14 @@ export class QtiInlineChoiceInteraction extends Interaction {
     return this.options.find(option => option.selected)?.value || null;
   }
 
-  set correctResponse(value: string | string[]) {
-    if (value === '') {
+  toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
+    this.correctResponse = show ? responseVariable.value : '';
+    if (this.correctResponse === '') {
       this.correctOption = '';
       return;
     }
     this.correctOption = `<span part="correct-option">${
-      this.options.find(option => value === option.value).textContent
+      this.options.find(option => this.correctResponse === option.value).textContent
     }</span>`;
   }
 

@@ -40,7 +40,8 @@
   --qti-form-size: 1rem;
 
   /* Point elements */
-  --qti-point-size: 2rem;
+  --qti-point-size: 5%;
+  --qti-min-point-size: 1rem;
 
   /* Order buttons */
   --qti-order-size: 2rem;
@@ -139,7 +140,9 @@
 
   border-radius: 100%;
   width: var(--qti-point-size);
+  min-width: var(--qti-min-point-size);
   height: var(--qti-point-size);
+  min-height: var(--qti-min-point-size);
   background-color: transparent;
   padding: 0;
 }

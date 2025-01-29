@@ -177,23 +177,14 @@ export class QtiAssessmentItem extends LitElement {
    */
   public showCorrectResponse(show: boolean): void {
     // Process response variables with correct responses.
-    const responses = this._context.variables
-      .filter(
-        (variable: ResponseVariable | OutcomeVariable) => 'correctResponse' in variable && variable.correctResponse
-      )
-      .map((variable: ResponseVariable) => ({
-        responseIdentifier: variable.identifier,
-        response: variable.correctResponse || ''
-      }));
-
     // Update interactions with the correct responses or clear them.
-    for (const { responseIdentifier, response } of responses) {
+    for (const responseVariable of this._context.variables.filter(v => v.type === 'response') as ResponseVariable[]) {
       const interaction = this._interactionElements.find(
-        element => element.getAttribute('response-identifier') === responseIdentifier
+        element => element.getAttribute('response-identifier') === responseVariable.identifier
       );
 
       if (interaction) {
-        interaction.correctResponse = show ? response : '';
+        interaction.toggleCorrectResponse(responseVariable, show);
       }
     }
   }

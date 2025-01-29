@@ -73,10 +73,6 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       this._updateChoiceSelection();
     }
 
-    public get correctResponse(): string | string[] {
-      return this._correctResponse;
-    }
-
     public set correctResponse(value: string | string[]) {
       this._correctResponse = value;
       const responseArray = Array.isArray(value) ? value : [value];

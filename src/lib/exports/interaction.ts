@@ -1,6 +1,7 @@
 import { property, state } from 'lit/decorators.js';
 import { LitElement } from 'lit';
 
+import type { ResponseVariable } from './variables';
 import type { IInteraction } from './interaction.interface';
 
 export abstract class Interaction extends LitElement implements IInteraction {
@@ -20,6 +21,12 @@ export abstract class Interaction extends LitElement implements IInteraction {
     super();
     this._internals = this.attachInternals();
   }
+  get correctResponse(): Readonly<string | string[]> {
+    return this._correctResponse;
+  }
+  set correctResponse(val: Readonly<string | string[]>) {
+    this._correctResponse = val as string | string[];
+  }
   abstract validate(): boolean;
 
   public reportValidity(): boolean {
@@ -33,11 +40,12 @@ export abstract class Interaction extends LitElement implements IInteraction {
   abstract get value(): string | string[] | null;
   abstract set value(val: string | string[] | null);
 
-  public get correctResponse(): string | string[] {
-    return this._correctResponse;
-  }
-  set correctResponse(value: string | string[]) {
-    this._correctResponse = value;
+  public toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
+    this.correctResponse = show
+      ? responseVariable?.correctResponse
+      : responseVariable.cardinality === 'single'
+        ? ''
+        : [];
   }
 
   public override connectedCallback() {

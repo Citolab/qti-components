@@ -38,7 +38,6 @@ export class QtiMapResponsePoint extends QtiExpression<number> {
         if (mappedAreas.has(entry.coords)) {
           continue; // Skip areas that have already been mapped
         }
-
         const isPointInArea = ScoringHelper.isPointInArea(
           candidateResponse,
           `${entry.shape},${entry.coords}`,

@@ -2,7 +2,7 @@ import { html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
 import { ChoicesMixin } from '../internal/choices/choices.mixin';
-import { positionHotspots } from '../internal/hotspots/hotspot';
+import { positionShapes } from '../internal/hotspots/hotspot';
 import { Interaction } from '../../../exports/interaction';
 import styles from './qti-graphic-order-interaction.styles';
 
@@ -74,7 +74,7 @@ export class QtiGraphicOrderInteraction extends ChoicesMixin(Interaction, 'qti-h
     const shape = hotspot.getAttribute('shape');
     const coordsNumber = coords.split(',').map(s => parseInt(s));
 
-    positionHotspots(shape, coordsNumber, img, hotspot);
+    positionShapes(shape, coordsNumber, img, hotspot);
   }
 
   override connectedCallback(): void {

@@ -28,7 +28,7 @@ export const Test: Story = {
   render: (_, { loaded: { testURL } }) => {
     return html`
       <qti-test class="h-full">
-        <test-navigation class="flex h-full overflow-hidden">
+        <test-navigation auto-score-items class="flex h-full overflow-hidden">
           <test-paging-buttons-stamp class="flex flex-col gap-2 p-2 overflow-auto" style="min-width:160px">
             <template>
               <test-item-link item-id="{{ item.identifier }}"> {{ item.identifier }} </test-item-link>
@@ -45,6 +45,7 @@ export const Test: Story = {
               <test-next>Volgende</test-next>
             </nav>
           </div>
+          <test-print-item-variables></test-print-item-variables>
         </test-navigation>
       </qti-test>
     `;

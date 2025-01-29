@@ -1,32 +1,46 @@
-import type { QtiHotspotChoice } from '../../qti-hotspot-choice';
-
-export function positionHotspots(
-  shape: string,
-  coordsNumber: number[],
-  img: HTMLImageElement,
-  hotspot: QtiHotspotChoice
-) {
+export function positionShapes(shape: string, coordsNumber: number[], img: HTMLImageElement, hotspot: HTMLElement) {
+  // Determine the reference width and height based on the attributes or natural dimensions
+  const imgWidth = img.getAttribute('width') ? parseFloat(img.getAttribute('width')!) : img.naturalWidth;
+  const imgHeight = img.getAttribute('height') ? parseFloat(img.getAttribute('height')!) : img.naturalHeight;
+  debugger;
   switch (shape) {
     case 'circle':
       {
+        if (coordsNumber.length !== 3) {
+          console.error('Invalid cirlce coordinates:', coordsNumber);
+          return;
+        }
         const [centerX, centerY, radius] = coordsNumber;
-        const centerXPer = (centerX / img.width) * 100;
-        const centerYPer = (centerY / img.height) * 100;
-        const radiusPer = (radius / img.width) * 100;
+
+        // Calculate percentages for center and radius
+        const centerXPer = (centerX / imgWidth) * 100;
+        const centerYPer = (centerY / imgHeight) * 100;
+        const radiusPer = (radius / imgWidth) * 100;
+
+        // Subtract half the diameter (radiusPer in percentage) to center the circle
         hotspot.style.left = centerXPer - radiusPer + '%';
         hotspot.style.top = centerYPer - radiusPer + '%';
-        hotspot.style.width = hotspot.style.height = 4 * radiusPer + 'px';
-        hotspot.style.borderRadius = `9999px`;
+        // Use both imgWidth and imgHeight for radius calculations
+        const radiusXPer = (radius / imgWidth) * 100; // Relative to width
+        const radiusYPer = (radius / imgHeight) * 100; // Relative to height
+        // Use percentage-based width and height to keep it proportional
+        hotspot.style.width = 2 * radiusXPer + '%';
+        hotspot.style.height = 2 * radiusYPer + '%';
+        hotspot.style.borderRadius = `50%`; // Create a circular
       }
       break;
 
     case 'rect':
       {
+        if (coordsNumber.length !== 4) {
+          console.error('Invalid rectangle coordinates:', coordsNumber);
+          return;
+        }
         const [leftX, topY, rightX, bottomY] = coordsNumber;
-        const leftXPer = (leftX / img.width) * 100;
-        const topYPer = (topY / img.height) * 100;
-        const rightXPer = (rightX / img.width) * 100;
-        const bottomYPer = (bottomY / img.height) * 100;
+        const leftXPer = (leftX / imgWidth) * 100;
+        const topYPer = (topY / imgHeight) * 100;
+        const rightXPer = (rightX / imgWidth) * 100;
+        const bottomYPer = (bottomY / imgHeight) * 100;
         hotspot.style.left = leftXPer + '%';
         hotspot.style.top = topYPer + '%';
         hotspot.style.width = rightXPer - leftXPer + '%';
@@ -35,11 +49,15 @@ export function positionHotspots(
       break;
     case 'ellipse':
       {
+        if (coordsNumber.length !== 4) {
+          console.error('Invalid ellipse coordinates:', coordsNumber);
+          return;
+        }
         const [centerX, centerY, radiusX, radiusY] = coordsNumber;
-        const centerXPer = (centerX / img.width) * 100;
-        const centerYPer = (centerY / img.height) * 100;
-        const radiusXPer = (radiusX / img.width) * 100;
-        const radiusYPer = (radiusY / img.height) * 100;
+        const centerXPer = (centerX / imgWidth) * 100;
+        const centerYPer = (centerY / imgHeight) * 100;
+        const radiusXPer = (radiusX / imgWidth) * 100;
+        const radiusYPer = (radiusY / imgHeight) * 100;
 
         hotspot.style.left = centerXPer - radiusXPer + '%';
         hotspot.style.top = centerYPer - radiusYPer + '%';
@@ -50,6 +68,10 @@ export function positionHotspots(
       break;
     case 'poly':
       {
+        if (coordsNumber.length < 6 || coordsNumber.length % 2 !== 0) {
+          console.error('Invalid polygon coordinates:', coordsNumber);
+          return;
+        }
         // Convert coordsNumber to an array of {x, y}
         const polycoords = [];
         for (let i = 0; i < coordsNumber.length; i += 2) {
@@ -63,10 +85,10 @@ export function positionHotspots(
         const bottomY = Math.max(...polycoords.map(point => point.y));
 
         // Set the hotspot position and size in percentages
-        const leftXPer = (leftX / img.width) * 100;
-        const topYPer = (topY / img.height) * 100;
-        const rightXPer = (rightX / img.width) * 100;
-        const bottomYPer = (bottomY / img.height) * 100;
+        const leftXPer = (leftX / imgWidth) * 100;
+        const topYPer = (topY / imgHeight) * 100;
+        const rightXPer = (rightX / imgWidth) * 100;
+        const bottomYPer = (bottomY / imgHeight) * 100;
 
         hotspot.style.left = leftXPer + '%';
         hotspot.style.top = topYPer + '%';

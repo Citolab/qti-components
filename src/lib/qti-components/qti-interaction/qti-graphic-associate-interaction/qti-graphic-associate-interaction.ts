@@ -3,7 +3,7 @@ import { customElement, queryAssignedElements, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { repeat } from 'lit/directives/repeat.js';
 
-import { positionHotspots } from '../internal/hotspots/hotspot';
+import { positionShapes } from '../internal/hotspots/hotspot';
 import { Interaction } from '../../../exports/interaction';
 import styles from './qti-graphic-associate-interaction.styles';
 
@@ -92,7 +92,7 @@ export class QtiGraphicAssociateInteraction extends Interaction {
     const coords = hotspot.getAttribute('coords');
     const shape = hotspot.getAttribute('shape');
     const coordsNumber = coords.split(',').map(s => parseInt(s));
-    positionHotspots(shape, coordsNumber, img, hotspot);
+    positionShapes(shape, coordsNumber, img, hotspot);
   }
 
   override firstUpdated(e): void {
