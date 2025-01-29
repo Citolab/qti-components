@@ -2,7 +2,7 @@ export function positionShapes(shape: string, coordsNumber: number[], img: HTMLI
   // Determine the reference width and height based on the attributes or natural dimensions
   const imgWidth = img.getAttribute('width') ? parseFloat(img.getAttribute('width')!) : img.naturalWidth;
   const imgHeight = img.getAttribute('height') ? parseFloat(img.getAttribute('height')!) : img.naturalHeight;
-  debugger;
+
   switch (shape) {
     case 'circle':
       {
