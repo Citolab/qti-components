@@ -24,10 +24,13 @@ export class TestItemLink extends LitElement {
 
   protected _requestItem(identifier: string): void {
     this.dispatchEvent(
-      new CustomEvent('qti-request-test-item', {
+      new CustomEvent('qti-request-navigation', {
         composed: true,
         bubbles: true,
-        detail: identifier
+        detail: {
+          type: 'item',
+          id: identifier
+        }
       })
     );
   }

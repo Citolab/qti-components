@@ -77,15 +77,12 @@ export class TestNavigation extends LitElement {
     qtiAssessmentItemEl.showCorrectResponse(event.detail);
   }
 
-  _handleInteractionChanged(_event: CustomEvent) {
+  private _handleInteractionChanged(_event: CustomEvent) {
     if (this.autoScoreItems) {
-      const qtiItemEl = this._testElement.querySelector<QtiAssessmentItemRef>(
-        `qti-assessment-item-ref[identifier="${this._sessionContext.navItemId}"]`
-      );
-      const qtiAssessmentItem = qtiItemEl.assessmentItem;
-      const scoreOutcomeIdentifier = qtiAssessmentItem.variables.find(v => v.identifier === 'SCORE') as OutcomeVariable;
-      if (scoreOutcomeIdentifier.externalScored === null && qtiAssessmentItem.adaptive === 'false') {
-        qtiAssessmentItem.processResponse();
+      const assessmentItem = (_event.composedPath()[0] as HTMLElement).closest('qti-assessment-item');
+      const scoreOutcomeIdentifier = assessmentItem.variables.find(v => v.identifier === 'SCORE') as OutcomeVariable;
+      if (scoreOutcomeIdentifier.externalScored === null && assessmentItem.adaptive === 'false') {
+        assessmentItem.processResponse();
       }
     }
   }
@@ -99,20 +96,20 @@ export class TestNavigation extends LitElement {
     this._testElement = event.detail as QtiAssessmentTest;
     const testPartElements = Array.from(this._testElement?.querySelectorAll<QtiTestPart>(`qti-test-part`) || []);
     this.computedContext = {
-      testParts: testPartElements.map((testPart, indexTestPart) => {
+      testParts: testPartElements.map(testPart => {
         const sectionElements = [...testPart.querySelectorAll<QtiAssessmentSection>(`qti-assessment-section`)];
         return {
-          active: indexTestPart == 0,
+          active: false,
           identifier: testPart.identifier,
-          sections: sectionElements.map((section, indexSection) => {
+          sections: sectionElements.map(section => {
             const itemElements = [...section.querySelectorAll<QtiAssessmentItemRef>(`qti-assessment-item-ref`)];
             return {
-              active: indexSection == 0,
+              active: false,
               identifier: section.identifier,
               title: section.title,
-              items: itemElements.map((item, indexItem) => {
+              items: itemElements.map(item => {
                 return {
-                  active: indexItem == 0,
+                  active: false,
                   identifier: item.identifier,
                   href: item.href
                 };
@@ -122,6 +119,26 @@ export class TestNavigation extends LitElement {
         };
       })
     };
+
+    // const sections = this.computedContext?.testParts.flatMap(testPart => testPart.sections);
+
+    // let id;
+    // if (this.navigate === 'section') {
+    //   id = sections.find(section => section.active).identifier;
+    // }
+    // if (this.navigate === 'item') {
+    //   id = sections.flatMap(section => section.items).find(item => item.active).identifier;
+    // }
+
+    // if (id) {
+    //   this.dispatchEvent(
+    //     new CustomEvent('qti-request-navigation', {
+    //       detail: { type: this.navigate, id },
+    //       bubbles: true,
+    //       composed: true
+    //     })
+    //   );
+    // }
   }
 
   /* PK: on item connected we can add item only properties in the xml */

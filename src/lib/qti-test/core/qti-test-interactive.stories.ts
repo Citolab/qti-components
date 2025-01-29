@@ -67,8 +67,8 @@ export const T4_T7: Story = {
         @qti-request-test-section=${(e: CustomEvent) => {
           console.log('qti-request-test-section', e);
         }}
-        @qti-request-test-item=${(e: CustomEvent) => {
-          console.log('qti-request-test-item', e);
+        @qti-request-navigation=${(e: CustomEvent) => {
+          console.log('qti-request-navigation', e);
         }}
         ${ref(qtiTestRef)}
         class="flex h-full w-full flex-col"

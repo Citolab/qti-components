@@ -72,6 +72,7 @@ export class TestNext extends LitElement {
   willUpdate(_changedProperties: Map<string | number | symbol, unknown>) {
     if (!this.computedContext) return;
     const testPart = this.computedContext?.testParts.find(testPart => testPart.active);
+    if (!testPart) return;
     this.sectionItems = testPart.sections.flatMap(section => section.items);
     this.itemIndex = this.sectionItems.findIndex(item => item.active);
     this.checkDisabled();
@@ -83,10 +84,13 @@ export class TestNext extends LitElement {
 
   protected _requestItem(identifier: string): void {
     this.dispatchEvent(
-      new CustomEvent('qti-request-test-item', {
+      new CustomEvent('qti-request-navigation', {
         composed: true,
         bubbles: true,
-        detail: identifier
+        detail: {
+          type: 'item',
+          id: identifier
+        }
       })
     );
   }
