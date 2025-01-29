@@ -1,6 +1,6 @@
 import { property } from 'lit/decorators.js';
 
-import type { QtiAssessmentItemRef, QtiAssessmentTest } from '../qti-assessment-test';
+import type { QtiAssessmentItemRef, QtiAssessmentSection, QtiAssessmentTest } from '../qti-assessment-test';
 import type { TestBase } from '../test-base';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
@@ -33,14 +33,24 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
       this.addEventListener('qti-assessment-test-connected', (e: CustomEvent<QtiAssessmentTest>) => {
         this._testElement = e.detail;
 
-        let id = this._testElement.querySelector<QtiAssessmentItemRef>('qti-assessment-item-ref').identifier;
+        // Determine the navigation target
+        let id: string | undefined;
+
         if (this.navigate === 'section') {
-          id = this._testElement.querySelector<QtiAssessmentItemRef>('qti-assessment-section').identifier;
+          // Navigate to the first section if navigation mode is 'section'
+          id = this._testElement.querySelector<QtiAssessmentSection>('qti-assessment-section')?.identifier;
+        } else {
+          // Use the session context navigation ID if available, otherwise fallback to the first item
+          id =
+            this.sessionContext.navItemId ??
+            this._testElement.querySelector<QtiAssessmentItemRef>('qti-assessment-item-ref')?.identifier;
         }
+
+        // Dispatch navigation event if an ID is found
         if (id) {
           this.dispatchEvent(
             new CustomEvent('qti-request-navigation', {
-              detail: { type: this.navigate === 'section' ? this.navigate : 'item', id },
+              detail: { type: this.navigate === 'section' ? 'section' : 'item', id },
               bubbles: true,
               composed: true
             })
