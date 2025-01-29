@@ -29,7 +29,7 @@
       <qti-assessment-item-ref identifier="ITM-text_entry" href="items/text_entry.xml" />
     </qti-assessment-section>
 
-    <qti-assessment-section identifier="basic" title="2. Advanced Level" visible="true">
+    <qti-assessment-section identifier="advanced" title="2. Advanced Level" visible="true">
 
       <qti-rubric-block use="instructions" view="candidate">
         <qti-content-body>

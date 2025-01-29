@@ -79,23 +79,6 @@ export const Title: Story = {
             <test-item-link class="{{item.active ? 'active' : ''}}" item-id="{{ item.identifier }}"
               >{{ item.index }}:{{ item.title }}</test-item-link
             >
-            <dl>
-              <dt>title:</dt>
-              <dd>{{ item.title }}</dd>
-              <dt>type:</dt>
-              <dd>{{ item.type }}</dd>
-              <dt>active:</dt>
-              <dd>{{ item.active }}</dd>
-              <dt>correct:</dt>
-              <dd>{{ item.correct }}</dd>
-              <dt>incorrect:</dt>
-              <dd>{{ item.incorrect }}</dd>
-              <dt>completed:</dt>
-              <dd>{{ item.completed }}</dd>
-              <dt>response:</dt>
-              <dd>{{ item.response }}</dd>
-              <dd>{{ item.volgnummer }}</dd>
-            </dl>
           </template>
         </test-paging-buttons-stamp>
       </test-navigation>
