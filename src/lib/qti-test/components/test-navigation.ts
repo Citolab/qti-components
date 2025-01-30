@@ -66,7 +66,8 @@ export class TestNavigation extends LitElement {
       `qti-assessment-item-ref[identifier="${this._sessionContext.navItemId}"]`
     );
     const qtiAssessmentItemEl = qtiItemEl.assessmentItem;
-    qtiAssessmentItemEl.processResponse();
+    const reportValidityAfterScoring = this.configContext?.reportValidityAfterScoring === true ? true : false;
+    qtiAssessmentItemEl.processResponse(true, reportValidityAfterScoring);
   }
 
   private _handleTestShowCorrectResponse(event: CustomEvent) {

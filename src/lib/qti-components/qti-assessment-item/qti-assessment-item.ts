@@ -189,8 +189,8 @@ export class QtiAssessmentItem extends LitElement {
     }
   }
 
-  public processResponse(countNumAttempts: boolean = true): boolean {
-    this.validate();
+  public processResponse(countNumAttempts = true, reportValidityAfterScoring = true): boolean {
+    this.validate(reportValidityAfterScoring);
     const responseProcessor = this.querySelector<QtiResponseProcessing>('qti-response-processing');
     if (!responseProcessor) {
       // console.info('Client side response processing template not available');
