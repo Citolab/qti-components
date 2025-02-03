@@ -6,7 +6,13 @@ import { Interaction } from '../../../exports/interaction';
 import { itemContext } from '../../../exports/qti-assessment-item.context';
 
 import type { BaseType, Cardinality } from '../../../exports/expression-result';
-import type { IMSpci, ModuleResolutionConfig, QtiVariableJSON, ResponseVariableType } from './interface';
+import type {
+  ConfigProperties,
+  IMSpci,
+  ModuleResolutionConfig,
+  QtiVariableJSON,
+  ResponseVariableType
+} from './interface';
 import type { ItemContext } from '../../../exports/item.context';
 
 declare const requirejs: any;
@@ -16,7 +22,7 @@ declare const define: any;
 export class QtiPortableCustomInteraction extends Interaction {
   private _value: string | string[];
 
-  private pci: IMSpci<unknown>;
+  private pci: IMSpci<ConfigProperties<unknown>>;
 
   @property({ type: String, attribute: 'module' })
   module: string;
@@ -121,7 +127,7 @@ export class QtiPortableCustomInteraction extends Interaction {
     return responseVariable;
   }
 
-  register(pci: IMSpci<unknown>) {
+  register(pci: IMSpci<ConfigProperties<unknown>>) {
     this.pci = pci;
     const dom: HTMLElement = this.querySelector('qti-interaction-markup');
     dom.classList.add('qti-customInteraction');

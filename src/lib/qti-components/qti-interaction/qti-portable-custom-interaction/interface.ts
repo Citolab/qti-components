@@ -1,4 +1,29 @@
-export interface IMSpci<ConfigProperties> {
+export interface PciReadyPayload {
+  responseIdentifier: string; // The response identifier of the PCI
+  status: 'interacting' | 'suspended' | 'closed' | 'solution' | 'review'; // Current status
+}
+
+export interface PciDonePayload {
+  responseIdentifier: string; // The response identifier of the PCI
+  status: 'interacting' | 'suspended' | 'closed' | 'solution' | 'review'; // The final status after completion
+  outcome?: unknown; // Optional outcome data (e.g., score, correctness)
+}
+
+// Define the ConfigProperties interface
+export interface ConfigProperties<T> {
+  properties: T; // Follows dataset conversion rules (camelCased keys)
+  templateVariables: Record<string, unknown>; // Follows structure in Appendix C
+  contextVariables: Record<string, unknown>; // Follows structure in Appendix C
+  boundTo: unknown; // Follows structure in Appendix C
+  responseIdentifier: string; // Unique within interaction scope
+
+  onready: (payload: PciReadyPayload) => void; // Callback for when PCI is fully constructed and ready
+  ondone?: (payload: PciDonePayload) => void; // Optional callback when candidate finishes interaction
+
+  status?: 'interacting' | 'suspended' | 'closed' | 'solution' | 'review'; // Optional, defaults to "interacting"
+}
+
+export interface IMSpci<T> {
   typeIdentifier: string;
 
   /** @access public
@@ -10,7 +35,7 @@ export interface IMSpci<ConfigProperties> {
    *  This must have been obtained from a prior call to getState on an
    *  instance of this type (same typeIdentifier)
    */
-  getInstance: (dom: HTMLElement, configuration: Configuration<ConfigProperties>, state: string) => void;
+  getInstance: (dom: HTMLElement, configuration: Configuration<T>, state: string) => void;
 
   /** @access public
    * @method getResponse
@@ -29,7 +54,7 @@ export interface IMSpci<ConfigProperties> {
 }
 
 export declare type Configuration<T> = {
-  onready: (pci: IMSpci<T>, state?: string) => void;
+  onready: (pci: IMSpci<ConfigProperties<T>>, state?: string) => void;
   properties: T;
   // PK: following this: https://www.imsglobal.org/spec/qti/v3p0/impl#h.1mc9puik2ft6
   // All below are not used in the IMS Reference implementation, keeping for ref
