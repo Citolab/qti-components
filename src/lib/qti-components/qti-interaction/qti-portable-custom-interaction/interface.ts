@@ -41,7 +41,7 @@ export interface IMSpci<T> {
    * @method getResponse
    * @return {Object} - the value to assign to the bound QTI response variable
    */
-  getResponse: () => QtiVariableJSON;
+  getResponse: () => QtiVariableJSON | undefined;
 
   /** @access public
    * @method getState

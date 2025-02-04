@@ -5,6 +5,7 @@ import { consume } from '@lit/context';
 import { Interaction } from '../../../exports/interaction';
 import { itemContext } from '../../../exports/qti-assessment-item.context';
 
+import type { ItemContext } from '../../../exports/item.context';
 import type { BaseType, Cardinality } from '../../../exports/expression-result';
 import type {
   ConfigProperties,
@@ -13,12 +14,11 @@ import type {
   QtiVariableJSON,
   ResponseVariableType
 } from './interface';
-import type { ItemContext } from '../../../exports/item.context';
 
 declare const requirejs: any;
 declare const define: any;
 
-@customElement('qti-portable-custom-interaction')
+@customElement('qti-portable-custom-interaction-tao')
 export class QtiPortableCustomInteraction extends Interaction {
   private _value: string | string[];
 
@@ -37,13 +37,7 @@ export class QtiPortableCustomInteraction extends Interaction {
   @state()
   protected context?: ItemContext;
 
-  // get responseVariable(): ResponseVariable | undefined {
-  //   const assessmentItem = this.closest('qti-assessment-item');
-  //   if (assessmentItem) {
-  //     return assessmentItem.getResponse(this.responseIdentifier);
-  //   }
-  //   return undefined;
-  // }
+  private dom: HTMLElement;
 
   private convertQtiVariableJSON(input: QtiVariableJSON): string | string[] {
     for (const topLevelKey in input) {
@@ -119,8 +113,8 @@ export class QtiPortableCustomInteraction extends Interaction {
   get boundTo(): Record<string, QtiVariableJSON> {
     const responseVal = this.responseVariablesToQtiVariableJSON(
       this._value,
-      this.context.variables?.find(v => v.identifier === this.responseIdentifier)?.cardinality || 'single',
-      this.context.variables?.find(v => v.identifier === this.responseIdentifier)?.baseType || 'string'
+      this.context?.variables?.find(v => v.identifier === this.responseIdentifier)?.cardinality || 'single',
+      this.context?.variables?.find(v => v.identifier === this.responseIdentifier)?.baseType || 'string'
     );
     const responseVariable: Record<string, QtiVariableJSON> = {};
     responseVariable[this.responseIdentifier] = responseVal;
@@ -129,9 +123,13 @@ export class QtiPortableCustomInteraction extends Interaction {
 
   register(pci: IMSpci<ConfigProperties<unknown>>) {
     this.pci = pci;
-    const dom: HTMLElement = this.querySelector('qti-interaction-markup');
-    dom.classList.add('qti-customInteraction');
-
+    this.dom = this.querySelector('qti-interaction-markup');
+    if (!this.dom) {
+      this.dom = document.createElement('div');
+      this.appendChild(this.dom);
+    }
+    this.dom.classList.add('qti-customInteraction');
+    this.dom.addEventListener('qti-interaction-changed', this._onInteractionChanged);
     if (this.querySelector('properties')) {
       (this.querySelector('properties') as HTMLElement).style.display = 'none';
     }
@@ -153,7 +151,7 @@ export class QtiPortableCustomInteraction extends Interaction {
     if (pci.getInstance) {
       // try {
 
-      pci.getInstance(dom, config, undefined);
+      pci.getInstance(this.dom, config, undefined);
     } else {
       // Try the TAO custom interaction initialization.
       const restoreTAOConfig = (element: HTMLElement): any => {
@@ -207,7 +205,7 @@ export class QtiPortableCustomInteraction extends Interaction {
       const taoConfig = restoreTAOConfig(this);
       (pci as any).initialize(
         this.customInteractionTypeIdentifier,
-        dom.firstElementChild,
+        this.dom.firstElementChild || this.dom,
         Object.keys(taoConfig).length ? taoConfig : null
       );
     }
@@ -215,8 +213,6 @@ export class QtiPortableCustomInteraction extends Interaction {
 
   override connectedCallback(): void {
     super.connectedCallback();
-
-    console.log('connectedCallback');
     define('qtiCustomInteractionContext', () => {
       return {
         register: ctxA => {
@@ -255,7 +251,19 @@ export class QtiPortableCustomInteraction extends Interaction {
     // Clear the modules in the context
     const context = requirejs.s.contexts;
     delete context[this.customInteractionTypeIdentifier];
+    // Remove the event listener when the component is disconnected
+    this.removeEventListener('qti-interaction-changed', this._onInteractionChanged);
   }
+
+  private _onInteractionChanged = (event: CustomEvent) => {
+    // Prevent further propagation of the event
+    event.stopPropagation();
+
+    // Optionally, handle the event here (e.g., update internal state)
+    const value = this.convertQtiVariableJSON(event.detail.value);
+    this.value = value;
+    this.saveResponse(value);
+  };
 
   buildRequireConfig() {
     // Set RequireJS paths and shim configuration if available
