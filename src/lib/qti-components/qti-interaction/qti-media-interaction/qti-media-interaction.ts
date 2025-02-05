@@ -19,7 +19,7 @@ export class QtiMediaInteraction extends Interaction {
   }
 
   set value(val: string | string[]) {
-    const isNumber = !isNaN(parseInt(val.toString()));
+    const isNumber = !isNaN(parseInt(val?.toString()));
     if (isNumber) {
       this._value = parseInt(val.toString());
     } else {
