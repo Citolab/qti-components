@@ -5,10 +5,11 @@ import { state } from 'lit/decorators.js';
 import { testContext } from '../../exports/test.context';
 import { type SessionContext, sessionContext } from '../../exports/session.context';
 
+import type { ItemContext } from '../../exports/item.context';
 import type { TestContext } from '../../exports/test.context';
 import type { QtiAssessmentTest } from './qti-assessment-test';
 import type { QtiAssessmentItem } from '../../qti-components/';
-import type { OutcomeVariable, VariableValue } from '../../exports/variables';
+import type { OutcomeVariable, VariableDeclaration } from '../../exports/variables';
 
 export abstract class TestBase extends LitElement {
   @state()
@@ -52,9 +53,8 @@ export abstract class TestBase extends LitElement {
     this.addEventListener('qti-assessment-item-connected', (e: CustomEvent<QtiAssessmentItem>) => {
       this._updateItemInTestContext(e.detail);
     });
-    this.addEventListener('qti-outcome-changed', e => {
-      const assessmentitem = e.composedPath()[0] as QtiAssessmentItem;
-      this._updateItemVariablesInTestContext(assessmentitem.identifier, assessmentitem.variables);
+    this.addEventListener('qti-item-context-changed', (e: CustomEvent<{ itemContext: ItemContext }>) => {
+      this._updateItemVariablesInTestContext(e.detail.itemContext.identifier, e.detail?.itemContext?.variables || []);
     });
   }
 
@@ -85,7 +85,7 @@ export abstract class TestBase extends LitElement {
 
   private _updateItemVariablesInTestContext(
     identifier: string,
-    variables: VariableValue<string | string[] | null>[]
+    variables: readonly VariableDeclaration<string | string[] | null>[]
   ): void {
     // Update the test context with modified variables for the specified item
     this.testContext = {
