@@ -221,7 +221,24 @@ export class TestNavigation extends LitElement {
                   // this._testContext.view === 'candidate' &&
                   completionStatus === 'completed';
                 // || item.category === this.host._configContext?.infoItemCategory || false
-                const response = computedItem.variables?.find(v => v.identifier === 'RESPONSE')?.value || '';
+                const responseVariables = computedItem.variables?.filter(
+                  v => v.type === 'response' && v.identifier.toLowerCase().startsWith('response')
+                );
+                // sort the response variables by the order of the string: identifier
+                const sortedResponseVariables = responseVariables?.sort((a, b) =>
+                  a.identifier.localeCompare(b.identifier)
+                );
+                const response =
+                  sortedResponseVariables.length === 0
+                    ? ''
+                    : sortedResponseVariables
+                        ?.map(v => {
+                          if (Array.isArray(v.value)) {
+                            return v.value.join('&');
+                          }
+                          return v.value;
+                        })
+                        .join('#');
 
                 const index = categories.includes(this.configContext?.infoItemCategory) ? null : itemIndex++;
 
