@@ -18,7 +18,7 @@ import type {
 declare const requirejs: any;
 declare const define: any;
 
-@customElement('qti-portable-custom-interaction-tao')
+@customElement('qti-portable-custom-interaction')
 export class QtiPortableCustomInteraction extends Interaction {
   private _value: string | string[];
 
