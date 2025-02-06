@@ -7,7 +7,7 @@ import { sessionContext } from '../../exports/session.context';
 import { computedContext } from '../../exports/computed.context';
 
 import type { QtiAssessmentItem } from '../../qti-components';
-import type { OutcomeVariable } from '../../exports/variables';
+import type { OutcomeVariable, ResponseVariable } from '../../exports/variables';
 import type { ComputedContext } from '../../exports/computed.context';
 import type { PropertyValues } from 'lit';
 import type { QtiAssessmentItemRef, QtiAssessmentSection, QtiAssessmentTest, QtiTestPart } from '../core';
@@ -221,9 +221,17 @@ export class TestNavigation extends LitElement {
                   // this._testContext.view === 'candidate' &&
                   completionStatus === 'completed';
                 // || item.category === this.host._configContext?.infoItemCategory || false
-                const responseVariables = computedItem.variables?.filter(
-                  v => v.type === 'response' && v.identifier.toLowerCase().startsWith('response')
-                );
+                const responseVariables = computedItem.variables?.filter(v => {
+                  if (v.type !== 'response') {
+                    return false;
+                  }
+                  if (v.identifier.toLowerCase().startsWith('response')) {
+                    return true;
+                  }
+                  if ((v as ResponseVariable).correctResponse) {
+                    return true;
+                  }
+                });
                 // sort the response variables by the order of the string: identifier
                 const sortedResponseVariables = responseVariables?.sort((a, b) =>
                   a.identifier.localeCompare(b.identifier)

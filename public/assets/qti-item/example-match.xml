@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+    xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+    identifier="match_languages_countries" title="Match countries and languages (Match Interaction)"
+    label="Match countries and languages (Match Interaction)" xml:lang="en-US" adaptive="false"
+    time-dependent="false" tool-name="TAO" tool-version="2024.03">
+    <qti-response-declaration identifier="match_languages_countries" cardinality="multiple"
+        base-type="directedPair">
+        <qti-correct-response>
+            <qti-value>hungarian budapest</qti-value>
+            <qti-value>french paris</qti-value>
+            <qti-value>dutch amsterdam</qti-value>
+            <qti-value>polish warsaw</qti-value>
+            <qti-value>lithuanian vilnius</qti-value>
+        </qti-correct-response>
+    </qti-response-declaration>
+    <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float"
+        normal-maximum="1" />
+    <qti-outcome-declaration identifier="MAXSCORE" cardinality="single" base-type="float">
+        <qti-default-value>
+            <qti-value>1</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-item-body>
+        <div class="grid-row">
+            <div class="col-12">
+                <h1>Match Interaction</h1>
+        <h2>Match countries and languages</h2>
+            </div>
+        </div>
+        <div class="grid-row">
+            <div class="col-12">
+                <p>The people working on the TAO platform come from a multitude of countries and you
+            get to hear a number of languages in the office every day.</p>
+        <p>Can you match the
+            cities below with the language most likely to be spoken there?</p>
+            </div>
+        </div>
+        <div class="grid-row">
+            <div class="col-6">
+                <qti-match-interaction response-identifier="match_languages_countries"
+                    shuffle="false" max-associations="5" min-associations="0">
+                    <qti-prompt />
+                    <qti-simple-match-set>
+                        <qti-simple-associable-choice identifier="french" fixed="false"
+                            show-hide="show" match-max="0" match-min="0">French</qti-simple-associable-choice>
+                        <qti-simple-associable-choice identifier="hungarian" fixed="false"
+                            show-hide="show" match-max="0" match-min="0">Hungarian</qti-simple-associable-choice>
+                        <qti-simple-associable-choice identifier="polish" fixed="false"
+                            show-hide="show" match-max="0" match-min="0">Polish</qti-simple-associable-choice>
+                        <qti-simple-associable-choice identifier="dutch" fixed="false"
+                            show-hide="show" match-max="0" match-min="0">Dutch</qti-simple-associable-choice>
+                        <qti-simple-associable-choice identifier="lithuanian" fixed="false"
+                            show-hide="show" match-max="0" match-min="0">Lithuanian</qti-simple-associable-choice>
+                    </qti-simple-match-set>
+                    <qti-simple-match-set>
+                        <qti-simple-associable-choice identifier="budapest" fixed="false"
+                            show-hide="show" match-max="0" match-min="0">Budapest</qti-simple-associable-choice>
+                        <qti-simple-associable-choice identifier="vilnius" fixed="false"
+                            show-hide="show" match-max="0" match-min="0">Vilnius</qti-simple-associable-choice>
+                        <qti-simple-associable-choice identifier="paris" fixed="false"
+                            show-hide="show" match-max="0" match-min="0">Paris</qti-simple-associable-choice>
+                        <qti-simple-associable-choice identifier="amsterdam" fixed="false"
+                            show-hide="show" match-max="0" match-min="0">Amsterdam</qti-simple-associable-choice>
+                        <qti-simple-associable-choice identifier="warsaw" fixed="false"
+                            show-hide="show" match-max="0" match-min="0">Warsaw</qti-simple-associable-choice>
+                    </qti-simple-match-set>
+                </qti-match-interaction>
+            </div>
+      <div
+                class="col-1" />
+      <div class="col-5">
+                <img src="/img/1a7e84cd5d2ef3cb19be3.jpg" alt="Lithuania, Trakai Island Castle"
+                    width="100%" type="image/jpeg" /> Lithuania, Trakai Island Castle, picture by <a
+                    href="https://commons.wikimedia.org/wiki/File:Trakai-Troki.jpg" target="_blank">
+            Julo</a> , released under <a
+                    href="https://creativecommons.org/licenses/by-sa/3.0/deed.en" target="_blank">CC
+            BY-SA 3.0</a> . </div>
+        </div>
+    </qti-item-body>
+    <qti-response-processing>
+        <qti-set-outcome-value identifier="SCORE">
+            <qti-base-value base-type="integer">0</qti-base-value>
+        </qti-set-outcome-value>
+        <qti-response-condition>
+            <qti-response-if>
+                <qti-match>
+                    <qti-variable identifier="match_languages_countries" />
+                    <qti-correct identifier="match_languages_countries" />
+                </qti-match>
+                <qti-set-outcome-value identifier="SCORE">
+                    <qti-sum>
+                        <qti-variable identifier="SCORE" />
+                        <qti-base-value base-type="integer">1</qti-base-value>
+                    </qti-sum>
+                </qti-set-outcome-value>
+            </qti-response-if>
+        </qti-response-condition>
+    </qti-response-processing>
+</qti-assessment-item>
