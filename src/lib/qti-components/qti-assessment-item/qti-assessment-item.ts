@@ -49,11 +49,27 @@ export class QtiAssessmentItem extends LitElement {
   _handleReadonlyChange = (_: boolean, readonly: boolean) =>
     this._interactionElements.forEach(ch => (ch.readonly = readonly));
 
-  @provide({ context: itemContext })
-  private _context: ItemContext = {
+  private _contextInternal: ItemContext = {
     identifier: this.getAttribute('identifier'),
     variables: itemContextVariables
   };
+
+  @provide({ context: itemContext })
+  private _contextProxy = new Proxy(this._contextInternal, {
+    set: (target, property, value) => {
+      target[property as keyof ItemContext] = value;
+      this._emit<{ itemContext: ItemContext }>('qti-item-context-changed', { itemContext: target });
+      return true;
+    }
+  });
+
+  get _context(): ItemContext {
+    return this._contextProxy;
+  }
+
+  set _context(value: ItemContext) {
+    Object.assign(this._contextProxy, value);
+  }
 
   public get variables(): VariableValue<string | string[] | null>[] {
     return this._context.variables.map(v => ({

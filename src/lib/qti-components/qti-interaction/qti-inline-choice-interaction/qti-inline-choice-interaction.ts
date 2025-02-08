@@ -123,7 +123,7 @@ export class QtiInlineChoiceInteraction extends Interaction {
 
   toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
     this.correctResponse = show ? responseVariable.value : '';
-    if (this.correctResponse === '') {
+    if (!this.correctResponse) {
       this.correctOption = '';
       return;
     }

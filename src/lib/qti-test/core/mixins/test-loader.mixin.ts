@@ -46,6 +46,9 @@ export const TestLoaderMixin = <T extends Constructor<TestBase>>(superClass: T) 
     }
 
     updated(changedProperties: Map<string | number | symbol, unknown>) {
+      if (changedProperties.has('navItemId')) {
+        this.sessionContext = { ...this.sessionContext, navItemId: this.navItemId };
+      }
       if (changedProperties.has('testContext')) {
         if (this.autoStoreRestoreContext) {
           setSessionData<Readonly<TestContext>>(this.autoStoreRestoreContext, this.testContext);

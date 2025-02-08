@@ -20,7 +20,7 @@
 	<qti-item-body>
 		<p>The International Air Transport Association assigns three-letter codes to identify
 			airports worldwide. For example, London Heathrow has code LHR.</p>
-		<qti-graphic-gap-match-interaction response-identifier="RESPONSE">
+		<qti-graphic-gap-match-interaction response-identifier="RESPONSE" max-associations="0">
 			<qti-prompt>Some of the labels on the following diagram are missing: can you identify
 				the correct three-letter codes for the unlabelled airports?</qti-prompt>
 			<img src="../img/ukairtags.png" alt="" width="206" height="280" />

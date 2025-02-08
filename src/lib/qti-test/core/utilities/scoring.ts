@@ -3,8 +3,10 @@ import { QtiTestVariablesExpression } from '../qti-assessment-test/qti-test-vari
 import { QtiSetOutcomeValueRule, QtiSumExpression, QtiOutcomeProcessingProcessor } from '../../../qti-components';
 
 import type { Element } from 'domhandler';
-import type { VariableDeclaration, QtiRuleBase, QtiExpressionBase } from '../../../qti-components';
+import type { QtiRuleBase } from '../../../qti-components';
 import type { TestContext } from '../../../exports/test.context';
+import type { VariableDeclaration } from '../../../exports/variables';
+import type { QtiExpressionBase } from '../../../exports/qti-expression';
 
 export const getRules = (
   $outcomeProcessing: Element,

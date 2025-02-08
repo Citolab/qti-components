@@ -64,7 +64,16 @@ export class QtiOutcomeDeclaration extends QtiVariableDeclaration {
       interpolationTable: this.interpolationTable,
       externalScored: this.externalScored
     };
+    // At runtime, outcome variables are instantiated as part of an item session.
+    // Their values may be initialized with a default value and/or set during response processing.
+    // If no default value is given in the declaration then the outcome variable is initialized to NULL unless the outcome is of a numeric type (integer or float) in which case it is initialized to 0.
     outcomeVariable.value = this.defaultValues(outcomeVariable);
+    if (
+      (outcomeVariable.value === null || outcomeVariable.value == undefined) &&
+      (outcomeVariable.baseType === 'integer' || outcomeVariable.baseType === 'float')
+    ) {
+      outcomeVariable.value = '0';
+    }
     this.dispatchEvent(
       new CustomEvent('qti-register-variable', {
         bubbles: true,
