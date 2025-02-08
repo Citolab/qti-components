@@ -31,14 +31,10 @@
 }
 
 .qti-display-flex {
-  display: -webkit-box;
-  display: flexbox;
   display: flex;
 }
 
 .qti-display-inline-flex {
-  display: -webkit-inline-box;
-  display: -ms-inline-flexbox;
   display: inline-flex;
 }
 
