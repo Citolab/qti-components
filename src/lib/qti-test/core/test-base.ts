@@ -53,9 +53,15 @@ export abstract class TestBase extends LitElement {
     this.addEventListener('qti-assessment-item-connected', (e: CustomEvent<QtiAssessmentItem>) => {
       this._updateItemInTestContext(e.detail);
     });
-    this.addEventListener('qti-item-context-changed', (e: CustomEvent<{ itemContext: ItemContext }>) => {
-      this._updateItemVariablesInTestContext(e.detail.itemContext.identifier, e.detail?.itemContext?.variables || []);
+    this.addEventListener('qti-outcome-changed', e => {
+      const assessmentitem = e.composedPath()[0] as QtiAssessmentItem;
+      this._updateItemVariablesInTestContext(assessmentitem.identifier, assessmentitem.variables);
     });
+    // TODO: find out why this event makes the RESPONSE variable empty
+    // this.addEventListener('qti-item-context-changed', (e: CustomEvent<{ itemContext: ItemContext }>) => {
+    //   console.log('qti-item-context-changed', e.detail);
+    //   this._updateItemVariablesInTestContext(e.detail.itemContext.identifier, e.detail?.itemContext?.variables || []);
+    // });
   }
 
   // get testContext(): TestContext {
