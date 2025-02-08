@@ -112,8 +112,6 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
               composed: true
             })
           );
-
-          console.info(`Loaded ${results.length} items successfully.`);
         });
       } catch (error) {
         console.error('Error loading items:', error);

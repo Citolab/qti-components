@@ -221,7 +221,7 @@ export class TestNavigation extends LitElement {
                   // this._testContext.view === 'candidate' &&
                   completionStatus === 'completed';
                 // || item.category === this.host._configContext?.infoItemCategory || false
-                const responseVariables = computedItem.variables?.filter(v => {
+                const responseVariables: ResponseVariable[] = computedItem.variables?.filter(v => {
                   if (v.type !== 'response') {
                     return false;
                   }
@@ -236,6 +236,25 @@ export class TestNavigation extends LitElement {
                 const sortedResponseVariables = responseVariables?.sort((a, b) =>
                   a.identifier.localeCompare(b.identifier)
                 );
+                const correctResponseArray = sortedResponseVariables.map(r => {
+                  if (r.mapping && r.mapping.mapEntries.length > 0) {
+                    return r.mapping.mapEntries
+                      .map(m => {
+                        return `${m.mapKey}=${m.mappedValue}pt `;
+                      })
+                      .join('&');
+                  }
+                  if (r.areaMapping && r.areaMapping.areaMapEntries.length > 0) {
+                    return r.areaMapping.areaMapEntries.map(m => {
+                      return `${m.coords} ${m.shape}=${m.mappedValue}`;
+                    });
+                  }
+                  if (r.correctResponse) {
+                    return Array.isArray(r.correctResponse) ? r.correctResponse.join('&') : r.correctResponse;
+                  }
+                  return [];
+                });
+                const correctResponse = correctResponseArray.join('&');
                 const response =
                   sortedResponseVariables.length === 0
                     ? ''
@@ -249,7 +268,6 @@ export class TestNavigation extends LitElement {
                         .join('#');
 
                 const index = categories.includes(this.configContext?.infoItemCategory) ? null : itemIndex++;
-
                 return {
                   ...computedItem,
                   //   rawscore, // not necessary for outside world
@@ -262,7 +280,8 @@ export class TestNavigation extends LitElement {
                   incorrect,
                   completed,
                   index,
-                  response
+                  correctResponse: correctResponse ? correctResponse : computedItem?.correctResponse || '',
+                  value: response
                 };
               })
             };

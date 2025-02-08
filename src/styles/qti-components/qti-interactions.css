@@ -922,6 +922,23 @@
       &[aria-ordervalue]::after {
         content: attr(aria-ordervalue) !important;
       }
+
+      &[aria-ordercorrectvalue] {
+        display: grid;
+        place-content: center;
+      }
+
+      /* When both attributes are present */
+      &[aria-ordercorrectvalue][aria-ordervalue]::after {
+        content: 'C=' attr(aria-ordercorrectvalue) '  R=' attr(aria-ordervalue) !important;
+        color: green;
+      }
+
+      /* When only aria-ordercorrectvalue is present */
+      &[aria-ordercorrectvalue]:not([aria-ordervalue])::after {
+        content: 'C=' attr(aria-ordercorrectvalue) !important;
+        color: green;
+      }
     }
 
     &.qti-selections-light {

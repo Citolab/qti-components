@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+    xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+    identifier="i677f91b17e11b20250109100657d9f7" title="Item 2" label="Select point interaction"
+    xml:lang="en-US" adaptive="false" time-dependent="false" tool-name="TAO"
+    tool-version="2024.11 LTS">
+    <qti-response-declaration identifier="RESPONSE" cardinality="multiple" base-type="point">
+        <qti-correct-response>
+            <qti-value>152 141</qti-value>
+            <qti-value>253 220</qti-value>
+            <qti-value>317 194</qti-value>
+        </qti-correct-response>
+    </qti-response-declaration>
+    <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float"
+        normal-maximum="0" normal-minimum="0" />
+    <qti-outcome-declaration identifier="MAXSCORE" cardinality="single" base-type="float">
+        <qti-default-value>
+            <qti-value>0</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-item-body>
+        <div class="grid-row">
+            <div class="col-12">
+                <qti-select-point-interaction response-identifier="RESPONSE" max-choices="0"
+                    min-choices="0" class="responsive">
+                    <img src="/img/map-us.png" alt="map" width="795" height="492" />
+                </qti-select-point-interaction>
+            </div>
+        </div>
+    </qti-item-body>
+    <qti-response-processing
+        template="https://purl.imsglobal.org/spec/qti/v3p0/rptemplates/map_response_point.xml" />
+</qti-assessment-item>

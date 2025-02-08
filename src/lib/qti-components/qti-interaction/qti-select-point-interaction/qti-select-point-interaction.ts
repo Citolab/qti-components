@@ -6,7 +6,7 @@ import { styleMap } from 'lit/directives/style-map.js';
 import { Interaction } from '../../../exports/interaction';
 import { positionShapes } from '../internal/hotspots/hotspot';
 
-import type { QtiAreaMapping } from '../../qti-response-processing';
+import type { QtiAreaMapEntry, QtiAreaMapping } from '../../qti-response-processing';
 import type { ResponseVariable } from '../../../exports/variables';
 
 @customElement('qti-select-point-interaction')
@@ -77,7 +77,7 @@ export class QtiSelectPointInteraction extends Interaction {
       this._points = [newPoint];
     } else {
       // If maxChoices > 1, add a new marker if within the limit
-      if (this._points.length < this.maxChoices) {
+      if (this.maxChoices === 0 || this._points.length < this.maxChoices) {
         this._points = [...this._points, newPoint];
       } else {
         // Optional: Notify the user to remove a marker before adding a new one
@@ -99,16 +99,39 @@ export class QtiSelectPointInteraction extends Interaction {
   };
 
   public toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
-    // Find the area mapping element from the response variable
-    const areaMapping = responseVariable.areaMapping as QtiAreaMapping;
-
-    if (!areaMapping) {
-      console.error('No area mapping found for the response variable.');
+    if (!show) {
+      this._correctAreas = [];
       return;
     }
-    // Get all map entries from the area mapping
-    const mapEntries = areaMapping.mapEntries;
-    this._correctAreas = show ? mapEntries.map(e => ({ coords: e.coords, shape: e.shape })) : [];
+    // Find the area mapping element from the response variable
+    const areaMapping = responseVariable.areaMapping as QtiAreaMapping;
+    let areaMapEntries: QtiAreaMapEntry[] = [];
+    if (!areaMapping || areaMapping.areaMapEntries.length === 0) {
+      if (responseVariable.correctResponse) {
+        const correctResponses = Array.isArray(responseVariable.correctResponse)
+          ? responseVariable.correctResponse
+          : [responseVariable.correctResponse];
+        if (correctResponses.length === 0 || correctResponses.find(r => r.split(' ').length < 2)) {
+          console.error('No valid correct responses found for the response variable.');
+          return null;
+        }
+        console.warn(
+          `No area mapping found for the response variable. Using the correct responses to display the correct response but it probably won't score correct.`
+        );
+        // Create a new area mapping object with the correct responses
+        areaMapEntries = correctResponses.map((r, i) => {
+          const coords = r.split(' ').join(',').concat(',10'); // Add a radius of 10 pixels to the coordinates
+          return { shape: 'circle', coords, defaultValue: 1, mappedValue: 1 };
+        });
+      } else {
+        console.error('No area mapping found for the response variable.');
+        return;
+      }
+    } else {
+      // Get all map entries from the area mapping
+      areaMapEntries = areaMapping.areaMapEntries;
+    }
+    this._correctAreas = areaMapEntries.map(e => ({ coords: e.coords, shape: e.shape }));
   }
 
   override updated(changedProperties: Map<string | number | symbol, unknown>) {
@@ -142,6 +165,13 @@ export class QtiSelectPointInteraction extends Interaction {
             // point are based on the original image size, so we need calculate the percentage based on the original image
             const leftPercentage = (x / (this._imageWidthOrginal || 1)) * 100;
             const topPercentage = (y / (this._imageHeightOrginal || 1)) * 100;
+
+            // Base size is 1rem (16px), scaled proportionally to the image's current size
+            // Base size is 1rem in the original image size
+            const baseSize = 16; // Assuming 1rem = 16px
+            const widthPercentage = (baseSize / (this._imageWidthOrginal || 1)) * 100;
+            const heightPercentage = (baseSize / (this._imageHeightOrginal || 1)) * 100;
+
             return html`
               <button
                 part="point"
@@ -150,7 +180,13 @@ export class QtiSelectPointInteraction extends Interaction {
                   position: 'absolute',
                   transform: 'translate(-50%, -50%)',
                   left: `${leftPercentage}%`,
-                  top: `${topPercentage}%`
+                  top: `${topPercentage}%`,
+                  width: `min(${widthPercentage}%, 1rem)`,
+                  height: `min(${heightPercentage}%, 1rem)`,
+                  minWidth: `min(${widthPercentage}%, 1rem)`,
+                  minHeight: `min(${heightPercentage}%, 1rem)`,
+                  borderRadius: '50%', // Ensures round shape
+                  background: 'red' // Example styling, adjust as needed
                 })}
                 aria-label="Remove point at ${point}"
                 @click=${(e: Event) => {
@@ -166,7 +202,7 @@ export class QtiSelectPointInteraction extends Interaction {
         ${repeat(
           this._correctAreas?.filter(area => area),
           area => area,
-          (area, _) =>
+          (area, i) =>
             html`<div
               style=${styleMap({
                 position: 'absolute',
@@ -175,6 +211,7 @@ export class QtiSelectPointInteraction extends Interaction {
                 opacity: '0.5'
               })}
               data-coord="${area.coords}"
+              alt=${`correct-response-${i + 1}`}
               data-shape="${area.shape}"
             ></div>`
         )}

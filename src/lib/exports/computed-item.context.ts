@@ -9,6 +9,7 @@ export type ComputedItemContext = {
   adaptive?: boolean;
   timeDependent?: boolean;
   title?: string;
+  correctResponse?: string;
   value?: Readonly<string | string[]>;
 };
 

@@ -80,12 +80,42 @@ export class QtiResponseDeclaration extends QtiVariableDeclaration {
     return result;
   }
 
-  private get mapping() {
-    return this.querySelector('qti-mapping') as QtiMapping;
+  private get mapping(): QtiMapping {
+    const mappingElement = this.querySelector('qti-mapping');
+    return {
+      defaultValue: Number(mappingElement?.getAttribute('default-value')) || 0,
+      lowerBound: Number(mappingElement?.getAttribute('lower-bound')) || 0,
+      upperBound: Number(mappingElement?.getAttribute('upper-bound')) || 0,
+      mapEntries: Array.from(mappingElement?.querySelectorAll('qti-map-entry') || []).map(el => ({
+        mapKey: el.getAttribute('map-key') || '',
+        mappedValue: Number(el.getAttribute('mapped-value')) || 0,
+        caseSensitive: el.hasAttribute('case-sensitive') ? el.getAttribute('case-sensitive') !== 'false' : true
+      }))
+    };
   }
 
-  private get areaMapping() {
-    return this.querySelector('qti-area-mapping') as QtiAreaMapping;
+  private get areaMapping(): QtiAreaMapping {
+    const areaMappingElement = this.querySelector('qti-area-mapping') as HTMLElement;
+
+    const defaultValue = Number(areaMappingElement?.getAttribute('default-value')) || 0;
+    const lowerBound = Number(areaMappingElement?.getAttribute('lower-bound')) || 0;
+    const upperBound = Number(areaMappingElement?.getAttribute('upper-bound')) || 0;
+
+    const areaMapEntries = Array.from(areaMappingElement?.querySelectorAll('qti-area-map-entry') || []).map(
+      (el: HTMLElement) => ({
+        shape: (el.getAttribute('shape') as 'default' | 'circle' | 'rect' | 'ellipse' | 'poly') || 'default',
+        coords: el.getAttribute('coords') || '',
+        mappedValue: Number(el.getAttribute('mapped-value')) || 0,
+        defaultValue: Number(el.getAttribute('default-value')) || 0
+      })
+    );
+
+    return {
+      defaultValue,
+      lowerBound,
+      upperBound,
+      areaMapEntries
+    };
   }
 }
 

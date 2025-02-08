@@ -44,10 +44,13 @@ export class QtiItem extends LitElement {
 
   private _handleAssessmentItemConnected(e: CustomEvent<QtiAssessmentItem>) {
     this._qtiAssessmentItem = e.detail;
-    this.computedContext = {
-      identifier: e.detail.identifier,
-      title: e.detail.title
-    };
+    this.computedContext =
+      this.computedContext?.identifier === e.detail.identifier
+        ? { ...this.computedContext, title: e.detail.title }
+        : {
+            identifier: e.detail.identifier,
+            title: e.detail.title
+          };
     this._updateItemVariablesInTestContext(e.detail.identifier, e.detail.variables || []);
   }
 
@@ -69,7 +72,7 @@ export class QtiItem extends LitElement {
     const incorrect = score !== undefined && !isNaN(score) && score <= 0;
     const completed = completionStatus === 'completed';
     // || item.category === this.host._configContext?.infoItemCategory || false
-    const responseVariables = variables?.filter(v => {
+    const responseVariables: ResponseVariable[] = variables?.filter(v => {
       if (v.type !== 'response') {
         return false;
       }
@@ -80,6 +83,7 @@ export class QtiItem extends LitElement {
         return true;
       }
     });
+
     // sort the response variables by the order of the string: identifier
     const sortedResponseVariables = responseVariables?.sort((a, b) => a.identifier.localeCompare(b.identifier));
     const response =
@@ -93,12 +97,33 @@ export class QtiItem extends LitElement {
               return v.value;
             })
             .join('#');
+    const correctResponseArray = sortedResponseVariables.map(r => {
+      if (r.mapping && r.mapping.mapEntries.length > 0) {
+        return r.mapping.mapEntries
+          .map(m => {
+            return `${m.mapKey}=${m.mappedValue}pt `;
+          })
+          .join('&');
+      }
+      if (r.areaMapping && r.areaMapping.areaMapEntries.length > 0) {
+        return r.areaMapping.areaMapEntries.map(m => {
+          return `${m.coords} ${m.shape}=${m.mappedValue}`;
+        });
+      }
+      if (r.correctResponse) {
+        return Array.isArray(r.correctResponse) ? r.correctResponse.join('&') : r.correctResponse;
+      }
+      return [];
+    });
+
+    const correctResponse = correctResponseArray.join('&');
     this.computedContext = {
       ...this.computedContext,
       identifier,
       correct,
       incorrect,
       completed,
+      correctResponse: correctResponse ? correctResponse : this.computedContext?.correctResponse || '',
       value: response
     };
   }
