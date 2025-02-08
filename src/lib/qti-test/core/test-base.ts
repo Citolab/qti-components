@@ -5,7 +5,7 @@ import { state } from 'lit/decorators.js';
 import { testContext } from '../../exports/test.context';
 import { type SessionContext, sessionContext } from '../../exports/session.context';
 
-import type { ItemContext } from '../../exports/item.context';
+// import type { ItemContext } from '../../exports/item.context';
 import type { TestContext } from '../../exports/test.context';
 import type { QtiAssessmentTest } from './qti-assessment-test';
 import type { QtiAssessmentItem } from '../../qti-components/';
