@@ -119,7 +119,7 @@ export class QtiSelectPointInteraction extends Interaction {
           `No area mapping found for the response variable. Using the correct responses to display the correct response but it probably won't score correct.`
         );
         // Create a new area mapping object with the correct responses
-        areaMapEntries = correctResponses.map((r, i) => {
+        areaMapEntries = correctResponses.map(r => {
           const coords = r.split(' ').join(',').concat(',10'); // Add a radius of 10 pixels to the coordinates
           return { shape: 'circle', coords, defaultValue: 1, mappedValue: 1 };
         });
@@ -191,7 +191,6 @@ export class QtiSelectPointInteraction extends Interaction {
                 aria-label="Remove point at ${point}"
                 @click=${(e: Event) => {
                   e.stopPropagation();
-                  console.log('click');
                   this._points = this._points.filter((_, i) => i !== index);
                   this.saveResponse(this._points);
                 }}

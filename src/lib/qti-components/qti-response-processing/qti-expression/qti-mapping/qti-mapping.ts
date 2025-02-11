@@ -1,7 +1,7 @@
 export type QtiMapping = {
   defaultValue: number;
-  lowerBound: number;
-  upperBound: number;
+  lowerBound?: number;
+  upperBound?: number;
   mapEntries: QtiMapEntry[];
 };
 

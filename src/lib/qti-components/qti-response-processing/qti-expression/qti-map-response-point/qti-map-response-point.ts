@@ -34,7 +34,7 @@ export class QtiMapResponsePoint extends QtiExpression<number> {
     const mappedAreas = new Set<string>();
 
     for (const candidateResponse of candidateResponses) {
-      for (const entry of areaMapping.mapEntries) {
+      for (const entry of areaMapping.areaMapEntries) {
         if (mappedAreas.has(entry.coords)) {
           continue; // Skip areas that have already been mapped
         }

@@ -29,7 +29,7 @@ export class TestShowCorrectResponse extends LitElement {
 
   private _previousActiveItem?: unknown; // Store previous active item reference
 
-  updated(changedProperties: Map<string | number | symbol, unknown>) {
+  updated(_changedProperties: Map<string | number | symbol, unknown>) {
     const activeItem = this.computedContext?.testParts
       .flatMap(testPart => testPart.sections.flatMap(section => section.items))
       .find(item => item.active);
@@ -48,6 +48,7 @@ export class TestShowCorrectResponse extends LitElement {
   private _toggleState() {
     if (this.disabled) return;
     this.shown = !this.shown;
+
     this.dispatchEvent(
       new CustomEvent('test-show-correct-response', {
         detail: this.shown,

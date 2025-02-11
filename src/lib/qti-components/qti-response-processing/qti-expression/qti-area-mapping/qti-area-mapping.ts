@@ -1,7 +1,7 @@
 export type QtiAreaMapping = {
   defaultValue: number;
-  lowerBound: number;
-  upperBound: number;
+  lowerBound?: number;
+  upperBound?: number;
   areaMapEntries: QtiAreaMapEntry[];
 };
 

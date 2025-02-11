@@ -5,6 +5,7 @@ import { state } from 'lit/decorators.js';
 import { testContext } from '../../exports/test.context';
 import { type SessionContext, sessionContext } from '../../exports/session.context';
 
+// import type { ItemContext } from '../../exports/item.context';
 import type { ItemContext } from '../../exports/item.context';
 import type { TestContext } from '../../exports/test.context';
 import type { QtiAssessmentTest } from './qti-assessment-test';
@@ -21,6 +22,8 @@ export abstract class TestBase extends LitElement {
   public sessionContext: Readonly<SessionContext> = {};
 
   testElement: QtiAssessmentTest;
+
+  private itemContextChangedListener?: (e: CustomEvent<{ itemContext: ItemContext }>) => void;
 
   constructor() {
     super();
@@ -50,11 +53,26 @@ export abstract class TestBase extends LitElement {
       this.testContext = { ...this.testContext, items };
     });
 
-    this.addEventListener('qti-assessment-item-connected', (e: CustomEvent<QtiAssessmentItem>) => {
-      this._updateItemInTestContext(e.detail);
-    });
-    this.addEventListener('qti-item-context-changed', (e: CustomEvent<{ itemContext: ItemContext }>) => {
-      this._updateItemVariablesInTestContext(e.detail.itemContext.identifier, e.detail?.itemContext?.variables || []);
+    this.addEventListener('qti-assessment-item-connected', (connectedEvent: CustomEvent<QtiAssessmentItem>) => {
+      this._updateItemInTestContext(connectedEvent.detail);
+
+      // Remove the previous listener if it exists
+      if (this.itemContextChangedListener) {
+        this.removeEventListener('qti-item-context-changed', this.itemContextChangedListener);
+      }
+
+      // Define a new listener and store its reference
+      this.itemContextChangedListener = (e: CustomEvent<{ itemContext: ItemContext }>) => {
+        if (e.detail.itemContext.identifier !== connectedEvent.detail.identifier) {
+          this.removeEventListener('qti-item-context-changed', this.itemContextChangedListener);
+          return;
+        }
+        this._updateItemVariablesInTestContext(e.detail.itemContext.identifier, e.detail?.itemContext?.variables || []);
+      };
+      // Add the new event listener.
+      // This should be done after qti-assessment-item-connected event. Because the item context is merged here.
+      // If it's handled before, responses will be lost.
+      this.addEventListener('qti-item-context-changed', this.itemContextChangedListener);
     });
   }
 
