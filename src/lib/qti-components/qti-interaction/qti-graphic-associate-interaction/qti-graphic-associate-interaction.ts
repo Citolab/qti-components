@@ -18,7 +18,7 @@ export class QtiGraphicAssociateInteraction extends Interaction {
   private startPoint = null;
   private endPoint = null;
   @state() private _lines = [];
-  @state() private startCoord: { x: any; y: any };
+  @state() private startCoord: { x: number; y: number };
   @state() private mouseCoord: { x: number; y: number };
   @queryAssignedElements({ selector: 'img' }) private grImage;
 
@@ -56,10 +56,10 @@ export class QtiGraphicAssociateInteraction extends Interaction {
             (line, index) => svg`
               <line
                 part="line"
-                x1=${parseInt(this.querySelector<SVGLineElement>('[identifier=' + line.split(' ')[0] + ']').style.left)}
-                y1=${parseInt(this.querySelector<SVGLineElement>('[identifier=' + line.split(' ')[0] + ']').style.top)}
-                x2=${parseInt(this.querySelector<SVGLineElement>('[identifier=' + line.split(' ')[1] + ']').style.left)}
-                y2=${parseInt(this.querySelector<SVGLineElement>('[identifier=' + line.split(' ')[1] + ']').style.top)}
+                x1=${parseInt(this.querySelector<SVGLineElement>(`[identifier=${line.split(' ')[0]}]`).style.left)}
+                y1=${parseInt(this.querySelector<SVGLineElement>(`[identifier=${line.split(' ')[0]}]`).style.top)}
+                x2=${parseInt(this.querySelector<SVGLineElement>(`[identifier=${line.split(' ')[1]}]`).style.left)}
+                y2=${parseInt(this.querySelector<SVGLineElement>(`[identifier=${line.split(' ')[1]}]`).style.top)}
                 stroke="red"
                 stroke-width="3"
                 @click=${(e: Event) => {
@@ -95,15 +95,16 @@ export class QtiGraphicAssociateInteraction extends Interaction {
     positionShapes(shape, coordsNumber, img, hotspot);
   }
 
-  override firstUpdated(e): void {
-    super.firstUpdated(e);
-
+  override firstUpdated(): void {
     this.hotspots = this.querySelectorAll('qti-associable-hotspot');
 
     document.addEventListener('mousemove', event => {
+      const rect = this.grImage[0].getBoundingClientRect();
+      const scaleX = this.grImage[0].naturalWidth / rect.width;
+      const scaleY = this.grImage[0].naturalHeight / rect.height;
       this.mouseCoord = {
-        x: event.clientX - this.grImage[0].getBoundingClientRect().left,
-        y: event.clientY - this.grImage[0].getBoundingClientRect().top
+        x: (event.clientX - rect.left) * scaleX,
+        y: (event.clientY - rect.top) * scaleY
       };
     });
 
@@ -116,15 +117,15 @@ export class QtiGraphicAssociateInteraction extends Interaction {
           this.startPoint = event.target;
 
           this.startCoord = {
-            x: this.startPoint.getAttribute('coords').split(',')[0],
-            y: this.startPoint.getAttribute('coords').split(',')[1]
+            x: parseInt(this.startPoint.getAttribute('coords').split(',')[0]),
+            y: parseInt(this.startPoint.getAttribute('coords').split(',')[1])
           };
         } else if (!this.endPoint) {
           this.endPoint = event.target;
 
           this._lines = [
             ...this._lines,
-            this.startPoint.getAttribute('identifier') + ' ' + this.endPoint.getAttribute('identifier')
+            `${this.startPoint.getAttribute('identifier')} ${this.endPoint.getAttribute('identifier')}`
           ];
           this.saveResponse(this._lines);
           this.startPoint = null;
@@ -133,7 +134,8 @@ export class QtiGraphicAssociateInteraction extends Interaction {
       });
     });
   }
-  override disconnectedCallback() {
+
+  override disconnectedCallback(): void {
     super.disconnectedCallback();
     this.removeEventListener('qti-register-hotspot', this.positionHotspotOnRegister);
   }

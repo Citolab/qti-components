@@ -336,3 +336,58 @@ export const GraphicOrder: Story = {
     });
   }
 };
+
+export const GraphicAssociate: Story = {
+  args: {
+    'item-url': '/qti-test-package/items/graphic_associate.xml' // Set the new item URL here
+  },
+  render: args =>
+    html` <qti-item>
+      <div>
+        <item-container style="display: block;width: 400px; height: 350px;" item-url=${args['item-url']}>
+          <template>
+            <style>
+              qti-assessment-item {
+                padding: 1rem;
+                display: block;
+                aspect-ratio: 4 / 3;
+                width: 800px;
+
+                border: 2px solid blue;
+                transform: scale(0.75);
+                transform-origin: top left;
+              }
+            </style>
+          </template>
+        </item-container>
+        <item-show-correct-response></item-show-correct-response>
+      </div>
+    </qti-item>`,
+  play: async ({ canvasElement, step }) => {
+    // wait for qti-simple-choices to be rendered
+    const canvas = within(canvasElement);
+    await waitFor(
+      () => {
+        const interaction = canvasElement
+          .querySelector('item-container')
+          .shadowRoot.querySelector('qti-graphic-associate-interaction');
+        if (!interaction) {
+          throw new Error('interaction not loaded yet');
+        }
+      },
+      { timeout: 5000 }
+    );
+    const itemContainer = canvasElement.querySelector('item-container');
+    const interaction = itemContainer.shadowRoot.querySelector('qti-graphic-associate-interaction');
+    const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0];
+    // await step('Click on the Show Correct button', async () => {
+    //   await showCorrectButton.click();
+    //   const hotspotChoice = interaction.querySelectorAll('qti-hotspot-choice');
+    //   // const get after content
+    //   expect(window.getComputedStyle(hotspotChoice[0], ':after').content).toBe('"C=1"');
+    //   expect(window.getComputedStyle(hotspotChoice[1], ':after').content).toBe('"C=4"');
+    //   expect(window.getComputedStyle(hotspotChoice[2], ':after').content).toBe('"C=2"');
+    //   expect(window.getComputedStyle(hotspotChoice[3], ':after').content).toBe('"C=3"');
+    // });
+  }
+};
