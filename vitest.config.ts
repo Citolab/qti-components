@@ -21,5 +21,15 @@ export default defineConfig({
     onConsoleLog(log: string, type: 'stdout' | 'stderr'): boolean | void {
       return !log.includes('Lit is in dev mode');
     }
+  },
+  server: {
+    fs: {
+      allow: ['public'] // Allows serving static files from 'public'
+    },
+    open: false,
+    strictPort: true
+  },
+  define: {
+    'process.env.PUBLIC_URL': JSON.stringify('/public')
   }
 });

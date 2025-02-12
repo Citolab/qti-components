@@ -5,6 +5,7 @@ import { consume } from '@lit/context';
 import * as styles from './styles';
 import { computedItemContext } from '../../../exports/computed-item.context';
 
+import type { ResponseVariable } from '../../../exports/variables';
 import type { ComputedItemContext } from '../../../exports/computed-item.context';
 
 @customElement('item-show-correct-response')
@@ -27,8 +28,13 @@ export class ItemShowCorrectResponse extends LitElement {
   @property({ type: String }) hideCorrectText = 'Hide correct response';
   @property({ type: String }) noCorrectResponseText = 'No correct response specified';
 
+  private _hasCorrectResponse = false; // correct response is removed on certain point
+
   updated() {
-    this.disabled = !this.computedContext?.correctResponse; // Disable when no correct response
+    if (!this._hasCorrectResponse) {
+      this._hasCorrectResponse = this.computedContext?.variables?.some(v => (v as ResponseVariable)?.correctResponse);
+    }
+    this.disabled = !this._hasCorrectResponse;
   }
 
   private _toggleState() {

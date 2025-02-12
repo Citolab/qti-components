@@ -6,7 +6,7 @@ import { computedItemContext } from '../../exports/computed-item.context';
 
 import type { QtiAssessmentItem } from '../../qti-components';
 import type { ItemContext } from '../../exports/item.context';
-import type { ResponseVariable, VariableDeclaration } from '../../exports/variables';
+import type { VariableDeclaration } from '../../exports/variables';
 import type { ComputedItemContext } from '../../exports/computed-item.context';
 
 /**
@@ -45,13 +45,15 @@ export class QtiItem extends LitElement {
   private _handleAssessmentItemConnected(e: CustomEvent<QtiAssessmentItem>) {
     this._qtiAssessmentItem = e.detail;
     this.computedContext =
-      this.computedContext?.identifier === e.detail.identifier
-        ? { ...this.computedContext, title: e.detail.title }
-        : {
-            identifier: e.detail.identifier,
-            title: e.detail.title
-          };
-    this._updateItemVariablesInTestContext(e.detail.identifier, e.detail.variables || []);
+      this.computedContext?.identifier === this._qtiAssessmentItem.identifier
+        ? { ...this.computedContext, title: this._qtiAssessmentItem.title }
+        : ({
+            identifier: this._qtiAssessmentItem.identifier,
+            title: this._qtiAssessmentItem.title,
+            adaptive: this._qtiAssessmentItem.getAttribute('adaptive')?.toLowerCase() === 'true' || false,
+            variables: this._qtiAssessmentItem.variables
+          } as ComputedItemContext);
+    this._updateItemVariablesInTestContext(this._qtiAssessmentItem.identifier, e.detail.variables || []);
   }
 
   private _handleTestShowCorrectResponse(e: CustomEvent<boolean>) {
@@ -71,60 +73,13 @@ export class QtiItem extends LitElement {
     const correct = score !== undefined && !isNaN(score) && score > 0;
     const incorrect = score !== undefined && !isNaN(score) && score <= 0;
     const completed = completionStatus === 'completed';
-    // || item.category === this.host._configContext?.infoItemCategory || false
-    const responseVariables: ResponseVariable[] = variables?.filter(v => {
-      if (v.type !== 'response') {
-        return false;
-      }
-      if (v.identifier.toLowerCase().startsWith('response')) {
-        return true;
-      }
-      if ((v as ResponseVariable).correctResponse) {
-        return true;
-      }
-    });
-
-    // sort the response variables by the order of the string: identifier
-    const sortedResponseVariables = responseVariables?.sort((a, b) => a.identifier.localeCompare(b.identifier));
-    const response =
-      sortedResponseVariables.length === 0
-        ? ''
-        : sortedResponseVariables
-            ?.map(v => {
-              if (Array.isArray(v.value)) {
-                return v.value.join('&');
-              }
-              return v.value;
-            })
-            .join('#');
-    const correctResponseArray = sortedResponseVariables.map(r => {
-      if (r.mapping && r.mapping.mapEntries.length > 0) {
-        return r.mapping.mapEntries
-          .map(m => {
-            return `${m.mapKey}=${m.mappedValue}pt `;
-          })
-          .join('&');
-      }
-      if (r.areaMapping && r.areaMapping.areaMapEntries.length > 0) {
-        return r.areaMapping.areaMapEntries.map(m => {
-          return `${m.coords} ${m.shape}=${m.mappedValue}`;
-        });
-      }
-      if (r.correctResponse) {
-        return Array.isArray(r.correctResponse) ? r.correctResponse.join('&') : r.correctResponse;
-      }
-      return [];
-    });
-
-    const correctResponse = correctResponseArray.join('&');
     this.computedContext = {
       ...this.computedContext,
       identifier,
       correct,
       incorrect,
       completed,
-      correctResponse: correctResponse ? correctResponse : this.computedContext?.correctResponse || '',
-      value: response
+      variables
     };
   }
 

@@ -8,8 +8,8 @@ import { computedContext } from '../../exports/computed.context';
 
 import type { QtiAssessmentItem } from '../../qti-components';
 import type { ItemContext } from '../../exports/item.context';
-import type { OutcomeVariable, ResponseVariable } from '../../exports/variables';
-import type { ComputedContext } from '../../exports/computed.context';
+import type { OutcomeVariable } from '../../exports/variables';
+import type { ComputedContext, ComputedItem } from '../../exports/computed.context';
 import type { QtiAssessmentItemRef, QtiAssessmentSection, QtiAssessmentTest, QtiTestPart } from '../core';
 import type { ConfigContext } from '../../exports/config.context';
 import type { SessionContext } from '../../exports/session.context';
@@ -96,15 +96,10 @@ export class TestNavigation extends LitElement {
                   item.identifier === updatedItemContext.identifier
                     ? updatedItemContext
                     : this._testContext?.items.find(i => i.identifier === item.identifier);
-                let computedItem;
-
-                if (this.initContext) {
-                  const initContext = this.initContext.find(i => i.identifier === item.identifier);
-                  computedItem = { ...item, ...itemContext, ...initContext };
-                } else {
-                  computedItem = { ...item, ...itemContext };
-                }
-
+                const computedItem: ItemContext & { [key: string]: any; identifier: string } = {
+                  ...item,
+                  ...itemContext
+                };
                 const rawscore = computedItem.variables?.find(vr => vr.identifier == 'SCORE')?.value;
                 const score = parseInt(rawscore?.toString());
                 const completionStatus = computedItem.variables?.find(v => v.identifier === 'completionStatus')?.value;
@@ -122,68 +117,24 @@ export class TestNavigation extends LitElement {
                   // this._testContext.view === 'candidate' &&
                   completionStatus === 'completed';
                 // || item.category === this.host._configContext?.infoItemCategory || false
-                const responseVariables: ResponseVariable[] = computedItem.variables?.filter(v => {
-                  if (v.type !== 'response') {
-                    return false;
-                  }
-                  if (v.identifier.toLowerCase().startsWith('response')) {
-                    return true;
-                  }
-                  if ((v as ResponseVariable).correctResponse) {
-                    return true;
-                  }
-                });
-                // sort the response variables by the order of the string: identifier
-                const sortedResponseVariables = responseVariables?.sort((a, b) =>
-                  a.identifier.localeCompare(b.identifier)
-                );
-                const correctResponseArray = sortedResponseVariables.map(r => {
-                  if (r.mapping && r.mapping.mapEntries.length > 0) {
-                    return r.mapping.mapEntries
-                      .map(m => {
-                        return `${m.mapKey}=${m.mappedValue}pt `;
-                      })
-                      .join('&');
-                  }
-                  if (r.areaMapping && r.areaMapping.areaMapEntries.length > 0) {
-                    return r.areaMapping.areaMapEntries.map(m => {
-                      return `${m.coords} ${m.shape}=${m.mappedValue}`;
-                    });
-                  }
-                  if (r.correctResponse) {
-                    return Array.isArray(r.correctResponse) ? r.correctResponse.join('&') : r.correctResponse;
-                  }
-                  return [];
-                });
-                const correctResponse = correctResponseArray.join('&');
-                const response =
-                  sortedResponseVariables.length === 0
-                    ? ''
-                    : sortedResponseVariables
-                        ?.map(v => {
-                          if (Array.isArray(v.value)) {
-                            return v.value.join('&');
-                          }
-                          return v.value;
-                        })
-                        .join('#');
 
                 const index = categories.includes(this.configContext?.infoItemCategory) ? null : itemIndex++;
+                const base = this.initContext
+                  ? this.initContext.find(i => i.identifier === computedItem.identifier)
+                  : {};
                 return {
-                  ...computedItem,
-                  //   rawscore, // not necessary for outside world
-                  //   score, // not necessary for outside world
-                  //   completionStatus, // not necessary for outside world
-                  //   categories, // not necessary for outside world
+                  ...base,
+                  identifier: computedItem.identifier,
+                  adaptive: computedItem.adaptive,
+                  title: computedItem.title,
                   type,
                   active,
                   correct,
                   incorrect,
                   completed,
                   index,
-                  correctResponse: correctResponse ? correctResponse : computedItem?.correctResponse || '',
-                  value: response
-                };
+                  variables: computedItem.variables
+                } as ComputedItem;
               })
             };
           })
@@ -246,7 +197,7 @@ export class TestNavigation extends LitElement {
                   active: false,
                   identifier: item.identifier,
                   href: item.href
-                };
+                } as ComputedItem;
               })
             };
           })

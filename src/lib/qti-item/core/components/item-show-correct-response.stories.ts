@@ -28,8 +28,8 @@ const meta: Meta<typeof ItemContainer & { 'item-url': string }> = {
 export default meta;
 
 export const Default: Story = {
-  render: args =>
-    html` <qti-item>
+  render: args => {
+    return html`<qti-item>
       <!-- <div style="display: flex; flex-direction: column; gap: 1rem;"> -->
       <item-container style="width: 400px; height: 350px; display: block;" item-url=${args['item-url']}>
         <template>
@@ -49,7 +49,9 @@ export const Default: Story = {
 
       <item-show-correct-response ${spread(args)}></item-show-correct-response>
       <!-- </div> -->
-    </qti-item>`,
+    </qti-item>`;
+  },
+
   play: async ({ canvasElement, step }) => {
     // wait for qti-simple-choice to be rendered
     const canvas = within(canvasElement);
