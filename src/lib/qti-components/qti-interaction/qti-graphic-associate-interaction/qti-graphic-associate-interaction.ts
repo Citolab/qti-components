@@ -9,6 +9,7 @@ import styles from './qti-graphic-associate-interaction.styles';
 
 import type { QtiHotspotChoice } from '../qti-hotspot-choice';
 import type { CSSResultGroup } from 'lit';
+import type { ResponseVariable } from '../../../exports/variables';
 
 @customElement('qti-graphic-associate-interaction')
 export class QtiGraphicAssociateInteraction extends Interaction {
@@ -18,6 +19,7 @@ export class QtiGraphicAssociateInteraction extends Interaction {
   private startPoint = null;
   private endPoint = null;
   @state() private _lines = [];
+  @state() private _correctLines = [];
   @state() private startCoord: { x: number; y: number };
   @state() private mouseCoord: { x: number; y: number };
   @queryAssignedElements({ selector: 'img' }) private grImage;
@@ -29,6 +31,7 @@ export class QtiGraphicAssociateInteraction extends Interaction {
 
   reset(): void {
     this._lines = [];
+    this._correctLines = [];
   }
   validate(): boolean {
     return this._lines.length > 0;
@@ -40,6 +43,21 @@ export class QtiGraphicAssociateInteraction extends Interaction {
   }
   get value(): string | string[] {
     return this._lines;
+  }
+
+  public toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
+    if (!show) {
+      this._correctLines = [];
+      return;
+    }
+    if (!responseVariable.correctResponse) {
+      console.error('No correct response found for this interaction.');
+      return;
+    }
+    const correctResponses = Array.isArray(responseVariable.correctResponse)
+      ? responseVariable.correctResponse
+      : [responseVariable.correctResponse];
+    this._correctLines = correctResponses;
   }
 
   override render() {
@@ -67,6 +85,22 @@ export class QtiGraphicAssociateInteraction extends Interaction {
                   this._lines = this._lines.filter((_, i) => i !== index);
                   this.saveResponse(this._lines);
                 }}
+              />
+            `
+          )}
+          ${repeat(
+            this._correctLines,
+            line => line,
+            (line, _index) => svg`
+              <line
+                part="correct-line"
+                x1=${parseInt(this.querySelector<SVGLineElement>(`[identifier=${line.split(' ')[0]}]`).style.left)}
+                y1=${parseInt(this.querySelector<SVGLineElement>(`[identifier=${line.split(' ')[0]}]`).style.top)}
+                x2=${parseInt(this.querySelector<SVGLineElement>(`[identifier=${line.split(' ')[1]}]`).style.left)}
+                y2=${parseInt(this.querySelector<SVGLineElement>(`[identifier=${line.split(' ')[1]}]`).style.top)}
+                stroke="green"
+                stroke-width="3"
+                stroke-dasharray="5,5"
               />
             `
           )}

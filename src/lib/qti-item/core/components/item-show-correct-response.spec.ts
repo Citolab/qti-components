@@ -10,7 +10,8 @@ import meta, {
   MultipleResponse as MultipleResponseStory,
   SelectPoint as SelectPointStory,
   SelectPointMultipleNoAreaMapping as SelectPointMultipleNoAreaMappingStory,
-  GraphicOrder as GraphicOrderStory
+  GraphicOrder as GraphicOrderStory,
+  GraphicAssociate as GraphicAssociateStory
 } from './item-show-correct-response.stories';
 
 import '../../../qti-components';
@@ -24,6 +25,7 @@ const multipleResponseStory = composeStory(MultipleResponseStory, meta);
 const selectPointStory = composeStory(SelectPointStory, meta);
 const selectPointMultipleNoAreaMappingStory = composeStory(SelectPointMultipleNoAreaMappingStory, meta);
 const graphicOrderStory = composeStory(GraphicOrderStory, meta);
+const graphicAssociateStory = composeStory(GraphicAssociateStory, meta);
 
 // Helper function to resolve loaders and render story
 async function setupStory(story, canvasElement) {
@@ -81,5 +83,10 @@ describe.sequential('ItemShowCorrectResponse Suite', () => {
   test('show correct response - GraphicOrder', async () => {
     await setupStory(GraphicOrderStory, canvasElement);
     await graphicOrderStory.play({ canvasElement });
+  });
+
+  test('show correct response - GraphicAssociate', async () => {
+    await setupStory(GraphicAssociateStory, canvasElement);
+    await graphicAssociateStory.play({ canvasElement });
   });
 });
