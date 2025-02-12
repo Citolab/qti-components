@@ -305,5 +305,32 @@ export const GraphicOrder: Story = {
         </item-container>
         <item-show-correct-response></item-show-correct-response>
       </div>
-    </qti-item>`
+    </qti-item>`,
+  play: async ({ canvasElement, step }) => {
+    // wait for qti-simple-choices to be rendered
+    const canvas = within(canvasElement);
+    await waitFor(
+      () => {
+        const interaction = canvasElement
+          .querySelector('item-container')
+          .shadowRoot.querySelector('qti-graphic-order-interaction');
+        if (!interaction) {
+          throw new Error('interaction not loaded yet');
+        }
+      },
+      { timeout: 5000 }
+    );
+    const itemContainer = canvasElement.querySelector('item-container');
+    const interaction = itemContainer.shadowRoot.querySelector('qti-graphic-order-interaction');
+    const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0];
+    await step('Click on the Show Correct button', async () => {
+      await showCorrectButton.click();
+      const hotspotChoice = interaction.querySelectorAll('qti-hotspot-choice');
+      // const get after content
+      expect(window.getComputedStyle(hotspotChoice[0], ':after').content).toBe('"C=1"');
+      expect(window.getComputedStyle(hotspotChoice[1], ':after').content).toBe('"C=4"');
+      expect(window.getComputedStyle(hotspotChoice[2], ':after').content).toBe('"C=2"');
+      expect(window.getComputedStyle(hotspotChoice[3], ':after').content).toBe('"C=3"');
+    });
+  }
 };
