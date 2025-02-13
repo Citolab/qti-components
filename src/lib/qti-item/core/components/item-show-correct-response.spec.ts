@@ -11,6 +11,7 @@ import meta, {
   SelectPoint as SelectPointStory,
   SelectPointMultipleNoAreaMapping as SelectPointMultipleNoAreaMappingStory,
   GraphicOrder as GraphicOrderStory,
+  GapMatch as GapMatchStory,
   GraphicAssociate as GraphicAssociateStory
 } from './item-show-correct-response.stories';
 
@@ -26,6 +27,7 @@ const selectPointStory = composeStory(SelectPointStory, meta);
 const selectPointMultipleNoAreaMappingStory = composeStory(SelectPointMultipleNoAreaMappingStory, meta);
 const graphicOrderStory = composeStory(GraphicOrderStory, meta);
 const graphicAssociateStory = composeStory(GraphicAssociateStory, meta);
+const gapMatchStory = composeStory(GapMatchStory, meta);
 
 // Helper function to resolve loaders and render story
 async function setupStory(story, canvasElement) {
@@ -88,5 +90,10 @@ describe.sequential('ItemShowCorrectResponse Suite', () => {
   test('show correct response - GraphicAssociate', async () => {
     await setupStory(GraphicAssociateStory, canvasElement);
     await graphicAssociateStory.play({ canvasElement });
+  });
+
+  test('show correct response - GapMatch', async () => {
+    await setupStory(GapMatchStory, canvasElement);
+    await gapMatchStory.play({ canvasElement });
   });
 });
