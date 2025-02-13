@@ -80,12 +80,45 @@ export class QtiResponseDeclaration extends QtiVariableDeclaration {
     return result;
   }
 
-  private get mapping() {
-    return this.querySelector('qti-mapping') as QtiMapping;
+  private get mapping(): QtiMapping {
+    const mappingElement = this.querySelector('qti-mapping');
+    const lowerBound = parseInt(mappingElement?.getAttribute('lower-bound'));
+    const uppperBound = parseInt(mappingElement?.getAttribute('upper-bound'));
+    const mappingValue = {
+      defaultValue: Number(mappingElement?.getAttribute('default-value')) || 0,
+      lowerBound: isNaN(lowerBound) ? null : lowerBound,
+      upperBound: isNaN(uppperBound) ? null : uppperBound,
+      mapEntries: Array.from(mappingElement?.querySelectorAll('qti-map-entry') || []).map(el => ({
+        mapKey: el.getAttribute('map-key') || '',
+        mappedValue: Number(el.getAttribute('mapped-value')) || 0,
+        caseSensitive: el.hasAttribute('case-sensitive') ? el.getAttribute('case-sensitive') !== 'false' : true
+      }))
+    };
+    return mappingValue;
   }
 
-  private get areaMapping() {
-    return this.querySelector('qti-area-mapping') as QtiAreaMapping;
+  private get areaMapping(): QtiAreaMapping {
+    const areaMappingElement = this.querySelector('qti-area-mapping') as HTMLElement;
+
+    const defaultValue = Number(areaMappingElement?.getAttribute('default-value')) || 0;
+    const lowerBound = parseInt(areaMappingElement?.getAttribute('lower-bound'));
+    const uppperBound = parseInt(areaMappingElement?.getAttribute('upper-bound'));
+
+    const areaMapEntries = Array.from(areaMappingElement?.querySelectorAll('qti-area-map-entry') || []).map(
+      (el: HTMLElement) => ({
+        shape: (el.getAttribute('shape') as 'default' | 'circle' | 'rect' | 'ellipse' | 'poly') || 'default',
+        coords: el.getAttribute('coords') || '',
+        mappedValue: Number(el.getAttribute('mapped-value')) || 0,
+        defaultValue: Number(el.getAttribute('default-value')) || 0
+      })
+    );
+
+    return {
+      defaultValue,
+      lowerBound: isNaN(lowerBound) ? null : lowerBound,
+      upperBound: isNaN(uppperBound) ? null : uppperBound,
+      areaMapEntries
+    };
   }
 }
 

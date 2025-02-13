@@ -50,10 +50,11 @@ export const Test: Story = {
 
     const nextButton = await canvas.findByShadowText('Volgende');
     await waitFor(() => expect(nextButton).toBeEnabled());
+
     const firstItem = await findByShadowTitle(canvasElement, 'Richard III (Take 3)');
     expect(firstItem).toBeInTheDocument();
 
-    const showCorrectButton = await findByShadowText(canvasElement, 'Show correct');
+    const showCorrectButton = await findByShadowText(canvasElement, 'Show correct response');
     showCorrectButton.click();
 
     const incorrect = await canvas.findByShadowText('York');

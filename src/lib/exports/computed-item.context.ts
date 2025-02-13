@@ -1,5 +1,7 @@
 import { createContext } from '@lit/context';
 
+import type { VariableDeclaration } from './variables';
+
 export type ComputedItemContext = {
   identifier: string;
   href?: string;
@@ -9,7 +11,7 @@ export type ComputedItemContext = {
   adaptive?: boolean;
   timeDependent?: boolean;
   title?: string;
-  value?: Readonly<string | string[]>;
+  variables: ReadonlyArray<VariableDeclaration<string | string[] | null>>;
 };
 
 export const computedItemContext = createContext<Readonly<ComputedItemContext>>(Symbol('computedItemContext'));

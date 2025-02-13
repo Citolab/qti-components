@@ -17,6 +17,7 @@ export default css`
   line-container {
     display: block;
     position: relative;
+    width: fit-content;
   }
   svg {
     position: absolute;

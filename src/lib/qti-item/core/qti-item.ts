@@ -6,7 +6,7 @@ import { computedItemContext } from '../../exports/computed-item.context';
 
 import type { QtiAssessmentItem } from '../../qti-components';
 import type { ItemContext } from '../../exports/item.context';
-import type { ResponseVariable, VariableDeclaration } from '../../exports/variables';
+import type { VariableDeclaration } from '../../exports/variables';
 import type { ComputedItemContext } from '../../exports/computed-item.context';
 
 /**
@@ -44,11 +44,16 @@ export class QtiItem extends LitElement {
 
   private _handleAssessmentItemConnected(e: CustomEvent<QtiAssessmentItem>) {
     this._qtiAssessmentItem = e.detail;
-    this.computedContext = {
-      identifier: e.detail.identifier,
-      title: e.detail.title
-    };
-    this._updateItemVariablesInTestContext(e.detail.identifier, e.detail.variables || []);
+    this.computedContext =
+      this.computedContext?.identifier === this._qtiAssessmentItem.identifier
+        ? { ...this.computedContext, title: this._qtiAssessmentItem.title }
+        : ({
+            identifier: this._qtiAssessmentItem.identifier,
+            title: this._qtiAssessmentItem.title,
+            adaptive: this._qtiAssessmentItem.getAttribute('adaptive')?.toLowerCase() === 'true' || false,
+            variables: this._qtiAssessmentItem.variables
+          } as ComputedItemContext);
+    this._updateItemVariablesInTestContext(this._qtiAssessmentItem.identifier, e.detail.variables || []);
   }
 
   private _handleTestShowCorrectResponse(e: CustomEvent<boolean>) {
@@ -68,38 +73,13 @@ export class QtiItem extends LitElement {
     const correct = score !== undefined && !isNaN(score) && score > 0;
     const incorrect = score !== undefined && !isNaN(score) && score <= 0;
     const completed = completionStatus === 'completed';
-    // || item.category === this.host._configContext?.infoItemCategory || false
-    const responseVariables = variables?.filter(v => {
-      if (v.type !== 'response') {
-        return false;
-      }
-      if (v.identifier.toLowerCase().startsWith('response')) {
-        return true;
-      }
-      if ((v as ResponseVariable).correctResponse) {
-        return true;
-      }
-    });
-    // sort the response variables by the order of the string: identifier
-    const sortedResponseVariables = responseVariables?.sort((a, b) => a.identifier.localeCompare(b.identifier));
-    const response =
-      sortedResponseVariables.length === 0
-        ? ''
-        : sortedResponseVariables
-            ?.map(v => {
-              if (Array.isArray(v.value)) {
-                return v.value.join('&');
-              }
-              return v.value;
-            })
-            .join('#');
     this.computedContext = {
       ...this.computedContext,
       identifier,
       correct,
       incorrect,
       completed,
-      value: response
+      variables
     };
   }
 

@@ -15,6 +15,7 @@ export class QtiHotspotChoice extends ActiveElementMixin(LitElement, 'qti-hotspo
     }
   `;
   @property({ attribute: 'aria-ordervalue', type: Number, reflect: true }) order: number;
+  @property({ attribute: 'aria-ordercorrectvalue', type: Number, reflect: true }) orderCorrect: number;
 }
 
 declare global {

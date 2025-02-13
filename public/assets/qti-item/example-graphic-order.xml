@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+    xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+    identifier="i677d35643d0b320250107150836b4f2" title="Item 2" label="Graphic Order Interaction 1"
+    xml:lang="en-US" adaptive="false" time-dependent="false" tool-name="TAO"
+    tool-version="2024.11 LTS">
+    <qti-response-declaration identifier="RESPONSE" cardinality="ordered" base-type="identifier">
+        <qti-correct-response>
+            <qti-value>hotspot_1</qti-value>
+            <qti-value>hotspot_3</qti-value>
+            <qti-value>hotspot_4</qti-value>
+            <qti-value>hotspot_2</qti-value>
+        </qti-correct-response>
+    </qti-response-declaration>
+    <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float"
+        normal-maximum="0" normal-minimum="0" />
+    <qti-outcome-declaration identifier="MAXSCORE" cardinality="single" base-type="float">
+        <qti-default-value>
+            <qti-value>0</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-item-body>
+        <div class="grid-row">
+            <div class="col-12">
+                <qti-graphic-order-interaction response-identifier="RESPONSE" class="responsive">
+                    <qti-prompt>Test</qti-prompt>
+                    <img src="/img/map-us.png" alt="" width="795" height="492" />
+                    <qti-hotspot-choice identifier="hotspot_1" fixed="false" shape="rect"
+                        coords="74,101,234,194" />
+                    <qti-hotspot-choice identifier="hotspot_2" fixed="false" shape="ellipse"
+                        coords="338,259,77,73" />
+                    <qti-hotspot-choice identifier="hotspot_3" fixed="false" shape="ellipse"
+                        coords="444,148,47,46" />
+                    <qti-hotspot-choice identifier="hotspot_4" fixed="false" shape="poly"
+                        coords="114,269,146,295,181,271,154,249" />
+                </qti-graphic-order-interaction>
+            </div>
+        </div>
+    </qti-item-body>
+    <qti-response-processing
+        template="https://purl.imsglobal.org/spec/qti/v3p0/rptemplates/match_correct.xml" />
+</qti-assessment-item>

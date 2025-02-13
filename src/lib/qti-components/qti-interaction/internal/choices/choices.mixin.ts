@@ -2,6 +2,7 @@ import { property, query } from 'lit/decorators.js';
 
 import { watch } from '../../../../decorators/watch';
 
+import type { ResponseVariable } from '../../../../exports/variables';
 import type { ChoiceInterface } from '../active-element/active-element.mixin';
 import type { Interaction } from '../../../../exports/interaction';
 import type { IInteraction } from '../../../../exports/interaction.interface';
@@ -10,9 +11,7 @@ type Constructor<T = {}> = abstract new (...args: any[]) => T;
 
 export type Choice = HTMLElement & ChoiceInterface & { internals: ElementInternals };
 
-export interface ChoicesInterface extends IInteraction {
-  correctResponse: string | string[];
-}
+export interface ChoicesInterface extends IInteraction {}
 
 export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, selector: string) => {
   abstract class ChoicesMixinElement extends superClass implements ChoicesInterface {
@@ -73,20 +72,39 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       this._updateChoiceSelection();
     }
 
-    public set correctResponse(value: string | string[]) {
-      this._correctResponse = value;
-      const responseArray = Array.isArray(value) ? value : [value];
-      this._choiceElements.forEach(choice => {
-        choice.internals.states.delete('correct-response');
-        choice.internals.states.delete('incorrect-response');
-        if (responseArray.length > 0) {
-          if (responseArray.includes(choice.identifier)) {
-            choice.internals.states.add('correct-response');
-          } else {
-            choice.internals.states.add('incorrect-response');
+    // public set correctResponse(value: string | string[]) {
+    //   this._correctResponse = value;
+    //   const responseArray = Array.isArray(value) ? value : [value];
+    //   this._choiceElements.forEach(choice => {
+    //     choice.internals.states.delete('correct-response');
+    //     choice.internals.states.delete('incorrect-response');
+    //     if (responseArray.length > 0) {
+    //       if (responseArray.includes(choice.identifier)) {
+    //         choice.internals.states.add('correct-response');
+    //       } else {
+    //         choice.internals.states.add('incorrect-response');
+    //       }
+    //     }
+    //   });
+    // }
+
+    public toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
+      if (responseVariable.correctResponse) {
+        const responseArray = Array.isArray(responseVariable.correctResponse)
+          ? responseVariable.correctResponse
+          : [responseVariable.correctResponse];
+        this._choiceElements.forEach(choice => {
+          choice.internals.states.delete('correct-response');
+          choice.internals.states.delete('incorrect-response');
+          if (show && responseArray.length > 0) {
+            if (responseArray.includes(choice.identifier)) {
+              choice.internals.states.add('correct-response');
+            } else {
+              choice.internals.states.add('incorrect-response');
+            }
           }
-        }
-      });
+        });
+      }
     }
 
     override connectedCallback() {

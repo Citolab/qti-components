@@ -1,26 +1,15 @@
-import { property } from 'lit/decorators.js';
-import { LitElement } from 'lit';
+export type QtiAreaMapping = {
+  defaultValue: number;
+  lowerBound?: number;
+  upperBound?: number;
+  areaMapEntries: QtiAreaMapEntry[];
+};
 
-export class QtiAreaMapping extends LitElement {
-  @property({ attribute: 'default-value', type: Number }) defaultValue: number = 0;
-  @property({ attribute: 'lower-bound', type: Number }) lowerBound: number;
-  @property({ attribute: 'upper-bound', type: Number }) upperBound: number;
+export type QtiAreaMapEntry = {
+  shape: areaShape;
+  coords: string;
+  mappedValue: number;
+  defaultValue: number;
+};
 
-  public get mapEntries() {
-    return Array.from(this.querySelectorAll('qti-area-map-entry')).map(el => {
-      return {
-        shape: el.getAttribute('shape'),
-        coords: el.getAttribute('coords'),
-        mappedValue: +el.getAttribute('mapped-value'),
-        defaultValue: el.getAttribute('default-value') ? +el.getAttribute('default-value') : 0
-      } as {
-        shape: 'default' | 'circle' | 'rect' | 'ellipse' | 'poly';
-        coords: string;
-        mappedValue: number;
-        defaultValue: number;
-      };
-    });
-  }
-}
-
-customElements.define('qti-area-mapping', QtiAreaMapping);
+export type areaShape = 'default' | 'circle' | 'rect' | 'ellipse' | 'poly';

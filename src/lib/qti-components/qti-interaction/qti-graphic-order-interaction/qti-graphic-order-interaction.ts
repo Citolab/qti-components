@@ -6,11 +6,12 @@ import { positionShapes } from '../internal/hotspots/hotspot';
 import { Interaction } from '../../../exports/interaction';
 import styles from './qti-graphic-order-interaction.styles';
 
+import type { ResponseVariable } from '../../../exports/variables';
 import type { QtiHotspotChoice } from '../qti-hotspot-choice';
 import type { Choice } from '../internal/choices/choices.mixin';
 import type { CSSResultGroup } from 'lit';
 
-type HotspotChoice = Choice & { order: number };
+type HotspotChoice = Choice & { order: number; orderCorrect?: number };
 
 @customElement('qti-graphic-order-interaction')
 export class QtiGraphicOrderInteraction extends ChoicesMixin(Interaction, 'qti-hotspot-choice') {
@@ -64,6 +65,22 @@ export class QtiGraphicOrderInteraction extends ChoicesMixin(Interaction, 'qti-h
       }
 
       this.choiceOrdering = false;
+    }
+  }
+
+  public toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
+    const hotspots = this._choiceElements as HotspotChoice[];
+    for (const hotspot of hotspots) {
+      if (show && responseVariable.correctResponse?.length > 0 && Array.isArray(responseVariable.correctResponse)) {
+        const index = responseVariable.correctResponse.findIndex(identifier => identifier === hotspot.identifier);
+        if (index >= 0) {
+          hotspot.orderCorrect = index + 1;
+        } else {
+          hotspot.orderCorrect = null;
+        }
+      } else {
+        hotspot.orderCorrect = null;
+      }
     }
   }
 

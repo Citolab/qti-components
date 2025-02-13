@@ -7,9 +7,9 @@ import '../../qti-response-processing/qti-response-processing';
 import './../../qti-rule/qti-set-outcome-value/qti-set-outcome-value';
 import './../qti-basevalue/qti-basevalue';
 import './qti-sum';
+import type { ItemContext } from '../../../../exports/item.context';
 import type { QtiSum } from './qti-sum';
 import type { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
-import type { ItemContext } from '../../../../exports/qti-assessment-item.context';
 
 describe('QtiComponent qti-sum', () => {
   it('all true', () => {
@@ -35,7 +35,7 @@ describe('QtiComponent qti-sum', () => {
 
     const qtiAssessmentItem = document.body.querySelector('qti-assessment-item') as QtiAssessmentItem;
     qtiAssessmentItem.processResponse();
-    const itemContext = (qtiAssessmentItem as any)._context as ItemContext;
+    const itemContext = qtiAssessmentItem.context as ItemContext;
     const scoreVariable = itemContext.variables.find(v => v.identifier === 'SCORE');
     expect(scoreVariable?.value).toEqual('3');
   });
