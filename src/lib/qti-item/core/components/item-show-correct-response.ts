@@ -29,9 +29,11 @@ export class ItemShowCorrectResponse extends LitElement {
   @property({ type: String }) noCorrectResponseText = 'No correct response specified';
 
   private _hasCorrectResponse = false; // correct response is removed on certain point
+  private _previousActiveItem = ''; // Store previous active item reference
 
   updated() {
-    if (!this._hasCorrectResponse) {
+    if (!this._hasCorrectResponse || this._previousActiveItem !== this.computedContext?.identifier) {
+      this._previousActiveItem = this.computedContext?.identifier;
       this._hasCorrectResponse = this.computedContext?.variables?.some(v => (v as ResponseVariable)?.correctResponse);
     }
     this.disabled = !this._hasCorrectResponse;
