@@ -1,7 +1,8 @@
 import { html, TemplateInstance } from 'lit';
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
-import { expect, fireEvent, fn, waitFor, within } from '@storybook/test';
+import { expect, fireEvent, fn, waitFor } from '@storybook/test';
 import { getByShadowRole } from 'shadow-dom-testing-library';
+import { findByShadowTitle, getByShadowText, within } from 'shadow-dom-testing-library';
 
 import type { QtiSimpleChoice } from '../qti-simple-choice';
 import type { Meta, StoryObj } from '@storybook/web-components';
@@ -50,6 +51,12 @@ export const ChoiceLabelDecimal: Story = {
   render: TemplateThreeOptions,
   args: {
     class: 'qti-labels-decimal'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    expect(canvas.getByShadowText<QtiSimpleChoice>('1')).toBeTruthy();
+    expect(canvas.getByShadowText<QtiSimpleChoice>('2')).toBeTruthy();
+    expect(canvas.getByShadowText<QtiSimpleChoice>('3')).toBeTruthy();
   }
 };
 
@@ -57,6 +64,12 @@ export const ChoiceLabelLowerAlpha: Story = {
   render: TemplateThreeOptions,
   args: {
     class: 'qti-labels-lower-alpha'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    expect(canvas.getByShadowText<QtiSimpleChoice>('a')).toBeTruthy();
+    expect(canvas.getByShadowText<QtiSimpleChoice>('b')).toBeTruthy();
+    expect(canvas.getByShadowText<QtiSimpleChoice>('c')).toBeTruthy();
   }
 };
 
@@ -64,6 +77,12 @@ export const ChoiceLabelUpperAlpha: Story = {
   render: TemplateThreeOptions,
   args: {
     class: 'qti-labels-upper-alpha'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    expect(canvas.getByShadowText<QtiSimpleChoice>('A')).toBeTruthy();
+    expect(canvas.getByShadowText<QtiSimpleChoice>('B')).toBeTruthy();
+    expect(canvas.getByShadowText<QtiSimpleChoice>('C')).toBeTruthy();
   }
 };
 
@@ -82,6 +101,12 @@ export const ChoiceLabelSuffixPeriod: Story = {
   render: TemplateThreeOptions,
   args: {
     class: 'qti-labels-suffix-period'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    expect(canvas.getByShadowText<QtiSimpleChoice>('A.')).toBeTruthy();
+    expect(canvas.getByShadowText<QtiSimpleChoice>('B.')).toBeTruthy();
+    expect(canvas.getByShadowText<QtiSimpleChoice>('C.')).toBeTruthy();
   }
 };
 
@@ -89,6 +114,12 @@ export const ChoiceLabelSuffixParenthesis: Story = {
   render: TemplateThreeOptions,
   args: {
     class: 'qti-labels-suffix-parenthesis'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    expect(canvas.getByShadowText<QtiSimpleChoice>('A)')).toBeTruthy();
+    expect(canvas.getByShadowText<QtiSimpleChoice>('B)')).toBeTruthy();
+    expect(canvas.getByShadowText<QtiSimpleChoice>('C)')).toBeTruthy();
   }
 };
 
@@ -100,6 +131,12 @@ export const ChoiceLabelSuffixAlphaParenthesis: Story = {
   render: TemplateThreeOptions,
   args: {
     class: 'qti-labels-lower-alpha qti-labels-suffix-parenthesis'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    expect(canvas.getByShadowText<QtiSimpleChoice>('a)')).toBeTruthy();
+    expect(canvas.getByShadowText<QtiSimpleChoice>('b)')).toBeTruthy();
+    expect(canvas.getByShadowText<QtiSimpleChoice>('c)')).toBeTruthy();
   }
 };
 
@@ -107,6 +144,12 @@ export const ChoiceLabelSuffixDecimalPeriod: Story = {
   render: TemplateThreeOptions,
   args: {
     class: 'qti-labels-decimal qti-labels-suffix-period'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    expect(canvas.getByShadowText<QtiSimpleChoice>('1.')).toBeTruthy();
+    expect(canvas.getByShadowText<QtiSimpleChoice>('2.')).toBeTruthy();
+    expect(canvas.getByShadowText<QtiSimpleChoice>('3.')).toBeTruthy();
   }
 };
 
@@ -118,6 +161,14 @@ export const ChoiceOrientationVertical: Story = {
   render: TemplateThreeOptions,
   args: {
     class: 'qti-orientation-vertical'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const ChoiceA = canvas.getByText<QtiSimpleChoice>('You must stay with your luggage at all times.');
+    const ChoiceB = canvas.getByText<QtiSimpleChoice>('Do not let someone else look after your luggage.');
+    const ChoiceC = canvas.getByText<QtiSimpleChoice>('Remember your luggage when you leave.');
+    expect(ChoiceB).toBePositionedRelativeTo(ChoiceA, 'below');
+    expect(ChoiceC).toBePositionedRelativeTo(ChoiceB, 'below');
   }
 };
 
@@ -125,6 +176,14 @@ export const ChoiceOrientationHorizontal: Story = {
   render: TemplateThreeOptions,
   args: {
     class: 'qti-orientation-horizontal'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const ChoiceA = canvas.getByText<QtiSimpleChoice>('You must stay with your luggage at all times.');
+    const ChoiceB = canvas.getByText<QtiSimpleChoice>('Do not let someone else look after your luggage.');
+    const ChoiceC = canvas.getByText<QtiSimpleChoice>('Remember your luggage when you leave.');
+    expect(ChoiceB).toBePositionedRelativeTo(ChoiceA, 'right');
+    expect(ChoiceC).toBePositionedRelativeTo(ChoiceB, 'right');
   }
 };
 
@@ -147,6 +206,20 @@ export const ChoiceStacking1: Story = {
   render: args => TemplateSixOptions({ ...args, 'max-choices': '0' }),
   args: {
     class: 'qti-choices-stacking-1'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const hydrogenChoice = canvas.getByText<QtiSimpleChoice>('Hydrogen');
+    const heliumChoice = canvas.getByText<QtiSimpleChoice>('Helium');
+    const carbonChoice = canvas.getByText<QtiSimpleChoice>('Carbon');
+    const oxygenChoice = canvas.getByText<QtiSimpleChoice>('Oxygen');
+    const nitrogenChoice = canvas.getByText<QtiSimpleChoice>('Nitrogen');
+    const chlorineChoice = canvas.getByText<QtiSimpleChoice>('Chlorine');
+    expect(heliumChoice).toBePositionedRelativeTo(hydrogenChoice, 'below');
+    expect(carbonChoice).toBePositionedRelativeTo(hydrogenChoice, 'below');
+    expect(oxygenChoice).toBePositionedRelativeTo(carbonChoice, 'below');
+    expect(nitrogenChoice).toBePositionedRelativeTo(oxygenChoice, 'below');
+    expect(chlorineChoice).toBePositionedRelativeTo(nitrogenChoice, 'below');
   }
 };
 
@@ -154,6 +227,20 @@ export const ChoiceStacking2: Story = {
   render: args => TemplateSixOptions({ ...args, 'max-choices': '0' }),
   args: {
     class: 'qti-choices-stacking-2'
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const hydrogenChoice = canvas.getByText<QtiSimpleChoice>('Hydrogen');
+    const heliumChoice = canvas.getByText<QtiSimpleChoice>('Helium');
+    const carbonChoice = canvas.getByText<QtiSimpleChoice>('Carbon');
+    const oxygenChoice = canvas.getByText<QtiSimpleChoice>('Oxygen');
+    const nitrogenChoice = canvas.getByText<QtiSimpleChoice>('Nitrogen');
+    const chlorineChoice = canvas.getByText<QtiSimpleChoice>('Chlorine');
+    expect(heliumChoice).toBePositionedRelativeTo(hydrogenChoice, 'right');
+    expect(carbonChoice).toBePositionedRelativeTo(hydrogenChoice, 'below');
+    expect(oxygenChoice).toBePositionedRelativeTo(carbonChoice, 'right');
+    expect(nitrogenChoice).toBePositionedRelativeTo(oxygenChoice, 'left');
+    expect(chlorineChoice).toBePositionedRelativeTo(nitrogenChoice, 'right');
   }
 };
 
@@ -184,7 +271,6 @@ export const ChoiceStacking5: Story = {
 
 export const ChoiceOrientationStackingH3: Story = {
   render: args => TemplateSixOptions({ ...args, 'max-choices': '0' }),
-
   args: {
     class: 'qti-choices-stacking-3 qti-orientation-horizontal'
   }
@@ -192,7 +278,6 @@ export const ChoiceOrientationStackingH3: Story = {
 
 export const ChoiceOrientationStackingV3: Story = {
   render: args => TemplateSixOptions({ ...args, 'max-choices': '0' }),
-
   args: {
     class: 'qti-choices-stacking-3 qti-orientation-vertical'
   }
@@ -200,7 +285,6 @@ export const ChoiceOrientationStackingV3: Story = {
 
 export const ChoiceOrientationStackingV2: Story = {
   render: TemplateThreeOptions,
-
   args: {
     class: 'qti-choices-stacking-2 qti-orientation-vertical'
   }
@@ -208,7 +292,6 @@ export const ChoiceOrientationStackingV2: Story = {
 
 export const ChoiceOrientationStackingH2: Story = {
   render: TemplateThreeOptions,
-
   args: {
     class: 'qti-choices-stacking-2 qti-orientation-horizontal'
   }
