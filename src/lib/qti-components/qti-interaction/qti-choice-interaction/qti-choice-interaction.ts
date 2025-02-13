@@ -47,9 +47,16 @@ export class QtiChoiceInteraction
   @property({ type: String })
   public orientation: Orientation;
 
+  handleSlotChange() {
+    // count the number of choices, set a css variable for the number of choices
+    const choices = this.querySelectorAll('qti-simple-choice');
+    console.log('choices', choices.length.toString());
+    this.style.setProperty('--item-count', choices.length.toString());
+  }
+
   render() {
     return html`
-      <slot part="prompt" name="prompt"></slot><slot part="slot"></slot>
+      <slot part="prompt" name="prompt"></slot><slot part="slot" @slotchange=${this.handleSlotChange}></slot>
       <div part="message" role="alert" id="validationMessage"></div>
     `;
   }
