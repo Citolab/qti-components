@@ -50,7 +50,6 @@ export class QtiChoiceInteraction
   handleSlotChange() {
     // count the number of choices, set a css variable for the number of choices
     const choices = this.querySelectorAll('qti-simple-choice');
-    console.log('choices', choices.length.toString());
     this.style.setProperty('--item-count', choices.length.toString());
   }
 
