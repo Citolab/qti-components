@@ -1,18 +1,20 @@
-import { html, LitElement } from 'lit';
+import { html } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 
 import styles from './qti-slider-interaction.styles';
+import { Interaction } from '../../../exports/interaction';
 
-import type { CSSResultGroup} from 'lit';
+import type { ResponseVariable } from '../../../exports/variables';
+import type { CSSResultGroup } from 'lit';
 
 @customElement('qti-slider-interaction')
-export class QtiSliderInteraction extends LitElement {
+export class QtiSliderInteraction extends Interaction {
   static formAssociated = true; // Enables elementInternals for forms
 
   static styles: CSSResultGroup = styles;
 
   private _value = 0;
-  private _internals: ElementInternals;
+  private _correctResponseNumber: number | null = null;
 
   @query('#rail') private _rail!: HTMLElement;
 
@@ -20,9 +22,8 @@ export class QtiSliderInteraction extends LitElement {
   @property({ type: Number, attribute: 'upper-bound' }) max = 100;
   @property({ type: Number, attribute: 'step' }) step = 1;
 
-  constructor() {
-    super();
-    this._internals = this.attachInternals();
+  validate(): boolean {
+    return true;
   }
 
   override connectedCallback() {
@@ -41,6 +42,23 @@ export class QtiSliderInteraction extends LitElement {
     if (!isNaN(newValue)) {
       this._updateValue(newValue);
     }
+  }
+
+  public toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
+    if (show) {
+      this._correctResponse = responseVariable.correctResponse.toString();
+      const nr = parseFloat(responseVariable.correctResponse.toString());
+      if (!isNaN(nr)) {
+        this._correctResponseNumber = nr;
+        const valuePercentage = ((this._correctResponseNumber - this.min) / (this.max - this.min)) * 100;
+        this.style.setProperty('--value-percentage-correct', `${valuePercentage}%`);
+      } else {
+        this._correctResponseNumber = null;
+      }
+    } else {
+      this._correctResponseNumber = null;
+    }
+    this.requestUpdate();
   }
 
   private _updateValue(newValue: number) {
@@ -63,7 +81,17 @@ export class QtiSliderInteraction extends LitElement {
         <div id="ticks" part="ticks"></div>
 
         <div id="rail" part="rail" @mousedown=${this._onMouseDown} @touchstart=${this._onTouchStart}>
-          <div id="knob" part="knob"><div id="value" part="value">${this.value}</div></div>
+          <div id="knob" part="knob">
+            <div id="value" part="value">${this.value}</div>
+          </div>
+
+          ${this._correctResponseNumber !== null
+            ? html`
+                <div id="knob-correct" part="knob-correct">
+                  <div id="value" part="value">${this._correctResponseNumber}</div>
+                </div>
+              `
+            : null}
         </div>
       </div>
     `;
