@@ -55,6 +55,18 @@ export default css`
     border-radius: 9999px; /* rounded-full */
     left: var(--value-percentage);
   }
+  [part='knob-correct'] {
+    background-color: #c8e6c9;
+    border: 2px solid #66bb6a;
+    position: relative;
+    height: 1rem; /* h-4 */
+    width: 1rem; /* w-4 */
+    transform-origin: center;
+    transform: translateX(-50%);
+    cursor: pointer;
+    border-radius: 9999px; /* rounded-full */
+    left: var(--value-percentage-correct);
+  }
 
   [part='value'] {
     position: absolute;

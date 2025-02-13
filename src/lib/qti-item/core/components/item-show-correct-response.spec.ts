@@ -12,7 +12,8 @@ import meta, {
   SelectPointMultipleNoAreaMapping as SelectPointMultipleNoAreaMappingStory,
   GraphicOrder as GraphicOrderStory,
   GapMatch as GapMatchStory,
-  GraphicAssociate as GraphicAssociateStory
+  GraphicAssociate as GraphicAssociateStory,
+  Slider as SliderStory
 } from './item-show-correct-response.stories';
 
 import '../../../qti-components';
@@ -28,6 +29,7 @@ const selectPointMultipleNoAreaMappingStory = composeStory(SelectPointMultipleNo
 const graphicOrderStory = composeStory(GraphicOrderStory, meta);
 const graphicAssociateStory = composeStory(GraphicAssociateStory, meta);
 const gapMatchStory = composeStory(GapMatchStory, meta);
+const sliderStory = composeStory(SliderStory, meta);
 
 // Helper function to resolve loaders and render story
 async function setupStory(story, canvasElement) {
@@ -95,5 +97,10 @@ describe.sequential('ItemShowCorrectResponse Suite', () => {
   test('show correct response - GapMatch', async () => {
     await setupStory(GapMatchStory, canvasElement);
     await gapMatchStory.play({ canvasElement });
+  });
+
+  test('show correct response - Slider', async () => {
+    await setupStory(SliderStory, canvasElement);
+    await sliderStory.play({ canvasElement });
   });
 });
