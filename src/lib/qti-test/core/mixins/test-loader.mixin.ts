@@ -45,7 +45,7 @@ export const TestLoaderMixin = <T extends Constructor<TestBase>>(superClass: T) 
       }
     }
 
-    updated(changedProperties: Map<string | number | symbol, unknown>) {
+    willUpdate(changedProperties: Map<string | number | symbol, unknown>) {
       if (changedProperties.has('navItemId')) {
         this.sessionContext = { ...this.sessionContext, navItemId: this.navItemId };
       }
