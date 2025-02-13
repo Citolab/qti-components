@@ -19,7 +19,7 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
 
-    "types": ["vitest/globals","@types/dom-view-transitions","./test/vitest.d.ts"]
+    "types": ["vitest/globals","@types/dom-view-transitions","./test/vitest.d.ts", "./test/storybookMatchers.d.ts"]
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]

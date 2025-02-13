@@ -3,10 +3,12 @@ import { setWcStorybookHelpersConfig } from 'wc-storybook-helpers';
 import { withActions } from '@storybook/addon-actions/decorator';
 import prettier from 'prettier-v2'; /* https://github.com/storybookjs/storybook/issues/8078#issuecomment-2325332120 */
 import HTMLParser from 'prettier-v2/parser-html'; /* https://github.com/storybookjs/storybook/issues/8078#issuecomment-2325332120 */
+import { expect } from '@storybook/test';
 
 import customElements from '../custom-elements.json';
 import { customViewports } from './custom-viewport-sizes';
 import DocumentationTemplate from './DocumentationTemplate.mdx';
+import { toBePositionedRelativeTo } from '../test/setup/toBePositionedRelativeTo';
 
 import type { Preview } from '@storybook/web-components';
 
@@ -26,6 +28,8 @@ setWcStorybookHelpersConfig({
   /** renders default values for attributes and CSS properties */
   renderDefaultValues: false
 });
+
+expect.extend({ toBePositionedRelativeTo });
 
 setCustomElementsManifest(customElements);
 
