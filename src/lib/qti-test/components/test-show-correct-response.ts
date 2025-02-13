@@ -30,22 +30,23 @@ export class TestShowCorrectResponse extends LitElement {
 
   private _previousActiveItem?: unknown; // Store previous active item reference
 
-  updated(_changedProperties: Map<string | number | symbol, unknown>) {
+  willUpdate(_changedProperties: Map<string | number | symbol, unknown>) {
     const activeItem = this.computedContext?.testParts
       .flatMap(testPart => testPart.sections.flatMap(section => section.items))
       .find(item => item.active);
-    // If active item changed, reset shown
+
+    // If active item changed, reset shown before the update
     if (this._previousActiveItem !== activeItem) {
       this.shown = false;
       this._previousActiveItem = activeItem; // Update previous active item
     }
+
     if (activeItem) {
       this.disabled = !activeItem?.variables?.some(v => (v as ResponseVariable)?.correctResponse);
     } else {
       this.disabled = true;
     }
   }
-
   private _toggleState() {
     if (this.disabled) return;
     this.shown = !this.shown;

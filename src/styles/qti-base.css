@@ -4,6 +4,10 @@
   --qti-bg-active: #ffecec;
   --qti-border-active: #f86d70;
 
+  /* Correct colors */
+  --qti-correct-light: #c8e6c9;
+  --qti-correct: #66bb6a;
+
   /* Gap size */
   --qti-gap-size: 1rem;
 

@@ -98,7 +98,7 @@ export class QtiGraphicAssociateInteraction extends Interaction {
                 y1=${parseInt(this.querySelector<SVGLineElement>(`[identifier=${line.split(' ')[0]}]`).style.top)}
                 x2=${parseInt(this.querySelector<SVGLineElement>(`[identifier=${line.split(' ')[1]}]`).style.left)}
                 y2=${parseInt(this.querySelector<SVGLineElement>(`[identifier=${line.split(' ')[1]}]`).style.top)}
-                stroke="green"
+                stroke="var(--qti-correct)"
                 stroke-width="3"
                 stroke-dasharray="5,5"
               />
@@ -111,7 +111,7 @@ export class QtiGraphicAssociateInteraction extends Interaction {
             y1=${this.startCoord.y}
             x2=${this.mouseCoord.x}
             y2=${this.mouseCoord.y}
-            stroke="red"
+            stroke="var(--qti-border-active)"
             stroke-width="3"
           />`}
         </svg>

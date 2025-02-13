@@ -206,7 +206,7 @@ export class QtiSelectPointInteraction extends Interaction {
               style=${styleMap({
                 position: 'absolute',
                 pointerEvents: 'none',
-                backgroundColor: '#808080',
+                backgroundColor: 'var(--qti-correct)',
                 opacity: '0.5'
               })}
               data-coord="${area.coords}"

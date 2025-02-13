@@ -90,7 +90,7 @@
       &[data-correct-response='true'] {
         &::after {
           content: '\02714';
-          color: #16a34a; /* text-green-600 */
+          color: var(--qti-correct);
         }
       }
     }
@@ -931,13 +931,13 @@
       /* When both attributes are present */
       &[aria-ordercorrectvalue][aria-ordervalue]::after {
         content: 'C=' attr(aria-ordercorrectvalue) '  R=' attr(aria-ordervalue) !important;
-        color: green;
+        color: var(--qti-correct);
       }
 
       /* When only aria-ordercorrectvalue is present */
       &[aria-ordercorrectvalue]:not([aria-ordervalue])::after {
         content: 'C=' attr(aria-ordercorrectvalue) !important;
-        color: green;
+        color: var(--qti-correct);
       }
     }
 

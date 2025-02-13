@@ -56,8 +56,8 @@ export default css`
     left: var(--value-percentage);
   }
   [part='knob-correct'] {
-    background-color: #c8e6c9;
-    border: 2px solid #66bb6a;
+    background-color: var(--qti-correct-light);
+    border: 2px solid var(--qti-correct);
     position: relative;
     height: 1rem; /* h-4 */
     width: 1rem; /* w-4 */
