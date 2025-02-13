@@ -22,8 +22,6 @@ const meta: Meta<
   QtiChoiceInteraction & { classLabel: InputType; classLabelSuffix: InputType; classOrientation: InputType }
 > = {
   component: 'qti-choice-interaction',
-  title: 'components/qti-choice-interaction',
-
   args,
   argTypes: {
     ...argTypes,
@@ -48,7 +46,7 @@ const meta: Meta<
       handles: events
     }
   },
-  tags: ['autodocs']
+  tags: ['!autodocs']
 };
 export default meta;
 

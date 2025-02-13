@@ -138,6 +138,7 @@
     "postcss-import": "^16.1.0",
     "postcss-nesting": "^13.0.1",
     "prettier": "3.4.2",
+    "prettier-v2": "npm:prettier@2.8.8",
     "remark-gfm": "^4.0.0",
     "shadow-dom-testing-library": "^1.11.3",
     "stampino": "^0.8.3",

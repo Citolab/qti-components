@@ -1,9 +1,12 @@
 import { setCustomElementsManifest } from '@storybook/web-components';
 import { setWcStorybookHelpersConfig } from 'wc-storybook-helpers';
 import { withActions } from '@storybook/addon-actions/decorator';
+import prettier from 'prettier-v2'; /* https://github.com/storybookjs/storybook/issues/8078#issuecomment-2325332120 */
+import HTMLParser from 'prettier-v2/parser-html'; /* https://github.com/storybookjs/storybook/issues/8078#issuecomment-2325332120 */
 
 import customElements from '../custom-elements.json';
 import { customViewports } from './custom-viewport-sizes';
+import DocumentationTemplate from './DocumentationTemplate.mdx';
 
 import type { Preview } from '@storybook/web-components';
 
@@ -30,7 +33,20 @@ const preview: Preview = {
   decorators: [withActions],
 
   parameters: {
-    docs: { toc: true },
+    docs: {
+      toc: true,
+      source: {
+        /* FIXME EVENTUALLY https://github.com/storybookjs/storybook/issues/8078#issuecomment-2325332120 */
+        transform: input =>
+          prettier.format(input, {
+            parser: 'html',
+            plugins: [HTMLParser],
+            printWidth: 140,
+            htmlWhitespaceSensitivity: 'ignore'
+          })
+      },
+      page: DocumentationTemplate
+    },
     viewport: { viewports: customViewports },
     controls: {
       expanded: true,
