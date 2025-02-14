@@ -1,9 +1,11 @@
 import { html } from 'lit';
+import { useArgs } from '@storybook/preview-api';
 
 import packages from '../assets/packages.json';
 import { getManifestInfo } from '../lib/qti-loader';
 
 import type { Meta, StoryObj } from '@storybook/web-components';
+
 import '../../.storybook/utilities.css';
 
 const meta: Meta = {
@@ -15,6 +17,7 @@ const meta: Meta = {
   },
   args: {
     serverLocation: '/api',
+    itemIdentifier: '',
     qtipkg: 'examples'
   },
   parameters: {
@@ -26,12 +29,23 @@ type Story = StoryObj;
 
 export const Test: Story = {
   render: (_, { loaded: { testURL } }) => {
+    const [args, updateArgs] = useArgs();
+
     return html`
-      <qti-test class="h-full">
-        <test-navigation auto-score-items class="flex h-full overflow-hidden">
+      <qti-test class="h-full" nav-item-id=${args.itemIdentifier}>
+        <test-navigation
+          auto-score-items
+          class="flex h-full overflow-hidden"
+          @qti-request-navigation=${({ detail }) => updateArgs({ itemIdentifier: detail.id })}
+        >
           <test-paging-buttons-stamp class="flex flex-col gap-2 p-2 overflow-auto" style="min-width:160px">
             <template>
-              <test-item-link item-id="{{ item.identifier }}"> {{ item.identifier }} </test-item-link>
+              <test-item-link class="btn btn-primary {{item.active ? 'active' : ''}}" item-id="{{ item.identifier }}">
+                {{ item.index }} {{ item.title }} {{ item.difficulty }}
+                <template type="if" if="{{ item.type === 'info' }}">
+                  <i class="bi bi-info-circle"></i>
+                </template>
+              </test-item-link>
             </template>
           </test-paging-buttons-stamp>
 
