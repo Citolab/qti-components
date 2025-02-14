@@ -20,7 +20,7 @@ export class QtiItemBody extends LitElement {
   static styles: CSSResultGroup = styles;
 
   override render() {
-    return html`<slot name="qti-rubric-block"></slot><slot></slot>`;
+    return html`<slot part="qti-rubric-block" name="qti-rubric-block"></slot><slot></slot>`;
   }
 }
 
