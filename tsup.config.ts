@@ -1,8 +1,10 @@
-import type { Options } from 'tsup';
 import { defineConfig } from 'tsup';
 import { globby } from 'globby';
+
 import pkgJson from './package.json' assert { type: 'json' };
 import { InlineCSSPlugin } from './scripts/inline-css-plugin';
+
+import type { Options } from 'tsup';
 
 const peerDependencies = Object.keys(pkgJson.peerDependencies || {});
 

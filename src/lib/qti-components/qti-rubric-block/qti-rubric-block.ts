@@ -38,12 +38,6 @@ export class QtiRubricBlock extends LitElement {
   override render() {
     return html`<slot></slot>`;
   }
-
-  override connectedCallback(): void {
-    super.connectedCallback();
-    // by default put this in a slot in the item-body
-    this.setAttribute('slot', 'qti-rubric-block');
-  }
 }
 
 declare global {
