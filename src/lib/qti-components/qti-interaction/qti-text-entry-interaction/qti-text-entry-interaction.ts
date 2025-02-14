@@ -6,6 +6,7 @@ import { createRef } from 'lit/directives/ref.js';
 import { Interaction } from '../../../exports/interaction';
 import styles from './qti-text-entry-interaction.styles';
 
+import type { ResponseVariable } from '../../../exports/variables';
 import type { CSSResultGroup } from 'lit';
 @customElement('qti-text-entry-interaction')
 export class QtiTextEntryInteraction extends Interaction {
@@ -59,6 +60,33 @@ export class QtiTextEntryInteraction extends Interaction {
     return this._value !== '' && input.checkValidity();
   }
 
+  public toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean): void {
+    const input = this.shadowRoot.querySelector('input');
+    if (show && responseVariable.correctResponse) {
+      const text = responseVariable.correctResponse.toString();
+      if (text) {
+        if (!input.nextElementSibling?.classList.contains('correct-option')) {
+          const textSpan = document.createElement('span');
+          textSpan.classList.add('correct-option');
+          textSpan.textContent = text;
+
+          // Apply styles
+          textSpan.style.border = '1px solid var(--qti-correct)';
+          textSpan.style.borderRadius = '4px';
+          textSpan.style.padding = '2px 4px';
+          textSpan.style.margin = '4px';
+          textSpan.style.display = 'inline-block';
+
+          input.insertAdjacentElement('afterend', textSpan);
+        }
+      } else if (input.nextElementSibling?.classList.contains('correct-option')) {
+        input.nextElementSibling.remove();
+      }
+    } else {
+      input.nextElementSibling.remove();
+    }
+  }
+
   override render() {
     return html`
       <input
@@ -83,6 +111,7 @@ export class QtiTextEntryInteraction extends Interaction {
       <div part="correct">${this._correctResponse}</div>
     `;
   }
+
   protected textChanged(event: Event) {
     if (this.disabled || this.readonly) return;
     const input = event.target as HTMLInputElement;

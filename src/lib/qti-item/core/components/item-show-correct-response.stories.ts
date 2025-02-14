@@ -174,6 +174,57 @@ export const MultipleResponse: Story = {
   }
 };
 
+export const TextEntry: Story = {
+  args: {
+    'item-url': '/qti-test-package/items/text_entry.xml' // Set the new item URL here
+  },
+  render: args =>
+    html` <qti-item>
+      <div>
+        <item-container style="display: block;width: 400px; height: 350px;" item-url=${args['item-url']}>
+          <template>
+            <style>
+              qti-assessment-item {
+                padding: 1rem;
+                display: block;
+                aspect-ratio: 4 / 3;
+                width: 800px;
+
+                border: 2px solid blue;
+                transform: scale(0.5);
+                transform-origin: top left;
+              }
+            </style>
+          </template>
+        </item-container>
+        <item-show-correct-response ${spread(args)}></item-show-correct-response>
+      </div>
+    </qti-item>`,
+  play: async ({ canvasElement, step }) => {
+    // wait for qti-simple-choice to be rendered
+    const canvas = within(canvasElement);
+    await waitFor(
+      () => {
+        const interaction = canvasElement
+          .querySelector('item-container')
+          .shadowRoot.querySelector('qti-text-entry-interaction');
+        if (!interaction) {
+          throw new Error('interaction not loaded yet');
+        }
+      },
+      { timeout: 5000 }
+    );
+    const interaction = canvasElement
+      .querySelector('item-container')
+      .shadowRoot.querySelector('qti-text-entry-interaction');
+    const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0];
+    await step('Click on the Show Correct button', async () => {
+      await showCorrectButton.click();
+      interaction.shadowRoot.querySelector('.correct-option').textContent = 'York';
+    });
+  }
+};
+
 export const GapMatch: Story = {
   args: {
     'item-url': '/qti-test-package/items/gap_match.xml' // Set the new item URL here
