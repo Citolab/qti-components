@@ -1,5 +1,7 @@
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
+import { expect, fireEvent, waitFor } from '@storybook/test';
 import { html } from 'lit';
+import { findByShadowTitle, within } from 'shadow-dom-testing-library';
 
 import type { Meta, StoryObj } from '@storybook/web-components';
 import type { TestPagingButtonsStamp } from './test-paging-buttons-stamp';
@@ -30,7 +32,7 @@ export const Default: Story = {
         ${template(
           args,
           html`<template>
-            <test-item-link item-id="{{ item.identifier }}"> {{ item.newIndex }} </test-item-link>
+            <test-item-link item-id="{{ item.identifier }}"> {{ item.index }} </test-item-link>
           </template>`
         )}
       </test-navigation>
@@ -61,7 +63,7 @@ export const Title: Story = {
         }}
       >
         <test-container test-url="/assets/api/kennisnet-1/AssessmentTest.xml"></test-container>
-        <test-paging-buttons-stamp>
+        <test-paging-buttons-stamp data-testid="paging-buttons">
           <style>
             dl {
               display: grid;
@@ -83,5 +85,39 @@ export const Title: Story = {
         </test-paging-buttons-stamp>
       </test-navigation>
     </qti-test>
-  `
+  `,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    // expect(nextButton).toBeDisabled();
+    const pagingButtons = await canvas.findByTestId('paging-buttons');
+    await waitFor(
+      () => {
+        const button = pagingButtons.querySelector('test-item-link');
+        if (!button) {
+          throw new Error('interaction not loaded yet');
+        }
+      },
+      { timeout: 5000 }
+    );
+    const allButtons = pagingButtons.querySelectorAll('test-item-link');
+    waitFor(() => expect(allButtons[0].textContent).toBe(':'));
+    waitFor(() => expect(allButtons[1].textContent).toBe('1:Test title'));
+    await new Promise(resolve => setTimeout(resolve, 500));
+    await fireEvent.click(allButtons[6]);
+    await new Promise(resolve => setTimeout(resolve, 500));
+    waitFor(() => expect(allButtons[0].textContent).toBe(':'));
+    // expect(allButtons[0].textContent).toBe('1:');
+    // const firstItem = await findByShadowTitle(canvasElement, 'T1 - Test Entry - Item 1');
+    // expect(firstItem).toBeInTheDocument();
+    // await new Promise(resolve => setTimeout(resolve, 50));
+    // await fireEvent.click(linkButton);
+    // await new Promise(resolve => setTimeout(resolve, 50));
+    // const secondItem = await findByShadowTitle(canvasElement, 'T1 - Choice Interaction - Multiple Cardinality');
+    // expect(secondItem).toBeInTheDocument();
+    // await fireEvent.click(linkButton);
+    // await new Promise(resolve => setTimeout(resolve, 50));
+    // await fireEvent.click(linkButton);
+    // await new Promise(resolve => setTimeout(resolve, 50));
+    // expect(linkButton).toBeDisabled();
+  }
 };

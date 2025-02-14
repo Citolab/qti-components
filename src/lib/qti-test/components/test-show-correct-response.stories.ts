@@ -1,5 +1,5 @@
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
-import { expect, userEvent, waitFor } from '@storybook/test';
+import { expect, waitFor } from '@storybook/test';
 import { findByShadowText, findByShadowTitle, within } from 'shadow-dom-testing-library';
 import { spread } from '@open-wc/lit-helpers';
 import { html } from 'lit';

@@ -5,7 +5,6 @@ import { consume } from '@lit/context';
 import * as styles from './styles';
 import { computedContext } from '../../exports/computed.context';
 
-import type { ResponseVariable } from '../../exports/variables';
 import type { ComputedContext } from '../../exports/computed.context';
 
 @customElement('test-show-correct-response')
@@ -42,7 +41,7 @@ export class TestShowCorrectResponse extends LitElement {
     }
 
     if (activeItem) {
-      this.disabled = !activeItem?.variables?.some(v => (v as ResponseVariable)?.correctResponse);
+      this.disabled = !activeItem.variables.some(v => v['correctResponse']);
     } else {
       this.disabled = true;
     }

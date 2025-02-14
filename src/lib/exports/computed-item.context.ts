@@ -11,6 +11,7 @@ export type ComputedItemContext = {
   adaptive?: boolean;
   timeDependent?: boolean;
   title?: string;
+  label?: string;
   variables: ReadonlyArray<VariableDeclaration<string | string[] | null>>;
 };
 

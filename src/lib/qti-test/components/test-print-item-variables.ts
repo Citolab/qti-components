@@ -66,7 +66,6 @@ export class TestPrintVariables extends LitElement {
                 return v.value;
               })
               .join('#');
-      console.log('correctResponse', correctResponse);
       const itemToReturn = {
         ...activeItem,
         response,

@@ -42,7 +42,7 @@ describe.sequential('suite', () => {
     );
   });
 
-  test('test-nest fast clicking between items', async () => {
+  test('test-end attempt', async () => {
     await testStory.play({ canvasElement });
   });
 });

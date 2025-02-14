@@ -17,6 +17,7 @@ export class PrintItemVariables extends LitElement {
 
   private _previousActiveItem?: ComputedItemContext & { correctResponse: string; response: string } = null; // Store previous active item reference
   render() {
+    console.log('computedContext', this.computedContext);
     if (this.computedContext) {
       const responseVariables: ResponseVariable[] = this.computedContext.variables?.filter(v => {
         if (v.type !== 'response') {

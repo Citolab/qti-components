@@ -33,7 +33,7 @@ export class QtiItem extends LitElement {
   private _onHandleTestShowCorrectResponse = this._handleTestShowCorrectResponse.bind(this);
   constructor() {
     super();
-    this.addEventListener('qti-item-context-changed', this._onItemContextChanged);
+    this.addEventListener('qti-item-context-updated', this._onItemContextChanged);
     this.addEventListener('qti-assessment-item-connected', this._onAssessmentItemConnected);
     this.addEventListener('item-show-correct-response', this._onHandleTestShowCorrectResponse.bind(this));
   }
@@ -43,6 +43,7 @@ export class QtiItem extends LitElement {
   }
 
   private _handleAssessmentItemConnected(e: CustomEvent<QtiAssessmentItem>) {
+    const fullVariables = (e.detail as any)._context.variables;
     this._qtiAssessmentItem = e.detail;
     this.computedContext =
       this.computedContext?.identifier === this._qtiAssessmentItem.identifier
@@ -51,9 +52,9 @@ export class QtiItem extends LitElement {
             identifier: this._qtiAssessmentItem.identifier,
             title: this._qtiAssessmentItem.title,
             adaptive: this._qtiAssessmentItem.getAttribute('adaptive')?.toLowerCase() === 'true' || false,
-            variables: this._qtiAssessmentItem.variables
+            variables: fullVariables
           } as ComputedItemContext);
-    this._updateItemVariablesInTestContext(this._qtiAssessmentItem.identifier, e.detail.variables || []);
+    this._updateItemVariablesInTestContext(this._qtiAssessmentItem.identifier, fullVariables || []);
   }
 
   private _handleTestShowCorrectResponse(e: CustomEvent<boolean>) {
