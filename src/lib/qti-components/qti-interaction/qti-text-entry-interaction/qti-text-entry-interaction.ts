@@ -80,10 +80,10 @@ export class QtiTextEntryInteraction extends Interaction {
           input.insertAdjacentElement('afterend', textSpan);
         }
       } else if (input.nextElementSibling?.classList.contains('correct-option')) {
-        input.nextElementSibling.remove();
+        input.nextElementSibling?.remove();
       }
     } else {
-      input.nextElementSibling.remove();
+      input.nextElementSibling?.remove();
     }
   }
 
