@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import { useArgs } from '@storybook/preview-api';
+import { ifDefined } from 'lit/directives/if-defined.js';
 
 import packages from '../assets/packages.json';
 import { getManifestInfo } from '../lib/qti-loader';
@@ -17,7 +18,7 @@ const meta: Meta = {
   },
   args: {
     serverLocation: '/api',
-    itemIdentifier: '',
+    itemIdentifier: undefined,
     qtipkg: 'examples'
   },
   parameters: {
@@ -32,7 +33,7 @@ export const Test: Story = {
     const [args, updateArgs] = useArgs();
 
     return html`
-      <qti-test class="h-full" nav-item-id=${args.itemIdentifier}>
+      <qti-test class="h-full" nav-item-id=${ifDefined(args.itemIdentifier)}>
         <test-navigation
           auto-score-items
           class="flex h-full overflow-hidden"
