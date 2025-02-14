@@ -1,8 +1,12 @@
+import { customElement } from 'lit/decorators.js';
+
 import { QtiConditionExpression } from '../../../../exports/qti-condition-expression';
 
 import type { QtiExpression } from '../../../../exports/qti-expression';
 
 type Constructor<T> = new (...args: any[]) => T;
+
+@customElement('qti-and')
 export class QtiAnd extends qtiAndMixin(QtiConditionExpression as unknown as Constructor<QtiConditionExpression>) {
   public calculate() {
     return this.calculateChildren(Array.from(this.children as unknown as QtiExpression<any>[]));

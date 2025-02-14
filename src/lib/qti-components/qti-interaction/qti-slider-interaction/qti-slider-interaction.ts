@@ -62,10 +62,15 @@ export class QtiSliderInteraction extends Interaction {
   }
 
   private _updateValue(newValue: number) {
+    const oldValue = this._value;
     this._value = Math.min(this.max, Math.max(this.min, newValue));
+    if (this._value === oldValue) {
+      return; // Do not update if the value is the same as before
+    }
     const valuePercentage = ((this._value - this.min) / (this.max - this.min)) * 100;
     this.style.setProperty('--value-percentage', `${valuePercentage}%`);
     this._internals.setFormValue(this.value); // Update form value
+    this.saveResponse(this.value);
     this.requestUpdate();
   }
 
