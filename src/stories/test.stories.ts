@@ -8,6 +8,9 @@ import { getManifestInfo } from '../lib/qti-loader';
 import type { Meta, StoryObj } from '@storybook/web-components';
 
 import '../../.storybook/utilities.css';
+// import { within } from 'shadow-dom-testing-library';
+
+// import type { QtiTest } from '../lib';
 
 const meta: Meta = {
   argTypes: {
@@ -64,6 +67,71 @@ export const Test: Story = {
         </test-navigation>
       </qti-test>
     `;
+  },
+  loaders: [
+    async ({ args }) => {
+      const { testURL } = await getManifestInfo(`${args.serverLocation}/${args.qtipkg}/imsmanifest.xml`);
+      return { testURL };
+    }
+  ]
+};
+
+export const TestMismatchItemRefId: Story = {
+  args: {
+    serverLocation: '/api',
+    itemIdentifier: undefined,
+    qtipkg: 'examples-itemref-mismatch'
+  },
+  render: (_, { loaded: { testURL } }) => {
+    const [args, updateArgs] = useArgs();
+
+    return html`
+      <qti-test class="h-full" nav-item-id=${ifDefined(args.itemIdentifier)}>
+        <test-navigation
+          auto-score-items
+          class="flex h-full overflow-hidden"
+          @qti-request-navigation=${({ detail }) => updateArgs({ itemIdentifier: detail.id })}
+        >
+          <test-paging-buttons-stamp class="flex flex-col gap-2 p-2 overflow-auto" style="min-width:160px">
+            <template>
+              <test-item-link class="btn btn-primary {{item.active ? 'active' : ''}}" item-id="{{ item.identifier }}">
+                {{ item.index }} {{ item.title }} {{ item.difficulty }}
+                <template type="if" if="{{ item.type === 'info' }}">
+                  <i class="bi bi-info-circle"></i>
+                </template>
+              </test-item-link>
+            </template>
+          </test-paging-buttons-stamp>
+
+          <div class="flex flex-col flex-1">
+            <test-view>View</test-view>
+            <test-container class="flex-1 overflow-auto p-2" test-url="${testURL}"></test-container>
+            <nav class="flex justify-between p-2">
+              <test-end-attempt>End attempt</test-end-attempt>
+              <test-show-correct-response>Show Correct</test-show-correct-response>
+              <test-prev>Vorige</test-prev>
+              <test-next>Volgende</test-next>
+            </nav>
+          </div>
+          <test-print-item-variables></test-print-item-variables>
+        </test-navigation>
+      </qti-test>
+    `;
+  },
+  play: async ({ canvasElement }) => {
+    //     const canvas = within(canvasElement);
+    //     const responses = [
+    //       'correct',
+    //       ['choice_a', 'choice_b'],
+    //       'jumps',
+    //       `Gentle rain descends,
+    // Whispers on the windowpane,
+    // Nature’s lullaby.`
+    //     ];
+    //     const qtiTest = canvasElement.querySelector<QtiTest>('qti-test');
+    //     const prevButton = canvasElement.querySelector('test-prev') as HTMLElement;
+    //     const nextButton = canvasElement.querySelector('test-next') as HTMLElement;
+    //     const printedItemVariables = canvasElement.querySelector('test-print-item-variables') as HTMLElement;
   },
   loaders: [
     async ({ args }) => {
