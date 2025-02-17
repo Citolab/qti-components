@@ -3,6 +3,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
 import { Interaction } from '../../../exports/interaction';
+import { ShuffleMixin } from '../internal/shuffle/shuffle-mixin';
 
 import type { ResponseVariable } from '../../../exports/variables';
 
@@ -13,7 +14,7 @@ interface OptionType {
 }
 
 @customElement('qti-inline-choice-interaction')
-export class QtiInlineChoiceInteraction extends Interaction {
+export class QtiInlineChoiceInteraction extends ShuffleMixin(Interaction, 'qti-inline-choice') {
   static override get styles() {
     return [
       css`
@@ -65,9 +66,19 @@ export class QtiInlineChoiceInteraction extends Interaction {
   dataPrompt: string = 'select';
 
   override render() {
+    const sortedOptions = [...this.options].sort((a, b) => {
+      const orderA = parseInt(
+        (this.querySelector(`qti-inline-choice[identifier="${a.value}"]`) as HTMLElement)?.style.order || '0'
+      );
+      const orderB = parseInt(
+        (this.querySelector(`qti-inline-choice[identifier="${b.value}"]`) as HTMLElement)?.style.order || '0'
+      );
+      return orderA - orderB;
+    });
+
     return html`
       <select part="select" @change="${this.choiceSelected}" ?disabled="${this.disabled}" ?readonly="${this.readonly}">
-        ${this.options.map(
+        ${sortedOptions.map(
           option => html`
             <option value="${option.value}" ?selected="${option.selected}">${unsafeHTML(option.textContent)}</option>
           `

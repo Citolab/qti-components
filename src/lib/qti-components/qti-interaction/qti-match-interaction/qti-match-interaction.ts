@@ -7,17 +7,21 @@ import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-interaction-mixin';
 import styles from './qti-match-interaction.styles';
 import { Interaction } from '../../../exports/interaction';
+import { ShuffleMixin } from '../internal/shuffle/shuffle-mixin';
 
 import type { CSSResultGroup } from 'lit';
 import type { ResponseInteraction } from '../../../exports/expression-result';
 import type { QtiSimpleAssociableChoice } from '../qti-simple-associable-choice';
 
 @customElement('qti-match-interaction')
-export class QtiMatchInteraction extends DragDropInteractionMixin(
-  Interaction,
-  'qti-simple-match-set:first-of-type qti-simple-associable-choice, qti-simple-match-set:last-of-type > qti-simple-associable-choice > qti-simple-associable-choice',
-  'qti-simple-match-set:last-of-type > qti-simple-associable-choice',
-  'qti-simple-match-set:first-of-type'
+export class QtiMatchInteraction extends ShuffleMixin(
+  DragDropInteractionMixin(
+    Interaction,
+    'qti-simple-match-set:first-of-type qti-simple-associable-choice, qti-simple-match-set:last-of-type > qti-simple-associable-choice > qti-simple-associable-choice',
+    'qti-simple-match-set:last-of-type > qti-simple-associable-choice',
+    'qti-simple-match-set:first-of-type'
+  ),
+  'qti-simple-match-set'
 ) {
   static styles: CSSResultGroup = styles;
 

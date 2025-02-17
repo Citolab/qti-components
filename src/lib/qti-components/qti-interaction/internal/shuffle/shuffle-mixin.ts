@@ -13,7 +13,7 @@
  */
 import { property } from 'lit/decorators.js';
 
-import type { Interaction } from '../interaction/interaction';
+import type { Interaction } from '../../../../exports/interaction';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 
