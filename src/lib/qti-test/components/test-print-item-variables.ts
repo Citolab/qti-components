@@ -21,6 +21,7 @@ export class TestPrintVariables extends LitElement {
     const activeItems = this.computedContext?.testParts.flatMap(testPart =>
       testPart.sections.flatMap(section => section.items).find(item => item.active)
     );
+    if (!activeItems) return html``;
     const activeItem = activeItems.length > 0 ? activeItems[0] : null;
     if (activeItem) {
       const responseVariables: ResponseVariable[] = activeItem.variables?.filter(v => {
