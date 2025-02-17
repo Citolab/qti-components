@@ -41,7 +41,11 @@ export class TestShowCorrectResponse extends LitElement {
     }
 
     if (activeItem) {
-      this.disabled = !activeItem.variables.some(v => v['correctResponse']);
+      const containsCorrectResponse = !!activeItem?.variables.some(v => v['correctResponse']);
+      const containsMapping = !!activeItem?.variables.some(v => {
+        return v['mapping']?.mapEntries?.length > 0 || v['areaMapping']?.areaMapEntries?.length > 0;
+      });
+      this.disabled = !containsCorrectResponse && !containsMapping;
     } else {
       this.disabled = true;
     }

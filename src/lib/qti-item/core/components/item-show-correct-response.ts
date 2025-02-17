@@ -5,7 +5,6 @@ import { consume } from '@lit/context';
 import * as styles from './styles';
 import { computedItemContext } from '../../../exports/computed-item.context';
 
-import type { ResponseVariable } from '../../../exports/variables';
 import type { ComputedItemContext } from '../../../exports/computed-item.context';
 
 @customElement('item-show-correct-response')
@@ -34,7 +33,11 @@ export class ItemShowCorrectResponse extends LitElement {
   updated() {
     if (!this._hasCorrectResponse || this._previousActiveItem !== this.computedContext?.identifier) {
       this._previousActiveItem = this.computedContext?.identifier;
-      this._hasCorrectResponse = this.computedContext?.variables?.some(v => (v as ResponseVariable)?.correctResponse);
+      const containsCorrectResponse = !!this.computedContext?.variables.some(v => v['correctResponse']);
+      const containsMapping = !!this.computedContext?.variables.some(v => {
+        return v['mapping']?.mapEntries?.length > 0 || v['areaMapping']?.areaMapEntries?.length > 0;
+      });
+      this._hasCorrectResponse = containsCorrectResponse || containsMapping;
     }
     this.disabled = !this._hasCorrectResponse;
   }
