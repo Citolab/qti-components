@@ -8,6 +8,7 @@ import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-intera
 import styles from './qti-match-interaction.styles';
 import { Interaction } from '../../../exports/interaction';
 
+import type { ResponseVariable } from '../../../exports/variables';
 import type { CSSResultGroup } from 'lit';
 import type { ResponseInteraction } from '../../../exports/expression-result';
 import type { QtiSimpleAssociableChoice } from '../qti-simple-associable-choice';
@@ -95,6 +96,53 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
       })
     );
   };
+
+  public toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean): void {
+    if (show && responseVariable.correctResponse) {
+      let matches: { text: string; gap: string }[] = [];
+      const response = Array.isArray(responseVariable.correctResponse)
+        ? responseVariable.correctResponse
+        : [responseVariable.correctResponse];
+
+      if (response) {
+        matches = response.map(x => {
+          const split = x.split(' ');
+          return { text: split[0], gap: split[1] };
+        });
+      }
+
+      const gaps = this.querySelectorAll('qti-simple-match-set > qti-simple-associable-choice');
+      gaps.forEach(gap => {
+        const identifier = gap.getAttribute('identifier');
+        const textIdentifier = matches.find(x => x.gap === identifier)?.text;
+        const text = this.querySelector(
+          `qti-simple-associable-choice[identifier="${textIdentifier}"]`
+        )?.textContent.trim();
+        if (textIdentifier && text) {
+          if (!gap.nextElementSibling?.classList.contains('correct-option')) {
+            const textSpan = document.createElement('span');
+            textSpan.classList.add('correct-option');
+            textSpan.textContent = text;
+
+            // Apply styles
+            textSpan.style.border = '1px solid var(--qti-correct)';
+            textSpan.style.borderRadius = '4px';
+            textSpan.style.padding = '2px 4px';
+            textSpan.style.display = 'inline-block';
+
+            gap.insertAdjacentElement('beforebegin', textSpan);
+          }
+        } else if (gap.nextElementSibling?.classList.contains('correct-option')) {
+          gap.nextElementSibling.remove();
+        }
+      });
+    } else {
+      const correctOptions = this.querySelectorAll('.correct-option');
+      correctOptions.forEach(option => {
+        option.remove();
+      });
+    }
+  }
 
   set correctResponse(responseValue: string | string[]) {
     if (responseValue === '') {

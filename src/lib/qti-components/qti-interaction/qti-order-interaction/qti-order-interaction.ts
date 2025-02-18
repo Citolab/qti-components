@@ -1,12 +1,12 @@
 import { html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
 import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-interaction-mixin';
 import { ShuffleMixin } from '../internal/shuffle/shuffle-mixin'; // Import the mixin
 import { Interaction } from '../../../exports/interaction';
 import styles from './qti-order-interaction.styles';
 
+import type { ResponseVariable } from '../../../exports/variables';
 import type { QtiSimpleChoice } from '../qti-simple-choice';
 @customElement('qti-order-interaction')
 export class QtiOrderInteraction extends ShuffleMixin(
@@ -34,38 +34,61 @@ export class QtiOrderInteraction extends ShuffleMixin(
       <div part="container">
         <slot part="drags"> </slot>
         <div part="drops">
-          ${Array.from(Array(this.nrChoices)).map(
-            (_, i) =>
-              html`<drop-list part="drop-list" identifier="droplist${i}"></drop-list>${this.showCorrectResponses &&
-                this.correctResponses.length > i
-                  ? unsafeHTML(`<span part='correct-response'>${this.correctResponses[i]}</span>`)
-                  : ''}`
+          ${[...Array(this.nrChoices)].map(
+            (_, i) => html`<drop-list part="drop-list" identifier="droplist${i}"></drop-list>`
           )}
         </div>
       </div>`;
   }
 
-  set correctResponse(value: string | string[]) {
-    if (value === '') {
-      this.showCorrectResponses = false;
-      return;
-    }
+  public toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean): void {
+    if (show && responseVariable.correctResponse) {
+      let matches: { text: string }[] = [];
+      const response = Array.isArray(responseVariable.correctResponse)
+        ? responseVariable.correctResponse
+        : [responseVariable.correctResponse];
 
-    if (this.correctResponses.length === 0) {
-      const responses = Array.isArray(value) ? value : [value];
+      if (response) {
+        matches = response.map(x => {
+          const split = x.split(' ');
+          return { text: split[0] };
+        });
+      }
 
-      responses.forEach(response => {
-        let simpleChoice = this.querySelector(`qti-simple-choice[identifier="${response}"]`);
-        if (!simpleChoice) {
-          simpleChoice = this.shadowRoot.querySelector(`qti-simple-choice[identifier="${response}"]`);
+      const gaps = this.querySelectorAll('qti-simple-choice');
+      gaps.forEach((gap, i) => {
+        const identifier = gap.getAttribute('identifier');
+        const textIdentifier = matches.find(x => x.text === identifier)?.text;
+        const text = this.querySelector(`qti-simple-choice[identifier="${textIdentifier}"]`)?.textContent.trim();
+        if (textIdentifier && text) {
+          if (!gap.nextElementSibling?.classList.contains('correct-option')) {
+            const textSpan = document.createElement('span');
+            textSpan.classList.add('correct-option');
+            textSpan.textContent = text;
+
+            // Apply styles
+            textSpan.style.border = '1px solid var(--qti-correct)';
+            textSpan.style.borderRadius = '4px';
+            textSpan.style.padding = '2px 4px';
+            textSpan.style.display = 'inline-block';
+
+            const relativeDrop = this.shadowRoot.querySelector(`drop-list[identifier="droplist${i}"]`);
+            relativeDrop.insertAdjacentElement('afterend', textSpan);
+          }
+        } else {
+          const relativeDrop = this.shadowRoot.querySelector(`drop-list[identifier="droplist${i}"]`);
+
+          if (relativeDrop.nextElementSibling?.classList.contains('correct-option')) {
+            gap.nextElementSibling.remove();
+          }
         }
-
-        const text = simpleChoice?.textContent.trim();
-        this.correctResponses = [...this.correctResponses, text];
+      });
+    } else {
+      const correctOptions = this.shadowRoot.querySelectorAll('.correct-option');
+      correctOptions.forEach(option => {
+        option.remove();
       });
     }
-
-    this.showCorrectResponses = true;
   }
 
   // some interactions have a different way of getting the response
