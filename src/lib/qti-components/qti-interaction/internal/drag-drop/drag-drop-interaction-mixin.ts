@@ -63,7 +63,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       dragOnClick: false
     };
     @property({ type: Number, reflect: true, attribute: 'min-associations' }) minAssociations = 1;
-    @property({ type: Number, reflect: true, attribute: 'max-associations' }) maxAssociations = 1;
+    @property({ type: Number, reflect: true, attribute: 'max-associations' }) maxAssociations = 0;
 
     @liveQuery(dragContainersSelector)
     handleDraggableContainerChange(dragContainersAdded: HTMLElement[], dragContainersRemoved: HTMLElement[]) {
