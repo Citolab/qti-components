@@ -2,7 +2,7 @@ export const decimalSeparator = () => {
   return new Intl.NumberFormat().format(0.1).replace(/\d/g, '');
 };
 
-export const convertNumberToUniveralFormat = (number: number | string) => {
+export const convertNumberToUniversalFormat = (number: number | string) => {
   // check if type is string
   if (typeof number === 'string') {
     return number;
