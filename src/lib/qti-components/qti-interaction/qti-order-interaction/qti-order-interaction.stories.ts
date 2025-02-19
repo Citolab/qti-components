@@ -9,9 +9,15 @@ const { events, args, argTypes, template } = getWcStorybookHelpers('qti-order-in
 
 type Story = StoryObj<QtiOrderInteraction & typeof args>;
 
+/**
+ *
+ * ### [3.2.10 Order Interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.4n8gips6tlv4)
+ * the candidate's task is to reorder the choices, the order in which the choices are displayed initially is significant.
+ *
+ */
 const meta: Meta<QtiOrderInteraction & { class: InputType }> = {
   component: 'qti-order-interaction',
-  title: 'components/qti-order-interaction',
+  title: '3.2 interaction types/3.2.10 Match Interaction',
   args,
   argTypes: {
     ...argTypes,

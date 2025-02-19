@@ -1,21 +1,8 @@
-/**
- * Mixin that provides shuffling functionality for a LitElement.
- * @template T - The type of the LitElement subclass.
- * @param {T} superClass - The superclass to extend.
- * @param {string} selector - The CSS selector for the elements to shuffle.
- * @returns {Constructor<ShuffleInterface> & T} - The extended class with shuffling functionality.
- *
- * adds a shuffle property to the class with an attribute converter
- *
- * qti-inline-choice-interaction
- * qti-choice-interaction
- * qti-match-interaction
- */
 import { property } from 'lit/decorators.js';
 
+import type { Interaction } from '../../../../exports/interaction';
 import type { PropertyValues } from 'lit';
 import type { QtiSimpleChoice } from '../../qti-simple-choice';
-import type { Interaction } from '../interaction/interaction';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 

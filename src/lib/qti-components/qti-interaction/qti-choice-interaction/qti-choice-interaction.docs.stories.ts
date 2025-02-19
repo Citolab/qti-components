@@ -13,11 +13,12 @@ const { events, args, argTypes, template } = getWcStorybookHelpers('qti-choice-i
 type Story = StoryObj<QtiChoiceInteraction & typeof args>;
 
 /**
- * ### [3.2.2 Choice Interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.j9nu1oa1tu3b)
+ * [1.2.1 Choice Interaction](https://www.imsglobal.org/spec/qti/v3p0/vocab#choice-interaction)
+ * Presents a set of choices to the candidate. The candidate's task is to select one or more of the choices, up to a maximum number of choices allowed.
  */
 const meta: Meta<QtiChoiceInteraction> = {
   component: 'qti-choice-interaction',
-  title: 'components/qti-choice-interaction',
+  title: 'Shared Vocabulary/1.2.1 Choice Interaction',
   args,
   argTypes,
   parameters: {

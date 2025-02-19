@@ -8,9 +8,15 @@ const { events, args, argTypes, template } = getWcStorybookHelpers('qti-hottext-
 
 type Story = StoryObj<QtiHottextInteraction & typeof args>;
 
+/**
+ *
+ * ### [3.2.7 Hot Text Interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.sbnpx830yzqu)
+ * presents a set of choices to the candidate represented as selectable runs of text embedded within a surrounding context, such as a passage of text.
+ *
+ */
 const meta: Meta<QtiHottextInteraction> = {
   component: 'qti-hottext-interaction',
-  title: 'components/qti-hottext-interaction',
+  title: '3.2 interaction types/3.2.7 Hot Text Interaction',
   args,
   argTypes,
   parameters: {

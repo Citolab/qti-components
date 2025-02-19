@@ -15,6 +15,7 @@ export abstract class Interaction extends LitElement implements IInteraction {
 
   @state()
   protected _correctResponse: string | string[];
+
   protected _internals: ElementInternals;
 
   constructor() {

@@ -10,9 +10,15 @@ const { events, args, argTypes, template } = getWcStorybookHelpers('qti-text-ent
 
 type Story = StoryObj<QtiTextEntryInteraction & typeof args>;
 
+/**
+ *
+ * ### [3.2.3 Text Interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.5bw8rpbotrcs)
+ * An inline interaction that accepts text from the candidate.
+ *
+ */
 const meta: Meta<QtiTextEntryInteraction> = {
   component: 'qti-text-entry-interaction',
-  title: 'components/qti-text-entry-interaction',
+  title: '3.2 interaction types/3.2.3 Text Interaction',
 
   args,
   argTypes,

@@ -12,9 +12,15 @@ const { events, args, argTypes, template } = getWcStorybookHelpers('qti-extended
 
 type Story = StoryObj<QtiExtendedTextInteraction & typeof args>;
 
+/**
+ *
+ * ### [3.2.4 Extended Text Interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.omuxci3o5dmg)
+ * A block interaction that allows the candidate to enter an extended amount of text.
+ *
+ */
 const meta: Meta<QtiExtendedTextInteraction> = {
   component: 'qti-extended-text-interaction',
-  title: 'components/qti-extended-text-interaction',
+  title: '3.2 interaction types/3.2.4 Extended Text Interaction',
   args,
   argTypes,
   parameters: {
@@ -22,7 +28,7 @@ const meta: Meta<QtiExtendedTextInteraction> = {
       handles: events
     }
   },
-  tags: ['autodocs']
+  tags: ['autodocs', 'basic']
 };
 export default meta;
 

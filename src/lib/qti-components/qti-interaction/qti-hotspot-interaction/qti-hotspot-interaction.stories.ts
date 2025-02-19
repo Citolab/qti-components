@@ -8,9 +8,15 @@ const { events, args, argTypes, template } = getWcStorybookHelpers('qti-hotspot-
 
 type Story = StoryObj<QtiHotspotInteraction & typeof args>;
 
+/**
+ *
+ * ### [3.2.6 Hotspot Interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.y2th8rh73267)
+ * a graphical interaction with a corresponding set of choices that are defined as areas of the graphic image. The candidate's task is to select one or more of the areas (hotspots).
+ *
+ */
 const meta: Meta<QtiHotspotInteraction> = {
   component: 'qti-hotspot-interaction',
-  title: 'components/qti-hotspot-interaction',
+  title: '3.2 interaction types/3.2.6 Hotspot Interaction',
   args,
   argTypes,
   parameters: {

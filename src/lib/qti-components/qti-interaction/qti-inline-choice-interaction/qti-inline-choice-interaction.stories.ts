@@ -8,9 +8,15 @@ const { events, args, argTypes, template } = getWcStorybookHelpers('qti-inline-c
 
 type Story = StoryObj<QtiInlineChoiceInteraction & typeof args>;
 
+/**
+ *
+ * ### [3.2.8 Inline Choice Interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.y2th8rh73267)
+ * an inline interaction that presents the user with a set of choices, each of which is an answer option (usually text). The candidate's task is to select one of the choices.
+ *
+ */
 const meta: Meta<QtiInlineChoiceInteraction> = {
   component: 'qti-inline-choice-interaction',
-  title: 'components/qti-inline-choice-interaction',
+  title: '3.2 interaction types/3.2.8 Inline Choice Interaction',
   args,
   argTypes,
   parameters: {

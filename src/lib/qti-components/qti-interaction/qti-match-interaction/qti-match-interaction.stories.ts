@@ -16,9 +16,15 @@ const { events, args, argTypes, template } = getWcStorybookHelpers('qti-match-in
 
 type Story = StoryObj<QtiMatchInteraction & typeof args>;
 
+/**
+ *
+ * ### [3.2.9 Match Interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.be4ll1tm4t99)
+ * a block interaction that presents candidates with two sets of choices and allows them to create associations between pairs of choices in the two sets, but not between pairs of choices in the same set.
+ *
+ */
 const meta: Meta<QtiMatchInteraction & { class: InputType; 'response-identifier': string }> = {
   component: 'qti-match-interaction',
-  title: 'components/qti-match-interaction',
+  title: '3.2 interaction types/3.2.9 Match Interaction',
 
   subcomponents: { QtiSimpleAssociableChoice: 'qti-simple-associable-choice' },
   args: { ...args, 'response-identifier': 'RESPONSE' } /* set default value for response-identifier */,

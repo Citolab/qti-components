@@ -15,13 +15,14 @@ type Story = StoryObj<QtiChoiceInteraction & typeof args>;
 /**
  *
  * ### [3.2.2 Choice Interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.j9nu1oa1tu3b)
- * The ChoiceInteraction.Type (qti-choice-interaction) interaction presents a collection of choices to the candidate. The candidate's task is to select one or more of the choices, up to a maximum of max-choices. The interaction is always initialized with no choices selected.
+ * Presents a set of choices to the candidate. The candidate's task is to select one or more of the choices, up to a maximum number of choices allowed.
  *
  */
 const meta: Meta<
   QtiChoiceInteraction & { classLabel: InputType; classLabelSuffix: InputType; classOrientation: InputType }
 > = {
   component: 'qti-choice-interaction',
+  title: '3.2 interaction types/3.2.2 Choice Interaction',
   args,
   argTypes: {
     ...argTypes,
@@ -46,7 +47,7 @@ const meta: Meta<
       handles: events
     }
   },
-  tags: ['!autodocs']
+  tags: ['autodocs']
 };
 export default meta;
 
