@@ -559,7 +559,13 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
 
     public saveResponse(): void {
-      const response = this.collectResponseData();
+      let response: string | string[];
+      if (typeof (this as any).getResponse === 'function') {
+        // only for the qti-order-interaction, abstracted this away in a method
+        response = (this as any).getResponse(); // Call the method from the implementing class
+      } else {
+        response = this.collectResponseData();
+      }
       this.dispatchEvent(
         new CustomEvent('qti-interaction-response', {
           bubbles: true,
