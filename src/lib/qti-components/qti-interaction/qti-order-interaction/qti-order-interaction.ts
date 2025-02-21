@@ -35,7 +35,7 @@ export class QtiOrderInteraction extends ShuffleMixin(
         <slot part="drags"> </slot>
         <div part="drops">
           ${[...Array(this.nrChoices)].map(
-            (_, i) => html`<drop-list part="drop-list" identifier="droplist${i}"></drop-list>`
+            (_, i) => html`<drop-list role="region" part="drop-list" identifier="droplist${i}"></drop-list>`
           )}
         </div>
       </div>`;
@@ -89,6 +89,14 @@ export class QtiOrderInteraction extends ShuffleMixin(
         option.remove();
       });
     }
+  }
+
+  // some interactions have a different way of getting the response
+  // this is called from the drag and drop mixin class
+  // you have to implement your own getResponse method in the superclass
+  // cause they are different for some interactions.
+  getValue(val: string[]) {
+    return val.map((v, i) => `${v} droplist${i}`);
   }
 
   // some interactions have a different way of getting the response
