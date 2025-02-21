@@ -2,6 +2,7 @@ import { property } from 'lit/decorators.js';
 
 import { FlippablesMixin } from './flippables-mixin';
 import { liveQuery } from '../../../../decorators/live-query';
+import drag from '../../../../../testing/drag';
 
 import type { Interaction } from '../../../../exports/interaction';
 import type { IInteraction } from '../../../../exports/interaction.interface';
@@ -558,6 +559,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       const droppableArray = Array.from(this.droppables);
 
       dragIds.forEach(dragId => {
+        if (dragId === '') return; // in the case of a qti-order-interaction this is necessary, ['drag0','drag1','','drag2'] there can be empty placeholders
         const draggable = draggableArray.find(d => d.getAttribute('identifier') === dragId);
         const droppable = droppableArray.find(d => d.getAttribute('identifier') === dropId);
         this.dropDraggableInDroppable(draggable, droppable);
