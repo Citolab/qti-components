@@ -1,87 +1,92 @@
-import { html, LitElement } from 'lit';
+import { html, css, LitElement } from 'lit';
 import { consume } from '@lit/context';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement } from 'lit/decorators.js';
 
 import { computedContext } from '../../exports/computed.context';
 
 import type { ResponseVariable } from '../../exports/variables';
-import type { ComputedContext, ComputedItem } from '../../exports/computed.context';
+import type { ComputedContext } from '../../exports/computed.context';
 
 @customElement('test-print-item-variables')
 export class TestPrintVariables extends LitElement {
   @consume({ context: computedContext, subscribe: true })
   public computedContext?: ComputedContext;
 
-  @property({ type: String, reflect: true })
-  public mode: 'summed' | 'complete' = 'summed';
-
-  private _previousActiveItem?: ComputedItem & { correctResponse: string; response: string }; // Store previous active item reference
+  static styles = css`
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 14px;
+      text-align: left;
+    }
+    th,
+    td {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+    th {
+      background-color: #f4f4f4;
+      font-weight: bold;
+    }
+    h3 {
+      margin-top: 20px;
+      font-size: 16px;
+    }
+  `;
 
   render() {
-    const activeItems = this.computedContext?.testParts.flatMap(testPart =>
-      testPart.sections.flatMap(section => section.items).find(item => item.active)
-    );
-    if (!activeItems) return html``;
-    const activeItem = activeItems.length > 0 ? activeItems[0] : null;
-    if (activeItem) {
-      const responseVariables: ResponseVariable[] = activeItem.variables?.filter(v => {
-        if (v.type !== 'response') {
-          return false;
-        }
-        if (v.identifier.toLowerCase().startsWith('response')) {
-          return true;
-        }
-        if ((v as ResponseVariable).correctResponse) {
-          return true;
-        }
-      });
-      // sort the response variables by the order of the string: identifier
-      const sortedResponseVariables = responseVariables?.sort((a, b) => a.identifier.localeCompare(b.identifier));
-      const correctResponseArray = sortedResponseVariables.map(r => {
-        if (r.mapping && r.mapping.mapEntries.length > 0) {
-          return r.mapping.mapEntries
-            .map(m => {
-              return `${m.mapKey}=${m.mappedValue}pt `;
-            })
-            .join('&');
-        }
-        if (r.areaMapping && r.areaMapping.areaMapEntries.length > 0) {
-          return r.areaMapping.areaMapEntries.map(m => {
-            return `${m.coords} ${m.shape}=${m.mappedValue}`;
-          });
-        }
-        if (r.correctResponse) {
-          return Array.isArray(r.correctResponse) ? r.correctResponse.join('&') : r.correctResponse;
-        }
-        return [];
-      });
-      const correctResponse = correctResponseArray.join('&');
-      const response =
-        sortedResponseVariables.length === 0
-          ? ''
-          : sortedResponseVariables
-              ?.map(v => {
-                if (Array.isArray(v.value)) {
-                  return v.value.join('&');
-                }
-                return v.value;
-              })
-              .join('#');
-      const itemToReturn = {
-        ...activeItem,
-        response,
-        correctResponse:
-          this._previousActiveItem?.identifier === activeItem.identifier && this._previousActiveItem?.correctResponse
-            ? this._previousActiveItem.correctResponse
-            : correctResponse
-      };
-      if (this.mode === 'summed') {
-        delete itemToReturn.variables;
-      }
-      this._previousActiveItem = itemToReturn;
-      return html` <small><pre>${JSON.stringify(itemToReturn, null, 2)}</pre></small> `;
-    }
-    return html``;
+    const activeItem = this.computedContext?.testParts
+      .flatMap(testPart => testPart.sections.flatMap(section => section.items))
+      .find(item => item.active);
+
+    if (!activeItem || !activeItem.variables) return html``;
+
+    const responseVariables: ResponseVariable[] = activeItem.variables.filter(v => v.type === 'response');
+    const outcomeVariables = activeItem.variables.filter(v => v.type === 'outcome');
+
+    const renderTable = (variables: ResponseVariable[], title: string) => html`
+      <h3>${title}</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Identifier</th>
+            <th>Value</th>
+            <th>Cardinality</th>
+            <th>Base Type</th>
+            <th>Correct Response / Mappings</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${variables.map(v => {
+            const correctResponse = v.correctResponse
+              ? Array.isArray(v.correctResponse)
+                ? v.correctResponse.join(', ')
+                : v.correctResponse
+              : '';
+
+            const mapEntries = v.mapping?.mapEntries?.map(m => `${m.mapKey}=${m.mappedValue}pt`).join(', ') || '';
+
+            const areaMapEntries =
+              v.areaMapping?.areaMapEntries?.map(m => `${m.shape}(${m.coords})=${m.mappedValue}pt`).join(', ') || '';
+
+            return html`
+              <tr>
+                <td>${v.identifier}</td>
+                <td>${Array.isArray(v.value) ? v.value.join(', ') : v.value}</td>
+                <td>${v.cardinality}</td>
+                <td>${v.baseType}</td>
+                <td>${correctResponse || mapEntries || areaMapEntries}</td>
+              </tr>
+            `;
+          })}
+        </tbody>
+      </table>
+    `;
+
+    return html`
+      ${renderTable(responseVariables, 'Response Variables')} ${renderTable(outcomeVariables, 'Outcome Variables')}
+    `;
   }
 }
 

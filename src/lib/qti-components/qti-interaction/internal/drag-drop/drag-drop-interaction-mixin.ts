@@ -2,6 +2,7 @@ import { property } from 'lit/decorators.js';
 
 import { FlippablesMixin } from './flippables-mixin';
 import { liveQuery } from '../../../../decorators/live-query';
+import drag from '../../../../../testing/drag';
 
 import type { Interaction } from '../../../../exports/interaction';
 import type { IInteraction } from '../../../../exports/interaction.interface';
@@ -517,14 +518,27 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
 
     get value(): string[] {
-      return this.collectResponseData();
+      let response: string[];
+      if (typeof (this as any).getResponse === 'function') {
+        // only for the qti-order-interaction, abstracted this away in a method
+        response = (this as any).getResponse(); // Call the method from the implementing class
+      } else {
+        response = this.collectResponseData();
+      }
+      return response;
     }
 
     set value(value: string[] | string | null) {
       if (this.isMatchTabular()) return;
       // Assuming this.value is an array of strings
+
+      if (typeof (this as any).getValue === 'function') {
+        // only for the qti-order-interaction, abstracted this away in a method
+        value = (this as any).getValue(value); // Call the method from the implementing class
+      }
+
       if (Array.isArray(value)) {
-        this.reset();
+        this.reset(false);
 
         value?.forEach(entry => this.placeResponse(entry));
         const formData = new FormData();
@@ -540,10 +554,12 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
     private placeResponse(response: string): void {
       const [dropId, ...dragIds] = response.split(' ').reverse();
+
       const draggableArray = Array.from(this.draggables);
       const droppableArray = Array.from(this.droppables);
 
       dragIds.forEach(dragId => {
+        if (dragId === '') return; // in the case of a qti-order-interaction this is necessary, ['drag0','drag1','','drag2'] there can be empty placeholders
         const draggable = draggableArray.find(d => d.getAttribute('identifier') === dragId);
         const droppable = droppableArray.find(d => d.getAttribute('identifier') === dropId);
         this.dropDraggableInDroppable(draggable, droppable);
@@ -559,7 +575,13 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
 
     public saveResponse(): void {
-      const response = this.collectResponseData();
+      let response: string | string[];
+      if (typeof (this as any).getResponse === 'function') {
+        // only for the qti-order-interaction, abstracted this away in a method
+        response = (this as any).getResponse(); // Call the method from the implementing class
+      } else {
+        response = this.collectResponseData();
+      }
       this.dispatchEvent(
         new CustomEvent('qti-interaction-response', {
           bubbles: true,
@@ -596,7 +618,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       return draggables;
     }
 
-    reset(save = false): void {
+    reset(save = true): void {
       // Remove all draggables from droppables
       this.droppables.forEach(droppable => {
         const draggables = this.getDraggablesFromDroppable(droppable);

@@ -11,3 +11,4 @@ export * from './test-container';
 export * from './test-print-item-variables';
 export * from './test-section-buttons-stamp';
 export * from './test-section-link';
+export * from './test-print-context';

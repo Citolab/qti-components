@@ -38,6 +38,18 @@ export abstract class Interaction extends LitElement implements IInteraction {
     this.value = '';
   }
 
+  // attributeChangedCallback(name: string, _old: string | null, value: string | null): void {
+  //   super.attributeChangedCallback(name, _old, value);
+  //   // changing attributes in lit is not a thing, they are defined in the QTI XML and will never change
+  //   // except in storybook where we can change the value of the attribute
+  //   // this can make the internal state out of sync with the attribute
+  //   // so we reset the value to null to force the internal state to be reset
+  //   const attributeNamesToExclude = ['style', 'class'];
+  //   if (!attributeNamesToExclude.includes(name)) {
+  //     this.reset();
+  //   }
+  // }
+
   abstract get value(): string | string[] | null;
   abstract set value(val: string | string[] | null);
 
