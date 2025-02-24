@@ -13,6 +13,8 @@ export default [
   pluginJs.configs.recommended,
   ...configs.recommended,
   importPlugin.flatConfigs.recommended,
+  litPlugin.configs['flat/recommended'],
+  ...storybook.configs['flat/recommended'],
   {
     files: ['**/*.{js,mjs,cjs,ts,tsx}'],
     languageOptions: {
@@ -49,7 +51,8 @@ export default [
         {
           prefer: 'type-imports'
         }
-      ]
+      ],
+      'lit/no-boolean-in-attribute-binding': 'off'
     },
     settings: {
       wc: {
@@ -70,8 +73,7 @@ export default [
       }
     }
   },
-  litPlugin.configs['flat/recommended'],
-  ...storybook.configs['flat/recommended'],
+
   // ...wcPlugin.configs.recommended,
   { ignores: ['node_modules', 'dist', 'build', 'coverage', 'public'] }
 ];

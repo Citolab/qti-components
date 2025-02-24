@@ -11,7 +11,14 @@ type Constructor<T = {}> = abstract new (...args: any[]) => T;
 
 export type Choice = HTMLElement & ChoiceInterface & { internals: ElementInternals };
 
-export interface ChoicesInterface extends IInteraction {}
+export interface ChoicesInterface extends IInteraction {
+  minChoices: number;
+  maxChoices: number;
+  value: string | string[] | null;
+  toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean): void;
+  validate(): boolean;
+  reportValidity(): boolean;
+}
 
 export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, selector: string) => {
   abstract class ChoicesMixinElement extends superClass implements ChoicesInterface {
@@ -183,7 +190,7 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
     }
 
     protected _setInputType(choiceElement: Choice) {
-      this._internals.ariaLabel = this.maxChoices === 1 ? 'radio-group' : 'checkbox-group';
+      this._internals.role = this.maxChoices === 1 ? 'radiogroup' : null;
 
       const role = this.maxChoices === 1 ? 'radio' : 'checkbox';
       choiceElement.internals.role = role;

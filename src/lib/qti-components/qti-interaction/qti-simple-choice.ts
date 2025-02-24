@@ -9,6 +9,21 @@ import { ActiveElementMixin } from './internal/active-element/active-element.mix
  */
 @customElement('qti-simple-choice')
 export class QtiSimpleChoice extends ActiveElementMixin(LitElement, 'qti-simple-choice') {
+  @property({ type: String, attribute: 'template-identifier' })
+  public templateIdentifier: string | null = null;
+
+  @property({ type: String, attribute: 'show-hide' })
+  public showHide: string | null = 'show';
+
+  @property({
+    type: Boolean,
+    converter: {
+      fromAttribute: (value: string | null) => value === 'true',
+      toAttribute: (value: boolean) => String(value)
+    }
+  })
+  public fixed: boolean = false;
+
   static styles = css`
     :host {
       display: flex;
@@ -32,7 +47,6 @@ export class QtiSimpleChoice extends ActiveElementMixin(LitElement, 'qti-simple-
   @property({ type: String, attribute: false })
   public marker: string;
 
-
   get checked() {
     return this['internals'].states.has('--checked');
   }
@@ -42,7 +56,7 @@ export class QtiSimpleChoice extends ActiveElementMixin(LitElement, 'qti-simple-
         <div part="cha"></div>
       </div>
       ${this.marker ? html`<div id="label">${this.marker}</div>` : nothing}
-      <slot part="slot"></slot> `;
+      <slot part="slot"></slot>`;
   }
 }
 

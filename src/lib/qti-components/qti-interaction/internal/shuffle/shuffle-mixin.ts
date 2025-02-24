@@ -13,16 +13,24 @@
  */
 import { property } from 'lit/decorators.js';
 
-import type { Interaction } from '../interaction/interaction';
+import type { Interaction } from '../../../../exports/interaction';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 
-declare class ShuffleInterface {}
+declare class ShuffleInterface {
+  shuffle: boolean;
+}
 export const ShuffleMixin = <T extends Constructor<Interaction>>(superClass: T, selector: string) => {
   abstract class ShuffleElement extends superClass {
     /** <span style="color:blue">some *blue* text</span>. Does not work in storybook */
-    @property({ type: String, reflect: true })
-    shuffle: 'true' | 'false' = 'false'; // Defaults to 'false'
+    @property({
+      type: Boolean,
+      converter: {
+        fromAttribute: (value: string | null) => value === 'true',
+        toAttribute: (value: boolean) => String(value)
+      }
+    })
+    shuffle: boolean = false; // Defaults to 'false'
 
     connectedCallback() {
       super.connectedCallback();
@@ -36,7 +44,7 @@ export const ShuffleMixin = <T extends Constructor<Interaction>>(superClass: T, 
     }
 
     private _applyShuffle() {
-      if (this.shuffle === 'true') {
+      if (this.shuffle) {
         this._shuffleChoices();
       } else {
         this._resetShuffleChoices();

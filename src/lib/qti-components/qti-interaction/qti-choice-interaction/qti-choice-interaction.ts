@@ -34,7 +34,7 @@ export class QtiChoiceInteraction
 
   /** @deprecated, use 'qti-orientation-horizontal' or 'qti-orientation-vertical' instead */
   @property({ type: String })
-  public orientation: Orientation;
+  public orientation: Orientation = 'vertical';
 
   handleSlotChange() {
     // count the number of choices, set a css variable for the number of choices
