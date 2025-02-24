@@ -170,3 +170,23 @@ export function stripStyleSheets(xmlFragment: DocumentFragment) {
   // remove qti-stylesheet tag
   xmlFragment.querySelectorAll('qti-stylesheet').forEach(stylesheet => stylesheet.remove());
 }
+
+export function getShuffleQuerySelectorByTagName(tagName: string) {
+  switch (tagName) {
+    case 'qti-choice-interaction':
+    case 'qti-order-interaction':
+      return 'qti-simple-choice';
+    case 'qti-inline-choice-interaction':
+      return 'qti-inline-choice';
+    case 'qti-match-interaction':
+      return [
+        'qti-simple-match-set:first-of-type qti-simple-associable-choice',
+        'qti-simple-match-set:last-of-type > qti-simple-associable-choice'
+      ];
+    case 'qti-gap-match-interaction':
+      return 'qti-gap-text';
+    case 'qti-associate-interaction':
+      return 'qti-simple-associable-choice';
+    default:
+  }
+}

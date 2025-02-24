@@ -2,16 +2,17 @@ import { html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
 import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-interaction-mixin';
-import { ShuffleMixin } from '../internal/shuffle/shuffle-mixin'; // Import the mixin
 import { Interaction } from '../../../exports/interaction';
 import styles from './qti-order-interaction.styles';
 
 import type { ResponseVariable } from '../../../exports/variables';
 import type { QtiSimpleChoice } from '../qti-simple-choice';
 @customElement('qti-order-interaction')
-export class QtiOrderInteraction extends ShuffleMixin(
-  DragDropInteractionMixin(Interaction, `qti-simple-choice`, 'drop-list', `slot[part='drags']`),
-  'qti-simple-choice'
+export class QtiOrderInteraction extends DragDropInteractionMixin(
+  Interaction,
+  `qti-simple-choice`,
+  'drop-list',
+  `slot[part='drags']`
 ) {
   static styles = styles;
   protected childrenMap: Element[];
