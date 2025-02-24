@@ -10,7 +10,7 @@ export default css`
     display: flex;
     align-items: flex-start;
     flex: 1;
-    border: 2px solid transparent;
+    flex-wrap: wrap;
   }
 
   [part='drops'] {

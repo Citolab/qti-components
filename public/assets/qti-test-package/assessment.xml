@@ -23,10 +23,10 @@
       </qti-rubric-block>
 
 
+      <qti-assessment-item-ref identifier="ITM-text_entry" href="items/text_entry.xml" />
       <qti-assessment-item-ref identifier="ITM-choice" href="items/choice.xml" />
       <qti-assessment-item-ref identifier="ITM-choice_multiple" href="items/choice_multiple.xml" />
       <qti-assessment-item-ref identifier="ITM-extended_text" href="items/extended_text.xml" />
-      <qti-assessment-item-ref identifier="ITM-text_entry" href="items/text_entry.xml" />
     </qti-assessment-section>
 
     <qti-assessment-section identifier="advanced" title="2. Advanced Level" visible="true">

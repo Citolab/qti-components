@@ -1,8 +1,8 @@
-import { html, TemplateInstance } from 'lit';
+import { html } from 'lit';
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
 import { expect, fireEvent, fn, waitFor } from '@storybook/test';
 import { getByShadowRole } from 'shadow-dom-testing-library';
-import { findByShadowTitle, getByShadowText, within } from 'shadow-dom-testing-library';
+import { within } from 'shadow-dom-testing-library';
 
 import type { QtiSimpleChoice } from '../qti-simple-choice';
 import type { Meta, StoryObj } from '@storybook/web-components';

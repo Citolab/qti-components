@@ -27,7 +27,8 @@ export * from './qti-subtract';
 export * from './qti-string-match/qti-string-match';
 export * from './qti-sum/qti-sum';
 export * from './qti-variable/qti-variable';
-
+export * from './qti-random/qti-random';
+export * from './qti-delete/qti-delete';
 // FIXME are internal and abstract
 // export * from './qti-expression';
 // export * from './qti-condition-expression';

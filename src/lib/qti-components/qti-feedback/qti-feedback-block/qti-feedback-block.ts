@@ -3,8 +3,6 @@ import { customElement } from 'lit/decorators.js';
 
 import { QtiFeedback } from '../qti-feedback';
 
-import type { PropertyValueMap} from 'lit';
-
 @customElement('qti-feedback-block')
 export class QtiFeedbackBlock extends QtiFeedback {
   static override styles = css`
@@ -23,7 +21,8 @@ export class QtiFeedbackBlock extends QtiFeedback {
     return html` <slot part="feedback" class="feedback ${this.showStatus}"></slot> `;
   }
 
-  protected firstUpdated(_changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
+  public connectedCallback(): void {
+    super.connectedCallback();
     this.checkShowFeedback(this.outcomeIdentifier);
   }
 }

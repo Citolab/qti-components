@@ -1,5 +1,5 @@
 import { consume } from '@lit/context';
-import { LitElement, html } from 'lit';
+import { LitElement, html, nothing } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
 import { itemContext } from '../../../../exports/qti-assessment-item.context';
@@ -17,7 +17,7 @@ export class QtiPrintedVariable extends LitElement {
 
   override render() {
     const value = this.context?.variables.find(v => v.identifier === this.identifier)?.value;
-    return html`${JSON.stringify(value, null, 2)}`;
+    return value === null ? nothing : html`${JSON.stringify(value, null, 2)}`;
   }
 
   public calculate(): VariableDeclaration<string | string[]> {

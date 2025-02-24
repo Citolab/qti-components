@@ -13,9 +13,6 @@ import type { SessionContext } from '../../exports/session.context';
 export class TestView extends LitElement {
   static DEFAULT_VIEW_OPTIONS = ['author', 'candidate', 'proctor', 'scorer', 'testConstructor', 'tutor'];
 
-  // @consume({ context: computedContext, subscribe: true })
-  // private computedContext: ComputedContext;
-
   @consume({ context: sessionContext, subscribe: true })
   private sessionContext: SessionContext;
 

@@ -1,7 +1,7 @@
 import { html } from 'lit';
 
 export default {
-  component: 'qti-feedback'
+  title: 'components/feedback'
 };
 
 export const Inline = () => {

@@ -230,6 +230,8 @@ export class TestNavigation extends LitElement {
 
                 const index = categories.includes(this.configContext?.infoItemCategory) ? null : itemIndex++;
 
+                const view = this._sessionContext.view;
+
                 return {
                   ...computedItem,
                   //   rawscore, // not necessary for outside world
@@ -242,7 +244,8 @@ export class TestNavigation extends LitElement {
                   incorrect,
                   completed,
                   index,
-                  response
+                  response,
+                  view
                 };
               })
             };

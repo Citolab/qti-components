@@ -2,8 +2,8 @@ import { provide } from '@lit/context';
 import { LitElement } from 'lit';
 import { state } from 'lit/decorators.js';
 
-import { testContext } from '../../exports/test.context';
-import { type SessionContext, sessionContext } from '../../exports/session.context';
+import { INITIAL_TEST_CONTEXT, testContext } from '../../exports/test.context';
+import { INITIAL_SESSION_CONTEXT, type SessionContext, sessionContext } from '../../exports/session.context';
 
 import type { ItemContext } from '../../exports/item.context';
 import type { TestContext } from '../../exports/test.context';
@@ -14,11 +14,11 @@ import type { OutcomeVariable, VariableDeclaration } from '../../exports/variabl
 export abstract class TestBase extends LitElement {
   @state()
   @provide({ context: testContext })
-  public testContext: Readonly<TestContext> = { items: [], testOutcomeVariables: [] };
+  public testContext: Readonly<TestContext> = INITIAL_TEST_CONTEXT;
 
   @state()
   @provide({ context: sessionContext })
-  public sessionContext: Readonly<SessionContext> = {};
+  public sessionContext: Readonly<SessionContext> = INITIAL_SESSION_CONTEXT;
 
   testElement: QtiAssessmentTest;
 
@@ -30,6 +30,8 @@ export abstract class TestBase extends LitElement {
      * An existing context item is updated with the itemRef properties if nessesary.
      */
     this.addEventListener('qti-assessment-test-connected', (e: CustomEvent<QtiAssessmentTest>) => {
+      // this.testContext = INITIAL_TEST_CONTEXT; // new test, new test context!
+      // this.sessionContext = INITIAL_SESSION_CONTEXT; // new test, new session context!
       if (this.testContext && this.testContext.items.length > 0) return;
 
       this.testElement = e.detail;

@@ -1,6 +1,6 @@
 import { property } from 'lit/decorators.js';
 
-import { convertNumberToUniveralFormat } from '../../../internal/utils';
+import { convertNumberToUniversalFormat } from '../../../internal/utils';
 import { QtiRule } from '../qti-rule';
 
 import type { QtiExpression } from '../../../../exports/qti-expression';
@@ -35,7 +35,7 @@ export class QtiLookupOutcomeValue extends QtiRule {
         composed: true,
         detail: {
           outcomeIdentifier: this.identifier,
-          value: convertNumberToUniveralFormat(value)
+          value: convertNumberToUniversalFormat(value)
         }
       })
     );

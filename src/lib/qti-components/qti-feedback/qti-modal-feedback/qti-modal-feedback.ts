@@ -44,16 +44,6 @@ export class QtiModalFeedback extends QtiFeedback {
     .button:focus {
       outline: var(--qti-focus-border-width) solid var(--qti-focus-color);
     }
-
-    /* Text content of the button */
-    .button::after {
-      content: var(--qti-close-text, 'Close');
-      color: inherit;
-      font-size: inherit;
-      text-align: center;
-      display: inline-block;
-      line-height: 1.5;
-    }
   `;
 
   override render() {
@@ -61,7 +51,7 @@ export class QtiModalFeedback extends QtiFeedback {
       <dialog class="qti-dialog" part="feedback" ?open="${this.showStatus === 'on'}">
         <slot></slot>
         <div style="margin-top: var(--qti-gap-size); text-align: center;">
-          <button class="button close-button" @click="${this.closeFeedback}"></button>
+          <button class="button close-button" @click="${this.closeFeedback}">Close</button>
         </div>
       </dialog>
     `;
@@ -82,7 +72,8 @@ export class QtiModalFeedback extends QtiFeedback {
     }
   }
 
-  protected firstUpdated(): void {
+  public connectedCallback(): void {
+    super.connectedCallback();
     if (this.showStatus === 'on') {
       this.openFeedback();
     }

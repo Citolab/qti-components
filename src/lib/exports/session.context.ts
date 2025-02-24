@@ -11,4 +11,6 @@ export interface SessionContext {
   view?: View;
 }
 
+export const INITIAL_SESSION_CONTEXT: Readonly<SessionContext> = { view: 'candidate' };
+
 export const sessionContext = createContext<Readonly<SessionContext>>(Symbol('testContext'));
