@@ -54,6 +54,7 @@ export const qtiTransformItem = () => {
           // set the base path for images and other resources,
           // you probably want to set the base path to the document root else you can use the path method to set it
           api.path(uri.substring(0, uri.lastIndexOf('/')));
+          api.shuffleInteractions();
           return resolve(api);
         });
       });
