@@ -20,10 +20,15 @@ describe('qtiTransformItem API Methods', () => {
       .html();
 
     expect(parsedXML).toEqualXml(
-      html`
-      <qti-assessment-item xmlns="http://www.w3.org/1999/xhtml">
+      html` <qti-assessment-item xmlns="http://www.w3.org/1999/xhtml">
         <qti-item-body>
-          <qti-custom-interaction data-base-ref="baseRef" data-base-item="baseRefitem123" data="baseData" width="400" height="300"></qti-custom-interaction>
+          <qti-custom-interaction
+            data-base-ref="baseRef"
+            data-base-item="baseRefitem123"
+            data="baseData"
+            width="400"
+            height="300"
+          ></qti-custom-interaction>
         </qti-item-body>
       </qti-assessment-item>`
     );
@@ -44,15 +49,14 @@ describe('qtiTransformItem API Methods', () => {
       .convertCDATAtoComment()
       .html();
 
-    expect(parsedXML).toMatch(
-      html`
-<qti-assessment-item xmlns="http://www.w3.org/1999/xhtml">
-  <qti-item-body>
-    <qti-custom-operator class="js.org">
-      <qti-base-value><!--some CDATA content--></qti-base-value>
-    </qti-custom-operator>
-  </qti-item-body>
-</qti-assessment-item>`
+    expect(parsedXML).toEqualXml(
+      html`<qti-assessment-item xmlns="http://www.w3.org/1999/xhtml">
+        <qti-item-body>
+          <qti-custom-operator class="js.org">
+            <qti-base-value><!--some CDATA content--></qti-base-value>
+          </qti-custom-operator>
+        </qti-item-body>
+      </qti-assessment-item>`
     );
   });
 
@@ -74,8 +78,7 @@ describe('qtiTransformItem API Methods', () => {
       .html();
 
     expect(parsedXML).toEqualXml(
-      html`
-      <qti-assessment-item xmlns="http://www.w3.org/1999/xhtml">
+      html` <qti-assessment-item xmlns="http://www.w3.org/1999/xhtml">
         <qti-item-body>
           <qti-choice-interaction response-identifier="RESPONSE">
             <qti-simple-choice identifier="A">Choice A</qti-simple-choice>
@@ -100,13 +103,116 @@ describe('qtiTransformItem API Methods', () => {
       .html();
 
     expect(parsedXML).toEqualXml(
-      html`
-      <qti-assessment-item xmlns="http://www.w3.org/1999/xhtml">
+      html` <qti-assessment-item xmlns="http://www.w3.org/1999/xhtml">
         <qti-item-body>
-          <qti-custom-interaction hook="customHook" module="https://example.com/customHook.js" base-url="https://example.com/path"></qti-custom-interaction>
+          <qti-custom-interaction
+            hook="customHook"
+            module="https://example.com/customHook.js"
+            base-url="https://example.com/path"
+          ></qti-custom-interaction>
         </qti-item-body>
       </qti-assessment-item>`
     );
+  });
+
+  it('choice should shuffle', async () => {
+    const parsedXML = qtiTransformItem()
+      .parse(
+        xml`
+        <qti-assessment-item>
+          <qti-item-body>
+            <qti-choice-interaction shuffle="true">
+              <qti-simple-choice identifier="A">Optie A</qti-simple-choice>
+              <qti-simple-choice identifier="B">Optie B</qti-simple-choice>
+              <qti-simple-choice identifier="C">Optie C</qti-simple-choice>
+            </qti-choice-interaction>
+          </qti-item-body>
+        </qti-assessment-item>`
+      )
+      .shuffleInteractions()
+      .html();
+
+    expect(parsedXML).toNotEqualXml(
+      html`<qti-assessment-item>
+        <qti-item-body>
+          <qti-choice-interaction shuffle="true">
+            <qti-simple-choice identifier="A">Optie A</qti-simple-choice>
+            <qti-simple-choice identifier="B">Optie B</qti-simple-choice>
+            <qti-simple-choice identifier="C">Optie C</qti-simple-choice>
+          </qti-choice-interaction>
+        </qti-item-body>
+      </qti-assessment-item>`
+    );
+  });
+
+  it('shuffle fixed p1', async () => {
+    const parsedXML = qtiTransformItem()
+      .parse(
+        xml`
+        <qti-assessment-item>
+          <qti-item-body>
+            <qti-choice-interaction shuffle="true">
+              <qti-simple-choice fixed="true" identifier="A">Optie A</qti-simple-choice>
+              <qti-simple-choice identifier="B">Optie B</qti-simple-choice>
+              <qti-simple-choice identifier="C">Optie C</qti-simple-choice>
+            </qti-choice-interaction>
+          </qti-item-body>
+        </qti-assessment-item>`
+      )
+      .shuffleInteractions();
+
+    const choices = parsedXML.xmlDoc().querySelectorAll('qti-simple-choice');
+    expect(choices[0].getAttribute('fixed')).toBe('true');
+    expect(choices[1].hasAttribute('fixed')).toBe(false);
+    expect(choices[2].hasAttribute('fixed')).toBe(false);
+    expect(choices[0].textContent).toBe('Optie A');
+  });
+
+  it('shuffle fixed p2', async () => {
+    const parsedXML = qtiTransformItem()
+      .parse(
+        xml`
+        <qti-assessment-item>
+          <qti-item-body>
+            <qti-choice-interaction shuffle="true">
+              <qti-simple-choice identifier="A">Optie A</qti-simple-choice>
+              <qti-simple-choice fixed="true" identifier="B">Optie B</qti-simple-choice>
+              <qti-simple-choice identifier="C">Optie C</qti-simple-choice>
+            </qti-choice-interaction>
+          </qti-item-body>
+        </qti-assessment-item>`
+      )
+      .shuffleInteractions();
+
+    const choices = parsedXML.xmlDoc().querySelectorAll('qti-simple-choice');
+    expect(choices[0].hasAttribute('fixed')).toBe(false);
+    expect(choices[1].getAttribute('fixed')).toBe('true');
+    expect(choices[2].hasAttribute('fixed')).toBe(false);
+    expect(choices[1].textContent).toBe('Optie B');
+  });
+
+  it('shuffle fixed p3', async () => {
+    const parsedXML = qtiTransformItem()
+      .parse(
+        xml`
+        <qti-assessment-item>
+          <qti-item-body>
+            <qti-choice-interaction shuffle="true">
+              <qti-simple-choice identifier="A">Optie A</qti-simple-choice>
+              <qti-simple-choice identifier="B">Optie B</qti-simple-choice>
+              <qti-simple-choice fixed="true"  identifier="C">Optie C</qti-simple-choice>
+            </qti-choice-interaction>
+          </qti-item-body>
+        </qti-assessment-item>`
+      )
+      .shuffleInteractions();
+
+    const choices = parsedXML.xmlDoc().querySelectorAll('qti-simple-choice');
+
+    expect(choices[0].hasAttribute('fixed')).toBe(false);
+    expect(choices[1].hasAttribute('fixed')).toBe(false);
+    expect(choices[2].getAttribute('fixed')).toBe('true');
+    expect(choices[2].textContent).toBe('Optie C');
   });
 
   it('should extend element names with specified suffix correctly', async () => {
@@ -126,8 +232,7 @@ describe('qtiTransformItem API Methods', () => {
       .html();
 
     expect(parsedXML).toEqualXml(
-      html`
-      <qti-assessment-item xmlns="http://www.w3.org/1999/xhtml">
+      html` <qti-assessment-item xmlns="http://www.w3.org/1999/xhtml">
         <qti-item-body>
           <qti-choice-interaction-extended response-identifier="RESPONSE">
             <qti-simple-choice identifier="A">Choice A</qti-simple-choice>

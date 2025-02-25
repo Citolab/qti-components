@@ -13,11 +13,11 @@
  *
  * qtiTransformItem().parse(storyXML).html()
  */
-
 import {
   convertCDATAtoComment,
   extendElementName,
   extendElementsWithClass,
+  getShuffleQuerySelectorByTagName,
   loadXML,
   parseXML,
   setLocation,
@@ -35,6 +35,7 @@ export type transformItemApi = {
   extendElementsWithClass: (param?: string) => transformItemApi;
   customInteraction: (baseRef: string, baseItem: string) => transformItemApi;
   convertCDATAtoComment: () => transformItemApi;
+  shuffleInteractions: () => transformItemApi;
   stripStyleSheets: () => transformItemApi;
   html: () => string;
   xml: () => string;
@@ -53,6 +54,7 @@ export const qtiTransformItem = () => {
           // set the base path for images and other resources,
           // you probably want to set the base path to the document root else you can use the path method to set it
           api.path(uri.substring(0, uri.lastIndexOf('/')));
+          api.shuffleInteractions();
           return resolve(api);
         });
       });
@@ -88,6 +90,71 @@ export const qtiTransformItem = () => {
         });
       }
       return api;
+    },
+    shuffleInteractions(): typeof api {
+      const shuffleElements = xmlFragment.querySelectorAll(`[shuffle="true"]`);
+      const shuffleInteractions = Array.from(shuffleElements).filter(e =>
+        e.tagName?.toLowerCase().endsWith('-interaction')
+      );
+      for (const shuffleInteraction of shuffleInteractions) {
+        const query = getShuffleQuerySelectorByTagName(shuffleInteraction.tagName.toLowerCase());
+        const queries = Array.isArray(query) ? query : [query];
+        for (const q of queries) {
+          const choices = Array.from(shuffleInteraction.querySelectorAll(q)) as HTMLElement[];
+          const fixedChoices = choices
+            .map((choice, originalOrder) => {
+              return {
+                element: choice,
+                fixed: choice.hasAttribute('fixed') && choice.getAttribute('fixed') === 'true',
+                originalOrder
+              };
+            })
+            .filter(choice => choice.fixed);
+          const nonFixedChoices = choices.filter(
+            choice => !choice.hasAttribute('fixed') || choice.getAttribute('fixed') !== 'true'
+          );
+          if (nonFixedChoices.length <= 1) {
+            console.warn('Shuffling is not possible with fewer than 2 non-fixed elements.');
+            return api;
+          }
+
+          const originalOrder = [...nonFixedChoices];
+          let shuffled = false;
+          let attempts = 0;
+
+          // Shuffle until the result is different or attempts are exceeded
+          while (!shuffled && attempts < 20) {
+            attempts++;
+            for (let i = nonFixedChoices.length - 1; i > 0; i--) {
+              const j = Math.floor(Math.random() * (i + 1));
+              [nonFixedChoices[i], nonFixedChoices[j]] = [nonFixedChoices[j], nonFixedChoices[i]];
+            }
+            shuffled = !nonFixedChoices.every((choice, index) => choice === originalOrder[index]);
+          }
+          if (!shuffled) {
+            console.warn('Failed to shuffle the choices after multiple attempts.');
+          } else {
+            // remove the shuffle attribute
+            shuffleInteraction.removeAttribute('shuffle');
+            // change the order of the choices
+            // Insert shuffled non-fixed choices while preserving the positions of fixed choices
+            // Create a reference list to properly insert the shuffled elements
+            let nonFixedIndex = 0;
+            for (const nonFixedChoice of nonFixedChoices) {
+              nonFixedChoice.parentElement.insertBefore(nonFixedChoice, fixedChoices[nonFixedIndex]?.element);
+              nonFixedIndex++;
+            }
+            for (const fixedChoice of fixedChoices) {
+              fixedChoice.element.parentElement.insertBefore(
+                fixedChoice.element,
+                nonFixedChoices[fixedChoice.originalOrder]
+              );
+            }
+          }
+        }
+
+        return api;
+      }
     },
     extendElementName: (tagName: string, extension: string): typeof api => {
       extendElementName(xmlFragment, tagName, extension);
