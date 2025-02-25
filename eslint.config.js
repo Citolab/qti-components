@@ -4,7 +4,7 @@ import { configs } from 'typescript-eslint';
 import importPlugin from 'eslint-plugin-import';
 import litPlugin from 'eslint-plugin-lit';
 import storybook from 'eslint-plugin-storybook';
-import wcPlugin from 'eslint-plugin-wc';
+// import wcPlugin from 'eslint-plugin-wc';
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
@@ -51,8 +51,7 @@ export default [
         {
           prefer: 'type-imports'
         }
-      ],
-      'lit/no-boolean-in-attribute-binding': 'off'
+      ]
     },
     settings: {
       wc: {

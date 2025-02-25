@@ -42,8 +42,7 @@ export class QtiSelectPointInteraction extends Interaction {
   })
   public minChoices: number = 0;
 
-  @state()
-  private _points: string[] = [];
+  @state() response: string[] = [];
 
   @state()
   private _correctAreas: { shape: string; coords: string }[] = [];
@@ -74,11 +73,11 @@ export class QtiSelectPointInteraction extends Interaction {
 
     if (this.maxChoices === 1) {
       // If maxChoices is 1, replace the existing marker with the new one
-      this._points = [newPoint];
+      this.response = [newPoint];
     } else {
       // If maxChoices > 1, add a new marker if within the limit
-      if (this.maxChoices === 0 || this._points.length < this.maxChoices) {
-        this._points = [...this._points, newPoint];
+      if (this.maxChoices === 0 || this.response.length < this.maxChoices) {
+        this.response = [...this.response, newPoint];
       } else {
         // Optional: Notify the user to remove a marker before adding a new one
         console.warn('Maximum number of points reached. Remove a marker to add a new one.');
@@ -86,7 +85,7 @@ export class QtiSelectPointInteraction extends Interaction {
     }
 
     // Save the response with the calculated points
-    this.saveResponse(this._points);
+    this.saveResponse(this.response);
   };
 
   override connectedCallback() {
@@ -158,7 +157,7 @@ export class QtiSelectPointInteraction extends Interaction {
     return html` <slot name="prompt"></slot>
       <point-container>
         ${repeat(
-          this._points.filter(point => point),
+          this.response.filter(point => point),
           point => point,
           (point, index) => {
             const [x, y] = point.split(' ').map(Number);
@@ -191,8 +190,8 @@ export class QtiSelectPointInteraction extends Interaction {
                 aria-label="Remove point at ${point}"
                 @click=${(e: Event) => {
                   e.stopPropagation();
-                  this._points = this._points.filter((_, i) => i !== index);
-                  this.saveResponse(this._points);
+                  this.response = this.response.filter((_, i) => i !== index);
+                  this.saveResponse(this.response);
                 }}
               ></button>
             `;
@@ -219,18 +218,18 @@ export class QtiSelectPointInteraction extends Interaction {
   }
 
   reset(): void {
-    this._points = [];
+    this.response = null;
   }
 
   validate(): boolean {
-    return this._points.length >= this.minChoices && this._points.length <= this.maxChoices;
+    return this.response.length >= this.minChoices && this.response.length <= this.maxChoices;
   }
 
-  set value(val: string | string[]) {
-    this._points = Array.isArray(val) ? val : val ? [val] : [];
+  set value(val: string | null) {
+    this.response = val.split(',');
   }
-  get value(): string | string[] {
-    return this._points;
+  get value(): string | null {
+    return this.response.join(',');
   }
 
   private calculateScale() {

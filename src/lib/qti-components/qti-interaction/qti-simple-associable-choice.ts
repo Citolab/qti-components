@@ -39,10 +39,14 @@ export class QtiSimpleAssociableChoice extends ActiveElementMixin(LitElement, 'q
   public matchMax: number = 1;
 
   @property({
-    type: Boolean,
-    attribute: 'fixed'
+    type: String,
+    attribute: 'fixed',
+    converter: {
+      fromAttribute: (value: string | null) => value === 'true',
+      toAttribute: (value: boolean) => String(value)
+    }
   })
-  public fixed = false;
+  public fixed: boolean = false;
 
   // pk: This needs some explanation
   // in the associate interaction there is a special slot for these qti-simple-associable-choices

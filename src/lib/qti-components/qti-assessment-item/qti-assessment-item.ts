@@ -88,7 +88,7 @@ export class QtiAssessmentItem extends LitElement {
           (el: Interaction) => el.responseIdentifier === variable.identifier
         );
         if (interactionElement) {
-          interactionElement.value = variable.value as string | string[];
+          interactionElement.response = variable.value as string | string[];
         }
       }
     });
@@ -111,7 +111,7 @@ export class QtiAssessmentItem extends LitElement {
           i => i.getAttribute('response-identifier') === response.responseIdentifier
         );
         if (interaction) {
-          interaction.value = response.response;
+          interaction.response = response.response;
         }
       }
     }

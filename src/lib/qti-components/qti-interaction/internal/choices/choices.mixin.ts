@@ -1,4 +1,4 @@
-import { property, query } from 'lit/decorators.js';
+import { property, query, state } from 'lit/decorators.js';
 
 import { watch } from '../../../../decorators/watch';
 
@@ -14,7 +14,8 @@ export type Choice = HTMLElement & ChoiceInterface & { internals: ElementInterna
 export interface ChoicesInterface extends IInteraction {
   minChoices: number;
   maxChoices: number;
-  value: string | string[] | null;
+  value: string | null;
+  response: string | string[] | null;
   toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean): void;
   validate(): boolean;
   reportValidity(): boolean;
@@ -48,52 +49,30 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       this._choiceElements.forEach(choice => (choice.readonly = readonly));
     };
 
-    protected _value: string | string[] = '';
+    @state() response: string | string[] | null = '';
 
-    get value(): string | string[] | null {
-      if (Array.isArray(this._value) && this._value.length === 0) {
-        return null;
-      } else if (this._value === '') {
-        return null;
-      }
-      return Array.isArray(this._value) ? this._value.join(',') : this._value;
-    }
-
-    set value(val: string | string[] | null) {
-      if (this.maxChoices > 1 && (typeof val === 'string' || val === null)) {
-        this._value = !val ? [] : val.toString().split(',');
-      } else {
-        this._value = val || '';
-      }
-      // Assuming this.value is an array of strings
-      if (Array.isArray(this._value)) {
-        const formData = new FormData();
-        this._value.forEach(response => {
-          formData.append(this.responseIdentifier, response);
-        });
-        this._internals.setFormValue(formData);
-      } else {
-        // Handle the case where this.value is not an array
-        this._internals.setFormValue(this._value);
-      }
+    @watch('response', { waitUntilFirstUpdate: true })
+    protected _handleValueChange = () => {
+      this._internals.setFormValue(this.value);
       this._updateChoiceSelection();
+    };
+
+    get value(): string | null {
+      if (Array.isArray(this.response) && this.response.length === 0) {
+        return null;
+      } else if (this.response === '') {
+        return null;
+      }
+      return Array.isArray(this.response) ? this.response.join(',') : this.response;
     }
 
-    // public set correctResponse(value: string | string[]) {
-    //   this._correctResponse = value;
-    //   const responseArray = Array.isArray(value) ? value : [value];
-    //   this._choiceElements.forEach(choice => {
-    //     choice.internals.states.delete('correct-response');
-    //     choice.internals.states.delete('incorrect-response');
-    //     if (responseArray.length > 0) {
-    //       if (responseArray.includes(choice.identifier)) {
-    //         choice.internals.states.add('correct-response');
-    //       } else {
-    //         choice.internals.states.add('incorrect-response');
-    //       }
-    //     }
-    //   });
-    // }
+    set value(val: string | null) {
+      if (this.maxChoices > 1 && (typeof val === 'string' || val === null)) {
+        this.response = !val ? [] : val.toString().split(',');
+      } else {
+        this.response = val || '';
+      }
+    }
 
     public toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
       if (responseVariable.correctResponse) {
@@ -235,16 +214,17 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       const selectedChoices = this._choiceElements.filter(choice => this._getChoiceChecked(choice));
       const selectedIdentifiers = selectedChoices.map(choice => choice.identifier);
 
-      this.value = this.maxChoices === 1 ? selectedIdentifiers[0] || '' : selectedIdentifiers;
+      this.response = this.maxChoices === 1 ? selectedIdentifiers[0] || '' : selectedIdentifiers;
+
       this.validate();
-      this.saveResponse(this._value);
+      this.saveResponse(this.response);
     }
 
     /**
      * Updates the selection state of each choice element based on the current response.
      */
     protected _updateChoiceSelection() {
-      const responseArray = Array.isArray(this._value) ? this._value : [this._value];
+      const responseArray = Array.isArray(this.response) ? this.response : [this.response];
       this._choiceElements.forEach(choice => {
         const isSelected = responseArray.includes(choice.identifier);
         this._setChoiceChecked(choice, isSelected);

@@ -30,12 +30,17 @@ export abstract class Interaction extends LitElement implements IInteraction {
   }
   abstract validate(): boolean;
 
+  abstract get value(): string | null;
+  abstract set value(val: string | null);
+
+  public response: string | string[] | null;
+
   public reportValidity(): boolean {
     return this._internals.reportValidity();
   }
 
   public reset(): void {
-    this.value = '';
+    this.value = null;
   }
 
   // attributeChangedCallback(name: string, _old: string | null, value: string | null): void {
@@ -49,9 +54,6 @@ export abstract class Interaction extends LitElement implements IInteraction {
   //     this.reset();
   //   }
   // }
-
-  abstract get value(): string | string[] | null;
-  abstract set value(val: string | string[] | null);
 
   public toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
     this.correctResponse = show

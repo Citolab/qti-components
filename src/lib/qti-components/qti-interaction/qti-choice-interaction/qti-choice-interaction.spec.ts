@@ -2,19 +2,18 @@ import '../../../../../.storybook/import-storybook-cem'; // <-- fake storybook i
 import { render } from 'lit';
 import { composeStory } from '@storybook/preview-api';
 
-import Meta, { Test as TestStory } from './qti-choice-interaction.stories';
+import Meta, * as Stories from './qti-choice-interaction.stories';
 
-import type { ComposedStoryFn } from 'storybook/internal/types';
-import type { WebComponentsRenderer } from '@storybook/web-components';
-import type { QtiChoiceInteraction } from './qti-choice-interaction';
+import type { StoryObj } from '@storybook/web-components';
 
 import './qti-choice-interaction';
 import '../qti-simple-choice';
 
-const testStory: ComposedStoryFn<WebComponentsRenderer, Partial<QtiChoiceInteraction>> = composeStory(TestStory, Meta);
-
-describe.sequential('suite', () => {
+describe.sequential('QtiChoiceInteraction stories', () => {
   let canvasElement;
+  const storiesToTest = Object.entries(Stories)
+    .filter(([_, value]) => (value as StoryObj).play)
+    .map(([key]) => key);
 
   beforeEach(() => {
     canvasElement = document.createElement('div');
@@ -22,20 +21,17 @@ describe.sequential('suite', () => {
   });
 
   afterEach(() => {
-    if (canvasElement) {
-      canvasElement.remove();
-      canvasElement = null;
-    }
+    canvasElement.remove();
+    canvasElement = null;
   });
 
-  beforeEach(async () => {
-    render(
-      TestStory.render!({ ...Meta.args, ...TestStory.args } as any, { argTypes: TestStory.argTypes } as any),
-      canvasElement
-    );
-  });
-
-  test('choice-interaction min-choices="1" max-choices="2"', async () => {
-    await testStory.play({ canvasElement });
-  });
+  for (const storyName of storiesToTest) {
+    test(`${storyName} story`, async () => {
+      // eslint-disable-next-line import/namespace
+      const Story = Stories[storyName];
+      const composedStory = composeStory(Story, Meta);
+      render(Story.render!({ ...Meta.args, ...Story.args } as any, { argTypes: Story.argTypes } as any), canvasElement);
+      await composedStory.play({ canvasElement });
+    });
+  }
 });

@@ -60,7 +60,8 @@ export const Test: Story = {
   args: {
     'pattern-mask': '[A-Za-z]{3}',
     'data-patternmask-message': 'Please enter exact 3 letters',
-    'response-identifier': 'RESPONSE'
+    'response-identifier': 'RESPONSE',
+    name: 'RESPONSE'
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

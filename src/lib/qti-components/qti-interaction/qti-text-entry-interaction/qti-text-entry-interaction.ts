@@ -5,12 +5,14 @@ import { createRef } from 'lit/directives/ref.js';
 
 import { Interaction } from '../../../exports/interaction';
 import styles from './qti-text-entry-interaction.styles';
+import { watch } from '../../../decorators/watch';
 
 import type { ResponseVariable } from '../../../exports/variables';
 import type { CSSResultGroup } from 'lit';
 @customElement('qti-text-entry-interaction')
 export class QtiTextEntryInteraction extends Interaction {
   static styles: CSSResultGroup = styles;
+  inputRef = createRef<HTMLInputElement>();
 
   @property({ type: Number, attribute: 'expected-length' }) expectedLength: number;
 
@@ -21,23 +23,21 @@ export class QtiTextEntryInteraction extends Interaction {
   @property({ type: String, attribute: 'data-patternmask-message' }) dataPatternmaskMessage: string;
 
   @state()
-  private _value = '';
+  response: string | null = null;
 
-  inputRef = createRef<HTMLInputElement>();
+  @watch('response', { waitUntilFirstUpdate: true })
+  protected _handleValueChange = () => {
+    // const formData = new FormData();
+    // formData.append(this.responseIdentifier, this.response);
+    this._internals.setFormValue(this.value);
+    this.validate();
+  };
 
-  get value(): string | string[] | null {
-    return this._value || null;
+  get value(): string | null {
+    return this.response || null;
   }
-  set value(val: string | string[] | null) {
-    if (typeof val === 'string' || val === null) {
-      this._value = (val || '') as string;
-      const formData = new FormData();
-      formData.append(this.responseIdentifier, this._value);
-      this._internals.setFormValue(formData);
-      this.validate();
-    } else {
-      throw new Error('Value must be a string');
-    }
+  set value(val: string | null) {
+    this.response = val || null;
   }
 
   public override validate() {
@@ -57,7 +57,7 @@ export class QtiTextEntryInteraction extends Interaction {
       const isValid = input.checkValidity();
       this._internals.setValidity(isValid ? {} : { customError: false });
     }
-    return this._value !== '' && input.checkValidity();
+    return this.response !== '' && input.checkValidity();
   }
 
   public toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean): void {
@@ -102,7 +102,7 @@ export class QtiTextEntryInteraction extends Interaction {
         @change="${this.textChanged}"
         type="${this.patternMask == '[0-9]*' ? 'number' : 'text'}"
         placeholder="${ifDefined(this.placeholderText ? this.placeholderText : undefined)}"
-        .value="${this._value}"
+        .value="${this.response}"
         pattern="${ifDefined(this.patternMask ? this.patternMask : undefined)}"
         maxlength=${1000}
         ?disabled="${this.disabled}"
@@ -116,7 +116,7 @@ export class QtiTextEntryInteraction extends Interaction {
     if (this.disabled || this.readonly) return;
     const input = event.target as HTMLInputElement;
     this.setEmptyAttribute(input.value);
-    if (this._value !== input.value) {
+    if (this.response !== input.value) {
       this.value = input.value;
       this.saveResponse(input.value);
     }
@@ -135,7 +135,7 @@ export class QtiTextEntryInteraction extends Interaction {
   }
 
   reset(): void {
-    this._value = '';
+    this.response = '';
   }
 
   private setEmptyAttribute(text: string) {

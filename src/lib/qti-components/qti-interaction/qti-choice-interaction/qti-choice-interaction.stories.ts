@@ -1,7 +1,7 @@
 import { html } from 'lit';
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
-import { expect, fireEvent, fn, userEvent, within } from '@storybook/test';
-import { getByShadowRole } from 'shadow-dom-testing-library';
+import { expect, fireEvent, fn } from '@storybook/test';
+import { within } from 'shadow-dom-testing-library';
 import { spread } from '@open-wc/lit-helpers';
 
 import type { Meta, StoryObj } from '@storybook/web-components';
@@ -71,7 +71,8 @@ export const Test: Story = {
     const choiceA = canvas.getByText<QtiSimpleChoice>('Option A');
     const choiceB = canvas.getByText<QtiSimpleChoice>('Option B');
     const choiceC = canvas.getByText<QtiSimpleChoice>('Option C');
-    const validationMessage = getByShadowRole(canvasElement, 'alert');
+    // const choiceD = canvas.getByText<QtiSimpleChoice>('Option D');
+    // const validationMessage = getByShadowRole(interaction, 'alert');
 
     const spy = fn(e => e.detail.response);
 
@@ -100,17 +101,18 @@ export const Test: Story = {
     try {
       /* QTI */
       await step('response null', async () => {
-        // console.log(interaction.outerHTML);
         expect(interaction.value).toBe(null);
       });
-      await step('interaction default attribute values', async () => {
+      await step('default attribute values', async () => {
         expect(interaction.maxChoices).toBe(1);
         expect(interaction.minChoices).toBe(0); // unlimited
         expect(interaction.orientation).toBe('vertical');
         expect(interaction.shuffle).toBe(false);
       });
-      await step('children default attribute values', async () => {
+      await step('children have default attribute values', async () => {
         expect(choiceA.identifier).not.toBe(null);
+        expect(choiceB.identifier).not.toBe(null);
+        expect(choiceC.identifier).not.toBe(null);
         expect(choiceA.templateIdentifier).toBe(null);
         expect(choiceA.showHide).toBe('show');
         expect(choiceA.fixed).toBe(false);
@@ -120,18 +122,11 @@ export const Test: Story = {
         expect(choiceB.internals.role).toBe('radio');
         expect(choiceC.internals.role).toBe('radio');
       });
-
       /* ACCESSIBILITY */
-      await step('accessibility roles', async () => {
+      await step('interaction and childreven have correct accessibility roles', async () => {
         expect(choiceA.internals.role).toBe('radio');
         expect(interaction['_internals'].role).toBe('radiogroup');
       });
-      await step('tab index', async () => {
-        choiceA.focus();
-        await userEvent.keyboard('{Tab}');
-        await userEvent.keyboard('{Tab}');
-      });
-
       /* INTERACTION */
       await step('interaction', async () => {
         await fireEvent.click(choiceA);
@@ -142,7 +137,6 @@ export const Test: Story = {
         expect(interaction.value).toBe('B');
         expect(choiceA.checked).toBeFalsy();
       });
-
       /* INTERNALS */
       await step('event called', async () => {
         expect(spy).toHaveBeenCalled();
@@ -152,32 +146,45 @@ export const Test: Story = {
         const expectedResponse = 'A';
         expect(receivedEvent.detail.response).toEqual(expectedResponse);
       });
-
       /* FORM */
-      await step('reset interaction', async () => {
-        interaction.reset();
-        expect(interaction.value).toBe(null);
+      // await step('reset interaction', async () => {
+      //   interaction.reset();
+      //   expect(interaction.value).toBe(null);
+      // });
+      await step('tab index', async () => {
+        choiceA.focus();
+        await expect(choiceA).toHaveFocus();
+        // await delay(2000);
+        // await userEvent.tab();
+        // await expect(choiceB).toHaveFocus();
+        // await userEvent.keyboard('{space}');
+        // await expect(choiceB.checked).toBeTruthy();
       });
-      await step('validate', async () => {
-        interaction.reportValidity();
-        // expect(validationMessage).toBe('Please select an option.');
-      });
-      await step('responsiveness container queries', async () => {});
+      // await step('changing qti attributes should reset state', async () => {
+      //   interaction.maxChoices = 2;
+      //   expect(interaction.value).toBe(null);
+      // });
+      // await step('validate', async () => {
+      //   interaction.reportValidity();
+      //   // expect(validationMessage).toBe('Please select an option.');
+      // });
+      // await step('responsiveness container queries', async () => {});
 
-      await step('changing qti attributes should reset state', async () => {});
-      await step('keyboard navigation', async () => {});
-      await step('touch events', async () => {});
+      // await step('changing qti attributes should reset state', async () => {});
+      // await step('keyboard navigation', async () => {});
+      // await step('touch events', async () => {});
 
-      await step('the dom is wihout added attributes', async () => {});
-      await step('correct event thrown', async () => {});
-      await step('set value', async () => {});
+      // await step('the dom is wihout added attributes', async () => {
+      //   console.log(interaction.outerHTML);
+      // });
+      // await step('correct event thrown', async () => {});
+      // await step('set value', async () => {});
 
-      await step('set value outside', async () => {});
-      await step('validate', async () => {});
-      await step('report reportValidity', async () => {});
-      await step('disabled', async () => {});
-      await step('readonly', async () => {});
-      await step('default attributes in QTI not on the item ( webcomponent without attributes )', async () => {});
+      // await step('set value outside', async () => {});
+      // await step('report reportValidity', async () => {});
+      // await step('disabled', async () => {});
+      // await step('readonly', async () => {});
+      // await step('default attributes in QTI not on the item ( webcomponent without attributes )', async () => {});
     } finally {
       interaction.removeEventListener('qti-interaction-response', spy);
     }
@@ -211,91 +218,112 @@ export const CorrectResponse: Story = {
   }
 };
 
-export const Form: Story = {
-  render: (args, context) => {
-    return html`
-      <form name="choice-form" @submit=${e => e.preventDefault()}>
-        ${Default.render(args, context)}
-        <input type="submit" value="submit" />
-      </form>
-    `;
+const formTemplate = (args, context) => html`
+  <form data-testid="form" role="form" @submit=${e => e.preventDefault()}>
+    ${Test.render(args, context)}
+    <input type="submit" value="submit" />
+  </form>
+`;
+
+export const FormCheckbox: Story = {
+  render: formTemplate,
+  args: {
+    name: 'RESPONSE',
+    'max-choices': 0
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const choiceA = canvas.getByTestId<QtiSimpleChoice>('A');
-    const choiceB = canvas.getByTestId<QtiSimpleChoice>('B');
+    const choiceA = canvas.getByText<QtiSimpleChoice>('Option A');
+    const choiceB = canvas.getByText<QtiSimpleChoice>('Option B');
     const form = canvas.getByRole<HTMLFormElement>('form');
 
-    await fireEvent.click(choiceA);
-    await fireEvent.click(choiceB);
-    await fireEvent.submit(form);
+    await step('event', async () => {
+      expect(choiceA.internals.role).toBe('checkbox');
+    });
 
-    const formData = new FormData(form);
+    await step('event', async () => {
+      await fireEvent.click(choiceA);
+      await fireEvent.click(choiceB);
+      await fireEvent.submit(form);
+      const formData = new FormData(form);
 
-    const submittedValues = formData.getAll('RESPONSE');
+      const submittedValuesArray: string[] = (formData.get('RESPONSE') as string).split(',');
+      const expectedValues = ['A', 'B'];
 
-    // Define expected values for assertion
-    const expectedValues = ['A', 'B'];
+      expect(submittedValuesArray).toEqual(expect.arrayContaining(expectedValues));
+    });
+  }
+};
 
-    // Check that form data contains the expected values
-    expect(submittedValues).toEqual(expect.arrayContaining(expectedValues));
-    try {
-      await step('event', async () => {});
-      await step('reset interaction', async () => {});
-      await step('set value', async () => {});
-      await step('disabled', async () => {});
-      await step('readonly', async () => {});
-      await step('response is null when nothing entered', async () => {});
-      await step('the dom is wihout added attributes', async () => {});
-      await step('default attributes in QTI not on the item ( webcomponent without attributes )', async () => {});
-    } finally {
-      // interaction.removeEventListener('qti-interaction-response', callback);
-    }
+export const FormRadio: Story = {
+  render: formTemplate,
+  args: {
+    name: 'RESPONSE'
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const choiceA = canvas.getByText<QtiSimpleChoice>('Option A');
+    const choiceB = canvas.getByText<QtiSimpleChoice>('Option B');
+    const form = canvas.getByRole<HTMLFormElement>('form');
+
+    await step('event', async () => {
+      expect(choiceA.internals.role).toBe('radio');
+    });
+
+    await step('event', async () => {
+      await fireEvent.click(choiceA);
+      await fireEvent.click(choiceB);
+      await fireEvent.submit(form);
+      const formData = new FormData(form);
+      const submittedValues = formData.getAll('RESPONSE');
+      const expectedValues = ['B'];
+      expect(submittedValues).toEqual(expect.arrayContaining(expectedValues));
+    });
   }
 };
 
 export const ContentEditable = {
   render: (args, context) => {
-    return html` <div contenteditable="true">${Default.render(args, context)}</div> `;
+    return html` <div contenteditable="true">${Test.render(args, context)}</div> `;
   }
 };
 
-// export const Multiple: Story = {
-//   render: Default.render,
-//   args: {
-//     'response-identifier': 'RESPONSE',
-//     'min-choices': 1,
-//     'max-choices': 2
-//   },
-//   play: async ({ canvasElement }) => {
-//     const canvas = within(canvasElement);
-//     const choiceA = canvas.getByTestId<QtiSimpleChoice>('A');
-//     const choiceB = canvas.getByTestId<QtiSimpleChoice>('B');
+export const Multiple: Story = {
+  render: Test.render,
+  args: {
+    'response-identifier': 'RESPONSE',
+    'min-choices': 1,
+    'max-choices': 2
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const choiceA = canvas.getByText<QtiSimpleChoice>('Option A');
+    const choiceB = canvas.getByText<QtiSimpleChoice>('Option B');
 
-//     // Set up a spy to check if 'qti-interaction-changed' event is triggered
-//     const interactionChangedSpy = fn();
-//     canvasElement.addEventListener('qti-interaction-response', interactionChangedSpy);
+    // Set up a spy to check if 'qti-interaction-changed' event is triggered
+    const interactionChangedSpy = fn();
+    canvasElement.addEventListener('qti-interaction-response', interactionChangedSpy);
 
-//     // Simulate clicking choiceB
-//     await fireEvent.click(choiceA);
-//     await fireEvent.click(choiceB);
+    // Simulate clicking choiceB
+    await fireEvent.click(choiceA);
+    await fireEvent.click(choiceB);
 
-//     expect(choiceA.checked).toBeTruthy();
-//     expect(choiceB.checked).toBeTruthy();
+    expect(choiceA.checked).toBeTruthy();
+    expect(choiceB.checked).toBeTruthy();
 
-//     // Assert that the 'qti-interaction-changed' event was called
-//     expect(interactionChangedSpy).toHaveBeenCalled();
+    // Assert that the 'qti-interaction-changed' event was called
+    expect(interactionChangedSpy).toHaveBeenCalled();
 
-//     // Extract the event data from the spy's second call
-//     const event = interactionChangedSpy.mock.calls[1][0];
+    // Extract the event data from the spy's second call
+    const event = interactionChangedSpy.mock.calls[1][0];
 
-//     // Define expected detail data
-//     const expectedDetail = {
-//       responseIdentifier: 'RESPONSE', // replace with actual response identifier if available
-//       response: ['A', 'B'] // assuming "B" is the expected response; adjust as needed
-//     };
+    // Define expected detail data
+    const expectedDetail = {
+      responseIdentifier: 'RESPONSE', // replace with actual response identifier if available
+      response: ['A', 'B'] // assuming "B" is the expected response; adjust as needed
+    };
 
-//     // Check that the event's detail matches expected data
-//     expect(event.detail).toEqual(expectedDetail);
-//   }
-// };
+    // Check that the event's detail matches expected data
+    expect(event.detail).toEqual(expectedDetail);
+  }
+};

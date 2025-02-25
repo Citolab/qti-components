@@ -36,11 +36,11 @@ describe.sequential('suite', () => {
     );
   });
 
-  test('choice-interaction min-choices="1" max-choices="2"', async () => {
+  test('match-interaction test', async () => {
     await testStory.play({ canvasElement });
   });
 
-  test('choice-interaction min-choices="1" max-choices="2"', async () => {
+  test('match-interaction test2', async () => {
     await test2Story.play({ canvasElement });
   });
 });

@@ -25,9 +25,6 @@ export class QtiExtendedTextInteraction extends Interaction {
 
   @property({ type: String, attribute: 'data-patternmask-message' }) dataPatternmaskMessage: string;
 
-  @state()
-  protected _value = '';
-
   @property({ type: String, attribute: 'class' }) classNames;
   @watch('classNames')
   handleclassNamesChange(_: any, classes: string) {
@@ -47,19 +44,20 @@ export class QtiExtendedTextInteraction extends Interaction {
     }
   }
 
-  get value(): string | string[] | null {
-    return this._value || null;
+  @state()
+  response: string | null = null;
+
+  @watch('response', { waitUntilFirstUpdate: true })
+  protected _handleResponseChange = () => {
+    this._internals.setFormValue(this.value);
+    this.validate();
+  };
+
+  get value(): string | null {
+    return this.response || null;
   }
-  set value(val: string | string[] | null) {
-    if (typeof val === 'string' || val === null) {
-      this._value = (val || '') as string;
-      const formData = new FormData();
-      formData.append(this.responseIdentifier, this._value);
-      this._internals.setFormValue(formData);
-      this.validate();
-    } else {
-      throw new Error('Value must be a string');
-    }
+  set value(val: string | null) {
+    this.response = val || null;
   }
 
   public override validate() {
@@ -86,7 +84,7 @@ export class QtiExtendedTextInteraction extends Interaction {
       this._internals.setValidity(isValid ? {} : { customError: false });
     }
 
-    return this._value !== '' && textarea.checkValidity();
+    return this.response !== '' && textarea.checkValidity();
   }
 
   override reportValidity() {
@@ -119,7 +117,7 @@ export class QtiExtendedTextInteraction extends Interaction {
         rows="${this._rows}"
         ?disabled="${this.disabled}"
         ?readonly="${this.readonly}"
-        .value=${this._value}
+        .value=${this.response}
       ></textarea>`;
   }
 
@@ -127,7 +125,7 @@ export class QtiExtendedTextInteraction extends Interaction {
     if (this.disabled || this.readonly) return;
     const input = event.target as HTMLInputElement;
     this.setEmptyAttribute(input.value);
-    if (this._value !== input.value) {
+    if (this.response !== input.value) {
       this.value = input.value;
       this.saveResponse(input.value);
     }

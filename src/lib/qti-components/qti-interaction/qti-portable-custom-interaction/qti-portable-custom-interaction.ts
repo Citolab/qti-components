@@ -37,6 +37,8 @@ export class QtiPortableCustomInteraction extends Interaction {
   @state()
   protected context?: ItemContext;
 
+  @state() response: string | string[] = [];
+
   private dom: HTMLElement;
 
   private convertQtiVariableJSON(input: QtiVariableJSON): string | string[] {
@@ -94,15 +96,15 @@ export class QtiPortableCustomInteraction extends Interaction {
   validate(): boolean {
     return true; // FOR NOW
   }
-  set value(v: string | string[]) {
-    this._value = v;
+  set value(v: string | null) {
+    this._value = v.split(',');
   }
-  get value(): string | string[] {
+  get value(): string | null {
     const pciValue = this.pci?.getResponse();
     if (pciValue) {
-      return this.convertQtiVariableJSON(pciValue);
+      return (this.convertQtiVariableJSON(pciValue) as string[]).join(',');
     }
-    return this._value;
+    return (this._value as string[]).join(',');
   }
 
   set boundTo(newValue: Record<string, ResponseVariableType>) {
@@ -139,7 +141,7 @@ export class QtiPortableCustomInteraction extends Interaction {
         this.pci = pciInstance;
       },
       ondone: (_pciInstance, response, _state, _status: 'interacting' | 'closed' | 'solution' | 'review') => {
-        this.value = this.convertQtiVariableJSON(response);
+        this.response = this.convertQtiVariableJSON(response);
         this.saveResponse(this.value);
       },
       responseIdentifier: this.responseIdentifier,
@@ -261,7 +263,7 @@ export class QtiPortableCustomInteraction extends Interaction {
 
     // Optionally, handle the event here (e.g., update internal state)
     const value = this.convertQtiVariableJSON(event.detail.value);
-    this.value = value;
+    this.response = value;
     this.saveResponse(value);
   };
 
