@@ -2,6 +2,7 @@ import 'vitest';
 
 interface CustomMatchers<R = unknown> {
   toEqualXml: (expected: string) => R;
+  toNotEqualXml: (expected: string) => R;
   toBePositionedRelativeTo: (received, other, position: 'left' | 'right' | 'above' | 'below') => R;
 }
 
