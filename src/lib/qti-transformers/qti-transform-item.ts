@@ -61,19 +61,16 @@ export const qtiTransformItem = () => {
           // get id of url that can be stored in the sessionStorage
           const sessionItemId = uri.substring(uri.lastIndexOf('/') + 1, uri.lastIndexOf('.'));
           if (sessionStorage.getItem(`shuffleOrder-${sessionItemId}`)) {
-            const predefinedOrderRaw = JSON.parse(sessionStorage.getItem(`shuffleOrder-${sessionItemId}`)!) as {
-              interactionId: string;
-              ids: { original: string[]; shuffled: string[] } | undefined;
-            }[];
-            const predefinedOrder = {};
-            for (const order of predefinedOrderRaw) {
-              predefinedOrder[order.interactionId] = order.ids.shuffled;
-            }
+            const predefinedOrder = JSON.parse(sessionStorage.getItem(`shuffleOrder-${sessionItemId}`)!);
             api.shuffleInteractions(predefinedOrder);
           } else {
             const shuffleResult = api.shuffleInteractions();
             if (shuffleResult.result.length > 0) {
-              sessionStorage.setItem(`shuffleOrder-${sessionItemId}`, JSON.stringify(shuffleResult.result));
+              const predefinedOrder = {};
+              for (const order of shuffleResult.result) {
+                predefinedOrder[order.interactionId] = order.ids.shuffled;
+              }
+              sessionStorage.setItem(`shuffleOrder-${sessionItemId}`, JSON.stringify(predefinedOrder));
             }
           }
 
