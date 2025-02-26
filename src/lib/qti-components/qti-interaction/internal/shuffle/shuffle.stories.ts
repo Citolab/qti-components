@@ -32,7 +32,7 @@ export const Choice: StoryObj = {
             </qti-assessment-item>`
       )
       .shuffleInteractions()
-      .html();
+      .api.html();
 
     return shuffledQti;
   },
@@ -66,7 +66,7 @@ export const InlineChoice: StoryObj = {
             </qti-assessment-item>`
       )
       .shuffleInteractions()
-      .html();
+      .api.html();
 
     return shuffledQti;
   },
@@ -119,7 +119,7 @@ export const MatchInteraction: StoryObj = {
         </qti-assessment-item>`
       )
       .shuffleInteractions()
-      .html();
+      .api.html();
 
     return shuffledQti;
   },
@@ -189,7 +189,7 @@ export const MatchInteractionTabular: StoryObj = {
         </qti-assessment-item>`
       )
       .shuffleInteractions()
-      .html();
+      .api.html();
 
     return shuffledQti;
   },
@@ -231,7 +231,7 @@ export const OrderInteraction: StoryObj = {
         </qti-assessment-item>`
       )
       .shuffleInteractions()
-      .html();
+      .api.html();
 
     return shuffledQti;
   },
@@ -243,21 +243,73 @@ export const OrderInteraction: StoryObj = {
       const schumacher = canvas.getByText<QtiSimpleChoice>('Michael Schumacher');
 
       const rubensUnderOrRightToJenson =
-        toBePositionedRelativeTo(rubens, jenson, 'below') || toBePositionedRelativeTo(rubens, jenson, 'right');
+        toBePositionedRelativeTo(rubens, jenson, 'below').pass ||
+        toBePositionedRelativeTo(rubens, jenson, 'right').pass;
       const jensonUnderOfRightToSchumacher =
-        toBePositionedRelativeTo(jenson, schumacher, 'below') || toBePositionedRelativeTo(jenson, schumacher, 'right');
+        toBePositionedRelativeTo(jenson, schumacher, 'below').pass ||
+        toBePositionedRelativeTo(jenson, schumacher, 'right').pass;
 
       const schumacherUnderOrRightToRubens =
-        toBePositionedRelativeTo(schumacher, rubens, 'below') || toBePositionedRelativeTo(schumacher, rubens, 'right');
+        toBePositionedRelativeTo(schumacher, rubens, 'below').pass ||
+        toBePositionedRelativeTo(schumacher, rubens, 'right').pass;
 
       expect(
-        rubensUnderOrRightToJenson.pass && jensonUnderOfRightToSchumacher.pass,
+        rubensUnderOrRightToJenson && jensonUnderOfRightToSchumacher,
         'expect the sequence is different from orginal'
       ).toBe(false);
 
       // we know what sequence it will be because there's a fixed alternative and only 2 non-fixed alternatives, so only 2 possible sequences where 1 is the orginal one that we don't present.
-      expect(rubensUnderOrRightToJenson.pass, 'expect rubens under or right to jenson').toBe(true);
-      expect(schumacherUnderOrRightToRubens.pass, 'expect schumacher under or right to rubens').toBe(true);
+      expect(rubensUnderOrRightToJenson, 'expect rubens under or right to jenson').toBe(true);
+      expect(schumacherUnderOrRightToRubens, 'expect schumacher under or right to rubens').toBe(true);
+    });
+  }
+};
+
+export const OrderInteraction2: StoryObj = {
+  render: () => {
+    const shuffledQti = qtiTransformItem()
+      .parse(
+        xml`
+        <qti-assessment-item>
+          <qti-item-body>
+          		<qti-order-interaction response-identifier="RESPONSE" shuffle="true">
+                <qti-prompt>
+                  Zet de volgende dagelijkse activiteiten in de juiste volgorde:
+                </qti-prompt>
+                <qti-simple-choice data-testid="simple" identifier="_7277e44510f33087d07f4066d0ce308b">
+                  Opstaan
+                </qti-simple-choice>
+                <qti-simple-choice data-testid="simple" identifier="_1295359046aa972a407e41a1350316e7">
+                  Aankleden
+                </qti-simple-choice>
+                <qti-simple-choice data-testid="simple" identifier="_97094d4eb5162950ed0f771abed47e4d">
+                  Ontbijten
+                </qti-simple-choice>
+                <qti-simple-choice data-testid="simple" identifier="_1815d0886d3fddd35b602bc0054b868d">
+                  Naar school gaan
+                </qti-simple-choice>
+                <qti-simple-choice data-testid="simple" identifier="_ec46da4638d1a6bc9c7d601efcb88bd2">
+                  Naar bed gaan
+                </qti-simple-choice>
+              </qti-order-interaction>
+           </qti-item-body>
+        </qti-assessment-item>`
+      )
+      .shuffleInteractions()
+      .api.html();
+
+    return shuffledQti;
+  },
+  play: async ({ canvasElement, step }) => {
+    await step('Verify options are shuffled', async () => {
+      const canvas = within(canvasElement);
+      const simples = await canvas.findAllByShadowTestId('simple');
+      const simpleTexts = Array.from(simples)
+        .map(simple => simple.textContent)
+        .join('#');
+
+      const originalOrder = 'Opstaan#Aankleden#Ontbijten#Naar school gaan#Naar bed gaan';
+      expect(simpleTexts).not.toBe(originalOrder);
     });
   }
 };
@@ -314,7 +366,7 @@ export const GapMatchInteraction: StoryObj = {
             </qti-assessment-item>`
       )
       .shuffleInteractions()
-      .html();
+      .api.html();
 
     return shuffledQti;
   },
@@ -366,7 +418,7 @@ export const AssociateInteraction: StoryObj = {
             </qti-assessment-item>`
       )
       .shuffleInteractions()
-      .html();
+      .api.html();
 
     return shuffledQti;
   },
