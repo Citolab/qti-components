@@ -37,9 +37,9 @@ export const VocabularyMixin = <T extends Constructor<Interaction>>(superClass: 
 
     protected override updated(_changedProperties: PropertyValues): void {
       super.updated(_changedProperties);
-      if (_changedProperties.has('shuffle')) {
-        this._addLabels();
-      }
+      // if (_changedProperties.has('shuffle')) {
+      this._addLabels();
+      // }
     }
 
     private _addLabels() {
