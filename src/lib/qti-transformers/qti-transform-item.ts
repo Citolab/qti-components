@@ -51,29 +51,16 @@ export const qtiTransformItem = () => {
 
   const api: transformItemApi = {
     async load(uri: string, cancelPreviousRequest = false): Promise<typeof api> {
+      // replace all non-alphanumeric characters with underscores
+      let fullKey = uri.replace(/[^a-zA-Z0-9]/g, '_');
+      if (sessionStorage.getItem(fullKey)) {
+        return Promise.resolve(api.parse(sessionStorage.getItem(fullKey)!));
+      }
       return new Promise<typeof api>(resolve => {
         loadXML(uri, cancelPreviousRequest).then(xml => {
           xmlFragment = xml;
-          // set the base path for images and other resources,
-          // you probably want to set the base path to the document root else you can use the path method to set it
-          api.path(uri.substring(0, uri.lastIndexOf('/')));
-
-          // get id of url that can be stored in the sessionStorage
-          const sessionItemId = uri.substring(uri.lastIndexOf('/') + 1, uri.lastIndexOf('.'));
-          if (sessionStorage.getItem(`shuffleOrder-${sessionItemId}`)) {
-            const predefinedOrder = JSON.parse(sessionStorage.getItem(`shuffleOrder-${sessionItemId}`)!);
-            api.shuffleInteractions(predefinedOrder);
-          } else {
-            const shuffleResult = api.shuffleInteractions();
-            if (shuffleResult.result.length > 0) {
-              const predefinedOrder = {};
-              for (const order of shuffleResult.result) {
-                predefinedOrder[order.interactionId] = order.ids.shuffled;
-              }
-              sessionStorage.setItem(`shuffleOrder-${sessionItemId}`, JSON.stringify(predefinedOrder));
-            }
-          }
-
+          fullKey = uri.replace(/[^a-zA-Z0-9]/g, '_');
+          sessionStorage.setItem(fullKey, new XMLSerializer().serializeToString(xmlFragment));
           return resolve(api);
         });
       });
