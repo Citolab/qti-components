@@ -11,7 +11,7 @@ import '../../.storybook/utilities.css';
 
 const meta: Meta = {
   argTypes: {
-    qtipkg: {
+    packages: {
       options: packages.packages,
       control: { type: 'radio' }
     }
@@ -19,7 +19,7 @@ const meta: Meta = {
   args: {
     serverLocation: '/api',
     itemIdentifier: undefined,
-    qtipkg: 'examples'
+    packages: 'examples'
   },
   parameters: {
     layout: 'fullscreen'
@@ -37,7 +37,10 @@ export const Test: Story = {
         <test-navigation
           auto-score-items
           class="flex h-full overflow-hidden"
-          @qti-request-navigation=${({ detail }) => updateArgs({ itemIdentifier: detail.id })}
+          @qti-request-navigation=${({ detail }) => {
+            updateArgs({ itemIdentifier: detail.id });
+            location.reload();
+          }}
         >
           <test-paging-buttons-stamp class="flex flex-col gap-2 p-2 overflow-auto" style="min-width:160px">
             <template>
@@ -51,6 +54,15 @@ export const Test: Story = {
           </test-paging-buttons-stamp>
 
           <div class="flex flex-col flex-1">
+            <div style="padding:1rem; background-color:#ffeeee; color:#ff0000; margin-bottom:3px;">
+              BEWARE CHANGING PACKAGE<br />
+              <span style="color:#ff5555; margin-top:10px;"
+                ><small
+                  >can cause old testContext to be combined with new package. now solved with auto reload</small
+                ></span
+              >
+            </div>
+
             <test-view>View</test-view>
             <test-container class="flex-1 overflow-auto p-2" test-url="${testURL}"></test-container>
             <nav class="flex justify-between p-2">
@@ -67,7 +79,7 @@ export const Test: Story = {
   },
   loaders: [
     async ({ args }) => {
-      const { testURL } = await getManifestInfo(`${args.serverLocation}/${args.qtipkg}/imsmanifest.xml`);
+      const { testURL } = await getManifestInfo(`${args.serverLocation}/${args.packages}/imsmanifest.xml`);
       return { testURL };
     }
   ]

@@ -8,9 +8,15 @@ const { events, args, argTypes, template } = getWcStorybookHelpers('qti-position
 
 type Story = StoryObj<QtiPositionObjectInteraction & typeof args>;
 
+/**
+ *
+ * ### [3.2.16 Position Object Interaction (PCI)](https://www.imsglobal.org/spec/qti/v3p0/impl#h.98xaka8g51za)
+ * consists of a single image which must be positioned on another graphic image (the stage) by the candidate.
+ *
+ */
 const meta: Meta<QtiPositionObjectInteraction> = {
   component: 'qti-position-object-interaction',
-  title: 'components/qti-position-object-interaction',
+  title: '3.2 interaction types/3.2.16 Position Object Interaction',
   args,
   argTypes,
   parameters: {

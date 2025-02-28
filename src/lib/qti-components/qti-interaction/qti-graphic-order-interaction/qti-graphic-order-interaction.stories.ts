@@ -8,9 +8,15 @@ const { events, args, argTypes, template } = getWcStorybookHelpers('qti-graphic-
 
 type Story = StoryObj<QtiGraphicOrderInteraction & typeof args>;
 
+/**
+ *
+ * ### [3.2.11 Graphic Order Interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.973pocg92wxf)
+ * A graphic order interaction is a graphic interaction with a corresponding set of hotspot choices that are defined as areas of the graphic image. The candidate's task is to impose an ordering on the areas (hotspots).
+ *
+ */
 const meta: Meta<QtiGraphicOrderInteraction> = {
   component: 'qti-graphic-order-interaction',
-  title: 'components/qti-graphic-order-interaction',
+  title: '3.2 interaction types/3.2.11 Graphic Order Interaction',
   args,
   argTypes,
   parameters: {

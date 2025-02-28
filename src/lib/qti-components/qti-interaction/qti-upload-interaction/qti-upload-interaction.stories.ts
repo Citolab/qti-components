@@ -8,8 +8,15 @@ const { events, args, argTypes, template } = getWcStorybookHelpers('qti-upload-i
 
 type Story = StoryObj<QtiUploadInteraction & typeof args>;
 
+/**
+ *
+ * ### [3.2.19 Upload](https://www.imsglobal.org/spec/qti/v3p0/impl#h.5bw8rpbotrcs)
+ * allows the candidate to upload a pre-prepared file representing their response.
+ *
+ */
 const meta: Meta<QtiUploadInteraction> = {
   component: 'qti-upload-interaction',
+  title: '3.2 interaction types/3.2.19 Upload',
   args,
   argTypes,
   parameters: {
@@ -17,7 +24,7 @@ const meta: Meta<QtiUploadInteraction> = {
       handles: events
     }
   },
-  tags: ['!autodocs']
+  tags: ['autodocs']
 };
 export default meta;
 

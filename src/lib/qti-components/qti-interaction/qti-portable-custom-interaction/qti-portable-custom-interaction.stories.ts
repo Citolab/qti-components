@@ -1,11 +1,33 @@
 import { html } from 'lit';
+import { getWcStorybookHelpers } from 'wc-storybook-helpers';
 
-export default {
+import type { QtiPortableCustomInteraction } from './qti-portable-custom-interaction';
+import type { StoryObj, Meta } from '@storybook/web-components';
+
+const { events, args, argTypes, template } = getWcStorybookHelpers('qti-portable-custom-interaction');
+
+type Story = StoryObj<QtiPortableCustomInteraction & typeof args>;
+
+/**
+ *
+ * ### [3.2.23 Portable Custom Interaction (PCI)](https://www.imsglobal.org/spec/qti/v3p0/impl#h.98xaka8g51za)
+ * allow the item author to present an interaction with a custom user interface and behavior, supported by, respectively, delivery engine-specific or author-provided code.  Portable Custom Interactions (PCIs) allow the Javascript code implementing the interaction to be made available to delivery systems, with a standard Javascript interface, offering the potential for making PCIs more interoperable and portable between conforming delivery engines.
+ *
+ */
+const meta: Meta<QtiPortableCustomInteraction> = {
   component: 'qti-portable-custom-interaction',
-  title: 'components/qti-portable-custom-interaction'
+  title: '3.2 interaction types/3.2.23 Portable Custom Interaction (PCI)',
+  args,
+  argTypes,
+  parameters: {
+    actions: {
+      handles: events
+    }
+  }
 };
+export default meta;
 
-export const Default = {
+export const Default: Story = {
   render: () =>
     html`<qti-portable-custom-interaction
       response-identifier="RESPONSE"
@@ -27,7 +49,7 @@ export const Default = {
   }
 };
 
-export const FallbackPath = {
+export const FallbackPath: Story = {
   render: () =>
     html`<div>
       Mary is saving to buy a birthday present for her mother. Every week she counts the money she has saved into piles
@@ -105,7 +127,7 @@ export const FallbackPath = {
   }
 };
 
-export const GraphAmpIO = {
+export const GraphAmpIO: Story = {
   render: () =>
     html`<qti-portable-custom-interaction
       custom-interaction-type-identifier="GraphAmpIO"
@@ -139,7 +161,7 @@ export const GraphAmpIO = {
     </qti-portable-custom-interaction>`
 };
 
-export const TapToReveal = {
+export const TapToReveal: Story = {
   render: () =>
     html`<qti-portable-custom-interaction
       class="hmh-tap-border-rounded"
@@ -198,7 +220,7 @@ export const TapToReveal = {
   }
 };
 
-export const ConvertedTAO = {
+export const ConvertedTAO: Story = {
   render: () =>
     html` <qti-portable-custom-interaction
       hook="decisiontask/runtime/decisiontask.amd.js"
