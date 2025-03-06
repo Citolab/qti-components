@@ -97,7 +97,7 @@ export class QtiOrderInteraction extends DragDropInteractionMixin(
   // you have to implement your own getResponse method in the superclass
   // cause they are different for some interactions.
   getValue(val: string[]) {
-    return val.map((v, i) => `${v} droplist${i}`);
+    return val?.map((v, i) => `${v} droplist${i}`) || [];
   }
 
   // some interactions have a different way of getting the response
