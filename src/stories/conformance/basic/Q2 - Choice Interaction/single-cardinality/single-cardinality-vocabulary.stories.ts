@@ -50,7 +50,7 @@ export const Q22_L1_D201: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri('assets/qti-conformance/Basic/Q2/single-cardinality-sv-1.xml')
+      xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality-sv-1.xml')
     })
   ]
 };
@@ -88,7 +88,7 @@ export const Q22_L1_D202: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri('assets/qti-conformance/Basic/Q2/single-cardinality-sv-2a.xml')
+      xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality-sv-2a.xml')
     })
   ]
 };
@@ -127,7 +127,7 @@ export const Q22_L1_D203: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri('assets/qti-conformance/Basic/Q2/single-cardinality-sv-2b.xml')
+      xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality-sv-2b.xml')
     })
   ]
 };
@@ -166,7 +166,7 @@ export const Q22_L1_D204: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri('assets/qti-conformance/Basic/Q2/single-cardinality-sv-2c.xml')
+      xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality-sv-2c.xml')
     })
   ]
 };
@@ -204,7 +204,7 @@ export const Q22_L1_D205: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri('assets/qti-conformance/Basic/Q2/single-cardinality-sv-2d.xml')
+      xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality-sv-2d.xml')
     })
   ]
 };
@@ -242,7 +242,7 @@ export const Q22_L1_D206: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri('assets/qti-conformance/Basic/Q2/single-cardinality-sv-3a.xml')
+      xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality-sv-3a.xml')
     })
   ]
 };
@@ -280,7 +280,7 @@ export const Q22_L1_D207: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri('assets/qti-conformance/Basic/Q2/single-cardinality-sv-3b.xml')
+      xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality-sv-3b.xml')
     })
   ]
 };
@@ -318,7 +318,7 @@ export const Q22_L1_D208: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri('assets/qti-conformance/Basic/Q2/single-cardinality-sv-3c.xml')
+      xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality-sv-3c.xml')
     })
   ]
 };
@@ -356,7 +356,7 @@ export const Q22_L1_I209: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri('assets/qti-conformance/Basic/Q2/single-cardinality-sv-3d.xml')
+      xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality-sv-3d.xml')
     })
   ]
 };
@@ -394,7 +394,7 @@ export const Q22_L1_I210: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri('assets/qti-conformance/Basic/Q2/single-cardinality-sv-3e.xml')
+      xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality-sv-3e.xml')
     })
   ]
 };
@@ -432,7 +432,7 @@ export const Q22_L1_I211: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri('assets/qti-conformance/Basic/Q2/single-cardinality-sv-3f.xml')
+      xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality-sv-3f.xml')
     })
   ]
 };
@@ -470,7 +470,7 @@ export const Q22_L1_I212: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri('assets/qti-conformance/Basic/Q2/single-cardinality-sv-3g.xml')
+      xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality-sv-3g.xml')
     })
   ]
 };
@@ -508,7 +508,7 @@ export const Q22_L1_I213: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri('assets/qti-conformance/Basic/Q2/single-cardinality-sv-3h.xml')
+      xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality-sv-3h.xml')
     })
   ]
 };
@@ -546,7 +546,7 @@ export const Q22_L1_I214: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri('assets/qti-conformance/Basic/Q2/single-cardinality-sv-3i.xml')
+      xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality-sv-3i.xml')
     })
   ]
 };
@@ -583,7 +583,7 @@ export const Q22_L1_I215: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri('assets/qti-conformance/Basic/Q2/single-cardinality-sv-3j.xml')
+      xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality-sv-3j.xml')
     })
   ]
 };
@@ -621,7 +621,7 @@ export const Q22_L1_I216: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri('assets/qti-conformance/Basic/Q2/single-cardinality-sv-3k.xml')
+      xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality-sv-3k.xml')
     })
   ]
 };
@@ -659,7 +659,7 @@ export const Q22_L1_I217: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri('assets/qti-conformance/Basic/Q2/single-cardinality-sv-3l.xml')
+      xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality-sv-3l.xml')
     })
   ]
 };

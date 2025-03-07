@@ -50,7 +50,7 @@ export const Q22_L1_D51: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri('assets/qti-conformance/Basic/Q2/single-cardinality.xml')
+      xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality.xml')
     })
   ]
 };
@@ -92,7 +92,7 @@ export const Q22_L1_D52: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri('assets/qti-conformance/Basic/Q2/single-cardinality.xml')
+      xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality.xml')
     })
   ]
 };
@@ -133,7 +133,7 @@ export const Q22_L1_D53: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri('assets/qti-conformance/Basic/Q2/single-cardinality.xml')
+      xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality.xml')
     })
   ]
 };
@@ -174,7 +174,7 @@ export const Q22_L1_D54: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri('assets/qti-conformance/Basic/Q2/single-cardinality.xml')
+      xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality.xml')
     })
   ]
 };
@@ -215,7 +215,7 @@ export const Q22_L1_D55: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri('assets/qti-conformance/Basic/Q2/single-cardinality.xml')
+      xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality.xml')
     })
   ]
 };
@@ -258,7 +258,7 @@ export const Q22_L1_D56: Story = {
   loaders: [
     async ({ args }) => {
       try {
-        const xml = await getItemByUri('assets/qti-conformance/Basic/Q2/single-cardinality-invalid.xml');
+        const xml = await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality-invalid.xml');
         return { xml };
       } catch (error) {
         console.error('XML validation exception caught during loading:', error.message);
