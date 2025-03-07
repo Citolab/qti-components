@@ -51,9 +51,12 @@ export class QtiAssessmentItem extends LitElement {
 
   @provide({ context: itemContext })
   private _context: ItemContext = {
-    identifier: this.getAttribute('identifier'),
     variables: itemContextVariables
   };
+
+  public setAssessmentItemRefId(identifier: string) {
+    this._context = { ...this._context, identifier };
+  }
 
   public get variables(): VariableValue<string | string[] | null>[] {
     return this._context.variables.map(v => ({

@@ -161,6 +161,7 @@ export class TestNavigation extends LitElement {
                 }
                 return {
                   ...item,
+                  assessmentItemIdentifier: itemElement.getAttribute('identifier'),
                   label: itemElement.getAttribute('label'),
                   title: itemElement.title,
                   adaptive: itemElement.adaptive == 'true' || false,

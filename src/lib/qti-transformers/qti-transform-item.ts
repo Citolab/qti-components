@@ -51,10 +51,6 @@ export const qtiTransformItem = () => {
 
   const api: transformItemApi = {
     async load(uri: string, cancelPreviousRequest = false): Promise<typeof api> {
-      // TODO: find a way to fix this from vitest
-      if (window && window['__vitest_browser__'] === true && !uri.startsWith('http')) {
-        uri = window.origin + `${uri.startsWith('/') ? '' : '/'}` + uri;
-      }
       // replace all non-alphanumeric characters with underscores
       let fullKey = uri.replace(/[^a-zA-Z0-9]/g, '_');
       if (sessionStorage.getItem(fullKey)) {
@@ -63,6 +59,7 @@ export const qtiTransformItem = () => {
       return new Promise<typeof api>(resolve => {
         loadXML(uri, cancelPreviousRequest).then(xml => {
           xmlFragment = xml;
+          api.path(uri.substring(0, uri.lastIndexOf('/')));
           fullKey = uri.replace(/[^a-zA-Z0-9]/g, '_');
           sessionStorage.setItem(fullKey, new XMLSerializer().serializeToString(xmlFragment));
           return resolve(api);

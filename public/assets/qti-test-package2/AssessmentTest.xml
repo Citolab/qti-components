@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-test xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+  identifier="_17076056-4073-4ceb-b51d-119f91b243e0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd">
+  <qti-test-part identifier="testPart" navigation-mode="linear" submission-mode="individual">
+    <qti-assessment-section identifier="section" title="Content Package with QTI v3.0 items"
+      visible="true">
+      <qti-assessment-item-ref identifier="ODD-13122024-124755-RES1" href="QUE_1_1.xml" />
+      <qti-assessment-item-ref identifier="ODD-13122024-124755-RES2" href="QUE_2_1.xml" />
+      <qti-assessment-item-ref identifier="ODD-13122024-124755-RES3" href="QUE_1_1.xml" />
+    </qti-assessment-section>
+  </qti-test-part>
+</qti-assessment-test>

@@ -57,7 +57,7 @@ export const Q22_L1_D1: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri(`assets/qti-conformance/Basic/Q2/multiple-cardinality.xml`)
+      xml: await getItemByUri(`/assets/qti-conformance/Basic/Q2/multiple-cardinality.xml`)
     })
   ]
 };
@@ -107,7 +107,7 @@ export const Q22_L1_D2: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri(`assets/qti-conformance/Basic/Q2/multiple-cardinality.xml`)
+      xml: await getItemByUri(`/assets/qti-conformance/Basic/Q2/multiple-cardinality.xml`)
     })
   ]
 };
@@ -150,7 +150,7 @@ export const Q22_L1_D3: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri(`assets/qti-conformance/Basic/Q2/multiple-cardinality.xml`)
+      xml: await getItemByUri(`/assets/qti-conformance/Basic/Q2/multiple-cardinality.xml`)
     })
   ]
 };
@@ -193,7 +193,7 @@ export const Q22_L1_D4: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri(`assets/qti-conformance/Basic/Q2/multiple-cardinality.xml`)
+      xml: await getItemByUri(`/assets/qti-conformance/Basic/Q2/multiple-cardinality.xml`)
     })
   ]
 };
@@ -238,7 +238,7 @@ export const Q22_L1_D5: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri(`assets/qti-conformance/Basic/Q2/multiple-cardinality.xml`)
+      xml: await getItemByUri(`/assets/qti-conformance/Basic/Q2/multiple-cardinality.xml`)
     })
   ]
 };
@@ -283,7 +283,7 @@ export const Q22_L1_D6: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri(`assets/qti-conformance/Basic/Q2/multiple-cardinality.xml`)
+      xml: await getItemByUri(`/assets/qti-conformance/Basic/Q2/multiple-cardinality.xml`)
     })
   ]
 };
@@ -330,7 +330,7 @@ export const Q22_L1_D7: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri(`assets/qti-conformance/Basic/Q2/multiple-cardinality.xml`)
+      xml: await getItemByUri(`/assets/qti-conformance/Basic/Q2/multiple-cardinality.xml`)
     })
   ]
 };

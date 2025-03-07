@@ -1,7 +1,7 @@
 import type { VariableDeclaration } from './variables';
 
 export interface ItemContext {
-  identifier: string;
+  identifier?: string;
   href?: string;
   variables?: ReadonlyArray<VariableDeclaration<string | string[] | null>>;
 }

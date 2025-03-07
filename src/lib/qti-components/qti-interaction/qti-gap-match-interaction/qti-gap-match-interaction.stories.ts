@@ -152,7 +152,7 @@ export const DontDropInOtherInteraction = {
   },
   loaders: [
     async () => ({
-      xml: await getItemByUri(`assets/qti-conformance/Advanced/Q6/gap-match-sv-1.xml`)
+      xml: await getItemByUri(`/assets/qti-conformance/Advanced/Q6/gap-match-sv-1.xml`)
     })
   ]
 };
@@ -219,7 +219,7 @@ export const CanRedrop: Story = {
   },
   loaders: [
     async () => ({
-      xml: await getItemByUri(`assets/qti-conformance/Advanced/Q6/gap-match-example-1.xml`)
+      xml: await getItemByUri(`/assets/qti-conformance/Advanced/Q6/gap-match-example-1.xml`)
     })
   ]
 };
@@ -306,7 +306,7 @@ export const DraggableContainerHasDropInDication: Story = {
   },
   loaders: [
     async () => ({
-      xml: await getItemByUri(`assets/qti-conformance/Advanced/Q6/gap-match-example-1-removed.xml`)
+      xml: await getItemByUri(`/assets/qti-conformance/Advanced/Q6/gap-match-example-1-removed.xml`)
     })
   ]
 };
