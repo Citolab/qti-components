@@ -53,6 +53,11 @@ export abstract class TestBase extends LitElement {
     });
 
     this.addEventListener('qti-assessment-item-connected', (e: CustomEvent<QtiAssessmentItem>) => {
+      const assessmentItem = e.detail as QtiAssessmentItem;
+      const assessmentRefId = assessmentItem.closest('qti-assessment-item-ref')?.identifier;
+      if (assessmentRefId) {
+        assessmentItem.setAssessmentItemRefId(assessmentRefId);
+      }
       this._updateItemInTestContext(e.detail);
     });
 
@@ -125,11 +130,11 @@ export abstract class TestBase extends LitElement {
    * @param assessmentItem - The assessment item to update.
    */
   private _updateItemInTestContext = (assessmentItem: QtiAssessmentItem): void => {
-    const { identifier } = assessmentItem;
-    const fullVariables = (assessmentItem as any)._context.variables;
+    const context = (assessmentItem as any)._context;
+    const identifier = context.identifier;
+    const fullVariables = context.variables;
 
     // console.log(this._testContext);
-
     // Find the corresponding item in the test context by identifier
     const itemContext = this.testContext.items.find(i => i?.identifier === identifier);
 
