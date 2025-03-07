@@ -1,6 +1,6 @@
 import { action } from '@storybook/addon-actions';
-import { expect } from '@storybook/test';
-import { fireEvent, screen } from '@storybook/test';
+import { expect, within } from '@storybook/test';
+import { fireEvent } from '@storybook/test';
 import { html } from 'lit';
 
 import { getItemByUri } from '../../../../../lib/qti-loader';
@@ -40,7 +40,8 @@ export const Q22_L1_D51: Story = {
     `;
   },
   play: ({ canvasElement }) => {
-    const submitButton = screen.getByRole('button', { name: 'Submit' });
+    const canvas = within(canvasElement);
+    const submitButton = canvas.getByRole('button', { name: 'Submit' });
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
 
     fireEvent.click(submitButton);
@@ -79,7 +80,8 @@ export const Q22_L1_D52: Story = {
     `;
   },
   play: ({ canvasElement }) => {
-    const submitButton = screen.getByRole('button', { name: 'Submit' });
+    const canvas = within(canvasElement);
+    const submitButton = canvas.getByRole('button', { name: 'Submit' });
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
     const choiceA = assessmentItem.querySelector('qti-simple-choice[identifier="choice_a"]') as QtiSimpleChoice;
 
@@ -121,7 +123,8 @@ export const Q22_L1_D53: Story = {
     `;
   },
   play: ({ canvasElement }) => {
-    const submitButton = screen.getByRole('button', { name: 'Submit' });
+    const canvas = within(canvasElement);
+    const submitButton = canvas.getByRole('button', { name: 'Submit' });
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
     const choiceB = assessmentItem.querySelector('qti-simple-choice[identifier="choice_b"]') as QtiSimpleChoice;
 
@@ -162,7 +165,8 @@ export const Q22_L1_D54: Story = {
     `;
   },
   play: ({ canvasElement }) => {
-    const submitButton = screen.getByRole('button', { name: 'Submit' });
+    const canvas = within(canvasElement);
+    const submitButton = canvas.getByRole('button', { name: 'Submit' });
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
     const choiceC = assessmentItem.querySelector('qti-simple-choice[identifier="choice_c"]') as QtiSimpleChoice;
 

@@ -40,7 +40,7 @@ async function setupStory(story, canvasElement) {
 
   // Ensure `item-url` is correctly prefixed with `/public/assets`
   if (args['item-url']) {
-    args['item-url'] = `${window.location.origin}/public/assets${args['item-url']}`;
+    args['item-url'] = `/assets${args['item-url']}`;
   }
 
   render(story.render!(args as any, { loaded, argTypes: story.argTypes || {} } as any), canvasElement);

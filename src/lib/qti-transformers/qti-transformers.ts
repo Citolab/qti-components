@@ -91,6 +91,7 @@ export function itemsFromTest(xmlFragment: DocumentFragment) {
 let currentRequest: XMLHttpRequest | null = null;
 
 export function loadXML(url, cancelPreviousRequest = false) {
+  // console.trace('loadXML', url);
   if (cancelPreviousRequest && currentRequest !== null) {
     currentRequest.abort(); // Abort the ongoing request if there is one
   }
@@ -98,7 +99,6 @@ export function loadXML(url, cancelPreviousRequest = false) {
   return new Promise<XMLDocument | null>((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     currentRequest = xhr; // Store the current request
-
     xhr.open('GET', url, true);
     xhr.responseType = 'document';
 

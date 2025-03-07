@@ -7,6 +7,10 @@ export default defineConfig({
     dangerouslyIgnoreUnhandledErrors: true,
     include: ['src/**/*.spec.ts', 'src/**/*.test.ts'],
     globals: true,
+    // PK: Debugging browser mode does not work as expected, stalls with those options
+    // see https://vitest.dev/guide/debugging#browser-mode for more info
+    // inspectBrk: true,
+    // fileParallelism: false,
     coverage: {
       provider: 'v8' // or 'v8'
     },
