@@ -26,7 +26,7 @@ import {
 } from './qti-transformers';
 
 export type transformItemApi = {
-  load: (uri: string, cancelPreviousRequest?: boolean) => Promise<transformItemApi>;
+  load: (uri: string, identifier?: string, cancelPreviousRequest?: boolean) => Promise<transformItemApi>;
   parse: (xmlString: string) => transformItemApi;
   path: (location: string) => transformItemApi;
   fn: (fn: (xmlFragment: XMLDocument) => void) => transformItemApi;
@@ -50,9 +50,9 @@ export const qtiTransformItem = () => {
   let xmlFragment: XMLDocument;
 
   const api: transformItemApi = {
-    async load(uri: string, cancelPreviousRequest = false): Promise<typeof api> {
+    async load(uri: string, identifier?: string, cancelPreviousRequest = false): Promise<typeof api> {
       // replace all non-alphanumeric characters with underscores
-      let fullKey = uri.replace(/[^a-zA-Z0-9]/g, '_');
+      const fullKey = (identifier || uri)?.replace(/[^a-zA-Z0-9]/g, '_');
       if (sessionStorage.getItem(fullKey)) {
         return Promise.resolve(api.parse(sessionStorage.getItem(fullKey)!));
       }
@@ -60,7 +60,6 @@ export const qtiTransformItem = () => {
         loadXML(uri, cancelPreviousRequest).then(xml => {
           xmlFragment = xml;
           api.path(uri.substring(0, uri.lastIndexOf('/')));
-          fullKey = uri.replace(/[^a-zA-Z0-9]/g, '_');
           sessionStorage.setItem(fullKey, new XMLSerializer().serializeToString(xmlFragment));
           return resolve(api);
         });

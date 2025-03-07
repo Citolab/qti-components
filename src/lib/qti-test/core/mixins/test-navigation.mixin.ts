@@ -94,7 +94,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
 
       const itemLoadPromises = itemRefEls.map(async itemRef => {
         if (!itemRef) return null;
-        return { itemRef, doc: await this._loadItemRequest(itemRef.href) };
+        return { itemRef, doc: await this._loadItemRequest(itemRef.href, itemRef.identifier) };
       });
 
       try {
@@ -145,11 +145,11 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
       });
     }
 
-    private _loadItemRequest(href: string): Promise<DocumentFragment> {
+    private _loadItemRequest(href: string, identifier: string): Promise<DocumentFragment> {
       const event = new CustomEvent('qti-load-item-request', {
         bubbles: true,
         composed: true,
-        detail: { href, promise: null }
+        detail: { href, identifier, promise: null }
       });
       this.dispatchEvent(event);
       return event.detail.promise;

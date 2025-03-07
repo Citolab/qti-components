@@ -41,7 +41,7 @@ export class ItemContainer extends LitElement {
   protected async handleItemURLChange() {
     if (!this.itemURL) return;
     try {
-      const api = await qtiTransformItem().load(this.itemURL);
+      const api = await qtiTransformItem().load(this.itemURL, this.itemURL);
       this.itemDoc = api.htmlDoc();
     } catch (error) {
       console.error('Error loading or parsing XML:', error);

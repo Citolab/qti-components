@@ -26,7 +26,7 @@ export const TestLoaderMixin = <T extends Constructor<TestBase>>(superClass: T) 
 
       this.addEventListener('qti-load-item-request' /* 5. Request the item */, ({ detail }: CustomEvent) => {
         detail.promise = (async () => {
-          const api = await qtiTransformItem().load(`${detail.href}`, detail.cancelPreviousRequest);
+          const api = await qtiTransformItem().load(`${detail.href}`, detail.identifier, detail.cancelPreviousRequest);
           return api.htmlDoc();
         })();
       });
