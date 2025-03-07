@@ -50,7 +50,7 @@ export const Default: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri(`assets/qti-conformance/Basic/A1/alternate-text-for-graphics.xml`)
+      xml: await getItemByUri(`/assets/qti-conformance/Basic/A1/alternate-text-for-graphics.xml`)
     })
   ]
 };

@@ -11,7 +11,6 @@ import type { QtiAssessmentItem } from '../../qti-assessment-item/qti-assessment
 import type { QtiGapText } from '../qti-gap-text';
 import type { QtiGapMatchInteraction } from './qti-gap-match-interaction';
 
-
 const { events, args, argTypes, template } = getWcStorybookHelpers('qti-gap-match-interaction');
 
 type Story = StoryObj<QtiGapMatchInteraction & typeof args>;
@@ -147,7 +146,7 @@ export const DontDropInOtherInteraction = {
   },
   loaders: [
     async () => ({
-      xml: await getItemByUri(`assets/qti-conformance/Advanced/Q6/gap-match-sv-1.xml`)
+      xml: await getItemByUri(`/assets/qti-conformance/Advanced/Q6/gap-match-sv-1.xml`)
     })
   ]
 };
@@ -214,7 +213,7 @@ export const CanRedrop: Story = {
   },
   loaders: [
     async () => ({
-      xml: await getItemByUri(`assets/qti-conformance/Advanced/Q6/gap-match-example-1.xml`)
+      xml: await getItemByUri(`/assets/qti-conformance/Advanced/Q6/gap-match-example-1.xml`)
     })
   ]
 };
@@ -301,7 +300,7 @@ export const DraggableContainerHasDropInDication: Story = {
   },
   loaders: [
     async () => ({
-      xml: await getItemByUri(`assets/qti-conformance/Advanced/Q6/gap-match-example-1-removed.xml`)
+      xml: await getItemByUri(`/assets/qti-conformance/Advanced/Q6/gap-match-example-1-removed.xml`)
     })
   ]
 };

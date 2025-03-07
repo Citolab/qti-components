@@ -63,7 +63,7 @@ export const D1: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri(`assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
+      xml: await getItemByUri(`/assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
     })
   ]
 };
@@ -95,7 +95,7 @@ export const D2: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri(`assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
+      xml: await getItemByUri(`/assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
     })
   ]
 };
@@ -127,7 +127,7 @@ export const D3: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri(`assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
+      xml: await getItemByUri(`/assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
     })
   ]
 };
@@ -159,7 +159,7 @@ export const D4: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri(`assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
+      xml: await getItemByUri(`/assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
     })
   ]
 };
@@ -190,7 +190,7 @@ export const D5: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri(`assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
+      xml: await getItemByUri(`/assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
     })
   ]
 };
@@ -221,7 +221,7 @@ export const D6: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri(`assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
+      xml: await getItemByUri(`/assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
     })
   ]
 };
@@ -254,7 +254,7 @@ export const D7: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri(`assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
+      xml: await getItemByUri(`/assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
     })
   ]
 };
@@ -288,7 +288,7 @@ export const D8: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri(`assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
+      xml: await getItemByUri(`/assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
     })
   ]
 };
@@ -320,7 +320,7 @@ export const D9: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri(`assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
+      xml: await getItemByUri(`/assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
     })
   ]
 };
@@ -356,7 +356,7 @@ export const D10: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri(`assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
+      xml: await getItemByUri(`/assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
     })
   ]
 };
@@ -405,7 +405,7 @@ export const D11: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri(`assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
+      xml: await getItemByUri(`/assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
     })
   ]
 };

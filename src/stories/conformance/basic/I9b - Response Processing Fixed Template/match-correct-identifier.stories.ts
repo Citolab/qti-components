@@ -60,7 +60,7 @@ export const Default: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri(`assets/qti-conformance/Basic/I9b/match-correct-identifier.xml`)
+      xml: await getItemByUri(`/assets/qti-conformance/Basic/I9b/match-correct-identifier.xml`)
     })
   ]
 };
@@ -114,7 +114,7 @@ export const D13: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri(`assets/qti-conformance/Basic/I9b/match-correct-identifier.xml`)
+      xml: await getItemByUri(`/assets/qti-conformance/Basic/I9b/match-correct-identifier.xml`)
     })
   ]
 };
@@ -168,7 +168,7 @@ export const D14: Story = {
   },
   loaders: [
     async ({ args }) => ({
-      xml: await getItemByUri(`assets/qti-conformance/Basic/I9b/match-correct-identifier.xml`)
+      xml: await getItemByUri(`/assets/qti-conformance/Basic/I9b/match-correct-identifier.xml`)
     })
   ]
 };
