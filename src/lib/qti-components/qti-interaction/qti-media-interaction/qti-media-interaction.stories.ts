@@ -8,10 +8,15 @@ const { events, args, argTypes, template } = getWcStorybookHelpers('qti-media-in
 
 type Story = StoryObj<QtiMediaInteraction & typeof args>;
 
+/**
+ *
+ * ### [3.2.15 Media Interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.u9utgghwf8ck)
+ * allows more control over the way the candidate interacts with a time-based media object and allows the number of times the media object was experienced to be reported in the value of the associated response variable.
+ *
+ */
 const meta: Meta<QtiMediaInteraction> = {
   component: 'qti-media-interaction',
-  title: 'components/qti-media-interaction',
-
+  title: '3.2 interaction types/3.2.15 Media Interaction',
   args,
   argTypes,
   parameters: {

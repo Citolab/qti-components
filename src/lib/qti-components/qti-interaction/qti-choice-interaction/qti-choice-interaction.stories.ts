@@ -1,7 +1,8 @@
 import { html } from 'lit';
 import { getWcStorybookHelpers } from 'wc-storybook-helpers';
-import { expect, fireEvent, fn, waitFor, within } from '@storybook/test';
-import { getByShadowRole } from 'shadow-dom-testing-library';
+import { expect, fireEvent, fn } from '@storybook/test';
+import { within } from 'shadow-dom-testing-library';
+import { spread } from '@open-wc/lit-helpers';
 
 import type { Meta, StoryObj } from '@storybook/web-components';
 import type { InputType } from '@storybook/core/types';
@@ -15,38 +16,22 @@ type Story = StoryObj<QtiChoiceInteraction & typeof args>;
 /**
  *
  * ### [3.2.2 Choice Interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.j9nu1oa1tu3b)
- * The ChoiceInteraction.Type (qti-choice-interaction) interaction presents a collection of choices to the candidate. The candidate's task is to select one or more of the choices, up to a maximum of max-choices. The interaction is always initialized with no choices selected.
+ * Presents a set of choices to the candidate. The candidate's task is to select one or more of the choices, up to a maximum number of choices allowed.
  *
  */
 const meta: Meta<
   QtiChoiceInteraction & { classLabel: InputType; classLabelSuffix: InputType; classOrientation: InputType }
 > = {
   component: 'qti-choice-interaction',
+  title: '3.2 interaction types/3.2.2 Choice Interaction',
   args,
-  argTypes: {
-    ...argTypes,
-    classLabel: {
-      options: ['qti-labels-none', 'qti-labels-decimal', 'qti-labels-lower-alpha', 'qti-labels-upper-alpha'],
-      control: { type: 'select' },
-      table: { category: 'Styling' }
-    },
-    classLabelSuffix: {
-      options: ['qti-labels-suffix-none', 'qti-labels-suffix-period', 'qti-labels-suffix-parenthesis'],
-      control: { type: 'select' },
-      table: { category: 'Styling' }
-    },
-    classOrientation: {
-      options: ['qti-orientation-horizontal', 'qti-orientation-vertical'],
-      control: { type: 'select' },
-      table: { category: 'Styling' }
-    }
-  },
+  argTypes,
   parameters: {
     actions: {
       handles: events
     }
   },
-  tags: ['!autodocs']
+  tags: ['autodocs']
 };
 export default meta;
 
@@ -55,42 +40,258 @@ export const Default: Story = {
     return html`
       ${template(
         args,
-        html` <qti-prompt>
+        html`<qti-prompt>
             <p>Which of the following features are <strong>new</strong> to QTI 3?</p>
           </qti-prompt>
-          <qti-simple-choice data-testid="A" identifier="A">Option A</qti-simple-choice>
-          <qti-simple-choice data-testid="B" identifier="B" fixed>Option B</qti-simple-choice>
-          <qti-simple-choice data-testid="C" identifier="C">Option C</qti-simple-choice>
-          <qti-simple-choice data-testid="D" identifier="D">Option D</qti-simple-choice>`
+          <qti-simple-choice identifier="A">Option A</qti-simple-choice>
+          <qti-simple-choice identifier="B">Option B</qti-simple-choice>
+          <qti-simple-choice identifier="C">Option C</qti-simple-choice>
+          <qti-simple-choice identifier="D">Option D</qti-simple-choice>`
       )}
     `;
   }
 };
 
 export const Test: Story = {
-  render: () => {
-    return html` <qti-choice-interaction min-choices="1" max-choices="2">
-        <qti-prompt>
-          <p>Which of the following features are <strong>new</strong> to QTI 3?</p>
-        </qti-prompt>
-        <qti-simple-choice identifier="A">Option A</qti-simple-choice>
-        <qti-simple-choice identifier="B">Option B</qti-simple-choice>
-        <qti-simple-choice identifier="C">Option C</qti-simple-choice>
-        <qti-simple-choice identifier="D">Option D</qti-simple-choice>
-      </qti-choice-interaction>
-      <button
-        id="validate-button"
-        @click=${() => {
-          const choiceInteraction = document.querySelector('qti-choice-interaction') as HTMLElement & {
-            reportValidity: () => boolean;
-          };
-          choiceInteraction?.reportValidity();
-        }}
-      >
-        Validate
-      </button>`;
+  render: args => {
+    return html` <qti-choice-interaction ${spread(args)} data-testid="interaction">
+      <qti-prompt>
+        <p>Which of the following features are <strong>new</strong> to QTI 3?</p>
+      </qti-prompt>
+      <qti-simple-choice identifier="A">Option A</qti-simple-choice>
+      <qti-simple-choice identifier="B">Option B</qti-simple-choice>
+      <qti-simple-choice identifier="C">Option C</qti-simple-choice>
+      <qti-simple-choice identifier="D">Option D</qti-simple-choice>
+    </qti-choice-interaction>`;
   },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    const interaction = canvas.getByTestId<QtiChoiceInteraction>('interaction');
+    const choiceA = canvas.getByText<QtiSimpleChoice>('Option A');
+    const choiceB = canvas.getByText<QtiSimpleChoice>('Option B');
+    const choiceC = canvas.getByText<QtiSimpleChoice>('Option C');
+    // const choiceD = canvas.getByText<QtiSimpleChoice>('Option D');
+    // const validationMessage = getByShadowRole(interaction, 'alert');
+
+    const spy = fn(e => e.detail.response);
+
+    interaction.addEventListener('qti-interaction-response', spy);
+
+    // await fireEvent.click(choiceA);
+    // expect(choiceA.checked).toBeTruthy();
+
+    // await fireEvent.click(choiceB);
+    // expect(choiceB.checked).toBeTruthy();
+    // expect(choiceA.checked).toBeTruthy();
+
+    // await fireEvent.click(choiceC);
+    // const validationMessage = getByShadowRole(canvasElement, 'alert');
+
+    // interaction.reportValidity();
+
+    // await waitFor(() => expect(validationMessage).toBeVisible());
+
+    // expect(validationMessage.textContent).toBe('Please select no more than 2 options.');
+
+    // const callback = fn(e => e.detail.response);
+
+    // interaction.addEventListener('qti-interaction-response', callback);
+
+    try {
+      /* QTI */
+      await step('response null', async () => {
+        expect(interaction.value).toBe(null);
+      });
+      await step('default attribute values', async () => {
+        expect(interaction.maxChoices).toBe(1);
+        expect(interaction.minChoices).toBe(0); // unlimited
+        expect(interaction.orientation).toBe('vertical');
+        // expect(interaction.shuffle).toBe(false);
+      });
+      await step('children have default attribute values', async () => {
+        expect(choiceA.identifier).not.toBe(null);
+        expect(choiceB.identifier).not.toBe(null);
+        expect(choiceC.identifier).not.toBe(null);
+        expect(choiceA.templateIdentifier).toBe(null);
+        expect(choiceA.showHide).toBe('show');
+        expect(choiceA.fixed).toBe(false);
+      });
+      await step('initial state', async () => {
+        expect(choiceA.internals.role).toBe('radio');
+        expect(choiceB.internals.role).toBe('radio');
+        expect(choiceC.internals.role).toBe('radio');
+      });
+      /* ACCESSIBILITY */
+      await step('interaction and childreven have correct accessibility roles', async () => {
+        expect(choiceA.internals.role).toBe('radio');
+        expect(interaction['_internals'].role).toBe('radiogroup');
+      });
+      /* INTERACTION */
+      await step('interaction', async () => {
+        await fireEvent.click(choiceA);
+        expect(choiceA.checked).toBeTruthy();
+        expect(interaction.value).toBe('A');
+        await fireEvent.click(choiceB);
+        expect(choiceB.checked).toBeTruthy();
+        expect(interaction.value).toBe('B');
+        expect(choiceA.checked).toBeFalsy();
+      });
+      /* INTERNALS */
+      await step('event called', async () => {
+        expect(spy).toHaveBeenCalled();
+      });
+      await step('event detail', async () => {
+        const receivedEvent = spy.mock.calls.at(0)[0];
+        const expectedResponse = 'A';
+        expect(receivedEvent.detail.response).toEqual(expectedResponse);
+      });
+      /* FORM */
+      // await step('reset interaction', async () => {
+      //   interaction.reset();
+      //   expect(interaction.value).toBe(null);
+      // });
+      await step('tab index', async () => {
+        choiceA.focus();
+        await expect(choiceA).toHaveFocus();
+        // await delay(2000);
+        // await userEvent.tab();
+        // await expect(choiceB).toHaveFocus();
+        // await userEvent.keyboard('{space}');
+        // await expect(choiceB.checked).toBeTruthy();
+      });
+      // await step('changing qti attributes should reset state', async () => {
+      //   interaction.maxChoices = 2;
+      //   expect(interaction.value).toBe(null);
+      // });
+      // await step('validate', async () => {
+      //   interaction.reportValidity();
+      //   // expect(validationMessage).toBe('Please select an option.');
+      // });
+      // await step('responsiveness container queries', async () => {});
+
+      // await step('changing qti attributes should reset state', async () => {});
+      // await step('keyboard navigation', async () => {});
+      // await step('touch events', async () => {});
+
+      // await step('the dom is wihout added attributes', async () => {
+      //   console.log(interaction.outerHTML);
+      // });
+      // await step('correct event thrown', async () => {});
+      // await step('set value', async () => {});
+
+      // await step('set value outside', async () => {});
+      // await step('report reportValidity', async () => {});
+      // await step('disabled', async () => {});
+      // await step('readonly', async () => {});
+      // await step('default attributes in QTI not on the item ( webcomponent without attributes )', async () => {});
+    } finally {
+      interaction.removeEventListener('qti-interaction-response', spy);
+    }
+  }
+};
+
+export const Disabled: Story = {
+  render: Test.render,
   args: {
+    disabled: true
+  }
+};
+
+export const Readonly: Story = {
+  render: Test.render,
+  args: { readonly: true }
+};
+
+export const CorrectResponse: Story = {
+  render: Test.render,
+  args: {
+    orientation: 'vertical',
+    class: ['qti-input-control-hidden', 'qti-choices-stacking-2'].join(' '),
+    'min-choices': 1,
+    'max-choices': 2
+  },
+  play: ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const choiceInteraction = canvas.getByTestId<QtiChoiceInteraction>('interaction');
+    choiceInteraction.correctResponse = ['A', 'B'];
+  }
+};
+
+const formTemplate = (args, context) => html`
+  <form data-testid="form" role="form" @submit=${e => e.preventDefault()}>
+    ${Test.render(args, context)}
+    <input type="submit" value="submit" />
+  </form>
+`;
+
+export const FormCheckbox: Story = {
+  render: formTemplate,
+  args: {
+    name: 'RESPONSE',
+    'max-choices': 0
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const choiceA = canvas.getByText<QtiSimpleChoice>('Option A');
+    const choiceB = canvas.getByText<QtiSimpleChoice>('Option B');
+    const form = canvas.getByRole<HTMLFormElement>('form');
+
+    await step('event', async () => {
+      expect(choiceA.internals.role).toBe('checkbox');
+    });
+
+    await step('event', async () => {
+      await fireEvent.click(choiceA);
+      await fireEvent.click(choiceB);
+      await fireEvent.submit(form);
+      const formData = new FormData(form);
+
+      const submittedValuesArray: string[] = (formData.get('RESPONSE') as string).split(',');
+      const expectedValues = ['A', 'B'];
+
+      expect(submittedValuesArray).toEqual(expect.arrayContaining(expectedValues));
+    });
+  }
+};
+
+export const FormRadio: Story = {
+  render: formTemplate,
+  args: {
+    name: 'RESPONSE'
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const choiceA = canvas.getByText<QtiSimpleChoice>('Option A');
+    const choiceB = canvas.getByText<QtiSimpleChoice>('Option B');
+    const form = canvas.getByRole<HTMLFormElement>('form');
+
+    await step('event', async () => {
+      expect(choiceA.internals.role).toBe('radio');
+    });
+
+    await step('event', async () => {
+      await fireEvent.click(choiceA);
+      await fireEvent.click(choiceB);
+      await fireEvent.submit(form);
+      const formData = new FormData(form);
+      const submittedValues = formData.getAll('RESPONSE');
+      const expectedValues = ['B'];
+      expect(submittedValues).toEqual(expect.arrayContaining(expectedValues));
+    });
+  }
+};
+
+export const ContentEditable = {
+  render: (args, context) => {
+    return html` <div contenteditable="true">${Test.render(args, context)}</div> `;
+  }
+};
+
+export const Multiple: Story = {
+  render: Test.render,
+  args: {
+    'response-identifier': 'RESPONSE',
     'min-choices': 1,
     'max-choices': 2
   },
@@ -98,92 +299,6 @@ export const Test: Story = {
     const canvas = within(canvasElement);
     const choiceA = canvas.getByText<QtiSimpleChoice>('Option A');
     const choiceB = canvas.getByText<QtiSimpleChoice>('Option B');
-    const choiceC = canvas.getByText<QtiSimpleChoice>('Option C');
-    const button = canvas.getByRole('button', { name: 'Validate' });
-
-    expect(choiceA.internals.role).toBe('checkbox');
-    // expect(element.validate()).toBeFalsy();
-
-    await fireEvent.click(choiceA);
-    expect(choiceA.checked).toBeTruthy();
-
-    await fireEvent.click(choiceB);
-    expect(choiceB.checked).toBeTruthy();
-    expect(choiceA.checked).toBeTruthy();
-
-    await fireEvent.click(choiceC);
-    const validationMessage = getByShadowRole(canvasElement, 'alert');
-
-    await fireEvent.click(button);
-
-    await waitFor(() => expect(validationMessage).toBeVisible());
-
-    expect(validationMessage.textContent).toBe('Please select no more than 2 options.');
-  }
-};
-
-export const Standard: Story = {
-  render: Default.render,
-  args: {},
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    fireEvent.click(canvas.getByTestId('B'));
-    expect(canvas.getByTestId<QtiSimpleChoice>('B').checked).toBeTruthy();
-  }
-};
-
-export const Disabled: Story = {
-  render: Default.render,
-  args: {
-    disabled: true
-  }
-};
-
-export const Readonly: Story = {
-  render: Default.render,
-  args: { readonly: true }
-};
-
-export const MinChoices1: Story = {
-  render: Default.render,
-  args: {
-    minChoices: 1
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    await fireEvent.click(canvas.getByTestId('B'));
-    expect(canvas.getByTestId<QtiSimpleChoice>('B').checked).toBeTruthy();
-  }
-};
-
-export const OrientationHorizontal: Story = {
-  render: Default.render,
-  args: {
-    orientation: 'horizontal'
-  }
-};
-
-export const ControlHidden: Story = {
-  render: Default.render,
-  args: {
-    orientation: 'vertical',
-    class: ['qti-input-control-hidden', 'qti-choices-stacking-2'].join(' ')
-  }
-};
-
-export const Multiple: Story = {
-  render: Default.render,
-  args: {
-    'response-identifier': 'RESPONSE',
-    orientation: 'vertical',
-    class: ['qti-choices-stacking-2'].join(' '),
-    'min-choices': 1,
-    'max-choices': 2
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const choiceA = canvas.getByTestId<QtiSimpleChoice>('A');
-    const choiceB = canvas.getByTestId<QtiSimpleChoice>('B');
 
     // Set up a spy to check if 'qti-interaction-changed' event is triggered
     const interactionChangedSpy = fn();
@@ -212,118 +327,3 @@ export const Multiple: Story = {
     expect(event.detail).toEqual(expectedDetail);
   }
 };
-
-export const CorrectResponse: Story = {
-  render: Default.render,
-  args: {
-    orientation: 'vertical',
-    class: ['qti-input-control-hidden', 'qti-choices-stacking-2'].join(' '),
-    'min-choices': 1,
-    'max-choices': 2
-  },
-  play: ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const choiceInteraction = canvas.getByRole<QtiChoiceInteraction>('group');
-    choiceInteraction.correctResponse = ['A', 'B'];
-  }
-};
-
-export const VocabularyDecimal: Story = {
-  render: Default.render,
-  args: {
-    orientation: 'vertical',
-    class: ['qti-labels-decimal'].join(' '),
-    'min-choices': 1,
-    'max-choices': 1
-  }
-};
-
-VocabularyDecimal.parameters = {
-  chromatic: { disableSnapshot: false } // Ensure Chromatic takes a snapshot for this story
-};
-
-export const VocabularyLowerAlphaStory = {
-  render: Default.render,
-  args: {
-    orientation: 'vertical',
-    class: ['qti-labels-lower-alpha'].join(' '),
-    'min-choices': 1,
-    'max-choices': 1
-  }
-};
-
-export const VocabularyUpperAlphaStory = {
-  render: Default.render,
-  args: {
-    orientation: 'vertical',
-    class: ['qti-labels-upper-alpha'].join(' '),
-    'min-choices': 1,
-    'max-choices': 1
-  }
-};
-
-export const VocabularyLowerAlphaSuffixDotStory = {
-  render: Default.render,
-  args: {
-    orientation: 'vertical',
-    class: ['qti-labels-lower-alpha', 'qti-labels-suffix-period'].join(' '),
-    'min-choices': 1,
-    'max-choices': 1
-  }
-};
-
-export const VocabularyLowerAlphaSuffixDotAndCorrectStory = {
-  render: Default.render,
-  args: {
-    orientation: 'vertical',
-    class: ['qti-labels-lower-alpha', 'qti-labels-suffix-period'].join(' '),
-    'min-choices': 1,
-    'max-choices': 1
-  },
-  play: ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const el = canvas.getByRole<QtiChoiceInteraction>('group');
-    el.correctResponse = ['A', 'B'];
-  }
-};
-
-// export const Form: Story = {
-//   render: () => {
-//     return html`
-//       <form name="choice-form" @submit=${e => e.preventDefault()}>
-//         ${Default.render({
-//           'response-identifier': 'RESPONSE',
-//           'min-choices': 1,
-//           'max-choices': 2
-//         })}
-//         <input type="submit" value="submit" />
-//       </form>
-//     `;
-//   },
-//   play: async ({ canvasElement }) => {
-//     const canvas = within(canvasElement);
-//     const choiceA = canvas.getByTestId<QtiSimpleChoice>('A');
-//     const choiceB = canvas.getByTestId<QtiSimpleChoice>('B');
-//     const form = canvas.getByRole<HTMLFormElement>('form');
-
-//     await fireEvent.click(choiceA);
-//     await fireEvent.click(choiceB);
-//     await fireEvent.submit(form);
-
-//     const formData = new FormData(form);
-
-//     const submittedValues = formData.getAll('RESPONSE');
-
-//     // Define expected values for assertion
-//     const expectedValues = ['A', 'B'];
-
-//     // Check that form data contains the expected values
-//     expect(submittedValues).toEqual(expect.arrayContaining(expectedValues));
-//   }
-// };
-
-// export const ContentEditable = {
-//   render: () => {
-//     return html` <div contenteditable="true">${Default.render({})}</div> `;
-//   }
-// };

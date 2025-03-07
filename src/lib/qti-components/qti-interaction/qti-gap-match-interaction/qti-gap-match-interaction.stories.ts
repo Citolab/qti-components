@@ -15,9 +15,15 @@ const { events, args, argTypes, template } = getWcStorybookHelpers('qti-gap-matc
 
 type Story = StoryObj<QtiGapMatchInteraction & typeof args>;
 
+/**
+ *
+ * ### [3.2.5 Gap Match Interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.7sroqk3xl8e1)
+ * a block interaction that contains a number of gaps that the candidate can fill from an associated set of choices.
+ *
+ */
 const meta: Meta<QtiGapMatchInteraction> = {
   component: 'qti-gap-match-interaction',
-  title: 'components/qti-gap-match-interaction',
+  title: '3.2 interaction types/3.2.5 Gap Match Interaction',
   args,
   argTypes,
   parameters: {
@@ -25,7 +31,7 @@ const meta: Meta<QtiGapMatchInteraction> = {
       handles: events
     }
   },
-  tags: ['no-tests']
+  tags: ['autodocs', 'no-tests']
 };
 export default meta;
 

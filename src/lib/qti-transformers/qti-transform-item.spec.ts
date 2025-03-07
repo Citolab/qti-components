@@ -132,7 +132,7 @@ describe('qtiTransformItem API Methods', () => {
       .shuffleInteractions()
       .api.html();
 
-    expect(parsedXML).toNotEqualXml(
+    expect(parsedXML).not.toEqualXml(
       html`<qti-assessment-item>
         <qti-item-body>
           <qti-choice-interaction shuffle="true">

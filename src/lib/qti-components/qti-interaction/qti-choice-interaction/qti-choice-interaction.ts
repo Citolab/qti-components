@@ -20,12 +20,6 @@ export type Orientation = 'horizontal' | 'vertical' | undefined;
  * @csspart slot - The choice elements
  * @csspart prompt - The prompt
  * @csspart message - The validation message
- *
- * @cssprop [--qti-bg-active=#ffecec] - The active background color
- * @cssprop [--qti-border-active=#f86d70] - The active border color
- * @cssprop [--qti-padding-horizontal=1px] - The option horizontal padding
- * @cssprop [--qti-padding-vertical=solid] - The option vertical padding
- * @cssprop [--qti-border-radius=8px] - The option border radius
  */
 @customElement('qti-choice-interaction')
 export class QtiChoiceInteraction
@@ -34,14 +28,9 @@ export class QtiChoiceInteraction
 {
   static styles: CSSResultGroup = styles;
 
-  constructor() {
-    super();
-    this._internals.role = 'group';
-  }
-
   /** @deprecated, use 'qti-orientation-horizontal' or 'qti-orientation-vertical' instead */
   @property({ type: String })
-  public orientation: Orientation;
+  public orientation: Orientation = 'vertical';
 
   handleSlotChange() {
     // count the number of choices, set a css variable for the number of choices

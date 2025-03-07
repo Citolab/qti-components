@@ -3,7 +3,7 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   base: process.env.VITEST ? undefined : './src',
   test: {
-    setupFiles: './test/setup/customMatchers.js',
+    setupFiles: './test/setup/index.js',
     dangerouslyIgnoreUnhandledErrors: true,
     include: ['src/**/*.spec.ts', 'src/**/*.test.ts'],
     globals: true,
@@ -24,7 +24,7 @@ export default defineConfig({
   },
   server: {
     fs: {
-      allow: ['public'] // Allows serving static files from 'public'
+      allow: ['public/assets'] // Allows serving static files from 'public'
     },
     open: false,
     strictPort: true

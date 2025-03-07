@@ -10,9 +10,15 @@ const { events, args, argTypes, template } = getWcStorybookHelpers('qti-text-ent
 
 type Story = StoryObj<QtiTextEntryInteraction & typeof args>;
 
+/**
+ *
+ * ### [3.2.3 Text Interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.5bw8rpbotrcs)
+ * An inline interaction that accepts text from the candidate.
+ *
+ */
 const meta: Meta<QtiTextEntryInteraction> = {
   component: 'qti-text-entry-interaction',
-  title: 'components/qti-text-entry-interaction',
+  title: '3.2 interaction types/3.2.3 Text Interaction',
 
   args,
   argTypes,
@@ -52,7 +58,8 @@ export const Test: Story = {
   args: {
     'pattern-mask': '[A-Za-z]{3}',
     'data-patternmask-message': 'Please enter exact 3 letters',
-    'response-identifier': 'RESPONSE'
+    'response-identifier': 'RESPONSE',
+    name: 'RESPONSE'
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -66,6 +73,7 @@ export const Test: Story = {
     await fireEvent.submit(form);
 
     const formData = new FormData(form);
+    console.log('formData', formData);
     const value = formData.get('RESPONSE');
     // Check that form data contains the expected values
     expect(value).toEqual(expectedValue);

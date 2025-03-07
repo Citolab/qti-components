@@ -2,14 +2,14 @@ import '../../../../../.storybook/import-storybook-cem'; // <-- fake storybook i
 import { render } from 'lit';
 import { composeStory } from '@storybook/preview-api';
 
-import Meta, * as Stories from './qti-choice-interaction.stories';
+import Meta, * as Stories from './qti-choice-interaction.docs.stories';
 
 import type { StoryObj } from '@storybook/web-components';
 
 import './qti-choice-interaction';
 import '../qti-simple-choice';
 
-describe.sequential('QtiChoiceInteraction stories', () => {
+describe.sequential('QtiChoiceInteraction docs stories', () => {
   let canvasElement;
   const storiesToTest = Object.entries(Stories)
     .filter(([_, value]) => (value as StoryObj).play)
@@ -25,13 +25,19 @@ describe.sequential('QtiChoiceInteraction stories', () => {
     canvasElement = null;
   });
 
+  // test(`ChoiceOrientationVertical story`, async () => play(canvasElement, Stories.ChoiceOrientationVertical));
+
   for (const storyName of storiesToTest) {
-    test(`${storyName} story`, async () => {
-      // eslint-disable-next-line import/namespace
-      const Story = Stories[storyName];
-      const composedStory = composeStory(Story, Meta);
-      render(Story.render!({ ...Meta.args, ...Story.args } as any, { argTypes: Story.argTypes } as any), canvasElement);
-      await composedStory.play({ canvasElement });
-    });
+    // eslint-disable-next-line import/namespace
+    test(`${storyName} story`, async () => play(canvasElement, Stories[storyName]));
   }
 });
+
+async function play(canvasElement, Story: StoryObj) {
+  const composedStory = composeStory(Story, Meta);
+  await render(
+    Story.render!({ ...Meta.args, ...Story.args } as any, { argTypes: Story.argTypes } as any),
+    canvasElement
+  );
+  await composedStory.play({ canvasElement });
+}

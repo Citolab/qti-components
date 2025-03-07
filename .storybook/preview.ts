@@ -48,8 +48,8 @@ const preview: Preview = {
             printWidth: 140,
             htmlWhitespaceSensitivity: 'ignore'
           })
-      },
-      page: DocumentationTemplate
+      }
+      // page: DocumentationTemplate
     },
     viewport: { viewports: customViewports },
     controls: {
@@ -57,6 +57,10 @@ const preview: Preview = {
       matchers: {
         color: /(background|color)$/i
       }
+    },
+    // because we number the stories according to the QTI implementation, we need to sort on those number
+    options: {
+      storySort: (a, b) => (a.id === b.id ? 0 : a.id.localeCompare(b.id, undefined, { numeric: true }))
     },
     layout: 'fullscreen'
   },

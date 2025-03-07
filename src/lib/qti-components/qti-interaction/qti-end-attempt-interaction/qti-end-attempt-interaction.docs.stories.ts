@@ -11,11 +11,14 @@ const { events, args, argTypes, template } = getWcStorybookHelpers('qti-modal-fe
 type Story = StoryObj<QtiEndAttemptInteraction & typeof args>;
 
 /**
+ *
  * ### [3.2.21 End Attempt Interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.b3g8rgbtuwqp)
+ * is a special interaction which immediately ends the current attempt on an assessment item.  It may be used, for example, to allow the candidate to request a hint or model solution, or in an adaptive item to let the candidate display feedback or to move to the next in a series of interactions in the item.
+ *
  */
 const meta: Meta<QtiEndAttemptInteraction> = {
   component: 'qti-end-attempt-interaction',
-  title: 'components/qti-end-attempt-interaction',
+  title: '3.2 interaction types/3.2.21 End Attempt Interaction',
   args,
   argTypes,
   parameters: {

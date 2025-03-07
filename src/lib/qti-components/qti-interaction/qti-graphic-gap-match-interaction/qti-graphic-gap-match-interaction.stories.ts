@@ -8,9 +8,15 @@ const { events, args, argTypes, template } = getWcStorybookHelpers('qti-graphic-
 
 type Story = StoryObj<QtiGraphicGapMatchInteraction & typeof args>;
 
+/**
+ *
+ * ### [3.2.14 Graphic Gap Match Interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.7cs7637r54vv)
+ * a graphical interaction with a set of gaps that are defined as areas (hotspots) of the graphic image and an additional set of gap choices that are defined outside the image. The candidate must associate the gap choices with the gaps in the image and be able to review the image with the gaps filled in context, as indicated by their choices.
+ *
+ */
 const meta: Meta<QtiGraphicGapMatchInteraction> = {
   component: 'qti-graphic-gap-match-interaction',
-  title: 'components/qti-graphic-gap-match-interaction',
+  title: '3.2 interaction types/3.2.14 Graphic Gap Match Interaction',
   args,
   argTypes,
   parameters: {

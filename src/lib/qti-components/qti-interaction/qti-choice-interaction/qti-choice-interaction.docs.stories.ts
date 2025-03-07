@@ -3,6 +3,7 @@ import { getWcStorybookHelpers } from 'wc-storybook-helpers';
 import { expect, fireEvent, fn, waitFor } from '@storybook/test';
 import { getByShadowRole } from 'shadow-dom-testing-library';
 import { within } from 'shadow-dom-testing-library';
+import { spread } from '@open-wc/lit-helpers';
 
 import type { QtiSimpleChoice } from '../qti-simple-choice';
 import type { Meta, StoryObj } from '@storybook/web-components';
@@ -13,11 +14,12 @@ const { events, args, argTypes, template } = getWcStorybookHelpers('qti-choice-i
 type Story = StoryObj<QtiChoiceInteraction & typeof args>;
 
 /**
- * ### [3.2.2 Choice Interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.j9nu1oa1tu3b)
+ * [1.2.1 Choice Interaction](https://www.imsglobal.org/spec/qti/v3p0/vocab#choice-interaction)
+ * Presents a set of choices to the candidate. The candidate's task is to select one or more of the choices, up to a maximum number of choices allowed.
  */
 const meta: Meta<QtiChoiceInteraction> = {
   component: 'qti-choice-interaction',
-  title: 'components/qti-choice-interaction',
+  title: 'Shared Vocabulary/1.2.1 Choice Interaction',
   args,
   argTypes,
   parameters: {
@@ -29,14 +31,15 @@ const meta: Meta<QtiChoiceInteraction> = {
 };
 export default meta;
 
+// ${template(
+//   { ...args, 'response-identifier': 'RESPONSE', 'max-choices': 1 },
+//   html`
 const TemplateThreeOptions = args =>
-  html`${template(
-    { ...args, 'response-identifier': 'RESPONSE', 'max-choices': 1 },
-    html` <qti-simple-choice identifier="ChoiceA">You must stay with your luggage at all times.</qti-simple-choice>
-      <qti-simple-choice identifier="ChoiceB">Do not let someone else look after your luggage.</qti-simple-choice>
-      <qti-simple-choice identifier="ChoiceC">Remember your luggage when you leave.</qti-simple-choice>`
-  )}`;
-
+  html` <qti-choice-interaction ${spread({ ...args, 'response-identifier': 'RESPONSE', 'max-choices': 1 })}>
+    <qti-simple-choice identifier="ChoiceA">You must stay with your luggage at all times.</qti-simple-choice>
+    <qti-simple-choice identifier="ChoiceB">Do not let someone else look after your luggage.</qti-simple-choice>
+    <qti-simple-choice identifier="ChoiceC">Remember your luggage when you leave.</qti-simple-choice>
+  </qti-choice-interaction>`;
 /**
  * ### [1.2.1.1 Choice Label](https://www.imsglobal.org/spec/qti/v3p0/vocab#choice-label)
  */
@@ -191,16 +194,19 @@ export const ChoiceOrientationHorizontal: Story = {
  * ### [1.2.1.4 Choice Stacking](https://www.imsglobal.org/spec/qti/v3p0/vocab#choice-stacking)
  */
 
+// ${template(
+//   { ...args, 'response-identifier': 'RESPONSE' },
+//   html`
+
 const TemplateSixOptions = args =>
-  html`${template(
-    { ...args, 'response-identifier': 'RESPONSE' },
-    html`<qti-simple-choice fixed="false" identifier="H">Hydrogen</qti-simple-choice>
-      <qti-simple-choice fixed="false" identifier="He">Helium</qti-simple-choice>
-      <qti-simple-choice fixed="false" identifier="C">Carbon</qti-simple-choice>
-      <qti-simple-choice fixed="false" identifier="O">Oxygen</qti-simple-choice>
-      <qti-simple-choice fixed="false" identifier="N">Nitrogen</qti-simple-choice>
-      <qti-simple-choice fixed="false" identifier="Cl">Chlorine</qti-simple-choice>`
-  )}`;
+  html` <qti-choice-interaction ${spread({ ...args, 'response-identifier': 'RESPONSE' })}>
+    <qti-simple-choice fixed="false" identifier="H">Hydrogen</qti-simple-choice>
+    <qti-simple-choice fixed="false" identifier="He">Helium</qti-simple-choice>
+    <qti-simple-choice fixed="false" identifier="C">Carbon</qti-simple-choice>
+    <qti-simple-choice fixed="false" identifier="O">Oxygen</qti-simple-choice>
+    <qti-simple-choice fixed="false" identifier="N">Nitrogen</qti-simple-choice>
+    <qti-simple-choice fixed="false" identifier="Cl">Chlorine</qti-simple-choice>
+  </qti-choice-interaction>`;
 
 export const ChoiceStacking1: Story = {
   render: args => TemplateSixOptions({ ...args, 'max-choices': '0' }),

@@ -8,9 +8,15 @@ const { events, args, argTypes, template } = getWcStorybookHelpers('qti-graphic-
 
 type Story = StoryObj<QtiGraphicAssociateInteraction & typeof args>;
 
+/**
+ *
+ * ### [3.2.13 Graphic Associate Interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.7cs7637r54vv)
+ * A graphic interaction with a corresponding set of choices that are defined as areas of the graphic image. The candidate's task is to associate the areas (hotspots) with each other.
+ *
+ */
 const meta: Meta<QtiGraphicAssociateInteraction> = {
   component: 'qti-graphic-associate-interaction',
-  title: 'components/qti-graphic-associate-interaction',
+  title: '3.2 interaction types/3.2.13 Graphic Associate Interaction',
   args,
   argTypes,
   parameters: {

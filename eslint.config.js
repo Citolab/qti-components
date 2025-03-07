@@ -4,7 +4,7 @@ import { configs } from 'typescript-eslint';
 import importPlugin from 'eslint-plugin-import';
 import litPlugin from 'eslint-plugin-lit';
 import storybook from 'eslint-plugin-storybook';
-import wcPlugin from 'eslint-plugin-wc';
+// import wcPlugin from 'eslint-plugin-wc';
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
@@ -13,6 +13,8 @@ export default [
   pluginJs.configs.recommended,
   ...configs.recommended,
   importPlugin.flatConfigs.recommended,
+  litPlugin.configs['flat/recommended'],
+  ...storybook.configs['flat/recommended'],
   {
     files: ['**/*.{js,mjs,cjs,ts,tsx}'],
     languageOptions: {
@@ -70,8 +72,7 @@ export default [
       }
     }
   },
-  litPlugin.configs['flat/recommended'],
-  ...storybook.configs['flat/recommended'],
+
   // ...wcPlugin.configs.recommended,
   { ignores: ['node_modules', 'dist', 'build', 'coverage', 'public'] }
 ];

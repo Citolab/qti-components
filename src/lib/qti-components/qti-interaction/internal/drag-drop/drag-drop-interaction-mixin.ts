@@ -517,7 +517,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       droppable.removeAttribute('disabled');
     }
 
-    get value(): string[] {
+    get value(): string {
       let response: string[];
       if (typeof (this as any).getResponse === 'function') {
         // only for the qti-order-interaction, abstracted this away in a method
@@ -525,10 +525,10 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       } else {
         response = this.collectResponseData();
       }
-      return response;
+      return response.join(',');
     }
 
-    set value(value: string[] | string | null) {
+    set value(value: string | null) {
       if (this.isMatchTabular()) return;
       // Assuming this.value is an array of strings
 

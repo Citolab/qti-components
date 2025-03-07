@@ -18,11 +18,13 @@ export class QtiGraphicAssociateInteraction extends Interaction {
   private hotspots;
   private startPoint = null;
   private endPoint = null;
-  @state() private _lines = [];
+
   @state() private _correctLines = [];
   @state() private startCoord: { x: number; y: number };
   @state() private mouseCoord: { x: number; y: number };
   @queryAssignedElements({ selector: 'img' }) private grImage;
+
+  @state() response = [];
 
   constructor() {
     super();
@@ -30,19 +32,19 @@ export class QtiGraphicAssociateInteraction extends Interaction {
   }
 
   reset(): void {
-    this._lines = [];
+    this.response = [];
     this._correctLines = [];
   }
   validate(): boolean {
-    return this._lines.length > 0;
+    return this.response.length > 0;
   }
-  set value(val: string | string[]) {
-    if (Array.isArray(val)) {
-      this._lines = val;
-    }
+
+  set value(val: string | null) {
+    this.response = val.split(',');
   }
-  get value(): string | string[] {
-    return this._lines;
+
+  get value(): string | null {
+    return this.response.join(',');
   }
 
   public toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
@@ -69,7 +71,7 @@ export class QtiGraphicAssociateInteraction extends Interaction {
           viewbox="0 0 ${this.grImage[0]?.width} ${this.grImage[0]?.height}"
         >
           ${repeat(
-            this._lines,
+            this.response,
             line => line,
             (line, index) => svg`
               <line
@@ -82,8 +84,8 @@ export class QtiGraphicAssociateInteraction extends Interaction {
                 stroke-width="3"
                 @click=${(e: Event) => {
                   e.stopPropagation();
-                  this._lines = this._lines.filter((_, i) => i !== index);
-                  this.saveResponse(this._lines);
+                  this.response = this.response.filter((_, i) => i !== index);
+                  this.saveResponse(this.response);
                 }}
               />
             `
@@ -157,11 +159,11 @@ export class QtiGraphicAssociateInteraction extends Interaction {
         } else if (!this.endPoint) {
           this.endPoint = event.target;
 
-          this._lines = [
-            ...this._lines,
+          this.response = [
+            ...this.response,
             `${this.startPoint.getAttribute('identifier')} ${this.endPoint.getAttribute('identifier')}`
           ];
-          this.saveResponse(this._lines);
+          this.saveResponse(this.response);
           this.startPoint = null;
           this.endPoint = null;
         }

@@ -8,8 +8,15 @@ const { events, args, argTypes, template } = getWcStorybookHelpers('qti-slider-i
 
 type Story = StoryObj<QtiSliderInteraction & typeof args>;
 
+/**
+ *
+ * ### [3.2.18 Slider Interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.s61xcrj4qcyj)
+ * presents the candidate with a control for selecting a numerical value between a lower and upper bound..
+ *
+ */
 const meta: Meta<QtiSliderInteraction> = {
   component: 'qti-slider-interaction',
+  title: '3.2 interaction types/3.2.18 Slider Interaction',
   args,
   argTypes,
   parameters: {

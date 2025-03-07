@@ -9,9 +9,15 @@ const { events, args, argTypes, template } = getWcStorybookHelpers('qti-select-p
 
 type Story = StoryObj<QtiSelectPointInteraction & typeof args>;
 
+/**
+ *
+ * ### [3.2.17 Select Point Interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.ev30y6ze263d)
+ * a graphic interaction in which the candidate's task is to select one or more points.
+ *
+ */
 const meta: Meta<QtiSelectPointInteraction> = {
   component: 'qti-select-point-interaction',
-  title: 'components/qti-select-point-interaction',
+  title: '3.2 interaction types/3.2.17 Select Point Interaction',
   args,
   argTypes,
   parameters: {
