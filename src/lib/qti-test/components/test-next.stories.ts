@@ -1,13 +1,13 @@
 import { expect, fireEvent, waitFor } from '@storybook/test';
 import { html } from 'lit';
 import { findByShadowTitle } from 'shadow-dom-testing-library';
-import { getWcStorybookHelpers } from 'wc-storybook-helpers';
+import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { spread } from '@open-wc/lit-helpers';
 
 import type { TestNext } from './test-next';
 import type { Meta, StoryObj } from '@storybook/web-components';
 
-const { events, args, argTypes, template } = getWcStorybookHelpers('test-next');
+const { events, args, argTypes, template } = getStorybookHelpers('test-next');
 
 type Story = StoryObj<TestNext & typeof args>;
 

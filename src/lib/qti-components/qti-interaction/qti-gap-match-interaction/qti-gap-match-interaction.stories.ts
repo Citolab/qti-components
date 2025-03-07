@@ -1,7 +1,7 @@
 import { action } from '@storybook/addon-actions';
 import { expect } from '@storybook/test';
 import { html } from 'lit';
-import { getWcStorybookHelpers } from 'wc-storybook-helpers';
+import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 
 import { getItemByUri } from '../../../../lib/qti-loader';
 import drag from '../../../../testing/drag';
@@ -11,7 +11,7 @@ import type { QtiAssessmentItem } from '../../qti-assessment-item/qti-assessment
 import type { QtiGapText } from '../qti-gap-text';
 import type { QtiGapMatchInteraction } from './qti-gap-match-interaction';
 
-const { events, args, argTypes, template } = getWcStorybookHelpers('qti-gap-match-interaction');
+const { events, args, argTypes, template } = getStorybookHelpers('qti-gap-match-interaction');
 
 type Story = StoryObj<QtiGapMatchInteraction & typeof args>;
 

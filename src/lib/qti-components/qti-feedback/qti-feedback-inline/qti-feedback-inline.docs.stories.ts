@@ -1,5 +1,5 @@
 import { html } from 'lit';
-import { getWcStorybookHelpers } from 'wc-storybook-helpers';
+import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { expect, fireEvent } from '@storybook/test';
 import { within } from 'shadow-dom-testing-library';
 
@@ -7,7 +7,7 @@ import type { QtiEndAttemptInteraction } from '../../qti-interaction/qti-end-att
 import type { QtiFeedbackInline } from './qti-feedback-inline';
 import type { StoryObj, Meta } from '@storybook/web-components';
 
-const { events, args, argTypes, template } = getWcStorybookHelpers('qti-feedback-inline');
+const { events, args, argTypes, template } = getStorybookHelpers('qti-feedback-inline');
 
 type Story = StoryObj<QtiFeedbackInline & typeof args>;
 

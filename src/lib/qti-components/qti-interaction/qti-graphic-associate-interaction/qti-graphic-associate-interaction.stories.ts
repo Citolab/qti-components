@@ -1,10 +1,10 @@
 import { html } from 'lit';
-import { getWcStorybookHelpers } from 'wc-storybook-helpers';
+import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 
 import type { QtiGraphicAssociateInteraction } from './qti-graphic-associate-interaction';
 import type { StoryObj, Meta } from '@storybook/web-components';
 
-const { events, args, argTypes, template } = getWcStorybookHelpers('qti-graphic-associate-interaction');
+const { events, args, argTypes, template } = getStorybookHelpers('qti-graphic-associate-interaction');
 
 type Story = StoryObj<QtiGraphicAssociateInteraction & typeof args>;
 

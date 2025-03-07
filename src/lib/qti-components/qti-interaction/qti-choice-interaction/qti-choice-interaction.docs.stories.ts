@@ -1,5 +1,5 @@
 import { html } from 'lit';
-import { getWcStorybookHelpers } from 'wc-storybook-helpers';
+import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { expect, fireEvent, fn, waitFor } from '@storybook/test';
 import { getByShadowRole } from 'shadow-dom-testing-library';
 import { within } from 'shadow-dom-testing-library';
@@ -9,7 +9,7 @@ import type { QtiSimpleChoice } from '../qti-simple-choice';
 import type { Meta, StoryObj } from '@storybook/web-components';
 import type { QtiChoiceInteraction } from './qti-choice-interaction';
 
-const { events, args, argTypes, template } = getWcStorybookHelpers('qti-choice-interaction');
+const { events, args, argTypes, template } = getStorybookHelpers('qti-choice-interaction');
 
 type Story = StoryObj<QtiChoiceInteraction & typeof args>;
 

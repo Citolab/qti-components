@@ -1,10 +1,10 @@
 import { html } from 'lit';
-import { getWcStorybookHelpers } from 'wc-storybook-helpers';
+import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 
 import type { QtiMediaInteraction } from './qti-media-interaction';
 import type { StoryObj, Meta } from '@storybook/web-components';
 
-const { events, args, argTypes, template } = getWcStorybookHelpers('qti-media-interaction');
+const { events, args, argTypes, template } = getStorybookHelpers('qti-media-interaction');
 
 type Story = StoryObj<QtiMediaInteraction & typeof args>;
 

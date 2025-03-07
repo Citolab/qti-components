@@ -1,10 +1,10 @@
 import { html } from 'lit';
-import { getWcStorybookHelpers } from 'wc-storybook-helpers';
+import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 
 import type { Meta, StoryObj } from '@storybook/web-components';
 import type { QtiEndAttemptInteraction } from './qti-end-attempt-interaction';
 
-const { events, args, argTypes, template } = getWcStorybookHelpers('qti-end-attempt-interaction');
+const { events, args, argTypes, template } = getStorybookHelpers('qti-end-attempt-interaction');
 
 type Story = StoryObj<QtiEndAttemptInteraction & typeof args>;
 

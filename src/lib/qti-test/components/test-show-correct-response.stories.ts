@@ -1,4 +1,4 @@
-import { getWcStorybookHelpers } from 'wc-storybook-helpers';
+import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { expect, waitFor } from '@storybook/test';
 import { findByShadowText, findByShadowTitle, within } from 'shadow-dom-testing-library';
 import { spread } from '@open-wc/lit-helpers';
@@ -9,7 +9,7 @@ import type { QtiSimpleChoice } from '../../qti-components';
 import type { TestShowCorrectResponse } from './test-show-correct-response';
 import type { Meta, StoryObj } from '@storybook/web-components';
 
-const { events, args, argTypes, template } = getWcStorybookHelpers('test-show-correct-response');
+const { events, args, argTypes, template } = getStorybookHelpers('test-show-correct-response');
 
 type Story = StoryObj<TestShowCorrectResponse & typeof args>;
 

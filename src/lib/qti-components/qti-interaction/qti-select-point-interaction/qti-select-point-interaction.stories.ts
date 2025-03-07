@@ -1,11 +1,11 @@
 import { html } from 'lit';
-import { getWcStorybookHelpers } from 'wc-storybook-helpers';
+import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { expect, fireEvent, fn, waitFor, within } from '@storybook/test';
 
 import type { QtiSelectPointInteraction } from '../..';
 import type { StoryObj, Meta } from '@storybook/web-components';
 
-const { events, args, argTypes, template } = getWcStorybookHelpers('qti-select-point-interaction');
+const { events, args, argTypes, template } = getStorybookHelpers('qti-select-point-interaction');
 
 type Story = StoryObj<QtiSelectPointInteraction & typeof args>;
 

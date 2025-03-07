@@ -1,12 +1,12 @@
 import { html } from 'lit';
 import { expect, fireEvent, within } from '@storybook/test';
-import { getWcStorybookHelpers } from 'wc-storybook-helpers';
+import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { spread } from '@open-wc/lit-helpers';
 
 import type { Meta, StoryObj } from '@storybook/web-components';
 import type { QtiTextEntryInteraction } from './qti-text-entry-interaction';
 
-const { events, args, argTypes, template } = getWcStorybookHelpers('qti-text-entry-interaction');
+const { events, args, argTypes, template } = getStorybookHelpers('qti-text-entry-interaction');
 
 type Story = StoryObj<QtiTextEntryInteraction & typeof args>;
 

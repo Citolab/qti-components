@@ -1,10 +1,10 @@
 import { html } from 'lit';
-import { getWcStorybookHelpers } from 'wc-storybook-helpers';
+import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 
 import type { Meta, StoryObj } from '@storybook/web-components';
 import type { QtiUploadInteraction } from './qti-upload-interaction';
 
-const { events, args, argTypes, template } = getWcStorybookHelpers('qti-upload-interaction');
+const { events, args, argTypes, template } = getStorybookHelpers('qti-upload-interaction');
 
 type Story = StoryObj<QtiUploadInteraction & typeof args>;
 

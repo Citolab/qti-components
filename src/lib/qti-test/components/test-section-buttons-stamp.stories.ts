@@ -1,4 +1,4 @@
-import { getWcStorybookHelpers } from 'wc-storybook-helpers';
+import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { html } from 'lit';
 
 import type { Meta, StoryObj } from '@storybook/web-components';
@@ -6,7 +6,7 @@ import type { TestSectionButtonsStamp } from './test-section-buttons-stamp';
 
 import '../../../../.storybook/utilities.css';
 
-const { events, args, argTypes, template } = getWcStorybookHelpers('test-section-buttons-stamp');
+const { events, args, argTypes, template } = getStorybookHelpers('test-section-buttons-stamp');
 
 type Story = StoryObj<TestSectionButtonsStamp & typeof args>;
 

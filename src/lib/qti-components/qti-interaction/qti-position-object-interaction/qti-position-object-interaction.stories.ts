@@ -1,10 +1,10 @@
 import { html } from 'lit';
-import { getWcStorybookHelpers } from 'wc-storybook-helpers';
+import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 
 import type { QtiPositionObjectInteraction } from './qti-position-object-interaction';
 import type { StoryObj, Meta } from '@storybook/web-components';
 
-const { events, args, argTypes, template } = getWcStorybookHelpers('qti-position-object-interaction');
+const { events, args, argTypes, template } = getStorybookHelpers('qti-position-object-interaction');
 
 type Story = StoryObj<QtiPositionObjectInteraction & typeof args>;
 

@@ -2,7 +2,7 @@ import { action } from '@storybook/addon-actions';
 import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { expect, fn, waitFor, within } from '@storybook/test';
-import { getWcStorybookHelpers } from 'wc-storybook-helpers';
+import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 
 import drag from '../../../../testing/drag';
 
@@ -12,7 +12,7 @@ import type { InputType } from '@storybook/core/types';
 
 import '../../../../item.css';
 
-const { events, args, argTypes, template } = getWcStorybookHelpers('qti-match-interaction');
+const { events, args, argTypes, template } = getStorybookHelpers('qti-match-interaction');
 
 type Story = StoryObj<QtiMatchInteraction & typeof args>;
 

@@ -1,10 +1,10 @@
 import { html } from 'lit';
-import { getWcStorybookHelpers } from 'wc-storybook-helpers';
+import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 
 import type { QtiInlineChoiceInteraction } from './qti-inline-choice-interaction';
 import type { StoryObj, Meta } from '@storybook/web-components';
 
-const { events, args, argTypes, template } = getWcStorybookHelpers('qti-inline-choice-interaction');
+const { events, args, argTypes, template } = getStorybookHelpers('qti-inline-choice-interaction');
 
 type Story = StoryObj<QtiInlineChoiceInteraction & typeof args>;
 

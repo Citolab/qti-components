@@ -1,5 +1,5 @@
 import { html } from 'lit';
-import { getWcStorybookHelpers } from 'wc-storybook-helpers';
+import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { expect, fn } from '@storybook/test';
 import { within } from 'shadow-dom-testing-library';
 
@@ -10,7 +10,7 @@ import type { QtiOrderInteraction } from './qti-order-interaction';
 import type { InputType } from '@storybook/core/types';
 import type { QtiSimpleChoice } from '../qti-simple-choice';
 
-const { events, args, argTypes, template } = getWcStorybookHelpers('qti-order-interaction');
+const { events, args, argTypes, template } = getStorybookHelpers('qti-order-interaction');
 
 type Story = StoryObj<QtiOrderInteraction & typeof args>;
 

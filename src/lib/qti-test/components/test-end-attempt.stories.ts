@@ -1,4 +1,4 @@
-import { getWcStorybookHelpers } from 'wc-storybook-helpers';
+import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { expect, userEvent, waitFor } from '@storybook/test';
 import { findByShadowText, findByShadowTitle, within } from 'shadow-dom-testing-library';
 import { spread } from '@open-wc/lit-helpers';
@@ -7,7 +7,7 @@ import { html } from 'lit';
 import type { TestEndAttempt } from './test-end-attempt';
 import type { Meta, StoryObj } from '@storybook/web-components';
 
-const { events, args, argTypes, template } = getWcStorybookHelpers('test-end-attempt');
+const { events, args, argTypes, template } = getStorybookHelpers('test-end-attempt');
 
 type Story = StoryObj<TestEndAttempt & typeof args>;
 

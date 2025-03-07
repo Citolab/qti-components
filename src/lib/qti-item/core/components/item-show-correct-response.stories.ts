@@ -1,4 +1,4 @@
-import { getWcStorybookHelpers } from 'wc-storybook-helpers';
+import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { spread } from '@open-wc/lit-helpers';
 import { html } from 'lit';
 import { expect, waitFor } from '@storybook/test';
@@ -10,7 +10,7 @@ import './item-show-correct-response';
 import type { ItemContainer } from './item-container';
 import type { QtiSimpleChoice } from '../../../qti-components';
 
-const { events, args, argTypes, template } = getWcStorybookHelpers('test-print-item-variables');
+const { events, args, argTypes, template } = getStorybookHelpers('test-print-item-variables');
 
 type Story = StoryObj<ItemShowCorrectResponse & typeof args>;
 

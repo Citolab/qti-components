@@ -1,12 +1,12 @@
 import { html } from 'lit';
-import { getWcStorybookHelpers } from 'wc-storybook-helpers';
+import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { expect, fireEvent } from '@storybook/test';
 import { within } from 'shadow-dom-testing-library';
 
 import type { QtiEndAttemptInteraction } from './qti-end-attempt-interaction';
 import type { StoryObj, Meta } from '@storybook/web-components';
 
-const { events, args, argTypes, template } = getWcStorybookHelpers('qti-modal-feedback');
+const { events, args, argTypes, template } = getStorybookHelpers('qti-modal-feedback');
 
 type Story = StoryObj<QtiEndAttemptInteraction & typeof args>;
 

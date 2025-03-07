@@ -1,5 +1,5 @@
 import { setCustomElementsManifest } from '@storybook/web-components';
-import { setWcStorybookHelpersConfig } from 'wc-storybook-helpers';
+import { setStorybookHelpersConfig, type Options } from '@wc-toolkit/storybook-helpers';
 import { withActions } from '@storybook/addon-actions/decorator';
 import prettier from 'prettier-v2'; /* https://github.com/storybookjs/storybook/issues/8078#issuecomment-2325332120 */
 import HTMLParser from 'prettier-v2/parser-html'; /* https://github.com/storybookjs/storybook/issues/8078#issuecomment-2325332120 */
@@ -18,7 +18,7 @@ import '../src/lib/qti-test/components';
 import '../src/lib/qti-item/core';
 import '../src/item.css';
 
-setWcStorybookHelpersConfig({
+const options: Options = {
   /** hides the `arg ref` label on each control */
   hideArgRef: true,
   /** sets the custom type reference in the Custom Elements Manifest */
@@ -27,7 +27,9 @@ setWcStorybookHelpersConfig({
   setComponentVariable: false,
   /** renders default values for attributes and CSS properties */
   renderDefaultValues: false
-});
+};
+
+setStorybookHelpersConfig(options);
 
 expect.extend({ toBePositionedRelativeTo });
 

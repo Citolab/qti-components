@@ -1,4 +1,4 @@
-import { getWcStorybookHelpers } from 'wc-storybook-helpers';
+import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { expect, fireEvent, waitFor } from '@storybook/test';
 import { html } from 'lit';
 import { findByShadowTitle, within } from 'shadow-dom-testing-library';
@@ -8,7 +8,7 @@ import type { TestPagingButtonsStamp } from './test-paging-buttons-stamp';
 
 import '../../../../.storybook/utilities.css';
 
-const { events, args, argTypes, template } = getWcStorybookHelpers('test-paging-buttons-stamp');
+const { events, args, argTypes, template } = getStorybookHelpers('test-paging-buttons-stamp');
 
 type Story = StoryObj<TestPagingButtonsStamp & typeof args>;
 

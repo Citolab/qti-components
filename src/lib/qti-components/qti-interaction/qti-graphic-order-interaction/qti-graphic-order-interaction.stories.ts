@@ -1,10 +1,10 @@
 import { html } from 'lit';
-import { getWcStorybookHelpers } from 'wc-storybook-helpers';
+import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 
 import type { QtiGraphicOrderInteraction } from './qti-graphic-order-interaction';
 import type { StoryObj, Meta } from '@storybook/web-components';
 
-const { events, args, argTypes, template } = getWcStorybookHelpers('qti-graphic-order-interaction');
+const { events, args, argTypes, template } = getStorybookHelpers('qti-graphic-order-interaction');
 
 type Story = StoryObj<QtiGraphicOrderInteraction & typeof args>;
 

@@ -1,4 +1,4 @@
-import { getWcStorybookHelpers } from 'wc-storybook-helpers';
+import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { html } from 'lit';
 
 import type { Meta, StoryObj } from '@storybook/web-components';
@@ -6,7 +6,7 @@ import type { TestPrintContext } from './test-print-context';
 
 import './test-print-context';
 
-const { events, args, argTypes, template } = getWcStorybookHelpers('test-print-context');
+const { events, args, argTypes, template } = getStorybookHelpers('test-print-context');
 
 type Story = StoryObj<TestPrintContext & typeof args>;
 
