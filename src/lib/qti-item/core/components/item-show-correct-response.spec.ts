@@ -11,6 +11,7 @@ import meta, {
   SelectPoint as SelectPointStory,
   SelectPointMultipleNoAreaMapping as SelectPointMultipleNoAreaMappingStory,
   GraphicOrder as GraphicOrderStory,
+  InlineChoice as InlineChoiceStory,
   GapMatch as GapMatchStory,
   TextEntry as TextEntryStory,
   GraphicAssociate as GraphicAssociateStory,
@@ -32,6 +33,7 @@ const graphicAssociateStory = composeStory(GraphicAssociateStory, meta);
 const gapMatchStory = composeStory(GapMatchStory, meta);
 const sliderStory = composeStory(SliderStory, meta);
 const textEntryStory = composeStory(TextEntryStory, meta);
+const inlineChoiceStory = composeStory(InlineChoiceStory, meta);
 
 // Helper function to resolve loaders and render story
 async function setupStory(story, canvasElement) {
@@ -89,6 +91,11 @@ describe.sequential('ItemShowCorrectResponse Suite', () => {
   test('show correct response - GraphicOrder', async () => {
     await setupStory(GraphicOrderStory, canvasElement);
     await graphicOrderStory.play({ canvasElement });
+  });
+
+  test('show correct response - InlineChoice', async () => {
+    await setupStory(InlineChoiceStory, canvasElement);
+    await inlineChoiceStory.play({ canvasElement });
   });
 
   test('show correct response - GraphicAssociate', async () => {

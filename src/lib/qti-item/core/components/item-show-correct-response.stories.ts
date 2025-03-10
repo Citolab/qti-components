@@ -31,7 +31,7 @@ export const Default: Story = {
   render: args => {
     return html`<qti-item>
       <!-- <div style="display: flex; flex-direction: column; gap: 1rem;"> -->
-      <item-container style="width: 400px; height: 350px; display: block;" item-url=${args['item-url']}>
+      <item-container style="width: 400px; height: 350px; display: block;" item-url=${args['item-url'] as string}>
         <template>
           <style>
             qti-assessment-item {
@@ -94,7 +94,7 @@ export const NoCorrectResponse: Story = {
   },
   render: args =>
     html` <qti-item>
-      <item-container style="width: 400px; height: 350px; display: block;" item-url=${args['item-url']}>
+      <item-container style="width: 400px; height: 350px; display: block;" item-url=${args['item-url'] as string}>
         <template>
           <style>
             qti-assessment-item {
@@ -132,7 +132,7 @@ export const MultipleResponse: Story = {
   render: args =>
     html` <qti-item>
       <div>
-        <item-container style="display: block;width: 400px; height: 350px;" item-url=${args['item-url']}>
+        <item-container style="display: block;width: 400px; height: 350px;" item-url=${args['item-url'] as string}>
           <template>
             <style>
               qti-assessment-item {
@@ -181,7 +181,7 @@ export const TextEntry: Story = {
   render: args =>
     html` <qti-item>
       <div>
-        <item-container style="display: block;width: 400px; height: 350px;" item-url=${args['item-url']}>
+        <item-container style="display: block;width: 400px; height: 350px;" item-url=${args['item-url'] as string}>
           <template>
             <style>
               qti-assessment-item {
@@ -232,7 +232,7 @@ export const GapMatch: Story = {
   render: args =>
     html` <qti-item>
       <div>
-        <item-container style="display: block;width: 400px; height: 350px;" item-url=${args['item-url']}>
+        <item-container style="display: block;width: 400px; height: 350px;" item-url=${args['item-url'] as string}>
           <template>
             <style>
               qti-assessment-item {
@@ -290,7 +290,7 @@ export const SelectPoint: Story = {
   render: args =>
     html`<qti-item>
       <div>
-        <item-container style="display: block;width: 400px; height: 350px;" item-url=${args['item-url']}>
+        <item-container style="display: block;width: 400px; height: 350px;" item-url=${args['item-url'] as string}>
           <template>
             <style>
               qti-assessment-item {
@@ -343,7 +343,7 @@ export const SelectPointMultipleNoAreaMapping: Story = {
   render: args =>
     html` <qti-item>
       <div>
-        <item-container style="display: block;width: 400px; height: 350px;" item-url=${args['item-url']}>
+        <item-container style="display: block;width: 400px; height: 350px;" item-url=${args['item-url'] as string}>
           <template>
             <style>
               qti-assessment-item {
@@ -398,7 +398,7 @@ export const GraphicOrder: Story = {
   render: args =>
     html` <qti-item>
       <div>
-        <item-container style="display: block;width: 400px; height: 350px;" item-url=${args['item-url']}>
+        <item-container style="display: block;width: 400px; height: 350px;" item-url=${args['item-url'] as string}>
           <template>
             <style>
               qti-assessment-item {
@@ -446,6 +446,47 @@ export const GraphicOrder: Story = {
   }
 };
 
+export const InlineChoice: Story = {
+  args: {
+    'item-url': '/qti-item/example-inline-choice.xml' // Set the new item URL here
+  },
+  render: args =>
+    html` <qti-item>
+      <div>
+        <item-container style="display: block;width: 400px; height: 350px;" item-url=${args['item-url'] as string}>
+          <template>
+            <style>
+              qti-assessment-item {
+                padding: 1rem;
+                display: block;
+                aspect-ratio: 4 / 3;
+                width: 800px;
+
+                border: 2px solid blue;
+                transform: scale(0.5);
+                transform-origin: top left;
+              }
+            </style>
+          </template>
+        </item-container>
+        <item-show-correct-response></item-show-correct-response>
+      </div>
+    </qti-item>`,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const assessmentItem = await canvas.findByShadowTitle('Richard III (Take 2)');
+    const interaction = assessmentItem.querySelector('qti-inline-choice-interaction');
+
+    const showCorrectButton = await canvas.findByShadowText(`Show correct response`);
+    await step('Click on the Show Correct button', async () => {
+      await showCorrectButton.click();
+      const correctResponse = interaction.shadowRoot.querySelector<HTMLSpanElement>('[part="correct-option"]'); //.findByShadowLabelText('correct-response');
+      expect(correctResponse).not.toBeNull();
+      expect(correctResponse.innerText).toBe('York');
+    });
+  }
+};
+
 export const GraphicAssociate: Story = {
   args: {
     'item-url': '/qti-test-package/items/graphic_associate.xml' // Set the new item URL here
@@ -453,7 +494,7 @@ export const GraphicAssociate: Story = {
   render: args =>
     html` <qti-item>
       <div>
-        <item-container style="display: block;width: 400px; height: 350px;" item-url=${args['item-url']}>
+        <item-container style="display: block;width: 400px; height: 350px;" item-url=${args['item-url'] as string}>
           <template>
             <style>
               qti-assessment-item {
@@ -504,7 +545,7 @@ export const Slider: Story = {
   render: args =>
     html` <qti-item>
       <div>
-        <item-container style="display: block;width: 400px; height: 350px;" item-url=${args['item-url']}>
+        <item-container style="display: block;width: 400px; height: 350px;" item-url=${args['item-url'] as string}>
           <template>
             <style>
               qti-assessment-item {

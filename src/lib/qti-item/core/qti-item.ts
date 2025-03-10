@@ -35,7 +35,7 @@ export class QtiItem extends LitElement {
     super();
     this.addEventListener('qti-item-context-updated', this._onItemContextChanged);
     this.addEventListener('qti-assessment-item-connected', this._onAssessmentItemConnected);
-    this.addEventListener('item-show-correct-response', this._onHandleTestShowCorrectResponse.bind(this));
+    this.addEventListener('item-show-correct-response', this._onHandleTestShowCorrectResponse);
   }
 
   private _handleItemContextChanged(e: CustomEvent<{ itemContext: ItemContext }>) {

@@ -122,12 +122,23 @@ export class QtiInlineChoiceInteraction extends Interaction {
   }
 
   toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
-    this.correctResponse = show ? responseVariable.value : '';
+    this.correctResponse = show && responseVariable.correctResponse?.toString();
     if (!this.correctResponse) {
       this.correctOption = '';
       return;
     }
-    this.correctOption = `<span part="correct-option">${
+
+    // textSpan.classList.add('correct-option');
+    //       textSpan.textContent = text;
+
+    //       // Apply styles
+    //       textSpan.style.border = '1px solid var(--qti-correct)';
+    //       textSpan.style.borderRadius = '4px';
+    //       textSpan.style.padding = '2px 4px';
+    //       textSpan.style.margin = '4px';
+    //       textSpan.style.display = 'inline-block';
+
+    this.correctOption = `<span part="correct-option" style="border:1px solid var(--qti-correct); border-radius:4px; padding: 2px 4px; margin: 4px; display:inline-block">${
       this.options.find(option => this.correctResponse === option.value).textContent
     }</span>`;
   }
