@@ -39,7 +39,6 @@ export const Test: Story = {
           class="flex h-full overflow-hidden"
           @qti-request-navigation=${({ detail }) => {
             updateArgs({ itemIdentifier: detail.id });
-            location.reload();
           }}
         >
           <test-paging-buttons-stamp class="flex flex-col gap-2 p-2 overflow-auto" style="min-width:160px">
@@ -57,9 +56,7 @@ export const Test: Story = {
             <div style="padding:1rem; background-color:#ffeeee; color:#ff0000; margin-bottom:3px;">
               BEWARE CHANGING PACKAGE<br />
               <span style="color:#ff5555; margin-top:10px;"
-                ><small
-                  >can cause old testContext to be combined with new package. now solved with auto reload</small
-                ></span
+                ><small>can cause old testContext to be combined with new package.</small></span
               >
             </div>
 
