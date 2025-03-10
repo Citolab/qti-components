@@ -1,7 +1,6 @@
 import { customElementVsCodePlugin } from 'custom-element-vs-code-integration';
-import { customEsLintRuleGeneratorPlugin } from 'custom-element-eslint-rule-generator';
 import { customElementJsxPlugin } from 'custom-element-jsx-integration';
-import { expandTypesPlugin, getTsProgram } from 'cem-plugin-expanded-types';
+import { getTsProgram, typeParserPlugin } from '@wc-toolkit/type-parser';
 
 console.log('Building the custom element manifest...');
 
@@ -31,7 +30,7 @@ export default {
   },
 
   plugins: [
-    expandTypesPlugin({
+    typeParserPlugin({
       outdir: outdir + 'dist'
     }),
     customElementVsCodePlugin({

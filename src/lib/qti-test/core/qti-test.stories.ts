@@ -16,13 +16,17 @@ const meta: Meta<typeof QtiTest> = {
   parameters: {
     actions: {
       handles: events
-    }
+    },
+    controls: { disable: true }
   },
   tags: ['autodocs']
 };
 export default meta;
 
-export const Unstyled: Story = {
+export const Controls: Story = {
+  parameters: {
+    controls: { disable: false }
+  },
   render: args => {
     return html` ${template(
       args,
@@ -31,6 +35,17 @@ export const Unstyled: Story = {
         <nav><test-prev>Vorige</test-prev><test-next>Volgende</test-next></nav></test-navigation
       >`
     )}`;
+  }
+};
+
+export const Unstyled: Story = {
+  render: args => {
+    return html`<qti-test
+      ><test-navigation
+        ><test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"></test-container>
+        <nav><test-prev>Vorige</test-prev><test-next>Volgende</test-next></nav></test-navigation
+      ></qti-test
+    >`;
   }
 };
 

@@ -10,7 +10,7 @@ import type { QtiSimpleChoice } from '../qti-simple-choice';
 import type { QtiChoiceInteraction } from './qti-choice-interaction';
 
 const { events, args, argTypes, template } = getStorybookHelpers('qti-choice-interaction', {
-  excludeCategories: []
+  excludeCategories: ['cssParts', 'cssProps', 'cssStates', 'events', 'properties', 'slots', 'methods']
 });
 
 type Story = StoryObj<QtiChoiceInteraction & typeof args>;
@@ -217,6 +217,7 @@ export const CorrectResponse: Story = {
     const canvas = within(canvasElement);
     const choiceInteraction = canvas.getByTestId<QtiChoiceInteraction>('interaction');
     choiceInteraction.correctResponse = ['A', 'B'];
+    // choiceInteraction.toggleCorrectResponse();
   }
 };
 

@@ -1,6 +1,6 @@
 import { provide } from '@lit/context';
 import { LitElement } from 'lit';
-import { state } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
 
 import { INITIAL_TEST_CONTEXT, testContext } from '../../exports/test.context';
 import { INITIAL_SESSION_CONTEXT, type SessionContext, sessionContext } from '../../exports/session.context';
@@ -12,15 +12,15 @@ import type { QtiAssessmentItem } from '../../qti-components/';
 import type { OutcomeVariable, VariableDeclaration } from '../../exports/variables';
 
 export abstract class TestBase extends LitElement {
-  @state()
+  @property({ attribute: false, type: Object })
   @provide({ context: testContext })
   public testContext: Readonly<TestContext> = INITIAL_TEST_CONTEXT;
 
-  @state()
+  @property({ attribute: false, type: Object })
   @provide({ context: sessionContext })
   public sessionContext: Readonly<SessionContext> = INITIAL_SESSION_CONTEXT;
 
-  testElement: QtiAssessmentTest;
+  protected _testElement: QtiAssessmentTest;
 
   constructor() {
     super();
@@ -34,8 +34,8 @@ export abstract class TestBase extends LitElement {
       // this.sessionContext = INITIAL_SESSION_CONTEXT; // new test, new session context!
       if (this.testContext && this.testContext.items.length > 0) return;
 
-      this.testElement = e.detail;
-      const items = Array.from(this.testElement.querySelectorAll('qti-assessment-item-ref')).map(itemRef => {
+      this._testElement = e.detail;
+      const items = Array.from(this._testElement.querySelectorAll('qti-assessment-item-ref')).map(itemRef => {
         return {
           href: itemRef.href,
           identifier: itemRef.identifier,

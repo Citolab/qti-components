@@ -29,7 +29,8 @@
     "mdx.experimentalLanguageServer": true,
     "lit-plugin.rules.no-boolean-in-attribute-binding": "off",
     "lit-plugin.rules.no-incompatible-type-binding": "warning",
-    "lit-plugin.rules.no-invalid-boolean-binding": "warning"
+    "lit-plugin.rules.no-invalid-boolean-binding": "warning",
+    "lit-plugin.rules.no-complex-attribute-binding": "warning"
   },
   "extensions": {
     "recommendations": [
