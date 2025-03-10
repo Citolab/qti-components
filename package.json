@@ -100,7 +100,7 @@
     "@storybook/test-runner": "^0.22.0",
     "@storybook/web-components": "^8.6.4",
     "@storybook/web-components-vite": "^8.6.4",
-    "@swc/core": "^1.11.7",
+    "@swc/core": "^1.11.8",
     "@testing-library/dom": "^10.4.0",
     "@types/dom-view-transitions": "^1.0.6",
     "@types/node": "^22.13.9",
@@ -162,7 +162,7 @@
     "wireit": "^0.14.11"
   },
   "optionalDependencies": {
-    "@rollup/rollup-linux-x64-gnu": "^4.34.9"
+    "@rollup/rollup-linux-x64-gnu": "^4.35.0"
   },
   "customElements": "custom-elements.json",
   "bugs": {
