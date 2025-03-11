@@ -10,7 +10,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
   abstract class TestNavigationClass extends superClass {
     @property({ type: String }) navigate: 'item' | 'section' = 'item';
 
-    protected _testElement?: QtiAssessmentTest;
+    protected _testElement: QtiAssessmentTest;
 
     constructor(...args: any[]) {
       super(...args);
