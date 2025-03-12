@@ -36,12 +36,12 @@ jobs:
         run: npm ci
 
       - name: Build docs
-        run: npm run storybook:docs:build
+        run: npm run build-storybook
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './storybook-static'
+          path: './dist'
 
       - name: Deploy to GitHub Pages
         id: deployment
