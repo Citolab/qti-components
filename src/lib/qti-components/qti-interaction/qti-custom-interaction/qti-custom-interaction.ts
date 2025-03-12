@@ -181,11 +181,11 @@ export class QtiCustomInteraction extends Interaction {
     return this.rawResponse !== '';
   }
 
-  get value(): string | null {
+  get response(): string | null {
     return this.rawResponse;
   }
 
-  set value(val: string | null) {
+  set response(val: string | null) {
     if (typeof val === 'string') {
       this.rawResponse = val;
       this.saveResponse(val);

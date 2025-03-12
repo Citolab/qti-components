@@ -16,7 +16,7 @@ type Story = StoryObj<QtiSliderInteraction & typeof args>;
  */
 const meta: Meta<QtiSliderInteraction> = {
   component: 'qti-slider-interaction',
-  title: '3.2 interaction types/3.2.18 Slider Interaction',
+  title: '3.2 interaction types/18 Slider',
   args,
   argTypes,
   parameters: {

@@ -28,17 +28,17 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
 
   @property({ type: String }) class: string = '';
 
-  @state() public response: string | string[] = [];
+  // public response: string | string[] = [];
 
   // dragDropApi: TouchDragAndDrop;
-  get value(): string | null {
-    if (!this.classList.contains('qti-match-tabular')) return (this.response as string[]).join(',');
-    else return (this.response as string[]).join(',');
-  }
-  set value(val: string | null) {
-    if (!this.classList.contains('qti-match-tabular')) this.response = val.split(',');
-    else this.response = val.split(',');
-  }
+  // get value(): string | null {
+  //   if (!this.classList.contains('qti-match-tabular')) return (this.response as string[]).join(',');
+  //   else return (this.response as string[]).join(',');
+  // }
+  // set value(val: string | null) {
+  //   if (!this.classList.contains('qti-match-tabular')) this.response = val.split(',');
+  //   else this.response = val.split(',');
+  // }
   @property({ type: String, attribute: 'response-identifier' }) responseIdentifier: string = '';
   @state() protected correctOptions: string[] = [];
 

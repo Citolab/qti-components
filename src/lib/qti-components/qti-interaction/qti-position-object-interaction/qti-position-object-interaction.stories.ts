@@ -16,7 +16,7 @@ type Story = StoryObj<QtiPositionObjectInteraction & typeof args>;
  */
 const meta: Meta<QtiPositionObjectInteraction> = {
   component: 'qti-position-object-interaction',
-  title: '3.2 interaction types/3.2.16 Position Object Interaction',
+  title: '3.2 interaction types/16 Position Object',
   args,
   argTypes,
   parameters: {

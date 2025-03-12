@@ -6,6 +6,7 @@ import type { IInteraction } from './interaction.interface';
 
 export abstract class Interaction extends LitElement implements IInteraction {
   static formAssociated = true;
+  protected _internals: ElementInternals;
 
   @property({ type: String, attribute: 'response-identifier' }) responseIdentifier;
 
@@ -13,34 +14,50 @@ export abstract class Interaction extends LitElement implements IInteraction {
 
   @property({ reflect: true, type: Boolean }) readonly = false;
 
+  /* PK: Correct response */
   @state()
   protected _correctResponse: string | string[];
 
-  protected _internals: ElementInternals;
+  get correctResponse(): Readonly<string | string[]> {
+    return this._correctResponse;
+  }
+
+  set correctResponse(val: Readonly<string | string[]>) {
+    this._correctResponse = val as string | string[];
+  }
+
+  public toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
+    this.correctResponse = show
+      ? responseVariable?.correctResponse
+      : responseVariable.cardinality === 'single'
+        ? ''
+        : [];
+  }
 
   constructor() {
     super();
     this._internals = this.attachInternals();
   }
-  get correctResponse(): Readonly<string | string[]> {
-    return this._correctResponse;
-  }
-  set correctResponse(val: Readonly<string | string[]>) {
-    this._correctResponse = val as string | string[];
-  }
+
   abstract validate(): boolean;
 
-  abstract get value(): string | null;
-  abstract set value(val: string | null);
+  get value(): string | null {
+    return JSON.stringify(this.response);
+  }
 
-  public response: string | string[] | null;
+  set value(val: string | null) {
+    this.response = val ? JSON.parse(val) : null;
+  }
+
+  abstract get response(): string | string[] | null;
+  abstract set response(val: string | string[] | null);
 
   public reportValidity(): boolean {
     return this._internals.reportValidity();
   }
 
   public reset(): void {
-    this.value = null;
+    this.response = null;
   }
 
   // attributeChangedCallback(name: string, _old: string | null, value: string | null): void {
@@ -54,14 +71,6 @@ export abstract class Interaction extends LitElement implements IInteraction {
   //     this.reset();
   //   }
   // }
-
-  public toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
-    this.correctResponse = show
-      ? responseVariable?.correctResponse
-      : responseVariable.cardinality === 'single'
-        ? ''
-        : [];
-  }
 
   public override connectedCallback() {
     super.connectedCallback();

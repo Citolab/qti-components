@@ -22,7 +22,7 @@ type Story = StoryObj<QtiOrderInteraction & typeof args>;
  */
 const meta: Meta<QtiOrderInteraction & { class: InputType }> = {
   component: 'qti-order-interaction',
-  title: '3.2 interaction types/3.2.10 Order Interaction',
+  title: '3.2 interaction types/10 Order',
   args,
   argTypes: {
     ...argTypes,
@@ -97,7 +97,7 @@ export const Test: Story = {
         await drag(dragC, { to: drops[2], duration: 500 });
         const receivedEvent = callback.mock.calls.at(-1)?.[0];
         const expectedResponse = ['DriverA', 'DriverB', 'DriverC'];
-        expect(interaction.value).toEqual(expectedResponse.join(','));
+        expect(interaction.response).toEqual(expectedResponse.join(','));
         expect(receivedEvent.detail.response).toEqual(expectedResponse);
         expect(drops[0]).toHaveTextContent('Rubens Barrichello');
       });
@@ -106,10 +106,10 @@ export const Test: Story = {
         const receivedEvent = callback.mock.calls.at(-1)?.[0];
         const expectedResponse = ['', '', ''];
         expect(receivedEvent.detail.response).toEqual(expectedResponse);
-        expect(interaction.value).toEqual(expectedResponse.join(','));
+        expect(interaction.response).toEqual(expectedResponse.join(','));
       });
       await step('set value of interaction', async () => {
-        interaction.value = ['DriverA', 'DriverB', 'DriverC'];
+        interaction.response = ['DriverA', 'DriverB', 'DriverC'];
         expect(drops[0]).toHaveTextContent('Rubens Barrichello');
       });
       await step('disabled', async () => {

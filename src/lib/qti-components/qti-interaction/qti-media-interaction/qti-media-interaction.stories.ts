@@ -16,7 +16,7 @@ type Story = StoryObj<QtiMediaInteraction & typeof args>;
  */
 const meta: Meta<QtiMediaInteraction> = {
   component: 'qti-media-interaction',
-  title: '3.2 interaction types/3.2.15 Media Interaction',
+  title: '3.2 interaction types/15 Media',
   args,
   argTypes,
   parameters: {

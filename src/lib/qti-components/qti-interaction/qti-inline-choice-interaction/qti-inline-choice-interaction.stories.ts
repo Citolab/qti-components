@@ -16,7 +16,7 @@ type Story = StoryObj<QtiInlineChoiceInteraction & typeof args>;
  */
 const meta: Meta<QtiInlineChoiceInteraction> = {
   component: 'qti-inline-choice-interaction',
-  title: '3.2 interaction types/3.2.8 Inline Choice Interaction',
+  title: '3.2 interaction types/08 Inline Choice',
   args,
   argTypes,
   parameters: {

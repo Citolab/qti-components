@@ -10,7 +10,7 @@ import type { QtiSimpleChoice } from '../qti-simple-choice';
 import type { QtiChoiceInteraction } from './qti-choice-interaction';
 
 const { events, args, argTypes, template } = getStorybookHelpers('qti-choice-interaction', {
-  excludeCategories: ['cssParts', 'cssProps', 'cssStates', 'events', 'properties', 'slots', 'methods']
+  // excludeCategories: ['cssParts', 'cssProps', 'cssStates', 'events', 'properties', 'slots', 'methods']
 });
 
 type Story = StoryObj<QtiChoiceInteraction & typeof args>;
@@ -25,7 +25,7 @@ const meta: Meta<
   QtiChoiceInteraction & { classLabel: InputType; classLabelSuffix: InputType; classOrientation: InputType }
 > = {
   component: 'qti-choice-interaction',
-  title: '3.2 interaction types/3.2.2 Choice Interaction',
+  title: '3.2 interaction types/02 Choice',
   args,
   argTypes,
   parameters: {

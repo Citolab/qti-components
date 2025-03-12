@@ -33,11 +33,11 @@ export class QtiSliderInteraction extends Interaction {
     this.setAttribute('role', 'slider');
   }
 
-  get value(): string {
+  get response(): string {
     return this._value.toString();
   }
 
-  set value(val: string) {
+  set response(val: string) {
     const newValue = parseInt(val, 10);
     if (!isNaN(newValue)) {
       this._updateValue(newValue);

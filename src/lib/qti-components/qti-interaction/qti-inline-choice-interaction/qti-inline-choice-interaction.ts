@@ -109,7 +109,7 @@ export class QtiInlineChoiceInteraction extends Interaction {
     this.options = this.options.map((option, i) => ({ ...option, selected: i === 0 }));
   }
 
-  public set value(value: string | null) {
+  public set response(value: string | null) {
     this.options = this.options.map(option => {
       if (value && value === option.value) {
         option.selected = true;
@@ -117,7 +117,7 @@ export class QtiInlineChoiceInteraction extends Interaction {
       return option;
     });
   }
-  get value(): string | null {
+  get response(): string | null {
     return this.options.find(option => option.selected)?.value || null;
   }
 

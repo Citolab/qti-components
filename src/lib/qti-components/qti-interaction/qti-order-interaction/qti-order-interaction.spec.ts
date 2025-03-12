@@ -34,7 +34,7 @@ describe.sequential('suite', () => {
     );
   });
 
-  test('choice-interaction min-choices="1" max-choices="2"', async () => {
+  test('order-interaction', async () => {
     await testStory.play({ canvasElement });
   });
 });

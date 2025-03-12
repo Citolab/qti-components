@@ -18,11 +18,11 @@ export class QtiUploadInteraction extends Interaction {
     return this._base64 !== null; // Ensure the Base64 string is set
   }
 
-  get value(): string | null {
+  get response(): string | null {
     return this._base64; // Return the Base64 string
   }
 
-  set value(base64: string | null) {
+  set response(base64: string | null) {
     if (typeof base64 === 'string') {
       this._base64 = base64;
       this.saveResponse(base64); // Save Base64 string as the response

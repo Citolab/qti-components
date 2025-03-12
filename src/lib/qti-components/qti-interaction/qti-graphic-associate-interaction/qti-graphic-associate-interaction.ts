@@ -24,7 +24,8 @@ export class QtiGraphicAssociateInteraction extends Interaction {
   @state() private mouseCoord: { x: number; y: number };
   @queryAssignedElements({ selector: 'img' }) private grImage;
 
-  @state() response = [];
+  @state()
+  private _response: string[] | null = [];
 
   constructor() {
     super();
@@ -32,19 +33,20 @@ export class QtiGraphicAssociateInteraction extends Interaction {
   }
 
   reset(): void {
-    this.response = [];
+    this._response = [];
     this._correctLines = [];
   }
+
   validate(): boolean {
     return this.response.length > 0;
   }
 
-  set value(val: string | null) {
-    this.response = val.split(',');
+  set response(val) {
+    this._response = val;
   }
 
-  get value(): string | null {
-    return this.response.join(',');
+  get response() {
+    return this._response;
   }
 
   public toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
@@ -84,7 +86,7 @@ export class QtiGraphicAssociateInteraction extends Interaction {
                 stroke-width="3"
                 @click=${(e: Event) => {
                   e.stopPropagation();
-                  this.response = this.response.filter((_, i) => i !== index);
+                  this._response = this._response.filter((_, i) => i !== index);
                   this.saveResponse(this.response);
                 }}
               />
@@ -134,17 +136,29 @@ export class QtiGraphicAssociateInteraction extends Interaction {
   override firstUpdated(): void {
     this.hotspots = this.querySelectorAll('qti-associable-hotspot');
 
-    document.addEventListener('mousemove', event => {
-      const rect = this.grImage[0].getBoundingClientRect();
-      const scaleX = this.grImage[0].naturalWidth / rect.width;
-      const scaleY = this.grImage[0].naturalHeight / rect.height;
+    this.addEventListener('mousemove', event => {
+      const img = this.grImage[0];
+      if (!img) return;
+
+      const rect = img.getBoundingClientRect();
+      // const scaleX = img.naturalWidth / img.clientWidth;
+      // const scaleY = img.naturalHeight / img.clientHeight;
+
+      // console.log(`scaleX: ${scaleX}, scaleY: ${scaleY}`);
+
       this.mouseCoord = {
-        x: (event.clientX - rect.left) * scaleX,
-        y: (event.clientY - rect.top) * scaleY
+        x: event.clientX - rect.left, // * scaleX,
+        y: event.clientY - rect.top // * scaleY
       };
+
+      console.log(`Mouse Coord: ${JSON.stringify(this.mouseCoord)}`);
     });
 
     this.hotspots.forEach(hotspot => {
+      const img = this.grImage[0];
+      const scaleX = img.naturalWidth / img.clientWidth;
+      const scaleY = img.naturalHeight / img.clientHeight;
+
       hotspot.style.left = hotspot.getAttribute('coords').split(',')[0] + 'px';
       hotspot.style.top = hotspot.getAttribute('coords').split(',')[1] + 'px';
 
@@ -159,7 +173,7 @@ export class QtiGraphicAssociateInteraction extends Interaction {
         } else if (!this.endPoint) {
           this.endPoint = event.target;
 
-          this.response = [
+          this._response = [
             ...this.response,
             `${this.startPoint.getAttribute('identifier')} ${this.endPoint.getAttribute('identifier')}`
           ];

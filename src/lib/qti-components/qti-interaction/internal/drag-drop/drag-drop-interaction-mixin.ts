@@ -2,7 +2,6 @@ import { property } from 'lit/decorators.js';
 
 import { FlippablesMixin } from './flippables-mixin';
 import { liveQuery } from '../../../../decorators/live-query';
-import drag from '../../../../../testing/drag';
 
 import type { Interaction } from '../../../../exports/interaction';
 import type { IInteraction } from '../../../../exports/interaction.interface';
@@ -517,7 +516,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       droppable.removeAttribute('disabled');
     }
 
-    get value(): string {
+    get response(): string {
       let response: string[];
       if (typeof (this as any).getResponse === 'function') {
         // only for the qti-order-interaction, abstracted this away in a method
@@ -528,7 +527,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       return response.join(',');
     }
 
-    set value(value: string | null) {
+    set response(value: string | null) {
       if (this.isMatchTabular()) return;
       // Assuming this.value is an array of strings
 

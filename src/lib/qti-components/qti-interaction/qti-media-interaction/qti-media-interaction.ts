@@ -14,11 +14,11 @@ export class QtiMediaInteraction extends Interaction {
     // maybe check if the media has been played?
   }
 
-  get value(): string | null {
+  get response(): string | null {
     return this._value.toString();
   }
 
-  set value(val: string | null) {
+  set response(val: string | null) {
     if (val !== null) {
       const isNumber = !isNaN(parseInt(val?.toString()));
       if (isNumber) {
