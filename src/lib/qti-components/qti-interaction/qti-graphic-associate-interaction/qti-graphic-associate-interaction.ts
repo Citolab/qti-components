@@ -155,9 +155,9 @@ export class QtiGraphicAssociateInteraction extends Interaction {
     });
 
     this.hotspots.forEach(hotspot => {
-      const img = this.grImage[0];
-      const scaleX = img.naturalWidth / img.clientWidth;
-      const scaleY = img.naturalHeight / img.clientHeight;
+      // const img = this.grImage[0];
+      // const scaleX = img.naturalWidth / img.clientWidth;
+      // const scaleY = img.naturalHeight / img.clientHeight;
 
       hotspot.style.left = hotspot.getAttribute('coords').split(',')[0] + 'px';
       hotspot.style.top = hotspot.getAttribute('coords').split(',')[1] + 'px';
