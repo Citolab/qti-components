@@ -67,7 +67,7 @@
     "act": "act --container-architecture linux/arm64 -W .github/workflows/pkgr-release.yml",
     "vite": "vite",
     "stylelint": "stylelint \"src/**/*.css\"",
-    "storybook:build": "wireit",
+    "build-storybook": "wireit",
     "test-storybook": "wireit",
     "storybook:docs:build": "wireit",
     "chromatic": "node chromatic-runner.cjs",
@@ -206,7 +206,7 @@
     "test": {
       "command": "vitest run"
     },
-    "storybook:build": {
+    "build-storybook": {
       "command": "storybook build",
       "dependencies": [
         "cem"
