@@ -1,4 +1,4 @@
-name: tag-docs
+name: tag-storybook
 
 on:      
   # Allows you to run this workflow manually from the Actions tab
