@@ -212,7 +212,7 @@ export const MaxChoice_One_SameLocation: Story = {
       html`
         <qti-select-point-interaction max-choices="1">
           <qti-prompt>Click twice on the same location.</qti-prompt>
-          <img src="qti-select-point-interaction/uk.png" max-choices=${args.maxChoices} height="280" width="206" />
+          <img src="qti-select-point-interaction/uk.png" height="280" width="206" />
         </qti-select-point-interaction>
       `
     ),
@@ -284,12 +284,10 @@ export const MaxChoice_One_DifferentLocation: Story = {
   render: args =>
     template(
       { ...args, 'max-choices': 1 },
-      html`
-        <qti-select-point-interaction max-choices="1">
-          <qti-prompt>Click two different locations.</qti-prompt>
-          <img src="qti-select-point-interaction/uk.png" max-choices="${args.maxChoices}" height="280" width="206" />
-        </qti-select-point-interaction>
-      `
+      html` <qti-select-point-interaction max-choices="1">
+        <qti-prompt>Click two different locations.</qti-prompt>
+        <img src="qti-select-point-interaction/uk.png" height="280" width="206" />
+      </qti-select-point-interaction>`
     ),
   args: {
     'response-identifier': 'RESPONSE'

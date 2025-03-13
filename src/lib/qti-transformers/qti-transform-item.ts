@@ -52,15 +52,15 @@ export const qtiTransformItem = () => {
   const api: transformItemApi = {
     async load(uri: string, identifier?: string, cancelPreviousRequest = false): Promise<typeof api> {
       // replace all non-alphanumeric characters with underscores
-      const fullKey = (identifier || uri)?.replace(/[^a-zA-Z0-9]/g, '_');
-      if (sessionStorage.getItem(fullKey)) {
-        return Promise.resolve(api.parse(sessionStorage.getItem(fullKey)!));
-      }
+      // const fullKey = (identifier || uri)?.replace(/[^a-zA-Z0-9]/g, '_');
+      // if (sessionStorage.getItem(fullKey)) {
+      //   return Promise.resolve(api.parse(sessionStorage.getItem(fullKey)!));
+      // }
       return new Promise<typeof api>(resolve => {
         loadXML(uri, cancelPreviousRequest).then(xml => {
           xmlFragment = xml;
           api.path(uri.substring(0, uri.lastIndexOf('/')));
-          sessionStorage.setItem(fullKey, new XMLSerializer().serializeToString(xmlFragment));
+          // sessionStorage.setItem(fullKey, new XMLSerializer().serializeToString(xmlFragment));
           return resolve(api);
         });
       });

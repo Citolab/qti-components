@@ -83,7 +83,6 @@ export class QtiSelectPointInteraction extends Interaction {
         console.warn('Maximum number of points reached. Remove a marker to add a new one.');
       }
     }
-
     // Save the response with the calculated points
     this.saveResponse(this.response);
   };
@@ -223,13 +222,6 @@ export class QtiSelectPointInteraction extends Interaction {
 
   validate(): boolean {
     return this.response.length >= this.minChoices && this.response.length <= this.maxChoices;
-  }
-
-  set value(val: string | null) {
-    this.response = val.split(',');
-  }
-  get value(): string | null {
-    return this.response.join(',');
   }
 
   private calculateScale() {

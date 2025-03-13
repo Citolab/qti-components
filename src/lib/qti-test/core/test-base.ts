@@ -30,8 +30,8 @@ export abstract class TestBase extends LitElement {
      * An existing context item is updated with the itemRef properties if nessesary.
      */
     this.addEventListener('qti-assessment-test-connected', (e: CustomEvent<QtiAssessmentTest>) => {
-      // this.testContext = INITIAL_TEST_CONTEXT; // new test, new test context!
-      // this.sessionContext = INITIAL_SESSION_CONTEXT; // new test, new session context!
+      this.testContext = INITIAL_TEST_CONTEXT; // new test, new test context!
+      this.sessionContext = INITIAL_SESSION_CONTEXT; // new test, new session context!
       if (this.testContext && this.testContext.items.length > 0) return;
 
       this._testElement = e.detail;

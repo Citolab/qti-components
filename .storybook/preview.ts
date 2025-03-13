@@ -41,6 +41,7 @@ const preview: Preview = {
   parameters: {
     docs: {
       toc: true,
+      codePanel: true,
       source: {
         /* FIXME EVENTUALLY https://github.com/storybookjs/storybook/issues/8078#issuecomment-2325332120 */
         transform: input =>

@@ -11,16 +11,6 @@ import type { CSSResultGroup } from 'lit';
 
 export type Orientation = 'horizontal' | 'vertical' | undefined;
 
-/**
- * An sample element.
- *
- * @slot - default slot of the choices
- * @slot prompt - slot of the prompt
- *
- * @csspart slot - The choice elements
- * @csspart prompt - The prompt
- * @csspart message - The validation message
- */
 @customElement('qti-choice-interaction')
 export class QtiChoiceInteraction
   extends VocabularyMixin(ChoicesMixin(Interaction, 'qti-simple-choice'), 'qti-simple-choice')
