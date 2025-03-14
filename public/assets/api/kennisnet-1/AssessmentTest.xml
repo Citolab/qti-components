@@ -16,16 +16,16 @@
   <qti-test-part identifier="TEST-PART" navigation-mode="linear" submission-mode="individual">
     <qti-assessment-section identifier="SECTION" title="Section" visible="true">
       <qti-assessment-item-ref identifier="INTRODUCTION" href="INTRODUCTION.xml"
-        category="info introduction" />
-      <qti-assessment-item-ref identifier="ITEM001" href="ITEM001.xml" />
-      <qti-assessment-item-ref identifier="ITEM002" href="ITEM002.xml" />
-      <qti-assessment-item-ref identifier="ITEM003" href="ITEM003.xml" />
-      <qti-assessment-item-ref identifier="ITEM004" href="ITEM004.xml" />
-      <qti-assessment-item-ref identifier="ITEM005" href="ITEM005.xml" />
-      <qti-assessment-item-ref identifier="ITEM006" href="ITEM006.xml" />
-      <qti-assessment-item-ref identifier="ITEM007" href="ITEM007.xml" />
-      <qti-assessment-item-ref identifier="ITEM008" href="ITEM008.xml" />
-      <qti-assessment-item-ref identifier="ITEM009" href="ITEM009.xml" />
+        category="info" />
+      <qti-assessment-item-ref identifier="ITEM001-TEST" href="ITEM001.xml" />
+      <qti-assessment-item-ref identifier="ITEM002-TEST" href="ITEM002.xml" />
+      <qti-assessment-item-ref identifier="ITEM003-TEST" href="ITEM003.xml" />
+      <qti-assessment-item-ref identifier="ITEM004-TEST" href="ITEM004.xml" />
+      <qti-assessment-item-ref identifier="ITEM005-TEST" href="ITEM005.xml" />
+      <qti-assessment-item-ref identifier="ITEM006-TEST" href="ITEM006.xml" />
+      <qti-assessment-item-ref identifier="ITEM007-TEST" href="ITEM007.xml" />
+      <qti-assessment-item-ref identifier="ITEM008-TEST" href="ITEM008.xml" />
+      <qti-assessment-item-ref identifier="ITEM009-TEST" href="ITEM009.xml" />
     </qti-assessment-section>
   </qti-test-part>
   <qti-outcome-processing>

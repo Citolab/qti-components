@@ -1,6 +1,5 @@
 import { html } from 'lit';
 import { useArgs } from '@storybook/preview-api';
-import { ifDefined } from 'lit/directives/if-defined.js';
 
 import packages from '../assets/packages.json';
 import { getManifestInfo } from '../lib/qti-loader';
@@ -32,8 +31,9 @@ export const Test: Story = {
   render: (_, { loaded: { testURL } }) => {
     const [args, updateArgs] = useArgs();
 
+    // nav-item-id=${ifDefined(args.itemIdentifier)}
     return html`
-      <qti-test class="h-full" nav-item-id=${ifDefined(args.itemIdentifier)}>
+      <qti-test class="h-full">
         <test-navigation
           auto-score-items
           class="flex h-full overflow-hidden"
@@ -69,7 +69,10 @@ export const Test: Story = {
               <test-next>Volgende</test-next>
             </nav>
           </div>
-          <test-print-item-variables></test-print-item-variables>
+          <div class="overflow-auto" style="min-width: 600px; max-width: 600px">
+            <test-print-item-variables></test-print-item-variables>
+            <test-print-context></test-print-context>
+          </div>
         </test-navigation>
       </qti-test>
     `;

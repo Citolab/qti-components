@@ -122,26 +122,6 @@ export class TestNavigation extends LitElement {
         };
       })
     };
-
-    // const sections = this.computedContext?.testParts.flatMap(testPart => testPart.sections);
-
-    // let id;
-    // if (this.navigate === 'section') {
-    //   id = sections.find(section => section.active).identifier;
-    // }
-    // if (this.navigate === 'item') {
-    //   id = sections.flatMap(section => section.items).find(item => item.active).identifier;
-    // }
-
-    // if (id) {
-    //   this.dispatchEvent(
-    //     new CustomEvent('qti-request-navigation', {
-    //       detail: { type: this.navigate, id },
-    //       bubbles: true,
-    //       composed: true
-    //     })
-    //   );
-    // }
   }
 
   /* PK: on item connected we can add item only properties in the xml */
@@ -156,7 +136,7 @@ export class TestNavigation extends LitElement {
             return {
               ...section,
               items: section.items.map(item => {
-                if (item.identifier !== itemElement.identifier) {
+                if (item.identifier !== itemElement.parentElement.getAttribute('identifier')) {
                   return item;
                 }
                 return {
