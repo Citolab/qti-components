@@ -31,6 +31,10 @@ export default defineConfig({
       {
         plugins: [
           storybookTest({
+            tags: {
+              // include: ['test'],
+              exclude: ['skip-test']
+            },
             // The location of your Storybook config, main.js|ts
             configDir: path.join(dirname, '.storybook'),
             // This should match your package.json script to run Storybook
@@ -39,6 +43,7 @@ export default defineConfig({
           })
         ],
         test: {
+          name: 'stories',
           setupFiles: ['./.storybook/vitest.setup.ts'],
           globals: true,
           browser: {
@@ -58,21 +63,22 @@ export default defineConfig({
             ]
           }
         }
-      }
-      // {
-      //   test: {
-      //     setupFiles: ['./test/setup/index.js'],
-      //     include: ['src/**/*.spec.ts', 'src/**/*.test.ts'],
-      //     globals: true,
+      },
+      {
+        test: {
+          name: 'tests',
+          setupFiles: ['./test/setup/index.js'],
+          include: ['src/**/*.spec.ts', 'src/**/*.test.ts'],
+          globals: true,
 
-      //     browser: {
-      //       enabled: true,
-      //       provider: 'playwright',
-      //       headless: true, // Both modes work fine
-      //       instances: [{ browser: 'chromium', headless: true }]
-      //     }
-      //   }
-      // }
+          browser: {
+            enabled: true,
+            provider: 'playwright',
+            headless: true, // Both modes work fine
+            instances: [{ browser: 'chromium', headless: true }]
+          }
+        }
+      }
     ]
   }
 });

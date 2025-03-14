@@ -31,10 +31,10 @@ export const T4_T7: Story = {
     return html`
       <qti-test
         @qti-load-test-request=${(e: CustomEvent) => {
-          console.log('qti-load-test-request', e);
+          // console.log('qti-load-test-request', e);
         }}
         @qti-test-connected=${(e: CustomEvent) => {
-          console.log('qti-test-connected', e);
+          // console.log('qti-test-connected', e);
         }}
         @qti-load-item-request=${e => {
           // e.detail.returnedPromise = new Promise((resolve, reject) => {
@@ -53,22 +53,22 @@ export const T4_T7: Story = {
           // })();
         }}
         @qti-assessment-stimulus-ref-connected=${(e: CustomEvent) => {
-          console.log('qti-assessment-stimulus-ref-connected', e);
+          // console.log('qti-assessment-stimulus-ref-connected', e);
         }}
         @qti-assessment-test-connected=${(e: CustomEvent) => {
-          console.log('qti-assessment-test-connected', e);
+          // console.log('qti-assessment-test-connected', e);
         }}
         @qti-outcome-changed=${(e: CustomEvent) => {
-          console.log('qti-outcome-changed', e);
+          // console.log('qti-outcome-changed', e);
         }}
         @qti-interaction-changed=${(e: CustomEvent) => {
-          console.log('qti-interaction-changed', e);
+          // console.log('qti-interaction-changed', e);
         }}
         @qti-request-test-section=${(e: CustomEvent) => {
-          console.log('qti-request-test-section', e);
+          // console.log('qti-request-test-section', e);
         }}
         @qti-request-navigation=${(e: CustomEvent) => {
-          console.log('qti-request-navigation', e);
+          // console.log('qti-request-navigation', e);
         }}
         ${ref(qtiTestRef)}
         class="flex h-full w-full flex-col"

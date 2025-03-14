@@ -54,11 +54,10 @@
     "storybook:docs": "wireit",
     "build:watch": "npm run yalc --watch",
     "npm:publish": "np",
-    "vitest": "vitest",
-    "vitest ui": "vitest --browser.headless=false",
     "---": "-",
     "build": "wireit",
     "test": "wireit",
+    "test-storybook": "wireit",
     "yalc": "wireit",
     "attw": "wireit",
     "lint": "eslint src/**/*.ts",
@@ -68,7 +67,6 @@
     "vite": "vite",
     "stylelint": "stylelint \"src/**/*.css\"",
     "build-storybook": "wireit",
-    "test-storybook": "wireit",
     "storybook:docs:build": "wireit",
     "chromatic": "node chromatic-runner.cjs",
     "----hooks----": "-",
@@ -195,7 +193,7 @@
       "command": "cem analyze"
     },
     "test-storybook": {
-      "command": "test-storybook --excludeTags no-tests"
+      "command": "vitest --project=stories"
     },
     "css": {
       "command": "postcss src/item.css -d dist -m"

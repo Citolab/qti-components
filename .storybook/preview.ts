@@ -6,8 +6,6 @@ import HTMLParser from 'prettier-v2/parser-html'; /* https://github.com/storyboo
 import { expect } from '@storybook/test';
 
 import customElements from '../custom-elements.json';
-import { customViewports } from './custom-viewport-sizes';
-import DocumentationTemplate from './DocumentationTemplate.mdx';
 import { toBePositionedRelativeTo } from '../test/setup/toBePositionedRelativeTo';
 
 import type { Preview } from '@storybook/web-components';
@@ -17,6 +15,30 @@ import '../src/lib/qti-test/core';
 import '../src/lib/qti-test/components';
 import '../src/lib/qti-item/core';
 import '../src/item.css';
+
+export const customViewports = {
+  default: {
+    name: 'Default',
+    styles: {
+      width: '412px',
+      height: '780px'
+    }
+  },
+  phone: {
+    name: 'Phone',
+    styles: {
+      width: '412px',
+      height: '780px'
+    }
+  },
+  laptop: {
+    name: 'Laptop',
+    styles: {
+      width: '1257px',
+      height: '598px'
+    }
+  }
+};
 
 const options: Options = {
   /** hides the `arg ref` label on each control */
@@ -52,7 +74,6 @@ const preview: Preview = {
             htmlWhitespaceSensitivity: 'ignore'
           })
       }
-      // page: DocumentationTemplate
     },
     viewport: { viewports: customViewports },
     controls: {
@@ -64,11 +85,6 @@ const preview: Preview = {
     options: {
       storySort: { method: 'alphabetical' }
     }
-    // because we number the stories according to the QTI implementation, we need to sort on those number
-    // options: {
-    //   storySort: (a, b) => (a.id === b.id ? 0 : a.id.localeCompare(b.id, undefined, { numeric: true }))
-    // },
-    // layout: 'fullscreen'
   },
 
   tags: ['!autodocs']
