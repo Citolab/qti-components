@@ -1,6 +1,6 @@
 import { expect, fireEvent } from '@storybook/test';
 import { html } from 'lit';
-import { findByShadowTitle, getByShadowText } from 'shadow-dom-testing-library';
+import { findByShadowTitle, getByShadowText, within } from 'shadow-dom-testing-library';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { spread } from '@open-wc/lit-helpers';
 
@@ -36,17 +36,24 @@ export const Default: Story = {
 
 export const Test: Story = {
   render: args => html`
-    <qti-test nav-item-id="t1-test-entry-item4">
+    <qti-test>
       <test-navigation>
         <test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"> </test-container>
         <test-prev ${spread(args)}>vorige</test-prev>
       </test-navigation>
+      <test-item-link item-id="t1-test-entry-item4">link</test-item-link>
     </qti-test>
   `,
   play: async ({ canvasElement }) => {
-    const prevButton = getByShadowText(canvasElement, 'vorige');
+    const canvas = within(canvasElement);
+    const link = await canvas.findByShadowText('link');
+
+    await canvas.findByShadowTitle('T1 - Test Entry - Item 1');
+    await fireEvent.click(link);
+
+    const prevButton = canvas.getByShadowText('vorige');
     expect(prevButton).toBeDisabled();
-    const firstItem = await findByShadowTitle(canvasElement, 'T1 - Extended Text Interaction');
+    const firstItem = await canvas.findByShadowTitle('T1 - Extended Text Interaction');
     expect(prevButton).not.toBeDisabled();
     expect(firstItem).toBeInTheDocument();
     await new Promise(resolve => setTimeout(resolve, 500));

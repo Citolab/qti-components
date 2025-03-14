@@ -34,7 +34,7 @@ export const Default: Story = {
     template(
       args,
       html` <qti-prompt>Mark Edinburgh on this map of the United Kingdom.</qti-prompt>
-        <img src="qti-select-point-interaction/uk.png" height="280" width="206" />`
+        <img src="/qti-select-point-interaction/uk.png" height="280" width="206" />`
     ),
   args: {
     'response-identifier': 'RESPONSE',
@@ -50,7 +50,7 @@ export const ClickImageTest: Story = {
         <div style="width: 206px; height: 280px; display: block; border: 1px solid red;">
           <qti-select-point-interaction max-choices="1">
             <qti-prompt>Click anywhere on the interaction.</qti-prompt>
-            <img src="qti-select-point-interaction/uk.png" alt="map of united kingdom" height="280" width="206" />
+            <img src="/qti-select-point-interaction/uk.png" alt="map of united kingdom" height="280" width="206" />
           </qti-select-point-interaction>
         </div>
       `
@@ -116,7 +116,7 @@ export const ScaledSmallerImageTest: Story = {
         <div style="width: 103px; height: auto; display: block; border: 1px solid red;">
           <qti-select-point-interaction>
             <qti-prompt>Click anywhere on the scaled interaction.</qti-prompt>
-            <img src="qti-select-point-interaction/uk.png" alt="map of united kingdom" height="280" width="206" />
+            <img src="/qti-select-point-interaction/uk.png" alt="map of united kingdom" height="280" width="206" />
           </qti-select-point-interaction>
         </div>
       `
@@ -212,7 +212,7 @@ export const MaxChoice_One_SameLocation: Story = {
       html`
         <qti-select-point-interaction max-choices="1">
           <qti-prompt>Click twice on the same location.</qti-prompt>
-          <img src="qti-select-point-interaction/uk.png" alt="map of united kingdom" height="280" width="206" />
+          <img src="/qti-select-point-interaction/uk.png" alt="map of united kingdom" height="280" width="206" />
         </qti-select-point-interaction>
       `
     ),
@@ -248,7 +248,7 @@ export const MaxChoice_Two_SameLocation: Story = {
       html`
         <qti-select-point-interaction max-choices="2">
           <qti-prompt>Click twice on the same location.</qti-prompt>
-          <img src="qti-select-point-interaction/uk.png" alt="map of united kingdom" height="280" width="206" />
+          <img src="/qti-select-point-interaction/uk.png" alt="map of united kingdom" height="280" width="206" />
         </qti-select-point-interaction>
       `
     ),
@@ -286,7 +286,7 @@ export const MaxChoice_One_DifferentLocation: Story = {
       { ...args, 'max-choices': 1 },
       html` <qti-select-point-interaction max-choices="1">
         <qti-prompt>Click two different locations.</qti-prompt>
-        <img src="qti-select-point-interaction/uk.png" alt="map of united kingdom" height="280" width="206" />
+        <img src="/qti-select-point-interaction/uk.png" alt="map of united kingdom" height="280" width="206" />
       </qti-select-point-interaction>`
     ),
   args: {
@@ -322,7 +322,7 @@ export const MaxChoice_Two_DifferentLocations: Story = {
       html`
         <qti-select-point-interaction max-choices="2">
           <qti-prompt>Click two different locations.</qti-prompt>
-          <img src="qti-select-point-interaction/uk.png" alt="map of united kingdom" height="280" width="206" />
+          <img src="/qti-select-point-interaction/uk.png" alt="map of united kingdom" height="280" width="206" />
         </qti-select-point-interaction>
       `
     ),
@@ -357,7 +357,7 @@ export const MaxChoice_Two_ThreeClicks: Story = {
       html`
         <qti-select-point-interaction max-choices="2">
           <qti-prompt>Click three different locations.</qti-prompt>
-          <img src="qti-select-point-interaction/uk.png" alt="map of united kingdom" height="280" width="206" />
+          <img src="/qti-select-point-interaction/uk.png" alt="map of united kingdom" height="280" width="206" />
         </qti-select-point-interaction>
       `
     ),

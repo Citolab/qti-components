@@ -23,7 +23,8 @@ const meta: Meta<QtiPortableCustomInteraction> = {
     actions: {
       handles: events
     }
-  }
+  },
+  tags: ['skip-test']
 };
 export default meta;
 

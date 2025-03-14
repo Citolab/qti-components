@@ -89,17 +89,23 @@ export const Test2: Story = {
 
 export const Test: Story = {
   render: args => html`
-    <qti-test nav-item-id="ITM-text_entry">
+    <qti-test>
       <test-navigation>
         <!-- <test-print-item-variables></test-print-item-variables> -->
         <test-container test-url="/assets/qti-test-package/assessment.xml"> </test-container>
         <test-show-correct-response ${spread(args)}>Show correct</test-show-correct-response>
         <test-next>Volgende</test-next>
+        <test-item-link item-id="ITM-text_entry">link</test-item-link>
       </test-navigation>
     </qti-test>
   `,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
+
+    const link = await canvas.findByShadowText('link');
+
+    await canvas.findByShadowTitle('Info Start');
+    await fireEvent.click(link);
 
     const nextButton = await canvas.findByShadowText('Volgende');
     await waitFor(() => expect(nextButton).toBeEnabled());

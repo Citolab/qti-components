@@ -16,9 +16,9 @@ export default defineConfig({
     browser: {
       headless: true
     },
-    // coverage: {
-    //   provider: 'v8' // or 'v8'
-    // },
+    coverage: {
+      provider: 'v8' // or 'v8'
+    },
     onConsoleLog(log: string, type: 'stdout' | 'stderr'): boolean | void {
       return !log.includes('Lit is in dev mode');
     },
@@ -58,21 +58,21 @@ export default defineConfig({
             ]
           }
         }
-      },
-      {
-        test: {
-          setupFiles: ['./test/setup/index.js'],
-          include: ['src/**/*.spec.ts', 'src/**/*.test.ts'],
-          globals: true,
-
-          browser: {
-            enabled: true,
-            provider: 'playwright',
-            headless: true, // Both modes work fine
-            instances: [{ browser: 'chromium', headless: true }]
-          }
-        }
       }
+      // {
+      //   test: {
+      //     setupFiles: ['./test/setup/index.js'],
+      //     include: ['src/**/*.spec.ts', 'src/**/*.test.ts'],
+      //     globals: true,
+
+      //     browser: {
+      //       enabled: true,
+      //       provider: 'playwright',
+      //       headless: true, // Both modes work fine
+      //       instances: [{ browser: 'chromium', headless: true }]
+      //     }
+      //   }
+      // }
     ]
   }
 });

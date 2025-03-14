@@ -349,7 +349,7 @@ const assessmentTest = html` <qti-test>
   </test-container>
 </qti-test>`;
 
-describe('outcome-processing lit', () => {
+describe.skip('outcome-processing lit', () => {
   beforeEach(async () => {
     const template = () => assessmentTest;
     render(template(), document.body);

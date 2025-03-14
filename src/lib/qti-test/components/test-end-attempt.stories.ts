@@ -1,5 +1,5 @@
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
-import { expect, userEvent, waitFor } from '@storybook/test';
+import { expect, fireEvent, userEvent, waitFor } from '@storybook/test';
 import { findByShadowText, findByShadowTitle, within } from 'shadow-dom-testing-library';
 import { spread } from '@open-wc/lit-helpers';
 import { html } from 'lit';
@@ -25,7 +25,7 @@ export default meta;
 
 export const Default: Story = {
   render: args =>
-    html` <qti-test nav-item-id="ITM-text_entry">
+    html` <qti-test>
       <test-navigation>
         <!-- <test-print-item-variables></test-print-item-variables> -->
         <test-container test-url="/assets/qti-test-package/assessment.xml"></test-container>
@@ -37,17 +37,23 @@ export const Default: Story = {
 
 export const Test: Story = {
   render: args => html`
-    <qti-test nav-item-id="ITM-text_entry">
+    <qti-test>
       <test-navigation>
         <!-- <test-print-item-variables>  </test-print-item-variables> -->
         <test-container test-url="/assets/qti-test-package/assessment.xml"> </test-container>
         <test-end-attempt ${spread(args)}>End Attempt</test-end-attempt>
         <test-next>Volgende</test-next>
+        <test-item-link item-id="ITM-text_entry">link</test-item-link>
       </test-navigation>
     </qti-test>
   `,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
+
+    const link = await canvas.findByShadowText('link');
+
+    await canvas.findByShadowTitle('Info Start');
+    await fireEvent.click(link);
 
     const nextButton = await canvas.findByShadowText('Volgende');
     await waitFor(() => expect(nextButton).toBeEnabled());
