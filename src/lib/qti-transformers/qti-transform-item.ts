@@ -50,7 +50,7 @@ export const qtiTransformItem = () => {
   let xmlFragment: XMLDocument;
 
   const api: transformItemApi = {
-    async load(uri: string, identifier?: string, cancelPreviousRequest = false): Promise<typeof api> {
+    async load(uri: string, _identifier?: string, cancelPreviousRequest = false): Promise<typeof api> {
       // replace all non-alphanumeric characters with underscores
       // const fullKey = (identifier || uri)?.replace(/[^a-zA-Z0-9]/g, '_');
       // if (sessionStorage.getItem(fullKey)) {

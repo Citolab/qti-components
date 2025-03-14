@@ -17,7 +17,7 @@ export const btn = css`
 
 export const dis = css`
   cursor: not-allowed;
-  opacity: 0.5;
+  opacity: 0.8;
 `;
 
 export const ind = css`

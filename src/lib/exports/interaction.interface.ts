@@ -1,6 +1,6 @@
 export interface IInteraction {
   correctResponse: Readonly<string | string[]>;
-  value: string;
+  // value: string;
   response: string | string[];
   responseIdentifier: string;
   disabled: boolean;

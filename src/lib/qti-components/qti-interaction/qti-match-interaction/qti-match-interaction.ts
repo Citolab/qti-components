@@ -27,18 +27,16 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
   protected lastCheckedRadio: HTMLInputElement | null = null;
 
   @property({ type: String }) class: string = '';
-
-  // public response: string | string[] = [];
-
+  @state() protected _response: string | string[] = [];
   // dragDropApi: TouchDragAndDrop;
-  // get value(): string | null {
-  //   if (!this.classList.contains('qti-match-tabular')) return (this.response as string[]).join(',');
-  //   else return (this.response as string[]).join(',');
-  // }
-  // set value(val: string | null) {
-  //   if (!this.classList.contains('qti-match-tabular')) this.response = val.split(',');
-  //   else this.response = val.split(',');
-  // }
+  get response(): string[] {
+    if (!this.classList.contains('qti-match-tabular')) return super.response as string[];
+    else return this._response as string[];
+  }
+  set response(val: string[]) {
+    if (!this.classList.contains('qti-match-tabular')) super.response = val;
+    else this._response = val;
+  }
   @property({ type: String, attribute: 'response-identifier' }) responseIdentifier: string = '';
   @state() protected correctOptions: string[] = [];
 
@@ -72,17 +70,17 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
     const type = checkbox.type;
 
     if (checkbox.checked) {
-      if (!this.value) {
+      if (!this.response) {
         this.response = [value];
-      } else if (this.value.indexOf(value) === -1) {
+      } else if (this.response.indexOf(value) === -1) {
         if (type === 'radio') {
-          this.response = (this.response as string[]).filter(v => v.indexOf(name) === -1);
+          this.response = this.response.filter(v => v.indexOf(name) === -1);
         }
-        this.response = [...this.value, value];
+        this.response = [...this.response, value];
       }
       this.lastCheckedRadio = checkbox;
     } else {
-      this.response = (this.response as string[]).filter(v => v !== value);
+      this.response = this.response.filter(v => v !== value);
       this.lastCheckedRadio = null;
     }
 
@@ -93,7 +91,7 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
         composed: true,
         detail: {
           responseIdentifier: this.responseIdentifier,
-          response: Array.isArray(this.value) ? [...this.value] : this.value
+          response: Array.isArray(this.response) ? [...this.response] : this.response
         }
       })
     );
@@ -180,9 +178,8 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
                       const rowId = row.getAttribute('identifier');
                       const colId = col.getAttribute('identifier');
                       const value = `${rowId} ${colId}`;
-                      const selectedInRowCount =
-                        (this.response as string[]).filter(v => v.split(' ')[0] === rowId).length || 0;
-                      const checked = this.value.includes(value);
+                      const selectedInRowCount = this.response.filter(v => v.split(' ')[0] === rowId).length || 0;
+                      const checked = this.response.includes(value);
                       const part = `rb ${checked ? 'rb-checked' : ''} ${this.correctOptions.includes(value) ? 'rb-correct' : ''}`;
                       // disable if match max is greater than 1 and max is reached
                       const disable =
