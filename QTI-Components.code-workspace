@@ -25,8 +25,11 @@
       "statusBarItem.remoteForeground": "#e7e7e7",
       "commandCenter.border": "#e7e7e799"
     },
-    "peacock.color": "#05445e",
+    "peacock.color": "#4f419d",
     "mdx.experimentalLanguageServer": true,
+    "xml.symbols.showReferencedGrammars": true,
+    "xml.format.maxLineWidth": 800,
+
     "lit-plugin.rules.no-boolean-in-attribute-binding": "off",
     "lit-plugin.rules.no-incompatible-type-binding": "warning",
     "lit-plugin.rules.no-invalid-boolean-binding": "warning",

@@ -46,7 +46,6 @@ export const ItemDoc: Story = {
   },
   loaders: [
     async ({ args }) => {
-      console.log('args', args);
       const itemDoc = qtiTransformItem()
         .load(args['item-url'])
         .then(api => api.htmlDoc());

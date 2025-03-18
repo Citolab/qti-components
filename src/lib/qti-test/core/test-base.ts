@@ -67,31 +67,6 @@ export abstract class TestBase extends LitElement {
     });
   }
 
-  // get testContext(): TestContext {
-  //   return this._testContext;
-  // }
-
-  // // /* restores the context by updating existing items and adding new items from the "contextToRestore" parameter into the "this._context.items" array. */
-  // set testContext(testContext: TestContext) {
-  //   if (this._testContext.items.length > 0) {
-  //     console.warn(
-  //       'testContext already set and can not be overwritten. Set the testContext before loading the assessment test'
-  //     );
-  //     return;
-  //   }
-  //   if (testContext === null || testContext === undefined) return;
-  //   this._testContext = { ...testContext }; // Clone the context to avoid modifying the original object
-  //   // // append the items that are not yet in the context and replace the ones that are
-  //   testContext.items?.forEach(itemContext => {
-  //     const existingItemContext = this._testContext.items.find(i => i.identifier === itemContext.identifier);
-  //     if (existingItemContext) {
-  //       existingItemContext.variables = itemContext.variables;
-  //     } else {
-  //       this._testContext.items.push(itemContext);
-  //     }
-  //   });
-  // }
-
   private _updateItemVariablesInTestContext(
     identifier: string,
     variables: readonly VariableDeclaration<string | string[] | null>[]
@@ -118,6 +93,9 @@ export abstract class TestBase extends LitElement {
         };
       })
     };
+    this.dispatchEvent(
+      new CustomEvent('qti-test-context-updated', { detail: this.testContext, bubbles: false, composed: false })
+    );
   }
 
   /**

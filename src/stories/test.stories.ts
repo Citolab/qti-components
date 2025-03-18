@@ -33,7 +33,7 @@ export const Test: Story = {
 
     // nav-item-id=${ifDefined(args.itemIdentifier)}
     return html`
-      <qti-test class="h-full">
+      <qti-test class="h-full" @qti-test-context-updated=${({ detail }) => {}}>
         <test-navigation
           auto-score-items
           class="flex h-full overflow-hidden"
