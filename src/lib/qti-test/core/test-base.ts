@@ -56,7 +56,7 @@ export abstract class TestBase extends LitElement {
       const assessmentItem = e.detail as QtiAssessmentItem;
       const assessmentRefId = assessmentItem.closest('qti-assessment-item-ref')?.identifier;
       if (assessmentRefId) {
-        assessmentItem.setAssessmentItemRefId(assessmentRefId);
+        assessmentItem.assessmentItemRefId = assessmentRefId;
       }
       this._updateItemInTestContext(e.detail);
     });

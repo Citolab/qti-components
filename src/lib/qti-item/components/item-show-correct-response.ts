@@ -3,9 +3,9 @@ import { customElement, property } from 'lit/decorators.js';
 import { consume } from '@lit/context';
 
 import * as styles from './styles';
-import { computedItemContext } from '../../../exports/computed-item.context';
+import { computedItemContext } from '../../exports/computed-item.context';
 
-import type { ComputedItemContext } from '../../../exports/computed-item.context';
+import type { ComputedItemContext } from '../../exports/computed-item.context';
 
 @customElement('item-show-correct-response')
 export class ItemShowCorrectResponse extends LitElement {

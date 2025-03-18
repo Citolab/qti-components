@@ -17,7 +17,6 @@ type Story = StoryObj<QtiFeedbackInline & typeof args>;
  */
 const meta: Meta<QtiFeedbackInline> = {
   component: 'qti-feedback-inline',
-  title: 'components/feedback',
   args,
   argTypes,
   parameters: {

@@ -1,42 +1,21 @@
-import { action } from '@storybook/addon-actions';
 import { expect } from '@storybook/test';
-import { html } from 'lit';
 
 import { getItemByUri } from '../../../../../lib/qti-loader';
 
-import type { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
+import type { QtiAssessmentItem } from '../../../../../lib';
 import type { Meta, StoryObj } from '@storybook/web-components';
 
 type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {
   title: 'qti-conformance/basic/Q2 - Choice Interaction/single-cardinality-vocabulary',
-  beforeEach: async ({ args }) => {}
+  beforeEach: async () => {}
 };
 export default meta;
 
 export const Q22_L1_D201: Story = {
   name: 'Q22-L1-D201',
-  render: (_, { loaded: { xml } }) => {
-    let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
-    const onItemConnected = ({ detail: qtiAssessmentItem }) => {
-      item = qtiAssessmentItem;
-      action('qti-assessment-item-connected');
-    };
-
-    return html`
-      <div
-        class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
-        @qti-assessment-item-connected=${onItemConnected}
-      >
-        ${xml}
-      </div>
-    `;
-  },
+  render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const element = canvasElement.querySelector('qti-choice-interaction');
     // No specific class applied for labels, behavior is at platform's discretion
@@ -49,7 +28,7 @@ export const Q22_L1_D201: Story = {
     });
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality-sv-1.xml')
     })
   ]
@@ -57,26 +36,7 @@ export const Q22_L1_D201: Story = {
 
 export const Q22_L1_D202: Story = {
   name: 'Q22-L1-D202',
-  render: (_, { loaded: { xml } }) => {
-    let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
-    const onItemConnected = ({ detail: qtiAssessmentItem }) => {
-      item = qtiAssessmentItem;
-      action('qti-assessment-item-connected');
-    };
-
-    return html`
-      <div
-        class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
-        @qti-assessment-item-connected=${onItemConnected}
-      >
-        ${xml}
-      </div>
-    `;
-  },
+  render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const element = canvasElement.querySelector('qti-choice-interaction');
     await element.updateComplete;
@@ -87,7 +47,7 @@ export const Q22_L1_D202: Story = {
     });
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality-sv-2a.xml')
     })
   ]
@@ -95,26 +55,7 @@ export const Q22_L1_D202: Story = {
 
 export const Q22_L1_D203: Story = {
   name: 'Q22-L1-D203',
-  render: (_, { loaded: { xml } }) => {
-    let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
-    const onItemConnected = ({ detail: qtiAssessmentItem }) => {
-      item = qtiAssessmentItem;
-      action('qti-assessment-item-connected');
-    };
-
-    return html`
-      <div
-        class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
-        @qti-assessment-item-connected=${onItemConnected}
-      >
-        ${xml}
-      </div>
-    `;
-  },
+  render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const element = canvasElement.querySelector('qti-choice-interaction');
     await element.updateComplete;
@@ -126,7 +67,7 @@ export const Q22_L1_D203: Story = {
     });
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality-sv-2b.xml')
     })
   ]
@@ -134,26 +75,7 @@ export const Q22_L1_D203: Story = {
 
 export const Q22_L1_D204: Story = {
   name: 'Q22-L1-D204',
-  render: (_, { loaded: { xml } }) => {
-    let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
-    const onItemConnected = ({ detail: qtiAssessmentItem }) => {
-      item = qtiAssessmentItem;
-      action('qti-assessment-item-connected');
-    };
-
-    return html`
-      <div
-        class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
-        @qti-assessment-item-connected=${onItemConnected}
-      >
-        ${xml}
-      </div>
-    `;
-  },
+  render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const element = canvasElement.querySelector('qti-choice-interaction');
     await element.updateComplete;
@@ -165,7 +87,7 @@ export const Q22_L1_D204: Story = {
     });
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality-sv-2c.xml')
     })
   ]
@@ -173,26 +95,7 @@ export const Q22_L1_D204: Story = {
 
 export const Q22_L1_D205: Story = {
   name: 'Q22-L1-D205',
-  render: (_, { loaded: { xml } }) => {
-    let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
-    const onItemConnected = ({ detail: qtiAssessmentItem }) => {
-      item = qtiAssessmentItem;
-      action('qti-assessment-item-connected');
-    };
-
-    return html`
-      <div
-        class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
-        @qti-assessment-item-connected=${onItemConnected}
-      >
-        ${xml}
-      </div>
-    `;
-  },
+  render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const element = canvasElement.querySelector('qti-choice-interaction');
 
@@ -203,7 +106,7 @@ export const Q22_L1_D205: Story = {
     });
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality-sv-2d.xml')
     })
   ]
@@ -211,26 +114,7 @@ export const Q22_L1_D205: Story = {
 
 export const Q22_L1_D206: Story = {
   name: 'Q22-L1-D206',
-  render: (_, { loaded: { xml } }) => {
-    let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
-    const onItemConnected = ({ detail: qtiAssessmentItem }) => {
-      item = qtiAssessmentItem;
-      action('qti-assessment-item-connected');
-    };
-
-    return html`
-      <div
-        class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
-        @qti-assessment-item-connected=${onItemConnected}
-      >
-        ${xml}
-      </div>
-    `;
-  },
+  render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const element = canvasElement.querySelector('qti-choice-interaction');
 
@@ -241,7 +125,7 @@ export const Q22_L1_D206: Story = {
     });
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality-sv-3a.xml')
     })
   ]
@@ -249,26 +133,7 @@ export const Q22_L1_D206: Story = {
 
 export const Q22_L1_D207: Story = {
   name: 'Q22-L1-D207',
-  render: (_, { loaded: { xml } }) => {
-    let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
-    const onItemConnected = ({ detail: qtiAssessmentItem }) => {
-      item = qtiAssessmentItem;
-      action('qti-assessment-item-connected');
-    };
-
-    return html`
-      <div
-        class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
-        @qti-assessment-item-connected=${onItemConnected}
-      >
-        ${xml}
-      </div>
-    `;
-  },
+  render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const element = canvasElement.querySelector('qti-choice-interaction');
 
@@ -279,7 +144,7 @@ export const Q22_L1_D207: Story = {
     });
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality-sv-3b.xml')
     })
   ]
@@ -287,26 +152,7 @@ export const Q22_L1_D207: Story = {
 
 export const Q22_L1_D208: Story = {
   name: 'Q22-L1-D208',
-  render: (_, { loaded: { xml } }) => {
-    let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
-    const onItemConnected = ({ detail: qtiAssessmentItem }) => {
-      item = qtiAssessmentItem;
-      action('qti-assessment-item-connected');
-    };
-
-    return html`
-      <div
-        class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
-        @qti-assessment-item-connected=${onItemConnected}
-      >
-        ${xml}
-      </div>
-    `;
-  },
+  render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const element = canvasElement.querySelector('qti-choice-interaction');
 
@@ -317,7 +163,7 @@ export const Q22_L1_D208: Story = {
     });
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality-sv-3c.xml')
     })
   ]
@@ -325,26 +171,7 @@ export const Q22_L1_D208: Story = {
 
 export const Q22_L1_I209: Story = {
   name: 'Q22-L1-I209',
-  render: (_, { loaded: { xml } }) => {
-    let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
-    const onItemConnected = ({ detail: qtiAssessmentItem }) => {
-      item = qtiAssessmentItem;
-      action('qti-assessment-item-connected');
-    };
-
-    return html`
-      <div
-        class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
-        @qti-assessment-item-connected=${onItemConnected}
-      >
-        ${xml}
-      </div>
-    `;
-  },
+  render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const element = canvasElement.querySelector('qti-choice-interaction');
 
@@ -355,7 +182,7 @@ export const Q22_L1_I209: Story = {
     });
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality-sv-3d.xml')
     })
   ]
@@ -363,26 +190,7 @@ export const Q22_L1_I209: Story = {
 
 export const Q22_L1_I210: Story = {
   name: 'Q22-L1-I210',
-  render: (_, { loaded: { xml } }) => {
-    let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
-    const onItemConnected = ({ detail: qtiAssessmentItem }) => {
-      item = qtiAssessmentItem;
-      action('qti-assessment-item-connected');
-    };
-
-    return html`
-      <div
-        class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
-        @qti-assessment-item-connected=${onItemConnected}
-      >
-        ${xml}
-      </div>
-    `;
-  },
+  render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const element = canvasElement.querySelector('qti-choice-interaction');
 
@@ -393,7 +201,7 @@ export const Q22_L1_I210: Story = {
     });
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality-sv-3e.xml')
     })
   ]
@@ -401,26 +209,7 @@ export const Q22_L1_I210: Story = {
 
 export const Q22_L1_I211: Story = {
   name: 'Q22-L1-I211',
-  render: (_, { loaded: { xml } }) => {
-    let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
-    const onItemConnected = ({ detail: qtiAssessmentItem }) => {
-      item = qtiAssessmentItem;
-      action('qti-assessment-item-connected');
-    };
-
-    return html`
-      <div
-        class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
-        @qti-assessment-item-connected=${onItemConnected}
-      >
-        ${xml}
-      </div>
-    `;
-  },
+  render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const element = canvasElement.querySelector('qti-choice-interaction');
 
@@ -431,7 +220,7 @@ export const Q22_L1_I211: Story = {
     });
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality-sv-3f.xml')
     })
   ]
@@ -439,26 +228,7 @@ export const Q22_L1_I211: Story = {
 
 export const Q22_L1_I212: Story = {
   name: 'Q22-L1-I212',
-  render: (_, { loaded: { xml } }) => {
-    let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
-    const onItemConnected = ({ detail: qtiAssessmentItem }) => {
-      item = qtiAssessmentItem;
-      action('qti-assessment-item-connected');
-    };
-
-    return html`
-      <div
-        class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
-        @qti-assessment-item-connected=${onItemConnected}
-      >
-        ${xml}
-      </div>
-    `;
-  },
+  render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const element = canvasElement.querySelector('qti-choice-interaction');
 
@@ -469,7 +239,7 @@ export const Q22_L1_I212: Story = {
     });
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality-sv-3g.xml')
     })
   ]
@@ -477,26 +247,7 @@ export const Q22_L1_I212: Story = {
 
 export const Q22_L1_I213: Story = {
   name: 'Q22-L1-I213',
-  render: (_, { loaded: { xml } }) => {
-    let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
-    const onItemConnected = ({ detail: qtiAssessmentItem }) => {
-      item = qtiAssessmentItem;
-      action('qti-assessment-item-connected');
-    };
-
-    return html`
-      <div
-        class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
-        @qti-assessment-item-connected=${onItemConnected}
-      >
-        ${xml}
-      </div>
-    `;
-  },
+  render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const element = canvasElement.querySelector('qti-choice-interaction');
 
@@ -507,7 +258,7 @@ export const Q22_L1_I213: Story = {
     });
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality-sv-3h.xml')
     })
   ]
@@ -515,26 +266,7 @@ export const Q22_L1_I213: Story = {
 
 export const Q22_L1_I214: Story = {
   name: 'Q22-L1-I214',
-  render: (_, { loaded: { xml } }) => {
-    let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
-    const onItemConnected = ({ detail: qtiAssessmentItem }) => {
-      item = qtiAssessmentItem;
-      action('qti-assessment-item-connected');
-    };
-
-    return html`
-      <div
-        class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
-        @qti-assessment-item-connected=${onItemConnected}
-      >
-        ${xml}
-      </div>
-    `;
-  },
+  render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const element = canvasElement.querySelector('qti-choice-interaction');
 
@@ -545,7 +277,7 @@ export const Q22_L1_I214: Story = {
     });
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality-sv-3i.xml')
     })
   ]
@@ -553,26 +285,7 @@ export const Q22_L1_I214: Story = {
 
 export const Q22_L1_I215: Story = {
   name: 'Q22-L1-I215',
-  render: (_, { loaded: { xml } }) => {
-    let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
-    const onItemConnected = ({ detail: qtiAssessmentItem }) => {
-      item = qtiAssessmentItem;
-      action('qti-assessment-item-connected');
-    };
-
-    return html`
-      <div
-        class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
-        @qti-assessment-item-connected=${onItemConnected}
-      >
-        ${xml}
-      </div>
-    `;
-  },
+  render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const element = canvasElement.querySelector('qti-choice-interaction');
 
@@ -582,7 +295,7 @@ export const Q22_L1_I215: Story = {
     });
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality-sv-3j.xml')
     })
   ]
@@ -590,37 +303,17 @@ export const Q22_L1_I215: Story = {
 
 export const Q22_L1_I216: Story = {
   name: 'Q22-L1-I216',
-  render: (_, { loaded: { xml } }) => {
-    let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
-    const onItemConnected = ({ detail: qtiAssessmentItem }) => {
-      item = qtiAssessmentItem;
-      action('qti-assessment-item-connected');
-    };
-
-    return html`
-      <div
-        class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
-        @qti-assessment-item-connected=${onItemConnected}
-      >
-        ${xml}
-      </div>
-    `;
-  },
+  render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const element = canvasElement.querySelector('qti-choice-interaction');
 
     const choices = Array.from(element.querySelectorAll('qti-simple-choice'));
-    const labels = ['.', '.', '.', '.', '.', '.']; // Expected suffix for each label as period
-    choices.forEach((choice, index) => {
+    choices.forEach(choice => {
       expect(choice.shadowRoot.querySelector('#label').textContent.endsWith('.')).toBe(true);
     });
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality-sv-3k.xml')
     })
   ]
@@ -628,37 +321,17 @@ export const Q22_L1_I216: Story = {
 
 export const Q22_L1_I217: Story = {
   name: 'Q22-L1-I217',
-  render: (_, { loaded: { xml } }) => {
-    let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
-    const onItemConnected = ({ detail: qtiAssessmentItem }) => {
-      item = qtiAssessmentItem;
-      action('qti-assessment-item-connected');
-    };
-
-    return html`
-      <div
-        class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
-        @qti-assessment-item-connected=${onItemConnected}
-      >
-        ${xml}
-      </div>
-    `;
-  },
+  render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const element = canvasElement.querySelector('qti-choice-interaction');
 
     const choices = Array.from(element.querySelectorAll('qti-simple-choice'));
-    const labels = [')', ')', ')', ')', ')', ')']; // Expected suffix for each label as parenthesis
-    choices.forEach((choice, index) => {
+    choices.forEach(choice => {
       expect(choice.shadowRoot.querySelector('#label').textContent.endsWith(')')).toBe(true);
     });
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality-sv-3l.xml')
     })
   ]

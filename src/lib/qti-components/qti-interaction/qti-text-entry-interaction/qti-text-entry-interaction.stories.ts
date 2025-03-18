@@ -73,7 +73,7 @@ export const Test: Story = {
     await fireEvent.submit(form);
 
     const formData = new FormData(form);
-    console.log('formData', formData);
+
     const value = formData.get('RESPONSE');
     // Check that form data contains the expected values
     expect(value).toEqual(expectedValue);

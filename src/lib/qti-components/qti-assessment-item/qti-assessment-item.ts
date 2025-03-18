@@ -18,18 +18,12 @@ import type { Interaction } from '../../exports/interaction';
 /**
  * @summary The qti-assessment-item element contains all the other QTI 3 item structures.
  * @documentation https://www.imsglobal.org/spec/qti/v3p0/impl#h.dltnnj87l0yj
- * @status stable
- * @since 4.0
  *
  * @dependency qti-feedback
  * @dependency qti-responseprocessing
  *
- * @slot - The default slot where all the other QTI 3 item structures go.
- *
- * @event qti-interaction-changed - Emitted when an interaction is changed.
- * @event qti-outcome-changed - Emitted when an outcome has changed.
- * @event qti-response-processing - Emitted when response-processing is called.
- *
+ * @event qti-item-context-updated - Emitted when through a user action the itemContext is updated,
+ * typically on interaction with the interactions, or calling response processing.
  */
 @customElement('qti-assessment-item')
 export class QtiAssessmentItem extends LitElement {
@@ -40,13 +34,13 @@ export class QtiAssessmentItem extends LitElement {
 
   @property({ type: Boolean }) disabled: boolean;
   @watch('disabled', { waitUntilFirstUpdate: true })
-  _handleDisabledChange = (_: boolean, disabled: boolean) => {
+  protected _handleDisabledChange = (_: boolean, disabled: boolean) => {
     this._interactionElements.forEach(ch => (ch.disabled = disabled));
   };
 
   @property({ type: Boolean }) readonly: boolean;
   @watch('readonly', { waitUntilFirstUpdate: true })
-  _handleReadonlyChange = (_: boolean, readonly: boolean) =>
+  protected _handleReadonlyChange = (_: boolean, readonly: boolean) =>
     this._interactionElements.forEach(ch => (ch.readonly = readonly));
 
   @provide({ context: itemContext })
@@ -54,8 +48,17 @@ export class QtiAssessmentItem extends LitElement {
     variables: itemContextVariables
   };
 
-  public setAssessmentItemRefId(identifier: string) {
+  /**
+   * Sets the identifier for the assessment item reference if this item is in a test.
+   *
+   * @param identifier - The identifier for the assessment item reference.
+   */
+  public set assessmentItemRefId(identifier: string) {
     this._context = { ...this._context, identifier };
+  }
+
+  public get assessmentItemRefId(): string {
+    return this._context.identifier;
   }
 
   public get variables(): VariableValue<string | string[] | null>[] {
@@ -128,7 +131,13 @@ export class QtiAssessmentItem extends LitElement {
     this._attachEventListeners();
     super.connectedCallback();
     this.updateComplete.then(() => {
-      this._emit<{ detail: QtiAssessmentItem }>('qti-assessment-item-connected', this);
+      this.dispatchEvent(
+        new CustomEvent<QtiAssessmentItem>('qti-assessment-item-connected', {
+          bubbles: true,
+          composed: true,
+          detail: this
+        })
+      );
     });
   }
 
@@ -198,7 +207,13 @@ export class QtiAssessmentItem extends LitElement {
     const { responseIdentifier, response } = e.detail;
     this.updateResponseVariable(responseIdentifier, response);
 
-    this._emit<{ itemContext: ItemContext }>('qti-item-context-updated', { itemContext: this._context });
+    this.dispatchEvent(
+      new CustomEvent<{ itemContext: ItemContext }>('qti-item-context-updated', {
+        bubbles: true,
+        composed: true,
+        detail: { itemContext: this._context }
+      })
+    );
   };
 
   /**
@@ -246,7 +261,13 @@ export class QtiAssessmentItem extends LitElement {
       );
     }
 
-    this._emit<{ itemContext: ItemContext }>('qti-item-context-updated', { itemContext: this._context });
+    this.dispatchEvent(
+      new CustomEvent<{ itemContext: ItemContext }>('qti-item-context-updated', {
+        bubbles: true,
+        composed: true,
+        detail: { itemContext: this._context }
+      })
+    );
 
     return true;
   }
@@ -255,31 +276,48 @@ export class QtiAssessmentItem extends LitElement {
     this._context = this._initialContext;
   }
 
-  public getResponse(identifier: string): Readonly<ResponseVariable> {
+  protected getResponse(identifier: string): Readonly<ResponseVariable> {
     return this.getVariable(identifier) as ResponseVariable;
   }
 
-  public getOutcome(identifier: string): Readonly<OutcomeVariable> {
+  protected getOutcome(identifier: string): Readonly<OutcomeVariable> {
     return this.getVariable(identifier) as OutcomeVariable;
   }
 
-  public getVariable(identifier: string): Readonly<VariableDeclaration<string | string[] | null>> {
+  protected getVariable(identifier: string): Readonly<VariableDeclaration<string | string[] | null>> {
     return this._context.variables.find(v => v.identifier === identifier) || null;
   }
 
   // saving privates here: ------------------------------------------------------------------------------
 
+  /**
+   * Updates the response variable with the specified identifier to the given value.
+   *
+   * @protected
+   *
+   * This method is intended for internal use within the class and subclasses.
+   * It should not be called externally by third parties.
+   *
+   * @param identifier - The identifier of the response variable to update.
+   * @param value - The new value for the response variable.
+   */
   public updateResponseVariable(identifier: string, value: string | string[] | undefined) {
     this._context = {
       ...this._context,
       variables: this._context.variables.map(v => (v.identifier !== identifier ? v : { ...v, value: value }))
     };
 
-    this._emit<InteractionChangedDetails>('qti-interaction-changed', {
-      item: this.identifier,
-      responseIdentifier: identifier,
-      response: Array.isArray(value) ? [...value] : value
-    });
+    this.dispatchEvent(
+      new CustomEvent<InteractionChangedDetails>('qti-interaction-changed', {
+        bubbles: true,
+        composed: true,
+        detail: {
+          item: this.identifier,
+          responseIdentifier: identifier,
+          response: Array.isArray(value) ? [...value] : value
+        }
+      })
+    );
 
     if (this.adaptive === 'false') {
       // if adapative, completionStatus is set by the processing template
@@ -287,6 +325,28 @@ export class QtiAssessmentItem extends LitElement {
     }
   }
 
+  public setOutcomeVariable(identifier: string, value: string | string[] | undefined) {
+    this.updateOutcomeVariable(identifier, value);
+    this.dispatchEvent(
+      new CustomEvent<{ itemContext: ItemContext }>('qti-item-context-updated', {
+        bubbles: true,
+        composed: true,
+        detail: { itemContext: this._context }
+      })
+    );
+  }
+
+  /**
+   * Updates the outcome variable with the specified identifier to the given value.
+   *
+   * @protected
+   *
+   * This method is intended for internal use within the class and subclasses.
+   * It should not be called externally by third parties.
+   *
+   * @param identifier - The identifier of the response variable to update.
+   * @param value - The new value for the response variable.
+   */
   public updateOutcomeVariable(identifier: string, value: string | string[] | undefined) {
     const outcomeVariable = this.getOutcome(identifier);
 
@@ -309,11 +369,17 @@ export class QtiAssessmentItem extends LitElement {
     };
     this._feedbackElements.forEach(fe => fe.checkShowFeedback(identifier));
 
-    this._emit<OutcomeChangedDetails>('qti-outcome-changed', {
-      item: this.identifier,
-      outcomeIdentifier: identifier,
-      value: this._context.variables.find(v => v.identifier === identifier)?.value
-    });
+    this.dispatchEvent(
+      new CustomEvent<OutcomeChangedDetails>('qti-outcome-changed', {
+        bubbles: true,
+        composed: true,
+        detail: {
+          item: this.identifier,
+          outcomeIdentifier: identifier,
+          value: this._context.variables.find(v => v.identifier === identifier)?.value
+        }
+      })
+    );
   }
 
   public validate(reportValidity = true): boolean | null {
@@ -334,16 +400,6 @@ export class QtiAssessmentItem extends LitElement {
     if (valid === true) return 'completed';
     if (valid === false) return 'incomplete';
     return 'not_attempted';
-  }
-
-  private _emit<T>(name, detail = null) {
-    this.dispatchEvent(
-      new CustomEvent<T>(name, {
-        bubbles: true,
-        composed: true,
-        detail
-      })
-    );
   }
 }
 

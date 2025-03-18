@@ -9,8 +9,6 @@ import type { CSSResultGroup } from 'lit';
 
 @customElement('qti-slider-interaction')
 export class QtiSliderInteraction extends Interaction {
-  static formAssociated = true; // Enables elementInternals for forms
-
   static styles: CSSResultGroup = styles;
 
   private _value = 0;
@@ -70,7 +68,7 @@ export class QtiSliderInteraction extends Interaction {
     const valuePercentage = ((this._value - this.min) / (this.max - this.min)) * 100;
     this.style.setProperty('--value-percentage', `${valuePercentage}%`);
     this._internals.setFormValue(this.value); // Update form value
-    this.saveResponse(this.value);
+    this.saveResponse(this.response);
     this.requestUpdate();
   }
 
@@ -87,7 +85,7 @@ export class QtiSliderInteraction extends Interaction {
 
         <div id="rail" part="rail" @mousedown=${this._onMouseDown} @touchstart=${this._onTouchStart}>
           <div id="knob" part="knob">
-            <div id="value" part="value">${this.value}</div>
+            <div id="value" part="value">${this.response}</div>
           </div>
 
           ${this._correctResponseNumber !== null
