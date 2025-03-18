@@ -60,6 +60,7 @@ export class TestNavigation extends LitElement {
 
     this.addEventListener('test-end-attempt', this._handleTestEndAttempt.bind(this));
     this.addEventListener('test-show-correct-response', this._handleTestShowCorrectResponse.bind(this));
+    this.addEventListener('test-update-outcome-variable', this._handleTestUpdateOutcomeVariable.bind(this));
   }
 
   private _handleTestEndAttempt(_event: CustomEvent) {
@@ -77,6 +78,14 @@ export class TestNavigation extends LitElement {
     );
     const qtiAssessmentItemEl = qtiItemEl.assessmentItem;
     qtiAssessmentItemEl.showCorrectResponse(event.detail);
+  }
+
+  private _handleTestUpdateOutcomeVariable(event: CustomEvent) {
+    const qtiItemEl = this._testElement.querySelector<QtiAssessmentItemRef>(
+      `qti-assessment-item-ref[identifier="${this._sessionContext.navItemId}"]`
+    );
+    const qtiAssessmentItemEl = qtiItemEl.assessmentItem;
+    qtiAssessmentItemEl.setOutcomeVariable(event.detail.outcomeVariableId, event.detail.value);
   }
 
   private _handleInteractionChanged(_event: CustomEvent) {

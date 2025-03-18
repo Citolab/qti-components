@@ -2,44 +2,53 @@ import { html, LitElement, nothing } from 'lit';
 import { consume } from '@lit/context';
 import { customElement, property } from 'lit/decorators.js';
 
-import { testContext } from '../../exports/test.context';
 import { computedContext } from '../../exports/computed.context';
-import { sessionContext } from '../../exports/session.context';
+// import { sessionContext } from '../../exports/session.context';
 
-import type { QtiAssessmentItemRef } from '../core';
+// import type { QtiAssessmentItemRef } from '../core';
 import type { OutcomeVariable } from '../../exports/variables';
 import type { ComputedContext } from '../../exports/computed.context';
-import type { TestContext } from '../../exports/test.context';
-import type { SessionContext } from '../../exports/session.context';
+// import type { SessionContext } from '../../exports/session.context';
 
 @customElement('test-scoring-buttons')
 export class TestScoringButtons extends LitElement {
   @property({ type: String, attribute: 'view' }) view = ''; // is only an attribute, but this is here because.. react
   @property({ type: Boolean }) disabled: boolean = false;
 
-  @consume({ context: testContext, subscribe: true })
-  public _testContext?: TestContext;
+  // @consume({ context: testContext, subscribe: true })
+  // public _testContext?: TestContext;
 
-  @consume({ context: sessionContext, subscribe: true })
-  public _sessionContext?: SessionContext;
+  // @consume({ context: sessionContext, subscribe: true })
+  // public _sessionContext?: SessionContext;
 
   @consume({ context: computedContext, subscribe: true })
-  public computedContext?: ComputedContext;
+  protected computedContext?: ComputedContext;
 
-  _changeOutcomeScore(value: number) {
-    const testPart = this.computedContext?.testParts.find(testPart => testPart.active);
-    const sectionItems = testPart.sections.flatMap(section => section.items);
-    const currentItemIdentifier = sectionItems.find(item => item.active)?.identifier;
+  private _changeOutcomeScore(value: number) {
+    // const testPart = this.computedContext?.testParts.find(testPart => testPart.active);
+    // const sectionItems = testPart.sections.flatMap(section => section.items);
+    // const currentItemIdentifier = sectionItems.find(item => item.active)?.identifier;
 
-    const qtiPlayerElement = this.closest('qti-test');
-    const testContainer = qtiPlayerElement.querySelector('test-container').shadowRoot;
+    // const qtiPlayerElement = this.closest('qti-test');
+    // const testContainer = qtiPlayerElement.querySelector('test-container').shadowRoot;
 
-    const qtiItemEl = testContainer.querySelector<QtiAssessmentItemRef>(
-      `qti-assessment-item-ref[identifier="${currentItemIdentifier}"]`
+    // const qtiItemEl = testContainer.querySelector<QtiAssessmentItemRef>(
+    //   `qti-assessment-item-ref[identifier="${currentItemIdentifier}"]`
+    // );
+
+    // const qtiAssessmentItemEl = qtiItemEl.assessmentItem;
+    // qtiAssessmentItemEl.updateOutcomeVariable('SCORE', value.toString());
+
+    this.dispatchEvent(
+      new CustomEvent('test-update-outcome-variable', {
+        detail: {
+          // assessmentItemId: currentItemIdentifier,
+          outcomeVariableId: 'SCORE',
+          value
+        },
+        bubbles: true
+      })
     );
-
-    const qtiAssessmentItemEl = qtiItemEl.assessmentItem;
-    qtiAssessmentItemEl.updateOutcomeVariable('SCORE', value.toString());
   }
 
   render() {
@@ -56,7 +65,7 @@ export class TestScoringButtons extends LitElement {
 
     // this.disabled = !(scoreOutcome?.externalScored === 'human');
 
-    this.disabled = !(activeItem as any).externalScored;
+    // this.disabled = !(activeItem as any).externalScored;
 
     return maxScore
       ? html`

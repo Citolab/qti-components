@@ -54,7 +54,7 @@ export const Test: Story = {
           </test-paging-buttons-stamp>
 
           <div class="flex flex-col flex-1">
-            <test-view>View</test-view>
+            <test-view>View</test-view><test-scoring-buttons></test-scoring-buttons>
             <test-container class="flex-1 overflow-auto p-2" test-url="${testURL}"></test-container>
             <nav class="flex justify-between p-2">
               <test-end-attempt>End attempt</test-end-attempt>

@@ -325,6 +325,17 @@ export class QtiAssessmentItem extends LitElement {
     }
   }
 
+  public setOutcomeVariable(identifier: string, value: string | string[] | undefined) {
+    this.updateOutcomeVariable(identifier, value);
+    this.dispatchEvent(
+      new CustomEvent<{ itemContext: ItemContext }>('qti-item-context-updated', {
+        bubbles: true,
+        composed: true,
+        detail: { itemContext: this._context }
+      })
+    );
+  }
+
   /**
    * Updates the outcome variable with the specified identifier to the given value.
    *
