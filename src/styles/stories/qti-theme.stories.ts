@@ -5,7 +5,7 @@ import type { Meta } from '@storybook/web-components';
 import type { QtiAssessmentItem } from '../../lib/qti-components';
 
 const meta: Meta<QtiAssessmentItem> = {
-  title: 'Theme/Controls'
+  title: 'Theme'
 };
 export default meta;
 
@@ -32,7 +32,7 @@ class ButtonComponent extends LitElement {
 window.customElements.define('button-component', ButtonComponent);
 
 // grid grid-cols-6 gap-4
-export const Controls = (_mod: string) => html`
+export const Theme = (_mod: string) => html`
   <css-variable-editor></css-variable-editor>
   <div style="display:grid;grid-template-columns: repeat(7, minmax(0, 1fr));gap:2rem;">
     <style>

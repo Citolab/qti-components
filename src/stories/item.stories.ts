@@ -6,6 +6,7 @@ import { getManifestInfo } from '../lib/qti-loader';
 import type { Meta, StoryObj } from '@storybook/web-components';
 
 const meta: Meta = {
+  title: 'Item',
   argTypes: {
     qtipkg: {
       options: packages.packages,
@@ -22,7 +23,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const Items: Story = {
+export const Item: Story = {
   render: (args, { loaded: { items } }) => {
     return html`
       <qti-item>

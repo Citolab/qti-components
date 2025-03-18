@@ -3,7 +3,7 @@ import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { getByShadowText, findByShadowText, findByShadowRole, within } from 'shadow-dom-testing-library';
 
-import { getManifestInfo, type ManifestInfo } from '../../qti-loader';
+import { getManifestInfo, type ManifestInfo } from '../../../../lib/qti-loader';
 
 import type { QtiTest } from '@citolab/qti-components/qti-test/core';
 import type { ArgTypes, Meta, StoryObj } from '@storybook/web-components';
@@ -11,10 +11,7 @@ import type { ArgTypes, Meta, StoryObj } from '@storybook/web-components';
 type Story = StoryObj;
 
 const meta: Meta<QtiTest> = {
-  // title: 'qti-conformance/basic/T4 and T7 - Test Structures',
-  parameters: {
-    layout: 'fullscreen'
-  }
+  title: 'qti-conformance/basic/T4 and T7 - Test Structures'
 };
 export default meta;
 

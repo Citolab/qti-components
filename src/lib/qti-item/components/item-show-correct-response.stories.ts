@@ -8,7 +8,7 @@ import type { Meta, StoryObj } from '@storybook/web-components';
 import type { ItemShowCorrectResponse } from './item-show-correct-response';
 import './item-show-correct-response';
 import type { ItemContainer } from './item-container';
-import type { QtiSimpleChoice } from '../../../qti-components';
+import type { QtiSimpleChoice } from '../../qti-components';
 
 const { events, args, argTypes, template } = getStorybookHelpers('test-print-item-variables');
 

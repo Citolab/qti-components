@@ -80,7 +80,7 @@ export class QtiSelectPointInteraction extends Interaction {
         this.response = [...this.response, newPoint];
       } else {
         // Optional: Notify the user to remove a marker before adding a new one
-        console.warn('Maximum number of points reached. Remove a marker to add a new one.');
+        // console.warn('Maximum number of points reached. Remove a marker to add a new one.');
       }
     }
     // Save the response with the calculated points

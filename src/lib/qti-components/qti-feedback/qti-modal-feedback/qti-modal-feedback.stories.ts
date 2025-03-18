@@ -17,7 +17,6 @@ type Story = StoryObj<QtiModalFeedback & typeof args>;
  */
 const meta: Meta<QtiModalFeedback> = {
   component: 'qti-modal-feedback',
-  title: 'components/feedback',
   args,
   argTypes,
   parameters: {

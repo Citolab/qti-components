@@ -24,7 +24,6 @@ const meta: Meta<QtiMediaInteraction> = {
       handles: events
     }
   }
-  // tags: ['autodocs', 'no-tests']
 };
 export default meta;
 
@@ -41,8 +40,5 @@ export const Default: Story = {
       `
     ),
 
-  args: {},
-  parameters: {
-    chromatic: { disableSnapshot: true }
-  }
+  args: {}
 };

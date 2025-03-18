@@ -9,6 +9,7 @@ import type { Meta, StoryObj } from '@storybook/web-components';
 import '../../.storybook/utilities.css';
 
 const meta: Meta = {
+  title: 'Test',
   argTypes: {
     packages: {
       options: packages.packages,
@@ -53,13 +54,6 @@ export const Test: Story = {
           </test-paging-buttons-stamp>
 
           <div class="flex flex-col flex-1">
-            <div style="padding:1rem; background-color:#ffeeee; color:#ff0000; margin-bottom:3px;">
-              BEWARE CHANGING PACKAGE<br />
-              <span style="color:#ff5555; margin-top:10px;"
-                ><small>can cause old testContext to be combined with new package.</small></span
-              >
-            </div>
-
             <test-view>View</test-view>
             <test-container class="flex-1 overflow-auto p-2" test-url="${testURL}"></test-container>
             <nav class="flex justify-between p-2">
@@ -84,39 +78,3 @@ export const Test: Story = {
     }
   ]
 };
-
-/*
-        .context=${{
-          items: [
-            {
-              identifier: 'INTRODUCTION',
-              title: 'Introductie'
-            },
-            {
-              identifier: 'ITEM001',
-              title: 'Item 1'
-            },
-            {
-              identifier: 'ITEM002',
-              title: 'Item 2'
-            },
-            {
-              identifier: 'ITEM003',
-              title: 'Item 3'
-            },
-            {
-              identifier: 'ITEM004',
-              title: 'Item 4'
-            },
-            {
-              identifier: 'ITEM005',
-              title: 'Item 5'
-            },
-            {
-              identifier: 'ITEM006',
-              title: 'Item 6'
-            }
-          ],
-          testOutcomeVariables: []
-        }}
-          */

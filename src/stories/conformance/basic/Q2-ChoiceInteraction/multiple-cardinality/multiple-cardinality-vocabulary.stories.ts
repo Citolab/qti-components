@@ -1,10 +1,8 @@
-import { action } from '@storybook/addon-actions';
 import { expect } from '@storybook/test';
-import { html } from 'lit';
 
 import { getItemByUri } from '../../../../../lib/qti-loader';
 
-import type { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
+import type { QtiAssessmentItem } from '../../../../../lib';
 import type { Meta, StoryObj } from '@storybook/web-components';
 
 type Story = StoryObj;
