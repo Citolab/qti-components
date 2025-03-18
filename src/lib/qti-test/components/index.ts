@@ -12,3 +12,6 @@ export * from './test-print-item-variables';
 export * from './test-section-buttons-stamp';
 export * from './test-section-link';
 export * from './test-print-context';
+export * from './test-print-stamp';
+export * from './test-scoring-buttons';
+export * from './test-view-toggle';
