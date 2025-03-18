@@ -150,8 +150,6 @@ export class QtiGraphicAssociateInteraction extends Interaction {
         x: event.clientX - rect.left, // * scaleX,
         y: event.clientY - rect.top // * scaleY
       };
-
-      console.log(`Mouse Coord: ${JSON.stringify(this.mouseCoord)}`);
     });
 
     this.hotspots.forEach(hotspot => {

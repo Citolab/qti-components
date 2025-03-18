@@ -34,18 +34,18 @@ export class TestNavigation extends LitElement {
 
   @state()
   @consume({ context: testContext, subscribe: true })
-  public _testContext?: TestContext;
+  protected _testContext?: TestContext;
 
   @state()
   @consume({ context: sessionContext, subscribe: true })
-  public _sessionContext?: SessionContext;
+  protected _sessionContext?: SessionContext;
 
   @state()
-  public configContext: ConfigContext = {};
+  protected configContext: ConfigContext = {};
 
   @state()
   @provide({ context: computedContext })
-  public computedContext: ComputedContext;
+  protected computedContext: ComputedContext;
 
   @property({ type: Boolean, attribute: 'auto-score-items' }) autoScoreItems = false;
 
@@ -62,6 +62,12 @@ export class TestNavigation extends LitElement {
     this.addEventListener('test-show-correct-response', this._handleTestShowCorrectResponse.bind(this));
   }
 
+  /**
+   * Handles the 'test-end-attempt' event.
+   * @private
+   * @listens TestNavigation#test-end-attempt
+   * @param {CustomEvent} event - The custom event object.
+   */
   private _handleTestEndAttempt(_event: CustomEvent) {
     const qtiItemEl = this._testElement.querySelector<QtiAssessmentItemRef>(
       `qti-assessment-item-ref[identifier="${this._sessionContext.navItemId}"]`
@@ -71,6 +77,12 @@ export class TestNavigation extends LitElement {
     qtiAssessmentItemEl.processResponse(true, reportValidityAfterScoring);
   }
 
+  /**
+   * Handles the 'test-end-attempt' event.
+   * @private
+   * @listens TestNavigation#test-show-correct-response
+   * @param {CustomEvent} event - The custom event object.
+   */
   private _handleTestShowCorrectResponse(event: CustomEvent) {
     const qtiItemEl = this._testElement.querySelector<QtiAssessmentItemRef>(
       `qti-assessment-item-ref[identifier="${this._sessionContext.navItemId}"]`
@@ -94,7 +106,7 @@ export class TestNavigation extends LitElement {
   }
 
   /* PK: on test connected we can build the computed context */
-  _handleTestConnected(event: CustomEvent) {
+  private _handleTestConnected(event: CustomEvent) {
     this._testElement = event.detail as QtiAssessmentTest;
     const testPartElements = Array.from(this._testElement?.querySelectorAll<QtiTestPart>(`qti-test-part`) || []);
     this.computedContext = {
@@ -125,7 +137,7 @@ export class TestNavigation extends LitElement {
   }
 
   /* PK: on item connected we can add item only properties in the xml */
-  _handleItemConnected(event: CustomEvent) {
+  private _handleItemConnected(event: CustomEvent) {
     const itemElement = event.detail as QtiAssessmentItem;
     this.computedContext = {
       ...this.computedContext,
