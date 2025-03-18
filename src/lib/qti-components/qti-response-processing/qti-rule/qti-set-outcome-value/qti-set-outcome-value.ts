@@ -64,7 +64,7 @@ export class QtiSetOutcomeValueRule<T> implements QtiRuleBase {
    * Evaluates the expression and returns its value.
    */
   process(): string | string[] | null {
-    const value = this.expression.calculate() ?? null;
+    const value = (this.expression.calculate() ?? null) as unknown as string | string[] | null;
 
     if (value === null) {
       console.warn('QtiSetOutcomeValueRule: Evaluated value is null.');
