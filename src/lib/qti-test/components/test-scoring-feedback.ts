@@ -2,11 +2,11 @@ import { consume } from '@lit/context';
 import { html, LitElement, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
-import { testContext } from '@citolab/qti-components/exports/test.context.js';
-import { sessionContext } from '@citolab/qti-components/exports/session.context.js';
+import { testContext } from '../../exports/test.context';
+import { sessionContext } from '../../exports/session.context';
 
-import type { SessionContext } from '@citolab/qti-components/exports/session.context.js';
-import type { TestContext } from '@citolab/qti-components/exports/test.context.js';
+import type { TestContext } from '../../exports/test.context';
+import type { SessionContext } from '../../exports/session.context';
 import type { OutcomeVariable } from '@citolab/qti-components/exports/variables.js';
 import type { ViewMode } from 'storybook/internal/types';
 
@@ -26,10 +26,15 @@ export class TestScoringFeedback extends LitElement {
 
     const item = items.find(item => item.identifier === this._sessionContext.navItemId);
 
+    console.log(item, 'item');
+
     if (item?.category === 'dep-informational') return html``;
 
     const completionStatus = item?.variables.find(v => v.identifier === 'completionStatus')?.value;
     const scoreOutcome = item?.variables.find(vr => vr.identifier == 'SCORE') as OutcomeVariable;
+
+    console.log(scoreOutcome);
+
     const score = parseInt(scoreOutcome?.value as string);
     const externalScored = scoreOutcome?.externalScored;
 
