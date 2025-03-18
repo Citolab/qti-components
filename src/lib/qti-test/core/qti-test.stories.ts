@@ -9,7 +9,6 @@ type Story = StoryObj<QtiTest & typeof args>;
 
 const meta: Meta<typeof QtiTest> = {
   component: 'qti-test',
-  title: 'qti-test',
   subcomponents: { testContainer: 'test-container' },
   args,
   argTypes,

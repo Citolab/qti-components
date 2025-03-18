@@ -16,7 +16,6 @@ type Story = StoryObj<QtiFeedbackBlock & typeof args>;
  */
 const meta: Meta<QtiFeedbackBlock> = {
   component: 'qti-feedback-block',
-  title: 'components/feedback',
   args,
   argTypes,
   parameters: {

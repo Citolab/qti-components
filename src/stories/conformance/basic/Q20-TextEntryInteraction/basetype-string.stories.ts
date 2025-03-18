@@ -1,4 +1,3 @@
-
 import { action } from '@storybook/addon-actions';
 import { expect } from '@storybook/test';
 import { fireEvent, screen, userEvent } from '@storybook/test';
@@ -6,14 +5,14 @@ import { html } from 'lit';
 
 import { getItemByUri } from '@citolab/qti-components/qti-loader';
 
-import type { QtiAssessmentItem, QtiTextEntryInteraction } from '@citolab/qti-components/qti-components';
+import type { QtiAssessmentItem, QtiTextEntryInteraction } from '../../../../lib';
 import type { Meta, StoryObj } from '@storybook/web-components';
 
 type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {
   title: 'qti-conformance/basic/Q20 - Text Entry Interaction/baseType-string',
-  beforeEach: async ({ args }) => { }
+  beforeEach: async ({ args }) => {}
 };
 export default meta;
 

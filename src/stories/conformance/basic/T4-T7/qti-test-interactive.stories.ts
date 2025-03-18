@@ -11,10 +11,7 @@ import type { ArgTypes, Meta, StoryObj } from '@storybook/web-components';
 type Story = StoryObj;
 
 const meta: Meta<QtiTest> = {
-  // title: 'qti-conformance/basic/T4 and T7 - Test Structures',
-  parameters: {
-    layout: 'fullscreen'
-  }
+  title: 'qti-conformance/basic/T4 and T7 - Test Structures'
 };
 export default meta;
 

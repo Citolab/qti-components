@@ -1,4 +1,3 @@
-
 import { action } from '@storybook/addon-actions';
 import { expect } from '@storybook/test';
 import { fireEvent, screen, userEvent } from '@storybook/test';
@@ -6,17 +5,14 @@ import { html } from 'lit';
 
 import { getItemByUri } from '@citolab/qti-components/qti-loader';
 
-import type {
-  QtiAssessmentItem,
-  QtiExtendedTextInteraction
-} from '@citolab/qti-components/qti-components';
+import type { QtiAssessmentItem, QtiExtendedTextInteraction } from '@citolab/qti-components/qti-components';
 import type { Meta, StoryObj } from '@storybook/web-components';
 
 type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {
   title: 'qti-conformance/basic/Q5 - Extended Text Interaction/baseType-string',
-  beforeEach: async ({ args }) => { }
+  beforeEach: async ({ args }) => {}
 };
 export default meta;
 
@@ -45,10 +41,10 @@ export const Q5_L1_D1: Story = {
   },
   play: async ({ canvasElement }) => {
     const submitButton = screen.getByRole('button', { name: 'Submit' });
-    const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
-    const extendedTextInteraction = assessmentItem.querySelector(
+    const assessmentItem = canvasElement.querySelector<QtiAssessmentItem>('qti-assessment-item');
+    const extendedTextInteraction = assessmentItem.querySelector<QtiExtendedTextInteraction>(
       'qti-extended-text-interaction'
-    ) as QtiExtendedTextInteraction;
+    );
     const textarea = extendedTextInteraction.shadowRoot.querySelector('textarea');
     // Add a space to the input field
     await userEvent.type(textarea, 'T');
@@ -105,10 +101,10 @@ export const Q5_L1_D2: Story = {
 Wind whispers through empty trees,
 Autumn’s quiet song.`;
     const submitButton = screen.getByRole('button', { name: 'Submit' });
-    const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
-    const extendedTextInteraction = assessmentItem.querySelector(
+    const assessmentItem = canvasElement.querySelector<QtiAssessmentItem>('qti-assessment-item');
+    const extendedTextInteraction = assessmentItem.querySelector<QtiExtendedTextInteraction>(
       'qti-extended-text-interaction'
-    ) as QtiExtendedTextInteraction;
+    );
     const textarea = extendedTextInteraction.shadowRoot.querySelector('textarea');
     // Add a space to the input field
     await userEvent.type(textarea, lorem);
@@ -157,10 +153,10 @@ In the evenings, I stroll there,
 Watching sunsets paint the sky.
 Wish you could see it too!`;
     const submitButton = screen.getByRole('button', { name: 'Submit' });
-    const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
-    const extendedTextInteraction = assessmentItem.querySelector(
+    const assessmentItem = canvasElement.querySelector<QtiAssessmentItem>('qti-assessment-item');
+    const extendedTextInteraction = assessmentItem.querySelector<QtiExtendedTextInteraction>(
       'qti-extended-text-interaction'
-    ) as QtiExtendedTextInteraction;
+    );
     const textarea = extendedTextInteraction.shadowRoot.querySelector('textarea');
     // Add a space to the input field
     await userEvent.type(textarea, lorem);
@@ -218,10 +214,10 @@ Making even the darkest nights feel warm.
 I hope someday you can visit,
 So I can show you around myself!`;
     const submitButton = screen.getByRole('button', { name: 'Submit' });
-    const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
-    const extendedTextInteraction = assessmentItem.querySelector(
+    const assessmentItem = canvasElement.querySelector<QtiAssessmentItem>('qti-assessment-item');
+    const extendedTextInteraction = assessmentItem.querySelector<QtiExtendedTextInteraction>(
       'qti-extended-text-interaction'
-    ) as QtiExtendedTextInteraction;
+    );
     const textarea = extendedTextInteraction.shadowRoot.querySelector('textarea');
     // Add a space to the input field
     await userEvent.type(textarea, lorem);

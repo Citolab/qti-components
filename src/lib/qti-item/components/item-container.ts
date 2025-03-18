@@ -2,9 +2,9 @@ import { LitElement, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { until } from 'lit/directives/until.js';
 
-import { watch } from '../../../decorators/watch';
-import itemCss from '../../../../item.css?inline';
-import { qtiTransformItem } from '../../../qti-transformers';
+import { watch } from '../../decorators/watch';
+import itemCss from '../../../item.css?inline';
+import { qtiTransformItem } from '../../qti-transformers';
 
 /**
  * `<item-container>` is a custom element designed for hosting the qti-assessment-item.
