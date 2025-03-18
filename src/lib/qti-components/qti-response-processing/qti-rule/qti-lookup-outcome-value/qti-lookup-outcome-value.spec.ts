@@ -4,7 +4,7 @@ import { expect, describe, it, vi } from 'vitest';
 import './../../../index';
 import type { QtiLookupOutcomeValue } from './qti-lookup-outcome-value';
 
-describe.skip('qti-lookup-outcome-value', () => {
+describe('qti-lookup-outcome-value', () => {
   function setupQtiAssessmentItem2() {
     const container = document.createElement('div'); // Create a new container for each test
     document.body.appendChild(container);

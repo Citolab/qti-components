@@ -255,8 +255,6 @@ export const Q22_L1_D56: Story = {
       }
     } catch (error) {
       expect(error.message).toContain('XML validation error'); // Adjust the error message check as per actual exception
-
-      console.log('XML validation exception triggered as expected:', error.message);
     }
   },
   loaders: [
