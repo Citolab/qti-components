@@ -5,7 +5,7 @@ import { Interaction } from '../../../exports/interaction';
 
 @customElement('qti-media-interaction')
 export class QtiMediaInteraction extends Interaction {
-  private _value = 0;
+  private _value = null;
   reset() {
     // throw new Error('Method not implemented.');
   }
@@ -15,16 +15,16 @@ export class QtiMediaInteraction extends Interaction {
   }
 
   get response(): string | null {
-    return this._value.toString();
+    return this._value ? this._value.toString() : null;
   }
 
   set response(val: string | null) {
-    if (val !== null) {
+    if (val) {
       const isNumber = !isNaN(parseInt(val?.toString()));
       if (isNumber) {
         this._value = parseInt(val.toString());
       } else {
-        throw new Error('Value must be a number');
+        throw new Error(`Value must be a number ${val}`);
       }
     }
   }
