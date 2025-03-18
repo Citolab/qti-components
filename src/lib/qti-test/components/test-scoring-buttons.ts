@@ -25,24 +25,14 @@ export class TestScoringButtons extends LitElement {
   protected computedContext?: ComputedContext;
 
   private _changeOutcomeScore(value: number) {
-    // const testPart = this.computedContext?.testParts.find(testPart => testPart.active);
-    // const sectionItems = testPart.sections.flatMap(section => section.items);
-    // const currentItemIdentifier = sectionItems.find(item => item.active)?.identifier;
-
-    // const qtiPlayerElement = this.closest('qti-test');
-    // const testContainer = qtiPlayerElement.querySelector('test-container').shadowRoot;
-
-    // const qtiItemEl = testContainer.querySelector<QtiAssessmentItemRef>(
-    //   `qti-assessment-item-ref[identifier="${currentItemIdentifier}"]`
-    // );
-
-    // const qtiAssessmentItemEl = qtiItemEl.assessmentItem;
-    // qtiAssessmentItemEl.updateOutcomeVariable('SCORE', value.toString());
+    const testPart = this.computedContext?.testParts.find(testPart => testPart.active);
+    const sectionItems = testPart.sections.flatMap(section => section.items);
+    const currentItemIdentifier = sectionItems.find(item => item.active)?.identifier;
 
     this.dispatchEvent(
       new CustomEvent('test-update-outcome-variable', {
         detail: {
-          // assessmentItemId: currentItemIdentifier,
+          assessmentItemRefId: currentItemIdentifier,
           outcomeVariableId: 'SCORE',
           value
         },

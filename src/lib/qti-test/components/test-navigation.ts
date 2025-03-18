@@ -82,7 +82,7 @@ export class TestNavigation extends LitElement {
 
   private _handleTestUpdateOutcomeVariable(event: CustomEvent) {
     const qtiItemEl = this._testElement.querySelector<QtiAssessmentItemRef>(
-      `qti-assessment-item-ref[identifier="${this._sessionContext.navItemId}"]`
+      `qti-assessment-item-ref[identifier="${event.detail.assessmentItemRefId}"]`
     );
     const qtiAssessmentItemEl = qtiItemEl.assessmentItem;
     qtiAssessmentItemEl.setOutcomeVariable(event.detail.outcomeVariableId, event.detail.value);

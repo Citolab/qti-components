@@ -26,14 +26,14 @@ export class TestScoringFeedback extends LitElement {
 
     const item = items.find(item => item.identifier === this._sessionContext.navItemId);
 
-    console.log(item, 'item');
+    // console.log(item, 'item');
 
     if (item?.category === 'dep-informational') return html``;
 
     const completionStatus = item?.variables.find(v => v.identifier === 'completionStatus')?.value;
     const scoreOutcome = item?.variables.find(vr => vr.identifier == 'SCORE') as OutcomeVariable;
 
-    console.log(scoreOutcome);
+    // console.log(scoreOutcome);
 
     const score = parseInt(scoreOutcome?.value as string);
     const externalScored = scoreOutcome?.externalScored;
