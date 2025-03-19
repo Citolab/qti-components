@@ -27,13 +27,13 @@ export const Default: Story = {
     html` <qti-test>
       <!-- <template item-ref><div style="border:2px solid red">{{ xmlDoc }}</div></template> -->
       <test-navigation>
-        <test-container test-url="/assets/qti-test-package/assessment.xml"></test-container>
         ${template(
           args,
           html`<template>
             <test-section-link section-id="{{ item.identifier }}"> {{ item.identifier }} </test-section-link>
           </template>`
         )}
+        <test-container test-url="/assets/qti-test-package/assessment.xml"></test-container>
       </test-navigation>
     </qti-test>`
 };
