@@ -3,9 +3,9 @@ import { expect } from '@storybook/test';
 import { fireEvent, screen, userEvent } from '@storybook/test';
 import { html } from 'lit';
 
-import { getItemByUri } from '@citolab/qti-components/qti-loader';
+import { getItemByUri } from '../../../../lib';
 
-import type { QtiAssessmentItem, QtiExtendedTextInteraction } from '@citolab/qti-components/qti-components';
+import type { QtiAssessmentItem, QtiExtendedTextInteraction } from '../../../../lib';
 import type { Meta, StoryObj } from '@storybook/web-components';
 
 type Story = StoryObj;

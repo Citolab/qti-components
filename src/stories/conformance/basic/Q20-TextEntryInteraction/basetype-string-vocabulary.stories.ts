@@ -1,12 +1,8 @@
-
 import { expect } from '@storybook/test';
 import { userEvent } from '@storybook/test';
 import { html } from 'lit';
 
-
-
-
-import { getItemByUri } from '@citolab/qti-components/qti-loader';
+import { getItemByUri } from '../../../../lib';
 
 import type { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
 import type { Meta, StoryObj } from '@storybook/web-components';
@@ -15,7 +11,7 @@ type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {
   title: 'qti-conformance/basic/Q20 - Text Entry Interaction/baseType-string-vocabulary',
-  beforeEach: async ({ args }) => { }
+  beforeEach: async ({ args }) => {}
 };
 export default meta;
 
