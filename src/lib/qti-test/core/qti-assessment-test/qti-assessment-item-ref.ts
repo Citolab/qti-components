@@ -1,10 +1,8 @@
-import { consume } from '@lit/context';
-import { html, LitElement } from 'lit';
+import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
+import { prepareTemplate } from 'stampino';
 
-import { testContext } from '../../../exports/test.context';
-
-import type { TestContext } from '../../../exports/test.context';
+import type { TemplateFunction } from 'stampino';
 import type { QtiAssessmentItem } from '../../../qti-components';
 
 // Converter function to interpret "true" and "false" as booleans
@@ -25,8 +23,8 @@ export class QtiAssessmentItemRef extends LitElement {
   @property({ type: Boolean, converter: stringToBooleanConverter }) fixed?: boolean;
   @property({ type: String }) href?: string;
 
-  @consume({ context: testContext, subscribe: true })
-  public _testContext?: TestContext;
+  // @consume({ context: computedContext, subscribe: true })
+  // private computedContext: ComputedContext;
 
   weigths: Map<string, number> = new Map();
 
@@ -41,10 +39,20 @@ export class QtiAssessmentItemRef extends LitElement {
     return this.renderRoot?.querySelector('qti-assessment-item');
   }
 
+  myTemplate: TemplateFunction;
+
   async connectedCallback(): Promise<void> {
     // debugger;
     super.connectedCallback();
+
+    const templateElement = ((this.getRootNode() as any).host as HTMLElement)
+      .closest('qti-test')
+      .querySelector<HTMLTemplateElement>('template[item-ref]');
+
+    if (templateElement) this.myTemplate = prepareTemplate(templateElement);
+
     await this.updateComplete;
+
     this.dispatchEvent(
       new CustomEvent('qti-assessment-item-ref-connected', {
         bubbles: true,
@@ -55,7 +63,7 @@ export class QtiAssessmentItemRef extends LitElement {
   }
 
   render() {
-    return html`${this.xmlDoc}`;
+    return this.myTemplate ? this.myTemplate({ xmlDoc: this.xmlDoc }) : this.xmlDoc;
   }
 }
 
