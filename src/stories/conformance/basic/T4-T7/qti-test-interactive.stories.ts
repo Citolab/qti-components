@@ -26,50 +26,7 @@ export const T4_T7: Story = {
     const { testURI } = manifestInfo;
 
     return html`
-      <qti-test
-        @qti-load-test-request=${(e: CustomEvent) => {
-          // console.log('qti-load-test-request', e);
-        }}
-        @qti-test-connected=${(e: CustomEvent) => {
-          // console.log('qti-test-connected', e);
-        }}
-        @qti-load-item-request=${e => {
-          // e.detail.returnedPromise = new Promise((resolve, reject) => {
-          //   qtiTransformItem()
-          //     .load(`${testURI}/${e.detail.href}`)
-          //     .then(api => api.path(testURI).extendElementsWithClass('type').htmlDoc())
-          //     .then(htmlDoc => resolve(htmlDoc))
-          //     .catch(error => reject(error));
-          // });
-          // e.detail.promise = (async () => {
-          //   const api = await qtiTransformItem().load(
-          //     `${e.detail.href}`,
-          //     e.detail.cancelPreviousRequest
-          //   ); /* 6. load the item */
-          //   return api.htmlDoc(); /* 7. Return HTML version of the item.xml */
-          // })();
-        }}
-        @qti-assessment-stimulus-ref-connected=${(e: CustomEvent) => {
-          // console.log('qti-assessment-stimulus-ref-connected', e);
-        }}
-        @qti-assessment-test-connected=${(e: CustomEvent) => {
-          // console.log('qti-assessment-test-connected', e);
-        }}
-        @qti-outcome-changed=${(e: CustomEvent) => {
-          // console.log('qti-outcome-changed', e);
-        }}
-        @qti-interaction-changed=${(e: CustomEvent) => {
-          // console.log('qti-interaction-changed', e);
-        }}
-        @qti-request-test-section=${(e: CustomEvent) => {
-          // console.log('qti-request-test-section', e);
-        }}
-        @qti-request-navigation=${(e: CustomEvent) => {
-          // console.log('qti-request-navigation', e);
-        }}
-        ${ref(qtiTestRef)}
-        class="flex h-full w-full flex-col"
-      >
+      <qti-test ${ref(qtiTestRef)} class="flex h-full w-full flex-col">
         <test-navigation>
           <div class="relative flex-1 overflow-auto">
             <test-container test-url="${manifestInfo.testURL}" class="block"></test-container>

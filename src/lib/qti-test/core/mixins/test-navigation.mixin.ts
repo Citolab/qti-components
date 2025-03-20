@@ -106,7 +106,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
 
         requestAnimationFrame(() => {
           this.dispatchEvent(
-            new CustomEvent('qti-test-connected', {
+            new CustomEvent('qti-test-loaded', {
               detail: results.map(({ itemRef }) => ({ identifier: itemRef?.identifier, element: itemRef })),
               bubbles: true,
               composed: true
