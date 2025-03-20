@@ -29,15 +29,15 @@ export class TestScoringFeedback extends LitElement {
     const scoreOutcome = activeItem?.variables.find(vr => vr.identifier == 'SCORE') as OutcomeVariable;
 
     const score = parseInt(scoreOutcome?.value as string);
-    const externalScored = activeItem['externalScored'] || scoreOutcome?.externalScored;
+    const externalScored = activeItem['externalScored'];
 
     const feedbackText = () => {
       if (completionStatus !== 'completed') {
         return this.dataset.textNoResponse;
       }
 
-      if (!externalScored) {
-        return score && score > 0 ? this.dataset.textCorrect : this.dataset.textIncorrect;
+      if (!externalScored && score !== undefined && !Number.isNaN(score)) {
+        return score > 0 ? this.dataset.textCorrect : this.dataset.textIncorrect;
       }
 
       if (externalScored === 'externalMachine') {
@@ -50,7 +50,7 @@ export class TestScoringFeedback extends LitElement {
         return Number.isNaN(score) ? '' : 'Deze score heb je zelf toegekend.';
       }
 
-      return '';
+      return this.dataset.scoreUnknown;
     };
 
     return html`<div>${feedbackText()}</div>`;

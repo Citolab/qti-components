@@ -12,6 +12,10 @@ export class TestScoringButtons extends LitElement {
   @property({ type: String, attribute: 'view' }) view = ''; // is only an attribute, but this is here because.. react
   @property({ type: Boolean }) disabled: boolean = false;
 
+  protected createRenderRoot(): HTMLElement | DocumentFragment {
+    return this;
+  }
+
   @consume({ context: computedContext, subscribe: true })
   protected computedContext?: ComputedContext;
 

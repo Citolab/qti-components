@@ -8,6 +8,10 @@ import type { SessionContext } from '../../exports/session.context';
 
 @customElement('test-view-toggle')
 export class TestViewToggle extends LitElement {
+  protected createRenderRoot(): HTMLElement | DocumentFragment {
+    return this;
+  }
+
   static styles = css`
     ::slotted {
       display: flex;
@@ -57,7 +61,7 @@ export class TestViewToggle extends LitElement {
           }}
         />
         <!-- for switch -->
-        <span part="peer"></span>
+        <span class="toggle" part="toggle"></span>
         <slot></slot>
       </label>
     `;
