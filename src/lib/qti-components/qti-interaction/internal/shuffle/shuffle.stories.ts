@@ -33,7 +33,7 @@ export const Choice: StoryObj = {
             </qti-assessment-item>`
       )
       .shuffleInteractions()
-      .api.html();
+      .html();
 
     return shuffledQti;
   },
@@ -67,7 +67,7 @@ export const InlineChoice: StoryObj = {
             </qti-assessment-item>`
       )
       .shuffleInteractions()
-      .api.html();
+      .html();
 
     return shuffledQti;
   },
@@ -120,7 +120,7 @@ export const MatchInteraction: StoryObj = {
         </qti-assessment-item>`
       )
       .shuffleInteractions()
-      .api.html();
+      .html();
 
     return shuffledQti;
   },
@@ -190,7 +190,7 @@ export const MatchInteractionTabular: StoryObj = {
         </qti-assessment-item>`
       )
       .shuffleInteractions()
-      .api.html();
+      .html();
 
     return shuffledQti;
   },
@@ -232,7 +232,7 @@ export const OrderInteraction: StoryObj = {
         </qti-assessment-item>`
       )
       .shuffleInteractions()
-      .api.html();
+      .html();
 
     return shuffledQti;
   },
@@ -297,7 +297,7 @@ export const OrderInteraction2: StoryObj = {
         </qti-assessment-item>`
       )
       .shuffleInteractions()
-      .api.html();
+      .html();
 
     return shuffledQti;
   },
@@ -367,7 +367,7 @@ export const GapMatchInteraction: StoryObj = {
             </qti-assessment-item>`
       )
       .shuffleInteractions()
-      .api.html();
+      .html();
 
     return shuffledQti;
   },
@@ -419,7 +419,7 @@ export const AssociateInteraction: StoryObj = {
             </qti-assessment-item>`
       )
       .shuffleInteractions()
-      .api.html();
+      .html();
 
     return shuffledQti;
   },

@@ -31,8 +31,6 @@ type Story = StoryObj;
 export const Test: Story = {
   render: (_, { loaded: { testURL } }) => {
     const [args, updateArgs] = useArgs();
-
-    // nav-item-id=${ifDefined(args.itemIdentifier)}
     return html`
       <qti-test class="h-full" @qti-test-context-updated=${({ detail }) => {}}>
         <test-navigation
