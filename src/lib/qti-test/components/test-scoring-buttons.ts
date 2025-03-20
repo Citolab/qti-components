@@ -3,23 +3,14 @@ import { consume } from '@lit/context';
 import { customElement, property } from 'lit/decorators.js';
 
 import { computedContext } from '../../exports/computed.context';
-// import { sessionContext } from '../../exports/session.context';
 
-// import type { QtiAssessmentItemRef } from '../core';
 import type { OutcomeVariable } from '../../exports/variables';
 import type { ComputedContext } from '../../exports/computed.context';
-// import type { SessionContext } from '../../exports/session.context';
 
 @customElement('test-scoring-buttons')
 export class TestScoringButtons extends LitElement {
   @property({ type: String, attribute: 'view' }) view = ''; // is only an attribute, but this is here because.. react
   @property({ type: Boolean }) disabled: boolean = false;
-
-  // @consume({ context: testContext, subscribe: true })
-  // public _testContext?: TestContext;
-
-  // @consume({ context: sessionContext, subscribe: true })
-  // public _sessionContext?: SessionContext;
 
   @consume({ context: computedContext, subscribe: true })
   protected computedContext?: ComputedContext;

@@ -1,42 +1,35 @@
 import { consume } from '@lit/context';
-import { html, LitElement, nothing } from 'lit';
+import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
-import { testContext } from '../../exports/test.context';
-import { sessionContext } from '../../exports/session.context';
+import { computedContext } from '../../exports/computed.context';
 
-import type { TestContext } from '../../exports/test.context';
-import type { SessionContext } from '../../exports/session.context';
-import type { OutcomeVariable } from '@citolab/qti-components/exports/variables.js';
+import type { OutcomeVariable } from '../../exports/variables';
+import type { ComputedContext } from '../../exports/computed.context';
 import type { ViewMode } from 'storybook/internal/types';
 
 @customElement('test-scoring-feedback')
 export class TestScoringFeedback extends LitElement {
-  @consume({ context: testContext, subscribe: true })
-  public _testContext?: TestContext;
-
-  @consume({ context: sessionContext, subscribe: true })
-  public _sessionContext?: SessionContext;
+  @consume({ context: computedContext, subscribe: true })
+  protected computedContext?: ComputedContext;
 
   @property({ type: String, attribute: 'view' })
   public view: ViewMode = null;
 
   render() {
-    const { items } = this._testContext;
+    const activeItem = this.computedContext?.testParts
+      .flatMap(testPart => testPart.sections.flatMap(section => section.items))
+      .find(item => item.active);
 
-    const item = items.find(item => item.identifier === this._sessionContext.navItemId);
+    if (!activeItem || !activeItem.variables) return html``;
 
-    // console.log(item, 'item');
+    if (activeItem['category'] === 'dep-informational') return html`<div>${this.dataset.informational}</div>`;
 
-    if (item?.category === 'dep-informational') return html``;
-
-    const completionStatus = item?.variables.find(v => v.identifier === 'completionStatus')?.value;
-    const scoreOutcome = item?.variables.find(vr => vr.identifier == 'SCORE') as OutcomeVariable;
-
-    // console.log(scoreOutcome);
+    const completionStatus = activeItem?.variables.find(v => v.identifier === 'completionStatus')?.value;
+    const scoreOutcome = activeItem?.variables.find(vr => vr.identifier == 'SCORE') as OutcomeVariable;
 
     const score = parseInt(scoreOutcome?.value as string);
-    const externalScored = scoreOutcome?.externalScored;
+    const externalScored = activeItem['externalScored'] || scoreOutcome?.externalScored;
 
     const feedbackText = () => {
       if (completionStatus !== 'completed') {
@@ -48,19 +41,19 @@ export class TestScoringFeedback extends LitElement {
       }
 
       if (externalScored === 'externalMachine') {
-        return html` <div class="flex animate-spin gap-2">Je antwoord wordt nagekeken</div>`;
+        return Number.isNaN(score) || score === undefined
+          ? 'We konden je antwoord geen score geven, omdat we te weinig antwoorden konden vinden die op jouw antwoord leken. Kijk je antwoord zelf na.'
+          : `We hebben je antwoord ${score === 0 ? 'geen punten' : score == 1 ? 'één punt' : `${score} punten`} gegeven. Je kunt je score zelf aanpassen als je denkt dat dat niet klopt.`;
       }
 
       if (externalScored === 'human') {
-        return Number.isNaN(score) ? 'woot' : 'waahh';
+        return Number.isNaN(score) ? '' : 'Deze score heb je zelf toegekend.';
       }
 
-      return Number.isNaN(score) || score === undefined
-        ? 'We konden je antwoord geen score geven, omdat we te weinig antwoorden konden vinden die op jouw antwoord leken. Kijk je antwoord zelf na.'
-        : `We hebben je antwoord ${score === 0 ? 'geen punten' : score == 1 ? 'één punt' : `${score} punten`} gegeven. Je kunt je score zelf aanpassen als je denkt dat dat niet klopt.`;
+      return '';
     };
 
-    return externalScored !== 'human' || Number.isNaN(score) ? html` ${feedbackText()}` : nothing;
+    return html`<div>${feedbackText()}</div>`;
   }
 }
 
