@@ -57,7 +57,8 @@ export const qtiTransformItem = (cache: boolean = false) => {
       return new Promise<typeof api>(resolve => {
         loadXML(uri, cancelPreviousRequest).then(xml => {
           xmlFragment = xml;
-          api.shuffleInteractions().path(uri.substring(0, uri.lastIndexOf('/')));
+          api.shuffleInteractions();
+          api.path(uri.substring(0, uri.lastIndexOf('/')));
           if (cache) sessionStorage.setItem(fullKey, new XMLSerializer().serializeToString(xmlFragment));
           return resolve(api);
         });

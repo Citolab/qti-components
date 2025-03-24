@@ -98,6 +98,12 @@ export class QtiAssessmentItem extends LitElement {
         }
       }
     });
+
+    this.variables.forEach(variable => {
+      if (variable.type === 'outcome') {
+        this._feedbackElements.forEach(fe => fe.checkShowFeedback(variable.identifier));
+      }
+    });
   }
 
   private _initialContext: Readonly<ItemContext> = { ...this._context, variables: this._context.variables };
