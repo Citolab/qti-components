@@ -26,7 +26,7 @@ import {
 } from './qti-transformers';
 
 export type transformItemApi = {
-  load: (uri: string, cancelPreviousRequest?: boolean) => Promise<transformItemApi>;
+  load: (uri: string) => { promise: Promise<transformItemApi>; request: XMLHttpRequest | null };
   parse: (xmlString: string) => transformItemApi;
   path: (location: string) => transformItemApi;
   fn: (fn: (xmlFragment: XMLDocument) => void) => transformItemApi;
@@ -47,15 +47,19 @@ export const qtiTransformItem = (cache: boolean = false) => {
   let xmlFragment: XMLDocument;
 
   const api: transformItemApi = {
-    async load(uri: string, cancelPreviousRequest = false): Promise<typeof api> {
+    load(uri: string) {
       const fullKey = encodeURI(uri);
       if (cache) {
         if (sessionStorage.getItem(fullKey)) {
-          return Promise.resolve(api.parse(sessionStorage.getItem(fullKey)!));
+          return {
+            promise: Promise.resolve(api.parse(sessionStorage.getItem(fullKey)!)),
+            request: null
+          };
         }
       }
-      return new Promise<typeof api>(resolve => {
-        loadXML(uri, cancelPreviousRequest).then(xml => {
+      const { promise, xhr } = loadXML(uri);
+      const a = new Promise<typeof api>(resolve => {
+        promise.then(xml => {
           xmlFragment = xml;
           api.shuffleInteractions();
           api.path(uri.substring(0, uri.lastIndexOf('/')));
@@ -63,6 +67,8 @@ export const qtiTransformItem = (cache: boolean = false) => {
           return resolve(api);
         });
       });
+
+      return { promise: a, request: xhr };
     },
     parse(xmlString: string): typeof api {
       xmlFragment = parseXML(xmlString);

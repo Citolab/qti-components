@@ -48,7 +48,7 @@ export const ItemDoc: Story = {
     async ({ args }) => {
       const itemDoc = qtiTransformItem()
         .load(args['item-url'])
-        .then(api => api.htmlDoc());
+        .promise.then(api => api.htmlDoc());
       return { itemDoc };
     }
   ],
@@ -68,7 +68,7 @@ export const ItemXML: Story = {
     async ({ args }) => {
       const itemXML = await qtiTransformItem()
         .load(args['item-url'])
-        .then(api => api.xml());
+        .promise.then(api => api.xml());
       return { itemXML };
     }
   ],

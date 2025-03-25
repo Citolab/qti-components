@@ -88,17 +88,12 @@ export function itemsFromTest(xmlFragment: DocumentFragment) {
   return items;
 }
 
-let currentRequest: XMLHttpRequest | null = null;
+// let currentRequest: XMLHttpRequest | null = null;
 
-export function loadXML(url, cancelPreviousRequest = false) {
-  // console.trace('loadXML', url);
-  if (cancelPreviousRequest && currentRequest !== null) {
-    currentRequest.abort(); // Abort the ongoing request if there is one
-  }
+export function loadXML(url): { promise: Promise<XMLDocument | null>; xhr: XMLHttpRequest } {
+  const xhr = new XMLHttpRequest();
 
-  return new Promise<XMLDocument | null>((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    currentRequest = xhr; // Store the current request
+  const promise = new Promise<XMLDocument | null>((resolve, reject) => {
     xhr.open('GET', url, true);
     xhr.responseType = 'document';
 
@@ -116,6 +111,8 @@ export function loadXML(url, cancelPreviousRequest = false) {
 
     xhr.send();
   });
+
+  return { promise, xhr };
 }
 
 export function parseXML(xmlDocument: string) {
