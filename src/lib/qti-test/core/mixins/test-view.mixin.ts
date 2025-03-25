@@ -29,9 +29,7 @@ export const TestViewMixin = <T extends Constructor<TestBase>>(superClass: T) =>
     willUpdate(changedProperties: Map<string | number | symbol, unknown>) {
       super.willUpdate(changedProperties);
       if (changedProperties.has('sessionContext')) {
-        // if (previousContext && previousContext.view !== this.sessionContext.view) {
         this._updateElementView();
-        // }
       }
     }
 
