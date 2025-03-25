@@ -130,7 +130,7 @@ describe('qtiTransformItem API Methods', () => {
         </qti-assessment-item>`
       )
       .shuffleInteractions()
-      .api.html();
+      .html();
 
     expect(parsedXML).not.toEqualXml(
       html`<qti-assessment-item>
@@ -159,7 +159,7 @@ describe('qtiTransformItem API Methods', () => {
           </qti-item-body>
         </qti-assessment-item>`
       )
-      .shuffleInteractions().api;
+      .shuffleInteractions();
 
     const choices = parsedXML.xmlDoc().querySelectorAll('qti-simple-choice');
     expect(choices[0].getAttribute('fixed')).toBe('true');
@@ -182,7 +182,7 @@ describe('qtiTransformItem API Methods', () => {
           </qti-item-body>
         </qti-assessment-item>`
       )
-      .shuffleInteractions().api;
+      .shuffleInteractions();
 
     const choices = parsedXML.xmlDoc().querySelectorAll('qti-simple-choice');
     expect(choices[0].hasAttribute('fixed')).toBe(false);
@@ -205,7 +205,7 @@ describe('qtiTransformItem API Methods', () => {
           </qti-item-body>
         </qti-assessment-item>`
       )
-      .shuffleInteractions().api;
+      .shuffleInteractions();
 
     const choices = parsedXML.xmlDoc().querySelectorAll('qti-simple-choice');
 

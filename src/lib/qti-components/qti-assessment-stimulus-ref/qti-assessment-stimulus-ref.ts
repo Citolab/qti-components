@@ -51,7 +51,7 @@ export class QtiAssessmentStimulusRef extends LitElement {
   public async updateStimulusRef(stimulusRef: Element) {
     const stimulus = await qtiTransformItem()
       .load(this.href)
-      .then(api => api.htmlDoc());
+      .promise.then(api => api.htmlDoc());
     if (stimulus) {
       const elements = stimulus.querySelectorAll('qti-stimulus-body, qti-stylesheet');
       stimulusRef.innerHTML = '';

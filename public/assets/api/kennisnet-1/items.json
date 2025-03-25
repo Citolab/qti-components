@@ -1,0 +1,51 @@
+[
+  {
+    "identifier": "INTRODUCTION",
+    "title": "Intro"
+  },
+  {
+    "identifier": "ITEM001-TEST",
+    "title": "Opties",
+    "difficulty": "2"
+  },
+  {
+    "identifier": "ITEM002-TEST",
+    "title": "Sesamstraat",
+    "difficulty": "3"
+  },
+  {
+    "identifier": "ITEM003-TEST",
+    "title": "Dieren",
+    "difficulty": "1"
+  },
+  {
+    "identifier": "ITEM004-TEST",
+    "title": "Zagen",
+    "difficulty": "1"
+  },
+  {
+    "identifier": "ITEM005-TEST",
+    "title": "Kat",
+    "difficulty": "1"
+  },
+  {
+    "identifier": "ITEM006-TEST",
+    "title": "Woorden",
+    "difficulty": "1"
+  },
+  {
+    "identifier": "ITEM007-TEST",
+    "title": "Romeins",
+    "difficulty": "1"
+  },
+  {
+    "identifier": "ITEM008-TEST",
+    "title": "Technologie",
+    "difficulty": "1"
+  },
+  {
+    "identifier": "ITEM009-TEST",
+    "title": "Volgorde",
+    "difficulty": "1"
+  }
+]

@@ -4,7 +4,7 @@ import { html } from 'lit';
 
 import { getItemByUri } from '../../../../lib/qti-loader';
 
-import type { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
+import type { QtiAssessmentItem } from '../../../../lib';
 import type { ArgTypes, Meta, StoryObj } from '@storybook/web-components';
 
 type Story = StoryObj;
@@ -15,7 +15,7 @@ const meta: Meta<QtiAssessmentItem> = {
 export default meta;
 
 export const Default: Story = {
-  render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
+  render: (_args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');

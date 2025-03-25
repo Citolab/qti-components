@@ -9,7 +9,7 @@ export const qtiTransformManifest = (): {
   const api = {
     async load(uri) {
       return new Promise<typeof api>(resolve => {
-        loadXML(uri).then(xml => {
+        loadXML(uri).promise.then(xml => {
           xmlFragment = xml;
           return resolve(api);
         });

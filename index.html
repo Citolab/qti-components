@@ -1,112 +1,275 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <title>QTI-Components</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/2.0.0/modern-normalize.min.css"
-      integrity="sha512-4xo8blKMVCiXpTaLzQSLSw3KFOVPWhm/TRtuPVc4WG6kUgjH6J03IBuG7JZPkcWMxJ5huwaBpOpnwYElP/m6wg=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QTI IOL Player LIT</title>
+
+    <base href="%VITE_BASE_HREF%" />
+
+    <script type="module" defer>
+      import '@citolab/qti-components/qti-components';
+      import '@citolab/qti-components/qti-test/core';
+      import '@citolab/qti-components/qti-test/components/test-navigation';
+      import '@citolab/qti-components/qti-test/components/test-container';
+      import '@citolab/qti-components/qti-test/components/test-next';
+      import '@citolab/qti-components/qti-test/components/test-prev';
+      import '@citolab/qti-components/qti-test/components/test-show-correct-response';
+      import '@citolab/qti-components/qti-test/components/test-end-attempt';
+      import '@citolab/qti-components/qti-test/components/test-paging-buttons-stamp';
+      import '@citolab/qti-components/qti-test/components/test-item-link';
+      import '@citolab/qti-components/qti-test/components/test-view';
+      import '@citolab/qti-components/qti-test/components/test-print-item-variables';
+      import '@citolab/qti-components/qti-test/components/test-print-context';
+      import '@citolab/qti-components/qti-test/components/test-scoring-buttons';
+    </script>
+
+    <script defer>
+      async function changeTest(e) {
+        const value = document.querySelector('#test-url-select').value;
+        const testContainer = document.querySelector('test-container');
+        const testNavigation = document.querySelector('test-navigation');
+        testNavigation.configContext = {
+          infoItemCategory: 'info'
+        };
+        // Fetch items.json with error handling
+        try {
+          const response = await fetch(value + 'items.json');
+          testNavigation.initContext = response.ok ? await response.json() : null;
+        } catch {
+          testNavigation.initContext = null;
+        }
+
+        testContainer.setAttribute('test-url', value + '/AssessmentTest.xml');
+      }
+    </script>
+
+    <script type="module" defer>
+      const stimulusRefContainer = document.getElementById('stimulusRefContainer');
+
+      customElements.whenDefined('qti-test').then(() => {
+        const qtiTest = document.querySelector('qti-test');
+
+        const implemented = false;
+        if (implemented) {
+          // also declaratively in the html
+          // qtiTest.navItemId = ""; <-- hier weghalen
+          qtiTest.autoStoreRestore = 'KEY'; // exists
+          qtiTest.cacheItems = false; // should be implemented
+          qtiTest.autoScoreItems = true; // is now on : testNavigation.autoScoreItems
+          qtiTest.reportValidityAfterScoring = true;
+
+          qtiTest.autoLoad = 'item' | 'section'; // should be implemented
+          // qtiTest.navigate = 'section' || 'item' // default is 'item' <-- zit nog n de peiling, automatisch eerste section laden
+
+          // qtiTest.configContext = {
+          // reportValidityAfterScoring: true,
+          // infoItemCategory: 'info',
+          // };
+
+          // all items are loaded and the complete dom is rendered
+          qtiTest.addEventListener('qti-test-loaded', e => {
+            clickRules();
+            markLines();
+          });
+
+          qtiTest.addEventListener('qti-load-item-request', e => {
+            e.detail.promise = (async () => {
+              const api = await qtiTransformItem().load(e.detail.href, true);
+              return api.htmlDoc();
+            })();
+          });
+
+          // the item is loaded and the dom is rendered
+          qtiTest.addEventListener('qti-assessment-item-connected', e => {
+            hideTitleOnMouseOver();
+          });
+
+          // the item has a stimulus ref and this is your chance to let the player place the stimulusref
+          qtiTest.addEventListener('qti-assessment-stimulus-ref-connected', e => {
+            e.preventDefault(); // this prevents the default behaviour of the item to set the stimulus content
+            const assessmentStimulusRef = e.composedPath()[0];
+            assessmentStimulusRef.updateStimulusRef(stimulusRefContainer);
+          });
+
+          // there is a request for navigation but it is not yet processed and handled ( ie it is not in the dom yet )
+          qtiTest.addEventListener('qti-request-navigation', e => {
+            history.pushState({}, '', `#${e.detail.id}`); // update URL of router
+            stimulusRefContainer.innerHTML = '';
+          });
+
+          // ** not implemented yet **
+          // the test context is updated because test-base got a "qti-item-context-updated" event
+          qtiTest.addEventListener('qti-test-context-updated', e => {
+            // from QtiAssessmentItem after processResponse
+            const testContext = e.detail.testContext;
+          });
+
+          // ********* SPECIFIC TO THE LOADED QTI-ASSESSMENT-TEST *********
+          // is now qti-assessment-test-connected
+          qtiTest.addEventListener('qti-test-context-set', e => {
+            if (testContext) {
+              // in session
+              qtiTest.detail.testContext = testContext;
+            }
+
+            // SPECIFIC TO WHICH ASSESSMENT XML
+            (e.detail.infoItemCategory = 'info'),
+              (e.detail.initContext = [
+                { itemRefId: 'ITM001', pValue: 0.672, domain: 'Biologie' },
+                { itemRefId: 'ITM002', pValue: 0.672, domain: 'Biologie' },
+                { itemRefId: 'ITM003', pValue: 0.672, domain: 'Biologie' }
+              ]);
+          });
+
+          qtiTest.load('./kennisnet-1/AssessmentTest.xml').then(() => {
+            qtiTest.navigateTo('ITEM', ITM002);
+            // qtiTest.navigateTo('SECTION', SECTION002) // can also navigate to a section
+          });
+        }
+      });
+    </script>
+
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
     <style>
-      body {
-        margin: 2rem;
-        padding: 0;
-        text-wrap: balance;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
+      test-container {
+        --qti-bg-active: #efecff;
+        --qti-border-active: #581d70;
+        --qti-button-padding-vertical: 0.2rem;
+        --bs-box-shadow: box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.1);
       }
     </style>
   </head>
-  <body>
-    <link rel="stylesheet" href="./src/item.css" />
-    <qti-assessment-item>
-      <p>DOC: lightdom</p>
-      <qti-item-body>
-        <qti-choice-interaction>
-          <qti-simple-choice identifier="A">Optie A</qti-simple-choice>
-          <qti-simple-choice identifier="B">Optie B</qti-simple-choice>
-        </qti-choice-interaction>
-      </qti-item-body>
-    </qti-assessment-item>
 
-    <div>
-      <template shadowrootmode="open">
-        <link rel="stylesheet" href="./src/item.css" />
-        <p>DIV: shadowdom open</p>
-        <qti-assessment-item>
-          <qti-item-body>
-            <qti-choice-interaction>
-              <qti-simple-choice identifier="A">Optie A</qti-simple-choice>
-              <qti-simple-choice identifier="B">Optie B</qti-simple-choice>
-            </qti-choice-interaction>
-          </qti-item-body>
-        </qti-assessment-item>
-      </template>
-    </div>
+  <body class="bg-slate-50 h-screen w-screen">
+    <!-- auto-store-restore="my session storage" -->
+    <qti-test class="h-full" cache-transform>
+      <test-navigation class="h-full flex gap-2 p-8" auto-score-items>
+        <div class="flex flex-col flex-1">
+          <div class="flex items-center gap-2 justify-between">
+            <test-view-toggle>Nakijken</test-view-toggle>
+            <div class="flex gap-2">
+              <test-scoring-buttons view="scorer"></test-scoring-buttons>
+            </div>
 
-    <div>
-      <template shadowrootmode="closed">
-        <link rel="stylesheet" href="./src/item.css" />
-        <p>DIV: shadowdom closed</p>
-        <qti-assessment-item>
-          <qti-item-body>
-            <qti-choice-interaction>
-              <qti-simple-choice identifier="A">Optie A</qti-simple-choice>
-              <qti-simple-choice identifier="B">Optie B</qti-simple-choice>
-            </qti-choice-interaction>
-          </qti-item-body>
-        </qti-assessment-item>
-      </template>
-    </div>
+            <test-view>View</test-view>
 
-    <qti-item>
-      <qti-assessment-item>
-        <p>QTI-ITEM: lightdom</p>
-        <qti-item-body>
-          <qti-choice-interaction>
-            <qti-simple-choice identifier="A">Optie A</qti-simple-choice>
-            <qti-simple-choice identifier="B">Optie B</qti-simple-choice>
-          </qti-choice-interaction>
-        </qti-item-body>
-      </qti-assessment-item>
-    </qti-item>
+            <test-end-attempt class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">
+              Scoring
+            </test-end-attempt>
+            <test-show-correct-response class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">
+              Toon correct antwoord
+            </test-show-correct-response>
 
-    <qti-item>
-      <template shadowrootmode="closed">
-        <link rel="stylesheet" href="./src/item.css" />
-        <qti-assessment-item>
-          <p>QTI-ITEM: shadowdom closed</p>
-          <qti-item-body>
-            <qti-choice-interaction>
-              <qti-simple-choice identifier="A">Optie A</qti-simple-choice>
-              <qti-simple-choice identifier="B">Optie B</qti-simple-choice>
-            </qti-choice-interaction>
-          </qti-item-body>
-        </qti-assessment-item>
-      </template>
-    </qti-item>
+            <test-view-toggle></test-view-toggle>
 
-    <qti-item id="imperative"></qti-item>
-    <script type="module">
-      import { qtiTransformItem } from './src/lib/qti-transformers';
-      onload = event => {
-        const xml = `
-      <qti-assessment-item>
-        <p>QTI-ITEM: imperative shadowdom closed</p>
-        <qti-item-body>
-          <qti-choice-interaction>
-            <qti-simple-choice identifier="A">Optie A</qti-simple-choice>
-            <qti-simple-choice identifier="B">Optie B</qti-simple-choice>
-          </qti-choice-interaction>
-        </qti-item-body>
-      </qti-assessment-item>`;
-        const item = qtiTransformItem().parse(xml).htmldoc();
-        document.getElementById('imperative').xmlDoc = item;
-      };
-    </script>
+            <select id="test-url-select" class="form-select mb-3 border p-2 rounded" oninput="changeTest()">
+              <option>Select</option>
+              <option value="assets/api/kennisnet-1/">Kennisnet 1</option>
+              <option value="assets/api/kennisnet-2/">Kennisnet 2</option>
+            </select>
+          </div>
 
-    <script type="module" src="./src/index.ts"></script>
+          <!-- <div class="relative flex-1 overflow-auto"> -->
+          <div popover id="popover-thumbs" class="w-full">
+            <div class="flex flex-wrap gap-2">
+              <test-paging-buttons-stamp>
+                <template>
+                  <test-item-link
+                    class="cursor-pointer relative bg-white p-2 border-2 border-b-4 
+                  {{ item.view === 'scorer' && item.correct ? 'border-green-400' : item.view === 'scorer' && item.incorrect && item.completed ? 'border-red-400' : item.completed ? 'border-slate-400' : '' }} 
+                  {{ item.active ? '!border-sky-600' : '' }} 
+                  {{ item.category === 'info' ? '' : 'rounded-2xl' }}"
+                    item-id="{{ item.identifier }}"
+                  >
+                    <img src="{{ item.thumbnail }}" alt="{{ item.title }}" />
+                  </test-item-link>
+                </template>
+              </test-paging-buttons-stamp>
+            </div>
+          </div>
+
+          <div popover id="popover-list" class="absolute bottom-0 w-full">
+            <div class="columns-1 md:columns-4">
+              <test-paging-buttons-stamp>
+                <template>
+                  <test-item-link
+                    class="gap-2 px-2 text-sm py-1 flex items-center justify-between cursor-pointer {{ item.active ? 'bg-sky-500 text-white' : 'bg-transparent text-slate-600 ' }}"
+                    item-id="{{ item.identifier }}"
+                  >
+                    <div
+                      class="flex items-center justify-center w-4 h-4 border-2 cursor-pointer {{ item.view === 'scorer' && item.correct ? 'bg-green-100 border-green-400' : item.view === 'scorer' && item.incorrect && item.completed ? 'bg-red-100 border-red-400' : item.completed ? 'bg-slate-300' : 'bg-white' }} p-0 {{ item.category === 'dep-informational' ? '' : 'rounded-full' }}"
+                    ></div>
+                    <div class="flex flex-grow gap-1 py-0.5">
+                      {{ item.category === 'dep-informational' ? 'info' : item.title }}
+                    </div>
+                    <!-- <template type="repeat" repeat="{{ item.domains }}">
+                      <div
+                        class="capitalize flex items-center justify-center rounded-full font-bold leading-none flex-shrink-0 h-5 w-5 text-[10px]"
+                        style="background-color: {{ item.color }}"
+                      >
+                        {{ item.title.slice(0, 2) }}
+                      </div>
+                    </template> -->
+                    <div class="w-4 text-right mr-2 text-xs text-slate-300">{{ item.index }}</div>
+                  </test-item-link>
+                </template>
+              </test-paging-buttons-stamp>
+            </div>
+          </div>
+          <!-- </div> -->
+          <test-container class="block rounded bg-white p-8 flex-1 overflow-auto shadow-sm"> </test-container>
+
+          <div class="flex w-full items-center justify-between gap-2">
+            <button class="btn btn-primary">Inleveren</button>
+
+            <div class="flex items-center">
+              <div class="hidden flex-1 gap-1 overflow-auto md:flex">
+                <test-paging-buttons-stamp class="flex gap-2 p-2 overflow-auto">
+                  <template>
+                    <test-item-link
+                      class="flex items-center justify-center w-4 h-4 border-2 cursor-pointer p-0 {{ item.view === 'scorer' && item.correct ? 'bg-green-100 border-green-400' : item.view === 'scorer' && item.incorrect && item.completed ? 'bg-red-100 border-red-400' : item.completed ? 'bg-slate-300' : 'bg-transparent' }} {{ item.active ? '!border-sky-600' : ''}} {{ item.category === 'info' ? '' : 'rounded-full' }}"
+                      item-id="{{ item.identifier }}"
+                    >
+                      <template type="if" if="{{ item.category === 'info' }}">
+                        <div class="w-1 h-1 rounded-full bg-slate-300"></div>
+                      </template>
+                    </test-item-link>
+                  </template>
+                </test-paging-buttons-stamp>
+              </div>
+
+              <div class="flex gap-2">
+                <button popovertarget="popover-thumbs" class="btn btn-outline">
+                  <hi-24-outline-squares-2x2></hi-24-outline-squares-2x2>
+                  <i class="bi bi-grid"></i>
+                </button>
+                <button popovertarget="popover-list" class="btn btn-outline">
+                  <i class="bi bi-list"></i>
+                </button>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <test-prev class="btn btn-primary" role="button">
+                <i class="bi bi-arrow-left-short"></i>
+              </test-prev>
+              <test-next class="btn btn-primary" role="button">
+                <div class="hidden md:flex">Volgende</div>
+                <i class="bi bi-arrow-right-short"></i>
+              </test-next>
+            </div>
+          </div>
+
+          <div id="stimulusRefContainer"></div>
+        </div>
+        <div class="w-1/4">
+          <test-print-item-variables class="text-sm"></test-print-item-variables>
+          <test-print-context></test-print-context>
+        </div>
+      </test-navigation>
+    </qti-test>
   </body>
 </html>

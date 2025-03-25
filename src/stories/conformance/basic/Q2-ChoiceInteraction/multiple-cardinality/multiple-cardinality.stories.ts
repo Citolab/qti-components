@@ -1,7 +1,5 @@
-import { action } from '@storybook/addon-actions';
 import { expect } from '@storybook/test';
-import { fireEvent, screen } from '@storybook/test';
-import { html } from 'lit';
+import { fireEvent } from '@storybook/test';
 
 import { getItemByUri } from '../../../../../lib/qti-loader';
 

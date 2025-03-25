@@ -1,7 +1,7 @@
 import { html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
-import { TestLoaderMixin, TestNavigationMixin, TestViewMixin } from './mixins';
+import { TestNavigationMixin, TestViewMixin } from './mixins';
 import { TestBase } from './test-base';
 import { TestProcessingMixin } from './mixins/test-processing.mixin';
 
@@ -54,7 +54,7 @@ import { TestProcessingMixin } from './mixins/test-processing.mixin';
  *
  */
 @customElement('qti-test')
-export class QtiTest extends TestLoaderMixin(TestNavigationMixin(TestViewMixin(TestProcessingMixin(TestBase)))) {
+export class QtiTest extends TestNavigationMixin(TestViewMixin(TestProcessingMixin(TestBase))) {
   // export class QtiTest extends TestLoaderMixin(TestNavigationMixin(TestViewMixin(TestBase))) {
   /**
    * Renders the component's template.

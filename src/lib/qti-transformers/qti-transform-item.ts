@@ -26,7 +26,7 @@ import {
 } from './qti-transformers';
 
 export type transformItemApi = {
-  load: (uri: string, identifier?: string, cancelPreviousRequest?: boolean) => Promise<transformItemApi>;
+  load: (uri: string) => { promise: Promise<transformItemApi>; request: XMLHttpRequest | null };
   parse: (xmlString: string) => transformItemApi;
   path: (location: string) => transformItemApi;
   fn: (fn: (xmlFragment: XMLDocument) => void) => transformItemApi;
@@ -35,10 +35,7 @@ export type transformItemApi = {
   extendElementsWithClass: (param?: string) => transformItemApi;
   customInteraction: (baseRef: string, baseItem: string) => transformItemApi;
   convertCDATAtoComment: () => transformItemApi;
-  shuffleInteractions: (predefinedOrder?: { [interactionId: string]: string[] } | undefined) => {
-    api: transformItemApi;
-    result: { interactionId: string; ids: { original: string[]; shuffled: string[] } | undefined }[];
-  };
+  shuffleInteractions: () => transformItemApi;
   stripStyleSheets: () => transformItemApi;
   html: () => string;
   xml: () => string;
@@ -46,24 +43,32 @@ export type transformItemApi = {
   xmlDoc: () => XMLDocument;
 };
 
-export const qtiTransformItem = () => {
+export const qtiTransformItem = (cache: boolean = false) => {
   let xmlFragment: XMLDocument;
 
   const api: transformItemApi = {
-    async load(uri: string, _identifier?: string, cancelPreviousRequest = false): Promise<typeof api> {
-      // replace all non-alphanumeric characters with underscores
-      // const fullKey = (identifier || uri)?.replace(/[^a-zA-Z0-9]/g, '_');
-      // if (sessionStorage.getItem(fullKey)) {
-      //   return Promise.resolve(api.parse(sessionStorage.getItem(fullKey)!));
-      // }
-      return new Promise<typeof api>(resolve => {
-        loadXML(uri, cancelPreviousRequest).then(xml => {
+    load(uri: string) {
+      const fullKey = encodeURI(uri);
+      if (cache) {
+        if (sessionStorage.getItem(fullKey)) {
+          return {
+            promise: Promise.resolve(api.parse(sessionStorage.getItem(fullKey)!)),
+            request: null
+          };
+        }
+      }
+      const { promise, xhr } = loadXML(uri);
+      const a = new Promise<typeof api>(resolve => {
+        promise.then(xml => {
           xmlFragment = xml;
+          api.shuffleInteractions();
           api.path(uri.substring(0, uri.lastIndexOf('/')));
-          // sessionStorage.setItem(fullKey, new XMLSerializer().serializeToString(xmlFragment));
+          if (cache) sessionStorage.setItem(fullKey, new XMLSerializer().serializeToString(xmlFragment));
           return resolve(api);
         });
       });
+
+      return { promise: a, request: xhr };
     },
     parse(xmlString: string): typeof api {
       xmlFragment = parseXML(xmlString);
@@ -97,16 +102,11 @@ export const qtiTransformItem = () => {
       }
       return api;
     },
-    shuffleInteractions(predefinedOrder?: { [interactionId: string]: string[] }): {
-      api: transformItemApi;
-      result: { interactionId: string; ids: { original: string[]; shuffled: string[] } | undefined }[];
-    } {
+    shuffleInteractions(): typeof api {
       const shuffleElements = xmlFragment.querySelectorAll(`[shuffle="true"]`);
       const shuffleInteractions = Array.from(shuffleElements).filter(e =>
         e.tagName?.toLowerCase().endsWith('-interaction')
       );
-      const shuffelResults: { interactionId: string; ids: { original: string[]; shuffled: string[] } | undefined }[] =
-        [];
 
       for (const shuffleInteraction of shuffleInteractions) {
         const query = getShuffleQuerySelectorByTagName(shuffleInteraction.tagName.toLowerCase());
@@ -114,40 +114,7 @@ export const qtiTransformItem = () => {
 
         for (const q of queries) {
           const choices = Array.from(shuffleInteraction.querySelectorAll(q)) as HTMLElement[];
-          const originalOrderIdentifiers = choices.map(choice => choice.getAttribute('identifier') || '');
-          const interactionId = (shuffelResults.length + 1).toString();
 
-          // If a predefined order exists for this interaction, use it
-          if (predefinedOrder) {
-            const predefinedOrderIdentifiers = predefinedOrder[interactionId];
-
-            // Ensure all predefined order identifiers exist in the original choices
-            if (!predefinedOrderIdentifiers.every(id => originalOrderIdentifiers.includes(id))) {
-              console.warn(`Predefined order for ${interactionId} contains unknown identifiers.`);
-              continue;
-            }
-
-            // Sort choices based on predefined order
-            const orderedChoices = predefinedOrderIdentifiers
-              .map(id => choices.find(choice => choice.getAttribute('identifier') === id))
-              .filter(Boolean) as HTMLElement[];
-
-            // Reorder in the DOM
-            for (const choice of orderedChoices) {
-              choice.parentElement.appendChild(choice);
-            }
-
-            shuffelResults.push({
-              interactionId,
-              ids: { original: originalOrderIdentifiers, shuffled: predefinedOrderIdentifiers }
-            });
-
-            // Remove the shuffle attribute
-            shuffleInteraction.removeAttribute('shuffle');
-            continue;
-          }
-
-          // Normal shuffle logic if predefined order is not present
           const fixedChoices = choices
             .map((choice, originalOrder) => ({
               element: choice,
@@ -162,7 +129,7 @@ export const qtiTransformItem = () => {
 
           if (nonFixedChoices.length <= 1) {
             console.warn('Shuffling is not possible with fewer than 2 non-fixed elements.');
-            return { api, result: undefined };
+            return api;
           }
 
           const originalOrder = [...nonFixedChoices];
@@ -198,20 +165,10 @@ export const qtiTransformItem = () => {
               nonFixedChoices[fixedChoice.originalOrder]
             );
           }
-
-          // Extract shuffled order identifiers
-          const shuffledOrderIdentifiers = Array.from(shuffleInteraction.querySelectorAll(q)).map(
-            choice => choice.getAttribute('identifier') || ''
-          );
-
-          shuffelResults.push({
-            interactionId,
-            ids: { original: originalOrderIdentifiers, shuffled: shuffledOrderIdentifiers }
-          });
         }
       }
 
-      return { api, result: shuffelResults };
+      return api;
     },
     extendElementName: (tagName: string, extension: string): typeof api => {
       extendElementName(xmlFragment, tagName, extension);

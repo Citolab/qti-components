@@ -29,7 +29,7 @@ export const qtiTransformTest = (): transformTestApi => {
   const api: transformTestApi = {
     async load(uri) {
       return new Promise<transformTestApi>((resolve, _) => {
-        loadXML(uri).then(xml => {
+        loadXML(uri).promise.then(xml => {
           xmlFragment = xml;
 
           api.path(uri.substring(0, uri.lastIndexOf('/')));

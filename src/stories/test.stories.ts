@@ -31,10 +31,51 @@ type Story = StoryObj;
 export const Test: Story = {
   render: (_, { loaded: { testURL } }) => {
     const [args, updateArgs] = useArgs();
-
-    // nav-item-id=${ifDefined(args.itemIdentifier)}
     return html`
-      <qti-test class="h-full" @qti-test-context-updated=${({ detail }) => {}}>
+      <qti-test
+        class="h-full"
+        @qti-test-connected=${(e: CustomEvent) => {
+          console.log('qti-test-connected', e);
+        }}
+        @qti-test-loaded=${(e: CustomEvent) => {
+          console.log('qti-test-loaded', e);
+        }}
+        @qti-load-item-request=${e => {
+          // e.detail.returnedPromise = new Promise((resolve, reject) => {
+          //   qtiTransformItem()
+          //     .load(`${testURI}/${e.detail.href}`)
+          //     .then(api => api.path(testURI).extendElementsWithClass('type').htmlDoc())
+          //     .then(htmlDoc => resolve(htmlDoc))
+          //     .catch(error => reject(error));
+          // });
+          // e.detail.promise = (async () => {
+          //   const api = await qtiTransformItem().load(
+          //     `${e.detail.href}`,
+          //     e.detail.cancelPreviousRequest
+          //   ); /* 6. load the item */
+          //   return api.htmlDoc(); /* 7. Return HTML version of the item.xml */
+          // })();
+        }}
+        @qti-assessment-stimulus-ref-connected=${(e: CustomEvent) => {
+          console.log('qti-assessment-stimulus-ref-connected', e);
+        }}
+        @qti-assessment-test-connected=${(e: CustomEvent) => {
+          console.log('qti-assessment-test-connected', e);
+        }}
+        @qti-outcome-changed=${(e: CustomEvent) => {
+          console.log('qti-outcome-changed', e);
+        }}
+        @qti-interaction-changed=${(e: CustomEvent) => {
+          console.log('qti-interaction-changed', e);
+        }}
+        @qti-request-test-section=${(e: CustomEvent) => {
+          console.log('qti-request-test-section', e);
+        }}
+        @qti-request-navigation=${(e: CustomEvent) => {
+          console.log('qti-request-navigation', e);
+        }}
+        @qti-test-context-updated=${({ detail }) => {}}
+      >
         <test-navigation
           auto-score-items
           class="flex h-full overflow-hidden"
