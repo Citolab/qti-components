@@ -147,123 +147,16 @@
   <body class="bg-slate-50 h-screen w-screen">
     <!-- auto-store-restore="my session storage" -->
     <qti-test class="h-full" cache-transform>
-      <test-navigation class="h-full flex flex-col gap-2 p-8" auto-score-items>
-        <div class="flex items-center gap-2 justify-between">
-          <test-view-toggle>Nakijken</test-view-toggle>
-          <div class="flex gap-2">
-            <test-scoring-buttons view="scorer"></test-scoring-buttons>
-          </div>
-          <select id="test-url-select" class="form-select mb-3 border p-2 rounded" oninput="changeTest()">
-            <option>Select</option>
-            <option value="assets/api/kennisnet-1/">Kennisnet 1</option>
-            <option value="assets/api/kennisnet-2/">Kennisnet 2</option>
-          </select>
-        </div>
-
-        <!-- <div class="relative flex-1 overflow-auto"> -->
-        <div popover id="popover-thumbs" class="w-full">
-          <div class="flex flex-wrap gap-2">
-            <test-paging-buttons-stamp>
-              <template>
-                <test-item-link
-                  class="cursor-pointer relative bg-white p-2 border-2 border-b-4 
-                  {{ item.view === 'scorer' && item.correct ? 'border-green-400' : item.view === 'scorer' && item.incorrect && item.completed ? 'border-red-400' : item.completed ? 'border-slate-400' : '' }} 
-                  {{ item.active ? '!border-sky-600' : '' }} 
-                  {{ item.category === 'info' ? '' : 'rounded-2xl' }}"
-                  item-id="{{ item.identifier }}"
-                >
-                  <img src="{{ item.thumbnail }}" alt="{{ item.title }}" />
-                </test-item-link>
-              </template>
-            </test-paging-buttons-stamp>
-          </div>
-        </div>
-
-        <div popover id="popover-list" class="absolute bottom-0 w-full">
-          <div class="columns-1 md:columns-4">
-            <test-paging-buttons-stamp>
-              <template>
-                <test-item-link
-                  class="gap-2 px-2 text-sm py-1 flex items-center justify-between cursor-pointer {{ item.active ? 'bg-sky-500 text-white' : 'bg-transparent text-slate-600 ' }}"
-                  item-id="{{ item.identifier }}"
-                >
-                  <div
-                    class="flex items-center justify-center w-4 h-4 border-2 cursor-pointer {{ item.view === 'scorer' && item.correct ? 'bg-green-100 border-green-400' : item.view === 'scorer' && item.incorrect && item.completed ? 'bg-red-100 border-red-400' : item.completed ? 'bg-slate-300' : 'bg-white' }} p-0 {{ item.category === 'dep-informational' ? '' : 'rounded-full' }}"
-                  ></div>
-                  <div class="flex flex-grow gap-1 py-0.5">
-                    {{ item.category === 'dep-informational' ? 'info' : item.title }}
-                  </div>
-                  <!-- <template type="repeat" repeat="{{ item.domains }}">
-                      <div
-                        class="capitalize flex items-center justify-center rounded-full font-bold leading-none flex-shrink-0 h-5 w-5 text-[10px]"
-                        style="background-color: {{ item.color }}"
-                      >
-                        {{ item.title.slice(0, 2) }}
-                      </div>
-                    </template> -->
-                  <div class="w-4 text-right mr-2 text-xs text-slate-300">{{ item.index }}</div>
-                </test-item-link>
-              </template>
-            </test-paging-buttons-stamp>
-          </div>
-        </div>
-        <!-- </div> -->
-        <test-container class="block rounded bg-white p-8 flex-1 overflow-auto shadow-sm"> </test-container>
-
-        <div class="flex w-full items-center justify-between gap-2">
-          <button class="btn btn-primary">Inleveren</button>
-
-          <div class="flex items-center">
-            <div class="hidden flex-1 gap-1 overflow-auto md:flex">
-              <test-paging-buttons-stamp class="flex gap-2 p-2 overflow-auto">
-                <template>
-                  <test-item-link
-                    class="flex items-center justify-center w-4 h-4 border-2 cursor-pointer p-0 {{ item.view === 'scorer' && item.correct ? 'bg-green-100 border-green-400' : item.view === 'scorer' && item.incorrect && item.completed ? 'bg-red-100 border-red-400' : item.completed ? 'bg-slate-300' : 'bg-transparent' }} {{ item.active ? '!border-sky-600' : ''}} {{ item.category === 'info' ? '' : 'rounded-full' }}"
-                    item-id="{{ item.identifier }}"
-                  >
-                    <template type="if" if="{{ item.category === 'info' }}">
-                      <div class="w-1 h-1 rounded-full bg-slate-300"></div>
-                    </template>
-                  </test-item-link>
-                </template>
-              </test-paging-buttons-stamp>
-            </div>
-
+      <test-navigation class="h-full flex gap-2 p-8" auto-score-items>
+        <div class="flex flex-col flex-1">
+          <div class="flex items-center gap-2 justify-between">
+            <test-view-toggle>Nakijken</test-view-toggle>
             <div class="flex gap-2">
-              <button popovertarget="popover-thumbs" class="btn btn-outline">
-                <hi-24-outline-squares-2x2></hi-24-outline-squares-2x2>
-                <i class="bi bi-grid"></i>
-              </button>
-              <button popovertarget="popover-list" class="btn btn-outline">
-                <i class="bi bi-list"></i>
-              </button>
+              <test-scoring-buttons view="scorer"></test-scoring-buttons>
             </div>
-          </div>
-          <div class="flex items-center gap-2">
-            <test-prev class="btn btn-primary" role="button">
-              <i class="bi bi-arrow-left-short"></i>
-            </test-prev>
-            <test-next class="btn btn-primary" role="button">
-              <div class="hidden md:flex">Volgende</div>
-              <i class="bi bi-arrow-right-short"></i>
-            </test-next>
-          </div>
-        </div>
 
-        <!-- <div id="stimulusRefContainer"></div> -->
+            <test-view>View</test-view>
 
-        <!-- <div class="flex flex-col flex-grow m-4">
-          <test-view>View</test-view>
-          <select id="test-url-select" class="form-select mb-3 border p-2 rounded" oninput="changeTest()">
-            <option>Select</option>
-            <option value="assets/api/kennisnet-1/">Kennisnet 1</option>
-            <option value="assets/api/kennisnet-2/">Kennisnet 2</option>
-          </select>
-          <test-container
-            id="test-container"
-            class="rounded bg-white border p-4 flex-grow overflow-auto shadow"
-          ></test-container>
-          <nav class="flex items-center justify-between mt-4">
             <test-end-attempt class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">
               Scoring
             </test-end-attempt>
@@ -271,17 +164,111 @@
               Toon correct antwoord
             </test-show-correct-response>
 
-            <test-prev class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"> Vorige </test-prev>
-            <test-next class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"> Volgende </test-next>
-
             <test-view-toggle></test-view-toggle>
-          </nav>
-        </div> -->
 
-        <!-- <div class="overflow-auto" style="min-width: 600px; max-width: 600px">
+            <select id="test-url-select" class="form-select mb-3 border p-2 rounded" oninput="changeTest()">
+              <option>Select</option>
+              <option value="assets/api/kennisnet-1/">Kennisnet 1</option>
+              <option value="assets/api/kennisnet-2/">Kennisnet 2</option>
+            </select>
+          </div>
+
+          <!-- <div class="relative flex-1 overflow-auto"> -->
+          <div popover id="popover-thumbs" class="w-full">
+            <div class="flex flex-wrap gap-2">
+              <test-paging-buttons-stamp>
+                <template>
+                  <test-item-link
+                    class="cursor-pointer relative bg-white p-2 border-2 border-b-4 
+                  {{ item.view === 'scorer' && item.correct ? 'border-green-400' : item.view === 'scorer' && item.incorrect && item.completed ? 'border-red-400' : item.completed ? 'border-slate-400' : '' }} 
+                  {{ item.active ? '!border-sky-600' : '' }} 
+                  {{ item.category === 'info' ? '' : 'rounded-2xl' }}"
+                    item-id="{{ item.identifier }}"
+                  >
+                    <img src="{{ item.thumbnail }}" alt="{{ item.title }}" />
+                  </test-item-link>
+                </template>
+              </test-paging-buttons-stamp>
+            </div>
+          </div>
+
+          <div popover id="popover-list" class="absolute bottom-0 w-full">
+            <div class="columns-1 md:columns-4">
+              <test-paging-buttons-stamp>
+                <template>
+                  <test-item-link
+                    class="gap-2 px-2 text-sm py-1 flex items-center justify-between cursor-pointer {{ item.active ? 'bg-sky-500 text-white' : 'bg-transparent text-slate-600 ' }}"
+                    item-id="{{ item.identifier }}"
+                  >
+                    <div
+                      class="flex items-center justify-center w-4 h-4 border-2 cursor-pointer {{ item.view === 'scorer' && item.correct ? 'bg-green-100 border-green-400' : item.view === 'scorer' && item.incorrect && item.completed ? 'bg-red-100 border-red-400' : item.completed ? 'bg-slate-300' : 'bg-white' }} p-0 {{ item.category === 'dep-informational' ? '' : 'rounded-full' }}"
+                    ></div>
+                    <div class="flex flex-grow gap-1 py-0.5">
+                      {{ item.category === 'dep-informational' ? 'info' : item.title }}
+                    </div>
+                    <!-- <template type="repeat" repeat="{{ item.domains }}">
+                      <div
+                        class="capitalize flex items-center justify-center rounded-full font-bold leading-none flex-shrink-0 h-5 w-5 text-[10px]"
+                        style="background-color: {{ item.color }}"
+                      >
+                        {{ item.title.slice(0, 2) }}
+                      </div>
+                    </template> -->
+                    <div class="w-4 text-right mr-2 text-xs text-slate-300">{{ item.index }}</div>
+                  </test-item-link>
+                </template>
+              </test-paging-buttons-stamp>
+            </div>
+          </div>
+          <!-- </div> -->
+          <test-container class="block rounded bg-white p-8 flex-1 overflow-auto shadow-sm"> </test-container>
+
+          <div class="flex w-full items-center justify-between gap-2">
+            <button class="btn btn-primary">Inleveren</button>
+
+            <div class="flex items-center">
+              <div class="hidden flex-1 gap-1 overflow-auto md:flex">
+                <test-paging-buttons-stamp class="flex gap-2 p-2 overflow-auto">
+                  <template>
+                    <test-item-link
+                      class="flex items-center justify-center w-4 h-4 border-2 cursor-pointer p-0 {{ item.view === 'scorer' && item.correct ? 'bg-green-100 border-green-400' : item.view === 'scorer' && item.incorrect && item.completed ? 'bg-red-100 border-red-400' : item.completed ? 'bg-slate-300' : 'bg-transparent' }} {{ item.active ? '!border-sky-600' : ''}} {{ item.category === 'info' ? '' : 'rounded-full' }}"
+                      item-id="{{ item.identifier }}"
+                    >
+                      <template type="if" if="{{ item.category === 'info' }}">
+                        <div class="w-1 h-1 rounded-full bg-slate-300"></div>
+                      </template>
+                    </test-item-link>
+                  </template>
+                </test-paging-buttons-stamp>
+              </div>
+
+              <div class="flex gap-2">
+                <button popovertarget="popover-thumbs" class="btn btn-outline">
+                  <hi-24-outline-squares-2x2></hi-24-outline-squares-2x2>
+                  <i class="bi bi-grid"></i>
+                </button>
+                <button popovertarget="popover-list" class="btn btn-outline">
+                  <i class="bi bi-list"></i>
+                </button>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <test-prev class="btn btn-primary" role="button">
+                <i class="bi bi-arrow-left-short"></i>
+              </test-prev>
+              <test-next class="btn btn-primary" role="button">
+                <div class="hidden md:flex">Volgende</div>
+                <i class="bi bi-arrow-right-short"></i>
+              </test-next>
+            </div>
+          </div>
+
+          <div id="stimulusRefContainer"></div>
+        </div>
+        <div class="w-1/4">
           <test-print-item-variables class="text-sm"></test-print-item-variables>
           <test-print-context></test-print-context>
-        </div> -->
+        </div>
       </test-navigation>
     </qti-test>
   </body>
