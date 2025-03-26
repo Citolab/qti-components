@@ -35,7 +35,7 @@ export const TestViewMixin = <T extends Constructor<TestBase>>(superClass: T) =>
 
     // Method to handle view updates for elements based on the current context view
     private _updateElementView() {
-      if (this._testElement && this._testElement) {
+      if (this._testElement) {
         const viewElements = Array.from(this._testElement.querySelectorAll('[view]'));
 
         viewElements.forEach((element: HTMLElement) => {
@@ -45,6 +45,7 @@ export const TestViewMixin = <T extends Constructor<TestBase>>(superClass: T) =>
         const assessmentItem = this._testElement.querySelector<QtiAssessmentItem>(
           `qti-assessment-item[identifier="${this.sessionContext.navItemId}"]`
         );
+
         if (assessmentItem) {
           assessmentItem.showCorrectResponse(this.sessionContext.view === 'scorer');
         }

@@ -8,20 +8,22 @@
     <base href="%VITE_BASE_HREF%" />
 
     <script type="module" defer>
-      import '@citolab/qti-components/qti-components';
-      import '@citolab/qti-components/qti-test/core';
-      import '@citolab/qti-components/qti-test/components/test-navigation';
-      import '@citolab/qti-components/qti-test/components/test-container';
-      import '@citolab/qti-components/qti-test/components/test-next';
-      import '@citolab/qti-components/qti-test/components/test-prev';
-      import '@citolab/qti-components/qti-test/components/test-show-correct-response';
-      import '@citolab/qti-components/qti-test/components/test-end-attempt';
-      import '@citolab/qti-components/qti-test/components/test-paging-buttons-stamp';
-      import '@citolab/qti-components/qti-test/components/test-item-link';
-      import '@citolab/qti-components/qti-test/components/test-view';
-      import '@citolab/qti-components/qti-test/components/test-print-item-variables';
-      import '@citolab/qti-components/qti-test/components/test-print-context';
-      import '@citolab/qti-components/qti-test/components/test-scoring-buttons';
+      // import '@citolab/qti-components/qti-components';
+      // import '@citolab/qti-components/qti-test/core';
+      // import '@citolab/qti-components/qti-test/components/test-navigation';
+      // import '@citolab/qti-components/qti-test/components/test-container';
+      // import '@citolab/qti-components/qti-test/components/test-next';
+      // import '@citolab/qti-components/qti-test/components/test-prev';
+      // import '@citolab/qti-components/qti-test/components/test-show-correct-response';
+      // import '@citolab/qti-components/qti-test/components/test-end-attempt';
+      // import '@citolab/qti-components/qti-test/components/test-paging-buttons-stamp';
+      // import '@citolab/qti-components/qti-test/components/test-item-link';
+      // import '@citolab/qti-components/qti-test/components/test-view';
+      // import '@citolab/qti-components/qti-test/components/test-print-item-variables';
+      // import '@citolab/qti-components/qti-test/components/test-print-context';
+      // import '@citolab/qti-components/qti-test/components/test-scoring-buttons';
+      // import '@citolab/qti-components/qti-test/components/test-view-toggle';
+      import './src/lib/index';
     </script>
 
     <script defer>
@@ -130,7 +132,7 @@
       });
     </script>
 
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <!-- <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" /> -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
 
@@ -147,85 +149,78 @@
   <body class="bg-slate-50 h-screen w-screen">
     <!-- auto-store-restore="my session storage" -->
     <qti-test class="h-full" cache-transform>
-      <test-navigation class="h-full flex gap-2 p-8" auto-score-items>
-        <div class="flex flex-col flex-1">
-          <div class="flex items-center gap-2 justify-between">
-            <test-view-toggle>Nakijken</test-view-toggle>
-            <div class="flex gap-2">
-              <test-scoring-buttons view="scorer"></test-scoring-buttons>
-            </div>
-
-            <test-view>View</test-view>
-
-            <test-end-attempt class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">
-              Scoring
-            </test-end-attempt>
-            <test-show-correct-response class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">
-              Toon correct antwoord
-            </test-show-correct-response>
-
-            <test-view-toggle></test-view-toggle>
-
-            <select id="test-url-select" class="form-select mb-3 border p-2 rounded" oninput="changeTest()">
-              <option>Select</option>
-              <option value="assets/api/kennisnet-1/">Kennisnet 1</option>
-              <option value="assets/api/kennisnet-2/">Kennisnet 2</option>
-            </select>
+      <test-navigation class="h-full flex flex-col gap-2 pt-8 px-8" auto-score-items>
+        <!-- <div class="flex flex-col flex-1"> -->
+        <div class="flex items-center gap-2 justify-between">
+          <test-view-toggle>Nakijken</test-view-toggle>
+          <div class="flex gap-2">
+            <test-scoring-buttons view="scorer"></test-scoring-buttons>
           </div>
 
-          <!-- <div class="relative flex-1 overflow-auto"> -->
-          <div popover id="popover-thumbs" class="w-full">
-            <div class="flex flex-wrap gap-2">
-              <test-paging-buttons-stamp>
-                <template>
-                  <test-item-link
-                    class="cursor-pointer relative bg-white p-2 border-2 border-b-4 
+          <test-view>View</test-view>
+
+          <test-end-attempt class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">
+            Scoring
+          </test-end-attempt>
+          <test-show-correct-response class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">
+            Toon correct antwoord
+          </test-show-correct-response>
+
+          <select id="test-url-select" class="form-select mb-3 border p-2 rounded" oninput="changeTest()">
+            <option>Select</option>
+            <option value="assets/api/kennisnet-1/">Kennisnet 1</option>
+            <option value="assets/api/kennisnet-2/">Kennisnet 2</option>
+          </select>
+        </div>
+
+        <div popover id="popover-thumbs" class="w-full">
+          <div class="flex flex-wrap gap-2">
+            <test-paging-buttons-stamp>
+              <template>
+                <test-item-link
+                  class="cursor-pointer relative bg-white p-2 border-2 border-b-4 
                   {{ item.view === 'scorer' && item.correct ? 'border-green-400' : item.view === 'scorer' && item.incorrect && item.completed ? 'border-red-400' : item.completed ? 'border-slate-400' : '' }} 
                   {{ item.active ? '!border-sky-600' : '' }} 
                   {{ item.category === 'info' ? '' : 'rounded-2xl' }}"
-                    item-id="{{ item.identifier }}"
-                  >
-                    <img src="{{ item.thumbnail }}" alt="{{ item.title }}" />
-                  </test-item-link>
-                </template>
-              </test-paging-buttons-stamp>
-            </div>
+                  item-id="{{ item.identifier }}"
+                >
+                  <img src="{{ item.thumbnail }}" alt="{{ item.title }}" />
+                </test-item-link>
+              </template>
+            </test-paging-buttons-stamp>
           </div>
+        </div>
 
-          <div popover id="popover-list" class="absolute bottom-0 w-full">
-            <div class="columns-1 md:columns-4">
-              <test-paging-buttons-stamp>
-                <template>
-                  <test-item-link
-                    class="gap-2 px-2 text-sm py-1 flex items-center justify-between cursor-pointer {{ item.active ? 'bg-sky-500 text-white' : 'bg-transparent text-slate-600 ' }}"
-                    item-id="{{ item.identifier }}"
-                  >
-                    <div
-                      class="flex items-center justify-center w-4 h-4 border-2 cursor-pointer {{ item.view === 'scorer' && item.correct ? 'bg-green-100 border-green-400' : item.view === 'scorer' && item.incorrect && item.completed ? 'bg-red-100 border-red-400' : item.completed ? 'bg-slate-300' : 'bg-white' }} p-0 {{ item.category === 'dep-informational' ? '' : 'rounded-full' }}"
-                    ></div>
-                    <div class="flex flex-grow gap-1 py-0.5">
-                      {{ item.category === 'dep-informational' ? 'info' : item.title }}
-                    </div>
-                    <!-- <template type="repeat" repeat="{{ item.domains }}">
-                      <div
-                        class="capitalize flex items-center justify-center rounded-full font-bold leading-none flex-shrink-0 h-5 w-5 text-[10px]"
-                        style="background-color: {{ item.color }}"
-                      >
-                        {{ item.title.slice(0, 2) }}
-                      </div>
-                    </template> -->
-                    <div class="w-4 text-right mr-2 text-xs text-slate-300">{{ item.index }}</div>
-                  </test-item-link>
-                </template>
-              </test-paging-buttons-stamp>
-            </div>
+        <div popover id="popover-list" class="absolute bottom-0 w-full">
+          <div class="columns-1 md:columns-4">
+            <test-paging-buttons-stamp>
+              <template>
+                <test-item-link
+                  class="gap-2 px-2 text-sm py-1 flex items-center justify-between cursor-pointer {{ item.active ? 'bg-sky-500 text-white' : 'bg-transparent text-slate-600 ' }}"
+                  item-id="{{ item.identifier }}"
+                >
+                  <div
+                    class="flex items-center justify-center w-4 h-4 border-2 cursor-pointer {{ item.view === 'scorer' && item.correct ? 'bg-green-100 border-green-400' : item.view === 'scorer' && item.incorrect && item.completed ? 'bg-red-100 border-red-400' : item.completed ? 'bg-slate-300' : 'bg-white' }} p-0 {{ item.category === 'dep-informational' ? '' : 'rounded-full' }}"
+                  ></div>
+                  <div class="flex flex-grow gap-1 py-0.5">
+                    {{ item.category === 'dep-informational' ? 'info' : item.title }}
+                  </div>
+                  <div class="w-4 text-right mr-2 text-xs text-slate-300">{{ item.index }}</div>
+                </test-item-link>
+              </template>
+            </test-paging-buttons-stamp>
           </div>
-          <!-- </div> -->
-          <test-container class="block rounded bg-white p-8 flex-1 overflow-auto shadow-sm"> </test-container>
+        </div>
 
-          <div class="flex w-full items-center justify-between gap-2">
-            <button class="btn btn-primary">Inleveren</button>
+        <test-container class="block rounded bg-white p-16 flex-1 overflow-auto shadow-sm"> </test-container>
 
+        <div class="flex justify-between items-center fixed bottom-8 left-1/3 right-1/3">
+          <button popovertarget="popover-thumbs" class="btn btn-outline">
+            Inleveren
+            <i class="bi bi-grid"></i>
+          </button>
+
+          <nav class="flex shadow-2xl bg-white rounded-2xl border border-gray-200">
             <div class="flex items-center">
               <div class="hidden flex-1 gap-1 overflow-auto md:flex">
                 <test-paging-buttons-stamp class="flex gap-2 p-2 overflow-auto">
@@ -243,13 +238,17 @@
               </div>
 
               <div class="flex gap-2">
-                <button popovertarget="popover-thumbs" class="btn btn-outline">
-                  <hi-24-outline-squares-2x2></hi-24-outline-squares-2x2>
-                  <i class="bi bi-grid"></i>
-                </button>
-                <button popovertarget="popover-list" class="btn btn-outline">
-                  <i class="bi bi-list"></i>
-                </button>
+                <test-stamp>
+                  <template>
+                    <button popovertarget="popover-thumbs" class="btn btn-outline">
+                      <hi-24-outline-squares-2x2></hi-24-outline-squares-2x2>
+                      <i class="bi bi-grid"></i>
+                    </button>
+                    <button popovertarget="popover-list" class="btn btn-outline">
+                      <i class="bi bi-list"></i>
+                    </button>
+                  </template>
+                </test-stamp>
               </div>
             </div>
             <div class="flex items-center gap-2">
@@ -261,14 +260,15 @@
                 <i class="bi bi-arrow-right-short"></i>
               </test-next>
             </div>
-          </div>
-
-          <div id="stimulusRefContainer"></div>
+          </nav>
         </div>
-        <div class="w-1/4">
+
+        <div id="stimulusRefContainer"></div>
+        <!-- </div> -->
+        <!-- <div class="w-1/4">
           <test-print-item-variables class="text-sm"></test-print-item-variables>
           <test-print-context></test-print-context>
-        </div>
+        </div> -->
       </test-navigation>
     </qti-test>
   </body>

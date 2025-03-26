@@ -8,22 +8,15 @@ import { computedContext } from '../../exports/computed.context';
 import type { ComputedContext } from '../../exports/computed.context';
 import type { TemplateFunction } from 'stampino';
 
-@customElement('test-print-stamp')
-export class TestPrintStamp extends LitElement {
+@customElement('test-stamp')
+export class TestStamp extends LitElement {
   @consume({ context: computedContext, subscribe: true })
   private computedContext: ComputedContext;
 
   myTemplate: TemplateFunction;
-  private _internals: ElementInternals;
 
   protected createRenderRoot(): HTMLElement | DocumentFragment {
     return this;
-  }
-
-  constructor() {
-    super();
-    this._internals = this.attachInternals();
-    this._internals.ariaLabel = 'print-variables';
   }
 
   connectedCallback(): void {
@@ -39,12 +32,12 @@ export class TestPrintStamp extends LitElement {
     );
     const activeItem = activeItems && activeItems.length > 0 ? activeItems[0] : null;
     if (!activeItem) return html``;
-    return html`${this.myTemplate({ item: activeItem })}`;
+    return html`${this.myTemplate({ computedContext: this.computedContext, activeItem })}`;
   }
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    'test-print-stamp': TestPrintStamp;
+    'test-stamp': TestStamp;
   }
 }
