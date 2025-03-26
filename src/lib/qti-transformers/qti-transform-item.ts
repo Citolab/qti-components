@@ -45,9 +45,11 @@ export type transformItemApi = {
 
 export const qtiTransformItem = (cache: boolean = false) => {
   let xmlFragment: XMLDocument;
+  let xmlUri = '';
 
   const api: transformItemApi = {
     load(uri: string) {
+      xmlUri = uri;
       const fullKey = encodeURI(uri);
       if (cache) {
         if (sessionStorage.getItem(fullKey)) {
@@ -62,7 +64,6 @@ export const qtiTransformItem = (cache: boolean = false) => {
         promise.then(xml => {
           xmlFragment = xml;
           api.shuffleInteractions();
-          api.path(uri.substring(0, uri.lastIndexOf('/')));
           if (cache) sessionStorage.setItem(fullKey, new XMLSerializer().serializeToString(xmlFragment));
           return resolve(api);
         });
@@ -76,6 +77,7 @@ export const qtiTransformItem = (cache: boolean = false) => {
     },
     path: (location: string): typeof api => {
       setLocation(xmlFragment, location);
+      xmlUri = null;
       return api;
     },
     fn(fn: (xmlFragment: XMLDocument) => void): typeof api {
@@ -206,6 +208,9 @@ export const qtiTransformItem = (cache: boolean = false) => {
       return new XMLSerializer().serializeToString(xmlFragment);
     },
     htmlDoc() {
+      if (xmlUri !== null) {
+        setLocation(xmlFragment, xmlUri.substring(0, xmlUri.lastIndexOf('/')));
+      }
       return toHTML(xmlFragment);
     },
     xmlDoc(): XMLDocument {

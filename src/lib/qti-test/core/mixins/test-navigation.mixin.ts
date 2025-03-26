@@ -311,7 +311,9 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
     /**
      * Load items with improved error handling and timeout
      */
-    private async _loadItems(itemIds: string[]): Promise<void> {
+    private async _loadItems(
+      itemIds: string[]
+    ): Promise<{ itemRef: QtiAssessmentItemRef; doc: any; request: XMLHttpRequest }[]> {
       if (!this._testElement || itemIds.length === 0) return;
 
       const itemRefEls = itemIds.map(id =>
@@ -350,7 +352,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
         });
 
         try {
-          const { promise: api, request } = qtiTransformItem(this.cacheTransform).load(itemRef.href);
+          const { promise, request } = qtiTransformItem(this.cacheTransform).load(itemRef.href);
 
           // Track the request so it can be cancelled if needed
           if (request instanceof XMLHttpRequest) {
@@ -358,7 +360,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
           }
 
           // Race the item loading against the timeout
-          const apiResult = await Promise.race([api, timeoutPromise]);
+          const apiResult = await Promise.race([promise, timeoutPromise]);
           return {
             itemRef,
             doc: (apiResult as any).htmlDoc(),
