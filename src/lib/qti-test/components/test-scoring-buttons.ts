@@ -48,9 +48,7 @@ export class TestScoringButtons extends LitElement {
 
     const score = scoreOutcome?.value;
 
-    // this.disabled = !(scoreOutcome?.externalScored === 'human');
-
-    this.disabled = !(activeItem as any).externalScored;
+    this.disabled = !(scoreOutcome?.externalScored === 'human');
 
     return maxScore
       ? html`
