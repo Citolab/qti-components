@@ -79,7 +79,7 @@ export class TestNext extends LitElement {
   }
 
   checkDisabled() {
-    this.disabled = !this.computedContext || this.itemIndex < 0 || this.itemIndex >= this.sectionItems.length - 1;
+    this.disabled = !this.computedContext || this.itemIndex < 0 || this.itemIndex >= this.sectionItems?.length - 1;
   }
 
   protected _requestItem(identifier: string): void {

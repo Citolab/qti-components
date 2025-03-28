@@ -6,6 +6,9 @@
     <title>QTI IOL Player LIT</title>
 
     <base href="%VITE_BASE_HREF%" />
+    <script src="//unpkg.com/navigo"></script>
+
+    <!-- <script src="./index.js"></script> -->
 
     <script type="module" defer>
       // import '@citolab/qti-components/qti-components';
@@ -27,22 +30,42 @@
     </script>
 
     <script defer>
-      async function changeTest(e) {
-        const value = document.querySelector('#test-url-select').value;
-        const testContainer = document.querySelector('test-container');
+      const map = new Map();
+      map.set('kennisnet1', 'assets/api/kennisnet-1/');
+      map.set('kennisnet2', 'assets/api/kennisnet-2/');
+    </script>
+
+    <script type="module" defer>
+      const testContainer = document.querySelector('test-container');
+      const testNavigation = document.querySelector('test-navigation');
+
+      const router = new Navigo(null, true, '#');
+      router.on({
+        '/': () => {
+          console.log('Home');
+        },
+        '/kennisnet1': () => {
+          changeTest(map.get('kennisnet1'));
+        },
+        '/kennisnet2': () => {
+          changeTest(map.get('kennisnet2'));
+        }
+      });
+      router.resolve();
+
+      async function changeTest(test) {
         const testNavigation = document.querySelector('test-navigation');
         testNavigation.configContext = {
           infoItemCategory: 'info'
         };
+        testContainer.setAttribute('test-url', test + '/AssessmentTest.xml');
         // Fetch items.json with error handling
         try {
-          const response = await fetch(value + 'items.json');
+          const response = await fetch(test + 'items.json');
           testNavigation.initContext = response.ok ? await response.json() : null;
         } catch {
-          testNavigation.initContext = null;
+          console.error('Failed to fetch items.json');
         }
-
-        testContainer.setAttribute('test-url', value + '/AssessmentTest.xml');
       }
     </script>
 
@@ -132,9 +155,36 @@
       });
     </script>
 
-    <!-- <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" /> -->
+    <link
+      href="https://cdn.jsdelivr.net/combine/npm/daisyui@5/base/properties.css,npm/daisyui@5/base/reset.css,npm/daisyui@5/base/rootcolor.css,npm/daisyui@5/base/rootscrollgutter.css,npm/daisyui@5/base/rootscrolllock.css,npm/daisyui@5/base/scrollbar.css,npm/daisyui@5/base/svg.css,npm/daisyui@5/components/button.css,npm/daisyui@5/components/checkbox.css,npm/daisyui@5/components/input.css,npm/daisyui@5/components/menu.css,npm/daisyui@5/components/select.css,npm/daisyui@5/components/toggle.css,npm/daisyui@5/theme/light.css"
+      rel="stylesheet"
+      type="text/css"
+    />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+    <style type="text/tailwindcss">
+      nav {
+        anchor-name: --profile-button;
+      }
+
+      #popover-thumbs,
+      #popover-list {
+        position-anchor: --profile-button;
+        bottom: anchor(top);
+        left: anchor(left);
+
+        &:popover-open {
+          display: grid;
+          opacity: 1;
+
+          @starting-style {
+            display: grid;
+            opacity: 0;
+          }
+        }
+      }
+    </style>
 
     <style>
       test-container {
@@ -147,33 +197,39 @@
   </head>
 
   <body class="bg-slate-50 h-screen w-screen">
-    <!-- auto-store-restore="my session storage" -->
-    <qti-test class="h-full" cache-transform>
+    <!-- auto-store-restore="my session storage" cache-transform -->
+    <qti-test class="h-full">
       <test-navigation class="h-full flex flex-col gap-2 pt-8 px-8" auto-score-items>
         <!-- <div class="flex flex-col flex-1"> -->
         <div class="flex items-center gap-2 justify-between">
-          <test-view-toggle>Nakijken</test-view-toggle>
-          <div class="flex gap-2">
-            <test-scoring-buttons view="scorer"></test-scoring-buttons>
-          </div>
+          <test-stamp class="flex gap-2 items-center">
+            <template>
+              <test-view-toggle class-for-input="toggle"></test-view-toggle>
+              <test-stamp class="flex gap-2 items-center">
+                <template>
+                  <template type="if" if="{{ item.view === 'scorer' }}">
+                    <div class="flex gap-2">
+                      <test-scoring-buttons view="scorer"></test-scoring-buttons>
+                    </div>
 
-          <test-view>View</test-view>
+                    <!-- <test-view>View</test-view> -->
 
-          <test-end-attempt class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">
-            Scoring
-          </test-end-attempt>
-          <test-show-correct-response class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">
-            Toon correct antwoord
-          </test-show-correct-response>
-
-          <select id="test-url-select" class="form-select mb-3 border p-2 rounded" oninput="changeTest()">
-            <option>Select</option>
-            <option value="assets/api/kennisnet-1/">Kennisnet 1</option>
-            <option value="assets/api/kennisnet-2/">Kennisnet 2</option>
-          </select>
+                    <test-end-attempt class="btn btn-primary"> Feedback </test-end-attempt>
+                    <test-show-correct-response class="btn btn-primary">
+                      Toon correct antwoord
+                    </test-show-correct-response>
+                  </template>
+                </template>
+              </test-stamp>
+            </template>
+          </test-stamp>
         </div>
 
-        <div popover id="popover-thumbs" class="w-full">
+        <div
+          popover
+          id="popover-thumbs"
+          class="opacity-0 inset-auto hidden absolute m-0 transition-opacity duration-1000 transform -translate-y-2 p-8 shadow-lg rounded-lg"
+        >
           <div class="flex flex-wrap gap-2">
             <test-paging-buttons-stamp>
               <template>
@@ -191,7 +247,11 @@
           </div>
         </div>
 
-        <div popover id="popover-list" class="absolute bottom-0 w-full">
+        <div
+          popover
+          id="popover-list"
+          class="opacity-0 inset-auto hidden absolute m-0 transition-opacity duration-1000 transform -translate-y-2 p-8 shadow-lg rounded-lg"
+        >
           <div class="columns-1 md:columns-4">
             <test-paging-buttons-stamp>
               <template>
@@ -212,63 +272,103 @@
           </div>
         </div>
 
-        <test-container class="block rounded bg-white p-16 flex-1 overflow-auto shadow-sm"> </test-container>
+        <dialog
+          popover
+          id="popover-deliver"
+          class="opacity-0 inset-auto hidden absolute m-0 transition-opacity duration-1000 transform -translate-y-2 p-8 shadow-lg rounded-lg"
+        >
+          <div class="columns-1 md:columns-4">
+            <test-paging-buttons-stamp>
+              <template>
+                <test-item-link
+                  class="gap-2 px-2 text-sm py-1 flex items-center justify-between cursor-pointer {{ item.active ? 'bg-sky-500 text-white' : 'bg-transparent text-slate-600 ' }}"
+                  item-id="{{ item.identifier }}"
+                >
+                  <div
+                    class="flex items-center justify-center w-4 h-4 border-2 cursor-pointer {{ item.view === 'scorer' && item.correct ? 'bg-green-100 border-green-400' : item.view === 'scorer' && item.incorrect && item.completed ? 'bg-red-100 border-red-400' : item.completed ? 'bg-slate-300' : 'bg-white' }} p-0 {{ item.category === 'dep-informational' ? '' : 'rounded-full' }}"
+                  ></div>
+                  <div class="flex flex-grow gap-1 py-0.5">
+                    {{ item.category === 'dep-informational' ? 'info' : item.title }}
+                  </div>
+                  <div class="w-4 text-right mr-2 text-xs text-slate-300">{{ item.index }}</div>
+                </test-item-link>
+              </template>
+            </test-paging-buttons-stamp>
+          </div>
+        </dialog>
 
-        <div class="flex justify-between items-center fixed bottom-8 left-1/3 right-1/3">
-          <button popovertarget="popover-thumbs" class="btn btn-outline">
-            Inleveren
-            <i class="bi bi-grid"></i>
-          </button>
-
-          <nav class="flex shadow-2xl bg-white rounded-2xl border border-gray-200">
-            <div class="flex items-center">
-              <div class="hidden flex-1 gap-1 overflow-auto md:flex">
-                <test-paging-buttons-stamp class="flex gap-2 p-2 overflow-auto">
-                  <template>
-                    <test-item-link
-                      class="flex items-center justify-center w-4 h-4 border-2 cursor-pointer p-0 {{ item.view === 'scorer' && item.correct ? 'bg-green-100 border-green-400' : item.view === 'scorer' && item.incorrect && item.completed ? 'bg-red-100 border-red-400' : item.completed ? 'bg-slate-300' : 'bg-transparent' }} {{ item.active ? '!border-sky-600' : ''}} {{ item.category === 'info' ? '' : 'rounded-full' }}"
-                      item-id="{{ item.identifier }}"
-                    >
-                      <template type="if" if="{{ item.category === 'info' }}">
-                        <div class="w-1 h-1 rounded-full bg-slate-300"></div>
-                      </template>
-                    </test-item-link>
-                  </template>
-                </test-paging-buttons-stamp>
-              </div>
-
-              <div class="flex gap-2">
-                <test-stamp>
-                  <template>
-                    <button popovertarget="popover-thumbs" class="btn btn-outline">
-                      <hi-24-outline-squares-2x2></hi-24-outline-squares-2x2>
-                      <i class="bi bi-grid"></i>
-                    </button>
-                    <button popovertarget="popover-list" class="btn btn-outline">
-                      <i class="bi bi-list"></i>
-                    </button>
-                  </template>
-                </test-stamp>
-              </div>
-            </div>
-            <div class="flex items-center gap-2">
-              <test-prev class="btn btn-primary" role="button">
-                <i class="bi bi-arrow-left-short"></i>
-              </test-prev>
-              <test-next class="btn btn-primary" role="button">
-                <div class="hidden md:flex">Volgende</div>
-                <i class="bi bi-arrow-right-short"></i>
-              </test-next>
-            </div>
-          </nav>
+        <div class="flex flex-1">
+          <div id="stimulusRefContainer"></div>
+          <test-container class="flex-grow block rounded bg-white p-16 overflow-auto shadow-sm prose"> </test-container>
         </div>
 
-        <div id="stimulusRefContainer"></div>
-        <!-- </div> -->
-        <!-- <div class="w-1/4">
+        <test-stamp class="flex justify-between items-center fixed bottom-8">
+          <template>
+            <button popovertarget="popover-deliver" class="btn btn-outline">
+              Inleveren
+              <i class="bi bi-grid"></i>
+            </button>
+
+            <nav class="flex shadow-2xl bg-white rounded-2xl border border-gray-200">
+              <button
+                popovertarget="sidePane"
+                popovertargetaction="toggle"
+                class="m-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+              >
+                <i class="bi bi-gear"></i>
+              </button>
+
+              <div class="flex items-center">
+                <div class="hidden flex-1 gap-1 overflow-auto md:flex">
+                  <test-paging-buttons-stamp class="flex gap-2 p-2 overflow-auto">
+                    <template>
+                      <test-item-link
+                        class="flex items-center justify-center aspect-square w-8 border-2 cursor-pointer p-0 {{ item.view === 'scorer' && item.correct ? 'bg-green-100 border-green-400' : item.view === 'scorer' && item.incorrect && item.completed ? 'bg-red-100 border-red-400' : item.completed ? 'bg-slate-300' : 'bg-transparent' }} {{ item.active ? '!border-sky-600' : ''}} {{ item.category === 'info' ? '' : 'rounded-full' }}"
+                        item-id="{{ item.identifier }}"
+                      >
+                        {{ item.index}}
+                        <template type="if" if="{{ item.category === 'info' }}">
+                          <div class="w-1 h-1 rounded-full bg-slate-300"></div>
+                        </template>
+                      </test-item-link>
+                    </template>
+                  </test-paging-buttons-stamp>
+                </div>
+
+                <div class="flex gap-2">
+                  <button popovertarget="popover-thumbs" class="btn btn-outline">
+                    <i class="bi bi-grid"></i>
+                  </button>
+                  <button popovertarget="popover-list" class="btn btn-outline">
+                    <i class="bi bi-list"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <test-prev class="btn btn-primary" role="button">
+                  <i class="bi bi-arrow-left-short"></i>
+                </test-prev>
+                <test-next class="btn btn-primary" role="button">
+                  <div class="hidden md:flex">Volgende</div>
+                  <i class="bi bi-arrow-right-short"></i>
+                </test-next>
+              </div>
+            </nav>
+          </template>
+        </test-stamp>
+
+        <div id="sidePane" popover class="relative! left-0 top-0 h-full w-1/2 bg-white shadow-lg p-4 shadow-lg z-50">
+          <h2 class="text-xl mb-4">Side Panel</h2>
           <test-print-item-variables class="text-sm"></test-print-item-variables>
           <test-print-context></test-print-context>
-        </div> -->
+          <button
+            popovertarget="sidePane"
+            popovertargetaction="hide"
+            class="mt-4 px-3 py-1 bg-red-600 text-white rounded"
+          >
+            Close
+          </button>
+        </div>
       </test-navigation>
     </qti-test>
   </body>
