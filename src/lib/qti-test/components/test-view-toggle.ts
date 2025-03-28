@@ -32,27 +32,27 @@ export class TestViewToggle extends LitElement {
 
   render() {
     return html`
-      <!-- <label for="viewToggle" part="label"> -->
-      <input
-        type="checkbox"
-        role="switch"
-        aria-checked=${this.sessionContext?.view === 'scorer'}
-        id="viewToggle"
-        class=${`${this.classForInput}`}
-        ?checked=${this.sessionContext?.view === 'scorer'}
-        @change=${(e: Event) => {
-          const el = e.target as HTMLInputElement;
-          if (el.checked) {
-            this._switchView('scorer');
-          } else {
-            this._switchView('candidate');
-          }
-        }}
-      />
-      <!-- for switch -->
-      <!-- <span class="toggle" part="toggle"></span> -->
-      <!-- <slot></slot> -->
-      <!-- </label> -->
+      <label for="viewToggle" part="label">
+        <input
+          type="checkbox"
+          role="switch"
+          aria-checked=${this.sessionContext?.view === 'scorer'}
+          id="viewToggle"
+          class=${`${this.classForInput}`}
+          ?checked=${this.sessionContext?.view === 'scorer'}
+          @change=${(e: Event) => {
+            const el = e.target as HTMLInputElement;
+            if (el.checked) {
+              this._switchView('scorer');
+            } else {
+              this._switchView('candidate');
+            }
+          }}
+        />
+        <!-- for switch -->
+        <!-- <span class="toggle" part="toggle"></span> -->
+        <slot></slot>
+      </label>
     `;
   }
 }
