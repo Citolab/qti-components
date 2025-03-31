@@ -20,7 +20,7 @@ export class QtiSimpleAssociableChoice extends ActiveElementMixin(LitElement, 'q
       display: block;
     }
     slot[name='qti-simple-associable-choice'] {
-      width: 100%;
+      /* width: 100%; */
     }
   `;
 

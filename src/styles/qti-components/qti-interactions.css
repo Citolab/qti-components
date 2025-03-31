@@ -669,7 +669,8 @@
             @apply foc;
           }
 
-          min-height: 6rem;
+          /* min-height: 6rem; */
+          min-height: calc(1lh + 2 * var(--qti-padding-vertical));
           gap: var(--qti-gap-size);
           box-sizing: border-box;
           display: flex;

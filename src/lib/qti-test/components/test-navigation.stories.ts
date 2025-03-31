@@ -22,7 +22,7 @@ export default meta;
 
 export const Default: Story = {
   render: args =>
-    html` <qti-test>
+    html` <qti-test navigate="item">
       ${template(args, html` <test-container test-url="/assets/qti-test-package/assessment.xml"></test-container>`)}
     </qti-test>`
 };

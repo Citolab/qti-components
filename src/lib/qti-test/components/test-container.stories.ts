@@ -26,7 +26,7 @@ export default meta;
 
 export const TestURL: Story = {
   render: args => {
-    return html`<qti-test>${template(args)}</qti-test>`;
+    return html`<qti-test navigate="item">${template(args)}</qti-test>`;
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -39,7 +39,7 @@ export const TestURL: Story = {
 export const TestDoc: Story = {
   render: (_, { loaded: { testDoc } }) => {
     return html`
-      <qti-test>
+      <qti-test navigate="item">
         <test-container .testDoc=${testDoc}></test-container>
       </qti-test>
     `;
@@ -59,7 +59,7 @@ export const TestDoc: Story = {
 export const TestXML: Story = {
   render: (_, { loaded: { testXML } }) => {
     return html`
-      <qti-test>
+      <qti-test navigate="item">
         <test-container .testXML=${testXML}></test-container>
       </qti-test>
     `;
@@ -79,7 +79,7 @@ export const TestXML: Story = {
 export const TestWithTemplate: Story = {
   render: args => {
     return html`
-      <qti-test>
+      <qti-test navigate="item">
         <test-navigation>
           <test-container test-url=${args['test-url']}>
             <template>

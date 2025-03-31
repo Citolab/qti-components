@@ -38,27 +38,42 @@
 
     <script defer>
       const map = new Map();
-      map.set('kennisnet1', 'assets/api/kennisnet-1/');
-      map.set('kennisnet2', 'assets/api/kennisnet-2/');
+      map.set('kennisnet1', '/assets/api/kennisnet-1/');
+      map.set('kennisnet2', '/assets/api/kennisnet-2/');
+      map.set('biologie', '/assets/api/biologie/');
     </script>
 
     <script type="module" defer>
+      const qtiTest = document.querySelector('qti-test');
       const testContainer = document.querySelector('test-container');
       const testNavigation = document.querySelector('test-navigation');
+      let pkg = 'null';
 
       const router = new Navigo(null, true, '#');
-      router.on({
-        '/': () => {
-          console.log('Home');
-        },
-        '/kennisnet1': () => {
-          changeTest(map.get('kennisnet1'));
-        },
-        '/kennisnet2': () => {
-          changeTest(map.get('kennisnet2'));
-        }
+
+      router.on('/:package', ({ data }) => {
+        qtiTest.navigate = 'item';
+        pkg = data.package;
+        changeTest(map.get(data.package));
       });
+      router.on('/:package/:item', ({ data }) => {
+        pkg = data.package;
+        changeTest(map.get(data.package));
+        qtiTest.addEventListener('qti-assessment-test-connected', () => {
+          if (sessionStorage.getItem(pkg) !== null) qtiTest.testContext = JSON.parse(sessionStorage.getItem(pkg));
+          qtiTest.dispatchEvent(new CustomEvent('qti-request-navigation', { detail: { type: 'item', id: data.item } }));
+        });
+      });
+
+      qtiTest.addEventListener('qti-request-navigation', e => {
+        router.navigate(`/${pkg}/${e.detail.id}`);
+      });
+
       router.resolve();
+
+      qtiTest.addEventListener('qti-test-context-updated', e => {
+        sessionStorage.setItem(pkg, JSON.stringify(e.detail));
+      });
 
       async function changeTest(test) {
         const testNavigation = document.querySelector('test-navigation');
@@ -71,7 +86,7 @@
           const response = await fetch(test + 'items.json');
           testNavigation.initContext = response.ok ? await response.json() : null;
         } catch {
-          console.error('Failed to fetch items.json');
+          console.error('Failed to fetch items.json ss');
         }
       }
     </script>
@@ -187,10 +202,35 @@
 
     <style>
       test-container {
-        --qti-bg-active: #efecff;
-        --qti-border-active: #581d70;
-        --qti-button-padding-vertical: 0.2rem;
-        --bs-box-shadow: box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.1);
+        --qti-button-padding-vertical: var(--size-field);
+        --qti-button-padding-horizontal: var(--size-field);
+        --qti-border-radius: var(--radius-field);
+        --qti-correct-bg: var(--color-success);
+
+        --qti-bg-active: var(--color-primary-content); /* --qti-bg-active: #ffecec; */
+        --qti-border-active: var(--color-primary); /* --qti-border-active: #f86d70; */
+        --qti-correct-light: #c8e6c9;
+        --qti-correct: #66bb6a;
+        --qti-gap-size: 1rem;
+        --qti-bg: var(--color-base-100); /* --qti-bg: white; */
+        --qti-hover-bg: #f9fafb;
+        --qti-light-bg-active: #f0f0f0;
+        --qti-light-border-active: #d0d0d0;
+        --qti-dark-bg-active: #1f2937;
+        --qti-dark-border-active: #64748b;
+        --qti-disabled-bg: #f3f4f6;
+        --qti-disabled-color: #45484f;
+        --qti-border-thickness: 2px;
+        --qti-border-style: solid;
+        --qti-border-color: var(--color-base-300); /* --qti-border-color: #c6cad0; */
+        --qti-border-radius: 0.3rem;
+        --qti-drop-border-radius: calc(var(--qti-border-radius) + var(--qti-border-thickness));
+        --qti-focus-border-width: 5px;
+        --qti-focus-color: #bddcff7e;
+        --qti-form-size: 1rem;
+        --qti-order-size: 2rem;
+        --qti-padding-vertical: 0.5rem;
+        --qti-padding-horizontal: 0.5rem;
       }
     </style>
   </head>
@@ -198,173 +238,187 @@
   <body class="bg-base-200 text-base-content h-screen w-screen">
     <!-- auto-store-restore="my session storage" cache-transform -->
     <qti-test class="h-full">
-      <test-navigation class="h-full flex flex-col gap-2 pt-8 px-8" auto-score-items>
-        <!-- <div class="flex flex-col flex-1"> -->
-        <div class="flex items-center gap-2 justify-between">
-          <test-stamp class="flex gap-2 items-center">
-            <template>
-              <button popovertarget="sidePane" popovertargetaction="toggle" class="btn">
-                <i class="bi bi-gear"></i>
-              </button>
-
-              <test-view-toggle class-for-input="toggle">Nakijken</test-view-toggle>
-              <test-stamp class="flex gap-2 items-center">
-                <template>
-                  <template type="if" if="{{ item.view === 'scorer' }}">
-                    <div class="flex gap-2">
-                      <test-scoring-buttons view="scorer"></test-scoring-buttons>
-                    </div>
-
-                    <!-- <test-view>View</test-view> -->
-
-                    <test-end-attempt class="btn btn-primary"> Feedback </test-end-attempt>
-                    <test-show-correct-response class="btn btn-primary">
-                      Toon correct antwoord
-                    </test-show-correct-response>
-                  </template>
-                </template>
-              </test-stamp>
-            </template>
-          </test-stamp>
-        </div>
-
-        <div
-          popover
-          id="popover-thumbs"
-          class="opacity-0 inset-auto hidden absolute m-0 transition-opacity duration-1000 transform -translate-y-2 p-8 shadow-lg rounded-lg"
-        >
-          <div class="flex flex-wrap gap-2">
-            <test-paging-buttons-stamp>
+      <test-navigation class="h-full flex gap-2" auto-score-items>
+        <div class="flex flex-col flex-grow pt-8 px-8">
+          <!-- <div class="flex flex-col flex-1"> -->
+          <div class="flex items-center gap-2 justify-between">
+            <test-stamp class="flex gap-2 items-center">
               <template>
-                <test-item-link
-                  class="cursor-pointer relative base-100 p-2 border-2 border-b-4 
+                <button popovertarget="sidePane" popovertargetaction="toggle" class="btn">
+                  <i class="bi bi-gear"></i>
+                </button>
+
+                <test-view-toggle class-for-input="toggle">Nakijken</test-view-toggle>
+                <test-stamp class="flex gap-2 items-center">
+                  <template>
+                    <template type="if" if="{{ item.view === 'scorer' }}">
+                      <div class="flex gap-2">
+                        <test-scoring-buttons view="scorer"></test-scoring-buttons>
+                      </div>
+
+                      <!-- <test-view>View</test-view> -->
+
+                      <test-end-attempt class="btn"> Feedback </test-end-attempt>
+                      <test-show-correct-response class="btn"> Toon correct antwoord </test-show-correct-response>
+                    </template>
+                  </template>
+                </test-stamp>
+              </template>
+            </test-stamp>
+          </div>
+
+          <div
+            popover
+            id="popover-thumbs"
+            class="opacity-0 inset-auto hidden absolute m-0 transition-opacity duration-1000 transform -translate-y-2 p-8 shadow-lg rounded-lg"
+          >
+            <div class="flex flex-wrap gap-2">
+              <test-paging-buttons-stamp>
+                <template>
+                  <test-item-link
+                    class="cursor-pointer relative base-100 p-2 border-2 border-b-4 
                   {{ item.view === 'scorer' && item.correct ? 'border-green-400' : item.view === 'scorer' && item.incorrect && item.completed ? 'border-red-400' : item.completed ? 'border-slate-400' : '' }} 
                   {{ item.active ? '!border-sky-600' : '' }} 
                   {{ item.category === 'info' ? '' : 'rounded-2xl' }}"
-                  item-id="{{ item.identifier }}"
-                >
-                  <img src="{{ item.thumbnail }}" alt="{{ item.title }}" />
-                </test-item-link>
-              </template>
-            </test-paging-buttons-stamp>
+                    item-id="{{ item.identifier }}"
+                  >
+                    <img src="{{ item.thumbnail }}" alt="{{ item.title }}" />
+                  </test-item-link>
+                </template>
+              </test-paging-buttons-stamp>
+            </div>
           </div>
-        </div>
 
-        <div
-          popover
-          id="popover-list"
-          class="opacity-0 inset-auto hidden absolute m-0 transition-opacity duration-1000 transform -translate-y-2 p-8 shadow-lg rounded-lg"
-        >
-          <div class="columns-1 md:columns-4">
-            <test-paging-buttons-stamp>
-              <template>
-                <test-item-link
-                  class="gap-2 px-2 text-sm py-1 flex items-center justify-between cursor-pointer {{ item.active ? 'bg-sky-500 text-white' : 'bg-transparent text-slate-600 ' }}"
-                  item-id="{{ item.identifier }}"
-                >
-                  <div
-                    class="flex items-center justify-center w-4 h-4 border-2 cursor-pointer {{ item.view === 'scorer' && item.correct ? 'btn-success' : item.view === 'scorer' && item.incorrect && item.completed ? 'btn-error' : item.completed ? 'bg-base-300' : 'bg-transparent' }} p-0 {{ item.category === 'dep-informational' ? 'rounded' : 'rounded-full' }}"
-                  ></div>
-                  <div class="flex flex-grow gap-1 py-0.5">
-                    {{ item.category === 'dep-informational' ? 'info' : item.title }}
-                  </div>
-                  <div class="w-4 text-right mr-2 text-xs text-slate-300">{{ item.index }}</div>
-                </test-item-link>
-              </template>
-            </test-paging-buttons-stamp>
+          <div
+            popover
+            id="popover-list"
+            class="opacity-0 inset-auto hidden absolute m-0 transition-opacity duration-1000 transform -translate-y-2 p-8 shadow-lg rounded-lg"
+          >
+            <div class="columns-1 md:columns-4">
+              <test-paging-buttons-stamp>
+                <template>
+                  <test-item-link
+                    class="gap-2 px-2 text-sm py-1 flex items-center justify-between cursor-pointer {{ item.active ? 'bg-sky-500 text-white' : 'bg-transparent text-slate-600 ' }}"
+                    item-id="{{ item.identifier }}"
+                  >
+                    <div
+                      class="flex items-center justify-center w-4 h-4 border-2 cursor-pointer {{ item.view === 'scorer' && item.correct ? 'btn-success' : item.view === 'scorer' && item.incorrect && item.completed ? 'btn-error' : item.completed ? 'bg-base-300' : 'bg-transparent' }} p-0 {{ item.category === 'dep-informational' ? 'rounded' : 'rounded-full' }}"
+                    ></div>
+                    <div class="flex flex-grow gap-1 py-0.5">
+                      {{ item.category === 'dep-informational' ? 'info' : item.title }}
+                    </div>
+                    <div class="w-4 text-right mr-2 text-xs text-slate-300">{{ item.index }}</div>
+                  </test-item-link>
+                </template>
+              </test-paging-buttons-stamp>
+            </div>
           </div>
-        </div>
 
-        <dialog
-          popover
-          id="popover-deliver"
-          class="opacity-0 inset-auto hidden absolute m-0 transition-opacity duration-1000 transform -translate-y-2 p-8 shadow-lg rounded-lg"
-        >
-          <div class="columns-1 md:columns-4">
-            <test-paging-buttons-stamp>
-              <template>
-                <test-item-link
-                  class="gap-2 px-2 text-sm py-1 flex items-center justify-between cursor-pointer {{ item.active ? 'bg-sky-500 text-white' : 'bg-transparent text-slate-600 ' }}"
-                  item-id="{{ item.identifier }}"
-                >
-                  <div
-                    class="flex items-center justify-center w-4 h-4 border-2 cursor-pointer {{ item.view === 'scorer' && item.correct ? 'btn-success' : item.view === 'scorer' && item.incorrect && item.completed ? 'btn-error' : item.completed ? 'bg-base-300' : 'bg-transparent' }} p-0 {{ item.category === 'dep-informational' ? 'rounded' : 'rounded-full' }}"
-                  ></div>
-                  <div class="flex flex-grow gap-1 py-0.5">
-                    {{ item.category === 'dep-informational' ? 'info' : item.title }}
-                  </div>
-                  <div class="w-4 text-right mr-2 text-xs text-slate-300">{{ item.index }}</div>
-                </test-item-link>
-              </template>
-            </test-paging-buttons-stamp>
+          <div
+            popover
+            id="popover-deliver"
+            class="opacity-0 inset-auto hidden absolute m-0 transition-opacity duration-1000 transform -translate-y-2 p-8 shadow-lg rounded-lg"
+          >
+            <div class="columns-1 md:columns-4">
+              <test-paging-buttons-stamp>
+                <template>
+                  <test-item-link
+                    class="gap-2 px-2 text-sm py-1 flex items-center justify-between cursor-pointer {{ item.active ? 'bg-sky-500 text-white' : 'bg-transparent text-slate-600 ' }}"
+                    item-id="{{ item.identifier }}"
+                  >
+                    <div
+                      class="flex items-center justify-center w-4 h-4 border-2 cursor-pointer {{ item.view === 'scorer' && item.correct ? 'btn-success' : item.view === 'scorer' && item.incorrect && item.completed ? 'btn-error' : item.completed ? 'bg-base-300' : 'bg-transparent' }} p-0 {{ item.category === 'dep-informational' ? 'rounded' : 'rounded-full' }}"
+                    ></div>
+                    <div class="flex flex-grow gap-1 py-0.5">
+                      {{ item.category === 'dep-informational' ? 'info' : item.title }}
+                    </div>
+                    <div class="w-4 text-right mr-2 text-xs">{{ item.index }}</div>
+                  </test-item-link>
+                </template>
+              </test-paging-buttons-stamp>
+            </div>
           </div>
-        </dialog>
 
-        <div class="flex flex-1 card card-border border-base-300 overflow-auto container mx-auto">
-          <div class="card-body gap-4 bg-base-100">
+          <div class="flex flex-1 overflow-auto container mx-auto">
             <div id="stimulusRefContainer"></div>
-            <test-container>
+            <test-container class="flex-1 p-16">
               <template>
                 <style>
                   img {
-                    mix-blend-mode: multiply;
+                    /* mix-blend-mode: multiply; */
                     /* width: 100%; */
                   }
                 </style>
               </template>
             </test-container>
           </div>
-        </div>
 
-        <test-stamp class="flex justify-between items-center fixed bottom-8 left-8 right-8">
-          <template>
-            <button popovertarget="popover-deliver" class="btn">
-              Inleveren
-              <i class="bi bi-grid"></i>
-            </button>
+          <test-stamp class="flex justify-between items-center fixed bottom-8 left-8 right-8">
+            <template>
+              <button popovertarget="popover-deliver" class="btn">
+                Inleveren
+                <i class="bi bi-grid"></i>
+              </button>
 
-            <nav class="card card-border border-base-300 bg-base-100 shadow-xl">
-              <div class="card-body gap-4 flex-row items-center justify-between">
-                <div class="flex items-center flex-grow">
-                  <div class="hidden flex-1 gap-1 overflow-auto md:flex">
-                    <test-paging-buttons-stamp class="flex gap-2 p-2 overflow-auto">
-                      <template>
-                        <test-item-link
-                          class="flex items-center justify-center btn btn-soft btn-square {{ item.view === 'scorer' && item.correct ? 'btn-success' : item.view === 'scorer' && item.incorrect && item.completed ? 'btn-error' : item.completed ? 'bg-base-300' : 'bg-transparent' }} {{ item.active ? 'border-active' : ''}} {{ item.category === 'info' ? 'rounded' : 'rounded-full' }}"
-                          item-id="{{ item.identifier }}"
-                        >
-                          {{ item.index}}
-                          <template type="if" if="{{ item.category === 'info' }}">
-                            <i class="bi bi-info text-xl"></i>
-                          </template>
-                        </test-item-link>
-                      </template>
-                    </test-paging-buttons-stamp>
-                  </div>
+              <nav class="card card-border border-base-300 bg-base-100 shadow-xl">
+                <div class="card-body gap-4 flex-row items-center justify-between">
+                  <div class="flex items-center flex-grow">
+                    <div class="hidden flex-1 gap-1 overflow-auto md:flex">
+                      <test-paging-buttons-stamp class="flex gap-2 p-2 overflow-auto">
+                        <template>
+                          <test-item-link
+                            class="flex relative items-center justify-center btn btn-soft btn-square border-2  {{ item.active ? 'border-primary' : ''}} {{ item.category === 'info' ? 'rounded' : 'rounded-full' }}"
+                            item-id="{{ item.identifier }}"
+                          >
+                            {{ item.index}}
+                            <template type="if" if="{{ item.category === 'info' }}">
+                              <i class="bi bi-info text-xl"></i>
+                            </template>
+                            <template type="if" if="{{ item.view === 'scorer' }}">
+                              <div
+                                aria-label="status"
+                                class="status status-md absolute top-0 right-0  {{ item.correct ? 'status-success' : item.incorrect && item.completed ? 'status-error' : item.completed ? 'status-neutral' : 'bg-transparent' }}"
+                              ></div>
+                            </template>
+                          </test-item-link>
+                        </template>
+                      </test-paging-buttons-stamp>
+                    </div>
 
-                  <div class="flex gap-2">
-                    <button popovertarget="popover-thumbs" class="btn">
-                      <i class="bi bi-grid"></i>
-                    </button>
-                    <button popovertarget="popover-list" class="btn">
-                      <i class="bi bi-list"></i>
-                    </button>
+                    <div class="flex gap-2">
+                      <button popovertarget="popover-thumbs" class="btn">
+                        <i class="bi bi-grid"></i>
+                      </button>
+                      <button popovertarget="popover-list" class="btn">
+                        <i class="bi bi-list"></i>
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </nav>
+              </nav>
 
-            <div class="flex items-center gap-2">
-              <test-prev class="btn btn-primary" role="button">
-                <i class="bi bi-arrow-left-short"></i>
-              </test-prev>
-              <test-next class="btn btn-primary" role="button">
-                <div class="hidden md:flex">Volgende</div>
-                <i class="bi bi-arrow-right-short"></i>
-              </test-next>
-            </div>
-          </template>
-        </test-stamp>
+              <div class="flex items-center gap-2">
+                <test-prev class="btn btn-outline" role="button">
+                  <i class="bi bi-arrow-left-short"></i>
+                </test-prev>
+                <test-next class="btn btn-primary" role="button">
+                  <div class="hidden md:flex">Volgende</div>
+                  <i class="bi bi-arrow-right-short"></i>
+                </test-next>
+              </div>
+            </template>
+          </test-stamp>
+        </div>
+
+        <details class="pt-8 pr-8">
+          <summary class="btn inline-flex">Details</summary>
+
+          <test-section-buttons-stamp>
+            <template>
+              <test-section-link section-id="{{ item.identifier }}"> {{ item.identifier }} </test-section-link>
+            </template>
+          </test-section-buttons-stamp>
+        </details>
 
         <div id="sidePane" popover class="relative! left-0 top-0 h-full w-1/2 base-100 shadow-lg p-4 shadow-lg z-50">
           <button
@@ -374,8 +428,11 @@
           >
             Close
           </button>
-          <a href="/kennisnet1" class="btn"> Kennisnet 1 </a>
-          <a href="/kennisnet2" class="btn"> Kennisnet 2 </a>
+
+          <a href="/kennisnet1" class="btn" data-navigo> Kennisnet 1 </a>
+          <a href="/kennisnet2" class="btn" data-navigo> Kennisnet 2 </a>
+          <a href="/biologie" class="btn" data-navigo> Biologie </a>
+
           <select class="select" data-choose-theme>
             <optgroup label="Light Themes">
               <option value="light">Light</option>

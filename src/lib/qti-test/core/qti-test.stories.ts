@@ -79,7 +79,7 @@ export const CSSVariablesForItem: Story = {
         --qti-button-padding-vertical: 0.2rem;
       }
     </style>
-    <qti-test>
+    <qti-test navigate="item">
       <test-navigation>
         <test-container test-url="/assets/api/examples/assessment.xml"></test-container>
         <test-prev> previous </test-prev>

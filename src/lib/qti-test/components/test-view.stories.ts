@@ -26,7 +26,7 @@ export default meta;
 
 export const Default: Story = {
   render: args =>
-    html` <qti-test>
+    html` <qti-test navigate="item">
       <test-navigation>
         <test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"></test-container>
         ${template(args)}
@@ -36,7 +36,7 @@ export const Default: Story = {
 
 export const Test: Story = {
   render: args => html`
-    <qti-test>
+    <qti-test navigate="item">
       <test-navigation>
         <test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"> </test-container>
         <test-view ${spread(args)}>vorige</test-view>
