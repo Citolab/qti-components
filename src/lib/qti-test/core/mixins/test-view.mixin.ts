@@ -1,3 +1,4 @@
+import type { QtiAssessmentItemRef } from '../qti-assessment-test';
 import type { QtiAssessmentItem } from '../../../qti-components';
 import type { TestBase } from '../test-base';
 
@@ -42,9 +43,10 @@ export const TestViewMixin = <T extends Constructor<TestBase>>(superClass: T) =>
           element.classList.toggle('show', element.getAttribute('view') === this.sessionContext.view);
         });
 
-        const assessmentItem = this._testElement.querySelector<QtiAssessmentItem>(
-          `qti-assessment-item[identifier="${this.sessionContext.navItemId}"]`
+        const assessmentItemRef = this._testElement.querySelector<QtiAssessmentItemRef>(
+          `qti-assessment-item-ref[identifier="${this.sessionContext.navItemId}"]`
         );
+        const assessmentItem = assessmentItemRef?.assessmentItem;
 
         if (assessmentItem) {
           assessmentItem.showCorrectResponse(this.sessionContext.view === 'scorer');
