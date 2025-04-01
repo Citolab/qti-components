@@ -19,7 +19,7 @@ export const Default: Story = {
         max-width: 800px;
       }
     </style>
-    <qti-test>
+    <qti-test navigate="item">
       <test-navigation>
         <test-container test-url="/assets/api/examples/assessment.xml"></test-container>
         <div>

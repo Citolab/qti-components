@@ -120,6 +120,7 @@ export class TestNavigation extends LitElement {
 
   /* PK: on test connected we can build the computed context */
   private _handleTestConnected(event: CustomEvent) {
+    this.initContext = null;
     this._testElement = event.detail as QtiAssessmentTest;
     const testPartElements = Array.from(this._testElement?.querySelectorAll<QtiTestPart>(`qti-test-part`) || []);
     this.computedContext = {

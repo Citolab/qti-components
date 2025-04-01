@@ -179,7 +179,7 @@ export const TextEntry: Story = {
     'item-url': '/qti-test-package/items/text_entry.xml' // Set the new item URL here
   },
   render: args =>
-    html` <qti-item>
+    html` <qti-item navigate="item">
       <div>
         <item-container style="display: block;width: 400px; height: 350px;" item-url=${args['item-url'] as string}>
           <template>
@@ -220,7 +220,8 @@ export const TextEntry: Story = {
     const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0];
     await step('Click on the Show Correct button', async () => {
       await showCorrectButton.click();
-      interaction.shadowRoot.querySelector('.correct-option').textContent = 'York';
+      const correctElement = interaction.shadowRoot.querySelector('[part="correct"]');
+      expect(correctElement).toBeVisible();
     });
   }
 };

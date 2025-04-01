@@ -121,7 +121,7 @@
   border-radius: 0;
   cursor: text;
   padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
-  background: unset;
+  background: var(--qti-bg);
 }
 
 /* Apply .spot for hotspot shapes */
@@ -147,7 +147,7 @@
 
 /* Apply .drag for draggable elements */
 .drag {
-  @apply bordered handle;
+  @apply bordered /* handle*/;
 
   transition:
     transform 200ms ease-out,
@@ -157,7 +157,10 @@
   background-color: var(--qti-bg);
   padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
   border-radius: var(--qti-border-radius);
-  padding-left: calc(var(--qti-padding-horizontal) + 0.5rem) !important; /* 1.5rem for the drag */
+
+  /* padding-left: calc(var(--qti-padding-horizontal) + 0.5rem) !important; */
+
+  /* 1.5rem for the drag */
 }
 
 /* Apply .dragging for the dragging state of a draggable element */
@@ -171,8 +174,8 @@
 
 /* Apply .drop for an element where you can drop the draggable */
 .drop {
-  @apply bordered;
-
+  /* @apply bordered; */
+  border: var(--qti-border-thickness) dashed var(--qti-border-color);
   background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7" stroke="%23CCCCCC" stroke-width="1" fill="transparent" /></svg>')
     center no-repeat;
   border-radius: var(--qti-border-radius);
@@ -243,7 +246,7 @@
 
 /* Apply .hov for hover state */
 .hov {
-  background-color: var(--qti-hover-bg);
+  /* background-color: var(--qti-hover-bg); */
 }
 
 /* Apply .foc for focus state */

@@ -28,7 +28,7 @@ export default meta;
 
 export const Default: Story = {
   render: args =>
-    html` <qti-test>
+    html` <qti-test navigate="item">
       <!-- <template item-ref><div style="border:2px solid red">{{ xmlDoc }}</div></template> -->
       <test-navigation>
         ${template(

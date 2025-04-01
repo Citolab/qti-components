@@ -38,7 +38,7 @@ export const Default: Story = {
 
 export const Test2: Story = {
   render: args =>
-    html` <qti-test>
+    html` <qti-test navigate="item">
       <test-navigation>
         <test-container test-url="/assets/qti-test-package2/AssessmentTest.xml"> </test-container>
         ${template(args, html`Show Correct`)}
@@ -89,7 +89,7 @@ export const Test2: Story = {
 
 export const Test: Story = {
   render: args => html`
-    <qti-test>
+    <qti-test navigate="item">
       <test-navigation>
         <!-- <test-print-item-variables></test-print-item-variables> -->
         <test-container test-url="/assets/qti-test-package/assessment.xml"> </test-container>

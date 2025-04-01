@@ -4,10 +4,7 @@ export default css`
   :host {
     display: inline-block;
   }
-  [part='correct'] {
-    position: absolute;
-    width: 100%;
-  }
+
   :host(.qti-input-width-1) [part='input'] {
     width: 1.1rem;
     min-width: 1.1rem;
@@ -81,5 +78,34 @@ export default css`
   :host(.qti-input-width-72) [part='input'] {
     width: 57rem;
     min-width: 57rem;
+  }
+
+  :host {
+    position: relative;
+  }
+  input {
+    anchor-name: --text-entry-input;
+    z-index: 100;
+    position: relative;
+  }
+
+  [part='correct'] {
+    padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
+    background-color: var(--qti-bg);
+    z-index: 0;
+    position: absolute;
+    left: 0;
+    right: 0;
+    position-anchor: --text-entry-input;
+    bottom: anchor(top);
+    left: anchor(left);
+    /* opacity: 1; */
+    transition: all 1s;
+
+    @starting-style {
+      display: grid;
+      /* opacity: 0; */
+      bottom: 0;
+    }
   }
 `;

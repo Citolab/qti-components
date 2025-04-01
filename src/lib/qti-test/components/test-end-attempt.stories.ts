@@ -25,7 +25,7 @@ export default meta;
 
 export const Default: Story = {
   render: args =>
-    html` <qti-test>
+    html` <qti-test navigate="item">
       <test-navigation>
         <!-- <test-print-item-variables></test-print-item-variables> -->
         <test-container test-url="/assets/qti-test-package/assessment.xml"></test-container>
@@ -37,7 +37,7 @@ export const Default: Story = {
 
 export const Test: Story = {
   render: args => html`
-    <qti-test>
+    <qti-test navigate="item">
       <test-navigation>
         <!-- <test-print-item-variables>  </test-print-item-variables> -->
         <test-container test-url="/assets/qti-test-package/assessment.xml"> </test-container>

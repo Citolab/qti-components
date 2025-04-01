@@ -1,5 +1,5 @@
-import { html } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { html, nothing } from 'lit';
+import { customElement, property, query, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { createRef } from 'lit/directives/ref.js';
 
@@ -25,6 +25,8 @@ export class QtiTextEntryInteraction extends Interaction {
   @state()
   response: string | null = null;
 
+  @query('input') private _input!: HTMLInputElement;
+
   @watch('response', { waitUntilFirstUpdate: true })
   protected _handleValueChange = () => {
     // const formData = new FormData();
@@ -41,49 +43,49 @@ export class QtiTextEntryInteraction extends Interaction {
   }
 
   public override validate() {
-    const input = this.shadowRoot.querySelector('input');
-    if (!input) return false;
+    if (!this._input) return false;
     if (this.patternMask && this.dataPatternmaskMessage) {
-      // Clear any custom error if the input is valid
+      // Clear any custom error if the this._input is valid
       this._internals.setValidity({});
-      input.setCustomValidity(''); // Clear the custom message
-      const isValid = input.checkValidity();
+      this._input.setCustomValidity(''); // Clear the custom message
+      const isValid = this._input.checkValidity();
       if (!isValid) {
         // Set custom error if invalid
         this._internals.setValidity({ customError: true }, this.dataPatternmaskMessage);
-        input.setCustomValidity(this.dataPatternmaskMessage); // Set custom message only if invalid
+        this._input.setCustomValidity(this.dataPatternmaskMessage); // Set custom message only if invalid
       }
     } else {
-      const isValid = input.checkValidity();
+      const isValid = this._input.checkValidity();
       this._internals.setValidity(isValid ? {} : { customError: false });
     }
-    return this.response !== '' && input.checkValidity();
+    return this.response !== '' && this._input.checkValidity();
   }
 
   public toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean): void {
-    const input = this.shadowRoot.querySelector('input');
     if (show && responseVariable.correctResponse) {
       const text = responseVariable.correctResponse.toString();
-      if (text) {
-        if (!input.nextElementSibling?.classList.contains('correct-option')) {
-          const textSpan = document.createElement('span');
-          textSpan.classList.add('correct-option');
-          textSpan.textContent = text;
+      this._correctResponse = text;
+      //   if (text) {
+      //     if (!this._input.nextElementSibling?.classList.contains('correct-option')) {
+      //       const textSpan = document.createElement('span');
+      //       textSpan.classList.add('correct-option');
+      //       textSpan.textContent = text;
 
-          // Apply styles
-          textSpan.style.border = '1px solid var(--qti-correct)';
-          textSpan.style.borderRadius = '4px';
-          textSpan.style.padding = '2px 4px';
-          textSpan.style.margin = '4px';
-          textSpan.style.display = 'inline-block';
+      //       // Apply styles
+      //       textSpan.style.border = '1px solid var(--qti-correct)';
+      //       textSpan.style.borderRadius = '4px';
+      //       textSpan.style.padding = '2px 4px';
+      //       textSpan.style.margin = '4px';
+      //       textSpan.style.display = 'inline-block';
 
-          input.insertAdjacentElement('afterend', textSpan);
-        }
-      } else if (input.nextElementSibling?.classList.contains('correct-option')) {
-        input.nextElementSibling?.remove();
-      }
+      //       this._input.insertAdjacentElement('afterend', textSpan);
+      //     }
+      //   } else if (this._input.nextElementSibling?.classList.contains('correct-option')) {
+      //     this._input.nextElementSibling?.remove();
+      //   }
     } else {
-      input.nextElementSibling?.remove();
+      // this._input.nextElementSibling?.remove();
+      this._correctResponse = null;
     }
   }
 
@@ -108,9 +110,10 @@ export class QtiTextEntryInteraction extends Interaction {
         ?disabled="${this.disabled}"
         ?readonly="${this.readonly}"
       />
-      <div part="correct">${this._correctResponse}</div>
+      ${this._correctResponse ? html`<div part="correct">${this._correctResponse}</div>` : nothing}
     `;
   }
+  // ${this._correctResponse ? html`<div popover part="correct">${this._correctResponse}</div>` : nothing}
 
   protected textChanged(event: Event) {
     if (this.disabled || this.readonly) return;

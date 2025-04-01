@@ -27,7 +27,7 @@ interface NavigationError {
 declare class TestNavigationInterface {}
 export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass: T) => {
   abstract class TestNavigationClass extends superClass {
-    @property({ type: String }) navigate: 'item' | 'section' | null = 'item';
+    @property({ type: String }) navigate: 'item' | 'section' | null = null;
     @property({ type: Boolean, attribute: 'cache-transform' }) cacheTransform: boolean = false;
     @property({ type: Number }) requestTimeout: number = 30000; // Default timeout of 30 seconds
     @property({ type: Boolean }) showLoadingIndicators: boolean = true;

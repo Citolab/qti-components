@@ -26,7 +26,7 @@ export const T4_T7: Story = {
     const { testURI } = manifestInfo;
 
     return html`
-      <qti-test ${ref(qtiTestRef)} class="flex h-full w-full flex-col">
+      <qti-test ${ref(qtiTestRef)} navigate="item" class="flex h-full w-full flex-col">
         <test-navigation>
           <div class="relative flex-1 overflow-auto">
             <test-container test-url="${manifestInfo.testURL}" class="block"></test-container>

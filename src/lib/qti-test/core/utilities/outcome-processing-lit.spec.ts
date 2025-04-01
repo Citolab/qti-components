@@ -3,7 +3,7 @@ import { html, render } from 'lit';
 import type { QtiTest } from '../qti-test';
 import '../../../index';
 
-const assessmentTest = html` <qti-test>
+const assessmentTest = html` <qti-test navigate="item">
   <test-container>
     <qti-assessment-test
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
