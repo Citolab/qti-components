@@ -76,28 +76,31 @@ export const SlowLoadingStimulus: Story = {
       false
     );
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    // const navInfoStart = await canvas.findByShadowText('info-start');
-    const navBasic = await canvas.findByShadowText('basic');
-    // const navAdvanced = await canvas.findByShadowText('advanced');
-    const navInfoEnd = await canvas.findByShadowText('info-end');
 
-    // const firstItem = await canvas.findByShadowTitle('Examples');
-    // expect(firstItem).toBeInTheDocument();
-    // await fireEvent.click(navInfoStart);
-    await new Promise(resolve => setTimeout(resolve, 400));
-    await fireEvent.click(navBasic);
-    await new Promise(resolve => setTimeout(resolve, 400));
-    await fireEvent.click(navInfoEnd);
-    // await fireEvent.click(navAdvanced);
-    // const lastItem = await canvas.findByShadowTitle('Info End');
-    // expect(lastItem).toBeInTheDocument();
+    await step('Verify options are shuffled', async () => {
+      // const navInfoStart = await canvas.findByShadowText('info-start');
+      const navBasic = await canvas.findByShadowText('basic');
+      // const navAdvanced = await canvas.findByShadowText('advanced');
+      const navInfoEnd = await canvas.findByShadowText('info-end');
 
-    // const qtiSharedStimulus = canvasElement.querySelector('.qti-shared-stimulus');
+      // const firstItem = await canvas.findByShadowTitle('Examples');
+      // expect(firstItem).toBeInTheDocument();
+      // await fireEvent.click(navInfoStart);
+      await new Promise(resolve => setTimeout(resolve, 400));
+      await fireEvent.click(navBasic);
+      await new Promise(resolve => setTimeout(resolve, 400));
+      await fireEvent.click(navInfoEnd);
+      // await fireEvent.click(navAdvanced);
+      // const lastItem = await canvas.findByShadowTitle('Info End');
+      // expect(lastItem).toBeInTheDocument();
 
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    // expect(qtiSharedStimulus?.children.length).toBe(0);
+      // const qtiSharedStimulus = canvasElement.querySelector('.qti-shared-stimulus');
+
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      // expect(qtiSharedStimulus?.children.length).toBe(0);
+    });
   }
 };
 
@@ -112,9 +115,12 @@ export const NotLoadingAdvancedOrder: Story = {
       false
     );
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const navAdvanced = await canvas.findByShadowText('advanced');
-    await fireEvent.click(navAdvanced);
+
+    await step('Verify options are shuffled', async () => {
+      const navAdvanced = await canvas.findByShadowText('advanced');
+      await fireEvent.click(navAdvanced);
+    });
   }
 };

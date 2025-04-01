@@ -45,6 +45,14 @@ export class QtiAssessmentItemRef extends LitElement {
     // debugger;
     super.connectedCallback();
 
+    /*
+      searches for the template element to use in the qti-test component
+      can be used to render extra things for an item, like a bookmark, index nummer
+      put this in your test-container component
+      <template item-ref>
+        <div>Extra content</div>
+      </template>
+    */
     const templateElement = ((this.getRootNode() as any).host as HTMLElement)
       .closest('qti-test')
       .querySelector<HTMLTemplateElement>('template[item-ref]');
