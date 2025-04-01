@@ -33,7 +33,7 @@ export default defineConfig({
           storybookTest({
             tags: {
               // include: ['test'],
-              exclude: ['skip-test']
+              exclude: ['skip-test', 'no-tests']
             },
             // The location of your Storybook config, main.js|ts
             configDir: path.join(dirname, '.storybook'),
@@ -50,6 +50,7 @@ export default defineConfig({
             enabled: true,
             provider: 'playwright',
             headless: true,
+            viewport: { width: 1280, height: 600 },
             instances: [
               {
                 browser: 'chromium'
@@ -64,6 +65,7 @@ export default defineConfig({
           }
         }
       },
+      /* this is for the normal spec files, which do not need storybook */
       {
         test: {
           name: 'tests',

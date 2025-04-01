@@ -192,14 +192,14 @@
     "cem": {
       "command": "cem analyze"
     },
+    "test": {
+      "command": "vitest run"
+    },
     "test-storybook": {
       "command": "vitest --project=stories"
     },
     "css": {
       "command": "postcss src/item.css -d dist -m"
-    },
-    "test": {
-      "command": "vitest run"
     },
     "build-storybook": {
       "command": "storybook build",

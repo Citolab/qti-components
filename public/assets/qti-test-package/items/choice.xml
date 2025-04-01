@@ -21,17 +21,31 @@
 			<qti-value>1</qti-value>
 		</qti-default-value>
 	</qti-outcome-declaration>
+
+	<qti-assessment-stimulus-ref
+		identifier="Stimulus1"
+		href="/ref/unbelievableNight.xml"
+		title="An Unbelievable Night"
+	></qti-assessment-stimulus-ref>
 	<qti-item-body>
-		<p>Look at the text in the picture.</p>
+
+		<div class="qti-layout-row">
+			<div class="qti-layout-col6">
+				<div class="qti-shared-stimulus" data-stimulus-idref="Stimulus1"></div>
+			</div>
+          <div class="qti-layout-col6">
+
+				<p>Look at the text in the picture.</p>
 		<p>
-			<img src="../img/sign.png" alt="NEVER LEAVE LUGGAGE UNATTENDED" />
-		</p>
+					<img src="../img/sign.png" alt="NEVER LEAVE LUGGAGE UNATTENDED" />
+				</p>
 		<qti-choice-interaction response-identifier="RESPONSE" shuffle="false" max-choices="1">
-			<qti-prompt>What does it say?</qti-prompt>
-			<qti-simple-choice identifier="ChoiceA">You must stay with your luggage at all times.</qti-simple-choice>
-			<qti-simple-choice identifier="ChoiceB">Do not let someone else look after your luggage.</qti-simple-choice>
-			<qti-simple-choice identifier="ChoiceC">Remember your luggage when you leave.</qti-simple-choice>
-		</qti-choice-interaction>
+					<qti-prompt>What does it say?</qti-prompt>
+					<qti-simple-choice identifier="ChoiceA">You must stay with your luggage at all times.</qti-simple-choice>
+					<qti-simple-choice identifier="ChoiceB">Do not let someone else look after your luggage.</qti-simple-choice>
+					<qti-simple-choice identifier="ChoiceC">Remember your luggage when you leave.</qti-simple-choice>
+				</qti-choice-interaction>
+			</div></div>
 	</qti-item-body>
 	<qti-response-processing
 		template="https://purl.imsglobal.org/spec/qti/v3p0/rptemplates/match_correct.xml" />

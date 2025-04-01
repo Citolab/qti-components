@@ -13,6 +13,10 @@ body.sb-main-fullscreen #storybook-root #root-inner {
   display: flex;
 }
 
+.w-1\/2 {
+  width: 50%;
+}
+
 .items-center {
   align-items: center;
 }
