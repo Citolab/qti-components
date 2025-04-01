@@ -104,7 +104,11 @@ export class TestNavigation extends LitElement {
     if (this.autoScoreItems) {
       const assessmentItem = (_event.composedPath()[0] as HTMLElement).closest('qti-assessment-item');
       const scoreOutcomeIdentifier = assessmentItem.variables.find(v => v.identifier === 'SCORE') as OutcomeVariable;
-      if (scoreOutcomeIdentifier.externalScored === null && assessmentItem.adaptive === 'false') {
+      if (
+        scoreOutcomeIdentifier &&
+        scoreOutcomeIdentifier.externalScored === null &&
+        assessmentItem.adaptive === 'false'
+      ) {
         assessmentItem.processResponse();
       }
     }

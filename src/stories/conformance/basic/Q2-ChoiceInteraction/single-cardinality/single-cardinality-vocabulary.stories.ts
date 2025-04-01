@@ -13,8 +13,8 @@ const meta: Meta<QtiAssessmentItem> = {
 };
 export default meta;
 
-export const Q22_L1_D201: Story = {
-  name: 'Q22-L1-D201',
+export const Q2_L1_D201: Story = {
+  name: 'Q2-L1-D201',
   render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const element = canvasElement.querySelector('qti-choice-interaction');
@@ -34,8 +34,8 @@ export const Q22_L1_D201: Story = {
   ]
 };
 
-export const Q22_L1_D202: Story = {
-  name: 'Q22-L1-D202',
+export const Q2_L1_D202: Story = {
+  name: 'Q2-L1-D202',
   render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const element = canvasElement.querySelector('qti-choice-interaction');
@@ -53,8 +53,8 @@ export const Q22_L1_D202: Story = {
   ]
 };
 
-export const Q22_L1_D203: Story = {
-  name: 'Q22-L1-D203',
+export const Q2_L1_D203: Story = {
+  name: 'Q2-L1-D203',
   render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const element = canvasElement.querySelector('qti-choice-interaction');
@@ -73,8 +73,8 @@ export const Q22_L1_D203: Story = {
   ]
 };
 
-export const Q22_L1_D204: Story = {
-  name: 'Q22-L1-D204',
+export const Q2_L1_D204: Story = {
+  name: 'Q2-L1-D204',
   render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const element = canvasElement.querySelector('qti-choice-interaction');
@@ -93,8 +93,8 @@ export const Q22_L1_D204: Story = {
   ]
 };
 
-export const Q22_L1_D205: Story = {
-  name: 'Q22-L1-D205',
+export const Q2_L1_D205: Story = {
+  name: 'Q2-L1-D205',
   render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const element = canvasElement.querySelector('qti-choice-interaction');
@@ -112,8 +112,8 @@ export const Q22_L1_D205: Story = {
   ]
 };
 
-export const Q22_L1_D206: Story = {
-  name: 'Q22-L1-D206',
+export const Q2_L1_D206: Story = {
+  name: 'Q2-L1-D206',
   render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const element = canvasElement.querySelector('qti-choice-interaction');
@@ -131,8 +131,8 @@ export const Q22_L1_D206: Story = {
   ]
 };
 
-export const Q22_L1_D207: Story = {
-  name: 'Q22-L1-D207',
+export const Q2_L1_D207: Story = {
+  name: 'Q2-L1-D207',
   render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const element = canvasElement.querySelector('qti-choice-interaction');
@@ -150,8 +150,8 @@ export const Q22_L1_D207: Story = {
   ]
 };
 
-export const Q22_L1_D208: Story = {
-  name: 'Q22-L1-D208',
+export const Q2_L1_D208: Story = {
+  name: 'Q2-L1-D208',
   render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const element = canvasElement.querySelector('qti-choice-interaction');
@@ -169,8 +169,8 @@ export const Q22_L1_D208: Story = {
   ]
 };
 
-export const Q22_L1_I209: Story = {
-  name: 'Q22-L1-I209',
+export const Q2_L1_I209: Story = {
+  name: 'Q2-L1-I209',
   render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const element = canvasElement.querySelector('qti-choice-interaction');
@@ -188,8 +188,8 @@ export const Q22_L1_I209: Story = {
   ]
 };
 
-export const Q22_L1_I210: Story = {
-  name: 'Q22-L1-I210',
+export const Q2_L1_I210: Story = {
+  name: 'Q2-L1-I210',
   render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const element = canvasElement.querySelector('qti-choice-interaction');
@@ -207,8 +207,8 @@ export const Q22_L1_I210: Story = {
   ]
 };
 
-export const Q22_L1_I211: Story = {
-  name: 'Q22-L1-I211',
+export const Q2_L1_I211: Story = {
+  name: 'Q2-L1-I211',
   render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const element = canvasElement.querySelector('qti-choice-interaction');
@@ -226,8 +226,8 @@ export const Q22_L1_I211: Story = {
   ]
 };
 
-export const Q22_L1_I212: Story = {
-  name: 'Q22-L1-I212',
+export const Q2_L1_I212: Story = {
+  name: 'Q2-L1-I212',
   render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const element = canvasElement.querySelector('qti-choice-interaction');
@@ -245,8 +245,8 @@ export const Q22_L1_I212: Story = {
   ]
 };
 
-export const Q22_L1_I213: Story = {
-  name: 'Q22-L1-I213',
+export const Q2_L1_I213: Story = {
+  name: 'Q2-L1-I213',
   render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const element = canvasElement.querySelector('qti-choice-interaction');
@@ -264,8 +264,8 @@ export const Q22_L1_I213: Story = {
   ]
 };
 
-export const Q22_L1_I214: Story = {
-  name: 'Q22-L1-I214',
+export const Q2_L1_I214: Story = {
+  name: 'Q2-L1-I214',
   render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const element = canvasElement.querySelector('qti-choice-interaction');
@@ -283,8 +283,8 @@ export const Q22_L1_I214: Story = {
   ]
 };
 
-export const Q22_L1_I215: Story = {
-  name: 'Q22-L1-I215',
+export const Q2_L1_I215: Story = {
+  name: 'Q2-L1-I215',
   render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const element = canvasElement.querySelector('qti-choice-interaction');
@@ -301,8 +301,8 @@ export const Q22_L1_I215: Story = {
   ]
 };
 
-export const Q22_L1_I216: Story = {
-  name: 'Q22-L1-I216',
+export const Q2_L1_I216: Story = {
+  name: 'Q2-L1-I216',
   render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const element = canvasElement.querySelector('qti-choice-interaction');
@@ -319,8 +319,8 @@ export const Q22_L1_I216: Story = {
   ]
 };
 
-export const Q22_L1_I217: Story = {
-  name: 'Q22-L1-I217',
+export const Q2_L1_I217: Story = {
+  name: 'Q2-L1-I217',
   render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const element = canvasElement.querySelector('qti-choice-interaction');
