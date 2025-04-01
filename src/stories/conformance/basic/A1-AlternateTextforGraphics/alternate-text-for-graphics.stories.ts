@@ -10,11 +10,11 @@ import type { ArgTypes, Meta, StoryObj } from '@storybook/web-components';
 type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {
-  title: 'qti-conformance/basic/A1 - Alternate Text for Graphics/alternate-text-for-graphics'
+  title: 'qti-conformance/basic/A1 - Alternate Text for Graphics/alternate-text-for-graphics/A1-L1-D1'
 };
 export default meta;
 
-export const Default: Story = {
+export const A1L1D1: Story = {
   render: (_args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
