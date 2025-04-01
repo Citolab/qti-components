@@ -51,6 +51,9 @@
 
       const router = new Navigo(null, true, '#');
 
+      router.on('/', () => {
+        router.navigate('/kennisnet1');
+      });
       router.on('/:package', ({ data }) => {
         qtiTest.navigate = 'item';
         pkg = data.package;
@@ -61,7 +64,7 @@
         changeTest(map.get(data.package));
         qtiTest.addEventListener('qti-assessment-test-connected', () => {
           if (sessionStorage.getItem(pkg) !== null) qtiTest.testContext = JSON.parse(sessionStorage.getItem(pkg));
-          qtiTest.dispatchEvent(new CustomEvent('qti-request-navigation', { detail: { type: 'item', id: data.item } }));
+          qtiTest.navigateTo('item', data.item);
         });
       });
 

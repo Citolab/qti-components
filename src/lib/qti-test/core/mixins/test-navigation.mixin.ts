@@ -132,6 +132,15 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
       }
     }
 
+    public navigateTo(type: 'item' | 'section', id: string): void {
+      this.dispatchEvent(
+        new CustomEvent('qti-request-navigation', {
+          detail: { type, id },
+          bubbles: true,
+          composed: true
+        })
+      );
+    }
     /**
      * Navigates to a specific item
      */

@@ -24,17 +24,11 @@ export default meta;
 
 export const Default: Story = {
   render: args =>
-    html` <qti-test>
+    html` <qti-test navigate="item">
       <test-navigation>
+        <strong>${template(args, html`<template>{{ item.identifier }}</template>`)}</strong>
         <test-container test-url="/assets/api/biologie/assessment.xml"></test-container>
-        ${template(args)}
-        <test-stamp>
-          <template>
-            <div>Extra content</div>
-            {{ computedContext }}
-          </template>
-          <template type="if" if="{{ important }}"> <test-next>Volgende</test-next></template>
-        </test-stamp>
+        <test-next>Volgende</test-next>
       </test-navigation>
     </qti-test>`
 };

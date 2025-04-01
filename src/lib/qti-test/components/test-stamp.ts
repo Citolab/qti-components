@@ -32,7 +32,7 @@ export class TestStamp extends LitElement {
     );
     const activeItem = activeItems && activeItems.length > 0 ? activeItems[0] : null;
     if (!activeItem) return html``;
-    return html`${this.myTemplate({ computedContext: this.computedContext, item: activeItem })}`;
+    return html`${this.myTemplate({ item: activeItem })}`;
   }
 }
 
