@@ -14,7 +14,7 @@ const meta: Meta<QtiAssessmentItem> = {
 };
 export default meta;
 
-export const Q22_L1_D1: Story = {
+export const Q2_L1_D1: Story = {
   name: 'Q2-L1-D1',
   render: (_, { loaded: { xml } }) => xml,
   args: {
@@ -37,7 +37,7 @@ export const Q22_L1_D1: Story = {
   ]
 };
 
-export const Q22_L1_D2: Story = {
+export const Q2_L1_D2: Story = {
   name: 'Q2-L1-D2',
   render: (_, { loaded: { xml } }) => xml,
   args: {
@@ -64,13 +64,13 @@ export const Q22_L1_D2: Story = {
   ]
 };
 
-export const Q22_L1_D3: Story = {
-  name: 'Q22-L1-D3',
+export const Q2_L1_D3: Story = {
+  name: 'Q2-L1-D3',
   render: (_, { loaded: { xml } }) => xml,
   play: ({ canvasElement }) => {
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
     assessmentItem.querySelector('qti-prompt').textContent =
-      'Q22-L1-D3: For file multiple-cardinality.xml after ending the attempt with the SimpleChoice with identifier choice_b selected, the RESPONSE Response Variable is set with a Multiple Container containing a value choice_b, with an Identifier baseType.';
+      'Q2-L1-D3: For file multiple-cardinality.xml after ending the attempt with the SimpleChoice with identifier choice_b selected, the RESPONSE Response Variable is set with a Multiple Container containing a value choice_b, with an Identifier baseType.';
 
     const choiceB = canvasElement.querySelector('qti-simple-choice[identifier="choice_b"]') as QtiSimpleChoice;
     fireEvent.click(choiceB);
@@ -86,13 +86,13 @@ export const Q22_L1_D3: Story = {
   ]
 };
 
-export const Q22_L1_D4: Story = {
-  name: 'Q22-L1-D4',
+export const Q2_L1_D4: Story = {
+  name: 'Q2-L1-D4',
   render: (_, { loaded: { xml } }) => xml,
   play: ({ canvasElement }) => {
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
     assessmentItem.querySelector('qti-prompt').textContent =
-      'Q22-L1-D4: For file multiple-cardinality.xml after ending the attempt with the SimpleChoice with identifier choice_c selected, the RESPONSE Response Variable is set with a Multiple Container containing a value choice_c, with an Identifier baseType.';
+      'Q2-L1-D4: For file multiple-cardinality.xml after ending the attempt with the SimpleChoice with identifier choice_c selected, the RESPONSE Response Variable is set with a Multiple Container containing a value choice_c, with an Identifier baseType.';
 
     const choiceC = canvasElement.querySelector('qti-simple-choice[identifier="choice_c"]') as QtiSimpleChoice;
     fireEvent.click(choiceC);
@@ -108,13 +108,13 @@ export const Q22_L1_D4: Story = {
   ]
 };
 
-export const Q22_L1_D5: Story = {
-  name: 'Q22-L1-D5',
+export const Q2_L1_D5: Story = {
+  name: 'Q2-L1-D5',
   render: (_, { loaded: { xml } }) => xml,
   play: ({ canvasElement }) => {
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
     assessmentItem.querySelector('qti-prompt').textContent =
-      'Q22-L1-D5: For file multiple-cardinality.xml after ending the attempt with the SimpleChoices with identifiers choice_a and choice_b selected, the RESPONSE Response Variable is set with a Multiple Container containing values choice_a and choice_b, with an Identifier baseType.';
+      'Q2-L1-D5: For file multiple-cardinality.xml after ending the attempt with the SimpleChoices with identifiers choice_a and choice_b selected, the RESPONSE Response Variable is set with a Multiple Container containing values choice_a and choice_b, with an Identifier baseType.';
 
     const choiceA = canvasElement.querySelector('qti-simple-choice[identifier="choice_a"]') as QtiSimpleChoice;
     const choiceB = canvasElement.querySelector('qti-simple-choice[identifier="choice_b"]') as QtiSimpleChoice;
@@ -132,13 +132,13 @@ export const Q22_L1_D5: Story = {
   ]
 };
 
-export const Q22_L1_D6: Story = {
-  name: 'Q22-L1-D6',
+export const Q2_L1_D6: Story = {
+  name: 'Q2-L1-D6',
   render: (_, { loaded: { xml } }) => xml,
   play: ({ canvasElement }) => {
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
     assessmentItem.querySelector('qti-prompt').textContent =
-      'Q22-L1-D6: For file multiple-cardinality.xml after ending the attempt with the SimpleChoices with identifiers choice_b and choice_c selected, the RESPONSE Response Variable is set with a Multiple Container containing values choice_b and choice_c, with an Identifier baseType.';
+      'Q2-L1-D6: For file multiple-cardinality.xml after ending the attempt with the SimpleChoices with identifiers choice_b and choice_c selected, the RESPONSE Response Variable is set with a Multiple Container containing values choice_b and choice_c, with an Identifier baseType.';
 
     const choiceB = canvasElement.querySelector('qti-simple-choice[identifier="choice_b"]') as QtiSimpleChoice;
     const choiceC = canvasElement.querySelector('qti-simple-choice[identifier="choice_c"]') as QtiSimpleChoice;
@@ -156,13 +156,13 @@ export const Q22_L1_D6: Story = {
   ]
 };
 
-export const Q22_L1_D7: Story = {
-  name: 'Q22-L1-D7',
+export const Q2_L1_D7: Story = {
+  name: 'Q2-L1-D7',
   render: (_, { loaded: { xml } }) => xml,
   play: ({ canvasElement }) => {
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
     assessmentItem.querySelector('qti-prompt').textContent =
-      'Q22-L1-D6: For file multiple-cardinality.xml after ending the attempt with the SimpleChoices with identifiers choice_b and choice_c selected, the RESPONSE Response Variable is set with a Multiple Container containing values choice_b and choice_c, with an Identifier baseType.';
+      'Q2-L1-D6: For file multiple-cardinality.xml after ending the attempt with the SimpleChoices with identifiers choice_b and choice_c selected, the RESPONSE Response Variable is set with a Multiple Container containing values choice_b and choice_c, with an Identifier baseType.';
 
     const choiceA = canvasElement.querySelector('qti-simple-choice[identifier="choice_a"]') as QtiSimpleChoice;
     const choiceB = canvasElement.querySelector('qti-simple-choice[identifier="choice_b"]') as QtiSimpleChoice;

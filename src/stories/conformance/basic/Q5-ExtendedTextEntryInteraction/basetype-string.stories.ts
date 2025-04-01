@@ -20,22 +20,13 @@ export const Q5_L1_D1: Story = {
   name: 'Q5_L1_D1',
   render: (args, { argTypes, loaded: { xml } }) => {
     let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
     const onItemConnected = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
       action('qti-assessment-item-connected');
     };
 
     return html`
-      <div
-        class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
-        @qti-assessment-item-connected=${onItemConnected}
-      >
-        ${xml}
-      </div>
+      <div class="item" @qti-assessment-item-connected=${onItemConnected}>${xml}</div>
       <button @click=${() => item?.processResponse()}>Submit</button>
     `;
   },
@@ -60,39 +51,52 @@ export const Q5_L1_D1: Story = {
     const response = assessmentItem.variables.find(v => v.identifier === 'RESPONSE');
     expect(response.value).toBe('');
   },
-  loaders: [
-    async ({ args }) => {
-      try {
-        const xml = await getItemByUri('/qti-conformance/Basic/Q5/base-type-string.xml');
-        return { xml };
-      } catch (error) {
-        console.error('XML validation exception caught during loading:', error.message);
-        return { xml: `<p>XML validation error</p>` };
-      }
-    }
-  ]
+  loaders: [async ({ args }) => ({ xml: await getItemByUri('/qti-conformance/Basic/Q5/base-type-string.xml') })]
 };
 
 export const Q5_L1_D2: Story = {
-  name: 'Q20-L1-D2',
+  name: 'Q5_L1_D2',
   render: (args, { argTypes, loaded: { xml } }) => {
     let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
     const onItemConnected = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
       action('qti-assessment-item-connected');
     };
 
     return html`
-      <div
-        class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
-        @qti-assessment-item-connected=${onItemConnected}
-      >
-        ${xml}
-      </div>
+      <div class="item" @qti-assessment-item-connected=${onItemConnected}>${xml}</div>
+      <button @click=${() => item?.processResponse()}>Submit</button>
+    `;
+  },
+  play: async ({ canvasElement }) => {
+    const submitButton = screen.getByRole('button', { name: 'Submit' });
+    const assessmentItem = canvasElement.querySelector<QtiAssessmentItem>('qti-assessment-item');
+    const extendedTextInteraction = assessmentItem.querySelector<QtiExtendedTextInteraction>(
+      'qti-extended-text-interaction'
+    );
+    const textarea = extendedTextInteraction.shadowRoot.querySelector('textarea');
+    // Add a space to the input field
+    await userEvent.type(textarea, 'response');
+
+    fireEvent.click(submitButton);
+
+    const response = assessmentItem.variables.find(v => v.identifier === 'RESPONSE');
+    expect(response.value).toBe('response');
+  },
+  loaders: [async ({ args }) => ({ xml: await getItemByUri('/qti-conformance/Basic/Q5/base-type-string.xml') })]
+};
+
+export const Q5L1D102: Story = {
+  name: 'Q5-L1-D102',
+  render: (args, { argTypes, loaded: { xml } }) => {
+    let item: QtiAssessmentItem;
+    const onItemConnected = ({ detail: qtiAssessmentItem }) => {
+      item = qtiAssessmentItem;
+      action('qti-assessment-item-connected');
+    };
+
+    return html`
+      <div class="item" @qti-assessment-item-connected=${onItemConnected}>${xml}</div>
       <button @click=${() => item?.processResponse()}>Submit</button>
     `;
   },
@@ -115,33 +119,20 @@ Autumn’s quiet song.`;
     const response = assessmentItem.variables.find(v => v.identifier === 'RESPONSE');
     expect(response.value).toBe(lorem);
   },
-  loaders: [
-    async ({ args }) => ({
-      xml: await getItemByUri('/qti-conformance/Basic/Q5/extended-text-sv-2a.xml')
-    })
-  ]
+  loaders: [async ({ args }) => ({ xml: await getItemByUri('/qti-conformance/Basic/Q5/extended-text-sv-2a.xml') })]
 };
 
-export const Q5_L1_D3: Story = {
-  name: 'Q20-L1-D3',
+export const Q5_L1_D103: Story = {
+  name: 'Q5-L1-D103',
   render: (args, { argTypes, loaded: { xml } }) => {
     let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
     const onItemConnected = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
       action('qti-assessment-item-connected');
     };
 
     return html`
-      <div
-        class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
-        @qti-assessment-item-connected=${onItemConnected}
-      >
-        ${xml}
-      </div>
+      <div class="item" @qti-assessment-item-connected=${onItemConnected}>${xml}</div>
       <button @click=${() => item?.processResponse()}>Submit</button>
     `;
   },
@@ -174,40 +165,31 @@ Wish you could see it too!`;
   ]
 };
 
-export const Q5_L1_D4: Story = {
-  name: 'Q20-L1-D4',
+export const Q5L1D104: Story = {
+  name: 'Q5_L1_D104',
   render: (args, { argTypes, loaded: { xml } }) => {
     let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
     const onItemConnected = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
       action('qti-assessment-item-connected');
     };
 
     return html`
-      <div
-        class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
-        @qti-assessment-item-connected=${onItemConnected}
-      >
-        ${xml}
-      </div>
+      <div class="item" @qti-assessment-item-connected=${onItemConnected}>${xml}</div>
       <button @click=${() => item?.processResponse()}>Submit</button>
     `;
   },
   play: async ({ canvasElement }) => {
     const lorem = `Thanks so much for the postcard!
-It’s lovely to see a glimpse of your town,
-A reminder of places I’ve yet to visit.
+It's lovely to see a glimpse of your town,
+A reminder of places I've yet to visit.
 Mine is a small, cozy place
 With winding streets and friendly faces.
-The nicest part, I’d say, is the lake,
+The nicest part, I'd say, is the lake,
 Where sunsets turn the water gold.
 On evenings, I often stroll along the shore,
 Listening to the gentle waves lap the sand.
-Sometimes, there’s music in the park,
+Sometimes, there's music in the park,
 And people gather, laughter filling the air.
 In winter, lights hang from every tree,
 Making even the darkest nights feel warm.
@@ -224,14 +206,12 @@ So I can show you around myself!`;
     fireEvent.click(submitButton);
 
     expect(textarea.rows).toBe(15);
-
-    //
     expect(extendedTextInteraction.classList.contains('qti-height-lines-15')).toBeTruthy();
     const response = assessmentItem.variables.find(v => v.identifier === 'RESPONSE');
     expect(response.value).toBe(lorem);
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri('/qti-conformance/Basic/Q5/extended-text-sv-2c.xml')
     })
   ]

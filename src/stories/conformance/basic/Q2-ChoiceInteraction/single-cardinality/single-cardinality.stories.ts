@@ -16,8 +16,8 @@ const meta: Meta<QtiAssessmentItem> = {
 };
 export default meta;
 
-export const Q22_L1_D51: Story = {
-  name: 'Q22-L1-D51',
+export const Q2_L1_D51: Story = {
+  name: 'Q2-L1-D51',
   render: (_, { loaded: { xml } }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
@@ -56,8 +56,8 @@ export const Q22_L1_D51: Story = {
   ]
 };
 
-export const Q22_L1_D52: Story = {
-  name: 'Q22-L1-D52',
+export const Q2_L1_D52: Story = {
+  name: 'Q2-L1-D52',
   render: (_, { loaded: { xml } }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
@@ -99,8 +99,8 @@ export const Q22_L1_D52: Story = {
   ]
 };
 
-export const Q22_L1_D53: Story = {
-  name: 'Q22-L1-D53',
+export const Q2_L1_D53: Story = {
+  name: 'Q2-L1-D53',
   render: (_, { loaded: { xml } }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
@@ -141,8 +141,8 @@ export const Q22_L1_D53: Story = {
   ]
 };
 
-export const Q22_L1_D54: Story = {
-  name: 'Q22-L1-D54',
+export const Q2_L1_D54: Story = {
+  name: 'Q2-L1-D54',
   render: (_, { loaded: { xml } }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
@@ -183,8 +183,8 @@ export const Q22_L1_D54: Story = {
   ]
 };
 
-export const Q22_L1_D55: Story = {
-  name: 'Q22-L1-D55',
+export const Q2_L1_D55: Story = {
+  name: 'Q2-L1-D55',
   render: (_, { loaded: { xml } }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
@@ -224,8 +224,8 @@ export const Q22_L1_D55: Story = {
   ]
 };
 
-export const Q22_L1_D56: Story = {
-  name: 'Q22-L1-D56',
+export const Q2_L1_D56: Story = {
+  name: 'Q2-L1-D56',
   render: (_, { loaded: { xml } }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
