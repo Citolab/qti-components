@@ -202,6 +202,9 @@ export const qtiTransformItem = (cache: boolean = false) => {
       return api;
     },
     html() {
+      if (xmlUri !== null) {
+        setLocation(xmlFragment, xmlUri.substring(0, xmlUri.lastIndexOf('/')));
+      }
       return new XMLSerializer().serializeToString(toHTML(xmlFragment));
     },
     xml(): string {

@@ -242,4 +242,22 @@ describe('qtiTransformItem API Methods', () => {
       </qti-assessment-item>`
     );
   });
+
+  it('should transform relative paths correctly', async () => {
+    const parsedXML = await qtiTransformItem()
+      .load(`/assets/qti-path-conversion/relative.xml`)
+      .promise.then(api => {
+        console.log('api', api.html());
+        return api.html();
+        // .path(``)
+      });
+
+    expect(parsedXML).toEqualXml(
+      html` <qti-assessment-item xmlns="http://www.w3.org/1999/xhtml">
+        <qti-item-body>
+          <img src="/assets/qti-path-conversion//assets/qti-path-conversion//path/to/image.jpg" />
+        </qti-item-body>
+      </qti-assessment-item>`
+    );
+  });
 });
