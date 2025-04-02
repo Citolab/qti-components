@@ -132,7 +132,16 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
       }
     }
 
-    public navigateTo(type: 'item' | 'section', id: string): void {
+    public navigateTo(type: 'item' | 'section', id?: string): void {
+      // if no id, take the first qti-assessment-item-ref
+      if (!id) {
+        if (type === 'section') {
+          id = this._testElement?.querySelector<QtiAssessmentSection>('qti-assessment-section')?.identifier;
+        }
+        if (type === 'item') {
+          id = this._testElement?.querySelector<QtiAssessmentItemRef>('qti-assessment-item-ref')?.identifier;
+        }
+      }
       this.dispatchEvent(
         new CustomEvent('qti-request-navigation', {
           detail: { type, id },
