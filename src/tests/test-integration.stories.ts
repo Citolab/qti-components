@@ -46,7 +46,7 @@ const meta: Meta = {
         </test-section-buttons-stamp>
         <div class="flex space-between">
           <div class="qti-shared-stimulus w-1/2" ${ref(placeholderRef)}></div>
-          <test-container class="w-1/2" test-url="/assets/qti-test-package/assessment.xml">
+          <test-container class="w-1/2" test-url="/assets/qti-test-package-stimulus/assessment.xml">
             <template
               ><style>
                 .qti-layout-col6:has(.qti-shared-stimulus:empty) {
@@ -69,8 +69,8 @@ export const SlowLoadingStimulus: Story = {
   beforeEach: async () => {
     ExtendedXMLHttpRequest.configureBehaviors(
       {
-        '/assets/qti-test-package/items/info_start.xml': { type: 'slow', delay: 800 },
-        '/assets/qti-test-package/items//ref/unbelievableNight.xml': { type: 'slow', delay: 800 }
+        '/assets/qti-test-package-stimulus/items/info_start.xml': { type: 'slow', delay: 800 },
+        '/assets/qti-test-package-stimulus/items//ref/unbelievableNight.xml': { type: 'slow', delay: 800 }
       },
       { type: 'passthrough' },
       false

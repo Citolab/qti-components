@@ -37,7 +37,7 @@ export const Default: Story = {
             <test-section-link section-id="{{ item.identifier }}"> {{ item.identifier }} </test-section-link>
           </template>`
         )}
-        <test-container test-url="/assets/qti-test-package/assessment.xml"></test-container>
+        <test-container test-url="/assets/qti-test-package-stimulus/assessment.xml"></test-container>
       </test-navigation>
     </qti-test>`,
   play: async ({ canvasElement }) => {
@@ -95,7 +95,7 @@ export const StimulusDeliveryPlatform: Story = {
         )}
         <div class="flex">
           <div class="qti-shared-stimulus" ${ref(placeholderRef)}></div>
-          <test-container test-url="/assets/qti-test-package/assessment.xml"></test-container>
+          <test-container test-url="/assets/qti-test-package-stimulus/assessment.xml"></test-container>
         </div>
       </test-navigation>
     </qti-test>`;

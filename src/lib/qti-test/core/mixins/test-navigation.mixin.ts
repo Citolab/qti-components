@@ -180,7 +180,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
         navItemLoading: true
       };
 
-      console.log('Navigating to item:', itemId);
+      // console.log('Navigating to item:', itemId);
 
       // Then attempt to load the item content
       try {

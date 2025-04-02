@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+	xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+	identifier="ITM-info_end" title="Info End" adaptive="false" time-dependent="false">
+
+	<qti-item-body>
+		<h1>Welkom bij einde info items</h1>
+		<p>Dit is een info-item</p>
+	</qti-item-body>
+
+</qti-assessment-item>

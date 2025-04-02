@@ -29,20 +29,28 @@
 		</qti-default-value>
 	</qti-outcome-declaration>
 
-
+	<qti-assessment-stimulus-ref
+		identifier="Stimulus1"
+		href="/ref/unbelievableNight.xml"
+		title="An Unbelievable Night"
+	></qti-assessment-stimulus-ref>
 	<qti-item-body>
 
-
-		<qti-choice-interaction response-identifier="RESPONSE" shuffle="true" max-choices="0">
-			<qti-prompt>Which of the following elements are used to form water?</qti-prompt>
-			<qti-simple-choice identifier="H" fixed="false">Hydrogen</qti-simple-choice>
-			<qti-simple-choice identifier="He" fixed="false">Helium</qti-simple-choice>
-			<qti-simple-choice identifier="C" fixed="false">Carbon</qti-simple-choice>
-			<qti-simple-choice identifier="O" fixed="false">Oxygen</qti-simple-choice>
-			<qti-simple-choice identifier="N" fixed="false">Nitrogen</qti-simple-choice>
-			<qti-simple-choice identifier="Cl" fixed="false">Chlorine</qti-simple-choice>
-		</qti-choice-interaction>
-
+		<div class="qti-layout-row">
+			<div class="qti-layout-col6">
+				<div class="qti-shared-stimulus" data-stimulus-idref="Stimulus1"></div>
+			</div>
+          <div class="qti-layout-col6">
+				<qti-choice-interaction response-identifier="RESPONSE" shuffle="true" max-choices="0">
+					<qti-prompt>Which of the following elements are used to form water?</qti-prompt>
+					<qti-simple-choice identifier="H" fixed="false">Hydrogen</qti-simple-choice>
+					<qti-simple-choice identifier="He" fixed="false">Helium</qti-simple-choice>
+					<qti-simple-choice identifier="C" fixed="false">Carbon</qti-simple-choice>
+					<qti-simple-choice identifier="O" fixed="false">Oxygen</qti-simple-choice>
+					<qti-simple-choice identifier="N" fixed="false">Nitrogen</qti-simple-choice>
+					<qti-simple-choice identifier="Cl" fixed="false">Chlorine</qti-simple-choice>
+				</qti-choice-interaction>
+			</div></div>
 	</qti-item-body>
 	<qti-response-processing
 		template="https://purl.imsglobal.org/spec/qti/v3p0/rptemplates/map_response.xml" />

@@ -3,7 +3,7 @@
 <qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
-    identifier="i677f91b17e11b20250109100657d9f7" title="Item 2" label="Select point interaction"
+    identifier="i677f91b17e11b20250109100657d9f7" title="example-select-point" label="Select point interaction"
     xml:lang="en-US" adaptive="false" time-dependent="false" tool-name="TAO"
     tool-version="2024.11 LTS">
     <qti-response-declaration identifier="RESPONSE" cardinality="multiple" base-type="point">
