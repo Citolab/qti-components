@@ -126,18 +126,9 @@ export class TestNavigation extends LitElement {
     this.computedContext = {
       testParts: testPartElements.map(testPart => {
         const sectionElements = [...testPart.querySelectorAll<QtiAssessmentSection>(`qti-assessment-section`)];
-        const itemElements = [...testPart.querySelectorAll<QtiAssessmentItemRef>(`qti-assessment-item-ref`)];
         return {
           active: false,
           identifier: testPart.identifier,
-          items: itemElements.map(item => {
-            return {
-              active: false,
-              identifier: item.identifier,
-              href: item.href,
-              variables: []
-            } as ComputedItemContext;
-          }),
           sections: sectionElements.map(section => {
             const itemElements = [...section.querySelectorAll<QtiAssessmentItemRef>(`qti-assessment-item-ref`)];
             return {

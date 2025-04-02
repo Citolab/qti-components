@@ -17,7 +17,6 @@ export type ComputedContext = {
   testParts: {
     active?: boolean;
     identifier: string;
-    items: ComputedItem[];
     sections: {
       active?: boolean;
       identifier: string;
