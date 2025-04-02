@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="cito">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -12,6 +12,43 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.jsdelivr.net/npm/theme-change@2.0.2/index.js"></script>
+
+    <style>
+      [data-theme='cito'] {
+        /* name: 'cito';
+        default: false;
+        prefersdark: false; */
+        color-scheme: 'cito';
+        --color-base-100: #ffffff;
+        --color-base-200: #f5f7fb;
+        --color-base-300: #e0e7f1;
+        --color-base-content: oklch(21% 0.034 264.665);
+        --color-primary: #e30075;
+        --color-primary-content: oklch(96% 0.015 12.422);
+        --color-secondary: #00acd5;
+        --color-secondary-content: oklch(98% 0.019 200.873);
+        --color-accent: oklch(81% 0.117 11.638);
+        --color-accent-content: oklch(27% 0.105 12.094);
+        --color-neutral: #424850;
+        --color-neutral-content: oklch(98% 0.002 247.839);
+        --color-info: #5185ec;
+        --color-info-content: oklch(97% 0.013 236.62);
+        --color-success: #0fa550;
+        --color-success-content: oklch(98% 0.014 180.72);
+        --color-warning: #fd9431;
+        --color-warning-content: oklch(98% 0.026 102.212);
+        --color-error: #d33c34;
+        --color-error-content: oklch(97% 0.014 343.198);
+        --radius-selector: 0.5rem;
+        --radius-field: 0.25rem;
+        --radius-box: 0rem;
+        --size-selector: 0.25rem;
+        --size-field: 0.3125rem;
+        --border: 1px;
+        --depth: 0;
+        --noise: 0;
+      }
+    </style>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
 
@@ -438,6 +475,7 @@
 
           <select class="select" data-choose-theme>
             <optgroup label="Light Themes">
+              <option value="cito">Cito</option>
               <option value="light">Light</option>
               <option value="cupcake">Cupcake</option>
               <option value="bumblebee">Bumblebee</option>
