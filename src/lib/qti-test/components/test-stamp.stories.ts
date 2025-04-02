@@ -26,8 +26,42 @@ export const Default: Story = {
   render: args =>
     html` <qti-test navigate="item">
       <test-navigation>
-        <strong>${template(args, html`<template>{{ item.identifier }}</template>`)}</strong>
-        <test-container test-url="/assets/api/biologie/assessment.xml"></test-container>
+        <dl style="display: grid; grid-template-columns: 1fr 1fr;">
+          <dt>Testpart</dt>
+          <dd>
+            ${template(
+              args,
+              html`
+                <template>
+                  <template type="repeat" repeat="{{ testpart.items }}">
+                    <p>{{ item.identifier }}</p>
+                  </template>
+                </template>
+              `
+            )}
+          </dd>
+
+          <dt>Section</dt>
+          <dd>
+            ${template(
+              args,
+              html`
+                <template>
+                  <template type="repeat" repeat="{{ section.items }}">
+                    <p>{{ item.identifier }}</p>
+                  </template>
+                </template>
+              `
+            )}
+          </dd>
+
+          <dt>Item</dt>
+          <dd>${template(args, html`<template>{{ item.identifier }}</template>`)}</dd>
+        </dl>
+
+        <h2></h2>
+
+        <test-container test-url="/assets/api/kennisnet-1/AssessmentTest.xml"></test-container>
         <test-next>Volgende</test-next>
       </test-navigation>
     </qti-test>`

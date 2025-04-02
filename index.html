@@ -126,7 +126,7 @@
           const response = await fetch(test + 'items.json');
           testNavigation.initContext = response.ok ? await response.json() : null;
         } catch {
-          console.error('Failed to fetch items.json ss');
+          console.error('Failed to fetch items.json');
         }
       }
     </script>

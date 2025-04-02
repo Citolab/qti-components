@@ -27,12 +27,20 @@ export class TestStamp extends LitElement {
 
   render() {
     if (!this.computedContext) return html``;
+    const activeTestPart = this.computedContext?.testParts.find(testPart => testPart.active);
+    const activeSection = this.computedContext?.testParts.flatMap(testPart =>
+      testPart.sections.find(section => section.active)
+    )[0];
     const activeItems = this.computedContext?.testParts.flatMap(testPart =>
       testPart.sections.flatMap(section => section.items).find(item => item.active)
     );
     const activeItem = activeItems && activeItems.length > 0 ? activeItems[0] : null;
     if (!activeItem) return html``;
-    return html`${this.myTemplate({ item: activeItem })}`;
+    return html`${this.myTemplate({
+      testpart: activeTestPart,
+      section: activeSection,
+      item: activeItem
+    })}`;
   }
 }
 
