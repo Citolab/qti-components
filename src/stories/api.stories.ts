@@ -10,7 +10,7 @@ const meta: Meta = {
   argTypes: {
     scoreBackend: { control: { type: 'boolean' } },
     packages: {
-      options: ['biologie', 'kennisnet-1', 'kennisnet-2'],
+      options: ['kennisnet-1', 'kennisnet-2'],
       control: { type: 'radio' }
     },
     itemIndex: { control: { type: 'number' } }
@@ -18,7 +18,7 @@ const meta: Meta = {
   args: {
     scoreBackend: false,
     serverLocation: 'http://localhost:3000/api',
-    packages: 'biologie',
+    packages: 'kennisnet-1',
     itemIndex: 0
   },
   parameters: {
@@ -109,7 +109,6 @@ export const Api: Story = {
       try {
         const fetchJson = url => fetch(url).then(res => (res.ok ? res.json() : Promise.reject('error')));
         const { items } = await fetchJson(`${args.serverLocation}/${args.packages}/items.json`);
-        console.log('items', items);
         const href = items[args.itemIndex].href;
         const itemHtmlDoc = await qtiTransformItem()
           .load(`${args.serverLocation}/${args.packages}/items/${href}${args.scoreBackend ? '?scorebackend=true' : ''}`)
