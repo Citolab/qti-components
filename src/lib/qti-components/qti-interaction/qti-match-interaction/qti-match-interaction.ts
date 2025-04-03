@@ -99,48 +99,45 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
 
   public toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean): void {
     if (show && responseVariable.correctResponse) {
-      let matches: { text: string; gap: string }[] = [];
       const response = Array.isArray(responseVariable.correctResponse)
         ? responseVariable.correctResponse
         : [responseVariable.correctResponse];
 
-      if (response) {
-        matches = response.map(x => {
-          const split = x.split(' ');
-          return { text: split[0], gap: split[1] };
-        });
-      }
+      const matches = response.map(x => {
+        const [text, gap] = x.split(' ');
+        return { text, gap };
+      });
 
-      const gaps = this.querySelectorAll('qti-simple-match-set > qti-simple-associable-choice');
-      gaps.forEach(gap => {
-        const identifier = gap.getAttribute('identifier');
-        const textIdentifier = matches.find(x => x.gap === identifier)?.text;
-        const text = this.querySelector(
-          `qti-simple-associable-choice[identifier="${textIdentifier}"]`
-        )?.textContent.trim();
-        if (textIdentifier && text) {
-          if (!gap.nextElementSibling?.classList.contains('correct-option')) {
+      // Clear old correct options first
+      this.querySelectorAll('.correct-option').forEach(el => el.remove());
+
+      this.cols.forEach(gap => {
+        const gapId = gap.getAttribute('identifier');
+        const match = matches.find(m => m.gap === gapId);
+
+        if (match?.text) {
+          const textEl = this.querySelector(`qti-simple-associable-choice[identifier="${match.text}"]`);
+          const text = textEl?.textContent?.trim();
+
+          if (text && !gap.previousElementSibling?.classList.contains('correct-option')) {
             const textSpan = document.createElement('span');
             textSpan.classList.add('correct-option');
             textSpan.textContent = text;
 
-            // Apply styles
+            // Style the span
             textSpan.style.border = '1px solid var(--qti-correct)';
             textSpan.style.borderRadius = '4px';
             textSpan.style.padding = '2px 4px';
             textSpan.style.display = 'inline-block';
 
+            // Insert before the gap
             gap.insertAdjacentElement('beforebegin', textSpan);
           }
-        } else if (gap.nextElementSibling?.classList.contains('correct-option')) {
-          gap.nextElementSibling.remove();
         }
       });
     } else {
-      const correctOptions = this.querySelectorAll('.correct-option');
-      correctOptions.forEach(option => {
-        option.remove();
-      });
+      // Remove all previously added correct responses
+      this.querySelectorAll('.correct-option').forEach(el => el.remove());
     }
   }
 

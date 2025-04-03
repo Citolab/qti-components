@@ -43,51 +43,47 @@ export class QtiOrderInteraction extends DragDropInteractionMixin(
   }
 
   public toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean): void {
+    // Always start by removing old correct answers
+    this.shadowRoot.querySelectorAll('.correct-option').forEach(option => option.remove());
+
     if (show && responseVariable.correctResponse) {
-      let matches: { text: string }[] = [];
       const response = Array.isArray(responseVariable.correctResponse)
         ? responseVariable.correctResponse
         : [responseVariable.correctResponse];
 
-      if (response) {
-        matches = response.map(x => {
-          const split = x.split(' ');
-          return { text: split[0] };
-        });
-      }
+      const correctIds = response.map(r => r.split(' ')[0]); // e.g., ['A', 'B', 'C']
+
+      const used = new Set<string>(); // to track already rendered correct-answers
 
       const gaps = this.querySelectorAll('qti-simple-choice');
+
       gaps.forEach((gap, i) => {
         const identifier = gap.getAttribute('identifier');
-        const textIdentifier = matches.find(x => x.text === identifier)?.text;
-        const text = this.querySelector(`qti-simple-choice[identifier="${textIdentifier}"]`)?.textContent.trim();
-        if (textIdentifier && text) {
-          if (!gap.nextElementSibling?.classList.contains('correct-option')) {
-            const textSpan = document.createElement('span');
-            textSpan.classList.add('correct-option');
-            textSpan.textContent = text;
+        if (!identifier || !correctIds.includes(identifier)) return;
 
-            // Apply styles
-            textSpan.style.border = '1px solid var(--qti-correct)';
-            textSpan.style.borderRadius = '4px';
-            textSpan.style.padding = '2px 4px';
-            textSpan.style.display = 'inline-block';
+        // Only render once per identifier
+        if (used.has(identifier)) return;
+        used.add(identifier);
 
-            const relativeDrop = this.shadowRoot.querySelector(`drop-list[identifier="droplist${i}"]`);
-            relativeDrop.insertAdjacentElement('afterend', textSpan);
-          }
-        } else {
-          const relativeDrop = this.shadowRoot.querySelector(`drop-list[identifier="droplist${i}"]`);
+        // Get the choice label
+        const text = gap.textContent?.trim();
+        if (!text) return;
 
-          if (relativeDrop.nextElementSibling?.classList.contains('correct-option')) {
-            gap.nextElementSibling.remove();
-          }
-        }
-      });
-    } else {
-      const correctOptions = this.shadowRoot.querySelectorAll('.correct-option');
-      correctOptions.forEach(option => {
-        option.remove();
+        const relativeDrop = this.shadowRoot.querySelector(`drop-list[identifier="droplist${i}"]`);
+        if (!relativeDrop) return;
+
+        const span = document.createElement('span');
+        span.classList.add('correct-option');
+        span.textContent = text;
+
+        // Style
+        span.style.border = '1px solid var(--qti-correct)';
+        span.style.borderRadius = '4px';
+        span.style.padding = '2px 4px';
+        span.style.display = 'inline-block';
+        span.style.marginTop = '4px';
+
+        relativeDrop.insertAdjacentElement('afterend', span);
       });
     }
   }
