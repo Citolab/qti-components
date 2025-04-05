@@ -183,6 +183,7 @@
         "css"
       ],
       "files": [
+        "src/**/*.css",
         "src/**/*.ts",
         "tsconfig.json",
         "package.json",
