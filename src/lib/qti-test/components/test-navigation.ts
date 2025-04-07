@@ -120,7 +120,6 @@ export class TestNavigation extends LitElement {
 
   /* PK: on test connected we can build the computed context */
   private _handleTestConnected(event: CustomEvent) {
-    this.initContext = null;
     this._testElement = event.detail as QtiAssessmentTest;
     const testPartElements = Array.from(this._testElement?.querySelectorAll<QtiTestPart>(`qti-test-part`) || []);
     this.computedContext = {
@@ -139,14 +138,16 @@ export class TestNavigation extends LitElement {
               active: false,
               identifier: section.identifier,
               title: section.title,
-              items: itemElements.map(item => {
-                return {
-                  active: false,
-                  identifier: item.identifier,
-                  href: item.href,
-                  variables: []
-                } as ComputedItemContext;
-              })
+              items: itemElements.map(
+                item =>
+                  ({
+                    ...this.initContext?.find(i => i.identifier === item.identifier),
+                    active: false,
+                    identifier: item.identifier,
+                    href: item.href,
+                    variables: []
+                  }) as ComputedItemContext
+              )
             };
           })
         };
@@ -210,14 +211,7 @@ export class TestNavigation extends LitElement {
 
               items: section.items.map(item => {
                 const itemContext = this._testContext?.items.find(i => i.identifier === item.identifier);
-                let computedItem;
-
-                if (this.initContext) {
-                  const initContext = this.initContext.find(i => i.identifier === item.identifier);
-                  computedItem = { ...item, ...itemContext, ...initContext };
-                } else {
-                  computedItem = { ...item, ...itemContext };
-                }
+                const computedItem = { ...item, ...itemContext };
 
                 const rawscore = computedItem.variables?.find(vr => vr.identifier == 'SCORE')?.value;
                 const score = parseInt(rawscore?.toString());

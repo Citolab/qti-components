@@ -47,20 +47,20 @@ export class TestStamp extends LitElement {
   }
 
   protected willUpdate(_changedProperties: PropertyValues): void {
-    // If no computed context is available, clear the stamp context
     if (!this.computedContext) {
       this.stampContext = null;
       return;
     }
 
-    // Find the active test part
     const activeTestPart = this.computedContext.testParts.find(testPart => testPart.active);
-    if (!activeTestPart) {
+    const activeSection = activeTestPart?.sections.find(section => section.active);
+    const activeItem = activeSection?.items.find(item => item.active);
+
+    if (!activeTestPart || !activeSection || !activeItem) {
       this.stampContext = null;
       return;
     }
 
-    // Augment the active test part by removing variables from items
     const augmentedTestPart = {
       ...activeTestPart,
       items: activeTestPart.sections.flatMap(section => section.items.map(({ variables, ...rest }) => rest)),
@@ -70,28 +70,21 @@ export class TestStamp extends LitElement {
       }))
     };
 
-    // Find and augment the active section
-    const activeSection = augmentedTestPart.sections.find(section => section.active);
-    const augmentedSection = activeSection ? { ...activeSection, items: activeSection.items } : null;
-
-    // Find the active item within the active section
-    const augmentedItem = augmentedSection?.items.find(item => item.active);
-
-    // Extract the active test data excluding test parts
+    const augmentedSection = { ...activeSection, items: activeSection.items };
     const { testParts, ...activeTest } = this.computedContext;
 
-    // Set the stamp context with the augmented data
     this.stampContext = {
-      item: augmentedItem || null,
-      section: augmentedSection || null,
+      item: activeItem,
+      section: augmentedSection,
       testpart: augmentedTestPart,
       test: activeTest
     };
   }
 
   render() {
+    if (!this.stampContext) return nothing;
     return html` ${this.debug ? html`<small><pre>${JSON.stringify(this.stampContext, null, 2)}</pre></small>` : nothing}
-    ${this.stampContext && this.myTemplate ? this.myTemplate(this.stampContext) : nothing}`;
+    ${this.myTemplate ? this.myTemplate(this.stampContext) : nothing}`;
   }
 }
 
