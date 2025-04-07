@@ -89,6 +89,7 @@
 .form {
   @apply bordered;
 
+  /* background-color: var(--qti-bg); */
   display: grid;
   place-content: center;
   width: var(--qti-form-size);
@@ -210,6 +211,7 @@
 /* Apply .check for checkbox */
 .check {
   gap: 0.5rem;
+  background-color: var(--qti-bg);
   border-radius: var(--qti-border-radius);
   padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
   outline: none;

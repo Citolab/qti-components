@@ -4,6 +4,7 @@ import { withActions } from '@storybook/addon-actions/decorator';
 import prettier from 'prettier-v2'; /* https://github.com/storybookjs/storybook/issues/8078#issuecomment-2325332120 */
 import HTMLParser from 'prettier-v2/parser-html'; /* https://github.com/storybookjs/storybook/issues/8078#issuecomment-2325332120 */
 import { expect } from '@storybook/test';
+import { withThemeByClassName } from '@storybook/addon-themes';
 
 import customElements from '../custom-elements.json';
 import { toBePositionedRelativeTo } from '../test/setup/toBePositionedRelativeTo';
@@ -58,7 +59,16 @@ expect.extend({ toBePositionedRelativeTo });
 setCustomElementsManifest(customElements);
 
 const preview: Preview = {
-  decorators: [withActions],
+  decorators: [
+    withActions,
+    withThemeByClassName({
+      themes: {
+        light: 'light-theme',
+        dark: 'dark-theme'
+      },
+      defaultTheme: 'light'
+    })
+  ],
 
   parameters: {
     docs: {

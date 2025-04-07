@@ -5,7 +5,13 @@ import type { Meta } from '@storybook/web-components';
 import type { QtiAssessmentItem } from '../../lib/qti-components';
 
 const meta: Meta<QtiAssessmentItem> = {
-  title: 'Theme'
+  title: 'Theme',
+  parameters: {
+    backgrounds: {
+      // 👇 Set default background value for all component stories
+      default: 'light'
+    }
+  }
 };
 export default meta;
 

@@ -7,6 +7,7 @@ const config: StorybookConfig = {
   addons: [
     '@storybook/addon-a11y',
     'storybook-addon-tag-badges',
+    '@storybook/addon-themes',
     {
       name: '@storybook/addon-essentials',
       options: {
