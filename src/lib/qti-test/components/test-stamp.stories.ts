@@ -5,6 +5,7 @@ import type { Meta, StoryObj } from '@storybook/web-components';
 import type { TestStamp } from './test-stamp';
 
 import './test-stamp';
+import './test-print-context';
 
 const { events, args, argTypes, template } = getStorybookHelpers('test-stamp');
 
@@ -26,40 +27,55 @@ export const Default: Story = {
   render: args =>
     html` <qti-test navigate="item">
       <test-navigation>
-        <dl style="display: grid; grid-template-columns: 1fr 1fr;">
-          <dt>Testpart</dt>
-          <dd>
-            ${template(
-              args,
-              html`
-                <template>
-                  <template type="repeat" repeat="{{ testpart.items }}">
-                    <p>{{ item.identifier }}</p>
-                  </template>
-                </template>
-              `
-            )}
-          </dd>
+        <!-- <test-print-context></test-print-context> -->
+        ${template(args, html`<template>{{ test.title }}</template>`)}
+        ${template(
+          args,
+          html`
+            <template>
+              <ul>
+                <li>{{ test.identifier }}</li>
+                <li>{{ test.title }}</li>
+              </ul>
 
-          <dt>Section</dt>
-          <dd>
-            ${template(
-              args,
-              html`
-                <template>
-                  <template type="repeat" repeat="{{ section.items }}">
-                    <p>{{ item.identifier }}</p>
-                  </template>
-                </template>
-              `
-            )}
-          </dd>
+              <ul>
+                <li>{{ testpart.items }}</li>
+                <li>{{ testpart.active }}</li>
+                <li>{{ testpart.identifier }}</li>
+                <li>{{ testpart.navigationMode }}</li>
+                <li>{{ testpart.submissionMode }}</li>
+              </ul>
 
-          <dt>Item</dt>
-          <dd>${template(args, html`<template>{{ item.identifier }}</template>`)}</dd>
-        </dl>
+              <ul>
+                <li>{{ section.title }}</li>
+                <li>{{ section.active }}</li>
+                <li>{{ section.identifier }}</li>
 
-        <h2></h2>
+                <li>{{required}}</li>
+                <li>{{fixed}}</li>
+                <li>{{visible}}</li>
+                <li>{{keepTogether}}</li>
+
+                <li>{{ section.items }}</li>
+              </ul>
+
+              <template type="repeat" repeat="{{ testpart.items }}">
+                <p>{{ item.identifier }}</p>
+              </template>
+            </template>
+          `
+        )}
+        ${template(
+          args,
+          html`
+            <template>
+              <template type="repeat" repeat="{{ section.items }}">
+                <p>{{ item.identifier }}</p>
+              </template>
+            </template>
+          `
+        )}
+        ${template(args, html`<template>{{ item.identifier }}</template>`)}
 
         <test-container test-url="/assets/api/kennisnet-1/AssessmentTest.xml"></test-container>
         <test-next>Volgende</test-next>
