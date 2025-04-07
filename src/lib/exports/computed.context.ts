@@ -14,9 +14,13 @@ export type ComputedItem = ComputedItemContext & {
 
 export type ComputedContext = {
   // testElement?: HTMLElement;
+  identifier: string;
+  title: string;
   testParts: {
     active?: boolean;
     identifier: string;
+    navigationMode: 'linear' | 'nonlinear';
+    submissionMode: 'individual' | 'simultaneous';
     sections: {
       active?: boolean;
       identifier: string;

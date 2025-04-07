@@ -7,7 +7,7 @@ export class QtiTestPart extends LitElement {
   @property({ type: String }) class: string = '';
 
   @property({ type: String, attribute: 'navigation-mode' })
-  NavigationMode: 'linear' | 'nonlinear' = 'nonlinear';
+  navigationMode: 'linear' | 'nonlinear' = 'nonlinear';
 
   @property({ type: String, attribute: 'submission-mode' })
   submissionMode: 'individual' | 'simultaneous' = 'individual';

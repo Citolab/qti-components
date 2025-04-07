@@ -124,11 +124,15 @@ export class TestNavigation extends LitElement {
     this._testElement = event.detail as QtiAssessmentTest;
     const testPartElements = Array.from(this._testElement?.querySelectorAll<QtiTestPart>(`qti-test-part`) || []);
     this.computedContext = {
+      identifier: this._testElement.identifier,
+      title: this._testElement.title,
       testParts: testPartElements.map(testPart => {
         const sectionElements = [...testPart.querySelectorAll<QtiAssessmentSection>(`qti-assessment-section`)];
         return {
           active: false,
           identifier: testPart.identifier,
+          navigationMode: testPart.navigationMode,
+          submissionMode: testPart.submissionMode,
           sections: sectionElements.map(section => {
             const itemElements = [...section.querySelectorAll<QtiAssessmentItemRef>(`qti-assessment-item-ref`)];
             return {
