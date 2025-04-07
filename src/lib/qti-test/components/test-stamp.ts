@@ -11,6 +11,10 @@ import type { TemplateFunction } from 'stampino';
 
 @customElement('test-stamp')
 export class TestStamp extends LitElement {
+  /**
+   * Indicates whether the component is in debug mode.
+   * When set to `true`, the available objects and properties (i.e.: stampContext) is displayed.
+   */
   @property({ type: Boolean, reflect: true })
   public debug = false;
 
