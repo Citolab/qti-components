@@ -33,15 +33,15 @@ export class TestNavigation extends LitElement {
   public initContext: { identifier: string; [key: string]: any }[] = [];
 
   @state()
+  public configContext: ConfigContext = {};
+
+  @state()
   @consume({ context: testContext, subscribe: true })
   protected _testContext?: TestContext;
 
   @state()
   @consume({ context: sessionContext, subscribe: true })
   protected _sessionContext?: SessionContext;
-
-  @state()
-  protected configContext: ConfigContext = {};
 
   @state()
   @provide({ context: computedContext })
