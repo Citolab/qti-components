@@ -118,7 +118,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
       }
       if (this.navigate === 'item') {
         id =
-          this.sessionContext.navItemId ??
+          this.sessionContext.navItemRefId ??
           this._testElement.querySelector<QtiAssessmentItemRef>('qti-assessment-item-ref')?.identifier;
       }
       if (id) {
@@ -176,7 +176,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
         ...this.sessionContext,
         navPartId,
         navSectionId,
-        navItemId: itemId,
+        navItemRefId: itemId,
         navItemLoading: true
       };
 
@@ -219,7 +219,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
         ...this.sessionContext,
         navPartId,
         navSectionId: sectionId,
-        navItemId: null,
+        navItemRefId: null,
         navItemLoading: true
       };
 

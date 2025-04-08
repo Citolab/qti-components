@@ -44,7 +44,7 @@ export const TestViewMixin = <T extends Constructor<TestBase>>(superClass: T) =>
         });
 
         const assessmentItemRef = this._testElement.querySelector<QtiAssessmentItemRef>(
-          `qti-assessment-item-ref[identifier="${this.sessionContext.navItemId}"]`
+          `qti-assessment-item-ref[identifier="${this.sessionContext.navItemRefId}"]`
         );
         const assessmentItem = assessmentItemRef?.assessmentItem;
 

@@ -71,7 +71,7 @@ export class TestNavigation extends LitElement {
    */
   private _handleTestEndAttempt(_event: CustomEvent) {
     const qtiItemEl = this._testElement.querySelector<QtiAssessmentItemRef>(
-      `qti-assessment-item-ref[identifier="${this._sessionContext.navItemId}"]`
+      `qti-assessment-item-ref[identifier="${this._sessionContext.navItemRefId}"]`
     );
     const qtiAssessmentItemEl = qtiItemEl.assessmentItem;
     const reportValidityAfterScoring = this.configContext?.reportValidityAfterScoring === true ? true : false;
@@ -86,7 +86,7 @@ export class TestNavigation extends LitElement {
    */
   private _handleTestShowCorrectResponse(event: CustomEvent) {
     const qtiItemEl = this._testElement.querySelector<QtiAssessmentItemRef>(
-      `qti-assessment-item-ref[identifier="${this._sessionContext.navItemId}"]`
+      `qti-assessment-item-ref[identifier="${this._sessionContext.navItemRefId}"]`
     );
     const qtiAssessmentItemEl = qtiItemEl.assessmentItem;
     qtiAssessmentItemEl.showCorrectResponse(event.detail);
@@ -125,6 +125,7 @@ export class TestNavigation extends LitElement {
     this.computedContext = {
       identifier: this._testElement.identifier,
       title: this._testElement.title,
+      view: this._sessionContext?.view,
       testParts: testPartElements.map(testPart => {
         const sectionElements = [...testPart.querySelectorAll<QtiAssessmentSection>(`qti-assessment-section`)];
         return {
@@ -218,39 +219,36 @@ export class TestNavigation extends LitElement {
                 const completionStatus = computedItem.variables?.find(v => v.identifier === 'completionStatus')?.value;
                 const categories = computedItem.category ? computedItem.category?.split(' ') : [];
 
-                const type = categories.includes(this.configContext?.infoItemCategory) ? 'info' : 'regular'; // rounded-full
-                const active = this._sessionContext?.navItemId === computedItem.identifier || false; // !border-sky-600
+                const type = categories.includes(this.configContext?.infoItemCategory) ? 'info' : 'regular';
+                const active = this._sessionContext?.navItemRefId === computedItem.identifier || false;
 
-                const correct =
-                  // this._testContext.view === 'scorer' &&
-                  (type == 'regular' && score !== undefined && !isNaN(score) && score > 0) || false; // bg-green-100 border-green-400
-                const incorrect =
-                  // this._testContext.view === 'scorer' &&
-                  (type == 'regular' && score !== undefined && !isNaN(score) && score <= 0) || false; // bg-red-100 border-red-400
-                const completed =
-                  // this._testContext.view === 'candidate' &&
-                  completionStatus === 'completed';
-                // || item.category === this.host._configContext?.infoItemCategory || false
+                const correct = (type == 'regular' && score !== undefined && !isNaN(score) && score > 0) || false;
+                const incorrect = (type == 'regular' && score !== undefined && !isNaN(score) && score <= 0) || false;
+                const completed = completionStatus === 'completed';
+
                 const response = computedItem.variables?.find(v => v.identifier === 'RESPONSE')?.value || '';
 
                 const index = categories.includes(this.configContext?.infoItemCategory) ? null : itemIndex++;
 
-                const view = this._sessionContext.view;
+                const containsCorrectResponse = !!item?.variables?.some(v => v['correctResponse']);
+                const containsMapping = !!item?.variables?.some(v => {
+                  return v['mapping']?.mapEntries?.length > 0 || v['areaMapping']?.areaMapEntries?.length > 0;
+                });
+                const hasCorrectResponse = !containsCorrectResponse && !containsMapping;
 
                 return {
                   ...computedItem,
-                  //   rawscore, // not necessary for outside world
-                  //   score, // not necessary for outside world
-                  //   completionStatus, // not necessary for outside world
-                  //   categories, // not necessary for outside world
+                  // score => correct / incorrect
+                  // completionStatus, => completed
+                  hasCorrectResponse,
+                  categories,
                   type,
                   active,
                   correct,
                   incorrect,
                   completed,
                   index,
-                  response,
-                  view
+                  response
                 };
               })
             };

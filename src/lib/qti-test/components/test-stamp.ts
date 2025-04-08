@@ -5,6 +5,7 @@ import { consume } from '@lit/context';
 
 import { computedContext } from '../../exports/computed.context';
 
+import type { View } from '../core/mixins/test-view.mixin';
 import type { PropertyValues } from 'lit';
 import type { ComputedContext } from '../../exports/computed.context';
 import type { TemplateFunction } from 'stampino';
@@ -24,6 +25,7 @@ export class TestStamp extends LitElement {
 
   @state()
   private stampContext: {
+    view?: View;
     test?: unknown;
     testpart?: unknown;
     section?: unknown;
@@ -51,10 +53,10 @@ export class TestStamp extends LitElement {
       this.stampContext = null;
       return;
     }
-
     const activeTestPart = this.computedContext.testParts.find(testPart => testPart.active);
     const activeSection = activeTestPart?.sections.find(section => section.active);
     const activeItem = activeSection?.items.find(item => item.active);
+    const { variables, ...augmentedItem } = activeItem || {};
 
     if (!activeTestPart || !activeSection || !activeItem) {
       this.stampContext = null;
@@ -70,11 +72,12 @@ export class TestStamp extends LitElement {
       }))
     };
 
-    const augmentedSection = { ...activeSection, items: activeSection.items };
+    const augmentedSection = { ...activeSection, items: activeSection.items.map(({ variables, ...rest }) => rest) };
     const { testParts, ...activeTest } = this.computedContext;
 
     this.stampContext = {
-      item: activeItem,
+      view: this.computedContext.view,
+      item: augmentedItem,
       section: augmentedSection,
       testpart: augmentedTestPart,
       test: activeTest

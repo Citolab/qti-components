@@ -1,19 +1,17 @@
 import { createContext } from '@lit/context';
 
+import type { View } from '../qti-test/core/mixins/test-view.mixin';
 import type { ComputedItemContext } from './computed-item.context';
 
 export type ComputedItem = ComputedItemContext & {
-  //   rawscore?: Readonly<string | string[]>; // not necessary for outside world
-  //   score?: number; // not necessary for outside world
-  //   completionStatus?: Readonly<string | string[]>; // not necessary for outside world
-  //   categories?: string[]; // not necessary for outside world
+  categories?: string[]; // not necessary for outside world
   type?: 'info' | 'regular';
   index?: number;
   active?: boolean;
 };
 
 export type ComputedContext = {
-  // testElement?: HTMLElement;
+  view: View;
   identifier: string;
   title: string;
   testParts: {

@@ -59,7 +59,7 @@ export const Title: Story = {
           infoItemCategory: 'info'
         }}
         .sessionContext=${{
-          navItemId: 'ITEM001'
+          navItemRefId: 'ITEM001'
         }}
       >
         <test-container test-url="/assets/api/kennisnet-1/AssessmentTest.xml"></test-container>
