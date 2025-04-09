@@ -1,94 +1,98 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd" title="Aardrijkskunde BuiteNLand3 vwo5 h01 p09" time-dependent="false" identifier="QUE_1_1">
-<qti-response-declaration identifier="RESPONSE" base-type="identifier" cardinality="single">
-<qti-correct-response>
-<qti-value>choice4</qti-value>
-</qti-correct-response>
-<qti-mapping lower-bound="0" upper-bound="1" default-value="-1">
-<qti-map-entry map-key="choice1" mapped-value="0"/>
-<qti-map-entry map-key="choice2" mapped-value="0"/>
-<qti-map-entry map-key="choice3" mapped-value="0"/>
-<qti-map-entry map-key="choice4" mapped-value="1"/>
-</qti-mapping>
-</qti-response-declaration>
-<qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single" normal-minimum="0" normal-maximum="1">
-<qti-default-value>
-<qti-value>0</qti-value>
-</qti-default-value>
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+    xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+    title="Aardrijkskunde BuiteNLand3 vwo5 h01 p09" time-dependent="false" identifier="QUE_1_1">
+    <qti-response-declaration identifier="RESPONSE" base-type="identifier" cardinality="single">
+        <qti-correct-response>
+            <qti-value>choice4</qti-value>
+        </qti-correct-response>
+        <qti-mapping lower-bound="0" upper-bound="1" default-value="-1">
+            <qti-map-entry map-key="choice1" mapped-value="0" />
+            <qti-map-entry map-key="choice2" mapped-value="0" />
+            <qti-map-entry map-key="choice3" mapped-value="0" />
+            <qti-map-entry map-key="choice4" mapped-value="1" />
+        </qti-mapping>
+    </qti-response-declaration>
+    <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single"
+        normal-minimum="0" normal-maximum="1">
+        <qti-default-value>
+            <qti-value>0</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
+        <qti-default-value>
+            <qti-value>1</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="FEEDBACK" base-type="identifier" cardinality="single">
 </qti-outcome-declaration>
-<qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
-<qti-default-value>
-<qti-value>1</qti-value>
-</qti-default-value>
-</qti-outcome-declaration>
-<qti-outcome-declaration identifier="FEEDBACK" base-type="identifier" cardinality="single">
-</qti-outcome-declaration>
-<qti-item-body>
-<div>
-<p>In welke richting is de <em>global shift</em> bezig?</p>
-</div>
-<qti-choice-interaction response-identifier="RESPONSE" shuffle="true" min-choices="0" max-choices="1">
-<qti-simple-choice identifier="choice1" fixed="false" show-hide="show">
-<div>
-<p>Richting het noorden</p>
-</div>
-</qti-simple-choice>
-<qti-simple-choice identifier="choice2" fixed="false" show-hide="show">
-<div>
-<p>Richting het oosten</p>
-</div>
-</qti-simple-choice>
-<qti-simple-choice identifier="choice3" fixed="false" show-hide="show">
-<div>
-<p>Richting het zuiden</p>
-</div>
-</qti-simple-choice>
-<qti-simple-choice identifier="choice4" fixed="false" show-hide="show">
-<div>
-<p>Richting het westen</p>
-</div>
-</qti-simple-choice>
-</qti-choice-interaction>
-</qti-item-body>
-<qti-response-processing>
-<qti-response-condition>
-<qti-response-if>
-<qti-match>
-<qti-variable identifier="RESPONSE"/>
-<qti-correct identifier="RESPONSE"/>
-</qti-match>
-<qti-set-outcome-value identifier="SCORE">
-<qti-variable identifier="MAXSCORE"/>
-</qti-set-outcome-value>
-</qti-response-if>
-</qti-response-condition>
-<qti-set-outcome-value identifier="FEEDBACK">
-<qti-variable identifier="RESPONSE"/>
-</qti-set-outcome-value>
-</qti-response-processing>
-<qti-modal-feedback identifier="choice1" outcome-identifier="FEEDBACK" show-hide="show">
-<qti-content-body>
-<p/>
-</qti-content-body>
-</qti-modal-feedback>
-<qti-modal-feedback identifier="choice2" outcome-identifier="FEEDBACK" show-hide="show">
-<qti-content-body>
-<p/>
-</qti-content-body>
-</qti-modal-feedback>
-<qti-modal-feedback identifier="choice3" outcome-identifier="FEEDBACK" show-hide="show">
-<qti-content-body>
-<p/>
-</qti-content-body>
-</qti-modal-feedback>
-<qti-modal-feedback identifier="choice4" outcome-identifier="FEEDBACK" show-hide="show">
-<qti-content-body>
-<p/>
-</qti-content-body>
-</qti-modal-feedback>
-<qti-modal-feedback identifier="choice4" outcome-identifier="FEEDBACK" show-hide="hide">
-<qti-content-body>
-Het juiste antwoord is: <p>Richting het westen</p>
-</qti-content-body>
-</qti-modal-feedback>
+    <qti-item-body>
+        <div>
+            <p>In welke richting is de <em>global shift</em> bezig?</p>
+        </div>
+        <qti-choice-interaction response-identifier="RESPONSE" shuffle="true" min-choices="0"
+            max-choices="1">
+            <qti-simple-choice identifier="choice1" fixed="false" show-hide="show">
+                <div>
+                    <p>Richting het noorden</p>
+                </div>
+            </qti-simple-choice>
+            <qti-simple-choice identifier="choice2" fixed="false" show-hide="show">
+                <div>
+                    <p>Richting het oosten</p>
+                </div>
+            </qti-simple-choice>
+            <qti-simple-choice identifier="choice3" fixed="false" show-hide="show">
+                <div>
+                    <p>Richting het zuiden</p>
+                </div>
+            </qti-simple-choice>
+            <qti-simple-choice identifier="choice4" fixed="false" show-hide="show">
+                <div>
+                    <p>Richting het westen</p>
+                </div>
+            </qti-simple-choice>
+        </qti-choice-interaction>
+    </qti-item-body>
+    <qti-response-processing>
+        <qti-response-condition>
+            <qti-response-if>
+                <qti-match>
+                    <qti-variable identifier="RESPONSE" />
+                    <qti-correct identifier="RESPONSE" />
+                </qti-match>
+                <qti-set-outcome-value identifier="SCORE">
+                    <qti-variable identifier="MAXSCORE" />
+                </qti-set-outcome-value>
+            </qti-response-if>
+        </qti-response-condition>
+        <qti-set-outcome-value identifier="FEEDBACK">
+            <qti-variable identifier="RESPONSE" />
+        </qti-set-outcome-value>
+    </qti-response-processing>
+    <qti-modal-feedback identifier="choice1" outcome-identifier="FEEDBACK" show-hide="show">
+        <qti-content-body>
+            <p />
+        </qti-content-body>
+    </qti-modal-feedback>
+    <qti-modal-feedback identifier="choice2" outcome-identifier="FEEDBACK" show-hide="show">
+        <qti-content-body>
+            <p />
+        </qti-content-body>
+    </qti-modal-feedback>
+    <qti-modal-feedback identifier="choice3" outcome-identifier="FEEDBACK" show-hide="show">
+        <qti-content-body>
+            <p />
+        </qti-content-body>
+    </qti-modal-feedback>
+    <qti-modal-feedback identifier="choice4" outcome-identifier="FEEDBACK" show-hide="show">
+        <qti-content-body>
+            <p />
+        </qti-content-body>
+    </qti-modal-feedback>
+    <qti-modal-feedback identifier="choice4" outcome-identifier="FEEDBACK" show-hide="hide">
+        <qti-content-body> Het juiste antwoord is: <p>Richting het westen</p>
+        </qti-content-body>
+    </qti-modal-feedback>
 </qti-assessment-item>

@@ -19,8 +19,6 @@ export class TestViewToggle extends LitElement {
   @consume({ context: sessionContext, subscribe: true })
   private sessionContext: SessionContext;
 
-  viewOptions = ['candidate', 'scorer', ''];
-
   connectedCallback(): void {
     super.connectedCallback();
     const templateElement = this.querySelector<HTMLTemplateElement>('template');

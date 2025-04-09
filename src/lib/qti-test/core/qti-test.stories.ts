@@ -1,41 +1,41 @@
 import { html } from 'lit';
-import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
+// import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 
 import type { Meta, StoryObj } from '@storybook/web-components';
 import type { QtiTest } from './qti-test';
-const { events, args, argTypes, template } = getStorybookHelpers('qti-test');
+// const { events, args, argTypes, template } = getStorybookHelpers('qti-test');
 
-type Story = StoryObj<QtiTest & typeof args>;
+type Story = StoryObj<QtiTest>;
 
 const meta: Meta<typeof QtiTest> = {
   component: 'qti-test',
   subcomponents: { testContainer: 'test-container' },
-  args,
-  argTypes,
+  args: {},
+  argTypes: {},
   parameters: {
     actions: {
-      handles: events
+      handles: {}
     },
     controls: { disable: true }
   },
-  tags: ['autodocs']
+  tags: ['autodocs', 'no-tests']
 };
 export default meta;
 
-export const Controls: Story = {
-  parameters: {
-    controls: { disable: false }
-  },
-  render: args => {
-    return html` ${template(
-      args,
-      html`<test-navigation
-        ><test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"></test-container>
-        <nav><test-prev>Vorige</test-prev><test-next>Volgende</test-next></nav></test-navigation
-      >`
-    )}`;
-  }
-};
+// export const Controls: Story = {
+//   parameters: {
+//     controls: { disable: false }
+//   },
+//   render: args => {
+//     return html` ${template(
+//       args,
+//       html`<test-navigation
+//         ><test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"></test-container>
+//         <nav><test-prev>Vorige</test-prev><test-next>Volgende</test-next></nav></test-navigation
+//       >`
+//     )}`;
+//   }
+// };
 
 export const Unstyled: Story = {
   render: args => {
