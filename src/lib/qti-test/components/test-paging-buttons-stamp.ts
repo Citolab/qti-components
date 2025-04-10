@@ -38,7 +38,7 @@ export class TestPagingButtonsStamp extends LitElement {
       testPart.sections.flatMap(section => section.items)
     );
 
-    return html` ${items.map(item => this.myTemplate({ item }))} `;
+    return html` ${items.map(item => this.myTemplate({ item, view: this.computedContext.view }))} `;
   }
 }
 

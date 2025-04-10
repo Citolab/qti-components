@@ -12,6 +12,9 @@ export type ComputedItemContext = {
   timeDependent?: boolean;
   title?: string;
   label?: string;
+  score?: number;
+  maxScore?: number;
+  completionStatus?: string;
   variables: ReadonlyArray<VariableDeclaration<string | string[] | null>>;
 };
 

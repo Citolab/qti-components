@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+    xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+    title="test-scoring-buttons" time-dependent="false" identifier="QUE_1_1">
+    <qti-response-declaration identifier="RESPONSE" base-type="identifier" cardinality="single" />
+    <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single"
+        normal-minimum="0" normal-maximum="1">
+        <qti-default-value>
+            <qti-value>0</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
+        <qti-default-value>
+            <qti-value>3</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+
+    <qti-item-body>
+        <p>In welke richting is de <em>global shift</em> bezig?</p>
+        <qti-extended-text-interaction response-identifier="RESPONSE" />
+    </qti-item-body>
+</qti-assessment-item>

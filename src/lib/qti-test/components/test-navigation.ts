@@ -195,6 +195,7 @@ export class TestNavigation extends LitElement {
     let itemIndex = 1;
     this.computedContext = {
       ...this.computedContext,
+      view: this._sessionContext?.view,
       testParts: this.computedContext.testParts.map(testPart => {
         return {
           ...testPart,
@@ -216,7 +217,12 @@ export class TestNavigation extends LitElement {
 
                 const rawscore = computedItem.variables?.find(vr => vr.identifier == 'SCORE')?.value;
                 const score = parseInt(rawscore?.toString());
-                const completionStatus = computedItem.variables?.find(v => v.identifier === 'completionStatus')?.value;
+
+                const rawMaxScore = computedItem.variables?.find(vr => vr.identifier == 'MAXSCORE')?.value;
+                const maxScore = parseInt(rawMaxScore?.toString());
+
+                const completionStatus = computedItem.variables?.find(v => v.identifier === 'completionStatus')
+                  ?.value as string;
                 const categories = computedItem.category ? computedItem.category?.split(' ') : [];
 
                 const type = categories.includes(this.configContext?.infoItemCategory) ? 'info' : 'regular';
@@ -238,8 +244,9 @@ export class TestNavigation extends LitElement {
 
                 return {
                   ...computedItem,
-                  // score => correct / incorrect
-                  // completionStatus, => completed
+                  completionStatus,
+                  score,
+                  maxScore,
                   hasCorrectResponse,
                   categories,
                   type,

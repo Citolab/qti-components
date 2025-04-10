@@ -1,9 +1,11 @@
 import { html, LitElement, nothing } from 'lit';
 import { consume } from '@lit/context';
 import { customElement, property } from 'lit/decorators.js';
+import { prepareTemplate } from 'stampino';
 
 import { computedContext } from '../../exports/computed.context';
 
+import type { TemplateFunction } from 'stampino';
 import type { OutcomeVariable } from '../../exports/variables';
 import type { ComputedContext } from '../../exports/computed.context';
 
@@ -11,9 +13,20 @@ import type { ComputedContext } from '../../exports/computed.context';
 export class TestScoringButtons extends LitElement {
   @property({ type: String, attribute: 'view' }) view = ''; // is only an attribute, but this is here because.. react
   @property({ type: Boolean }) disabled: boolean = false;
+  myTemplate: TemplateFunction | null = null;
 
   protected createRenderRoot(): HTMLElement | DocumentFragment {
     return this;
+  }
+
+  connectedCallback(): void {
+    super.connectedCallback();
+    const templateElement = this.querySelector<HTMLTemplateElement>('template');
+    if (!templateElement) {
+      this.myTemplate = null;
+      return;
+    }
+    this.myTemplate = prepareTemplate(templateElement);
   }
 
   @consume({ context: computedContext, subscribe: true })
@@ -50,28 +63,44 @@ export class TestScoringButtons extends LitElement {
 
     this.disabled = !(scoreOutcome?.externalScored === 'human');
 
-    return maxScore
-      ? html`
-          <form part="form">
-            ${[...Array(Number(maxScore) + 1).keys()].map(itemIndex => {
-              const identifier = `scoring-buttons${itemIndex}${activeItem.identifier}`;
-              return html` <input
-                  part="input"
-                  type="radio"
-                  ?disabled=${this.disabled}
-                  .checked=${itemIndex === Number(score)}
-                  @change=${() => this._changeOutcomeScore(itemIndex)}
-                  id=${identifier}
-                  name=${`scoring-buttons-${activeItem.identifier}`}
-                  value=${itemIndex}
-                />
+    if (!maxScore || !scoreOutcome) return nothing;
+    const scores = [...Array(Number(maxScore) + 1).keys()];
 
-                <label part="label" for=${identifier}>${itemIndex}</label>`;
-            })}
-          </form>
-          <slot></slot>
-        `
-      : nothing;
+    return html`${this.myTemplate ? this.myTemplate({ scores, score }) : nothing}`;
+  }
+
+  constructor() {
+    super();
+    this.addEventListener('click', e => {
+      const target = e.target as HTMLInputElement;
+      const value = parseInt(target.value);
+      if (target.tagName === 'INPUT') {
+        this._changeOutcomeScore(value);
+      }
+    });
+
+    // return maxScore
+    //   ? html`
+    //       <form part="form">
+    //         ${[...Array(Number(maxScore) + 1).keys()].map(itemIndex => {
+    //           const identifier = `scoring-buttons${itemIndex}${activeItem.identifier}`;
+    //           return html` <input
+    //               part="input"
+    //               type="radio"
+    //               ?disabled=${this.disabled}
+    //               .checked=${itemIndex === Number(score)}
+    //               @change=${() => this._changeOutcomeScore(itemIndex)}
+    //               id=${identifier}
+    //               name=${`scoring-buttons-${activeItem.identifier}`}
+    //               value=${itemIndex}
+    //             />
+
+    //             <label part="label" for=${identifier}>${itemIndex}</label>`;
+    //         })}
+    //       </form>
+    //       <slot></slot>
+    //     `
+    //   : nothing;
   }
 }
 
