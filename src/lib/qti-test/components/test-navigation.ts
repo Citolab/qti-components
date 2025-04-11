@@ -109,7 +109,8 @@ export class TestNavigation extends LitElement {
         scoreOutcomeIdentifier.externalScored === null &&
         assessmentItem.adaptive === 'false'
       ) {
-        assessmentItem.processResponse();
+        const reportValidityAfterScoring = this.configContext?.reportValidityAfterScoring === true ? true : false;
+        assessmentItem.processResponse(true, reportValidityAfterScoring);
       }
     }
   }
