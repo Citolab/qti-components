@@ -1,8 +1,13 @@
 import { html } from 'lit';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
+import { expect } from '@storybook/test';
 
 import type { QtiPortableCustomInteraction } from './qti-portable-custom-interaction';
 import type { StoryObj, Meta } from '@storybook/web-components';
+import type { QtiPortableCustomInteractionTest } from './qti-portable-custom-test-interaction';
+import type { VariableDeclaration } from '../../../exports/variables';
+
+import './qti-portable-custom-test-interaction';
 
 const { events, args, argTypes, template } = getStorybookHelpers('qti-portable-custom-interaction');
 
@@ -24,13 +29,13 @@ const meta: Meta<QtiPortableCustomInteraction> = {
       handles: events
     }
   },
-  tags: ['skip-test']
+  tags: []
 };
 export default meta;
 
 export const Default: Story = {
   render: () =>
-    html`<qti-portable-custom-interaction
+    html` <qti-portable-custom-interaction-test
       response-identifier="RESPONSE"
       module="pci-getallen"
       custom-interaction-type-identifier="getallenFormule"
@@ -38,19 +43,45 @@ export const Default: Story = {
       data-sum1="$1 * 12 + 3"
       data-sum2="$1 * 4 + 53"
       data-table-size="4"
-      data-base-url="/assets/qti-portable-custom-interaction/"
+      data-base-url="/assets/qti-portable-interaction/baking_soda"
     >
       <qti-interaction-modules>
         <qti-interaction-module id="pci-getallen" primary-path="pci-getallen.js"></qti-interaction-module>
       </qti-interaction-modules>
       <qti-interaction-markup></qti-interaction-markup>
-    </qti-portable-custom-interaction>`,
+    </qti-portable-custom-interaction-test>`,
+  play: async ({ canvasElement, step }) => {
+    const pciElement = canvasElement.querySelector('qti-portable-custom-interaction-test');
+    await new Promise(resolve => {
+      pciElement?.addEventListener('qti-portable-custom-interaction-loaded', () => {
+        resolve(true);
+      });
+    });
+    await step('set first value', async () => {
+      let content = await pciElement.getIFrameContent();
+      await new Promise(resolve => setTimeout(resolve, 500));
+      expect(
+        content.includes(
+          `<div class="font-bold flex items-center justify-center bg-white border-1 text-right h-16 w-16">4</div>`
+        )
+      ).toBeFalsy();
+      await pciElement.iFrameSetValueElement('input', '4');
+      await pciElement.iFrameClickOnElementByText('Berekenen');
+      await new Promise(resolve => setTimeout(resolve, 500));
+      content = await pciElement.getIFrameContent();
+      expect(
+        content.includes(
+          `<div class="font-bold flex items-center justify-center bg-white border-1 text-right h-16 w-16">4</div>`
+        )
+      ).toBeTruthy();
+    });
+  },
   parameters: {
     chromatic: { disableSnapshot: true }
   }
 };
 
-export const FallbackPath: Story = {
+export const FallbackPath = {
   render: () =>
     html`<div>
       Mary is saving to buy a birthday present for her mother. Every week she counts the money she has saved into piles
@@ -58,7 +89,7 @@ export const FallbackPath: Story = {
       <p></p>
       She represented this in the following shaded chart with a shaded square for every $5 saved and a target of $30.
       <p></p>
-      <qti-portable-custom-interaction
+      <qti-portable-custom-interaction-test
         custom-interaction-type-identifier="urn:fdc:hmhco.com:pci:shading"
         data-active="0"
         module="shading"
@@ -72,7 +103,7 @@ export const FallbackPath: Story = {
         data-unselected_color="white"
         data-value="numShaded"
         response-identifier="EXAMPLE"
-        data-base-url="/assets/qti-portable-custom-interaction/"
+        data-base-url="/assets/qti-portable-interaction/baking_soda"
       >
         <qti-interaction-modules>
           <qti-interaction-module
@@ -86,7 +117,7 @@ export const FallbackPath: Story = {
           ></qti-interaction-module>
         </qti-interaction-modules>
         <qti-interaction-markup> </qti-interaction-markup>
-      </qti-portable-custom-interaction>
+      </qti-portable-custom-interaction-test>
       <p>
         By the second week she has already saved the exact amount she planned on spending on the present ($30) and is
         trying to work out if she will be able to afford a more expensive present costing $45.
@@ -95,7 +126,7 @@ export const FallbackPath: Story = {
         To help her do this use the buttons below to create a chart representing $45 assuming that each square
         represents $5 and then click to shade the fraction of the chart representing the amount saved in two weeks.
       </p>
-      <qti-portable-custom-interaction
+      <qti-portable-custom-interaction-test
         custom-interaction-type-identifier="urn:fdc:hmhco.com:pci:shading1"
         data-controls="full"
         data-dimension1_initial="2"
@@ -107,7 +138,7 @@ export const FallbackPath: Story = {
         data-value="numShaded"
         module="shading"
         response-identifier="RESPONSE"
-        data-base-url="/assets/qti-portable-custom-interaction/"
+        data-base-url="/assets/qti-portable-interaction/baking_soda"
       >
         <qti-interaction-modules>
           <qti-interaction-module
@@ -121,57 +152,58 @@ export const FallbackPath: Story = {
           ></qti-interaction-module>
         </qti-interaction-modules>
         <qti-interaction-markup> </qti-interaction-markup>
-      </qti-portable-custom-interaction>
+      </qti-portable-custom-interaction-test>
     </div>`,
+  play: async ({ canvasElement, step }) => {
+    const pciElements = canvasElement.querySelectorAll('qti-portable-custom-interaction-test');
+    const secondPciElement = pciElements[1];
+    await new Promise(resolve => {
+      secondPciElement?.addEventListener('qti-portable-custom-interaction-loaded', () => {
+        resolve(true);
+      });
+    });
+    await step('check response without interaction', async () => {
+      await new Promise(resolve => setTimeout(resolve, 500));
+      const response = secondPciElement.response;
+      // expect(response).toEqual('0');
+    });
+    await step('click two rects and check the response', async () => {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      await secondPciElement.iFrameClickOnElementByText('More');
+      await new Promise(resolve => setTimeout(resolve, 200));
+      await secondPciElement.iFrameClickOnElementByText('More');
+      await new Promise(resolve => setTimeout(resolve, 200));
+      await secondPciElement.iFrameClickOnElement('rect:nth-of-type(1)');
+      await new Promise(resolve => setTimeout(resolve, 200));
+      await secondPciElement.iFrameClickOnElement('rect:nth-of-type(3)');
+      await new Promise(resolve => setTimeout(resolve, 200));
+      await secondPciElement.iFrameClickOnElement('rect:nth-of-type(5)');
+      await new Promise(resolve => setTimeout(resolve, 500));
+      const response = secondPciElement.response;
+
+      expect(response).toEqual('3');
+      await secondPciElement.iFrameClickOnElement('rect:nth-of-type(3)');
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      const response2 = secondPciElement.response;
+      expect(response2).toEqual('2');
+    });
+  },
   parameters: {
     chromatic: { disableSnapshot: true }
   }
 };
 
-export const GraphAmpIO: Story = {
+export const TapToReveal = {
   render: () =>
-    html`<qti-portable-custom-interaction
-      custom-interaction-type-identifier="GraphAmpIO"
-      data-height="360"
-      data-prompt="Use the drawing tool(s) to form the correct answer on the provided graph."
-      data-show-axes="true"
-      data-width="360"
-      data-x="-10,10"
-      data-x-step="1"
-      data-y="-10,10"
-      data-y-step="1"
-      module="graphInteraction"
-      response-identifier="RESPONSE"
-      data-base-url="/assets/qti-portable-custom-interaction/"
-    >
-      <qti-interaction-markup>
-        <div class="qti-padding-2">
-          <div class="graphInteraction">
-            <div class="graph-interaction">
-              <div class="graph-interaction__prompt"></div>
-              <div class="graph-interaction__canvas"></div>
-            </div>
-          </div>
-        </div>
-      </qti-interaction-markup>
-      <qti-interaction-modules>
-        <qti-interaction-module id="graphInteraction" primary-path="modules/graphInteraction"></qti-interaction-module>
-        <qti-interaction-module id="tap" primary-path="tap"> </qti-interaction-module>
-        <qti-interaction-module id="d3" primary-path="modules/d3.v5.min"> </qti-interaction-module>
-      </qti-interaction-modules>
-    </qti-portable-custom-interaction>`
-};
-
-export const TapToReveal: Story = {
-  render: () =>
-    html`<qti-portable-custom-interaction
+    html`<qti-portable-custom-interaction-test
       class="hmh-tap-border-rounded"
       custom-interaction-type-identifier="tapToReveal"
       data-tap-message="Tap to reveal the color of the solution"
       data-toggle="true"
       module="tap"
       response-identifier="RESPONSE"
-      data-base-url="/assets/qti-portable-custom-interaction/"
+      data-base-url="/assets/qti-portable-interaction/baking_soda"
     >
       <qti-prompt>
         <p>Add 30ml of red cabbage solution to 100ml of each of the solutions below.</p>
@@ -189,14 +221,18 @@ export const TapToReveal: Story = {
                 <img
                   alt="Baking soda solution turns bright blue."
                   class="tap"
-                  src="assets/qti-portable-custom-interaction/baking_soda.svg"
+                  src="assets/qti-portable-interaction/baking_soda/baking_soda.svg"
                 />
               </figure>
               <figure role="gridcell">
                 <figcaption>
                   <h5>Vinegar</h5>
                 </figcaption>
-                <img alt="Vinegar turns pink." class="tap" src="assets/qti-portable-custom-interaction/vinegar.svg" />
+                <img
+                  alt="Vinegar turns pink."
+                  class="tap"
+                  src="assets/qti-portable-interaction/baking_soda/vinegar.svg"
+                />
               </figure>
               <figure role="gridcell">
                 <figcaption>
@@ -205,7 +241,7 @@ export const TapToReveal: Story = {
                 <img
                   alt="Ammonia turns light green."
                   class="tap"
-                  src="assets/qti-portable-custom-interaction/ammonia.svg"
+                  src="assets/qti-portable-interaction/baking_soda/ammonia.svg"
                 />
               </figure>
             </div>
@@ -215,28 +251,89 @@ export const TapToReveal: Story = {
       <qti-interaction-modules>
         <qti-interaction-module id="tap" primary-path="tap"> </qti-interaction-module>
       </qti-interaction-modules>
-    </qti-portable-custom-interaction>`,
+    </qti-portable-custom-interaction-test>`,
+  play: async ({ canvasElement, step }) => {
+    const pciElement = canvasElement.querySelector('qti-portable-custom-interaction-test');
+    await new Promise(resolve => {
+      pciElement?.addEventListener('qti-portable-custom-interaction-loaded', () => {
+        resolve(true);
+      });
+    });
+    await step('check response without interaction', async () => {
+      await new Promise(resolve => setTimeout(resolve, 500));
+      const response = pciElement.response;
+      expect(response).toEqual('0');
+    });
+    await step('click on the second option and check the response', async () => {
+      await new Promise(resolve => setTimeout(resolve, 500));
+      await pciElement.iFrameClickOnElement('.hmh-tap-image');
+      await new Promise(resolve => setTimeout(resolve, 500));
+      const response = pciElement.response;
+      expect(response).toEqual('1');
+    });
+  },
   parameters: {
     chromatic: { disableSnapshot: true }
   }
 };
 
-export const ConvertedTAO: Story = {
+export const ConvertedTAO = {
   render: () =>
-    html` <qti-portable-custom-interaction
-      hook="decisiontask/runtime/decisiontask.amd.js"
-      version="0.0.10"
-      data-stimulusindex="3"
-      data-stimulus="7 + 6 = 13"
-      data-response="1"
-      data-uploaded-fname="stimuli_IIL_item.csv"
-      data-feedback="true"
-      data-tlimit="0"
-      data-level="2"
-      data-buttonlabel0="True"
-      data-buttonlabel1="False"
-      module="decisiontask"
-      response-identifier="RESPONSE"
+    html`<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd" identifier="i605b50d60c465892a88c0651ffd390" title="decisiontask" label="decisiontask" xml:lang="en-US" adaptive="false" time-dependent="false" tool-name="TAO" tool-version="3.4.0-sprint134">
+  <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="string"></qti-response-declaration>
+  <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float"></qti-outcome-declaration>
+  <qti-stylesheet  href="/assets/qti-portable-interaction/i605b50d60c465892a88c0651ffd390/decisiontask/runtime/css/base.css" type="text/css" title="base"></qti-stylesheet>
+              <qti-stylesheet  href="/assets/qti-portable-interaction/i605b50d60c465892a88c0651ffd390/decisiontask/runtime/css/decisiontask.css" type="text/css" title="decisiontask"></qti-stylesheet>
+  <qti-item-body>
+    <div class="grid-row">
+      <div class="col-12"></div>
+    </div>
+    <div class="grid-row">
+      <div class="col-12"></div>
+    </div>
+    <div class="grid-row">
+      <div class="col-12">
+        <qti-portable-custom-interaction-test
+    custom-interaction-type-identifier="decisiontask" 
+    module="decisiontask" 
+              data-version="1.0.1"
+              data-data__0__stimulusindex="1"
+              data-data__0__stimulus="5 + 7 = 12"
+              data-data__0__response="1"
+              data-data__1__stimulusindex="2"
+              data-data__1__stimulus="4 + 4 = 9"
+              data-data__1__response="2"
+              data-data__2__stimulusindex="3"
+              data-data__2__stimulus="7 + 6 = 13"
+              data-data__2__response="1"
+              data-uploaded-fname="stimuli_IIL_item.csv"
+              data-feedback="true"
+              data-shufflestimuli=""
+              data-respkey=""
+              data-tlimit="0"
+              data-level="2"
+              data-buttonlabel0="True"
+              data-buttonlabel1="False"
+              data-buttonlabel2=""
+              data-buttonlabel3=""
+              data-buttonlabel4=""
+              data-buttonlabel5=""
+              data-buttonlabel6=""
+              data-buttonlabel7=""
+              data-0__stimulusindex="1"
+              data-0__stimulus="5 + 7 = 12"
+              data-0__response="1"
+              data-1__stimulusindex="2"
+              data-1__stimulus="4 + 4 = 9"
+              data-1__response="2"
+              data-2__stimulusindex="3"
+              data-2__stimulus="7 + 6 = 13"
+              data-2__response="1"
+              data-stimulusindex="3"
+              data-stimulus="7 + 6 = 13"
+              data-response="1"
+              response-identifier="RESPONSE"
+      data-base-url="/assets/qti-portable-interaction/i605b50d60c465892a88c0651ffd390/"
     >
      <qti-interaction-modules>
          <qti-interaction-module
@@ -257,7 +354,206 @@ export const ConvertedTAO: Story = {
           <div class="globalWrapper"></div>
         </div>
       </qti-interaction-markup>
-    </qti-portable-custom-interaction>`,
+    </qti-portable-custom-interaction-test>
+    </div>
+    </div>
+  </qti-item-body>
+</qti-assessment-item>
+    `,
+  play: async ({ canvasElement, step }) => {
+    let pciElement = canvasElement.querySelector('qti-portable-custom-interaction-test');
+    await step('check response without interaction', async () => {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      pciElement = canvasElement.querySelector('qti-portable-custom-interaction-test');
+      const response = pciElement.response;
+      expect(response).toEqual('');
+    });
+    await step('click on the second option and check the response', async () => {
+      await new Promise(resolve => setTimeout(resolve, 500));
+      await pciElement.iFrameClickOnElementByText('Cliquer ici pour commencer');
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      const content = await pciElement.getIFrameContent();
+      expect(content).toContain('5 + 7 = 12');
+      await pciElement.iFrameClickOnElementByText('True');
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      const response = pciElement.response;
+      const expectedResponse = [{ stimulusindex: '1', stimulus: '5 + 7 = 12', time: 1018, correct: 1 }];
+      const parsedResponse = JSON.parse(response);
+      expect(parsedResponse[0].stimulusindex).toEqual(expectedResponse[0].stimulusindex);
+      expect(parsedResponse[0].stimulus).toEqual(expectedResponse[0].stimulus);
+      expect(parsedResponse[0].correct).toEqual(expectedResponse[0].correct);
+    });
+  },
+  parameters: {
+    chromatic: { disableSnapshot: true }
+  }
+};
+
+export const TaoNew = {
+  render: () =>
+    html`<qti-assessment-item
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+      xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+      identifier="i674ee5ef802e720241203120519e9a7"
+      title="Item 9"
+      label="likert_PCI"
+      xml:lang="en-US"
+      adaptive="false"
+      time-dependent="false"
+      tool-name="TAO"
+      tool-version="2024.11 LTS"
+    >
+      <qti-response-declaration
+        identifier="RESPONSE"
+        cardinality="single"
+        base-type="integer"
+      ></qti-response-declaration>
+      <qti-item-body>
+        <div class="grid-row">
+          <div class="col-12">
+            <qti-portable-custom-interaction-test
+              custom-interaction-type-identifier="likertScoreInteraction"
+              data-version="1.0.0"
+              data-level="5"
+              data-label-min="min"
+              data-label-max="max"
+              data-icons=""
+              data-numbers=""
+              module="likertScoreInteraction"
+              response-identifier="RESPONSE"
+              data-base-url="/assets/qti-portable-interaction/likert_pci_1733224036/"
+            >
+              <qti-interaction-modules>
+                <qti-interaction-module
+                  id="likertScoreInteraction"
+                  primary-path="/runtime/js/likertScoreInteraction.min.js"
+                ></qti-interaction-module>
+              </qti-interaction-modules>
+              <qti-interaction-markup>
+                <div class="likertScoreInteraction">
+                  <div class="prompt"></div>
+                  <div class="scale">
+                    <ul class="likert"></ul>
+                  </div>
+                </div>
+              </qti-interaction-markup>
+            </qti-portable-custom-interaction-test>
+          </div>
+        </div>
+      </qti-item-body>
+    </qti-assessment-item> `,
+  play: async ({ canvasElement, step }) => {
+    let pciElement = canvasElement.querySelector('qti-portable-custom-interaction-test');
+    await step('check response without interaction', async () => {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      pciElement = canvasElement.querySelector('qti-portable-custom-interaction-test');
+      const response = pciElement.response;
+      expect(response).toEqual('0');
+    });
+    await step('click on the second option and check the response', async () => {
+      await new Promise(resolve => setTimeout(resolve, 500));
+      await pciElement.iFrameClickOnElement('input[type="radio"]');
+      await new Promise(resolve => setTimeout(resolve, 500));
+      const response = pciElement.response;
+      expect(response).toEqual('1');
+    });
+  },
+  parameters: {
+    chromatic: { disableSnapshot: true }
+  }
+};
+
+export const VerhoudingenRestoreResponse = {
+  render: () =>
+    html`<qti-assessment-item
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+      xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+      identifier="i67a0dfca446508820f6286cf78feea"
+      title="verhoudingen"
+      label="verhoudingen"
+      xml:lang="en-US"
+      adaptive="false"
+      time-dependent="false"
+      tool-name="TAO"
+      tool-version="3.4.0-sprint121"
+    >
+      <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="string">
+        <qti-correct-response>
+          <qti-value>[{&quot;color&quot;:&quot;red&quot;,&quot;percentage&quot;:50}]</qti-value>
+        </qti-correct-response>
+      </qti-response-declaration>
+      <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float"></qti-outcome-declaration>
+      <qti-item-body>
+        <div class="grid-row">
+          <div class="col-12">
+            <qti-portable-custom-interaction-test
+              custom-interaction-type-identifier="colorProportions"
+              data-version="1.0.1"
+              data-colors="red, blue, green"
+              data-width="400"
+              data-height="400"
+              data-base-url="/assets/qti-portable-interaction/verhoudingen/"
+              module="colorProportions"
+              response-identifier="RESPONSE"
+            >
+              <qti-interaction-modules>
+                <qti-interaction-module
+                  id="colorProportions"
+                  primary-path="/interaction/runtime/js/index.js"
+                ></qti-interaction-module>
+              </qti-interaction-modules>
+              <qti-interaction-markup>
+                <div class="pciInteraction">
+                  <div class="prompt"></div>
+                  <ul class="pci"></ul>
+                </div>
+              </qti-interaction-markup>
+            </qti-portable-custom-interaction-test>
+          </div>
+        </div>
+      </qti-item-body>
+    </qti-assessment-item>`,
+  play: async ({ canvasElement, step }) => {
+    const storedResponse = [
+      { color: 'blue', percentage: 12.5 },
+      { color: 'green', percentage: 37.5 },
+      { color: 'red', percentage: 50 }
+    ];
+    let pciElement = canvasElement.querySelector(
+      'qti-portable-custom-interaction-test'
+    ) as QtiPortableCustomInteractionTest;
+
+    const variable = {
+      identifier: 'RESPONSE',
+      value: JSON.stringify(storedResponse),
+      type: 'response',
+      cardinality: 'single',
+      baseType: 'string'
+    } as VariableDeclaration<string | string>;
+    await new Promise(resolve => setTimeout(resolve, 500));
+    const content = await pciElement.getIFrameContent();
+    expect(content).not.toContain('fill="red"');
+    expect(content).not.toContain('fill="green"');
+
+    pciElement.setTestContext({
+      identifier: 'pci',
+      variables: [variable]
+    });
+
+    await step('check the restored response', async () => {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      pciElement = canvasElement.querySelector(
+        'qti-portable-custom-interaction-test'
+      ) as QtiPortableCustomInteractionTest;
+      const content = await pciElement.getIFrameContent();
+      expect(content).toContain('fill="red"');
+      expect(content).toContain('fill="green"');
+    });
+  },
   parameters: {
     chromatic: { disableSnapshot: true }
   }

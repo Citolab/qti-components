@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<manifest xmlns="http://www.imsglobal.org/xsd/imscp_v1p1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/imscp_v1p1 http://www.imsglobal.org/xsd/qti/qtiv2p2/qtiv2p2_imscpv1p2_v1p0.xsd http://ltsc.ieee.org/xsd/LOM http://www.imsglobal.org/xsd/imsmd_loose_v1p3p2.xsd" identifier="MANIFEST-tao674ee664ec34d0-58514053" xmlns:imsmd="http://ltsc.ieee.org/xsd/LOM">
+    <metadata>
+        <schema>QTIv2.2 Package</schema>
+        <schemaversion>1.0.0</schemaversion>
+    <imsmd:lom><imsmd:metaMetadata><extension><customProperties><property><uri>http://www.tao.lu/Ontologies/TAOItem.rdf#ItemContent</uri><label>Item Content</label><domain>http://www.tao.lu/Ontologies/TAOItem.rdf#Item</domain><checksum>da39a3ee5e6b4b0d3255bfef95601890afd80709</checksum></property><property><uri>http://www.tao.lu/Ontologies/TAOItem.rdf#ItemModel</uri><label>Item Model</label><domain>http://www.tao.lu/Ontologies/TAOItem.rdf#Item</domain><widget>http://www.tao.lu/datatypes/WidgetDefinitions.rdf#RadioBox</widget><checksum>99336650bf0c454a35ac0dafa585708284ad57b1</checksum></property><property><uri>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</uri><label>type</label><domain>http://www.w3.org/2000/01/rdf-schema#Resource</domain><multiple>http://www.tao.lu/Ontologies/generis.rdf#True</multiple><widget>http://www.tao.lu/datatypes/WidgetDefinitions.rdf#TreeView</widget></property><property><uri>http://www.w3.org/2000/01/rdf-schema#label</uri><label>Label</label><domain>http://www.w3.org/2000/01/rdf-schema#Resource</domain><widget>http://www.tao.lu/datatypes/WidgetDefinitions.rdf#TextBox</widget></property></customProperties></extension></imsmd:metaMetadata></imsmd:lom></metadata>
+    <organizations/>
+    <resources>
+                <resource identifier="i674ee5ef802e720241203120519e9a798a4" type="imsqti_item_xmlv2p2" href="i674ee5ef802e720241203120519e9a798a4/qti.xml">
+            <metadata><imsmd:lom><imsmd:classification><imsmd:taxonPath><imsmd:source><imsmd:string xml:lang="en-US">http://www.w3.org/2000/01/rdf-schema#label</imsmd:string></imsmd:source><imsmd:taxon><imsmd:entry><imsmd:string xml:lang="en-US">likert_PCI</imsmd:string></imsmd:entry></imsmd:taxon></imsmd:taxonPath></imsmd:classification></imsmd:lom></metadata><file href="i674ee5ef802e720241203120519e9a798a4/qti.xml"/>
+                        <file href="runtime/js/likertScoreInteraction.min.js"/>
+                    </resource>
+            </resources>
+</manifest>
