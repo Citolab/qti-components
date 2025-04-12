@@ -27,9 +27,9 @@ export class TestStamp extends LitElement {
   private stampContext: {
     view?: View;
     test?: unknown;
-    testpart?: unknown;
-    section?: unknown;
-    item?: unknown;
+    activeTestpart?: unknown;
+    activeSection?: unknown;
+    activeItem?: unknown;
   } | null = null;
 
   myTemplate: TemplateFunction;
@@ -77,9 +77,9 @@ export class TestStamp extends LitElement {
 
     this.stampContext = {
       view: this.computedContext.view,
-      item: augmentedItem,
-      section: augmentedSection,
-      testpart: augmentedTestPart,
+      activeItem: augmentedItem,
+      activeSection: augmentedSection,
+      activeTestpart: augmentedTestPart,
       test: activeTest
     };
   }
