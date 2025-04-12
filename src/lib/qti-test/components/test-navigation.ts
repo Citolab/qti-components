@@ -6,7 +6,6 @@ import { testContext } from '../../exports/test.context';
 import { sessionContext } from '../../exports/session.context';
 import { computedContext } from '../../exports/computed.context';
 
-import type { ComputedItemContext } from '../../exports/computed-item.context';
 import type { QtiAssessmentItem } from '../../qti-components';
 import type { OutcomeVariable } from '../../exports/variables';
 import type { ComputedContext } from '../../exports/computed.context';
@@ -139,16 +138,14 @@ export class TestNavigation extends LitElement {
               active: false,
               identifier: section.identifier,
               title: section.title,
-              items: itemElements.map(
-                item =>
-                  ({
-                    ...this.initContext?.find(i => i.identifier === item.identifier),
-                    active: false,
-                    identifier: item.identifier,
-                    href: item.href,
-                    variables: []
-                  }) as ComputedItemContext
-              )
+              items: itemElements.map(item => ({
+                ...this.initContext?.find(i => i.identifier === item.identifier),
+                active: false,
+                identifier: item.identifier,
+                categories: item.category ? item.category?.split(' ') : [],
+                href: item.href,
+                variables: []
+              }))
             };
           })
         };
@@ -159,6 +156,8 @@ export class TestNavigation extends LitElement {
   /* PK: on item connected we can add item only properties in the xml */
   private _handleItemConnected(event: CustomEvent) {
     const itemElement = event.detail as QtiAssessmentItem;
+
+    let itemIndex = 1;
     this.computedContext = {
       ...this.computedContext,
       testParts: this.computedContext.testParts.map(testPart => {
@@ -171,14 +170,32 @@ export class TestNavigation extends LitElement {
                 if (item.identifier !== itemElement.parentElement.getAttribute('identifier')) {
                   return item;
                 }
+                const rawMaxScore = item.variables?.find(vr => vr.identifier == 'MAXSCORE')?.value;
+                const maxScore = parseInt(rawMaxScore?.toString());
+
+                const scoreOutcome = item.variables.find(vr => vr.identifier == 'SCORE') as OutcomeVariable;
+                const externalScored = scoreOutcome?.externalScored;
+
+                const containsCorrectResponse = !!item?.variables?.some(v => v['correctResponse']);
+                const containsMapping = !!item?.variables?.some(v => {
+                  return v['mapping']?.mapEntries?.length > 0 || v['areaMapping']?.areaMapEntries?.length > 0;
+                });
+                const hasCorrectResponse = !containsCorrectResponse && !containsMapping;
+
+                const index = item.categories.includes(this.configContext?.infoItemCategory) ? null : itemIndex++;
+
                 return {
                   ...item,
                   assessmentItemIdentifier: itemElement.getAttribute('identifier'),
                   label: itemElement.getAttribute('label'),
                   title: itemElement.title,
+                  maxScore,
+                  externalScored,
                   adaptive: itemElement.adaptive == 'true' || false,
                   timeDependent: itemElement.timeDependent == 'true' || false,
-                  variables: (itemElement as any)._context.variables
+                  variables: itemElement.variables,
+                  hasCorrectResponse,
+                  index
                 };
               })
             };
@@ -192,7 +209,6 @@ export class TestNavigation extends LitElement {
   protected willUpdate(_changedProperties: PropertyValues): void {
     if (!this.computedContext) return;
 
-    let itemIndex = 1;
     this.computedContext = {
       ...this.computedContext,
       view: this._sessionContext?.view,
@@ -218,44 +234,30 @@ export class TestNavigation extends LitElement {
                 const rawscore = computedItem.variables?.find(vr => vr.identifier == 'SCORE')?.value;
                 const score = parseInt(rawscore?.toString());
 
-                const rawMaxScore = computedItem.variables?.find(vr => vr.identifier == 'MAXSCORE')?.value;
-                const maxScore = parseInt(rawMaxScore?.toString());
-
                 const completionStatus = computedItem.variables?.find(v => v.identifier === 'completionStatus')
                   ?.value as string;
-                const categories = computedItem.category ? computedItem.category?.split(' ') : [];
 
-                const type = categories.includes(this.configContext?.infoItemCategory) ? 'info' : 'regular';
+                const response = computedItem.variables?.find(v => v.identifier === 'RESPONSE')?.value || '';
+                const numAttempts = computedItem.variables?.find(v => v.identifier === 'NUMATTEMPTS')?.value || 0;
+
+                const type = item.categories.includes(this.configContext?.infoItemCategory) ? 'info' : 'regular';
                 const active = this._sessionContext?.navItemRefId === computedItem.identifier || false;
-
                 const correct = (type == 'regular' && score !== undefined && !isNaN(score) && score > 0) || false;
                 const incorrect = (type == 'regular' && score !== undefined && !isNaN(score) && score <= 0) || false;
                 const completed = completionStatus === 'completed';
 
-                const response = computedItem.variables?.find(v => v.identifier === 'RESPONSE')?.value || '';
-
-                const index = categories.includes(this.configContext?.infoItemCategory) ? null : itemIndex++;
-
-                const containsCorrectResponse = !!item?.variables?.some(v => v['correctResponse']);
-                const containsMapping = !!item?.variables?.some(v => {
-                  return v['mapping']?.mapEntries?.length > 0 || v['areaMapping']?.areaMapEntries?.length > 0;
-                });
-                const hasCorrectResponse = !containsCorrectResponse && !containsMapping;
-
                 return {
                   ...computedItem,
                   completionStatus,
+                  numAttempts,
                   score,
-                  maxScore,
-                  hasCorrectResponse,
-                  categories,
+                  response,
+
                   type,
                   active,
                   correct,
                   incorrect,
-                  completed,
-                  index,
-                  response
+                  completed
                 };
               })
             };
@@ -263,5 +265,12 @@ export class TestNavigation extends LitElement {
         };
       })
     };
+
+    this.dispatchEvent(
+      new CustomEvent('test-computed-context-changed', {
+        detail: this.computedContext,
+        bubbles: true
+      })
+    );
   }
 }
