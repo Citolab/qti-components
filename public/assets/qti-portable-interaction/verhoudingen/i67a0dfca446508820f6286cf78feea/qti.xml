@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+  identifier="i67a0dfca446508820f6286cf78feea" title="verhoudingen" label="verhoudingen"
+  xml:lang="en-US" adaptive="false" time-dependent="false" tool-name="TAO"
+  tool-version="3.4.0-sprint121">
+  <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="string">
+    <qti-correct-response>
+      <qti-value>[{&quot;color&quot;:&quot;red&quot;,&quot;percentage&quot;:50}]</qti-value>
+    </qti-correct-response>
+  </qti-response-declaration>
+  <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float" />
+  <qti-stylesheet href="style/custom/tao-user-styles.css" type="text/css" media="all" title="" />
+  <qti-item-body>
+    <div class="grid-row">
+      <div class="col-12">
+        <qti-portable-custom-interaction custom-interaction-type-identifier="colorProportions"
+          data-version="1.0.1" data-colors="red, blue, green" data-width="400" data-height="400"
+          module="colorProportions" response-identifier="RESPONSE">
+          <qti-interaction-modules>
+            <qti-interaction-module id="colorProportions"
+              primary-path="../interaction/runtime/js/index.js" />
+          </qti-interaction-modules>
+          <qti-interaction-markup>
+            <div class="pciInteraction">
+              <div class="prompt" />
+              <ul class="pci" />
+            </div>
+          </qti-interaction-markup>
+        </qti-portable-custom-interaction>
+      </div>
+    </div>
+  </qti-item-body>
+  <qti-response-processing
+    template="https://purl.imsglobal.org/spec/qti/v3p0/rptemplates/match_correct.xml" />
+</qti-assessment-item>

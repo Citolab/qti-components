@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assessmentItem xmlns="http://www.imsglobal.org/xsd/imsqti_v2p2" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqti_v2p2 http://www.imsglobal.org/xsd/qti/qtiv2p2/imsqti_v2p2.xsd" identifier="i674ee5ef802e720241203120519e9a7" title="Item 9" label="likert_PCI" xml:lang="en-US" adaptive="false" timeDependent="false" toolName="TAO" toolVersion="2024.11 LTS">
+  <responseDeclaration identifier="RESPONSE" cardinality="single" baseType="integer"/>
+  <itemBody>
+    <div class="grid-row">
+      <div class="col-12">
+        <customInteraction responseIdentifier="RESPONSE">
+          <portableCustomInteraction xmlns="http://www.imsglobal.org/xsd/portableCustomInteraction_v1" customInteractionTypeIdentifier="likertScoreInteraction" data-version="1.0.0">
+            <properties>
+              <property key="level">5</property>
+              <property key="label-min">min</property>
+              <property key="label-max">max</property>
+              <property key="icons"></property>
+              <property key="numbers"></property>
+            </properties>
+            <modules>
+                    <module id="likertScoreInteraction/runtime/js/likertScoreInteraction.min" primaryPath="../runtime/js/likertScoreInteraction.min.js"/></modules>
+            <markup xmlns="http://www.w3.org/1999/xhtml">
+              <div class="likertScoreInteraction">
+                <div class="prompt"/>
+                <div class="scale">
+                  <ul class="likert"/>
+                </div>
+              </div>
+            </markup>
+          </portableCustomInteraction>
+        </customInteraction>
+      </div>
+    </div>
+  </itemBody>
+</assessmentItem>

@@ -48,6 +48,10 @@ Contributions are welcome! Please follow these guidelines when contributing:
 - Push your changes to your forked repository
 - Open a pull request to the original repository
 
+## Third-Party Components
+
+Note: This repository includes some third-party components solely for showcasing PCIs in Storybook. These components are not included in the published npm package. For licensing details, refer to the LICENSE file in the third-party directory.
+
 ## License
 
 This project is licensed under the [GPLv3 License](LICENSE).
