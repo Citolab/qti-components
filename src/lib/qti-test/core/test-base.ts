@@ -7,9 +7,9 @@ import { INITIAL_SESSION_CONTEXT, type SessionContext, sessionContext } from '..
 
 import type { ItemContext } from '../../exports/item.context';
 import type { TestContext } from '../../exports/test.context';
-import type { QtiAssessmentTest } from './qti-assessment-test';
+import type { QtiAssessmentItemRef, QtiAssessmentTest } from './qti-assessment-test';
 import type { QtiAssessmentItem } from '../../qti-components/';
-import type { OutcomeVariable, VariableDeclaration } from '../../exports/variables';
+import type { OutcomeVariable, VariableDeclaration, VariableValue } from '../../exports/variables';
 
 export abstract class TestBase extends LitElement {
   @property({ attribute: false, type: Object })
@@ -21,6 +21,26 @@ export abstract class TestBase extends LitElement {
   public sessionContext: Readonly<SessionContext> = INITIAL_SESSION_CONTEXT;
 
   protected _testElement: QtiAssessmentTest;
+
+  updateItemVariables(itemRefID: string, variables: VariableValue<string | string[] | null>[]): void {
+    // Update variables in the testContext for the specified itemRefID
+    const itemContext = this.testContext.items.find(item => item.identifier === itemRefID);
+    if (itemContext) {
+      itemContext.variables = itemContext.variables.map(variable => {
+        const updatedVariable = variables.find(v => v.identifier === variable.identifier);
+        return updatedVariable ? { ...variable, ...updatedVariable } : variable;
+      });
+    }
+    // if the qti-assessment-item-ref has a qti-assessment-item, then update this item as well
+    const itemRef = this._testElement.querySelector<QtiAssessmentItemRef>(
+      `qti-assessment-item-ref[identifier="${itemRefID}"]`
+    );
+    if (itemRef && itemRef.assessmentItem) {
+      if (itemRef.assessmentItem) {
+        itemRef.assessmentItem.variables = variables;
+      }
+    }
+  }
 
   constructor() {
     super();
