@@ -97,6 +97,14 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
     );
   };
 
+  validate(): boolean {
+    if (this.class.split(' ').includes('qti-match-tabular')) {
+      return this.response?.length === this.rows.length;
+    } else {
+      return super.validate();
+    }
+  }
+
   public toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean): void {
     if (show && responseVariable.correctResponse) {
       const response = Array.isArray(responseVariable.correctResponse)

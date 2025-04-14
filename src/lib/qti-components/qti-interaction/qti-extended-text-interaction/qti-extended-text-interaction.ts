@@ -84,7 +84,7 @@ export class QtiExtendedTextInteraction extends Interaction {
       this._internals.setValidity(isValid ? {} : { customError: false });
     }
 
-    return this.response !== '' && textarea.checkValidity();
+    return !!this.response && textarea.checkValidity();
   }
 
   override reportValidity() {
