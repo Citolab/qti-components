@@ -1,11 +1,14 @@
 import { consume, provide } from '@lit/context';
 import { html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
+// import { prepareTemplate } from 'stampino';
 
 import { testContext } from '../../exports/test.context';
 import { sessionContext } from '../../exports/session.context';
 import { computedContext } from '../../exports/computed.context';
 
+// import type { View } from '../core/mixins/test-view.mixin';
+// import type { TemplateFunction } from 'stampino';
 import type { QtiAssessmentItem } from '../../qti-components';
 import type { OutcomeVariable } from '../../exports/variables';
 import type { ComputedContext } from '../../exports/computed.context';
@@ -48,6 +51,26 @@ export class TestNavigation extends LitElement {
 
   @property({ type: Boolean, attribute: 'auto-score-items' }) autoScoreItems = false;
 
+  // @state()
+  // private stampContext: {
+  //   view?: View;
+  //   test?: unknown;
+  //   activeTestpart?: unknown;
+  //   activeSection?: unknown;
+  //   activeItem?: unknown;
+  // } = {
+  //   view: 'candidate',
+  //   activeItem: {},
+  //   activeSection: {
+  //     items: []
+  //   },
+  //   activeTestpart: {
+  //     items: []
+  //   },
+  //   test: {}
+  // };
+  // @property({ type: Boolean, reflect: true }) public debug = false;
+
   private _testElement: QtiAssessmentTest;
 
   constructor() {
@@ -76,6 +99,22 @@ export class TestNavigation extends LitElement {
     const reportValidityAfterScoring = this.configContext?.reportValidityAfterScoring === true ? true : false;
     qtiAssessmentItemEl.processResponse(true, reportValidityAfterScoring);
   }
+
+  protected createRenderRoot(): HTMLElement | DocumentFragment {
+    return this;
+  }
+
+  // myTemplate: TemplateFunction;
+
+  // connectedCallback(): void {
+  //   super.connectedCallback();
+  //   const templateElement = this.querySelector<HTMLTemplateElement>('template');
+  //   if (!templateElement) {
+  //     this.myTemplate = null;
+  //     return;
+  //   }
+  //   this.myTemplate = prepareTemplate(templateElement);
+  // }
 
   /**
    * Handles the 'test-end-attempt' event.
@@ -115,6 +154,7 @@ export class TestNavigation extends LitElement {
   }
 
   render() {
+    // return this.myTemplate ? this.myTemplate(this.stampContext) : nothing;
     return html`<slot></slot>`;
   }
 
@@ -158,7 +198,6 @@ export class TestNavigation extends LitElement {
   private _handleItemConnected(event: CustomEvent) {
     const itemElement = event.detail as QtiAssessmentItem;
 
-    let itemIndex = 1;
     this.computedContext = {
       ...this.computedContext,
       testParts: this.computedContext.testParts.map(testPart => {
@@ -171,8 +210,6 @@ export class TestNavigation extends LitElement {
                 if (item.identifier !== itemElement.parentElement.getAttribute('identifier')) {
                   return item;
                 }
-                const rawMaxScore = item.variables?.find(vr => vr.identifier == 'MAXSCORE')?.value;
-                const maxScore = parseInt(rawMaxScore?.toString());
 
                 const scoreOutcome = item.variables.find(vr => vr.identifier == 'SCORE') as OutcomeVariable;
                 const externalScored = scoreOutcome?.externalScored;
@@ -183,20 +220,16 @@ export class TestNavigation extends LitElement {
                 });
                 const hasCorrectResponse = !containsCorrectResponse && !containsMapping;
 
-                const index = item.categories.includes(this.configContext?.infoItemCategory) ? null : itemIndex++;
-
                 return {
                   ...item,
                   assessmentItemIdentifier: itemElement.getAttribute('identifier'),
                   label: itemElement.getAttribute('label'),
                   title: itemElement.title,
-                  maxScore,
                   externalScored,
                   adaptive: itemElement.adaptive == 'true' || false,
                   timeDependent: itemElement.timeDependent == 'true' || false,
                   variables: itemElement.variables,
-                  hasCorrectResponse,
-                  index
+                  hasCorrectResponse
                 };
               })
             };
@@ -210,6 +243,7 @@ export class TestNavigation extends LitElement {
   protected willUpdate(_changedProperties: PropertyValues): void {
     if (!this.computedContext) return;
 
+    let itemIndex = 1;
     this.computedContext = {
       ...this.computedContext,
       view: this._sessionContext?.view,
@@ -230,7 +264,11 @@ export class TestNavigation extends LitElement {
 
               items: section.items.map(item => {
                 const itemContext = this._testContext?.items.find(i => i.identifier === item.identifier);
-                const computedItem = { ...item, ...itemContext };
+                const computedItem = {
+                  ...item,
+                  ...itemContext,
+                  ...this.initContext?.find(i => i.identifier === item.identifier)
+                };
 
                 const rawscore = computedItem.variables?.find(vr => vr.identifier == 'SCORE')?.value;
                 const score = parseInt(rawscore?.toString());
@@ -239,13 +277,17 @@ export class TestNavigation extends LitElement {
                   ?.value as string;
 
                 const response = computedItem.variables?.find(v => v.identifier === 'RESPONSE')?.value || '';
-                const numAttempts = computedItem.variables?.find(v => v.identifier === 'NUMATTEMPTS')?.value || 0;
+                const numAttempts = computedItem.variables?.find(v => v.identifier === 'numAttempts')?.value || 0;
 
                 const type = item.categories.includes(this.configContext?.infoItemCategory) ? 'info' : 'regular';
                 const active = this._sessionContext?.navItemRefId === computedItem.identifier || false;
                 const correct = (type == 'regular' && score !== undefined && !isNaN(score) && score > 0) || false;
                 const incorrect = (type == 'regular' && score !== undefined && !isNaN(score) && score <= 0) || false;
                 const completed = completionStatus === 'completed';
+                const index = item.categories.includes(this.configContext?.infoItemCategory) ? null : itemIndex++;
+
+                const rawMaxScore = item.variables?.find(vr => vr.identifier == 'MAXSCORE')?.value;
+                const maxScore = parseInt(rawMaxScore?.toString());
 
                 return {
                   ...computedItem,
@@ -253,10 +295,11 @@ export class TestNavigation extends LitElement {
                   numAttempts,
                   score,
                   response,
-
+                  index,
                   type,
                   active,
                   correct,
+                  maxScore,
                   incorrect,
                   completed
                 };
@@ -267,8 +310,38 @@ export class TestNavigation extends LitElement {
       })
     };
 
+    // const activeTestPart = this.computedContext.testParts.find(testPart => testPart.active);
+    // const activeSection = activeTestPart?.sections.find(section => section.active);
+    // const activeItem = activeSection?.items.find(item => item.active);
+    // const { variables, ...augmentedItem } = activeItem || {};
+
+    // if (!activeTestPart || !activeSection || !activeItem) {
+    //   this.stampContext = null;
+    //   return;
+    // }
+
+    // const augmentedTestPart = {
+    //   ...activeTestPart,
+    //   items: activeTestPart.sections.flatMap(section => section.items.map(({ variables, ...rest }) => rest)),
+    //   sections: activeTestPart.sections.map(section => ({
+    //     ...section,
+    //     items: section.items.map(({ variables, ...rest }) => rest)
+    //   }))
+    // };
+
+    // const augmentedSection = { ...activeSection, items: activeSection.items.map(({ variables, ...rest }) => rest) };
+    // const { testParts, ...activeTest } = this.computedContext;
+
+    // this.stampContext = {
+    //   view: this.computedContext.view,
+    //   activeItem: augmentedItem,
+    //   activeSection: augmentedSection,
+    //   activeTestpart: augmentedTestPart,
+    //   test: activeTest
+    // };
+
     this.dispatchEvent(
-      new CustomEvent('test-computed-context-changed', {
+      new CustomEvent('qti-computed-context-updated', {
         detail: this.computedContext,
         bubbles: true
       })

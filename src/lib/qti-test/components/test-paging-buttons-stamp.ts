@@ -8,6 +8,9 @@ import { computedContext } from '../../exports/computed.context';
 import type { ComputedContext } from '../../exports/computed.context';
 import type { TemplateFunction } from 'stampino';
 
+/**
+ * @deprecated test-paging-buttons-stamp is deprecated and will be removed in the future.
+ */
 @customElement('test-paging-buttons-stamp')
 export class TestPagingButtonsStamp extends LitElement {
   @consume({ context: computedContext, subscribe: true })

@@ -10,6 +10,15 @@ import type { PropertyValues } from 'lit';
 import type { ComputedContext } from '../../exports/computed.context';
 import type { TemplateFunction } from 'stampino';
 
+/**
+ * A custom web component that renders a test stamp using the Lit framework.
+ * This component is deprecated and will be removed in the future.
+ *
+ * @deprecated Test-stamp is deprecated and will be removed in the future.
+ *
+ * @customElement
+ * @extends {LitElement}
+ */
 @customElement('test-stamp')
 export class TestStamp extends LitElement {
   /**

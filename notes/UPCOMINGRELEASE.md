@@ -20,3 +20,7 @@ updateItemVariables(itemRefID: string, variables: VariableValue<string | string[
 | testpart?: unknown; | activeTestpart?: unknown; |
 | section?: unknown;  | activeSection?: unknown;  |
 | item?: unknown;     | activeItem?: unknown;     |
+
+qti-computed-context-updated
+qti-test-context-updated
+qti-item-context-updated
