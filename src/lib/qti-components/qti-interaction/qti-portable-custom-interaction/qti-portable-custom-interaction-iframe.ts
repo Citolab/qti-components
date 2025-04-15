@@ -80,11 +80,11 @@ export class QtiPortableCustomInteractionIFrame extends Interaction {
   }
 
   set value(v: string | null) {
-    this._value = v;
-    const cardinality =
-      this.context?.variables?.find(v => v.identifier === this.responseIdentifier)?.cardinality || 'single';
-    const baseType = this.context?.variables?.find(v => v.identifier === this.responseIdentifier)?.baseType || 'string';
-    this.sendMessageToIframe('setValue', this.responseVariablesToQtiVariableJSON(this._value, cardinality, baseType));
+    this._value = v ? (Array.isArray(v) ? v : v.split(',')) : [];
+    // We don't need to directly call setResponse here as the PCI
+    // will get the boundTo property during initialization
+    // Instead, we'll update our internal state and let the normal
+    // boundTo getter/initialization process handle it
   }
 
   get value(): string | null {
@@ -94,7 +94,6 @@ export class QtiPortableCustomInteractionIFrame extends Interaction {
   // Send message to iframe
   protected sendMessageToIframe(method: string, params: any) {
     if (!this._iframeLoaded) {
-      // || !this._iframeReady) {
       this._pendingMessages.push({ method, params });
       return;
     }
@@ -216,6 +215,7 @@ export class QtiPortableCustomInteractionIFrame extends Interaction {
 
     const boundTo: Record<string, QtiVariableJSON> = {};
     boundTo[this.responseIdentifier] = responseVal;
+
     // Once iframe is loaded, send initialization data
     const initData = {
       module: this.module,
@@ -266,15 +266,8 @@ export class QtiPortableCustomInteractionIFrame extends Interaction {
   }
 
   private initializeInteraction() {
-    // Send boundTo data if available
-    if (this._value) {
-      const cardinality =
-        this.context?.variables?.find(v => v.identifier === this.responseIdentifier)?.cardinality || 'single';
-      const baseType =
-        this.context?.variables?.find(v => v.identifier === this.responseIdentifier)?.baseType || 'string';
-      const responseVal = this.responseVariablesToQtiVariableJSON(this._value, cardinality, baseType);
-      this.sendMessageToIframe('setValue', responseVal);
-    }
+    // No need to explicitly call setValue here since the boundTo property
+    // is already provided during initialization and the PCI will use that
   }
 
   protected generateIframeContent(): string {
@@ -610,9 +603,7 @@ export class QtiPortableCustomInteractionIFrame extends Interaction {
       },
       
       setValue: function(value) {
-        if (this.pciInstance && this.pciInstance.setResponse) {
-          this.pciInstance.setResponse(value);
-        }
+        // No longer needed - PCI gets response via boundTo
       },
       
       addHyphenatedKeys: function(properties) {
@@ -642,7 +633,7 @@ export class QtiPortableCustomInteractionIFrame extends Interaction {
           break;
           
         case 'setValue':
-          PCIManager.setValue(data.params);
+          // No longer needed - the value is handled via boundTo
           break;
           
         case 'setMarkup':

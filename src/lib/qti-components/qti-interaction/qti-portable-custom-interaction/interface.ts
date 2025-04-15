@@ -44,6 +44,14 @@ export interface IMSpci<T> {
   getResponse: () => QtiVariableJSON | undefined;
 
   /** @access public
+   * @method setResponse
+   * @param {Object} value - the value to assign to the bound QTI response variable
+   * NOTE: This is not an official QTI method, so no guarantee it is implemented
+   * in all PCIs.
+   */
+  setResponse: (value: QtiVariableJSON) => void;
+
+  /** @access public
    * @method getState
    * @return {String} The current state of this PCI. May be passed to
    * getInstance to later restore this PCI instance.
@@ -68,27 +76,80 @@ export declare type Configuration<T> = {
   */
 };
 
-export declare type ResponseType =
+// File type representation
+export type QtiFileData = {
+  data: string;
+  mime: string;
+  name?: string;
+};
+
+export type QtiBaseBoolean = boolean;
+export type QtiBaseInteger = number;
+export type QtiBaseFloat = number;
+export type QtiBaseString = string;
+export type QtiBasePoint = [number, number];
+export type QtiBasePair = [string, string];
+export type QtiBaseDirectedPair = [string, string];
+export type QtiBaseDuration = string; // ISO 8601 duration format
+export type QtiBaseFile = QtiFileData;
+export type QtiBaseUri = string;
+export type QtiBaseIntOrIdentifier = number | string;
+export type QtiBaseIdentifier = string;
+
+// Union of all possible response types for base and list
+export type ResponseType =
   | boolean
   | number
   | string
-  | [number, number]
-  | [string, string]
-  | string[]
-  | [number | string][];
+  | QtiBasePair
+  | QtiBasePoint
+  | QtiFileData
+  | Array<boolean | number | string | QtiBasePair | QtiBasePoint | QtiFileData>;
 
-export declare type ResponseVariableType = {
-  string?: ResponseType;
-  boolean?: ResponseType;
-  integer?: ResponseType;
-  float?: ResponseType;
-  pair?: ResponseType;
-  directedPair?: ResponseType;
-  identifier?: ResponseType;
+// Record item type
+export type QtiRecordItem = {
+  name: string;
+  base?: QtiBaseTypeJSON | null;
+  list?: QtiListTypeJSON | null;
 };
+export type ResponseVariableType = QtiVariableJSON;
+// Base type JSON representation
+export type QtiBaseTypeJSON = {
+  boolean?: QtiBaseBoolean;
+  integer?: QtiBaseInteger;
+  float?: QtiBaseFloat;
+  string?: QtiBaseString;
+  point?: QtiBasePoint;
+  pair?: QtiBasePair;
+  directedPair?: QtiBaseDirectedPair;
+  duration?: QtiBaseDuration;
+  file?: QtiBaseFile;
+  uri?: QtiBaseUri;
+  intOrIdentifier?: QtiBaseIntOrIdentifier;
+  identifier?: QtiBaseIdentifier;
+} | null;
 
+// List type JSON representation
+export type QtiListTypeJSON = {
+  boolean?: QtiBaseBoolean[];
+  integer?: QtiBaseInteger[];
+  float?: QtiBaseFloat[];
+  string?: QtiBaseString[];
+  point?: QtiBasePoint[];
+  pair?: QtiBasePair[];
+  directedPair?: QtiBaseDirectedPair[];
+  duration?: QtiBaseDuration[];
+  file?: QtiBaseFile[];
+  uri?: QtiBaseUri[];
+  intOrIdentifier?: QtiBaseIntOrIdentifier[];
+  identifier?: QtiBaseIdentifier[];
+} | null;
+
+// Complete QTI Variable JSON type
 export declare type QtiVariableJSON = {
-  [K in 'list' | 'base']?: ResponseVariableType;
+  base?: QtiBaseTypeJSON;
+  list?: QtiListTypeJSON;
+  record?: QtiRecordItem[] | null;
 };
 
 export interface ModuleResolutionConfig {

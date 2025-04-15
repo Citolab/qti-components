@@ -96,28 +96,45 @@ export class QtiPortableCustomInteraction extends Interaction {
   validate(): boolean {
     return true; // FOR NOW
   }
+
   set value(v: string | null) {
-    this._value = v.split(',');
+    if (v === null) {
+      this._value = [];
+    } else {
+      this._value = v.split(',');
+    }
   }
+
   get value(): string | null {
+    // Try to get the value from the PCI first
     const pciValue = this.pci?.getResponse();
     if (pciValue) {
-      return (this.convertQtiVariableJSON(pciValue) as string[]).join(',');
+      const convertedValue = this.convertQtiVariableJSON(pciValue);
+      return Array.isArray(convertedValue) ? convertedValue.join(',') : convertedValue;
     }
-    return (this._value as string[]).join(',');
+
+    // Fallback to stored value
+    return Array.isArray(this._value) ? this._value.join(',') : this._value?.toString() || null;
   }
 
   set boundTo(newValue: Record<string, ResponseVariableType>) {
-    const value = this.convertQtiVariableJSON(newValue);
+    if (!newValue || !newValue[this.responseIdentifier]) {
+      return;
+    }
+
+    const value = this.convertQtiVariableJSON(newValue[this.responseIdentifier]);
     this._value = value;
+
     this.saveResponse(value);
   }
+
   get boundTo(): Record<string, QtiVariableJSON> {
-    const responseVal = this.responseVariablesToQtiVariableJSON(
-      this._value,
-      this.context?.variables?.find(v => v.identifier === this.responseIdentifier)?.cardinality || 'single',
-      this.context?.variables?.find(v => v.identifier === this.responseIdentifier)?.baseType || 'string'
-    );
+    const cardinality =
+      this.context?.variables?.find(v => v.identifier === this.responseIdentifier)?.cardinality || 'single';
+    const baseType = this.context?.variables?.find(v => v.identifier === this.responseIdentifier)?.baseType || 'string';
+
+    const responseVal = this.responseVariablesToQtiVariableJSON(this._value, cardinality, baseType);
+
     const responseVariable: Record<string, QtiVariableJSON> = {};
     responseVariable[this.responseIdentifier] = responseVal;
     return responseVariable;
@@ -135,6 +152,7 @@ export class QtiPortableCustomInteraction extends Interaction {
     if (this.querySelector('properties')) {
       (this.querySelector('properties') as HTMLElement).style.display = 'none';
     }
+
     const config: any = {
       properties: this.addHyphenatedKeys({ ...this.dataset }),
       onready: pciInstance => {
@@ -142,7 +160,7 @@ export class QtiPortableCustomInteraction extends Interaction {
       },
       ondone: (_pciInstance, response, _state, _status: 'interacting' | 'closed' | 'solution' | 'review') => {
         this.response = this.convertQtiVariableJSON(response);
-        this.saveResponse(this.value);
+        this.saveResponse(this.response);
       },
       responseIdentifier: this.responseIdentifier,
       boundTo: this.boundTo
@@ -150,9 +168,8 @@ export class QtiPortableCustomInteraction extends Interaction {
       //       templateVariables	An object containing all of the template variables referenced (via qti-template-variable elements) in the qti-portable-custom-interaction and their current values.The values of variables MUST follow the structure defined in Appendix C.
       // contextVariables	An object containing all of the context variables referenced (via qti-context-variable elements) in the qti-portable-custom-interaction and their current values. The values of variables MUST follow the structure defined in Appendix C.
     };
-    if (pci.getInstance) {
-      // try {
 
+    if (pci.getInstance) {
       pci.getInstance(this.dom, config, undefined);
     } else {
       // Try the TAO custom interaction initialization.
