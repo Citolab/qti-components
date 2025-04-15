@@ -13,9 +13,6 @@ import type { TemplateFunction } from 'stampino';
 /**
  * A custom web component that renders a test stamp using the Lit framework.
  * This component is deprecated and will be removed in the future.
- *
- * @deprecated Test-stamp is deprecated and will be removed in the future.
- *
  * @customElement
  * @extends {LitElement}
  */
@@ -39,17 +36,27 @@ export class TestStamp extends LitElement {
     activeTestpart?: unknown;
     activeSection?: unknown;
     activeItem?: unknown;
-  } | null = null;
+  } = {
+    view: 'candidate',
+    activeItem: {},
+    activeSection: {
+      items: []
+    },
+    activeTestpart: {
+      items: []
+    },
+    test: {}
+  };
 
   myTemplate: TemplateFunction;
 
-  protected createRenderRoot(): HTMLElement | DocumentFragment {
-    return this;
-  }
+  // protected createRenderRoot(): HTMLElement | DocumentFragment {
+  //   return this;
+  // }
 
   connectedCallback(): void {
     super.connectedCallback();
-    const templateElement = this.querySelector<HTMLTemplateElement>('template');
+    const templateElement = this.querySelector<HTMLTemplateElement>('> template');
     if (!templateElement) {
       this.myTemplate = null;
       return;
