@@ -1,6 +1,6 @@
 import { customElement } from 'lit/decorators.js';
 
-import { QtiPortableCustomInteraction } from './qti-portable-custom-interaction';
+import { QtiPortableCustomInteractionIFrame } from './qti-portable-custom-interaction-iframe';
 
 import type { ItemContext } from '../../../exports/item.context';
 
@@ -9,7 +9,7 @@ import type { ItemContext } from '../../../exports/item.context';
  * for interacting with the iframe content in tests.
  */
 @customElement('qti-portable-custom-interaction-test')
-export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteraction {
+export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteractionIFrame {
   private _recreatingIframe = false;
   /**
    * Gets the HTML content of the iframe for testing purposes
