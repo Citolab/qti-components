@@ -38,7 +38,7 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
     else this._response = val;
   }
   @property({ type: String, attribute: 'response-identifier' }) responseIdentifier: string = '';
-  @state() protected correctOptions: string[] = [];
+  @state() protected correctOptions: { text: string; gap: string }[] = [];
 
   async connectedCallback(): Promise<void> {
     super.connectedCallback();
@@ -116,48 +116,40 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
         return { text, gap };
       });
 
-      // Clear old correct options first
-      this.querySelectorAll('.correct-option').forEach(el => el.remove());
+      if (!this.class.split(' ').includes('qti-match-tabular')) {
+        // Clear old correct options first
+        this.querySelectorAll('.correct-option').forEach(el => el.remove());
 
-      this.cols.forEach(gap => {
-        const gapId = gap.getAttribute('identifier');
-        const match = matches.find(m => m.gap === gapId);
+        this.cols.forEach(gap => {
+          const gapId = gap.getAttribute('identifier');
+          const match = matches.find(m => m.gap === gapId);
 
-        if (match?.text) {
-          const textEl = this.querySelector(`qti-simple-associable-choice[identifier="${match.text}"]`);
-          const text = textEl?.textContent?.trim();
+          if (match?.text) {
+            const textEl = this.querySelector(`qti-simple-associable-choice[identifier="${match.text}"]`);
+            const text = textEl?.textContent?.trim();
 
-          if (text && !gap.previousElementSibling?.classList.contains('correct-option')) {
-            const textSpan = document.createElement('span');
-            textSpan.classList.add('correct-option');
-            textSpan.textContent = text;
+            if (text && !gap.previousElementSibling?.classList.contains('correct-option')) {
+              const textSpan = document.createElement('span');
+              textSpan.classList.add('correct-option');
+              textSpan.textContent = text;
 
-            // Style the span
-            textSpan.style.border = '1px solid var(--qti-correct)';
-            textSpan.style.borderRadius = '4px';
-            textSpan.style.padding = '2px 4px';
-            textSpan.style.display = 'inline-block';
+              // Style the span
+              textSpan.style.border = '1px solid var(--qti-correct)';
+              textSpan.style.borderRadius = '4px';
+              textSpan.style.padding = '2px 4px';
+              textSpan.style.display = 'inline-block';
 
-            // Insert before the gap
-            gap.insertAdjacentElement('beforebegin', textSpan);
+              // Insert before the gap
+              gap.insertAdjacentElement('beforebegin', textSpan);
+            }
           }
-        }
-      });
+        });
+      } else {
+        this.correctOptions = matches;
+      }
     } else {
       // Remove all previously added correct responses
       this.querySelectorAll('.correct-option').forEach(el => el.remove());
-    }
-  }
-
-  set correctResponse(responseValue: string | string[]) {
-    if (responseValue === '') {
-      this.correctOptions = [];
-      return;
-    } else if (Array.isArray(responseValue)) {
-      this.correctOptions = responseValue;
-      if (!this.class.split(' ').includes('qti-match-tabular')) {
-        this.response = responseValue;
-      }
     }
   }
 
@@ -185,7 +177,7 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
                       const value = `${rowId} ${colId}`;
                       const selectedInRowCount = this.response.filter(v => v.split(' ')[0] === rowId).length || 0;
                       const checked = this.response.includes(value);
-                      const part = `rb ${checked ? 'rb-checked' : ''} ${this.correctOptions.includes(value) ? 'rb-correct' : ''}`;
+                      const part = `rb ${checked ? 'rb-checked' : ''} ${this.correctOptions.find(x => x.text === rowId && x.gap === colId) ? 'rb-correct' : ''}`;
                       // disable if match max is greater than 1 and max is reached
                       const disable =
                         this.correctOptions.length > 0
