@@ -296,6 +296,8 @@ export const ConvertedTAO = {
         <qti-portable-custom-interaction-test
     custom-interaction-type-identifier="decisiontask" 
     module="decisiontask" 
+                  data-use-default-paths="true"
+              data-use-default-shims="true"
               data-version="1.0.1"
               data-data__0__stimulusindex="1"
               data-data__0__stimulus="5 + 7 = 12"
@@ -423,6 +425,8 @@ export const TaoNew = {
               data-numbers=""
               module="likertScoreInteraction"
               response-identifier="RESPONSE"
+              data-use-default-paths="true"
+              data-use-default-shims="true"
               data-base-url="/assets/qti-portable-interaction/likert_pci_1733224036/"
             >
               <qti-interaction-modules>
