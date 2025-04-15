@@ -39,7 +39,7 @@ export const Test: Story = {
     <qti-test navigate="item">
       <test-navigation>
         <test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"> </test-container>
-        <test-next ${spread(args)}>volgende</test-next>
+        <test-next>volgende</test-next>
       </test-navigation>
     </qti-test>
   `,

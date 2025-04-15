@@ -50,13 +50,13 @@ export class TestStamp extends LitElement {
 
   myTemplate: TemplateFunction;
 
-  // protected createRenderRoot(): HTMLElement | DocumentFragment {
-  //   return this;
-  // }
+  protected createRenderRoot(): HTMLElement | DocumentFragment {
+    return this;
+  }
 
   connectedCallback(): void {
     super.connectedCallback();
-    const templateElement = this.querySelector<HTMLTemplateElement>('> template');
+    const templateElement = this.querySelector<HTMLTemplateElement>('template');
     if (!templateElement) {
       this.myTemplate = null;
       return;
