@@ -58,9 +58,10 @@ export const Default: Story = {
 
                 <li>{{ section.items }}</li>
               </ul>
-
-              <template type="repeat" repeat="{{ testpart.items }}">
-                <p>{{ item.identifier }}</p>
+              <template type="if" if="{{ testpart.items }}">
+                <template type="repeat" repeat="{{ testpart.items }}">
+                  <p>{{ item.identifier }}</p>
+                </template>
               </template>
             </template>
           `
@@ -69,8 +70,10 @@ export const Default: Story = {
           args,
           html`
             <template>
-              <template type="repeat" repeat="{{ section.items }}">
-                <p>{{ item.identifier }}</p>
+              <template type="if" if="{{ section.items }}">
+                <template type="repeat" repeat="{{ section.items }}">
+                  <p>{{ item.identifier }}</p>
+                </template>
               </template>
             </template>
           `
