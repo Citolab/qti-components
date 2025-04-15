@@ -1,4 +1,4 @@
-import { html } from 'lit';
+import { css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { consume } from '@lit/context';
 
@@ -33,7 +33,26 @@ export class QtiPortableCustomInteraction extends Interaction {
   protected _pendingMessages: Array<{ method: string; params: any }> = [];
   protected iframe: HTMLIFrameElement;
 
-  static styles: CSSResultGroup = styles;
+  private _responseCheckInterval: number | null = null;
+  private _lastResponseStr: string = '';
+
+  // Define a static style that applies to both direct and iframe modes
+  static styles: CSSResultGroup = [
+    styles,
+    // Add default width/height for direct mode
+    css`
+      :host {
+        display: block;
+        width: 100%;
+        min-height: 50px;
+      }
+      .qti-customInteraction {
+        display: block;
+        width: 100%;
+        min-height: 50px;
+      }
+    `
+  ];
 
   @property({ type: String, attribute: 'module' })
   module: string;
@@ -305,14 +324,18 @@ export class QtiPortableCustomInteraction extends Interaction {
   }
 
   get boundTo(): Record<string, QtiVariableJSON> {
-    const cardinality =
-      this.context?.variables?.find(v => v.identifier === this.responseIdentifier)?.cardinality || 'single';
-    const baseType = this.context?.variables?.find(v => v.identifier === this.responseIdentifier)?.baseType || 'string';
-
-    const responseVal = this.responseVariablesToQtiVariableJSON(this._value, cardinality, baseType);
-
     const responseVariable: Record<string, QtiVariableJSON> = {};
-    responseVariable[this.responseIdentifier] = responseVal;
+    const variable = this.context?.variables?.find(v => v.identifier === this.responseIdentifier);
+    if (variable) {
+      const cardinality =
+        this.context?.variables?.find(v => v.identifier === this.responseIdentifier)?.cardinality || 'single';
+      const baseType =
+        this.context?.variables?.find(v => v.identifier === this.responseIdentifier)?.baseType || 'string';
+      const value = this.context?.variables?.find(v => v.identifier === this.responseIdentifier)?.value || null;
+      const responseVal = this.responseVariablesToQtiVariableJSON(value as string | string[], cardinality, baseType);
+      responseVariable[this.responseIdentifier] = responseVal;
+    }
+
     return responseVariable;
   }
 
@@ -327,6 +350,12 @@ export class QtiPortableCustomInteraction extends Interaction {
       this.appendChild(this.dom);
     }
     this.dom.classList.add('qti-customInteraction');
+
+    // Add explicit styling to DOM element for direct mode
+    this.dom.style.width = '100%';
+    this.dom.style.minHeight = '50px';
+    this.dom.style.display = 'block';
+
     this.dom.addEventListener('qti-interaction-changed', this._onInteractionChanged);
     if (this.querySelector('properties')) {
       (this.querySelector('properties') as HTMLElement).style.display = 'none';
@@ -336,11 +365,45 @@ export class QtiPortableCustomInteraction extends Interaction {
       properties: this.addHyphenatedKeys({ ...this.dataset }),
       onready: pciInstance => {
         this.pci = pciInstance;
-        // PCI uses boundTo from initialization config, no need to call setResponse
+
+        // Initialize the last response string once the PCI is ready
+        if (this.pci && typeof this.pci.getResponse === 'function') {
+          try {
+            const response = this.pci.getResponse();
+            this._lastResponseStr = JSON.stringify(response);
+          } catch (error) {
+            console.error('Error getting initial response:', error);
+          }
+        }
+
+        // Set up a ResizeObserver to handle dynamic size changes in direct mode
+        try {
+          const resizeObserver = new ResizeObserver(entries => {
+            for (const entry of entries) {
+              if (entry.contentRect) {
+                // Adjust container height based on content
+                if (entry.contentRect.height > 0) {
+                  // Add a small buffer for padding
+                  this.style.height = `${entry.contentRect.height + 20}px`;
+                }
+              }
+            }
+          });
+
+          // Observe the DOM element
+          resizeObserver.observe(this.dom);
+
+          // Store reference for cleanup
+          (this as any)._resizeObserver = resizeObserver;
+        } catch (e) {
+          console.warn('ResizeObserver not supported, falling back to static sizing');
+        }
       },
       ondone: (_pciInstance, response, _state, _status: 'interacting' | 'closed' | 'solution' | 'review') => {
         this.response = this.convertQtiVariableJSON(response);
         this.saveResponse(this.response);
+        // Update the last response string
+        this._lastResponseStr = JSON.stringify(response);
       },
       responseIdentifier: this.responseIdentifier,
       boundTo: this.boundTo
@@ -404,6 +467,34 @@ export class QtiPortableCustomInteraction extends Interaction {
         this.dom.firstElementChild || this.dom,
         Object.keys(taoConfig).length ? taoConfig : null
       );
+    }
+  }
+
+  /* ... rest of the code remains the same ... */
+
+  override disconnectedCallback(): void {
+    super.disconnectedCallback();
+
+    if (this.useIframe) {
+      // IFRAME MODE cleanup
+      window.removeEventListener('message', this.handleIframeMessage);
+    } else {
+      // DIRECT MODE cleanup
+      // Clean up ResizeObserver if it exists
+      // DIRECT MODE cleanup
+      // Stop response checking interval
+      this.stopResponseCheck();
+      if ((this as any)._resizeObserver) {
+        (this as any)._resizeObserver.disconnect();
+        (this as any)._resizeObserver = null;
+      }
+
+      requirejs.undef(this.customInteractionTypeIdentifier);
+      // Clear the modules in the context
+      const context = requirejs.s.contexts;
+      delete context[this.customInteractionTypeIdentifier];
+      // Remove the event listener when the component is disconnected
+      this.removeEventListener('qti-interaction-changed', this._onInteractionChanged);
     }
   }
 
@@ -520,16 +611,6 @@ export class QtiPortableCustomInteraction extends Interaction {
    * IFRAME MODE: Send initialization data to iframe
    */
   private sendIframeInitData() {
-    // Build the boundTo structure
-    const responseVal = this.responseVariablesToQtiVariableJSON(
-      this._value,
-      this.context?.variables?.find(v => v.identifier === this.responseIdentifier)?.cardinality || 'single',
-      this.context?.variables?.find(v => v.identifier === this.responseIdentifier)?.baseType || 'string'
-    );
-
-    const boundTo: Record<string, QtiVariableJSON> = {};
-    boundTo[this.responseIdentifier] = responseVal;
-
     // Once iframe is loaded, send initialization data
     const initData = {
       module: this.module,
@@ -542,7 +623,7 @@ export class QtiPortableCustomInteraction extends Interaction {
       responseIdentifier: this.responseIdentifier,
       dataAttributes: { ...this.dataset },
       interactionModules: this.getInteractionModules(),
-      boundTo: boundTo
+      boundTo: this.boundTo
     };
 
     this.sendMessageToIframe('initialize', initData);
@@ -632,24 +713,44 @@ export class QtiPortableCustomInteraction extends Interaction {
             console.error('Error in require call:', error);
           }
         });
+        // Start periodically checking for response changes
+        this.startResponseCheck();
       }
     }
   }
 
-  override disconnectedCallback(): void {
-    super.disconnectedCallback();
+  /**
+   * Start checking for response changes at regular intervals
+   */
+  private startResponseCheck(): void {
+    // Clear any existing interval
+    this.stopResponseCheck();
 
-    if (this.useIframe) {
-      // IFRAME MODE cleanup
-      window.removeEventListener('message', this.handleIframeMessage);
-    } else {
-      // DIRECT MODE cleanup
-      requirejs.undef(this.customInteractionTypeIdentifier);
-      // Clear the modules in the context
-      const context = requirejs.s.contexts;
-      delete context[this.customInteractionTypeIdentifier];
-      // Remove the event listener when the component is disconnected
-      this.removeEventListener('qti-interaction-changed', this._onInteractionChanged);
+    // Set up a new interval
+    this._responseCheckInterval = window.setInterval(() => {
+      if (this.pci && typeof this.pci.getResponse === 'function') {
+        try {
+          const response = this.pci.getResponse();
+          const responseStr = JSON.stringify(response);
+          if (responseStr !== this._lastResponseStr) {
+            this._lastResponseStr = responseStr;
+            const convertedValue = this.convertQtiVariableJSON(response);
+            this.saveResponse(convertedValue);
+          }
+        } catch (error) {
+          console.error('Error checking for response changes:', error);
+        }
+      }
+    }, 500);
+  }
+
+  /**
+   * Stop checking for response changes
+   */
+  private stopResponseCheck(): void {
+    if (this._responseCheckInterval !== null) {
+      window.clearInterval(this._responseCheckInterval);
+      this._responseCheckInterval = null;
     }
   }
 
