@@ -43,7 +43,8 @@ export class TestStamp extends LitElement {
       items: []
     },
     activeTestpart: {
-      items: []
+      items: [],
+      sections: []
     },
     test: {}
   };
@@ -66,7 +67,6 @@ export class TestStamp extends LitElement {
 
   protected willUpdate(_changedProperties: PropertyValues): void {
     if (!this.computedContext) {
-      this.stampContext = null;
       return;
     }
     const activeTestPart = this.computedContext.testParts.find(testPart => testPart.active);
@@ -75,7 +75,6 @@ export class TestStamp extends LitElement {
     const { variables, ...augmentedItem } = activeItem || {};
 
     if (!activeTestPart || !activeSection || !activeItem) {
-      this.stampContext = null;
       return;
     }
 
@@ -101,7 +100,7 @@ export class TestStamp extends LitElement {
   }
 
   render() {
-    if (!this.stampContext) return nothing;
+    // if (!this.stampContext) return nothing;
     return html` ${this.debug ? html`<small><pre>${JSON.stringify(this.stampContext, null, 2)}</pre></small>` : nothing}
     ${this.myTemplate ? this.myTemplate(this.stampContext) : nothing}`;
   }
