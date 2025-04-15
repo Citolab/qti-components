@@ -106,7 +106,7 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
   }
 
   public toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean): void {
-    if (show && responseVariable.correctResponse) {
+    if (responseVariable.correctResponse) {
       const response = Array.isArray(responseVariable.correctResponse)
         ? responseVariable.correctResponse
         : [responseVariable.correctResponse];
@@ -117,35 +117,41 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
       });
 
       if (!this.class.split(' ').includes('qti-match-tabular')) {
-        // Clear old correct options first
-        this.querySelectorAll('.correct-option').forEach(el => el.remove());
+        if (show) {
+          // Clear old correct options first
+          this.querySelectorAll('.correct-option').forEach(el => el.remove());
 
-        this.cols.forEach(gap => {
-          const gapId = gap.getAttribute('identifier');
-          const match = matches.find(m => m.gap === gapId);
+          this.cols.forEach(gap => {
+            const gapId = gap.getAttribute('identifier');
+            const match = matches.find(m => m.gap === gapId);
 
-          if (match?.text) {
-            const textEl = this.querySelector(`qti-simple-associable-choice[identifier="${match.text}"]`);
-            const text = textEl?.textContent?.trim();
+            if (match?.text) {
+              const textEl = this.querySelector(`qti-simple-associable-choice[identifier="${match.text}"]`);
+              const text = textEl?.textContent?.trim();
 
-            if (text && !gap.previousElementSibling?.classList.contains('correct-option')) {
-              const textSpan = document.createElement('span');
-              textSpan.classList.add('correct-option');
-              textSpan.textContent = text;
+              if (text && !gap.previousElementSibling?.classList.contains('correct-option')) {
+                const textSpan = document.createElement('span');
+                textSpan.classList.add('correct-option');
+                textSpan.textContent = text;
 
-              // Style the span
-              textSpan.style.border = '1px solid var(--qti-correct)';
-              textSpan.style.borderRadius = '4px';
-              textSpan.style.padding = '2px 4px';
-              textSpan.style.display = 'inline-block';
+                // Style the span
+                textSpan.style.border = '1px solid var(--qti-correct)';
+                textSpan.style.borderRadius = '4px';
+                textSpan.style.padding = '2px 4px';
+                textSpan.style.display = 'inline-block';
 
-              // Insert before the gap
-              gap.insertAdjacentElement('beforebegin', textSpan);
+                // Insert before the gap
+                gap.insertAdjacentElement('beforebegin', textSpan);
+              }
             }
-          }
-        });
+          });
+        }
       } else {
-        this.correctOptions = matches;
+        if (show) {
+          this.correctOptions = matches;
+        } else {
+          this.correctOptions = [];
+        }
       }
     } else {
       // Remove all previously added correct responses
