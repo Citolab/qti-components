@@ -7,6 +7,7 @@ import { Interaction } from '../../../exports/interaction';
 import { itemContext } from '../../../exports/qti-assessment-item.context';
 import { removeDoubleSlashes } from '../../internal/utils';
 
+import type { ResponseVariable } from '../../../exports/variables';
 import type { CSSResultGroup } from 'lit';
 import type { ItemContext } from '../../../exports/item.context';
 import type { BaseType, Cardinality } from '../../../exports/expression-result';
@@ -1282,6 +1283,281 @@ export class QtiPortableCustomInteraction extends Interaction {
 </body>
 </html>`;
   }
+
+  /**
+   * Toggle the display of the correct response
+   * @param responseVariable The response variable containing the correct response
+   * @param show Whether to show or hide the correct response
+   */
+  public toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
+    // Store the correct response or clear it based on the show parameter
+    this.correctResponse = show
+      ? responseVariable?.correctResponse
+      : responseVariable.cardinality === 'single'
+        ? ''
+        : [];
+
+    // Get unique identifiers for this PCI's correct response elements
+    const containerId = `correct-response-container-${this.responseIdentifier}`;
+
+    // Check the parent element for any existing containers with this ID
+    const existingContainers = this.parentElement?.querySelectorAll(`#${containerId}`);
+    if (existingContainers) {
+      existingContainers.forEach(existingContainer => {
+        existingContainer.remove();
+      });
+    }
+
+    // Handle the current interaction's state
+    if (show) {
+      // Disable the current interaction when showing correct response
+      this.disable();
+    } else {
+      // Enable the current interaction when hiding correct response
+      this.enable();
+      return; // Exit early, nothing else to do
+    }
+
+    // If there's no correct response to show, exit
+    if (!show || !responseVariable?.correctResponse) {
+      return;
+    }
+
+    // Create a container for the correct response viewer
+    const correctResponseContainer = document.createElement('div');
+    correctResponseContainer.id = containerId;
+    correctResponseContainer.className = 'pci-correct-response-container';
+    correctResponseContainer.style.position = 'relative';
+    correctResponseContainer.style.marginTop = '20px';
+    correctResponseContainer.style.border = '2px solid green';
+    correctResponseContainer.style.padding = '16px';
+    correctResponseContainer.style.borderRadius = '4px';
+    correctResponseContainer.style.backgroundColor = 'rgba(0, 128, 0, 0.05)';
+
+    // Add a label for the correct response
+    const label = document.createElement('div');
+    label.textContent = 'Correct Response:';
+    label.style.fontWeight = 'bold';
+    label.style.marginBottom = '10px';
+    label.style.color = 'green';
+    correctResponseContainer.appendChild(label);
+
+    // Instead of cloning, we'll create a new instance and copy necessary attributes
+    const correctResponseViewer = document.createElement(
+      'qti-portable-custom-interaction'
+    ) as QtiPortableCustomInteraction;
+
+    // Copy all attributes from the original PCI
+    Array.from(this.attributes).forEach(attr => {
+      if (attr.name !== 'id' && attr.name !== 'response-identifier') {
+        correctResponseViewer.setAttribute(attr.name, attr.value);
+      }
+    });
+
+    // Set a unique response identifier to avoid conflicts
+    const originalResponseId = this.responseIdentifier;
+    correctResponseViewer.responseIdentifier = `${originalResponseId}-correct`;
+
+    // Copy any light DOM content from the original PCI
+    // This includes markup and properties
+    Array.from(this.children).forEach(child => {
+      const clonedChild = child.cloneNode(true);
+      correctResponseViewer.appendChild(clonedChild);
+    });
+
+    // Store the correct response value
+    const correctResponseValue = responseVariable.correctResponse;
+
+    // Different initialization based on mode
+    if (this.useIframe) {
+      // For iframe mode, add a custom connected callback
+      const originalConnectedCallback = correctResponseViewer.connectedCallback;
+      correctResponseViewer.connectedCallback = function () {
+        // Call the original connected callback to set up the iframe
+        originalConnectedCallback.call(this);
+
+        // Wait for iframe to load then set the correct response
+        const checkIframeLoaded = () => {
+          if (this._iframeLoaded) {
+            // Set response after a small delay to ensure PCI is ready
+            setTimeout(() => {
+              const qtiVariableJSON = this.responseVariablesToQtiVariableJSON(
+                correctResponseValue,
+                responseVariable.cardinality,
+                responseVariable.baseType
+              );
+
+              // Send the correct response to the iframe
+              this.sendMessageToIframe('setBoundTo', {
+                [originalResponseId]: qtiVariableJSON
+              });
+
+              // Disable interaction with the correct response viewer
+              this.sendMessageToIframe('setState', { state: 'review' });
+            }, 1000);
+
+            return true;
+          }
+          return false;
+        };
+
+        // Try immediately
+        if (!checkIframeLoaded()) {
+          // If not loaded yet, set up an interval to check
+          const intervalId = setInterval(() => {
+            if (checkIframeLoaded()) {
+              clearInterval(intervalId);
+            }
+          }, 100);
+
+          // Safety timeout to clear interval after 10 seconds
+          setTimeout(() => {
+            clearInterval(intervalId);
+          }, 10000);
+        }
+      };
+    } else {
+      // For direct mode, add a custom register method
+      const originalRegister = correctResponseViewer.register;
+      correctResponseViewer.register = function (pci) {
+        // Call the original register method
+        originalRegister.call(this, pci);
+
+        // Once registered, set the correct response
+        const setCorrectResponse = () => {
+          if (this.pci) {
+            if (typeof this.pci.setResponse === 'function') {
+              // Convert to the format expected by the PCI
+              const pciResponse = this.responseVariablesToQtiVariableJSON(
+                correctResponseValue,
+                responseVariable.cardinality,
+                responseVariable.baseType
+              );
+
+              // Set the response
+              this.pci.setResponse(pciResponse);
+
+              // Disable interaction if the PCI supports it
+              if (typeof this.pci.setState === 'function') {
+                this.pci.setState('review');
+              }
+
+              return true;
+            }
+          }
+          return false;
+        };
+
+        // Try to set response after a delay to ensure PCI is fully initialized
+        setTimeout(() => {
+          if (!setCorrectResponse()) {
+            // If not successful, try again with a longer delay
+            const intervalId = setInterval(() => {
+              if (setCorrectResponse()) {
+                clearInterval(intervalId);
+              }
+            }, 200);
+
+            // Safety timeout to clear interval after 5 seconds
+            setTimeout(() => {
+              clearInterval(intervalId);
+            }, 5000);
+          }
+        }, 500);
+      };
+    }
+
+    // Make sure the viewer is not interactive
+    correctResponseViewer.style.pointerEvents = 'none';
+
+    // Add the correct response viewer to the container
+    correctResponseContainer.appendChild(correctResponseViewer);
+
+    // Append the container after this PCI
+    this.after(correctResponseContainer);
+  }
+  /**
+   * Method to disable the PCI for review mode
+   * This can be used when showing the correct response
+   */
+  public disable() {
+    // First, store the current state of the PCI
+    this._previousState = {
+      pointerEvents: this.style.pointerEvents,
+      position: this.style.position
+    };
+
+    if (this.useIframe) {
+      // For iframe mode, send a message to disable interaction
+      this.sendMessageToIframe('setState', { state: 'disabled' });
+    } else {
+      // // For direct mode, use the PCI's disable method if available
+      // if (this.pci && typeof this.pci.setState === 'function') {
+      //   this.pci.setState('disabled');
+      // }
+    }
+
+    // Add an overlay to prevent interaction if not already there
+    const existingOverlay = this.querySelector('.pci-interaction-overlay');
+    if (!existingOverlay) {
+      const overlay = document.createElement('div');
+      overlay.className = 'pci-interaction-overlay';
+      overlay.style.position = 'absolute';
+      overlay.style.top = '0';
+      overlay.style.left = '0';
+      overlay.style.width = '100%';
+      overlay.style.height = '100%';
+      overlay.style.backgroundColor = 'rgba(200, 200, 200, 0.3)';
+      overlay.style.zIndex = '100';
+      overlay.style.pointerEvents = 'all';
+      overlay.style.cursor = 'not-allowed';
+
+      // Make sure the container is relatively positioned
+      if (getComputedStyle(this).position === 'static') {
+        this.style.position = 'relative';
+      }
+
+      this.appendChild(overlay);
+    }
+  }
+
+  /**
+   * Method to enable the PCI for interactive mode
+   */
+  public enable() {
+    // Remove any overlays
+    const overlay = this.querySelector('.pci-interaction-overlay');
+    if (overlay) {
+      overlay.remove();
+    }
+
+    // Restore previous state if available
+    if (this._previousState) {
+      if (this._previousState.pointerEvents) {
+        this.style.pointerEvents = this._previousState.pointerEvents;
+      }
+      if (this._previousState.position) {
+        this.style.position = this._previousState.position;
+      }
+      this._previousState = null;
+    }
+
+    if (this.useIframe) {
+      // For iframe mode, send a message to enable interaction
+      this.sendMessageToIframe('setState', { state: 'interacting' });
+    } else {
+      // // For direct mode, use the PCI's enable method if available
+      // if (this.pci && typeof this.pci.setState === 'function') {
+      //   this.pci.setState('interacting');
+      // }
+    }
+  }
+
+  // Add this property to store the previous state
+  private _previousState: {
+    pointerEvents?: string;
+    position?: string;
+  } = null;
 
   override render() {
     return html`
