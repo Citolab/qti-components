@@ -566,3 +566,59 @@ export const Slider: Story = {
     });
   }
 };
+
+export const MultipleInteractions: Story = {
+  args: {
+    'item-url': '/qti-item/example-multiple-interactions.xml' // Set the new item URL here
+  },
+  render: args =>
+    html` <qti-item>
+      <item-container style="width: 400px; height: 350px; display: block;" item-url=${args['item-url'] as string}>
+        <template>
+          <style>
+            qti-assessment-item {
+              padding: 1rem;
+              display: block;
+              aspect-ratio: 4 / 3;
+              width: 800px;
+              border: 2px solid blue;
+              transform: scale(0.5);
+              transform-origin: top left;
+            }
+          </style>
+        </template>
+      </item-container>
+
+      <item-show-correct-response ${spread(args)}></item-show-correct-response>
+      <!-- </div> -->
+    </qti-item>`,
+  play: async ({ canvasElement, step }) => {
+    // // wait for qti-simple-choice to be rendered
+    const canvas = within(canvasElement);
+
+    const interactions = await waitFor(() => {
+      const itemContainer = canvasElement.querySelector('item-container');
+      if (!itemContainer) {
+        throw new Error('Item container not found');
+      }
+      if (!itemContainer.shadowRoot) {
+        throw new Error('Shadow root not found');
+      }
+      if (!itemContainer.shadowRoot.querySelector('qti-inline-choice-interaction')) {
+        throw new Error('qti-inline-choice-interaction not found');
+      }
+      return itemContainer.shadowRoot.querySelectorAll('qti-inline-choice-interaction');
+    });
+    const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0];
+    await step('Click on the Show Correct button', async () => {
+      await showCorrectButton.click();
+    });
+
+    await step('Verify correct response state is applied', async () => {
+      for (const interaction of interactions) {
+        const feedback = interaction.shadowRoot.querySelector('[part="correct-option"]');
+        expect(feedback).not.toBeNull();
+      }
+    });
+  }
+};
