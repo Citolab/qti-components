@@ -7,6 +7,9 @@ import { computedContext } from '../../exports/computed.context';
 
 import type { ComputedContext } from '../../exports/computed.context';
 
+/**
+ * @deprecated test-show-correct-response is deprecated and will be removed in the future.
+ */
 @customElement('test-show-correct-response')
 export class TestShowCorrectResponse extends LitElement {
   @consume({ context: computedContext, subscribe: true })

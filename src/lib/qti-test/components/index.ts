@@ -16,3 +16,4 @@ export * from './test-stamp';
 export * from './test-scoring-buttons';
 export * from './test-view-toggle';
 export * from './test-scoring-feedback';
+export * from './test-check-item';

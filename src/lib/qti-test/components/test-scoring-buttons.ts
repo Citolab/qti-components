@@ -61,12 +61,12 @@ export class TestScoringButtons extends LitElement {
 
     const score = scoreOutcome?.value;
 
-    this.disabled = !(scoreOutcome?.externalScored === 'human');
+    const disabled = !(scoreOutcome?.externalScored === 'human');
 
     if (!maxScore || !scoreOutcome) return nothing;
     const scores = [...Array(Number(maxScore) + 1).keys()];
 
-    return html`${this.myTemplate ? this.myTemplate({ scores, score }) : nothing}`;
+    return html`${this.myTemplate ? this.myTemplate({ scores, score, disabled }) : nothing}`;
   }
 
   constructor() {
