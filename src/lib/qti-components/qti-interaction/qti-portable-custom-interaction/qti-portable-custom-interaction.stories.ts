@@ -1,6 +1,6 @@
 import { html } from 'lit';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
-import { expect } from '@storybook/test';
+import { expect, waitFor } from '@storybook/test';
 
 import type { QtiPortableCustomInteraction } from './qti-portable-custom-interaction';
 import type { StoryObj, Meta } from '@storybook/web-components';
@@ -8,6 +8,7 @@ import type { QtiPortableCustomInteractionTest } from './qti-portable-custom-tes
 import type { VariableDeclaration } from '../../../exports/variables';
 
 import './qti-portable-custom-test-interaction';
+import type { QtiAssessmentItem } from '../../qti-assessment-item/qti-assessment-item';
 
 const { events, args, argTypes, template } = getStorybookHelpers('qti-portable-custom-interaction');
 
@@ -296,6 +297,8 @@ export const ConvertedTAO = {
         <qti-portable-custom-interaction-test
     custom-interaction-type-identifier="decisiontask" 
     module="decisiontask" 
+                  data-use-default-paths="true"
+              data-use-default-shims="true"
               data-version="1.0.1"
               data-data__0__stimulusindex="1"
               data-data__0__stimulus="5 + 7 = 12"
@@ -423,6 +426,8 @@ export const TaoNew = {
               data-numbers=""
               module="likertScoreInteraction"
               response-identifier="RESPONSE"
+              data-use-default-paths="true"
+              data-use-default-shims="true"
               data-base-url="/assets/qti-portable-interaction/likert_pci_1733224036/"
             >
               <qti-interaction-modules>
@@ -466,8 +471,8 @@ export const TaoNew = {
 };
 
 export const VerhoudingenRestoreResponse = {
-  render: () =>
-    html`<qti-assessment-item
+  render: () => {
+    const qti = `<qti-assessment-item
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
       xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
@@ -515,40 +520,44 @@ export const VerhoudingenRestoreResponse = {
           </div>
         </div>
       </qti-item-body>
-    </qti-assessment-item>`,
-  play: async ({ canvasElement, step }) => {
+    </qti-assessment-item>`;
     const storedResponse = [
       { color: 'blue', percentage: 12.5 },
       { color: 'green', percentage: 37.5 },
       { color: 'red', percentage: 50 }
     ];
-    let pciElement = canvasElement.querySelector(
-      'qti-portable-custom-interaction-test'
-    ) as QtiPortableCustomInteractionTest;
-
-    const variable = {
-      identifier: 'RESPONSE',
-      value: JSON.stringify(storedResponse),
-      type: 'response',
-      cardinality: 'single',
-      baseType: 'string'
-    } as VariableDeclaration<string | string>;
-    await new Promise(resolve => setTimeout(resolve, 500));
-    const content = await pciElement.getIFrameContent();
-    expect(content).not.toContain('fill="red"');
-    expect(content).not.toContain('fill="green"');
-
-    pciElement.setTestContext({
-      identifier: 'pci',
-      variables: [variable]
-    });
-
+    let assessmentItem = null;
+    const onItemFirstUpdated = e => {
+      assessmentItem = (e as CustomEvent<QtiAssessmentItem>).detail;
+      assessmentItem.updateResponseVariable('RESPONSE', JSON.stringify(storedResponse));
+    };
+    return html`
+      <qti-item>
+        <item-container @qti-assessment-item-connected="${onItemFirstUpdated}" .itemXML=${qti}></item-container>
+      </qti-item>
+    `;
+  },
+  play: async ({ canvasElement, step }) => {
     await step('check the restored response', async () => {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const qtiItem = canvasElement.querySelector('qti-item');
+      // await new Promise(resolve => setTimeout(resolve, 1000));
 
-      pciElement = canvasElement.querySelector(
-        'qti-portable-custom-interaction-test'
-      ) as QtiPortableCustomInteractionTest;
+      const pciElement = await waitFor(
+        () => {
+          if (!qtiItem) throw new Error('qtiItem is not defined');
+          if (!qtiItem.children.length) throw new Error('qtiItem has no children');
+          const assessmentItem = qtiItem.children[0].shadowRoot.querySelector('qti-assessment-item');
+          if (!assessmentItem) throw new Error('assessmentItem is not defined');
+          const el = assessmentItem.querySelector('qti-portable-custom-interaction-test');
+          if (!el) throw new Error('Element not found');
+          return el;
+        },
+        {
+          timeout: 10000,
+          interval: 1000
+        }
+      );
+      await new Promise(resolve => setTimeout(resolve, 1000));
       const content = await pciElement.getIFrameContent();
       expect(content).toContain('fill="red"');
       expect(content).toContain('fill="green"');

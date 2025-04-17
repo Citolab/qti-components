@@ -13,9 +13,6 @@ import type { TemplateFunction } from 'stampino';
 /**
  * A custom web component that renders a test stamp using the Lit framework.
  * This component is deprecated and will be removed in the future.
- *
- * @deprecated Test-stamp is deprecated and will be removed in the future.
- *
  * @customElement
  * @extends {LitElement}
  */
@@ -39,7 +36,18 @@ export class TestStamp extends LitElement {
     activeTestpart?: unknown;
     activeSection?: unknown;
     activeItem?: unknown;
-  } | null = null;
+  } = {
+    view: 'candidate',
+    activeItem: {},
+    activeSection: {
+      items: []
+    },
+    activeTestpart: {
+      items: [],
+      sections: []
+    },
+    test: {}
+  };
 
   myTemplate: TemplateFunction;
 
@@ -59,7 +67,6 @@ export class TestStamp extends LitElement {
 
   protected willUpdate(_changedProperties: PropertyValues): void {
     if (!this.computedContext) {
-      this.stampContext = null;
       return;
     }
     const activeTestPart = this.computedContext.testParts.find(testPart => testPart.active);
@@ -68,7 +75,6 @@ export class TestStamp extends LitElement {
     const { variables, ...augmentedItem } = activeItem || {};
 
     if (!activeTestPart || !activeSection || !activeItem) {
-      this.stampContext = null;
       return;
     }
 
@@ -94,7 +100,7 @@ export class TestStamp extends LitElement {
   }
 
   render() {
-    if (!this.stampContext) return nothing;
+    // if (!this.stampContext) return nothing;
     return html` ${this.debug ? html`<small><pre>${JSON.stringify(this.stampContext, null, 2)}</pre></small>` : nothing}
     ${this.myTemplate ? this.myTemplate(this.stampContext) : nothing}`;
   }

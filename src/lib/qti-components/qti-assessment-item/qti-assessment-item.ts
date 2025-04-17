@@ -223,18 +223,23 @@ export class QtiAssessmentItem extends LitElement {
   };
 
   /**
-   * Toggles the display of correct responses for interactions.
+   * Toggles the display of correct responses for all interactions.
    * @param show - A boolean indicating whether to show or hide correct responses.
    */
   public showCorrectResponse(show: boolean): void {
-    // Process response variables with correct responses.
-    // Update interactions with the correct responses or clear them.
-    for (const responseVariable of this._context.variables.filter(v => v.type === 'response') as ResponseVariable[]) {
-      const interaction = this._interactionElements.find(
-        element => element.getAttribute('response-identifier') === responseVariable.identifier
-      );
+    // Get all response variables
+    const responseVariables = this._context.variables.filter(v => v.type === 'response') as ResponseVariable[];
 
-      if (interaction) {
+    // Iterate through all interaction elements
+    for (const interaction of this._interactionElements) {
+      // Get the response identifier for this interaction
+      const responseIdentifier = interaction.getAttribute('response-identifier');
+
+      // Find the matching response variable for this interaction
+      const responseVariable = responseVariables.find(v => v.identifier === responseIdentifier);
+
+      // If we found a matching response variable, toggle the correct response
+      if (responseVariable) {
         interaction.toggleCorrectResponse(responseVariable, show);
       }
     }

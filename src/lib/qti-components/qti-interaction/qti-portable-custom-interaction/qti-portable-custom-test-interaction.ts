@@ -11,6 +11,13 @@ import type { ItemContext } from '../../../exports/item.context';
 @customElement('qti-portable-custom-interaction-test')
 export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteraction {
   private _recreatingIframe = false;
+
+  constructor() {
+    super();
+    // Initialize the iframe and other properties
+    this.useIframe = true;
+  }
+
   /**
    * Gets the HTML content of the iframe for testing purposes
    * @returns Promise that resolves with the HTML content string

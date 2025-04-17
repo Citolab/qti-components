@@ -46,13 +46,15 @@ export class QtiCustomInteraction extends Interaction {
 
   override connectedCallback(): void {
     super.connectedCallback();
-
-    const uriToManifest = this.data.startsWith('http')
-      ? this.data
-      : removeDoubleSlashes(this.baseItemUrl + '/' + this.data);
+    const uriToManifest =
+      this.data.startsWith('http') || this.data.startsWith('blob')
+        ? this.data
+        : removeDoubleSlashes(this.baseItemUrl + '/' + this.data);
     // fetch the json file located at the data attribute
     fetch(uriToManifest)
-      .then(response => response.json())
+      .then(response => {
+        return response.json();
+      })
       .then(data => {
         this.manifest = data;
         this.setupCES();
@@ -70,14 +72,32 @@ export class QtiCustomInteraction extends Interaction {
     const iframe = this.shadowRoot.querySelector('#pciContainer') as HTMLIFrameElement,
       iframeDoc = iframe.contentDocument;
 
+    if (!this.manifest.script || this.manifest.script.length === 0) {
+      this._errorMessage = 'No script found in manifest';
+      return;
+    }
+    if (!this.manifest.style || this.manifest.style.length === 0) {
+      this._errorMessage = 'No style found in manifest';
+      return;
+    }
+    const cssRef = this.manifest.style[0];
+    const cssUrl =
+      cssRef.startsWith('http') || cssRef.startsWith('blob')
+        ? cssRef
+        : removeDoubleSlashes(`${this.baseRefUrl}/${cssRef}`);
+    const scriptRef = this.manifest.script[0];
+    const scriptUrl =
+      scriptRef.startsWith('http') || scriptRef.startsWith('blob')
+        ? scriptRef
+        : removeDoubleSlashes(`${this.baseRefUrl}/${scriptRef}`);
     // const channel = new BroadcastChannel('ces_channel');
     window.addEventListener('message', this.handlePostMessage);
     iframeDoc.open();
     iframeDoc.write(`
       <html>
         <head>
-          <link href='${removeDoubleSlashes(`${this.baseRefUrl}/${this.manifest.style[0]}`)}' rel="stylesheet" />
-          <script src='${removeDoubleSlashes(`${this.baseRefUrl}/${this.manifest.script[0]}`)}'></script>
+          <link href='${cssUrl}' rel="stylesheet" />
+          <script src='${scriptUrl}'></script>
         </head>
         <body></body>
       </html>
@@ -165,7 +185,10 @@ export class QtiCustomInteraction extends Interaction {
       }
       case 'getMedia': {
         const mediaData = this.manifest.media.map(media => {
-          const url = media.startsWith('http') ? media : removeDoubleSlashes(this.baseRefUrl + '/' + media);
+          const url =
+            media.startsWith('http') || media.startsWith('blob')
+              ? media
+              : removeDoubleSlashes(this.baseRefUrl + '/' + media);
           return url;
         });
         this.postToWindowAndIframes('mediaData', mediaData);

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+    xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+    title="Celleer" time-dependent="false" identifier="QUE_185_1">
+    <qti-response-declaration identifier="RESPONSE" base-type="identifier" cardinality="single">
+        <qti-correct-response>
+            <qti-value>A</qti-value>
+        </qti-correct-response>
+        <qti-mapping default-value="0" lower-bound="0" upper-bound="1">
+            <qti-map-entry map-key="A" mapped-value="1" />
+        </qti-mapping>
+    </qti-response-declaration>
+    <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single"
+        normal-minimum="0" normal-maximum="5">
+        <qti-default-value>
+            <qti-value>0</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
+        <qti-default-value>
+            <qti-value>5</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="FEEDBACK" base-type="identifier" cardinality="single">
+</qti-outcome-declaration>
+    <qti-item-body>
+        <div>
+            <p><strong>Cellen, weefsels, orgenen: 10 x juist of onjuist.</strong><br />Zie figuur B
+            3063 van de bijlage.<br /><br />Vul in: juist of onjuist.<br /><br />1. In de afbeelding
+            is één type weefsel weergegeven. <qti-inline-choice-interaction
+                    response-identifier="RESPONSE" shuffle="false">
+                    <qti-inline-choice identifier="B">juist</qti-inline-choice>
+                    <qti-inline-choice identifier="A">onjuist</qti-inline-choice>
+                </qti-inline-choice-interaction>
+<br />2.
+            Het skelet is een voorbeeld van een orgaan. <qti-inline-choice-interaction
+                    response-identifier="RESPONSE" shuffle="false">
+                    <qti-inline-choice identifier="B">juist</qti-inline-choice>
+                    <qti-inline-choice identifier="A">onjuist</qti-inline-choice>
+                </qti-inline-choice-interaction>
+<br />3.
+            De longen bevinden zich in de buikholte. <qti-inline-choice-interaction
+                    response-identifier="RESPONSE" shuffle="false">
+                    <qti-inline-choice identifier="B">juist</qti-inline-choice>
+                    <qti-inline-choice identifier="A">onjuist</qti-inline-choice>
+                </qti-inline-choice-interaction>
+<br />4.
+            Jonge plantencellen hebben veel kleine vacuolen. <qti-inline-choice-interaction
+                    response-identifier="RESPONSE" shuffle="false">
+                    <qti-inline-choice identifier="A">juist</qti-inline-choice>
+                    <qti-inline-choice identifier="B">onjuist</qti-inline-choice>
+                </qti-inline-choice-interaction>
+<br />5.
+            Een celmembraan is tussencelstof. <qti-inline-choice-interaction
+                    response-identifier="RESPONSE" shuffle="false">
+                    <qti-inline-choice identifier="B">juist</qti-inline-choice>
+                    <qti-inline-choice identifier="A">onjuist</qti-inline-choice>
+                </qti-inline-choice-interaction>
+<br />6.
+            In zetmeelkorrels vindt fotosynthese plaats. <qti-inline-choice-interaction
+                    response-identifier="RESPONSE" shuffle="false">
+                    <qti-inline-choice identifier="B">juist</qti-inline-choice>
+                    <qti-inline-choice identifier="A">onjuist</qti-inline-choice>
+                </qti-inline-choice-interaction>
+<br />7.
+            DNA bevat de informatie voor erfelijke eigenschappen. <qti-inline-choice-interaction
+                    response-identifier="RESPONSE" shuffle="false">
+                    <qti-inline-choice identifier="A">juist</qti-inline-choice>
+                    <qti-inline-choice identifier="B">onjuist</qti-inline-choice>
+                </qti-inline-choice-interaction>
+<br />8.
+            De kern van een zenuwcel van een mens bevat 23 chromosomen. <qti-inline-choice-interaction
+                    response-identifier="RESPONSE" shuffle="false">
+                    <qti-inline-choice identifier="B">juist</qti-inline-choice>
+                    <qti-inline-choice identifier="A">onjuist</qti-inline-choice>
+                </qti-inline-choice-interaction>
+<br />9.
+            Alleen bij groeiende kinderen vinden celdelingen plaats. <qti-inline-choice-interaction
+                    response-identifier="RESPONSE" shuffle="false">
+                    <qti-inline-choice identifier="B">juist</qti-inline-choice>
+                    <qti-inline-choice identifier="A">onjuist</qti-inline-choice>
+                </qti-inline-choice-interaction>
+<br />10.
+            In de periode tussen twee celdelingen in zijn chromosomen niet zichtbaar. <qti-inline-choice-interaction
+                    response-identifier="RESPONSE" shuffle="false">
+                    <qti-inline-choice identifier="A">juist</qti-inline-choice>
+                    <qti-inline-choice identifier="B">onjuist</qti-inline-choice>
+                </qti-inline-choice-interaction>
+            </p>
+<img
+                src="figb3063.jpg" alt="" />
+        </div>
+    </qti-item-body>
+    <qti-response-processing />
+    <qti-modal-feedback show-hide="show" outcome-identifier="FEEDBACK" identifier="correct">
+        <qti-content-body>Het antwoord is goed</qti-content-body>
+    </qti-modal-feedback>
+    <qti-modal-feedback show-hide="show" outcome-identifier="FEEDBACK" identifier="incorrect">
+        <qti-content-body>Het antwoord is fout</qti-content-body>
+    </qti-modal-feedback>
+    <qti-modal-feedback show-hide="show" outcome-identifier="FEEDBACK" identifier="partly">
+        <qti-content-body>Het antwoord is gedeeltelijk goed</qti-content-body>
+    </qti-modal-feedback>
+</qti-assessment-item>

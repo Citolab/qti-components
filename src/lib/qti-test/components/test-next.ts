@@ -1,9 +1,9 @@
 import { css, html, LitElement } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 import { consume } from '@lit/context';
 
 import * as styles from './styles';
-import { propInternalState, watch } from '../../decorators';
+// import { watch } from '../../decorators';
 import { computedContext } from '../../exports/computed.context';
 
 import type { ComputedContext, ComputedItem } from '../../exports/computed.context';
@@ -21,12 +21,8 @@ import type { ComputedContext, ComputedItem } from '../../exports/computed.conte
  */
 @customElement('test-next')
 export class TestNext extends LitElement {
-  @propInternalState({
-    type: Boolean,
-    reflect: true,
-    aria: 'ariaDisabled' // Maps to `aria-disabled` attribute
-  })
-  public disabled = true;
+  @property({ type: Boolean, reflect: true })
+  public disabled = false;
 
   @consume({ context: computedContext, subscribe: true })
   protected computedContext: ComputedContext;
@@ -34,12 +30,12 @@ export class TestNext extends LitElement {
   sectionItems: ComputedItem[];
   itemIndex: number;
 
-  @watch('computedContext')
-  _handleTestElementChange(_oldValue: ComputedContext, newValue: ComputedContext) {
-    if (newValue) {
-      this.disabled = false;
-    }
-  }
+  // @watch('computedContext')
+  // _handleTestElementChange(_oldValue: ComputedContext, newValue: ComputedContext) {
+  //   if (newValue) {
+  //     this.disabled = false;
+  //   }
+  // }
 
   static styles = css`
     :host {
@@ -66,7 +62,6 @@ export class TestNext extends LitElement {
 
   connectedCallback(): void {
     super.connectedCallback();
-    this.checkDisabled();
   }
 
   willUpdate(_changedProperties: Map<string | number | symbol, unknown>) {
@@ -79,7 +74,11 @@ export class TestNext extends LitElement {
   }
 
   checkDisabled() {
-    this.disabled = !this.computedContext || this.itemIndex < 0 || this.itemIndex >= this.sectionItems?.length - 1;
+    const shouldBeDisabled =
+      !this.computedContext || this.itemIndex < 0 || this.itemIndex >= this.sectionItems?.length - 1;
+    if (shouldBeDisabled) {
+      this.disabled = true;
+    }
   }
 
   protected _requestItem(identifier: string): void {

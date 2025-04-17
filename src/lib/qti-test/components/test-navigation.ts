@@ -100,9 +100,9 @@ export class TestNavigation extends LitElement {
     qtiAssessmentItemEl.processResponse(true, reportValidityAfterScoring);
   }
 
-  protected createRenderRoot(): HTMLElement | DocumentFragment {
-    return this;
-  }
+  // protected createRenderRoot(): HTMLElement | DocumentFragment {
+  //   return this;
+  // }
 
   // myTemplate: TemplateFunction;
 
