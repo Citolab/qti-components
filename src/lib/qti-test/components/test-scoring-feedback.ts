@@ -42,7 +42,7 @@ export class TestScoringFeedback extends LitElement {
 
       if (externalScored === 'externalMachine') {
         return Number.isNaN(score) || score === undefined
-          ? 'We konden je antwoord geen score geven, omdat we te weinig antwoorden konden vinden die op jouw antwoord leken. Kijk je antwoord zelf na.'
+          ? this.dataset.scoreUnknown
           : `We hebben je antwoord ${score === 0 ? 'geen punten' : score == 1 ? 'één punt' : `${score} punten`} gegeven. Je kunt je score zelf aanpassen als je denkt dat dat niet klopt.`;
       }
 
@@ -50,7 +50,7 @@ export class TestScoringFeedback extends LitElement {
         return Number.isNaN(score) ? '' : 'Deze score heb je zelf toegekend.';
       }
 
-      return this.dataset.scoreUnknown;
+      return this.dataset.inProgress;
     };
 
     return html`<div>${feedbackText()}</div>`;
