@@ -6,9 +6,10 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { testContext } from '../../exports/test.context';
 import { sessionContext } from '../../exports/session.context';
 import { computedContext } from '../../exports/computed.context';
-
 // import type { View } from '../core/mixins/test-view.mixin';
 // import type { TemplateFunction } from 'stampino';
+import { qtiTransformItem } from '../../qti-transformers';
+
 import type { QtiAssessmentItem } from '../../qti-components';
 import type { OutcomeVariable } from '../../exports/variables';
 import type { ComputedContext } from '../../exports/computed.context';
@@ -158,7 +159,6 @@ export class TestNavigation extends LitElement {
     return html`<slot></slot>`;
   }
 
-  /* PK: on test connected we can build the computed context */
   private _handleTestConnected(event: CustomEvent) {
     this._testElement = event.detail as QtiAssessmentTest;
     const testPartElements = Array.from(this._testElement?.querySelectorAll<QtiTestPart>(`qti-test-part`) || []);
@@ -185,13 +185,36 @@ export class TestNavigation extends LitElement {
                 identifier: item.identifier,
                 categories: item.category ? item.category?.split(' ') : [],
                 href: item.href,
-                variables: []
+                variables: [],
+                itemDoc: null
               }))
             };
           })
         };
       })
     };
+    this.loadAndSetComputedContext();
+  }
+
+  async loadAndSetComputedContext() {
+    const testParts = await Promise.all(
+      this.computedContext.testParts.map(testPart =>
+        Promise.all(
+          testPart.sections.map(section =>
+            Promise.all(
+              section.items.map(async item => {
+                if (item.href) {
+                  const { htmlDoc } = await qtiTransformItem().load(item.href).promise;
+                  return { ...item, itemDoc: htmlDoc() as Document };
+                }
+                return { ...item };
+              })
+            ).then(items => ({ ...section, items }))
+          )
+        ).then(sections => ({ ...testPart, sections }))
+      )
+    );
+    this.computedContext = { ...this.computedContext, testParts };
   }
 
   /* PK: on item connected we can add item only properties in the xml */
