@@ -83,11 +83,16 @@ export class QtiAssessmentItem extends LitElement {
       variables: this._context.variables.map(variable => {
         const matchingValue = value.find(v => v.identifier === variable.identifier);
         if (matchingValue) {
-          return { ...variable, ...matchingValue };
+          return {
+            ...variable,
+            ...matchingValue,
+            interpolationTable: (variable as OutcomeVariable).interpolationTable
+          };
         }
         return variable;
       })
     };
+
     this._context.variables.forEach(variable => {
       if (variable.type === 'response') {
         const interactionElement = this._interactionElements.find(
