@@ -9,7 +9,13 @@ import type { IInteraction } from '../../../../exports/interaction.interface';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 
-export type Choice = HTMLElement & ChoiceInterface & { internals: ElementInternals };
+export type Choice = HTMLElement &
+  ChoiceInterface & {
+    internals: ElementInternals;
+    inputType: 'checkbox' | 'radio';
+    groupName?: string;
+    checked: boolean;
+  };
 
 export interface ChoicesInterface extends IInteraction {
   minChoices: number;
@@ -24,6 +30,7 @@ export interface ChoicesInterface extends IInteraction {
 export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, selector: string) => {
   abstract class ChoicesMixinElement extends superClass implements ChoicesInterface {
     protected _choiceElements: Choice[] = [];
+    protected _lastSelectedChoice: Choice | null = null;
 
     @query('#validationMessage')
     protected _validationMessageElement!: HTMLElement;
@@ -108,7 +115,7 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
     }
 
     public validate(): boolean {
-      const selectedChoices = this._choiceElements.filter(choice => this._getChoiceChecked(choice));
+      const selectedChoices = this._choiceElements.filter(choice => choice.checked);
       const selectedCount = selectedChoices.length;
       let isValid = true;
       let validityMessage = '';
@@ -124,7 +131,7 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
           `Please select at least ${this.minChoices} ${this.minChoices === 1 ? 'option' : 'options'}.`;
       }
 
-      if (selectedChoices.length > 0) {
+      if (selectedChoices.length > 0 || this._choiceElements.length > 0) {
         this._internals.setValidity(
           isValid ? {} : { customError: true },
           validityMessage,
@@ -147,20 +154,25 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       return this._internals.validity.valid;
     }
 
-    protected _registerChoiceElement(event: CustomEvent) {
+    protected _registerChoiceElement = (event: CustomEvent) => {
       event.stopPropagation();
       const choiceElement = event.target as Choice;
       choiceElement.disabled = this.disabled;
 
       this._choiceElements.push(choiceElement);
       this._setInputType(choiceElement);
-    }
+    };
 
-    protected _unregisterChoiceElement(event: CustomEvent) {
+    protected _unregisterChoiceElement = (event: CustomEvent) => {
       event.stopPropagation();
       const choiceElement = event.target as Choice;
       this._choiceElements = this._choiceElements.filter(choice => choice !== choiceElement);
-    }
+
+      // Reset lastSelectedChoice if it's being unregistered
+      if (this._lastSelectedChoice === choiceElement) {
+        this._lastSelectedChoice = null;
+      }
+    };
 
     protected _determineInputType() {
       this._choiceElements.forEach(choice => {
@@ -169,49 +181,67 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
     }
 
     protected _setInputType(choiceElement: Choice) {
-      this._internals.role = this.maxChoices === 1 ? 'radiogroup' : null;
+      // Set the container role
+      this._internals.role = this.maxChoices === 1 ? 'radiogroup' : 'group';
 
+      // Set input type for the choice element
+      choiceElement.inputType = this.maxChoices === 1 ? 'radio' : 'checkbox';
+
+      // If this is a radio button, ensure they all share the same name for grouping
+      if (this.maxChoices === 1) {
+        const groupName = 'group-' + (this.getAttribute('response-identifier') || 'response');
+        choiceElement.groupName = groupName;
+        // const inputElements = this._choiceElements
+        //   .map(choice => choice.shadowRoot?.querySelector('input'))
+        //   .filter(Boolean) as HTMLInputElement[];
+
+        // // Set the same name for all radio buttons in the group
+        // const groupName = 'group-' + (this.getAttribute('response-identifier') || 'response');
+        // inputElements.forEach(input => {
+        //   if (input) input.name = groupName;
+        // });
+      }
+
+      // Keep ARIA roles for accessibility
       const role = this.maxChoices === 1 ? 'radio' : 'checkbox';
       choiceElement.internals.role = role;
-      choiceElement.internals.states.delete(role === 'radio' ? 'checkbox' : 'radio');
-      choiceElement.internals.states.add(role);
     }
 
-    protected _choiceElementSelectedHandler(event: CustomEvent<{ identifier: string }>) {
-      this._toggleChoiceChecked(event.target as Choice);
+    protected _choiceElementSelectedHandler = (event: CustomEvent<{ identifier: string }>) => {
+      const choiceElement = event.target as Choice;
+
+      // Handle radio button unselection
       if (this.maxChoices === 1) {
-        this._choiceElements.forEach(choice => {
-          if (choice.identifier !== event.detail.identifier) {
-            this._setChoiceChecked(choice, false);
-          }
-        });
-      }
-      this._handleChoiceSelection();
-    }
+        // If this was the previously selected radio and is now unchecked
+        // we need to update the response
+        if (this._lastSelectedChoice === choiceElement && !choiceElement.checked) {
+          // Radio was unselected, set response to empty
+          this.response = '';
+          this._lastSelectedChoice = null;
+          this.saveResponse(this.response);
+          this.validate();
+          return;
+        }
 
-    protected _setChoiceChecked(choice: Choice, checked: boolean) {
-      if (choice.internals?.states) {
-        if (checked) {
-          choice.internals.states.add('--checked');
-          choice.internals.ariaChecked = 'true';
-        } else {
-          choice.internals.states.delete('--checked');
-          choice.internals.ariaChecked = 'false';
+        // Otherwise, normal radio selection behavior
+        if (choiceElement.checked) {
+          // Store the last selected choice for radio unselection tracking
+          this._lastSelectedChoice = choiceElement;
+
+          // Uncheck all other radio buttons
+          this._choiceElements.forEach(choice => {
+            if (choice !== choiceElement && choice.checked) {
+              choice.checked = false;
+            }
+          });
         }
       }
-    }
 
-    protected _getChoiceChecked(choice: Choice): boolean {
-      return choice.internals.states.has('--checked');
-    }
-
-    protected _toggleChoiceChecked(choice: Choice) {
-      const checked = this._getChoiceChecked(choice);
-      this._setChoiceChecked(choice, !checked);
-    }
+      this._handleChoiceSelection();
+    };
 
     protected _handleChoiceSelection() {
-      const selectedChoices = this._choiceElements.filter(choice => this._getChoiceChecked(choice));
+      const selectedChoices = this._choiceElements.filter(choice => choice.checked);
       const selectedIdentifiers = selectedChoices.map(choice => choice.identifier);
 
       this.response = this.maxChoices === 1 ? selectedIdentifiers[0] || '' : selectedIdentifiers;
@@ -225,10 +255,23 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
      */
     protected _updateChoiceSelection() {
       const responseArray = Array.isArray(this.response) ? this.response : [this.response];
+
+      let foundSelected = false;
+
       this._choiceElements.forEach(choice => {
         const isSelected = responseArray.includes(choice.identifier);
-        this._setChoiceChecked(choice, isSelected);
+        choice.checked = isSelected;
+
+        if (isSelected && this.maxChoices === 1) {
+          this._lastSelectedChoice = choice;
+          foundSelected = true;
+        }
       });
+
+      // If no choice is selected in radio mode, reset the lastSelectedChoice
+      if (!foundSelected && this.maxChoices === 1) {
+        this._lastSelectedChoice = null;
+      }
     }
   }
   return ChoicesMixinElement as Constructor<ChoicesInterface> & T;

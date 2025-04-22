@@ -1,103 +1,162 @@
 @layer qti-components {
+  /* CSS for custom focus indicator if needed */
+
+  /* Set the accent color for all inputs */
+  & input[type='checkbox'],
+  & input[type='radio'] {
+    accent-color: var(--qti-border-active);
+    width: var(--qti-form-size);
+    height: var(--qti-form-size);
+    cursor: pointer;
+  }
+
+  input[type='checkbox']:focus,
+  input[type='radio']:focus {
+    outline: none; /* Remove default focus outline */
+  }
+
   qti-choice-interaction {
-    &.qti-input-control-hidden {
-      & qti-simple-choice {
-        @apply button;
-
-        &:hover {
-          @apply hov;
-        }
-
-        &:focus {
-          @apply foc;
-        }
-
-        &::part(ch) {
-          display: none;
-        }
-
-        &:state(--checked),
-        &[aria-checked='true'] {
-          @apply act;
-        }
-
-        &:state(readonly),
-        &[aria-readonly='true'] {
-          @apply rdo;
-        }
-
-        &:state(disabled),
-        &[aria-disabled='true'] {
-          @apply dis;
-        }
-      }
-    }
-
-    &:not(.qti-input-control-hidden) {
-      & qti-simple-choice {
-        @apply check;
-
-        &:not([aria-disabled='true'], [aria-readonly='true'], :state(--checked)):hover {
-          @apply hov;
-        }
-
-        &:focus {
-          @apply foc;
-        }
-
-        &:state(--checked),
-        &[aria-checked='true'] {
-          @apply act;
-        }
-
-        &:state(readonly),
-        &[aria-readonly='true'] {
-          @apply rdo;
-        }
-
-        &:state(disabled),
-        &[aria-disabled='true'] {
-          @apply dis;
-        }
-
-        &::part(cha) {
-          @apply check-size;
-        }
-
-        &:state(radio)::part(ch) {
-          @apply check-radio;
-        }
-
-        &:state(radio):state(--checked)::part(cha) {
-          @apply check-radio-checked;
-        }
-
-        &:state(checkbox)::part(ch) {
-          @apply check-checkbox;
-        }
-
-        &:state(checkbox):state(--checked)::part(cha) {
-          @apply check-checkbox-checked;
-        }
-      }
-    }
-
+    /* Common styles for all qti-simple-choice elements */
     & qti-simple-choice {
       width: fit-content;
       cursor: pointer;
+      display: flex;
+      align-items: center;
 
-      &:state(correct-response),
-      &[data-correct-response='true'] {
-        &::after {
-          content: '\02714';
-          color: var(--qti-correct);
+      /* Set margin to create spacing between choices */
+      margin-bottom: 0.5rem;
+
+      /* Styles for correct response indicators */
+      &[internals|states~='correct-response']::after,
+      &:state(correct-response)::after {
+        content: '\02714';
+        color: var(--qti-correct);
+        margin-left: 0.5rem;
+      }
+
+      /* Style for incorrect response indicators */
+      &[internals|states~='incorrect-response']::after {
+        content: '\02716';
+        color: var(--qti-border-active);
+        margin-left: 0.5rem;
+      }
+
+      /* Remove margin from paragraphs inside choices */
+      & > p {
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
+      /* Style for the input container */
+      & .input-container {
+        margin-right: 0.5rem;
+      }
+
+      /* States for all choices */
+      &:focus-within {
+        outline: var(--qti-focus-border-width) solid var(--qti-focus-color);
+      }
+
+      &:hover:not([disabled], [readonly]) {
+        background-color: var(--qti-hover-bg);
+      }
+
+      &[disabled],
+      &[aria-disabled='true'] {
+        cursor: not-allowed;
+        opacity: 0.6;
+
+        & input {
+          opacity: 0.6;
+        }
+      }
+
+      &[readonly],
+      &[aria-readonly='true'] {
+        cursor: default;
+
+        & input {
+          pointer-events: none;
         }
       }
     }
 
-    & qti-simple-choice > p {
-      margin: 0 !important;
-      padding: 0 !important;
+    /* Input-Control-Hidden mode: Buttons instead of checkboxes/radios */
+    &.qti-input-control-hidden {
+      & qti-simple-choice {
+        border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color);
+        border-radius: var(--qti-border-radius);
+        padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
+        margin-bottom: 0.5rem;
+
+        /* Hide the input container */
+        & .input-container {
+          display: none;
+        }
+
+        &:hover:not([disabled], [readonly]) {
+          background-color: var(--qti-hover-bg);
+        }
+
+        &:focus-within {
+          box-shadow: 0 0 0 var(--qti-focus-border-width) var(--qti-focus-color);
+        }
+
+        /* Checked state */
+        &[aria-checked='true'],
+        &[checked] {
+          border-color: var(--qti-border-active);
+          background-color: var(--qti-bg-active);
+        }
+
+        /* Readonly state */
+        &[readonly],
+        &[aria-readonly='true'] {
+          cursor: default;
+          background-color: var(--qti-bg);
+          outline: 0;
+          border: none;
+        }
+
+        /* Disabled state */
+        &[disabled],
+        &[aria-disabled='true'] {
+          cursor: not-allowed;
+          background-color: var(--qti-disabled-bg);
+          color: var(--qti-disabled-color);
+          border-color: var(--qti-border-color);
+          outline: 4px solid var(--qti-disabled-bg);
+        }
+      }
+    }
+
+    /* Regular mode: Standard checkboxes/radios with labels */
+    &:not(.qti-input-control-hidden) {
+      & qti-simple-choice {
+        padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
+
+        &:hover:not([disabled], [readonly], [checked]) {
+          background-color: var(--qti-hover-bg);
+        }
+
+        /* Checked state - highlight the entire choice */
+        &[aria-checked='true'],
+        &[checked] {
+          background-color: var(--qti-bg-active);
+        }
+
+        /* Light theme adjustments */
+        &.light-theme input[type='checkbox'],
+        &.light-theme input[type='radio'] {
+          accent-color: var(--qti-light-border-active);
+        }
+
+        /* Dark theme adjustments */
+        &.dark-theme input[type='checkbox'],
+        &.dark-theme input[type='radio'] {
+          accent-color: var(--qti-dark-border-active);
+        }
+      }
     }
   }
 
