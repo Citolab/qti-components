@@ -39,7 +39,8 @@ export const Test: Story = {
     <qti-test navigate="item">
       <test-navigation>
         <test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"> </test-container>
-        <test-prev ${spread(args)}>vorige</test-prev>
+        <test-prev>vorige</test-prev>
+        <test-next>volgende</test-next>
       </test-navigation>
       <test-item-link item-id="t1-test-entry-item4">link</test-item-link>
     </qti-test>
@@ -52,20 +53,25 @@ export const Test: Story = {
     await fireEvent.click(link);
 
     const prevButton = canvas.getByShadowText('vorige');
+    const nextButton = canvas.getByShadowText('volgende');
+
     expect(prevButton).toBeDisabled();
     const firstItem = await canvas.findByShadowTitle('T1 - Extended Text Interaction');
     expect(prevButton).not.toBeDisabled();
     expect(firstItem).toBeInTheDocument();
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise(resolve => setTimeout(resolve, 1));
     await fireEvent.click(prevButton);
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise(resolve => setTimeout(resolve, 1));
 
     await fireEvent.click(prevButton);
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise(resolve => setTimeout(resolve, 1));
 
     await fireEvent.click(prevButton);
     const secondItem = await findByShadowTitle(canvasElement, 'T1 - Test Entry - Item 1');
     expect(secondItem).toBeInTheDocument();
     expect(prevButton).toBeDisabled();
+    await fireEvent.click(nextButton);
+    await new Promise(resolve => setTimeout(resolve, 1));
+    expect(prevButton).not.toBeDisabled();
   }
 };
