@@ -250,7 +250,7 @@ export const FormCheckbox: Story = {
       await fireEvent.submit(form);
       const formData = new FormData(form);
 
-      const submittedValuesArray: string[] = (formData.get('RESPONSE') as string).split(',');
+      const submittedValuesArray: string[] = (formData.get('RESPONSE') as string)?.split(',') || [];
       const expectedValues = ['A', 'B'];
 
       expect(submittedValuesArray).toEqual(expect.arrayContaining(expectedValues));

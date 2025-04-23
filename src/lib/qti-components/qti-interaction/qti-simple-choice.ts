@@ -2,6 +2,7 @@ import { css, html, LitElement, nothing } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 
 import { ActiveElementMixin } from './internal/active-element/active-element.mixin';
+import { c } from '../../../../dist/qti-response-declaration-L3kc-wZ7';
 
 /**
  * QtiSimpleChoice component with proper selection styling
@@ -10,7 +11,7 @@ import { ActiveElementMixin } from './internal/active-element/active-element.mix
  * - Support for hiding input controls while keeping functionality
  */
 @customElement('qti-simple-choice')
-export class QtiSimpleChoice extends ActiveElementMixin(LitElement, 'qti-simple-choice') {
+export class QtiSimpleChoice extends ActiveElementMixin(LitElement, { type: 'qti-simple-choice', checkable: true }) {
   @property({ type: String, attribute: 'template-identifier' })
   public templateIdentifier: string | null = null;
 
@@ -354,7 +355,7 @@ export class QtiSimpleChoice extends ActiveElementMixin(LitElement, 'qti-simple-
     // Get the input element
     const inputElement = this.shadowRoot?.querySelector('input') as HTMLInputElement;
     if (!inputElement) return;
-
+    debugger;
     // Get the elements in the event path
     const path = e.composedPath();
 
@@ -411,14 +412,14 @@ export class QtiSimpleChoice extends ActiveElementMixin(LitElement, 'qti-simple-
       this.classList.remove('checked');
       this._wasLastSelected = false;
 
-      // Dispatch event to parent
-      this.dispatchEvent(
-        new CustomEvent(`activate-qti-simple-choice`, {
-          bubbles: true,
-          composed: true,
-          detail: { identifier: this.identifier }
-        })
-      );
+      // // Dispatch event to parent
+      // this.dispatchEvent(
+      //   new CustomEvent(`activate-qti-simple-choice`, {
+      //     bubbles: true,
+      //     composed: true,
+      //     detail: { identifier: this.identifier }
+      //   })
+      // );
     }, 0);
   }
 
@@ -453,14 +454,14 @@ export class QtiSimpleChoice extends ActiveElementMixin(LitElement, 'qti-simple-
       this._wasLastSelected = false;
     }
 
-    // Dispatch the activate event to notify the parent
-    this.dispatchEvent(
-      new CustomEvent(`activate-qti-simple-choice`, {
-        bubbles: true,
-        composed: true,
-        detail: { identifier: this.identifier }
-      })
-    );
+    // // Dispatch the activate event to notify the parent
+    // this.dispatchEvent(
+    //   new CustomEvent(`activate-qti-simple-choice`, {
+    //     bubbles: true,
+    //     composed: true,
+    //     detail: { identifier: this.identifier }
+    //   })
+    // );
   }
 
   // Update when attributes change or when parent changes

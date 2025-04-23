@@ -3,7 +3,7 @@ import { property } from 'lit/decorators.js';
 
 import { watch } from '../../../../decorators/watch';
 
-import type { ComplexAttributeConverter, LitElement} from 'lit';
+import type { ComplexAttributeConverter, LitElement } from 'lit';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 
@@ -11,6 +11,7 @@ export interface ChoiceInterface {
   identifier: string;
   disabled: boolean;
   readonly: boolean;
+  checked?: boolean;
 }
 
 /**
@@ -22,24 +23,30 @@ const ariaBooleanConverter: ComplexAttributeConverter<boolean, boolean> = {
   fromAttribute: (value: string | null) => value === 'true'
 };
 
-/**
- * A mixin that adds choice functionality to a LitElement-based class.
- * It dispatches events with a custom `type` and handles selection logic.
- *
- * @param Base - The base class to extend.
- * @param type - The type of the choice, used in event names.
- * @returns A new class extending the base class with choice functionality.
- */
+export interface FormElementOptions {
+  /** Type of interaction ('choice', 'checkbox', 'radio', etc.) */
+  type: string;
+  /** Whether the element can be checked/unchecked */
+  checkable?: boolean;
+  /** Whether to dispatch 'change' events instead of 'activate' events */
+  useChangeEvent?: boolean;
+}
+
 export interface ActiveElementMixinInterface {
   identifier: string;
   tabIndex: number;
   disabled: boolean;
   readonly: boolean;
+  checked?: boolean;
   internals: ElementInternals;
 }
 
+export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, options: string | FormElementOptions) {
+  const config =
+    typeof options === 'string'
+      ? { type: options, checkable: false, useChangeEvent: false }
+      : { checkable: false, useChangeEvent: false, ...options };
 
-export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, type: string) {
   abstract class QtiChoice extends Base {
     @property({ type: String })
     public identifier = '';
@@ -63,6 +70,12 @@ export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, t
     })
     public readonly = false;
 
+    @property({
+      type: Boolean,
+      reflect: true
+    })
+    public checked = false;
+
     public internals: ElementInternals;
 
     @watch('disabled', { waitUntilFirstUpdate: true })
@@ -73,6 +86,13 @@ export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, t
       }
     }
 
+    @watch('checked', { waitUntilFirstUpdate: true })
+    handleCheckedChange(_oldValue: boolean, checked: boolean) {
+      if (config.checkable && config.useChangeEvent) {
+        this._dispatchChangeEvent();
+      }
+    }
+
     constructor(...args: any[]) {
       super(...args);
       this.internals = this.attachInternals();
@@ -80,12 +100,10 @@ export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, t
 
     override connectedCallback() {
       super.connectedCallback();
-
       this.addEventListener('keyup', this._onKeyUp);
       this.addEventListener('click', this._onClick);
-
       this.dispatchEvent(
-        new CustomEvent(`register-${type}`, {
+        new CustomEvent(`register-${config.type}`, {
           bubbles: true,
           composed: true
         })
@@ -97,7 +115,7 @@ export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, t
       this.removeEventListener('keyup', this._onKeyUp);
       this.removeEventListener('click', this._onClick);
       this.dispatchEvent(
-        new CustomEvent(`unregister-${type}`, {
+        new CustomEvent(`unregister-${config.type}`, {
           bubbles: true,
           composed: true
         })
@@ -106,7 +124,6 @@ export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, t
 
     private _onKeyUp(event: KeyboardEvent) {
       if (event.altKey) return;
-
       if (event.code === 'Space') {
         event.preventDefault();
         this._activate();
@@ -122,11 +139,47 @@ export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, t
     private _activate() {
       if (this.disabled || this.readonly) return;
 
+      if (config.checkable) {
+        // Toggle checked state for checkboxes
+        // For radio buttons, this would be handled differently (likely by a parent component)
+        if (!config.useChangeEvent) {
+          this.checked = !this.checked;
+        }
+      }
+
+      if (config.useChangeEvent) {
+        if (config.checkable && !this.checked) {
+          this.checked = !this.checked;
+        } else {
+          this._dispatchChangeEvent();
+        }
+      } else {
+        this._dispatchActivateEvent();
+      }
+    }
+
+    private _dispatchActivateEvent() {
       this.dispatchEvent(
-        new CustomEvent<{ identifier: string }>(`activate-${type}`, {
+        new CustomEvent<{ identifier: string; checked?: boolean }>(`activate-${config.type}`, {
           bubbles: true,
           composed: true,
-          detail: { identifier: this.identifier }
+          detail: {
+            identifier: this.identifier,
+            ...(config.checkable ? { checked: this.checked } : {})
+          }
+        })
+      );
+    }
+
+    private _dispatchChangeEvent() {
+      this.dispatchEvent(
+        new CustomEvent<{ identifier: string; checked: boolean }>(`change-${config.type}`, {
+          bubbles: true,
+          composed: true,
+          detail: {
+            identifier: this.identifier,
+            checked: this.checked
+          }
         })
       );
     }
@@ -135,5 +188,6 @@ export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, t
       return html`<slot></slot>`;
     }
   }
+
   return QtiChoice as Constructor<ActiveElementMixinInterface> & T;
 }

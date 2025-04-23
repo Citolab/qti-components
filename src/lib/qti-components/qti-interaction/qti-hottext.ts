@@ -4,7 +4,7 @@ import { customElement } from 'lit/decorators.js';
 import { ActiveElementMixin } from './internal/active-element/active-element.mixin';
 
 @customElement('qti-hottext')
-export class QtiHottext extends ActiveElementMixin(LitElement, 'qti-hottext') {
+export class QtiHottext extends ActiveElementMixin(LitElement, { type: 'qti-hottext' }) {
   static styles = css`
     :host {
       display: flex;

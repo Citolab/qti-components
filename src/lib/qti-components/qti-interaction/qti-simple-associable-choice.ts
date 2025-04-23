@@ -9,7 +9,9 @@ qti-associate-interaction
 */
 @customElement('qti-simple-associable-choice')
 // tslint:disable: indent
-export class QtiSimpleAssociableChoice extends ActiveElementMixin(LitElement, 'qti-simple-associable-choice') {
+export class QtiSimpleAssociableChoice extends ActiveElementMixin(LitElement, {
+  type: 'qti-simple-associable-choice'
+}) {
   static styles = css`
     :host {
       display: flex;

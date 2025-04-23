@@ -200,7 +200,6 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
 
     protected _choiceElementSelectedHandler = (event: CustomEvent<{ identifier: string }>) => {
       const choiceElement = event.target as Choice;
-
       // Handle radio button unselection
       if (this.maxChoices === 1) {
         // If this was the previously selected radio and is now unchecked
@@ -232,13 +231,15 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
     };
 
     protected _handleChoiceSelection() {
-      const selectedChoices = this._choiceElements.filter(choice => choice.checked);
-      const selectedIdentifiers = selectedChoices.map(choice => choice.identifier);
+      setTimeout(() => {
+        const selectedChoices = this._choiceElements.filter(choice => choice.checked);
+        const selectedIdentifiers = selectedChoices.map(choice => choice.identifier);
 
-      this.response = this.maxChoices === 1 ? selectedIdentifiers[0] || '' : selectedIdentifiers;
+        this.response = this.maxChoices === 1 ? selectedIdentifiers[0] || '' : selectedIdentifiers;
 
-      this.validate();
-      this.saveResponse(this.response);
+        this.validate();
+        this.saveResponse(this.response);
+      }, 0); // Allow time for the DOM to check the checked state
     }
 
     /**
