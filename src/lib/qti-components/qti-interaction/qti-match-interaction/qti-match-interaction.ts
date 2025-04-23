@@ -184,10 +184,12 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
                       const selectedInRowCount = this.response.filter(v => v.split(' ')[0] === rowId).length || 0;
                       const checked = this.response.includes(value);
                       const type = row.matchMax === 1 ? 'radio' : 'checkbox';
+                      const isCorrect = !!this.correctOptions.find(x => x.text === rowId && x.gap === colId);
                       const part =
                         type === 'radio'
-                          ? `rb ${checked ? 'rb-checked' : ''} ${this.correctOptions.find(x => x.text === rowId && x.gap === colId) ? 'rb-correct' : ''}`
-                          : `cb ${checked ? 'cb-checked' : ''} ${this.correctOptions.find(x => x.text === rowId && x.gap === colId) ? 'cb-correct' : ''}`;
+                          ? `rb ${isCorrect ? 'rb-correct' : 'rb-incorrect'}`
+                          : `cb ${isCorrect ? 'cb-correct' : 'cb-incorrect'}`;
+
                       // disable if match max is greater than 1 and max is reached
                       const disable =
                         this.correctOptions.length > 0

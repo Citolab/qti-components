@@ -660,7 +660,6 @@
       background-color: var(--qti-border-active, #2196f3) !important;
     }
 
-    /* SVG Checkmark (if added to template) */
     &::part(checkmark) {
       position: absolute;
       width: 18px;
@@ -672,19 +671,36 @@
 
     /* Correct answers for both types */
     &::part(rb-correct) {
-      border-color: #4caf50;
+      border-color: var(--qti-correct, #4caf50);
     }
 
     &::part(rb-checked rb-correct) {
-      box-shadow: inset 0 0 0 6px #4caf50;
+      box-shadow: inset 0 0 0 6px var(--qti-correct, #4caf50);
     }
 
     &::part(cb-correct) {
-      border-color: #4caf50;
+      border-color: var(--qti-correct, #4caf50);
     }
 
     &::part(cb-checked cb-correct) {
-      background-color: #4caf50 !important;
+      background-color: var(--qti-correct, #4caf50) !important;
+    }
+
+    /* Incorrect answers for both types */
+    &::part(rb-incorrect) {
+      border-color: var(--qti-incorrect, #f44336);
+    }
+
+    &::part(rb-checked rb-incorrect) {
+      box-shadow: inset 0 0 0 6px var(--qti-incorrect, #f44336);
+    }
+
+    &::part(cb-incorrect) {
+      border-color: var(--qti-incorrect, #f44336);
+    }
+
+    &::part(cb-checked cb-incorrect) {
+      background-color: var(--qti-incorrect, #f44336) !important;
     }
   }
 

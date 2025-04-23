@@ -302,6 +302,70 @@ export const Match: Story = {
   }
 };
 
+export const MatchTabular: Story = {
+  args: {
+    'item-url': '/qti-test-package/items/match-tabular.xml' // Set the new item URL here
+    // 'item-url': 'api/kennisnet-1/ITEM002.xml' // Set the new item URL here
+  },
+  render: args =>
+    html` <qti-item>
+      <div>
+        <item-container style="display: block;width: 400px; height: 350px;" item-url=${args['item-url'] as string}>
+          <template>
+            <style>
+              qti-assessment-item {
+                padding: 1rem;
+                display: block;
+                aspect-ratio: 4 / 3;
+                width: 800px;
+
+                border: 2px solid blue;
+                transform: scale(0.5);
+                transform-origin: top left;
+              }
+            </style>
+          </template>
+        </item-container>
+        <item-show-correct-response ${spread(args)}></item-show-correct-response>
+      </div>
+    </qti-item>`,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const item = await canvas.findByShadowTitle('Characters and Plays');
+    const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0];
+    const interaction = item.querySelector('qti-match-interaction');
+
+    await step('Click on the Show Correct button', async () => {
+      await showCorrectButton.click();
+
+      // Find all elements with rb-correct or cb-correct parts
+      // This uses the shadow DOM API to find elements with specific part attributes
+      const correctRadioButtons = interaction.shadowRoot.querySelectorAll('[part~="rb-correct"]');
+      const correctCheckboxes = interaction.shadowRoot.querySelectorAll('[part~="cb-correct"]');
+
+      // Combine both types of correct elements
+      const allCorrectElements = [...correctRadioButtons, ...correctCheckboxes];
+
+      // Verify we have the expected number of correct answers
+      expect(allCorrectElements.length).toBe(4);
+
+      // Get the associated row identifiers for the correct options
+      const correctRowIds = Array.from(allCorrectElements).map(el => el.name);
+
+      // Get the values of the correct inputs (which contain the row and column IDs)
+      const correctValues = Array.from(allCorrectElements).map(el => el.value);
+
+      // Parse the values to extract row IDs
+      const rowIds = correctValues.map(value => value.split(' ')[0]);
+
+      // Verify the correct row IDs exist
+      const expectedRowIds = ['C', 'P', 'L', 'D'];
+      const allExist = rowIds.every(rowId => expectedRowIds.includes(rowId));
+      expect(allExist).toBe(true);
+    });
+  }
+};
+
 export const SelectPoint: Story = {
   args: {
     'item-url': '/qti-test-package/items/select_point.xml' // Set the new item URL here
