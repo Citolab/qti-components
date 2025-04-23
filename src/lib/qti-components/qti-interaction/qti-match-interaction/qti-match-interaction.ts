@@ -167,15 +167,15 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
 
       ${isTabular
         ? html`
-            <table>
-              <tr>
+            <table part="table">
+              <tr part="r-header">
                 <td></td>
                 ${this.cols.map(col => html`<th part="r-header">${unsafeHTML(col.innerHTML)}</th>`)}
               </tr>
 
               ${this.rows.map(
                 row =>
-                  html`<tr>
+                  html`<tr part="row">
                     <td part="c-header">${unsafeHTML(row.innerHTML)}</td>
                     ${this.cols.map(col => {
                       const rowId = row.getAttribute('identifier');
@@ -183,7 +183,11 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
                       const value = `${rowId} ${colId}`;
                       const selectedInRowCount = this.response.filter(v => v.split(' ')[0] === rowId).length || 0;
                       const checked = this.response.includes(value);
-                      const part = `rb ${checked ? 'rb-checked' : ''} ${this.correctOptions.find(x => x.text === rowId && x.gap === colId) ? 'rb-correct' : ''}`;
+                      const type = row.matchMax === 1 ? 'radio' : 'checkbox';
+                      const part =
+                        type === 'radio'
+                          ? `rb ${checked ? 'rb-checked' : ''} ${this.correctOptions.find(x => x.text === rowId && x.gap === colId) ? 'rb-correct' : ''}`
+                          : `cb ${checked ? 'cb-checked' : ''} ${this.correctOptions.find(x => x.text === rowId && x.gap === colId) ? 'cb-correct' : ''}`;
                       // disable if match max is greater than 1 and max is reached
                       const disable =
                         this.correctOptions.length > 0
@@ -191,16 +195,32 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
                           : row.matchMax === 1
                             ? false
                             : row.matchMax !== 0 && selectedInRowCount >= row.matchMax && !checked;
-                      return html`<td>
-                        <input
-                          type=${row.matchMax === 1 ? 'radio' : `checkbox`}
-                          part=${part}
-                          name=${rowId}
-                          value=${value}
-                          .disabled=${disable}
-                          @change=${e => this.handleRadioChange(e)}
-                          @click=${e => (row.matchMax === 1 ? this.handleRadioClick(e) : null)}
-                        />
+                      return html`<td part="input-cell">
+                        <div
+                          class="input-container"
+                          style="position: relative; width: 24px; height: 24px; margin: 0 auto;"
+                        >
+                          <input
+                            type=${type}
+                            part=${part}
+                            name=${rowId}
+                            value=${value}
+                            .disabled=${disable}
+                            @change=${e => this.handleRadioChange(e)}
+                            @click=${e => (row.matchMax === 1 ? this.handleRadioClick(e) : null)}
+                          />
+                          ${type === 'checkbox' && checked
+                            ? html`
+                                <svg
+                                  part="checkmark"
+                                  viewBox="0 0 24 24"
+                                  style="position: absolute; width: 20px; height: 20px; top: 2px; left: 2px; pointer-events: none;"
+                                >
+                                  <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" fill="white" />
+                                </svg>
+                              `
+                            : ''}
+                        </div>
                       </td>`;
                     })}
                   </tr>`

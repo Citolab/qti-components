@@ -581,6 +581,113 @@
     }
   }
 
+  qti-match-interaction.qti-match-tabular {
+    /* Main container */
+    border: 1px solid #ddd;
+
+    /* Table element */
+    &::part(table) {
+      border-collapse: collapse;
+      width: 100%;
+      table-layout: fixed;
+    }
+
+    /* Row headers */
+    &::part(r-header) {
+      background-color: var(--qti-bg-active, #f8f8f8);
+      font-weight: 500;
+      text-align: center;
+      padding: 8px;
+      border: 1px solid #ddd;
+    }
+
+    /* Column headers */
+    &::part(c-header) {
+      background-color: var(--qti-bg-active, #f8f8f8);
+      font-weight: 500;
+      text-align: left;
+      padding: 8px 15px;
+      border: 1px solid #ddd;
+    }
+
+    /* Table rows */
+    &::part(row) {
+      border-bottom: 1px solid #ddd;
+    }
+
+    /* Input cells */
+    &::part(input-cell) {
+      text-align: center;
+      vertical-align: middle;
+      height: 48px;
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+
+    /* Radio button styling */
+    &::part(rb) {
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid var(--qti-border-active, #2196f3);
+      background-color: transparent !important;
+      margin: 0 auto;
+      cursor: pointer;
+      display: block;
+    }
+
+    /* Radio button checked state */
+    &::part(rb-checked) {
+      box-shadow: inset 0 0 0 6px var(--qti-border-active, #2196f3);
+    }
+
+    /* Checkbox styling */
+    &::part(cb) {
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 3px;
+      border: 2px solid var(--qti-border-active, #2196f3);
+      background-color: transparent !important;
+      margin: 0 auto;
+      cursor: pointer;
+      display: block;
+    }
+
+    /* Checkbox checked state - only change border if we're adding an SVG checkmark */
+    &::part(cb-checked) {
+      background-color: var(--qti-border-active, #2196f3) !important;
+    }
+
+    /* SVG Checkmark (if added to template) */
+    &::part(checkmark) {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      top: 3px;
+      left: 3px;
+      pointer-events: none;
+    }
+
+    /* Correct answers for both types */
+    &::part(rb-correct) {
+      border-color: #4caf50;
+    }
+
+    &::part(rb-checked rb-correct) {
+      box-shadow: inset 0 0 0 6px #4caf50;
+    }
+
+    &::part(cb-correct) {
+      border-color: #4caf50;
+    }
+
+    &::part(cb-checked cb-correct) {
+      background-color: #4caf50 !important;
+    }
+  }
+
   qti-match-interaction:not(.qti-match-tabular) {
     &:state(--dragzone-enabled) qti-simple-match-set:first-of-type {
       @apply dropping;
