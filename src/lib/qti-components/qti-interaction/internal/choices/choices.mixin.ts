@@ -14,6 +14,7 @@ export type Choice = HTMLElement &
     internals: ElementInternals;
     inputType: 'checkbox' | 'radio';
     groupName?: string;
+    hideControl?: boolean;
     checked: boolean;
   };
 
@@ -188,19 +189,9 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       choiceElement.inputType = this.maxChoices === 1 ? 'radio' : 'checkbox';
 
       // If this is a radio button, ensure they all share the same name for grouping
-      if (this.maxChoices === 1) {
-        const groupName = 'group-' + (this.getAttribute('response-identifier') || 'response');
-        choiceElement.groupName = groupName;
-        // const inputElements = this._choiceElements
-        //   .map(choice => choice.shadowRoot?.querySelector('input'))
-        //   .filter(Boolean) as HTMLInputElement[];
-
-        // // Set the same name for all radio buttons in the group
-        // const groupName = 'group-' + (this.getAttribute('response-identifier') || 'response');
-        // inputElements.forEach(input => {
-        //   if (input) input.name = groupName;
-        // });
-      }
+      const groupName = 'group-' + (this.getAttribute('response-identifier') || 'response');
+      choiceElement.groupName = groupName;
+      choiceElement.hideControl = this.classList.contains('qti-input-control-hidden');
 
       // Keep ARIA roles for accessibility
       const role = this.maxChoices === 1 ? 'radio' : 'checkbox';

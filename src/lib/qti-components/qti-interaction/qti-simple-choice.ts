@@ -4,9 +4,10 @@ import { customElement, property, query } from 'lit/decorators.js';
 import { ActiveElementMixin } from './internal/active-element/active-element.mixin';
 
 /**
- * QtiSimpleChoice component with pure CSS radio and checkbox styling
- * The entire component area is clickable
- * Supports unselecting a choice by clicking it again
+ * QtiSimpleChoice component with proper selection styling
+ * - Full-width clickable area that grows with text
+ * - Proper selection highlighting
+ * - Support for hiding input controls while keeping functionality
  */
 @customElement('qti-simple-choice')
 export class QtiSimpleChoice extends ActiveElementMixin(LitElement, 'qti-simple-choice') {
@@ -29,9 +30,13 @@ export class QtiSimpleChoice extends ActiveElementMixin(LitElement, 'qti-simple-
   @property({ type: String, reflect: true })
   public inputType: 'checkbox' | 'radio' = 'checkbox';
 
-  // Input type - will be set by parent component
-  @property({ type: String, reflect: true })
+  // Group name for the input
+  @property({ type: String, reflect: false })
   public groupName: string = '';
+
+  // Flag to hide control visually but keep functionality
+  @property({ type: String, reflect: false })
+  public hideControl: string = '';
 
   // Query for the input element
   @query('input')
@@ -49,18 +54,77 @@ export class QtiSimpleChoice extends ActiveElementMixin(LitElement, 'qti-simple-
       user-select: none;
       cursor: pointer;
       border-radius: 4px;
-      padding: 0.5rem;
-      transition: background-color 0.2s ease;
       margin-bottom: 0.5rem;
-      position: relative; /* Needed for proper event handling */
+      position: relative;
+      transition: background-color 0.2s ease;
+      border: 1px solid var(--qti-border-color, #c6cad0);
+      background-color: var(--qti-bg, white);
     }
 
+    /* Styling for checked/selected state - including when input is hidden */
+    :host([aria-checked='true']),
+    :host([checked]),
+    :host(.input-control-hidden[aria-checked='true']),
+    :host(.input-control-hidden[checked]),
+    :host(.input-control-hidden) [aria-checked='true'],
+    :host(.input-control-hidden.checked),
+    :host(.input-control-hidden:has(input:checked)) {
+      border-color: var(--qti-border-active, #f86d70);
+      background-color: var(--qti-bg-active, #ffecec);
+    }
+
+    /* Hover state */
+    :host(:hover:not([disabled], [readonly])) {
+      background-color: var(--qti-hover-bg, #f9fafb);
+    }
+
+    /* Disabled and readonly states */
+    :host([disabled]) {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    :host([readonly]) {
+      pointer-events: none;
+    }
+
+    /* Main container that holds the form elements */
     .form-control {
       display: grid;
-      grid-template-columns: 1em auto;
+      grid-template-columns: 1.15em auto;
       gap: 0.5em;
       align-items: center;
       width: 100%;
+      padding: 0.75rem;
+      box-sizing: border-box;
+    }
+
+    /* When input is hidden, adjust layout */
+    :host(.input-control-hidden) .form-control {
+      display: block;
+    }
+
+    /* The container for the input */
+    .input-container {
+      display: flex;
+      align-items: center;
+      flex: 0 0 1.15em;
+      width: 1.15em;
+      height: 1.15em;
+      box-sizing: content-box;
+    }
+
+    /* Hide input container when needed, but keep it in the DOM */
+    :host(.input-control-hidden) .input-container {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
     }
 
     /* Hide the native radio button appearance but keep it accessible */
@@ -73,11 +137,17 @@ export class QtiSimpleChoice extends ActiveElementMixin(LitElement, 'qti-simple-
       color: currentColor;
       width: 1.15em;
       height: 1.15em;
+      min-width: 1.15em;
+      min-height: 1.15em;
+      max-width: 1.15em;
+      max-height: 1.15em;
       border: 0.15em solid var(--qti-border-color, #c6cad0);
       border-radius: 50%;
       display: grid;
       place-content: center;
       transform: translateY(-0.075em);
+      box-sizing: border-box;
+      flex-shrink: 0;
     }
 
     /* The inner dot for radio buttons */
@@ -107,11 +177,17 @@ export class QtiSimpleChoice extends ActiveElementMixin(LitElement, 'qti-simple-
       color: currentColor;
       width: 1.15em;
       height: 1.15em;
+      min-width: 1.15em;
+      min-height: 1.15em;
+      max-width: 1.15em;
+      max-height: 1.15em;
       border: 0.15em solid var(--qti-border-color, #c6cad0);
       border-radius: 0.15em;
       display: grid;
       place-content: center;
       transform: translateY(-0.075em);
+      box-sizing: border-box;
+      flex-shrink: 0;
     }
 
     /* Checkmark for checkboxes */
@@ -137,7 +213,7 @@ export class QtiSimpleChoice extends ActiveElementMixin(LitElement, 'qti-simple-
       outline-offset: max(2px, 0.15em);
     }
 
-    /* Hover state */
+    /* Hover state for inputs */
     input:hover:not(:disabled) {
       border-color: var(--qti-border-active, #f86d70);
     }
@@ -147,23 +223,10 @@ export class QtiSimpleChoice extends ActiveElementMixin(LitElement, 'qti-simple-
       border-color: var(--qti-border-active, #f86d70);
     }
 
-    /* States for the host element */
-    :host(:hover:not([disabled], [readonly])) {
-      background-color: var(--qti-hover-bg, #f9fafb);
-    }
-
-    :host([aria-checked='true']),
-    :host([checked]) {
-      background-color: var(--qti-bg-active, #ffecec);
-    }
-
-    :host([disabled]) {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    :host([readonly]) {
-      pointer-events: none;
+    /* The label that contains the content */
+    label {
+      display: inline-block;
+      cursor: pointer;
     }
 
     /* Correct/incorrect response indicators */
@@ -196,22 +259,32 @@ export class QtiSimpleChoice extends ActiveElementMixin(LitElement, 'qti-simple-
       if (value) {
         this.internals.states.add('--checked');
         this.internals.ariaChecked = 'true';
+        this.setAttribute('aria-checked', 'true');
+        this.classList.add('checked');
         this._wasLastSelected = true;
       } else {
         this.internals.states.delete('--checked');
         this.internals.ariaChecked = 'false';
+        this.setAttribute('aria-checked', 'false');
+        this.classList.remove('checked');
+        this._wasLastSelected = false;
+      }
+    } else {
+      // For cases when the input element is not yet available
+      if (value) {
+        this.internals.states.add('--checked');
+        this.internals.ariaChecked = 'true';
+        this.setAttribute('aria-checked', 'true');
+        this.classList.add('checked');
+        this._wasLastSelected = true;
+      } else {
+        this.internals.states.delete('--checked');
+        this.internals.ariaChecked = 'false';
+        this.setAttribute('aria-checked', 'false');
+        this.classList.remove('checked');
         this._wasLastSelected = false;
       }
     }
-  }
-
-  // get the first parent element with the tag name that endswith '-interaction'
-  get parentInteraction(): HTMLElement | null {
-    let parent = this.parentElement;
-    while (parent && !parent.tagName.toLowerCase().endsWith('-interaction')) {
-      parent = parent.parentElement;
-    }
-    return parent;
   }
 
   override render() {
@@ -219,15 +292,17 @@ export class QtiSimpleChoice extends ActiveElementMixin(LitElement, 'qti-simple-
     const inputId = `input-${this.identifier || Math.random().toString(36).substring(2, 9)}`;
     return html`
       <div class="form-control">
-        <input
-          id="${inputId}"
-          type="${this.inputType}"
-          name="${this.groupName}"
-          .disabled="${this.disabled}"
-          .readOnly="${this.readonly}"
-          .checked="${this.internals.states.has('--checked')}"
-          @change="${this._handleInputChange}"
-        />
+        <div class="input-container">
+          <input
+            id="${inputId}"
+            type="${this.inputType}"
+            .disabled="${this.disabled}"
+            .readOnly="${this.readonly}"
+            name="${this.groupName}"
+            .checked="${this.internals.states.has('--checked')}"
+            @change="${this._handleInputChange}"
+          />
+        </div>
         <label for="${inputId}">
           ${this.marker ? html`<span id="marker">${this.marker}</span>` : nothing}
           <slot part="slot"></slot>
@@ -247,6 +322,26 @@ export class QtiSimpleChoice extends ActiveElementMixin(LitElement, 'qti-simple-
         inputElement.addEventListener('click', this._handleRadioClick);
       }
     }
+
+    // Check if we should add the input-control-hidden class
+    this._updateInputControlHiddenClass();
+
+    // Initialize aria-checked attribute
+    if (this.internals.states.has('--checked')) {
+      this.setAttribute('aria-checked', 'true');
+      this.classList.add('checked');
+    } else {
+      this.setAttribute('aria-checked', 'false');
+    }
+  }
+
+  // Update the input-control-hidden class
+  private _updateInputControlHiddenClass() {
+    if (this.hideControl) {
+      this.classList.add('input-control-hidden');
+    } else {
+      this.classList.remove('input-control-hidden');
+    }
   }
 
   // This function handles the entire component area clicks
@@ -256,20 +351,21 @@ export class QtiSimpleChoice extends ActiveElementMixin(LitElement, 'qti-simple-
       return;
     }
 
-    // Find input element
+    // Get the input element
     const inputElement = this.shadowRoot?.querySelector('input') as HTMLInputElement;
     if (!inputElement) return;
 
     // Get the elements in the event path
     const path = e.composedPath();
 
-    // If the click was directly on the input or label, let the native handlers work
+    // If the click was directly on the input, let the native handlers work
     if (path.includes(inputElement)) {
       return;
     }
 
     const labelElement = this.shadowRoot?.querySelector('label') as HTMLLabelElement;
     if (labelElement && path.includes(labelElement)) {
+      // Let the label's for attribute handle the click natively
       return;
     }
 
@@ -302,13 +398,17 @@ export class QtiSimpleChoice extends ActiveElementMixin(LitElement, 'qti-simple-
 
   // Helper method to unselect a radio button
   private _unSelectRadio() {
-    if (!this._inputElement) return;
-
     // Uncheck it and update states
     setTimeout(() => {
-      this._inputElement.checked = false;
+      // Make sure the input element exists
+      if (this._inputElement) {
+        this._inputElement.checked = false;
+      }
+
       this.internals.states.delete('--checked');
       this.internals.ariaChecked = 'false';
+      this.setAttribute('aria-checked', 'false');
+      this.classList.remove('checked');
       this._wasLastSelected = false;
 
       // Dispatch event to parent
@@ -335,17 +435,21 @@ export class QtiSimpleChoice extends ActiveElementMixin(LitElement, 'qti-simple-
     }
   }
 
-  private _handleInputChange(e: Event) {
-    const isChecked = this._inputElement.checked;
+  private _handleInputChange(_e: Event) {
+    const isChecked = this._inputElement?.checked || false;
 
     // Normal handling for when something gets checked
     if (isChecked) {
       this.internals.states.add('--checked');
       this.internals.ariaChecked = 'true';
+      this.setAttribute('aria-checked', 'true');
+      this.classList.add('checked');
       this._wasLastSelected = true;
     } else {
       this.internals.states.delete('--checked');
       this.internals.ariaChecked = 'false';
+      this.setAttribute('aria-checked', 'false');
+      this.classList.remove('checked');
       this._wasLastSelected = false;
     }
 
@@ -359,7 +463,7 @@ export class QtiSimpleChoice extends ActiveElementMixin(LitElement, 'qti-simple-
     );
   }
 
-  // Update when attributes change
+  // Update when attributes change or when parent changes
   updated(changedProperties: Map<string, any>) {
     super.updated(changedProperties);
 
@@ -380,9 +484,14 @@ export class QtiSimpleChoice extends ActiveElementMixin(LitElement, 'qti-simple-
 
         // Add new event listeners if it's a radio
         if (this.inputType === 'radio') {
-          inputElement.addEventListener('click', this._handleRadioClick);
+          inputElement.addEventListener('mousedown', this._handleRadioClick);
         }
       }
+    }
+
+    // Check for input-control-hidden class changes
+    if (changedProperties.has('hideControl')) {
+      this._updateInputControlHiddenClass();
     }
   }
 }
