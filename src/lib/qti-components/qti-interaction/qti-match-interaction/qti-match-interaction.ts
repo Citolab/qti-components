@@ -187,8 +187,8 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
                       const isCorrect = !!this.correctOptions.find(x => x.text === rowId && x.gap === colId);
                       const part =
                         type === 'radio'
-                          ? `rb ${isCorrect ? 'rb-correct' : 'rb-incorrect'}`
-                          : `cb ${isCorrect ? 'cb-correct' : 'cb-incorrect'}`;
+                          ? `rb ${checked ? 'rb-checked' : ''} ${isCorrect ? 'rb-correct' : 'rb-incorrect'}`
+                          : `cb ${checked ? 'cb-checked' : ''} ${isCorrect ? 'cb-correct' : 'cb-incorrect'}`;
 
                       // disable if match max is greater than 1 and max is reached
                       const disable =
