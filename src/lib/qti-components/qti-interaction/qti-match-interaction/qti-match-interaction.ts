@@ -150,7 +150,7 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
         if (show) {
           this.correctOptions = matches;
         } else {
-          this.correctOptions = [];
+          this.correctOptions = null;
         }
       }
     } else {
@@ -184,15 +184,15 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
                       const selectedInRowCount = this.response.filter(v => v.split(' ')[0] === rowId).length || 0;
                       const checked = this.response.includes(value);
                       const type = row.matchMax === 1 ? 'radio' : 'checkbox';
-                      const isCorrect = !!this.correctOptions.find(x => x.text === rowId && x.gap === colId);
+                      const isCorrect = !!this.correctOptions?.find(x => x.text === rowId && x.gap === colId);
                       const part =
                         type === 'radio'
-                          ? `rb ${checked ? 'rb-checked' : ''} ${isCorrect ? 'rb-correct' : 'rb-incorrect'}`
-                          : `cb ${checked ? 'cb-checked' : ''} ${isCorrect ? 'cb-correct' : 'cb-incorrect'}`;
+                          ? `rb ${checked ? 'rb-checked' : ''} ${this.correctOptions ? (isCorrect ? 'rb-correct' : 'rb-incorrect') : ''}`
+                          : `cb ${checked ? 'cb-checked' : ''} ${this.correctOptions ? (isCorrect ? 'cb-correct' : 'cb-incorrect') : ''}`;
 
                       // disable if match max is greater than 1 and max is reached
                       const disable =
-                        this.correctOptions.length > 0
+                        this.correctOptions?.length > 0
                           ? true
                           : row.matchMax === 1
                             ? false
