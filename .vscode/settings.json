@@ -1,6 +1,10 @@
 {
-  "html.customData": ["./dist/vscode.html-custom-data.json"],
-  "css.customData": ["./dist/vscode.css-custom-data.json"],
+  "html.customData": [
+    "./dist/vscode.html-custom-data.json"
+  ],
+  "css.customData": [
+    "./dist/vscode.css-custom-data.json"
+  ],
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.codeActionsOnSave": {
@@ -17,6 +21,6 @@
   "lit-plugin.rules.no-incompatible-type-binding": "warning",
   "lit-plugin.rules.no-invalid-boolean-binding": "warning",
   "lit-plugin.rules.no-complex-attribute-binding": "warning",
-
-  "github-actions.workflows.pinned.workflows": []
+  "github-actions.workflows.pinned.workflows": [],
+  "git.allowNoVerifyCommit": true,
 }
