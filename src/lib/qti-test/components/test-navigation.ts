@@ -211,14 +211,26 @@ export class TestNavigation extends LitElement {
                   return item;
                 }
 
-                const scoreOutcome = item.variables.find(vr => vr.identifier == 'SCORE') as OutcomeVariable;
-                const externalScored = scoreOutcome?.externalScored;
+                const scoreOutcome = itemElement.querySelector<HTMLElement>(
+                  "qti-outcome-declaration[identifier='SCORE']"
+                );
+                // const scoreOutcome = item.variables.find(vr => vr.identifier == 'SCORE') as OutcomeVariable;
+                const externalScored = scoreOutcome?.getAttribute('externalScored');
 
-                const containsCorrectResponse = !!item?.variables?.some(v => v['correctResponse']);
-                const containsMapping = !!item?.variables?.some(v => {
-                  return v['mapping']?.mapEntries?.length > 0 || v['areaMapping']?.areaMapEntries?.length > 0;
+                const responseDeclarations = itemElement.querySelectorAll<HTMLElement>('qti-response-declaration');
+                const containsCorrectResponse = Array.from(responseDeclarations).some(r =>
+                  r.querySelector('qti-correct-response')
+                );
+                // check if every responseDeclaration has a correctResponse
+                const containsMapping = Array.from(responseDeclarations).some(r => {
+                  const mapping = r.querySelector('qti-mapping');
+                  const areaMapping = r.querySelector('qti-area-mapping');
+                  return mapping?.querySelector('qti-map-entry') || areaMapping?.querySelector('qti-area-map-entry');
                 });
-                const hasCorrectResponse = !containsCorrectResponse && !containsMapping;
+
+                const hasCorrectResponse = containsCorrectResponse || containsMapping;
+
+                const hasResponseProcessing = itemElement.querySelector('qti-response-processing') ? true : false;
 
                 return {
                   ...item,
@@ -229,7 +241,8 @@ export class TestNavigation extends LitElement {
                   adaptive: itemElement.adaptive == 'true' || false,
                   timeDependent: itemElement.timeDependent == 'true' || false,
                   variables: itemElement.variables,
-                  hasCorrectResponse
+                  hasCorrectResponse,
+                  hasResponseProcessing
                 };
               })
             };
@@ -279,13 +292,15 @@ export class TestNavigation extends LitElement {
                 const response = computedItem.variables?.find(v => v.identifier === 'RESPONSE')?.value || '';
                 const numAttempts = computedItem.variables?.find(v => v.identifier === 'numAttempts')?.value || 0;
 
-                const type = item.categories.includes(this.configContext?.infoItemCategory) ? 'info' : 'regular';
                 const active = this._sessionContext?.navItemRefId === computedItem.identifier || false;
-                const correct = (type == 'regular' && score !== undefined && !isNaN(score) && score > 0) || false;
-                const incorrect = (type == 'regular' && score !== undefined && !isNaN(score) && score <= 0) || false;
-                const completed = completionStatus === 'completed';
-                const index = item.categories.includes(this.configContext?.infoItemCategory) ? null : itemIndex++;
 
+                // Computed and opiniated
+                // const type = item.categories.includes(this.configContext?.infoItemCategory) ? 'info' : 'regular';
+                // const correct = (type == 'regular' && score !== undefined && !isNaN(score) && score > 0) || false;
+                // const incorrect = (type == 'regular' && score !== undefined && !isNaN(score) && score <= 0) || false;
+                // const completed = completionStatus === 'completed';
+
+                const index = item.categories.includes(this.configContext?.infoItemCategory) ? null : itemIndex++;
                 const rawMaxScore = item.variables?.find(vr => vr.identifier == 'MAXSCORE')?.value;
                 const maxScore = parseInt(rawMaxScore?.toString());
 
@@ -296,12 +311,12 @@ export class TestNavigation extends LitElement {
                   score,
                   response,
                   index,
-                  type,
+                  // type,
                   active,
-                  correct,
-                  maxScore,
-                  incorrect,
-                  completed
+                  // correct,
+                  maxScore
+                  // incorrect,
+                  // completed
                 };
               })
             };

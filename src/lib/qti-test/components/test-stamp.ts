@@ -1,6 +1,6 @@
 import { html, LitElement, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { prepareTemplate } from 'stampino';
+import { prepareTemplate } from '@heximal/templates';
 import { consume } from '@lit/context';
 
 import { computedContext } from '../../exports/computed.context';
@@ -8,7 +8,7 @@ import { computedContext } from '../../exports/computed.context';
 import type { View } from '../core/mixins/test-view.mixin';
 import type { PropertyValues } from 'lit';
 import type { ComputedContext } from '../../exports/computed.context';
-import type { TemplateFunction } from 'stampino';
+import type { TemplateFunction } from '@heximal/templates';
 
 /**
  * A custom web component that renders a test stamp using the Lit framework.

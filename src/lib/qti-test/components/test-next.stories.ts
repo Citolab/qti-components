@@ -28,6 +28,7 @@ export const Default: Story = {
     <qti-test navigate="item">
       <test-navigation>
         <test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"> </test-container>
+        <test-prev>vorige</test-prev>
         ${template(args, html`volgende`)}
       </test-navigation>
     </qti-test>

@@ -1,11 +1,11 @@
 import { html, LitElement, nothing } from 'lit';
 import { consume } from '@lit/context';
 import { customElement, property } from 'lit/decorators.js';
-import { prepareTemplate } from 'stampino';
+import { prepareTemplate } from '@heximal/templates';
 
 import { computedContext } from '../../exports/computed.context';
 
-import type { TemplateFunction } from 'stampino';
+import type { TemplateFunction } from '@heximal/templates';
 import type { OutcomeVariable } from '../../exports/variables';
 import type { ComputedContext } from '../../exports/computed.context';
 

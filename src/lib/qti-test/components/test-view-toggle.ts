@@ -1,7 +1,7 @@
 import { consume } from '@lit/context';
 import { html, LitElement, nothing } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import { prepareTemplate } from 'stampino';
+import { prepareTemplate } from '@heximal/templates';
 
 import { sessionContext } from '../../exports/session.context';
 

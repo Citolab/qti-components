@@ -1,40 +1,41 @@
 import { css, html, LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 import { consume } from '@lit/context';
 
 import * as styles from './styles';
+import { watch } from '../../decorators';
 import { computedContext } from '../../exports/computed.context';
 
 import type { ComputedContext, ComputedItem } from '../../exports/computed.context';
 
+/**
+ * Represents a custom element for navigating to the previous test item.
+ *
+ * @remarks
+ * This element provides functionality for navigating to the previous test item.
+ *
+ * @example
+ * ```html
+ * <test-prev></test-prev>
+ * ```
+ */
 @customElement('test-prev')
 export class TestPrev extends LitElement {
-  /**
-   * External input: allows parent to disable this element.
-   */
-  @property({ type: Boolean })
-  public disabled = false;
-
-  /**
-   * Internal logic + external flag = effective disabled state (reflected)
-   */
   @property({ type: Boolean, reflect: true, attribute: 'disabled' })
-  public get _effectiveDisabled(): boolean {
-    return this._internallyDisabled || this.disabled;
-  }
-
-  private set _effectiveDisabled(_: boolean) {
-    // no-op setter to satisfy reflect binding; computed internally
-  }
+  public _internalDisabled = true;
 
   @consume({ context: computedContext, subscribe: true })
   private computedContext: ComputedContext;
 
-  sectionItems: ComputedItem[] = [];
-  itemIndex = -1;
+  sectionItems: ComputedItem[];
+  itemIndex: number;
 
-  @state()
-  private _internallyDisabled = true;
+  @watch('computedContext')
+  _handleTestElementChange(_oldValue: ComputedContext, newValue: ComputedContext) {
+    if (newValue) {
+      this._internalDisabled = false;
+    }
+  }
 
   static styles = css`
     :host {
@@ -45,45 +46,26 @@ export class TestPrev extends LitElement {
     }
   `;
 
-  private _internals: ElementInternals;
-
   constructor() {
     super();
-    this._internals = this.attachInternals();
-    this._internals.role = 'button';
-    this._internals.ariaLabel = 'Previous item';
 
     this.addEventListener('click', e => {
       e.preventDefault();
-      if (!this._effectiveDisabled) {
-        const prev = this.sectionItems[this.itemIndex - 1];
-        if (prev) this._requestItem(prev.identifier);
-      }
+      if (!this._internalDisabled) this._requestItem(this.sectionItems[this.itemIndex - 1].identifier);
     });
   }
 
-  willUpdate() {
+  willUpdate(_changedProperties: Map<string | number | symbol, unknown>) {
     if (!this.computedContext) return;
-
-    const testPart = this.computedContext.testParts.find(testPart => testPart.active);
+    const testPart = this.computedContext?.testParts.find(testPart => testPart.active);
     if (!testPart) return;
-
     this.sectionItems = testPart.sections.flatMap(section => section.items);
     this.itemIndex = this.sectionItems.findIndex(item => item.active);
-
-    this._updateInternalDisabledState();
+    this.checkDisabled();
   }
 
-  updated() {
-    if (this._effectiveDisabled) {
-      this.setAttribute('disabled', '');
-    } else {
-      this.removeAttribute('disabled');
-    }
-  }
-
-  private _updateInternalDisabledState() {
-    this._internallyDisabled = !this.computedContext || this.itemIndex === 0 || this.itemIndex === -1;
+  checkDisabled() {
+    this._internalDisabled = !this.computedContext || this.itemIndex === 0 || this.itemIndex === -1;
   }
 
   protected _requestItem(identifier: string): void {
@@ -106,6 +88,6 @@ export class TestPrev extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'test-prev': TestPrev;
+    'test-previous': TestPrev;
   }
 }
