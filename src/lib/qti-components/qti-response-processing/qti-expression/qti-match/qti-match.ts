@@ -24,9 +24,9 @@ export class QtiMatch extends QtiExpression<boolean> {
   }
 
   public static match(valueToMap: ResponseVariable, correctValueInfo: ResponseVariable) {
+    if (valueToMap.value === null) return false;
     switch (correctValueInfo.cardinality) {
       case 'single': {
-        if (valueToMap.value === null) return false;
         if (Array.isArray(valueToMap.value) || Array.isArray(correctValueInfo.value)) {
           console.error('unexpected cardinality in qti match');
           return false;
