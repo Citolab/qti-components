@@ -582,9 +582,6 @@
   }
 
   qti-match-interaction.qti-match-tabular {
-    /* Main container */
-    border: 1px solid #ddd;
-
     /* Table element */
     &::part(table) {
       border-collapse: collapse;
