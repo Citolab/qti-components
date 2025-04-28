@@ -4,6 +4,7 @@ import { html } from 'lit';
 import { within } from 'shadow-dom-testing-library';
 
 import { qtiTransformTest } from '../../qti-transformers';
+import { getAssessmentItemFromTestContainerByDataTitle } from '../../../testing/test-utils';
 
 import type { TestContainer } from './test-container';
 import type { Meta, StoryObj } from '@storybook/web-components';
@@ -29,9 +30,8 @@ export const TestURL: Story = {
     return html`<qti-test navigate="item">${template(args)}</qti-test>`;
   },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-
-    const testElement = await canvas.findByShadowTitle('T1 - Test Entry - Item 1');
+    //getAssessmentItemFromTestContainerByDataTitle
+    const testElement = await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'T1 - Test Entry - Item 1');
     expect(testElement).toBeInTheDocument();
   }
 };

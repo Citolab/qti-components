@@ -5,6 +5,8 @@ import { spread } from '@open-wc/lit-helpers';
 import { html } from 'lit';
 import { fireEvent } from '@storybook/test';
 
+import { getAssessmentItemFromTestContainerByDataTitle } from '../../../testing/test-utils';
+
 import type { QtiSimpleChoice } from '../../qti-components';
 import type { TestShowCorrectResponse } from './test-show-correct-response';
 import type { Meta, StoryObj } from '@storybook/web-components';
@@ -103,14 +105,13 @@ export const Test: Story = {
     const canvas = within(canvasElement);
 
     const link = await canvas.findByShadowText('link');
-
-    await canvas.findByShadowTitle('Info Start');
+    await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'Info Start');
     await fireEvent.click(link);
 
     const nextButton = await canvas.findByShadowText('Volgende');
     await waitFor(() => expect(nextButton).toBeEnabled());
 
-    const firstItem = await findByShadowTitle(canvasElement, 'Richard III (Take 3)');
+    const firstItem = await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'Richard III (Take 3)');
     expect(firstItem).toBeInTheDocument();
 
     const showCorrectButton = await findByShadowText(canvasElement, 'Show correct response');

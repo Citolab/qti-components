@@ -1,8 +1,10 @@
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { expect, fireEvent, userEvent, waitFor } from '@storybook/test';
-import { findByShadowText, findByShadowTitle, within } from 'shadow-dom-testing-library';
+import { findByShadowText, within } from 'shadow-dom-testing-library';
 import { spread } from '@open-wc/lit-helpers';
 import { html } from 'lit';
+
+import { getAssessmentItemFromTestContainerByDataTitle } from '../../../testing/test-utils';
 
 import type { TestEndAttempt } from './test-end-attempt';
 import type { Meta, StoryObj } from '@storybook/web-components';
@@ -52,12 +54,12 @@ export const Test: Story = {
 
     const link = await canvas.findByShadowText('link');
 
-    await canvas.findByShadowTitle('Info Start');
+    const info = await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'Info Start');
     await fireEvent.click(link);
 
     const nextButton = await canvas.findByShadowText('Volgende');
     await waitFor(() => expect(nextButton).toBeEnabled());
-    const firstItem = await findByShadowTitle(canvasElement, 'Richard III (Take 3)');
+    const firstItem = await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'Richard III (Take 3)');
     expect(firstItem).toBeInTheDocument();
     // click end attempt
     const endAttemptButton = await findByShadowText(canvasElement, 'End Attempt');

@@ -27,10 +27,21 @@ import type { Interaction } from '../../exports/interaction';
  */
 @customElement('qti-assessment-item')
 export class QtiAssessmentItem extends LitElement {
-  @property({ type: String }) title: string;
+  private _itemTitle: string;
+
   @property({ type: String }) identifier: string = '';
   @property({ type: String }) adaptive: 'true' | 'false' = 'false';
   @property({ type: String }) timeDependent: 'true' | 'false' | null = null;
+
+  @property({ type: String })
+  get title(): string {
+    return this._itemTitle;
+  }
+  set title(value: string) {
+    this._itemTitle = value;
+    this.removeAttribute('title');
+    this.setAttribute('data-title', value);
+  }
 
   @property({ type: Boolean }) disabled: boolean;
   @watch('disabled', { waitUntilFirstUpdate: true })

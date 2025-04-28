@@ -4,6 +4,8 @@ import { findByShadowTitle, getByShadowText, within } from 'shadow-dom-testing-l
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { spread } from '@open-wc/lit-helpers';
 
+import { getAssessmentItemFromTestContainerByDataTitle } from '../../../testing/test-utils';
+
 import type { TestPrev } from '.';
 import type { Meta, StoryObj } from '@storybook/web-components';
 
@@ -50,14 +52,18 @@ export const Test: Story = {
     const canvas = within(canvasElement);
     const link = await canvas.findByShadowText('link');
 
-    await canvas.findByShadowTitle('T1 - Test Entry - Item 1');
+    await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'T1 - Test Entry - Item 1');
+
     await fireEvent.click(link);
 
     const prevButton = canvas.getByShadowText('vorige');
     const nextButton = canvas.getByShadowText('volgende');
 
     expect(prevButton).toBeDisabled();
-    const firstItem = await canvas.findByShadowTitle('T1 - Extended Text Interaction');
+    const firstItem = await getAssessmentItemFromTestContainerByDataTitle(
+      canvasElement,
+      'T1 - Extended Text Interaction'
+    );
     expect(prevButton).not.toBeDisabled();
     expect(firstItem).toBeInTheDocument();
     await new Promise(resolve => setTimeout(resolve, 1));
@@ -68,7 +74,7 @@ export const Test: Story = {
     await new Promise(resolve => setTimeout(resolve, 1));
 
     await fireEvent.click(prevButton);
-    const secondItem = await findByShadowTitle(canvasElement, 'T1 - Test Entry - Item 1');
+    const secondItem = await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'T1 - Test Entry - Item 1');
     expect(secondItem).toBeInTheDocument();
     expect(prevButton).toBeDisabled();
     await fireEvent.click(nextButton);

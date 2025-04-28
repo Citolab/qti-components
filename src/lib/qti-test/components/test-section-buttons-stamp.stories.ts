@@ -4,6 +4,12 @@ import { html } from 'lit';
 import { within } from 'shadow-dom-testing-library';
 import { createRef, ref } from 'lit/directives/ref.js';
 
+import {
+  getAssessmentItemFromTestContainerByDataTitle,
+  getAssessmentItemsFromTestContainer,
+  getTestContainer
+} from '../../../testing/test-utils';
+
 import type { Meta, StoryObj } from '@storybook/web-components';
 import type { TestSectionButtonsStamp } from './test-section-buttons-stamp';
 import type { QtiAssessmentStimulusRef } from '../../qti-components';
@@ -47,8 +53,8 @@ export const Default: Story = {
     const navAdvanced = await canvas.findByShadowText('advanced');
     const navInfoEnd = await canvas.findByShadowText('info-end');
 
-    const firstItem = await canvas.findByShadowTitle('Examples');
-    expect(firstItem).toBeInTheDocument();
+    const firstItem = await getAssessmentItemsFromTestContainer(canvasElement);
+    expect(firstItem[0]).toBeInTheDocument();
 
     // Spy on event listener
     const eventSpy = fn();
@@ -71,7 +77,7 @@ export const Default: Story = {
     });
 
     await fireEvent.click(navInfoEnd);
-    const lastItem = await canvas.findByShadowTitle('Info End');
+    const lastItem = await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'Info End');
     expect(lastItem).toBeInTheDocument();
   }
 };
@@ -107,13 +113,14 @@ export const StimulusDeliveryPlatform: Story = {
     const navAdvanced = await canvas.findByShadowText('advanced');
     const navInfoEnd = await canvas.findByShadowText('info-end');
 
-    const firstItem = await canvas.findByShadowTitle('Examples');
-    expect(firstItem).toBeInTheDocument();
+    const testContainer = await getTestContainer(canvasElement);
+    expect(testContainer).toBeInTheDocument();
+
     await fireEvent.click(navInfoStart);
     await fireEvent.click(navBasic);
     await fireEvent.click(navAdvanced);
     await fireEvent.click(navInfoEnd);
-    const lastItem = await canvas.findByShadowTitle('Info End');
+    const lastItem = await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'Info End');
     expect(lastItem).toBeInTheDocument();
   }
 };

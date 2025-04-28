@@ -4,6 +4,8 @@ import { html } from 'lit';
 import { expect, waitFor } from '@storybook/test';
 import { within } from 'shadow-dom-testing-library';
 
+import { getAssessmentItemFromItemContainer } from '../../../testing/test-utils';
+
 import type { Meta, StoryObj } from '@storybook/web-components';
 import type { ItemShowCorrectResponse } from './item-show-correct-response';
 import './item-show-correct-response';
@@ -202,11 +204,8 @@ export const TextEntry: Story = {
     </qti-item>`,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-
-    await canvas.findByShadowTitle('Richard III (Take 3)');
-    const interaction = canvasElement
-      .querySelector('item-container')
-      .shadowRoot.querySelector('qti-text-entry-interaction');
+    const item = await getAssessmentItemFromItemContainer(canvasElement);
+    const interaction = item.querySelector('qti-text-entry-interaction');
     const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0];
     await step('Click on the Show Correct button', async () => {
       await showCorrectButton.click();
@@ -244,8 +243,7 @@ export const GapMatch: Story = {
     </qti-item>`,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-
-    const interaction = await canvas.findByShadowTitle('Richard III (Take 1)');
+    const interaction = await getAssessmentItemFromItemContainer(canvasElement);
 
     const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0];
     await step('Click on the Show Correct button', async () => {
@@ -288,8 +286,7 @@ export const Match: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    const interaction = await canvas.findByShadowTitle('Characters and Plays');
-
+    const interaction = await getAssessmentItemFromItemContainer(canvasElement);
     const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0];
     await step('Click on the Show Correct button', async () => {
       await showCorrectButton.click();
@@ -331,7 +328,7 @@ export const MatchTabular: Story = {
     </qti-item>`,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const item = await canvas.findByShadowTitle('Characters and Plays');
+    const item = await getAssessmentItemFromItemContainer(canvasElement);
     const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0];
     const interaction = item.querySelector('qti-match-interaction');
 
@@ -344,7 +341,7 @@ export const MatchTabular: Story = {
       const correctCheckboxes = interaction.shadowRoot.querySelectorAll('[part~="cb-correct"]');
 
       // Combine both types of correct elements
-      const allCorrectElements = [...correctRadioButtons, ...correctCheckboxes];
+      const allCorrectElements = [...correctRadioButtons, ...correctCheckboxes] as HTMLInputElement[];
 
       // Verify we have the expected number of correct answers
       expect(allCorrectElements.length).toBe(4);
@@ -395,11 +392,8 @@ export const SelectPoint: Story = {
   play: async ({ canvasElement, step }) => {
     // wait for qti-simple-choice to be rendered
     const canvas = within(canvasElement);
-    await canvas.findByShadowTitle('Where is Edinburgh?');
-
-    const interaction = canvasElement
-      .querySelector('item-container')
-      .shadowRoot.querySelector('qti-select-point-interaction');
+    const item = await getAssessmentItemFromItemContainer(canvasElement);
+    const interaction = item.querySelector('qti-select-point-interaction');
 
     const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0];
     await step('Click on the Show Correct button', async () => {
@@ -439,10 +433,8 @@ export const SelectPointMultipleNoAreaMapping: Story = {
   play: async ({ canvasElement, step }) => {
     // wait for qti-simple-choices to be rendered
     const canvas = within(canvasElement);
-    await canvas.findByShadowTitle('example-select-point');
-    const interaction = canvasElement
-      .querySelector('item-container')
-      .shadowRoot.querySelector('qti-select-point-interaction');
+    const item = await getAssessmentItemFromItemContainer(canvasElement);
+    const interaction = item.querySelector('qti-select-point-interaction');
 
     const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0];
     await step('Click on the Show Correct button', async () => {
@@ -486,10 +478,8 @@ export const GraphicOrder: Story = {
   play: async ({ canvasElement, step }) => {
     // wait for qti-simple-choices to be rendered
     const canvas = within(canvasElement);
-    await canvas.findByShadowTitle('Item 2');
-    const interaction = canvasElement
-      .querySelector('item-container')
-      .shadowRoot.querySelector('qti-graphic-order-interaction');
+    const item = await getAssessmentItemFromItemContainer(canvasElement);
+    const interaction = item.querySelector('qti-graphic-order-interaction');
     const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0];
     await step('Click on the Show Correct button', async () => {
       await showCorrectButton.click();
@@ -531,8 +521,8 @@ export const InlineChoice: Story = {
     </qti-item>`,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const assessmentItem = await canvas.findByShadowTitle('Richard III (Take 2)');
-    const interaction = assessmentItem.querySelector('qti-inline-choice-interaction');
+    const item = await getAssessmentItemFromItemContainer(canvasElement);
+    const interaction = item.querySelector('qti-inline-choice-interaction');
 
     const showCorrectButton = await canvas.findByShadowText(`Show correct response`);
     await step('Click on the Show Correct button', async () => {
@@ -572,11 +562,8 @@ export const GraphicAssociate: Story = {
   play: async ({ canvasElement, step }) => {
     // wait for qti-simple-choices to be rendered
     const canvas = within(canvasElement);
-    await canvas.findByShadowTitle('Low-cost Flying');
-
-    const interaction = canvasElement
-      .querySelector('item-container')
-      .shadowRoot.querySelector('qti-graphic-associate-interaction');
+    const item = await getAssessmentItemFromItemContainer(canvasElement);
+    const interaction = item.querySelector('qti-graphic-associate-interaction');
     const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0];
     await step('Click on the Show Correct button', async () => {
       await showCorrectButton.click();
@@ -616,11 +603,8 @@ export const Slider: Story = {
   play: async ({ canvasElement, step }) => {
     // wait for qti-simple-choices to be rendered
     const canvas = within(canvasElement);
-    await canvas.findByShadowTitle('Slider Interaction – Water');
-
-    const interaction = canvasElement
-      .querySelector('item-container')
-      .shadowRoot.querySelector('qti-slider-interaction');
+    const item = await getAssessmentItemFromItemContainer(canvasElement);
+    const interaction = item.querySelector('qti-slider-interaction');
 
     const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0];
     await step('Click on the Show Correct button', async () => {

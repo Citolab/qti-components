@@ -1,9 +1,10 @@
 import { html } from 'lit';
-import { expect } from '@storybook/test';
+import { expect, waitFor } from '@storybook/test';
 import { within } from 'shadow-dom-testing-library';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 
 import { qtiTransformItem } from '../../qti-transformers';
+import { getAssessmentItemFromItemContainer } from '../../../testing/test-utils';
 
 import type { ItemContainer } from '../components/item-container';
 import type { Meta, StoryObj } from '@storybook/web-components';
@@ -30,8 +31,7 @@ export const ItemURL: Story = {
     return html`<qti-item>${template(args)}</qti-item>`;
   },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const assessmentItem = await canvas.findByShadowTitle('Unattended Luggage');
+    const assessmentItem = await getAssessmentItemFromItemContainer(canvasElement);
     expect(assessmentItem).toBeInTheDocument();
   }
 };

@@ -4,6 +4,11 @@ import { findByShadowTitle, within } from 'shadow-dom-testing-library';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { spread } from '@open-wc/lit-helpers';
 
+import {
+  getAssessmentItemFromItemContainer,
+  getAssessmentItemFromTestContainerByDataTitle
+} from '../../../testing/test-utils';
+
 import type { TestNext } from './test-next';
 import type { Meta, StoryObj } from '@storybook/web-components';
 
@@ -51,11 +56,15 @@ export const Test: Story = {
     const prevButton = canvas.getByShadowText('vorige');
     const nextButton = canvas.getByShadowText('volgende');
     await waitFor(() => expect(nextButton).toBeEnabled());
-    const firstItem = await canvas.findByShadowTitle('T1 - Test Entry - Item 1');
+
+    const firstItem = await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'T1 - Test Entry - Item 1');
     expect(firstItem).toBeInTheDocument();
     await new Promise(resolve => setTimeout(resolve, 500));
     await fireEvent.click(nextButton);
-    const secondItem = await canvas.findByShadowTitle('T1 - Choice Interaction - Multiple Cardinality');
+    const secondItem = await getAssessmentItemFromTestContainerByDataTitle(
+      canvasElement,
+      'T1 - Choice Interaction - Multiple Cardinality'
+    );
     expect(secondItem).toBeInTheDocument();
     await fireEvent.click(nextButton);
     await new Promise(resolve => setTimeout(resolve, 1)); // minimal time to let the next button know about the update on sessionContext
