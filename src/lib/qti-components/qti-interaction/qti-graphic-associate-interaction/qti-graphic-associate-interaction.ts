@@ -73,7 +73,7 @@ export class QtiGraphicAssociateInteraction extends Interaction {
           viewbox="0 0 ${this.grImage[0]?.width} ${this.grImage[0]?.height}"
         >
           ${repeat(
-            this.response,
+            this.response || [],
             line => line,
             (line, index) => svg`
               <line
@@ -93,7 +93,7 @@ export class QtiGraphicAssociateInteraction extends Interaction {
             `
           )}
           ${repeat(
-            this._correctLines,
+            this._correctLines || [],
             line => line,
             (line, _index) => svg`
               <line

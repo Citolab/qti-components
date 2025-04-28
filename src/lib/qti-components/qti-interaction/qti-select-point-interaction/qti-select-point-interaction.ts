@@ -156,7 +156,7 @@ export class QtiSelectPointInteraction extends Interaction {
     return html` <slot name="prompt"></slot>
       <point-container>
         ${repeat(
-          this.response?.filter(point => point),
+          this.response?.filter(point => point) || [],
           point => point,
           (point, index) => {
             const [x, y] = point.split(' ').map(Number);
@@ -197,7 +197,7 @@ export class QtiSelectPointInteraction extends Interaction {
           }
         )}
         ${repeat(
-          this._correctAreas?.filter(area => area),
+          this._correctAreas?.filter(area => area) || [],
           area => area,
           (area, i) =>
             html`<div
