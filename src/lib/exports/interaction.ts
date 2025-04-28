@@ -29,7 +29,7 @@ export abstract class Interaction extends LitElement implements IInteraction {
   public toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
     this.correctResponse = show
       ? responseVariable?.correctResponse
-      : responseVariable.cardinality === 'single'
+      : responseVariable?.cardinality === 'single'
         ? ''
         : [];
   }
