@@ -73,32 +73,10 @@ export const Test: Story = {
     const choiceA = canvas.getByText<QtiSimpleChoice>('Option A');
     const choiceB = canvas.getByText<QtiSimpleChoice>('Option B');
     const choiceC = canvas.getByText<QtiSimpleChoice>('Option C');
-    // const choiceD = canvas.getByText<QtiSimpleChoice>('Option D');
-    // const validationMessage = getByShadowRole(interaction, 'alert');
 
     const spy = fn(e => e.detail.response);
 
     interaction.addEventListener('qti-interaction-response', spy);
-
-    // await fireEvent.click(choiceA);
-    // expect(choiceA.checked).toBeTruthy();
-
-    // await fireEvent.click(choiceB);
-    // expect(choiceB.checked).toBeTruthy();
-    // expect(choiceA.checked).toBeTruthy();
-
-    // await fireEvent.click(choiceC);
-    // const validationMessage = getByShadowRole(canvasElement, 'alert');
-
-    // interaction.reportValidity();
-
-    // await waitFor(() => expect(validationMessage).toBeVisible());
-
-    // expect(validationMessage.textContent).toBe('Please select no more than 2 options.');
-
-    // const callback = fn(e => e.detail.response);
-
-    // interaction.addEventListener('qti-interaction-response', callback);
 
     try {
       /* QTI */
@@ -148,45 +126,10 @@ export const Test: Story = {
         const expectedResponse = 'A';
         expect(receivedEvent.detail.response).toEqual(expectedResponse);
       });
-      /* FORM */
-      // await step('reset interaction', async () => {
-      //   interaction.reset();
-      //   expect(interaction.value).toBe(null);
-      // });
       await step('tab index', async () => {
         choiceA.focus();
         await expect(choiceA).toHaveFocus();
-        // await delay(2000);
-        // await userEvent.tab();
-        // await expect(choiceB).toHaveFocus();
-        // await userEvent.keyboard('{space}');
-        // await expect(choiceB.checked).toBeTruthy();
       });
-      // await step('changing qti attributes should reset state', async () => {
-      //   interaction.maxChoices = 2;
-      //   expect(interaction.value).toBe(null);
-      // });
-      // await step('validate', async () => {
-      //   interaction.reportValidity();
-      //   // expect(validationMessage).toBe('Please select an option.');
-      // });
-      // await step('responsiveness container queries', async () => {});
-
-      // await step('changing qti attributes should reset state', async () => {});
-      // await step('keyboard navigation', async () => {});
-      // await step('touch events', async () => {});
-
-      // await step('the dom is wihout added attributes', async () => {
-      //   console.log(interaction.outerHTML);
-      // });
-      // await step('correct event thrown', async () => {});
-      // await step('set value', async () => {});
-
-      // await step('set value outside', async () => {});
-      // await step('report reportValidity', async () => {});
-      // await step('disabled', async () => {});
-      // await step('readonly', async () => {});
-      // await step('default attributes in QTI not on the item ( webcomponent without attributes )', async () => {});
     } finally {
       interaction.removeEventListener('qti-interaction-response', spy);
     }
@@ -328,5 +271,69 @@ export const Multiple: Story = {
 
     // Check that the event's detail matches expected data
     expect(event.detail).toEqual(expectedDetail);
+  }
+};
+
+export const TextOverflowTest: Story = {
+  render: args => {
+    // Create a wrapper with fixed width to test text wrapping
+    return html`
+      <div style="width: 300px; border: 1px solid #ccc;">
+        <qti-choice-interaction ${spread(args)} data-testid="interaction">
+          <qti-prompt>
+            <p>Which of the following features are <strong>new</strong> to QTI 3?</p>
+          </qti-prompt>
+          <qti-simple-choice identifier="A">Option A</qti-simple-choice>
+          <qti-simple-choice identifier="B">Option B</qti-simple-choice>
+          <qti-simple-choice identifier="C">Option C</qti-simple-choice>
+          <qti-simple-choice identifier="D"
+            >This is a very long option text that should wrap to the next line instead of overflowing outside its
+            container when rendered properly. The text should respect the container boundaries and not break the
+            layout.</qti-simple-choice
+          >
+        </qti-choice-interaction>
+      </div>
+    `;
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const interaction = canvas.getByTestId<QtiChoiceInteraction>('interaction');
+    const choiceD = canvas.getByText<QtiSimpleChoice>(/This is a very long option text/);
+
+    // Basic test setup from original test
+    const spy = fn(e => e.detail.response);
+    interaction.addEventListener('qti-interaction-response', spy);
+
+    try {
+      // First perform the standard checks
+      await step('response null', async () => {
+        expect(interaction.value).toBe(null);
+      });
+
+      // Add text wrapping test
+      await step('long text wrapping', async () => {
+        // Get the actual width of the choice element
+        const choiceDRect = choiceD.getBoundingClientRect();
+
+        // Get the width of the container
+        const containerRect = canvasElement.querySelector('div').getBoundingClientRect();
+
+        // Check that the element's width doesn't exceed the container width
+        expect(choiceDRect.width).toBeLessThanOrEqual(containerRect.width);
+
+        // Optional: Check if choiceD element has any computed style that forces text wrapping
+        const choiceDStyles = window.getComputedStyle(choiceD);
+        expect(choiceDStyles.whiteSpace).not.toBe('nowrap');
+      });
+
+      // Test interaction with the long text option
+      await step('interaction with long text option', async () => {
+        await fireEvent.click(choiceD);
+        expect(choiceD.checked).toBeTruthy();
+        expect(interaction.value).toBe('D');
+      });
+    } finally {
+      interaction.removeEventListener('qti-interaction-response', spy);
+    }
   }
 };

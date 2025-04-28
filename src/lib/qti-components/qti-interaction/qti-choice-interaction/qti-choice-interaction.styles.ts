@@ -39,7 +39,7 @@ export default css`
   ::slotted(qti-simple-choice) {
     display: flex;
     align-items: center;
-    white-space: nowrap;
+    white-space: normal;
   }
 
   /* Orientation styles */
