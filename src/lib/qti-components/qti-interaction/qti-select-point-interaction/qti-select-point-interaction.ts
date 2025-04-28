@@ -189,7 +189,7 @@ export class QtiSelectPointInteraction extends Interaction {
                 aria-label="Remove point at ${point}"
                 @click=${(e: Event) => {
                   e.stopPropagation();
-                  this.response = this.response.filter((_, i) => i !== index);
+                  this.response = (this.response || []).filter((_, i) => i !== index);
                   this.saveResponse(this.response);
                 }}
               ></button>
