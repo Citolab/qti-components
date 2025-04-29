@@ -60,3 +60,22 @@ export const Hidden = {
     class: ['qti-unselected-hidden']
   }
 };
+
+export const Multiple: Story = {
+  render: args =>
+    template(
+      args,
+      html`
+        <p>
+          Sponsors of the Olympic Games
+          <qti-hottext-interaction max-choices="2" response-identifier="RESPONSE" class="qti-input-control-hidden">
+            <qti-hottext identifier="A">who bought</qti-hottext> advertising time on United States television
+            <qti-hottext identifier="B">includes</qti-hottext>
+            <qti-hottext identifier="C">at least</qti-hottext> a dozen international firms
+            <qti-hottext identifier="D">whose</qti-hottext> names are familiar to American consumers.
+            <qti-hottext identifier="E">No error.</qti-hottext>
+          </qti-hottext-interaction>
+        </p>
+      `
+    )
+};

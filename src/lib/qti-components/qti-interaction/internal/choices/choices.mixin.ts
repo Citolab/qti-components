@@ -25,7 +25,7 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
   abstract class ChoicesMixinElement extends superClass implements ChoicesInterface {
     protected _choiceElements: Choice[] = [];
 
-    @query('#validationMessage')
+    @query('#validation-message')
     protected _validationMessageElement!: HTMLElement;
 
     @property({ type: Number, attribute: 'min-choices' })
@@ -123,7 +123,6 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
           this.dataset.minSelectionsMessage ||
           `Please select at least ${this.minChoices} ${this.minChoices === 1 ? 'option' : 'options'}.`;
       }
-
       if (selectedChoices.length > 0) {
         this._internals.setValidity(
           isValid ? {} : { customError: true },
@@ -138,7 +137,9 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       if (this._validationMessageElement) {
         if (!this._internals.validity.valid) {
           this._validationMessageElement.textContent = this._internals.validationMessage;
-          this._validationMessageElement.style.display = 'block';
+          // Set the display to block to show the message, add important to override any styles
+
+          this._validationMessageElement.style.setProperty('display', 'block', 'important');
         } else {
           this._validationMessageElement.textContent = '';
           this._validationMessageElement.style.display = 'none';

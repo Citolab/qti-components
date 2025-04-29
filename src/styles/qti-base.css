@@ -8,9 +8,13 @@
   --qti-correct-light: #c8e6c9;
   --qti-correct: #66bb6a;
 
-  /* Inorrect colors */
+  /* Incorrect colors */
   --qti-incorrect-light: #ef9a9a;
   --qti-incorrect: #ef5350;
+
+  /* Validation colors */
+  --qti-validation-error-bg: #fffbeb;
+  --qti-validation-text: #92400e;
 
   /* Gap size */
   --qti-gap-size: 1rem;

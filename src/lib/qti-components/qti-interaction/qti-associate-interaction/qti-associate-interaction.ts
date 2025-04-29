@@ -44,7 +44,7 @@ export class QtiAssociateInteraction extends DragDropInteractionMixin(
             </div>`
         )}
 
-        <div role="alert" id="validationMessage"></div>
+        <div role="alert" part="message" id="validation-message"></div>
       </div>`;
   }
 

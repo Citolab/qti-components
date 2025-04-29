@@ -15,3 +15,19 @@ qti-assessment-section:not(:has(qti-assessment-item)),
 qti-assessment-item-ref:not(:has(qti-assessment-item)) {
   display: none;
 }
+
+qti-hottext-interaction::part(message),
+qti-choice-interaction::part(message),
+qti-association-interaction::part(message),
+qti-graphic-association-interaction::part(message),
+qti-graphic-gap-match-interaction::part(message),
+qti-graphic-order-interaction::part(message),
+qti-math-interaction::part(message) {
+  display: none;
+  color: var(--qti-validation-text, #000);
+  background-color: var(--qti-validation-error-bg, #fff);
+  padding: 10px;
+  border: 3px solid var(--qti-validation-text, #000);
+  border-radius: 4px;
+  margin-top: 8px;
+}

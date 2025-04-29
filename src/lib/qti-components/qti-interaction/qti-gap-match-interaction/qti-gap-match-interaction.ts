@@ -20,7 +20,7 @@ export class QtiGapMatchInteraction extends DragDropInteractionMixin(
     return html`<slot name="prompt"> </slot>
       <slot part="drags" name="drags"></slot>
       <slot part="drops"></slot>
-      <div role="alert" id="validationMessage"></div>`;
+      <div role="alert" part="message" id="validation-message"></div>`;
   }
 
   public toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean): void {

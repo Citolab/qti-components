@@ -25,7 +25,7 @@ export class QtiGraphicOrderInteraction extends ChoicesMixin(Interaction, 'qti-h
     return html`
       <slot name="prompt"></slot>
       <slot></slot>
-      <div role="alert" id="validationMessage"></div>
+      <div role="alert" part="message" id="validation-message"></div>
     `;
   }
 

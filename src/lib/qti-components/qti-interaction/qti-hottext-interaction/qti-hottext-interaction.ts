@@ -6,7 +6,9 @@ import { Interaction } from '../../../exports/interaction';
 
 @customElement('qti-hottext-interaction')
 export class QtiHottextInteraction extends ChoicesMixin(Interaction, 'qti-hottext') {
-  override render = () => html`<slot></slot>`;
+  override render = () =>
+    html` <slot></slot>
+      <div part="message" role="alert" id="validation-message"></div>`;
 }
 
 declare global {

@@ -21,7 +21,7 @@ export class QtiGraphicGapMatchInteraction extends DragDropInteractionMixin(
     return html` <slot name="prompt"></slot>
       <slot part="image"></slot>
       <slot part="drags" name="drags" class="hover-border"></slot>
-      <div role="alert" id="validationMessage"></div>`;
+      <div role="alert" part="message" id="validation-message"></div>`;
   }
 
   private positionHotspotOnRegister(e: CustomEvent<null>): void {

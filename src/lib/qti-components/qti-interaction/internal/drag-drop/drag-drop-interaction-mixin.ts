@@ -414,11 +414,11 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
 
     override reportValidity(): boolean {
-      const validationMessageElement = this.shadowRoot.querySelector('#validationMessage') as HTMLElement;
+      const validationMessageElement = this.shadowRoot.querySelector('#validation-message') as HTMLElement;
       if (validationMessageElement) {
         if (!this._internals.validity.valid) {
           validationMessageElement.textContent = this._internals.validationMessage;
-          validationMessageElement.style.display = 'block';
+          validationMessageElement.style.setProperty('display', 'block', 'important');
         } else {
           validationMessageElement.textContent = '';
           validationMessageElement.style.display = 'none';

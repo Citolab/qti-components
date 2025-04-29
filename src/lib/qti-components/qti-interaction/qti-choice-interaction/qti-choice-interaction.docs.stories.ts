@@ -347,12 +347,12 @@ export const ChoiceMaxMessage: Story = {
     const oxygenChoice = canvas.getByText<QtiSimpleChoice>('Oxygen');
     const nitrogenChoice = canvas.getByText<QtiSimpleChoice>('Nitrogen');
     const button = canvas.getByRole('button', { name: 'Validate' });
-    const validationMessage = getByShadowRole(canvasElement, 'alert');
 
     await fireEvent.click(heliumChoice);
     await fireEvent.click(oxygenChoice);
     await fireEvent.click(nitrogenChoice);
     await fireEvent.click(button);
+    const validationMessage = getByShadowRole(canvasElement, 'alert');
     await waitFor(() => expect(validationMessage).toBeVisible());
     expect(validationMessage.textContent).toBe('You can only select up to 2 options');
   }
@@ -379,10 +379,10 @@ export const ChoiceMinMessage: Story = {
     const canvas = within(canvasElement);
     const heliumChoice = canvas.getByText<QtiSimpleChoice>('Helium');
     const button = canvas.getByRole('button', { name: 'Validate' });
-    const validationMessage = getByShadowRole(canvasElement, 'alert');
 
     await fireEvent.click(heliumChoice);
     await fireEvent.click(button);
+    const validationMessage = getByShadowRole(canvasElement, 'alert');
     await waitFor(() => expect(validationMessage).toBeVisible());
     expect(validationMessage.textContent).toBe('You must select at least 2 options');
   }

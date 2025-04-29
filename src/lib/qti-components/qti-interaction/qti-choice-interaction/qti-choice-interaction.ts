@@ -31,7 +31,7 @@ export class QtiChoiceInteraction
   render() {
     return html`
       <slot part="prompt" name="prompt"></slot><slot part="slot" @slotchange=${this._handleSlotChange}></slot>
-      <div part="message" role="alert" id="validationMessage"></div>
+      <div part="message" role="alert" id="validation-message"></div>
     `;
   }
 }

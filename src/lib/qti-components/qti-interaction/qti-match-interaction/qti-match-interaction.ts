@@ -231,7 +231,7 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
           `
         : nothing}
 
-      <div role="alert" id="validationMessage"></div>
+      <div role="alert" part="message" id="validation-message"></div>
     `;
   }
 }
