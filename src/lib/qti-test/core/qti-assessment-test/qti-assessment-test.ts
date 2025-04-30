@@ -9,10 +9,19 @@ import type { TestContext } from '../../../exports/test.context';
 @customElement('qti-assessment-test')
 export class QtiAssessmentTest extends LitElement {
   @property({ type: String }) identifier: string;
-  @property({ type: String }) title: string;
+  @property({ type: String })
+  get title(): string {
+    return this._title;
+  }
+  set title(value: string) {
+    this._title = value;
+    this.removeAttribute('title');
+    this.setAttribute('data-title', value);
+  }
 
   @consume({ context: testContext, subscribe: true })
   public _testContext?: TestContext;
+  private _title = '';
 
   async connectedCallback(): Promise<void> {
     super.connectedCallback();

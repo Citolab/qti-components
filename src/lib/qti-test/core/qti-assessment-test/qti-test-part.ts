@@ -3,7 +3,14 @@ import { customElement, property } from 'lit/decorators.js';
 @customElement('qti-test-part')
 export class QtiTestPart extends LitElement {
   @property({ type: String }) identifier: string = '';
-  @property({ type: String }) title: string = '';
+  get title(): string {
+    return this._title;
+  }
+  set title(value: string) {
+    this._title = value;
+    this.removeAttribute('title');
+    this.setAttribute('data-title', value);
+  }
   @property({ type: String }) class: string = '';
 
   @property({ type: String, attribute: 'navigation-mode' })
@@ -11,6 +18,8 @@ export class QtiTestPart extends LitElement {
 
   @property({ type: String, attribute: 'submission-mode' })
   submissionMode: 'individual' | 'simultaneous' = 'individual';
+
+  private _title = '';
 
   async connectedCallback(): Promise<void> {
     super.connectedCallback();

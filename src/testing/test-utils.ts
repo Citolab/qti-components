@@ -26,6 +26,21 @@ export const getTestContainer = async (canvasElement: HTMLElement): Promise<HTML
   return testContainer;
 };
 
+export async function getAssessmentTest(canvasElement: HTMLElement): Promise<HTMLElement | null> {
+  const qtiAssessmentTest = await waitFor(() => {
+    const testContainer = canvasElement.querySelector('test-container');
+    if (!testContainer || !testContainer.shadowRoot) {
+      throw new Error('test-container or its shadowRoot not ready yet');
+    }
+    const qtiAssessmentTest = testContainer.shadowRoot.querySelector('qti-assessment-test');
+    if (!qtiAssessmentTest) {
+      throw new Error('qti-assessment-item or its shadowRoot not ready yet');
+    }
+    return qtiAssessmentTest;
+  });
+  return qtiAssessmentTest;
+}
+
 export async function getAssessmentItemsFromTestContainer(canvasElement: HTMLElement): Promise<HTMLElement[] | null> {
   const assessmentItems = await waitFor(() => {
     const testContainer = canvasElement.querySelector('test-container');

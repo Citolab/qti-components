@@ -3,6 +3,8 @@ import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { html } from 'lit';
 import { within } from 'shadow-dom-testing-library';
 
+import { getAssessmentTest } from '../../../testing/test-utils';
+
 import type { Meta, StoryObj } from '@storybook/web-components';
 import type { TestScoringButtons } from './test-scoring-buttons';
 
@@ -49,10 +51,8 @@ export const Default: Story = {
 export const Test: Story = {
   render: Default.render,
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-
-    const itemElement = await canvas.findByShadowTitle('test-scoring-buttons');
-    expect(itemElement).toBeInTheDocument();
+    const assessmentTest = await getAssessmentTest(canvasElement);
+    expect(assessmentTest).toBeInTheDocument();
     // // 2 Assume the candidate rubric is not visible
     // const rubricElement = await canvas.findByShadowText('candidate rubric block');
     // expect(rubricElement).toBeVisible();

@@ -21,12 +21,21 @@ export class QtiAssessmentSection extends LitElement {
   @property({ type: String }) identifier: string;
   @property({ type: String }) required: string;
   @property({ type: Boolean, converter: stringToBooleanConverter }) fixed: boolean;
-  @property({ type: String }) title: string;
+  get title(): string {
+    return this._title;
+  }
+  set title(value: string) {
+    this._title = value;
+    this.removeAttribute('title');
+    this.setAttribute('data-title', value);
+  }
   @property({ type: Boolean, converter: stringToBooleanConverter }) visible: boolean;
   @property({ type: Boolean, converter: stringToBooleanConverter, attribute: 'keep-together' }) keepTogether: boolean;
 
   @consume({ context: testContext, subscribe: true })
   public _testContext?: TestContext;
+
+  private _title = '';
 
   async connectedCallback(): Promise<void> {
     super.connectedCallback();
