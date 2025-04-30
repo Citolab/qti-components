@@ -6,6 +6,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { testContext } from '../../exports/test.context';
 import { sessionContext } from '../../exports/session.context';
 import { computedContext } from '../../exports/computed.context';
+import { configContext } from '../../exports/config.context';
 
 // import type { View } from '../core/mixins/test-view.mixin';
 // import type { TemplateFunction } from 'stampino';
@@ -35,6 +36,7 @@ export class TestNavigation extends LitElement {
   public initContext: { identifier: string; [key: string]: any }[] = [];
 
   @state()
+  @provide({ context: configContext })
   public configContext: ConfigContext = {};
 
   @state()

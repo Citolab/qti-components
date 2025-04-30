@@ -1,6 +1,8 @@
 import { property, query, state } from 'lit/decorators.js';
+import { consume } from '@lit/context';
 
 import { watch } from '../../../../decorators/watch';
+import { configContext, type ConfigContext } from '../../../../exports/config.context';
 
 import type { ResponseVariable } from '../../../../exports/variables';
 import type { ChoiceInterface } from '../active-element/active-element.mixin';
@@ -57,6 +59,9 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       this._updateChoiceSelection();
     };
 
+    @state()
+    @consume({ context: configContext, subscribe: true })
+    protected _configContext: ConfigContext; //configContext
     get value(): string | null {
       if (Array.isArray(this.response) && this.response.length === 0) {
         return null;
@@ -186,7 +191,19 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
             this._setChoiceChecked(choice, false);
           }
         });
+      } else if (this._configContext?.disableAfterIfMaxChoicesReached) {
+        const selectedChoices = this._choiceElements.filter(choice => this._getChoiceChecked(choice));
+        if (selectedChoices.length >= this.maxChoices) {
+          this._choiceElements.forEach(choice => {
+            if (!this._getChoiceChecked(choice)) {
+              choice.disabled = true;
+            }
+          });
+        } else {
+          this._choiceElements.forEach(choice => (choice.disabled = false));
+        }
       }
+
       this._handleChoiceSelection();
     }
 
