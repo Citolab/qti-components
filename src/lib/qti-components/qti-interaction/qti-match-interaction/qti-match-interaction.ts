@@ -74,13 +74,13 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
         this.response = [value];
       } else if (this.response.indexOf(value) === -1) {
         if (type === 'radio') {
-          this.response = this.response.filter(v => v.indexOf(name) === -1);
+          this.response = (this.response || []).filter(v => v.indexOf(name) === -1);
         }
         this.response = [...this.response, value];
       }
       this.lastCheckedRadio = checkbox;
     } else {
-      this.response = this.response.filter(v => v !== value);
+      this.response = (this.response || []).filter(v => v !== value);
       this.lastCheckedRadio = null;
     }
 
@@ -145,6 +145,8 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
               }
             }
           });
+        } else {
+          this.correctOptions = null;
         }
       } else {
         if (show) {
@@ -161,6 +163,7 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
 
   override render() {
     const isTabular = this.class.split(' ').includes('qti-match-tabular');
+    const hasCorrectResponse = !!this.correctOptions?.length;
     return html`
       <slot name="prompt"></slot>
       <slot ?hidden=${isTabular}></slot>
@@ -181,14 +184,15 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
                       const rowId = row.getAttribute('identifier');
                       const colId = col.getAttribute('identifier');
                       const value = `${rowId} ${colId}`;
-                      const selectedInRowCount = this.response.filter(v => v.split(' ')[0] === rowId).length || 0;
+                      const selectedInRowCount =
+                        (this.response || []).filter(v => v.split(' ')[0] === rowId).length || 0;
                       const checked = this.response.includes(value);
                       const type = row.matchMax === 1 ? 'radio' : 'checkbox';
                       const isCorrect = !!this.correctOptions?.find(x => x.text === rowId && x.gap === colId);
                       const part =
                         type === 'radio'
-                          ? `rb ${checked ? 'rb-checked' : ''} ${this.correctOptions ? (isCorrect ? 'rb-correct' : 'rb-incorrect') : ''}`
-                          : `cb ${checked ? 'cb-checked' : ''} ${this.correctOptions ? (isCorrect ? 'cb-correct' : 'cb-incorrect') : ''}`;
+                          ? `rb ${checked ? 'rb-checked' : ''} ${hasCorrectResponse ? (isCorrect ? 'rb-correct' : 'rb-incorrect') : ''}`
+                          : `cb ${checked ? 'cb-checked' : ''} ${hasCorrectResponse ? (isCorrect ? 'cb-correct' : 'cb-incorrect') : ''}`;
 
                       // disable if match max is greater than 1 and max is reached
                       const disable =
