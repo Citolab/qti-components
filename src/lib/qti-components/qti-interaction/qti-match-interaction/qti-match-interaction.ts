@@ -150,7 +150,7 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
         }
       } else {
         if (show) {
-          this.correctOptions = matches;
+          this.correctOptions = matches || [];
         } else {
           this.correctOptions = null;
         }
@@ -163,7 +163,7 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
 
   override render() {
     const isTabular = this.class.split(' ').includes('qti-match-tabular');
-    const hasCorrectResponse = !!this.correctOptions?.length;
+    const hasCorrectResponse = this.correctOptions !== null;
     return html`
       <slot name="prompt"></slot>
       <slot ?hidden=${isTabular}></slot>
