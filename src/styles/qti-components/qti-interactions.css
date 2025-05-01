@@ -2,6 +2,8 @@
   qti-choice-interaction {
     &.qti-input-control-hidden {
       & qti-simple-choice {
+        position: relative; /* Add position relative here instead of a separate rule */
+
         @apply button;
 
         &:hover {
@@ -35,10 +37,16 @@
         &:state(correct-response),
         &[data-correct-response='true'] {
           border: 3px solid var(--qti-correct) !important;
+          padding-right: 30px;
 
-          /* Remove the checkmark for hidden input controls */
           &::after {
-            content: none !important;
+            content: '\02714';
+            color: var(--qti-correct);
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 1.2em;
+            font-weight: bold;
           }
         }
       }
@@ -107,13 +115,6 @@
           color: var(--qti-correct);
         }
       }
-    }
-
-    /* Override to remove the checkmark in qti-input-control-hidden context */
-    /* stylelint-disable-next-line no-duplicate-selectors */
-    &.qti-input-control-hidden qti-simple-choice:state(correct-response)::after,
-    &.qti-input-control-hidden qti-simple-choice[data-correct-response='true']::after {
-      content: none !important;
     }
 
     & qti-simple-choice > p {
