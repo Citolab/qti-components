@@ -410,17 +410,13 @@ export class QtiAssessmentItem extends LitElement {
     );
   }
 
-  public validate(reportValidity = true): boolean | null {
-    let isValid = null;
-    if (this._interactionElements.every(interactionElement => interactionElement.validate())) {
-      isValid = true;
-    }
-    if (this._interactionElements.some(interactionElement => interactionElement.validate())) {
-      isValid = false;
-    }
+  public validate(reportValidity = true): boolean {
+    const isValid = this._interactionElements.every(interactionElement => interactionElement.validate());
+
     if (reportValidity) {
       this.reportValidity();
     }
+
     return isValid;
   }
 
