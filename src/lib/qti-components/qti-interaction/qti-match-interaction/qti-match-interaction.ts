@@ -38,7 +38,7 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
     else this._response = val;
   }
   @property({ type: String, attribute: 'response-identifier' }) responseIdentifier: string = '';
-  @state() protected correctOptions: { text: string; gap: string }[] = [];
+  @state() protected correctOptions: { text: string; gap: string }[] = null;
 
   async connectedCallback(): Promise<void> {
     super.connectedCallback();
