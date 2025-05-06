@@ -107,6 +107,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
     override firstUpdated(changedProps): void {
       super.firstUpdated(changedProps);
+      if (this.isMatchTabular()) return;
       const disabled = this.hasAttribute('disabled');
       if (!disabled) {
         document.addEventListener('touchmove', this.handleTouchMove.bind(this), { passive: false });
@@ -141,6 +142,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
 
     private draggablesModified = (addedDraggables: HTMLElement[], removedDraggables: HTMLElement[]) => {
+      if (this.isMatchTabular()) return;
       for (const removedDraggable of removedDraggables) {
         if (this.draggables.includes(removedDraggable)) {
           this.draggables = this.draggables.filter(draggable => draggable !== removedDraggable);
@@ -172,6 +174,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     };
 
     private droppablesModified = (addedDroppables: HTMLElement[], removedDroppables: HTMLElement[]) => {
+      if (this.isMatchTabular()) return;
       for (const removedDroppable of removedDroppables) {
         if (this.droppables.includes(removedDroppable)) {
           this.droppables = this.droppables.filter(droppable => droppable !== removedDroppable);
@@ -193,6 +196,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     };
 
     private async moveDraggableToDroppable(draggable: HTMLElement, droppable: HTMLElement): Promise<void> {
+      if (this.isMatchTabular()) return;
       // console.log(`moveDraggableToDroppable, draggable: ${draggable.tagName}, droppable: ${droppable.tagName}`);
       const moveElement = (): void => {
         draggable.style.transform = 'translate(0, 0)';
@@ -239,6 +243,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
 
     private updateMinDimensionsForDropZones() {
+      if (this.isMatchTabular()) return;
       const gapTexts = this.querySelectorAll(draggablesSelector);
       const gaps = Array.from(this.querySelectorAll(droppablesSelector)).map(d => d as HTMLElement);
       let maxHeight = 0;
@@ -264,6 +269,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
 
     private activateDroppables(target: HTMLElement): void {
+      if (this.isMatchTabular()) return;
       const dragContainers = this.dragContainers;
       dragContainers.forEach(d => {
         d.setAttribute('enabled', '');
@@ -331,6 +337,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
 
     private handleTouchMove(e) {
+      if (this.isMatchTabular()) return;
       if (this.isDraggable && this.dragClone) {
         const { x, y } = this.getEventCoordinates(e);
         const currentTouch = { clientX: x, clientY: y };
@@ -370,6 +377,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
 
     private handleTouchEnd(e) {
+      if (this.isMatchTabular()) return;
       if (this.isDragging) {
         this.resetDragState();
       }
@@ -391,6 +399,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
 
     validate(): boolean {
+      if (this.isMatchTabular()) return;
       if (!this.shadowRoot) return false;
       const validAssociations = this.getValidAssociations();
       let isValid = true;
@@ -745,6 +754,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
 
     private handleTouchStart(e) {
+      if (this.isMatchTabular()) return;
       if (this.isDragging) {
         return;
       }
