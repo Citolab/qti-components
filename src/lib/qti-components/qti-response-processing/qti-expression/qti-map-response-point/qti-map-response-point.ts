@@ -1,7 +1,7 @@
 import { property } from 'lit/decorators.js';
 
-import { QtiExpression } from '../../../internal/qti-expression';
 import { ScoringHelper } from '../../utilities/scoring-helper';
+import { QtiExpression } from '../../../../exports/qti-expression';
 
 import type { ResponseVariable } from '../../../../exports/variables';
 import type { QtiAreaMapping } from '../qti-area-mapping/qti-area-mapping';

@@ -6,6 +6,7 @@ import { itemContext } from './qti-assessment-item.context';
 
 import type { ResponseVariable, VariableDeclaration } from './variables';
 import type { QtiMultiple } from '../qti-components/qti-response-processing/qti-expression/qti-multiple/qti-multiple';
+import type { QtiOrdered } from '../qti-components/qti-response-processing/qti-expression/qti-ordered/qti-ordered';
 import type { ItemContext } from './item.context';
 
 export interface QtiExpressionBase<T> {
@@ -72,6 +73,20 @@ export abstract class QtiExpression<T> extends LitElement implements QtiExpressi
                 baseType: values[0].baseType,
                 value: values.map(v => v.value),
                 cardinality: 'multiple',
+                type: 'response'
+              } as ResponseVariable;
+            }
+            return null;
+          }
+          case 'qti-ordered': {
+            const multiple = e as QtiOrdered;
+            const values = multiple.getResult();
+            if (values.length > 0) {
+              return {
+                identifier: '',
+                baseType: values[0].baseType,
+                value: values.map(v => v.value),
+                cardinality: 'ordered',
                 type: 'response'
               } as ResponseVariable;
             }

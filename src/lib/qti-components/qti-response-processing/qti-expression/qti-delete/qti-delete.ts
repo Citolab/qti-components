@@ -1,4 +1,4 @@
-import { QtiExpression } from '../../../internal/qti-expression';
+import { QtiExpression } from '../../../../exports/qti-expression';
 
 import type { ResponseVariable } from '../../../../exports/variables';
 
