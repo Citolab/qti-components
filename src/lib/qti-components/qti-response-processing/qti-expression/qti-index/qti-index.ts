@@ -2,7 +2,7 @@ import { customElement, property } from 'lit/decorators.js';
 
 import { QtiExpression } from '../../../../exports/qti-expression';
 
-import type { integer } from '../../../../../../dist/exports/expression-result';
+import type { integer } from '../../../../exports/expression-result';
 import type { ResponseVariable } from '../../../../exports/variables';
 
 @customElement('qti-index')
