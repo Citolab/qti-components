@@ -203,7 +203,7 @@ export class QtiCustomInteraction extends Interaction {
   }
 
   validate(): boolean {
-    if (this.rawResponse) {
+    if (!this.rawResponse) {
       return false;
     }
     if (Array.isArray(this.rawResponse)) {
