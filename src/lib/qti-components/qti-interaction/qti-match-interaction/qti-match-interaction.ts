@@ -186,7 +186,7 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
                       const value = `${rowId} ${colId}`;
                       const selectedInRowCount =
                         (this.response || []).filter(v => v.split(' ')[0] === rowId).length || 0;
-                      const checked = this.response.includes(value);
+                      const checked = this.response?.includes(value) || false;
                       const type = row.matchMax === 1 ? 'radio' : 'checkbox';
                       const isCorrect = !!this.correctOptions?.find(x => x.text === rowId && x.gap === colId);
                       const part =
