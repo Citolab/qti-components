@@ -94,7 +94,7 @@ export abstract class QtiExpression<T> extends LitElement implements QtiExpressi
               const value = expression.getResult();
               return {
                 baseType: 'integer',
-                value: value.toString(),
+                value: value.toString() || null,
                 cardinality: 'single'
               } as ResponseVariable;
             } catch (error) {

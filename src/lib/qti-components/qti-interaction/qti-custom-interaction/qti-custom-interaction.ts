@@ -17,7 +17,7 @@ export class QtiCustomInteraction extends Interaction {
   // To achieve this we change the package by replacing the bootstrap.js with our own and inject a proxy CES API that communicates via postMessage
   // Because we also want to run this in storybook, we cannot use window.top because to send messages there, because in case of storybook that is not the top window.
   // So we send messages to all parent windows
-  private rawResponse: string;
+  private rawResponse: string | string[] = '';
 
   constructor() {
     super();
@@ -69,8 +69,8 @@ export class QtiCustomInteraction extends Interaction {
   // is embedded in an iframe and coming from another domain
   // Therefor we need to use the new CES API to communicates via the broadcast API
   setupCES() {
-    const iframe = this.shadowRoot.querySelector('#pciContainer') as HTMLIFrameElement,
-      iframeDoc = iframe.contentDocument;
+    const iframe = this.shadowRoot.querySelector('#pciContainer') as HTMLIFrameElement;
+    const iframeDoc = iframe.contentDocument;
 
     if (!this.manifest.script || this.manifest.script.length === 0) {
       this._errorMessage = 'No script found in manifest';
@@ -176,8 +176,10 @@ export class QtiCustomInteraction extends Interaction {
     const { type, data } = event.data;
     switch (type) {
       case 'setResponse':
-        this.rawResponse = data;
-        this.saveResponse(data);
+        if (data === null || !(Array.isArray(data) && data.length === 1 && data[0] === '')) {
+          this.rawResponse = data;
+          this.saveResponse(data);
+        }
         break;
       case 'getResponse': {
         this.postToWindowAndIframes('responseData', this.rawResponse);
@@ -201,19 +203,37 @@ export class QtiCustomInteraction extends Interaction {
   }
 
   validate(): boolean {
-    return this.rawResponse !== '';
+    if (this.rawResponse) {
+      return false;
+    }
+    if (Array.isArray(this.rawResponse)) {
+      if (this.rawResponse.length === 0) {
+        return false;
+      }
+      // check if one of the values has a value
+      for (const value of this.rawResponse) {
+        if (value !== '' && value !== null) {
+          return true;
+        }
+      }
+    }
+    return true;
   }
 
-  get response(): string | null {
-    return this.rawResponse;
+  get response(): string | string[] | null {
+    return (this.rawResponse as string | string[]) || null;
   }
 
-  set response(val: string | null) {
+  set response(val: string | string[] | null) {
     if (typeof val === 'string') {
       this.rawResponse = val;
       this.saveResponse(val);
+    } else if (Array.isArray(val)) {
+      this.rawResponse = val;
+    } else if (!val) {
+      // do nothing
     } else {
-      throw new Error('Value must be a string');
+      throw new Error('Value must be a string or an array of strings');
     }
   }
 
