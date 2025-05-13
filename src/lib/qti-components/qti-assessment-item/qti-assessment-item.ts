@@ -391,7 +391,7 @@ export class QtiAssessmentItem extends LitElement {
         }
         return {
           ...v,
-          value: outcomeVariable.cardinality === 'single' ? value : [...v.value, value as string]
+          value: outcomeVariable.cardinality === 'single' ? value : Array.isArray(value) ? value : [value]
         };
       })
     };
