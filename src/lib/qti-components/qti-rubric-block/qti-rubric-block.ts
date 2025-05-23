@@ -18,7 +18,17 @@ export class QtiRubricBlock extends LitElement {
     classNames.forEach((className: string) => {
       switch (className) {
         case 'qti-rubric-discretionary-placement':
-          this.setAttribute('slot', 'qti-rubric-block');
+          {
+            const event = new CustomEvent('qti-rubric:discretionary-placement', {
+              detail: { className, element: this },
+              bubbles: true,
+              composed: true,
+              cancelable: true
+            });
+            const notCancelled = this.dispatchEvent(event);
+            if (!notCancelled) return;
+            this.setAttribute('slot', 'qti-rubric-block');
+          }
           break;
         case 'qti-rubric-inline':
           this.setAttribute('slot', '');
