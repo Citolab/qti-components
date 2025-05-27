@@ -11,7 +11,7 @@ declare class TestProcessingInterface {
   outcomeProcessing(): boolean;
 }
 export const TestProcessingMixin = <T extends Constructor<TestBase>>(superClass: T) => {
-  abstract class TestProcessingElement extends superClass {
+  abstract class TestProcessingElement extends superClass implements TestProcessingInterface {
     constructor(...args: any[]) {
       super(...args);
       this.addEventListener('qti-register-variable', (e: CustomEvent<{ variable: any }>) => {

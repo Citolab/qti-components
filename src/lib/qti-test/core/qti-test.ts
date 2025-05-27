@@ -5,6 +5,8 @@ import { TestNavigationMixin, TestViewMixin } from './mixins';
 import { TestBase } from './test-base';
 import { TestProcessingMixin } from './mixins/test-processing.mixin';
 
+import type { IQtiTest } from '../../exports/qti-test';
+
 /**
  * `<qti-test>` is a custom element designed for rendering and interacting with QTI (Question and Test Interoperability) tests.
  *
@@ -54,7 +56,7 @@ import { TestProcessingMixin } from './mixins/test-processing.mixin';
  *
  */
 @customElement('qti-test')
-export class QtiTest extends TestNavigationMixin(TestViewMixin(TestProcessingMixin(TestBase))) {
+export class QtiTest extends TestNavigationMixin(TestViewMixin(TestProcessingMixin(TestBase))) implements IQtiTest {
   // export class QtiTest extends TestLoaderMixin(TestNavigationMixin(TestViewMixin(TestBase))) {
   /**
    * Renders the component's template.

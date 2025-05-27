@@ -9,7 +9,7 @@ type Constructor<T = {}> = abstract new (...args: any[]) => T;
 declare class TestViewInterface {}
 
 export const TestViewMixin = <T extends Constructor<TestBase>>(superClass: T) => {
-  abstract class TestViewClass extends superClass {
+  abstract class TestViewClass extends superClass implements TestViewInterface {
     constructor(...args: any[]) {
       super(...args);
       this.sessionContext = { ...this.sessionContext, view: 'candidate' };
