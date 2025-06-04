@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-item xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0p1_v1p0.xsd" 
+  identifier="pci-graphing-interaction-2" title="PCI Graphing Interaction 2" 
+  xml:lang="en-US" adaptive="false" time-dependent="false">
+  <qti-response-declaration identifier="RESPONSE" cardinality="multiple" base-type="point">
+    <qti-correct-response>
+      <qti-value>-3 0</qti-value>
+      <qti-value>0 -2</qti-value>
+    </qti-correct-response>
+  </qti-response-declaration>
+  <qti-item-body>
+    <div class="qti-layout-row">
+      <div class="qti-layout-col12">
+        <p class="stimulus">
+          Draw the graph of the inverse of <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>=</mo><mo>-</mo><mfrac bevelled="false"><mi>3</mi><mi>2</mi></mfrac><mo>⁢</mo><mi>x</mi><mo>-</mo><mi>3</mi></mrow></math> on the coordinate grid below.
+        </p>
+        <qti-portable-custom-interaction response-identifier="RESPONSE" 
+          module="GraphingInteraction"
+          custom-interaction-type-identifier="urn:ampup:pci:2025:graphingInteraction"
+          data-width="400"
+          data-height="400"
+          data-id="graph"
+          data-graphtype="line"
+          data-planetype="default"
+          data-title=""
+          data-vlines="10"
+          data-hlines="10"
+          data-borderlinewidth="3"
+          data-axislinewidth="3"
+          data-steplinewidth="1"
+          data-maxpoints="2"
+          data-minpoints="2"
+          data-invalidresponsemessage="You must plot two points to answer this question."
+          data-xaxis="{ &amp;quot;step&amp;quot;: 1, &amp;quot;substeps&amp;quot;: 1, &amp;quot;label&amp;quot;: &amp;quot;x&amp;quot;, &amp;quot;labelprecision&amp;quot;: 0, &amp;quot;precision&amp;quot;: 0 }" 
+          data-yaxis="{ &amp;quot;step&amp;quot;: 1, &amp;quot;substeps&amp;quot;: 1, &amp;quot;label&amp;quot;: &amp;quot;f(x)&amp;quot;, &amp;quot;labelprecision&amp;quot;: 0, &amp;quot;precision&amp;quot;: 0 }" 
+          >
+          <qti-interaction-markup>
+            <div id="graph" class="graph-container"></div>
+          </qti-interaction-markup>
+          <qti-stylesheet href="css/styles.css" type="text/css"/>
+        </qti-portable-custom-interaction>
+      </div>
+    </div>
+ </qti-item-body>
+ <qti-response-processing template="https://purl.imsglobal.org/spec/qti/v3p0/rptemplates/match_correct"/>
+</qti-assessment-item>

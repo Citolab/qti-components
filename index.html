@@ -1,225 +1,224 @@
 <!doctype html>
 <html lang="en" data-theme="cito">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QTI IOL Player LIT</title>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QTI IOL Player LIT</title>
+    <base href="%VITE_BASE_HREF%" />
+    <script src="//unpkg.com/navigo"></script>
 
-  <base href="%VITE_BASE_HREF%" />
-  <script src="//unpkg.com/navigo"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/theme-change@2.0.2/index.js"></script>
 
-  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  <link href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css" rel="stylesheet" type="text/css" />
-  <script src="https://cdn.jsdelivr.net/npm/theme-change@2.0.2/index.js"></script>
-
-  <style>
-    [data-theme='cito'] {
-      /* name: 'cito';
+    <style>
+      [data-theme='cito'] {
+        /* name: 'cito';
         default: false;
         prefersdark: false; */
-      color-scheme: 'cito';
-      --color-base-100: #ffffff;
-      --color-base-200: #f5f7fb;
-      --color-base-300: #e0e7f1;
-      --color-base-content: oklch(21% 0.034 264.665);
-      --color-primary: #e30075;
-      --color-primary-content: oklch(96% 0.015 12.422);
-      --color-secondary: #00acd5;
-      --color-secondary-content: oklch(98% 0.019 200.873);
-      --color-accent: oklch(81% 0.117 11.638);
-      --color-accent-content: oklch(27% 0.105 12.094);
-      --color-neutral: #424850;
-      --color-neutral-content: oklch(98% 0.002 247.839);
-      --color-info: #5185ec;
-      --color-info-content: oklch(97% 0.013 236.62);
-      --color-success: #0fa550;
-      --color-success-content: oklch(98% 0.014 180.72);
-      --color-warning: #fd9431;
-      --color-warning-content: oklch(98% 0.026 102.212);
-      --color-error: #d33c34;
-      --color-error-content: oklch(97% 0.014 343.198);
-      --radius-selector: 0.5rem;
-      --radius-field: 0.25rem;
-      --radius-box: 0rem;
-      --size-selector: 0.25rem;
-      --size-field: 0.3125rem;
-      --border: 1px;
-      --depth: 0;
-      --noise: 0;
-    }
-  </style>
-
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
-
-  <!-- <script src="./index.js"></script> -->
-
-  <script type="module" defer>
-    // import '@citolab/qti-components/qti-components';
-    // import '@citolab/qti-components/qti-test/core';
-    // import '@citolab/qti-components/qti-test/components/test-navigation';
-    // import '@citolab/qti-components/qti-test/components/test-container';
-    // import '@citolab/qti-components/qti-test/components/test-next';
-    // import '@citolab/qti-components/qti-test/components/test-prev';
-    // import '@citolab/qti-components/qti-test/components/test-show-correct-response';
-    // import '@citolab/qti-components/qti-test/components/test-end-attempt';
-    // import '@citolab/qti-components/qti-test/components/test-paging-buttons-stamp';
-    // import '@citolab/qti-components/qti-test/components/test-item-link';
-    // import '@citolab/qti-components/qti-test/components/test-view';
-    // import '@citolab/qti-components/qti-test/components/test-print-item-variables';
-    // import '@citolab/qti-components/qti-test/components/test-print-context';
-    // import '@citolab/qti-components/qti-test/components/test-scoring-buttons';
-    // import '@citolab/qti-components/qti-test/components/test-view-toggle';
-    import './src/lib/index';
-  </script>
-
-  <script defer>
-    const map = new Map();
-    map.set('kennisnet1', '/assets/api/kennisnet-1/');
-    map.set('kennisnet2', '/assets/api/kennisnet-2/');
-    map.set('biologie', '/assets/api/biologie/');
-  </script>
-
-  <script type="module" defer>
-    const qtiTest = document.querySelector('qti-test');
-    const testContainer = document.querySelector('test-container');
-    const testNavigation = document.querySelector('test-navigation');
-    let pkg = 'null';
-
-    const router = new Navigo(null, true, '#');
-
-    router.on('/', () => {
-      router.navigate('/kennisnet1');
-    });
-    router.on('/:package', ({ data }) => {
-      qtiTest.navigate = 'item';
-      pkg = data.package;
-      changeTest(map.get(data.package));
-    });
-    router.on('/:package/:item', ({ data }) => {
-      pkg = data.package;
-      changeTest(map.get(data.package));
-      qtiTest.addEventListener('qti-assessment-test-connected', () => {
-        if (sessionStorage.getItem(pkg) !== null) qtiTest.testContext = JSON.parse(sessionStorage.getItem(pkg));
-        qtiTest.navigateTo('item', data.item);
-      });
-    });
-
-    qtiTest.addEventListener('qti-request-navigation', e => {
-      router.navigate(`/${pkg}/${e.detail.id}`);
-    });
-
-    router.resolve();
-
-    qtiTest.addEventListener('qti-test-context-updated', e => {
-      sessionStorage.setItem(pkg, JSON.stringify(e.detail));
-    });
-
-    async function changeTest(test) {
-      const testNavigation = document.querySelector('test-navigation');
-      testNavigation.configContext = {
-        infoItemCategory: 'info'
-      };
-      testContainer.setAttribute('test-url', test + '/AssessmentTest.xml');
-      // Fetch items.json with error handling
-      try {
-        const response = await fetch(test + 'items.json');
-        testNavigation.initContext = response.ok ? await response.json() : null;
-      } catch {
-        console.error('Failed to fetch items.json');
+        color-scheme: 'cito';
+        --color-base-100: #ffffff;
+        --color-base-200: #f5f7fb;
+        --color-base-300: #e0e7f1;
+        --color-base-content: oklch(21% 0.034 264.665);
+        --color-primary: #e30075;
+        --color-primary-content: oklch(96% 0.015 12.422);
+        --color-secondary: #00acd5;
+        --color-secondary-content: oklch(98% 0.019 200.873);
+        --color-accent: oklch(81% 0.117 11.638);
+        --color-accent-content: oklch(27% 0.105 12.094);
+        --color-neutral: #424850;
+        --color-neutral-content: oklch(98% 0.002 247.839);
+        --color-info: #5185ec;
+        --color-info-content: oklch(97% 0.013 236.62);
+        --color-success: #0fa550;
+        --color-success-content: oklch(98% 0.014 180.72);
+        --color-warning: #fd9431;
+        --color-warning-content: oklch(98% 0.026 102.212);
+        --color-error: #d33c34;
+        --color-error-content: oklch(97% 0.014 343.198);
+        --radius-selector: 0.5rem;
+        --radius-field: 0.25rem;
+        --radius-box: 0rem;
+        --size-selector: 0.25rem;
+        --size-field: 0.3125rem;
+        --border: 1px;
+        --depth: 0;
+        --noise: 0;
       }
-    }
-  </script>
+    </style>
 
-  <script type="module" defer>
-    const stimulusRefContainer = document.getElementById('stimulusRefContainer');
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
 
-    customElements.whenDefined('qti-test').then(() => {
+    <!-- <script src="./index.js"></script> -->
+
+    <script type="module" defer>
+      // import '@citolab/qti-components/qti-components';
+      // import '@citolab/qti-components/qti-test/core';
+      // import '@citolab/qti-components/qti-test/components/test-navigation';
+      // import '@citolab/qti-components/qti-test/components/test-container';
+      // import '@citolab/qti-components/qti-test/components/test-next';
+      // import '@citolab/qti-components/qti-test/components/test-prev';
+      // import '@citolab/qti-components/qti-test/components/test-show-correct-response';
+      // import '@citolab/qti-components/qti-test/components/test-end-attempt';
+      // import '@citolab/qti-components/qti-test/components/test-paging-buttons-stamp';
+      // import '@citolab/qti-components/qti-test/components/test-item-link';
+      // import '@citolab/qti-components/qti-test/components/test-view';
+      // import '@citolab/qti-components/qti-test/components/test-print-item-variables';
+      // import '@citolab/qti-components/qti-test/components/test-print-context';
+      // import '@citolab/qti-components/qti-test/components/test-scoring-buttons';
+      // import '@citolab/qti-components/qti-test/components/test-view-toggle';
+      import './src/lib/index';
+    </script>
+
+    <script defer>
+      const map = new Map();
+      map.set('kennisnet1', '/assets/api/kennisnet-1/');
+      map.set('kennisnet2', '/assets/api/kennisnet-2/');
+      map.set('biologie', '/assets/api/biologie/');
+    </script>
+
+    <script type="module" defer>
       const qtiTest = document.querySelector('qti-test');
+      const testContainer = document.querySelector('test-container');
+      const testNavigation = document.querySelector('test-navigation');
+      let pkg = 'null';
 
-      const implemented = false;
-      if (implemented) {
-        // also declaratively in the html
-        // qtiTest.navItemRefId = ""; <-- hier weghalen
-        qtiTest.autoStoreRestore = 'KEY'; // exists
-        qtiTest.cacheItems = false; // should be implemented
-        qtiTest.autoScoreItems = true; // is now on : testNavigation.autoScoreItems
-        qtiTest.reportValidityAfterScoring = true;
+      const router = new Navigo(null, true, '#');
 
-        qtiTest.autoLoad = 'item' | 'section'; // should be implemented
-        // qtiTest.navigate = 'section' || 'item' // default is 'item' <-- zit nog n de peiling, automatisch eerste section laden
-
-        // qtiTest.configContext = {
-        // reportValidityAfterScoring: true,
-        // infoItemCategory: 'info',
-        // };
-
-        // all items are loaded and the complete dom is rendered
-        qtiTest.addEventListener('qti-test-loaded', e => {
-          clickRules();
-          markLines();
+      router.on('/', () => {
+        router.navigate('/kennisnet1');
+      });
+      router.on('/:package', ({ data }) => {
+        qtiTest.navigate = 'item';
+        pkg = data.package;
+        changeTest(map.get(data.package));
+      });
+      router.on('/:package/:item', ({ data }) => {
+        pkg = data.package;
+        changeTest(map.get(data.package));
+        qtiTest.addEventListener('qti-assessment-test-connected', () => {
+          if (sessionStorage.getItem(pkg) !== null) qtiTest.testContext = JSON.parse(sessionStorage.getItem(pkg));
+          qtiTest.navigateTo('item', data.item);
         });
+      });
 
-        qtiTest.addEventListener('qti-load-item-request', e => {
-          e.detail.promise = (async () => {
-            const api = await qtiTransformItem().load(e.detail.href, true);
-            return api.htmlDoc();
-          })();
-        });
+      qtiTest.addEventListener('qti-request-navigation', e => {
+        router.navigate(`/${pkg}/${e.detail.id}`);
+      });
 
-        // the item is loaded and the dom is rendered
-        qtiTest.addEventListener('qti-assessment-item-connected', e => {
-          hideTitleOnMouseOver();
-        });
+      router.resolve();
 
-        // the item has a stimulus ref and this is your chance to let the player place the stimulusref
-        qtiTest.addEventListener('qti-assessment-stimulus-ref-connected', e => {
-          e.preventDefault(); // this prevents the default behaviour of the item to set the stimulus content
-          const assessmentStimulusRef = e.composedPath()[0];
-          assessmentStimulusRef.updateStimulusRef(stimulusRefContainer);
-        });
+      qtiTest.addEventListener('qti-test-context-updated', e => {
+        sessionStorage.setItem(pkg, JSON.stringify(e.detail));
+      });
 
-        // there is a request for navigation but it is not yet processed and handled ( ie it is not in the dom yet )
-        qtiTest.addEventListener('qti-request-navigation', e => {
-          history.pushState({}, '', `#${e.detail.id}`); // update URL of router
-          stimulusRefContainer.innerHTML = '';
-        });
-
-        // ** not implemented yet **
-        // the test context is updated because test-base got a "qti-item-context-updated" event
-        qtiTest.addEventListener('qti-test-context-updated', e => {
-          // from QtiAssessmentItem after processResponse
-          const testContext = e.detail.testContext;
-        });
-
-        // ********* SPECIFIC TO THE LOADED QTI-ASSESSMENT-TEST *********
-        // is now qti-assessment-test-connected
-        qtiTest.addEventListener('qti-test-context-set', e => {
-          if (testContext) {
-            // in session
-            qtiTest.detail.testContext = testContext;
-          }
-
-          // SPECIFIC TO WHICH ASSESSMENT XML
-          (e.detail.infoItemCategory = 'info'),
-            (e.detail.initContext = [
-              { itemRefId: 'ITM001', pValue: 0.672, domain: 'Biologie' },
-              { itemRefId: 'ITM002', pValue: 0.672, domain: 'Biologie' },
-              { itemRefId: 'ITM003', pValue: 0.672, domain: 'Biologie' }
-            ]);
-        });
-
-        qtiTest.load('./kennisnet-1/AssessmentTest.xml').then(() => {
-          qtiTest.navigateTo('ITEM', ITM002);
-          // qtiTest.navigateTo('SECTION', SECTION002) // can also navigate to a section
-        });
+      async function changeTest(test) {
+        const testNavigation = document.querySelector('test-navigation');
+        testNavigation.configContext = {
+          infoItemCategory: 'info'
+        };
+        testContainer.setAttribute('test-url', test + '/AssessmentTest.xml');
+        // Fetch items.json with error handling
+        try {
+          const response = await fetch(test + 'items.json');
+          testNavigation.initContext = response.ok ? await response.json() : null;
+        } catch {
+          console.error('Failed to fetch items.json');
+        }
       }
-    });
-  </script>
+    </script>
 
-  <style type="text/tailwindcss">
-    nav {
+    <script type="module" defer>
+      const stimulusRefContainer = document.getElementById('stimulusRefContainer');
+
+      customElements.whenDefined('qti-test').then(() => {
+        const qtiTest = document.querySelector('qti-test');
+
+        const implemented = false;
+        if (implemented) {
+          // also declaratively in the html
+          // qtiTest.navItemRefId = ""; <-- hier weghalen
+          qtiTest.autoStoreRestore = 'KEY'; // exists
+          qtiTest.cacheItems = false; // should be implemented
+          qtiTest.autoScoreItems = true; // is now on : testNavigation.autoScoreItems
+          qtiTest.reportValidityAfterScoring = true;
+
+          qtiTest.autoLoad = 'item' | 'section'; // should be implemented
+          // qtiTest.navigate = 'section' || 'item' // default is 'item' <-- zit nog n de peiling, automatisch eerste section laden
+
+          // qtiTest.configContext = {
+          // reportValidityAfterScoring: true,
+          // infoItemCategory: 'info',
+          // };
+
+          // all items are loaded and the complete dom is rendered
+          qtiTest.addEventListener('qti-test-loaded', e => {
+            clickRules();
+            markLines();
+          });
+
+          qtiTest.addEventListener('qti-load-item-request', e => {
+            e.detail.promise = (async () => {
+              const api = await qtiTransformItem().load(e.detail.href, true);
+              return api.htmlDoc();
+            })();
+          });
+
+          // the item is loaded and the dom is rendered
+          qtiTest.addEventListener('qti-assessment-item-connected', e => {
+            hideTitleOnMouseOver();
+          });
+
+          // the item has a stimulus ref and this is your chance to let the player place the stimulusref
+          qtiTest.addEventListener('qti-assessment-stimulus-ref-connected', e => {
+            e.preventDefault(); // this prevents the default behaviour of the item to set the stimulus content
+            const assessmentStimulusRef = e.composedPath()[0];
+            assessmentStimulusRef.updateStimulusRef(stimulusRefContainer);
+          });
+
+          // there is a request for navigation but it is not yet processed and handled ( ie it is not in the dom yet )
+          qtiTest.addEventListener('qti-request-navigation', e => {
+            history.pushState({}, '', `#${e.detail.id}`); // update URL of router
+            stimulusRefContainer.innerHTML = '';
+          });
+
+          // ** not implemented yet **
+          // the test context is updated because test-base got a "qti-item-context-updated" event
+          qtiTest.addEventListener('qti-test-context-updated', e => {
+            // from QtiAssessmentItem after processResponse
+            const testContext = e.detail.testContext;
+          });
+
+          // ********* SPECIFIC TO THE LOADED QTI-ASSESSMENT-TEST *********
+          // is now qti-assessment-test-connected
+          qtiTest.addEventListener('qti-test-context-set', e => {
+            if (testContext) {
+              // in session
+              qtiTest.detail.testContext = testContext;
+            }
+
+            // SPECIFIC TO WHICH ASSESSMENT XML
+            (e.detail.infoItemCategory = 'info'),
+              (e.detail.initContext = [
+                { itemRefId: 'ITM001', pValue: 0.672, domain: 'Biologie' },
+                { itemRefId: 'ITM002', pValue: 0.672, domain: 'Biologie' },
+                { itemRefId: 'ITM003', pValue: 0.672, domain: 'Biologie' }
+              ]);
+          });
+
+          qtiTest.load('./kennisnet-1/AssessmentTest.xml').then(() => {
+            qtiTest.navigateTo('ITEM', ITM002);
+            // qtiTest.navigateTo('SECTION', SECTION002) // can also navigate to a section
+          });
+        }
+      });
+    </script>
+
+    <style type="text/tailwindcss">
+      nav {
         anchor-name: --profile-button;
       }
 
@@ -241,272 +240,290 @@
       }
     </style>
 
-  <style>
-    test-container {
-      --qti-button-padding-vertical: var(--size-field);
-      --qti-button-padding-horizontal: var(--size-field);
-      --qti-border-radius: var(--radius-field);
-      --qti-correct-bg: var(--color-success);
+    <style>
+      test-container {
+        --qti-button-padding-vertical: var(--size-field);
+        --qti-button-padding-horizontal: var(--size-field);
+        --qti-border-radius: var(--radius-field);
+        --qti-correct-bg: var(--color-success);
 
-      --qti-bg-active: var(--color-primary-content);
-      /* --qti-bg-active: #ffecec; */
-      --qti-border-active: var(--color-primary);
-      /* --qti-border-active: #f86d70; */
-      --qti-correct-light: #c8e6c9;
-      --qti-correct: #66bb6a;
-      --qti-gap-size: 1rem;
-      --qti-bg: var(--color-base-100);
-      /* --qti-bg: white; */
-      --qti-hover-bg: #f9fafb;
-      --qti-light-bg-active: #f0f0f0;
-      --qti-light-border-active: #d0d0d0;
-      --qti-dark-bg-active: #1f2937;
-      --qti-dark-border-active: #64748b;
-      --qti-disabled-bg: #f3f4f6;
-      --qti-disabled-color: #45484f;
-      --qti-border-thickness: 2px;
-      --qti-border-style: solid;
-      --qti-border-color: var(--color-base-300);
-      /* --qti-border-color: #c6cad0; */
-      --qti-border-radius: 0.3rem;
-      --qti-drop-border-radius: calc(var(--qti-border-radius) + var(--qti-border-thickness));
-      --qti-focus-border-width: 5px;
-      --qti-focus-color: #bddcff7e;
-      --qti-form-size: 1rem;
-      --qti-order-size: 2rem;
-      --qti-padding-vertical: 0.5rem;
-      --qti-padding-horizontal: 0.5rem;
-    }
-  </style>
-</head>
+        --qti-bg-active: var(--color-primary-content);
+        /* --qti-bg-active: #ffecec; */
+        --qti-border-active: var(--color-primary);
+        /* --qti-border-active: #f86d70; */
+        --qti-correct-light: #c8e6c9;
+        --qti-correct: #66bb6a;
+        --qti-gap-size: 1rem;
+        --qti-bg: var(--color-base-100);
+        /* --qti-bg: white; */
+        --qti-hover-bg: #f9fafb;
+        --qti-light-bg-active: #f0f0f0;
+        --qti-light-border-active: #d0d0d0;
+        --qti-dark-bg-active: #1f2937;
+        --qti-dark-border-active: #64748b;
+        --qti-disabled-bg: #f3f4f6;
+        --qti-disabled-color: #45484f;
+        --qti-border-thickness: 2px;
+        --qti-border-style: solid;
+        --qti-border-color: var(--color-base-300);
+        /* --qti-border-color: #c6cad0; */
+        --qti-border-radius: 0.3rem;
+        --qti-drop-border-radius: calc(var(--qti-border-radius) + var(--qti-border-thickness));
+        --qti-focus-border-width: 5px;
+        --qti-focus-color: #bddcff7e;
+        --qti-form-size: 1rem;
+        --qti-order-size: 2rem;
+        --qti-padding-vertical: 0.5rem;
+        --qti-padding-horizontal: 0.5rem;
+      }
+    </style>
+  </head>
 
-<body class="bg-base-200 text-base-content h-screen w-screen">
-  <!-- auto-store-restore="my session storage" cache-transform -->
-  <qti-test class="h-full">
-    <test-navigation class="h-full flex gap-2" auto-score-items>
-      <div class="flex flex-col flex-grow pt-8 px-8">
-        <!-- <div class="flex flex-col flex-1"> -->
-        <div class="flex items-center gap-2 justify-between">
-          <test-stamp class="flex gap-2 items-center">
+  <body class="bg-base-200 text-base-content h-screen w-screen">
+    <!-- auto-store-restore="my session storage" cache-transform -->
+    <qti-test class="h-full">
+      <test-navigation class="h-full flex gap-2" auto-score-items>
+        <div class="flex flex-col flex-grow pt-8 px-8">
+          <!-- <div class="flex flex-col flex-1"> -->
+          <div class="flex items-center gap-2 justify-between">
+            <test-stamp class="flex gap-2 items-center">
+              <template>
+                <button popovertarget="sidePane" popovertargetaction="toggle" class="btn">
+                  <i class="bi bi-gear"></i>
+                </button>
+
+                <test-view-toggle class-for-input="toggle">Nakijken</test-view-toggle>
+                <test-stamp class="flex gap-2 items-center">
+                  <template>
+                    <template type="if" if="{{ item.view === 'scorer' }}">
+                      <div class="flex gap-2">
+                        <test-scoring-buttons view="scorer"></test-scoring-buttons>
+                      </div>
+
+                      <!-- <test-view>View</test-view> -->
+
+                      <test-end-attempt class="btn"> Feedback </test-end-attempt>
+                      <test-show-correct-response class="btn"> Toon correct antwoord </test-show-correct-response>
+                    </template>
+                  </template>
+                </test-stamp>
+              </template>
+            </test-stamp>
+          </div>
+
+          <div
+            popover
+            id="popover-thumbs"
+            class="opacity-0 inset-auto hidden absolute m-0 transition-opacity duration-1000 transform -translate-y-2 p-8 shadow-lg rounded-lg"
+          >
+            <div class="flex flex-wrap gap-2">
+              <test-paging-buttons-stamp>
+                <template>
+                  <test-item-link
+                    class="cursor-pointer relative base-100 p-2 border-2 border-b-4 
+                  {{ item.view === 'scorer' && item.correct ? 'border-green-400' : item.view === 'scorer' && item.incorrect && item.completed ? 'border-red-400' : item.completed ? 'border-slate-400' : '' }} 
+                  {{ item.active ? '!border-sky-600' : '' }} 
+                  {{ item.category === 'info' ? '' : 'rounded-2xl' }}"
+                    item-id="{{ item.identifier }}"
+                  >
+                    <img src="{{ item.thumbnail }}" alt="{{ item.title }}" />
+                  </test-item-link>
+                </template>
+              </test-paging-buttons-stamp>
+            </div>
+          </div>
+
+          <div
+            popover
+            id="popover-list"
+            class="opacity-0 inset-auto hidden absolute m-0 transition-opacity duration-1000 transform -translate-y-2 p-8 shadow-lg rounded-lg"
+          >
+            <div class="columns-1 md:columns-4">
+              <test-paging-buttons-stamp>
+                <template>
+                  <test-item-link
+                    class="gap-2 px-2 text-sm py-1 flex items-center justify-between cursor-pointer {{ item.active ? 'bg-sky-500 text-white' : 'bg-transparent text-slate-600 ' }}"
+                    item-id="{{ item.identifier }}"
+                  >
+                    <div
+                      class="flex items-center justify-center w-4 h-4 border-2 cursor-pointer {{ item.view === 'scorer' && item.correct ? 'btn-success' : item.view === 'scorer' && item.incorrect && item.completed ? 'btn-error' : item.completed ? 'bg-base-300' : 'bg-transparent' }} p-0 {{ item.category === 'dep-informational' ? 'rounded' : 'rounded-full' }}"
+                    ></div>
+                    <div class="flex flex-grow gap-1 py-0.5">
+                      {{ item.category === 'dep-informational' ? 'info' : item.title }}
+                    </div>
+                    <div class="w-4 text-right mr-2 text-xs text-slate-300">{{ item.index }}</div>
+                  </test-item-link>
+                </template>
+              </test-paging-buttons-stamp>
+            </div>
+          </div>
+
+          <div
+            popover
+            id="popover-deliver"
+            class="opacity-0 inset-auto hidden absolute m-0 transition-opacity duration-1000 transform -translate-y-2 p-8 shadow-lg rounded-lg"
+          >
+            <div class="columns-1 md:columns-4">
+              <test-paging-buttons-stamp>
+                <template>
+                  <test-item-link
+                    class="gap-2 px-2 text-sm py-1 flex items-center justify-between cursor-pointer {{ item.active ? 'bg-sky-500 text-white' : 'bg-transparent text-slate-600 ' }}"
+                    item-id="{{ item.identifier }}"
+                  >
+                    <div
+                      class="flex items-center justify-center w-4 h-4 border-2 cursor-pointer {{ item.view === 'scorer' && item.correct ? 'btn-success' : item.view === 'scorer' && item.incorrect && item.completed ? 'btn-error' : item.completed ? 'bg-base-300' : 'bg-transparent' }} p-0 {{ item.category === 'dep-informational' ? 'rounded' : 'rounded-full' }}"
+                    ></div>
+                    <div class="flex flex-grow gap-1 py-0.5">
+                      {{ item.category === 'dep-informational' ? 'info' : item.title }}
+                    </div>
+                    <div class="w-4 text-right mr-2 text-xs">{{ item.index }}</div>
+                  </test-item-link>
+                </template>
+              </test-paging-buttons-stamp>
+            </div>
+          </div>
+
+          <div class="flex flex-1 overflow-auto container mx-auto">
+            <div id="stimulusRefContainer"></div>
+            <test-container class="flex-1 p-16">
+              <template>
+                <style>
+                  img {
+                    /* mix-blend-mode: multiply; */
+                    /* width: 100%; */
+                  }
+                </style>
+              </template>
+            </test-container>
+          </div>
+
+          <test-stamp class="flex justify-between items-center fixed bottom-8 left-8 right-8">
             <template>
-              <button popovertarget="sidePane" popovertargetaction="toggle" class="btn">
-                <i class="bi bi-gear"></i>
+              <button popovertarget="popover-deliver" class="btn">
+                Inleveren
+                <i class="bi bi-grid"></i>
               </button>
 
-              <test-view-toggle class-for-input="toggle">Nakijken</test-view-toggle>
-              <test-stamp class="flex gap-2 items-center">
-                <template>
-                  <template type="if" if="{{ item.view === 'scorer' }}">
-                    <div class="flex gap-2">
-                      <test-scoring-buttons view="scorer"></test-scoring-buttons>
+              <nav class="card card-border border-base-300 bg-base-100 shadow-xl">
+                <div class="card-body gap-4 flex-row items-center justify-between">
+                  <div class="flex items-center flex-grow">
+                    <div class="hidden flex-1 gap-1 overflow-auto md:flex">
+                      <test-paging-buttons-stamp class="flex gap-2 p-2 overflow-auto">
+                        <template>
+                          <test-item-link
+                            class="flex relative items-center justify-center btn btn-soft btn-square border-2  {{ item.active ? 'border-primary' : ''}} {{ item.category === 'info' ? 'rounded' : 'rounded-full' }}"
+                            item-id="{{ item.identifier }}"
+                          >
+                            {{ item.index}}
+                            <template type="if" if="{{ item.category === 'info' }}">
+                              <i class="bi bi-info text-xl"></i>
+                            </template>
+                            <template type="if" if="{{ item.view === 'scorer' }}">
+                              <div
+                                aria-label="status"
+                                class="status status-md absolute top-0 right-0  {{ item.correct ? 'status-success' : item.incorrect && item.completed ? 'status-error' : item.completed ? 'status-neutral' : 'bg-transparent' }}"
+                              ></div>
+                            </template>
+                          </test-item-link>
+                        </template>
+                      </test-paging-buttons-stamp>
                     </div>
 
-                    <!-- <test-view>View</test-view> -->
+                    <div class="flex gap-2">
+                      <button popovertarget="popover-thumbs" class="btn">
+                        <i class="bi bi-grid"></i>
+                      </button>
+                      <button popovertarget="popover-list" class="btn">
+                        <i class="bi bi-list"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </nav>
 
-                    <test-end-attempt class="btn"> Feedback </test-end-attempt>
-                    <test-show-correct-response class="btn"> Toon correct antwoord </test-show-correct-response>
-                  </template>
-                </template>
-              </test-stamp>
+              <div class="flex items-center gap-2">
+                <test-prev class="btn btn-outline" role="button">
+                  <i class="bi bi-arrow-left-short"></i>
+                </test-prev>
+                <test-next class="btn btn-primary" role="button">
+                  <div class="hidden md:flex">Volgende</div>
+                  <i class="bi bi-arrow-right-short"></i>
+                </test-next>
+              </div>
             </template>
           </test-stamp>
         </div>
 
-        <div popover id="popover-thumbs"
-          class="opacity-0 inset-auto hidden absolute m-0 transition-opacity duration-1000 transform -translate-y-2 p-8 shadow-lg rounded-lg">
-          <div class="flex flex-wrap gap-2">
-            <test-paging-buttons-stamp>
-              <template>
-                <test-item-link class="cursor-pointer relative base-100 p-2 border-2 border-b-4 
-                  {{ item.view === 'scorer' && item.correct ? 'border-green-400' : item.view === 'scorer' && item.incorrect && item.completed ? 'border-red-400' : item.completed ? 'border-slate-400' : '' }} 
-                  {{ item.active ? '!border-sky-600' : '' }} 
-                  {{ item.category === 'info' ? '' : 'rounded-2xl' }}" item-id="{{ item.identifier }}">
-                  <img src="{{ item.thumbnail }}" alt="{{ item.title }}" />
-                </test-item-link>
-              </template>
-            </test-paging-buttons-stamp>
-          </div>
-        </div>
+        <details class="pt-8 pr-8">
+          <summary class="btn inline-flex">Details</summary>
 
-        <div popover id="popover-list"
-          class="opacity-0 inset-auto hidden absolute m-0 transition-opacity duration-1000 transform -translate-y-2 p-8 shadow-lg rounded-lg">
-          <div class="columns-1 md:columns-4">
-            <test-paging-buttons-stamp>
-              <template>
-                <test-item-link
-                  class="gap-2 px-2 text-sm py-1 flex items-center justify-between cursor-pointer {{ item.active ? 'bg-sky-500 text-white' : 'bg-transparent text-slate-600 ' }}"
-                  item-id="{{ item.identifier }}">
-                  <div
-                    class="flex items-center justify-center w-4 h-4 border-2 cursor-pointer {{ item.view === 'scorer' && item.correct ? 'btn-success' : item.view === 'scorer' && item.incorrect && item.completed ? 'btn-error' : item.completed ? 'bg-base-300' : 'bg-transparent' }} p-0 {{ item.category === 'dep-informational' ? 'rounded' : 'rounded-full' }}">
-                  </div>
-                  <div class="flex flex-grow gap-1 py-0.5">
-                    {{ item.category === 'dep-informational' ? 'info' : item.title }}
-                  </div>
-                  <div class="w-4 text-right mr-2 text-xs text-slate-300">{{ item.index }}</div>
-                </test-item-link>
-              </template>
-            </test-paging-buttons-stamp>
-          </div>
-        </div>
-
-        <div popover id="popover-deliver"
-          class="opacity-0 inset-auto hidden absolute m-0 transition-opacity duration-1000 transform -translate-y-2 p-8 shadow-lg rounded-lg">
-          <div class="columns-1 md:columns-4">
-            <test-paging-buttons-stamp>
-              <template>
-                <test-item-link
-                  class="gap-2 px-2 text-sm py-1 flex items-center justify-between cursor-pointer {{ item.active ? 'bg-sky-500 text-white' : 'bg-transparent text-slate-600 ' }}"
-                  item-id="{{ item.identifier }}">
-                  <div
-                    class="flex items-center justify-center w-4 h-4 border-2 cursor-pointer {{ item.view === 'scorer' && item.correct ? 'btn-success' : item.view === 'scorer' && item.incorrect && item.completed ? 'btn-error' : item.completed ? 'bg-base-300' : 'bg-transparent' }} p-0 {{ item.category === 'dep-informational' ? 'rounded' : 'rounded-full' }}">
-                  </div>
-                  <div class="flex flex-grow gap-1 py-0.5">
-                    {{ item.category === 'dep-informational' ? 'info' : item.title }}
-                  </div>
-                  <div class="w-4 text-right mr-2 text-xs">{{ item.index }}</div>
-                </test-item-link>
-              </template>
-            </test-paging-buttons-stamp>
-          </div>
-        </div>
-
-        <div class="flex flex-1 overflow-auto container mx-auto">
-          <div id="stimulusRefContainer"></div>
-          <test-container class="flex-1 p-16">
+          <test-section-buttons-stamp>
             <template>
-              <style>
-                img {
-                  /* mix-blend-mode: multiply; */
-                  /* width: 100%; */
-                }
-              </style>
+              <test-section-link section-id="{{ item.identifier }}"> {{ item.identifier }} </test-section-link>
             </template>
-          </test-container>
+          </test-section-buttons-stamp>
+        </details>
+
+        <div id="sidePane" popover class="relative! left-0 top-0 h-full w-1/2 base-100 shadow-lg p-4 shadow-lg z-50">
+          <button
+            popovertarget="sidePane"
+            popovertargetaction="hide"
+            class="mt-4 px-3 py-1 bg-red-600 text-white rounded"
+          >
+            Close
+          </button>
+
+          <a href="/kennisnet1" class="btn" data-navigo> Kennisnet 1 </a>
+          <a href="/kennisnet2" class="btn" data-navigo> Kennisnet 2 </a>
+          <a href="/biologie" class="btn" data-navigo> Biologie </a>
+
+          <select class="select" data-choose-theme>
+            <optgroup label="Light Themes">
+              <option value="cito">Cito</option>
+              <option value="light">Light</option>
+              <option value="cupcake">Cupcake</option>
+              <option value="bumblebee">Bumblebee</option>
+              <option value="emerald">Emerald</option>
+              <option value="corporate">Corporate</option>
+              <option value="garden">Garden</option>
+              <option value="forest">Forest</option>
+              <option value="aqua">Aqua</option>
+              <option value="lofi">Lofi</option>
+              <option value="pastel">Pastel</option>
+              <option value="fantasy">Fantasy</option>
+              <option value="wireframe">Wireframe</option>
+              <option value="autumn">Autumn</option>
+              <option value="business">Business</option>
+              <option value="lemonade">Lemonade</option>
+              <option value="winter">Winter</option>
+              <option value="sunset">Sunset</option>
+              <option value="caramellatte">Caramellatte</option>
+              <option value="silk">Silk</option>
+            </optgroup>
+            <optgroup label="Dark Themes">
+              <option value="dark">Dark</option>
+              <option value="synthwave">Synthwave</option>
+              <option value="retro">Retro</option>
+              <option value="cyberpunk">Cyberpunk</option>
+              <option value="valentine">Valentine</option>
+              <option value="halloween">Halloween</option>
+              <option value="black">Black</option>
+              <option value="luxury">Luxury</option>
+              <option value="dracula">Dracula</option>
+              <option value="cmyk">Cmyk</option>
+              <option value="acid">Acid</option>
+              <option value="night">Night</option>
+              <option value="coffee">Coffee</option>
+              <option value="dim">Dim</option>
+              <option value="nord">Nord</option>
+              <option value="abyss">Abyss</option>
+            </optgroup>
+          </select>
+
+          <test-print-item-variables class="text-sm"></test-print-item-variables>
+          <test-print-context></test-print-context>
         </div>
-
-        <test-stamp class="flex justify-between items-center fixed bottom-8 left-8 right-8">
-          <template>
-            <button popovertarget="popover-deliver" class="btn">
-              Inleveren
-              <i class="bi bi-grid"></i>
-            </button>
-
-            <nav class="card card-border border-base-300 bg-base-100 shadow-xl">
-              <div class="card-body gap-4 flex-row items-center justify-between">
-                <div class="flex items-center flex-grow">
-                  <div class="hidden flex-1 gap-1 overflow-auto md:flex">
-                    <test-paging-buttons-stamp class="flex gap-2 p-2 overflow-auto">
-                      <template>
-                        <test-item-link
-                          class="flex relative items-center justify-center btn btn-soft btn-square border-2  {{ item.active ? 'border-primary' : ''}} {{ item.category === 'info' ? 'rounded' : 'rounded-full' }}"
-                          item-id="{{ item.identifier }}">
-                          {{ item.index}}
-                          <template type="if" if="{{ item.category === 'info' }}">
-                            <i class="bi bi-info text-xl"></i>
-                          </template>
-                          <template type="if" if="{{ item.view === 'scorer' }}">
-                            <div aria-label="status"
-                              class="status status-md absolute top-0 right-0  {{ item.correct ? 'status-success' : item.incorrect && item.completed ? 'status-error' : item.completed ? 'status-neutral' : 'bg-transparent' }}">
-                            </div>
-                          </template>
-                        </test-item-link>
-                      </template>
-                    </test-paging-buttons-stamp>
-                  </div>
-
-                  <div class="flex gap-2">
-                    <button popovertarget="popover-thumbs" class="btn">
-                      <i class="bi bi-grid"></i>
-                    </button>
-                    <button popovertarget="popover-list" class="btn">
-                      <i class="bi bi-list"></i>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </nav>
-
-            <div class="flex items-center gap-2">
-              <test-prev class="btn btn-outline" role="button">
-                <i class="bi bi-arrow-left-short"></i>
-              </test-prev>
-              <test-next class="btn btn-primary" role="button">
-                <div class="hidden md:flex">Volgende</div>
-                <i class="bi bi-arrow-right-short"></i>
-              </test-next>
-            </div>
-          </template>
-        </test-stamp>
-      </div>
-
-      <details class="pt-8 pr-8">
-        <summary class="btn inline-flex">Details</summary>
-
-        <test-section-buttons-stamp>
-          <template>
-            <test-section-link section-id="{{ item.identifier }}"> {{ item.identifier }} </test-section-link>
-          </template>
-        </test-section-buttons-stamp>
-      </details>
-
-      <div id="sidePane" popover class="relative! left-0 top-0 h-full w-1/2 base-100 shadow-lg p-4 shadow-lg z-50">
-        <button popovertarget="sidePane" popovertargetaction="hide"
-          class="mt-4 px-3 py-1 bg-red-600 text-white rounded">
-          Close
-        </button>
-
-        <a href="/kennisnet1" class="btn" data-navigo> Kennisnet 1 </a>
-        <a href="/kennisnet2" class="btn" data-navigo> Kennisnet 2 </a>
-        <a href="/biologie" class="btn" data-navigo> Biologie </a>
-
-        <select class="select" data-choose-theme>
-          <optgroup label="Light Themes">
-            <option value="cito">Cito</option>
-            <option value="light">Light</option>
-            <option value="cupcake">Cupcake</option>
-            <option value="bumblebee">Bumblebee</option>
-            <option value="emerald">Emerald</option>
-            <option value="corporate">Corporate</option>
-            <option value="garden">Garden</option>
-            <option value="forest">Forest</option>
-            <option value="aqua">Aqua</option>
-            <option value="lofi">Lofi</option>
-            <option value="pastel">Pastel</option>
-            <option value="fantasy">Fantasy</option>
-            <option value="wireframe">Wireframe</option>
-            <option value="autumn">Autumn</option>
-            <option value="business">Business</option>
-            <option value="lemonade">Lemonade</option>
-            <option value="winter">Winter</option>
-            <option value="sunset">Sunset</option>
-            <option value="caramellatte">Caramellatte</option>
-            <option value="silk">Silk</option>
-          </optgroup>
-          <optgroup label="Dark Themes">
-            <option value="dark">Dark</option>
-            <option value="synthwave">Synthwave</option>
-            <option value="retro">Retro</option>
-            <option value="cyberpunk">Cyberpunk</option>
-            <option value="valentine">Valentine</option>
-            <option value="halloween">Halloween</option>
-            <option value="black">Black</option>
-            <option value="luxury">Luxury</option>
-            <option value="dracula">Dracula</option>
-            <option value="cmyk">Cmyk</option>
-            <option value="acid">Acid</option>
-            <option value="night">Night</option>
-            <option value="coffee">Coffee</option>
-            <option value="dim">Dim</option>
-            <option value="nord">Nord</option>
-            <option value="abyss">Abyss</option>
-          </optgroup>
-        </select>
-
-        <test-print-item-variables class="text-sm"></test-print-item-variables>
-        <test-print-context></test-print-context>
-      </div>
-    </test-navigation>
-  </qti-test>
-</body>
-
+      </test-navigation>
+    </qti-test>
+  </body>
 </html>

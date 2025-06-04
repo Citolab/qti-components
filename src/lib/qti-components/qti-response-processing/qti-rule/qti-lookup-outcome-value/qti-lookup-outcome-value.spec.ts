@@ -5,6 +5,20 @@ import './../../../index';
 import type { QtiLookupOutcomeValue } from './qti-lookup-outcome-value';
 
 describe('qti-lookup-outcome-value', () => {
+  let container;
+
+  beforeEach(() => {
+    container = document.createElement('div');
+    document.body.appendChild(container);
+  });
+
+  afterEach(() => {
+    if (container) {
+      document.body.removeChild(container);
+      container = null;
+    }
+  });
+
   function setupQtiAssessmentItem2() {
     const container = document.createElement('div'); // Create a new container for each test
     document.body.appendChild(container);
@@ -97,49 +111,53 @@ describe('qti-lookup-outcome-value', () => {
   }
 
   function setupQtiAssessmentItem() {
-    const container = document.createElement('div'); // Create a new container for each test
-    document.body.appendChild(container);
-    const template = html`
-      <qti-assessment-item>
-        <qti-outcome-declaration identifier="RAW_SCORE" cardinality="single" base-type="integer">
-          <qti-default-value>
-            <qti-value>0</qti-value>
-          </qti-default-value>
-        </qti-outcome-declaration>
-        <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float">
-          <qti-interpolation-table>
-            <qti-interpolation-table-entry
-              include-boundary="false"
-              source-value="3"
-              target-value="2"
-            ></qti-interpolation-table-entry>
-            <qti-interpolation-table-entry
-              include-boundary="false"
-              source-value="2"
-              target-value="1"
-            ></qti-interpolation-table-entry>
-            <qti-interpolation-table-entry
-              include-boundary="false"
-              source-value="1"
-              target-value="0"
-            ></qti-interpolation-table-entry>
-            <qti-interpolation-table-entry
-              include-boundary="false"
-              source-value="0"
-              target-value="0"
-            ></qti-interpolation-table-entry>
-          </qti-interpolation-table>
-        </qti-outcome-declaration>
+    try {
+      document.body.appendChild(container);
+      const template = html`
+        <qti-assessment-item>
+          <qti-outcome-declaration identifier="RAW_SCORE" cardinality="single" base-type="integer">
+            <qti-default-value>
+              <qti-value>0</qti-value>
+            </qti-default-value>
+          </qti-outcome-declaration>
+          <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float">
+            <qti-interpolation-table>
+              <qti-interpolation-table-entry
+                include-boundary="false"
+                source-value="3"
+                target-value="2"
+              ></qti-interpolation-table-entry>
+              <qti-interpolation-table-entry
+                include-boundary="false"
+                source-value="2"
+                target-value="1"
+              ></qti-interpolation-table-entry>
+              <qti-interpolation-table-entry
+                include-boundary="false"
+                source-value="1"
+                target-value="0"
+              ></qti-interpolation-table-entry>
+              <qti-interpolation-table-entry
+                include-boundary="false"
+                source-value="0"
+                target-value="0"
+              ></qti-interpolation-table-entry>
+            </qti-interpolation-table>
+          </qti-outcome-declaration>
 
-        <qti-response-processing>
-          <qti-lookup-outcome-value identifier="SCORE">
-            <qti-variable identifier="RAW_SCORE"></qti-variable>
-          </qti-lookup-outcome-value>
-        </qti-response-processing>
-      </qti-assessment-item>
-    `;
-    render(template, container); // Render into the new container
-    return container.querySelector('qti-assessment-item');
+          <qti-response-processing>
+            <qti-lookup-outcome-value identifier="SCORE">
+              <qti-variable identifier="RAW_SCORE"></qti-variable>
+            </qti-lookup-outcome-value>
+          </qti-response-processing>
+        </qti-assessment-item>
+      `;
+      render(template, container); // Render into the new container
+      return container.querySelector('qti-assessment-item');
+    } catch (error) {
+      console.error('Setup failed:', error);
+      throw error;
+    }
   }
 
   it('should interpolate RAW_SCORE to SCORE correctly', () => {

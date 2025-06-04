@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-item xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0p1_v1p0.xsd" 
+  identifier="pci-graphing-interaction-altconfig-modules" title="PCI Graphing Interaction - altconfig modules" 
+  xml:lang="en-US" adaptive="false" time-dependent="false">
+  <qti-response-declaration identifier="RESPONSE" cardinality="multiple" base-type="point">
+    <qti-correct-response>
+      <qti-value>0.5 2</qti-value>
+    </qti-correct-response>
+  </qti-response-declaration>
+  <qti-item-body>
+    <div class="qti-layout-row">
+      <div class="qti-layout-col12">
+        <p class="stimulus">
+          The graph shows a point <em>L</em> at (2,3) and a point <em>M</em> at (-1,1).
+        </p>
+        <qti-portable-custom-interaction response-identifier="RESPONSE"
+          module="GraphingInteraction"
+          custom-interaction-type-identifier="urn:ampup:pci:2025:graphingInteraction"
+          data-width="360"
+          data-height="360"
+          data-id="graph"
+          data-graphtype="scatter"
+          data-planetype="default"
+          data-title=""
+          data-vlines="8"
+          data-hlines="8"
+          data-borderlinewidth="3"
+          data-axislinewidth="3"
+          data-steplinewidth="1"
+          data-maxpoints="1"
+          data-minpoints="1"
+          data-invalidresponsemessage="You have not answered this question. Please plot the midpoint."
+          data-xaxis="{ &amp;quot;step&amp;quot;: 1, &amp;quot;substeps&amp;quot;: 2, &amp;quot;label&amp;quot;: &amp;quot;x&amp;quot;, &amp;quot;labelprecision&amp;quot;: 0, &amp;quot;precision&amp;quot;: 1 }"
+          data-yaxis="{ &amp;quot;step&amp;quot;: 1, &amp;quot;substeps&amp;quot;: 2, &amp;quot;label&amp;quot;: &amp;quot;y&amp;quot;, &amp;quot;labelprecision&amp;quot;: 0, &amp;quot;precision&amp;quot;: 1 }"
+          data-fixedpoints="{ &amp;quot;points&amp;quot;: [{ &amp;quot;x&amp;quot;: 2, &amp;quot;y&amp;quot;: 3, &amp;quot;label&amp;quot;: &amp;quot;L&amp;quot; },{ &amp;quot;x&amp;quot;: -1, &amp;quot;y&amp;quot;: 1, &amp;quot;label&amp;quot;: &amp;quot;M&amp;quot; }]}"
+          >
+          <!-- config.json only has 2 of the dependencies -->
+          <qti-interaction-modules primary-configuration="config.json">
+            <!-- Use qti-interaction-module elements to resolve all 7 of the remaining module dependencies -->
+            <qti-interaction-module id="PciUtilities" primary-path="modules/PciUtilities"/>
+            <qti-interaction-module id="PlottedPoint" primary-path="modules/PlottedPoint"/>
+            <qti-interaction-module id="FullPlane" primary-path="modules/FullPlane"/>
+            <qti-interaction-module id="CoordinatePlaneFactory" primary-path="modules/CoordinatePlaneFactory"/>
+            <qti-interaction-module id="Graph" primary-path="modules/Graph"/>
+            <qti-interaction-module id="GraphingModule" primary-path="modules/GraphingModule"/>
+            <qti-interaction-module id="GraphingInteraction" primary-path="modules/GraphingInteraction"/>
+          </qti-interaction-modules>
+          <qti-interaction-markup>
+            <div class="qti-layout-row">
+              <div class="qti-layout-col6">
+           	<div id="graph" class="graph-container"></div>
+              </div>
+              <div class="qti-layout-col6">
+                <div class="qti-well qti-padding-1">
+                  <p>I'm in a PCI that uses a primary-configuration file: "config.json" to locate 2 of my dependencies (Raphael and BigNumber).</p>
+                  <p>The remaining 7 dependencies are located by using qti-interaction-module elements with primary-path attributes.</p>
+                  <p>Now <strong>plot a point at the midpoint</strong> between <em>L</em> and <em>M</em>.</p>
+                </div>
+              </div>
+            </div>
+          </qti-interaction-markup>
+          <qti-stylesheet href="css/styles.css" type="text/css"/>
+        </qti-portable-custom-interaction>
+      </div>
+    </div>
+ </qti-item-body>
+ <qti-response-processing template="https://purl.imsglobal.org/spec/qti/v3p0/rptemplates/match_correct"/>
+</qti-assessment-item>

@@ -1,0 +1,7 @@
+{
+  "urlArgs": "version=2k",
+  "paths": {
+    "bignumber": "modules/lib/bignumber-9.1.2-min",
+    "raphael": "modules/lib/raphael-2.3.0-min"
+  }
+}

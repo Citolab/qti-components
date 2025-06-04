@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-item xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0p1_v1p0.xsd" 
+  identifier="pci-graphing-interaction-variables" title="PCI Graphing Interaction - variables" 
+  xml:lang="en-US" adaptive="false" time-dependent="false">
+  <qti-context-declaration cardinality="record" identifier="QTI_CONTEXT">
+    <qti-default-value>
+      <qti-value base-type="string" field-identifier="environmentIdentifier">CONFORMANCE</qti-value>
+    </qti-default-value>
+  </qti-context-declaration>
+  <qti-response-declaration identifier="RESPONSE" cardinality="multiple" base-type="point">
+    <qti-correct-response>
+      <qti-value>-3 0</qti-value>
+      <qti-value>0 -2</qti-value>
+    </qti-correct-response>
+  </qti-response-declaration>
+  <qti-response-declaration base-type="point" cardinality="multiple" identifier="RESPONSE1">
+    <qti-correct-response>
+      <qti-value>-3 0</qti-value><qti-value>0 -2</qti-value>
+    </qti-correct-response>
+  </qti-response-declaration>
+  <qti-template-declaration base-type="string" cardinality="multiple" identifier="SECONDARY-FIXED-POINTS">
+    <qti-default-value>
+      <qti-value>{ "x":2, "y":2, "label":"T" }</qti-value>
+    </qti-default-value>
+  </qti-template-declaration>
+  <qti-item-body>
+    <div class="qti-layout-row">
+      <div class="qti-layout-col12">
+        <p class="stimulus">
+          Draw the graph of the inverse of <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>=</mo><mo>-</mo><mfrac bevelled="false"><mi>3</mi><mi>2</mi></mfrac><mo>⁢</mo><mi>x</mi><mo>-</mo><mi>3</mi></mrow></math> on the coordinate grid below.
+        </p>
+      </div>
+    </div>
+    <div class="qti-layout-row">
+      <div class="qti-layout-col6">
+        <p>
+          The presentation of the GraphingInteraction PCI below is altered in two ways:
+        </p>
+        <ul>
+          <li>Graph should have a fixed point plotted at [2,2] with label "T" injected via a template variable.</li>
+          <li>The coordinate plane should have thin blue axes and a 1px black border because of context variable injection.</li>
+        </ul>
+      </div>
+      <div class="qti-layout-col6">            
+        <p>
+          The presentation of the GraphingInteraction PCI below should be its <em>default</em> presentation:
+        </p>
+        <ul>
+          <li>Graph should not have any fixed points.</li>
+          <li>The coordinate plane should have a 3px blue border and 3px red axes.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="qti-layout-row">
+      <div class="qti-layout-col6">  
+        <qti-portable-custom-interaction response-identifier="RESPONSE" 
+          module="GraphingInteraction"
+          custom-interaction-type-identifier="urn:ampup:pci:2025:graphingInteraction"
+          data-width="320"
+          data-height="320"
+          data-id="graph-1"
+          data-graphtype="line"
+          data-planetype="default"
+          data-title=""
+          data-vlines="8"
+          data-hlines="10"
+          data-borderlinewidth="3"
+          data-axislinewidth="3"
+          data-steplinewidth="1"
+          data-maxpoints="2"
+          data-minpoints="2"
+          data-invalidresponsemessage="More Points Please!"
+          data-xaxis="{ &amp;quot;step&amp;quot;: 1, &amp;quot;substeps&amp;quot;: 1, &amp;quot;label&amp;quot;: &amp;quot;x&amp;quot;, &amp;quot;labelprecision&amp;quot;: 0, &amp;quot;precision&amp;quot;: 0 }" 
+          data-yaxis="{ &amp;quot;step&amp;quot;: 1, &amp;quot;substeps&amp;quot;: 1, &amp;quot;label&amp;quot;: &amp;quot;f(x)&amp;quot;, &amp;quot;labelprecision&amp;quot;: 0, &amp;quot;precision&amp;quot;: 0 }" 
+          >
+          <qti-interaction-markup>
+            <div id="graph-1" class="graph-container"></div>
+          </qti-interaction-markup>
+          <qti-template-variable template-identifier="SECONDARY-FIXED-POINTS"/>
+          <qti-context-variable identifier="QTI_CONTEXT"/>
+          <qti-stylesheet href="css/styles.css" type="text/css"/>
+        </qti-portable-custom-interaction>
+      </div>
+      <div class="qti-layout-col6">  
+        <qti-portable-custom-interaction response-identifier="RESPONSE1" 
+          module="GraphingInteraction"
+          custom-interaction-type-identifier="urn:ampup:pci:2025:graphingInteraction"
+          data-width="320"
+          data-height="320"
+          data-id="graph-2"
+          data-graphtype="line"
+          data-planetype="default"
+          data-title=""
+          data-vlines="8"
+          data-hlines="10"
+          data-borderlinewidth="3"
+          data-axislinewidth="3"
+          data-steplinewidth="1"
+          data-maxpoints="2"
+          data-minpoints="2"
+          data-xaxis="{ &amp;quot;step&amp;quot;: 1, &amp;quot;substeps&amp;quot;: 1, &amp;quot;label&amp;quot;: &amp;quot;x&amp;quot;, &amp;quot;labelprecision&amp;quot;: 0, &amp;quot;precision&amp;quot;: 0 }" 
+          data-yaxis="{ &amp;quot;step&amp;quot;: 1, &amp;quot;substeps&amp;quot;: 1, &amp;quot;label&amp;quot;: &amp;quot;f(x)&amp;quot;, &amp;quot;labelprecision&amp;quot;: 0, &amp;quot;precision&amp;quot;: 0 }" 
+          >
+          <qti-interaction-markup>
+            <div id="graph-2" class="graph-container"></div>
+          </qti-interaction-markup>
+          <qti-stylesheet href="css/styles.css" type="text/css"/>
+        </qti-portable-custom-interaction>
+      </div>
+    </div>
+ </qti-item-body>
+ <qti-response-processing template="https://purl.imsglobal.org/spec/qti/v3p0/rptemplates/match_correct"/>
+</qti-assessment-item>

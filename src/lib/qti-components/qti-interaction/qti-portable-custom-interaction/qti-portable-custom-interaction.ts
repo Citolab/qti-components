@@ -35,7 +35,6 @@ export class QtiPortableCustomInteraction extends Interaction {
   protected iframe: HTMLIFrameElement;
 
   private _responseCheckInterval: number | null = null;
-  private _lastResponseStr: string = '';
 
   // Define a static style that applies to both direct and iframe modes
   static styles: CSSResultGroup = [
@@ -341,6 +340,40 @@ export class QtiPortableCustomInteraction extends Interaction {
   }
 
   /**
+   * Unescape HTML entities in a string
+   */
+  private unescapeHtml(str: string): string {
+    if (!str) return str;
+
+    return str
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .replace(/&#x27;/g, "'")
+      .replace(/&#x2F;/g, '/')
+      .replace(/&#x60;/g, '`')
+      .replace(/&#x3D;/g, '=');
+  }
+
+  /**
+   * Unescape HTML entities in all values of an object
+   */
+  private unescapeDataAttributes(obj: Record<string, any>): Record<string, any> {
+    const unescaped: Record<string, any> = {};
+
+    for (const [key, value] of Object.entries(obj)) {
+      if (typeof value === 'string') {
+        unescaped[key] = this.unescapeHtml(value);
+      } else {
+        unescaped[key] = value;
+      }
+    }
+
+    return unescaped;
+  }
+
+  /**
    * DIRECT MODE: Register PCI instance
    */
   register(pci: IMSpci<ConfigProperties<unknown>>) {
@@ -363,20 +396,11 @@ export class QtiPortableCustomInteraction extends Interaction {
     }
 
     const config: any = {
-      properties: this.addHyphenatedKeys({ ...this.dataset }),
+      properties: this.addHyphenatedKeys(this.unescapeDataAttributes({ ...this.dataset })),
+      contextVariables: {},
+      templateVariables: {},
       onready: pciInstance => {
         this.pci = pciInstance;
-
-        // Initialize the last response string once the PCI is ready
-        if (this.pci && typeof this.pci.getResponse === 'function') {
-          try {
-            const response = this.pci.getResponse();
-            this._lastResponseStr = JSON.stringify(response);
-          } catch (error) {
-            console.error('Error getting initial response:', error);
-          }
-        }
-
         // Set up a ResizeObserver to handle dynamic size changes in direct mode
         try {
           const resizeObserver = new ResizeObserver(entries => {
@@ -403,8 +427,6 @@ export class QtiPortableCustomInteraction extends Interaction {
       ondone: (_pciInstance, response, _state, _status: 'interacting' | 'closed' | 'solution' | 'review') => {
         this.response = this.convertQtiVariableJSON(response);
         this.saveResponse(this.response);
-        // Update the last response string
-        this._lastResponseStr = JSON.stringify(response);
       },
       responseIdentifier: this.responseIdentifier,
       boundTo: this.boundTo
@@ -714,35 +736,8 @@ export class QtiPortableCustomInteraction extends Interaction {
             console.error('Error in require call:', error);
           }
         });
-        // Start periodically checking for response changes
-        this.startResponseCheck();
       }
     }
-  }
-
-  /**
-   * Start checking for response changes at regular intervals
-   */
-  private startResponseCheck(): void {
-    // Clear any existing interval
-    this.stopResponseCheck();
-
-    // Set up a new interval
-    this._responseCheckInterval = window.setInterval(() => {
-      if (this.pci && typeof this.pci.getResponse === 'function') {
-        try {
-          const response = this.pci.getResponse();
-          const responseStr = JSON.stringify(response);
-          if (responseStr !== this._lastResponseStr) {
-            this._lastResponseStr = responseStr;
-            const convertedValue = this.convertQtiVariableJSON(response);
-            this.saveResponse(convertedValue);
-          }
-        } catch (error) {
-          console.error('Error checking for response changes:', error);
-        }
-      }
-    }, 500);
   }
 
   /**
@@ -923,6 +918,7 @@ export class QtiPortableCustomInteraction extends Interaction {
       catchError: true,
       waitSeconds: 30,
       paths: window.requirePaths,
+      baseUrl: '${this.dataset.baseUrl}',
       shim: window.requireShim,
       onNodeCreated: function(node, config, moduleName, url) {
         console.log('RequireJS creating node for module:', moduleName, 'URL:', url);
@@ -1032,7 +1028,9 @@ export class QtiPortableCustomInteraction extends Interaction {
               this.pciInstance = pciInstance;
               // Configure PCI instance
               const pciConfig = {
-                properties: this.addHyphenatedKeys({ ...config.dataAttributes }),
+                properties: this.addHyphenatedKeys(this.unescapeDataAttributes({ ...config.dataAttributes })),
+                contextVariables: config.contextVariables || {},
+                templateVariables: config.templateVariables || {},
                 onready: pciInstance => {
                   this.pciInstance = pciInstance;
                   this.notifyReady();
@@ -1122,17 +1120,17 @@ export class QtiPortableCustomInteraction extends Interaction {
           const contextRequire = window.requirejs.config({
             context: this.customInteractionTypeIdentifier
           });
-          
-                   contextRequire(['require'], require => {     
+          contextRequire(['require'], require => {     
              // Now load the actual module
               require([modulePath], () => {
               }, err => {
-                console.error('Error loading module after tap loaded:', modulePath, err);
+                console.error('Error loading module:', modulePath, err);
                 this.notifyError('Module load error: ' + err.toString());
               });
           });
         } catch (error) {
-          console.error('Exception in loadModule:', error);
+          console.error('Exception in loadModule:', modulePath);
+          console.error(error);
           this.notifyError('Error in require call: ' + error.toString());
         }
       },
@@ -1175,6 +1173,25 @@ export class QtiPortableCustomInteraction extends Interaction {
           }
         }
         return updatedProperties;
+      },
+      unescapeDataAttributes: function(obj) {
+        const unescaped = {};
+        for (const [key, value] of Object.entries(obj)) {
+          if (typeof value === 'string') {
+            unescaped[key] = value
+              .replace(/&amp;/g, '&')
+              .replace(/&lt;/g, '<')
+              .replace(/&gt;/g, '>')
+              .replace(/&quot;/g, '"')
+              .replace(/&#x27;/g, "'")
+              .replace(/&#x2F;/g, '/')
+              .replace(/&#x60;/g, '\`')
+              .replace(/&#x3D;/g, '=');
+          } else {
+            unescaped[key] = value;
+          }
+        }
+        return unescaped;
       },
     };
     

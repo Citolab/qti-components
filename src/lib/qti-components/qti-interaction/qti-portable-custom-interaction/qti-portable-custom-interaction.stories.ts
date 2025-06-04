@@ -2,13 +2,16 @@ import { html } from 'lit';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { expect, waitFor } from '@storybook/test';
 
-import type { QtiPortableCustomInteraction } from './qti-portable-custom-interaction';
+import { removeDoubleSlashes } from '../../internal/utils';
+import { qtiTransformItem } from '../../../qti-transformers';
+
 import type { StoryObj, Meta } from '@storybook/web-components';
-import type { QtiPortableCustomInteractionTest } from './qti-portable-custom-test-interaction';
-import type { VariableDeclaration } from '../../../exports/variables';
+import type { QtiPortableCustomInteraction } from './qti-portable-custom-interaction';
 
 import './qti-portable-custom-test-interaction';
 import type { QtiAssessmentItem } from '../../qti-assessment-item/qti-assessment-item';
+import type { ItemContainer, QtiItem } from '../../../qti-item/core';
+import type { ModuleResolutionConfig } from '../../../qti-transformers';
 
 const { events, args, argTypes, template } = getStorybookHelpers('qti-portable-custom-interaction');
 
@@ -539,7 +542,7 @@ export const VerhoudingenRestoreResponse = {
   },
   play: async ({ canvasElement, step }) => {
     await step('check the restored response', async () => {
-      const qtiItem = canvasElement.querySelector('qti-item');
+      const qtiItem = canvasElement.querySelector('qti-item') as QtiItem;
       // await new Promise(resolve => setTimeout(resolve, 1000));
 
       const pciElement = await waitFor(
@@ -567,3 +570,80 @@ export const VerhoudingenRestoreResponse = {
     chromatic: { disableSnapshot: true }
   }
 };
+
+// Base story function that accepts itemName as parameter
+const createPciConformanceStory = (itemName: string): Story => ({
+  args: {
+    // Remove the item-url since we'll fetch the data ourselves
+  },
+  render: args =>
+    html`<qti-item>
+      <div>
+        <item-container style="display: block;width: 400px; height: 350px;" id="item-container">
+          <template>
+            <style>
+              qti-assessment-item {
+                padding: 1rem;
+                display: block;
+                aspect-ratio: 4 / 3;
+                width: 800px;
+                border: 2px solid blue;
+                transform: scale(0.5);
+                transform-origin: top left;
+              }
+            </style>
+          </template>
+        </item-container>
+      </div>
+    </qti-item>`,
+  play: async ({ canvasElement, step }) => {
+    console.log(canvasElement);
+
+    await step('Fetch and load QTI XML', async () => {
+      try {
+        const getModuleResolution = async (baseUrl: string, name: string) => {
+          // try to find the files: /modules/module_resolution.js` and  modules/fallback_module_resolution.js`;
+          const modulResolutionResource = await fetch(removeDoubleSlashes(`${baseUrl}/${name}`));
+          if (!modulResolutionResource.ok) {
+            // If 404 or any error, skip the rest
+            return null;
+          }
+          const fileContent = await modulResolutionResource.text();
+          if (fileContent) {
+            const config = JSON.parse(fileContent) as ModuleResolutionConfig;
+            return config;
+          }
+          return null;
+        };
+
+        // Fetch the XML file using the parameterized item name
+        const baseUrl = `/qti-portable-interaction/pci-conformance/${itemName}`;
+        const response = await fetch(`${baseUrl}/qti.xml`);
+        const xmlText = await response.text();
+        const qti = xmlText
+          .replace('<qti-portable-custom-interaction', '<qti-portable-custom-interaction-test')
+          .replace('</qti-portable-custom-interaction>', '</qti-portable-custom-interaction-test>');
+        const transform = await qtiTransformItem()
+          .parse(qti)
+          .configurePci(baseUrl, getModuleResolution, 'qti-portable-custom-interaction-test');
+
+        // Find the item-container element
+        const itemContainer = canvasElement.querySelector('#item-container') as ItemContainer;
+
+        if (itemContainer) {
+          itemContainer.itemXML = transform.xml();
+        }
+      } catch (error) {
+        console.error('Failed to fetch QTI XML:', error);
+      }
+    });
+  }
+});
+
+// Create the individual stories using the base function
+export const PciConformance1: Story = createPciConformanceStory('item-1');
+export const PciConformance2: Story = createPciConformanceStory('item-2');
+export const PciConformance3: Story = createPciConformanceStory('item-3');
+export const PciConformance4: Story = createPciConformanceStory('item-4');
+export const PciConformance5: Story = createPciConformanceStory('item-5');
+export const PciConformance6: Story = createPciConformanceStory('item-6');

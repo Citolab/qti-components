@@ -356,7 +356,6 @@ describe.skip('outcome-processing lit', () => {
   });
   test('real assessment doc in lit', async () => {
     const qtiTestElement = document.body.querySelector('qti-test') as QtiTest;
-
     const contextAfterResponseProcessing = {
       ...qtiTestElement.testContext,
       items: qtiTestElement.testContext.items.map(itemContext => {

@@ -1,0 +1,14 @@
+{
+  "urlArgs": "version=2k",
+  "_comment": "NOTE: 'Graph' is missing from paths",
+  "paths": {
+    "bignumber": "modules/lib/bignumber-9.1.2-min",
+    "raphael": "modules/lib/raphael-2.3.0-min",
+    "PciUtilities": "modules/PciUtilities",
+    "PlottedPoint": "modules/PlottedPoint",
+    "FullPlane": "modules/FullPlane",
+    "CoordinatePlaneFactory": "modules/CoordinatePlaneFactory",
+    "GraphingModule": "modules/GraphingModule",
+    "GraphingInteraction": "modules/GraphingInteraction"
+  }
+}
