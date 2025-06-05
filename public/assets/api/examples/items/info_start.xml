@@ -7,7 +7,7 @@
 
 	<qti-item-body>
 		<h1>Welkom bij info item 1</h1>
-		<p>Dit is een info-item</p>
+		<p>Dit is een info-item <a href="https://github.com/Citolab/qti-components">Dit is een link knop naar de code</a></p>
 	</qti-item-body>
 
 </qti-assessment-item>

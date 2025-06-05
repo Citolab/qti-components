@@ -148,7 +148,7 @@ export function setLocation(xmlFragment: DocumentFragment, location: string) {
     }
     const attrValue = elWithSrc.getAttribute(attr)?.trim();
 
-    if (!attrValue.startsWith('data:') && !attrValue.startsWith('http:') && !attrValue.startsWith('blob:')) {
+    if (!/^(data:|https?:|blob:)/.test(attrValue)) {
       const newSrcValue = location + encodeURI(attrValue);
       elWithSrc.setAttribute(attr, newSrcValue);
     }
