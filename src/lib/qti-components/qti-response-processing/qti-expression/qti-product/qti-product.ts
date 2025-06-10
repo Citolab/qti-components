@@ -8,7 +8,7 @@ export class QtiProduct extends QtiExpression<number> {
     const product = values.reduce((accumulator, currentValue) => {
       if (currentValue.baseType == 'float' || currentValue.baseType == 'integer') {
         try {
-          return accumulator * parseInt(currentValue.value.toString());
+          return accumulator * parseFloat(currentValue.value.toString());
         } catch (error) {
           console.warn(`can not convert to number`);
         }

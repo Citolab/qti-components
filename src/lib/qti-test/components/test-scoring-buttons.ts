@@ -73,7 +73,7 @@ export class TestScoringButtons extends LitElement {
     super();
     this.addEventListener('click', e => {
       const target = e.target as HTMLInputElement;
-      const value = parseInt(target.value);
+      const value = parseFloat(target.value);
       if (target.tagName === 'INPUT') {
         this._changeOutcomeScore(value);
       }

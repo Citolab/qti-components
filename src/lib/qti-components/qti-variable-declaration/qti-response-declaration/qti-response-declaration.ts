@@ -82,8 +82,8 @@ export class QtiResponseDeclaration extends QtiVariableDeclaration {
 
   private get mapping(): QtiMapping {
     const mappingElement = this.querySelector('qti-mapping');
-    const lowerBound = parseInt(mappingElement?.getAttribute('lower-bound'));
-    const uppperBound = parseInt(mappingElement?.getAttribute('upper-bound'));
+    const lowerBound = parseFloat(mappingElement?.getAttribute('lower-bound'));
+    const uppperBound = parseFloat(mappingElement?.getAttribute('upper-bound'));
     const mappingValue = {
       defaultValue: Number(mappingElement?.getAttribute('default-value')) || 0,
       lowerBound: isNaN(lowerBound) ? null : lowerBound,
@@ -101,8 +101,8 @@ export class QtiResponseDeclaration extends QtiVariableDeclaration {
     const areaMappingElement = this.querySelector('qti-area-mapping') as HTMLElement;
 
     const defaultValue = Number(areaMappingElement?.getAttribute('default-value')) || 0;
-    const lowerBound = parseInt(areaMappingElement?.getAttribute('lower-bound'));
-    const uppperBound = parseInt(areaMappingElement?.getAttribute('upper-bound'));
+    const lowerBound = parseFloat(areaMappingElement?.getAttribute('lower-bound'));
+    const uppperBound = parseFloat(areaMappingElement?.getAttribute('upper-bound'));
 
     const areaMapEntries = Array.from(areaMappingElement?.querySelectorAll('qti-area-map-entry') || []).map(
       (el: HTMLElement) => ({

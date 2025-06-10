@@ -286,7 +286,7 @@ export class TestNavigation extends LitElement {
                 };
 
                 const rawscore = computedItem.variables?.find(vr => vr.identifier == 'SCORE')?.value;
-                const score = parseInt(rawscore?.toString());
+                const score = parseFloat(rawscore?.toString());
 
                 const completionStatus = computedItem.variables?.find(v => v.identifier === 'completionStatus')
                   ?.value as string;
@@ -304,7 +304,7 @@ export class TestNavigation extends LitElement {
 
                 const index = item.categories.includes(this.configContext?.infoItemCategory) ? null : itemIndex++;
                 const rawMaxScore = item.variables?.find(vr => vr.identifier == 'MAXSCORE')?.value;
-                const maxScore = parseInt(rawMaxScore?.toString());
+                const maxScore = parseFloat(rawMaxScore?.toString());
 
                 return {
                   ...computedItem,

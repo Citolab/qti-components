@@ -33,7 +33,7 @@ export class QtiLookupOutcomeValue extends QtiRule {
 
     let value;
     if (outcomeVariable.interpolationTable) {
-      value = outcomeVariable.interpolationTable.get(parseInt(this.childExpression.calculate()));
+      value = outcomeVariable.interpolationTable.get(parseFloat(this.childExpression.calculate()));
     }
     if (value === null || value === undefined) {
       console.warn('lookupOutcomeValue: value is null or undefined');

@@ -41,8 +41,8 @@ export class QtiOutcomeDeclaration extends QtiVariableDeclaration {
         if (!entry.getAttribute('source-value') && entry.getAttribute('target-value')) {
           console.error('source-value or target-value is missing in qti-interpolation-table-entry');
         }
-        const sourceValue = parseInt(entry.getAttribute('source-value'));
-        const targetValue = parseInt(entry.getAttribute('target-value'));
+        const sourceValue = parseFloat(entry.getAttribute('source-value'));
+        const targetValue = parseFloat(entry.getAttribute('target-value'));
         if (isNaN(sourceValue) || isNaN(targetValue)) {
           console.error('source-value or target-value is not a number in qti-interpolation-table-entry');
         }

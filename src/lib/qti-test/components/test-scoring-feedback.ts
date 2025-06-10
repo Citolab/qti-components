@@ -28,7 +28,7 @@ export class TestScoringFeedback extends LitElement {
     const completionStatus = activeItem?.variables.find(v => v.identifier === 'completionStatus')?.value;
     const scoreOutcome = activeItem?.variables.find(vr => vr.identifier == 'SCORE') as OutcomeVariable;
 
-    const score = parseInt(scoreOutcome?.value as string);
+    const score = parseFloat(scoreOutcome?.value as string);
     const externalScored = activeItem['externalScored'];
 
     const feedbackText = () => {

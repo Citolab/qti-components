@@ -68,7 +68,7 @@ export class QtiItem extends LitElement {
     variables: readonly VariableDeclaration<string | string[] | null>[]
   ): void {
     const rawscore = variables?.find(vr => vr.identifier == 'SCORE')?.value;
-    const score = parseInt(rawscore?.toString());
+    const score = parseFloat(rawscore?.toString());
     const completionStatus = variables?.find(v => v.identifier === 'completionStatus')?.value;
 
     const correct = score !== undefined && !isNaN(score) && score > 0;
