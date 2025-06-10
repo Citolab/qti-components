@@ -100,6 +100,7 @@ export class TestStamp extends LitElement {
   }
 
   render() {
+    console.log('value of stampContext', this.stampContext);
     // if (!this.stampContext) return nothing;
     return html` ${this.debug ? html`<small><pre>${JSON.stringify(this.stampContext, null, 2)}</pre></small>` : nothing}
     ${this.myTemplate ? this.myTemplate(this.stampContext) : nothing}`;

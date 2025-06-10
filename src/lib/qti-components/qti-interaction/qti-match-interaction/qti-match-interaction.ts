@@ -17,7 +17,26 @@ import type { QtiSimpleAssociableChoice } from '../qti-simple-associable-choice'
 export class QtiMatchInteraction extends DragDropInteractionMixin(
   Interaction,
   'qti-simple-match-set:first-of-type qti-simple-associable-choice, qti-simple-match-set:last-of-type > qti-simple-associable-choice > qti-simple-associable-choice',
-  'qti-simple-match-set:last-of-type > qti-simple-associable-choice',
+  () => {
+    // Get the last qti-simple-match-set
+    const lastMatchSet = document.querySelector('qti-simple-match-set:last-of-type');
+    if (!lastMatchSet) return [];
+
+    // Get the qti-simple-associable-choice within it
+    const associableChoices = lastMatchSet.querySelectorAll('qti-simple-associable-choice');
+    const elements: HTMLElement[] = [];
+    for (const choice of associableChoices) {
+      if (choice.shadowRoot) {
+        // get slot with part: dropslot
+        const slot = choice.shadowRoot.querySelector('slot[part="dropslot"]');
+        console.log('slot:', slot);
+        if (slot) {
+          elements.push(slot as HTMLElement);
+        }
+      }
+    }
+    return elements;
+  },
   'qti-simple-match-set:first-of-type'
 ) {
   static styles: CSSResultGroup = styles;

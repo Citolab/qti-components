@@ -14,16 +14,19 @@ interface InteractionConfiguration {
   dragOnClick: boolean;
 }
 
+// Type for selector - can be string or function returning elements
+type ElementSelector = string | (() => HTMLElement[]);
+
 export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
   superClass: T,
-  draggablesSelector: string,
-  droppablesSelector: string,
-  dragContainersSelector: string
+  draggablesSelector: ElementSelector,
+  droppablesSelector: ElementSelector,
+  dragContainersSelector: ElementSelector
 ) => {
   abstract class DragDropInteractionElement extends FlippablesMixin(
     superClass,
-    droppablesSelector,
-    draggablesSelector
+    typeof droppablesSelector === 'string' ? droppablesSelector : '',
+    typeof draggablesSelector === 'string' ? draggablesSelector : ''
   ) {
     // protected draggables = new Map<HTMLElement, { parent: HTMLElement; index: number }>();
     private observer: MutationObserver | null = null;
@@ -65,9 +68,38 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     @property({ type: Number, reflect: true, attribute: 'min-associations' }) minAssociations = 1;
     @property({ type: Number, reflect: true, attribute: 'max-associations' }) maxAssociations = 0;
 
-    @liveQuery(dragContainersSelector)
+    // Helper method to get elements based on selector type
+    private getElementsFromSelector(selector: ElementSelector): HTMLElement[] {
+      if (typeof selector === 'function') {
+        return selector();
+      } else {
+        return Array.from(this.querySelectorAll(selector) || []).concat(
+          Array.from(this.shadowRoot?.querySelectorAll(selector) || [])
+        ) as HTMLElement[];
+      }
+    }
+
+    // Helper method for drag containers with live query support
+    private getDragContainersElements(): HTMLElement[] {
+      return this.getElementsFromSelector(dragContainersSelector);
+    }
+
+    @liveQuery(dragContainersSelector, { waitUntilFirstUpdate: true })
     handleDraggableContainerChange(dragContainersAdded: HTMLElement[], dragContainersRemoved: HTMLElement[]) {
       if (this.isMatchTabular()) return;
+
+      // If dragContainersSelector is a function, we need to handle changes differently
+      if (typeof dragContainersSelector === 'function') {
+        // For function selectors, we need to manually check for changes
+        const currentContainers = this.getDragContainersElements();
+        const addedContainers = currentContainers.filter(c => !this.dragContainers.includes(c));
+        const removedContainers = this.dragContainers.filter(c => !currentContainers.includes(c));
+
+        if (addedContainers.length > 0 || removedContainers.length > 0) {
+          this.dragContainersModified(addedContainers, removedContainers);
+        }
+        return;
+      }
 
       if (dragContainersAdded.length > 0 || dragContainersRemoved.length > 0) {
         this.dragContainersModified(dragContainersAdded || [], dragContainersRemoved || []);
@@ -89,17 +121,43 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       }
     }
 
-    @liveQuery(draggablesSelector)
+    @liveQuery(draggablesSelector, { waitUntilFirstUpdate: true })
     handleDraggablesChange(dragsAdded: HTMLElement[], dragsRemoved: HTMLElement[]) {
       if (this.isMatchTabular()) return;
+
+      // If draggablesSelector is a function, handle changes manually
+      if (typeof draggablesSelector === 'function') {
+        const currentDraggables = this.getElementsFromSelector(draggablesSelector);
+        const addedDraggables = currentDraggables.filter(d => !this.draggables.includes(d));
+        const removedDraggables = this.draggables.filter(d => !currentDraggables.includes(d));
+
+        if (addedDraggables.length > 0 || removedDraggables.length > 0) {
+          this.draggablesModified(addedDraggables, removedDraggables);
+        }
+        return;
+      }
+
       if (dragsAdded.length > 0 || dragsRemoved.length > 0) {
         this.draggablesModified(dragsAdded || [], dragsRemoved || []);
       }
     }
 
-    @liveQuery(droppablesSelector)
+    @liveQuery(droppablesSelector, { waitUntilFirstUpdate: true })
     handleDroppablesChange(dropsAdded: HTMLElement[], dropsRemoved: HTMLElement[]) {
       if (this.isMatchTabular()) return;
+
+      // If droppablesSelector is a function, handle changes manually
+      if (typeof droppablesSelector === 'function') {
+        const currentDroppables = this.getElementsFromSelector(droppablesSelector);
+        const addedDroppables = currentDroppables.filter(d => !this.droppables.includes(d));
+        const removedDroppables = this.droppables.filter(d => !currentDroppables.includes(d));
+
+        if (addedDroppables.length > 0 || removedDroppables.length > 0) {
+          this.droppablesModified(addedDroppables, removedDroppables);
+        }
+        return;
+      }
+
       if (dropsAdded.length > 0 || dropsRemoved.length > 0) {
         this.droppablesModified(dropsAdded || [], dropsRemoved || []);
       }
@@ -116,15 +174,11 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
         document.addEventListener('mouseup', this.handleTouchEnd.bind(this), { passive: false });
         document.addEventListener('touchcancel', this.handleTouchCancel.bind(this), { passive: false });
       }
-      const draggables = Array.from(this.querySelectorAll(draggablesSelector) || []).concat(
-        Array.from(this.shadowRoot?.querySelectorAll(draggablesSelector) || [])
-      ) as HTMLElement[];
-      const droppables = Array.from(this.querySelectorAll(droppablesSelector) || []).concat(
-        Array.from(this.shadowRoot?.querySelectorAll(droppablesSelector) || [])
-      ) as HTMLElement[];
-      const dragContainers = Array.from(this.querySelectorAll(dragContainersSelector) || []).concat(
-        Array.from(this.shadowRoot?.querySelectorAll(dragContainersSelector) || [])
-      ) as HTMLElement[];
+
+      const draggables = this.getElementsFromSelector(draggablesSelector);
+      const droppables = this.getElementsFromSelector(droppablesSelector);
+      const dragContainers = this.getElementsFromSelector(dragContainersSelector);
+
       this.dragContainersModified(dragContainers, []);
       this.droppablesModified(droppables, []);
       this.draggablesModified(draggables, []);
@@ -140,6 +194,74 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       const gapTexts = this.querySelectorAll('qti-gap-text');
       gapTexts.forEach(gapText => this.resizeObserver?.observe(gapText));
     }
+
+    private updateMinDimensionsForDropZones() {
+      if (this.isMatchTabular()) return;
+      const gapTexts = this.getElementsFromSelector(draggablesSelector);
+      const gaps = this.getElementsFromSelector(droppablesSelector);
+      let maxHeight = 0;
+      let maxWidth = 0;
+      gapTexts.forEach(gapText => {
+        const rect = gapText.getBoundingClientRect();
+        maxHeight = Math.max(maxHeight, rect.height);
+        maxWidth = Math.max(maxWidth, rect.width);
+        console.debug(`Gap Text: ${gapText.tagName}, Height: ${rect.height}, Width: ${rect.width}`);
+      });
+
+      const dragContainerElements = this.getElementsFromSelector(dragContainersSelector);
+      const dragContainer = dragContainerElements[0]; // Take first one if multiple
+
+      if (dragContainer) {
+        dragContainer.style.minHeight = `${maxHeight}px`;
+        dragContainer.style.minWidth = `${maxWidth}px`;
+      }
+      for (const gap of gaps) {
+        gap.style.minHeight = `${maxHeight}px`;
+        gap.style.minWidth = `${maxWidth}px`;
+        console.debug(`Gap: ${gap.tagName}, Min Height: ${maxHeight}, Min Width: ${maxWidth}`);
+      }
+    }
+
+    private findDraggableInDraggableContainer(identifier: string): HTMLElement | undefined {
+      // Flatten all drag containers
+      const allDragContainers = this.dragContainers.flat();
+      // Iterate through each drag container
+      for (const container of allDragContainers) {
+        // Check if the container itself has the identifier
+        if (container.getAttribute('identifier') === identifier) {
+          // Return the container itself if it matches
+          return container;
+        }
+        // If the container is a slot element, get assigned elements
+        let elements: HTMLElement[];
+        // Check if the container is a slot element
+        if (container instanceof HTMLSlotElement) {
+          // If it's a slot, get the assigned elements
+          elements = Array.from(container?.assignedElements() || []) as HTMLElement[];
+        } else {
+          // Otherwise, get elements using the selector
+          if (typeof draggablesSelector === 'function') {
+            // For function selectors, we need to filter elements that are children of this container
+            const allDraggableElements = this.getElementsFromSelector(draggablesSelector);
+            elements = allDraggableElements.filter(el => container.contains(el));
+          } else {
+            elements = Array.from(container.querySelectorAll(draggablesSelector)) as HTMLElement[];
+          }
+        }
+        // Search for a matching child element inside the container
+        const foundElement = elements.find(e => e.getAttribute('identifier') === identifier);
+
+        // If a matching element is found, return it
+        if (foundElement) {
+          return foundElement;
+        }
+      }
+      // Return undefined if no matching element is found
+      return undefined;
+    }
+
+    // Rest of the methods remain the same, but any place where we used the selectors directly
+    // should now use this.getElementsFromSelector() or reference the stored arrays
 
     private draggablesModified = (addedDraggables: HTMLElement[], removedDraggables: HTMLElement[]) => {
       if (this.isMatchTabular()) return;
@@ -240,32 +362,6 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
     private isMatchTabular(): boolean {
       return this.classList.contains('qti-match-tabular');
-    }
-
-    private updateMinDimensionsForDropZones() {
-      if (this.isMatchTabular()) return;
-      const gapTexts = this.querySelectorAll(draggablesSelector);
-      const gaps = Array.from(this.querySelectorAll(droppablesSelector)).map(d => d as HTMLElement);
-      let maxHeight = 0;
-      let maxWidth = 0;
-      gapTexts.forEach(gapText => {
-        const rect = gapText.getBoundingClientRect();
-        maxHeight = Math.max(maxHeight, rect.height);
-        maxWidth = Math.max(maxWidth, rect.width);
-      });
-
-      const dragContainer =
-        (this.querySelector(dragContainersSelector) as HTMLElement) ||
-        (this.shadowRoot?.querySelector(dragContainersSelector) as HTMLElement);
-
-      if (dragContainer) {
-        dragContainer.style.minHeight = `${maxHeight}px`;
-        dragContainer.style.minWidth = `${maxWidth}px`;
-      }
-      for (const gap of gaps) {
-        gap.style.minHeight = `${maxHeight}px`;
-        gap.style.minWidth = `${maxWidth}px`;
-      }
     }
 
     private activateDroppables(target: HTMLElement): void {
@@ -818,38 +914,6 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       }
       e.preventDefault();
       this.dragClone.setAttribute('dragging', '');
-    }
-
-    private findDraggableInDraggableContainer(identifier: string): HTMLElement | undefined {
-      // Flatten all drag containers
-      const allDragContainers = this.dragContainers.flat();
-      // Iterate through each drag container
-      for (const container of allDragContainers) {
-        // Check if the container itself has the identifier
-        if (container.getAttribute('identifier') === identifier) {
-          // Return the container itself if it matches
-          return container;
-        }
-        // If the container is a slot element, get assigned elements
-        let elements: HTMLElement[];
-        // Check if the container is a slot element
-        if (container instanceof HTMLSlotElement) {
-          // If it's a slot, get the assigned elements
-          elements = Array.from(container?.assignedElements() || []) as HTMLElement[];
-        } else {
-          // Otherwise, query the container using draggablesSelector
-          elements = Array.from(container.querySelectorAll(draggablesSelector)) as HTMLElement[];
-        }
-        // Search for a matching child element inside the container
-        const foundElement = elements.find(e => e.getAttribute('identifier') === identifier);
-
-        // If a matching element is found, return it
-        if (foundElement) {
-          return foundElement;
-        }
-      }
-      // Return undefined if no matching element is found
-      return undefined;
     }
 
     private setDragCloneStyles(rect: DOMRect) {
