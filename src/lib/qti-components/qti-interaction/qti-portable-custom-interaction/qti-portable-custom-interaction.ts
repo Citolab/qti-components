@@ -580,7 +580,6 @@ export class QtiPortableCustomInteraction extends Interaction {
 
       case 'interactionChanged': {
         const value = this.convertQtiVariableJSON(data.params.value);
-        console.log('Interaction changed:', value);
         this.response = value;
         this.validate();
         this.saveResponse(this.response);
