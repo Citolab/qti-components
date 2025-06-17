@@ -115,6 +115,16 @@
           color: var(--qti-correct);
         }
       }
+
+      /* stylelint-disable-next-line no-descending-specificity */
+      &:state(candidate-correct) {
+        background-color: var(--qti-correct) !important;
+      }
+
+      /* stylelint-disable-next-line no-descending-specificity */
+      &:state(candidate-incorrect) {
+        background-color: var(--qti-incorrect) !important;
+      }
     }
 
     & qti-simple-choice > p {

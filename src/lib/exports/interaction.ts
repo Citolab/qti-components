@@ -26,12 +26,39 @@ export abstract class Interaction extends LitElement implements IInteraction {
     this._correctResponse = val as string | string[];
   }
 
+  @state()
+  protected _isCorrect: boolean | null = null;
+
+  get isCorrect(): Readonly<boolean | null> {
+    return this._isCorrect;
+  }
+
+  set isCorrect(val: Readonly<boolean | null>) {
+    this._isCorrect = val as boolean;
+  }
+
   public toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
     this.correctResponse = show
       ? responseVariable?.correctResponse
       : responseVariable?.cardinality === 'single'
         ? ''
         : [];
+  }
+
+  public toggleCandidateCorrection(responseVariable: ResponseVariable, show: boolean) {
+    this.isCorrect = show
+      ? responseVariable.correctResponse === responseVariable.value
+      : null;
+
+    this._internals.states.delete('candidate-correct');
+    this._internals.states.delete('candidate-incorrect');
+
+    if (this.isCorrect === true) {
+      this._internals.states.add('candidate-correct');
+    }
+    if (this.isCorrect === false) {
+      this._internals.states.add('candidate-incorrect');
+    }
   }
 
   constructor() {

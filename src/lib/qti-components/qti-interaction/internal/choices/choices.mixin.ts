@@ -98,6 +98,40 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       }
     }
 
+    public toggleCandidateCorrection(responseVariable: ResponseVariable, show: boolean) {
+      if (!responseVariable.correctResponse) {
+        return;
+      }
+
+      this.isCorrect = show
+        ? responseVariable.correctResponse === responseVariable.value
+        : null;
+
+      const correctResponseArray = Array.isArray(responseVariable.correctResponse)
+        ? responseVariable.correctResponse
+        : [responseVariable.correctResponse];
+
+      const candidateResponseArray = Array.isArray(responseVariable.value)
+        ? responseVariable.value
+        : [responseVariable.value];
+
+      this._choiceElements.forEach(choice => {
+        choice.internals.states.delete('candidate-correct');
+        choice.internals.states.delete('candidate-incorrect');
+        if (!show) {
+          return;
+        }
+        if (!candidateResponseArray.includes(choice.identifier)) {
+          return; // Not checked, so no feedback
+        }
+        if (correctResponseArray.includes(choice.identifier)) {
+          choice.internals.states.add('candidate-correct');
+        } else {
+          choice.internals.states.add('candidate-incorrect');
+        }
+      });
+    }
+
     override connectedCallback() {
       super.connectedCallback();
       this.addEventListener(`register-${selector}`, this._registerChoiceElement);
