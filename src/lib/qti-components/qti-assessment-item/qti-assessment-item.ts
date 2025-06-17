@@ -261,6 +261,29 @@ export class QtiAssessmentItem extends LitElement {
     }
   }
 
+  /**
+   * Toggles the display of the candidate correction for all interactions.
+   * @param show - A boolean indicating whether to show or hide candidate correction.
+   */
+  public showCandidateCorrection(show: boolean): void {
+    // Get all response variables
+    const responseVariables = this._context.variables.filter(v => v.type === 'response') as ResponseVariable[];
+
+    // Iterate through all interaction elements
+    for (const interaction of this._interactionElements) {
+      // Get the response identifier for this interaction
+      const responseIdentifier = interaction.getAttribute('response-identifier');
+
+      // Find the matching response variable for this interaction
+      const responseVariable = responseVariables.find(v => v.identifier === responseIdentifier);
+
+      // If we found a matching response variable, toggle the candidate correction
+      if (responseVariable) {
+        interaction.toggleCandidateCorrection(responseVariable, show);
+      }
+    }
+  }
+
   public processResponse(countNumAttempts = true, reportValidityAfterScoring = true): boolean {
     this.validate(reportValidityAfterScoring);
 
@@ -335,6 +358,15 @@ export class QtiAssessmentItem extends LitElement {
       variables: this._context.variables.map(v => (v.identifier !== identifier ? v : { ...v, value: value }))
     };
 
+    // Turn off candidate correction after change of response variable
+    this.dispatchEvent(
+      new CustomEvent<boolean>('item-show-candidate-correction', {
+        bubbles: true,
+        composed: true,
+        detail: false
+      })
+    );
+
     this.dispatchEvent(
       new CustomEvent<InteractionChangedDetails>('qti-interaction-changed', {
         bubbles: true,
@@ -348,7 +380,7 @@ export class QtiAssessmentItem extends LitElement {
     );
 
     if (this.adaptive === 'false') {
-      // if adapative, completionStatus is set by the processing template
+      // if adaptive, completionStatus is set by the processing template
       this.updateOutcomeVariable('completionStatus', this._getCompletionStatus());
     }
   }

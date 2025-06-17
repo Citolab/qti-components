@@ -84,6 +84,7 @@ export class TestNavigation extends LitElement {
 
     this.addEventListener('test-end-attempt', this._handleTestEndAttempt.bind(this));
     this.addEventListener('test-show-correct-response', this._handleTestShowCorrectResponse.bind(this));
+    this.addEventListener('test-show-candidate-correction', this._handleTestShowCandidateCorrection.bind(this));
     this.addEventListener('test-update-outcome-variable', this._handleTestUpdateOutcomeVariable.bind(this));
   }
 
@@ -119,7 +120,7 @@ export class TestNavigation extends LitElement {
   // }
 
   /**
-   * Handles the 'test-end-attempt' event.
+   * Handles the 'test-show-correct-response' event.
    * @private
    * @listens TestNavigation#test-show-correct-response
    * @param {CustomEvent} event - The custom event object.
@@ -130,6 +131,20 @@ export class TestNavigation extends LitElement {
     );
     const qtiAssessmentItemEl = qtiItemEl.assessmentItem;
     qtiAssessmentItemEl.showCorrectResponse(event.detail);
+  }
+
+  /**
+   * Handles the 'test-show-candidate-correction' event.
+   * @private
+   * @listens TestNavigation#test-show-candidate-correction
+   * @param {CustomEvent} event - The custom event object.
+   */
+  private _handleTestShowCandidateCorrection(event: CustomEvent) {
+    const qtiItemEl = this._testElement.querySelector<QtiAssessmentItemRef>(
+      `qti-assessment-item-ref[identifier="${this._sessionContext.navItemRefId}"]`
+    );
+    const qtiAssessmentItemEl = qtiItemEl.assessmentItem;
+    qtiAssessmentItemEl.showCandidateCorrection(event.detail);
   }
 
   private _handleTestUpdateOutcomeVariable(event: CustomEvent) {
