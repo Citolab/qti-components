@@ -1,6 +1,6 @@
 import '../../qti-simple-choice';
 
-import { getByTestId, userEvent } from '@storybook/test';
+import { getByTestId, userEvent } from 'storybook/test';
 import { html, render } from 'lit';
 
 import { ChoicesMixin } from './choices.mixin';

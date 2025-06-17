@@ -1,11 +1,11 @@
-import { expect, waitFor } from '@storybook/test';
+import { expect, waitFor } from 'storybook/test';
 import { within } from 'shadow-dom-testing-library';
 
 import { toBePositionedRelativeTo } from '../../../../../../test/setup/toBePositionedRelativeTo';
 import { qtiTransformItem } from '../../../../qti-transformers';
 
 import type { QtiSimpleChoice } from '../../qti-simple-choice';
-import type { StoryObj, Meta } from '@storybook/web-components';
+import type { StoryObj, Meta } from '@storybook/web-components-vite';
 
 // type Story = StoryObj<typeof args>;
 const xml = String.raw;

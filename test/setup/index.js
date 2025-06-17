@@ -1,5 +1,5 @@
 import { expect as expectInVitest } from 'vitest';
-import { expect as expectInStorybook } from '@storybook/test';
+import { expect as expectInStorybook } from 'storybook/test';
 
 import { toEqualXml } from './toEqualXml';
 import { toBePositionedRelativeTo } from './toBePositionedRelativeTo';

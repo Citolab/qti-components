@@ -8,18 +8,9 @@ const config: StorybookConfig = {
     '@storybook/addon-a11y',
     'storybook-addon-tag-badges',
     '@storybook/addon-themes',
-    {
-      name: '@storybook/addon-essentials',
-      options: {
-        mdxPluginOptions: {
-          mdxCompileOptions: {
-            remarkPlugins: [remarkGfm]
-          }
-        }
-      }
-    },
     '@chromatic-com/storybook',
-    '@storybook/experimental-addon-test'
+    '@storybook/addon-vitest',
+    '@storybook/addon-docs'
   ],
   framework: {
     name: '@storybook/web-components-vite',

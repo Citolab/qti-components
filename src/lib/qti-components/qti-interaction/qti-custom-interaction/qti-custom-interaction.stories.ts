@@ -5,7 +5,7 @@ import itemXML from './qti-custom-interaction.xml?raw';
 import { qtiTransformItem } from '../../../qti-transformers';
 
 import type { QtiCustomInteraction } from './qti-custom-interaction';
-import type { Meta, StoryObj } from '@storybook/web-components';
+import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 const { events, args, argTypes } = getStorybookHelpers('qti-custom-interaction');
 

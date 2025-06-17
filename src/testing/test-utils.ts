@@ -1,4 +1,4 @@
-import { waitFor } from '@storybook/test';
+import { waitFor } from 'storybook/test';
 
 export async function getAssessmentItemFromItemContainer(canvasElement: HTMLElement): Promise<HTMLElement | null> {
   const assessmentItem = await waitFor(() => {

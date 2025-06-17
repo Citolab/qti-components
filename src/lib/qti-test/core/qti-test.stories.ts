@@ -1,7 +1,7 @@
 import { html } from 'lit';
 // import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 
-import type { Meta, StoryObj } from '@storybook/web-components';
+import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { QtiTest } from './qti-test';
 // const { events, args, argTypes, template } = getStorybookHelpers('qti-test');
 
@@ -39,7 +39,7 @@ export default meta;
 
 export const Unstyled: Story = {
   render: args => {
-    return html`<qti-test
+    return html`<qti-test navigate="item"
       ><test-navigation
         ><test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"></test-container>
         <nav><test-prev>Vorige</test-prev><test-next>Volgende</test-next></nav></test-navigation
@@ -50,7 +50,7 @@ export const Unstyled: Story = {
 
 export const BootstrapForTest: Story = {
   render: () => html`
-    <qti-test class="d-flex h-100 w-full flex-column">
+    <qti-test navigate="item" class="d-flex h-100 w-full flex-column">
       <test-navigation>
         <test-container
           test-url="/assets/api/examples/assessment.xml"

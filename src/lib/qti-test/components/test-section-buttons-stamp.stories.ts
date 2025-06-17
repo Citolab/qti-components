@@ -1,4 +1,4 @@
-import { expect, fireEvent, fn } from '@storybook/test';
+import { expect, fireEvent, fn } from 'storybook/test';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { html } from 'lit';
 import { within } from 'shadow-dom-testing-library';
@@ -10,7 +10,7 @@ import {
   getTestContainer
 } from '../../../testing/test-utils';
 
-import type { Meta, StoryObj } from '@storybook/web-components';
+import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { TestSectionButtonsStamp } from './test-section-buttons-stamp';
 import type { QtiAssessmentStimulusRef } from '../../qti-components';
 

@@ -4,7 +4,7 @@ import { createRef, ref } from 'lit/directives/ref.js';
 import { qtiTransformItem } from '../lib';
 
 import type { QtiAssessmentItem, QtiItem } from '../lib';
-import type { Meta, StoryObj } from '@storybook/web-components';
+import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 const meta: Meta = {
   argTypes: {

@@ -1,7 +1,6 @@
 import { customElementVsCodePlugin } from 'custom-element-vs-code-integration';
-import { customElementJsxPlugin } from 'custom-element-jsx-integration';
+import { jsxTypesPlugin } from '@wc-toolkit/jsx-types';
 import { getTsProgram, typeParserPlugin } from '@wc-toolkit/type-parser';
-import { cemDeprecatorPlugin } from 'custom-elements-manifest-deprecator';
 
 console.log('Building the custom element manifest...');
 
@@ -32,14 +31,13 @@ export default {
 
   /** Custom elements manifest plugins */
   plugins: [
-    cemDeprecatorPlugin({}),
     typeParserPlugin({
       outdir: outdir + 'dist'
     }),
     customElementVsCodePlugin({
       outdir: outdir + 'dist'
     }),
-    customElementJsxPlugin({
+    jsxTypesPlugin({
       outdir: outdir + 'dist',
       exclude: [],
       fileName: `qti-components-jsx.d.ts`

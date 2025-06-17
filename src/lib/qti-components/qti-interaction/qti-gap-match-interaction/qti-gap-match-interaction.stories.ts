@@ -1,12 +1,12 @@
-import { action } from '@storybook/addon-actions';
-import { expect } from '@storybook/test';
+import { action } from 'storybook/actions';
+import { expect } from 'storybook/test';
 import { html } from 'lit';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 
 import { getItemByUri } from '../../../../lib/qti-loader';
 import drag from '../../../../testing/drag';
 
-import type { ArgTypes, Meta, StoryObj } from '@storybook/web-components';
+import type { ArgTypes, Meta, StoryObj } from '@storybook/web-components-vite';
 import type { QtiAssessmentItem } from '../../qti-assessment-item/qti-assessment-item';
 import type { QtiGapText } from '../qti-gap-text';
 import type { QtiGapMatchInteraction } from './qti-gap-match-interaction';

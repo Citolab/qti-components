@@ -2,7 +2,7 @@ import { html } from 'lit';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 
 import type { QtiMediaInteraction } from './qti-media-interaction';
-import type { StoryObj, Meta } from '@storybook/web-components';
+import type { StoryObj, Meta } from '@storybook/web-components-vite';
 
 const { events, args, argTypes, template } = getStorybookHelpers('qti-media-interaction');
 

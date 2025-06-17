@@ -1,12 +1,12 @@
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { spread } from '@open-wc/lit-helpers';
 import { html } from 'lit';
-import { expect, waitFor } from '@storybook/test';
+import { expect, waitFor } from 'storybook/test';
 import { within } from 'shadow-dom-testing-library';
 
 import { getAssessmentItemFromItemContainer } from '../../../testing/test-utils';
 
-import type { Meta, StoryObj } from '@storybook/web-components';
+import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { ItemShowCorrectResponse } from './item-show-correct-response';
 import './item-show-correct-response';
 import type { ItemContainer } from './item-container';

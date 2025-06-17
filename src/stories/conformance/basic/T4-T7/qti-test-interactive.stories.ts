@@ -1,4 +1,4 @@
-import { expect, fireEvent, userEvent, waitFor } from '@storybook/test';
+import { expect, fireEvent, userEvent, waitFor } from 'storybook/test';
 import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { getByShadowText, findByShadowText, findByShadowRole, within } from 'shadow-dom-testing-library';
@@ -6,7 +6,7 @@ import { getByShadowText, findByShadowText, findByShadowRole, within } from 'sha
 import { getManifestInfo, type ManifestInfo } from '../../../../lib/qti-loader';
 
 import type { QtiTest } from '@citolab/qti-components/qti-test/core';
-import type { ArgTypes, Meta, StoryObj } from '@storybook/web-components';
+import type { ArgTypes, Meta, StoryObj } from '@storybook/web-components-vite';
 
 type Story = StoryObj;
 

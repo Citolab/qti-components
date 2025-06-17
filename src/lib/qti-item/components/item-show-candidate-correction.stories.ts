@@ -1,10 +1,10 @@
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { spread } from '@open-wc/lit-helpers';
 import { html } from 'lit';
-import { expect } from '@storybook/test';
+import { expect } from 'storybook/test';
 import { within } from 'shadow-dom-testing-library';
 
-import type { Meta, StoryObj } from '@storybook/web-components';
+import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { ItemShowCandidateCorrection } from './item-show-candidate-correction.ts';
 import './item-show-candidate-correction.ts';
 import type { ItemContainer } from './item-container';

@@ -5,7 +5,7 @@ import { within } from 'shadow-dom-testing-library';
 import drag from '../../../../testing/drag';
 
 import type { QtiSliderInteraction } from './qti-slider-interaction';
-import type { StoryObj, Meta } from '@storybook/web-components';
+import type { StoryObj, Meta } from '@storybook/web-components-vite';
 
 const { events, args, argTypes, template } = getStorybookHelpers('qti-slider-interaction');
 

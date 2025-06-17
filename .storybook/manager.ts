@@ -1,5 +1,5 @@
 // .storybook/manager.ts
-import { addons } from '@storybook/manager-api';
+import { addons } from 'storybook/manager-api';
 import { defaultConfig, type TagBadgeParameters } from 'storybook-addon-tag-badges';
 
 addons.setConfig({

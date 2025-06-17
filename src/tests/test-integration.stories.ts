@@ -1,4 +1,4 @@
-import { fireEvent } from '@storybook/test';
+import { fireEvent } from 'storybook/test';
 import { html } from 'lit';
 import { within } from 'shadow-dom-testing-library';
 import { createRef, ref } from 'lit/directives/ref.js';
@@ -6,7 +6,7 @@ import { createRef, ref } from 'lit/directives/ref.js';
 import { ExtendedXMLHttpRequest } from '../testing/xmlHttpRequest';
 
 import type { QtiAssessmentStimulusRef } from '../lib';
-import type { Meta, StoryObj } from '@storybook/web-components';
+import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 import '../../.storybook/utilities.css';
 

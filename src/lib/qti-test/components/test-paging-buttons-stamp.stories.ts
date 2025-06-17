@@ -1,9 +1,9 @@
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
-import { expect, fireEvent, waitFor } from '@storybook/test';
+import { expect, fireEvent, waitFor } from 'storybook/test';
 import { html } from 'lit';
 import { within } from 'shadow-dom-testing-library';
 
-import type { Meta, StoryObj } from '@storybook/web-components';
+import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { TestPagingButtonsStamp } from './test-paging-buttons-stamp';
 
 import '../../../../.storybook/utilities.css';
