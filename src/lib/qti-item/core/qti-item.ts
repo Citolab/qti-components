@@ -8,6 +8,7 @@ import type { QtiAssessmentItem } from '../../qti-components';
 import type { ItemContext } from '../../exports/item.context';
 import type { VariableDeclaration } from '../../exports/variables';
 import type { ComputedItemContext } from '../../exports/computed-item.context';
+import { ItemShowCandidateCorrection } from '../components/item-show-candidate-correction.ts';
 
 /**
  * `<qti-item>` is a custom element designed for rendering a single `qti-assessment-item`.
@@ -31,11 +32,14 @@ export class QtiItem extends LitElement {
   private _onItemContextChanged = this._handleItemContextChanged.bind(this);
   private _onAssessmentItemConnected = this._handleAssessmentItemConnected.bind(this);
   private _onHandleTestShowCorrectResponse = this._handleTestShowCorrectResponse.bind(this);
+  private _onHandleTestShowCandidateCorrection = this._handleTestShowCandidateCorrection.bind(this);
+
   constructor() {
     super();
     this.addEventListener('qti-item-context-updated', this._onItemContextChanged);
     this.addEventListener('qti-assessment-item-connected', this._onAssessmentItemConnected);
     this.addEventListener('item-show-correct-response', this._onHandleTestShowCorrectResponse);
+    this.addEventListener('item-show-candidate-correction', this._onHandleTestShowCandidateCorrection);
   }
 
   private _handleItemContextChanged(e: CustomEvent<{ itemContext: ItemContext }>) {
@@ -61,6 +65,16 @@ export class QtiItem extends LitElement {
     if (this._qtiAssessmentItem) {
       this._qtiAssessmentItem.showCorrectResponse(e.detail);
     }
+  }
+
+  private _handleTestShowCandidateCorrection(e: CustomEvent<boolean>) {
+    if (this._qtiAssessmentItem) {
+      this._qtiAssessmentItem.showCandidateCorrection(e.detail);
+    }
+    // Update one or more toggle component states
+    this.querySelectorAll('item-show-candidate-correction').forEach((el: ItemShowCandidateCorrection) => {
+      el.shown = e.detail;
+    })
   }
 
   private _updateItemVariablesInTestContext(

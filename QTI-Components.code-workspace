@@ -34,7 +34,8 @@
     "lit-plugin.rules.no-incompatible-type-binding": "warning",
     "lit-plugin.rules.no-invalid-boolean-binding": "warning",
     "lit-plugin.rules.no-complex-attribute-binding": "warning",
-    "git.allowNoVerifyCommit": true
+    "git.allowNoVerifyCommit": true,
+    "nuxt.isNuxtApp": false
   },
   "extensions": {
     "recommendations": [
