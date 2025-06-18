@@ -130,6 +130,7 @@ export class TestNavigation extends LitElement {
       `qti-assessment-item-ref[identifier="${this._sessionContext.navItemRefId}"]`
     );
     const qtiAssessmentItemEl = qtiItemEl.assessmentItem;
+    if (!qtiAssessmentItemEl) return;
     qtiAssessmentItemEl.showCorrectResponse(event.detail);
   }
 
@@ -202,7 +203,8 @@ export class TestNavigation extends LitElement {
                 identifier: item.identifier,
                 categories: item.category ? item.category?.split(' ') : [],
                 href: item.href,
-                variables: []
+                variables: [],
+                correctResponseMode: 'internal'
               }))
             };
           })

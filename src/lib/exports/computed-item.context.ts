@@ -2,6 +2,8 @@ import { createContext } from '@lit/context';
 
 import type { VariableDeclaration } from './variables';
 
+export type CorrectResponseMode = 'internal' | 'full';
+
 export type ComputedItemContext = {
   identifier: string;
   href?: string;
@@ -15,6 +17,7 @@ export type ComputedItemContext = {
   score?: number;
   maxScore?: number;
   completionStatus?: string;
+  correctResponseMode: CorrectResponseMode;
   variables: ReadonlyArray<VariableDeclaration<string | string[] | null>>;
 };
 

@@ -9,10 +9,11 @@ import { getAssessmentItemFromItemContainer } from '../../../testing/test-utils'
 import type { Meta, StoryObj } from '@storybook/web-components';
 import type { ItemShowCorrectResponse } from './item-show-correct-response';
 import './item-show-correct-response';
+import './item-correct-response-mode';
 import type { ItemContainer } from './item-container';
 import type { QtiSimpleChoice } from '../../qti-components';
 
-const { events, args, argTypes, template } = getStorybookHelpers('test-print-item-variables');
+const { events, args, argTypes } = getStorybookHelpers('test-print-item-variables');
 
 type Story = StoryObj<ItemShowCorrectResponse & typeof args>;
 
@@ -32,25 +33,26 @@ export default meta;
 export const Default: Story = {
   render: args => {
     return html`<qti-item>
-      <!-- <div style="display: flex; flex-direction: column; gap: 1rem;"> -->
-      <item-container style="width: 400px; height: 350px; display: block;" item-url=${args['item-url'] as string}>
-        <template>
-          <style>
-            qti-assessment-item {
-              padding: 1rem;
-              display: block;
-              aspect-ratio: 4 / 3;
-              width: 800px;
-              border: 2px solid blue;
-              transform: scale(0.5);
-              transform-origin: top left;
-            }
-          </style>
-        </template>
-      </item-container>
+      <div style="display: flex; flex-direction: column; gap: 1rem; align-items: start">
+        <item-container style="width: 400px; height: 350px; display: block;" item-url=${args['item-url'] as string}>
+          <template>
+            <style>
+              qti-assessment-item {
+                padding: 1rem;
+                display: block;
+                aspect-ratio: 4 / 3;
+                width: 800px;
+                border: 2px solid blue;
+                transform: scale(0.5);
+                transform-origin: top left;
+              }
+            </style>
+          </template>
+        </item-container>
 
-      <item-show-correct-response ${spread(args)}></item-show-correct-response>
-      <!-- </div> -->
+        <item-correct-response-mode></item-correct-response-mode>
+        <item-show-correct-response ${spread(args)}></item-show-correct-response>
+      </div>
     </qti-item>`;
   },
 

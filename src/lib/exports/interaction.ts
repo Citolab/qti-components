@@ -1,10 +1,18 @@
 import { property, state } from 'lit/decorators.js';
 import { LitElement } from 'lit';
+import { consume } from '@lit/context';
 
+import { copyElement } from './copy-element.ts';
+import { computedItemContext } from './computed-item.context.ts';
+
+import type { ComputedItemContext } from './computed-item.context.ts';
 import type { ResponseVariable } from './variables';
 import type { IInteraction } from './interaction.interface';
 
 export abstract class Interaction extends LitElement implements IInteraction {
+  @consume({ context: computedItemContext, subscribe: true })
+  private itemContext: ComputedItemContext;
+
   static formAssociated = true;
   protected _internals: ElementInternals;
 
@@ -13,6 +21,17 @@ export abstract class Interaction extends LitElement implements IInteraction {
   @property({ reflect: true, type: Boolean }) disabled = false;
 
   @property({ reflect: true, type: Boolean }) readonly = false;
+
+  @state()
+  protected _isFullCorrectResponse: boolean;
+
+  get isFullCorrectResponse(): Readonly<boolean> {
+    return this._isFullCorrectResponse;
+  }
+
+  set isFullCorrectResponse(val: Readonly<boolean>) {
+    this._isFullCorrectResponse = val as boolean;
+  }
 
   /* PK: Correct response */
   @state()
@@ -38,6 +57,37 @@ export abstract class Interaction extends LitElement implements IInteraction {
   }
 
   public toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
+    if (this.itemContext?.correctResponseMode === 'full') {
+      this.toggleFullCorrectResponse(responseVariable, show);
+    } else {
+      this.toggleInternalCorrectResponse(responseVariable, show);
+    }
+  }
+
+  protected async toggleFullCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
+    if (show) {
+      // Add a clone of interaction with the correct response
+      const clone = copyElement(this) as Interaction;
+      clone.isFullCorrectResponse = true;
+
+      const containerDiv = document.createElement('div');
+      containerDiv.classList.add('full-correct-response');
+      containerDiv.appendChild(clone);
+      clone.setAttribute('response-identifier', this.responseIdentifier + '_cr');
+
+      this.parentElement?.insertBefore(containerDiv, this.nextElementSibling);
+      await clone.updateComplete;
+
+      clone.response = Array.isArray(responseVariable.correctResponse)
+        ? [...responseVariable.correctResponse] as string[]
+        : responseVariable.correctResponse as string;
+    } else {
+      // Remove cloned interaction
+      this.parentElement?.removeChild(this.nextElementSibling);
+    }
+  }
+
+  protected toggleInternalCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
     this.correctResponse = show
       ? responseVariable?.correctResponse
       : responseVariable?.cardinality === 'single'
@@ -101,6 +151,10 @@ export abstract class Interaction extends LitElement implements IInteraction {
 
   public override connectedCallback() {
     super.connectedCallback();
+
+    if (this.isFullCorrectResponse) {
+      return;
+    }
 
     this.dispatchEvent(
       new CustomEvent('qti-register-interaction', {

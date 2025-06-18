@@ -2,7 +2,7 @@ import { provide } from '@lit/context';
 import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
-import { watch } from '../../decorators/watch';
+import { watch } from '../../decorators';
 import { itemContext } from '../../exports/qti-assessment-item.context';
 import { itemContextVariables } from '../../exports/item.context';
 
@@ -15,6 +15,7 @@ import type { QtiResponseProcessing } from '../qti-response-processing';
 import type QtiRegisterVariable from '../internal/events/qti-register-variable';
 import type { ItemContext } from '../../exports/item.context';
 import type { Interaction } from '../../exports/interaction';
+
 /**
  * @summary The qti-assessment-item element contains all the other QTI 3 item structures.
  * @documentation https://www.imsglobal.org/spec/qti/v3p0/impl#h.dltnnj87l0yj
@@ -56,7 +57,7 @@ export class QtiAssessmentItem extends LitElement {
 
   @provide({ context: itemContext })
   private _context: ItemContext = {
-    variables: itemContextVariables
+    variables: itemContextVariables,
   };
 
   /**
