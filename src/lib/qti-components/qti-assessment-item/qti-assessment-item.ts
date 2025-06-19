@@ -372,13 +372,7 @@ export class QtiAssessmentItem extends LitElement {
     };
 
     // Turn off candidate correction after change of response variable
-    this.dispatchEvent(
-      new CustomEvent<boolean>('item-show-candidate-correction', {
-        bubbles: true,
-        composed: true,
-        detail: false
-      })
-    );
+    this.showCandidateCorrection(false);
 
     this.dispatchEvent(
       new CustomEvent<InteractionChangedDetails>('qti-interaction-changed', {
