@@ -1,9 +1,7 @@
 import { html } from 'lit';
-// import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { QtiTest } from './qti-test';
-// const { events, args, argTypes, template } = getStorybookHelpers('qti-test');
 
 type Story = StoryObj<QtiTest>;
 
@@ -38,7 +36,7 @@ export default meta;
 // };
 
 export const Unstyled: Story = {
-  render: args => {
+  render: () => {
     return html`<qti-test navigate="item"
       ><test-navigation
         ><test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"></test-container>

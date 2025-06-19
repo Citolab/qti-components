@@ -8,7 +8,7 @@ import drag from '../../../../testing/drag';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { QtiAssessmentItem, QtiMatchInteraction } from '../../';
-import type { InputType } from '@storybook/core/types';
+import type { InputType } from 'storybook/internal/types';
 
 import '../../../../item.css';
 
