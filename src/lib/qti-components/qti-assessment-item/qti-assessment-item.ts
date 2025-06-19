@@ -6,6 +6,7 @@ import { watch } from '../../decorators';
 import { itemContext } from '../../exports/qti-assessment-item.context';
 import { itemContextVariables } from '../../exports/item.context';
 
+import type { ItemShowCandidateCorrection } from '../../qti-item/components/item-show-candidate-correction.ts';
 import type { InteractionChangedDetails, OutcomeChangedDetails } from '../internal/event-types';
 import type { ResponseInteraction } from '../../exports/expression-result';
 import type { VariableDeclaration, VariableValue } from '../../exports/variables';
@@ -15,6 +16,7 @@ import type { QtiResponseProcessing } from '../qti-response-processing';
 import type QtiRegisterVariable from '../internal/events/qti-register-variable';
 import type { ItemContext } from '../../exports/item.context';
 import type { Interaction } from '../../exports/interaction';
+import type { ItemShowCorrectResponse } from '../../qti-item/components/item-show-correct-response.ts';
 
 /**
  * @summary The qti-assessment-item element contains all the other QTI 3 item structures.
@@ -260,6 +262,11 @@ export class QtiAssessmentItem extends LitElement {
         interaction.toggleCorrectResponse(responseVariable, show);
       }
     }
+
+    // Update one or more toggle component states
+    document.querySelectorAll('item-show-correct-response').forEach((el: ItemShowCorrectResponse) => {
+      el.shown = show;
+    })
   }
 
   /**
@@ -283,6 +290,11 @@ export class QtiAssessmentItem extends LitElement {
         interaction.toggleCandidateCorrection(responseVariable, show);
       }
     }
+
+    // Update one or more toggle component states
+    document.querySelectorAll('item-show-candidate-correction').forEach((el: ItemShowCandidateCorrection) => {
+      el.shown = show;
+    })
   }
 
   public processResponse(countNumAttempts = true, reportValidityAfterScoring = true): boolean {
