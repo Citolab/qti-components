@@ -2,7 +2,6 @@ import { property, state } from 'lit/decorators.js';
 import { LitElement } from 'lit';
 import { consume } from '@lit/context';
 
-import { copyElement } from './copy-element.ts';
 import { computedItemContext } from './computed-item.context.ts';
 
 import type { ComputedItemContext } from './computed-item.context.ts';
@@ -67,7 +66,7 @@ export abstract class Interaction extends LitElement implements IInteraction {
   protected async toggleFullCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
     if (show) {
       // Add a clone of interaction with the correct response
-      const clone = copyElement(this) as Interaction;
+      const clone = this.cloneNode(true) as Interaction;
       clone.isFullCorrectResponse = true;
 
       const containerDiv = document.createElement('div');
