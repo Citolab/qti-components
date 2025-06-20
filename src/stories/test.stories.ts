@@ -1,5 +1,5 @@
 import { html } from 'lit';
-import { useArgs } from '@storybook/preview-api';
+import { useArgs } from 'storybook/preview-api';
 
 import packages from '../assets/packages.json';
 import { getManifestInfo } from '../lib/qti-loader';
