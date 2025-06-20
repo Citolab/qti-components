@@ -71,9 +71,12 @@ export abstract class Interaction extends LitElement implements IInteraction {
     const nextSiblingIsFullCorrectResponse = nextSibling?.classList.contains('full-correct-response');
 
     if (show) {
-      if (nextSiblingIsFullCorrectResponse) {
-        return; // Already exists
+      const isCorrect = responseVariable.correctResponse === responseVariable.value;
+
+      if (nextSiblingIsFullCorrectResponse || isCorrect) {
+        return; // Already exists or don't show with the correct answer responded
       }
+
       // Add a clone of interaction with the correct response
       const clone = this.cloneNode(true) as Interaction;
       clone.isFullCorrectResponse = true;
