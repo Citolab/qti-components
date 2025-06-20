@@ -206,6 +206,23 @@ export class TestNavigation extends LitElement {
         }
       };
     }
+
+    // Process qti-context-declaration elements to get default values
+    const contextDeclarations = this._testElement.querySelectorAll('qti-context-declaration[identifier="QTI_CONTEXT"]');
+
+    contextDeclarations.forEach(declaration => {
+      const defaultValues = this._extractDefaultValues(declaration);
+      if (Object.keys(defaultValues).length > 0) {
+        // Merge default values with current context, but don't override existing runtime values
+        this.qtiContext = {
+          QTI_CONTEXT: {
+            ...defaultValues, // Default values first
+            ...this.qtiContext.QTI_CONTEXT // Runtime values override defaults
+          }
+        };
+      }
+    });
+
     const testPartElements = Array.from(this._testElement?.querySelectorAll<QtiTestPart>(`qti-test-part`) || []);
     this.computedContext = {
       identifier: this._testElement.identifier,
@@ -237,6 +254,49 @@ export class TestNavigation extends LitElement {
         };
       })
     };
+  }
+
+  /**
+   * Extract default values from a qti-context-declaration element
+   */
+  private _extractDefaultValues(declaration: Element): Record<string, any> {
+    const defaultValues: Record<string, any> = {};
+
+    const defaultValueElement = declaration.querySelector('qti-default-value');
+    if (!defaultValueElement) {
+      return defaultValues;
+    }
+
+    const valueElements = defaultValueElement.querySelectorAll('qti-value[field-identifier]');
+    valueElements.forEach(valueElement => {
+      const fieldIdentifier = valueElement.getAttribute('field-identifier');
+      const baseType = valueElement.getAttribute('base-type') || 'string';
+      const textContent = valueElement.textContent?.trim() || '';
+
+      if (fieldIdentifier) {
+        // Convert value based on base-type
+        let value: any = textContent;
+        switch (baseType) {
+          case 'integer':
+            value = parseInt(textContent, 10);
+            break;
+          case 'float':
+            value = parseFloat(textContent);
+            break;
+          case 'boolean':
+            value = textContent.toLowerCase() === 'true';
+            break;
+          case 'string':
+          default:
+            value = textContent;
+            break;
+        }
+
+        defaultValues[fieldIdentifier] = value;
+      }
+    });
+
+    return defaultValues;
   }
 
   /* PK: on item connected we can add item only properties in the xml */
