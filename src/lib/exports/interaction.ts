@@ -77,6 +77,7 @@ export abstract class Interaction extends LitElement implements IInteraction {
       // Add a clone of interaction with the correct response
       const clone = this.cloneNode(true) as Interaction;
       clone.isFullCorrectResponse = true;
+      clone.disabled = true;
 
       const containerDiv = document.createElement('div');
       containerDiv.classList.add('full-correct-response');
