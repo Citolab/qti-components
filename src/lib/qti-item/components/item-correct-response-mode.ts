@@ -2,14 +2,14 @@ import { html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { consume } from '@lit/context';
 
-import { computedItemContext } from '../../exports/computed-item.context.ts';
+import { configContext } from '../../exports/config.context.ts';
 
-import type { ComputedItemContext, CorrectResponseMode } from '../../exports/computed-item.context.ts';
+import type { ConfigContext, CorrectResponseMode } from '../../exports/config.context.ts';
 
 @customElement('item-correct-response-mode')
 export class ItemCorrectResponseMode extends LitElement {
-  @consume({ context: computedItemContext, subscribe: true })
-  private itemContext: ComputedItemContext;
+  @consume({ context: configContext, subscribe: true })
+  private itemContext: ConfigContext;
 
   @property({ type: String })
   label = 'Correct response mode';

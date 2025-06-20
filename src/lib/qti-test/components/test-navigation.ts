@@ -11,7 +11,6 @@ import { configContext } from '../../exports/config.context';
 // import type { View } from '../core/mixins/test-view.mixin';
 // import type { TemplateFunction } from 'stampino';
 
-import type { CorrectResponseMode } from '../../exports/computed-item.context.ts';
 import type { QtiAssessmentItem } from '../../qti-components';
 import type { OutcomeVariable } from '../../exports/variables';
 import type { ComputedContext } from '../../exports/computed.context';
@@ -54,8 +53,6 @@ export class TestNavigation extends LitElement {
   protected computedContext: ComputedContext;
 
   @property({ type: Boolean, attribute: 'auto-score-items' }) autoScoreItems = false;
-
-  @property({ type: String, attribute: 'correct-response-mode' }) correctResponseMode = 'internal';
 
   // @state()
   // private stampContext: {
@@ -208,7 +205,6 @@ export class TestNavigation extends LitElement {
                 categories: item.category ? item.category?.split(' ') : [],
                 href: item.href,
                 variables: [],
-                correctResponseMode: this.correctResponseMode as CorrectResponseMode
               }))
             };
           })

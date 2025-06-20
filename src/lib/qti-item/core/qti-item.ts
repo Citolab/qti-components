@@ -3,11 +3,13 @@ import { html, LitElement } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 
 import { computedItemContext } from '../../exports/computed-item.context';
+import { configContext } from '../../exports/config.context.ts';
 
+import type { ConfigContext, CorrectResponseMode} from '../../exports/config.context.ts';
 import type { QtiAssessmentItem } from '../../qti-components';
 import type { ItemContext } from '../../exports/item.context';
 import type { VariableDeclaration } from '../../exports/variables';
-import type { ComputedItemContext , CorrectResponseMode } from '../../exports/computed-item.context';
+import type { ComputedItemContext } from '../../exports/computed-item.context';
 
 /**
  * `<qti-item>` is a custom element designed for rendering a single `qti-assessment-item`.
@@ -23,10 +25,15 @@ import type { ComputedItemContext , CorrectResponseMode } from '../../exports/co
  */
 @customElement('qti-item')
 export class QtiItem extends LitElement {
+
   @state()
   @provide({ context: computedItemContext })
   public computedContext: ComputedItemContext;
   private _qtiAssessmentItem?: QtiAssessmentItem;
+
+  @state()
+  @provide({ context: configContext })
+  public configContext: ConfigContext = {};
 
   // Store event handlers as instance properties
   private _onItemContextChanged = this._handleItemContextChanged.bind(this);
@@ -80,8 +87,8 @@ export class QtiItem extends LitElement {
     // Switch off the correct response first
     this._handleShowCorrectResponse(new CustomEvent('item-show-correct-response', { detail: false, bubbles: true }));
 
-    this.computedContext = {
-      ...this.computedContext,
+    this.configContext = {
+      ...this.configContext,
       correctResponseMode: e.detail
     };
   }

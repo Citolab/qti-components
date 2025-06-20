@@ -2,15 +2,16 @@ import { property, state } from 'lit/decorators.js';
 import { LitElement } from 'lit';
 import { consume } from '@lit/context';
 
-import { computedItemContext } from './computed-item.context.ts';
+import { configContext } from './config.context.ts';
 
-import type { ComputedItemContext } from './computed-item.context.ts';
+import type { ConfigContext } from './config.context.ts';
 import type { ResponseVariable } from './variables';
 import type { IInteraction } from './interaction.interface';
 
 export abstract class Interaction extends LitElement implements IInteraction {
-  @consume({ context: computedItemContext, subscribe: true })
-  private itemContext: ComputedItemContext;
+
+  @consume({ context: configContext, subscribe: true })
+  private configContext: ConfigContext;
 
   static formAssociated = true;
   protected _internals: ElementInternals;
@@ -56,7 +57,9 @@ export abstract class Interaction extends LitElement implements IInteraction {
   }
 
   public toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
-    if (this.itemContext?.correctResponseMode === 'full') {
+    const correctResponseMode = this?.configContext?.correctResponseMode || 'internal'
+
+    if (correctResponseMode === 'full') {
       this.toggleFullCorrectResponse(responseVariable, show);
     } else {
       this.toggleInternalCorrectResponse(responseVariable, show);
@@ -64,13 +67,20 @@ export abstract class Interaction extends LitElement implements IInteraction {
   }
 
   protected async toggleFullCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
+    const nextSibling = this.nextElementSibling;
+    const nextSiblingIsFullCorrectResponse = nextSibling?.classList.contains('full-correct-response');
+
     if (show) {
+      if (nextSiblingIsFullCorrectResponse) {
+        return; // Already exists
+      }
       // Add a clone of interaction with the correct response
       const clone = this.cloneNode(true) as Interaction;
       clone.isFullCorrectResponse = true;
 
       const containerDiv = document.createElement('div');
       containerDiv.classList.add('full-correct-response');
+      containerDiv.role = 'full-correct-response';
       containerDiv.appendChild(clone);
       clone.setAttribute('response-identifier', this.responseIdentifier + '_cr');
 
@@ -81,8 +91,11 @@ export abstract class Interaction extends LitElement implements IInteraction {
         ? [...responseVariable.correctResponse] as string[]
         : responseVariable.correctResponse as string;
     } else {
+      if (!nextSiblingIsFullCorrectResponse) {
+        return;
+      }
       // Remove cloned interaction
-      this.parentElement?.removeChild(this.nextElementSibling);
+      this.parentElement?.removeChild(nextSibling);
     }
   }
 
