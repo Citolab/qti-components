@@ -9,6 +9,7 @@ export * from './qti-equal/qti-equal';
 export * from './qti-gt/qti-gt';
 export * from './qti-gte/qti-gte';
 export * from './qti-is-null/qti-is-null';
+export * from './qti-field-value/qti-field-value';
 export * from './qti-lt/qti-lt';
 export * from './qti-lte/qti-lte';
 export * from './qti-map-response/qti-map-response';

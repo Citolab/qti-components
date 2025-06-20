@@ -1,15 +1,18 @@
 import { consume, provide } from '@lit/context';
 import { html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-// import { prepareTemplate } from 'stampino';
 
+// import { prepareTemplate } from 'stampino';
+import { configContext } from '../../exports/config.context';
 import { testContext } from '../../exports/test.context';
 import { sessionContext } from '../../exports/session.context';
 import { computedContext } from '../../exports/computed.context';
-import { configContext } from '../../exports/config.context';
 
 // import type { View } from '../core/mixins/test-view.mixin';
 // import type { TemplateFunction } from 'stampino';
+import { qtiContext } from '../../exports/qti.context';
+
+import type { QtiContext } from '../../exports/qti.context';
 import type { QtiAssessmentItem } from '../../qti-components';
 import type { OutcomeVariable } from '../../exports/variables';
 import type { ComputedContext } from '../../exports/computed.context';
@@ -34,6 +37,16 @@ export class TestNavigation extends LitElement {
 
   @state()
   public initContext: { identifier: string; [key: string]: any }[] = [];
+
+  @state()
+  @provide({ context: qtiContext })
+  public qtiContext: QtiContext = {
+    QTI_CONTEXT: {
+      testIdentifier: '',
+      candidateIdentifier: '',
+      environmentIdentifier: 'default'
+    }
+  };
 
   @state()
   @provide({ context: configContext })
@@ -178,6 +191,21 @@ export class TestNavigation extends LitElement {
   /* PK: on test connected we can build the computed context */
   private _handleTestConnected(event: CustomEvent) {
     this._testElement = event.detail as QtiAssessmentTest;
+    // Set the testIdentifier in qtiContext if not already set
+    if (!this.qtiContext.QTI_CONTEXT?.testIdentifier) {
+      const currentContext = this.qtiContext.QTI_CONTEXT || {
+        testIdentifier: '',
+        candidateIdentifier: 'not set',
+        environmentIdentifier: 'default'
+      };
+      this.qtiContext = {
+        QTI_CONTEXT: {
+          ...currentContext,
+          testIdentifier: this._testElement.identifier,
+          environmentIdentifier: currentContext.environmentIdentifier || 'default'
+        }
+      };
+    }
     const testPartElements = Array.from(this._testElement?.querySelectorAll<QtiTestPart>(`qti-test-part`) || []);
     this.computedContext = {
       identifier: this._testElement.identifier,

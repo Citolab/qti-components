@@ -4,7 +4,7 @@ import type { BaseType, Cardinality } from './expression-result';
 export interface VariableValue<T> {
   identifier: string;
   value: Readonly<T>;
-  type: 'outcome' | 'response';
+  type: 'outcome' | 'response' | 'context';
 }
 
 export interface VariableDeclaration<T> extends VariableValue<T> {

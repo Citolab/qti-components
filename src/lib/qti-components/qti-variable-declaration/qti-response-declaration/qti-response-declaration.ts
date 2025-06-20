@@ -7,7 +7,7 @@ import { QtiVariableDeclaration } from '../qti-variable-declaration';
 
 import type { QtiAreaMapping } from '../../qti-response-processing';
 import type { BaseType, Cardinality } from '../../../exports/expression-result';
-import type { ResponseVariable } from '../../../exports/variables';
+import type { ResponseVariable, VariableDeclaration } from '../../../exports/variables';
 import type { QtiMapping } from '../../qti-response-processing/qti-expression/qti-mapping/qti-mapping';
 import type { ItemContext } from '../../../exports/item.context';
 
@@ -50,7 +50,7 @@ export class QtiResponseDeclaration extends QtiVariableDeclaration {
       type: 'response',
       candidateResponse: null
     };
-    responseVariable.value = this.defaultValues(responseVariable);
+    responseVariable.value = this.defaultValues(responseVariable as VariableDeclaration<string | string[] | null>);
 
     this.dispatchEvent(
       new CustomEvent('qti-register-variable', {
