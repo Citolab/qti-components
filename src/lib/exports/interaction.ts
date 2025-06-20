@@ -70,37 +70,41 @@ export abstract class Interaction extends LitElement implements IInteraction {
     const nextSibling = this.nextElementSibling;
     const nextSiblingIsFullCorrectResponse = nextSibling?.classList.contains('full-correct-response');
 
-    if (show) {
-      const isCorrect = responseVariable.correctResponse === responseVariable.value;
+    const isCorrect = responseVariable.correctResponse === responseVariable.value;
 
-      if (nextSiblingIsFullCorrectResponse || isCorrect) {
-        return; // Already exists or don't show with the correct answer responded
-      }
-
-      // Add a clone of interaction with the correct response
-      const clone = this.cloneNode(true) as Interaction;
-      clone.isFullCorrectResponse = true;
-      clone.disabled = true;
-
-      const containerDiv = document.createElement('div');
-      containerDiv.classList.add('full-correct-response');
-      containerDiv.role = 'full-correct-response';
-      containerDiv.appendChild(clone);
-      clone.setAttribute('response-identifier', this.responseIdentifier + '_cr');
-
-      this.parentElement?.insertBefore(containerDiv, this.nextElementSibling);
-      await clone.updateComplete;
-
-      clone.response = Array.isArray(responseVariable.correctResponse)
-        ? [...responseVariable.correctResponse] as string[]
-        : responseVariable.correctResponse as string;
-    } else {
+    if (!show || isCorrect) { // Don't show with the correct answer responded
       if (!nextSiblingIsFullCorrectResponse) {
         return;
       }
       // Remove cloned interaction
       this.parentElement?.removeChild(nextSibling);
     }
+
+    if (nextSiblingIsFullCorrectResponse) {
+      return; // Already exists
+    }
+
+    if (isCorrect) {
+      return;
+    }
+
+    // Add a clone of interaction with the correct response
+    const clone = this.cloneNode(true) as Interaction;
+    clone.isFullCorrectResponse = true;
+    clone.disabled = true;
+
+    const containerDiv = document.createElement('div');
+    containerDiv.classList.add('full-correct-response');
+    containerDiv.role = 'full-correct-response';
+    containerDiv.appendChild(clone);
+    clone.setAttribute('response-identifier', this.responseIdentifier + '_cr');
+
+    this.parentElement?.insertBefore(containerDiv, this.nextElementSibling);
+    await clone.updateComplete;
+
+    clone.response = Array.isArray(responseVariable.correctResponse)
+      ? [...responseVariable.correctResponse] as string[]
+      : responseVariable.correctResponse as string;
   }
 
   protected toggleInternalCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
