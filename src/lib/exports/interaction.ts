@@ -105,6 +105,10 @@ export abstract class Interaction extends LitElement implements IInteraction {
     clone.response = Array.isArray(responseVariable.correctResponse)
       ? [...responseVariable.correctResponse] as string[]
       : responseVariable.correctResponse as string;
+
+    const responseVariableClone = { ...responseVariable };
+    responseVariableClone.value = responseVariable.correctResponse;
+    clone.toggleCandidateCorrection(responseVariableClone, true);
   }
 
   protected toggleInternalCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
