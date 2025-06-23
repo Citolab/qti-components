@@ -3,10 +3,10 @@ import { html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
 // import { prepareTemplate } from 'stampino';
+import { computedContext } from '../../exports/computed.context';
 import { configContext } from '../../exports/config.context';
 import { testContext } from '../../exports/test.context';
 import { sessionContext } from '../../exports/session.context';
-import { computedContext } from '../../exports/computed.context';
 
 // import type { View } from '../core/mixins/test-view.mixin';
 // import type { TemplateFunction } from 'stampino';
@@ -281,6 +281,7 @@ export class TestNavigation extends LitElement {
             value = parseInt(textContent, 10);
             break;
           case 'float':
+          case 'duration':
             value = parseFloat(textContent);
             break;
           case 'boolean':

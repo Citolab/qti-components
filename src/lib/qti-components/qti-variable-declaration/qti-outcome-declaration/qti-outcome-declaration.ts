@@ -55,10 +55,14 @@ export class QtiOutcomeDeclaration extends QtiVariableDeclaration {
 
   public override connectedCallback() {
     super.connectedCallback();
+
+    const defaultValue = this.defaultValues(this.cardinality);
+
     const outcomeVariable: OutcomeVariable = {
       identifier: this.identifier,
       cardinality: this.cardinality,
       baseType: this.baseType,
+      defaultValue: defaultValue,
       type: 'outcome',
       value: null,
       interpolationTable: this.interpolationTable,
@@ -67,7 +71,7 @@ export class QtiOutcomeDeclaration extends QtiVariableDeclaration {
     // At runtime, outcome variables are instantiated as part of an item session.
     // Their values may be initialized with a default value and/or set during response processing.
     // If no default value is given in the declaration then the outcome variable is initialized to NULL unless the outcome is of a numeric type (integer or float) in which case it is initialized to 0.
-    outcomeVariable.value = this.defaultValues(outcomeVariable);
+    outcomeVariable.value = defaultValue;
     if (
       (outcomeVariable.value === null || outcomeVariable.value == undefined) &&
       (outcomeVariable.baseType === 'integer' || outcomeVariable.baseType === 'float')

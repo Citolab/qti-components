@@ -195,7 +195,7 @@ describe('qti-lookup-outcome-value', () => {
     const assessmentItem = setupQtiAssessmentItem2();
 
     const lookupOutcomeValue = assessmentItem!.querySelector('qti-lookup-outcome-value') as QtiLookupOutcomeValue;
-
+    console.debug('lookupOutcomeValue', lookupOutcomeValue);
     assessmentItem.updateResponseVariable('RESPONSE', 'B');
     assessmentItem.processResponse();
 

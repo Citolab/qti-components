@@ -4,11 +4,11 @@ import { customElement, state } from 'lit/decorators.js';
 
 import { computedItemContext } from '../../exports/computed-item.context';
 
+import type { ItemShowCandidateCorrection } from '../components/item-show-candidate-correction.ts';
 import type { QtiAssessmentItem } from '../../qti-components';
 import type { ItemContext } from '../../exports/item.context';
 import type { VariableDeclaration } from '../../exports/variables';
 import type { ComputedItemContext } from '../../exports/computed-item.context';
-import { ItemShowCandidateCorrection } from '../components/item-show-candidate-correction.ts';
 
 /**
  * `<qti-item>` is a custom element designed for rendering a single `qti-assessment-item`.
@@ -74,7 +74,7 @@ export class QtiItem extends LitElement {
     // Update one or more toggle component states
     this.querySelectorAll('item-show-candidate-correction').forEach((el: ItemShowCandidateCorrection) => {
       el.shown = e.detail;
-    })
+    });
   }
 
   private _updateItemVariablesInTestContext(
