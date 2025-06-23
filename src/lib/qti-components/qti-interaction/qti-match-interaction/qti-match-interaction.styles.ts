@@ -8,7 +8,6 @@ export default css`
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    align-items: flex-start; /* prevents the drag and drop container slots having the same height */
   }
   :host(.qti-choices-top) slot {
     flex-direction: column;

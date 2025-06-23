@@ -127,6 +127,131 @@ const multipleAssociationsTemplate = html` <qti-match-interaction
   </qti-simple-match-set>
 </qti-match-interaction>`;
 
+const multipleAssociations2Template = html`
+  <div>
+    <p>Which properties do the following animal classes have?</p>
+
+    <qti-match-interaction max-associations="3" response-identifier="RESPONSE">
+      <qti-simple-match-set>
+        <qti-simple-associable-choice identifier="r1" match-max="0">
+          <p>Asexual</p>
+        </qti-simple-associable-choice>
+        <qti-simple-associable-choice identifier="r2" match-max="0">
+          <p>Endothermic</p>
+        </qti-simple-associable-choice>
+        <qti-simple-associable-choice identifier="r3" match-max="0">
+          <p>Possess Gills</p>
+        </qti-simple-associable-choice>
+        <qti-simple-associable-choice identifier="r4" match-max="0">
+          <p>Bear Live Young</p>
+        </qti-simple-associable-choice>
+      </qti-simple-match-set>
+      <qti-simple-match-set>
+        <qti-simple-associable-choice identifier="h1" match-max="2">Birds</qti-simple-associable-choice>
+        <qti-simple-associable-choice identifier="h2" match-max="2">Reptiles</qti-simple-associable-choice>
+        <qti-simple-associable-choice identifier="h3" match-max="2">Mammals</qti-simple-associable-choice>
+      </qti-simple-match-set>
+    </qti-match-interaction>
+  </div>
+  <p>Select all choices that apply.</p>
+`;
+
+const optionsRightTemplate = html`
+  <qti-match-interaction response-identifier="RESPONSE" shuffle="true" max-associations="4" class="qti-choices-right">
+    <qti-prompt>Combineer de teksten</qti-prompt>
+    <qti-simple-match-set>
+      <qti-simple-associable-choice identifier="A1" match-max="1">Berlijn</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="A2" match-max="1">Amsterdam</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="A3" match-max="1">Parijs</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="A4" match-max="1">Brussel</qti-simple-associable-choice>
+    </qti-simple-match-set>
+    <qti-simple-match-set>
+      <qti-simple-associable-choice identifier="B1" match-max="1">Duitsland</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="B2" match-max="1">Nederland</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="B3" match-max="1">Frankrijk</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="B4" match-max="1">Belgie</qti-simple-associable-choice>
+    </qti-simple-match-set>
+  </qti-match-interaction>
+`;
+
+const manyOptionsTemplate = html`
+  <div>
+    <p><strong>Organellen en hun functies.</strong><br/><br/>Geef in het overzicht van de verschillende organellen in cellen hun functies.</p>
+  </div>
+  <qti-match-interaction response-identifier="RESPONSE" shuffle="true" max-associations="7">
+    <qti-simple-match-set>
+      <qti-simple-associable-choice identifier="A1" fixed="false" match-max="1" match-min="0">
+        endoplasmatisch reticulum
+      </qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="A2" fixed="false" match-max="1" match-min="0">
+        ribosomen
+      </qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="A3" fixed="false" match-max="1" match-min="0">
+        mitochondriën
+      </qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="A4" fixed="false" match-max="1" match-min="0">
+        lysosomen
+      </qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="A5" fixed="false" match-max="1" match-min="0">
+        golgi-apparaat
+      </qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="A6" fixed="false" match-max="1" match-min="0">
+        kern
+      </qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="A7" fixed="false" match-max="1" match-min="0">
+        centrosomen
+
+      </qti-simple-associable-choice>
+    </qti-simple-match-set>
+    <qti-simple-match-set>
+      <qti-simple-associable-choice identifier="B1" fixed="false" match-max="1" match-min="0">
+        isolatie en vervoer van eiwitten
+      </qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="B2" fixed="false" match-max="1" match-min="0">
+        aanmaak van eiwitten
+      </qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="B3" fixed="false" match-max="1" match-min="0">
+        energieproductie
+      </qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="B4" fixed="false" match-max="1" match-min="0">
+        afbreken en/of uitstoten van afval uit de cel
+      </qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="B5" fixed="false" match-max="1" match-min="0">
+        opslag van celproducten
+      </qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="B6" fixed="false" match-max="1" match-min="0">
+        besturing en voortplanting van de cel
+      </qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="B7" fixed="false" match-max="1" match-min="0">
+        vorming van draden bij de kerndeling
+
+      </qti-simple-associable-choice>
+    </qti-simple-match-set>
+  </qti-match-interaction>
+`;
+
+const withImagesTemplate = html`
+  <qti-match-interaction response-identifier="RESPONSE" shuffle="true" max-associations="3" class="qti-choices-bottom">
+    <qti-prompt>Hoe heet iedereen?</qti-prompt>
+    <qti-simple-match-set>
+      <qti-simple-associable-choice identifier="A1" match-max="1">Ernie</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="A2" match-max="1">Pino</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="A3" match-max="1">Kermit</qti-simple-associable-choice>
+    </qti-simple-match-set>
+    <qti-simple-match-set>
+      <qti-simple-associable-choice identifier="B1" match-max="1">
+        <img src="qti-match-interaction/8c571f983f691e42e7b3a0dc2664e51d.png" alt="afbeelding"/>
+      </qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="B2" match-max="1">
+        <img src="qti-match-interaction/80378beafd6b12ab7b97899ce39a2b78.jpg" alt="afbeelding"/>
+      </qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="B3" match-max="1">
+        <img src="qti-match-interaction/72c4b1f4ea9f7ba5548683c37806580e.png" alt="afbeelding"/>
+      </qti-simple-associable-choice>
+    </qti-simple-match-set>
+  </qti-match-interaction>
+`;
+
 export const Test: Story = {
   render: () => testTemplate,
   play: async ({ canvasElement, step }) => {
@@ -226,6 +351,34 @@ export const Test2: Story = {
 
 export const DragMultiple: Story = {
   render: () => multipleAssociationsTemplate,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+  }
+};
+
+export const DragMultiple2: Story = {
+  render: () => multipleAssociations2Template,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+  }
+};
+
+export const OptionsRight: Story = {
+  render: () => optionsRightTemplate,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+  }
+};
+
+export const ManyOptions: Story = {
+  render: () => manyOptionsTemplate,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+  }
+};
+
+export const WithImages: Story = {
+  render: () => withImagesTemplate,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
   }
