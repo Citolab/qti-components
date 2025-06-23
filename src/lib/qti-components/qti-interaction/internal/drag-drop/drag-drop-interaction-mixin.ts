@@ -259,7 +259,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
         (this.querySelector(dragContainersSelector) as HTMLElement) ||
         (this.shadowRoot?.querySelector(dragContainersSelector) as HTMLElement);
 
-      const dropContainer = droppables[0].parentElement;
+      const dropContainer = droppables[0]?.parentElement;
       if (dropContainer) {
         dropContainer.style.gridTemplateColumns = `repeat(auto-fit, minmax(${maxWidth}px, 1fr))`;
       }
