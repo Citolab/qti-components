@@ -220,6 +220,13 @@ export const ChoiceFullCorrectResponse: Story = {
       await step('Verify correct response state is applied', async () => {
         const fullCorrectResponse = await canvas.findByShadowRole('full-correct-response');
         expect(fullCorrectResponse).toBeVisible();
+
+        const interaction = fullCorrectResponse.querySelector('qti-choice-interaction');
+        const choices = Array.from(interaction.querySelectorAll('qti-simple-choice'));
+
+        expect(choices[0].internals.states.has('candidate-correct')).toBe(true);
+        expect(choices[1].internals.states.has('candidate-correct')).toBe(false);
+        expect(choices[2].internals.states.has('candidate-correct')).toBe(false);
       });
     });
   }
@@ -319,6 +326,13 @@ export const MultipleResponseFullCorrectResponse: Story = {
       await step('Verify correct response full state is applied', async () => {
         const fullCorrectResponse = await canvas.findByShadowRole('full-correct-response');
         expect(fullCorrectResponse).toBeVisible();
+
+        const interaction = fullCorrectResponse.querySelector('qti-choice-interaction');
+        const choices = Array.from(interaction.querySelectorAll('qti-simple-choice'));
+
+        expect(choices[0].internals.states.has('candidate-correct')).toBe(true);
+        expect(choices[1].internals.states.has('candidate-correct')).toBe(true);
+        expect(choices[2].internals.states.has('candidate-correct')).toBe(false);
       });
     });
   }
