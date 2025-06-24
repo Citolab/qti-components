@@ -131,7 +131,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
       this.updateMinDimensionsForDropZones();
 
-      // MutationObserver to observe changes in childrd elements
+      // MutationObserver to observe changes in child elements
       this.observer = new MutationObserver(() => this.updateMinDimensionsForDropZones());
       this.observer.observe(this, { childList: true, subtree: true });
 
@@ -242,14 +242,15 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       return this.classList.contains('qti-match-tabular');
     }
 
-    private updateMinDimensionsForDropZones() {
+    private async updateMinDimensionsForDropZones() {
+      await this.updateComplete;
       if (this.isMatchTabular()) return;
-      const gapTexts = this.querySelectorAll(draggablesSelector);
-      const gaps = Array.from(this.querySelectorAll(droppablesSelector)).map(d => d as HTMLElement);
+      const draggables = this.querySelectorAll(draggablesSelector);
+      const droppables = Array.from(this.querySelectorAll(droppablesSelector)).map(d => d as HTMLElement);
       let maxHeight = 0;
       let maxWidth = 0;
-      gapTexts.forEach(gapText => {
-        const rect = gapText.getBoundingClientRect();
+      draggables.forEach(draggable => {
+        const rect = draggable.getBoundingClientRect();
         maxHeight = Math.max(maxHeight, rect.height);
         maxWidth = Math.max(maxWidth, rect.width);
       });
@@ -258,13 +259,24 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
         (this.querySelector(dragContainersSelector) as HTMLElement) ||
         (this.shadowRoot?.querySelector(dragContainersSelector) as HTMLElement);
 
+      const dropContainer = droppables[0]?.parentElement;
+      if (dropContainer) {
+        dropContainer.style.gridTemplateColumns = `repeat(auto-fit, minmax(${maxWidth}px, 1fr))`;
+      }
+
       if (dragContainer) {
         dragContainer.style.minHeight = `${maxHeight}px`;
         dragContainer.style.minWidth = `${maxWidth}px`;
       }
-      for (const gap of gaps) {
-        gap.style.minHeight = `${maxHeight}px`;
-        gap.style.minWidth = `${maxWidth}px`;
+      for (const droppable of droppables) {
+        droppable.style.minHeight = `${maxHeight}px`;
+        droppable.style.minWidth = `${maxWidth}px`;
+
+        const dropSlot = droppable.shadowRoot?.querySelector('slot[part="dropslot"]');
+        if (dropSlot) {
+          dropSlot.style.minHeight = `${maxHeight}px`;
+          dropSlot.style.minWidth = `${maxWidth}px`;
+        }
       }
     }
 
@@ -755,6 +767,10 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
     private handleTouchStart(e) {
       if (this.isMatchTabular()) return;
+      if (e instanceof MouseEvent) {
+        // Only allow the left button
+        if (e.button !== 0) return;
+      }
       if (this.isDragging) {
         return;
       }

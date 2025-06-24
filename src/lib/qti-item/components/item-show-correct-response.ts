@@ -44,10 +44,10 @@ export class ItemShowCorrectResponse extends LitElement {
 
   private _toggleState() {
     if (this.disabled) return; // Prevent toggle if disabled
-    this.shown = !this.shown;
+
     this.dispatchEvent(
       new CustomEvent('item-show-correct-response', {
-        detail: this.shown,
+        detail: !this.shown,
         bubbles: true
       })
     );

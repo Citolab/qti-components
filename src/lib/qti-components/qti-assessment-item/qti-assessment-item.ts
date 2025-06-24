@@ -2,10 +2,11 @@ import { provide } from '@lit/context';
 import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
-import { watch } from '../../decorators/watch';
+import { watch } from '../../decorators';
 import { itemContext } from '../../exports/qti-assessment-item.context';
 import { itemContextVariables } from '../../exports/item.context';
 
+import type { ItemShowCandidateCorrection } from '../../qti-item/components/item-show-candidate-correction.ts';
 import type { QtiTemplateProcessing } from '../qti-template-processing/qti-template-declaration/qti-template-processing';
 import type { InteractionChangedDetails, OutcomeChangedDetails } from '../internal/event-types';
 import type { ResponseInteraction } from '../../exports/expression-result';
@@ -16,6 +17,8 @@ import type { QtiResponseProcessing } from '../qti-response-processing';
 import type QtiRegisterVariable from '../internal/events/qti-register-variable';
 import type { ItemContext } from '../../exports/item.context';
 import type { Interaction } from '../../exports/interaction';
+import type { ItemShowCorrectResponse } from '../../qti-item/components/item-show-correct-response.ts';
+
 /**
  * @summary The qti-assessment-item element contains all the other QTI 3 item structures.
  * @documentation https://www.imsglobal.org/spec/qti/v3p0/impl#h.dltnnj87l0yj
@@ -58,7 +61,7 @@ export class QtiAssessmentItem extends LitElement {
 
   @provide({ context: itemContext })
   private _context: ItemContext = {
-    variables: itemContextVariables
+    variables: itemContextVariables,
   };
 
   /**
@@ -263,6 +266,11 @@ export class QtiAssessmentItem extends LitElement {
         interaction.toggleCorrectResponse(responseVariable, show);
       }
     }
+
+    // Update one or more toggle component states
+    document.querySelectorAll('item-show-correct-response').forEach((el: ItemShowCorrectResponse) => {
+      el.shown = show;
+    })
   }
 
   /**
@@ -286,6 +294,11 @@ export class QtiAssessmentItem extends LitElement {
         interaction.toggleCandidateCorrection(responseVariable, show);
       }
     }
+
+    // Update one or more toggle component states
+    document.querySelectorAll('item-show-candidate-correction').forEach((el: ItemShowCandidateCorrection) => {
+      el.shown = show;
+    })
   }
 
   private _processTemplates(): void {
@@ -371,13 +384,7 @@ export class QtiAssessmentItem extends LitElement {
     };
 
     // Turn off candidate correction after change of response variable
-    this.dispatchEvent(
-      new CustomEvent<boolean>('item-show-candidate-correction', {
-        bubbles: true,
-        composed: true,
-        detail: false
-      })
-    );
+    this.showCandidateCorrection(false);
 
     this.dispatchEvent(
       new CustomEvent<InteractionChangedDetails>('qti-interaction-changed', {

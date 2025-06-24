@@ -18,7 +18,6 @@ export interface ChoicesInterface extends IInteraction {
   maxChoices: number;
   value: string | null;
   response: string | string[] | null;
-  toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean): void;
   validate(): boolean;
   reportValidity(): boolean;
 }
@@ -79,7 +78,7 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       }
     }
 
-    public toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
+    protected toggleInternalCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
       if (responseVariable.correctResponse) {
         const responseArray = Array.isArray(responseVariable.correctResponse)
           ? responseVariable.correctResponse

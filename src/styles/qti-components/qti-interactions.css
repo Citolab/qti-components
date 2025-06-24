@@ -69,6 +69,14 @@
           @apply act;
         }
 
+        &:state(candidate-correct) {
+          background-color: var(--qti-correct);
+        }
+
+        &:state(candidate-incorrect) {
+          background-color: var(--qti-incorrect);
+        }
+
         &:state(readonly),
         &[aria-readonly='true'] {
           @apply rdo;
@@ -770,22 +778,18 @@
     /* The droppables */
     & qti-simple-match-set:last-of-type {
       display: grid;
-      grid-auto-columns: 1fr; /* auto-cols-fr */
-      grid-auto-flow: column; /* grid-flow-col */
-      gap: var(--qti-gap-size); /* gap-2 */
-      width: 100%; /* w-full */
-
-      & qti-simple-associable-choice {
-        display: flex;
-        flex-direction: column;
-      }
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      grid-auto-flow: unset;
+      grid-auto-columns: unset;
+      gap: var(--qti-gap-size);
 
       & > qti-simple-associable-choice {
         /* a droppable qti-simple-associable-choice */
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        grid-row: unset;
         box-sizing: border-box;
-        display: grid;
-        grid-row: 2 / 4;
-        grid-template-rows: subgrid;
 
         & img {
           max-width: 100%;
@@ -821,11 +825,11 @@
             @apply foc;
           }
 
-          /* min-height: 6rem; */
-          min-height: calc(1lh + 2 * var(--qti-padding-vertical));
-          gap: var(--qti-gap-size);
+          margin-top: 0.5rem;
+          gap: 0.5rem;
           box-sizing: border-box;
           display: flex;
+          flex-wrap: wrap;
           justify-content: center;
           align-items: center;
         }

@@ -143,6 +143,7 @@ export class TestNavigation extends LitElement {
       `qti-assessment-item-ref[identifier="${this._sessionContext.navItemRefId}"]`
     );
     const qtiAssessmentItemEl = qtiItemEl.assessmentItem;
+    if (!qtiAssessmentItemEl) return;
     qtiAssessmentItemEl.showCorrectResponse(event.detail);
   }
 
@@ -191,7 +192,7 @@ export class TestNavigation extends LitElement {
   /* PK: on test connected we can build the computed context */
   private _handleTestConnected(event: CustomEvent) {
     this._testElement = event.detail as QtiAssessmentTest;
-    // Set the testIdentifier in qtiContext if not already set
+      // Set the testIdentifier in qtiContext if not already set
     if (!this.qtiContext.QTI_CONTEXT?.testIdentifier) {
       const currentContext = this.qtiContext.QTI_CONTEXT || {
         testIdentifier: '',
@@ -247,7 +248,7 @@ export class TestNavigation extends LitElement {
                 identifier: item.identifier,
                 categories: item.category ? item.category?.split(' ') : [],
                 href: item.href,
-                variables: []
+                variables: [],
               }))
             };
           })

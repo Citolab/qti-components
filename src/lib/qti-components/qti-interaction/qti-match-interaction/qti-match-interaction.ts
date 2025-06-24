@@ -27,6 +27,7 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
   protected lastCheckedRadio: HTMLInputElement | null = null;
 
   @property({ type: String }) class: string = '';
+
   @state() protected _response: string | string[] = [];
   // dragDropApi: TouchDragAndDrop;
   get response(): string[] {
@@ -37,7 +38,9 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
     if (!this.classList.contains('qti-match-tabular')) super.response = val;
     else this._response = val;
   }
+
   @property({ type: String, attribute: 'response-identifier' }) responseIdentifier: string = '';
+
   @state() protected correctOptions: { text: string; gap: string }[] = null;
 
   async connectedCallback(): Promise<void> {

@@ -7,6 +7,7 @@ import { fireEvent } from 'storybook/test';
 
 import { getAssessmentItemFromTestContainerByDataTitle } from '../../../testing/test-utils';
 
+import type { TestNavigation } from './test-navigation.ts';
 import type { QtiSimpleChoice } from '../../qti-components';
 import type { TestShowCorrectResponse } from './test-show-correct-response';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
@@ -119,5 +120,43 @@ export const Test: Story = {
 
     const incorrect = await canvas.findByShadowText('York');
     expect(incorrect).toBeInTheDocument();
+  }
+};
+
+export const TestFullCorrectResponse: Story = {
+  render: args => html`
+    <qti-test navigate="item">
+      <test-navigation>
+        <!-- <test-print-item-variables></test-print-item-variables> -->
+        <test-container test-url="/assets/qti-test-package/assessment.xml"> </test-container>
+        <test-show-correct-response ${spread(args)}>Show correct</test-show-correct-response>
+        <test-next>Volgende</test-next>
+        <test-item-link item-id="ITM-text_entry">link</test-item-link>
+      </test-navigation>
+    </qti-test>
+  `,
+  play: async ({ canvasElement }) => {
+    const testNavigation = document.querySelector('test-navigation') as TestNavigation;
+    testNavigation.configContext = {
+      correctResponseMode: 'full'
+    };
+
+    const canvas = within(canvasElement);
+
+    const link = await canvas.findByShadowText('link');
+    await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'Info Start');
+    await fireEvent.click(link);
+
+    const nextButton = await canvas.findByShadowText('Volgende');
+    await waitFor(() => expect(nextButton).toBeEnabled());
+
+    const firstItem = await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'Richard III (Take 3)');
+    expect(firstItem).toBeInTheDocument();
+
+    const showCorrectButton = await findByShadowText(canvasElement, 'Show correct response');
+    showCorrectButton.click();
+
+    const fullCorrectResponse = await canvas.findByShadowRole('full-correct-response');
+    expect(fullCorrectResponse).toBeInTheDocument();
   }
 };

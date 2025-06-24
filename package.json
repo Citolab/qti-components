@@ -70,7 +70,7 @@
     "storybook:docs:build": "wireit",
     "chromatic": "node chromatic-runner.cjs",
     "----hooks----": "-",
-    "prepare": "husky"
+    "prepare": "npm run build && husky"
   },
   "peerDependencies": {
     "@heximal/templates": "^0.1.5",
