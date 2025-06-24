@@ -6,7 +6,6 @@ import { computedItemContext } from '../../exports/computed-item.context';
 import { configContext } from '../../exports/config.context.ts';
 
 import type { ConfigContext, CorrectResponseMode} from '../../exports/config.context.ts';
-import type { ItemShowCandidateCorrection } from '../components/item-show-candidate-correction.ts';
 import type { QtiAssessmentItem } from '../../qti-components';
 import type { ItemContext } from '../../exports/item.context';
 import type { VariableDeclaration } from '../../exports/variables';
