@@ -3,7 +3,7 @@ import { customElement, property } from 'lit/decorators.js';
 
 import { ActiveElementMixin } from './internal/active-element/active-element.mixin';
 
-/* 
+/*
 qti-match-interaction
 qti-associate-interaction
 */
@@ -20,7 +20,7 @@ export class QtiSimpleAssociableChoice extends ActiveElementMixin(LitElement, 'q
       display: block;
     }
     slot[name='qti-simple-associable-choice'] {
-      /* width: 100%; */
+      width: auto;
     }
   `;
 
