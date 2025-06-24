@@ -887,7 +887,7 @@ export class QtiPortableCustomInteraction extends Interaction {
 <head>
   <meta charset="utf-8" />
   <title>QTI PCI Container</title>
-   <base href="${window.location.origin}" /> 
+   <base href="${window.location.origin}" />
   <style>
     body, html {
       margin: 0;
@@ -909,7 +909,7 @@ export class QtiPortableCustomInteraction extends Interaction {
   <script>
     // Define standard paths and shims
     window.requirePaths = ${requirePaths};
-    
+
     window.requireShim = ${requireShim};
 
     // Single initial RequireJS configuration with error handling
@@ -921,7 +921,7 @@ export class QtiPortableCustomInteraction extends Interaction {
       shim: window.requireShim,
       onNodeCreated: function(node, config, moduleName, url) {
         console.log('RequireJS creating node for module:', moduleName, 'URL:', url);
-        
+
         // Add error handler to script node
         node.addEventListener('error', function(evt) {
           console.error('Script load error for module:', moduleName, 'URL:', url, 'Event:', evt);
@@ -933,11 +933,11 @@ export class QtiPortableCustomInteraction extends Interaction {
           modules: err.requireModules,
           error: err
         });
-        
+
         if (err.requireType === 'scripterror') {
           console.error('Script error usually indicates a network or CORS issue with:', err.requireModules);
         }
-        
+
         // Notify parent window about the error
         window.parent.postMessage({
           source: 'qti-pci-iframe',
@@ -953,18 +953,18 @@ export class QtiPortableCustomInteraction extends Interaction {
         }, '*');
       }
     });
-   
-    // PCI Manager for iframe implementation 
+
+    // PCI Manager for iframe implementation
     window.PCIManager = {
       pciInstance: null,
       container: null,
       customInteractionTypeIdentifier: null,
-      
+
       initialize: function(config) {
         this.customInteractionTypeIdentifier = config.customInteractionTypeIdentifier;
         this.container = document.getElementById('pci-container');
         this.container.classList.add('qti-customInteraction');
-        
+
         function getResolvablePath(path, basePath) {
           if (Array.isArray(path)) {
             return path.map(p => getResolvablePathString(p, basePath));
@@ -980,7 +980,7 @@ export class QtiPortableCustomInteraction extends Interaction {
             .replace('http:/', 'http://')
             .replace('https:/', 'https://');
         }
-      
+
         function getResolvablePathString(path, basePath) {
             path = path.replace(/\\.js$/, '');
             return path?.toLocaleLowerCase().startsWith('http') || !basePath
@@ -1012,14 +1012,14 @@ export class QtiPortableCustomInteraction extends Interaction {
             }
           });
         }
-        
+
         // The ONLY other requirejs.config call - with the context for this specific PCI
         window.requirejs.config({
           context: this.customInteractionTypeIdentifier,
           paths: window.requirePaths,
           shim: window.requireShim
         });
-        
+
         // Define qtiCustomInteractionContext for the PCI
         define('qtiCustomInteractionContext', () => {
           return {
@@ -1040,7 +1040,7 @@ export class QtiPortableCustomInteraction extends Interaction {
                 responseIdentifier: config.responseIdentifier,
                 boundTo: config.boundTo,
               };
-              
+
               if (pciInstance.getInstance) {
                 pciInstance.getInstance(this.container, pciConfig, undefined);
               } else {
@@ -1108,18 +1108,18 @@ export class QtiPortableCustomInteraction extends Interaction {
             }
           };
         });
-        
+
         // Load the PCI module
         this.loadModule(config.module);
       },
-      
+
       loadModule: function(modulePath) {
-        try {          
+        try {
           // Get the context-specific require
           const contextRequire = window.requirejs.config({
             context: this.customInteractionTypeIdentifier
           });
-          contextRequire(['require'], require => {     
+          contextRequire(['require'], require => {
              // Now load the actual module
               require([modulePath], () => {
               }, err => {
@@ -1133,14 +1133,14 @@ export class QtiPortableCustomInteraction extends Interaction {
           this.notifyError('Error in require call: ' + error.toString());
         }
       },
-      
+
       notifyReady: function() {
         window.parent.postMessage({
           source: 'qti-pci-iframe',
           method: 'iframeReady'
         }, '*');
       },
-      
+
       notifyInteractionChanged: function(response) {
         window.parent.postMessage({
           source: 'qti-pci-iframe',
@@ -1148,7 +1148,7 @@ export class QtiPortableCustomInteraction extends Interaction {
           params: { value: response }
         }, '*');
       },
-      
+
       notifyError: function(message) {
         console.error('PCI Error:', message);
         window.parent.postMessage({
@@ -1157,12 +1157,12 @@ export class QtiPortableCustomInteraction extends Interaction {
           params: { message: message }
         }, '*');
       },
-      
+
       setMarkup: function(markupHtml) {
         this.container = document.getElementById('pci-container');
         this.container.innerHTML = markupHtml;
       },
-      
+
       addHyphenatedKeys: function(properties) {
         const updatedProperties = { ...properties };
         for (const key in properties) {
@@ -1193,35 +1193,35 @@ export class QtiPortableCustomInteraction extends Interaction {
         return unescaped;
       },
     };
-    
+
     // Set up message listener for communication with parent
     window.addEventListener('message', function(event) {
       const { data } = event;
-      
+
       // Ensure the message is from our parent
       if (!data || data.source !== 'qti-portable-custom-interaction') {
         return;
       }
-      
+
       switch(data.method) {
         case 'initialize':
           PCIManager.initialize(data.params);
           break;
-          
+
         case 'setMarkup':
           PCIManager.setMarkup(data.params);
           break;
-          
+
         case 'setBoundTo':
           // Handle setting boundTo
           break;
-          
+
         case 'setProperties':
           // Handle setting properties
           break;
       }
     });
-    
+
     // Notify parent that iframe has loaded
     window.addEventListener('load', function() {
       window.parent.postMessage({
@@ -1281,7 +1281,7 @@ export class QtiPortableCustomInteraction extends Interaction {
         if (PCIManager.pciInstance && PCIManager.pciInstance.getResponse) {
           const response = PCIManager.pciInstance.getResponse();
           const responseStr = JSON.stringify(response);
-          
+
           if (responseStr !== lastResponseStr) {
             lastResponseStr = responseStr;
               window.parent.postMessage({
@@ -1305,7 +1305,7 @@ export class QtiPortableCustomInteraction extends Interaction {
    * @param responseVariable The response variable containing the correct response
    * @param show Whether to show or hide the correct response
    */
-  public toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
+  public toggleInternalCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
     // Store the correct response or clear it based on the show parameter
     this.correctResponse = show
       ? responseVariable?.correctResponse

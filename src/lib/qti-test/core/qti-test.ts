@@ -58,6 +58,7 @@ import type { IQtiTest } from '../../exports/qti-test';
 @customElement('qti-test')
 export class QtiTest extends TestNavigationMixin(TestViewMixin(TestProcessingMixin(TestBase))) implements IQtiTest {
   // export class QtiTest extends TestLoaderMixin(TestNavigationMixin(TestViewMixin(TestBase))) {
+
   /**
    * Renders the component's template.
    * Provides a default `<slot>` for content projection.
@@ -67,6 +68,7 @@ export class QtiTest extends TestNavigationMixin(TestViewMixin(TestProcessingMix
     await this.updateComplete;
     this.dispatchEvent(new CustomEvent('qti-test-connected', { detail: this }));
   }
+
   render() {
     return html`<slot></slot>`;
   }

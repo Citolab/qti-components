@@ -61,7 +61,7 @@ export class QtiTextEntryInteraction extends Interaction {
     return this.response !== '' && this._input.checkValidity();
   }
 
-  public toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean): void {
+  public toggleInternalCorrectResponse(responseVariable: ResponseVariable, show: boolean): void {
     if (show && responseVariable.correctResponse) {
       const text = responseVariable.correctResponse.toString();
       this._correctResponse = text;

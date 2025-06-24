@@ -69,6 +69,14 @@
           @apply act;
         }
 
+        &:state(candidate-correct) {
+          background-color: var(--qti-correct);
+        }
+
+        &:state(candidate-incorrect) {
+          background-color: var(--qti-incorrect);
+        }
+
         &:state(readonly),
         &[aria-readonly='true'] {
           @apply rdo;
@@ -114,16 +122,6 @@
           content: '\02714';
           color: var(--qti-correct);
         }
-      }
-
-      /* stylelint-disable-next-line no-descending-specificity */
-      &:state(candidate-correct) {
-        background-color: var(--qti-correct) !important;
-      }
-
-      /* stylelint-disable-next-line no-descending-specificity */
-      &:state(candidate-incorrect) {
-        background-color: var(--qti-incorrect) !important;
       }
     }
 

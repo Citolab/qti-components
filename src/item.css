@@ -31,3 +31,12 @@ qti-math-interaction::part(message) {
   border-radius: 4px;
   margin-top: 8px;
 }
+
+div.full-correct-response {
+  display: flex;
+  margin-top: 0.5rem;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border: 1px solid #39a7c0;
+  background-color: #d9e8ee;
+}

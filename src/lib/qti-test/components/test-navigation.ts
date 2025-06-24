@@ -10,6 +10,7 @@ import { configContext } from '../../exports/config.context';
 
 // import type { View } from '../core/mixins/test-view.mixin';
 // import type { TemplateFunction } from 'stampino';
+
 import type { QtiAssessmentItem } from '../../qti-components';
 import type { OutcomeVariable } from '../../exports/variables';
 import type { ComputedContext } from '../../exports/computed.context';
@@ -130,6 +131,7 @@ export class TestNavigation extends LitElement {
       `qti-assessment-item-ref[identifier="${this._sessionContext.navItemRefId}"]`
     );
     const qtiAssessmentItemEl = qtiItemEl.assessmentItem;
+    if (!qtiAssessmentItemEl) return;
     qtiAssessmentItemEl.showCorrectResponse(event.detail);
   }
 
@@ -202,7 +204,7 @@ export class TestNavigation extends LitElement {
                 identifier: item.identifier,
                 categories: item.category ? item.category?.split(' ') : [],
                 href: item.href,
-                variables: []
+                variables: [],
               }))
             };
           })

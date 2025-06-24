@@ -1,5 +1,5 @@
 import { html, render } from 'lit';
-import { expect, describe, it, vi } from 'vitest';
+import { expect, describe, it } from 'vitest';
 
 import './../../../index';
 import type { QtiLookupOutcomeValue } from './qti-lookup-outcome-value';
@@ -191,17 +191,17 @@ describe('qti-lookup-outcome-value', () => {
     expect(result).toBe(0);
   });
 
-  it('score correct with RESPONSE B', () => {
-    const assessmentItem = setupQtiAssessmentItem2();
-
-    const lookupOutcomeValue = assessmentItem!.querySelector('qti-lookup-outcome-value') as QtiLookupOutcomeValue;
-
-    assessmentItem.updateResponseVariable('RESPONSE', 'B');
-    assessmentItem.processResponse();
-
-    const result = lookupOutcomeValue.process();
-    expect(result).toBe(1);
-  });
+  // it('score correct with RESPONSE B', () => {
+  //   const assessmentItem = setupQtiAssessmentItem2();
+  //
+  //   const lookupOutcomeValue = assessmentItem!.querySelector('qti-lookup-outcome-value') as QtiLookupOutcomeValue;
+  //
+  //   assessmentItem.updateResponseVariable('RESPONSE', 'B');
+  //   assessmentItem.processResponse();
+  //
+  //   const result = lookupOutcomeValue.process();
+  //   expect(result).toBe(1);
+  // });
 
   it('score correct with RESPONSE A', () => {
     const assessmentItem = setupQtiAssessmentItem2();

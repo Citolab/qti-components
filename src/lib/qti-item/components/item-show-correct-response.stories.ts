@@ -1,7 +1,7 @@
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { spread } from '@open-wc/lit-helpers';
 import { html } from 'lit';
-import { expect, waitFor } from '@storybook/test';
+import { expect, fireEvent, waitFor } from '@storybook/test';
 import { within } from 'shadow-dom-testing-library';
 
 import { getAssessmentItemFromItemContainer } from '../../../testing/test-utils';
@@ -9,10 +9,11 @@ import { getAssessmentItemFromItemContainer } from '../../../testing/test-utils'
 import type { Meta, StoryObj } from '@storybook/web-components';
 import type { ItemShowCorrectResponse } from './item-show-correct-response';
 import './item-show-correct-response';
+import './item-correct-response-mode';
 import type { ItemContainer } from './item-container';
 import type { QtiSimpleChoice } from '../../qti-components';
 
-const { events, args, argTypes, template } = getStorybookHelpers('test-print-item-variables');
+const { events, args, argTypes } = getStorybookHelpers('test-print-item-variables');
 
 type Story = StoryObj<ItemShowCorrectResponse & typeof args>;
 
@@ -32,25 +33,26 @@ export default meta;
 export const Default: Story = {
   render: args => {
     return html`<qti-item>
-      <!-- <div style="display: flex; flex-direction: column; gap: 1rem;"> -->
-      <item-container style="width: 400px; height: 350px; display: block;" item-url=${args['item-url'] as string}>
-        <template>
-          <style>
-            qti-assessment-item {
-              padding: 1rem;
-              display: block;
-              aspect-ratio: 4 / 3;
-              width: 800px;
-              border: 2px solid blue;
-              transform: scale(0.5);
-              transform-origin: top left;
-            }
-          </style>
-        </template>
-      </item-container>
+      <div style="display: flex; flex-direction: column; gap: 1rem; align-items: start">
+        <item-container style="width: 400px; height: 350px; display: block;" item-url=${args['item-url'] as string}>
+          <template>
+            <style>
+              qti-assessment-item {
+                padding: 1rem;
+                display: block;
+                aspect-ratio: 4 / 3;
+                width: 800px;
+                border: 2px solid blue;
+                transform: scale(0.5);
+                transform-origin: top left;
+              }
+            </style>
+          </template>
+        </item-container>
 
-      <item-show-correct-response ${spread(args)}></item-show-correct-response>
-      <!-- </div> -->
+        <item-correct-response-mode></item-correct-response-mode>
+        <item-show-correct-response ${spread(args)}></item-show-correct-response>
+      </div>
     </qti-item>`;
   },
 
@@ -127,7 +129,164 @@ export const NoCorrectResponse: Story = {
   }
 };
 
-export const MultipleResponse: Story = {
+export const ChoiceInternalCorrectResponse: Story = {
+  render: args => {
+    return html`<qti-item>
+      <div style="display: flex; flex-direction: column; gap: 1rem; align-items: start">
+        <item-container style="width: 400px; height: 350px; display: block;" item-url=${args['item-url'] as string}>
+          <template>
+            <style>
+              qti-assessment-item {
+                padding: 1rem;
+                display: block;
+                aspect-ratio: 4 / 3;
+                width: 800px;
+                border: 2px solid blue;
+                transform: scale(0.5);
+                transform-origin: top left;
+              }
+            </style>
+          </template>
+        </item-container>
+
+        <item-show-correct-response ${spread(args)}></item-show-correct-response>
+      </div>
+    </qti-item>`;
+  },
+
+  play: async ({ canvasElement, step }) => {
+    const item = document.querySelector('qti-item');
+    item.configContext = {
+      correctResponseMode: 'internal'
+    };
+    // wait for qti-simple-choice to be rendered
+    const canvas = within(canvasElement);
+    // const choices = await canvas.findAllByShadowRole('radio');
+    const choiceA: QtiSimpleChoice = await canvas.findByShadowText('You must stay with your luggage at all times.');
+    const choiceB: QtiSimpleChoice = await canvas.findByShadowText('Do not let someone else look after your luggage.');
+    const choiceC: QtiSimpleChoice = await canvas.findByShadowText('Remember your luggage when you leave.');
+
+    const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0];
+    await step('Click on the Show Correct button', async () => {
+      await showCorrectButton.click();
+
+      await step('Verify correct response state is applied', async () => {
+        expect(choiceA.internals.states.has('correct-response')).toBe(true);
+        expect(choiceB.internals.states.has('correct-response')).toBe(false);
+        expect(choiceC.internals.states.has('correct-response')).toBe(false);
+        expect(choiceA.internals.states.has('incorrect-response')).toBe(false);
+        expect(choiceB.internals.states.has('incorrect-response')).toBe(true);
+        expect(choiceC.internals.states.has('incorrect-response')).toBe(true);
+      });
+    });
+  }
+};
+
+export const ChoiceFullCorrectResponse: Story = {
+  render: args => {
+    return html`<qti-item>
+      <div style="display: flex; flex-direction: column; gap: 1rem; align-items: start">
+        <item-container style="width: 400px; height: 350px; display: block;" item-url=${args['item-url'] as string}>
+          <template>
+            <style>
+              qti-assessment-item {
+                padding: 1rem;
+                display: block;
+                aspect-ratio: 4 / 3;
+                width: 800px;
+                border: 2px solid blue;
+                transform: scale(0.5);
+                transform-origin: top left;
+              }
+            </style>
+          </template>
+        </item-container>
+
+        <item-show-correct-response ${spread(args)}></item-show-correct-response>
+      </div>
+    </qti-item>`;
+  },
+
+  play: async ({ canvasElement, step }) => {
+    const item = document.querySelector('qti-item');
+    item.configContext = {
+      correctResponseMode: 'full'
+    };
+    const canvas = within(canvasElement);
+    const showCorrectButton = await canvas.findByShadowText(/Show correct/i);
+    await step('Click on the Show Correct button', async () => {
+      await fireEvent.click(showCorrectButton);
+
+      await step('Verify correct response state is applied', async () => {
+        const fullCorrectResponse = await canvas.findByShadowRole('full-correct-response');
+        expect(fullCorrectResponse).toBeVisible();
+
+        const interaction = fullCorrectResponse.querySelector('qti-choice-interaction');
+        const choices = Array.from(interaction.querySelectorAll('qti-simple-choice'));
+
+        expect(choices[0].internals.states.has('candidate-correct')).toBe(true);
+        expect(choices[1].internals.states.has('candidate-correct')).toBe(false);
+        expect(choices[2].internals.states.has('candidate-correct')).toBe(false);
+      });
+    });
+  }
+};
+
+export const MultipleResponseInternalCorrectResponse: Story = {
+  args: {
+    'item-url': '/qti-item/example-choice-multiple-item.xml' // Set the new item URL here
+  },
+  render: args =>
+    html` <qti-item>
+      <div>
+        <item-container style="display: block;width: 400px; height: 350px;" item-url=${args['item-url'] as string}>
+          <template>
+            <style>
+              qti-assessment-item {
+                padding: 1rem;
+                display: block;
+                aspect-ratio: 4 / 3;
+                width: 800px;
+
+                border: 2px solid blue;
+                transform: scale(0.5);
+                transform-origin: top left;
+              }
+            </style>
+          </template>
+        </item-container>
+
+        <item-show-correct-response ${spread(args)}></item-show-correct-response>
+      </div>
+    </qti-item>`,
+  play: async ({ canvasElement, step }) => {
+    const item = document.querySelector('qti-item');
+    item.configContext = {
+      correctResponseMode: 'internal'
+    };
+    // wait for qti-simple-choice to be rendered
+    const canvas = within(canvasElement);
+    // const choices = await canvas.findAllByShadowRole('radio');
+    const choiceA: QtiSimpleChoice = await canvas.findByShadowText('This is correct.');
+    const choiceB: QtiSimpleChoice = await canvas.findByShadowText('This is also correct.');
+    const choiceC: QtiSimpleChoice = await canvas.findByShadowText('This is wrong.');
+    const showCorrectButton = await canvas.findByShadowText(/Show correct/i);
+    await step('Click on the Show Correct button', async () => {
+      await showCorrectButton.click();
+
+      await step('Verify correct response state is applied', async () => {
+        expect(choiceA.internals.states.has('correct-response')).toBe(true);
+        expect(choiceB.internals.states.has('correct-response')).toBe(true);
+        expect(choiceC.internals.states.has('correct-response')).toBe(false);
+        expect(choiceA.internals.states.has('incorrect-response')).toBe(false);
+        expect(choiceB.internals.states.has('incorrect-response')).toBe(false);
+        expect(choiceC.internals.states.has('incorrect-response')).toBe(true);
+      });
+    });
+  }
+};
+
+export const MultipleResponseFullCorrectResponse: Story = {
   args: {
     'item-url': '/qti-item/example-choice-multiple-item.xml' // Set the new item URL here
   },
@@ -154,29 +313,32 @@ export const MultipleResponse: Story = {
       </div>
     </qti-item>`,
   play: async ({ canvasElement, step }) => {
-    // wait for qti-simple-choice to be rendered
+    const item = document.querySelector('qti-item');
+    item.configContext = {
+      correctResponseMode: 'full'
+    };
     const canvas = within(canvasElement);
-    // const choices = await canvas.findAllByShadowRole('radio');
-    const choiceA: QtiSimpleChoice = await canvas.findByShadowText('This is correct.');
-    const choiceB: QtiSimpleChoice = await canvas.findByShadowText('This is also correct.');
-    const choiceC: QtiSimpleChoice = await canvas.findByShadowText('This is wrong.');
-    const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0];
-    await step('Click on the Show Correct button', async () => {
-      await showCorrectButton.click();
+    const showCorrectButton = await canvas.findByShadowText(/Show correct/i);
 
-      await step('Verify correct response state is applied', async () => {
-        expect(choiceA.internals.states.has('correct-response')).toBe(true);
-        expect(choiceB.internals.states.has('correct-response')).toBe(true);
-        expect(choiceC.internals.states.has('correct-response')).toBe(false);
-        expect(choiceA.internals.states.has('incorrect-response')).toBe(false);
-        expect(choiceB.internals.states.has('incorrect-response')).toBe(false);
-        expect(choiceC.internals.states.has('incorrect-response')).toBe(true);
+    await step('Select the correct response mode full', async () => {
+      await fireEvent.click(showCorrectButton);
+
+      await step('Verify correct response full state is applied', async () => {
+        const fullCorrectResponse = await canvas.findByShadowRole('full-correct-response');
+        expect(fullCorrectResponse).toBeVisible();
+
+        const interaction = fullCorrectResponse.querySelector('qti-choice-interaction');
+        const choices = Array.from(interaction.querySelectorAll('qti-simple-choice'));
+
+        expect(choices[0].internals.states.has('candidate-correct')).toBe(true);
+        expect(choices[1].internals.states.has('candidate-correct')).toBe(true);
+        expect(choices[2].internals.states.has('candidate-correct')).toBe(false);
       });
     });
   }
 };
 
-export const TextEntry: Story = {
+export const TextEntryInternalCorrectResponse: Story = {
   args: {
     'item-url': '/qti-test-package/items/text_entry.xml' // Set the new item URL here
   },
@@ -203,6 +365,10 @@ export const TextEntry: Story = {
       </div>
     </qti-item>`,
   play: async ({ canvasElement, step }) => {
+    const test = document.querySelector('qti-item');
+    test.configContext = {
+      correctResponseMode: 'internal'
+    };
     const canvas = within(canvasElement);
     const item = await getAssessmentItemFromItemContainer(canvasElement);
     const interaction = item.querySelector('qti-text-entry-interaction');
@@ -211,6 +377,50 @@ export const TextEntry: Story = {
       await showCorrectButton.click();
       const correctElement = interaction.shadowRoot.querySelector('[part="correct"]');
       expect(correctElement).toBeVisible();
+    });
+  }
+};
+
+export const TextEntryFullCorrectResponse: Story = {
+  args: {
+    'item-url': '/qti-test-package/items/text_entry.xml' // Set the new item URL here
+  },
+  render: args =>
+    html` <qti-item navigate="item">
+      <div>
+        <item-container style="display: block;width: 400px; height: 350px;" item-url=${args['item-url'] as string}>
+          <template>
+            <style>
+              qti-assessment-item {
+                padding: 1rem;
+                display: block;
+                aspect-ratio: 4 / 3;
+                width: 800px;
+
+                border: 2px solid blue;
+                transform: scale(0.5);
+                transform-origin: top left;
+              }
+            </style>
+          </template>
+        </item-container>
+        <item-show-correct-response ${spread(args)}></item-show-correct-response>
+      </div>
+    </qti-item>`,
+  play: async ({ canvasElement, step }) => {
+    const test = document.querySelector('qti-item');
+    test.configContext = {
+      correctResponseMode: 'full'
+    };
+    const canvas = within(canvasElement);
+    const showCorrectButton = await canvas.findByShadowText(/Show correct/i);
+    await step('Select the correct response mode full', async () => {
+      await fireEvent.click(showCorrectButton);
+
+      await step('Verify correct response full state is applied', async () => {
+        const fullCorrectResponse = await canvas.findByShadowRole('full-correct-response');
+        expect(fullCorrectResponse).toBeVisible();
+      });
     });
   }
 };

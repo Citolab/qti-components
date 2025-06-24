@@ -49,7 +49,7 @@ export class QtiGraphicAssociateInteraction extends Interaction {
     return this._response;
   }
 
-  public toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
+  public toggleInternalCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
     if (!show) {
       this._correctLines = [];
       return;
