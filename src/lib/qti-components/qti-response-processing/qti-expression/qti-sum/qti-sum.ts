@@ -20,11 +20,13 @@ export class QtiSumExpression implements QtiExpressionBase<number> {
   constructor(private expressions: QtiExpressionBase<number>[]) {}
 
   public calculate() {
+    const expressions = this.expressions.filter(c => c.calculate !== undefined);
+    // check if one expresssion returns null
+    if (expressions.some(c => c.calculate() === null)) {
+      return null;
+    }
+
     const values = this.expressions.map(c => {
-      if (!c.calculate) {
-        console.error("Element doesn't implement QtiConditionExpression");
-        return null;
-      }
       const value = c.calculate();
       if (Number.isNaN(value)) {
         console.error('unexpected value in qti-sum, expected number');

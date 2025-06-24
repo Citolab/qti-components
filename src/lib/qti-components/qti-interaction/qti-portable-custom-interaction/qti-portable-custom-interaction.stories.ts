@@ -1,11 +1,11 @@
 import { html } from 'lit';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
-import { expect, waitFor } from '@storybook/test';
+import { expect, waitFor } from 'storybook/test';
 
 import { removeDoubleSlashes } from '../../internal/utils';
 import { qtiTransformItem } from '../../../qti-transformers';
 
-import type { StoryObj, Meta } from '@storybook/web-components';
+import type { StoryObj, Meta } from '@storybook/web-components-vite';
 import type { QtiPortableCustomInteraction } from './qti-portable-custom-interaction';
 
 import './qti-portable-custom-test-interaction';

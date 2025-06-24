@@ -1,11 +1,11 @@
-import { expect } from '@storybook/test';
-import { userEvent } from '@storybook/test';
+import { expect } from 'storybook/test';
+import { userEvent } from 'storybook/test';
 import { html } from 'lit';
 
 import { getItemByUri } from '../../../../lib';
 
 import type { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
-import type { Meta, StoryObj } from '@storybook/web-components';
+import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 type Story = StoryObj;
 

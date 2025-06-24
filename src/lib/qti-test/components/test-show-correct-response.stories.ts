@@ -1,16 +1,16 @@
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
-import { expect, waitFor } from '@storybook/test';
-import { findByShadowText, within } from 'shadow-dom-testing-library';
+import { expect, waitFor } from 'storybook/test';
+import { findByShadowText, findByShadowTitle, within } from 'shadow-dom-testing-library';
 import { spread } from '@open-wc/lit-helpers';
 import { html } from 'lit';
-import { fireEvent } from '@storybook/test';
+import { fireEvent } from 'storybook/test';
 
 import { getAssessmentItemFromTestContainerByDataTitle } from '../../../testing/test-utils';
 
 import type { TestNavigation } from './test-navigation.ts';
 import type { QtiSimpleChoice } from '../../qti-components';
 import type { TestShowCorrectResponse } from './test-show-correct-response';
-import type { Meta, StoryObj } from '@storybook/web-components';
+import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 const { events, args, argTypes, template } = getStorybookHelpers('test-show-correct-response');
 

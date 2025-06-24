@@ -6,6 +6,7 @@ import { computedItemContext } from '../../exports/computed-item.context';
 import { configContext } from '../../exports/config.context.ts';
 
 import type { ConfigContext, CorrectResponseMode} from '../../exports/config.context.ts';
+import type { ItemShowCandidateCorrection } from '../components/item-show-candidate-correction.ts';
 import type { QtiAssessmentItem } from '../../qti-components';
 import type { ItemContext } from '../../exports/item.context';
 import type { VariableDeclaration } from '../../exports/variables';
@@ -38,6 +39,7 @@ export class QtiItem extends LitElement {
   // Store event handlers as instance properties
   private _onItemContextChanged = this._handleItemContextChanged.bind(this);
   private _onAssessmentItemConnected = this._handleAssessmentItemConnected.bind(this);
+
   private _onHandleShowCorrectResponse = this._handleShowCorrectResponse.bind(this);
   private _onHandleShowCandidateCorrection = this._handleShowCandidateCorrection.bind(this);
   private _onHandleSwitchCorrectResponseMode = this._handleSwitchCorrectResponseMode.bind(this);

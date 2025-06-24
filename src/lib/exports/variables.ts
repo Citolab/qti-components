@@ -4,7 +4,8 @@ import type { BaseType, Cardinality } from './expression-result';
 export interface VariableValue<T> {
   identifier: string;
   value: Readonly<T>;
-  type: 'outcome' | 'response';
+  defaultValue?: T | null;
+  type: 'outcome' | 'response' | 'context' | 'template';
 }
 
 export interface VariableDeclaration<T> extends VariableValue<T> {
@@ -24,4 +25,10 @@ export interface ResponseVariable extends VariableDeclaration<string | string[] 
   mapping?: QtiMapping;
   areaMapping?: QtiAreaMapping; // Optional property for area mappings
   correctResponse?: string | string[] | null;
+}
+
+export interface TemplateVariable extends VariableDeclaration<string | string[] | number | boolean | null> {
+  type: 'template';
+  mathVariable?: boolean;
+  paramVariable?: boolean;
 }

@@ -2,8 +2,8 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { defineConfig, mergeConfig } from 'vitest/config';
-import { storybookTest } from '@storybook/experimental-addon-test/vitest-plugin';
+import { defineConfig } from 'vitest/config';
+import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 
 const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
 
@@ -27,7 +27,7 @@ export default defineConfig({
     // see https://vitest.dev/guide/debugging#browser-mode for more info
     // inspectBrk: true,
     // fileParallelism: false,
-    workspace: [
+    projects: [
       {
         plugins: [
           storybookTest({

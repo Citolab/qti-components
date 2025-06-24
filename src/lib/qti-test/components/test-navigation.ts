@@ -1,16 +1,18 @@
 import { consume, provide } from '@lit/context';
 import { html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-// import { prepareTemplate } from 'stampino';
 
-import { testContext } from '../../exports/test.context';
-import { sessionContext } from '../../exports/session.context';
+// import { prepareTemplate } from 'stampino';
 import { computedContext } from '../../exports/computed.context';
 import { configContext } from '../../exports/config.context';
+import { testContext } from '../../exports/test.context';
+import { sessionContext } from '../../exports/session.context';
 
 // import type { View } from '../core/mixins/test-view.mixin';
 // import type { TemplateFunction } from 'stampino';
+import { qtiContext } from '../../exports/qti.context';
 
+import type { QtiContext } from '../../exports/qti.context';
 import type { QtiAssessmentItem } from '../../qti-components';
 import type { OutcomeVariable } from '../../exports/variables';
 import type { ComputedContext } from '../../exports/computed.context';
@@ -35,6 +37,16 @@ export class TestNavigation extends LitElement {
 
   @state()
   public initContext: { identifier: string; [key: string]: any }[] = [];
+
+  @state()
+  @provide({ context: qtiContext })
+  public qtiContext: QtiContext = {
+    QTI_CONTEXT: {
+      testIdentifier: '',
+      candidateIdentifier: '',
+      environmentIdentifier: 'default'
+    }
+  };
 
   @state()
   @provide({ context: configContext })
@@ -180,6 +192,38 @@ export class TestNavigation extends LitElement {
   /* PK: on test connected we can build the computed context */
   private _handleTestConnected(event: CustomEvent) {
     this._testElement = event.detail as QtiAssessmentTest;
+      // Set the testIdentifier in qtiContext if not already set
+    if (!this.qtiContext.QTI_CONTEXT?.testIdentifier) {
+      const currentContext = this.qtiContext.QTI_CONTEXT || {
+        testIdentifier: '',
+        candidateIdentifier: 'not set',
+        environmentIdentifier: 'default'
+      };
+      this.qtiContext = {
+        QTI_CONTEXT: {
+          ...currentContext,
+          testIdentifier: this._testElement.identifier,
+          environmentIdentifier: currentContext.environmentIdentifier || 'default'
+        }
+      };
+    }
+
+    // Process qti-context-declaration elements to get default values
+    const contextDeclarations = this._testElement.querySelectorAll('qti-context-declaration[identifier="QTI_CONTEXT"]');
+
+    contextDeclarations.forEach(declaration => {
+      const defaultValues = this._extractDefaultValues(declaration);
+      if (Object.keys(defaultValues).length > 0) {
+        // Merge default values with current context, but don't override existing runtime values
+        this.qtiContext = {
+          QTI_CONTEXT: {
+            ...defaultValues, // Default values first
+            ...this.qtiContext.QTI_CONTEXT // Runtime values override defaults
+          }
+        };
+      }
+    });
+
     const testPartElements = Array.from(this._testElement?.querySelectorAll<QtiTestPart>(`qti-test-part`) || []);
     this.computedContext = {
       identifier: this._testElement.identifier,
@@ -211,6 +255,50 @@ export class TestNavigation extends LitElement {
         };
       })
     };
+  }
+
+  /**
+   * Extract default values from a qti-context-declaration element
+   */
+  private _extractDefaultValues(declaration: Element): Record<string, any> {
+    const defaultValues: Record<string, any> = {};
+
+    const defaultValueElement = declaration.querySelector('qti-default-value');
+    if (!defaultValueElement) {
+      return defaultValues;
+    }
+
+    const valueElements = defaultValueElement.querySelectorAll('qti-value[field-identifier]');
+    valueElements.forEach(valueElement => {
+      const fieldIdentifier = valueElement.getAttribute('field-identifier');
+      const baseType = valueElement.getAttribute('base-type') || 'string';
+      const textContent = valueElement.textContent?.trim() || '';
+
+      if (fieldIdentifier) {
+        // Convert value based on base-type
+        let value: any = textContent;
+        switch (baseType) {
+          case 'integer':
+            value = parseInt(textContent, 10);
+            break;
+          case 'float':
+          case 'duration':
+            value = parseFloat(textContent);
+            break;
+          case 'boolean':
+            value = textContent.toLowerCase() === 'true';
+            break;
+          case 'string':
+          default:
+            value = textContent;
+            break;
+        }
+
+        defaultValues[fieldIdentifier] = value;
+      }
+    });
+
+    return defaultValues;
   }
 
   /* PK: on item connected we can add item only properties in the xml */

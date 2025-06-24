@@ -1,7 +1,7 @@
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { html } from 'lit';
 
-import type { Meta, StoryObj } from '@storybook/web-components';
+import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { TestPrintContext } from './test-print-context';
 
 import './test-print-context';

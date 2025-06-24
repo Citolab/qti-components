@@ -1,7 +1,7 @@
 import { html } from 'lit';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 
-import type { Meta, StoryObj } from '@storybook/web-components';
+import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { QtiAssessmentItem } from './qti-assessment-item';
 
 const { events, args, argTypes, template } = getStorybookHelpers('qti-assessment-item');

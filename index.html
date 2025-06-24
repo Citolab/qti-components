@@ -120,6 +120,15 @@
         testNavigation.configContext = {
           infoItemCategory: 'info'
         };
+        // Set up QTI context with candidate and environment identifiers
+        testNavigation.qtiContext = {
+          QTI_CONTEXT: {
+            // testIdentifier: This will be set automatically when test connects
+            candidateIdentifier: 'candidate_12345' // Example candidate ID
+            // environmentIdentifier: 'development' // Example environment default: 'default'
+          }
+        };
+
         testContainer.setAttribute('test-url', test + '/AssessmentTest.xml');
         // Fetch items.json with error handling
         try {

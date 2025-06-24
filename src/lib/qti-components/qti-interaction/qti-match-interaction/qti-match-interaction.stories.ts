@@ -1,14 +1,14 @@
-import { action } from '@storybook/addon-actions';
+import { action } from 'storybook/actions';
 import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
-import { expect, fn, waitFor, within } from '@storybook/test';
+import { expect, fn, waitFor, within } from 'storybook/test';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 
 import drag from '../../../../testing/drag';
 
-import type { Meta, StoryObj } from '@storybook/web-components';
+import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { QtiAssessmentItem, QtiMatchInteraction } from '../../';
-import type { InputType } from '@storybook/core/types';
+import type { InputType } from 'storybook/internal/types';
 
 import '../../../../item.css';
 

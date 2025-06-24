@@ -1,4 +1,4 @@
-import '@storybook/test';
+import 'storybook/test';
 
 declare global {
   namespace jest {

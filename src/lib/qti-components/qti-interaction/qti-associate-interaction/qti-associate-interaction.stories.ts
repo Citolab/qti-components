@@ -2,7 +2,7 @@ import { html } from 'lit';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 
 import type { QtiAssociateInteraction } from './qti-associate-interaction';
-import type { Meta, StoryObj } from '@storybook/web-components';
+import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 const { events, args, argTypes, template } = getStorybookHelpers('qti-associate-interaction');
 

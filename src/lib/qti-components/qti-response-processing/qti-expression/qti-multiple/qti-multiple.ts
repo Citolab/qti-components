@@ -3,7 +3,9 @@ import { QtiExpression } from '../../../../exports/qti-expression';
 import type { ResponseVariable, VariableDeclaration } from '../../../../exports/variables';
 export class QtiMultiple extends QtiExpression<VariableDeclaration<string | string[]>[]> {
   public override getResult(): ResponseVariable[] {
+    console.debug('qti-multiple getResult called', this.innerHTML);
     const variables = this.getVariables() as ResponseVariable[];
+
     if (variables.length === 0) {
       console.error('unexpected number of children in qti multiple');
       return null;

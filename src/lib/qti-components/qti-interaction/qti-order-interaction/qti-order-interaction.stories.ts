@@ -1,13 +1,13 @@
 import { html } from 'lit';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
-import { expect, fn } from '@storybook/test';
+import { expect, fn } from 'storybook/test';
 import { within } from 'shadow-dom-testing-library';
 
 import drag from '../../../../testing/drag';
 
-import type { StoryObj, Meta } from '@storybook/web-components';
+import type { InputType } from 'storybook/internal/types';
+import type { StoryObj, Meta } from '@storybook/web-components-vite';
 import type { QtiOrderInteraction } from './qti-order-interaction';
-import type { InputType } from '@storybook/core/types';
 import type { QtiSimpleChoice } from '../qti-simple-choice';
 
 const { events, args, argTypes, template } = getStorybookHelpers('qti-order-interaction');

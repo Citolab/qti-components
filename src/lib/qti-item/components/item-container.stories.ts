@@ -1,5 +1,5 @@
 import { html } from 'lit';
-import { expect, waitFor } from '@storybook/test';
+import { expect, waitFor } from 'storybook/test';
 import { within } from 'shadow-dom-testing-library';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 
@@ -7,7 +7,7 @@ import { qtiTransformItem } from '../../qti-transformers';
 import { getAssessmentItemFromItemContainer } from '../../../testing/test-utils';
 
 import type { ItemContainer } from '../components/item-container';
-import type { Meta, StoryObj } from '@storybook/web-components';
+import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 const { events, args, argTypes, template } = getStorybookHelpers('item-container');
 

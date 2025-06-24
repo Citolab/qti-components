@@ -7,6 +7,7 @@ import { itemContext } from '../../exports/qti-assessment-item.context';
 import { itemContextVariables } from '../../exports/item.context';
 
 import type { ItemShowCandidateCorrection } from '../../qti-item/components/item-show-candidate-correction.ts';
+import type { QtiTemplateProcessing } from '../qti-template-processing/qti-template-declaration/qti-template-processing';
 import type { InteractionChangedDetails, OutcomeChangedDetails } from '../internal/event-types';
 import type { ResponseInteraction } from '../../exports/expression-result';
 import type { VariableDeclaration, VariableValue } from '../../exports/variables';
@@ -31,6 +32,7 @@ import type { ItemShowCorrectResponse } from '../../qti-item/components/item-sho
 @customElement('qti-assessment-item')
 export class QtiAssessmentItem extends LitElement {
   private _itemTitle: string;
+  private _templateProcessing: QtiTemplateProcessing | null = null;
 
   @property({ type: String }) identifier: string = '';
   @property({ type: String }) adaptive: 'true' | 'false' = 'false';
@@ -156,6 +158,8 @@ export class QtiAssessmentItem extends LitElement {
     this._attachEventListeners();
     super.connectedCallback();
     this.updateComplete.then(() => {
+      this._processTemplates();
+
       this.dispatchEvent(
         new CustomEvent<QtiAssessmentItem>('qti-assessment-item-connected', {
           bubbles: true,
@@ -295,6 +299,37 @@ export class QtiAssessmentItem extends LitElement {
     document.querySelectorAll('item-show-candidate-correction').forEach((el: ItemShowCandidateCorrection) => {
       el.shown = show;
     })
+  }
+
+  /**
+   * Toggles the display of the candidate correction for all interactions.
+   * @param show - A boolean indicating whether to show or hide candidate correction.
+   */
+  public showCandidateCorrection(show: boolean): void {
+    // Get all response variables
+    const responseVariables = this._context.variables.filter(v => v.type === 'response') as ResponseVariable[];
+
+    // Iterate through all interaction elements
+    for (const interaction of this._interactionElements) {
+      // Get the response identifier for this interaction
+      const responseIdentifier = interaction.getAttribute('response-identifier');
+
+      // Find the matching response variable for this interaction
+      const responseVariable = responseVariables.find(v => v.identifier === responseIdentifier);
+
+      // If we found a matching response variable, toggle the candidate correction
+      if (responseVariable) {
+        interaction.toggleCandidateCorrection(responseVariable, show);
+      }
+    }
+  }
+
+  private _processTemplates(): void {
+    this._templateProcessing = this.querySelector<QtiTemplateProcessing>('qti-template-processing');
+    if (this._templateProcessing) {
+      // Run template processing before first presentation
+      this._templateProcessing.process();
+    }
   }
 
   public processResponse(countNumAttempts = true, reportValidityAfterScoring = true): boolean {

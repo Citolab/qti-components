@@ -38,6 +38,7 @@ export class QtiResponseDeclaration extends QtiVariableDeclaration {
 
   public override connectedCallback() {
     super.connectedCallback();
+    const defaultValue = this.defaultValues(this.cardinality);
 
     const responseVariable: ResponseVariable = {
       baseType: this.baseType,
@@ -45,12 +46,13 @@ export class QtiResponseDeclaration extends QtiVariableDeclaration {
       correctResponse: this.correctResponse,
       cardinality: this.cardinality || 'single',
       mapping: this.mapping,
+      defaultValue,
       areaMapping: this.areaMapping,
       value: null,
       type: 'response',
       candidateResponse: null
     };
-    responseVariable.value = this.defaultValues(responseVariable);
+    responseVariable.value = defaultValue;
 
     this.dispatchEvent(
       new CustomEvent('qti-register-variable', {

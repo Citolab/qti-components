@@ -191,17 +191,17 @@ describe('qti-lookup-outcome-value', () => {
     expect(result).toBe(0);
   });
 
-  // it('score correct with RESPONSE B', () => {
-  //   const assessmentItem = setupQtiAssessmentItem2();
-  //
-  //   const lookupOutcomeValue = assessmentItem!.querySelector('qti-lookup-outcome-value') as QtiLookupOutcomeValue;
-  //
-  //   assessmentItem.updateResponseVariable('RESPONSE', 'B');
-  //   assessmentItem.processResponse();
-  //
-  //   const result = lookupOutcomeValue.process();
-  //   expect(result).toBe(1);
-  // });
+  it('score correct with RESPONSE B', () => {
+    const assessmentItem = setupQtiAssessmentItem2();
+
+    const lookupOutcomeValue = assessmentItem!.querySelector('qti-lookup-outcome-value') as QtiLookupOutcomeValue;
+    console.debug('lookupOutcomeValue', lookupOutcomeValue);
+    assessmentItem.updateResponseVariable('RESPONSE', 'B');
+    assessmentItem.processResponse();
+
+    const result = lookupOutcomeValue.process();
+    expect(result).toBe(1);
+  });
 
   it('score correct with RESPONSE A', () => {
     const assessmentItem = setupQtiAssessmentItem2();

@@ -1,15 +1,14 @@
-import { setCustomElementsManifest } from '@storybook/web-components';
+import { setCustomElementsManifest } from '@storybook/web-components-vite';
 import { setStorybookHelpersConfig, type Options } from '@wc-toolkit/storybook-helpers';
-import { withActions } from '@storybook/addon-actions/decorator';
 import prettier from 'prettier-v2'; /* https://github.com/storybookjs/storybook/issues/8078#issuecomment-2325332120 */
 import HTMLParser from 'prettier-v2/parser-html'; /* https://github.com/storybookjs/storybook/issues/8078#issuecomment-2325332120 */
-import { expect } from '@storybook/test';
+import { expect } from 'storybook/test';
 import { withThemeByClassName } from '@storybook/addon-themes';
 
 import customElements from '../custom-elements.json';
 import { toBePositionedRelativeTo } from '../test/setup/toBePositionedRelativeTo';
 
-import type { Preview } from '@storybook/web-components';
+import type { Preview } from '@storybook/web-components-vite';
 
 import '../src/lib/qti-components';
 import '../src/lib/qti-test/core';
@@ -60,7 +59,6 @@ setCustomElementsManifest(customElements);
 
 const preview: Preview = {
   decorators: [
-    withActions,
     withThemeByClassName({
       themes: {
         light: 'light-theme',

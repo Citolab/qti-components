@@ -1,4 +1,4 @@
-import { expect, fireEvent } from '@storybook/test';
+import { expect, fireEvent } from 'storybook/test';
 import { html } from 'lit';
 import { findByShadowTitle, getByShadowText, within } from 'shadow-dom-testing-library';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
@@ -7,7 +7,7 @@ import { spread } from '@open-wc/lit-helpers';
 import { getAssessmentItemFromTestContainerByDataTitle } from '../../../testing/test-utils';
 
 import type { TestPrev } from '.';
-import type { Meta, StoryObj } from '@storybook/web-components';
+import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 const { events, args, argTypes, template } = getStorybookHelpers('test-prev');
 

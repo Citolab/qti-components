@@ -1,10 +1,10 @@
-import { expect } from '@storybook/test';
-import { fireEvent } from '@storybook/test';
+import { expect } from 'storybook/test';
+import { fireEvent } from 'storybook/test';
 
 import { getItemByUri } from '../../../../../lib/qti-loader';
 
 import type { QtiAssessmentItem, QtiSimpleChoice } from '../../../../../lib';
-import type { Meta, StoryObj } from '@storybook/web-components';
+import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 type Story = StoryObj;
 

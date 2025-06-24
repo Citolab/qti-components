@@ -1,5 +1,5 @@
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
-import { expect, fireEvent, userEvent, waitFor } from '@storybook/test';
+import { expect, fireEvent, userEvent, waitFor } from 'storybook/test';
 import { findByShadowText, within } from 'shadow-dom-testing-library';
 import { spread } from '@open-wc/lit-helpers';
 import { html } from 'lit';
@@ -7,7 +7,7 @@ import { html } from 'lit';
 import { getAssessmentItemFromTestContainerByDataTitle } from '../../../testing/test-utils';
 
 import type { TestEndAttempt } from './test-end-attempt';
-import type { Meta, StoryObj } from '@storybook/web-components';
+import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 const { events, args, argTypes, template } = getStorybookHelpers('test-end-attempt');
 

@@ -6,7 +6,7 @@ import { within } from 'shadow-dom-testing-library';
 
 import { getAssessmentItemFromItemContainer } from '../../../testing/test-utils';
 
-import type { Meta, StoryObj } from '@storybook/web-components';
+import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { ItemShowCorrectResponse } from './item-show-correct-response';
 import './item-show-correct-response';
 import './item-correct-response-mode';

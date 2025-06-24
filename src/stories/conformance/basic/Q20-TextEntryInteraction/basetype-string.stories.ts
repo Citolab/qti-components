@@ -1,11 +1,11 @@
-import { action } from '@storybook/addon-actions';
-import { expect } from '@storybook/test';
-import { fireEvent, screen, userEvent } from '@storybook/test';
+import { action } from 'storybook/actions';
+import { expect } from 'storybook/test';
+import { fireEvent, screen, userEvent } from 'storybook/test';
 import { html } from 'lit';
 
 import { getItemByUri, type QtiAssessmentItem, type QtiTextEntryInteraction } from '../../../../lib';
 
-import type { Meta, StoryObj } from '@storybook/web-components';
+import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 type Story = StoryObj;
 

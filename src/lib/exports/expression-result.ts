@@ -18,9 +18,18 @@ export type integer = number;
 
 // export type string|string[] = string | string[];
 
-export type BaseType = 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'string' | 'identifier' | 'pair';
+export type BaseType =
+  | 'boolean'
+  | 'directedPair'
+  | 'duration'
+  | 'float'
+  | 'integer'
+  | 'string'
+  | 'identifier'
+  | 'pair'
+  | 'record'; // record is a special type for QTI context variables
 
 export type Multiple = string | string[][];
 export type Ordered = string | string[][];
 
-export type Cardinality = 'multiple' | 'ordered' | 'single';
+export type Cardinality = 'multiple' | 'ordered' | 'single' | 'record';

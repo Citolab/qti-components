@@ -1,12 +1,12 @@
 import { render } from 'lit';
-import { composeStory } from '@storybook/preview-api';
+import { composeStory } from 'storybook/preview-api';
 import { vi } from 'vitest';
 
 import Meta, { SlowLoadingStimulus, NotLoadingAdvancedOrder } from './test-integration.stories';
 import { ExtendedXMLHttpRequest } from '../testing/xmlHttpRequest';
 
 import type { ComposedStoryFn } from 'storybook/internal/types';
-import type { WebComponentsRenderer } from '@storybook/web-components';
+import type { WebComponentsRenderer } from '@storybook/web-components-vite';
 
 import '../lib/index';
 
