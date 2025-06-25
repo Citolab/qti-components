@@ -20,7 +20,7 @@ export class QtiExtendedTextInteraction extends Interaction {
 
   @property({ type: String, attribute: 'pattern-mask' }) patternMask: string;
 
-  /** text appearing in the extended-text-nteraction if it is empty */
+  /** text appearing in the extended-text-interaction if it is empty */
   @property({ type: String, attribute: 'placeholder-text' }) placeholderText: string;
 
   @property({ type: String, attribute: 'data-patternmask-message' }) dataPatternmaskMessage: string;
@@ -85,6 +85,10 @@ export class QtiExtendedTextInteraction extends Interaction {
     }
 
     return !!this.response && textarea.checkValidity();
+  }
+
+  public toggleCorrectResponse() {
+    // No correct response possible for extended text interactions
   }
 
   override reportValidity() {
