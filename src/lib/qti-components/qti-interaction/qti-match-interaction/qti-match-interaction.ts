@@ -108,7 +108,7 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
     }
   }
 
-  public toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean): void {
+  public toggleInternalCorrectResponse(responseVariable: ResponseVariable, show: boolean): void {
     if (responseVariable.correctResponse) {
       const response = Array.isArray(responseVariable.correctResponse)
         ? responseVariable.correctResponse
