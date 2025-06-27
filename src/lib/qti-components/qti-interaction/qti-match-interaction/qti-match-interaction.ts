@@ -183,6 +183,7 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
     console.log(matches);
 
     this.targetChoices.forEach(targetChoice => {
+      console.log(targetChoice);
       const targetId = targetChoice.getAttribute('identifier');
       const match = matches.find(m => m.gap === targetId);
       if (!match?.text) {
