@@ -211,3 +211,44 @@ export const MultipleResponse: Story = {
     });
   }
 };
+
+export const Match: Story = {
+  args: {
+    'item-url': '/qti-test-package/items/match.xml' // Set the new item URL here
+  },
+  render: args =>
+    html` <qti-item>
+      <div>
+        <item-container style="display: block;width: 400px; height: 350px;" item-url=${args['item-url'] as string}>
+          <template>
+            <style>
+              qti-assessment-item {
+                padding: 1rem;
+                display: block;
+                aspect-ratio: 4 / 3;
+                width: 800px;
+
+                border: 2px solid blue;
+                transform: scale(0.5);
+                transform-origin: top left;
+              }
+            </style>
+          </template>
+        </item-container>
+        <item-show-candidate-correction></item-show-candidate-correction>
+      </div>
+    </qti-item>`,
+  play: async ({ canvasElement, step }) => {
+    // wait for qti-simple-choice to be rendered
+    const canvas = within(canvasElement);
+    const showCorrectButton = await canvas.getAllByShadowText(/Show candidate correction/i)[0];
+
+    await step('Click on the Show Correct button', async () => {
+      await showCorrectButton.click();
+    });
+
+    await step('Click on the Hide Correct button and deselect options', async () => {
+      await showCorrectButton.click();
+    });
+  }
+};
