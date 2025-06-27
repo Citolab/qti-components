@@ -108,7 +108,7 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
     }
   }
 
-  private getMatches(responseVariable: ResponseVariable): { text: string; gap: string }[] {
+  private getMatches(responseVariable: ResponseVariable): { source: string; target: string }[] {
     if (!responseVariable.correctResponse) {
       return [];
     }
@@ -116,11 +116,11 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
       ? responseVariable.correctResponse
       : [responseVariable.correctResponse];
 
-    const matches: { text: string; gap: string }[] = [];
+    const matches: { source: string; target: string }[] = [];
     if (correctResponse) {
       correctResponse.forEach(x => {
         const split = x.split(' ');
-        matches.push({ text: split[0], gap: split[1] });
+        matches.push({ source: split[0], target: split[1] });
       });
     }
     return matches;
@@ -141,10 +141,10 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
 
         this.targetChoices.forEach(targetChoice => {
           const targetId = targetChoice.getAttribute('identifier');
-          const match = matches.find(m => m.gap === targetId);
+          const match = matches.find(m => m.target === targetId);
 
-          if (match?.text) {
-            const sourceChoice = this.querySelector(`qti-simple-associable-choice[identifier="${match.text}"]`);
+          if (match?.source) {
+            const sourceChoice = this.querySelector(`qti-simple-associable-choice[identifier="${match.source}"]`);
             const text = sourceChoice?.textContent?.trim();
 
             if (text && !targetChoice.previousElementSibling?.classList.contains('correct-option')) {
@@ -183,26 +183,25 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
 
     this.targetChoices.forEach(targetChoice => {
       const targetId = targetChoice.getAttribute('identifier');
-      const match = matches.find(m => m.gap === targetId);
+      const targetMatches = matches.filter(m => m.target === targetId);
 
-      const selectedChoice = targetChoice.querySelector(`qti-simple-associable-choice`);
+      const selectedChoices = targetChoice.querySelectorAll(`qti-simple-associable-choice`);
 
-      if (!selectedChoice) {
-        return;
-      }
-      selectedChoice.internals.states.delete('candidate-correct');
-      selectedChoice.internals.states.delete('candidate-incorrect');
+      selectedChoices.forEach(selectedChoice => {
+        selectedChoice.internals.states.delete('candidate-correct');
+        selectedChoice.internals.states.delete('candidate-incorrect');
 
-      if (!show) {
-        return;
-      }
+        if (!show) {
+          return;
+        }
 
-      const isCorrect = selectedChoice.identifier === match.text;
-      if (isCorrect) {
-        selectedChoice.internals.states.add('candidate-correct');
-      } else {
-        selectedChoice.internals.states.add('candidate-incorrect');
-      }
+        const isCorrect = targetMatches.find(m => m.source === selectedChoice.identifier)?.source !== undefined;
+        if (isCorrect) {
+          selectedChoice.internals.states.add('candidate-correct');
+        } else {
+          selectedChoice.internals.states.add('candidate-incorrect');
+        }
+      })
     });
   }
 
