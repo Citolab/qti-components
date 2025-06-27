@@ -246,7 +246,7 @@ export const Match: Story = {
     const showCorrectButton = await canvas.findByShadowText(/Show candidate correction/i);
 
     const matchItem1 = await canvas.findByShadowText('Prospero') as QtiSimpleAssociableChoice;
-    const matchItem2 = await canvas.findByShadowText('Lysander') as QtiSimpleAssociableChoice;
+    const matchItem2 = await canvas.findByShadowText('Capulet') as QtiSimpleAssociableChoice;
     const matchItem3 = await canvas.findByShadowText('Demetrius') as QtiSimpleAssociableChoice;
 
     const dropZone1 = await canvas.findByShadowText('The Tempest');
@@ -264,7 +264,7 @@ export const Match: Story = {
       await step('Verify candidate correction state is applied', async () => {
         const matchItem1List = Array.from(await canvas.findAllByShadowText('Prospero'));
         const matchItem1CandidateResponse = matchItem1List[1] as QtiSimpleAssociableChoice
-        const matchItem2List = Array.from(await canvas.findAllByShadowText('Lysander'));
+        const matchItem2List = Array.from(await canvas.findAllByShadowText('Capulet'));
         const matchItem2CandidateResponse = matchItem2List[1] as QtiSimpleAssociableChoice
         const matchItem3List = Array.from(await canvas.findAllByShadowText('Demetrius'));
         const matchItem3CandidateResponse = matchItem3List[1] as QtiSimpleAssociableChoice
