@@ -41,7 +41,7 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
 
   @property({ type: String, attribute: 'response-identifier' }) responseIdentifier: string = '';
 
-  @state() protected correctOptions: { text: string; gap: string }[] = null;
+  @state() protected correctOptions: { source: string; target: string }[] = null;
 
   async connectedCallback(): Promise<void> {
     super.connectedCallback();
@@ -232,7 +232,7 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
                         (this.response || []).filter(v => v.split(' ')[0] === rowId).length || 0;
                       const checked = this.response?.includes(value) || false;
                       const type = row.matchMax === 1 ? 'radio' : 'checkbox';
-                      const isCorrect = !!this.correctOptions?.find(x => x.text === rowId && x.gap === colId);
+                      const isCorrect = !!this.correctOptions?.find(x => x.source === rowId && x.target === colId);
                       const part =
                         type === 'radio'
                           ? `rb ${checked ? 'rb-checked' : ''} ${hasCorrectResponse ? (isCorrect ? 'rb-correct' : 'rb-incorrect') : ''}`
