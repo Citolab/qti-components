@@ -180,20 +180,14 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
       return;
     }
     const matches = this.getMatches(responseVariable);
-    console.log(matches);
 
     this.targetChoices.forEach(targetChoice => {
-      console.log(targetChoice);
       const targetId = targetChoice.getAttribute('identifier');
       const match = matches.find(m => m.gap === targetId);
-      if (!match?.text) {
-        console.error('No match found for this target choice.');
-        return;
-      }
+
       const selectedChoice = targetChoice.querySelector(`qti-simple-associable-choice`);
 
       if (!selectedChoice) {
-        console.log('No selected choice found for this target choice.');
         return;
       }
       selectedChoice.internals.states.delete('candidate-correct');
@@ -204,7 +198,6 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
       }
 
       const isCorrect = selectedChoice.identifier === match.text;
-      console.log(isCorrect);
       if (isCorrect) {
         selectedChoice.internals.states.add('candidate-correct');
       } else {

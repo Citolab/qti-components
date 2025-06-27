@@ -815,6 +815,7 @@
             @apply foc;
           }
 
+          padding: var(--qti-dropzone-padding);
           margin-top: 0.5rem;
           gap: 0.5rem;
           display: flex;
