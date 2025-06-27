@@ -180,29 +180,34 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
       return;
     }
     const matches = this.getMatches(responseVariable);
+    console.log(matches);
 
     this.targetChoices.forEach(targetChoice => {
       const targetId = targetChoice.getAttribute('identifier');
       const match = matches.find(m => m.gap === targetId);
-      if (match?.text) {
-        const selectedChoice = targetChoice.querySelector(`qti-simple-associable-choice`);
+      if (!match?.text) {
+        console.error('No match found for this target choice.');
+        return;
+      }
+      const selectedChoice = targetChoice.querySelector(`qti-simple-associable-choice`);
 
-        if (!selectedChoice) {
-          return;
-        }
-        selectedChoice.internals.states.delete('candidate-correct');
-        selectedChoice.internals.states.delete('candidate-incorrect');
+      if (!selectedChoice) {
+        console.log('No selected choice found for this target choice.');
+        return;
+      }
+      selectedChoice.internals.states.delete('candidate-correct');
+      selectedChoice.internals.states.delete('candidate-incorrect');
 
-        if (!show) {
-          return;
-        }
+      if (!show) {
+        return;
+      }
 
-        const isCorrect = selectedChoice.identifier === match.text;
-        if (isCorrect) {
-          selectedChoice.internals.states.add('candidate-correct');
-        } else {
-          selectedChoice.internals.states.add('candidate-incorrect');
-        }
+      const isCorrect = selectedChoice.identifier === match.text;
+      console.log(isCorrect);
+      if (isCorrect) {
+        selectedChoice.internals.states.add('candidate-correct');
+      } else {
+        selectedChoice.internals.states.add('candidate-incorrect');
       }
     });
   }
