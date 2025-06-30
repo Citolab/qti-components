@@ -815,6 +815,7 @@
             @apply foc;
           }
 
+          padding: var(--qti-dropzone-padding);
           margin-top: 0.5rem;
           gap: 0.5rem;
           display: flex;
@@ -829,6 +830,14 @@
 
         & > qti-simple-associable-choice {
           @apply drag;
+
+          &:state(candidate-correct) {
+            background-color: var(--qti-correct);
+          }
+
+          &:state(candidate-incorrect) {
+            background-color: var(--qti-incorrect);
+          }
 
           &::part(dropslot) {
             display: none;

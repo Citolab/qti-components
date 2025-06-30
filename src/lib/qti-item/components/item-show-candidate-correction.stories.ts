@@ -4,11 +4,13 @@ import { html } from 'lit';
 import { expect } from 'storybook/test';
 import { within } from 'shadow-dom-testing-library';
 
+import drag from '../../../testing/drag.ts';
+
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { ItemShowCandidateCorrection } from './item-show-candidate-correction.ts';
 import './item-show-candidate-correction.ts';
 import type { ItemContainer } from './item-container';
-import type { QtiSimpleChoice } from '../../qti-components';
+import type { QtiSimpleAssociableChoice, QtiSimpleChoice } from '../../qti-components';
 
 const { events, args, argTypes } = getStorybookHelpers('test-print-item-variables');
 
@@ -208,6 +210,134 @@ export const MultipleResponse: Story = {
 
       await choiceA.click();
       await choiceC.click();
+    });
+  }
+};
+
+export const Match: Story = {
+  args: {
+    'item-url': '/qti-test-package/items/match.xml' // Set the new item URL here
+  },
+  render: args =>
+    html` <qti-item>
+      <div>
+        <item-container style="display: block;width: 400px; height: 350px;" item-url=${args['item-url'] as string}>
+          <template>
+            <style>
+              qti-assessment-item {
+                padding: 1rem;
+                display: block;
+                aspect-ratio: 4 / 3;
+                width: 800px;
+
+                border: 2px solid blue;
+                transform: scale(0.5);
+                transform-origin: top left;
+              }
+            </style>
+          </template>
+        </item-container>
+        <item-show-candidate-correction></item-show-candidate-correction>
+      </div>
+    </qti-item>`,
+  play: async ({ canvasElement, step }) => {
+    // wait for qti-simple-choice to be rendered
+    const canvas = within(canvasElement);
+    const showCorrectButton = await canvas.findByShadowText(/Show candidate correction/i);
+
+    const matchItem1 = await canvas.findByShadowText('Prospero') as QtiSimpleAssociableChoice;
+    const matchItem2 = await canvas.findByShadowText('Capulet') as QtiSimpleAssociableChoice;
+    const matchItem3 = await canvas.findByShadowText('Demetrius') as QtiSimpleAssociableChoice;
+
+    const dropZone1 = await canvas.findByShadowText('The Tempest');
+    const dropZone2 = await canvas.findByShadowText("A Midsummer-Night's Dream");
+    const dropZone3 = await canvas.findByShadowText('Romeo and Juliet');
+
+
+    await step('Drag and drop match interaction items', async () => {
+      await drag(matchItem1, { to: dropZone1 });
+      await drag(matchItem2, { to: dropZone2 });
+      await drag(matchItem3, { to: dropZone3 });
+      await showCorrectButton.click();
+
+
+      await step('Verify candidate correction state is applied', async () => {
+        const matchItem1List = Array.from(await canvas.findAllByShadowText('Prospero'));
+        const matchItem1CandidateResponse = matchItem1List[1] as QtiSimpleAssociableChoice
+        const matchItem2List = Array.from(await canvas.findAllByShadowText('Capulet'));
+        const matchItem2CandidateResponse = matchItem2List[1] as QtiSimpleAssociableChoice
+        const matchItem3List = Array.from(await canvas.findAllByShadowText('Demetrius'));
+        const matchItem3CandidateResponse = matchItem3List[1] as QtiSimpleAssociableChoice
+
+        expect(matchItem1CandidateResponse.internals.states.has('candidate-correct')).toBe(true);
+        expect(matchItem2CandidateResponse.internals.states.has('candidate-correct')).toBe(false);
+        expect(matchItem3CandidateResponse.internals.states.has('candidate-correct')).toBe(false);
+        expect(matchItem1CandidateResponse.internals.states.has('candidate-incorrect')).toBe(false);
+        expect(matchItem2CandidateResponse.internals.states.has('candidate-incorrect')).toBe(true);
+        expect(matchItem3CandidateResponse.internals.states.has('candidate-incorrect')).toBe(true);
+      });
+    });
+  }
+};
+
+export const MatchAllToOneZone: Story = {
+  args: {
+    'item-url': '/qti-test-package/items/match.xml' // Set the new item URL here
+  },
+  render: args =>
+    html` <qti-item>
+      <div>
+        <item-container style="display: block;width: 400px; height: 350px;" item-url=${args['item-url'] as string}>
+          <template>
+            <style>
+              qti-assessment-item {
+                padding: 1rem;
+                display: block;
+                aspect-ratio: 4 / 3;
+                width: 800px;
+
+                border: 2px solid blue;
+                transform: scale(0.5);
+                transform-origin: top left;
+              }
+            </style>
+          </template>
+        </item-container>
+        <item-show-candidate-correction></item-show-candidate-correction>
+      </div>
+    </qti-item>`,
+  play: async ({ canvasElement, step }) => {
+    // wait for qti-simple-choice to be rendered - fresh UI state
+    const canvas = within(canvasElement);
+    const showCorrectButton = await canvas.findByShadowText(/Show candidate correction/i);
+
+    const matchItem1 = await canvas.findByShadowText('Prospero') as QtiSimpleAssociableChoice;
+    const matchItem2 = await canvas.findByShadowText('Lysander') as QtiSimpleAssociableChoice;
+    const matchItem3 = await canvas.findByShadowText('Demetrius') as QtiSimpleAssociableChoice;
+
+    const dropZone1 = await canvas.findByShadowText('The Tempest');
+
+    await step('Drag and drop all match interaction items to single dropzone', async () => {
+      await drag(matchItem1, { to: dropZone1 });
+      await drag(matchItem2, { to: dropZone1 });
+      await drag(matchItem3, { to: dropZone1 });
+      await showCorrectButton.click();
+
+      await step('Verify candidate correction state is applied', async () => {
+        const matchItem1List = Array.from(await canvas.findAllByShadowText('Prospero'));
+        const matchItem1CandidateResponse = matchItem1List[1] as QtiSimpleAssociableChoice
+        const matchItem2List = Array.from(await canvas.findAllByShadowText('Lysander'));
+        const matchItem2CandidateResponse = matchItem2List[1] as QtiSimpleAssociableChoice
+        const matchItem3List = Array.from(await canvas.findAllByShadowText('Demetrius'));
+        const matchItem3CandidateResponse = matchItem3List[1] as QtiSimpleAssociableChoice
+
+        expect(matchItem1CandidateResponse.internals.states.has('candidate-correct')).toBe(true);
+        expect(matchItem2CandidateResponse.internals.states.has('candidate-correct')).toBe(false);
+        expect(matchItem3CandidateResponse.internals.states.has('candidate-correct')).toBe(false);
+        expect(matchItem1CandidateResponse.internals.states.has('candidate-incorrect')).toBe(false);
+        expect(matchItem2CandidateResponse.internals.states.has('candidate-incorrect')).toBe(true);
+        expect(matchItem3CandidateResponse.internals.states.has('candidate-incorrect')).toBe(true);
+      });
     });
   }
 };
