@@ -261,6 +261,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
       const dropContainer = droppables[0]?.parentElement;
       if (dropContainer) {
+        // Calculate the correct width of grid columns by adding the defined padding to the maximum width
         dropContainer.style.gridTemplateColumns = `repeat(auto-fit, minmax(calc(${maxWidth}px + 2 * var(--qti-dropzone-padding)), 1fr))`;
       }
 

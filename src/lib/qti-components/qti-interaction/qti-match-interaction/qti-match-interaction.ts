@@ -232,7 +232,7 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
                         (this.response || []).filter(v => v.split(' ')[0] === rowId).length || 0;
                       const checked = this.response?.includes(value) || false;
                       const type = row.matchMax === 1 ? 'radio' : 'checkbox';
-                      const isCorrect = !!this.correctOptions?.find(x => x.source === rowId && x.target === colId);
+                      const isCorrect = !!this.correctOptions?.find(option => option.source === rowId && option.target === colId);
                       const part =
                         type === 'radio'
                           ? `rb ${checked ? 'rb-checked' : ''} ${hasCorrectResponse ? (isCorrect ? 'rb-correct' : 'rb-incorrect') : ''}`
