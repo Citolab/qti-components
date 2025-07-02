@@ -1,9 +1,12 @@
-import { css, html } from 'lit';
+import { css, html, PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
+import { consume } from '@lit/context';
 
 import { Interaction } from '../../../exports/interaction';
+import { configContext } from '../../../exports/config.context';
 
+import type { ConfigContext } from '../../../exports/config.context';
 import type { ResponseVariable } from '../../../exports/variables';
 
 interface OptionType {
@@ -62,7 +65,11 @@ export class QtiInlineChoiceInteraction extends Interaction {
   protected correctOption: string = '';
 
   @property({ attribute: 'data-prompt', type: String })
-  dataPrompt: string = 'select';
+  dataPrompt: string = '';
+
+  @consume({ context: configContext, subscribe: true })
+  @property({ attribute: false })
+  declare configContext: ConfigContext;
 
   override render() {
     return html`
@@ -81,10 +88,26 @@ export class QtiInlineChoiceInteraction extends Interaction {
   connectedCallback() {
     super.connectedCallback();
     this.addEventListener('on-dropdown-selected', this.choiceSelected);
+  }
+
+  override disconnectedCallback() {
+    super.disconnectedCallback();
+    this.removeEventListener('on-dropdown-selected', this.choiceSelected);
+  }
+
+  override willUpdate(changed: PropertyValues<this>) {
+    if (changed.has('configContext') || changed.has('dataPrompt')) {
+      this._updateOptions();
+    }
+  }
+
+  private _updateOptions() {
     const choices = Array.from(this.querySelectorAll('qti-inline-choice'));
+    const prompt = this.dataPrompt || this.configContext?.inlineChoicePrompt || 'select';
+
     this.options = [
       {
-        textContent: this.dataPrompt,
+        textContent: prompt,
         value: '',
         selected: false
       },
@@ -94,10 +117,6 @@ export class QtiInlineChoiceInteraction extends Interaction {
         selected: false
       }))
     ];
-  }
-
-  disconnectedCallback() {
-    this.removeEventListener('on-dropdown-selected', this.choiceSelected);
   }
 
   public validate(): boolean {
