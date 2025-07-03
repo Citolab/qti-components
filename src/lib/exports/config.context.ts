@@ -7,6 +7,7 @@ export interface ConfigContext {
   reportValidityAfterScoring?: boolean;
   disableAfterIfMaxChoicesReached?: boolean;
   correctResponseMode?: CorrectResponseMode;
+  inlineChoicePrompt?: string;
 }
 
 export const configContext = createContext<Readonly<ConfigContext>>(Symbol('configContext'));
