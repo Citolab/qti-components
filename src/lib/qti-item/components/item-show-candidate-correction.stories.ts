@@ -409,3 +409,70 @@ export const InlineChoice: Story = {
     });
   }
 };
+
+export const TextEntry: Story = {
+  args: {
+    'item-url': '/qti-item/example-text-entry.xml'
+  },
+  render: args => html`
+    <qti-item>
+      <div>
+        <item-container
+          style="display: block; width: 400px; height: 350px;"
+          item-url=${args['item-url'] as string}
+        >
+          <template>
+            <style>
+              qti-assessment-item {
+                padding: 1rem;
+                display: block;
+                aspect-ratio: 4 / 3;
+                width: 800px;
+                border: 2px solid blue;
+                transform: scale(0.5);
+                transform-origin: top left;
+              }
+            </style>
+          </template>
+        </item-container>
+
+        <item-show-candidate-correction></item-show-candidate-correction>
+      </div>
+    </qti-item>
+  `,
+
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const item = await getAssessmentItemFromItemContainer(canvasElement);
+
+    const interaction = await waitFor(() => {
+      const el = item.querySelector('qti-text-entry-interaction');
+      if (!el) throw new Error('text interaction not found');
+      return el;
+    });
+
+    const selectElement = await waitFor(() => {
+      const select = interaction.shadowRoot?.querySelector<HTMLSelectElement>('select');
+      if (!select) throw new Error('select element not yet available');
+      return select;
+    });
+
+    const showButton = await canvas.findByShadowText(/Show candidate correction/i);
+
+    await step('Select an inline choice option', async () => {
+      selectElement.value = 'Y'; // de correcte identifier (York)
+      selectElement.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+
+    await step('Click on the Show Candidate Correction button', async () => {
+      await showButton.click();
+
+      await step('Verify candidate correction by checking selected option', async () => {
+        const selectedOption = Array.from(selectElement.options).find(opt => opt.selected);
+        expect(selectedOption).not.toBeUndefined();
+        expect(selectedOption.value).toBe('Y');
+        expect(selectedOption.textContent.trim()).toBe('York');
+      });
+    });
+  }
+};

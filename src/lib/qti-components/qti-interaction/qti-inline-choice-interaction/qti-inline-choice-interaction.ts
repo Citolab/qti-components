@@ -14,6 +14,10 @@ interface OptionType {
 
 @customElement('qti-inline-choice-interaction')
 export class QtiInlineChoiceInteraction extends Interaction {
+  get isInline(): boolean {
+    return true;
+  }
+
   static override get styles() {
     return [
       css`
