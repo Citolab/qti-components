@@ -47,6 +47,7 @@ export abstract class Interaction extends LitElement implements IInteraction {
     this._isFullCorrectResponse = val as boolean;
     if (val) {
       this.disabled = true;
+      this.setAttribute('response-identifier', this.responseIdentifier + '_cr');
     }
   }
 

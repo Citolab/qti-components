@@ -38,9 +38,8 @@ div.full-correct-response {
 }
 
 div.full-correct-response-block {
-  display: flex;
+  display: block;
   margin-top: var(--qti-padding-vertical);
-  gap: 0.5rem;
   padding: 0.5rem;
 }
 
