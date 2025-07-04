@@ -598,6 +598,14 @@
   }
 
   qti-inline-choice-interaction {
+    &:state(candidate-correct) {
+      background-color: var(--qti-correct);
+    }
+
+    &:state(candidate-incorrect) {
+      background-color: var(--qti-incorrect);
+    }
+
     &::part(select) {
       @apply select;
 

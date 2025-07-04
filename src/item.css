@@ -40,3 +40,12 @@ div.full-correct-response {
   border: 1px solid #39a7c0;
   background-color: #d9e8ee;
 }
+
+.full-correct-response qti-inline-choice-interaction {
+  display: inline;
+}
+
+/* Override the parent display only when it contains inline-choice */
+.full-correct-response:has(qti-inline-choice-interaction) {
+  display: inline;
+}
