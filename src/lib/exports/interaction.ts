@@ -11,7 +11,7 @@ import type { IInteraction } from './interaction.interface';
 export abstract class Interaction extends LitElement implements IInteraction {
 
   @consume({ context: configContext, subscribe: true })
-  private configContext: ConfigContext;
+  protected configContext: ConfigContext;
 
   static formAssociated = true;
   protected _internals: ElementInternals;

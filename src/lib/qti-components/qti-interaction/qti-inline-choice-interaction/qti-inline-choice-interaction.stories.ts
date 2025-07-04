@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
+import { expect } from 'storybook/test';
 
 import type { QtiInlineChoiceInteraction } from './qti-inline-choice-interaction';
 import type { StoryObj, Meta } from '@storybook/web-components-vite';
@@ -37,9 +38,42 @@ export const Default: Story = {
     )
 };
 
-export const DataPrompt = {
+export const DataPrompt: Story = {
   render: Default.render,
   args: {
     dataPrompt: 'Select the correct answer'
+  }
+};
+
+export const WithConfigContext: Story = {
+  render: args =>
+    html`
+      <qti-item>
+        ${template(
+          args,
+          html`
+            <qti-inline-choice identifier="G">Gloucester</qti-inline-choice>
+            <qti-inline-choice identifier="L">Lancaster</qti-inline-choice>
+          `
+        )}
+      </qti-item>
+    `,
+  args: {},
+  play: async ({ canvasElement, step }) => {
+    const item = canvasElement.querySelector('qti-item')!;
+    item.configContext = {
+      inlineChoicePrompt: 'Select city'
+    };
+
+    const interaction = item.querySelector('qti-inline-choice-interaction')!;
+    await interaction.updateComplete;
+
+    await step('Prompt from configContext is displayed', async () => {
+      const select = interaction.shadowRoot!.querySelector('select')!;
+      const firstOption = select.options[0];
+
+      expect(firstOption).toBeDefined();
+      expect(firstOption.textContent?.trim()).toBe('Select city');
+    });
   }
 };
