@@ -7,7 +7,6 @@ import { Interaction } from '../../../exports/interaction';
 import { positionShapes } from '../internal/hotspots/hotspot';
 
 import type { QtiAreaMapEntry, QtiAreaMapping } from '../../qti-response-processing';
-import type { ResponseVariable } from '../../../exports/variables';
 
 @customElement('qti-select-point-interaction')
 export class QtiSelectPointInteraction extends Interaction {

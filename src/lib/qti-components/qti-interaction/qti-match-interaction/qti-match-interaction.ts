@@ -4,7 +4,7 @@ import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
-import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-interaction-mixin';
+import { DragDropInteractionMixin } from '../internal/drag-drop';
 import styles from './qti-match-interaction.styles';
 import { Interaction } from '../../../exports/interaction';
 

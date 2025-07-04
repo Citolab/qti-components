@@ -5,7 +5,6 @@ import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-intera
 import { Interaction } from '../../../exports/interaction';
 import styles from './qti-gap-match-interaction.styles';
 
-import type { ResponseVariable } from '../../../exports/variables';
 import type { CSSResultGroup } from 'lit';
 @customElement('qti-gap-match-interaction')
 export class QtiGapMatchInteraction extends DragDropInteractionMixin(

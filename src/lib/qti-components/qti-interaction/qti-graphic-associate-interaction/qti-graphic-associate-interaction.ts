@@ -9,7 +9,6 @@ import styles from './qti-graphic-associate-interaction.styles';
 
 import type { QtiHotspotChoice } from '../qti-hotspot-choice';
 import type { CSSResultGroup } from 'lit';
-import type { ResponseVariable } from '../../../exports/variables';
 
 @customElement('qti-graphic-associate-interaction')
 export class QtiGraphicAssociateInteraction extends Interaction {

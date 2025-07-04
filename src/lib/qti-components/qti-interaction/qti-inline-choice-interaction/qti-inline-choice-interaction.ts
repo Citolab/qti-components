@@ -1,4 +1,4 @@
-import { css, html, PropertyValues } from 'lit';
+import { css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { consume } from '@lit/context';
@@ -6,8 +6,8 @@ import { consume } from '@lit/context';
 import { Interaction } from '../../../exports/interaction';
 import { configContext } from '../../../exports/config.context';
 
+import type { PropertyValues } from 'lit';
 import type { ConfigContext } from '../../../exports/config.context';
-import type { ResponseVariable } from '../../../exports/variables';
 
 interface OptionType {
   textContent: string;

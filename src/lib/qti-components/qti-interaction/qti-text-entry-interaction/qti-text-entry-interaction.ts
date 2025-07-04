@@ -5,7 +5,7 @@ import { createRef } from 'lit/directives/ref.js';
 
 import { Correctness, Interaction } from '../../../exports/interaction';
 import styles from './qti-text-entry-interaction.styles';
-import { watch } from '../../../decorators/watch';
+import { watch } from '../../../decorators';
 
 import type { CSSResultGroup } from 'lit';
 @customElement('qti-text-entry-interaction')

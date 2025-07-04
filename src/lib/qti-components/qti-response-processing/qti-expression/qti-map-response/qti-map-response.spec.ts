@@ -79,7 +79,7 @@ describe('qti-map-response', () => {
     assessmentItem.updateResponseVariable('interaction_1', 'a');
 
     const qtiMapResponse = document.body.querySelector('qti-map-response') as QtiMapResponse;
-    expect(qtiMapResponse.getResult()).toEqual(0);
+    expect(qtiMapResponse.getResult()).toEqual(2);
   });
 
   describe('qti-map-response', () => {

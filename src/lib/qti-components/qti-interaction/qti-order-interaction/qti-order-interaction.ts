@@ -1,11 +1,10 @@
 import { html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
-import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-interaction-mixin';
+import { DragDropInteractionMixin } from '../internal/drag-drop';
 import { Interaction } from '../../../exports/interaction';
 import styles from './qti-order-interaction.styles';
 
-import type { ResponseVariable } from '../../../exports/variables';
 import type { QtiSimpleChoice } from '../qti-simple-choice';
 @customElement('qti-order-interaction')
 export class QtiOrderInteraction extends DragDropInteractionMixin(

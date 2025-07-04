@@ -1,10 +1,9 @@
 import { property, query, state } from 'lit/decorators.js';
 import { consume } from '@lit/context';
 
-import { watch } from '../../../../decorators/watch';
+import { watch } from '../../../../decorators';
 import { configContext, type ConfigContext } from '../../../../exports/config.context';
 
-import type { ResponseVariable } from '../../../../exports/variables';
 import type { ChoiceInterface } from '../active-element/active-element.mixin';
 import type { Interaction } from '../../../../exports/interaction';
 import type { IInteraction } from '../../../../exports/interaction.interface';

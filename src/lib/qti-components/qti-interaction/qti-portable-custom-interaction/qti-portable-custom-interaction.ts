@@ -7,7 +7,6 @@ import { Interaction } from '../../../exports/interaction';
 import { itemContext } from '../../../exports/qti-assessment-item.context';
 import { removeDoubleSlashes } from '../../internal/utils';
 
-import type { ResponseVariable } from '../../../exports/variables';
 import type { CSSResultGroup } from 'lit';
 import type { ItemContext } from '../../../exports/item.context';
 import type { BaseType, Cardinality } from '../../../exports/expression-result';
