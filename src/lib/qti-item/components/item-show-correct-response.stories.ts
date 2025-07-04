@@ -707,7 +707,7 @@ export const GraphicOrder: Story = {
   }
 };
 
-export const InlineChoice: Story = {
+export const InlineChoiceInternalCorrectResponse: Story = {
   args: {
     'item-url': '/qti-item/example-inline-choice.xml' // Set the new item URL here
   },
@@ -734,9 +734,13 @@ export const InlineChoice: Story = {
       </div>
     </qti-item>`,
   play: async ({ canvasElement, step }) => {
+    const item = document.querySelector('qti-item');
+    item.configContext = {
+      correctResponseMode: 'internal'
+    };
     const canvas = within(canvasElement);
-    const item = await getAssessmentItemFromItemContainer(canvasElement);
-    const interaction = item.querySelector('qti-inline-choice-interaction');
+    const itemAssessment = await getAssessmentItemFromItemContainer(canvasElement);
+    const interaction = itemAssessment.querySelector('qti-inline-choice-interaction');
 
     const showCorrectButton = await canvas.findByShadowText(`Show correct response`);
     await step('Click on the Show Correct button', async () => {

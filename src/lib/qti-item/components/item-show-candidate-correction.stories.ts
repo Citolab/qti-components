@@ -11,7 +11,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { ItemShowCandidateCorrection } from './item-show-candidate-correction.ts';
 import './item-show-candidate-correction.ts';
 import type { ItemContainer } from './item-container';
-import type { QtiSimpleAssociableChoice, QtiSimpleChoice } from '../../qti-components';
+import type { QtiSimpleAssociableChoice, QtiSimpleChoice, QtiTextEntryInteraction } from '../../qti-components';
 
 const { events, args, argTypes } = getStorybookHelpers('test-print-item-variables');
 
@@ -443,13 +443,41 @@ export const TextEntry: Story = {
 
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const item = await getAssessmentItemFromItemContainer(canvasElement);
 
-    const interaction = await waitFor(() => {
-      const el = item.querySelector('qti-text-entry-interaction');
-      if (!el) throw new Error('text interaction not found');
-      return el;
+    const showButton = await canvas.findByShadowText(/Show candidate correction/i);
+    const item = await getAssessmentItemFromItemContainer(canvasElement);
+    const interaction: QtiTextEntryInteraction = item.querySelector('qti-text-entry-interaction');
+    const input = interaction.shadowRoot?.querySelector<HTMLInputElement>('input');
+
+    await step('Type in the correct answer text entry interaction', async () => {
+      input.value = 'York';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.dispatchEvent(new Event('change', { bubbles: true }));
     });
 
+    await step('Click on the Show Candidate Correction button', async () => {
+      await showButton.click();
+
+      await step('Verify candidate correction by checking selected option', async () => {
+        expect(interaction.internals.states.has('candidate-correct')).toBe(true);
+        expect(interaction.internals.states.has('candidate-incorrect')).toBe(false);
+      });
+    });
+
+    await step('Type in the incorrect answer text entry interaction', async () => {
+      input.value = 'bla';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+
+    await step('Click on the Show Candidate Correction button', async () => {
+      await showButton.click();
+
+      await step('Verify candidate correction by checking selected option', async () => {
+        const interactionResponse: QtiTextEntryInteraction = item.querySelector('qti-text-entry-interaction');
+        expect(interactionResponse.internals.states.has('candidate-correct')).toBe(false);
+        expect(interactionResponse.internals.states.has('candidate-incorrect')).toBe(true);
+      });
+    });
   }
 };

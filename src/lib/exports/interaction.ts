@@ -26,6 +26,10 @@ export abstract class Interaction extends LitElement implements IInteraction {
   static formAssociated = true;
   protected _internals: ElementInternals;
 
+  get internals(): ElementInternals {
+    return this._internals;
+  }
+
   @property({ type: String, attribute: 'response-identifier' }) responseIdentifier;
 
   @property({ reflect: true, type: Boolean }) disabled = false;
