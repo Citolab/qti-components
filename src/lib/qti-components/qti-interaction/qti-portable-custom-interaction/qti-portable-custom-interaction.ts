@@ -1305,7 +1305,9 @@ export class QtiPortableCustomInteraction extends Interaction {
    * @param responseVariable The response variable containing the correct response
    * @param show Whether to show or hide the correct response
    */
-  public toggleInternalCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
+  public toggleInternalCorrectResponse(show: boolean) {
+    const responseVariable = this.responseVariable;
+
     // Store the correct response or clear it based on the show parameter
     this.correctResponse = show
       ? responseVariable?.correctResponse

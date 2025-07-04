@@ -42,11 +42,12 @@ export class QtiOrderInteraction extends DragDropInteractionMixin(
       </div>`;
   }
 
-  public toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean): void {
+  public toggleCorrectResponse(show: boolean): void {
+    const responseVariable = this.responseVariable;
     // Always start by removing old correct answers
     this.shadowRoot.querySelectorAll('.correct-option').forEach(option => option.remove());
 
-    if (show && responseVariable.correctResponse) {
+    if (show && responseVariable?.correctResponse) {
       const response = Array.isArray(responseVariable.correctResponse)
         ? responseVariable.correctResponse
         : [responseVariable.correctResponse];

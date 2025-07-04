@@ -251,6 +251,12 @@
       }
     }
 
+    &:state(candidate-partially-correct) {
+      &::part(input) {
+        background-color: var(--qti-partially-correct);
+      }
+    }
+
     &:state(candidate-incorrect) {
       &::part(input) {
         background-color: var(--qti-incorrect);

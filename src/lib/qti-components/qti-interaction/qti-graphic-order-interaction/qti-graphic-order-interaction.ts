@@ -68,10 +68,11 @@ export class QtiGraphicOrderInteraction extends ChoicesMixin(Interaction, 'qti-h
     }
   }
 
-  public toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
+  public toggleCorrectResponse(show: boolean) {
+    const responseVariable = this.responseVariable as ResponseVariable;
     const hotspots = this._choiceElements as HotspotChoice[];
     for (const hotspot of hotspots) {
-      if (show && responseVariable.correctResponse?.length > 0 && Array.isArray(responseVariable.correctResponse)) {
+      if (show && responseVariable?.correctResponse?.length > 0 && Array.isArray(responseVariable.correctResponse)) {
         const index = responseVariable.correctResponse.findIndex(identifier => identifier === hotspot.identifier);
         if (index >= 0) {
           hotspot.orderCorrect = index + 1;

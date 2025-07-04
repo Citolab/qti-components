@@ -96,8 +96,9 @@ export class QtiSelectPointInteraction extends Interaction {
     this.calculateScale();
   };
 
-  public toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
-    if (!show) {
+  public toggleCorrectResponse(show: boolean) {
+    const responseVariable = this.responseVariable;
+    if (!show || !responseVariable) {
       this._correctAreas = [];
       return;
     }

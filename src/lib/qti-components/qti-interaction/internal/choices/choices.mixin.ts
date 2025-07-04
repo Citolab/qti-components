@@ -78,8 +78,9 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       }
     }
 
-    protected toggleInternalCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
-      if (responseVariable.correctResponse) {
+    protected toggleInternalCorrectResponse(show: boolean) {
+      const responseVariable = this.responseVariable;
+      if (responseVariable?.correctResponse) {
         const responseArray = Array.isArray(responseVariable.correctResponse)
           ? responseVariable.correctResponse
           : [responseVariable.correctResponse];
@@ -97,14 +98,12 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       }
     }
 
-    public toggleCandidateCorrection(responseVariable: ResponseVariable, show: boolean) {
-      if (!responseVariable.correctResponse) {
+    public toggleCandidateCorrection(show: boolean) {
+      const responseVariable = this.responseVariable;
+
+      if (!responseVariable?.correctResponse) {
         return;
       }
-
-      this.isCorrect = show
-        ? responseVariable.correctResponse === responseVariable.value
-        : null;
 
       const correctResponseArray = Array.isArray(responseVariable.correctResponse)
         ? responseVariable.correctResponse

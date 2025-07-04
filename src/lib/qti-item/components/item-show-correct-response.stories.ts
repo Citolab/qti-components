@@ -224,9 +224,11 @@ export const ChoiceFullCorrectResponse: Story = {
         const interaction = fullCorrectResponse.querySelector('qti-choice-interaction');
         const choices = Array.from(interaction.querySelectorAll('qti-simple-choice'));
 
-        expect(choices[0].internals.states.has('candidate-correct')).toBe(true);
-        expect(choices[1].internals.states.has('candidate-correct')).toBe(false);
-        expect(choices[2].internals.states.has('candidate-correct')).toBe(false);
+        await interaction.updateComplete;
+
+        expect(choices[0].internals.states.has('--checked')).toBe(true);
+        expect(choices[1].internals.states.has('--checked')).toBe(false);
+        expect(choices[2].internals.states.has('--checked')).toBe(false);
       });
     });
   }
@@ -330,9 +332,11 @@ export const MultipleResponseFullCorrectResponse: Story = {
         const interaction = fullCorrectResponse.querySelector('qti-choice-interaction');
         const choices = Array.from(interaction.querySelectorAll('qti-simple-choice'));
 
-        expect(choices[0].internals.states.has('candidate-correct')).toBe(true);
-        expect(choices[1].internals.states.has('candidate-correct')).toBe(true);
-        expect(choices[2].internals.states.has('candidate-correct')).toBe(false);
+        await interaction.updateComplete;
+
+        expect(choices[0].internals.states.has('--checked')).toBe(true);
+        expect(choices[1].internals.states.has('--checked')).toBe(true);
+        expect(choices[2].internals.states.has('--checked')).toBe(false);
       });
     });
   }

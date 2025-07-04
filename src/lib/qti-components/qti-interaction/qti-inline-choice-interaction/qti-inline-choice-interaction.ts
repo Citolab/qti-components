@@ -144,8 +144,8 @@ export class QtiInlineChoiceInteraction extends Interaction {
     return this.options.find(option => option.selected)?.value || null;
   }
 
-  toggleInternalCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
-    this.correctResponse = show && responseVariable.correctResponse?.toString();
+  toggleInternalCorrectResponse(show: boolean) {
+    this.correctResponse = show && this.responseVariable?.correctResponse?.toString();
     if (!this.correctResponse) {
       this.correctOption = '';
       return;
