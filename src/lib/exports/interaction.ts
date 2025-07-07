@@ -13,7 +13,7 @@ import type { ItemContext } from './item.context.ts';
 export enum Correctness {
   Correct = 'correct',
   PartiallyCorrect = 'partially-correct',
-  Incorrect = 'incorrect',
+  Incorrect = 'incorrect'
 }
 
 export abstract class Interaction extends LitElement implements IInteraction {
@@ -65,6 +65,8 @@ export abstract class Interaction extends LitElement implements IInteraction {
 
   get correctness(): Readonly<Correctness | null> {
     const responseVariable = this.responseVariable;
+    if (!responseVariable || responseVariable.correctResponse === null) return null;
+
     return responseVariable.correctResponse === responseVariable.value ? Correctness.Correct : Correctness.Incorrect;
   }
 
@@ -139,8 +141,8 @@ export abstract class Interaction extends LitElement implements IInteraction {
     await clone.updateComplete;
 
     clone.response = Array.isArray(responseVariable.correctResponse)
-      ? [...responseVariable.correctResponse] as string[]
-      : responseVariable.correctResponse as string;
+      ? ([...responseVariable.correctResponse] as string[])
+      : (responseVariable.correctResponse as string);
   }
 
   protected toggleInternalCorrectResponse(show: boolean) {
