@@ -6,7 +6,6 @@ import { positionShapes } from '../internal/hotspots/hotspot';
 import { Interaction } from '../../../exports/interaction';
 import styles from './qti-graphic-order-interaction.styles';
 
-import type { ResponseVariable } from '../../../exports/variables';
 import type { QtiHotspotChoice } from '../qti-hotspot-choice';
 import type { Choice } from '../internal/choices/choices.mixin';
 import type { CSSResultGroup } from 'lit';
