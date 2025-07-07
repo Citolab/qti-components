@@ -33,19 +33,21 @@ qti-math-interaction::part(message) {
 }
 
 div.full-correct-response {
-  display: flex;
-  margin-top: 0.5rem;
-  gap: 0.5rem;
-  padding: 0.5rem;
   border: 1px solid #39a7c0;
   background-color: #d9e8ee;
 }
 
-.full-correct-response qti-inline-choice-interaction {
-  display: inline;
+div.full-correct-response-block {
+  display: flex;
+  margin-top: var(--qti-padding-vertical);
+  gap: 0.5rem;
+  padding: 0.5rem;
 }
 
-/* Override the parent display only when it contains inline-choice */
-.full-correct-response:has(qti-inline-choice-interaction) {
-  display: inline;
+/* Override the parent display only when it contains inline interaction */
+div.full-correct-response-inline {
+  display: inline-block;
+  margin-left: var(--qti-padding-horizontal);
+  margin-right: var(--qti-padding-horizontal);
+  padding: 0.2rem;
 }

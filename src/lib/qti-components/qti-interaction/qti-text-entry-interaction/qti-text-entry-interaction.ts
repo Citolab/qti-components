@@ -42,6 +42,10 @@ export class QtiTextEntryInteraction extends Interaction {
     this.response = val || null;
   }
 
+  get isInline(): boolean {
+    return true;
+  }
+
   public override validate() {
     if (!this._input) return false;
     if (this.patternMask && this.dataPatternmaskMessage) {

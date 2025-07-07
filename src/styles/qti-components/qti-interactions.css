@@ -245,6 +245,18 @@
   }
 
   qti-text-entry-interaction {
+    &:state(candidate-correct) {
+      &::part(input) {
+        background-color: var(--qti-correct);
+      }
+    }
+
+    &:state(candidate-incorrect) {
+      &::part(input) {
+        background-color: var(--qti-incorrect);
+      }
+    }
+
     &::part(input) {
       @apply text;
     }

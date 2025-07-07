@@ -16,6 +16,10 @@ export abstract class Interaction extends LitElement implements IInteraction {
   static formAssociated = true;
   protected _internals: ElementInternals;
 
+  get internals(): ElementInternals {
+    return this._internals;
+  }
+
   @property({ type: String, attribute: 'response-identifier' }) responseIdentifier;
 
   @property({ reflect: true, type: Boolean }) disabled = false;
@@ -56,6 +60,10 @@ export abstract class Interaction extends LitElement implements IInteraction {
     this._isCorrect = val as boolean;
   }
 
+  get isInline(): boolean {
+    return false;
+  }
+
   public toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
     const correctResponseMode = this?.configContext?.correctResponseMode || 'internal'
 
@@ -67,8 +75,8 @@ export abstract class Interaction extends LitElement implements IInteraction {
   }
 
   protected async toggleFullCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
-    const nextSibling = this.nextElementSibling;
-    const nextSiblingIsFullCorrectResponse = nextSibling?.classList.contains('full-correct-response');
+    const nextSibling = this.nextSibling;
+    const nextSiblingIsFullCorrectResponse = nextSibling instanceof HTMLDivElement && nextSibling?.classList.contains('full-correct-response');
 
     const isCorrect = responseVariable.correctResponse === responseVariable.value;
 
@@ -95,11 +103,16 @@ export abstract class Interaction extends LitElement implements IInteraction {
 
     const containerDiv = document.createElement('div');
     containerDiv.classList.add('full-correct-response');
+    if (this.isInline) {
+      containerDiv.classList.add('full-correct-response-inline');
+    } else {
+      containerDiv.classList.add('full-correct-response-block');
+    }
     containerDiv.role = 'full-correct-response';
     containerDiv.appendChild(clone);
     clone.setAttribute('response-identifier', this.responseIdentifier + '_cr');
 
-    this.parentElement?.insertBefore(containerDiv, this.nextElementSibling);
+    this.parentElement?.insertBefore(containerDiv, this.nextSibling);
     await clone.updateComplete;
 
     clone.response = Array.isArray(responseVariable.correctResponse)

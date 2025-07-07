@@ -3,15 +3,15 @@ import { spread } from '@open-wc/lit-helpers';
 import { html } from 'lit';
 import { expect, waitFor } from 'storybook/test';
 import { within } from 'shadow-dom-testing-library';
-import { getAssessmentItemFromItemContainer } from '../../../testing/test-utils';
 
+import { getAssessmentItemFromItemContainer } from '../../../testing/test-utils';
 import drag from '../../../testing/drag.ts';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { ItemShowCandidateCorrection } from './item-show-candidate-correction.ts';
 import './item-show-candidate-correction.ts';
 import type { ItemContainer } from './item-container';
-import type { QtiSimpleAssociableChoice, QtiSimpleChoice } from '../../qti-components';
+import type { QtiSimpleAssociableChoice, QtiSimpleChoice, QtiTextEntryInteraction } from '../../qti-components';
 
 const { events, args, argTypes } = getStorybookHelpers('test-print-item-variables');
 
@@ -405,6 +405,78 @@ export const InlineChoice: Story = {
         expect(selectedOption).not.toBeUndefined();
         expect(selectedOption.value).toBe('Y');
         expect(selectedOption.textContent.trim()).toBe('York');
+      });
+    });
+  }
+};
+
+export const TextEntry: Story = {
+  args: {
+    'item-url': '/qti-item/example-text-entry.xml'
+  },
+  render: args => html`
+    <qti-item>
+      <div>
+        <item-container
+          style="display: block; width: 400px; height: 350px;"
+          item-url=${args['item-url'] as string}
+        >
+          <template>
+            <style>
+              qti-assessment-item {
+                padding: 1rem;
+                display: block;
+                aspect-ratio: 4 / 3;
+                width: 800px;
+                border: 2px solid blue;
+                transform: scale(0.5);
+                transform-origin: top left;
+              }
+            </style>
+          </template>
+        </item-container>
+
+        <item-show-candidate-correction></item-show-candidate-correction>
+      </div>
+    </qti-item>
+  `,
+
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    const showButton = await canvas.findByShadowText(/Show candidate correction/i);
+    const item = await getAssessmentItemFromItemContainer(canvasElement);
+    const interaction: QtiTextEntryInteraction = item.querySelector('qti-text-entry-interaction');
+    const input = interaction.shadowRoot?.querySelector<HTMLInputElement>('input');
+
+    await step('Type in the correct answer text entry interaction', async () => {
+      input.value = 'York';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+
+    await step('Click on the Show Candidate Correction button', async () => {
+      await showButton.click();
+
+      await step('Verify candidate correction by checking selected option', async () => {
+        expect(interaction.internals.states.has('candidate-correct')).toBe(true);
+        expect(interaction.internals.states.has('candidate-incorrect')).toBe(false);
+      });
+    });
+
+    await step('Type in the incorrect answer text entry interaction', async () => {
+      input.value = 'bla';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+
+    await step('Click on the Show Candidate Correction button', async () => {
+      await showButton.click();
+
+      await step('Verify candidate correction by checking selected option', async () => {
+        const interactionResponse: QtiTextEntryInteraction = item.querySelector('qti-text-entry-interaction');
+        expect(interactionResponse.internals.states.has('candidate-correct')).toBe(false);
+        expect(interactionResponse.internals.states.has('candidate-incorrect')).toBe(true);
       });
     });
   }
