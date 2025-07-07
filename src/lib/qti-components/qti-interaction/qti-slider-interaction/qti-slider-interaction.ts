@@ -43,7 +43,7 @@ export class QtiSliderInteraction extends Interaction {
   }
 
   public toggleCorrectResponse(show: boolean) {
-    const responseVariable = this.responseVariable as ResponseVariable;
+    const responseVariable = this.responseVariable;
     if (!responseVariable?.correctResponse) return;
 
     if (show) {
