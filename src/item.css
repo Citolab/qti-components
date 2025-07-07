@@ -43,7 +43,6 @@ div.full-correct-response-block {
   padding: 0.5rem;
 }
 
-/* Override the parent display only when it contains inline interaction */
 div.full-correct-response-inline {
   display: inline-block;
   margin-left: var(--qti-padding-horizontal);
