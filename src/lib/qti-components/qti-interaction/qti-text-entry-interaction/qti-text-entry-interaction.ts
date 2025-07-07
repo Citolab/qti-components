@@ -44,7 +44,7 @@ export class QtiTextEntryInteraction extends Interaction {
   get correctness(): Readonly<Correctness | null> {
     const responseVariable = this.responseVariable;
 
-    if (responseVariable.value === null) {
+    if (!responseVariable || responseVariable.value === null) {
       return null;
     }
 
