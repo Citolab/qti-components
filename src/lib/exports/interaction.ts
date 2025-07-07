@@ -85,7 +85,7 @@ export abstract class Interaction extends LitElement implements IInteraction {
     return responseVariables.find(v => v.identifier === responseIdentifier);
   }
 
-  public toggleCorrectResponse(show: boolean) {
+  public toggleCorrectResponse(show: boolean): void {
     const correctResponseMode = this?.configContext?.correctResponseMode || 'internal';
 
     if (correctResponseMode === 'full') {
@@ -95,7 +95,7 @@ export abstract class Interaction extends LitElement implements IInteraction {
     }
   }
 
-  protected async toggleFullCorrectResponse(show: boolean) {
+  protected async toggleFullCorrectResponse(show: boolean): Promise<void> {
     const nextSibling = this.nextSibling;
     const nextSiblingIsFullCorrectResponse =
       nextSibling instanceof HTMLDivElement && nextSibling?.classList.contains('full-correct-response');
@@ -145,7 +145,7 @@ export abstract class Interaction extends LitElement implements IInteraction {
       : (responseVariable.correctResponse as string);
   }
 
-  protected toggleInternalCorrectResponse(show: boolean) {
+  protected toggleInternalCorrectResponse(show: boolean): void {
     const responseVariable = this.responseVariable;
 
     this.correctResponse = show
@@ -155,7 +155,7 @@ export abstract class Interaction extends LitElement implements IInteraction {
         : [];
   }
 
-  public toggleCandidateCorrection(show: boolean) {
+  public toggleCandidateCorrection(show: boolean): void {
     const responseVariable = this.responseVariable;
     if (!responseVariable) return;
 
@@ -216,7 +216,7 @@ export abstract class Interaction extends LitElement implements IInteraction {
   //   }
   // }
 
-  public override connectedCallback() {
+  public override connectedCallback(): void {
     super.connectedCallback();
 
     if (this.isFullCorrectResponse) {
@@ -236,7 +236,7 @@ export abstract class Interaction extends LitElement implements IInteraction {
     );
   }
 
-  public saveResponse(value: string | string[]) {
+  public saveResponse(value: string | string[]): void {
     this.dispatchEvent(
       new CustomEvent('qti-interaction-response', {
         bubbles: true,

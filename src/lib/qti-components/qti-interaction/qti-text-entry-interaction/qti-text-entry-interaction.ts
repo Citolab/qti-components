@@ -81,7 +81,7 @@ export class QtiTextEntryInteraction extends Interaction {
     return true;
   }
 
-  public override validate() {
+  public override validate(): boolean {
     if (!this._input) return false;
     if (this.patternMask && this.dataPatternmaskMessage) {
       // Clear any custom error if the this._input is valid
@@ -156,7 +156,7 @@ export class QtiTextEntryInteraction extends Interaction {
   }
   // ${this._correctResponse ? html`<div popover part="correct">${this._correctResponse}</div>` : nothing}
 
-  protected textChanged(event: Event) {
+  protected textChanged(event: Event): void {
     if (this.disabled || this.readonly) return;
     const input = event.target as HTMLInputElement;
     this.setEmptyAttribute(input.value);
@@ -166,7 +166,7 @@ export class QtiTextEntryInteraction extends Interaction {
     }
   }
 
-  override reportValidity() {
+  override reportValidity(): boolean {
     const input = this.shadowRoot.querySelector('input');
     if (!input) return false;
 
@@ -182,7 +182,7 @@ export class QtiTextEntryInteraction extends Interaction {
     this.response = '';
   }
 
-  private setEmptyAttribute(text: string) {
+  private setEmptyAttribute(text: string): void {
     this.setAttribute('empty', text === '' ? 'true' : 'false');
   }
 }
