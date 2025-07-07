@@ -224,9 +224,11 @@ export const ChoiceFullCorrectResponse: Story = {
         const interaction = fullCorrectResponse.querySelector('qti-choice-interaction');
         const choices = Array.from(interaction.querySelectorAll('qti-simple-choice'));
 
-        expect(choices[0].internals.states.has('candidate-correct')).toBe(true);
-        expect(choices[1].internals.states.has('candidate-correct')).toBe(false);
-        expect(choices[2].internals.states.has('candidate-correct')).toBe(false);
+        await interaction.updateComplete;
+
+        expect(choices[0].internals.states.has('--checked')).toBe(true);
+        expect(choices[1].internals.states.has('--checked')).toBe(false);
+        expect(choices[2].internals.states.has('--checked')).toBe(false);
       });
     });
   }
@@ -330,9 +332,11 @@ export const MultipleResponseFullCorrectResponse: Story = {
         const interaction = fullCorrectResponse.querySelector('qti-choice-interaction');
         const choices = Array.from(interaction.querySelectorAll('qti-simple-choice'));
 
-        expect(choices[0].internals.states.has('candidate-correct')).toBe(true);
-        expect(choices[1].internals.states.has('candidate-correct')).toBe(true);
-        expect(choices[2].internals.states.has('candidate-correct')).toBe(false);
+        await interaction.updateComplete;
+
+        expect(choices[0].internals.states.has('--checked')).toBe(true);
+        expect(choices[1].internals.states.has('--checked')).toBe(true);
+        expect(choices[2].internals.states.has('--checked')).toBe(false);
       });
     });
   }
@@ -505,6 +509,55 @@ export const Match: Story = {
       const correctOptions = Array.from(correctElements).map(el => el.textContent);
       const allExist = correctOptions.every(element => ['Prospero', 'Demetrius', 'Capulet'].includes(element));
       expect(allExist).toBe(true);
+    });
+  }
+};
+
+export const MatchFullCorrectResponse: Story = {
+  args: {
+    'item-url': '/qti-test-package/items/match.xml' // Set the new item URL here
+    // 'item-url': 'api/kennisnet-1/ITEM002.xml' // Set the new item URL here
+  },
+  render: args =>
+    html` <qti-item>
+      <div>
+        <item-container style="display: block;width: 400px; height: 350px;" item-url=${args['item-url'] as string}>
+          <template>
+            <style>
+              qti-assessment-item {
+                padding: 1rem;
+                display: block;
+                aspect-ratio: 4 / 3;
+                width: 800px;
+
+                border: 2px solid blue;
+                transform: scale(0.5);
+                transform-origin: top left;
+              }
+            </style>
+          </template>
+        </item-container>
+        <item-show-correct-response ${spread(args)}></item-show-correct-response>
+      </div>
+    </qti-item>`,
+  play: async ({ canvasElement, step }) => {
+    const item = document.querySelector('qti-item');
+    item.configContext = {
+      correctResponseMode: 'full'
+    };
+
+    const canvas = within(canvasElement);
+    const showCorrectButton = await canvas.findByShadowText(/Show correct/i);
+
+    await step('Click on the Show Correct button', async () => {
+      await fireEvent.click(showCorrectButton);
+
+      await step('Verify full correct response is shown', async () => {
+        const fullCorrectResponse = await waitFor(() =>
+          canvas.getByShadowRole('full-correct-response')
+        );
+        expect(fullCorrectResponse).toBeVisible();
+      });
     });
   }
 };

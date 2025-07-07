@@ -93,7 +93,7 @@ export class QtiResponseDeclaration extends QtiVariableDeclaration {
       mapEntries: Array.from(mappingElement?.querySelectorAll('qti-map-entry') || []).map(el => ({
         mapKey: el.getAttribute('map-key') || '',
         mappedValue: Number(el.getAttribute('mapped-value')) || 0,
-        caseSensitive: el.hasAttribute('case-sensitive') ? el.getAttribute('case-sensitive') !== 'false' : true
+        caseSensitive: el.hasAttribute('case-sensitive') ? el.getAttribute('case-sensitive') !== 'false' : false
       }))
     };
     return mappingValue;

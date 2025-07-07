@@ -461,6 +461,24 @@ export const TextEntry: Story = {
       await step('Verify candidate correction by checking selected option', async () => {
         expect(interaction.internals.states.has('candidate-correct')).toBe(true);
         expect(interaction.internals.states.has('candidate-incorrect')).toBe(false);
+        expect(interaction.internals.states.has('candidate-partially-correct')).toBe(false);
+      });
+    });
+
+    await step('Type in the partially correct answer text entry interaction', async () => {
+      input.value = 'york';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+
+    await step('Click on the Show Candidate Correction button', async () => {
+      await showButton.click();
+
+      await step('Verify candidate correction by checking selected option', async () => {
+        const interactionResponse: QtiTextEntryInteraction = item.querySelector('qti-text-entry-interaction');
+        expect(interactionResponse.internals.states.has('candidate-correct')).toBe(false);
+        expect(interactionResponse.internals.states.has('candidate-incorrect')).toBe(false);
+        expect(interactionResponse.internals.states.has('candidate-partially-correct')).toBe(true);
       });
     });
 
@@ -477,6 +495,7 @@ export const TextEntry: Story = {
         const interactionResponse: QtiTextEntryInteraction = item.querySelector('qti-text-entry-interaction');
         expect(interactionResponse.internals.states.has('candidate-correct')).toBe(false);
         expect(interactionResponse.internals.states.has('candidate-incorrect')).toBe(true);
+        expect(interactionResponse.internals.states.has('candidate-partially-correct')).toBe(false);
       });
     });
   }

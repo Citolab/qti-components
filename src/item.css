@@ -38,13 +38,11 @@ div.full-correct-response {
 }
 
 div.full-correct-response-block {
-  display: flex;
+  display: block;
   margin-top: var(--qti-padding-vertical);
-  gap: 0.5rem;
   padding: 0.5rem;
 }
 
-/* Override the parent display only when it contains inline interaction */
 div.full-correct-response-inline {
   display: inline-block;
   margin-left: var(--qti-padding-horizontal);

@@ -1,7 +1,7 @@
 import { html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
-import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-interaction-mixin';
+import { DragDropInteractionMixin } from '../internal/drag-drop';
 import { Interaction } from '../../../exports/interaction';
 import styles from './qti-graphic-gap-match-interaction.styles';
 
