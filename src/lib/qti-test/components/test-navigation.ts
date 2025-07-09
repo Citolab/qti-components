@@ -2,14 +2,10 @@ import { consume, provide } from '@lit/context';
 import { html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
-// import { prepareTemplate } from 'stampino';
 import { computedContext } from '../../exports/computed.context';
 import { configContext } from '../../exports/config.context';
 import { testContext } from '../../exports/test.context';
 import { sessionContext } from '../../exports/session.context';
-
-// import type { View } from '../core/mixins/test-view.mixin';
-// import type { TemplateFunction } from 'stampino';
 import { qtiContext } from '../../exports/qti.context';
 
 import type { QtiContext } from '../../exports/qti.context';
