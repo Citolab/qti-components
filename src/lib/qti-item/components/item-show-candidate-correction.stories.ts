@@ -1,7 +1,7 @@
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { spread } from '@open-wc/lit-helpers';
 import { html } from 'lit';
-import { expect, waitFor } from 'storybook/test';
+import { expect, fireEvent, userEvent, waitFor } from 'storybook/test';
 import { within } from 'shadow-dom-testing-library';
 
 import { getAssessmentItemFromItemContainer } from '../../../testing/test-utils';
@@ -11,7 +11,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { ItemShowCandidateCorrection } from './item-show-candidate-correction.ts';
 import './item-show-candidate-correction.ts';
 import type { ItemContainer } from './item-container';
-import type { QtiSimpleAssociableChoice, QtiSimpleChoice, QtiTextEntryInteraction } from '../../qti-components';
+import type { QtiSelectPointInteraction, QtiSimpleAssociableChoice, QtiSimpleChoice, QtiTextEntryInteraction } from '../../qti-components';
 
 const { events, args, argTypes } = getStorybookHelpers('test-print-item-variables');
 
@@ -533,5 +533,43 @@ export const SelectPoint: Story = {
   `,
 
   play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const showButton = await canvas.findByShadowText(/Show candidate correction/i);
+    const image = await canvas.findByShadowAltText('UK Map');
+
+    await step('Click on correct point in the image', async () => {
+      const rect = image.getBoundingClientRect();
+      await fireEvent.click(image, {
+        clientX: rect.left + rect.width * 0.5,
+        clientY: rect.top + rect.height * 0.4
+      });
+    });
+    await step('Click on incorrect points in the image', async () => {
+      const rect = image.getBoundingClientRect();
+      await fireEvent.click(image, {
+        clientX: rect.left + rect.width * 0.5,
+        clientY: rect.top + rect.height * 0.6
+      });
+      await fireEvent.click(image, {
+        clientX: rect.left + rect.width * 0.55,
+        clientY: rect.top + rect.height * 0.65
+      });
+    });
+
+    await step('Click on the Show Candidate Correction button', async () => {
+      await showButton.click();
+
+      await step('Verify candidate correction by checking selected options', async () => {
+        const item = await getAssessmentItemFromItemContainer(canvasElement);
+        const interaction: QtiSelectPointInteraction = item.querySelector('qti-select-point-interaction');
+
+        const buttonsCorrect = interaction.shadowRoot?.querySelectorAll<HTMLButtonElement>('button[part="point  correct"]');
+
+        const buttonsIncorrect = interaction.shadowRoot?.querySelectorAll<HTMLButtonElement>('button[part="point  incorrect"]');
+
+        expect(buttonsCorrect).toHaveLength(1);
+        expect(buttonsIncorrect).toHaveLength(2);
+      });
+    });
   }
 };
