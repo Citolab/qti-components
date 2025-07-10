@@ -5,6 +5,7 @@ import { styleMap } from 'lit/directives/style-map.js';
 
 import { Interaction } from '../../../exports/interaction';
 import { positionShapes } from '../internal/hotspots/hotspot';
+import { ScoringHelper } from '../../qti-response-processing/utilities/scoring-helper.ts';
 
 import type { QtiAreaMapEntry, QtiAreaMapping } from '../../qti-response-processing';
 
@@ -45,6 +46,9 @@ export class QtiSelectPointInteraction extends Interaction {
 
   @state()
   private _correctAreas: { shape: string; coords: string }[] = [];
+
+  @state()
+  private _responseCorrection: boolean[] = [];
 
   // Reference to the image element
   private _imgElement: HTMLImageElement | null = null;
@@ -94,6 +98,30 @@ export class QtiSelectPointInteraction extends Interaction {
   private _onResize = () => {
     this.calculateScale();
   };
+
+  get responsePoints() {
+    return (this.response?.filter(point => point) || []).map(point => {
+      const [x, y] = point.split(' ').map(Number);
+      return { x, y };
+    });
+  }
+
+  public toggleCandidateCorrection(show: boolean) {
+    this._responseCorrection = [];
+    if (!show) {
+      return;
+    }
+    this.responsePoints.forEach(point => {
+      (this.responseVariable.areaMapping as QtiAreaMapping).areaMapEntries.forEach(correctArea => {
+        const correct = ScoringHelper.isPointInArea(
+          `${point.x} ${point.y}`,
+          `${correctArea.shape},${correctArea.coords}`,
+          this.responseVariable.baseType
+        );
+        this._responseCorrection.push(correct);
+      });
+    });
+  }
 
   public toggleCorrectResponse(show: boolean) {
     const responseVariable = this.responseVariable;
@@ -172,7 +200,11 @@ export class QtiSelectPointInteraction extends Interaction {
 
             return html`
               <button
-                part="point"
+                part="point ${this._responseCorrection[index] === true
+                  ? ' correct'
+                  : this._responseCorrection[index] === false
+                    ? ' incorrect'
+                    : ''}"
                 style=${styleMap({
                   pointerEvents: this.maxChoices === 1 ? 'none' : 'auto',
                   position: 'absolute',

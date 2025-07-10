@@ -500,3 +500,38 @@ export const TextEntry: Story = {
     });
   }
 };
+
+export const SelectPoint: Story = {
+  args: {
+    'item-url': '/qti-test-package/items/select_point.xml'
+  },
+  render: args => html`
+    <qti-item>
+      <div>
+        <item-container
+          style="display: block; width: 400px; height: 350px;"
+          item-url=${args['item-url'] as string}
+        >
+          <template>
+            <style>
+              qti-assessment-item {
+                padding: 1rem;
+                display: block;
+                aspect-ratio: 4 / 3;
+                width: 800px;
+                border: 2px solid blue;
+                transform: scale(0.5);
+                transform-origin: top left;
+              }
+            </style>
+          </template>
+        </item-container>
+
+        <item-show-candidate-correction></item-show-candidate-correction>
+      </div>
+    </qti-item>
+  `,
+
+  play: async ({ canvasElement, step }) => {
+  }
+};
