@@ -11,7 +11,12 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { ItemShowCandidateCorrection } from './item-show-candidate-correction.ts';
 import './item-show-candidate-correction.ts';
 import type { ItemContainer } from './item-container';
-import type { QtiSelectPointInteraction, QtiSimpleAssociableChoice, QtiSimpleChoice, QtiTextEntryInteraction } from '../../qti-components';
+import type {
+  QtiSelectPointInteraction,
+  QtiSimpleAssociableChoice,
+  QtiSimpleChoice,
+  QtiTextEntryInteraction
+} from '../../qti-components';
 
 const { events, args, argTypes } = getStorybookHelpers('test-print-item-variables');
 
@@ -246,14 +251,13 @@ export const Match: Story = {
     const canvas = within(canvasElement);
     const showCorrectButton = await canvas.findByShadowText(/Show candidate correction/i);
 
-    const matchItem1 = await canvas.findByShadowText('Prospero') as QtiSimpleAssociableChoice;
-    const matchItem2 = await canvas.findByShadowText('Capulet') as QtiSimpleAssociableChoice;
-    const matchItem3 = await canvas.findByShadowText('Demetrius') as QtiSimpleAssociableChoice;
+    const matchItem1 = (await canvas.findByShadowText('Prospero')) as QtiSimpleAssociableChoice;
+    const matchItem2 = (await canvas.findByShadowText('Capulet')) as QtiSimpleAssociableChoice;
+    const matchItem3 = (await canvas.findByShadowText('Demetrius')) as QtiSimpleAssociableChoice;
 
     const dropZone1 = await canvas.findByShadowText('The Tempest');
     const dropZone2 = await canvas.findByShadowText("A Midsummer-Night's Dream");
     const dropZone3 = await canvas.findByShadowText('Romeo and Juliet');
-
 
     await step('Drag and drop match interaction items', async () => {
       await drag(matchItem1, { to: dropZone1 });
@@ -261,14 +265,13 @@ export const Match: Story = {
       await drag(matchItem3, { to: dropZone3 });
       await showCorrectButton.click();
 
-
       await step('Verify candidate correction state is applied', async () => {
         const matchItem1List = Array.from(await canvas.findAllByShadowText('Prospero'));
-        const matchItem1CandidateResponse = matchItem1List[1] as QtiSimpleAssociableChoice
+        const matchItem1CandidateResponse = matchItem1List[1] as QtiSimpleAssociableChoice;
         const matchItem2List = Array.from(await canvas.findAllByShadowText('Capulet'));
-        const matchItem2CandidateResponse = matchItem2List[1] as QtiSimpleAssociableChoice
+        const matchItem2CandidateResponse = matchItem2List[1] as QtiSimpleAssociableChoice;
         const matchItem3List = Array.from(await canvas.findAllByShadowText('Demetrius'));
-        const matchItem3CandidateResponse = matchItem3List[1] as QtiSimpleAssociableChoice
+        const matchItem3CandidateResponse = matchItem3List[1] as QtiSimpleAssociableChoice;
 
         expect(matchItem1CandidateResponse.internals.states.has('candidate-correct')).toBe(true);
         expect(matchItem2CandidateResponse.internals.states.has('candidate-correct')).toBe(false);
@@ -312,9 +315,9 @@ export const MatchAllToOneZone: Story = {
     const canvas = within(canvasElement);
     const showCorrectButton = await canvas.findByShadowText(/Show candidate correction/i);
 
-    const matchItem1 = await canvas.findByShadowText('Prospero') as QtiSimpleAssociableChoice;
-    const matchItem2 = await canvas.findByShadowText('Lysander') as QtiSimpleAssociableChoice;
-    const matchItem3 = await canvas.findByShadowText('Demetrius') as QtiSimpleAssociableChoice;
+    const matchItem1 = (await canvas.findByShadowText('Prospero')) as QtiSimpleAssociableChoice;
+    const matchItem2 = (await canvas.findByShadowText('Lysander')) as QtiSimpleAssociableChoice;
+    const matchItem3 = (await canvas.findByShadowText('Demetrius')) as QtiSimpleAssociableChoice;
 
     const dropZone1 = await canvas.findByShadowText('The Tempest');
 
@@ -326,11 +329,11 @@ export const MatchAllToOneZone: Story = {
 
       await step('Verify candidate correction state is applied', async () => {
         const matchItem1List = Array.from(await canvas.findAllByShadowText('Prospero'));
-        const matchItem1CandidateResponse = matchItem1List[1] as QtiSimpleAssociableChoice
+        const matchItem1CandidateResponse = matchItem1List[1] as QtiSimpleAssociableChoice;
         const matchItem2List = Array.from(await canvas.findAllByShadowText('Lysander'));
-        const matchItem2CandidateResponse = matchItem2List[1] as QtiSimpleAssociableChoice
+        const matchItem2CandidateResponse = matchItem2List[1] as QtiSimpleAssociableChoice;
         const matchItem3List = Array.from(await canvas.findAllByShadowText('Demetrius'));
-        const matchItem3CandidateResponse = matchItem3List[1] as QtiSimpleAssociableChoice
+        const matchItem3CandidateResponse = matchItem3List[1] as QtiSimpleAssociableChoice;
 
         expect(matchItem1CandidateResponse.internals.states.has('candidate-correct')).toBe(true);
         expect(matchItem2CandidateResponse.internals.states.has('candidate-correct')).toBe(false);
@@ -350,10 +353,7 @@ export const InlineChoice: Story = {
   render: args => html`
     <qti-item>
       <div>
-        <item-container
-          style="display: block; width: 400px; height: 350px;"
-          item-url=${args['item-url'] as string}
-        >
+        <item-container style="display: block; width: 400px; height: 350px;" item-url=${args['item-url'] as string}>
           <template>
             <style>
               qti-assessment-item {
@@ -417,10 +417,7 @@ export const TextEntry: Story = {
   render: args => html`
     <qti-item>
       <div>
-        <item-container
-          style="display: block; width: 400px; height: 350px;"
-          item-url=${args['item-url'] as string}
-        >
+        <item-container style="display: block; width: 400px; height: 350px;" item-url=${args['item-url'] as string}>
           <template>
             <style>
               qti-assessment-item {
@@ -508,10 +505,7 @@ export const SelectPoint: Story = {
   render: args => html`
     <qti-item>
       <div>
-        <item-container
-          style="display: block; width: 400px; height: 350px;"
-          item-url=${args['item-url'] as string}
-        >
+        <item-container style="display: block; width: 400px; height: 350px;" item-url=${args['item-url'] as string}>
           <template>
             <style>
               qti-assessment-item {
@@ -563,9 +557,12 @@ export const SelectPoint: Story = {
         const item = await getAssessmentItemFromItemContainer(canvasElement);
         const interaction: QtiSelectPointInteraction = item.querySelector('qti-select-point-interaction');
 
-        const buttonsCorrect = interaction.shadowRoot?.querySelectorAll<HTMLButtonElement>('button[part="point  correct"]');
+        const buttonsCorrect =
+          interaction.shadowRoot?.querySelectorAll<HTMLButtonElement>('button[part="point correct"]');
 
-        const buttonsIncorrect = interaction.shadowRoot?.querySelectorAll<HTMLButtonElement>('button[part="point  incorrect"]');
+        const buttonsIncorrect = interaction.shadowRoot?.querySelectorAll<HTMLButtonElement>(
+          'button[part="point incorrect"]'
+        );
 
         expect(buttonsCorrect).toHaveLength(1);
         expect(buttonsIncorrect).toHaveLength(2);

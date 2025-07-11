@@ -101,10 +101,12 @@ export class QtiSelectPointInteraction extends Interaction {
   };
 
   get responsePoints() {
-    return (this.response?.filter(point => point) || []).map(point => {
-      const [x, y] = point.split(' ').map(Number);
-      return { x, y };
-    });
+    return (this.response || [])
+      .filter(point => point)
+      .map(point => {
+        const [x, y] = point.split(' ').map(Number);
+        return { x, y };
+      });
   }
 
   public toggleCandidateCorrection(show: boolean) {
@@ -185,7 +187,7 @@ export class QtiSelectPointInteraction extends Interaction {
     return html` <slot name="prompt"></slot>
       <point-container>
         ${repeat(
-          this.response?.filter(point => point) || [],
+          (this.response || []).filter(point => point),
           point => point,
           (point, index) => {
             const [x, y] = point.split(' ').map(Number);
