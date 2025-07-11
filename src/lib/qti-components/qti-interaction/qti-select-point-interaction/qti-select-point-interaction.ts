@@ -60,6 +60,9 @@ export class QtiSelectPointInteraction extends Interaction {
 
   // Extracted click handler method
   private _onImageClick = (event: MouseEvent) => {
+    if (this.disabled) {
+      return;
+    }
     if (!this._imgElement) {
       console.warn('No <img> element found in <qti-select-point-interaction>');
       return;
@@ -223,6 +226,9 @@ export class QtiSelectPointInteraction extends Interaction {
                 })}
                 aria-label="Remove point at ${point}"
                 @click=${(e: Event) => {
+                  if (this.disabled) {
+                    return;
+                  }
                   e.stopPropagation();
                   this.response = (this.response || []).filter((_, i) => i !== index);
                   this.saveResponse(this.response);
