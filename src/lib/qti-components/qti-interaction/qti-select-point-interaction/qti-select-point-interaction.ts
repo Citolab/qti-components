@@ -42,7 +42,7 @@ export class QtiSelectPointInteraction extends Interaction {
   })
   public minChoices: number = 0;
 
-  @state() response: string[] = [];
+  @state() response: string[] | null = null;
 
   @state()
   private _correctAreas: { shape: string; coords: string }[] = [];
@@ -55,8 +55,9 @@ export class QtiSelectPointInteraction extends Interaction {
 
   private _scaleX = 1;
   private _scaleY = 1;
-  private _imageWidthOrginal = 0;
-  private _imageHeightOrginal = 0;
+  private _imageWidthOriginal = 0;
+  private _imageHeightOriginal = 0;
+
   // Extracted click handler method
   private _onImageClick = (event: MouseEvent) => {
     if (!this._imgElement) {
@@ -79,8 +80,8 @@ export class QtiSelectPointInteraction extends Interaction {
       this.response = [newPoint];
     } else {
       // If maxChoices > 1, add a new marker if within the limit
-      if (this.maxChoices === 0 || this.response.length < this.maxChoices) {
-        this.response = [...this.response, newPoint];
+      if (this.maxChoices === 0 || (this.response || []).length < this.maxChoices) {
+        this.response = [...(this.response || []), newPoint];
       } else {
         // Optional: Notify the user to remove a marker before adding a new one
         // console.warn('Maximum number of points reached. Remove a marker to add a new one.');
@@ -112,14 +113,14 @@ export class QtiSelectPointInteraction extends Interaction {
       return;
     }
     this.responsePoints.forEach(point => {
-      (this.responseVariable.areaMapping as QtiAreaMapping).areaMapEntries.forEach(correctArea => {
-        const correct = ScoringHelper.isPointInArea(
+      const correct = (this.responseVariable.areaMapping as QtiAreaMapping).areaMapEntries.some(correctArea =>
+        ScoringHelper.isPointInArea(
           `${point.x} ${point.y}`,
           `${correctArea.shape},${correctArea.coords}`,
           this.responseVariable.baseType
-        );
-        this._responseCorrection.push(correct);
-      });
+        )
+      );
+      this._responseCorrection.push(correct);
     });
   }
 
@@ -189,18 +190,18 @@ export class QtiSelectPointInteraction extends Interaction {
           (point, index) => {
             const [x, y] = point.split(' ').map(Number);
             // point are based on the original image size, so we need calculate the percentage based on the original image
-            const leftPercentage = (x / (this._imageWidthOrginal || 1)) * 100;
-            const topPercentage = (y / (this._imageHeightOrginal || 1)) * 100;
+            const leftPercentage = (x / (this._imageWidthOriginal || 1)) * 100;
+            const topPercentage = (y / (this._imageHeightOriginal || 1)) * 100;
 
             // Base size is 1rem (16px), scaled proportionally to the image's current size
             // Base size is 1rem in the original image size
             const baseSize = 16; // Assuming 1rem = 16px
-            const widthPercentage = (baseSize / (this._imageWidthOrginal || 1)) * 100;
-            const heightPercentage = (baseSize / (this._imageHeightOrginal || 1)) * 100;
+            const widthPercentage = (baseSize / (this._imageWidthOriginal || 1)) * 100;
+            const heightPercentage = (baseSize / (this._imageHeightOriginal || 1)) * 100;
 
             return html`
               <button
-                part="point ${this._responseCorrection[index] === true
+                part="point${this._responseCorrection[index] === true
                   ? ' correct'
                   : this._responseCorrection[index] === false
                     ? ' incorrect'
@@ -248,26 +249,22 @@ export class QtiSelectPointInteraction extends Interaction {
       </point-container>`;
   }
 
-  reset(): void {
-    this.response = null;
-  }
-
   validate(): boolean {
-    return this.response.length >= this.minChoices && this.response.length <= this.maxChoices;
+    return this.response !== null && this.response.length >= this.minChoices && this.response.length <= this.maxChoices;
   }
 
   private calculateScale() {
     // Get the image dimensions
-    this._imageWidthOrginal = this._imgElement.getAttribute('width')
+    this._imageWidthOriginal = this._imgElement.getAttribute('width')
       ? parseFloat(this._imgElement.getAttribute('width')!)
       : this._imgElement.naturalWidth;
-    this._imageHeightOrginal = this._imgElement.getAttribute('height')
+    this._imageHeightOriginal = this._imgElement.getAttribute('height')
       ? parseFloat(this._imgElement.getAttribute('height')!)
       : this._imgElement.naturalHeight;
     // Get the image's bounding rectangle and calculate scaling factors
     const rect = this._imgElement.getBoundingClientRect();
-    this._scaleX = rect.width === 0 ? 1 : this._imageWidthOrginal / rect.width; // Horizontal scaling factor
-    this._scaleY = rect.height === 0 ? 1 : this._imageHeightOrginal / rect.height; // Vertical scaling factor
+    this._scaleX = rect.width === 0 ? 1 : this._imageWidthOriginal / rect.width; // Horizontal scaling factor
+    this._scaleY = rect.height === 0 ? 1 : this._imageHeightOriginal / rect.height; // Vertical scaling factor
   }
 
   override firstUpdated(): void {
