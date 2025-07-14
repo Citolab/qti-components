@@ -1256,6 +1256,15 @@
       }
 
       @apply point;
+
+    }
+
+    &::part(correct) {
+      background-color: var(--qti-correct);
+    }
+
+    &::part(incorrect) {
+      background-color: var(--qti-incorrect);
     }
   }
 

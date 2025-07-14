@@ -15,7 +15,7 @@
 	</qti-response-declaration>
 	<qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float" />
 	<qti-item-body>
-		<qti-select-point-interaction response-identifier="RESPONSE" max-choices="1">
+		<qti-select-point-interaction response-identifier="RESPONSE" max-choices="3">
 			<qti-prompt>Mark Edinburgh on this map of the United Kingdom.</qti-prompt>
 			<img src="../img/uk.png" alt="UK Map" width="196" height="280" />
 		</qti-select-point-interaction>
