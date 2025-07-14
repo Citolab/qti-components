@@ -3,7 +3,7 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import { customElement, property, state } from 'lit/decorators.js';
 
 import { Interaction } from '../../../exports/interaction';
-import { watch } from '../../../decorators/watch';
+import { watch } from '../../../decorators';
 import styles from './qti-extended-text-interaction.styles';
 
 import type { CSSResultGroup } from 'lit';

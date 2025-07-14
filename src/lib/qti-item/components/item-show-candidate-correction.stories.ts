@@ -1,16 +1,22 @@
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { spread } from '@open-wc/lit-helpers';
 import { html } from 'lit';
-import { expect } from 'storybook/test';
+import { expect, fireEvent, userEvent, waitFor } from 'storybook/test';
 import { within } from 'shadow-dom-testing-library';
 
+import { getAssessmentItemFromItemContainer } from '../../../testing/test-utils';
 import drag from '../../../testing/drag.ts';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { ItemShowCandidateCorrection } from './item-show-candidate-correction.ts';
 import './item-show-candidate-correction.ts';
 import type { ItemContainer } from './item-container';
-import type { QtiSimpleAssociableChoice, QtiSimpleChoice } from '../../qti-components';
+import type {
+  QtiSelectPointInteraction,
+  QtiSimpleAssociableChoice,
+  QtiSimpleChoice,
+  QtiTextEntryInteraction
+} from '../../qti-components';
 
 const { events, args, argTypes } = getStorybookHelpers('test-print-item-variables');
 
@@ -245,14 +251,13 @@ export const Match: Story = {
     const canvas = within(canvasElement);
     const showCorrectButton = await canvas.findByShadowText(/Show candidate correction/i);
 
-    const matchItem1 = await canvas.findByShadowText('Prospero') as QtiSimpleAssociableChoice;
-    const matchItem2 = await canvas.findByShadowText('Capulet') as QtiSimpleAssociableChoice;
-    const matchItem3 = await canvas.findByShadowText('Demetrius') as QtiSimpleAssociableChoice;
+    const matchItem1 = (await canvas.findByShadowText('Prospero')) as QtiSimpleAssociableChoice;
+    const matchItem2 = (await canvas.findByShadowText('Capulet')) as QtiSimpleAssociableChoice;
+    const matchItem3 = (await canvas.findByShadowText('Demetrius')) as QtiSimpleAssociableChoice;
 
     const dropZone1 = await canvas.findByShadowText('The Tempest');
     const dropZone2 = await canvas.findByShadowText("A Midsummer-Night's Dream");
     const dropZone3 = await canvas.findByShadowText('Romeo and Juliet');
-
 
     await step('Drag and drop match interaction items', async () => {
       await drag(matchItem1, { to: dropZone1 });
@@ -260,14 +265,13 @@ export const Match: Story = {
       await drag(matchItem3, { to: dropZone3 });
       await showCorrectButton.click();
 
-
       await step('Verify candidate correction state is applied', async () => {
         const matchItem1List = Array.from(await canvas.findAllByShadowText('Prospero'));
-        const matchItem1CandidateResponse = matchItem1List[1] as QtiSimpleAssociableChoice
+        const matchItem1CandidateResponse = matchItem1List[1] as QtiSimpleAssociableChoice;
         const matchItem2List = Array.from(await canvas.findAllByShadowText('Capulet'));
-        const matchItem2CandidateResponse = matchItem2List[1] as QtiSimpleAssociableChoice
+        const matchItem2CandidateResponse = matchItem2List[1] as QtiSimpleAssociableChoice;
         const matchItem3List = Array.from(await canvas.findAllByShadowText('Demetrius'));
-        const matchItem3CandidateResponse = matchItem3List[1] as QtiSimpleAssociableChoice
+        const matchItem3CandidateResponse = matchItem3List[1] as QtiSimpleAssociableChoice;
 
         expect(matchItem1CandidateResponse.internals.states.has('candidate-correct')).toBe(true);
         expect(matchItem2CandidateResponse.internals.states.has('candidate-correct')).toBe(false);
@@ -311,9 +315,9 @@ export const MatchAllToOneZone: Story = {
     const canvas = within(canvasElement);
     const showCorrectButton = await canvas.findByShadowText(/Show candidate correction/i);
 
-    const matchItem1 = await canvas.findByShadowText('Prospero') as QtiSimpleAssociableChoice;
-    const matchItem2 = await canvas.findByShadowText('Lysander') as QtiSimpleAssociableChoice;
-    const matchItem3 = await canvas.findByShadowText('Demetrius') as QtiSimpleAssociableChoice;
+    const matchItem1 = (await canvas.findByShadowText('Prospero')) as QtiSimpleAssociableChoice;
+    const matchItem2 = (await canvas.findByShadowText('Lysander')) as QtiSimpleAssociableChoice;
+    const matchItem3 = (await canvas.findByShadowText('Demetrius')) as QtiSimpleAssociableChoice;
 
     const dropZone1 = await canvas.findByShadowText('The Tempest');
 
@@ -325,11 +329,11 @@ export const MatchAllToOneZone: Story = {
 
       await step('Verify candidate correction state is applied', async () => {
         const matchItem1List = Array.from(await canvas.findAllByShadowText('Prospero'));
-        const matchItem1CandidateResponse = matchItem1List[1] as QtiSimpleAssociableChoice
+        const matchItem1CandidateResponse = matchItem1List[1] as QtiSimpleAssociableChoice;
         const matchItem2List = Array.from(await canvas.findAllByShadowText('Lysander'));
-        const matchItem2CandidateResponse = matchItem2List[1] as QtiSimpleAssociableChoice
+        const matchItem2CandidateResponse = matchItem2List[1] as QtiSimpleAssociableChoice;
         const matchItem3List = Array.from(await canvas.findAllByShadowText('Demetrius'));
-        const matchItem3CandidateResponse = matchItem3List[1] as QtiSimpleAssociableChoice
+        const matchItem3CandidateResponse = matchItem3List[1] as QtiSimpleAssociableChoice;
 
         expect(matchItem1CandidateResponse.internals.states.has('candidate-correct')).toBe(true);
         expect(matchItem2CandidateResponse.internals.states.has('candidate-correct')).toBe(false);
@@ -337,6 +341,231 @@ export const MatchAllToOneZone: Story = {
         expect(matchItem1CandidateResponse.internals.states.has('candidate-incorrect')).toBe(false);
         expect(matchItem2CandidateResponse.internals.states.has('candidate-incorrect')).toBe(true);
         expect(matchItem3CandidateResponse.internals.states.has('candidate-incorrect')).toBe(true);
+      });
+    });
+  }
+};
+
+export const InlineChoice: Story = {
+  args: {
+    'item-url': '/qti-item/example-inline-choice.xml'
+  },
+  render: args => html`
+    <qti-item>
+      <div>
+        <item-container style="display: block; width: 400px; height: 350px;" item-url=${args['item-url'] as string}>
+          <template>
+            <style>
+              qti-assessment-item {
+                padding: 1rem;
+                display: block;
+                aspect-ratio: 4 / 3;
+                width: 800px;
+                border: 2px solid blue;
+                transform: scale(0.5);
+                transform-origin: top left;
+              }
+            </style>
+          </template>
+        </item-container>
+
+        <item-show-candidate-correction></item-show-candidate-correction>
+      </div>
+    </qti-item>
+  `,
+
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const item = await getAssessmentItemFromItemContainer(canvasElement);
+
+    const interaction = await waitFor(() => {
+      const el = item.querySelector('qti-inline-choice-interaction');
+      if (!el) throw new Error('inline-choice interaction not found');
+      return el;
+    });
+
+    const selectElement = await waitFor(() => {
+      const select = interaction.shadowRoot?.querySelector<HTMLSelectElement>('select');
+      if (!select) throw new Error('select element not yet available');
+      return select;
+    });
+
+    const showButton = await canvas.findByShadowText(/Show candidate correction/i);
+
+    await step('Select an inline choice option', async () => {
+      selectElement.value = 'Y'; // de correcte identifier (York)
+      selectElement.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+
+    await step('Click on the Show Candidate Correction button', async () => {
+      await showButton.click();
+
+      await step('Verify candidate correction by checking selected option', async () => {
+        const selectedOption = Array.from(selectElement.options).find(opt => opt.selected);
+        expect(selectedOption).not.toBeUndefined();
+        expect(selectedOption.value).toBe('Y');
+        expect(selectedOption.textContent.trim()).toBe('York');
+      });
+    });
+  }
+};
+
+export const TextEntry: Story = {
+  args: {
+    'item-url': '/qti-item/example-text-entry.xml'
+  },
+  render: args => html`
+    <qti-item>
+      <div>
+        <item-container style="display: block; width: 400px; height: 350px;" item-url=${args['item-url'] as string}>
+          <template>
+            <style>
+              qti-assessment-item {
+                padding: 1rem;
+                display: block;
+                aspect-ratio: 4 / 3;
+                width: 800px;
+                border: 2px solid blue;
+                transform: scale(0.5);
+                transform-origin: top left;
+              }
+            </style>
+          </template>
+        </item-container>
+
+        <item-show-candidate-correction></item-show-candidate-correction>
+      </div>
+    </qti-item>
+  `,
+
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    const showButton = await canvas.findByShadowText(/Show candidate correction/i);
+    const item = await getAssessmentItemFromItemContainer(canvasElement);
+    const interaction: QtiTextEntryInteraction = item.querySelector('qti-text-entry-interaction');
+    const input = interaction.shadowRoot?.querySelector<HTMLInputElement>('input');
+
+    await step('Type in the correct answer text entry interaction', async () => {
+      input.value = 'York';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+
+    await step('Click on the Show Candidate Correction button', async () => {
+      await showButton.click();
+
+      await step('Verify candidate correction by checking selected option', async () => {
+        expect(interaction.internals.states.has('candidate-correct')).toBe(true);
+        expect(interaction.internals.states.has('candidate-incorrect')).toBe(false);
+        expect(interaction.internals.states.has('candidate-partially-correct')).toBe(false);
+      });
+    });
+
+    await step('Type in the partially correct answer text entry interaction', async () => {
+      input.value = 'york';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+
+    await step('Click on the Show Candidate Correction button', async () => {
+      await showButton.click();
+
+      await step('Verify candidate correction by checking selected option', async () => {
+        const interactionResponse: QtiTextEntryInteraction = item.querySelector('qti-text-entry-interaction');
+        expect(interactionResponse.internals.states.has('candidate-correct')).toBe(false);
+        expect(interactionResponse.internals.states.has('candidate-incorrect')).toBe(false);
+        expect(interactionResponse.internals.states.has('candidate-partially-correct')).toBe(true);
+      });
+    });
+
+    await step('Type in the incorrect answer text entry interaction', async () => {
+      input.value = 'bla';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+
+    await step('Click on the Show Candidate Correction button', async () => {
+      await showButton.click();
+
+      await step('Verify candidate correction by checking selected option', async () => {
+        const interactionResponse: QtiTextEntryInteraction = item.querySelector('qti-text-entry-interaction');
+        expect(interactionResponse.internals.states.has('candidate-correct')).toBe(false);
+        expect(interactionResponse.internals.states.has('candidate-incorrect')).toBe(true);
+        expect(interactionResponse.internals.states.has('candidate-partially-correct')).toBe(false);
+      });
+    });
+  }
+};
+
+export const SelectPoint: Story = {
+  args: {
+    'item-url': '/qti-test-package/items/select_point.xml'
+  },
+  render: args => html`
+    <qti-item>
+      <div>
+        <item-container style="display: block; width: 400px; height: 350px;" item-url=${args['item-url'] as string}>
+          <template>
+            <style>
+              qti-assessment-item {
+                padding: 1rem;
+                display: block;
+                aspect-ratio: 4 / 3;
+                width: 800px;
+                border: 2px solid blue;
+                transform: scale(0.5);
+                transform-origin: top left;
+              }
+            </style>
+          </template>
+        </item-container>
+
+        <item-show-candidate-correction></item-show-candidate-correction>
+      </div>
+    </qti-item>
+  `,
+
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const showButton = await canvas.findByShadowText(/Show candidate correction/i);
+    const image = await canvas.findByShadowAltText('UK Map');
+
+    await step('Click on correct point in the image', async () => {
+      const rect = image.getBoundingClientRect();
+      await fireEvent.click(image, {
+        clientX: rect.left + rect.width * 0.5,
+        clientY: rect.top + rect.height * 0.4
+      });
+    });
+    await step('Click on incorrect points in the image', async () => {
+      const rect = image.getBoundingClientRect();
+      await fireEvent.click(image, {
+        clientX: rect.left + rect.width * 0.5,
+        clientY: rect.top + rect.height * 0.6
+      });
+      await fireEvent.click(image, {
+        clientX: rect.left + rect.width * 0.55,
+        clientY: rect.top + rect.height * 0.65
+      });
+    });
+
+    await step('Click on the Show Candidate Correction button', async () => {
+      await showButton.click();
+
+      await step('Verify candidate correction by checking selected options', async () => {
+        const item = await getAssessmentItemFromItemContainer(canvasElement);
+        const interaction: QtiSelectPointInteraction = item.querySelector('qti-select-point-interaction');
+
+        const buttonsCorrect =
+          interaction.shadowRoot?.querySelectorAll<HTMLButtonElement>('button[part="point correct"]');
+
+        const buttonsIncorrect = interaction.shadowRoot?.querySelectorAll<HTMLButtonElement>(
+          'button[part="point incorrect"]'
+        );
+
+        expect(buttonsCorrect).toHaveLength(1);
+        expect(buttonsIncorrect).toHaveLength(2);
       });
     });
   }

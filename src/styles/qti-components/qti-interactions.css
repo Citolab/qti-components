@@ -245,6 +245,24 @@
   }
 
   qti-text-entry-interaction {
+    &:state(candidate-correct) {
+      &::part(input) {
+        background-color: var(--qti-correct);
+      }
+    }
+
+    &:state(candidate-partially-correct) {
+      &::part(input) {
+        background-color: var(--qti-partially-correct);
+      }
+    }
+
+    &:state(candidate-incorrect) {
+      &::part(input) {
+        background-color: var(--qti-incorrect);
+      }
+    }
+
     &::part(input) {
       @apply text;
     }
@@ -598,6 +616,14 @@
   }
 
   qti-inline-choice-interaction {
+    &:state(candidate-correct) {
+      background-color: var(--qti-correct);
+    }
+
+    &:state(candidate-incorrect) {
+      background-color: var(--qti-incorrect);
+    }
+
     &::part(select) {
       @apply select;
 
@@ -1230,6 +1256,15 @@
       }
 
       @apply point;
+
+    }
+
+    &::part(correct) {
+      background-color: var(--qti-correct);
+    }
+
+    &::part(incorrect) {
+      background-color: var(--qti-incorrect);
     }
   }
 

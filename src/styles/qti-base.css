@@ -8,6 +8,10 @@
   --qti-correct-light: #c8e6c9;
   --qti-correct: #66bb6a;
 
+  /** Partially correct colors */
+  --qti-partially-correct-light: #fff3e0;
+  --qti-partially-correct: #ffeb3b;
+
   /* Incorrect colors */
   --qti-incorrect-light: #ef9a9a;
   --qti-incorrect: #ef5350;

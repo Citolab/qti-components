@@ -7,7 +7,6 @@ import { Interaction } from '../../../exports/interaction';
 import { itemContext } from '../../../exports/qti-assessment-item.context';
 import { removeDoubleSlashes } from '../../internal/utils';
 
-import type { ResponseVariable } from '../../../exports/variables';
 import type { CSSResultGroup } from 'lit';
 import type { ItemContext } from '../../../exports/item.context';
 import type { BaseType, Cardinality } from '../../../exports/expression-result';
@@ -1305,7 +1304,9 @@ export class QtiPortableCustomInteraction extends Interaction {
    * @param responseVariable The response variable containing the correct response
    * @param show Whether to show or hide the correct response
    */
-  public toggleInternalCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
+  public toggleInternalCorrectResponse(show: boolean) {
+    const responseVariable = this.responseVariable;
+
     // Store the correct response or clear it based on the show parameter
     this.correctResponse = show
       ? responseVariable?.correctResponse

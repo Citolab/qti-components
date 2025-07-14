@@ -5,7 +5,6 @@ import { DragDropInteractionMixin } from '../internal/drag-drop/drag-drop-intera
 import { Interaction } from '../../../exports/interaction';
 import styles from './qti-gap-match-interaction.styles';
 
-import type { ResponseVariable } from '../../../exports/variables';
 import type { CSSResultGroup } from 'lit';
 @customElement('qti-gap-match-interaction')
 export class QtiGapMatchInteraction extends DragDropInteractionMixin(
@@ -23,8 +22,10 @@ export class QtiGapMatchInteraction extends DragDropInteractionMixin(
       <div role="alert" part="message" id="validation-message"></div>`;
   }
 
-  public toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean): void {
-    if (show && responseVariable.correctResponse) {
+  public toggleCorrectResponse(show: boolean): void {
+    const responseVariable = this.responseVariable;
+
+    if (show && responseVariable?.correctResponse) {
       let matches: { text: string; gap: string }[] = [];
       const response = Array.isArray(responseVariable.correctResponse)
         ? responseVariable.correctResponse

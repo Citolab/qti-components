@@ -250,21 +250,9 @@ export class QtiAssessmentItem extends LitElement {
    * @param show - A boolean indicating whether to show or hide correct responses.
    */
   public showCorrectResponse(show: boolean): void {
-    // Get all response variables
-    const responseVariables = this._context.variables.filter(v => v.type === 'response') as ResponseVariable[];
-
     // Iterate through all interaction elements
     for (const interaction of this._interactionElements) {
-      // Get the response identifier for this interaction
-      const responseIdentifier = interaction.getAttribute('response-identifier');
-
-      // Find the matching response variable for this interaction
-      const responseVariable = responseVariables.find(v => v.identifier === responseIdentifier);
-
-      // If we found a matching response variable, toggle the correct response
-      if (responseVariable) {
-        interaction.toggleCorrectResponse(responseVariable, show);
-      }
+      interaction.toggleCorrectResponse(show);
     }
 
     // Update one or more toggle component states
@@ -278,21 +266,9 @@ export class QtiAssessmentItem extends LitElement {
    * @param show - A boolean indicating whether to show or hide candidate correction.
    */
   public showCandidateCorrection(show: boolean): void {
-    // Get all response variables
-    const responseVariables = this._context.variables.filter(v => v.type === 'response') as ResponseVariable[];
-
     // Iterate through all interaction elements
     for (const interaction of this._interactionElements) {
-      // Get the response identifier for this interaction
-      const responseIdentifier = interaction.getAttribute('response-identifier');
-
-      // Find the matching response variable for this interaction
-      const responseVariable = responseVariables.find(v => v.identifier === responseIdentifier);
-
-      // If we found a matching response variable, toggle the candidate correction
-      if (responseVariable) {
-        interaction.toggleCandidateCorrection(responseVariable, show);
-      }
+      interaction.toggleCandidateCorrection(show);
     }
 
     // Update one or more toggle component states

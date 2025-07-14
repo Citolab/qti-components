@@ -224,9 +224,11 @@ export const ChoiceFullCorrectResponse: Story = {
         const interaction = fullCorrectResponse.querySelector('qti-choice-interaction');
         const choices = Array.from(interaction.querySelectorAll('qti-simple-choice'));
 
-        expect(choices[0].internals.states.has('candidate-correct')).toBe(true);
-        expect(choices[1].internals.states.has('candidate-correct')).toBe(false);
-        expect(choices[2].internals.states.has('candidate-correct')).toBe(false);
+        await interaction.updateComplete;
+
+        expect(choices[0].internals.states.has('--checked')).toBe(true);
+        expect(choices[1].internals.states.has('--checked')).toBe(false);
+        expect(choices[2].internals.states.has('--checked')).toBe(false);
       });
     });
   }
@@ -330,9 +332,11 @@ export const MultipleResponseFullCorrectResponse: Story = {
         const interaction = fullCorrectResponse.querySelector('qti-choice-interaction');
         const choices = Array.from(interaction.querySelectorAll('qti-simple-choice'));
 
-        expect(choices[0].internals.states.has('candidate-correct')).toBe(true);
-        expect(choices[1].internals.states.has('candidate-correct')).toBe(true);
-        expect(choices[2].internals.states.has('candidate-correct')).toBe(false);
+        await interaction.updateComplete;
+
+        expect(choices[0].internals.states.has('--checked')).toBe(true);
+        expect(choices[1].internals.states.has('--checked')).toBe(true);
+        expect(choices[2].internals.states.has('--checked')).toBe(false);
       });
     });
   }
@@ -505,6 +509,55 @@ export const Match: Story = {
       const correctOptions = Array.from(correctElements).map(el => el.textContent);
       const allExist = correctOptions.every(element => ['Prospero', 'Demetrius', 'Capulet'].includes(element));
       expect(allExist).toBe(true);
+    });
+  }
+};
+
+export const MatchFullCorrectResponse: Story = {
+  args: {
+    'item-url': '/qti-test-package/items/match.xml' // Set the new item URL here
+    // 'item-url': 'api/kennisnet-1/ITEM002.xml' // Set the new item URL here
+  },
+  render: args =>
+    html` <qti-item>
+      <div>
+        <item-container style="display: block;width: 400px; height: 350px;" item-url=${args['item-url'] as string}>
+          <template>
+            <style>
+              qti-assessment-item {
+                padding: 1rem;
+                display: block;
+                aspect-ratio: 4 / 3;
+                width: 800px;
+
+                border: 2px solid blue;
+                transform: scale(0.5);
+                transform-origin: top left;
+              }
+            </style>
+          </template>
+        </item-container>
+        <item-show-correct-response ${spread(args)}></item-show-correct-response>
+      </div>
+    </qti-item>`,
+  play: async ({ canvasElement, step }) => {
+    const item = document.querySelector('qti-item');
+    item.configContext = {
+      correctResponseMode: 'full'
+    };
+
+    const canvas = within(canvasElement);
+    const showCorrectButton = await canvas.findByShadowText(/Show correct/i);
+
+    await step('Click on the Show Correct button', async () => {
+      await fireEvent.click(showCorrectButton);
+
+      await step('Verify full correct response is shown', async () => {
+        const fullCorrectResponse = await waitFor(() =>
+          canvas.getByShadowRole('full-correct-response')
+        );
+        expect(fullCorrectResponse).toBeVisible();
+      });
     });
   }
 };
@@ -703,7 +756,7 @@ export const GraphicOrder: Story = {
   }
 };
 
-export const InlineChoice: Story = {
+export const InlineChoiceInternalCorrectResponse: Story = {
   args: {
     'item-url': '/qti-item/example-inline-choice.xml' // Set the new item URL here
   },
@@ -730,9 +783,13 @@ export const InlineChoice: Story = {
       </div>
     </qti-item>`,
   play: async ({ canvasElement, step }) => {
+    const item = document.querySelector('qti-item');
+    item.configContext = {
+      correctResponseMode: 'internal'
+    };
     const canvas = within(canvasElement);
-    const item = await getAssessmentItemFromItemContainer(canvasElement);
-    const interaction = item.querySelector('qti-inline-choice-interaction');
+    const itemAssessment = await getAssessmentItemFromItemContainer(canvasElement);
+    const interaction = itemAssessment.querySelector('qti-inline-choice-interaction');
 
     const showCorrectButton = await canvas.findByShadowText(`Show correct response`);
     await step('Click on the Show Correct button', async () => {
@@ -740,6 +797,64 @@ export const InlineChoice: Story = {
       const correctResponse = interaction.shadowRoot.querySelector<HTMLSpanElement>('[part="correct-option"]'); //.findByShadowLabelText('correct-response');
       expect(correctResponse).not.toBeNull();
       expect(correctResponse.innerText).toBe('York');
+    });
+  }
+};
+
+export const InlineChoiceFullCorrectResponse: Story = {
+  args: {
+    'item-url': '/qti-item/example-inline-choice.xml' // Zorg dat dit item een inline-choice bevat
+  },
+  render: args =>
+    html`<qti-item>
+      <div>
+        <item-container style="display: block; width: 400px; height: 350px;" item-url=${args['item-url'] as string}>
+          <template>
+            <style>
+              qti-assessment-item {
+                padding: 1rem;
+                display: block;
+                aspect-ratio: 4 / 3;
+                width: 800px;
+                border: 2px solid blue;
+                transform: scale(0.5);
+                transform-origin: top left;
+              }
+            </style>
+          </template>
+        </item-container>
+        <item-show-correct-response></item-show-correct-response>
+      </div>
+    </qti-item>`,
+
+  play: async ({ canvasElement, step }) => {
+    const item = document.querySelector('qti-item');
+    item.configContext = {
+      correctResponseMode: 'full'
+    };
+
+    const canvas = within(canvasElement);
+    const showCorrectButton = await canvas.findByShadowText(/Show correct/i);
+
+    await step('Click on the Show Correct button', async () => {
+      await fireEvent.click(showCorrectButton);
+
+      await step('Verify full correct response is shown', async () => {
+        const fullCorrectResponse = await waitFor(() =>
+          canvas.getByShadowRole('full-correct-response')
+        );
+        expect(fullCorrectResponse).toBeVisible();
+
+        const interaction = fullCorrectResponse.querySelector('qti-inline-choice-interaction');
+        expect(interaction).not.toBeNull();
+
+        const select = interaction.shadowRoot.querySelector('select');
+        expect(select).not.toBeNull();
+
+        const selectedOption = Array.from(select.options).find(opt => opt.selected);
+        expect(selectedOption).not.toBeUndefined();
+        expect(selectedOption.textContent.trim()).toBe('York');
+      });
     });
   }
 };

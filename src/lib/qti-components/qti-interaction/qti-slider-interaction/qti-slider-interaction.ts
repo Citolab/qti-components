@@ -4,7 +4,6 @@ import { customElement, property, query } from 'lit/decorators.js';
 import styles from './qti-slider-interaction.styles';
 import { Interaction } from '../../../exports/interaction';
 
-import type { ResponseVariable } from '../../../exports/variables';
 import type { CSSResultGroup } from 'lit';
 
 @customElement('qti-slider-interaction')
@@ -42,7 +41,10 @@ export class QtiSliderInteraction extends Interaction {
     }
   }
 
-  public toggleCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
+  public toggleCorrectResponse(show: boolean) {
+    const responseVariable = this.responseVariable;
+    if (!responseVariable?.correctResponse) return;
+
     if (show) {
       this._correctResponse = responseVariable.correctResponse.toString();
       const nr = parseFloat(responseVariable.correctResponse.toString());

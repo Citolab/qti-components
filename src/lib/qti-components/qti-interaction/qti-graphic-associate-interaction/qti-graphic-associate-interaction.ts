@@ -9,7 +9,6 @@ import styles from './qti-graphic-associate-interaction.styles';
 
 import type { QtiHotspotChoice } from '../qti-hotspot-choice';
 import type { CSSResultGroup } from 'lit';
-import type { ResponseVariable } from '../../../exports/variables';
 
 @customElement('qti-graphic-associate-interaction')
 export class QtiGraphicAssociateInteraction extends Interaction {
@@ -49,8 +48,9 @@ export class QtiGraphicAssociateInteraction extends Interaction {
     return this._response;
   }
 
-  public toggleInternalCorrectResponse(responseVariable: ResponseVariable, show: boolean) {
-    if (!show) {
+  public toggleInternalCorrectResponse(show: boolean) {
+    const responseVariable = this.responseVariable;
+    if (!show || !responseVariable) {
       this._correctLines = [];
       return;
     }

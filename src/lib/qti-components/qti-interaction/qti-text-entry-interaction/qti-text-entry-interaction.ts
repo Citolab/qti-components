@@ -3,11 +3,10 @@ import { customElement, property, query, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { createRef } from 'lit/directives/ref.js';
 
-import { Interaction } from '../../../exports/interaction';
+import { Correctness, Interaction } from '../../../exports/interaction';
 import styles from './qti-text-entry-interaction.styles';
-import { watch } from '../../../decorators/watch';
+import { watch } from '../../../decorators';
 
-import type { ResponseVariable } from '../../../exports/variables';
 import type { CSSResultGroup } from 'lit';
 @customElement('qti-text-entry-interaction')
 export class QtiTextEntryInteraction extends Interaction {
@@ -42,7 +41,47 @@ export class QtiTextEntryInteraction extends Interaction {
     this.response = val || null;
   }
 
-  public override validate() {
+  get correctness(): Readonly<Correctness | null> {
+    const responseVariable = this.responseVariable;
+
+    if (!responseVariable || responseVariable.value === null) {
+      return null;
+    }
+
+    if (responseVariable.mapping) {
+      const maxScore = responseVariable.mapping.mapEntries.reduce<number>(
+        (currentMax, mapEntry) => Math.max(mapEntry.mappedValue, currentMax),
+        0
+      );
+      for (const mapEntry of responseVariable.mapping.mapEntries) {
+        let mapAnswer = mapEntry.mapKey;
+        let responseAnswer = responseVariable.value as string;
+        if (!mapEntry.caseSensitive) {
+          mapAnswer = mapAnswer.toLowerCase();
+          responseAnswer = responseAnswer.toLowerCase();
+        }
+        if (mapAnswer === responseAnswer) {
+          if (mapEntry.mappedValue === maxScore) {
+            return Correctness.Correct;
+          }
+          if (mapEntry.mappedValue <= (responseVariable.mapping.defaultValue || 0)) {
+            return Correctness.Incorrect;
+          }
+          return Correctness.PartiallyCorrect;
+        }
+      }
+    }
+
+    // Fallback to the correct response
+
+    return responseVariable.correctResponse === responseVariable.value ? Correctness.Correct : Correctness.Incorrect;
+  }
+
+  get isInline(): boolean {
+    return true;
+  }
+
+  public override validate(): boolean {
     if (!this._input) return false;
     if (this.patternMask && this.dataPatternmaskMessage) {
       // Clear any custom error if the this._input is valid
@@ -61,8 +100,10 @@ export class QtiTextEntryInteraction extends Interaction {
     return this.response !== '' && this._input.checkValidity();
   }
 
-  public toggleInternalCorrectResponse(responseVariable: ResponseVariable, show: boolean): void {
-    if (show && responseVariable.correctResponse) {
+  public toggleInternalCorrectResponse(show: boolean): void {
+    const responseVariable = this.responseVariable;
+
+    if (show && responseVariable?.correctResponse) {
       const text = responseVariable.correctResponse.toString();
       this._correctResponse = text;
       //   if (text) {
@@ -115,7 +156,7 @@ export class QtiTextEntryInteraction extends Interaction {
   }
   // ${this._correctResponse ? html`<div popover part="correct">${this._correctResponse}</div>` : nothing}
 
-  protected textChanged(event: Event) {
+  protected textChanged(event: Event): void {
     if (this.disabled || this.readonly) return;
     const input = event.target as HTMLInputElement;
     this.setEmptyAttribute(input.value);
@@ -125,7 +166,7 @@ export class QtiTextEntryInteraction extends Interaction {
     }
   }
 
-  override reportValidity() {
+  override reportValidity(): boolean {
     const input = this.shadowRoot.querySelector('input');
     if (!input) return false;
 
@@ -141,7 +182,7 @@ export class QtiTextEntryInteraction extends Interaction {
     this.response = '';
   }
 
-  private setEmptyAttribute(text: string) {
+  private setEmptyAttribute(text: string): void {
     this.setAttribute('empty', text === '' ? 'true' : 'false');
   }
 }
