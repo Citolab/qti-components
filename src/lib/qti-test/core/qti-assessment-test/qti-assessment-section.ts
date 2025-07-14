@@ -21,6 +21,7 @@ export class QtiAssessmentSection extends LitElement {
   @property({ type: String }) identifier: string;
   @property({ type: String }) required: string;
   @property({ type: Boolean, converter: stringToBooleanConverter }) fixed: boolean;
+
   get title(): string {
     return this._title;
   }
@@ -38,6 +39,7 @@ export class QtiAssessmentSection extends LitElement {
   private _title = '';
 
   async connectedCallback(): Promise<void> {
+    this._title = this.getAttribute('title') || '';
     super.connectedCallback();
     await this.updateComplete;
     this.dispatchEvent(
