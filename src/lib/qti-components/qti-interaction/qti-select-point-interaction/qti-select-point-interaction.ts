@@ -204,12 +204,12 @@ export class QtiSelectPointInteraction extends Interaction {
             const widthPercentage = (baseSize / (this._imageWidthOriginal || 1)) * 100;
             const heightPercentage = (baseSize / (this._imageHeightOriginal || 1)) * 100;
 
-            const correctionPart =
-              this._responseCorrection[index] === true
-                ? ' correct'
-                : this._responseCorrection[index] === false
-                  ? ' incorrect'
-                  : '';
+            let correctionPart = '';
+            if (this._responseCorrection[index] === true) {
+              correctionPart = ' correct';
+            } else if (this._responseCorrection[index] === false) {
+              correctionPart = ' incorrect';
+            }
 
             return html`
               <button
@@ -228,7 +228,7 @@ export class QtiSelectPointInteraction extends Interaction {
                   background: 'red' // Example styling, adjust as needed
                 })}
                 aria-label="Remove point at ${point}"
-                disabled=${this.disabled}
+                ?disabled=${this.disabled}
                 @click=${(e: Event) => {
                   e.stopPropagation();
                   this.response = (this.response || []).filter((_, i) => i !== index);
