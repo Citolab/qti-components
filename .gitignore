@@ -42,3 +42,4 @@ unpublish.sh
 # Yalc
 /.yalc
 yalc.lock
+.npmrc
