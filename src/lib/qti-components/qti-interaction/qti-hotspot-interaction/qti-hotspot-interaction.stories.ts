@@ -41,6 +41,25 @@ export const Circle: Story = {
     )
 };
 
+export const Circle2: Story = {
+  render: () =>
+    template(
+      args,
+      html`
+        <img
+          src="qti-hotspot-interaction/map_cape_cod.svg"
+          width="700"
+          height="550"
+          alt="a map of Cape Cod Massachusetts with 4 lighthouse icons distributed on the outer Cape"
+        />
+        <qti-hotspot-choice identifier="R" shape="circle" coords="418,29,40"></qti-hotspot-choice>
+        <qti-hotspot-choice identifier="H" shape="circle" coords="546,56,40"></qti-hotspot-choice>
+        <qti-hotspot-choice identifier="N" shape="circle" coords="596,182,40"></qti-hotspot-choice>
+        <qti-hotspot-choice identifier="C" shape="circle" coords="598,316,40"></qti-hotspot-choice>
+      `
+    )
+};
+
 export const Rect = {
   render: () =>
     template(
