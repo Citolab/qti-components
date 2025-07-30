@@ -1,3 +1,4 @@
+import type { PostLoadTransformCallback } from '../qti-test/core/mixins/test-navigation.mixin';
 import type { LitElement } from 'lit';
 import type { TestContext } from './test.context';
 import type { SessionContext } from './session.context';
@@ -20,6 +21,7 @@ export interface ITestNavigationMixin {
   requestTimeout: number;
   showLoadingIndicators: boolean;
 
+  postLoadTransformCallback: PostLoadTransformCallback | null;
   navigateTo(type: 'item' | 'section', id?: string): void;
   retryNavigation(): void;
 }
