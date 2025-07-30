@@ -7,7 +7,7 @@ export function positionShapes(shape: string, coordsNumber: number[], img: HTMLI
     case 'circle':
       {
         if (coordsNumber.length !== 3) {
-          console.error('Invalid cirlce coordinates:', coordsNumber);
+          console.error('Invalid circle coordinates:', coordsNumber);
           return;
         }
         const [centerX, centerY, radius] = coordsNumber;
@@ -15,18 +15,15 @@ export function positionShapes(shape: string, coordsNumber: number[], img: HTMLI
         // Calculate percentages for center and radius
         const centerXPer = (centerX / imgWidth) * 100;
         const centerYPer = (centerY / imgHeight) * 100;
-        const radiusPer = (radius / imgWidth) * 100;
-
-        // Subtract half the diameter (radiusPer in percentage) to center the circle
-        hotspot.style.left = centerXPer - radiusPer + '%';
-        hotspot.style.top = centerYPer - radiusPer + '%';
-        // Use both imgWidth and imgHeight for radius calculations
         const radiusXPer = (radius / imgWidth) * 100; // Relative to width
         const radiusYPer = (radius / imgHeight) * 100; // Relative to height
-        // Use percentage-based width and height to keep it proportional
+
+        // Position the hotspot so its center aligns with the circle center
+        hotspot.style.left = centerXPer - radiusXPer + '%';
+        hotspot.style.top = centerYPer - radiusYPer + '%';
         hotspot.style.width = 2 * radiusXPer + '%';
         hotspot.style.height = 2 * radiusYPer + '%';
-        hotspot.style.borderRadius = `50%`; // Create a circular
+        hotspot.style.borderRadius = `50%`; // Create a circular shape
       }
       break;
 
@@ -54,11 +51,16 @@ export function positionShapes(shape: string, coordsNumber: number[], img: HTMLI
           return;
         }
         const [centerX, centerY, radiusX, radiusY] = coordsNumber;
+
+        // Calculate center position as percentages
         const centerXPer = (centerX / imgWidth) * 100;
         const centerYPer = (centerY / imgHeight) * 100;
+
+        // Calculate radii as percentages (relative to their respective dimensions)
         const radiusXPer = (radiusX / imgWidth) * 100;
         const radiusYPer = (radiusY / imgHeight) * 100;
 
+        // Position the hotspot so its center aligns with the ellipse center
         hotspot.style.left = centerXPer - radiusXPer + '%';
         hotspot.style.top = centerYPer - radiusYPer + '%';
         hotspot.style.width = 2 * radiusXPer + '%';
