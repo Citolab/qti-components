@@ -105,8 +105,9 @@ export abstract class Interaction extends LitElement implements IInteraction {
       return;
     }
 
-    if (!show || this.correctness === Correctness.Correct) {
-      // Don't show with the correct answer responded
+    const showFullCorrectResponse = show && (this?.configContext?.fullCorrectResponseOnlyWhenIncorrect === false || this.correctness !== Correctness.Correct)
+
+    if (!showFullCorrectResponse) {
       if (!nextSiblingIsFullCorrectResponse) {
         return;
       }
@@ -118,9 +119,6 @@ export abstract class Interaction extends LitElement implements IInteraction {
       return; // Already exists
     }
 
-    if (this.correctness === Correctness.Correct) {
-      return;
-    }
 
     // Add a clone of interaction with the correct response
     const clone = this.cloneNode(true) as Interaction;
