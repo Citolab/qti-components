@@ -187,7 +187,7 @@
       ]
     },
     "cem": {
-      "command": "cem analyze"
+      "command": "cem analyze && cp ./custom-elements.json ./dist/"
     },
     "test": {
       "command": "vitest run"
