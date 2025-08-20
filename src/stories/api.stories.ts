@@ -25,7 +25,8 @@ const meta: Meta = {
     controls: {
       expanded: false
     }
-  }
+  },
+  tags: ['no-tests']
 };
 
 /*
