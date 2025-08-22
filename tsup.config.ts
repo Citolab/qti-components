@@ -24,7 +24,6 @@ const npmOptions: Options = {
   ],
   external: peerDependencies,
   splitting: true,
-  clean: true,
   esbuildPlugins: [InlineCSSPlugin],
   sourcemap: true,
   dts: true,
@@ -37,7 +36,6 @@ const cdnEs6Options: Options = {
   ...npmOptions,
   // entry: ['./src/lib/qti-components/index.ts'],
   splitting: true,
-  clean: true,
   outDir: 'cdn',
   external: undefined,
   noExternal: [/(.*)/],
@@ -48,9 +46,8 @@ const cdnEs6Options: Options = {
 
 const cndEs5Options: Options = {
   ...npmOptions,
-  entry: ['./src/lib/qti-components/index.ts'],
+  entry: ['./src/lib/index.ts'],
   splitting: true,
-  clean: true,
   outDir: 'cdn',
   external: undefined,
   noExternal: [/(.*)/],
