@@ -16,6 +16,8 @@ export default defineConfig({
     browser: {
       headless: true
     },
+    // Suppress console output during tests
+    silent: true,
     coverage: {
       provider: 'v8' // or 'v8'
     },

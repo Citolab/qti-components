@@ -41,7 +41,7 @@ export const Test: Story = {
   render: args => {
     return html` ${template(args)} `;
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const slider = canvas.getByTestId<QtiSliderInteraction>('interaction');
     const knob = slider.shadowRoot?.querySelector('#knob') as HTMLElement;

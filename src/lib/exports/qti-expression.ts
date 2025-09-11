@@ -7,8 +7,6 @@ import { qtiContext } from './qti.context';
 
 import type { QtiContext, QtiContextType } from './qti.context';
 import type { ResponseVariable, VariableDeclaration } from './variables';
-import type { QtiMultiple } from '../qti-components/qti-response-processing/qti-expression/qti-multiple/qti-multiple';
-import type { QtiOrdered } from '../qti-components/qti-response-processing/qti-expression/qti-ordered/qti-ordered';
 import type { ItemContext } from './item.context';
 
 export interface QtiExpressionBase<T> {
@@ -94,7 +92,7 @@ export abstract class QtiExpression<T> extends LitElement implements QtiExpressi
             return variable;
           }
           case 'qti-multiple': {
-            const multiple = e as QtiMultiple;
+            const multiple = e as QtiExpression<ResponseVariable[]>;
 
             const values = multiple.getResult();
             console.debug('values', values);
@@ -110,7 +108,7 @@ export abstract class QtiExpression<T> extends LitElement implements QtiExpressi
             return null;
           }
           case 'qti-ordered': {
-            const multiple = e as QtiOrdered;
+            const multiple = e as QtiExpression<ResponseVariable[]>;
             const values = multiple.getResult();
             if (values?.length > 0) {
               return {

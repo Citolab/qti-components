@@ -5,10 +5,11 @@ import { property } from 'lit/decorators.js';
 import { INITIAL_TEST_CONTEXT, testContext } from '../../exports/test.context';
 import { INITIAL_SESSION_CONTEXT, type SessionContext, sessionContext } from '../../exports/session.context';
 
+import type { QtiAssessmentItem } from '../../qti-components/qti-assessment-item/qti-assessment-item';
+import type { QtiAssessmentItemRef } from './qti-assessment-test/qti-assessment-item-ref';
+import type { QtiAssessmentTest } from './qti-assessment-test/qti-assessment-test';
 import type { ItemContext } from '../../exports/item.context';
 import type { TestContext } from '../../exports/test.context';
-import type { QtiAssessmentItemRef, QtiAssessmentTest } from './qti-assessment-test';
-import type { QtiAssessmentItem } from '../../qti-components/';
 import type { OutcomeVariable, VariableDeclaration, VariableValue } from '../../exports/variables';
 
 export abstract class TestBase extends LitElement {

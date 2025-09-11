@@ -5,8 +5,8 @@ import { customElement, state } from 'lit/decorators.js';
 import { computedItemContext } from '../../exports/computed-item.context';
 import { configContext } from '../../exports/config.context.ts';
 
-import type { ConfigContext, CorrectResponseMode} from '../../exports/config.context.ts';
-import type { QtiAssessmentItem } from '../../qti-components';
+import type { QtiAssessmentItem } from '../../qti-components/qti-assessment-item/qti-assessment-item.ts';
+import type { ConfigContext, CorrectResponseMode } from '../../exports/config.context.ts';
 import type { ItemContext } from '../../exports/item.context';
 import type { VariableDeclaration } from '../../exports/variables';
 import type { ComputedItemContext } from '../../exports/computed-item.context';
@@ -25,7 +25,6 @@ import type { ComputedItemContext } from '../../exports/computed-item.context';
  */
 @customElement('qti-item')
 export class QtiItem extends LitElement {
-
   @state()
   @provide({ context: computedItemContext })
   public computedContext: ComputedItemContext;
@@ -67,7 +66,7 @@ export class QtiItem extends LitElement {
             title: this._qtiAssessmentItem.title,
             adaptive: this._qtiAssessmentItem.getAttribute('adaptive')?.toLowerCase() === 'true' || false,
             variables: fullVariables,
-            correctResponseMode: 'internal',
+            correctResponseMode: 'internal'
           } as ComputedItemContext);
     this._updateItemVariablesInTestContext(this._qtiAssessmentItem.identifier, fullVariables || []);
   }

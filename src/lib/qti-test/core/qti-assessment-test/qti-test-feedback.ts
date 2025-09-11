@@ -1,7 +1,7 @@
 import { customElement } from 'lit/decorators.js';
 import { css, html } from 'lit';
 
-import { QtiModalFeedback } from '../../../qti-components';
+import { QtiModalFeedback } from '../../../qti-components/qti-feedback/qti-modal-feedback/qti-modal-feedback';
 
 @customElement('qti-test-feedback')
 export class QtiTestFeedback extends QtiModalFeedback {

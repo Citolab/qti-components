@@ -1,8 +1,7 @@
-import type { QtiAssessmentItemRef } from '../qti-assessment-test';
-import type { QtiAssessmentItem } from '../../../qti-components';
+import type { View } from '../../../exports/session.context';
+import type { QtiAssessmentItemRef } from '../qti-assessment-test/qti-assessment-item-ref';
+import type { QtiAssessmentItem } from '../../../qti-components/qti-assessment-item/qti-assessment-item';
 import type { TestBase } from '../test-base';
-
-export type View = 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor' | '';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 

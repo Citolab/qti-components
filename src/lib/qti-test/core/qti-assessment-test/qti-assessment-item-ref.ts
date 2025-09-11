@@ -2,8 +2,8 @@ import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import { prepareTemplate } from '@heximal/templates';
 
+import type { QtiAssessmentItem } from '../../../qti-components/qti-assessment-item/qti-assessment-item';
 import type { TemplateFunction } from '@heximal/templates';
-import type { QtiAssessmentItem } from '../../../qti-components';
 
 // Converter function to interpret "true" and "false" as booleans
 const stringToBooleanConverter = {

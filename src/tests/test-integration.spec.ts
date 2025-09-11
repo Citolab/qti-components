@@ -8,7 +8,8 @@ import { ExtendedXMLHttpRequest } from '../testing/xmlHttpRequest';
 import type { ComposedStoryFn } from 'storybook/internal/types';
 import type { WebComponentsRenderer } from '@storybook/web-components-vite';
 
-import '../lib/index';
+import '../lib/qti-test';
+import '../lib/qti-components';
 
 const testStory1: ComposedStoryFn<WebComponentsRenderer, Partial<any>> = composeStory(SlowLoadingStimulus, Meta);
 const testStory2: ComposedStoryFn<WebComponentsRenderer, Partial<any>> = composeStory(NotLoadingAdvancedOrder, Meta);

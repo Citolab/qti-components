@@ -10,11 +10,11 @@ import { toBePositionedRelativeTo } from '../test/setup/toBePositionedRelativeTo
 
 import type { Preview } from '@storybook/web-components-vite';
 
-import '../src/lib/qti-components';
-import '../src/lib/qti-test/core';
-import '../src/lib/qti-test/components';
-import '../src/lib/qti-item/core';
 import '../src/item.css';
+
+import '../src/lib/qti-test';
+import '../src/lib/qti-item';
+import '../src/lib/qti-components';
 
 export const customViewports = {
   default: {
@@ -83,15 +83,25 @@ const preview: Preview = {
           })
       }
     },
+
     viewport: { viewports: customViewports },
+
     controls: {
       expanded: true,
       matchers: {
         color: /(background|color)$/i
       }
     },
+
     options: {
       storySort: { method: 'alphabetical' }
+    },
+
+    a11y: {
+      // 'todo' - show a11y violations in the test UI only
+      // 'error' - fail CI on a11y violations
+      // 'off' - skip a11y checks entirely
+      test: 'todo'
     }
   },
 

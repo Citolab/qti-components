@@ -48,17 +48,8 @@ jobs:
         run: npm ci
       - name: Install playwright
         run: npx playwright install  --with-deps  
-      - name: Build
-        run: npm run build
-      # - name: Build Storybook
-      #   run: npm run build-storybook --quiet
-      # - name: Serve Storybook and run tests
-      #   run: |
-      #     npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
-      #       "npx http-server storybook-static --port 6006 --silent" \
-      #       "npx wait-on tcp:127.0.0.1:6006 && npm run test-storybook"
-      - name: Run tests
-        run: npm run test
+      - name: pkgr-release
+        run: npm run pkgr-release
       - name: Create docs folder for pkg.pr
         run: |
           mkdir -p docs

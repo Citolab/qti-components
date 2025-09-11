@@ -9,16 +9,14 @@ import type { Options } from 'tsup';
 const peerDependencies = Object.keys(pkgJson.peerDependencies || {});
 
 const npmOptions: Options = {
+  clean: false, // handled by our npm script
   outDir: 'dist',
   format: 'esm',
   entry: [
     './src/lib/index.ts',
-    ...(await globby('./src/lib/exports/**/!(*.(style|test|stories)).ts')),
+    './src/lib/qti-test/index.ts',
+    './src/lib/qti-item/index.ts',
     './src/lib/qti-components/index.ts',
-    './src/lib/qti-test/core/index.ts',
-    ...(await globby('./src/lib/qti-test/components/**/!(*.(style|test|spec|stories)).ts')),
-    './src/lib/qti-item/core/index.ts',
-    ...(await globby('./src/lib/qti-item/components/**/!(*.(style|test|spec|stories)).ts')),
     './src/lib/qti-transformers/index.ts',
     './src/lib/qti-loader/index.ts'
   ],
@@ -32,31 +30,40 @@ const npmOptions: Options = {
   }
 };
 
-const cdnEs6Options: Options = {
-  ...npmOptions,
-  // entry: ['./src/lib/qti-components/index.ts'],
-  splitting: true,
+// CDN build (ESM, bundled deps)
+const cdnEsmOptions: Options = {
+  clean: false,
   outDir: 'cdn',
+  format: 'esm',
+  entry: {
+    index: './src/lib/index.ts'
+  },
   external: undefined,
   noExternal: [/(.*)/],
+  splitting: false,
+  esbuildPlugins: [InlineCSSPlugin],
   sourcemap: false,
   minify: true,
   dts: false
 };
 
-const cndEs5Options: Options = {
-  ...npmOptions,
-  entry: ['./src/lib/index.ts'],
-  splitting: true,
+// CDN build (UMD/Global for JSDOM and browser environments)
+const cdnUmdOptions: Options = {
+  clean: false,
   outDir: 'cdn',
+  format: 'iife',
+  entry: {
+    index: './src/lib/index.ts'
+  },
+  globalName: 'QtiComponents',
+  target: 'es5',
   external: undefined,
   noExternal: [/(.*)/],
-  format: 'iife',
-  target: 'es5',
+  splitting: false,
+  esbuildPlugins: [InlineCSSPlugin],
   sourcemap: false,
   minify: true,
-  dts: false,
-  globalName: 'QtiComponents'
+  dts: false
 };
 
-export default defineConfig([npmOptions, cdnEs6Options, cndEs5Options]);
+export default defineConfig([npmOptions, cdnEsmOptions, cdnUmdOptions]);

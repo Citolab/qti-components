@@ -2,7 +2,7 @@ import { expect, waitFor } from 'storybook/test';
 import { within } from 'shadow-dom-testing-library';
 
 import { toBePositionedRelativeTo } from '../../../../../../test/setup/toBePositionedRelativeTo';
-import { qtiTransformItem } from '../../../../qti-transformers';
+import { qtiTransformItem } from '../../../../qti-transformers/qti-transform-item';
 
 import type { QtiSimpleChoice } from '../../qti-simple-choice';
 import type { StoryObj, Meta } from '@storybook/web-components-vite';
