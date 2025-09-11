@@ -21,7 +21,7 @@
   "engines": {
     "node": ">=20.0.0"
   },
-  "version": "7.4.2",
+  "version": "7.4.3",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
