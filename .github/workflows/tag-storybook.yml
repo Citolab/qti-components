@@ -32,10 +32,10 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      - name: Install dependencies
+      - name: npm ci
         run: npm ci
 
-      - name: Build storybook
+      - name: npm run build-storybook
         run: npm run build-storybook
 
       - name: Upload artifact

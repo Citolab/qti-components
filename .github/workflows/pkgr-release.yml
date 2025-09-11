@@ -48,7 +48,7 @@ jobs:
         run: npm ci
       - name: Install playwright
         run: npx playwright install  --with-deps  
-      - name: pkgr-release
+      - name: npm run pkgr-release
         run: npm run pkgr-release
       - name: Create docs folder for pkg.pr
         run: |
