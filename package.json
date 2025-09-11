@@ -76,7 +76,6 @@
   "scripts": {
     "storybook": "run-p storybook:dev cem:watch",
     "watch": "nodemon --watch src --ext ts,css --exec \"run-s tsup cem css && yalc push\"",
-    "publish": "run-s clean ci build test lint stylelint publint attw np",
     "-----------------------cmds--": "-",
     "pre-commit": "run-s lint stylelint madge",
     "pre-push": "run-s clean ci build test lint stylelint publint attw",
@@ -88,7 +87,6 @@
     "cem:watch": "cem analyze --watch && cp custom-elements.json ./dist",
     "css": "postcss src/item.css -d dist -m",
     "ci": "npm ci",
-    "np": "np",
     "tsup": "tsup",
     "publint": "publint",
     "lint": "eslint src/**/*.ts",
@@ -156,7 +154,6 @@
     "lit": "^3.3.0",
     "madge": "^8.0.0",
     "nodemon": "^3.1.10",
-    "np": "^10.2.0",
     "npm-run-all": "^4.1.5",
     "path-browserify": "^1.0.1",
     "pkg-pr-new": "^0.0.51",
@@ -181,8 +178,7 @@
     "typescript-eslint": "^8.34.1",
     "vite": "^6.3.5",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^3.2.4",
-    "wireit": "^0.14.12"
+    "vitest": "^3.2.4"
   },
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "^4.43.0"

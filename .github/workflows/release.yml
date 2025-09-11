@@ -73,9 +73,6 @@ jobs:
       - name: Run style linting
         run: npm run stylelint
 
-      - name: Build
-        run: npm run build
-
       - name: Run publint
         run: npm run publint
 
