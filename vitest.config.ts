@@ -82,6 +82,14 @@ export default defineConfig({
             instances: [{ browser: 'chromium', headless: true }]
           }
         }
+      },
+      /* this is for the normal spec files, which do not need storybook */
+      {
+        test: {
+          name: 'unit test who uses dist and node',
+          include: ['tests/**/*.spec.ts', 'tests/**/*.test.ts'],
+          globals: true
+        }
       }
     ]
   }
