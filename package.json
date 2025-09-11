@@ -86,6 +86,7 @@
     "cem:watch": "cem analyze --watch && cp custom-elements.json ./dist",
     "css": "postcss src/item.css -d dist -m",
     "ci": "npm ci",
+    "np": "np",
     "tsup": "tsup",
     "publint": "publint",
     "lint": "eslint src/**/*.ts",
