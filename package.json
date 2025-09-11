@@ -95,7 +95,6 @@
     "test": "vitest run",
     "attw": "attw --profile esm-only --pack --exclude-entrypoints ./item.css ./react",
     "chromatic": "node chromatic-runner.cjs",
-    "prepare": "husky",
     "clean": "rm -rf dist cdn",
     "madge": "madge --circular --extensions ts src"
   },
