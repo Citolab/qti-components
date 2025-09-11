@@ -27,11 +27,11 @@ jobs:
           node-version: '20'  # Specify the Node.js version
           registry-url: 'https://registry.npmjs.org/'
 
-      - name: Install Dependencies
+      - name: npm ci
         run: npm ci
-      - name: Build
+      - name: npm run build
         run: npm run build
-      - name: Version to prerelease
+      - name: npm version prerelease
         run: npm version prerelease --preid=beta
 
         # Push repository changes
