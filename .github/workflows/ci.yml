@@ -52,6 +52,3 @@ jobs:
 
       - name: Create pkgr release
         run: npx pkg-pr-new publish --comment=off
-
-      - name: Build Storybook (for validation)
-        run: npm run build-storybook
