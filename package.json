@@ -25,16 +25,7 @@
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "sideEffects": [
-    "./dist/qti-components/*.js",
-    "./dist/qti-item/components/*.js",
-    "./dist/qti-test/components/*.js",
-    "./cdn/*.js",
-    "./src/**/*.css",
-    "./src/**/qti-*.ts",
-    "./src/**/test-*.ts",
-    "./src/**/item-*.ts"
-  ],
+  "sideEffects": true,
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
