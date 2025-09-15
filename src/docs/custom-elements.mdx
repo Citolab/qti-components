@@ -1,0 +1,38 @@
+# custom element manifest
+
+This project includes a [custom element manifest](./custom-elements.json) that describes the custom elements used in the project.
+This manifest is generated automatically during the build process and provides metadata about the custom elements, such as their properties, methods, events, and slots.
+The manifest is useful for documentation, tooling, and IDE support, as it allows developers to understand how to use the custom elements effectively.
+The `custom-elements.json` file is located in the root directory of the project.
+
+It is exported through the `package.json` file as follows:
+
+```json
+{
+  "exports": {
+    "./customElements": "./custom-elements.json"
+  }
+}
+```
+
+then you can import it in your project like this:
+
+```js
+import manifest from 'https://cdn.jsdelivr.net/npm/@citolab/qti-components@latest/custom-elements.json' assert { type: 'json' };
+```
+
+if you use the https://marketplace.visualstudio.com/items?itemName=wc-toolkit.web-components-language-server extension in VSCode,
+
+`wc.config.js` can be configured like this to use the manifest for better autocompletion and documentation:
+
+```javascript
+export default {
+  libraries: {
+    '@citolab/qti-components': {
+      manifestSrc: 'https://cdn.jsdelivr.net/npm/@citolab/qti-components@latest/custom-elements.json'
+    }
+  }
+};
+```
+
+For more information about the custom element manifest format, see the [Custom Elements Manifest Specification](https://github.com/webcomponents/custom-elements-manifest).

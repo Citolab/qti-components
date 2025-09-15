@@ -54,6 +54,7 @@
       "types": "./dist/qti-transformers/index.d.ts",
       "import": "./dist/qti-transformers/index.js"
     },
+    "./customElements": "./custom-elements.json",
     "./react": "./dist/qti-components-jsx.d.ts",
     "./item.css": "./dist/item.css",
     "./cdn/*": "./cdn/*",
@@ -74,8 +75,8 @@
     "-----------------------scripts--": "-",
     "build": "run-p cem css tsup",
     "storybook:dev": "storybook dev -p 6006",
-    "cem": "cem analyze && cp custom-elements.json ./dist",
-    "cem:watch": "cem analyze --watch && cp custom-elements.json ./dist",
+    "cem": "cem analyze",
+    "cem:watch": "cem analyze --watch",
     "css": "postcss src/item.css -d dist -m",
     "ci": "npm ci",
     "tsup": "tsup",
@@ -169,7 +170,8 @@
     "typescript-eslint": "^8.34.1",
     "vite": "^6.3.5",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "yalc": "^1.0.0-pre.53"
   },
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "^4.43.0"

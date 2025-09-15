@@ -28,16 +28,12 @@ dist-ssr
 .firebase/
 storybook-static/
 
-custom-elements.json
-
 public/assets/api/test
 .env
 *__screenshots__/
 .eslintcache
 cdn
 dev
-docs
-unpublish.sh
 
 # Yalc
 /.yalc
