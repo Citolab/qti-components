@@ -51,26 +51,27 @@ jobs:
           git config --global user.email "patrick.deklein@cito.nl"
           git config --global user.name "patrickdeklein"
 
-      - uses: googleapis/release-please-action@v4
+      - name: Validate NPM publish (dry run)
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --dry-run
+
+      - name: Create Release PR or Release
         id: release
+        uses: googleapis/release-please-action@v4
         with:
           release-type: node
-      # The logic below handles the npm publication:
-      - uses: actions/checkout@v4
-        # these if statements ensure that a publication only occurs when
-        # a new release is created:
-        if: ${{ steps.release.outputs.release_created }}
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 12
-          registry-url: 'https://registry.npmjs.org'
-        if: ${{ steps.release.outputs.release_created }}
-      - run: npm ci
-        if: ${{ steps.release.outputs.release_created }}
-      - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-        if: ${{ steps.release.outputs.release_created }}
+
+      - name: Set release outputs
+        id: release_outputs
+        run: |
+          if [ "${{ steps.release.outputs.release_created }}" == "true" ]; then
+            echo "released=true" >> $GITHUB_OUTPUT
+            echo "version=${{ steps.release.outputs.tag_name }}" >> $GITHUB_OUTPUT  
+            echo "tag=${{ steps.release.outputs.tag_name }}" >> $GITHUB_OUTPUT
+          else
+            echo "released=false" >> $GITHUB_OUTPUT
+          fi
 
       - name: Create GitHub Release
         if: steps.release.outputs.release_created
