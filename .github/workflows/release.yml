@@ -53,24 +53,28 @@ jobs:
           git config --global user.email "patrick.deklein@cito.nl"
           git config --global user.name "patrickdeklein"
 
-      - name: Github Tag Bump
-        id: release
-        uses: anothrNick/github-tag-action@1.75.0
+      - name: Validate NPM publish (dry run)
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          WITH_V: true
-          RELEASE_BRANCHES: main
-          MAJOR_STRING_TOKEN: "BREAKING CHANGE,feat!"
-          MINOR_STRING_TOKEN: "feat"
-          PATCH_STRING_TOKEN: "fix,docs,chore"
-          NONE_STRING_TOKEN: "ci,style,refactor"
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --dry-run
+
+      - name: Create Release PR or Release
+        id: release
+        uses: googleapis/release-please-action@v4
+        with:
+          release-type: node
+          skip-github-pull-request: true
 
       - name: Set release outputs
         id: release_outputs
         run: |
-          echo "released=true" >> $GITHUB_OUTPUT
-          echo "version=${{ steps.release.outputs.new_tag }}" >> $GITHUB_OUTPUT  
-          echo "tag=${{ steps.release.outputs.new_tag }}" >> $GITHUB_OUTPUT
+          if [ "${{ steps.release.outputs.release_created }}" = "true" ]; then
+            echo "released=true" >> $GITHUB_OUTPUT
+            echo "version=${{ steps.release.outputs.tag_name }}" >> $GITHUB_OUTPUT  
+            echo "tag=${{ steps.release.outputs.tag_name }}" >> $GITHUB_OUTPUT
+          else
+            echo "released=false" >> $GITHUB_OUTPUT
+          fi
 
       - name: Create GitHub Release
         if: steps.release_outputs.outputs.released == 'true'
