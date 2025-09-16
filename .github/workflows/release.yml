@@ -34,13 +34,17 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  build-and-test:
+    uses: ./.github/workflows/build-and-test.yml
+
   release:
     runs-on: ubuntu-latest
+    needs: build-and-test
     if: github.ref == 'refs/heads/main'
     outputs:
-      released: ${{ steps.release.outputs.released }}
-      version: ${{ steps.release.outputs.version }}
-      tag: ${{ steps.release.outputs.tag }}
+      released: ${{ steps.release_outputs.outputs.released }}
+      version: ${{ steps.release_outputs.outputs.version }}
+      tag: ${{ steps.release_outputs.outputs.tag }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -58,160 +62,60 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Playwright
-        run: npx playwright install --with-deps
-
       - name: Run build
         run: npm run build
-    
-      - name: Run tests
-        run: npm run test
-
-      - name: Run linting
-        run: npm run lint
-
-      - name: Run style linting
-        run: npm run stylelint
-
-      - name: Run publint
-        run: npm run publint
-
-      - name: Run attw
-        run: npm run attw
 
       - name: Git configuration
         run: |
           git config --global user.email "patrick.deklein@cito.nl"
           git config --global user.name "patrickdeklein"
 
-      - name: Determine release type
-        id: release_type
-        run: |
-          if [ "${{ github.event.inputs.custom_version }}" != "" ]; then
-            echo "Using custom version: ${{ github.event.inputs.custom_version }}"
-            echo "custom=true" >> $GITHUB_OUTPUT
-            echo "version=${{ github.event.inputs.custom_version }}" >> $GITHUB_OUTPUT
-          elif [ "${{ github.event.inputs.release_type }}" != "auto" ]; then
-            echo "type=${{ github.event.inputs.release_type }}" >> $GITHUB_OUTPUT
-          else
-            # Auto-determine based on commit messages since last tag
-            LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
-            if [ -z "$LAST_TAG" ]; then
-              echo "type=minor" >> $GITHUB_OUTPUT
-            else
-              COMMITS=$(git log ${LAST_TAG}..HEAD --pretty=format:"%s")
-              if echo "$COMMITS" | grep -qE "^feat(\(.+\))?!:|^fix(\(.+\))?!:|BREAKING CHANGE:"; then
-                echo "type=major" >> $GITHUB_OUTPUT
-              elif echo "$COMMITS" | grep -qE "^feat(\(.+\))?:"; then
-                echo "type=minor" >> $GITHUB_OUTPUT
-              else
-                echo "type=patch" >> $GITHUB_OUTPUT
-              fi
-            fi
-          fi
-
-      - name: Generate changelog
-        id: changelog
-        run: |
-          if [ "${{ github.event.inputs.release_notes }}" != "" ]; then
-            # Use custom release notes
-            echo "content=${{ github.event.inputs.release_notes }}" >> $GITHUB_OUTPUT
-          else
-            # Auto-generate from commits
-            LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
-            if [ -z "$LAST_TAG" ]; then
-              COMMITS=$(git log --pretty=format:"* %s" --reverse)
-            else
-              COMMITS=$(git log ${LAST_TAG}..HEAD --pretty=format:"* %s" --reverse)
-            fi
-            
-            # Filter and categorize commits
-            FEATURES=$(echo "$COMMITS" | grep -E "^\* feat(\(.+\))?:" | sed 's/^\* feat[^:]*: /• /' | head -20)
-            FIXES=$(echo "$COMMITS" | grep -E "^\* fix(\(.+\))?:" | sed 's/^\* fix[^:]*: /• /' | head -20)
-            BREAKING=$(echo "$COMMITS" | grep -E "^\* feat(\(.+\))?!:|^\* fix(\(.+\))?!:" | sed 's/^\* [^:]*: /• /' | head -10)
-            
-            CHANGELOG_CONTENT=""
-            
-            if [ ! -z "$BREAKING" ]; then
-              CHANGELOG_CONTENT="${CHANGELOG_CONTENT}### 💥 Breaking Changes\n${BREAKING}\n\n"
-            fi
-            
-            if [ ! -z "$FEATURES" ]; then
-              CHANGELOG_CONTENT="${CHANGELOG_CONTENT}### ✨ New Features\n${FEATURES}\n\n"
-            fi
-            
-            if [ ! -z "$FIXES" ]; then
-              CHANGELOG_CONTENT="${CHANGELOG_CONTENT}### 🐛 Bug Fixes\n${FIXES}\n\n"
-            fi
-            
-            if [ -z "$CHANGELOG_CONTENT" ]; then
-              CHANGELOG_CONTENT="### 🔧 Maintenance\n• Various improvements and updates\n\n"
-            fi
-            
-            # Save to file and output
-            echo -e "$CHANGELOG_CONTENT" > changelog.md
-            echo "content<<EOF" >> $GITHUB_OUTPUT
-            cat changelog.md >> $GITHUB_OUTPUT
-            echo "EOF" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Bump version and create tag
+      - name: Github Tag Bump
         id: release
-        run: |
-          if [ "${{ steps.release_type.outputs.custom }}" == "true" ]; then
-            # Use custom version
-            CUSTOM_VERSION="${{ steps.release_type.outputs.version }}"
-            # Remove 'v' prefix if present
-            NEW_VERSION=${CUSTOM_VERSION#v}
-            # Update package.json manually
-            npm version $NEW_VERSION --no-git-tag-version --allow-same-version
-            echo "version=v$NEW_VERSION" >> $GITHUB_OUTPUT
-            echo "tag=v$NEW_VERSION" >> $GITHUB_OUTPUT
-          else
-            # Use semver bump
-            RELEASE_TYPE="${{ steps.release_type.outputs.type }}"
-            NEW_VERSION=$(npm version $RELEASE_TYPE --no-git-tag-version)
-            echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
-            echo "tag=v${NEW_VERSION#v}" >> $GITHUB_OUTPUT
-          fi
-          
-          # Create and push tag
-          git add package.json package-lock.json
-          git commit -m "chore: release ${NEW_VERSION:-v$NEW_VERSION}"
-          git tag -a "${NEW_VERSION:-v$NEW_VERSION}" -m "Manual release ${NEW_VERSION:-v$NEW_VERSION}"
-          git push origin main
-          git push origin "${NEW_VERSION:-v$NEW_VERSION}"
-          
-          echo "released=true" >> $GITHUB_OUTPUT
-
-      - name: Create GitHub Release
-        if: steps.release.outputs.released == 'true'
-        uses: actions/create-release@v1
+        uses: anothrNick/github-tag-action@1.75.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true
+          RELEASE_BRANCHES: main
+          MAJOR_STRING_TOKEN: "BREAKING CHANGE,feat!"
+          MINOR_STRING_TOKEN: "feat"
+          PATCH_STRING_TOKEN: "fix,docs,chore"
+          NONE_STRING_TOKEN: "ci,style,refactor"
+
+      - name: Set release outputs
+        id: release_outputs
+        run: |
+          echo "released=true" >> $GITHUB_OUTPUT
+          echo "version=${{ steps.release.outputs.new_tag }}" >> $GITHUB_OUTPUT  
+          echo "tag=${{ steps.release.outputs.new_tag }}" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        if: steps.release_outputs.outputs.released == 'true'
+        uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.release.outputs.tag }}
-          release_name: Release ${{ steps.release.outputs.version }}
+          tag_name: ${{ steps.release_outputs.outputs.tag }}
+          name: Release ${{ steps.release_outputs.outputs.version }}
           body: |
-            # Manual Release ${{ steps.release.outputs.version }}
+            # Manual Release ${{ steps.release_outputs.outputs.version }}
             
-            ${{ steps.changelog.outputs.content }}
+            ${{ github.event.inputs.release_notes || '' }}
             
             ## 📦 Installation
             
             ```bash
-            npm install @citolab/qti-components@${{ steps.release.outputs.version }}
+            npm install @citolab/qti-components@${{ steps.release_outputs.outputs.version }}
             ```
             
             ## 🔗 Links
-            - [NPM Package](https://www.npmjs.com/package/@citolab/qti-components/v/${{ steps.release.outputs.version }})
+            - [NPM Package](https://www.npmjs.com/package/@citolab/qti-components/v/${{ steps.release_outputs.outputs.version }})
             - [Documentation](https://citolab.github.io/qti-components/)
             - [Changelog](https://github.com/Citolab/qti-components/releases)
           draft: false
           prerelease: false
+          generate_release_notes: true
 
       - name: Publish to NPM
-        if: steps.release.outputs.released == 'true'
+        if: steps.release_outputs.outputs.released == 'true'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npm publish
@@ -226,6 +130,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.release.outputs.tag }}
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4

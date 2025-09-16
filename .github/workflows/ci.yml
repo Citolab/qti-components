@@ -9,13 +9,15 @@ on:
       - main
 
 jobs:
-  test:
+  build-and-test:
+    uses: ./.github/workflows/build-and-test.yml
+
+  pkgr-release:
     runs-on: ubuntu-latest
+    needs: build-and-test
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -26,29 +28,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Playwright
-        run: npx playwright install --with-deps
-
-      - name: Run linting
-        run: npm run lint
-
-      - name: Run style linting
-        run: npm run stylelint
-
-      - name: Check circular dependencies
-        run: npm run madge
-
-      - name: Build
+      - name: Run build
         run: npm run build
-
-      - name: Run tests
-        run: npm run test
-
-      - name: Run publint
-        run: npm run publint
-
-      - name: Run attw
-        run: npm run attw
 
       - name: Create pkgr release
         run: npx pkg-pr-new publish --comment=off
