@@ -6503,6 +6503,21 @@
             },
             {
               "kind": "field",
+              "name": "onMove",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "onEnd",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "onCancel",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
               "name": "MIN_DRAG_DISTANCE",
               "type": {
                 "text": "number"
@@ -7973,6 +7988,33 @@
               },
               "privacy": "private",
               "default": "null",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "onMove",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "onEnd",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "onCancel",
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "DragDropInteractionMixin",
                 "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
@@ -11053,6 +11095,33 @@
             },
             {
               "kind": "field",
+              "name": "onMove",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "onEnd",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "onCancel",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "MIN_DRAG_DISTANCE",
               "type": {
                 "text": "number"
@@ -13029,6 +13098,33 @@
               },
               "privacy": "private",
               "default": "null",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "onMove",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "onEnd",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "onCancel",
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "DragDropInteractionMixin",
                 "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
@@ -16248,6 +16344,33 @@
             },
             {
               "kind": "field",
+              "name": "onMove",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "onEnd",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "onCancel",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "MIN_DRAG_DISTANCE",
               "type": {
                 "text": "number"
@@ -17574,6 +17697,33 @@
               },
               "privacy": "private",
               "default": "null",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "onMove",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "onEnd",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "onCancel",
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "DragDropInteractionMixin",
                 "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
@@ -22880,12 +23030,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/lib/qti-components/qti-response-processing/qti-expression/qti-gcd/qti.gcd.spec.ts",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
       "path": "src/lib/qti-components/qti-interaction/internal/choices/choices.spec.ts",
       "declarations": [
         {
@@ -23309,6 +23453,12 @@
           }
         }
       ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/lib/qti-components/qti-response-processing/qti-expression/qti-gcd/qti.gcd.spec.ts",
+      "declarations": [],
+      "exports": []
     },
     {
       "kind": "javascript-module",
