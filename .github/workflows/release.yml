@@ -1,26 +1,9 @@
-name: Manual Release
+name: Release
 
 on:
   workflow_dispatch:
-    inputs:
-      release_type:
-        description: 'Release type'
-        required: true
-        default: 'auto'
-        type: choice
-        options:
-          - auto
-          - patch
-          - minor
-          - major
-      custom_version:
-        description: 'Custom version (optional, overrides release_type)'
-        required: false
-        type: string
-      release_notes:
-        description: 'Custom release notes (optional)'
-        required: false
-        type: string
+  push:
+    branches: [ main ]
 
 # Sets permissions for GitHub Pages deployment and NPM publishing
 permissions:
@@ -30,7 +13,7 @@ permissions:
 
 # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
 concurrency:
-  group: "pages"
+  group: "release"
   cancel-in-progress: false
 
 jobs:
@@ -96,9 +79,7 @@ jobs:
           tag_name: ${{ steps.release_outputs.outputs.tag }}
           name: Release ${{ steps.release_outputs.outputs.version }}
           body: |
-            # Manual Release ${{ steps.release_outputs.outputs.version }}
-            
-            ${{ github.event.inputs.release_notes || '' }}
+            # Release ${{ steps.release_outputs.outputs.version }}
             
             ## 📦 Installation
             
