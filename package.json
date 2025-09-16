@@ -21,7 +21,7 @@
   "engines": {
     "node": ">=22.0.0"
   },
-  "version": "7.5.2",
+  "version": "7.6.0",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -83,9 +83,6 @@
     "tsup": "tsup",
     "publint": "publint",
     "lint": "eslint src/**/*.ts",
-    "act ci": "act --container-architecture linux/arm64 -W .github/workflows/ci.yml",
-    "act release": "act --container-architecture linux/arm64 -W .github/workflows/release.yml",
-    "act release-next": "act --container-architecture linux/arm64 -W .github/workflows/release-next.yml",
     "stylelint": "stylelint \"src/**/*.css\"",
     "test": "vitest run",
     "attw": "attw --profile esm-only --pack --exclude-entrypoints ./item.css ./react",

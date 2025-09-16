@@ -54,7 +54,8 @@
       "stylelint.vscode-stylelint",
       "redhat.vscode-xml",
       "joshbolduc.commitlint",
-      "wc-toolkit.web-components-language-server"
+      "wc-toolkit.web-components-language-server",
+      "sanjulaganepola.github-local-actions"
     ]
   }
 }
