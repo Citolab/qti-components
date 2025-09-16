@@ -66,6 +66,7 @@
     "custom-elements.json"
   ],
   "scripts": {
+    "prepare": "husky",
     "storybook": "run-p storybook:dev cem:watch",
     "watch": "nodemon --watch src --ext ts,css --exec \"run-s tsup cem css && yalc push\"",
     "-----------------------cmds--": "-",
