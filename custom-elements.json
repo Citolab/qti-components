@@ -14609,12 +14609,39 @@
           "name": "QtiHotspotInteraction",
           "members": [
             {
+              "kind": "field",
+              "name": "imageLoadPromise",
+              "type": {
+                "text": "Promise<HTMLImageElement> | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "getImageLoadPromise",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<HTMLImageElement>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "img",
+                  "type": {
+                    "text": "HTMLImageElement"
+                  }
+                }
+              ]
+            },
+            {
               "kind": "method",
               "name": "positionHotspotOnRegister",
               "privacy": "private",
               "return": {
                 "type": {
-                  "text": "void"
+                  "text": "Promise<void>"
                 }
               },
               "parameters": [
