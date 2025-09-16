@@ -51,46 +51,44 @@ jobs:
           git config --global user.email "patrick.deklein@cito.nl"
           git config --global user.name "patrickdeklein"
 
-      - name: Validate NPM publish (dry run)
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm publish --dry-run
-
-      - name: Create Release PR or Release
+      - uses: googleapis/release-please-action@v4
         id: release
-        uses: googleapis/release-please-action@v4
         with:
           release-type: node
-          skip-github-pull-request: true
-
-      - name: Set release outputs
-        id: release_outputs
-        run: |
-          if [ "${{ steps.release.outputs.release_created }}" = "true" ]; then
-            echo "released=true" >> $GITHUB_OUTPUT
-            echo "version=${{ steps.release.outputs.tag_name }}" >> $GITHUB_OUTPUT  
-            echo "tag=${{ steps.release.outputs.tag_name }}" >> $GITHUB_OUTPUT
-          else
-            echo "released=false" >> $GITHUB_OUTPUT
-          fi
+      # The logic below handles the npm publication:
+      - uses: actions/checkout@v4
+        # these if statements ensure that a publication only occurs when
+        # a new release is created:
+        if: ${{ steps.release.outputs.release_created }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 12
+          registry-url: 'https://registry.npmjs.org'
+        if: ${{ steps.release.outputs.release_created }}
+      - run: npm ci
+        if: ${{ steps.release.outputs.release_created }}
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+        if: ${{ steps.release.outputs.release_created }}
 
       - name: Create GitHub Release
-        if: steps.release_outputs.outputs.released == 'true'
+        if: steps.release.outputs.release_created
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.release_outputs.outputs.tag }}
-          name: Release ${{ steps.release_outputs.outputs.version }}
+          tag_name: ${{ steps.release.outputs.tag_name }}
+          name: Release ${{ steps.release.outputs.tag_name }}
           body: |
-            # Release ${{ steps.release_outputs.outputs.version }}
+            # Release ${{ steps.release.outputs.tag_name }}
             
             ## 📦 Installation
             
             ```bash
-            npm install @citolab/qti-components@${{ steps.release_outputs.outputs.version }}
+            npm install @citolab/qti-components@${{ steps.release.outputs.tag_name }}
             ```
             
             ## 🔗 Links
-            - [NPM Package](https://www.npmjs.com/package/@citolab/qti-components/v/${{ steps.release_outputs.outputs.version }})
+            - [NPM Package](https://www.npmjs.com/package/@citolab/qti-components/v/${{ steps.release.outputs.tag_name }})
             - [Documentation](https://citolab.github.io/qti-components/)
             - [Changelog](https://github.com/Citolab/qti-components/releases)
           draft: false
@@ -98,7 +96,7 @@ jobs:
           generate_release_notes: true
 
       - name: Publish to NPM
-        if: steps.release_outputs.outputs.released == 'true'
+        if: steps.release.outputs.release_created
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npm publish
