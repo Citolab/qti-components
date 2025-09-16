@@ -1,0 +1,50 @@
+name: Build and Test
+
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        description: 'Node.js version to use'
+        required: false
+        default: '22'
+        type: string
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright
+        run: npx playwright install --with-deps
+
+      - name: Run linting
+        run: npm run lint
+
+      - name: Run style linting
+        run: npm run stylelint
+
+      - name: Check circular dependencies
+        run: npm run madge
+
+      - name: Run build
+        run: npm run build
+
+      - name: Run tests
+        run: npm run test
+
+      - name: Run publint
+        run: npm run publint
+
+      - name: Run attw
+        run: npm run attw
