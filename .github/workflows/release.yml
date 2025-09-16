@@ -61,6 +61,7 @@ jobs:
         uses: googleapis/release-please-action@v4
         with:
           release-type: node
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set release outputs
         id: release_outputs
@@ -114,7 +115,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ needs.release.outputs.tag }}
-          fetch-depth: 0
+          fetch-depth: 100
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
