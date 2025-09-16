@@ -144,11 +144,13 @@
 .spot {
   @apply bordered;
 
-  box-sizing: border-box;
   width: 100%;
   height: 100%;
   background-color: transparent;
-  padding: 0;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  box-sizing: border-box !important;
 }
 
 /* Apply .point for circular small hotspots */
