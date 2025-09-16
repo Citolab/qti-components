@@ -63,6 +63,7 @@ jobs:
         with:
           release-type: simple
           token: ${{ secrets.GITHUB_TOKEN }}
+          skip-github-pull-request: true
 
       - name: Set release outputs
         id: release_outputs
