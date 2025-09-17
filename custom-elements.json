@@ -6257,6 +6257,24 @@
             },
             {
               "kind": "method",
+              "name": "getDropzoneRect",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "DOMRect"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "el",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "findClosestDropzone",
               "privacy": "private",
               "return": {
@@ -7091,6 +7109,24 @@
               "parameters": [
                 {
                   "name": "touch"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getDropzoneRect",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "DOMRect"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "el",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
                 }
               ]
             },
@@ -8791,6 +8827,28 @@
               "parameters": [
                 {
                   "name": "touch"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getDropzoneRect",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "DOMRect"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "el",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
                 }
               ],
               "inheritedFrom": {
@@ -11900,6 +11958,28 @@
             },
             {
               "kind": "method",
+              "name": "getDropzoneRect",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "DOMRect"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "el",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "findClosestDropzone",
               "privacy": "private",
               "return": {
@@ -13901,6 +13981,28 @@
               "parameters": [
                 {
                   "name": "touch"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getDropzoneRect",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "DOMRect"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "el",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
                 }
               ],
               "inheritedFrom": {
@@ -17149,6 +17251,28 @@
             },
             {
               "kind": "method",
+              "name": "getDropzoneRect",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "DOMRect"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "el",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "findClosestDropzone",
               "privacy": "private",
               "return": {
@@ -18527,6 +18651,28 @@
               "parameters": [
                 {
                   "name": "touch"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "src/lib/qti-components/qti-interaction/internal/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getDropzoneRect",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "DOMRect"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "el",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
                 }
               ],
               "inheritedFrom": {
