@@ -4,7 +4,8 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write   # required by release-please to create tags & releases
+  contents: write        # required by release-please to create tags & releases
+  pull-requests: write   # required by release-please to create/update release PRs
 
 concurrency:
   group: "release"
