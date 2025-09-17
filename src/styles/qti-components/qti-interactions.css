@@ -889,15 +889,15 @@
     }
   }
 
-  qti-order-interaction:state(--dragzone-active)::part(drags) {
-    @apply act;
-  }
-
-  qti-order-interaction:state(--dragzone-enabled)::part(drags) {
-    @apply dropping;
-  }
-
   qti-order-interaction {
+    &:state(--dragzone-active)::part(drags) {
+      @apply act;
+    }
+
+    &:state(--dragzone-enabled)::part(drags) {
+      @apply dropping;
+    }
+
     &::part(qti-simple-choice),
     & qti-simple-choice {
       @apply drag;
