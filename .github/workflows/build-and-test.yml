@@ -23,7 +23,9 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          echo "📦 Installing dependencies..."
+          npm ci --silent
 
       - name: Cache Playwright browsers
         uses: actions/cache@v4
@@ -34,25 +36,41 @@ jobs:
             playwright-${{ runner.os }}-
 
       - name: Install Playwright
-        run: npx playwright install --with-deps
+        run: |
+          echo "🎭 Installing Playwright browsers..."
+          npx playwright install --with-deps --quiet
 
       - name: Run linting
-        run: npm run lint
+        run: |
+          echo "🔍 Running ESLint..."
+          npm run lint --silent
 
       - name: Run style linting
-        run: npm run stylelint
+        run: |
+          echo "🎨 Running Stylelint..."
+          npm run stylelint --silent
 
       - name: Check circular dependencies
-        run: npm run madge
+        run: |
+          echo "🔄 Checking circular dependencies..."
+          npm run madge --silent
 
       - name: Run build
-        run: npm run build
+        run: |
+          echo "🔨 Building project..."
+          npm run build --silent
 
       - name: Run tests
-        run: npm run test
+        run: |
+          echo "🧪 Running tests..."
+          npm run test --silent
 
       - name: Run publint
-        run: npm run publint
+        run: |
+          echo "📋 Running publint..."
+          npm run publint --silent
 
       - name: Run attw
-        run: npm run attw
+        run: |
+          echo "🔍 Running attw..."
+          npm run attw --silent

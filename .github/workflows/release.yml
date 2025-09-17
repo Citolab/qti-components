@@ -24,9 +24,8 @@ jobs:
     needs: build-and-test
     if: github.ref == 'refs/heads/main'
     outputs:
-      released: ${{ steps.release_outputs.outputs.released }}
-      version: ${{ steps.release_outputs.outputs.version }}
-      tag: ${{ steps.release_outputs.outputs.tag }}
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -42,10 +41,14 @@ jobs:
           registry-url: 'https://registry.npmjs.org/'
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          echo "📦 Installing dependencies..."
+          npm ci --silent
 
       - name: Run build
-        run: npm run build
+        run: |
+          echo "🔨 Building project..."
+          npm run build --silent
 
       - name: Git configuration
         run: |
@@ -55,60 +58,40 @@ jobs:
       - name: Validate NPM publish (dry run)
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm publish --dry-run
+        run: |
+          echo "🔍 Validating NPM package..."
+          npm publish --dry-run --silent
 
       - name: Create Release PR or Release
         id: release
         uses: googleapis/release-please-action@v4
         with:
-          release-type: simple
+          release-type: node
           token: ${{ secrets.GITHUB_TOKEN }}
           skip-github-pull-request: true
 
-      - name: Set release outputs
-        id: release_outputs
+      - name: Release Summary
         run: |
           if [ "${{ steps.release.outputs.release_created }}" == "true" ]; then
-            echo "released=true" >> $GITHUB_OUTPUT
-            echo "version=${{ steps.release.outputs.tag_name }}" >> $GITHUB_OUTPUT  
-            echo "tag=${{ steps.release.outputs.tag_name }}" >> $GITHUB_OUTPUT
+            echo "✅ Release created: ${{ steps.release.outputs.html_url }}"
+            echo "🏷️ Tag: ${{ steps.release.outputs.tag_name }}"
           else
-            echo "released=false" >> $GITHUB_OUTPUT
+            echo "ℹ️ No release created (no conventional commits found since last release)"
           fi
-
-      - name: Create GitHub Release
-        if: steps.release.outputs.release_created
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ steps.release.outputs.tag_name }}
-          name: Release ${{ steps.release.outputs.tag_name }}
-          body: |
-            # Release ${{ steps.release.outputs.tag_name }}
-            
-            ## 📦 Installation
-            
-            ```bash
-            npm install @citolab/qti-components@${{ steps.release.outputs.tag_name }}
-            ```
-            
-            ## 🔗 Links
-            - [NPM Package](https://www.npmjs.com/package/@citolab/qti-components/v/${{ steps.release.outputs.tag_name }})
-            - [Documentation](https://citolab.github.io/qti-components/)
-            - [Changelog](https://github.com/Citolab/qti-components/releases)
-          draft: false
-          prerelease: false
-          generate_release_notes: true
 
       - name: Publish to NPM
         if: steps.release.outputs.release_created
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm publish
+        run: |
+          echo "📦 Publishing to NPM..."
+          npm publish --silent
+          echo "✅ Published @citolab/qti-components@${{ steps.release.outputs.tag_name }} to NPM"
 
   deploy-storybook:
     needs: release
     runs-on: ubuntu-latest
-    if: needs.release.outputs.released == 'true'
+    if: needs.release.outputs.release_created == 'true'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -116,8 +99,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ needs.release.outputs.tag }}
-          fetch-depth: 100
+          ref: ${{ needs.release.outputs.tag_name }}
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -126,13 +109,18 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          echo "📦 Installing dependencies..."
+          npm ci --silent
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
       - name: Build Storybook
-        run: npm run build-storybook
+        run: |
+          echo "📚 Building Storybook..."
+          npm run build-storybook --silent
+          echo "✅ Storybook build complete"
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
