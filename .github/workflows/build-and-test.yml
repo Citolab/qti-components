@@ -38,7 +38,7 @@ jobs:
       - name: Install Playwright
         run: |
           echo "🎭 Installing Playwright browsers..."
-          npx playwright install --with-deps --quiet
+          npx playwright install --with-deps
 
       - name: Run linting
         run: |
