@@ -20,14 +20,33 @@ export class QtiHotspotInteraction extends ChoicesMixin(Interaction, 'qti-hotspo
     `;
   }
 
-  private positionHotspotOnRegister(e: CustomEvent<QtiHotspotChoice>): void {
+  private imageLoadPromise: Promise<HTMLImageElement> | null = null;
+
+  private getImageLoadPromise(img: HTMLImageElement): Promise<HTMLImageElement> {
+    if (!this.imageLoadPromise) {
+      if (img.naturalWidth > 0 && img.naturalHeight > 0) {
+        this.imageLoadPromise = Promise.resolve(img);
+      } else {
+        this.imageLoadPromise = new Promise(resolve => {
+          const handler = () => {
+            img.removeEventListener('load', handler);
+            resolve(img);
+          };
+          img.addEventListener('load', handler);
+        });
+      }
+    }
+    return this.imageLoadPromise;
+  }
+
+  private async positionHotspotOnRegister(e: CustomEvent<QtiHotspotChoice>): Promise<void> {
     const img = this.querySelector('img') as HTMLImageElement;
     const hotspot = e.target as QtiHotspotChoice;
     const coords = hotspot.getAttribute('coords');
     const shape = hotspot.getAttribute('shape');
     const coordsNumber = coords.split(',').map(s => parseInt(s));
-
-    positionShapes(shape, coordsNumber, img, hotspot);
+    const loadedImg = await this.getImageLoadPromise(img);
+    positionShapes(shape, coordsNumber, loadedImg, hotspot);
   }
 
   override connectedCallback(): void {

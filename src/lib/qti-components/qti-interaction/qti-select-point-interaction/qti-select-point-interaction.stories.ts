@@ -113,7 +113,7 @@ export const ScaledSmallerImageTest: Story = {
     template(
       args,
       html`
-        <div style="width: 103px; height: auto; display: block; border: 1px solid red;">
+        <div style="box-sizing: content-box;width: 103px; height: auto; display: block; border: 1px solid red;">
           <qti-select-point-interaction>
             <qti-prompt>Click anywhere on the scaled interaction.</qti-prompt>
             <img src="/qti-select-point-interaction/uk.png" alt="map of united kingdom" height="280" width="206" />

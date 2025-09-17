@@ -60,6 +60,21 @@ export const Circle2: Story = {
     )
 };
 
+export const Circle3: Story = {
+  render: () =>
+    template(
+      args,
+      html`
+        <qti-prompt>Which one is Glasgow?</qti-prompt>
+        <img type="image/png" width="206" height="280" src="qti-hotspot-interaction/ukair.png" />
+        <qti-hotspot-choice shape="circle" coords="77,115,8" identifier="A"></qti-hotspot-choice>
+        <qti-hotspot-choice shape="circle" coords="118,184,8" identifier="B"></qti-hotspot-choice>
+        <qti-hotspot-choice shape="circle" coords="150,235,8" identifier="C"></qti-hotspot-choice>
+        <qti-hotspot-choice shape="circle" coords="96,114,8" identifier="D"></qti-hotspot-choice>
+      `
+    )
+};
+
 export const Rect = {
   render: () =>
     template(
