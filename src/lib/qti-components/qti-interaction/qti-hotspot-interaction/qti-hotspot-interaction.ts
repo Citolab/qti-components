@@ -45,11 +45,7 @@ export class QtiHotspotInteraction extends ChoicesMixin(Interaction, 'qti-hotspo
     const coords = hotspot.getAttribute('coords');
     const shape = hotspot.getAttribute('shape');
     const coordsNumber = coords.split(',').map(s => parseInt(s));
-
-    console.log('positioning hotspot', { img, hotspot, coords, shape, coordsNumber });
-
     const loadedImg = await this.getImageLoadPromise(img);
-    console.log('image loaded, now positioning hotspot', loadedImg);
     positionShapes(shape, coordsNumber, loadedImg, hotspot);
   }
 
