@@ -1,16 +1,13 @@
 name: Release
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
-# Sets permissions for GitHub Pages deployment and NPM publishing
 permissions:
-  contents: write
-  pages: write
-  id-token: write
-  pull-requests: write
+  contents: write   # required by release-please to create tags & releases
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
 concurrency:
   group: "release"
   cancel-in-progress: false
@@ -23,110 +20,37 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-and-test
     if: github.ref == 'refs/heads/main'
-    outputs:
-      release_created: ${{ steps.release.outputs.release_created }}
-      tag_name: ${{ steps.release.outputs.tag_name }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
 
+      # Optional: ensure Node is available if your repo scripts are used by release-please
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'npm'
-          registry-url: 'https://registry.npmjs.org/'
 
-      - name: Install dependencies
-        run: |
-          echo "📦 Installing dependencies..."
-          npm ci --silent
-
-      - name: Run build
-        run: |
-          echo "🔨 Building project..."
-          npm run build --silent
-
-      - name: Git configuration
+      - name: Configure Git author (for tags/commits created by the action)
         run: |
           git config --global user.email "patrick.deklein@cito.nl"
           git config --global user.name "patrickdeklein"
 
-      - name: Validate NPM publish (dry run)
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          echo "🔍 Validating NPM package..."
-          npm publish --dry-run --silent
-
-      - name: Create Release PR or Release
+      - name: Create Release (version + tag + GitHub Release)
         id: release
         uses: googleapis/release-please-action@v4
         with:
           release-type: node
+          # If you prefer PRs instead of immediate release, set this to false.
+          # skip-github-pull-request: true
           token: ${{ secrets.GITHUB_TOKEN }}
-          skip-github-pull-request: true
 
-      - name: Release Summary
+      - name: Summary
         run: |
-          if [ "${{ steps.release.outputs.release_created }}" == "true" ]; then
+          if [ "${{ steps.release.outputs.release_created }}" = "true" ]; then
             echo "✅ Release created: ${{ steps.release.outputs.html_url }}"
             echo "🏷️ Tag: ${{ steps.release.outputs.tag_name }}"
           else
-            echo "ℹ️ No release created (no conventional commits found since last release)"
+            echo "ℹ️ No release created (no Conventional Commits since last release)."
           fi
-
-      - name: Publish to NPM
-        if: steps.release.outputs.release_created
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          echo "📦 Publishing to NPM..."
-          npm publish --silent
-          echo "✅ Published @citolab/qti-components@${{ steps.release.outputs.tag_name }} to NPM"
-
-  deploy-storybook:
-    needs: release
-    runs-on: ubuntu-latest
-    if: needs.release.outputs.release_created == 'true'
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ needs.release.outputs.tag_name }}
-          fetch-depth: 0
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: |
-          echo "📦 Installing dependencies..."
-          npm ci --silent
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Build Storybook
-        run: |
-          echo "📚 Building Storybook..."
-          npm run build-storybook --silent
-          echo "✅ Storybook build complete"
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: './storybook-static'
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
