@@ -97,6 +97,12 @@ export class TestStamp extends LitElement {
       activeTestpart: augmentedTestPart,
       test: activeTest
     };
+    this.dispatchEvent(
+      new CustomEvent('qti-stamp-context-updated', {
+        detail: this.stampContext,
+        bubbles: true
+      })
+    );
   }
 
   render() {
