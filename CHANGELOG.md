@@ -1,5 +1,17 @@
 # Changelog
 
+## [7.9.0](https://github.com/Citolab/qti-components/compare/v7.8.1...v7.9.0) (2025-09-18)
+
+
+### Features
+
+* restructure CI workflows for improved release and deployment processes ([5e69844](https://github.com/Citolab/qti-components/commit/5e69844c841c8414c01ae63d8c8ece0a22a018d9))
+
+
+### Bug Fixes
+
+* add id-token permission for NPM publishing and GitHub Pages deployment ([df3c5c4](https://github.com/Citolab/qti-components/commit/df3c5c4f40b1a19e3275ec52950b93b1f4f0b4de))
+
 ## [7.8.1](https://github.com/Citolab/qti-components/compare/v7.8.0...v7.8.1) (2025-09-18)
 
 
