@@ -1,7 +1,8 @@
+# documentation: https://github.com/googleapis/release-please-action
 # .github/workflows/release-please.yml
 name: "Release"
 on:
-  pull_request:
+  push:
     branches:
       - main
 
