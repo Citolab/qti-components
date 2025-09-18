@@ -12,6 +12,7 @@ permissions:
   contents: write        # required by release-please to create tags & releases
   pull-requests: write   # required by release-please to create/update release PRs
   id-token: write        # required for NPM publishing and GitHub Pages deployment
+  pages: write           # required for GitHub Pages deployment
 
 jobs:
   release:
