@@ -9,12 +9,8 @@ on:
       - main
 
 jobs:
-  build-and-test:
-    uses: ./.github/workflows/build-and-test.yml
-
   pkgr-release:
     runs-on: ubuntu-latest
-    needs: build-and-test
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -30,12 +26,50 @@ jobs:
           echo "📦 Installing dependencies..."
           npm ci --silent
 
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            playwright-${{ runner.os }}-
+
+      - name: Install Playwright
+        run: |
+          echo "🎭 Installing Playwright browsers..."
+          npx playwright install --with-deps
+
+      - name: Run linting
+        run: |
+          echo "🔍 Running ESLint..."
+          npm run lint --silent
+
+      - name: Run style linting
+        run: |
+          echo "🎨 Running Stylelint..."
+          npm run stylelint --silent
+
+      - name: Check circular dependencies
+        run: |
+          echo "🔄 Checking circular dependencies..."
+          npm run madge --silent
+
       - name: Run build
         run: |
           echo "🔨 Building project..."
           npm run build --silent
 
-      - name: Create pkgr release
+      - name: Run tests
         run: |
-          echo "📦 Creating pkgr release..."
-          npx pkg-pr-new publish --comment=off
+          echo "🧪 Running tests..."
+          npm run test --silent
+
+      - name: Run publint
+        run: |
+          echo "📋 Running publint..."
+          npm run publint --silent
+
+      - name: Run attw
+        run: |
+          echo "🔍 Running attw..."
+          npm run attw --silent
