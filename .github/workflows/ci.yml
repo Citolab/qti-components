@@ -24,7 +24,7 @@ jobs:
       - name: Install dependencies
         run: |
           echo "📦 Installing dependencies..."
-          npm ci --silent
+          npm install --silent
 
       - name: Cache Playwright browsers
         uses: actions/cache@v4

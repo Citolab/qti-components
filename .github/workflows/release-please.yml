@@ -27,7 +27,7 @@ jobs:
 
       - name: Install dependencies 📦
         if: ${{ steps.release.outputs.release_created }}
-        run: npm ci
+        run: npm install --silent
 
       - name: Build project 🔨
         if: ${{ steps.release.outputs.release_created }}
