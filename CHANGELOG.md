@@ -1,5 +1,17 @@
 # Changelog
 
+## [7.8.0](https://github.com/Citolab/qti-components/compare/v7.7.0...v7.8.0) (2025-09-18)
+
+
+### Features
+
+* dispatch custom event when stamp context is updated ([#40](https://github.com/Citolab/qti-components/issues/40)) ([d3d92c0](https://github.com/Citolab/qti-components/commit/d3d92c07da86c237c3b2606a57b1412624039a53))
+
+
+### Bug Fixes
+
+* [[#35](https://github.com/Citolab/qti-components/issues/35)] drag interaction state styles ([#37](https://github.com/Citolab/qti-components/issues/37)) ([666d3af](https://github.com/Citolab/qti-components/commit/666d3afd2c047bc0a61a70caa77046bb2724e660))
+
 ## [7.7.0](https://github.com/Citolab/qti-components/compare/v7.6.0...v7.7.0) (2025-09-17)
 
 
