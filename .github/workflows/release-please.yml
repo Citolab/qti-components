@@ -12,52 +12,22 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
     steps:
       - uses: googleapis/release-please-action@v4
         id: release
         with:
           release-type: node
 
-      - name: Setup node ⚙️
-        if: ${{ steps.release.outputs.release_created }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          registry-url: "https://registry.npmjs.org"
+  publish:
+    needs: release
+    if: needs.release.outputs.release_created
+    uses: ./.github/workflows/publish.yml
+    secrets:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Install dependencies 📦
-        if: ${{ steps.release.outputs.release_created }}
-        run: npm install --silent
-
-      - name: Build project 🔨
-        if: ${{ steps.release.outputs.release_created }}
-        run: npm run build
-
-      - name: Publish to NPM 🚀
-        if: ${{ steps.release.outputs.release_created }}
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Build Storybook
-        if: ${{ steps.release.outputs.release_created }}
-
-        run: npm run build-storybook
-
-      - name: Setup Pages
-        if: ${{ steps.release.outputs.release_created }}
-
-        uses: actions/configure-pages@v5
-
-      - name: Upload Pages artifact
-        if: ${{ steps.release.outputs.release_created }}
-
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: storybook-static
-
-      - name: Deploy to GitHub Pages
-        if: ${{ steps.release.outputs.release_created }}
-
-        id: deployment
-        uses: actions/deploy-pages@v4
+  deploy:
+    needs: [release, publish]
+    if: needs.release.outputs.release_created
+    uses: ./.github/workflows/deploy.yml
