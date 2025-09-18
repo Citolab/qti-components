@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.8.1](https://github.com/Citolab/qti-components/compare/v7.8.0...v7.8.1) (2025-09-18)
+
+
+### Bug Fixes
+
+* replace npm ci with npm install in CI workflows for consistency ([1669c96](https://github.com/Citolab/qti-components/commit/1669c9604e7091f5512dca93ece2446d05624b80))
+
 ## [7.8.0](https://github.com/Citolab/qti-components/compare/v7.7.0...v7.8.0) (2025-09-18)
 
 
