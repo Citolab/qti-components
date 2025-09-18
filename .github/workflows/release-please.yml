@@ -1,9 +1,6 @@
 # .github/workflows/release-please.yml
 name: "Release"
 on:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
       - main
