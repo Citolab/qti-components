@@ -3,6 +3,11 @@ name: Deploy Storybook
 on:
   workflow_call:
   workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to deploy (e.g., v1.2.3). Leave empty for latest commit on selected branch.'
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -18,6 +23,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
