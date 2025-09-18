@@ -38,6 +38,15 @@ export default css`
     flex: 1;
   }
 
+  [part='drop-list'][active] {
+    border-color: var(--qti-border-active) !important;
+    background-color: var(--qti-bg-active) !important;
+  }
+
+  [part='drop-list'][enabled] {
+    background-color: var(--qti-bg-active) !important;
+  }
+
   [part='container'] {
     display: flex;
     gap: 0.5rem;

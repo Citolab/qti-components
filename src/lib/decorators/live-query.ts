@@ -1,70 +1,85 @@
-// @watch decorator
-//
-// Runs when an observed property changes, e.g. @property or @state, but before the component updates.
-//
-// To wait for an update to complete after a change occurs, use `await this.updateComplete` in the handler. To start
-// watching after the initial update/render, use `{ waitUntilFirstUpdate: true }` or `this.hasUpdated` in the handler.
-//
-// Usage:
-//
-//  @watch('propName')
-//  handlePropChange(oldValue, newValue) {
-//    ...
-//  }
-
 import type { LitElement } from 'lit';
 
-type UpdateHandler = (prev?: unknown, next?: unknown) => void;
-
-type NonUndefined<A> = A extends undefined ? never : A;
-
-type UpdateHandlerFunctionKeys<T extends object> = {
-  [K in keyof T]-?: NonUndefined<T[K]> extends UpdateHandler ? K : never;
+type LiveQueryHandler = (added: Element[], removed: Element[]) => void;
+type LiveQueryHandlerKeys<T extends object> = {
+  [K in keyof T]-?: T[K] extends LiveQueryHandler ? K : never;
 }[keyof T];
 
 interface LiveQueryOptions {
   /**
    * If true, will only start watching after the initial update/render
    */
+  waitUntilFirstUpdate?: boolean;
 }
 
-export function liveQuery(querySelector: string, _options?: LiveQueryOptions) {
-  let observer: MutationObserver;
-  // const resolvedOptions: Required<LiveQueryOptions> = {
-  //   ...options
-  // };
-  return <ElemClass extends LitElement>(
-    proto: ElemClass,
-    decoratedFnName: UpdateHandlerFunctionKeys<ElemClass>
-  ): void => {
+export function liveQuery(querySelector: string, options?: LiveQueryOptions) {
+  return <ElemClass extends LitElement>(proto: ElemClass, decoratedFnName: LiveQueryHandlerKeys<ElemClass>): void => {
     const { connectedCallback, disconnectedCallback } = proto;
 
     proto.connectedCallback = function (this: ElemClass) {
       connectedCallback.call(this);
+
+      const handler = this[decoratedFnName] as unknown as LiveQueryHandler;
+
       const callback = (mutationList: MutationRecord[]) => {
-        const elementsToWatch = Array.from(this.querySelectorAll(querySelector)).concat(
-          Array.from(this.shadowRoot?.querySelectorAll(querySelector) || [])
-        );
-        for (const mutation of mutationList) {
-          const addedNodes = Array.from(mutation.addedNodes).map(e => e as Element);
-          const removedNodes = Array.from(mutation.addedNodes).map(e => e as Element);
-          if (mutation.type === 'childList' && addedNodes.find(n => elementsToWatch.includes(n))) {
-            (this[decoratedFnName] as unknown as UpdateHandler)(addedNodes, removedNodes);
-          }
+        const added: Element[] = [];
+        const removed: Element[] = [];
+
+        for (const m of mutationList) {
+          if (m.type !== 'childList') continue;
+
+          m.addedNodes.forEach(n => {
+            if (n.nodeType !== 1) return;
+            const el = n as Element;
+            if (el.matches?.(querySelector)) added.push(el);
+            added.push(...(el.querySelectorAll?.(querySelector) ?? []));
+          });
+
+          m.removedNodes.forEach(n => {
+            if (n.nodeType !== 1) return;
+            const el = n as Element;
+            if (el.matches?.(querySelector)) removed.push(el);
+            removed.push(...(el.querySelectorAll?.(querySelector) ?? []));
+          });
+        }
+
+        // deduplicate added and removed (might be multiples since we observe both light and shadow DOM)
+        const dedupe = (arr: Element[]) => Array.from(new Set(arr));
+        const A = dedupe(added);
+        const R = dedupe(removed);
+
+        if (A.length || R.length) {
+          handler.call(this, A, R);
         }
       };
-      observer = new MutationObserver(callback);
-      observer.observe(this, { childList: true, subtree: true });
 
-      const elementsAdded = Array.from(this.querySelectorAll(querySelector)).concat(
-        Array.from(this.shadowRoot?.querySelectorAll(querySelector) || [])
-      );
-      (this[decoratedFnName] as unknown as UpdateHandler)(Array.from(elementsAdded), []);
+      // observe both light and shadow DOM
+      const obsLight = new MutationObserver(callback);
+      obsLight.observe(this, { childList: true, subtree: true });
+
+      const obsShadow = this.shadowRoot ? new MutationObserver(callback) : null;
+      obsShadow?.observe(this.shadowRoot, { childList: true, subtree: true });
+
+      (this as any).__lqObservers = [obsLight, obsShadow].filter((o): o is MutationObserver => !!o);
+
+      const fireInitial = async () => {
+        if (options?.waitUntilFirstUpdate && 'updateComplete' in this) {
+          await (this as any).updateComplete;
+        }
+        const initial = [
+          ...this.querySelectorAll(querySelector),
+          ...(this.shadowRoot?.querySelectorAll(querySelector) ?? [])
+        ] as Element[];
+        if (initial.length) handler.call(this, initial, []);
+      };
+
+      void fireInitial();
     };
 
     proto.disconnectedCallback = function (this: ElemClass) {
       disconnectedCallback.call(this);
-      observer.disconnect();
+      (this as any).__lqObservers?.forEach((o: MutationObserver) => o.disconnect());
+      (this as any).__lqObservers = undefined;
     };
   };
 }

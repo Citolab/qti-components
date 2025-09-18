@@ -718,38 +718,49 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       return xDist + yDist;
     }
 
+    private getDropzoneRect(el: HTMLElement): DOMRect {
+      const slot = el.shadowRoot?.querySelector<HTMLElement>('slot[part="dropslot"]');
+      return (slot ?? el).getBoundingClientRect();
+    }
+
     private findClosestDropzone(): HTMLElement | null {
-      const allActiveDropzones = this.allDropzones.filter(d => !d.hasAttribute('disabled'));
-      if (!this.dragClone || allActiveDropzones.length === 0) return null;
+      const activeDrops = this.allDropzones.filter(d => !d.hasAttribute('disabled'));
+      if (!this.dragClone || activeDrops.length === 0) return null;
 
       const dragRect = this.dragClone.getBoundingClientRect();
       let closestDropzone: HTMLElement | null = null;
-      let maxOverlapArea = 0;
+      let maxArea = 0;
 
-      for (const dropzone of allActiveDropzones) {
-        const dropRect = dropzone.getBoundingClientRect();
-        const overlapArea = this.calculateOverlapArea(dragRect, dropRect);
-
-        if (overlapArea > maxOverlapArea) {
-          maxOverlapArea = overlapArea;
-          closestDropzone = dropzone;
+      // prefer real droppables first
+      const prefer = (elements: HTMLElement[]) => {
+        for (const dz of elements) {
+          const dzRect = this.getDropzoneRect(dz);
+          const area = this.calculateOverlapArea(dragRect, dzRect);
+          if (area > maxArea) {
+            maxArea = area;
+            closestDropzone = dz;
+          }
         }
-      }
-      // if none was find using this method, try to find the closest dropzone by distance
+      };
+
+      prefer(this.droppables.filter(droppable => !droppable.hasAttribute('disabled')));
       if (!closestDropzone) {
-        let minDistance = 200; // arbitrary large number could be max too: number.MAX_VALUE;
-        for (const dropzone of allActiveDropzones) {
-          const dropRect = dropzone.getBoundingClientRect();
-          const distance = Math.sqrt(
-            Math.pow(dragRect.left - dropRect.left, 2) + Math.pow(dragRect.top - dropRect.top, 2)
-          );
-          if (distance < minDistance) {
-            minDistance = distance;
-            closestDropzone = dropzone;
+        // fallback to drag containers only if no droppable overlaps
+        prefer(this.dragContainers.filter(drags => !drags.hasAttribute('disabled')));
+      }
+
+      // fallback by distance
+      if (!closestDropzone) {
+        let minDist = Number.POSITIVE_INFINITY;
+        for (const dz of activeDrops) {
+          const dzRect = this.getDropzoneRect(dz);
+          const dist = Math.hypot(dragRect.left - dzRect.left, dragRect.top - dzRect.top);
+          if (dist < minDist) {
+            minDist = dist;
+            closestDropzone = dz;
           }
         }
       }
-
       return closestDropzone;
     }
 
