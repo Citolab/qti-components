@@ -12,7 +12,7 @@ permissions:
   pull-requests: write   # required by release-please to create/update release PRs
   id-token: write        # required for NPM publishing and GitHub Pages deployment
   pages: write           # required for GitHub Pages deployment
-  actions: read          # required for release-please to read workflow runs
+  actions: write         # required for release-please to read workflow runs
 
 # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued
 concurrency:
