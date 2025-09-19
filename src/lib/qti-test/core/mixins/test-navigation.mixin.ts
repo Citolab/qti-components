@@ -388,7 +388,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
           const loadedTransformer = (await Promise.race([promise, timeoutPromise])) as transformItemApi;
           // Apply external transformation if provided
           let finalTransformer = loadedTransformer;
-          console.log(`Loaded item 123: ${itemRef.identifier}`);
+
           if (this.postLoadTransformCallback) {
             finalTransformer = await this.postLoadTransformCallback(loadedTransformer, itemRef);
           }
