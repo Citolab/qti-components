@@ -33,7 +33,7 @@ jobs:
         id: release
         with:
           release-type: node
-          token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
+          token: ${{ secrets.qti-components-release-please }}
 
   publish:
     needs: release
