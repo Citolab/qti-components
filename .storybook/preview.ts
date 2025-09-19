@@ -12,9 +12,7 @@ import type { Preview } from '@storybook/web-components-vite';
 
 import '../src/item.css';
 
-import '../src/lib/qti-test';
-import '../src/lib/qti-item';
-import '../src/lib/qti-components';
+import '../src/lib';
 
 export const customViewports = {
   default: {
