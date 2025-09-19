@@ -22,6 +22,10 @@ concurrency:
 jobs:
   release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      repository-projects: write
     outputs:
       release_created: ${{ steps.release.outputs.release_created }}
     steps:
