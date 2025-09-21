@@ -1,4 +1,5 @@
 # documentation: https://github.com/googleapis/release-please-action
+# https://github.com/Citolab/qti-components/settings/secrets/actions
 # .github/workflows/release-please.yml
 name: "Release"
 on:
@@ -9,6 +10,7 @@ on:
 
 permissions:
   contents: write        # required by release-please to create tags & releases
+  issues: write          # required to create issues for failed releases
   pull-requests: write   # required by release-please to create/update release PRs
   id-token: write        # required for NPM publishing and GitHub Pages deployment
   pages: write           # required for GitHub Pages deployment
@@ -33,7 +35,6 @@ jobs:
         id: release
         with:
           release-type: node
-          token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
 
   publish:
     needs: release
