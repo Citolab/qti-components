@@ -2,10 +2,15 @@ import { property } from 'lit/decorators.js';
 
 import { qtiTransformItem } from '../../../qti-transformers';
 
+import type { transformItemApi } from '../../../qti-transformers';
 import type { QtiAssessmentItemRef, QtiAssessmentSection, QtiAssessmentTest } from '../qti-assessment-test';
 import type { TestBase } from '../test-base';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
+export type PostLoadTransformCallback = (
+  transformer: transformItemApi,
+  itemRef: QtiAssessmentItemRef
+) => transformItemApi | Promise<transformItemApi>;
 
 // Define error types for better error handling
 enum NavigationErrorType {
@@ -31,10 +36,12 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
     @property({ type: Boolean, attribute: 'cache-transform' }) cacheTransform: boolean = false;
     @property({ type: Number }) requestTimeout: number = 30000; // Default timeout of 30 seconds
     @property({ type: Boolean }) showLoadingIndicators: boolean = true;
+    @property({ type: Function }) postLoadTransformCallback: PostLoadTransformCallback | null = null;
 
     protected _testElement: QtiAssessmentTest;
+    protected _navigationInProgress: boolean = false;
     private _activeRequests: XMLHttpRequest[] = [];
-    private _navigationInProgress: boolean = false;
+
     private _lastError: NavigationError | null = null;
     private _lastNavigationRequestId: string | null = null;
     private _targetNavigation: { type: 'item' | 'section'; id: string } | null = null;
@@ -378,10 +385,16 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
           }
 
           // Race the item loading against the timeout
-          const apiResult = await Promise.race([promise, timeoutPromise]);
+          const loadedTransformer = (await Promise.race([promise, timeoutPromise])) as transformItemApi;
+          // Apply external transformation if provided
+          let finalTransformer = loadedTransformer;
+
+          if (this.postLoadTransformCallback) {
+            finalTransformer = await this.postLoadTransformCallback(loadedTransformer, itemRef);
+          }
           return {
             itemRef,
-            doc: (apiResult as any).htmlDoc(),
+            doc: finalTransformer.htmlDoc(),
             request
           };
         } catch (error) {

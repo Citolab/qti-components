@@ -6,6 +6,7 @@ import { Interaction } from '../../../exports/interaction';
 @customElement('qti-media-interaction')
 export class QtiMediaInteraction extends Interaction {
   private _value = null;
+
   reset() {
     // throw new Error('Method not implemented.');
   }

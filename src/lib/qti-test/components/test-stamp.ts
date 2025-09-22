@@ -5,7 +5,7 @@ import { consume } from '@lit/context';
 
 import { computedContext } from '../../exports/computed.context';
 
-import type { View } from '../core/mixins/test-view.mixin';
+import type { View } from '../../exports/session.context';
 import type { PropertyValues } from 'lit';
 import type { ComputedContext } from '../../exports/computed.context';
 import type { TemplateFunction } from '@heximal/templates';
@@ -97,6 +97,12 @@ export class TestStamp extends LitElement {
       activeTestpart: augmentedTestPart,
       test: activeTest
     };
+    this.dispatchEvent(
+      new CustomEvent('qti-stamp-context-updated', {
+        detail: this.stampContext,
+        bubbles: true
+      })
+    );
   }
 
   render() {

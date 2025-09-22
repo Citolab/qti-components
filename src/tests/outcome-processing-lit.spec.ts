@@ -1,7 +1,7 @@
+import '../lib/qti-components';
 import { html, render } from 'lit';
 
-import type { QtiTest } from '../qti-test';
-import '../../../index';
+import type { QtiTest } from '../lib/qti-test/core/qti-test';
 
 const assessmentTest = html` <qti-test navigate="item">
   <test-container>

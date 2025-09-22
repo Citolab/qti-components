@@ -1,7 +1,7 @@
 import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 
-import { qtiTransformItem } from '../lib';
+import { qtiTransformItem } from '../lib/qti-transformers/qti-transform-item';
 
 import type { QtiAssessmentItem, QtiItem } from '../lib';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
@@ -25,7 +25,8 @@ const meta: Meta = {
     controls: {
       expanded: false
     }
-  }
+  },
+  tags: ['no-tests']
 };
 
 /*

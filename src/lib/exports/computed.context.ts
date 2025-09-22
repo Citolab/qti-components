@@ -1,6 +1,6 @@
 import { createContext } from '@lit/context';
 
-import type { View } from '../qti-test/core/mixins/test-view.mixin';
+import type { View } from './session.context';
 import type { ComputedItemContext } from './computed-item.context';
 
 export type ComputedItem = ComputedItemContext & {

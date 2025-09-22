@@ -43,6 +43,10 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     private lastTarget = null; // Last touch target
     private currentDropTarget = null; // Current droppable element
 
+    private onMove = this.handleTouchMove.bind(this);
+    private onEnd = this.handleTouchEnd.bind(this);
+    private onCancel = this.handleTouchCancel.bind(this);
+
     private readonly MIN_DRAG_DISTANCE = 5; // Minimum pixel movement to start dragging
     private readonly DRAG_CLONE_OPACITY = 1; // Opacity of the drag clone element
 
@@ -110,11 +114,11 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       if (this.isMatchTabular()) return;
       const disabled = this.hasAttribute('disabled');
       if (!disabled) {
-        document.addEventListener('touchmove', this.handleTouchMove.bind(this), { passive: false });
-        document.addEventListener('mousemove', this.handleTouchMove.bind(this), { passive: false });
-        document.addEventListener('touchend', this.handleTouchEnd.bind(this), { passive: false });
-        document.addEventListener('mouseup', this.handleTouchEnd.bind(this), { passive: false });
-        document.addEventListener('touchcancel', this.handleTouchCancel.bind(this), { passive: false });
+        document.addEventListener('mousemove', this.onMove, { passive: false });
+        document.addEventListener('mouseup', this.onEnd, { passive: false });
+        document.addEventListener('touchmove', this.onMove, { passive: false });
+        document.addEventListener('touchend', this.onEnd, { passive: false });
+        document.addEventListener('touchcancel', this.onCancel, { passive: false });
       }
       const draggables = Array.from(this.querySelectorAll(draggablesSelector) || []).concat(
         Array.from(this.shadowRoot?.querySelectorAll(draggablesSelector) || [])
@@ -342,11 +346,11 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       }
 
       // Remove global event listeners
-      document.removeEventListener('touchmove', this.handleTouchMove);
-      document.removeEventListener('mousemove', this.handleTouchMove);
-      document.removeEventListener('touchend', this.handleTouchEnd);
-      document.removeEventListener('mouseup', this.handleTouchEnd);
-      document.removeEventListener('touchcancel', this.handleTouchCancel);
+      document.removeEventListener('mousemove', this.onMove);
+      document.removeEventListener('mouseup', this.onEnd);
+      document.removeEventListener('touchmove', this.onMove);
+      document.removeEventListener('touchend', this.onEnd);
+      document.removeEventListener('touchcancel', this.onCancel);
     }
 
     private handleTouchMove(e) {
@@ -391,7 +395,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
     private handleTouchEnd(e) {
       if (this.isMatchTabular()) return;
-      if (this.isDragging) {
+      if (this.isDragging || this.isDraggable || this.dragClone) {
         this.resetDragState();
       }
       this._internals.states.delete('--dragzone-active');
@@ -714,38 +718,49 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       return xDist + yDist;
     }
 
+    private getDropzoneRect(el: HTMLElement): DOMRect {
+      const slot = el.shadowRoot?.querySelector<HTMLElement>('slot[part="dropslot"]');
+      return (slot ?? el).getBoundingClientRect();
+    }
+
     private findClosestDropzone(): HTMLElement | null {
-      const allActiveDropzones = this.allDropzones.filter(d => !d.hasAttribute('disabled'));
-      if (!this.dragClone || allActiveDropzones.length === 0) return null;
+      const activeDrops = this.allDropzones.filter(d => !d.hasAttribute('disabled'));
+      if (!this.dragClone || activeDrops.length === 0) return null;
 
       const dragRect = this.dragClone.getBoundingClientRect();
       let closestDropzone: HTMLElement | null = null;
-      let maxOverlapArea = 0;
+      let maxArea = 0;
 
-      for (const dropzone of allActiveDropzones) {
-        const dropRect = dropzone.getBoundingClientRect();
-        const overlapArea = this.calculateOverlapArea(dragRect, dropRect);
-
-        if (overlapArea > maxOverlapArea) {
-          maxOverlapArea = overlapArea;
-          closestDropzone = dropzone;
+      // prefer real droppables first
+      const prefer = (elements: HTMLElement[]) => {
+        for (const dz of elements) {
+          const dzRect = this.getDropzoneRect(dz);
+          const area = this.calculateOverlapArea(dragRect, dzRect);
+          if (area > maxArea) {
+            maxArea = area;
+            closestDropzone = dz;
+          }
         }
-      }
-      // if none was find using this method, try to find the closest dropzone by distance
+      };
+
+      prefer(this.droppables.filter(droppable => !droppable.hasAttribute('disabled')));
       if (!closestDropzone) {
-        let minDistance = 200; // arbitrary large number could be max too: number.MAX_VALUE;
-        for (const dropzone of allActiveDropzones) {
-          const dropRect = dropzone.getBoundingClientRect();
-          const distance = Math.sqrt(
-            Math.pow(dragRect.left - dropRect.left, 2) + Math.pow(dragRect.top - dropRect.top, 2)
-          );
-          if (distance < minDistance) {
-            minDistance = distance;
-            closestDropzone = dropzone;
+        // fallback to drag containers only if no droppable overlaps
+        prefer(this.dragContainers.filter(drags => !drags.hasAttribute('disabled')));
+      }
+
+      // fallback by distance
+      if (!closestDropzone) {
+        let minDist = Number.POSITIVE_INFINITY;
+        for (const dz of activeDrops) {
+          const dzRect = this.getDropzoneRect(dz);
+          const dist = Math.hypot(dragRect.left - dzRect.left, dragRect.top - dzRect.top);
+          if (dist < minDist) {
+            minDist = dist;
+            closestDropzone = dz;
           }
         }
       }
-
       return closestDropzone;
     }
 

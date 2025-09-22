@@ -1,6 +1,7 @@
 import { customElementVsCodePlugin } from 'custom-element-vs-code-integration';
 import { jsxTypesPlugin } from '@wc-toolkit/jsx-types';
 import { getTsProgram, typeParserPlugin } from '@wc-toolkit/type-parser';
+import { cemSorterPlugin } from '@wc-toolkit/cem-sorter';
 
 console.log('Building the custom element manifest...');
 
@@ -41,9 +42,9 @@ export default {
       outdir: outdir + 'dist',
       exclude: [],
       fileName: `qti-components-jsx.d.ts`
+    }),
+    cemSorterPlugin({
+      deprecatedLast: true
     })
-    // customEsLintRuleGeneratorPlugin({
-    //   outdir: outdir + 'dist'
-    // })
   ]
 };

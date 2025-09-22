@@ -16,6 +16,8 @@ export default defineConfig({
     browser: {
       headless: true
     },
+    // Suppress console output during tests
+    silent: true,
     coverage: {
       provider: 'v8' // or 'v8'
     },
@@ -79,6 +81,14 @@ export default defineConfig({
             headless: true, // Both modes work fine
             instances: [{ browser: 'chromium', headless: true }]
           }
+        }
+      },
+      /* this is for the normal spec files, which do not need storybook */
+      {
+        test: {
+          name: 'unit test who uses dist and node',
+          include: ['tests/**/*.spec.ts', 'tests/**/*.test.ts'],
+          globals: true
         }
       }
     ]

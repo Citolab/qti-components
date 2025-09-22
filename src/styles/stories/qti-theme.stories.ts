@@ -1,8 +1,8 @@
 import { html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 
+import type { QtiAssessmentItem } from '../../lib/qti-components/qti-assessment-item/qti-assessment-item';
 import type { Meta } from '@storybook/web-components-vite';
-import type { QtiAssessmentItem } from '../../lib/qti-components';
 
 const meta: Meta<QtiAssessmentItem> = {
   title: 'Theme',

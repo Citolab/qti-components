@@ -10,11 +10,10 @@ import {
   getTestContainer
 } from '../../../testing/test-utils';
 
+import '../../../../.storybook/utilities.css';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { TestSectionButtonsStamp } from './test-section-buttons-stamp';
-import type { QtiAssessmentStimulusRef } from '../../qti-components';
-
-import '../../../../.storybook/utilities.css';
+import type { QtiAssessmentStimulusRef } from '../../qti-components/qti-assessment-stimulus-ref/qti-assessment-stimulus-ref';
 
 const { events, args, argTypes, template } = getStorybookHelpers('test-section-buttons-stamp');
 

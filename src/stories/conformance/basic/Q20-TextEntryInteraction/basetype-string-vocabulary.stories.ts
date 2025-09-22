@@ -2,7 +2,7 @@ import { expect } from 'storybook/test';
 import { userEvent } from 'storybook/test';
 import { html } from 'lit';
 
-import { getItemByUri } from '../../../../lib';
+import { getItemByUri } from '../../../../lib/qti-loader/qti-loader';
 
 import type { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
@@ -11,7 +11,7 @@ type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {
   title: 'qti-conformance/basic/Q20 - Text Entry Interaction/baseType-string-vocabulary',
-  beforeEach: async ({ args }) => {}
+  beforeEach: async () => {}
 };
 export default meta;
 
@@ -21,8 +21,8 @@ const getInputString = (charCount: number) => {
 
 export const Q20_L1_D101: Story = {
   name: 'Q20-L1-D101',
-  render: (args, { argTypes, loaded: { xml } }) => {
-    let item;
+  render: (_args, { loaded: { xml } }) => {
+    let item: any;
     const onItemConnected = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
     };
@@ -52,8 +52,8 @@ export const Q20_L1_D102: Story = {
       xml: await getItemByUri('/qti-conformance/Basic/Q20/text-entry-sv-2a.xml')
     })
   ],
-  render: (args, { argTypes, loaded: { xml } }) => {
-    let item;
+  render: (_args, { loaded: { xml } }) => {
+    let item: any;
     const onItemConnected = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
     };
@@ -81,8 +81,8 @@ export const Q20_L1_D103: Story = {
       xml: await getItemByUri('/qti-conformance/Basic/Q20/text-entry-sv-2b.xml')
     })
   ],
-  render: (args, { argTypes, loaded: { xml } }) => {
-    let item;
+  render: (_args, { loaded: { xml } }) => {
+    let item: any;
     const onItemConnected = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
     };
@@ -109,8 +109,8 @@ export const Q20_L1_D104: Story = {
       xml: await getItemByUri('/qti-conformance/Basic/Q20/text-entry-sv-2c.xml')
     })
   ],
-  render: (args, { argTypes, loaded: { xml } }) => {
-    let item;
+  render: (_args, { loaded: { xml } }) => {
+    let item: any;
     const onItemConnected = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
     };
@@ -140,8 +140,8 @@ export const Q20_L1_D105: Story = {
       xml: await getItemByUri('/qti-conformance/Basic/Q20/text-entry-sv-2d.xml')
     })
   ],
-  render: (args, { argTypes, loaded: { xml } }) => {
-    let item;
+  render: (_args, { loaded: { xml } }) => {
+    let item: any;
     const onItemConnected = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
     };
@@ -202,8 +202,8 @@ export const Q20_L1_D106: Story = {
       xml: await getItemByUri('/qti-conformance/Basic/Q20/text-entry-sv-2e.xml')
     })
   ],
-  render: (args, { argTypes, loaded: { xml } }) => {
-    let item;
+  render: (_args, { loaded: { xml } }) => {
+    let item: any;
     const onItemConnected = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
     };
@@ -232,8 +232,8 @@ export const Q20_L1_D107: Story = {
       xml: await getItemByUri('/qti-conformance/Basic/Q20/text-entry-sv-2f.xml')
     })
   ],
-  render: (args, { argTypes, loaded: { xml } }) => {
-    let item;
+  render: (_args, { loaded: { xml } }) => {
+    let item: any;
     const onItemConnected = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
     };
@@ -262,8 +262,8 @@ export const Q20_L1_D108: Story = {
       xml: await getItemByUri('/qti-conformance/Basic/Q20/text-entry-sv-2g.xml')
     })
   ],
-  render: (args, { argTypes, loaded: { xml } }) => {
-    let item;
+  render: (_args, { loaded: { xml } }) => {
+    let item: any;
     const onItemConnected = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
     };
@@ -292,8 +292,8 @@ export const Q20_L1_D109: Story = {
       xml: await getItemByUri('/qti-conformance/Basic/Q20/text-entry-sv-2h.xml')
     })
   ],
-  render: (args, { argTypes, loaded: { xml } }) => {
-    let item;
+  render: (_args, { loaded: { xml } }) => {
+    let item: any;
     const onItemConnected = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
     };
@@ -322,8 +322,8 @@ export const Q20_L1_D113: Story = {
       xml: await getItemByUri('/qti-conformance/Basic/Q20/text-entry-sv-2k.xml')
     })
   ],
-  render: (args, { argTypes, loaded: { xml } }) => {
-    let item;
+  render: (_args, { loaded: { xml } }) => {
+    let item: any;
     const onItemConnected = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
     };
@@ -352,8 +352,8 @@ export const Q20_L1_D114: Story = {
       xml: await getItemByUri('/qti-conformance/Basic/Q20/text-entry-sv-2l.xml')
     })
   ],
-  render: (args, { argTypes, loaded: { xml } }) => {
-    let item;
+  render: (_args, { loaded: { xml } }) => {
+    let item: any;
     const onItemConnected = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
     };
@@ -382,8 +382,8 @@ export const Q20_L1_D115: Story = {
       xml: await getItemByUri('/qti-conformance/Basic/Q20/text-entry-sv-2m.xml')
     })
   ],
-  render: (args, { argTypes, loaded: { xml } }) => {
-    let item;
+  render: (_args, { loaded: { xml } }) => {
+    let item: any;
     const onItemConnected = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
     };
@@ -411,8 +411,8 @@ export const Q20_L1_D116: Story = {
       xml: await getItemByUri('/qti-conformance/Basic/Q20/text-entry-sv-2n.xml')
     })
   ],
-  render: (args, { argTypes, loaded: { xml } }) => {
-    let item;
+  render: (_args, { loaded: { xml } }) => {
+    let item: any;
     const onItemConnected = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
     };
@@ -440,8 +440,8 @@ export const Q20_L1_D117: Story = {
       xml: await getItemByUri('/qti-conformance/Basic/Q20/text-entry-sv-2o.xml')
     })
   ],
-  render: (args, { argTypes, loaded: { xml } }) => {
-    let item;
+  render: (_args, { loaded: { xml } }) => {
+    let item: any;
     const onItemConnected = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
     };
@@ -469,8 +469,8 @@ export const Q20_L1_D118: Story = {
       xml: await getItemByUri('/qti-conformance/Basic/Q20/text-entry-sv-2p.xml')
     })
   ],
-  render: (args, { argTypes, loaded: { xml } }) => {
-    let item;
+  render: (_args, { loaded: { xml } }) => {
+    let item: any;
     const onItemConnected = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
     };
@@ -498,8 +498,8 @@ export const Q20_L1_D110: Story = {
       xml: await getItemByUri('/qti-conformance/Basic/Q20/text-entry-sv-2i.xml')
     })
   ],
-  render: (args, { argTypes, loaded: { xml } }) => {
-    let item;
+  render: (_args, { loaded: { xml } }) => {
+    let item: any;
     const onItemConnected = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
     };
@@ -527,8 +527,8 @@ export const Q20_L1_D111: Story = {
       xml: await getItemByUri('/qti-conformance/Basic/Q20/text-entry-sv-3.xml')
     })
   ],
-  render: (args, { argTypes, loaded: { xml } }) => {
-    let item;
+  render: (_args, { loaded: { xml } }) => {
+    let item: any;
     const onItemConnected = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
     };

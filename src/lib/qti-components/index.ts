@@ -45,11 +45,3 @@ export * from './qti-rubric-block/qti-rubric-block';
 export * from './qti-stylesheet/qti-stylesheet';
 export * from './qti-variable-declaration/qti-outcome-declaration/qti-outcome-declaration';
 export * from './qti-variable-declaration/qti-response-declaration/qti-response-declaration';
-
-//   '%cC¿TO%cLab%c: qti-components loaded',
-//   'font-family: "PT Sans", font-weight:bold; color:green; font-size: smaller;vertical-align: sub',
-//   'font-weight:bold; color:green',
-//   'font-weight:unset'
-// );
-// console.info(
-// css for font pt-sans and subscript and green

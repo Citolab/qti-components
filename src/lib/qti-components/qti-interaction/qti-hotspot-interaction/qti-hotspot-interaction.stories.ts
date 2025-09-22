@@ -41,6 +41,40 @@ export const Circle: Story = {
     )
 };
 
+export const Circle2: Story = {
+  render: () =>
+    template(
+      args,
+      html`
+        <img
+          src="qti-hotspot-interaction/map_cape_cod.svg"
+          width="700"
+          height="550"
+          alt="a map of Cape Cod Massachusetts with 4 lighthouse icons distributed on the outer Cape"
+        />
+        <qti-hotspot-choice identifier="R" shape="circle" coords="418,29,40"></qti-hotspot-choice>
+        <qti-hotspot-choice identifier="H" shape="circle" coords="546,56,40"></qti-hotspot-choice>
+        <qti-hotspot-choice identifier="N" shape="circle" coords="596,182,40"></qti-hotspot-choice>
+        <qti-hotspot-choice identifier="C" shape="circle" coords="598,316,40"></qti-hotspot-choice>
+      `
+    )
+};
+
+export const Circle3: Story = {
+  render: () =>
+    template(
+      args,
+      html`
+        <qti-prompt>Which one is Glasgow?</qti-prompt>
+        <img type="image/png" width="206" height="280" src="qti-hotspot-interaction/ukair.png" />
+        <qti-hotspot-choice shape="circle" coords="77,115,8" identifier="A"></qti-hotspot-choice>
+        <qti-hotspot-choice shape="circle" coords="118,184,8" identifier="B"></qti-hotspot-choice>
+        <qti-hotspot-choice shape="circle" coords="150,235,8" identifier="C"></qti-hotspot-choice>
+        <qti-hotspot-choice shape="circle" coords="96,114,8" identifier="D"></qti-hotspot-choice>
+      `
+    )
+};
+
 export const Rect = {
   render: () =>
     template(

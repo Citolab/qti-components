@@ -621,8 +621,8 @@ const createPciConformanceStory = (itemName: string): Story => ({
         const response = await fetch(`${baseUrl}/qti.xml`);
         const xmlText = await response.text();
         const qti = xmlText
-          .replace('<qti-portable-custom-interaction', '<qti-portable-custom-interaction-test')
-          .replace('</qti-portable-custom-interaction>', '</qti-portable-custom-interaction-test>');
+          .replaceAll('<qti-portable-custom-interaction', '<qti-portable-custom-interaction-test')
+          .replaceAll('</qti-portable-custom-interaction>', '</qti-portable-custom-interaction-test>');
         const transform = await qtiTransformItem()
           .parse(qti)
           .configurePci(baseUrl, getModuleResolution, 'qti-portable-custom-interaction-test');

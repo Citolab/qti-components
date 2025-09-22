@@ -61,7 +61,7 @@ export class QtiAssessmentItem extends LitElement {
 
   @provide({ context: itemContext })
   private _context: ItemContext = {
-    variables: itemContextVariables,
+    variables: itemContextVariables
   };
 
   /**
@@ -258,7 +258,7 @@ export class QtiAssessmentItem extends LitElement {
     // Update one or more toggle component states
     document.querySelectorAll('item-show-correct-response').forEach((el: ItemShowCorrectResponse) => {
       el.shown = show;
-    })
+    });
   }
 
   /**
@@ -274,7 +274,7 @@ export class QtiAssessmentItem extends LitElement {
     // Update one or more toggle component states
     document.querySelectorAll('item-show-candidate-correction').forEach((el: ItemShowCandidateCorrection) => {
       el.shown = show;
-    })
+    });
   }
 
   private _processTemplates(): void {

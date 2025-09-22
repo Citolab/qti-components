@@ -3,21 +3,23 @@ import { expect } from 'storybook/test';
 import { fireEvent, screen, userEvent } from 'storybook/test';
 import { html } from 'lit';
 
-import { getItemByUri, type QtiAssessmentItem, type QtiTextEntryInteraction } from '../../../../lib';
+import { getItemByUri } from '../../../../lib/qti-loader/qti-loader';
 
+import type { QtiTextEntryInteraction } from '../../../../lib/qti-components/qti-interaction/qti-text-entry-interaction/qti-text-entry-interaction';
+import type { QtiAssessmentItem } from '../../../../lib/qti-components/qti-assessment-item/qti-assessment-item';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {
   title: 'qti-conformance/basic/Q20 - Text Entry Interaction/baseType-string',
-  beforeEach: async ({ args }) => {}
+  beforeEach: async () => {}
 };
 export default meta;
 
 export const Q20_L1_D1: Story = {
   name: 'Q20-L1-D1',
-  render: (args, { argTypes, loaded: { xml } }) => {
+  render: (_args, { loaded: { xml } }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
@@ -54,7 +56,7 @@ export const Q20_L1_D1: Story = {
     expect(response.value).toBe('');
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri('/qti-conformance/Basic/Q20/text-entry-sv-1.xml')
     })
   ]
@@ -62,7 +64,7 @@ export const Q20_L1_D1: Story = {
 
 export const Q20_L1_D2: Story = {
   name: 'Q20-L1-D2',
-  render: (args, { argTypes, loaded: { xml } }) => {
+  render: (_, { loaded: { xml } }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
@@ -95,7 +97,7 @@ export const Q20_L1_D2: Story = {
     expect(response.value).toBe('jumped');
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri('/qti-conformance/Basic/Q20/text-entry-sv-1.xml')
     })
   ]

@@ -29,13 +29,19 @@
     "mdx.experimentalLanguageServer": true,
     "xml.symbols.showReferencedGrammars": true,
     "xml.format.maxLineWidth": 800,
-
     "lit-plugin.rules.no-boolean-in-attribute-binding": "off",
     "lit-plugin.rules.no-incompatible-type-binding": "warning",
     "lit-plugin.rules.no-invalid-boolean-binding": "warning",
     "lit-plugin.rules.no-complex-attribute-binding": "warning",
     "git.allowNoVerifyCommit": true,
-    "nuxt.isNuxtApp": false
+    "files.watcherExclude": {
+      "**/.git/objects/**": true,
+      "**/.git/subtree-cache/**": true,
+      "**/.hg/store/**": true,
+      "**/.git/**": true,
+      "**/node_modules/**": true,
+      "**/.vscode/**": true
+    }
   },
   "extensions": {
     "recommendations": [
@@ -46,9 +52,10 @@
       "unifiedjs.vscode-mdx",
       "esbenp.prettier-vscode",
       "stylelint.vscode-stylelint",
-      "google.wireit",
       "redhat.vscode-xml",
-      "joshbolduc.commitlint"
+      "joshbolduc.commitlint",
+      "wc-toolkit.web-components-language-server",
+      "sanjulaganepola.github-local-actions"
     ]
   }
 }

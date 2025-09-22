@@ -642,25 +642,30 @@
     &::part(table) {
       border-collapse: collapse;
       width: 100%;
-      table-layout: fixed;
     }
 
-    /* Row headers */
+    /* Row headers - take up remaining space */
     &::part(r-header) {
       background-color: var(--qti-bg-active, #f8f8f8);
       font-weight: 500;
       text-align: center;
-      padding: 8px;
+      padding: 8px 15px;
       border: 1px solid #ddd;
+      width: auto; /* Let it expand naturally */
+      word-wrap: break-word; /* Allow long words to break */
+      white-space: wrap; /* Allow text to wrap to multiple lines */
+      min-width: 4rem; /* Allow column to shrink below content width */
     }
 
-    /* Column headers */
+    /* Column headers - minimal width */
     &::part(c-header) {
       background-color: var(--qti-bg-active, #f8f8f8);
       font-weight: 500;
       text-align: left;
-      padding: 8px 15px;
+      padding: 8px;
       border: 1px solid #ddd;
+      width: 8rem; /* Force minimal width */
+      white-space: normal; /* Prevent wrapping */
     }
 
     /* Table rows */
@@ -668,13 +673,14 @@
       border-bottom: 1px solid #ddd;
     }
 
-    /* Input cells */
+    /* Input cells - minimal width */
     &::part(input-cell) {
       text-align: center;
       vertical-align: middle;
       height: 48px;
       border: 1px solid #ddd;
       padding: 8px;
+      width: 1%; /* Force minimal width */
     }
 
     /* Radio button styling */
@@ -883,15 +889,15 @@
     }
   }
 
-  qti-order-interaction:state(--dragzone-active)::part(drags) {
-    @apply act;
-  }
-
-  qti-order-interaction:state(--dragzone-enabled)::part(drags) {
-    @apply dropping;
-  }
-
   qti-order-interaction {
+    &:state(--dragzone-active)::part(drags) {
+      @apply act;
+    }
+
+    &:state(--dragzone-enabled)::part(drags) {
+      @apply dropping;
+    }
+
     &::part(qti-simple-choice),
     & qti-simple-choice {
       @apply drag;
@@ -1256,7 +1262,6 @@
       }
 
       @apply point;
-
     }
 
     &::part(correct) {

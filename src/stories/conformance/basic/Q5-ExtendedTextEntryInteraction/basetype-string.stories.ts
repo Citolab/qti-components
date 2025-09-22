@@ -3,7 +3,7 @@ import { expect } from 'storybook/test';
 import { fireEvent, screen, userEvent } from 'storybook/test';
 import { html } from 'lit';
 
-import { getItemByUri } from '../../../../lib';
+import { getItemByUri } from '../../../../lib/qti-loader/qti-loader';
 
 import type { QtiAssessmentItem, QtiExtendedTextInteraction } from '../../../../lib';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
@@ -12,13 +12,13 @@ type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {
   title: 'qti-conformance/basic/Q5 - Extended Text Interaction/baseType-string',
-  beforeEach: async ({ args }) => {}
+  beforeEach: async () => {}
 };
 export default meta;
 
 export const Q5_L1_D1: Story = {
   name: 'Q5_L1_D1',
-  render: (args, { argTypes, loaded: { xml } }) => {
+  render: (_args, { loaded: { xml } }) => {
     let item: QtiAssessmentItem;
     const onItemConnected = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
@@ -51,12 +51,12 @@ export const Q5_L1_D1: Story = {
     const response = assessmentItem.variables.find(v => v.identifier === 'RESPONSE');
     expect(response.value).toBe('');
   },
-  loaders: [async ({ args }) => ({ xml: await getItemByUri('/qti-conformance/Basic/Q5/base-type-string.xml') })]
+  loaders: [async () => ({ xml: await getItemByUri('/qti-conformance/Basic/Q5/base-type-string.xml') })]
 };
 
 export const Q5_L1_D2: Story = {
   name: 'Q5_L1_D2',
-  render: (args, { argTypes, loaded: { xml } }) => {
+  render: (_args, { loaded: { xml } }) => {
     let item: QtiAssessmentItem;
     const onItemConnected = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
@@ -83,12 +83,12 @@ export const Q5_L1_D2: Story = {
     const response = assessmentItem.variables.find(v => v.identifier === 'RESPONSE');
     expect(response.value).toBe('response');
   },
-  loaders: [async ({ args }) => ({ xml: await getItemByUri('/qti-conformance/Basic/Q5/base-type-string.xml') })]
+  loaders: [async () => ({ xml: await getItemByUri('/qti-conformance/Basic/Q5/base-type-string.xml') })]
 };
 
 export const Q5L1D102: Story = {
   name: 'Q5-L1-D102',
-  render: (args, { argTypes, loaded: { xml } }) => {
+  render: (_args, { loaded: { xml } }) => {
     let item: QtiAssessmentItem;
     const onItemConnected = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
@@ -119,12 +119,12 @@ Autumn’s quiet song.`;
     const response = assessmentItem.variables.find(v => v.identifier === 'RESPONSE');
     expect(response.value).toBe(lorem);
   },
-  loaders: [async ({ args }) => ({ xml: await getItemByUri('/qti-conformance/Basic/Q5/extended-text-sv-2a.xml') })]
+  loaders: [async () => ({ xml: await getItemByUri('/qti-conformance/Basic/Q5/extended-text-sv-2a.xml') })]
 };
 
 export const Q5_L1_D103: Story = {
   name: 'Q5-L1-D103',
-  render: (args, { argTypes, loaded: { xml } }) => {
+  render: (_args, { loaded: { xml } }) => {
     let item: QtiAssessmentItem;
     const onItemConnected = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
@@ -159,7 +159,7 @@ Wish you could see it too!`;
     expect(response.value).toBe(lorem);
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri('/qti-conformance/Basic/Q5/extended-text-sv-2b.xml')
     })
   ]
@@ -167,7 +167,7 @@ Wish you could see it too!`;
 
 export const Q5L1D104: Story = {
   name: 'Q5_L1_D104',
-  render: (args, { argTypes, loaded: { xml } }) => {
+  render: (_args, { loaded: { xml } }) => {
     let item: QtiAssessmentItem;
     const onItemConnected = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;

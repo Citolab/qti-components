@@ -1,6 +1,6 @@
 import { createContext } from '@lit/context';
 
-import type { View } from '../qti-test/core/mixins/test-view.mixin';
+export type View = 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor' | '';
 
 export interface SessionContext {
   navPartId?: string | null;
