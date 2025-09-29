@@ -1,5 +1,25 @@
 # Changelog
 
+## [7.10.0](https://github.com/Citolab/qti-components/compare/v7.9.0...v7.10.0) (2025-09-29)
+
+
+### Features
+
+* add version logging to qti-components ([c90618d](https://github.com/Citolab/qti-components/commit/c90618d40228a67cadda8f3d867c88026739c35b))
+* Configuration option to display full correct response for correct answers ([cf4a5f3](https://github.com/Citolab/qti-components/commit/cf4a5f3c4d6206c2815ffae9a8b03c0e25d29b5e))
+
+
+### Bug Fixes
+
+* add permissions for issues in release workflow and remove token reference ([39dbb5e](https://github.com/Citolab/qti-components/commit/39dbb5ee017023b7d264d259fadd1527af1c0d9f))
+* add permissions for repository-projects in release job ([fe37b08](https://github.com/Citolab/qti-components/commit/fe37b082fb9399840587f2ce1ec7952005e5fdc8))
+* ensure token is correctly referenced in release job ([a643763](https://github.com/Citolab/qti-components/commit/a643763c55ea3e05d339e89be583955de5c6c02c))
+* update actions permission to write for release-please functionality ([b43414b](https://github.com/Citolab/qti-components/commit/b43414bbe1631532f6b6a6c711cb8b9244936543))
+* update release-please token to use qti-components-release-please secret ([7f784e8](https://github.com/Citolab/qti-components/commit/7f784e8492064c6efa43d1fef53b42d64cd2a46b))
+* update release-please token to use RELEASE_PLEASE_TOKEN secret ([6c4d1cf](https://github.com/Citolab/qti-components/commit/6c4d1cf7fb559f46257c17659b535e619533a9a6))
+* use GITHUB_TOKEN for release-please action ([db8fe8e](https://github.com/Citolab/qti-components/commit/db8fe8edb4e79c007c75703d9b607a7312f92d95))
+* use RELEASE_PLEASE_TOKEN for release creation ([7e7268c](https://github.com/Citolab/qti-components/commit/7e7268c6687f1077e4d60064fbd560795c8483a0))
+
 ## [7.9.0](https://github.com/Citolab/qti-components/compare/v7.8.1...v7.9.0) (2025-09-18)
 
 
