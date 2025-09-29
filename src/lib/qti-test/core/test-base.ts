@@ -37,9 +37,7 @@ export abstract class TestBase extends LitElement {
       `qti-assessment-item-ref[identifier="${itemRefID}"]`
     );
     if (itemRef && itemRef.assessmentItem) {
-      if (itemRef.assessmentItem) {
-        itemRef.assessmentItem.variables = variables;
-      }
+      itemRef.assessmentItem.variables = variables;
     }
   }
 
@@ -147,8 +145,17 @@ export abstract class TestBase extends LitElement {
       // The loaded qti-assessment-item itself has variables which are not in test context yet.
       this._updateItemVariablesInTestContext(identifier, fullVariables);
     } else {
+      const newVariables = [...assessmentItem.variables];
       // Sync the assessment item's variables with the test context
-      assessmentItem.variables = [...(itemContext.variables || [])];
+      for (const variable of itemContext.variables) {
+        const currentVariable = newVariables.find(v => v.identifier === variable.identifier);
+        if (currentVariable) {
+          currentVariable.value = variable.value;
+        } else {
+          newVariables.push(variable);
+        }
+      }
+      assessmentItem.variables = newVariables;
     }
   };
 }

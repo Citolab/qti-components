@@ -210,11 +210,14 @@ export const ChoiceFullCorrectResponse: Story = {
   play: async ({ canvasElement, step }) => {
     const item = document.querySelector('qti-item');
     item.configContext = {
-      correctResponseMode: 'full'
+      correctResponseMode: 'full',
+      fullCorrectResponseOnlyWhenIncorrect: false
     };
     const canvas = within(canvasElement);
     const showCorrectButton = await canvas.findByShadowText(/Show correct/i);
+    const choiceA: QtiSimpleChoice = await canvas.findByShadowText('You must stay with your luggage at all times.');
     await step('Click on the Show Correct button', async () => {
+      await choiceA.click();
       await fireEvent.click(showCorrectButton);
 
       await step('Verify correct response state is applied', async () => {
@@ -229,6 +232,52 @@ export const ChoiceFullCorrectResponse: Story = {
         expect(choices[0].internals.states.has('--checked')).toBe(true);
         expect(choices[1].internals.states.has('--checked')).toBe(false);
         expect(choices[2].internals.states.has('--checked')).toBe(false);
+      });
+    });
+  }
+};
+
+export const ChoiceFullCorrectResponseOnlyWhenIncorrect: Story = {
+  render: args => {
+    return html`<qti-item>
+      <div style="display: flex; flex-direction: column; gap: 1rem; align-items: start">
+        <item-container style="width: 400px; height: 350px; display: block;" item-url=${args['item-url'] as string}>
+          <template>
+            <style>
+              qti-assessment-item {
+                padding: 1rem;
+                display: block;
+                aspect-ratio: 4 / 3;
+                width: 800px;
+                border: 2px solid blue;
+                transform: scale(0.5);
+                transform-origin: top left;
+              }
+            </style>
+          </template>
+        </item-container>
+
+        <item-show-correct-response ${spread(args)}></item-show-correct-response>
+      </div>
+    </qti-item>`;
+  },
+
+  play: async ({ canvasElement, step }) => {
+    const item = document.querySelector('qti-item');
+    item.configContext = {
+      correctResponseMode: 'full',
+      fullCorrectResponseOnlyWhenIncorrect: true
+    };
+    const canvas = within(canvasElement);
+    const showCorrectButton = await canvas.findByShadowText(/Show correct/i);
+    const choiceA: QtiSimpleChoice = await canvas.findByShadowText('You must stay with your luggage at all times.');
+    await step('Click on the Show Correct button', async () => {
+      await choiceA.click();
+      await fireEvent.click(showCorrectButton);
+
+      await step('Verify correct full correct response is not visible', async () => {
+        const fullCorrectResponse = await canvas.queryByShadowRole('full-correct-response');
+        expect(fullCorrectResponse).toBeNull();
       });
     });
   }
@@ -317,7 +366,7 @@ export const MultipleResponseFullCorrectResponse: Story = {
   play: async ({ canvasElement, step }) => {
     const item = document.querySelector('qti-item');
     item.configContext = {
-      correctResponseMode: 'full'
+      correctResponseMode: 'full',
     };
     const canvas = within(canvasElement);
     const showCorrectButton = await canvas.findByShadowText(/Show correct/i);

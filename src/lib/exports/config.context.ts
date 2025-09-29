@@ -8,6 +8,7 @@ export interface ConfigContext {
   disableAfterIfMaxChoicesReached?: boolean;
   correctResponseMode?: CorrectResponseMode;
   inlineChoicePrompt?: string;
+  fullCorrectResponseOnlyWhenIncorrect?: boolean;
 }
 
 export const configContext = createContext<Readonly<ConfigContext>>(Symbol('configContext'));
