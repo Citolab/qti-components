@@ -1,5 +1,17 @@
 # Changelog
 
+## [7.11.0](https://github.com/Citolab/qti-components/compare/v7.10.0...v7.11.0) (2025-09-30)
+
+
+### Features
+
+* add configuration for full correct response display options ([5ba8475](https://github.com/Citolab/qti-components/commit/5ba8475d6ca8e91dae52fc3dce076137c53a371c))
+
+
+### Bug Fixes
+
+* update options only if they are empty, otherwise update prompt text ([b04e9fe](https://github.com/Citolab/qti-components/commit/b04e9fe4a90bd8c14e3dc34f7b8378dd796395ca))
+
 ## [7.10.0](https://github.com/Citolab/qti-components/compare/v7.9.0...v7.10.0) (2025-09-29)
 
 
