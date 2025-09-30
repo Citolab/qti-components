@@ -108,19 +108,24 @@ export class QtiInlineChoiceInteraction extends Interaction {
   private _updateOptions() {
     const choices = Array.from(this.querySelectorAll('qti-inline-choice'));
     const prompt = this.dataPrompt || this.configContext?.inlineChoicePrompt || 'select';
-
-    this.options = [
-      {
-        textContent: prompt,
-        value: '',
-        selected: false
-      },
-      ...choices.map(choice => ({
-        textContent: choice.innerHTML,
-        value: choice.getAttribute('identifier'),
-        selected: false
-      }))
-    ];
+    if (!this.options || this.options.length === 0) {
+      this.options = [
+        {
+          textContent: prompt,
+          value: '',
+          selected: false
+        },
+        ...choices.map(choice => ({
+          textContent: choice.innerHTML,
+          value: choice.getAttribute('identifier'),
+          selected: false
+        }))
+      ];
+    } else {
+      this.options = this.options.map(o => {
+        return o.value === '' ? { ...o, textContent: prompt } : o;
+      });
+    }
   }
 
   public validate(): boolean {
