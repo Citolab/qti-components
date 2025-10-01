@@ -49,6 +49,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
     private readonly MIN_DRAG_DISTANCE = 5; // Minimum pixel movement to start dragging
     private readonly DRAG_CLONE_OPACITY = 1; // Opacity of the drag clone element
+    private readonly MAX_DRAGGABLE_WIDTH = 600; // Maximum width of a draggable element
 
     private dataTransfer = {
       data: {},
@@ -249,40 +250,64 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     private async updateMinDimensionsForDropZones() {
       await this.updateComplete;
       if (this.isMatchTabular()) return;
-      const draggables = this.querySelectorAll(draggablesSelector);
-      const droppables = Array.from(this.querySelectorAll(droppablesSelector)).map(d => d as HTMLElement);
-      let maxHeight = 0;
-      let maxWidth = 0;
-      draggables.forEach(draggable => {
-        const rect = draggable.getBoundingClientRect();
-        maxHeight = Math.max(maxHeight, rect.height);
-        maxWidth = Math.max(maxWidth, rect.width);
-      });
 
-      const dragContainer =
-        (this.querySelector(dragContainersSelector) as HTMLElement) ||
-        (this.shadowRoot?.querySelector(dragContainersSelector) as HTMLElement);
+      const draggables: NodeListOf<HTMLElement> = this.querySelectorAll(draggablesSelector);
+      const dragContainer: HTMLElement =
+        this.querySelector(dragContainersSelector) || this.shadowRoot?.querySelector(dragContainersSelector);
 
-      const dropContainer = droppables[0]?.parentElement;
+      const droppables: NodeListOf<HTMLElement> = this.querySelectorAll(droppablesSelector);
+      const dropContainer: HTMLElement = droppables[0]?.parentElement;
+
+      const maxWidth = this.determineMaxWidth(dragContainer, dropContainer);
+
+      let maxDraggableHeight = 0;
+      let maxDraggableWidth = 0;
+      for (const draggable of draggables) {
+        draggable.style.maxWidth = maxWidth + 'px';
+        const { width, height } = await this.measureIntrinsicSize(draggable);
+        maxDraggableHeight = Math.max(maxDraggableHeight, height);
+        maxDraggableWidth = Math.max(maxDraggableWidth, width);
+      }
+
       if (dropContainer) {
         // Calculate the correct width of grid columns by adding the defined padding to the maximum width
-        dropContainer.style.gridTemplateColumns = `repeat(auto-fit, minmax(calc(${maxWidth}px + 2 * var(--qti-dropzone-padding)), 1fr))`;
+        dropContainer.style.gridTemplateColumns = `repeat(auto-fit, minmax(calc(min(${maxWidth}px,${maxDraggableWidth}px + 2 * var(--qti-dropzone-padding))), 1fr))`;
       }
 
       if (dragContainer) {
-        dragContainer.style.minHeight = `${maxHeight}px`;
-        dragContainer.style.minWidth = `${maxWidth}px`;
+        dragContainer.style.minHeight = `${maxDraggableHeight}px`;
       }
       for (const droppable of droppables) {
-        droppable.style.minHeight = `${maxHeight}px`;
-        droppable.style.minWidth = `${maxWidth}px`;
+        droppable.style.minHeight = `${maxDraggableHeight}px`;
 
-        const dropSlot = droppable.shadowRoot?.querySelector('slot[part="dropslot"]');
+        const dropSlot: HTMLElement = droppable.shadowRoot?.querySelector('slot[part="dropslot"]');
         if (dropSlot) {
-          dropSlot.style.minHeight = `${maxHeight}px`;
-          dropSlot.style.minWidth = `${maxWidth}px`;
+          dropSlot.style.minHeight = `${maxDraggableHeight}px`;
         }
       }
+    }
+
+    private determineMaxWidth(dragContainer: HTMLElement, dropContainer: HTMLElement) {
+      const referenceContainer = dropContainer ?? dragContainer;
+
+      if (!referenceContainer) {
+        return this.MAX_DRAGGABLE_WIDTH;
+      }
+
+      const styles = window.getComputedStyle(referenceContainer);
+      const paddingLeft = parseFloat(styles.paddingLeft);
+      const paddingRight = parseFloat(styles.paddingRight);
+
+      return Math.min(this.MAX_DRAGGABLE_WIDTH, referenceContainer.clientWidth - paddingLeft - paddingRight);
+    }
+
+    private async measureIntrinsicSize(el: HTMLElement): Promise<{ width: number; height: number }> {
+      const origPosition = el.style.position;
+      el.style.position = 'fixed';
+      const rect = el.getBoundingClientRect();
+      el.style.position = origPosition;
+
+      return { width: rect.width, height: rect.height };
     }
 
     private activateDroppables(target: HTMLElement): void {
