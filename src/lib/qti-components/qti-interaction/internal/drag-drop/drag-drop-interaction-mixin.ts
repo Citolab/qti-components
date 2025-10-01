@@ -279,6 +279,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       }
       for (const droppable of droppables) {
         droppable.style.minHeight = `${maxDraggableHeight}px`;
+        droppable.style.minWidth = `${maxDraggableWidth}px`;
 
         const dropSlot: HTMLElement = droppable.shadowRoot?.querySelector('slot[part="dropslot"]');
         if (dropSlot) {
