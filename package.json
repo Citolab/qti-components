@@ -90,7 +90,7 @@
     "madge": "madge --circular --extensions ts src",
     "commitlint": "commitlint --edit",
     "-----------------------npm--": "-",
-    "prepare": "husky"
+    "prepare": "husky && npm run build"
   },
   "peerDependencies": {
     "@heximal/templates": "^0.1.5",
