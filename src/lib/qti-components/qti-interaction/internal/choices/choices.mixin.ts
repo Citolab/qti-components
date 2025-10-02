@@ -222,7 +222,7 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
             this._setChoiceChecked(choice, false);
           }
         });
-      } else if (this._configContext?.disableAfterIfMaxChoicesReached) {
+      } else if (this.maxChoices !== 0 && this._configContext?.disableAfterIfMaxChoicesReached) {
         const selectedChoices = this._choiceElements.filter(choice => this._getChoiceChecked(choice));
         if (selectedChoices.length >= this.maxChoices) {
           this._choiceElements.forEach(choice => {
