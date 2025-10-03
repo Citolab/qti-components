@@ -25200,6 +25200,19 @@
             },
             {
               "kind": "field",
+              "name": "postLoadTestTransformCallback",
+              "type": {
+                "text": "PostLoadTestTransformCallback | null"
+              },
+              "default": "null",
+              "description": "Callback function to transform the test after loading",
+              "attribute": "postLoadTestTransformCallback",
+              "parsedType": {
+                "text": "{  } | null"
+              }
+            },
+            {
+              "kind": "field",
               "name": "templateContent",
               "type": {
                 "text": "null"
@@ -25238,6 +25251,18 @@
             }
           ],
           "attributes": [
+            {
+              "name": "postLoadTestTransformCallback",
+              "type": {
+                "text": "PostLoadTestTransformCallback | null"
+              },
+              "default": "null",
+              "description": "Callback function to transform the test after loading",
+              "fieldName": "postLoadTestTransformCallback",
+              "parsedType": {
+                "text": "{  } | null"
+              }
+            },
             {
               "name": "test-url",
               "type": {
@@ -28063,6 +28088,15 @@
             },
             {
               "kind": "field",
+              "name": "postLoadTestTransformCallback",
+              "type": {
+                "text": "PostLoadTestTransformCallback | null"
+              },
+              "default": "null",
+              "attribute": "postLoadTestTransformCallback"
+            },
+            {
+              "kind": "field",
               "name": "postLoadTransformCallback",
               "type": {
                 "text": "PostLoadTransformCallback | null"
@@ -28142,6 +28176,14 @@
               },
               "default": "null",
               "fieldName": "navigate"
+            },
+            {
+              "name": "postLoadTestTransformCallback",
+              "type": {
+                "text": "PostLoadTestTransformCallback | null"
+              },
+              "default": "null",
+              "fieldName": "postLoadTestTransformCallback"
             },
             {
               "name": "postLoadTransformCallback",
@@ -29740,6 +29782,19 @@
             },
             {
               "kind": "field",
+              "name": "postLoadTestTransformCallback",
+              "type": {
+                "text": "PostLoadTestTransformCallback | null"
+              },
+              "default": "null",
+              "attribute": "postLoadTestTransformCallback",
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "postLoadTransformCallback",
               "type": {
                 "text": "PostLoadTransformCallback | null"
@@ -29976,6 +30031,18 @@
               },
               "default": "null",
               "fieldName": "navigate",
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "name": "postLoadTestTransformCallback",
+              "type": {
+                "text": "PostLoadTestTransformCallback | null"
+              },
+              "default": "null",
+              "fieldName": "postLoadTestTransformCallback",
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"

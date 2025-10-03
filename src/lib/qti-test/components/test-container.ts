@@ -6,6 +6,8 @@ import { watch } from '../../decorators/watch';
 import itemCss from '../../../item.css?inline';
 import { qtiTransformTest } from '../../qti-transformers';
 
+import type { PostLoadTestTransformCallback } from '../core/mixins/test-navigation.mixin';
+
 /**
  * `<test-container>` is a custom element designed for hosting the qti-assessment-item.
  * The `qti-assessment-test` will be placed inside the shadow DOM of this element.
@@ -36,11 +38,27 @@ export class TestContainer extends LitElement {
   /** Template content if provided */
   private templateContent = null;
 
+  /** Callback function to transform the test after loading */
+  @property({ type: Function }) postLoadTestTransformCallback: PostLoadTestTransformCallback | null = null;
+
   @watch('testURL', { waitUntilFirstUpdate: true })
   protected async handleTestURLChange() {
     if (!this.testURL) return;
     try {
-      const api = await qtiTransformTest().load(this.testURL);
+      let api = await qtiTransformTest().load(this.testURL);
+
+      // Apply external transformation if provided
+      if (this.postLoadTestTransformCallback) {
+        // Create a temporary document to get the test element reference
+        const tempDoc = api.htmlDoc();
+        const testElement = tempDoc.querySelector('qti-assessment-test') as any;
+
+        if (testElement) {
+          // Apply the callback with the test element
+          api = await this.postLoadTestTransformCallback(api, testElement);
+        }
+      }
+
       this.testDoc = api.htmlDoc();
     } catch (error) {
       console.error('Error loading or parsing XML:', error);
