@@ -2,7 +2,7 @@ import { property } from 'lit/decorators.js';
 
 import { qtiTransformItem } from '../../../qti-transformers';
 
-import type { transformItemApi } from '../../../qti-transformers';
+import type { transformItemApi, transformTestApi } from '../../../qti-transformers';
 import type { QtiAssessmentItemRef, QtiAssessmentSection, QtiAssessmentTest } from '../qti-assessment-test';
 import type { TestBase } from '../test-base';
 
@@ -11,6 +11,11 @@ export type PostLoadTransformCallback = (
   transformer: transformItemApi,
   itemRef: QtiAssessmentItemRef
 ) => transformItemApi | Promise<transformItemApi>;
+
+export type PostLoadTestTransformCallback = (
+  transformer: transformTestApi,
+  testElement: QtiAssessmentTest
+) => transformTestApi | Promise<transformTestApi>;
 
 // Define error types for better error handling
 enum NavigationErrorType {
@@ -37,6 +42,13 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
     @property({ type: Number }) requestTimeout: number = 30000; // Default timeout of 30 seconds
     @property({ type: Boolean }) showLoadingIndicators: boolean = true;
     @property({ type: Function }) postLoadTransformCallback: PostLoadTransformCallback | null = null;
+    @property({
+      type: Function,
+      hasChanged: (newVal: PostLoadTestTransformCallback | null, oldVal: PostLoadTestTransformCallback | null) => {
+        return newVal !== oldVal;
+      }
+    })
+    postLoadTestTransformCallback: PostLoadTestTransformCallback | null = null;
 
     protected _testElement: QtiAssessmentTest;
     protected _navigationInProgress: boolean = false;
