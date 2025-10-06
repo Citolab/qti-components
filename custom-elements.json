@@ -25186,7 +25186,8 @@
             {
               "kind": "method",
               "name": "handleTestURLChange",
-              "privacy": "protected"
+              "privacy": "protected",
+              "description": "Callback function to transform the test after loading"
             },
             {
               "kind": "method",
@@ -25197,19 +25198,6 @@
               "kind": "method",
               "name": "initializeTemplateContent",
               "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "postLoadTestTransformCallback",
-              "type": {
-                "text": "PostLoadTestTransformCallback | null"
-              },
-              "default": "null",
-              "description": "Callback function to transform the test after loading",
-              "attribute": "postLoadTestTransformCallback",
-              "parsedType": {
-                "text": "{  } | null"
-              }
             },
             {
               "kind": "field",
@@ -25251,18 +25239,6 @@
             }
           ],
           "attributes": [
-            {
-              "name": "postLoadTestTransformCallback",
-              "type": {
-                "text": "PostLoadTestTransformCallback | null"
-              },
-              "default": "null",
-              "description": "Callback function to transform the test after loading",
-              "fieldName": "postLoadTestTransformCallback",
-              "parsedType": {
-                "text": "{  } | null"
-              }
-            },
             {
               "name": "test-url",
               "type": {
