@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.13.0](https://github.com/Citolab/qti-components/compare/v7.12.0...v7.13.0) (2025-10-06)
+
+
+### Features
+
+* trigger build ([1457049](https://github.com/Citolab/qti-components/commit/14570494fa63dfdee91e4b621c0b07d8aa62d403))
+
 ## [7.12.0](https://github.com/Citolab/qti-components/compare/v7.11.0...v7.12.0) (2025-10-05)
 
 
