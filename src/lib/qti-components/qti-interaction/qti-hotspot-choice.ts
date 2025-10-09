@@ -12,6 +12,8 @@ export class QtiHotspotChoice extends ActiveElementMixin(LitElement, 'qti-hotspo
       display: flex;
       user-select: none;
       position: absolute;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
     }
   `;
   @property({ attribute: 'aria-ordervalue', type: Number, reflect: true }) order: number;
