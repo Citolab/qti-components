@@ -81,8 +81,7 @@ export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, t
       super.connectedCallback();
 
       this.addEventListener('keyup', this._onKeyUp);
-      this.addEventListener('click', this._onClick);
-      this.addEventListener('touchend', this._onTouchEnd);
+      this.addEventListener('pointerdown', this._pointerDown);
 
       this.dispatchEvent(
         new CustomEvent(`register-${type}`, {
@@ -95,8 +94,7 @@ export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, t
     override disconnectedCallback() {
       super.disconnectedCallback();
       this.removeEventListener('keyup', this._onKeyUp);
-      this.removeEventListener('click', this._onClick);
-      this.removeEventListener('touchend', this._onTouchEnd);
+      this.removeEventListener('pointerdown', this._pointerDown);
       this.dispatchEvent(
         new CustomEvent(`unregister-${type}`, {
           bubbles: true,
@@ -114,15 +112,9 @@ export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, t
       }
     }
 
-    private _onClick() {
+    private _pointerDown(event: PointerEvent) {
       if (this.disabled || this.readonly) return;
-      this.focus();
-      this._activate();
-    }
 
-    private _onTouchEnd(event: TouchEvent) {
-      if (this.disabled || this.readonly) return;
-      // Prevent the click event from firing after touchend to avoid double activation
       event.preventDefault();
       this.focus();
       this._activate();
