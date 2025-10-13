@@ -74,7 +74,7 @@
     "build-storybook": "npm run cem && storybook build",
     "-----------------------scripts--": "-",
     "build": "run-p cem css tsup",
-    "storybook:dev": "storybook dev -p 6006",
+    "storybook:dev": "storybook dev -p 6006 --no-open",
     "cem": "cem analyze",
     "cem:watch": "cem analyze --watch",
     "css": "postcss src/item.css -d dist -m",
