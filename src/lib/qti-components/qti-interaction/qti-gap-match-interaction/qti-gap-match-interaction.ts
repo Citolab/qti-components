@@ -6,6 +6,8 @@ import { Interaction } from '../../../exports/interaction';
 import styles from './qti-gap-match-interaction.styles';
 
 import type { CSSResultGroup } from 'lit';
+import type { ResponseVariable } from '../../../exports/variables.ts';
+import { QtiGap } from '../qti-gap.ts';
 @customElement('qti-gap-match-interaction')
 export class QtiGapMatchInteraction extends DragDropInteractionMixin(
   Interaction,
@@ -67,6 +69,57 @@ export class QtiGapMatchInteraction extends DragDropInteractionMixin(
         option.remove();
       });
     }
+  }
+
+  private getMatches(responseVariable: ResponseVariable): { source: string; target: string }[] {
+    if (!responseVariable.correctResponse) {
+      return [];
+    }
+    const correctResponse = Array.isArray(responseVariable.correctResponse)
+      ? responseVariable.correctResponse
+      : [responseVariable.correctResponse];
+
+    const matches: { source: string; target: string }[] = [];
+    if (correctResponse) {
+      correctResponse.forEach(x => {
+        const split = x.split(' ');
+        matches.push({ source: split[0], target: split[1] });
+      });
+    }
+    return matches;
+  }
+
+  public toggleCandidateCorrection(show: boolean) {
+    const responseVariable = this.responseVariable;
+
+    if (!responseVariable?.correctResponse) {
+      return;
+    }
+    const matches = this.getMatches(responseVariable);
+
+    const targetChoices = Array.from<QtiGap>(this.querySelectorAll('qti-gap'));
+    targetChoices.forEach(targetChoice => {
+      const targetId = targetChoice.getAttribute('identifier');
+      const targetMatches = matches.filter(m => m.target === targetId);
+
+      const selectedChoices = targetChoice.querySelectorAll(`qti-gap-text`);
+
+      selectedChoices.forEach(selectedChoice => {
+        selectedChoice.internals.states.delete('candidate-correct');
+        selectedChoice.internals.states.delete('candidate-incorrect');
+
+        if (!show) {
+          return;
+        }
+
+        const isCorrect = targetMatches.find(m => m.source === selectedChoice.identifier)?.source !== undefined;
+        if (isCorrect) {
+          selectedChoice.internals.states.add('candidate-correct');
+        } else {
+          selectedChoice.internals.states.add('candidate-incorrect');
+        }
+      });
+    });
   }
 }
 
