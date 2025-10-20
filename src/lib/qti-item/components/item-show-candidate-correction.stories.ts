@@ -570,3 +570,55 @@ export const SelectPoint: Story = {
     });
   }
 };
+
+export const GapMatch: Story = {
+  args: {
+    'item-url': '/qti-test-package/items/gap_match.xml'
+  },
+  render: args =>
+    html` <qti-item>
+      <div>
+        <item-container style="display: block;width: 400px; height: 350px;" item-url=${args['item-url'] as string}>
+          <template>
+            <style>
+              qti-assessment-item {
+                padding: 1rem;
+                display: block;
+                aspect-ratio: 4 / 3;
+                width: 800px;
+
+                border: 2px solid blue;
+                transform: scale(0.5);
+                transform-origin: top left;
+              }
+            </style>
+          </template>
+        </item-container>
+        <item-show-candidate-correction></item-show-candidate-correction>
+      </div>
+    </qti-item>`,
+  play: async ({ canvasElement, step }) => {
+    // wait for qti-simple-choice to be rendered
+    const canvas = within(canvasElement);
+    const interaction = await getAssessmentItemFromItemContainer(canvasElement);
+
+    const showCorrectButton = await canvas.findByShadowText(/Show candidate correction/i);
+
+    const matchItem1 = (await canvas.findByShadowText('winter')) as QtiSimpleAssociableChoice;
+    const matchItem2 = (await canvas.findByShadowText('spring')) as QtiSimpleAssociableChoice;
+
+    const dropZones = interaction.querySelectorAll(`qti-gap`);
+
+    const dropZone1 = dropZones[0] // First occurrence
+    const dropZone2 = dropZones[1]
+
+    await step('Drag and drop match interaction items', async () => {
+      await drag(matchItem1, { to: dropZone1 });
+      await drag(matchItem2, { to: dropZone2 });
+      await showCorrectButton.click();
+
+      await step('Verify candidate correction state is applied', async () => {
+      });
+    });
+  }
+};
