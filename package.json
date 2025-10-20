@@ -185,5 +185,11 @@
   "homepage": "https://github.com/Citolab/qti-components#readme",
   "overrides": {
     "storybook": "$storybook"
+  },
+  "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/dom": "^0.1.21",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2"
   }
 }

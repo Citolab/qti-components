@@ -244,6 +244,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "package": "./qti-interaction/qti-order-in-place-interaction/qti-order-in-place-interaction"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "package": "./qti-interaction/qti-portable-custom-interaction/qti-portable-custom-interaction"
           }
         },
@@ -13682,6 +13690,245 @@
           "declaration": {
             "name": "QtiMediaInteraction",
             "module": "src/lib/qti-components/qti-interaction/qti-media-interaction/qti-media-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/lib/qti-components/qti-interaction/qti-order-in-place-interaction/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiOrderInPlaceInteraction",
+          "declaration": {
+            "name": "QtiOrderInPlaceInteraction",
+            "module": "./qti-order-in-place-interaction"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/lib/qti-components/qti-interaction/qti-order-in-place-interaction/qti-order-in-place-interaction.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiOrderInPlaceInteraction",
+          "members": [
+            {
+              "kind": "method",
+              "name": "applyUniformWidth",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "choices",
+              "type": {
+                "text": "QtiSimpleChoice[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "method",
+              "name": "cleanup",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "forceSetupReset",
+              "privacy": "private",
+              "description": "Force a complete reset of the sortable setup.\nUseful when the DOM structure changes programmatically."
+            },
+            {
+              "kind": "method",
+              "name": "getResponseValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "handleSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "isDragging",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "isSetupComplete",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "manager",
+              "type": {
+                "text": "DragDropManager | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "orientation",
+              "type": {
+                "text": "'vertical' | 'horizontal'"
+              },
+              "default": "'vertical'",
+              "attribute": "orientation",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "response",
+              "type": {
+                "text": "string[]"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "setResponseOrder",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "identifiers",
+                  "type": {
+                    "text": "string[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "setupChoiceAsSortable",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "choice",
+                  "type": {
+                    "text": "QtiSimpleChoice"
+                  }
+                },
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "setupSortable",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "setupTimeout",
+              "type": {
+                "text": "any"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "sortableInstances",
+              "type": {
+                "text": "Map<string, Sortable>"
+              },
+              "privacy": "private",
+              "default": "new Map()"
+            },
+            {
+              "kind": "method",
+              "name": "toggleCorrectResponse",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "show",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "type": {
+                "text": "toggleCorrectResponse(show: boolean) => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "updateChoicesOrder",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "validate",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "type": {
+                "text": "validate() => boolean"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "orientation",
+              "type": {
+                "text": "'vertical' | 'horizontal'"
+              },
+              "default": "'vertical'",
+              "fieldName": "orientation"
+            }
+          ],
+          "superclass": {
+            "name": "Interaction",
+            "module": "/src/lib/exports/interaction"
+          },
+          "tagName": "qti-order-interaction-in-place",
+          "customElement": true,
+          "modulePath": "src/lib/qti-components/qti-interaction/qti-order-in-place-interaction/qti-order-in-place-interaction.ts",
+          "definitionPath": "src/lib/qti-components/qti-interaction/qti-order-in-place-interaction/qti-order-in-place-interaction.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-order-interaction-in-place",
+          "declaration": {
+            "name": "QtiOrderInPlaceInteraction",
+            "module": "src/lib/qti-components/qti-interaction/qti-order-in-place-interaction/qti-order-in-place-interaction.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiOrderInPlaceInteraction",
+          "declaration": {
+            "name": "QtiOrderInPlaceInteraction",
+            "module": "src/lib/qti-components/qti-interaction/qti-order-in-place-interaction/qti-order-in-place-interaction.ts"
           }
         }
       ]

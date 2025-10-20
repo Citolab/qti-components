@@ -27,6 +27,7 @@ export * from './qti-interaction/qti-inline-choice';
 export * from './qti-interaction/qti-match-interaction/qti-match-interaction';
 export * from './qti-interaction/qti-media-interaction/qti-media-interaction';
 export * from './qti-interaction/qti-order-interaction/qti-order-interaction';
+export * from './qti-interaction/qti-order-in-place-interaction/qti-order-in-place-interaction';
 export * from './qti-interaction/qti-portable-custom-interaction/qti-portable-custom-interaction';
 export * from './qti-interaction/qti-position-object-interaction/qti-position-object-interaction';
 export * from './qti-interaction/qti-position-object-interaction/qti-position-object-stage';
