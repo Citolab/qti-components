@@ -28091,6 +28091,15 @@
               "description": "Initialize navigation when test is first connected"
             },
             {
+              "kind": "field",
+              "name": "_loadingStimulusRefs",
+              "type": {
+                "text": "Set<string>"
+              },
+              "privacy": "private",
+              "default": "new Set()"
+            },
+            {
               "kind": "method",
               "name": "_loadItems",
               "privacy": "private",
@@ -29812,6 +29821,19 @@
                 }
               },
               "description": "Initialize navigation when test is first connected",
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_loadingStimulusRefs",
+              "type": {
+                "text": "Set<string>"
+              },
+              "privacy": "private",
+              "default": "new Set()",
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
