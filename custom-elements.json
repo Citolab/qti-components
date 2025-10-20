@@ -27810,7 +27810,7 @@
       "declarations": [
         {
           "kind": "mixin",
-          "description": "",
+          "description": "Navigation mixin for QTI test components\n\nProvides comprehensive navigation functionality with:\n- Efficient item/section loading with AbortController support\n- Stimulus reference coordination and duplicate prevention\n- Proper event timing and state management\n- Error handling and edge case coverage",
           "name": "TestNavigationMixin",
           "members": [
             {
@@ -27824,6 +27824,46 @@
             },
             {
               "kind": "method",
+              "name": "_applyStimulusContent",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "stimulus",
+                  "type": {
+                    "text": "DocumentFragment | null"
+                  }
+                },
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "{ identifier: string }"
+                  }
+                },
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "{ identifier: string }"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_bindEventHandlers",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
               "name": "_cancelPreviousNavigation",
               "privacy": "private",
               "return": {
@@ -27831,7 +27871,18 @@
                   "text": "void"
                 }
               },
-              "description": "Cancel previous navigation request"
+              "description": "Cancel previous navigation and clean up all state"
+            },
+            {
+              "kind": "method",
+              "name": "_checkLoadingComplete",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Check if loading is complete and dispatch events accordingly"
             },
             {
               "kind": "method",
@@ -27841,13 +27892,27 @@
                 "type": {
                   "text": "void"
                 }
-              },
-              "description": "Clear all loaded items"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_clearNavigationState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
             },
             {
               "kind": "method",
               "name": "_clearStimulusRef",
-              "privacy": "private"
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
             },
             {
               "kind": "method",
@@ -27877,8 +27942,7 @@
                     "text": "string"
                   }
                 }
-              ],
-              "description": "Create a navigation error object"
+              ]
             },
             {
               "kind": "method",
@@ -27896,8 +27960,7 @@
                     "text": "NavigationError"
                   }
                 }
-              ],
-              "description": "Dispatch error event"
+              ]
             },
             {
               "kind": "method",
@@ -27921,8 +27984,7 @@
                     "text": "string"
                   }
                 }
-              ],
-              "description": "Dispatch loading ended event"
+              ]
             },
             {
               "kind": "method",
@@ -27946,8 +28008,7 @@
                     "text": "string"
                   }
                 }
-              ],
-              "description": "Dispatch loading started event"
+              ]
             },
             {
               "kind": "method",
@@ -27965,8 +28026,31 @@
                     "text": "any[]"
                   }
                 }
-              ],
-              "description": "Dispatch test loaded event"
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_executeNavigation",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "'item' | 'section'"
+                  }
+                },
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
             },
             {
               "kind": "method",
@@ -27984,8 +28068,7 @@
                     "text": "string"
                   }
                 }
-              ],
-              "description": "Find item reference element"
+              ]
             },
             {
               "kind": "method",
@@ -27993,7 +28076,7 @@
               "privacy": "private",
               "return": {
                 "type": {
-                  "text": "QtiAssessmentSection"
+                  "text": "QtiAssessmentSection | null"
                 }
               },
               "parameters": [
@@ -28003,8 +28086,25 @@
                     "text": "string"
                   }
                 }
-              ],
-              "description": "Find section element"
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_getDefaultNavigationId",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | undefined"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "'item' | 'section'"
+                  }
+                }
+              ]
             },
             {
               "kind": "method",
@@ -28022,18 +28122,53 @@
                     "text": "string"
                   }
                 }
-              ],
-              "description": "Get all item IDs in a section"
+              ]
             },
             {
               "kind": "method",
               "name": "_handleItemConnected",
               "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
               "parameters": [
                 {
                   "name": "e",
                   "type": {
                     "text": "CustomEvent<QtiAssessmentItemRef>"
+                  }
+                }
+              ],
+              "description": "Handle item connection events - track connected items and discover stimulus references"
+            },
+            {
+              "kind": "method",
+              "name": "_handleNavigationError",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "error",
+                  "type": {
+                    "text": "any"
+                  }
+                },
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
                   }
                 }
               ]
@@ -28050,12 +28185,17 @@
                   }
                 }
               ],
-              "description": "Handle navigation requests"
+              "description": "Main navigation request handler with proper lifecycle management"
             },
             {
               "kind": "method",
               "name": "_handleStimulusRefConnected",
               "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
               "parameters": [
                 {
                   "name": "e",
@@ -28063,12 +28203,18 @@
                     "text": "QtiAssessmentStimulusRefConnectedEvent"
                   }
                 }
-              ]
+              ],
+              "description": "Handle stimulus reference connection events with duplicate prevention"
             },
             {
               "kind": "method",
               "name": "_handleTestConnected",
               "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
               "parameters": [
                 {
                   "name": "e",
@@ -28076,8 +28222,7 @@
                     "text": "CustomEvent<QtiAssessmentTest>"
                   }
                 }
-              ],
-              "description": "Handle test connection"
+              ]
             },
             {
               "kind": "method",
@@ -28087,17 +28232,28 @@
                 "type": {
                   "text": "void"
                 }
-              },
-              "description": "Initialize navigation when test is first connected"
+              }
             },
             {
               "kind": "field",
-              "name": "_loadingStimulusRefs",
+              "name": "_loadedStimulusHrefs",
+              "privacy": "private",
+              "default": "new Set<string>()"
+            },
+            {
+              "kind": "field",
+              "name": "_loadingState",
               "type": {
-                "text": "Set<string>"
+                "text": "object"
               },
               "privacy": "private",
-              "default": "new Set()"
+              "default": "{ expectedItems: 0, connectedItems: 0, expectedStimulus: 0, loadedStimulus: 0, isComplete: false }"
+            },
+            {
+              "kind": "field",
+              "name": "_loadingStimulusHrefs",
+              "privacy": "private",
+              "default": "new Set<string>()"
             },
             {
               "kind": "method",
@@ -28116,7 +28272,7 @@
                   }
                 }
               ],
-              "description": "Load items with timeout handling and abort support"
+              "description": "Load items with simple tracking"
             },
             {
               "kind": "field",
@@ -28138,8 +28294,7 @@
                     "text": "QtiAssessmentItemRef"
                   }
                 }
-              ],
-              "description": "Load a single item with abort support"
+              ]
             },
             {
               "kind": "method",
@@ -28157,8 +28312,32 @@
                     "text": "string"
                   }
                 }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_loadStimulusRef",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "{ identifier: string; href: string }"
+                  }
+                },
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "{ identifier: string }"
+                  }
+                }
               ],
-              "description": "Load stimulus with abort support"
+              "description": "Load stimulus reference with simple tracking"
             },
             {
               "kind": "method",
@@ -28177,7 +28356,7 @@
                   }
                 }
               ],
-              "description": "Navigate to a specific item"
+              "description": "Navigate to specific item with simple state tracking"
             },
             {
               "kind": "method",
@@ -28196,31 +28375,18 @@
                   }
                 }
               ],
-              "description": "Navigate to a specific section"
+              "description": "Navigate to section with simple state tracking"
             },
             {
-              "kind": "field",
-              "name": "_pendingItemConnections",
+              "kind": "method",
+              "name": "_resetLoadingState",
               "privacy": "private",
-              "default": "new Set<string>()"
-            },
-            {
-              "kind": "field",
-              "name": "_pendingStimulusLoads",
-              "type": {
-                "text": "Set<Promise<void>>"
+              "return": {
+                "type": {
+                  "text": "void"
+                }
               },
-              "privacy": "private",
-              "default": "new Set()"
-            },
-            {
-              "kind": "field",
-              "name": "_stimulusToBeLoaded",
-              "type": {
-                "text": "Array<{ identifier: string; href: string; itemIdentifier: string }>"
-              },
-              "privacy": "private",
-              "default": "[]"
+              "description": "Reset loading state for new navigation"
             },
             {
               "kind": "field",
@@ -28241,7 +28407,7 @@
               },
               "parameters": [
                 {
-                  "name": "itemRefEl",
+                  "name": "itemRef",
                   "type": {
                     "text": "QtiAssessmentItemRef"
                   }
@@ -28252,30 +28418,18 @@
                     "text": "string"
                   }
                 }
-              ],
-              "description": "Update session context for item navigation"
+              ]
             },
             {
               "kind": "method",
-              "name": "_waitForAllItemConnections",
+              "name": "_waitForLoadingComplete",
               "privacy": "private",
               "return": {
                 "type": {
                   "text": "Promise<void>"
                 }
               },
-              "description": "Wait for all item connections to complete"
-            },
-            {
-              "kind": "method",
-              "name": "_waitForAllStimulusLoads",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "Promise<void>"
-                }
-              },
-              "description": "Wait for all stimulus loads to complete"
+              "description": "Wait for loading to complete with simple polling"
             },
             {
               "kind": "field",
@@ -28285,6 +28439,12 @@
               },
               "default": "false",
               "attribute": "cache-transform"
+            },
+            {
+              "kind": "method",
+              "name": "getLoadingProgress",
+              "privacy": "public",
+              "description": "Get current loading progress for external consumption"
             },
             {
               "kind": "field",
@@ -28309,17 +28469,19 @@
                   "name": "type",
                   "type": {
                     "text": "'item' | 'section'"
-                  }
+                  },
+                  "description": "Navigation type ('item' or 'section')"
                 },
                 {
                   "name": "id",
                   "optional": true,
                   "type": {
                     "text": "string"
-                  }
+                  },
+                  "description": "Target identifier (optional, falls back to first available)"
                 }
               ],
-              "description": "Public method to navigate to an item or section"
+              "description": "Navigate to a specific item or section"
             },
             {
               "kind": "field",
@@ -29496,6 +29658,54 @@
             },
             {
               "kind": "method",
+              "name": "_applyStimulusContent",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "stimulus",
+                  "type": {
+                    "text": "DocumentFragment | null"
+                  }
+                },
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "{ identifier: string }"
+                  }
+                },
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "{ identifier: string }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_bindEventHandlers",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "_cancelPreviousNavigation",
               "privacy": "private",
               "return": {
@@ -29503,7 +29713,22 @@
                   "text": "void"
                 }
               },
-              "description": "Cancel previous navigation request",
+              "description": "Cancel previous navigation and clean up all state",
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_checkLoadingComplete",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Check if loading is complete and dispatch events accordingly",
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -29518,7 +29743,20 @@
                   "text": "void"
                 }
               },
-              "description": "Clear all loaded items",
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_clearNavigationState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -29528,6 +29766,11 @@
               "kind": "method",
               "name": "_clearStimulusRef",
               "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -29562,7 +29805,6 @@
                   }
                 }
               ],
-              "description": "Create a navigation error object",
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -29585,7 +29827,6 @@
                   }
                 }
               ],
-              "description": "Dispatch error event",
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -29614,7 +29855,6 @@
                   }
                 }
               ],
-              "description": "Dispatch loading ended event",
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -29643,7 +29883,6 @@
                   }
                 }
               ],
-              "description": "Dispatch loading started event",
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -29666,7 +29905,34 @@
                   }
                 }
               ],
-              "description": "Dispatch test loaded event",
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_executeNavigation",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "'item' | 'section'"
+                  }
+                },
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -29689,7 +29955,6 @@
                   }
                 }
               ],
-              "description": "Find item reference element",
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -29701,7 +29966,7 @@
               "privacy": "private",
               "return": {
                 "type": {
-                  "text": "QtiAssessmentSection"
+                  "text": "QtiAssessmentSection | null"
                 }
               },
               "parameters": [
@@ -29712,7 +29977,28 @@
                   }
                 }
               ],
-              "description": "Find section element",
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_getDefaultNavigationId",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | undefined"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "'item' | 'section'"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -29735,7 +30021,6 @@
                   }
                 }
               ],
-              "description": "Get all item IDs in a section",
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -29745,11 +30030,51 @@
               "kind": "method",
               "name": "_handleItemConnected",
               "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
               "parameters": [
                 {
                   "name": "e",
                   "type": {
                     "text": "CustomEvent<QtiAssessmentItemRef>"
+                  }
+                }
+              ],
+              "description": "Handle item connection events - track connected items and discover stimulus references",
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_handleNavigationError",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "error",
+                  "type": {
+                    "text": "any"
+                  }
+                },
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
                   }
                 }
               ],
@@ -29770,7 +30095,7 @@
                   }
                 }
               ],
-              "description": "Handle navigation requests",
+              "description": "Main navigation request handler with proper lifecycle management",
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -29780,6 +30105,11 @@
               "kind": "method",
               "name": "_handleStimulusRefConnected",
               "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
               "parameters": [
                 {
                   "name": "e",
@@ -29788,6 +30118,7 @@
                   }
                 }
               ],
+              "description": "Handle stimulus reference connection events with duplicate prevention",
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -29797,6 +30128,11 @@
               "kind": "method",
               "name": "_handleTestConnected",
               "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
               "parameters": [
                 {
                   "name": "e",
@@ -29805,7 +30141,6 @@
                   }
                 }
               ],
-              "description": "Handle test connection",
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -29820,7 +30155,6 @@
                   "text": "void"
                 }
               },
-              "description": "Initialize navigation when test is first connected",
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -29828,12 +30162,32 @@
             },
             {
               "kind": "field",
-              "name": "_loadingStimulusRefs",
+              "name": "_loadedStimulusHrefs",
+              "privacy": "private",
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_loadingState",
               "type": {
-                "text": "Set<string>"
+                "text": "object"
               },
               "privacy": "private",
-              "default": "new Set()",
+              "default": "{ expectedItems: 0, connectedItems: 0, expectedStimulus: 0, loadedStimulus: 0, isComplete: false }",
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_loadingStimulusHrefs",
+              "privacy": "private",
+              "default": "new Set<string>()",
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -29856,7 +30210,7 @@
                   }
                 }
               ],
-              "description": "Load items with timeout handling and abort support",
+              "description": "Load items with simple tracking",
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -29887,7 +30241,6 @@
                   }
                 }
               ],
-              "description": "Load a single item with abort support",
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -29910,7 +30263,35 @@
                   }
                 }
               ],
-              "description": "Load stimulus with abort support",
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_loadStimulusRef",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "{ identifier: string; href: string }"
+                  }
+                },
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "{ identifier: string }"
+                  }
+                }
+              ],
+              "description": "Load stimulus reference with simple tracking",
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -29933,7 +30314,7 @@
                   }
                 }
               ],
-              "description": "Navigate to a specific item",
+              "description": "Navigate to specific item with simple state tracking",
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -29956,30 +30337,22 @@
                   }
                 }
               ],
-              "description": "Navigate to a specific section",
+              "description": "Navigate to section with simple state tracking",
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
               }
             },
             {
-              "kind": "field",
-              "name": "_pendingItemConnections",
+              "kind": "method",
+              "name": "_resetLoadingState",
               "privacy": "private",
-              "default": "new Set<string>()",
-              "inheritedFrom": {
-                "name": "TestNavigationMixin",
-                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_pendingStimulusLoads",
-              "type": {
-                "text": "Set<Promise<void>>"
+              "return": {
+                "type": {
+                  "text": "void"
+                }
               },
-              "privacy": "private",
-              "default": "new Set()",
+              "description": "Reset loading state for new navigation",
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -30005,19 +30378,6 @@
               "inheritedFrom": {
                 "name": "TestViewMixin",
                 "module": "src/lib/qti-test/core/mixins/test-view.mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_stimulusToBeLoaded",
-              "type": {
-                "text": "Array<{ identifier: string; href: string; itemIdentifier: string }>"
-              },
-              "privacy": "private",
-              "default": "[]",
-              "inheritedFrom": {
-                "name": "TestNavigationMixin",
-                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
               }
             },
             {
@@ -30096,7 +30456,7 @@
               },
               "parameters": [
                 {
-                  "name": "itemRefEl",
+                  "name": "itemRef",
                   "type": {
                     "text": "QtiAssessmentItemRef"
                   }
@@ -30108,7 +30468,6 @@
                   }
                 }
               ],
-              "description": "Update session context for item navigation",
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -30116,29 +30475,14 @@
             },
             {
               "kind": "method",
-              "name": "_waitForAllItemConnections",
+              "name": "_waitForLoadingComplete",
               "privacy": "private",
               "return": {
                 "type": {
                   "text": "Promise<void>"
                 }
               },
-              "description": "Wait for all item connections to complete",
-              "inheritedFrom": {
-                "name": "TestNavigationMixin",
-                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "_waitForAllStimulusLoads",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "Promise<void>"
-                }
-              },
-              "description": "Wait for all stimulus loads to complete",
+              "description": "Wait for loading to complete with simple polling",
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -30155,6 +30499,19 @@
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getLoadingProgress",
+              "privacy": "public",
+              "description": "Get current loading progress for external consumption",
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              },
+              "type": {
+                "text": "getLoadingProgress() => void"
               }
             },
             {
@@ -30234,17 +30591,19 @@
                   "name": "type",
                   "type": {
                     "text": "'item' | 'section'"
-                  }
+                  },
+                  "description": "Navigation type ('item' or 'section')"
                 },
                 {
                   "name": "id",
                   "optional": true,
                   "type": {
                     "text": "string"
-                  }
+                  },
+                  "description": "Target identifier (optional, falls back to first available)"
                 }
               ],
-              "description": "Public method to navigate to an item or section",
+              "description": "Navigate to a specific item or section",
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
