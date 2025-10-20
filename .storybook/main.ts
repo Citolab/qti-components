@@ -16,7 +16,7 @@ const config: StorybookConfig = {
     name: '@storybook/web-components-vite',
     options: {}
   },
-  staticDirs: ['../public/assets']
+  staticDirs: ['../public']
   // async viteFinal(config, { configType }) {
   //   return {
   //     ...config,

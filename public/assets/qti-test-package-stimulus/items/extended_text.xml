@@ -23,9 +23,7 @@
 	<qti-item-body>
 
 		<div class="qti-layout-row">
-			<div class="qti-layout-col6">
-				<div class="qti-shared-stimulus" data-stimulus-idref="Stimulus1"></div>
-			</div>
+			<div class="qti-layout-col6"> </div>
           <div class="qti-layout-col6">
 				<p>Read this postcard from your English pen-friend, Sam.</p>
 			<div>

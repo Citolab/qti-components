@@ -158,8 +158,6 @@ export class QtiAssessmentItem extends LitElement {
     this._attachEventListeners();
     super.connectedCallback();
     this.updateComplete.then(() => {
-      this._processTemplates();
-
       this.dispatchEvent(
         new CustomEvent<QtiAssessmentItem>('qti-assessment-item-connected', {
           bubbles: true,
@@ -167,6 +165,7 @@ export class QtiAssessmentItem extends LitElement {
           detail: this
         })
       );
+      this._processTemplates();
     });
   }
 

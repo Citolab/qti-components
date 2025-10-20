@@ -1,0 +1,86 @@
+import { Mermaid } from 'mdx-mermaid/Mermaid';
+
+# qti-shared-stimulus-ref
+
+The `qti-shared-stimulus-ref` component is used to reference shared stimulus materials within QTI assessments. This component allows for the inclusion of external stimulus content that can be referenced by multiple assessment items.
+
+## Usage
+
+| Component                   | Description                                              |
+| --------------------------- | -------------------------------------------------------- |
+| `<qti-shared-stimulus-ref>` | References a shared stimulus material by its identifier. |
+
+<Mermaid chart={`
+sequenceDiagram
+    participant User
+    participant NavigationMixin as Navigation Mixin
+    participant AbortController as Abort Controller
+    participant ItemRef as QTI Item Ref
+    participant StimulusRef as QTI Stimulus Ref
+    participant Transformer as QTI Transformer
+
+    User->>NavigationMixin: navigateTo('item', 'ITM-001')
+    NavigationMixin->>NavigationMixin: _cancelPreviousNavigation()
+    NavigationMixin->>NavigationMixin: clear _pendingItemConnections
+    NavigationMixin->>NavigationMixin: clear _pendingStimulusLoads
+
+    NavigationMixin->>NavigationMixin: _dispatchLoadingStarted()
+    NavigationMixin->>AbortController: new AbortController()
+    Note over AbortController: ✅ Controller ACTIVE
+
+    NavigationMixin->>NavigationMixin: _navigateToItem('ITM-001')
+    NavigationMixin->>NavigationMixin: _loadItems(['ITM-001'])
+    NavigationMixin->>NavigationMixin: _pendingItemConnections.add('ITM-001')
+
+    NavigationMixin->>Transformer: qtiTransformItem().load(href, signal)
+    Transformer-->>NavigationMixin: transformed HTML
+    NavigationMixin->>ItemRef: itemRef.xmlDoc = doc
+    Note over ItemRef: Item inserted into DOM
+
+    NavigationMixin->>NavigationMixin: _waitForAllItemConnections()
+    Note over NavigationMixin: Waiting for item connections...
+
+    ItemRef->>NavigationMixin: qti-assessment-item-connected event
+    NavigationMixin->>ItemRef: querySelectorAll('qti-assessment-stimulus-ref')
+    ItemRef-->>NavigationMixin: stimulus refs found
+    NavigationMixin->>NavigationMixin: add to _stimulusToBeLoaded array
+    NavigationMixin->>NavigationMixin: _pendingItemConnections.delete('ITM-001')
+    Note over NavigationMixin: ✅ Item connection complete
+
+    NavigationMixin->>NavigationMixin: _waitForAllStimulusLoads()
+    Note over NavigationMixin: Waiting for stimulus loads...
+
+    StimulusRef->>NavigationMixin: qti-assessment-stimulus-ref-connected event
+    NavigationMixin->>NavigationMixin: check if expected stimulus
+    NavigationMixin->>NavigationMixin: create stimulusLoadPromise
+    NavigationMixin->>NavigationMixin: _pendingStimulusLoads.add(promise)
+
+    NavigationMixin->>Transformer: qtiTransformItem().load(href, signal)
+    Note over AbortController: ✅ Controller still ACTIVE
+    Transformer-->>NavigationMixin: stimulus HTML
+    NavigationMixin->>StimulusRef: append stimulus content
+    NavigationMixin->>NavigationMixin: _pendingStimulusLoads.delete(promise)
+    Note over NavigationMixin: ✅ Stimulus load complete
+
+    NavigationMixin->>NavigationMixin: _dispatchTestLoaded()
+    NavigationMixin->>User: qti-test-loaded event
+
+    Note over NavigationMixin: Navigation complete, finally block runs
+    NavigationMixin->>AbortController: _activeController = null
+    NavigationMixin->>NavigationMixin: _dispatchLoadingEnded()
+    NavigationMixin->>User: qti-navigation-loading-ended event
+
+    Note over NavigationMixin,AbortController: ❌ Controller cleared AFTER everything is done
+
+    %% Cancellation scenario
+    rect rgb(255, 240, 240)
+        Note over User,Transformer: CANCELLATION SCENARIO
+        User->>NavigationMixin: navigateTo('item', 'ITM-002') (while ITM-001 loading)
+        NavigationMixin->>AbortController: abort()
+        Note over Transformer: ❌ All pending requests aborted
+        NavigationMixin->>NavigationMixin: clear all pending sets
+        NavigationMixin->>AbortController: new AbortController()
+        Note over NavigationMixin: 🔄 New navigation starts...
+    end
+
+`} />

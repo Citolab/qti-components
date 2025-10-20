@@ -23,9 +23,7 @@
     ></qti-assessment-stimulus-ref>
     <qti-item-body>
         <div class="qti-layout-row">
-            <div class="qti-layout-col6">
-                <div class="qti-shared-stimulus" data-stimulus-idref="Stimulus1"></div>
-            </div>
+            <div class="qti-layout-col6"> </div>
           <div class="qti-layout-col6">
 
                 <p>Identify the missing word in this famous quote from Shakespeare's Richard III.</p>
