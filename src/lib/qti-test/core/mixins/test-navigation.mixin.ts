@@ -39,6 +39,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
     private _activeController: AbortController | null = null;
     private _stimulusToBeLoaded: Array<{ identifier: string; href: string; itemIdentifier: string }> = [];
     private _pendingStimulusLoads: Set<Promise<void>> = new Set();
+    private _loadingStimulusRefs: Set<string> = new Set();
     private _loadResults: any[] = [];
     private _pendingItemConnections = new Set<string>();
 
@@ -130,6 +131,17 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
         return;
       }
 
+      // Create unique key for this stimulus load to prevent duplicates
+      const stimulusKey = `${element.identifier}-${element.href}`;
+
+      // Check if this stimulus is already being loaded
+      if (this._loadingStimulusRefs.has(stimulusKey)) {
+        return;
+      }
+
+      // Mark this stimulus as being loaded
+      this._loadingStimulusRefs.add(stimulusKey);
+
       // Remove stimulus from the load queue
       this._stimulusToBeLoaded = this._stimulusToBeLoaded.filter(
         s => !(s.identifier === element.identifier && s.itemIdentifier === item.identifier && s.href === element.href)
@@ -160,8 +172,9 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
           }
         })
         .finally(() => {
-          // Remove from pending loads when complete
+          // Remove from both tracking sets when complete
           this._pendingStimulusLoads.delete(stimulusLoadPromise);
+          this._loadingStimulusRefs.delete(stimulusKey);
         });
 
       // Track this stimulus load
@@ -350,6 +363,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
       // Clear all loaded items and pending stimulus loads when cancelling
       this._clearLoadedItems();
       this._pendingStimulusLoads.clear();
+      this._loadingStimulusRefs.clear();
       this._pendingItemConnections.clear();
       this._loadResults = [];
     }
