@@ -15,7 +15,7 @@ const meta: Meta = {
     itemIndex: { control: { type: 'number' } }
   },
   args: {
-    serverLocation: '/api',
+    serverLocation: '/assets/api',
     qtipkg: 'examples',
     itemIndex: 0
   }

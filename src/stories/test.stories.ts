@@ -17,7 +17,7 @@ const meta: Meta = {
     }
   },
   args: {
-    serverLocation: '/api',
+    serverLocation: '/assets/api',
     itemIdentifier: undefined,
     packages: 'examples'
   },

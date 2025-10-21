@@ -40,7 +40,7 @@ export const Q20_L1_D101: Story = {
   },
   loaders: [
     async () => ({
-      xml: await getItemByUri('/qti-conformance/Basic/Q20/text-entry-sv-1.xml')
+      xml: await getItemByUri('assets/qti-conformance/Basic/Q20/text-entry-sv-1.xml')
     })
   ]
 };
@@ -49,7 +49,7 @@ export const Q20_L1_D102: Story = {
   name: 'Q20-L1-D102',
   loaders: [
     async () => ({
-      xml: await getItemByUri('/qti-conformance/Basic/Q20/text-entry-sv-2a.xml')
+      xml: await getItemByUri('assets/qti-conformance/Basic/Q20/text-entry-sv-2a.xml')
     })
   ],
   render: (_args, { loaded: { xml } }) => {
@@ -78,7 +78,7 @@ export const Q20_L1_D103: Story = {
   name: 'Q20-L1-D103',
   loaders: [
     async () => ({
-      xml: await getItemByUri('/qti-conformance/Basic/Q20/text-entry-sv-2b.xml')
+      xml: await getItemByUri('assets/qti-conformance/Basic/Q20/text-entry-sv-2b.xml')
     })
   ],
   render: (_args, { loaded: { xml } }) => {
@@ -106,7 +106,7 @@ export const Q20_L1_D104: Story = {
   name: 'Q20-L1-D104',
   loaders: [
     async () => ({
-      xml: await getItemByUri('/qti-conformance/Basic/Q20/text-entry-sv-2c.xml')
+      xml: await getItemByUri('assets/qti-conformance/Basic/Q20/text-entry-sv-2c.xml')
     })
   ],
   render: (_args, { loaded: { xml } }) => {
@@ -137,7 +137,7 @@ export const Q20_L1_D105: Story = {
   name: 'Q20-L1-D105',
   loaders: [
     async () => ({
-      xml: await getItemByUri('/qti-conformance/Basic/Q20/text-entry-sv-2d.xml')
+      xml: await getItemByUri('assets/qti-conformance/Basic/Q20/text-entry-sv-2d.xml')
     })
   ],
   render: (_args, { loaded: { xml } }) => {
@@ -169,7 +169,7 @@ export const Q20_L1_D105: Story = {
 //   name: 'Q20-L1-D112',
 //   loaders: [
 //     async () => ({
-//       xml: await getItemByUri('/qti-conformance/Basic/Q20/text-entry-sv-2j.xml')
+//       xml: await getItemByUri('assets/qti-conformance/Basic/Q20/text-entry-sv-2j.xml')
 //     })
 //   ],
 //   render: (args, { argTypes, loaded: { xml } }) => {
@@ -199,7 +199,7 @@ export const Q20_L1_D106: Story = {
   name: 'Q20-L1-D106',
   loaders: [
     async () => ({
-      xml: await getItemByUri('/qti-conformance/Basic/Q20/text-entry-sv-2e.xml')
+      xml: await getItemByUri('assets/qti-conformance/Basic/Q20/text-entry-sv-2e.xml')
     })
   ],
   render: (_args, { loaded: { xml } }) => {
@@ -229,7 +229,7 @@ export const Q20_L1_D107: Story = {
   name: 'Q20-L1-D107',
   loaders: [
     async () => ({
-      xml: await getItemByUri('/qti-conformance/Basic/Q20/text-entry-sv-2f.xml')
+      xml: await getItemByUri('assets/qti-conformance/Basic/Q20/text-entry-sv-2f.xml')
     })
   ],
   render: (_args, { loaded: { xml } }) => {
@@ -259,7 +259,7 @@ export const Q20_L1_D108: Story = {
   name: 'Q20-L1-D108',
   loaders: [
     async () => ({
-      xml: await getItemByUri('/qti-conformance/Basic/Q20/text-entry-sv-2g.xml')
+      xml: await getItemByUri('assets/qti-conformance/Basic/Q20/text-entry-sv-2g.xml')
     })
   ],
   render: (_args, { loaded: { xml } }) => {
@@ -289,7 +289,7 @@ export const Q20_L1_D109: Story = {
   name: 'Q20-L1-D109',
   loaders: [
     async () => ({
-      xml: await getItemByUri('/qti-conformance/Basic/Q20/text-entry-sv-2h.xml')
+      xml: await getItemByUri('assets/qti-conformance/Basic/Q20/text-entry-sv-2h.xml')
     })
   ],
   render: (_args, { loaded: { xml } }) => {
@@ -319,7 +319,7 @@ export const Q20_L1_D113: Story = {
   name: 'Q20-L1-D113',
   loaders: [
     async () => ({
-      xml: await getItemByUri('/qti-conformance/Basic/Q20/text-entry-sv-2k.xml')
+      xml: await getItemByUri('assets/qti-conformance/Basic/Q20/text-entry-sv-2k.xml')
     })
   ],
   render: (_args, { loaded: { xml } }) => {
@@ -349,7 +349,7 @@ export const Q20_L1_D114: Story = {
   name: 'Q20-L1-D114',
   loaders: [
     async () => ({
-      xml: await getItemByUri('/qti-conformance/Basic/Q20/text-entry-sv-2l.xml')
+      xml: await getItemByUri('assets/qti-conformance/Basic/Q20/text-entry-sv-2l.xml')
     })
   ],
   render: (_args, { loaded: { xml } }) => {
@@ -379,7 +379,7 @@ export const Q20_L1_D115: Story = {
   name: 'Q20-L1-D115',
   loaders: [
     async () => ({
-      xml: await getItemByUri('/qti-conformance/Basic/Q20/text-entry-sv-2m.xml')
+      xml: await getItemByUri('assets/qti-conformance/Basic/Q20/text-entry-sv-2m.xml')
     })
   ],
   render: (_args, { loaded: { xml } }) => {
@@ -408,7 +408,7 @@ export const Q20_L1_D116: Story = {
   name: 'Q20-L1-D116',
   loaders: [
     async () => ({
-      xml: await getItemByUri('/qti-conformance/Basic/Q20/text-entry-sv-2n.xml')
+      xml: await getItemByUri('assets/qti-conformance/Basic/Q20/text-entry-sv-2n.xml')
     })
   ],
   render: (_args, { loaded: { xml } }) => {
@@ -437,7 +437,7 @@ export const Q20_L1_D117: Story = {
   name: 'Q20-L1-D117',
   loaders: [
     async () => ({
-      xml: await getItemByUri('/qti-conformance/Basic/Q20/text-entry-sv-2o.xml')
+      xml: await getItemByUri('assets/qti-conformance/Basic/Q20/text-entry-sv-2o.xml')
     })
   ],
   render: (_args, { loaded: { xml } }) => {
@@ -466,7 +466,7 @@ export const Q20_L1_D118: Story = {
   name: 'Q20-L1-D118',
   loaders: [
     async () => ({
-      xml: await getItemByUri('/qti-conformance/Basic/Q20/text-entry-sv-2p.xml')
+      xml: await getItemByUri('assets/qti-conformance/Basic/Q20/text-entry-sv-2p.xml')
     })
   ],
   render: (_args, { loaded: { xml } }) => {
@@ -495,7 +495,7 @@ export const Q20_L1_D110: Story = {
   name: 'Q20-L1-D110',
   loaders: [
     async () => ({
-      xml: await getItemByUri('/qti-conformance/Basic/Q20/text-entry-sv-2i.xml')
+      xml: await getItemByUri('assets/qti-conformance/Basic/Q20/text-entry-sv-2i.xml')
     })
   ],
   render: (_args, { loaded: { xml } }) => {
@@ -524,7 +524,7 @@ export const Q20_L1_D111: Story = {
   name: 'Q20-L1-D111',
   loaders: [
     async () => ({
-      xml: await getItemByUri('/qti-conformance/Basic/Q20/text-entry-sv-3.xml')
+      xml: await getItemByUri('assets/qti-conformance/Basic/Q20/text-entry-sv-3.xml')
     })
   ],
   render: (_args, { loaded: { xml } }) => {

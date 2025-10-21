@@ -15,7 +15,7 @@ type Story = StoryObj<ItemContainer & typeof args>;
 
 const meta: Meta<typeof ItemContainer & { 'item-url': string }> = {
   component: 'item-container',
-  args: { ...args, 'item-url': '/qti-item/example-choice-item.xml' },
+  args: { ...args, 'item-url': 'assets/qti-item/example-choice-item.xml' },
   argTypes,
   parameters: {
     actions: {
