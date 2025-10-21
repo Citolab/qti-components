@@ -23,6 +23,8 @@ import '../src/item.css';
 
 import '../src/lib';
 
+export const loaders = [mswLoader];
+
 export const customViewports = {
   default: {
     name: 'Default',
