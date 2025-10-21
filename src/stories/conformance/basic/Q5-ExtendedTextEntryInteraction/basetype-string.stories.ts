@@ -11,7 +11,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {
-  title: 'qti-conformance/basic/Q5 - Extended Text Interaction/baseType-string',
+  title: 'assets/qti-conformance/basic/Q5 - Extended Text Interaction/baseType-string',
   beforeEach: async () => {}
 };
 export default meta;
@@ -51,7 +51,7 @@ export const Q5_L1_D1: Story = {
     const response = assessmentItem.variables.find(v => v.identifier === 'RESPONSE');
     expect(response.value).toBe('');
   },
-  loaders: [async () => ({ xml: await getItemByUri('/qti-conformance/Basic/Q5/base-type-string.xml') })]
+  loaders: [async () => ({ xml: await getItemByUri('assets/qti-conformance/Basic/Q5/base-type-string.xml') })]
 };
 
 export const Q5_L1_D2: Story = {
@@ -83,7 +83,7 @@ export const Q5_L1_D2: Story = {
     const response = assessmentItem.variables.find(v => v.identifier === 'RESPONSE');
     expect(response.value).toBe('response');
   },
-  loaders: [async () => ({ xml: await getItemByUri('/qti-conformance/Basic/Q5/base-type-string.xml') })]
+  loaders: [async () => ({ xml: await getItemByUri('assets/qti-conformance/Basic/Q5/base-type-string.xml') })]
 };
 
 export const Q5L1D102: Story = {
@@ -119,7 +119,7 @@ Autumn’s quiet song.`;
     const response = assessmentItem.variables.find(v => v.identifier === 'RESPONSE');
     expect(response.value).toBe(lorem);
   },
-  loaders: [async () => ({ xml: await getItemByUri('/qti-conformance/Basic/Q5/extended-text-sv-2a.xml') })]
+  loaders: [async () => ({ xml: await getItemByUri('assets/qti-conformance/Basic/Q5/extended-text-sv-2a.xml') })]
 };
 
 export const Q5_L1_D103: Story = {
@@ -160,7 +160,7 @@ Wish you could see it too!`;
   },
   loaders: [
     async () => ({
-      xml: await getItemByUri('/qti-conformance/Basic/Q5/extended-text-sv-2b.xml')
+      xml: await getItemByUri('assets/qti-conformance/Basic/Q5/extended-text-sv-2b.xml')
     })
   ]
 };
@@ -212,7 +212,7 @@ So I can show you around myself!`;
   },
   loaders: [
     async () => ({
-      xml: await getItemByUri('/qti-conformance/Basic/Q5/extended-text-sv-2c.xml')
+      xml: await getItemByUri('assets/qti-conformance/Basic/Q5/extended-text-sv-2c.xml')
     })
   ]
 };

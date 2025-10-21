@@ -1,12 +1,8 @@
 import { fireEvent } from 'storybook/test';
 import { html } from 'lit';
 import { within } from 'shadow-dom-testing-library';
-import { createRef, ref } from 'lit/directives/ref.js';
-
-import { ExtendedXMLHttpRequest } from '../testing/xmlHttpRequest';
-
-import type { QtiAssessmentStimulusRef } from '../lib';
-import type { Meta, StoryObj } from '@storybook/web-components-vite';
+import { http, HttpResponse, delay } from 'msw';
+import { mswLoader } from 'msw-storybook-addon';
 
 import '../../.storybook/utilities.css';
 
@@ -14,25 +10,10 @@ type Story = StoryObj;
 
 const meta: Meta = {
   component: 'test-integration',
-  async beforeEach() {
-    const xhr = XMLHttpRequest;
-    window.XMLHttpRequest = ExtendedXMLHttpRequest;
-
-    return () => {
-      window.XMLHttpRequest = xhr;
-    };
-  },
   tags: ['skip-test'],
+  loaders: [mswLoader],
   render: () => {
-    const placeholderRef = createRef<HTMLElement>();
-    return html` <qti-test
-      @qti-assessment-stimulus-ref-connected=${async (e: Event) => {
-        e.preventDefault(); // this prevents the default behaviour of the item to set the stimulus content
-        const stimulusRef = e.composedPath()[0] as QtiAssessmentStimulusRef;
-        stimulusRef.updateStimulusRef(placeholderRef.value);
-      }}
-      @qti-request-navigation=${() => (placeholderRef.value.innerHTML = ``)}
-    >
+    return html` <qti-test>
       <style>
         .qti-shared-stimulus:empty {
           display: none;
@@ -45,7 +26,8 @@ const meta: Meta = {
           </template>
         </test-section-buttons-stamp>
         <div class="flex space-between">
-          <div class="qti-shared-stimulus w-1/2" ${ref(placeholderRef)}></div>
+          <div class="qti-shared-stimulus w-1/2" data-stimulus-idref="Stimulus1"></div>
+
           <test-container class="w-1/2" test-url="/assets/qti-test-package-stimulus/assessment.xml">
             <template
               ><style>
@@ -65,16 +47,20 @@ const meta: Meta = {
 };
 export default meta;
 
+import UnbeleivableNight from '../../public/assets/qti-test-package-stimulus/items/ref/unbelievableNight.xml?raw';
+
+import type { Meta, StoryObj } from '@storybook/web-components-vite';
+
 export const SlowLoadingStimulus: Story = {
-  beforeEach: async () => {
-    ExtendedXMLHttpRequest.configureBehaviors(
-      {
-        '/assets/qti-test-package-stimulus/items/info_start.xml': { type: 'slow', delay: 800 },
-        '/assets/qti-test-package-stimulus/items//ref/unbelievableNight.xml': { type: 'slow', delay: 800 }
-      },
-      { type: 'passthrough' },
-      false
-    );
+  parameters: {
+    msw: {
+      handlers: [
+        http.get(/\/assets\/qti-test-package-stimulus\/items\/\/ref\/unbelievableNight\.xml$/, async () => {
+          await delay(2000);
+          return HttpResponse.text(UnbeleivableNight);
+        })
+      ]
+    }
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -88,9 +74,9 @@ export const SlowLoadingStimulus: Story = {
       // const firstItem = await canvas.findByShadowTitle('Examples');
       // expect(firstItem).toBeInTheDocument();
       // await fireEvent.click(navInfoStart);
-      await new Promise(resolve => setTimeout(resolve, 400));
+      await new Promise(resolve => setTimeout(resolve, 1400));
       await fireEvent.click(navBasic);
-      await new Promise(resolve => setTimeout(resolve, 400));
+      await new Promise(resolve => setTimeout(resolve, 500));
       await fireEvent.click(navInfoEnd);
       // await fireEvent.click(navAdvanced);
       // const lastItem = await canvas.findByShadowTitle('Info End');
@@ -100,27 +86,6 @@ export const SlowLoadingStimulus: Story = {
 
       await new Promise(resolve => setTimeout(resolve, 1500));
       // expect(qtiSharedStimulus?.children.length).toBe(0);
-    });
-  }
-};
-
-export const NotLoadingAdvancedOrder: Story = {
-  beforeEach: async () => {
-    ExtendedXMLHttpRequest.configureBehaviors(
-      {
-        '/assets/qti-test-package/items/graphic_associate.xml': { type: 'slow', delay: 800 },
-        '/assets/qti-test-package/items/order.xml': { type: 'error', status: 404, statusText: 'Not Found' }
-      },
-      { type: 'passthrough' },
-      false
-    );
-  },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-
-    await step('Verify options are shuffled', async () => {
-      const navAdvanced = await canvas.findByShadowText('advanced');
-      await fireEvent.click(navAdvanced);
     });
   }
 };

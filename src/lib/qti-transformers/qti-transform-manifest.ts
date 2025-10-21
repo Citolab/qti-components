@@ -1,15 +1,15 @@
 import { loadXML, parseXML } from './qti-transformers';
 
 export const qtiTransformManifest = (): {
-  load: (uri: string) => Promise<typeof api>;
+  load: (uri: string, signal?: AbortSignal) => Promise<typeof api>;
   assessmentTest: () => { href: string; identifier: string };
 } => {
   let xmlFragment: XMLDocument;
 
   const api = {
-    async load(uri) {
+    async load(uri, signal) {
       return new Promise<typeof api>(resolve => {
-        loadXML(uri).promise.then(xml => {
+        loadXML(uri, signal).then(xml => {
           xmlFragment = xml;
           return resolve(api);
         });

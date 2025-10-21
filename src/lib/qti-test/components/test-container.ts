@@ -47,7 +47,7 @@ export class TestContainer extends LitElement {
       let api = await qtiTransformTest().load(this.testURL);
       // Apply external transformation if provided
       const qtiTest = this.closest('qti-test') as unknown as QtiTest;
-      if (qtiTest.postLoadTestTransformCallback) {
+      if (qtiTest?.postLoadTestTransformCallback) {
         // Create a temporary document to get the test element reference
         const tempDoc = api.htmlDoc();
         const testElement = tempDoc.querySelector('qti-assessment-test') as any;

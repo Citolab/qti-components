@@ -12,7 +12,7 @@
 import { itemsFromTest, loadXML, parseXML, setLocation, toHTML } from './qti-transformers';
 
 export type transformTestApi = {
-  load: (uri: string) => Promise<transformTestApi>;
+  load: (uri: string, signal?: AbortSignal) => Promise<transformTestApi>;
   parse: (xmlString: string) => transformTestApi;
   path: (location: string) => transformTestApi;
   fn: (fn: (xmlFragment: XMLDocument) => void) => transformTestApi;
@@ -27,9 +27,9 @@ export const qtiTransformTest = (): transformTestApi => {
   let xmlFragment: XMLDocument;
 
   const api: transformTestApi = {
-    async load(uri) {
+    async load(uri, signal) {
       return new Promise<transformTestApi>((resolve, _) => {
-        loadXML(uri).promise.then(xml => {
+        loadXML(uri, signal).then(xml => {
           xmlFragment = xml;
 
           api.path(uri.substring(0, uri.lastIndexOf('/')));

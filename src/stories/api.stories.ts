@@ -113,7 +113,7 @@ export const Api: Story = {
         const href = items[args.itemIndex].href;
         const itemHtmlDoc = await qtiTransformItem()
           .load(`${args.serverLocation}/${args.packages}/items/${href}${args.scoreBackend ? '?scorebackend=true' : ''}`)
-          .promise.then(api =>
+          .then(api =>
             api
               .path(`${args.serverLocation}/static/${args.packages}/${href.includes('/') ? href.split('/')[0] : ''}`)
               .htmlDoc()

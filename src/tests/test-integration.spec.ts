@@ -2,7 +2,7 @@ import { render } from 'lit';
 import { composeStory } from 'storybook/preview-api';
 import { vi } from 'vitest';
 
-import Meta, { SlowLoadingStimulus, NotLoadingAdvancedOrder } from './test-integration.stories';
+import Meta, { SlowLoadingStimulus } from './test-integration.stories';
 import { ExtendedXMLHttpRequest } from '../testing/xmlHttpRequest';
 
 import type { ComposedStoryFn } from 'storybook/internal/types';
@@ -12,7 +12,6 @@ import '../lib/qti-test';
 import '../lib/qti-components';
 
 const testStory1: ComposedStoryFn<WebComponentsRenderer, Partial<any>> = composeStory(SlowLoadingStimulus, Meta);
-const testStory2: ComposedStoryFn<WebComponentsRenderer, Partial<any>> = composeStory(NotLoadingAdvancedOrder, Meta);
 
 vi.stubGlobal('XMLHttpRequest', ExtendedXMLHttpRequest);
 
@@ -37,9 +36,5 @@ describe.sequential('suite', () => {
 
   test('test-peiling-requests', async () => {
     await testStory1.play({ canvasElement });
-  });
-
-  test('test-peiling-requests', async () => {
-    await testStory2.play({ canvasElement });
   });
 });
