@@ -4,7 +4,16 @@ import prettier from 'prettier-v2'; /* https://github.com/storybookjs/storybook/
 import HTMLParser from 'prettier-v2/parser-html'; /* https://github.com/storybookjs/storybook/issues/8078#issuecomment-2325332120 */
 import { expect } from 'storybook/test';
 import { withThemeByClassName } from '@storybook/addon-themes';
+import { initialize, mswLoader } from 'msw-storybook-addon';
 
+/*
+ * Initializes MSW
+ * See https://github.com/mswjs/msw-storybook-addon#configuring-msw
+ * to learn how to customize it
+ */
+initialize({
+  onUnhandledRequest: 'bypass'
+});
 import customElements from '../custom-elements.json';
 import { toBePositionedRelativeTo } from '../test/setup/toBePositionedRelativeTo';
 
@@ -13,6 +22,8 @@ import type { Preview } from '@storybook/web-components-vite';
 import '../src/item.css';
 
 import '../src/lib';
+
+export const loaders = [mswLoader];
 
 export const customViewports = {
   default: {
@@ -72,7 +83,7 @@ const preview: Preview = {
       codePanel: true,
       source: {
         /* FIXME EVENTUALLY https://github.com/storybookjs/storybook/issues/8078#issuecomment-2325332120 */
-        transform: input =>
+        transform: (input: any) =>
           prettier.format(input, {
             parser: 'html',
             plugins: [HTMLParser],
@@ -83,7 +94,6 @@ const preview: Preview = {
     },
 
     viewport: { viewports: customViewports },
-
     controls: {
       expanded: true,
       matchers: {

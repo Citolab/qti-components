@@ -57,7 +57,7 @@ export const Q20_L1_D1: Story = {
   },
   loaders: [
     async () => ({
-      xml: await getItemByUri('/qti-conformance/Basic/Q20/text-entry-sv-1.xml')
+      xml: await getItemByUri('assets/qti-conformance/Basic/Q20/text-entry-sv-1.xml')
     })
   ]
 };
@@ -98,7 +98,7 @@ export const Q20_L1_D2: Story = {
   },
   loaders: [
     async () => ({
-      xml: await getItemByUri('/qti-conformance/Basic/Q20/text-entry-sv-1.xml')
+      xml: await getItemByUri('assets/qti-conformance/Basic/Q20/text-entry-sv-1.xml')
     })
   ]
 };

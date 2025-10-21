@@ -24,7 +24,7 @@ type Story = StoryObj<ItemShowCandidateCorrection & typeof args>;
 
 const meta: Meta<typeof ItemContainer & { 'item-url': string }> = {
   component: 'item-container',
-  args: { ...args, 'item-url': '/qti-item/example-choice-item.xml' },
+  args: { ...args, 'item-url': 'assets/qti-item/example-choice-item.xml' },
   argTypes,
   parameters: {
     actions: {
@@ -117,7 +117,7 @@ export const Default: Story = {
 
 export const NoCorrectResponse: Story = {
   args: {
-    'item-url': '/qti-item/example-choice-nocorrect-item.xml' // Set the new item URL here
+    'item-url': 'assets/qti-item/example-choice-nocorrect-item.xml' // Set the new item URL here
   },
   render: args =>
     html` <qti-item>
@@ -154,7 +154,7 @@ export const NoCorrectResponse: Story = {
 
 export const MultipleResponse: Story = {
   args: {
-    'item-url': '/qti-item/example-choice-multiple-item.xml' // Set the new item URL here
+    'item-url': 'assets/qti-item/example-choice-multiple-item.xml' // Set the new item URL here
   },
   render: args =>
     html` <qti-item>
@@ -222,7 +222,7 @@ export const MultipleResponse: Story = {
 
 export const Match: Story = {
   args: {
-    'item-url': '/qti-test-package/items/match.xml' // Set the new item URL here
+    'item-url': 'assets/qti-test-package/items/match.xml' // Set the new item URL here
   },
   render: args =>
     html` <qti-item>
@@ -286,7 +286,7 @@ export const Match: Story = {
 
 export const MatchAllToOneZone: Story = {
   args: {
-    'item-url': '/qti-test-package/items/match.xml' // Set the new item URL here
+    'item-url': 'assets/qti-test-package/items/match.xml' // Set the new item URL here
   },
   render: args =>
     html` <qti-item>
@@ -348,7 +348,7 @@ export const MatchAllToOneZone: Story = {
 
 export const InlineChoice: Story = {
   args: {
-    'item-url': '/qti-item/example-inline-choice.xml'
+    'item-url': 'assets/qti-item/example-inline-choice.xml'
   },
   render: args => html`
     <qti-item>
@@ -412,7 +412,7 @@ export const InlineChoice: Story = {
 
 export const TextEntry: Story = {
   args: {
-    'item-url': '/qti-item/example-text-entry.xml'
+    'item-url': 'assets/qti-item/example-text-entry.xml'
   },
   render: args => html`
     <qti-item>
@@ -500,7 +500,7 @@ export const TextEntry: Story = {
 
 export const SelectPoint: Story = {
   args: {
-    'item-url': '/qti-test-package/items/select_point.xml'
+    'item-url': 'assets/qti-test-package/items/select_point.xml'
   },
   render: args => html`
     <qti-item>

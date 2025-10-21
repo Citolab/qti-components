@@ -1,6 +1,5 @@
 import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
-import { prepareTemplate } from '@heximal/templates';
 
 import type { QtiAssessmentItem } from '../../../qti-components/qti-assessment-item/qti-assessment-item';
 import type { TemplateFunction } from '@heximal/templates';
@@ -53,11 +52,11 @@ export class QtiAssessmentItemRef extends LitElement {
         <div>Extra content</div>
       </template>
     */
-    const templateElement = ((this.getRootNode() as any).host as HTMLElement)
-      .closest('qti-test')
-      .querySelector<HTMLTemplateElement>('template[item-ref]');
+    // const templateElement = ((this.getRootNode() as any).host as HTMLElement)
+    //   .closest('qti-test')
+    //   .querySelector<HTMLTemplateElement>('template[item-ref]');
 
-    if (templateElement) this.myTemplate = prepareTemplate(templateElement);
+    // if (templateElement) this.myTemplate = prepareTemplate(templateElement);
 
     await this.updateComplete;
 

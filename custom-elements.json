@@ -1247,7 +1247,6 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "The href of the stimulus.",
               "attribute": "href"
             },
             {
@@ -1257,7 +1256,6 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "The identifier of the stimulus.",
               "attribute": "identifier"
             },
             {
@@ -1286,7 +1284,6 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "The href of the stimulus.",
               "fieldName": "href"
             },
             {
@@ -1295,7 +1292,6 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "The identifier of the stimulus.",
               "fieldName": "identifier"
             }
           ],
@@ -1307,6 +1303,27 @@
           "customElement": true,
           "modulePath": "src/lib/qti-components/qti-assessment-stimulus-ref/qti-assessment-stimulus-ref.ts",
           "definitionPath": "src/lib/qti-components/qti-assessment-stimulus-ref/qti-assessment-stimulus-ref.ts"
+        },
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiAssessmentStimulusRefConnectedEvent",
+          "members": [
+            {
+              "kind": "field",
+              "name": "eventName",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "static": true,
+              "default": "'qti-assessment-stimulus-ref-connected'"
+            }
+          ],
+          "superclass": {
+            "name": "Event",
+            "module": "src/lib/qti-components/qti-assessment-stimulus-ref/qti-assessment-stimulus-ref.ts"
+          }
         }
       ],
       "exports": [
@@ -1323,6 +1340,14 @@
           "name": "QtiAssessmentStimulusRef",
           "declaration": {
             "name": "QtiAssessmentStimulusRef",
+            "module": "src/lib/qti-components/qti-assessment-stimulus-ref/qti-assessment-stimulus-ref.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiAssessmentStimulusRefConnectedEvent",
+          "declaration": {
+            "name": "QtiAssessmentStimulusRefConnectedEvent",
             "module": "src/lib/qti-components/qti-assessment-stimulus-ref/qti-assessment-stimulus-ref.ts"
           }
         }
@@ -23229,7 +23254,7 @@
           "type": {
             "text": "Story"
           },
-          "default": "{ render: (_, { loaded: { itemDoc } }) => { return html` <qti-item> <item-container .itemDoc=${itemDoc}></item-container> </qti-item> `; }, loaders: [ async ({ args }) => { const itemDoc = qtiTransformItem() .load(args['item-url']) .promise.then(api => api.htmlDoc()); return { itemDoc }; } ], play: ItemURL.play, tags: ['!autodocs'] }"
+          "default": "{ render: (_, { loaded: { itemDoc } }) => { return html` <qti-item> <item-container .itemDoc=${itemDoc}></item-container> </qti-item> `; }, loaders: [ async ({ args }) => { const itemDoc = qtiTransformItem() .load(args['item-url']) .then(api => api.htmlDoc()); return { itemDoc }; } ], play: ItemURL.play, tags: ['!autodocs'] }"
         },
         {
           "kind": "variable",
@@ -23261,7 +23286,7 @@
           "type": {
             "text": "Story"
           },
-          "default": "{ render: (_, { loaded: { itemXML } }) => { return html` <qti-item> <item-container .itemXML=${itemXML}></item-container> </qti-item> `; }, loaders: [ async ({ args }) => { const itemXML = await qtiTransformItem() .load(args['item-url']) .promise.then(api => api.xml()); return { itemXML }; } ], play: ItemURL.play, tags: ['!autodocs'] }"
+          "default": "{ render: (_, { loaded: { itemXML } }) => { return html` <qti-item> <item-container .itemXML=${itemXML}></item-container> </qti-item> `; }, loaders: [ async ({ args }) => { const itemXML = await qtiTransformItem() .load(args['item-url']) .then(api => api.xml()); return { itemXML }; } ], play: ItemURL.play, tags: ['!autodocs'] }"
         },
         {
           "kind": "variable",
@@ -23269,7 +23294,7 @@
           "type": {
             "text": "Meta<typeof ItemContainer & { 'item-url': string }>"
           },
-          "default": "{ component: 'item-container', args: { ...args, 'item-url': '/qti-item/example-choice-item.xml' }, argTypes, parameters: { actions: { handles: events } } // tags: ['autodocs', 'new'] }"
+          "default": "{ component: 'item-container', args: { ...args, 'item-url': 'assets/qti-item/example-choice-item.xml' }, argTypes, parameters: { actions: { handles: events } } // tags: ['autodocs', 'new'] }"
         }
       ],
       "exports": [
@@ -23545,7 +23570,7 @@
           "type": {
             "text": "Story"
           },
-          "default": "{ args: { 'item-url': '/qti-item/example-inline-choice.xml' }, render: args => html` <qti-item> <div> <item-container style=\"display: block; width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-candidate-correction></item-show-candidate-correction> </div> </qti-item> `, play: async ({ canvasElement, step }) => { const canvas = within(canvasElement); const item = await getAssessmentItemFromItemContainer(canvasElement); const interaction = await waitFor(() => { const el = item.querySelector('qti-inline-choice-interaction'); if (!el) throw new Error('inline-choice interaction not found'); return el; }); const selectElement = await waitFor(() => { const select = interaction.shadowRoot?.querySelector<HTMLSelectElement>('select'); if (!select) throw new Error('select element not yet available'); return select; }); const showButton = await canvas.findByShadowText(/Show candidate correction/i); await step('Select an inline choice option', async () => { selectElement.value = 'Y'; // de correcte identifier (York) selectElement.dispatchEvent(new Event('change', { bubbles: true })); }); await step('Click on the Show Candidate Correction button', async () => { await showButton.click(); await step('Verify candidate correction by checking selected option', async () => { const selectedOption = Array.from(selectElement.options).find(opt => opt.selected); expect(selectedOption).not.toBeUndefined(); expect(selectedOption.value).toBe('Y'); expect(selectedOption.textContent.trim()).toBe('York'); }); }); } }"
+          "default": "{ args: { 'item-url': 'assets/qti-item/example-inline-choice.xml' }, render: args => html` <qti-item> <div> <item-container style=\"display: block; width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-candidate-correction></item-show-candidate-correction> </div> </qti-item> `, play: async ({ canvasElement, step }) => { const canvas = within(canvasElement); const item = await getAssessmentItemFromItemContainer(canvasElement); const interaction = await waitFor(() => { const el = item.querySelector('qti-inline-choice-interaction'); if (!el) throw new Error('inline-choice interaction not found'); return el; }); const selectElement = await waitFor(() => { const select = interaction.shadowRoot?.querySelector<HTMLSelectElement>('select'); if (!select) throw new Error('select element not yet available'); return select; }); const showButton = await canvas.findByShadowText(/Show candidate correction/i); await step('Select an inline choice option', async () => { selectElement.value = 'Y'; // de correcte identifier (York) selectElement.dispatchEvent(new Event('change', { bubbles: true })); }); await step('Click on the Show Candidate Correction button', async () => { await showButton.click(); await step('Verify candidate correction by checking selected option', async () => { const selectedOption = Array.from(selectElement.options).find(opt => opt.selected); expect(selectedOption).not.toBeUndefined(); expect(selectedOption.value).toBe('Y'); expect(selectedOption.textContent.trim()).toBe('York'); }); }); } }"
         },
         {
           "kind": "variable",
@@ -23553,7 +23578,7 @@
           "type": {
             "text": "Story"
           },
-          "default": "{ args: { 'item-url': '/qti-test-package/items/match.xml' // Set the new item URL here }, render: args => html` <qti-item> <div> <item-container style=\"display: block;width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-candidate-correction></item-show-candidate-correction> </div> </qti-item>`, play: async ({ canvasElement, step }) => { // wait for qti-simple-choice to be rendered const canvas = within(canvasElement); const showCorrectButton = await canvas.findByShadowText(/Show candidate correction/i); const matchItem1 = (await canvas.findByShadowText('Prospero')) as QtiSimpleAssociableChoice; const matchItem2 = (await canvas.findByShadowText('Capulet')) as QtiSimpleAssociableChoice; const matchItem3 = (await canvas.findByShadowText('Demetrius')) as QtiSimpleAssociableChoice; const dropZone1 = await canvas.findByShadowText('The Tempest'); const dropZone2 = await canvas.findByShadowText(\"A Midsummer-Night's Dream\"); const dropZone3 = await canvas.findByShadowText('Romeo and Juliet'); await step('Drag and drop match interaction items', async () => { await drag(matchItem1, { to: dropZone1 }); await drag(matchItem2, { to: dropZone2 }); await drag(matchItem3, { to: dropZone3 }); await showCorrectButton.click(); await step('Verify candidate correction state is applied', async () => { const matchItem1List = Array.from(await canvas.findAllByShadowText('Prospero')); const matchItem1CandidateResponse = matchItem1List[1] as QtiSimpleAssociableChoice; const matchItem2List = Array.from(await canvas.findAllByShadowText('Capulet')); const matchItem2CandidateResponse = matchItem2List[1] as QtiSimpleAssociableChoice; const matchItem3List = Array.from(await canvas.findAllByShadowText('Demetrius')); const matchItem3CandidateResponse = matchItem3List[1] as QtiSimpleAssociableChoice; expect(matchItem1CandidateResponse.internals.states.has('candidate-correct')).toBe(true); expect(matchItem2CandidateResponse.internals.states.has('candidate-correct')).toBe(false); expect(matchItem3CandidateResponse.internals.states.has('candidate-correct')).toBe(false); expect(matchItem1CandidateResponse.internals.states.has('candidate-incorrect')).toBe(false); expect(matchItem2CandidateResponse.internals.states.has('candidate-incorrect')).toBe(true); expect(matchItem3CandidateResponse.internals.states.has('candidate-incorrect')).toBe(true); }); }); } }"
+          "default": "{ args: { 'item-url': 'assets/qti-test-package/items/match.xml' // Set the new item URL here }, render: args => html` <qti-item> <div> <item-container style=\"display: block;width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-candidate-correction></item-show-candidate-correction> </div> </qti-item>`, play: async ({ canvasElement, step }) => { // wait for qti-simple-choice to be rendered const canvas = within(canvasElement); const showCorrectButton = await canvas.findByShadowText(/Show candidate correction/i); const matchItem1 = (await canvas.findByShadowText('Prospero')) as QtiSimpleAssociableChoice; const matchItem2 = (await canvas.findByShadowText('Capulet')) as QtiSimpleAssociableChoice; const matchItem3 = (await canvas.findByShadowText('Demetrius')) as QtiSimpleAssociableChoice; const dropZone1 = await canvas.findByShadowText('The Tempest'); const dropZone2 = await canvas.findByShadowText(\"A Midsummer-Night's Dream\"); const dropZone3 = await canvas.findByShadowText('Romeo and Juliet'); await step('Drag and drop match interaction items', async () => { await drag(matchItem1, { to: dropZone1 }); await drag(matchItem2, { to: dropZone2 }); await drag(matchItem3, { to: dropZone3 }); await showCorrectButton.click(); await step('Verify candidate correction state is applied', async () => { const matchItem1List = Array.from(await canvas.findAllByShadowText('Prospero')); const matchItem1CandidateResponse = matchItem1List[1] as QtiSimpleAssociableChoice; const matchItem2List = Array.from(await canvas.findAllByShadowText('Capulet')); const matchItem2CandidateResponse = matchItem2List[1] as QtiSimpleAssociableChoice; const matchItem3List = Array.from(await canvas.findAllByShadowText('Demetrius')); const matchItem3CandidateResponse = matchItem3List[1] as QtiSimpleAssociableChoice; expect(matchItem1CandidateResponse.internals.states.has('candidate-correct')).toBe(true); expect(matchItem2CandidateResponse.internals.states.has('candidate-correct')).toBe(false); expect(matchItem3CandidateResponse.internals.states.has('candidate-correct')).toBe(false); expect(matchItem1CandidateResponse.internals.states.has('candidate-incorrect')).toBe(false); expect(matchItem2CandidateResponse.internals.states.has('candidate-incorrect')).toBe(true); expect(matchItem3CandidateResponse.internals.states.has('candidate-incorrect')).toBe(true); }); }); } }"
         },
         {
           "kind": "variable",
@@ -23561,7 +23586,7 @@
           "type": {
             "text": "Story"
           },
-          "default": "{ args: { 'item-url': '/qti-test-package/items/match.xml' // Set the new item URL here }, render: args => html` <qti-item> <div> <item-container style=\"display: block;width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-candidate-correction></item-show-candidate-correction> </div> </qti-item>`, play: async ({ canvasElement, step }) => { // wait for qti-simple-choice to be rendered - fresh UI state const canvas = within(canvasElement); const showCorrectButton = await canvas.findByShadowText(/Show candidate correction/i); const matchItem1 = (await canvas.findByShadowText('Prospero')) as QtiSimpleAssociableChoice; const matchItem2 = (await canvas.findByShadowText('Lysander')) as QtiSimpleAssociableChoice; const matchItem3 = (await canvas.findByShadowText('Demetrius')) as QtiSimpleAssociableChoice; const dropZone1 = await canvas.findByShadowText('The Tempest'); await step('Drag and drop all match interaction items to single dropzone', async () => { await drag(matchItem1, { to: dropZone1 }); await drag(matchItem2, { to: dropZone1 }); await drag(matchItem3, { to: dropZone1 }); await showCorrectButton.click(); await step('Verify candidate correction state is applied', async () => { const matchItem1List = Array.from(await canvas.findAllByShadowText('Prospero')); const matchItem1CandidateResponse = matchItem1List[1] as QtiSimpleAssociableChoice; const matchItem2List = Array.from(await canvas.findAllByShadowText('Lysander')); const matchItem2CandidateResponse = matchItem2List[1] as QtiSimpleAssociableChoice; const matchItem3List = Array.from(await canvas.findAllByShadowText('Demetrius')); const matchItem3CandidateResponse = matchItem3List[1] as QtiSimpleAssociableChoice; expect(matchItem1CandidateResponse.internals.states.has('candidate-correct')).toBe(true); expect(matchItem2CandidateResponse.internals.states.has('candidate-correct')).toBe(false); expect(matchItem3CandidateResponse.internals.states.has('candidate-correct')).toBe(false); expect(matchItem1CandidateResponse.internals.states.has('candidate-incorrect')).toBe(false); expect(matchItem2CandidateResponse.internals.states.has('candidate-incorrect')).toBe(true); expect(matchItem3CandidateResponse.internals.states.has('candidate-incorrect')).toBe(true); }); }); } }"
+          "default": "{ args: { 'item-url': 'assets/qti-test-package/items/match.xml' // Set the new item URL here }, render: args => html` <qti-item> <div> <item-container style=\"display: block;width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-candidate-correction></item-show-candidate-correction> </div> </qti-item>`, play: async ({ canvasElement, step }) => { // wait for qti-simple-choice to be rendered - fresh UI state const canvas = within(canvasElement); const showCorrectButton = await canvas.findByShadowText(/Show candidate correction/i); const matchItem1 = (await canvas.findByShadowText('Prospero')) as QtiSimpleAssociableChoice; const matchItem2 = (await canvas.findByShadowText('Lysander')) as QtiSimpleAssociableChoice; const matchItem3 = (await canvas.findByShadowText('Demetrius')) as QtiSimpleAssociableChoice; const dropZone1 = await canvas.findByShadowText('The Tempest'); await step('Drag and drop all match interaction items to single dropzone', async () => { await drag(matchItem1, { to: dropZone1 }); await drag(matchItem2, { to: dropZone1 }); await drag(matchItem3, { to: dropZone1 }); await showCorrectButton.click(); await step('Verify candidate correction state is applied', async () => { const matchItem1List = Array.from(await canvas.findAllByShadowText('Prospero')); const matchItem1CandidateResponse = matchItem1List[1] as QtiSimpleAssociableChoice; const matchItem2List = Array.from(await canvas.findAllByShadowText('Lysander')); const matchItem2CandidateResponse = matchItem2List[1] as QtiSimpleAssociableChoice; const matchItem3List = Array.from(await canvas.findAllByShadowText('Demetrius')); const matchItem3CandidateResponse = matchItem3List[1] as QtiSimpleAssociableChoice; expect(matchItem1CandidateResponse.internals.states.has('candidate-correct')).toBe(true); expect(matchItem2CandidateResponse.internals.states.has('candidate-correct')).toBe(false); expect(matchItem3CandidateResponse.internals.states.has('candidate-correct')).toBe(false); expect(matchItem1CandidateResponse.internals.states.has('candidate-incorrect')).toBe(false); expect(matchItem2CandidateResponse.internals.states.has('candidate-incorrect')).toBe(true); expect(matchItem3CandidateResponse.internals.states.has('candidate-incorrect')).toBe(true); }); }); } }"
         },
         {
           "kind": "variable",
@@ -23569,7 +23594,7 @@
           "type": {
             "text": "Meta<typeof ItemContainer & { 'item-url': string }>"
           },
-          "default": "{ component: 'item-container', args: { ...args, 'item-url': '/qti-item/example-choice-item.xml' }, argTypes, parameters: { actions: { handles: events } } // tags: ['autodocs', 'new'] }"
+          "default": "{ component: 'item-container', args: { ...args, 'item-url': 'assets/qti-item/example-choice-item.xml' }, argTypes, parameters: { actions: { handles: events } } // tags: ['autodocs', 'new'] }"
         },
         {
           "kind": "variable",
@@ -23577,7 +23602,7 @@
           "type": {
             "text": "Story"
           },
-          "default": "{ args: { 'item-url': '/qti-item/example-choice-multiple-item.xml' // Set the new item URL here }, render: args => html` <qti-item> <div> <item-container style=\"display: block;width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-candidate-correction ${spread(args)}></item-show-candidate-correction> </div> </qti-item>`, play: async ({ canvasElement, step }) => { // wait for qti-simple-choice to be rendered const canvas = within(canvasElement); // const choices = await canvas.findAllByShadowRole('radio'); const choiceA: QtiSimpleChoice = await canvas.findByShadowText('This is correct.'); const choiceB: QtiSimpleChoice = await canvas.findByShadowText('This is also correct.'); const choiceC: QtiSimpleChoice = await canvas.findByShadowText('This is wrong.'); const showCorrectButton = canvas.getAllByShadowText(/Show candidate correction/i)[0]; await step('Click on the Show Correct button', async () => { await choiceA.click(); await choiceC.click(); await showCorrectButton.click(); await step('Verify candidate correction state is applied', async () => { expect(choiceA.internals.states.has('candidate-correct')).toBe(true); expect(choiceB.internals.states.has('candidate-correct')).toBe(false); expect(choiceC.internals.states.has('candidate-correct')).toBe(false); expect(choiceA.internals.states.has('candidate-incorrect')).toBe(false); expect(choiceB.internals.states.has('candidate-incorrect')).toBe(false); expect(choiceC.internals.states.has('candidate-incorrect')).toBe(true); }); }); await step('Click on the Hide Correct button and deselect options', async () => { await showCorrectButton.click(); await step('Verify candidate correction state is removed', async () => { expect(choiceA.internals.states.has('candidate-correct')).toBe(false); expect(choiceB.internals.states.has('candidate-correct')).toBe(false); expect(choiceC.internals.states.has('candidate-correct')).toBe(false); expect(choiceA.internals.states.has('candidate-incorrect')).toBe(false); expect(choiceB.internals.states.has('candidate-incorrect')).toBe(false); expect(choiceC.internals.states.has('candidate-incorrect')).toBe(false); }); await choiceA.click(); await choiceC.click(); }); } }"
+          "default": "{ args: { 'item-url': 'assets/qti-item/example-choice-multiple-item.xml' // Set the new item URL here }, render: args => html` <qti-item> <div> <item-container style=\"display: block;width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-candidate-correction ${spread(args)}></item-show-candidate-correction> </div> </qti-item>`, play: async ({ canvasElement, step }) => { // wait for qti-simple-choice to be rendered const canvas = within(canvasElement); // const choices = await canvas.findAllByShadowRole('radio'); const choiceA: QtiSimpleChoice = await canvas.findByShadowText('This is correct.'); const choiceB: QtiSimpleChoice = await canvas.findByShadowText('This is also correct.'); const choiceC: QtiSimpleChoice = await canvas.findByShadowText('This is wrong.'); const showCorrectButton = canvas.getAllByShadowText(/Show candidate correction/i)[0]; await step('Click on the Show Correct button', async () => { await choiceA.click(); await choiceC.click(); await showCorrectButton.click(); await step('Verify candidate correction state is applied', async () => { expect(choiceA.internals.states.has('candidate-correct')).toBe(true); expect(choiceB.internals.states.has('candidate-correct')).toBe(false); expect(choiceC.internals.states.has('candidate-correct')).toBe(false); expect(choiceA.internals.states.has('candidate-incorrect')).toBe(false); expect(choiceB.internals.states.has('candidate-incorrect')).toBe(false); expect(choiceC.internals.states.has('candidate-incorrect')).toBe(true); }); }); await step('Click on the Hide Correct button and deselect options', async () => { await showCorrectButton.click(); await step('Verify candidate correction state is removed', async () => { expect(choiceA.internals.states.has('candidate-correct')).toBe(false); expect(choiceB.internals.states.has('candidate-correct')).toBe(false); expect(choiceC.internals.states.has('candidate-correct')).toBe(false); expect(choiceA.internals.states.has('candidate-incorrect')).toBe(false); expect(choiceB.internals.states.has('candidate-incorrect')).toBe(false); expect(choiceC.internals.states.has('candidate-incorrect')).toBe(false); }); await choiceA.click(); await choiceC.click(); }); } }"
         },
         {
           "kind": "variable",
@@ -23585,7 +23610,7 @@
           "type": {
             "text": "Story"
           },
-          "default": "{ args: { 'item-url': '/qti-item/example-choice-nocorrect-item.xml' // Set the new item URL here }, render: args => html` <qti-item> <item-container style=\"width: 400px; height: 350px; display: block;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-candidate-correction ${spread(args)}></item-show-candidate-correction> <!-- </div> --> </qti-item>`, play: async ({ canvasElement, step }) => { // // wait for qti-simple-choice to be rendered const canvas = within(canvasElement); await canvas.findByShadowText('You must stay with your luggage at all times.'); const _ = canvas.getAllByShadowText(/No correct response specified/i)[0]; const itemShowCorrect = canvasElement.querySelector('item-show-candidate-correction'); await step('Verify the Show Correct button is disabled', async () => { expect(itemShowCorrect.disabled).toBe(true); }); } }"
+          "default": "{ args: { 'item-url': 'assets/qti-item/example-choice-nocorrect-item.xml' // Set the new item URL here }, render: args => html` <qti-item> <item-container style=\"width: 400px; height: 350px; display: block;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-candidate-correction ${spread(args)}></item-show-candidate-correction> <!-- </div> --> </qti-item>`, play: async ({ canvasElement, step }) => { // // wait for qti-simple-choice to be rendered const canvas = within(canvasElement); await canvas.findByShadowText('You must stay with your luggage at all times.'); const _ = canvas.getAllByShadowText(/No correct response specified/i)[0]; const itemShowCorrect = canvasElement.querySelector('item-show-candidate-correction'); await step('Verify the Show Correct button is disabled', async () => { expect(itemShowCorrect.disabled).toBe(true); }); } }"
         },
         {
           "kind": "variable",
@@ -23593,7 +23618,7 @@
           "type": {
             "text": "Story"
           },
-          "default": "{ args: { 'item-url': '/qti-test-package/items/select_point.xml' }, render: args => html` <qti-item> <div> <item-container style=\"display: block; width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-candidate-correction></item-show-candidate-correction> </div> </qti-item> `, play: async ({ canvasElement, step }) => { const canvas = within(canvasElement); const showButton = await canvas.findByShadowText(/Show candidate correction/i); const image = await canvas.findByShadowAltText('UK Map'); await step('Click on correct point in the image', async () => { const rect = image.getBoundingClientRect(); await fireEvent.click(image, { clientX: rect.left + rect.width * 0.5, clientY: rect.top + rect.height * 0.4 }); }); await step('Click on incorrect points in the image', async () => { const rect = image.getBoundingClientRect(); await fireEvent.click(image, { clientX: rect.left + rect.width * 0.5, clientY: rect.top + rect.height * 0.6 }); await fireEvent.click(image, { clientX: rect.left + rect.width * 0.55, clientY: rect.top + rect.height * 0.65 }); }); await step('Click on the Show Candidate Correction button', async () => { await showButton.click(); await step('Verify candidate correction by checking selected options', async () => { const item = await getAssessmentItemFromItemContainer(canvasElement); const interaction: QtiSelectPointInteraction = item.querySelector('qti-select-point-interaction'); const buttonsCorrect = interaction.shadowRoot?.querySelectorAll<HTMLButtonElement>('button[part=\"point correct\"]'); const buttonsIncorrect = interaction.shadowRoot?.querySelectorAll<HTMLButtonElement>( 'button[part=\"point incorrect\"]' ); expect(buttonsCorrect).toHaveLength(1); expect(buttonsIncorrect).toHaveLength(2); }); }); } }"
+          "default": "{ args: { 'item-url': 'assets/qti-test-package/items/select_point.xml' }, render: args => html` <qti-item> <div> <item-container style=\"display: block; width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-candidate-correction></item-show-candidate-correction> </div> </qti-item> `, play: async ({ canvasElement, step }) => { const canvas = within(canvasElement); const showButton = await canvas.findByShadowText(/Show candidate correction/i); const image = await canvas.findByShadowAltText('UK Map'); await step('Click on correct point in the image', async () => { const rect = image.getBoundingClientRect(); await fireEvent.click(image, { clientX: rect.left + rect.width * 0.5, clientY: rect.top + rect.height * 0.4 }); }); await step('Click on incorrect points in the image', async () => { const rect = image.getBoundingClientRect(); await fireEvent.click(image, { clientX: rect.left + rect.width * 0.5, clientY: rect.top + rect.height * 0.6 }); await fireEvent.click(image, { clientX: rect.left + rect.width * 0.55, clientY: rect.top + rect.height * 0.65 }); }); await step('Click on the Show Candidate Correction button', async () => { await showButton.click(); await step('Verify candidate correction by checking selected options', async () => { const item = await getAssessmentItemFromItemContainer(canvasElement); const interaction: QtiSelectPointInteraction = item.querySelector('qti-select-point-interaction'); const buttonsCorrect = interaction.shadowRoot?.querySelectorAll<HTMLButtonElement>('button[part=\"point correct\"]'); const buttonsIncorrect = interaction.shadowRoot?.querySelectorAll<HTMLButtonElement>( 'button[part=\"point incorrect\"]' ); expect(buttonsCorrect).toHaveLength(1); expect(buttonsIncorrect).toHaveLength(2); }); }); } }"
         },
         {
           "kind": "variable",
@@ -23601,7 +23626,7 @@
           "type": {
             "text": "Story"
           },
-          "default": "{ args: { 'item-url': '/qti-item/example-text-entry.xml' }, render: args => html` <qti-item> <div> <item-container style=\"display: block; width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-candidate-correction></item-show-candidate-correction> </div> </qti-item> `, play: async ({ canvasElement, step }) => { const canvas = within(canvasElement); const showButton = await canvas.findByShadowText(/Show candidate correction/i); const item = await getAssessmentItemFromItemContainer(canvasElement); const interaction: QtiTextEntryInteraction = item.querySelector('qti-text-entry-interaction'); const input = interaction.shadowRoot?.querySelector<HTMLInputElement>('input'); await step('Type in the correct answer text entry interaction', async () => { input.value = 'York'; input.dispatchEvent(new Event('input', { bubbles: true })); input.dispatchEvent(new Event('change', { bubbles: true })); }); await step('Click on the Show Candidate Correction button', async () => { await showButton.click(); await step('Verify candidate correction by checking selected option', async () => { expect(interaction.internals.states.has('candidate-correct')).toBe(true); expect(interaction.internals.states.has('candidate-incorrect')).toBe(false); expect(interaction.internals.states.has('candidate-partially-correct')).toBe(false); }); }); await step('Type in the partially correct answer text entry interaction', async () => { input.value = 'york'; input.dispatchEvent(new Event('input', { bubbles: true })); input.dispatchEvent(new Event('change', { bubbles: true })); }); await step('Click on the Show Candidate Correction button', async () => { await showButton.click(); await step('Verify candidate correction by checking selected option', async () => { const interactionResponse: QtiTextEntryInteraction = item.querySelector('qti-text-entry-interaction'); expect(interactionResponse.internals.states.has('candidate-correct')).toBe(false); expect(interactionResponse.internals.states.has('candidate-incorrect')).toBe(false); expect(interactionResponse.internals.states.has('candidate-partially-correct')).toBe(true); }); }); await step('Type in the incorrect answer text entry interaction', async () => { input.value = 'bla'; input.dispatchEvent(new Event('input', { bubbles: true })); input.dispatchEvent(new Event('change', { bubbles: true })); }); await step('Click on the Show Candidate Correction button', async () => { await showButton.click(); await step('Verify candidate correction by checking selected option', async () => { const interactionResponse: QtiTextEntryInteraction = item.querySelector('qti-text-entry-interaction'); expect(interactionResponse.internals.states.has('candidate-correct')).toBe(false); expect(interactionResponse.internals.states.has('candidate-incorrect')).toBe(true); expect(interactionResponse.internals.states.has('candidate-partially-correct')).toBe(false); }); }); } }"
+          "default": "{ args: { 'item-url': 'assets/qti-item/example-text-entry.xml' }, render: args => html` <qti-item> <div> <item-container style=\"display: block; width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-candidate-correction></item-show-candidate-correction> </div> </qti-item> `, play: async ({ canvasElement, step }) => { const canvas = within(canvasElement); const showButton = await canvas.findByShadowText(/Show candidate correction/i); const item = await getAssessmentItemFromItemContainer(canvasElement); const interaction: QtiTextEntryInteraction = item.querySelector('qti-text-entry-interaction'); const input = interaction.shadowRoot?.querySelector<HTMLInputElement>('input'); await step('Type in the correct answer text entry interaction', async () => { input.value = 'York'; input.dispatchEvent(new Event('input', { bubbles: true })); input.dispatchEvent(new Event('change', { bubbles: true })); }); await step('Click on the Show Candidate Correction button', async () => { await showButton.click(); await step('Verify candidate correction by checking selected option', async () => { expect(interaction.internals.states.has('candidate-correct')).toBe(true); expect(interaction.internals.states.has('candidate-incorrect')).toBe(false); expect(interaction.internals.states.has('candidate-partially-correct')).toBe(false); }); }); await step('Type in the partially correct answer text entry interaction', async () => { input.value = 'york'; input.dispatchEvent(new Event('input', { bubbles: true })); input.dispatchEvent(new Event('change', { bubbles: true })); }); await step('Click on the Show Candidate Correction button', async () => { await showButton.click(); await step('Verify candidate correction by checking selected option', async () => { const interactionResponse: QtiTextEntryInteraction = item.querySelector('qti-text-entry-interaction'); expect(interactionResponse.internals.states.has('candidate-correct')).toBe(false); expect(interactionResponse.internals.states.has('candidate-incorrect')).toBe(false); expect(interactionResponse.internals.states.has('candidate-partially-correct')).toBe(true); }); }); await step('Type in the incorrect answer text entry interaction', async () => { input.value = 'bla'; input.dispatchEvent(new Event('input', { bubbles: true })); input.dispatchEvent(new Event('change', { bubbles: true })); }); await step('Click on the Show Candidate Correction button', async () => { await showButton.click(); await step('Verify candidate correction by checking selected option', async () => { const interactionResponse: QtiTextEntryInteraction = item.querySelector('qti-text-entry-interaction'); expect(interactionResponse.internals.states.has('candidate-correct')).toBe(false); expect(interactionResponse.internals.states.has('candidate-incorrect')).toBe(true); expect(interactionResponse.internals.states.has('candidate-partially-correct')).toBe(false); }); }); } }"
         }
       ],
       "exports": [
@@ -23901,7 +23926,7 @@
           "type": {
             "text": "Story"
           },
-          "default": "{ args: { 'item-url': '/qti-test-package/items/gap_match.xml' // Set the new item URL here }, render: args => html` <qti-item> <div> <item-container style=\"display: block;width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-correct-response ${spread(args)}></item-show-correct-response> </div> </qti-item>`, play: async ({ canvasElement, step }) => { const canvas = within(canvasElement); const interaction = await getAssessmentItemFromItemContainer(canvasElement); const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0]; await step('Click on the Show Correct button', async () => { await showCorrectButton.click(); const correctOptions = interaction.querySelectorAll(`[class=\"correct-option\"]`); expect(correctOptions.length).toBe(2); expect(correctOptions[0].textContent).toBe('winter'); expect(correctOptions[1].textContent).toBe('summer'); }); } }"
+          "default": "{ args: { 'item-url': 'assets/qti-test-package/items/gap_match.xml' // Set the new item URL here }, render: args => html` <qti-item> <div> <item-container style=\"display: block;width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-correct-response ${spread(args)}></item-show-correct-response> </div> </qti-item>`, play: async ({ canvasElement, step }) => { const canvas = within(canvasElement); const interaction = await getAssessmentItemFromItemContainer(canvasElement); const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0]; await step('Click on the Show Correct button', async () => { await showCorrectButton.click(); const correctOptions = interaction.querySelectorAll(`[class=\"correct-option\"]`); expect(correctOptions.length).toBe(2); expect(correctOptions[0].textContent).toBe('winter'); expect(correctOptions[1].textContent).toBe('summer'); }); } }"
         },
         {
           "kind": "variable",
@@ -23909,7 +23934,7 @@
           "type": {
             "text": "Story"
           },
-          "default": "{ args: { 'item-url': '/qti-test-package/items/graphic_associate.xml' // Set the new item URL here }, render: args => html` <qti-item> <div> <item-container style=\"display: block;width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; border: 2px solid blue; transform: scale(0.7); transform-origin: top left; } </style> </template> </item-container> <item-show-correct-response></item-show-correct-response> <!-- <print-item-variables></print-item-variables> --> </div> </qti-item>`, play: async ({ canvasElement, step }) => { // wait for qti-simple-choices to be rendered const canvas = within(canvasElement); const item = await getAssessmentItemFromItemContainer(canvasElement); const interaction = item.querySelector('qti-graphic-associate-interaction'); const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0]; await step('Click on the Show Correct button', async () => { await showCorrectButton.click(); const lines = interaction.shadowRoot.querySelector('line-container').querySelectorAll(`[part='correct-line']`).length === 2; expect(lines).toBe(true); }); } }"
+          "default": "{ args: { 'item-url': 'assets/qti-test-package/items/graphic_associate.xml' // Set the new item URL here }, render: args => html` <qti-item> <div> <item-container style=\"display: block;width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; border: 2px solid blue; transform: scale(0.7); transform-origin: top left; } </style> </template> </item-container> <item-show-correct-response></item-show-correct-response> <!-- <print-item-variables></print-item-variables> --> </div> </qti-item>`, play: async ({ canvasElement, step }) => { // wait for qti-simple-choices to be rendered const canvas = within(canvasElement); const item = await getAssessmentItemFromItemContainer(canvasElement); const interaction = item.querySelector('qti-graphic-associate-interaction'); const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0]; await step('Click on the Show Correct button', async () => { await showCorrectButton.click(); const lines = interaction.shadowRoot.querySelector('line-container').querySelectorAll(`[part='correct-line']`).length === 2; expect(lines).toBe(true); }); } }"
         },
         {
           "kind": "variable",
@@ -23917,7 +23942,7 @@
           "type": {
             "text": "Story"
           },
-          "default": "{ args: { 'item-url': '/qti-item/example-graphic-order.xml' // Set the new item URL here }, render: args => html` <qti-item> <div> <item-container style=\"display: block;width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-correct-response></item-show-correct-response> </div> </qti-item>`, play: async ({ canvasElement, step }) => { // wait for qti-simple-choices to be rendered const canvas = within(canvasElement); const item = await getAssessmentItemFromItemContainer(canvasElement); const interaction = item.querySelector('qti-graphic-order-interaction'); const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0]; await step('Click on the Show Correct button', async () => { await showCorrectButton.click(); const hotspotChoice = interaction.querySelectorAll('qti-hotspot-choice'); // const get after content expect(window.getComputedStyle(hotspotChoice[0], ':after').content).toBe('\"C=1\"'); expect(window.getComputedStyle(hotspotChoice[1], ':after').content).toBe('\"C=4\"'); expect(window.getComputedStyle(hotspotChoice[2], ':after').content).toBe('\"C=2\"'); expect(window.getComputedStyle(hotspotChoice[3], ':after').content).toBe('\"C=3\"'); }); } }"
+          "default": "{ args: { 'item-url': 'assets/qti-item/example-graphic-order.xml' // Set the new item URL here }, render: args => html` <qti-item> <div> <item-container style=\"display: block;width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-correct-response></item-show-correct-response> </div> </qti-item>`, play: async ({ canvasElement, step }) => { // wait for qti-simple-choices to be rendered const canvas = within(canvasElement); const item = await getAssessmentItemFromItemContainer(canvasElement); const interaction = item.querySelector('qti-graphic-order-interaction'); const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0]; await step('Click on the Show Correct button', async () => { await showCorrectButton.click(); const hotspotChoice = interaction.querySelectorAll('qti-hotspot-choice'); // const get after content expect(window.getComputedStyle(hotspotChoice[0], ':after').content).toBe('\"C=1\"'); expect(window.getComputedStyle(hotspotChoice[1], ':after').content).toBe('\"C=4\"'); expect(window.getComputedStyle(hotspotChoice[2], ':after').content).toBe('\"C=2\"'); expect(window.getComputedStyle(hotspotChoice[3], ':after').content).toBe('\"C=3\"'); }); } }"
         },
         {
           "kind": "variable",
@@ -23925,7 +23950,7 @@
           "type": {
             "text": "Story"
           },
-          "default": "{ args: { 'item-url': '/qti-item/example-inline-choice.xml' // Zorg dat dit item een inline-choice bevat }, render: args => html`<qti-item> <div> <item-container style=\"display: block; width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-correct-response></item-show-correct-response> </div> </qti-item>`, play: async ({ canvasElement, step }) => { const item = document.querySelector('qti-item'); item.configContext = { correctResponseMode: 'full' }; const canvas = within(canvasElement); const showCorrectButton = await canvas.findByShadowText(/Show correct/i); await step('Click on the Show Correct button', async () => { await fireEvent.click(showCorrectButton); await step('Verify full correct response is shown', async () => { const fullCorrectResponse = await waitFor(() => canvas.getByShadowRole('full-correct-response') ); expect(fullCorrectResponse).toBeVisible(); const interaction = fullCorrectResponse.querySelector('qti-inline-choice-interaction'); expect(interaction).not.toBeNull(); const select = interaction.shadowRoot.querySelector('select'); expect(select).not.toBeNull(); const selectedOption = Array.from(select.options).find(opt => opt.selected); expect(selectedOption).not.toBeUndefined(); expect(selectedOption.textContent.trim()).toBe('York'); }); }); } }"
+          "default": "{ args: { 'item-url': 'assets/qti-item/example-inline-choice.xml' // Zorg dat dit item een inline-choice bevat }, render: args => html`<qti-item> <div> <item-container style=\"display: block; width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-correct-response></item-show-correct-response> </div> </qti-item>`, play: async ({ canvasElement, step }) => { const item = document.querySelector('qti-item'); item.configContext = { correctResponseMode: 'full' }; const canvas = within(canvasElement); const showCorrectButton = await canvas.findByShadowText(/Show correct/i); await step('Click on the Show Correct button', async () => { await fireEvent.click(showCorrectButton); await step('Verify full correct response is shown', async () => { const fullCorrectResponse = await waitFor(() => canvas.getByShadowRole('full-correct-response')); expect(fullCorrectResponse).toBeVisible(); const interaction = fullCorrectResponse.querySelector('qti-inline-choice-interaction'); expect(interaction).not.toBeNull(); const select = interaction.shadowRoot.querySelector('select'); expect(select).not.toBeNull(); const selectedOption = Array.from(select.options).find(opt => opt.selected); expect(selectedOption).not.toBeUndefined(); expect(selectedOption.textContent.trim()).toBe('York'); }); }); } }"
         },
         {
           "kind": "variable",
@@ -23933,7 +23958,7 @@
           "type": {
             "text": "Story"
           },
-          "default": "{ args: { 'item-url': '/qti-item/example-inline-choice.xml' // Set the new item URL here }, render: args => html` <qti-item> <div> <item-container style=\"display: block;width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-correct-response></item-show-correct-response> </div> </qti-item>`, play: async ({ canvasElement, step }) => { const item = document.querySelector('qti-item'); item.configContext = { correctResponseMode: 'internal' }; const canvas = within(canvasElement); const itemAssessment = await getAssessmentItemFromItemContainer(canvasElement); const interaction = itemAssessment.querySelector('qti-inline-choice-interaction'); const showCorrectButton = await canvas.findByShadowText(`Show correct response`); await step('Click on the Show Correct button', async () => { await showCorrectButton.click(); const correctResponse = interaction.shadowRoot.querySelector<HTMLSpanElement>('[part=\"correct-option\"]'); //.findByShadowLabelText('correct-response'); expect(correctResponse).not.toBeNull(); expect(correctResponse.innerText).toBe('York'); }); } }"
+          "default": "{ args: { 'item-url': 'assets/qti-item/example-inline-choice.xml' // Set the new item URL here }, render: args => html` <qti-item> <div> <item-container style=\"display: block;width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-correct-response></item-show-correct-response> </div> </qti-item>`, play: async ({ canvasElement, step }) => { const item = document.querySelector('qti-item'); item.configContext = { correctResponseMode: 'internal' }; const canvas = within(canvasElement); const itemAssessment = await getAssessmentItemFromItemContainer(canvasElement); const interaction = itemAssessment.querySelector('qti-inline-choice-interaction'); const showCorrectButton = await canvas.findByShadowText(`Show correct response`); await step('Click on the Show Correct button', async () => { await showCorrectButton.click(); const correctResponse = interaction.shadowRoot.querySelector<HTMLSpanElement>('[part=\"correct-option\"]'); //.findByShadowLabelText('correct-response'); expect(correctResponse).not.toBeNull(); expect(correctResponse.innerText).toBe('York'); }); } }"
         },
         {
           "kind": "variable",
@@ -23941,7 +23966,7 @@
           "type": {
             "text": "Story"
           },
-          "default": "{ args: { 'item-url': '/qti-test-package/items/match.xml' // Set the new item URL here // 'item-url': 'api/kennisnet-1/ITEM002.xml' // Set the new item URL here }, render: args => html` <qti-item> <div> <item-container style=\"display: block;width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-correct-response ${spread(args)}></item-show-correct-response> </div> </qti-item>`, play: async ({ canvasElement, step }) => { const canvas = within(canvasElement); const interaction = await getAssessmentItemFromItemContainer(canvasElement); const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0]; await step('Click on the Show Correct button', async () => { await showCorrectButton.click(); const correctElements = interaction.querySelectorAll(`[class=\"correct-option\"]`); expect(correctElements.length).toBe(3); const correctOptions = Array.from(correctElements).map(el => el.textContent); const allExist = correctOptions.every(element => ['Prospero', 'Demetrius', 'Capulet'].includes(element)); expect(allExist).toBe(true); }); } }"
+          "default": "{ args: { 'item-url': 'assets/qti-test-package/items/match.xml' // Set the new item URL here // 'item-url': 'api/kennisnet-1/ITEM002.xml' // Set the new item URL here }, render: args => html` <qti-item> <div> <item-container style=\"display: block;width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-correct-response ${spread(args)}></item-show-correct-response> </div> </qti-item>`, play: async ({ canvasElement, step }) => { const canvas = within(canvasElement); const interaction = await getAssessmentItemFromItemContainer(canvasElement); const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0]; await step('Click on the Show Correct button', async () => { await showCorrectButton.click(); const correctElements = interaction.querySelectorAll(`[class=\"correct-option\"]`); expect(correctElements.length).toBe(3); const correctOptions = Array.from(correctElements).map(el => el.textContent); const allExist = correctOptions.every(element => ['Prospero', 'Demetrius', 'Capulet'].includes(element)); expect(allExist).toBe(true); }); } }"
         },
         {
           "kind": "variable",
@@ -23949,7 +23974,7 @@
           "type": {
             "text": "Story"
           },
-          "default": "{ args: { 'item-url': '/qti-test-package/items/match.xml' // Set the new item URL here // 'item-url': 'api/kennisnet-1/ITEM002.xml' // Set the new item URL here }, render: args => html` <qti-item> <div> <item-container style=\"display: block;width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-correct-response ${spread(args)}></item-show-correct-response> </div> </qti-item>`, play: async ({ canvasElement, step }) => { const item = document.querySelector('qti-item'); item.configContext = { correctResponseMode: 'full' }; const canvas = within(canvasElement); const showCorrectButton = await canvas.findByShadowText(/Show correct/i); await step('Click on the Show Correct button', async () => { await fireEvent.click(showCorrectButton); await step('Verify full correct response is shown', async () => { const fullCorrectResponse = await waitFor(() => canvas.getByShadowRole('full-correct-response') ); expect(fullCorrectResponse).toBeVisible(); }); }); } }"
+          "default": "{ args: { 'item-url': 'assets/qti-test-package/items/match.xml' // Set the new item URL here // 'item-url': 'api/kennisnet-1/ITEM002.xml' // Set the new item URL here }, render: args => html` <qti-item> <div> <item-container style=\"display: block;width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-correct-response ${spread(args)}></item-show-correct-response> </div> </qti-item>`, play: async ({ canvasElement, step }) => { const item = document.querySelector('qti-item'); item.configContext = { correctResponseMode: 'full' }; const canvas = within(canvasElement); const showCorrectButton = await canvas.findByShadowText(/Show correct/i); await step('Click on the Show Correct button', async () => { await fireEvent.click(showCorrectButton); await step('Verify full correct response is shown', async () => { const fullCorrectResponse = await waitFor(() => canvas.getByShadowRole('full-correct-response')); expect(fullCorrectResponse).toBeVisible(); }); }); } }"
         },
         {
           "kind": "variable",
@@ -23957,7 +23982,7 @@
           "type": {
             "text": "Story"
           },
-          "default": "{ args: { 'item-url': '/qti-test-package/items/match-tabular.xml' // Set the new item URL here // 'item-url': 'api/kennisnet-1/ITEM002.xml' // Set the new item URL here }, render: args => html` <qti-item> <div> <item-container style=\"display: block;width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-correct-response ${spread(args)}></item-show-correct-response> </div> </qti-item>`, play: async ({ canvasElement, step }) => { const canvas = within(canvasElement); const item = await getAssessmentItemFromItemContainer(canvasElement); const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0]; const interaction = item.querySelector('qti-match-interaction'); await step('Click on the Show Correct button', async () => { await showCorrectButton.click(); // Find all elements with rb-correct or cb-correct parts // This uses the shadow DOM API to find elements with specific part attributes const correctRadioButtons = interaction.shadowRoot.querySelectorAll('[part~=\"rb-correct\"]'); const correctCheckboxes = interaction.shadowRoot.querySelectorAll('[part~=\"cb-correct\"]'); // Combine both types of correct elements const allCorrectElements = [...correctRadioButtons, ...correctCheckboxes] as HTMLInputElement[]; // Verify we have the expected number of correct answers expect(allCorrectElements.length).toBe(4); // Get the associated row identifiers for the correct options const correctRowIds = Array.from(allCorrectElements).map(el => el.name); // Get the values of the correct inputs (which contain the row and column IDs) const correctValues = Array.from(allCorrectElements).map(el => el.value); // Parse the values to extract row IDs const rowIds = correctValues.map(value => value.split(' ')[0]); // Verify the correct row IDs exist const expectedRowIds = ['C', 'P', 'L', 'D']; const allExist = rowIds.every(rowId => expectedRowIds.includes(rowId)); expect(allExist).toBe(true); }); } }"
+          "default": "{ args: { 'item-url': 'assets/qti-test-package/items/match-tabular.xml' // Set the new item URL here // 'item-url': 'api/kennisnet-1/ITEM002.xml' // Set the new item URL here }, render: args => html` <qti-item> <div> <item-container style=\"display: block;width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-correct-response ${spread(args)}></item-show-correct-response> </div> </qti-item>`, play: async ({ canvasElement, step }) => { const canvas = within(canvasElement); const item = await getAssessmentItemFromItemContainer(canvasElement); const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0]; const interaction = item.querySelector('qti-match-interaction'); await step('Click on the Show Correct button', async () => { await showCorrectButton.click(); // Find all elements with rb-correct or cb-correct parts // This uses the shadow DOM API to find elements with specific part attributes const correctRadioButtons = interaction.shadowRoot.querySelectorAll('[part~=\"rb-correct\"]'); const correctCheckboxes = interaction.shadowRoot.querySelectorAll('[part~=\"cb-correct\"]'); // Combine both types of correct elements const allCorrectElements = [...correctRadioButtons, ...correctCheckboxes] as HTMLInputElement[]; // Verify we have the expected number of correct answers expect(allCorrectElements.length).toBe(4); // Get the associated row identifiers for the correct options const correctRowIds = Array.from(allCorrectElements).map(el => el.name); // Get the values of the correct inputs (which contain the row and column IDs) const correctValues = Array.from(allCorrectElements).map(el => el.value); // Parse the values to extract row IDs const rowIds = correctValues.map(value => value.split(' ')[0]); // Verify the correct row IDs exist const expectedRowIds = ['C', 'P', 'L', 'D']; const allExist = rowIds.every(rowId => expectedRowIds.includes(rowId)); expect(allExist).toBe(true); }); } }"
         },
         {
           "kind": "variable",
@@ -23965,7 +23990,7 @@
           "type": {
             "text": "Meta<typeof ItemContainer & { 'item-url': string }>"
           },
-          "default": "{ component: 'item-container', args: { ...args, 'item-url': '/qti-item/example-choice-item.xml' }, argTypes, parameters: { actions: { handles: events } } // tags: ['autodocs', 'new'] }"
+          "default": "{ component: 'item-container', args: { ...args, 'item-url': 'assets/qti-item/example-choice-item.xml' }, argTypes, parameters: { actions: { handles: events } } // tags: ['autodocs', 'new'] }"
         },
         {
           "kind": "variable",
@@ -23973,7 +23998,7 @@
           "type": {
             "text": "Story"
           },
-          "default": "{ args: { 'item-url': '/qti-item/example-multiple-interactions.xml' // Set the new item URL here }, render: args => html` <qti-item> <item-container style=\"width: 400px; height: 350px; display: block;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-correct-response ${spread(args)}></item-show-correct-response> <!-- </div> --> </qti-item>`, play: async ({ canvasElement, step }) => { // // wait for qti-simple-choice to be rendered const canvas = within(canvasElement); const interactions = await waitFor(() => { const itemContainer = canvasElement.querySelector('item-container'); if (!itemContainer) { throw new Error('Item container not found'); } if (!itemContainer.shadowRoot) { throw new Error('Shadow root not found'); } if (!itemContainer.shadowRoot.querySelector('qti-inline-choice-interaction')) { throw new Error('qti-inline-choice-interaction not found'); } return itemContainer.shadowRoot.querySelectorAll('qti-inline-choice-interaction'); }); const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0]; await step('Click on the Show Correct button', async () => { await showCorrectButton.click(); }); await step('Verify correct response state is applied', async () => { for (const interaction of interactions) { const feedback = interaction.shadowRoot.querySelector('[part=\"correct-option\"]'); expect(feedback).not.toBeNull(); } }); } }"
+          "default": "{ args: { 'item-url': 'assets/qti-item/example-multiple-interactions.xml' // Set the new item URL here }, render: args => html` <qti-item> <item-container style=\"width: 400px; height: 350px; display: block;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-correct-response ${spread(args)}></item-show-correct-response> <!-- </div> --> </qti-item>`, play: async ({ canvasElement, step }) => { // // wait for qti-simple-choice to be rendered const canvas = within(canvasElement); const interactions = await waitFor(() => { const itemContainer = canvasElement.querySelector('item-container'); if (!itemContainer) { throw new Error('Item container not found'); } if (!itemContainer.shadowRoot) { throw new Error('Shadow root not found'); } if (!itemContainer.shadowRoot.querySelector('qti-inline-choice-interaction')) { throw new Error('qti-inline-choice-interaction not found'); } return itemContainer.shadowRoot.querySelectorAll('qti-inline-choice-interaction'); }); const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0]; await step('Click on the Show Correct button', async () => { await showCorrectButton.click(); }); await step('Verify correct response state is applied', async () => { for (const interaction of interactions) { const feedback = interaction.shadowRoot.querySelector('[part=\"correct-option\"]'); expect(feedback).not.toBeNull(); } }); } }"
         },
         {
           "kind": "variable",
@@ -23981,7 +24006,7 @@
           "type": {
             "text": "Story"
           },
-          "default": "{ args: { 'item-url': '/qti-item/example-choice-multiple-item.xml' // Set the new item URL here }, render: args => html` <qti-item> <div> <item-container style=\"display: block;width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-correct-response ${spread(args)}></item-show-correct-response> </div> </qti-item>`, play: async ({ canvasElement, step }) => { const item = document.querySelector('qti-item'); item.configContext = { correctResponseMode: 'full', }; const canvas = within(canvasElement); const showCorrectButton = await canvas.findByShadowText(/Show correct/i); await step('Select the correct response mode full', async () => { await fireEvent.click(showCorrectButton); await step('Verify correct response full state is applied', async () => { const fullCorrectResponse = await canvas.findByShadowRole('full-correct-response'); expect(fullCorrectResponse).toBeVisible(); const interaction = fullCorrectResponse.querySelector('qti-choice-interaction'); const choices = Array.from(interaction.querySelectorAll('qti-simple-choice')); await interaction.updateComplete; expect(choices[0].internals.states.has('--checked')).toBe(true); expect(choices[1].internals.states.has('--checked')).toBe(true); expect(choices[2].internals.states.has('--checked')).toBe(false); }); }); } }"
+          "default": "{ args: { 'item-url': 'assets/qti-item/example-choice-multiple-item.xml' // Set the new item URL here }, render: args => html` <qti-item> <div> <item-container style=\"display: block;width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-correct-response ${spread(args)}></item-show-correct-response> </div> </qti-item>`, play: async ({ canvasElement, step }) => { const item = document.querySelector('qti-item'); item.configContext = { correctResponseMode: 'full' }; const canvas = within(canvasElement); const showCorrectButton = await canvas.findByShadowText(/Show correct/i); await step('Select the correct response mode full', async () => { await fireEvent.click(showCorrectButton); await step('Verify correct response full state is applied', async () => { const fullCorrectResponse = await canvas.findByShadowRole('full-correct-response'); expect(fullCorrectResponse).toBeVisible(); const interaction = fullCorrectResponse.querySelector('qti-choice-interaction'); const choices = Array.from(interaction.querySelectorAll('qti-simple-choice')); await interaction.updateComplete; expect(choices[0].internals.states.has('--checked')).toBe(true); expect(choices[1].internals.states.has('--checked')).toBe(true); expect(choices[2].internals.states.has('--checked')).toBe(false); }); }); } }"
         },
         {
           "kind": "variable",
@@ -23989,7 +24014,7 @@
           "type": {
             "text": "Story"
           },
-          "default": "{ args: { 'item-url': '/qti-item/example-choice-multiple-item.xml' // Set the new item URL here }, render: args => html` <qti-item> <div> <item-container style=\"display: block;width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-correct-response ${spread(args)}></item-show-correct-response> </div> </qti-item>`, play: async ({ canvasElement, step }) => { const item = document.querySelector('qti-item'); item.configContext = { correctResponseMode: 'internal' }; // wait for qti-simple-choice to be rendered const canvas = within(canvasElement); // const choices = await canvas.findAllByShadowRole('radio'); const choiceA: QtiSimpleChoice = await canvas.findByShadowText('This is correct.'); const choiceB: QtiSimpleChoice = await canvas.findByShadowText('This is also correct.'); const choiceC: QtiSimpleChoice = await canvas.findByShadowText('This is wrong.'); const showCorrectButton = await canvas.findByShadowText(/Show correct/i); await step('Click on the Show Correct button', async () => { await showCorrectButton.click(); await step('Verify correct response state is applied', async () => { expect(choiceA.internals.states.has('correct-response')).toBe(true); expect(choiceB.internals.states.has('correct-response')).toBe(true); expect(choiceC.internals.states.has('correct-response')).toBe(false); expect(choiceA.internals.states.has('incorrect-response')).toBe(false); expect(choiceB.internals.states.has('incorrect-response')).toBe(false); expect(choiceC.internals.states.has('incorrect-response')).toBe(true); }); }); } }"
+          "default": "{ args: { 'item-url': 'assets/qti-item/example-choice-multiple-item.xml' // Set the new item URL here }, render: args => html` <qti-item> <div> <item-container style=\"display: block;width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-correct-response ${spread(args)}></item-show-correct-response> </div> </qti-item>`, play: async ({ canvasElement, step }) => { const item = document.querySelector('qti-item'); item.configContext = { correctResponseMode: 'internal' }; // wait for qti-simple-choice to be rendered const canvas = within(canvasElement); // const choices = await canvas.findAllByShadowRole('radio'); const choiceA: QtiSimpleChoice = await canvas.findByShadowText('This is correct.'); const choiceB: QtiSimpleChoice = await canvas.findByShadowText('This is also correct.'); const choiceC: QtiSimpleChoice = await canvas.findByShadowText('This is wrong.'); const showCorrectButton = await canvas.findByShadowText(/Show correct/i); await step('Click on the Show Correct button', async () => { await showCorrectButton.click(); await step('Verify correct response state is applied', async () => { expect(choiceA.internals.states.has('correct-response')).toBe(true); expect(choiceB.internals.states.has('correct-response')).toBe(true); expect(choiceC.internals.states.has('correct-response')).toBe(false); expect(choiceA.internals.states.has('incorrect-response')).toBe(false); expect(choiceB.internals.states.has('incorrect-response')).toBe(false); expect(choiceC.internals.states.has('incorrect-response')).toBe(true); }); }); } }"
         },
         {
           "kind": "variable",
@@ -23997,7 +24022,7 @@
           "type": {
             "text": "Story"
           },
-          "default": "{ args: { 'item-url': '/qti-item/example-choice-nocorrect-item.xml' // Set the new item URL here }, render: args => html` <qti-item> <item-container style=\"width: 400px; height: 350px; display: block;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-correct-response ${spread(args)}></item-show-correct-response> <!-- </div> --> </qti-item>`, play: async ({ canvasElement, step }) => { // // wait for qti-simple-choice to be rendered const canvas = within(canvasElement); await canvas.findByShadowText('You must stay with your luggage at all times.'); const _ = canvas.getAllByShadowText(/No correct response specified/i)[0]; const itemShowCorrect = canvasElement.querySelector('item-show-correct-response'); await step('Verify the Show Correct button is disabled', async () => { expect(itemShowCorrect.disabled).toBe(true); }); } }"
+          "default": "{ args: { 'item-url': 'assets/qti-item/example-choice-nocorrect-item.xml' // Set the new item URL here }, render: args => html` <qti-item> <item-container style=\"width: 400px; height: 350px; display: block;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-correct-response ${spread(args)}></item-show-correct-response> <!-- </div> --> </qti-item>`, play: async ({ canvasElement, step }) => { // // wait for qti-simple-choice to be rendered const canvas = within(canvasElement); await canvas.findByShadowText('You must stay with your luggage at all times.'); const _ = canvas.getAllByShadowText(/No correct response specified/i)[0]; const itemShowCorrect = canvasElement.querySelector('item-show-correct-response'); await step('Verify the Show Correct button is disabled', async () => { expect(itemShowCorrect.disabled).toBe(true); }); } }"
         },
         {
           "kind": "variable",
@@ -24005,7 +24030,7 @@
           "type": {
             "text": "Story"
           },
-          "default": "{ args: { 'item-url': '/qti-test-package/items/select_point.xml' // Set the new item URL here }, render: args => html`<qti-item> <div> <item-container style=\"display: block;width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-correct-response ${spread(args)}></item-show-correct-response> </div> </qti-item>`, play: async ({ canvasElement, step }) => { // wait for qti-simple-choice to be rendered const canvas = within(canvasElement); const item = await getAssessmentItemFromItemContainer(canvasElement); const interaction = item.querySelector('qti-select-point-interaction'); const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0]; await step('Click on the Show Correct button', async () => { await showCorrectButton.click(); const correctIndication = interaction.shadowRoot.querySelector('[alt=\"correct-response-1\"]'); expect(correctIndication).not.toBeNull(); }); } }"
+          "default": "{ args: { 'item-url': 'assets/qti-test-package/items/select_point.xml' // Set the new item URL here }, render: args => html`<qti-item> <div> <item-container style=\"display: block;width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-correct-response ${spread(args)}></item-show-correct-response> </div> </qti-item>`, play: async ({ canvasElement, step }) => { // wait for qti-simple-choice to be rendered const canvas = within(canvasElement); const item = await getAssessmentItemFromItemContainer(canvasElement); const interaction = item.querySelector('qti-select-point-interaction'); const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0]; await step('Click on the Show Correct button', async () => { await showCorrectButton.click(); const correctIndication = interaction.shadowRoot.querySelector('[alt=\"correct-response-1\"]'); expect(correctIndication).not.toBeNull(); }); } }"
         },
         {
           "kind": "variable",
@@ -24013,7 +24038,7 @@
           "type": {
             "text": "Story"
           },
-          "default": "{ args: { 'item-url': '/qti-item/example-select-point.xml' // Set the new item URL here }, render: args => html` <qti-item> <div> <item-container style=\"display: block;width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-correct-response ${spread(args)}></item-show-correct-response> </div> </qti-item>`, play: async ({ canvasElement, step }) => { // wait for qti-simple-choices to be rendered const canvas = within(canvasElement); const item = await getAssessmentItemFromItemContainer(canvasElement); const interaction = item.querySelector('qti-select-point-interaction'); const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0]; await step('Click on the Show Correct button', async () => { await showCorrectButton.click(); const correctIndication1 = interaction.shadowRoot.querySelector('[alt=\"correct-response-1\"]'); const correctIndication2 = interaction.shadowRoot.querySelector('[alt=\"correct-response-2\"]'); const correctIndication3 = interaction.shadowRoot.querySelector('[alt=\"correct-response-3\"]'); expect(correctIndication1).not.toBeNull(); expect(correctIndication2).not.toBeNull(); expect(correctIndication3).not.toBeNull(); }); } }"
+          "default": "{ args: { 'item-url': 'assets/qti-item/example-select-point.xml' // Set the new item URL here }, render: args => html` <qti-item> <div> <item-container style=\"display: block;width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-correct-response ${spread(args)}></item-show-correct-response> </div> </qti-item>`, play: async ({ canvasElement, step }) => { // wait for qti-simple-choices to be rendered const canvas = within(canvasElement); const item = await getAssessmentItemFromItemContainer(canvasElement); const interaction = item.querySelector('qti-select-point-interaction'); const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0]; await step('Click on the Show Correct button', async () => { await showCorrectButton.click(); const correctIndication1 = interaction.shadowRoot.querySelector('[alt=\"correct-response-1\"]'); const correctIndication2 = interaction.shadowRoot.querySelector('[alt=\"correct-response-2\"]'); const correctIndication3 = interaction.shadowRoot.querySelector('[alt=\"correct-response-3\"]'); expect(correctIndication1).not.toBeNull(); expect(correctIndication2).not.toBeNull(); expect(correctIndication3).not.toBeNull(); }); } }"
         },
         {
           "kind": "variable",
@@ -24021,7 +24046,7 @@
           "type": {
             "text": "Story"
           },
-          "default": "{ args: { 'item-url': '/qti-item/example-slider.xml' // Set the new item URL here }, render: args => html` <qti-item> <div> <item-container style=\"display: block;width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-correct-response></item-show-correct-response> </div> </qti-item>`, play: async ({ canvasElement, step }) => { // wait for qti-simple-choices to be rendered const canvas = within(canvasElement); const item = await getAssessmentItemFromItemContainer(canvasElement); const interaction = item.querySelector('qti-slider-interaction'); const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0]; await step('Click on the Show Correct button', async () => { await showCorrectButton.click(); const correctIndication = interaction.shadowRoot.querySelectorAll('[id=\"knob-correct\"]'); expect(correctIndication.length).toBe(1); }); } }"
+          "default": "{ args: { 'item-url': 'assets/qti-item/example-slider.xml' // Set the new item URL here }, render: args => html` <qti-item> <div> <item-container style=\"display: block;width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-correct-response></item-show-correct-response> </div> </qti-item>`, play: async ({ canvasElement, step }) => { // wait for qti-simple-choices to be rendered const canvas = within(canvasElement); const item = await getAssessmentItemFromItemContainer(canvasElement); const interaction = item.querySelector('qti-slider-interaction'); const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0]; await step('Click on the Show Correct button', async () => { await showCorrectButton.click(); const correctIndication = interaction.shadowRoot.querySelectorAll('[id=\"knob-correct\"]'); expect(correctIndication.length).toBe(1); }); } }"
         },
         {
           "kind": "variable",
@@ -24029,7 +24054,7 @@
           "type": {
             "text": "Story"
           },
-          "default": "{ args: { 'item-url': '/qti-test-package/items/text_entry.xml' // Set the new item URL here }, render: args => html` <qti-item navigate=\"item\"> <div> <item-container style=\"display: block;width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-correct-response ${spread(args)}></item-show-correct-response> </div> </qti-item>`, play: async ({ canvasElement, step }) => { const test = document.querySelector('qti-item'); test.configContext = { correctResponseMode: 'full' }; const canvas = within(canvasElement); const showCorrectButton = await canvas.findByShadowText(/Show correct/i); await step('Select the correct response mode full', async () => { await fireEvent.click(showCorrectButton); await step('Verify correct response full state is applied', async () => { const fullCorrectResponse = await canvas.findByShadowRole('full-correct-response'); expect(fullCorrectResponse).toBeVisible(); }); }); } }"
+          "default": "{ args: { 'item-url': 'assets/qti-test-package/items/text_entry.xml' // Set the new item URL here }, render: args => html` <qti-item navigate=\"item\"> <div> <item-container style=\"display: block;width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-correct-response ${spread(args)}></item-show-correct-response> </div> </qti-item>`, play: async ({ canvasElement, step }) => { const test = document.querySelector('qti-item'); test.configContext = { correctResponseMode: 'full' }; const canvas = within(canvasElement); const showCorrectButton = await canvas.findByShadowText(/Show correct/i); await step('Select the correct response mode full', async () => { await fireEvent.click(showCorrectButton); await step('Verify correct response full state is applied', async () => { const fullCorrectResponse = await canvas.findByShadowRole('full-correct-response'); expect(fullCorrectResponse).toBeVisible(); }); }); } }"
         },
         {
           "kind": "variable",
@@ -24037,7 +24062,7 @@
           "type": {
             "text": "Story"
           },
-          "default": "{ args: { 'item-url': '/qti-test-package/items/text_entry.xml' // Set the new item URL here }, render: args => html` <qti-item navigate=\"item\"> <div> <item-container style=\"display: block;width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-correct-response ${spread(args)}></item-show-correct-response> </div> </qti-item>`, play: async ({ canvasElement, step }) => { const test = document.querySelector('qti-item'); test.configContext = { correctResponseMode: 'internal' }; const canvas = within(canvasElement); const item = await getAssessmentItemFromItemContainer(canvasElement); const interaction = item.querySelector('qti-text-entry-interaction'); const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0]; await step('Click on the Show Correct button', async () => { await showCorrectButton.click(); const correctElement = interaction.shadowRoot.querySelector('[part=\"correct\"]'); expect(correctElement).toBeVisible(); }); } }"
+          "default": "{ args: { 'item-url': 'assets/qti-test-package/items/text_entry.xml' // Set the new item URL here }, render: args => html` <qti-item navigate=\"item\"> <div> <item-container style=\"display: block;width: 400px; height: 350px;\" item-url=${args['item-url'] as string}> <template> <style> qti-assessment-item { padding: 1rem; display: block; aspect-ratio: 4 / 3; width: 800px; border: 2px solid blue; transform: scale(0.5); transform-origin: top left; } </style> </template> </item-container> <item-show-correct-response ${spread(args)}></item-show-correct-response> </div> </qti-item>`, play: async ({ canvasElement, step }) => { const test = document.querySelector('qti-item'); test.configContext = { correctResponseMode: 'internal' }; const canvas = within(canvasElement); const item = await getAssessmentItemFromItemContainer(canvasElement); const interaction = item.querySelector('qti-text-entry-interaction'); const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0]; await step('Click on the Show Correct button', async () => { await showCorrectButton.click(); const correctElement = interaction.shadowRoot.querySelector('[part=\"correct\"]'); expect(correctElement).toBeVisible(); }); } }"
         }
       ],
       "exports": [
@@ -27785,28 +27810,79 @@
       "declarations": [
         {
           "kind": "mixin",
-          "description": "",
+          "description": "Navigation mixin for QTI test components\n\nProvides comprehensive navigation functionality with:\n- Efficient item/section loading with AbortController support\n- Stimulus reference coordination and duplicate prevention\n- Proper event timing and state management\n- Error handling and edge case coverage",
           "name": "TestNavigationMixin",
           "members": [
             {
               "kind": "field",
-              "name": "_activeRequests",
+              "name": "_activeController",
               "type": {
-                "text": "XMLHttpRequest[]"
+                "text": "AbortController | null"
               },
               "privacy": "private",
-              "default": "[]"
+              "default": "null"
             },
             {
               "kind": "method",
-              "name": "_cancelActiveRequests",
+              "name": "_applyStimulusContent",
               "privacy": "private",
               "return": {
                 "type": {
                   "text": "void"
                 }
               },
-              "description": "Cancels all active HTTP requests"
+              "parameters": [
+                {
+                  "name": "stimulus",
+                  "type": {
+                    "text": "DocumentFragment | null"
+                  }
+                },
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "{ identifier: string }"
+                  }
+                },
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "{ identifier: string }"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_bindEventHandlers",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_cancelPreviousNavigation",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Cancel previous navigation and clean up all state"
+            },
+            {
+              "kind": "method",
+              "name": "_checkLoadingComplete",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Check if loading is complete and dispatch events accordingly"
             },
             {
               "kind": "method",
@@ -27816,12 +27892,61 @@
                 "type": {
                   "text": "void"
                 }
-              },
-              "description": "Clears all loaded items"
+              }
             },
             {
               "kind": "method",
-              "name": "_dispatchErrorEvent",
+              "name": "_clearNavigationState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_clearStimulusRef",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_createNavigationError",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "NavigationError"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "error",
+                  "type": {
+                    "text": "any"
+                  }
+                },
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_dispatchError",
               "privacy": "private",
               "return": {
                 "type": {
@@ -27835,12 +27960,11 @@
                     "text": "NavigationError"
                   }
                 }
-              ],
-              "description": "Dispatch error event to notify the UI"
+              ]
             },
             {
               "kind": "method",
-              "name": "_dispatchStatusEvent",
+              "name": "_dispatchLoadingEnded",
               "privacy": "private",
               "return": {
                 "type": {
@@ -27849,13 +27973,138 @@
               },
               "parameters": [
                 {
-                  "name": "status",
+                  "name": "type",
                   "type": {
-                    "text": "{ loading: boolean; type: string; id: string }"
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
                   }
                 }
-              ],
-              "description": "Dispatch status event to indicate loading state"
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_dispatchLoadingStarted",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_dispatchTestLoaded",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "results",
+                  "type": {
+                    "text": "any[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_executeNavigation",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "'item' | 'section'"
+                  }
+                },
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_findItemRef",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "QtiAssessmentItemRef"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "itemId",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_findSection",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "QtiAssessmentSection | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "sectionId",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_getDefaultNavigationId",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | undefined"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "'item' | 'section'"
+                  }
+                }
+              ]
             },
             {
               "kind": "method",
@@ -27868,13 +28117,112 @@
               },
               "parameters": [
                 {
-                  "name": "navSectionId",
+                  "name": "sectionId",
                   "type": {
                     "text": "string"
                   }
                 }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_handleItemConnected",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "CustomEvent<QtiAssessmentItemRef>"
+                  }
+                }
               ],
-              "description": "Gets all item IDs in a section"
+              "description": "Handle item connection events - track connected items and discover stimulus references"
+            },
+            {
+              "kind": "method",
+              "name": "_handleNavigationError",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "error",
+                  "type": {
+                    "text": "any"
+                  }
+                },
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_handleNavigationRequest",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "{ detail }",
+                  "type": {
+                    "text": "CustomEvent<{ type: 'item' | 'section'; id: string }>"
+                  }
+                }
+              ],
+              "description": "Main navigation request handler with proper lifecycle management"
+            },
+            {
+              "kind": "method",
+              "name": "_handleStimulusRefConnected",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "QtiAssessmentStimulusRefConnectedEvent"
+                  }
+                }
+              ],
+              "description": "Handle stimulus reference connection events with duplicate prevention"
+            },
+            {
+              "kind": "method",
+              "name": "_handleTestConnected",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "CustomEvent<QtiAssessmentTest>"
+                  }
+                }
+              ]
             },
             {
               "kind": "method",
@@ -27884,26 +28232,28 @@
                 "type": {
                   "text": "void"
                 }
-              },
-              "description": "Initialize navigation when test is first connected"
+              }
             },
             {
               "kind": "field",
-              "name": "_lastError",
-              "type": {
-                "text": "NavigationError | null"
-              },
+              "name": "_loadedStimulusHrefs",
               "privacy": "private",
-              "default": "null"
+              "default": "new Set<string>()"
             },
             {
               "kind": "field",
-              "name": "_lastNavigationRequestId",
+              "name": "_loadingState",
               "type": {
-                "text": "string | null"
+                "text": "object"
               },
               "privacy": "private",
-              "default": "null"
+              "default": "{ expectedItems: 0, connectedItems: 0, expectedStimulus: 0, loadedStimulus: 0, isComplete: false }"
+            },
+            {
+              "kind": "field",
+              "name": "_loadingStimulusHrefs",
+              "privacy": "private",
+              "default": "new Set<string>()"
             },
             {
               "kind": "method",
@@ -27911,7 +28261,7 @@
               "privacy": "private",
               "return": {
                 "type": {
-                  "text": "Promise<{ itemRef: QtiAssessmentItemRef; doc: any; request: XMLHttpRequest }[]>"
+                  "text": "Promise<void>"
                 }
               },
               "parameters": [
@@ -27922,7 +28272,72 @@
                   }
                 }
               ],
-              "description": "Load items with improved error handling and timeout"
+              "description": "Load items with simple tracking"
+            },
+            {
+              "kind": "field",
+              "name": "_loadResults",
+              "type": {
+                "text": "any[]"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "method",
+              "name": "_loadSingleItem",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "itemRef",
+                  "type": {
+                    "text": "QtiAssessmentItemRef"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_loadStimulus",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<DocumentFragment | null>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "href",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_loadStimulusRef",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "{ identifier: string; href: string }"
+                  }
+                },
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "{ identifier: string }"
+                  }
+                }
+              ],
+              "description": "Load stimulus reference with simple tracking"
             },
             {
               "kind": "method",
@@ -27941,7 +28356,7 @@
                   }
                 }
               ],
-              "description": "Navigates to a specific item"
+              "description": "Navigate to specific item with simple state tracking"
             },
             {
               "kind": "method",
@@ -27960,56 +28375,18 @@
                   }
                 }
               ],
-              "description": "Navigates to a specific section"
-            },
-            {
-              "kind": "field",
-              "name": "_navigationInProgress",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "protected",
-              "default": "false"
+              "description": "Navigate to section with simple state tracking"
             },
             {
               "kind": "method",
-              "name": "_normalizeError",
+              "name": "_resetLoadingState",
               "privacy": "private",
               "return": {
                 "type": {
-                  "text": "NavigationError"
+                  "text": "void"
                 }
               },
-              "parameters": [
-                {
-                  "name": "error",
-                  "type": {
-                    "text": "any"
-                  }
-                },
-                {
-                  "name": "navigationType",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "id",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ],
-              "description": "Normalize different error types into a consistent NavigationError format"
-            },
-            {
-              "kind": "field",
-              "name": "_targetNavigation",
-              "type": {
-                "text": "{ type: 'item' | 'section'; id: string } | null"
-              },
-              "privacy": "private",
-              "default": "null"
+              "description": "Reset loading state for new navigation"
             },
             {
               "kind": "field",
@@ -28020,6 +28397,41 @@
               "privacy": "protected"
             },
             {
+              "kind": "method",
+              "name": "_updateSessionContext",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "itemRef",
+                  "type": {
+                    "text": "QtiAssessmentItemRef"
+                  }
+                },
+                {
+                  "name": "itemId",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_waitForLoadingComplete",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "description": "Wait for loading to complete with simple polling"
+            },
+            {
               "kind": "field",
               "name": "cacheTransform",
               "type": {
@@ -28027,6 +28439,12 @@
               },
               "default": "false",
               "attribute": "cache-transform"
+            },
+            {
+              "kind": "method",
+              "name": "getLoadingProgress",
+              "privacy": "public",
+              "description": "Get current loading progress for external consumption"
             },
             {
               "kind": "field",
@@ -28051,16 +28469,19 @@
                   "name": "type",
                   "type": {
                     "text": "'item' | 'section'"
-                  }
+                  },
+                  "description": "Navigation type ('item' or 'section')"
                 },
                 {
                   "name": "id",
                   "optional": true,
                   "type": {
                     "text": "string"
-                  }
+                  },
+                  "description": "Target identifier (optional, falls back to first available)"
                 }
-              ]
+              ],
+              "description": "Navigate to a specific item or section"
             },
             {
               "kind": "field",
@@ -28068,8 +28489,7 @@
               "type": {
                 "text": "PostLoadTestTransformCallback | null"
               },
-              "default": "null",
-              "attribute": "postLoadTestTransformCallback"
+              "default": "null"
             },
             {
               "kind": "field",
@@ -28077,8 +28497,7 @@
               "type": {
                 "text": "PostLoadTransformCallback | null"
               },
-              "default": "null",
-              "attribute": "postLoadTransformCallback"
+              "default": "null"
             },
             {
               "kind": "field",
@@ -28088,26 +28507,6 @@
               },
               "default": "30000",
               "attribute": "requestTimeout"
-            },
-            {
-              "kind": "method",
-              "name": "retryNavigation",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "description": "Retry the last failed navigation"
-            },
-            {
-              "kind": "field",
-              "name": "showLoadingIndicators",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "attribute": "showLoadingIndicators"
             }
           ],
           "events": [
@@ -28118,7 +28517,13 @@
               }
             },
             {
-              "name": "qti-navigation-status",
+              "name": "qti-navigation-loading-ended",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "qti-navigation-loading-started",
               "type": {
                 "text": "CustomEvent"
               }
@@ -28154,36 +28559,12 @@
               "fieldName": "navigate"
             },
             {
-              "name": "postLoadTestTransformCallback",
-              "type": {
-                "text": "PostLoadTestTransformCallback | null"
-              },
-              "default": "null",
-              "fieldName": "postLoadTestTransformCallback"
-            },
-            {
-              "name": "postLoadTransformCallback",
-              "type": {
-                "text": "PostLoadTransformCallback | null"
-              },
-              "default": "null",
-              "fieldName": "postLoadTransformCallback"
-            },
-            {
               "name": "requestTimeout",
               "type": {
                 "text": "number"
               },
               "default": "30000",
               "fieldName": "requestTimeout"
-            },
-            {
-              "name": "showLoadingIndicators",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "fieldName": "showLoadingIndicators"
             }
           ],
           "parameters": [
@@ -29264,12 +29645,12 @@
           "members": [
             {
               "kind": "field",
-              "name": "_activeRequests",
+              "name": "_activeController",
               "type": {
-                "text": "XMLHttpRequest[]"
+                "text": "AbortController | null"
               },
               "privacy": "private",
-              "default": "[]",
+              "default": "null",
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -29277,14 +29658,77 @@
             },
             {
               "kind": "method",
-              "name": "_cancelActiveRequests",
+              "name": "_applyStimulusContent",
               "privacy": "private",
               "return": {
                 "type": {
                   "text": "void"
                 }
               },
-              "description": "Cancels all active HTTP requests",
+              "parameters": [
+                {
+                  "name": "stimulus",
+                  "type": {
+                    "text": "DocumentFragment | null"
+                  }
+                },
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "{ identifier: string }"
+                  }
+                },
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "{ identifier: string }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_bindEventHandlers",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_cancelPreviousNavigation",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Cancel previous navigation and clean up all state",
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_checkLoadingComplete",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Check if loading is complete and dispatch events accordingly",
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -29299,7 +29743,6 @@
                   "text": "void"
                 }
               },
-              "description": "Clears all loaded items",
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -29307,7 +29750,69 @@
             },
             {
               "kind": "method",
-              "name": "_dispatchErrorEvent",
+              "name": "_clearNavigationState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_clearStimulusRef",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_createNavigationError",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "NavigationError"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "error",
+                  "type": {
+                    "text": "any"
+                  }
+                },
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_dispatchError",
               "privacy": "private",
               "return": {
                 "type": {
@@ -29322,7 +29827,6 @@
                   }
                 }
               ],
-              "description": "Dispatch error event to notify the UI",
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -29330,7 +29834,7 @@
             },
             {
               "kind": "method",
-              "name": "_dispatchStatusEvent",
+              "name": "_dispatchLoadingEnded",
               "privacy": "private",
               "return": {
                 "type": {
@@ -29339,13 +29843,162 @@
               },
               "parameters": [
                 {
-                  "name": "status",
+                  "name": "type",
                   "type": {
-                    "text": "{ loading: boolean; type: string; id: string }"
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
                   }
                 }
               ],
-              "description": "Dispatch status event to indicate loading state",
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_dispatchLoadingStarted",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_dispatchTestLoaded",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "results",
+                  "type": {
+                    "text": "any[]"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_executeNavigation",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "'item' | 'section'"
+                  }
+                },
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_findItemRef",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "QtiAssessmentItemRef"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "itemId",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_findSection",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "QtiAssessmentSection | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "sectionId",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_getDefaultNavigationId",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | undefined"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "'item' | 'section'"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -29362,13 +30015,132 @@
               },
               "parameters": [
                 {
-                  "name": "navSectionId",
+                  "name": "sectionId",
                   "type": {
                     "text": "string"
                   }
                 }
               ],
-              "description": "Gets all item IDs in a section",
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_handleItemConnected",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "CustomEvent<QtiAssessmentItemRef>"
+                  }
+                }
+              ],
+              "description": "Handle item connection events - track connected items and discover stimulus references",
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_handleNavigationError",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "error",
+                  "type": {
+                    "text": "any"
+                  }
+                },
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_handleNavigationRequest",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "{ detail }",
+                  "type": {
+                    "text": "CustomEvent<{ type: 'item' | 'section'; id: string }>"
+                  }
+                }
+              ],
+              "description": "Main navigation request handler with proper lifecycle management",
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_handleStimulusRefConnected",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "QtiAssessmentStimulusRefConnectedEvent"
+                  }
+                }
+              ],
+              "description": "Handle stimulus reference connection events with duplicate prevention",
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_handleTestConnected",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "CustomEvent<QtiAssessmentTest>"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -29383,7 +30155,6 @@
                   "text": "void"
                 }
               },
-              "description": "Initialize navigation when test is first connected",
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -29391,12 +30162,9 @@
             },
             {
               "kind": "field",
-              "name": "_lastError",
-              "type": {
-                "text": "NavigationError | null"
-              },
+              "name": "_loadedStimulusHrefs",
               "privacy": "private",
-              "default": "null",
+              "default": "new Set<string>()",
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -29404,12 +30172,22 @@
             },
             {
               "kind": "field",
-              "name": "_lastNavigationRequestId",
+              "name": "_loadingState",
               "type": {
-                "text": "string | null"
+                "text": "object"
               },
               "privacy": "private",
-              "default": "null",
+              "default": "{ expectedItems: 0, connectedItems: 0, expectedStimulus: 0, loadedStimulus: 0, isComplete: false }",
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_loadingStimulusHrefs",
+              "privacy": "private",
+              "default": "new Set<string>()",
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -29421,7 +30199,7 @@
               "privacy": "private",
               "return": {
                 "type": {
-                  "text": "Promise<{ itemRef: QtiAssessmentItemRef; doc: any; request: XMLHttpRequest }[]>"
+                  "text": "Promise<void>"
                 }
               },
               "parameters": [
@@ -29432,7 +30210,88 @@
                   }
                 }
               ],
-              "description": "Load items with improved error handling and timeout",
+              "description": "Load items with simple tracking",
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_loadResults",
+              "type": {
+                "text": "any[]"
+              },
+              "privacy": "private",
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_loadSingleItem",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "itemRef",
+                  "type": {
+                    "text": "QtiAssessmentItemRef"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_loadStimulus",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<DocumentFragment | null>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "href",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_loadStimulusRef",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "{ identifier: string; href: string }"
+                  }
+                },
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "{ identifier: string }"
+                  }
+                }
+              ],
+              "description": "Load stimulus reference with simple tracking",
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -29455,7 +30314,7 @@
                   }
                 }
               ],
-              "description": "Navigates to a specific item",
+              "description": "Navigate to specific item with simple state tracking",
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -29478,20 +30337,7 @@
                   }
                 }
               ],
-              "description": "Navigates to a specific section",
-              "inheritedFrom": {
-                "name": "TestNavigationMixin",
-                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_navigationInProgress",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "protected",
-              "default": "false",
+              "description": "Navigate to section with simple state tracking",
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -29499,34 +30345,14 @@
             },
             {
               "kind": "method",
-              "name": "_normalizeError",
+              "name": "_resetLoadingState",
               "privacy": "private",
               "return": {
                 "type": {
-                  "text": "NavigationError"
+                  "text": "void"
                 }
               },
-              "parameters": [
-                {
-                  "name": "error",
-                  "type": {
-                    "text": "any"
-                  }
-                },
-                {
-                  "name": "navigationType",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "id",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ],
-              "description": "Normalize different error types into a consistent NavigationError format",
+              "description": "Reset loading state for new navigation",
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -29552,19 +30378,6 @@
               "inheritedFrom": {
                 "name": "TestViewMixin",
                 "module": "src/lib/qti-test/core/mixins/test-view.mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_targetNavigation",
-              "type": {
-                "text": "{ type: 'item' | 'section'; id: string } | null"
-              },
-              "privacy": "private",
-              "default": "null",
-              "inheritedFrom": {
-                "name": "TestNavigationMixin",
-                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
               }
             },
             {
@@ -29633,6 +30446,49 @@
               }
             },
             {
+              "kind": "method",
+              "name": "_updateSessionContext",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "itemRef",
+                  "type": {
+                    "text": "QtiAssessmentItemRef"
+                  }
+                },
+                {
+                  "name": "itemId",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_waitForLoadingComplete",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "description": "Wait for loading to complete with simple polling",
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "cacheTransform",
               "type": {
@@ -29643,6 +30499,19 @@
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getLoadingProgress",
+              "privacy": "public",
+              "description": "Get current loading progress for external consumption",
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              },
+              "type": {
+                "text": "getLoadingProgress() => void"
               }
             },
             {
@@ -29722,16 +30591,19 @@
                   "name": "type",
                   "type": {
                     "text": "'item' | 'section'"
-                  }
+                  },
+                  "description": "Navigation type ('item' or 'section')"
                 },
                 {
                   "name": "id",
                   "optional": true,
                   "type": {
                     "text": "string"
-                  }
+                  },
+                  "description": "Target identifier (optional, falls back to first available)"
                 }
               ],
+              "description": "Navigate to a specific item or section",
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -29763,7 +30635,6 @@
                 "text": "PostLoadTestTransformCallback | null"
               },
               "default": "null",
-              "attribute": "postLoadTestTransformCallback",
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -29776,7 +30647,6 @@
                 "text": "PostLoadTransformCallback | null"
               },
               "default": "null",
-              "attribute": "postLoadTransformCallback",
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
@@ -29796,24 +30666,6 @@
               }
             },
             {
-              "kind": "method",
-              "name": "retryNavigation",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "description": "Retry the last failed navigation",
-              "inheritedFrom": {
-                "name": "TestNavigationMixin",
-                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
-              },
-              "type": {
-                "text": "retryNavigation() => void"
-              }
-            },
-            {
               "kind": "field",
               "name": "sessionContext",
               "type": {
@@ -29824,19 +30676,6 @@
               "inheritedFrom": {
                 "name": "TestBase",
                 "module": "src/lib/qti-test/core/test-base.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "showLoadingIndicators",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "attribute": "showLoadingIndicators",
-              "inheritedFrom": {
-                "name": "TestNavigationMixin",
-                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
               }
             },
             {
@@ -29921,7 +30760,17 @@
               }
             },
             {
-              "name": "qti-navigation-status",
+              "name": "qti-navigation-loading-ended",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "inheritedFrom": {
+                "name": "TestNavigationMixin",
+                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
+              }
+            },
+            {
+              "name": "qti-navigation-loading-started",
               "type": {
                 "text": "CustomEvent"
               },
@@ -30013,48 +30862,12 @@
               }
             },
             {
-              "name": "postLoadTestTransformCallback",
-              "type": {
-                "text": "PostLoadTestTransformCallback | null"
-              },
-              "default": "null",
-              "fieldName": "postLoadTestTransformCallback",
-              "inheritedFrom": {
-                "name": "TestNavigationMixin",
-                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
-              }
-            },
-            {
-              "name": "postLoadTransformCallback",
-              "type": {
-                "text": "PostLoadTransformCallback | null"
-              },
-              "default": "null",
-              "fieldName": "postLoadTransformCallback",
-              "inheritedFrom": {
-                "name": "TestNavigationMixin",
-                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
-              }
-            },
-            {
               "name": "requestTimeout",
               "type": {
                 "text": "number"
               },
               "default": "30000",
               "fieldName": "requestTimeout",
-              "inheritedFrom": {
-                "name": "TestNavigationMixin",
-                "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"
-              }
-            },
-            {
-              "name": "showLoadingIndicators",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "fieldName": "showLoadingIndicators",
               "inheritedFrom": {
                 "name": "TestNavigationMixin",
                 "module": "src/lib/qti-test/core/mixins/test-navigation.mixin.ts"

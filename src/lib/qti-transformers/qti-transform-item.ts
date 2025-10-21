@@ -43,7 +43,7 @@ export interface ModuleResolutionConfig {
 }
 
 export type transformItemApi = {
-  load: (uri: string) => { promise: Promise<transformItemApi>; request: XMLHttpRequest | null };
+  load: (uri: string, signal?: AbortSignal) => Promise<transformItemApi>;
   parse: (xmlString: string) => transformItemApi;
   path: (location: string) => transformItemApi;
   fn: (fn: (xmlFragment: XMLDocument) => void) => transformItemApi;
@@ -70,28 +70,20 @@ export const qtiTransformItem = (cache: boolean = false) => {
   let xmlUri = '';
 
   const api: transformItemApi = {
-    load(uri: string) {
+    load(uri: string, signal?: AbortSignal) {
       xmlUri = uri;
       const fullKey = encodeURI(uri);
       if (cache) {
         if (sessionStorage.getItem(fullKey)) {
-          return {
-            promise: Promise.resolve(api.parse(sessionStorage.getItem(fullKey)!)),
-            request: null
-          };
+          return Promise.resolve(api.parse(sessionStorage.getItem(fullKey)!));
         }
       }
-      const { promise, xhr } = loadXML(uri);
-      const a = new Promise<typeof api>(resolve => {
-        promise.then(xml => {
-          xmlFragment = xml;
-          api.shuffleInteractions();
-          if (cache) sessionStorage.setItem(fullKey, new XMLSerializer().serializeToString(xmlFragment));
-          return resolve(api);
-        });
+      return loadXML(uri, signal).then(xml => {
+        xmlFragment = xml;
+        api.shuffleInteractions();
+        if (cache) sessionStorage.setItem(fullKey, new XMLSerializer().serializeToString(xmlFragment));
+        return api;
       });
-
-      return { promise: a, request: xhr };
     },
     parse(xmlString: string): typeof api {
       xmlFragment = parseXML(xmlString);
