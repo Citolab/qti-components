@@ -340,6 +340,7 @@
       &:focus {
         @apply foc;
       }
+      
       &:state(candidate-correct) {
         background-color: var(--qti-correct);
       }

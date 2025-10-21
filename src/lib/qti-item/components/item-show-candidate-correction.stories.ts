@@ -15,7 +15,8 @@ import type {
   QtiSelectPointInteraction,
   QtiSimpleAssociableChoice,
   QtiSimpleChoice,
-  QtiTextEntryInteraction
+  QtiTextEntryInteraction,
+  QtiGapMatchInteraction
 } from '../../qti-components';
 
 const { events, args, argTypes } = getStorybookHelpers('test-print-item-variables');
@@ -598,18 +599,17 @@ export const GapMatch: Story = {
       </div>
     </qti-item>`,
   play: async ({ canvasElement, step }) => {
-    // wait for qti-simple-choice to be rendered
     const canvas = within(canvasElement);
     const interaction = await getAssessmentItemFromItemContainer(canvasElement);
 
     const showCorrectButton = await canvas.findByShadowText(/Show candidate correction/i);
 
-    const matchItem1 = (await canvas.findByShadowText('winter')) as QtiSimpleAssociableChoice;
-    const matchItem2 = (await canvas.findByShadowText('spring')) as QtiSimpleAssociableChoice;
+    const matchItem1 = (await canvas.findByShadowText('winter')) as QtiGapMatchInteraction;
+    const matchItem2 = (await canvas.findByShadowText('spring')) as QtiGapMatchInteraction;
 
     const dropZones = interaction.querySelectorAll(`qti-gap`);
 
-    const dropZone1 = dropZones[0] // First occurrence
+    const dropZone1 = dropZones[0]
     const dropZone2 = dropZones[1]
 
     await step('Drag and drop match interaction items', async () => {
@@ -618,6 +618,15 @@ export const GapMatch: Story = {
       await showCorrectButton.click();
 
       await step('Verify candidate correction state is applied', async () => {
+        const matchItem1List = Array.from(await canvas.findAllByShadowText('winter'));
+        const matchItem1CandidateResponse = matchItem1List[1] as QtiGapMatchInteraction;
+        const matchItem2List = Array.from(await canvas.findAllByShadowText('spring'));
+        const matchItem2CandidateResponse = matchItem2List[1] as QtiGapMatchInteraction;
+
+        expect(matchItem1CandidateResponse.internals.states.has('candidate-correct')).toBe(true);
+        expect(matchItem2CandidateResponse.internals.states.has('candidate-correct')).toBe(false);
+        expect(matchItem1CandidateResponse.internals.states.has('candidate-incorrect')).toBe(false);
+        expect(matchItem2CandidateResponse.internals.states.has('candidate-incorrect')).toBe(true);
       });
     });
   }
