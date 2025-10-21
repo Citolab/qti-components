@@ -340,6 +340,13 @@
       &:focus {
         @apply foc;
       }
+      &:state(candidate-correct) {
+        background-color: var(--qti-correct);
+      }
+
+      &:state(candidate-incorrect) {
+        background-color: var(--qti-incorrect);
+      }
     }
 
     & qti-gap {
