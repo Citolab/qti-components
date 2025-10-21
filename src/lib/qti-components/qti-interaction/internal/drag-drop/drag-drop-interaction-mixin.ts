@@ -291,7 +291,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     private determineMaxWidth(dragContainer: HTMLElement, dropContainer: HTMLElement) {
       const referenceContainer = dropContainer ?? dragContainer;
 
-      if (!referenceContainer) {
+      if (!referenceContainer || referenceContainer.clientWidth == 0) {
         return this.MAX_DRAGGABLE_WIDTH;
       }
 
