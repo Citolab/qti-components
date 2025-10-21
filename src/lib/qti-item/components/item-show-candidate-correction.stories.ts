@@ -221,11 +221,6 @@ export const MultipleResponse: Story = {
 };
 
 export const Match: Story = {
-  parameters: {
-    test: {
-      skip: true // Temporarily skipped due to test state bleeding - TODO: Fix test isolation
-    }
-  },
   args: {
     'item-url': 'assets/qti-test-package/items/match.xml' // Set the new item URL here
   },
@@ -251,19 +246,45 @@ export const Match: Story = {
         <item-show-candidate-correction></item-show-candidate-correction>
       </div>
     </qti-item>`,
-  // Temporarily skipped due to test state bleeding issues - TODO: Fix test isolation
   play: async ({ canvasElement, step }) => {
-    // TEMPORARILY SKIPPED - Test state bleeding issue
-    return;
+    // wait for qti-simple-choice to be rendered
+    const canvas = within(canvasElement);
+    const showCorrectButton = await canvas.findByShadowText(/Show candidate correction/i);
+
+    const matchItem1 = (await canvas.findByShadowText('Prospero')) as QtiSimpleAssociableChoice;
+    const matchItem2 = (await canvas.findByShadowText('Capulet')) as QtiSimpleAssociableChoice;
+    const matchItem3 = (await canvas.findByShadowText('Demetrius')) as QtiSimpleAssociableChoice;
+
+    const dropZone1 = await canvas.findByShadowText('The Tempest');
+    const dropZone2 = await canvas.findByShadowText("A Midsummer-Night's Dream");
+    const dropZone3 = await canvas.findByShadowText('Romeo and Juliet');
+
+    await step('Drag and drop match interaction items', async () => {
+      await drag(matchItem1, { to: dropZone1 });
+      await drag(matchItem2, { to: dropZone2 });
+      await drag(matchItem3, { to: dropZone3 });
+      await showCorrectButton.click();
+
+      await step('Verify candidate correction state is applied', async () => {
+        const matchItem1List = Array.from(await canvas.findAllByShadowText('Prospero'));
+        const matchItem1CandidateResponse = matchItem1List[1] as QtiSimpleAssociableChoice;
+        const matchItem2List = Array.from(await canvas.findAllByShadowText('Capulet'));
+        const matchItem2CandidateResponse = matchItem2List[1] as QtiSimpleAssociableChoice;
+        const matchItem3List = Array.from(await canvas.findAllByShadowText('Demetrius'));
+        const matchItem3CandidateResponse = matchItem3List[1] as QtiSimpleAssociableChoice;
+
+        expect(matchItem1CandidateResponse.internals.states.has('candidate-correct')).toBe(true);
+        expect(matchItem2CandidateResponse.internals.states.has('candidate-correct')).toBe(false);
+        expect(matchItem3CandidateResponse.internals.states.has('candidate-correct')).toBe(false);
+        expect(matchItem1CandidateResponse.internals.states.has('candidate-incorrect')).toBe(false);
+        expect(matchItem2CandidateResponse.internals.states.has('candidate-incorrect')).toBe(true);
+        expect(matchItem3CandidateResponse.internals.states.has('candidate-incorrect')).toBe(true);
+      });
+    });
   }
 };
 
 export const MatchAllToOneZone: Story = {
-  parameters: {
-    test: {
-      skip: true // Temporarily skipped due to test state bleeding - TODO: Fix test isolation
-    }
-  },
   args: {
     'item-url': 'assets/qti-test-package/items/match.xml' // Set the new item URL here
   },
@@ -289,10 +310,39 @@ export const MatchAllToOneZone: Story = {
         <item-show-candidate-correction></item-show-candidate-correction>
       </div>
     </qti-item>`,
-  // Temporarily skipped due to test state bleeding issues - TODO: Fix test isolation
   play: async ({ canvasElement, step }) => {
-    // TEMPORARILY SKIPPED - Test state bleeding issue
-    return;
+    // wait for qti-simple-choice to be rendered - fresh UI state
+    const canvas = within(canvasElement);
+    const showCorrectButton = await canvas.findByShadowText(/Show candidate correction/i);
+
+    const matchItem1 = (await canvas.findByShadowText('Prospero')) as QtiSimpleAssociableChoice;
+    const matchItem2 = (await canvas.findByShadowText('Lysander')) as QtiSimpleAssociableChoice;
+    const matchItem3 = (await canvas.findByShadowText('Demetrius')) as QtiSimpleAssociableChoice;
+
+    const dropZone1 = await canvas.findByShadowText('The Tempest');
+
+    await step('Drag and drop all match interaction items to single dropzone', async () => {
+      await drag(matchItem1, { to: dropZone1 });
+      await drag(matchItem2, { to: dropZone1 });
+      await drag(matchItem3, { to: dropZone1 });
+      await showCorrectButton.click();
+
+      await step('Verify candidate correction state is applied', async () => {
+        const matchItem1List = Array.from(await canvas.findAllByShadowText('Prospero'));
+        const matchItem1CandidateResponse = matchItem1List[1] as QtiSimpleAssociableChoice;
+        const matchItem2List = Array.from(await canvas.findAllByShadowText('Lysander'));
+        const matchItem2CandidateResponse = matchItem2List[1] as QtiSimpleAssociableChoice;
+        const matchItem3List = Array.from(await canvas.findAllByShadowText('Demetrius'));
+        const matchItem3CandidateResponse = matchItem3List[1] as QtiSimpleAssociableChoice;
+
+        expect(matchItem1CandidateResponse.internals.states.has('candidate-correct')).toBe(true);
+        expect(matchItem2CandidateResponse.internals.states.has('candidate-correct')).toBe(false);
+        expect(matchItem3CandidateResponse.internals.states.has('candidate-correct')).toBe(false);
+        expect(matchItem1CandidateResponse.internals.states.has('candidate-incorrect')).toBe(false);
+        expect(matchItem2CandidateResponse.internals.states.has('candidate-incorrect')).toBe(true);
+        expect(matchItem3CandidateResponse.internals.states.has('candidate-incorrect')).toBe(true);
+      });
+    });
   }
 };
 

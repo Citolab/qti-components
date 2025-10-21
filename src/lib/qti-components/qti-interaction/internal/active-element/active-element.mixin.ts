@@ -3,7 +3,7 @@ import { property } from 'lit/decorators.js';
 
 import { watch } from '../../../../decorators/watch';
 
-import type { ComplexAttributeConverter, LitElement } from 'lit';
+import type { ComplexAttributeConverter, LitElement} from 'lit';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 
@@ -37,6 +37,7 @@ export interface ActiveElementMixinInterface {
   readonly: boolean;
   internals: ElementInternals;
 }
+
 
 export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, type: string) {
   abstract class QtiChoice extends Base {
@@ -82,7 +83,6 @@ export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, t
 
       this.addEventListener('keyup', this._onKeyUp);
       this.addEventListener('click', this._onClick);
-      this.addEventListener('touchend', this._onTouchEnd);
 
       this.dispatchEvent(
         new CustomEvent(`register-${type}`, {
@@ -96,7 +96,6 @@ export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, t
       super.disconnectedCallback();
       this.removeEventListener('keyup', this._onKeyUp);
       this.removeEventListener('click', this._onClick);
-      this.removeEventListener('touchend', this._onTouchEnd);
       this.dispatchEvent(
         new CustomEvent(`unregister-${type}`, {
           bubbles: true,
@@ -116,14 +115,6 @@ export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, t
 
     private _onClick() {
       if (this.disabled || this.readonly) return;
-      this.focus();
-      this._activate();
-    }
-
-    private _onTouchEnd(event: TouchEvent) {
-      if (this.disabled || this.readonly) return;
-      // Prevent the click event from firing after touchend to avoid double activation
-      event.preventDefault();
       this.focus();
       this._activate();
     }
