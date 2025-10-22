@@ -42,15 +42,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     private allDropzones: HTMLElement[] = []; // All dropzones for keyboard navigation
     private lastTarget = null; // Last touch target
     private currentDropTarget = null; // Current droppable element
-    private pointerCaptureElement: HTMLElement | null = null; // Element that captured the pointer
 
-    private onPointerDown = this.handlePointerDown.bind(this);
-    private onPointerMove = this.handlePointerMove.bind(this);
-    private onPointerUp = this.handlePointerUp.bind(this);
-    private onPointerCancel = this.handlePointerCancel.bind(this);
-
-    // keeping legacy handlers here for redundancy reasons,
-    // pointer events alone don't cover all use cases on all devices
     private onMove = this.handleTouchMove.bind(this);
     private onEnd = this.handleTouchEnd.bind(this);
     private onCancel = this.handleTouchCancel.bind(this);
@@ -155,12 +147,12 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
     private draggablesModified = (addedDraggables: HTMLElement[], removedDraggables: HTMLElement[]) => {
       if (this.isMatchTabular()) return;
-
       for (const removedDraggable of removedDraggables) {
         if (this.draggables.includes(removedDraggable)) {
           this.draggables = this.draggables.filter(draggable => draggable !== removedDraggable);
           removedDraggable.removeAttribute('tabindex');
-          removedDraggable.removeEventListener('pointerdown', this.onPointerDown);
+          removedDraggable.removeEventListener('touchstart', this.handleTouchStart.bind(this));
+          removedDraggable.removeEventListener('mousedown', this.handleTouchStart.bind(this));
         }
       }
       for (const draggable of addedDraggables) {
@@ -168,11 +160,11 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
           this.draggables.push(draggable);
           // draggables.forEach(el => {
           draggable.setAttribute('tabindex', '0'); // Make draggable elements focusable
-          if (!(draggable as any).hasPointerListener) {
+          if (!(draggable as any).hasTouchStartListener) {
             // Prevent adding multiple listeners
-            // Use pointer events for unified handling
-            draggable.addEventListener('pointerdown', this.onPointerDown, { passive: false });
-            (draggable as any).hasPointerListener = true;
+            draggable.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: false });
+            draggable.addEventListener('mousedown', this.handleTouchStart.bind(this), { passive: false });
+            (draggable as any).hasTouchStartListener = true;
           }
           // });
         }
@@ -217,7 +209,6 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
         } else {
           droppable.appendChild(draggable);
         }
-
         this.checkAllMaxAssociations();
         this.saveResponse(); //
       };
@@ -242,7 +233,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
     private deactivateDroppable(droppable: HTMLElement, makeDragzoneActive = true): void {
       if (makeDragzoneActive) {
-        this._internals?.states.add('--dragzone-active');
+        this._internals.states.add('--dragzone-active');
       }
       droppable.removeAttribute('active');
     }
@@ -286,7 +277,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
         droppable.style.minHeight = `${maxHeight}px`;
         droppable.style.minWidth = `${maxWidth}px`;
 
-        const dropSlot = droppable.shadowRoot?.querySelector('slot[part="dropslot"]') as HTMLElement;
+        const dropSlot = droppable.shadowRoot?.querySelector('slot[part="dropslot"]');
         if (dropSlot) {
           dropSlot.style.minHeight = `${maxHeight}px`;
           dropSlot.style.minWidth = `${maxWidth}px`;
@@ -316,11 +307,11 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
 
     private activateDragLocation(): void {
-      this._internals?.states.add('--dragzone-enabled');
+      this._internals.states.add('--dragzone-enabled');
     }
 
     private deactivateDragLocation(): void {
-      this._internals?.states.delete('--dragzone-enabled');
+      this._internals.states.delete('--dragzone-enabled');
     }
 
     private deactivateDroppables(): void {
@@ -360,11 +351,6 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       document.removeEventListener('touchmove', this.onMove);
       document.removeEventListener('touchend', this.onEnd);
       document.removeEventListener('touchcancel', this.onCancel);
-
-      // Remove pointer event listeners (in case they were added but not cleaned up)
-      document.removeEventListener('pointermove', this.onPointerMove);
-      document.removeEventListener('pointerup', this.onPointerUp);
-      document.removeEventListener('pointercancel', this.onPointerCancel);
     }
 
     private handleTouchMove(e) {
@@ -373,12 +359,8 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
         const { x, y } = this.getEventCoordinates(e);
         const currentTouch = { clientX: x, clientY: y };
 
-        // If already dragging (e.g., from touch immediate start), just update position
-        if (this.isDragging) {
-          this.updateDragClonePosition(currentTouch);
-        }
-        // Otherwise, check if the minimum drag distance has been reached (for mouse events)
-        else if (this.calculateDragDistance(currentTouch) >= this.MIN_DRAG_DISTANCE) {
+        // Check if the minimum drag distance has been reached
+        if (this.calculateDragDistance(currentTouch) >= this.MIN_DRAG_DISTANCE) {
           this.isDragging = true;
           this.updateDragClonePosition(currentTouch);
         }
@@ -416,11 +398,11 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       if (this.isDragging || this.isDraggable || this.dragClone) {
         this.resetDragState();
       }
-      this._internals?.states.delete('--dragzone-active');
+      this._internals.states.delete('--dragzone-active');
       this.checkAllMaxAssociations();
 
-      this._internals?.states.delete('--dragzone-enabled');
-      this._internals?.states.delete('--dragzone-active');
+      this._internals.states.delete('--dragzone-enabled');
+      this._internals.states.delete('--dragzone-active');
       this.deactivateDragLocation();
       this.deactivateDroppables();
       this.draggables.forEach(d => {
@@ -430,133 +412,6 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
 
     private handleTouchCancel(_e) {
-      this.resetDragState();
-    }
-
-    private handlePointerDown(e: PointerEvent) {
-      if (this.isMatchTabular()) return;
-      if (!e.isPrimary) return;
-
-      // The event is already on a draggable element (from event listener setup)
-      const draggable = e.currentTarget as HTMLElement;
-
-      try {
-        draggable.setPointerCapture(e.pointerId);
-        this.pointerCaptureElement = draggable;
-      } catch (error) {
-        console.warn('Could not set pointer capture:', error);
-        this.pointerCaptureElement = null;
-      }
-
-      const { x, y } = this.getEventCoordinates(e);
-      this.initializeDragOperation(e, x, y);
-
-      document.addEventListener('pointermove', this.onPointerMove, { passive: false });
-      document.addEventListener('pointerup', this.onPointerUp, { passive: false });
-      document.addEventListener('pointercancel', this.onPointerCancel, { passive: false });
-
-      const draggableInDragContainer = this.createDragClone(x, y);
-      this.finalizeDragSetup(e, draggableInDragContainer);
-
-      e.preventDefault();
-      e.stopPropagation();
-    }
-
-    private handlePointerMove(e: PointerEvent) {
-      if (!e.isPrimary || !this.isDraggable) return;
-
-      if (this.isDraggable && this.dragClone) {
-        const currentPointer = { clientX: e.clientX, clientY: e.clientY };
-
-        // if already dragging (from immediate start), just update position
-        if (this.isDragging) {
-          this.updateDragClonePosition(currentPointer);
-        }
-        // if not, check if the minimum drag distance has been reached
-        else if (this.calculateDragDistance(currentPointer) >= this.MIN_DRAG_DISTANCE) {
-          this.isDragging = true;
-          this.updateDragClonePosition(currentPointer);
-        }
-
-        // find the closest dropzone to the current drag clone position
-        const closestDropzone = this.findClosestDropzone();
-        this.currentDropTarget = closestDropzone;
-
-        if (closestDropzone !== this.lastTarget) {
-          if (this.lastTarget) {
-            // simulate dragleave for the previous target
-            this.deactivateDroppable(this.lastTarget);
-            this.dispatchCustomEvent(this.lastTarget, 'dragleave');
-          }
-          if (closestDropzone) {
-            // simulate dragenter for the new target
-            this.activateDroppable(closestDropzone);
-            this.dispatchCustomEvent(closestDropzone, 'dragenter');
-          }
-          this.lastTarget = closestDropzone;
-        }
-
-        if (this.currentDropTarget) {
-          this.dispatchCustomEvent(this.currentDropTarget, 'dragover');
-        }
-
-        e.preventDefault();
-      }
-    }
-
-    private handlePointerUp(e: PointerEvent) {
-      if (!e.isPrimary) return;
-
-      // before resetting, detect the drop target if we have a drag clone
-      if (this.dragClone) {
-        this.currentDropTarget = this.findClosestDropzone();
-      }
-
-      // Clean up event listeners
-      document.removeEventListener('pointermove', this.onPointerMove);
-      document.removeEventListener('pointerup', this.onPointerUp);
-      document.removeEventListener('pointercancel', this.onPointerCancel);
-
-      try {
-        if (this.pointerCaptureElement) {
-          this.pointerCaptureElement.releasePointerCapture(e.pointerId);
-          this.pointerCaptureElement = null;
-        }
-      } catch (error) {
-        console.warn('Could not release pointer capture:', error);
-      }
-
-      if (this.isDragging || this.isDraggable || this.dragClone) {
-        this.resetDragState();
-      }
-      this._internals?.states.delete('--dragzone-active');
-      this.checkAllMaxAssociations();
-      this._internals?.states.delete('--dragzone-enabled');
-      this._internals?.states.delete('--dragzone-active');
-      this.deactivateDragLocation();
-      this.deactivateDroppables();
-      this.draggables.forEach(d => {
-        d.removeAttribute('dragging');
-      });
-
-      e.preventDefault();
-    }
-
-    private handlePointerCancel(e: PointerEvent) {
-      if (!e.isPrimary) return;
-      document.removeEventListener('pointermove', this.onPointerMove);
-      document.removeEventListener('pointerup', this.onPointerUp);
-      document.removeEventListener('pointercancel', this.onPointerCancel);
-
-      try {
-        if (this.pointerCaptureElement) {
-          this.pointerCaptureElement.releasePointerCapture(e.pointerId);
-          this.pointerCaptureElement = null;
-        }
-      } catch (error) {
-        console.warn('Could not release pointer capture on cancel:', error);
-      }
-
       this.resetDragState();
     }
 
@@ -580,22 +435,22 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       }
       const lastElementChild = this.lastElementChild as HTMLElement;
       // Use null for the third argument if no specific anchor is needed
-      this._internals?.setValidity(isValid ? {} : { customError: true }, validityMessage, lastElementChild);
+      this._internals.setValidity(isValid ? {} : { customError: true }, validityMessage, lastElementChild);
       return isValid;
     }
 
     override reportValidity(): boolean {
-      const validationMessageElement = this.shadowRoot?.querySelector('#validation-message') as HTMLElement;
+      const validationMessageElement = this.shadowRoot.querySelector('#validation-message') as HTMLElement;
       if (validationMessageElement) {
-        if (!this._internals?.validity.valid) {
-          validationMessageElement.textContent = this._internals?.validationMessage || '';
+        if (!this._internals.validity.valid) {
+          validationMessageElement.textContent = this._internals.validationMessage;
           validationMessageElement.style.setProperty('display', 'block', 'important');
         } else {
           validationMessageElement.textContent = '';
           validationMessageElement.style.display = 'none';
         }
       }
-      return this._internals?.validity.valid ?? true;
+      return this._internals.validity.valid;
     }
 
     private checkMaxAssociations(droppable: HTMLElement): boolean {
@@ -606,17 +461,12 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
 
     private dropDraggableInDroppable(draggable: HTMLElement, droppable: HTMLElement): void {
-      // In associate interactions, items should remain draggable for multiple associations
-      const isAssociateInteraction = this.tagName.toLowerCase() === 'qti-associate-interaction';
-
       // Create a clean clone of the original draggable without computed styles
       const cleanClone = draggable.cloneNode(true) as HTMLElement;
       cleanClone.removeAttribute('style'); // Remove inline styles from the clone
       // Place the clean clone into the drop target
       this.moveDraggableToDroppable(cleanClone, droppable);
       // this.currentDropTarget.appendChild(cleanClone);
-
-      // Add the clone to draggables so it can be dragged out of dropzones
       this.draggablesModified([cleanClone], []);
 
       // check if max associations are reached
@@ -624,18 +474,11 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       const currentDraggables = this.draggables.filter(
         d => d.getAttribute('identifier') === draggable.getAttribute('identifier')
       );
-
-      if (!isAssociateInteraction && matchMax !== 0 && currentDraggables.length >= matchMax) {
+      if (matchMax !== 0 && currentDraggables.length >= matchMax) {
         draggable.style.opacity = '0.0';
         draggable.style.pointerEvents = 'none';
-      } else if (isAssociateInteraction) {
-        // In associate interactions, hide the original when it's placed in a dropzone
-        // but keep it draggable (for moving between dropzones via the clone)
-        draggable.style.opacity = '0.0';
-        draggable.style.pointerEvents = 'auto'; // Keep it draggable via the clone
       } else {
         draggable.style.opacity = '1.0';
-        draggable.style.pointerEvents = 'auto';
       }
     }
 
@@ -643,45 +486,18 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       if (this.dragClone) {
         const isDropped = this.currentDropTarget !== null;
         const droppedInDragContainer = !isDropped || this.dragContainers.includes(this.currentDropTarget);
-
         if (isDropped && this.currentDropTarget && !droppedInDragContainer) {
           this.dropDraggableInDroppable(this.dragSource, this.currentDropTarget);
         }
         if (droppedInDragContainer) {
-          // Check if max associations are reached before making the element visible again
-          const isAssociateInteraction = this.tagName.toLowerCase() === 'qti-associate-interaction';
-          const matchMax = this.getMatchMaxValue(this.dragSource);
-          const currentDraggables = this.draggables.filter(
-            d => d.getAttribute('identifier') === this.dragSource.getAttribute('identifier')
-          );
-
-          if (!isAssociateInteraction && matchMax !== 0 && currentDraggables.length >= matchMax) {
-            this.dragSource.style.opacity = '0.0';
-            this.dragSource.style.pointerEvents = 'none';
-          } else if (isAssociateInteraction) {
-            // In associate interactions, show original only if no instances exist in dropzones
-            const hasInstancesInDropzones = this.hasInstancesInDropzones(this.dragSource.getAttribute('identifier'));
-            if (hasInstancesInDropzones) {
-              this.dragSource.style.opacity = '0.0';
-              this.dragSource.style.pointerEvents = 'auto';
-            } else {
-              this.dragSource.style.opacity = '1.0';
-              this.dragSource.style.pointerEvents = 'auto';
-            }
-          } else {
-            this.dragSource.style.opacity = '1.0';
-            this.dragSource.style.pointerEvents = 'auto';
-          }
+          this.dragSource.style.opacity = '1.0';
           this.dragSource.style.display = 'block';
           this.dragSource.style.position = 'static';
+          this.dragSource.style.pointerEvents = 'auto';
           this.saveResponse();
         }
         this.dragClone.remove();
-
-        // Only remove from draggables array if it's actually there
-        if (this.draggables.includes(this.dragClone)) {
-          this.draggablesModified([], [this.dragClone]);
-        }
+        this.draggablesModified([], [this.dragClone]);
       }
 
       this.isDragging = false;
@@ -691,16 +507,8 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       this.touchStartPoint = null;
       this.currentDropTarget = null;
       this.lastTarget = null;
-      this.pointerCaptureElement = null;
 
       this.deactivateDroppables();
-
-      // Restore document drag behavior
-      this.restoreDocumentDrag();
-
-      this.draggables.forEach(draggable => {
-        draggable.style.touchAction = 'auto';
-      });
     }
 
     protected checkAllMaxAssociations(): void {
@@ -723,32 +531,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
     private getMatchMaxValue(el: HTMLElement): number {
       const matchMaxRawValue = el.getAttribute('match-max');
-      if (matchMaxRawValue) {
-        return parseInt(matchMaxRawValue, 10);
-      }
-
-      // Default behavior depends on interaction type and element type
-      const isAssociateInteraction = this.tagName.toLowerCase() === 'qti-associate-interaction';
-      const isMatchInteraction = this.tagName.toLowerCase() === 'qti-match-interaction';
-      const isDropzone = this.droppables.includes(el);
-
-      if (isAssociateInteraction) {
-        // Associate interactions allow unlimited associations by default
-        return 0;
-      } else if (isMatchInteraction && isDropzone) {
-        // Match interaction dropzones now allow unlimited items by default
-        // (changed from previous behavior of 1 item limit)
-        return 0;
-      } else {
-        // Match interaction draggable items still limit to 1 by default
-        return 1;
-      }
-    }
-
-    private hasInstancesInDropzones(identifier: string): boolean {
-      return this.droppables.some(droppable => {
-        return Array.from(droppable.children).some(child => child.getAttribute('identifier') === identifier);
-      });
+      return matchMaxRawValue ? parseInt(matchMaxRawValue, 10) : 1;
     }
 
     private disableDroppable(droppable: Element): void {
@@ -787,10 +570,10 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
         value.forEach(response => {
           formData.append(this.responseIdentifier, response);
         });
-        this._internals?.setFormValue(formData);
+        this._internals.setFormValue(formData);
       } else {
         // Handle the case where this.value is not an array
-        this._internals?.setFormValue(value || '');
+        this._internals.setFormValue(value || '');
       }
     }
 
@@ -998,50 +781,16 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       document.body.appendChild(this.dragClone);
     }
 
-    private preventDocumentDrag() {
-      // Prevent native drag behavior during our drag operation
-      document.addEventListener('dragstart', this.preventDefault, { passive: false });
-      document.addEventListener('drag', this.preventDefault, { passive: false });
-      document.addEventListener('dragover', this.preventDefault, { passive: false });
-      document.addEventListener('dragenter', this.preventDefault, { passive: false });
-      document.addEventListener('dragleave', this.preventDefault, { passive: false });
-      document.addEventListener('drop', this.preventDefault, { passive: false });
-      document.addEventListener('dragend', this.preventDefault, { passive: false });
-
-      // Prevent document scrolling by temporarily disabling overflow instead of touchmove
-      document.body.style.overflow = 'hidden';
-      document.documentElement.style.overflow = 'hidden';
-
-      // Prevent text selection during drag
-      document.body.style.userSelect = 'none';
-      document.documentElement.style.userSelect = 'none';
-    }
-    private restoreDocumentDrag() {
-      // Remove drag prevention event listeners
-      document.removeEventListener('dragstart', this.preventDefault);
-      document.removeEventListener('drag', this.preventDefault);
-      document.removeEventListener('dragover', this.preventDefault);
-      document.removeEventListener('dragenter', this.preventDefault);
-      document.removeEventListener('dragleave', this.preventDefault);
-      document.removeEventListener('drop', this.preventDefault);
-      document.removeEventListener('dragend', this.preventDefault);
-
-      // Restore scrolling
-      document.body.style.overflow = '';
-      document.documentElement.style.overflow = '';
-
-      // Restore text selection
-      document.body.style.userSelect = '';
-      document.documentElement.style.userSelect = '';
-    }
-
-    private preventDefault = (e: Event) => {
-      e.preventDefault();
-      e.stopPropagation();
-    };
-
-    // Shared helper methods
-    private initializeDragOperation(e, x: number, y: number) {
+    private handleTouchStart(e) {
+      if (this.isMatchTabular()) return;
+      if (e instanceof MouseEvent) {
+        // Only allow the left button
+        if (e.button !== 0) return;
+      }
+      if (this.isDragging) {
+        return;
+      }
+      const { x, y } = this.getEventCoordinates(e);
       this.touchStartPoint = { x, y };
       this.dragSource = e.currentTarget;
       this.isDraggable = true;
@@ -1049,16 +798,10 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       this._internals.states.add('--dragzone-enabled');
       this._internals.states.add('--dragzone-active');
 
-      // Prevent document dragging and scrolling during our drag operation
-      this.preventDocumentDrag();
-
       this.activateDragLocation();
       this.activateDroppables(this.dragSource);
-    }
 
-    private createDragClone(x: number, y: number) {
       // Create and position the drag clone
-      const originalDragSource = this.dragSource;
       const draggableInDragContainer = this.findDraggableInDraggableContainer(
         this.dragSource.getAttribute('identifier')
       );
@@ -1067,31 +810,16 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       const draggedFromDropzone = this.droppables.some(d =>
         Array.from(d.children).some(child => child === this.dragSource)
       );
-
       const rect = this.dragSource.getBoundingClientRect();
       if (draggedFromDropzone) {
-        const isAssociateInteraction = this.tagName.toLowerCase() === 'qti-associate-interaction';
         this.dragSource.remove();
-
-        // In associate interactions, don't remove dropped items from draggables array
-        // They should remain draggable so they can be picked up again
-        if (!isAssociateInteraction) {
-          this.draggablesModified([], [this.dragSource]);
-        }
-
+        this.draggablesModified([], [this.dragSource]);
         this.dragSource = draggableInDragContainer;
       }
 
       this.cloneOffset.x = x - rect.left;
       this.cloneOffset.y = y - rect.top;
-
-      if (draggedFromDropzone) {
-        // When dragging from dropzone, clone from the reassigned dragSource
-        this.dragClone = this.dragSource.cloneNode(true) as HTMLElement;
-      } else {
-        // When dragging from source area, clone from original dragSource
-        this.dragClone = originalDragSource.cloneNode(true) as HTMLElement;
-      }
+      this.dragClone = draggableInDragContainer.cloneNode(true) as HTMLElement;
 
       // Copy computed styles to the clone
       const computedStyles = window.getComputedStyle(draggableInDragContainer);
@@ -1109,30 +837,17 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       this.dragClone.style.opacity = '1';
       this.appendClone();
 
-      return draggableInDragContainer;
-    }
-
-    private finalizeDragSetup(e, draggableInDragContainer: HTMLElement) {
-      // Hide the original dragSource element during drag operation
-      this.dragSource.style.opacity = '0.0';
-      this.dragSource.style.pointerEvents = 'none';
-
       // check if max associations are reached
       const matchMax = this.getMatchMaxValue(this.dragSource);
       const currentDraggables = this.draggables.filter(
         d => d.getAttribute('identifier') === this.dragSource.getAttribute('identifier')
       );
-
-      // Only modify the container element if it's different from the drag source
-      if (draggableInDragContainer !== this.dragSource) {
-        if (matchMax !== 0 && currentDraggables.length >= matchMax) {
-          draggableInDragContainer.style.opacity = '0.0';
-          draggableInDragContainer.style.pointerEvents = 'none';
-        } else {
-          draggableInDragContainer.style.opacity = '1.0';
-        }
+      if (matchMax !== 0 && currentDraggables.length >= matchMax) {
+        draggableInDragContainer.style.opacity = '0.0';
+        draggableInDragContainer.style.pointerEvents = 'none';
+      } else {
+        draggableInDragContainer.style.opacity = '1.0';
       }
-
       e.preventDefault();
       this.dragClone.setAttribute('dragging', '');
     }
@@ -1179,9 +894,6 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       this.dragClone.style.opacity = this.DRAG_CLONE_OPACITY.toString();
       this.dragClone.style.display = 'block';
     }
-
-    // Note: toggleCandidateCorrection is implemented by individual interaction types
-    // Each interaction handles its own candidate correction logic
   }
 
   return DragDropInteractionElement as Constructor<IInteraction> & T;
