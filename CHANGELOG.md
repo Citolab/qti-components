@@ -1,5 +1,17 @@
 # Changelog
 
+## [7.14.0](https://github.com/Citolab/qti-components/compare/v7.13.0...v7.14.0) (2025-10-22)
+
+
+### Features
+
+* add support for touch events to active element ([#55](https://github.com/Citolab/qti-components/issues/55)) ([9d80c60](https://github.com/Citolab/qti-components/commit/9d80c60666fafdb4c26081dcba72ab7ccdb88f6e))
+
+
+### Bug Fixes
+
+* Batch and cancel requests from items and stimulusrefs ([#58](https://github.com/Citolab/qti-components/issues/58)) ([78106f6](https://github.com/Citolab/qti-components/commit/78106f6626b194cb0e7984cb1f5fd780a699a10f))
+
 ## [7.13.0](https://github.com/Citolab/qti-components/compare/v7.12.0...v7.13.0) (2025-10-06)
 
 
