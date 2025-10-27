@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.14.1](https://github.com/Citolab/qti-components/compare/v7.14.0...v7.14.1) (2025-10-27)
+
+
+### Bug Fixes
+
+* create elements on the ownerDocument in createElementWithNewTagName function ([#64](https://github.com/Citolab/qti-components/issues/64)) ([a7e37a3](https://github.com/Citolab/qti-components/commit/a7e37a3246b66b637d92ba03559334ee17664ca3))
+
 ## [7.14.0](https://github.com/Citolab/qti-components/compare/v7.13.0...v7.14.0) (2025-10-22)
 
 
