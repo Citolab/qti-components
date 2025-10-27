@@ -246,7 +246,7 @@ describe('qtiTransformItem API Methods', () => {
   it('should transform relative paths correctly', async () => {
     const parsedXML = await qtiTransformItem()
       .load(`/assets/qti-path-conversion/relative.xml`)
-      .promise.then(api => {
+      .then(api => {
         console.log('api', api.html());
         return api.html();
         // .path(``)

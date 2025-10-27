@@ -65,7 +65,8 @@ export function extendElementsWithClass(xmlFragment: XMLDocument, classNamePatte
 
 // Helper function to create a new element with a new tag name and copy attributes and children
 function createElementWithNewTagName(element, newTagName) {
-  const newElement = document.createElement(newTagName);
+  // create Elements on the ownerDocument which is usually the XMLDocument
+  const newElement = element.ownerDocument.createElement(newTagName);
   // Copy attributes
   for (const attr of element.attributes) {
     newElement.setAttribute(attr.name, attr.value);
@@ -90,29 +91,24 @@ export function itemsFromTest(xmlFragment: DocumentFragment) {
 
 // let currentRequest: XMLHttpRequest | null = null;
 
-export function loadXML(url): { promise: Promise<XMLDocument | null>; xhr: XMLHttpRequest } {
-  const xhr = new XMLHttpRequest();
-
-  const promise = new Promise<XMLDocument | null>((resolve, reject) => {
-    xhr.open('GET', url, true);
-    xhr.responseType = 'document';
-
-    xhr.onload = () => {
-      if (xhr.status >= 200 && xhr.status < 300) {
-        resolve(xhr.responseXML);
-      } else {
-        reject(xhr.statusText);
+export function loadXML(url: string, signal?: AbortSignal): Promise<XMLDocument | null> {
+  return fetch(url, { signal })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-    };
-
-    xhr.onerror = () => {
-      reject(xhr.statusText);
-    };
-
-    xhr.send();
-  });
-
-  return { promise, xhr };
+      return response.text();
+    })
+    .then(text => {
+      const parser = new DOMParser();
+      return parser.parseFromString(text, 'text/xml');
+    })
+    .catch(error => {
+      if (error.name === 'AbortError') {
+        throw error;
+      }
+      throw new Error(`Failed to load XML: ${error.message}`);
+    });
 }
 
 export function parseXML(xmlDocument: string) {

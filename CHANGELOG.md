@@ -1,5 +1,78 @@
 # Changelog
 
+## [7.14.2](https://github.com/Citolab/qti-components/compare/v7.14.1...v7.14.2) (2025-10-27)
+
+
+### Bug Fixes
+
+* update view property type from ViewMode to View in TestScoringFeedback component ([#66](https://github.com/Citolab/qti-components/issues/66)) ([ed6eb67](https://github.com/Citolab/qti-components/commit/ed6eb6718a7d885563d8721891f700b1fb087b29))
+
+## [7.14.1](https://github.com/Citolab/qti-components/compare/v7.14.0...v7.14.1) (2025-10-27)
+
+
+### Bug Fixes
+
+* create elements on the ownerDocument in createElementWithNewTagName function ([#64](https://github.com/Citolab/qti-components/issues/64)) ([a7e37a3](https://github.com/Citolab/qti-components/commit/a7e37a3246b66b637d92ba03559334ee17664ca3))
+
+## [7.14.0](https://github.com/Citolab/qti-components/compare/v7.13.0...v7.14.0) (2025-10-22)
+
+
+### Features
+
+* add support for touch events to active element ([#55](https://github.com/Citolab/qti-components/issues/55)) ([9d80c60](https://github.com/Citolab/qti-components/commit/9d80c60666fafdb4c26081dcba72ab7ccdb88f6e))
+
+
+### Bug Fixes
+
+* Batch and cancel requests from items and stimulusrefs ([#58](https://github.com/Citolab/qti-components/issues/58)) ([78106f6](https://github.com/Citolab/qti-components/commit/78106f6626b194cb0e7984cb1f5fd780a699a10f))
+
+## [7.13.0](https://github.com/Citolab/qti-components/compare/v7.12.0...v7.13.0) (2025-10-06)
+
+
+### Features
+
+* trigger build ([1457049](https://github.com/Citolab/qti-components/commit/14570494fa63dfdee91e4b621c0b07d8aa62d403))
+
+## [7.12.0](https://github.com/Citolab/qti-components/compare/v7.11.0...v7.12.0) (2025-10-05)
+
+
+### Features
+
+* merge build trigger ([411b01f](https://github.com/Citolab/qti-components/commit/411b01fd63765f191a390f0997e7531b7bb0acdb))
+* trigger build ([13fca5b](https://github.com/Citolab/qti-components/commit/13fca5bd81e936191d7d9c0914d5a780048fac88))
+
+## [7.11.0](https://github.com/Citolab/qti-components/compare/v7.10.0...v7.11.0) (2025-09-30)
+
+
+### Features
+
+* add configuration for full correct response display options ([5ba8475](https://github.com/Citolab/qti-components/commit/5ba8475d6ca8e91dae52fc3dce076137c53a371c))
+
+
+### Bug Fixes
+
+* update options only if they are empty, otherwise update prompt text ([b04e9fe](https://github.com/Citolab/qti-components/commit/b04e9fe4a90bd8c14e3dc34f7b8378dd796395ca))
+
+## [7.10.0](https://github.com/Citolab/qti-components/compare/v7.9.0...v7.10.0) (2025-09-29)
+
+
+### Features
+
+* add version logging to qti-components ([c90618d](https://github.com/Citolab/qti-components/commit/c90618d40228a67cadda8f3d867c88026739c35b))
+* Configuration option to display full correct response for correct answers ([cf4a5f3](https://github.com/Citolab/qti-components/commit/cf4a5f3c4d6206c2815ffae9a8b03c0e25d29b5e))
+
+
+### Bug Fixes
+
+* add permissions for issues in release workflow and remove token reference ([39dbb5e](https://github.com/Citolab/qti-components/commit/39dbb5ee017023b7d264d259fadd1527af1c0d9f))
+* add permissions for repository-projects in release job ([fe37b08](https://github.com/Citolab/qti-components/commit/fe37b082fb9399840587f2ce1ec7952005e5fdc8))
+* ensure token is correctly referenced in release job ([a643763](https://github.com/Citolab/qti-components/commit/a643763c55ea3e05d339e89be583955de5c6c02c))
+* update actions permission to write for release-please functionality ([b43414b](https://github.com/Citolab/qti-components/commit/b43414bbe1631532f6b6a6c711cb8b9244936543))
+* update release-please token to use qti-components-release-please secret ([7f784e8](https://github.com/Citolab/qti-components/commit/7f784e8492064c6efa43d1fef53b42d64cd2a46b))
+* update release-please token to use RELEASE_PLEASE_TOKEN secret ([6c4d1cf](https://github.com/Citolab/qti-components/commit/6c4d1cf7fb559f46257c17659b535e619533a9a6))
+* use GITHUB_TOKEN for release-please action ([db8fe8e](https://github.com/Citolab/qti-components/commit/db8fe8edb4e79c007c75703d9b607a7312f92d95))
+* use RELEASE_PLEASE_TOKEN for release creation ([7e7268c](https://github.com/Citolab/qti-components/commit/7e7268c6687f1077e4d60064fbd560795c8483a0))
+
 ## [7.9.0](https://github.com/Citolab/qti-components/compare/v7.8.1...v7.9.0) (2025-09-18)
 
 

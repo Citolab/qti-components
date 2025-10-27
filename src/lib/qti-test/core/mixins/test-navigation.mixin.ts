@@ -2,27 +2,24 @@ import { property } from 'lit/decorators.js';
 
 import { qtiTransformItem } from '../../../qti-transformers';
 
-import type { transformItemApi } from '../../../qti-transformers';
+import type { QtiAssessmentStimulusRefConnectedEvent } from '../../../qti-components/qti-assessment-stimulus-ref/qti-assessment-stimulus-ref';
+import type { transformItemApi, transformTestApi } from '../../../qti-transformers';
 import type { QtiAssessmentItemRef, QtiAssessmentSection, QtiAssessmentTest } from '../qti-assessment-test';
 import type { TestBase } from '../test-base';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
+
 export type PostLoadTransformCallback = (
   transformer: transformItemApi,
   itemRef: QtiAssessmentItemRef
 ) => transformItemApi | Promise<transformItemApi>;
 
-// Define error types for better error handling
-enum NavigationErrorType {
-  ITEM_NOT_FOUND = 'item-not-found',
-  SECTION_NOT_FOUND = 'section-not-found',
-  LOAD_ERROR = 'load-error',
-  NETWORK_ERROR = 'network-error',
-  TIMEOUT_ERROR = 'timeout-error'
-}
+export type PostLoadTestTransformCallback = (
+  transformer: transformTestApi,
+  testElement: QtiAssessmentTest
+) => transformTestApi | Promise<transformTestApi>;
 
-interface NavigationError {
-  type: NavigationErrorType;
+export interface NavigationError {
   message: string;
   details?: any;
   itemId?: string;
@@ -30,108 +27,64 @@ interface NavigationError {
 }
 
 declare class TestNavigationInterface {}
+
+/**
+ * Navigation mixin for QTI test components
+ *
+ * Provides comprehensive navigation functionality with:
+ * - Efficient item/section loading with AbortController support
+ * - Stimulus reference coordination and duplicate prevention
+ * - Proper event timing and state management
+ * - Error handling and edge case coverage
+ */
 export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass: T) => {
   abstract class TestNavigationClass extends superClass implements TestNavigationInterface {
     @property({ type: String }) navigate: 'item' | 'section' | null = null;
     @property({ type: Boolean, attribute: 'cache-transform' }) cacheTransform: boolean = false;
-    @property({ type: Number }) requestTimeout: number = 30000; // Default timeout of 30 seconds
-    @property({ type: Boolean }) showLoadingIndicators: boolean = true;
-    @property({ type: Function }) postLoadTransformCallback: PostLoadTransformCallback | null = null;
+    @property({ type: Number }) requestTimeout: number = 30000;
+    @property({ attribute: false }) postLoadTransformCallback: PostLoadTransformCallback | null = null;
+    @property({ attribute: false }) postLoadTestTransformCallback: PostLoadTestTransformCallback | null = null;
 
     protected _testElement: QtiAssessmentTest;
-    protected _navigationInProgress: boolean = false;
-    private _activeRequests: XMLHttpRequest[] = [];
 
-    private _lastError: NavigationError | null = null;
-    private _lastNavigationRequestId: string | null = null;
-    private _targetNavigation: { type: 'item' | 'section'; id: string } | null = null;
+    // Navigation state tracking
+    private _activeController: AbortController | null = null;
+    private _loadResults: any[] = [];
+
+    // Simple loading progress tracking
+    private _loadingState = {
+      expectedItems: 0,
+      connectedItems: 0,
+      expectedStimulus: 0,
+      loadedStimulus: 0,
+      isComplete: false
+    };
+
+    // Track loaded/loading stimulus hrefs to prevent duplicates
+    private _loadedStimulusHrefs = new Set<string>();
+    private _loadingStimulusHrefs = new Set<string>();
 
     constructor(...args: any[]) {
       super(...args);
-
-      // Handle navigation requests
-      this.addEventListener(
-        'qti-request-navigation',
-        async ({ detail }: CustomEvent<{ type: 'item' | 'section'; id: string }>) => {
-          if (!detail?.id) return;
-
-          // Track this navigation request's unique identifier
-          // Using timestamp and a counter for uniqueness
-          const navigationRequestId = `nav_${Date.now()}_${Math.random()}`;
-          this._lastNavigationRequestId = navigationRequestId;
-
-          try {
-            // Set navigation in progress and clear errors
-            this._navigationInProgress = true;
-            this._lastError = null;
-            this._dispatchStatusEvent({ loading: true, type: detail.type, id: detail.id });
-
-            // Cancel any pending requests before starting new ones
-            this._cancelActiveRequests();
-
-            // Store the navigation target for quick navigation
-            this._targetNavigation = { type: detail.type, id: detail.id };
-
-            if (detail.type === 'item') {
-              await this._navigateToItem(detail.id);
-            } else if (detail.type === 'section') {
-              await this._navigateToSection(detail.id);
-            }
-
-            // Verify this is still the most recent navigation request
-            // If not, we don't need to do anything more as a newer request superseded this one
-            if (this._lastNavigationRequestId !== navigationRequestId) {
-              console.log('Navigation was superseded by a newer request');
-              return;
-            }
-          } catch (error) {
-            // Only process error if this is still the most recent navigation
-            if (this._lastNavigationRequestId === navigationRequestId) {
-              // Convert error to NavigationError if it's not already
-              const navError = this._normalizeError(error, detail.type, detail.id);
-              this._lastError = navError;
-
-              // Dispatch the error event
-              this._dispatchErrorEvent(navError);
-
-              console.error(`Navigation error (${navError.type}):`, navError.message, navError.details);
-            }
-          } finally {
-            // Only update navigation status if this is still the active request
-            if (this._lastNavigationRequestId === navigationRequestId) {
-              // Always mark navigation as completed
-              this._navigationInProgress = false;
-              this._dispatchStatusEvent({ loading: false, type: detail.type, id: detail.id });
-            }
-          }
-        }
-      );
-
-      // Handle test connection
-      this.addEventListener('qti-assessment-test-connected', (e: CustomEvent<QtiAssessmentTest>) => {
-        this._testElement = e.detail;
-        this._initializeNavigation();
-      });
+      this._bindEventHandlers();
     }
 
-    /**
-     * Initialize navigation when test is first connected
-     */
-    private _initializeNavigation(): void {
-      let id: string | undefined;
+    // ===========================================
+    // PUBLIC API
+    // ===========================================
 
-      if (this.navigate === 'section') {
-        id = this._testElement.querySelector<QtiAssessmentSection>('qti-assessment-section')?.identifier;
-      }
-      if (this.navigate === 'item') {
-        id =
-          this.sessionContext.navItemRefId ??
-          this._testElement.querySelector<QtiAssessmentItemRef>('qti-assessment-item-ref')?.identifier;
-      }
-      if (id) {
+    /**
+     * Navigate to a specific item or section
+     * @param type - Navigation type ('item' or 'section')
+     * @param id - Target identifier (optional, falls back to first available)
+     */
+    public navigateTo(type: 'item' | 'section', id?: string): void {
+      const targetId = id || this._getDefaultNavigationId(type);
+
+      if (targetId) {
         this.dispatchEvent(
           new CustomEvent('qti-request-navigation', {
-            detail: { type: this.navigate === 'section' ? 'section' : 'item', id },
+            detail: { type, id: targetId },
             bubbles: true,
             composed: true
           })
@@ -139,160 +92,466 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
       }
     }
 
-    public navigateTo(type: 'item' | 'section', id?: string): void {
-      // if no id, take the first qti-assessment-item-ref
-      if (!id) {
-        if (type === 'section') {
-          id = this._testElement?.querySelector<QtiAssessmentSection>('qti-assessment-section')?.identifier;
+    // ===========================================
+    // EVENT HANDLER SETUP
+    // ===========================================
+
+    private _bindEventHandlers(): void {
+      this.addEventListener('qti-request-navigation', this._handleNavigationRequest.bind(this));
+      this.addEventListener('qti-assessment-test-connected', this._handleTestConnected.bind(this));
+      this.addEventListener('qti-assessment-item-connected', this._handleItemConnected.bind(this));
+      this.addEventListener('qti-assessment-stimulus-ref-connected', this._handleStimulusRefConnected.bind(this));
+    }
+
+    private _handleTestConnected(e: CustomEvent<QtiAssessmentTest>): void {
+      this._testElement = e.detail;
+      this._initializeNavigation();
+    }
+
+    /**
+     * Handle item connection events - track connected items and discover stimulus references
+     */
+    private _handleItemConnected(e: CustomEvent<QtiAssessmentItemRef>): void {
+      const itemRef = e.detail;
+
+      // Increment connected items count
+      this._loadingState.connectedItems++;
+
+      // Count stimulus references in this item and add to expected
+      const stimulusRefs = itemRef.querySelectorAll('qti-assessment-stimulus-ref');
+      this._loadingState.expectedStimulus += stimulusRefs.length;
+
+      this._checkLoadingComplete();
+    }
+
+    /**
+     * Handle stimulus reference connection events with duplicate prevention
+     */
+    private async _handleStimulusRefConnected(e: QtiAssessmentStimulusRefConnectedEvent): Promise<void> {
+      e.preventDefault();
+
+      const { element, item } = e;
+      console.info('Stimulus ref connected:', {
+        identifier: element.identifier,
+        href: element.href,
+        item: item.identifier
+      });
+
+      // Check if this stimulus href is already loaded or currently loading
+      if (this._loadedStimulusHrefs.has(element.href)) {
+        console.info('Stimulus already loaded, skipping:', element.href);
+        this._loadingState.loadedStimulus++;
+        this._checkLoadingComplete();
+        return;
+      }
+
+      if (this._loadingStimulusHrefs.has(element.href)) {
+        console.info('Stimulus already loading, skipping duplicate:', element.href);
+        this._loadingState.loadedStimulus++;
+        this._checkLoadingComplete();
+        return;
+      }
+
+      // Mark as currently loading
+      this._loadingStimulusHrefs.add(element.href);
+      console.info('Starting stimulus load:', element.href);
+
+      try {
+        await this._loadStimulusRef(element, item);
+        this._loadedStimulusHrefs.add(element.href);
+        this._loadingState.loadedStimulus++;
+        console.info('Stimulus loaded successfully:', element.href);
+        this._checkLoadingComplete();
+      } catch (error) {
+        if (error.name !== 'AbortError') {
+          console.warn(`Failed to load stimulus ${element.identifier}:`, error);
         }
-        if (type === 'item') {
-          id = this._testElement?.querySelector<QtiAssessmentItemRef>('qti-assessment-item-ref')?.identifier;
+        // Still count as "processed" even if failed to avoid hanging
+        this._loadingState.loadedStimulus++;
+        this._checkLoadingComplete();
+      } finally {
+        // Remove from loading set regardless of outcome
+        this._loadingStimulusHrefs.delete(element.href);
+      }
+    }
+
+    // ===========================================
+    // NAVIGATION FLOW
+    // ===========================================
+
+    private _getDefaultNavigationId(type: 'item' | 'section'): string | undefined {
+      if (type === 'section') {
+        return this._testElement?.querySelector<QtiAssessmentSection>('qti-assessment-section')?.identifier;
+      }
+      return (
+        this.sessionContext?.navItemRefId ??
+        this._testElement?.querySelector<QtiAssessmentItemRef>('qti-assessment-item-ref')?.identifier
+      );
+    }
+
+    private _initializeNavigation(): void {
+      if (!this.navigate) return;
+
+      const id = this._getDefaultNavigationId(this.navigate);
+      if (id) {
+        this.navigateTo(this.navigate, id);
+      }
+    }
+
+    /**
+     * Main navigation request handler with proper lifecycle management
+     */
+    private async _handleNavigationRequest({ detail }: CustomEvent<{ type: 'item' | 'section'; id: string }>) {
+      if (!detail?.id) return;
+
+      this._cancelPreviousNavigation();
+
+      try {
+        this._dispatchLoadingStarted(detail.type, detail.id);
+        this._activeController = new AbortController();
+
+        await this._executeNavigation(detail.type, detail.id);
+      } catch (error) {
+        this._handleNavigationError(error, detail.type, detail.id);
+      } finally {
+        this._activeController = null;
+        this._dispatchLoadingEnded(detail.type, detail.id);
+      }
+    }
+
+    private _handleNavigationError(error: any, type: string, id: string): void {
+      if (error.name !== 'AbortError') {
+        this._dispatchError(this._createNavigationError(error, type, id));
+      }
+    }
+
+    private async _executeNavigation(type: 'item' | 'section', id: string): Promise<void> {
+      if (type === 'item') {
+        await this._navigateToItem(id);
+      } else {
+        await this._navigateToSection(id);
+      }
+    }
+
+    /**
+     * Navigate to specific item with simple state tracking
+     */
+    private async _navigateToItem(itemId: string): Promise<void> {
+      const itemRef = this._findItemRef(itemId);
+      this._updateSessionContext(itemRef, itemId);
+
+      this._resetLoadingState();
+      this._loadingState.expectedItems = 1;
+
+      await this._loadItems([itemId]);
+      await this._waitForLoadingComplete();
+
+      this._dispatchTestLoaded(this._loadResults);
+    }
+
+    /**
+     * Navigate to section with simple state tracking
+     */
+    private async _navigateToSection(sectionId: string): Promise<void> {
+      const sectionEl = this._findSection(sectionId);
+      const navPartId = sectionEl?.closest('qti-test-part')?.identifier;
+
+      this.sessionContext = {
+        ...this.sessionContext,
+        navPartId,
+        navSectionId: sectionId,
+        navItemRefId: null
+      };
+
+      const itemIds = this._getSectionItemIds(sectionId);
+
+      this._resetLoadingState();
+      this._loadingState.expectedItems = itemIds.length;
+
+      await this._loadItems(itemIds);
+      await this._waitForLoadingComplete();
+
+      this._dispatchTestLoaded(this._loadResults);
+    }
+
+    // ===========================================
+    // LOADING STATE MANAGEMENT
+    // ===========================================
+
+    /**
+     * Reset loading state for new navigation
+     */
+    private _resetLoadingState(): void {
+      this._loadingState = {
+        expectedItems: 0,
+        connectedItems: 0,
+        expectedStimulus: 0,
+        loadedStimulus: 0,
+        isComplete: false
+      };
+
+      // Clear stimulus tracking - start fresh for new navigation
+      this._loadedStimulusHrefs.clear();
+      this._loadingStimulusHrefs.clear();
+    }
+
+    /**
+     * Check if loading is complete and dispatch events accordingly
+     */
+    private _checkLoadingComplete(): void {
+      const allItemsConnected = this._loadingState.connectedItems >= this._loadingState.expectedItems;
+      const allStimulusLoaded = this._loadingState.loadedStimulus >= this._loadingState.expectedStimulus;
+
+      if (allItemsConnected && allStimulusLoaded && !this._loadingState.isComplete) {
+        this._loadingState.isComplete = true;
+        console.info('Loading complete:', this._loadingState);
+      }
+    }
+
+    /**
+     * Wait for loading to complete with simple polling
+     */
+    private async _waitForLoadingComplete(): Promise<void> {
+      while (!this._loadingState.isComplete) {
+        await new Promise(resolve => setTimeout(resolve, 10));
+      }
+    }
+
+    /**
+     * Get current loading progress for external consumption
+     */
+    public getLoadingProgress() {
+      return { ...this._loadingState };
+    }
+
+    /**
+     * Load stimulus reference with simple tracking
+     */
+    private async _loadStimulusRef(
+      element: { identifier: string; href: string },
+      item: { identifier: string }
+    ): Promise<void> {
+      console.info('Loading stimulus:', element.href);
+      const stimulus = await this._loadStimulus(element.href);
+      console.info('Stimulus loaded, applying content:', stimulus ? 'has content' : 'no content');
+      this._applyStimulusContent(stimulus, element, item);
+    }
+
+    private _applyStimulusContent(
+      stimulus: DocumentFragment | null,
+      element: { identifier: string },
+      item: { identifier: string }
+    ): void {
+      if (!stimulus) {
+        console.warn('No stimulus content to apply');
+        return;
+      }
+
+      const elements = stimulus.querySelectorAll('qti-stimulus-body, qti-stylesheet');
+      console.info(`Found ${elements.length} stimulus elements to apply for ${element.identifier}`);
+
+      if (elements.length === 0) {
+        console.warn('No qti-stimulus-body or qti-stylesheet elements found in stimulus');
+        return;
+      }
+
+      // Try multiple target selection strategies
+      let targets: Element[] = [];
+
+      // Strategy 1: Specific item and identifier
+      const specificTarget = document.querySelector(
+        `qti-assessment-item[identifier="${item.identifier}"] [data-stimulus-idref="${element.identifier}"]`
+      );
+
+      if (specificTarget) {
+        targets.push(specificTarget);
+        console.info('Found specific target:', specificTarget);
+      } else {
+        // Strategy 2: Any element with matching stimulus idref
+        const allTargetsWithId = Array.from(this.querySelectorAll(`[data-stimulus-idref="${element.identifier}"]`));
+
+        if (allTargetsWithId.length > 0) {
+          targets = allTargetsWithId;
+          console.info('Found targets by identifier:', allTargetsWithId.length);
+        } else {
+          // Strategy 3: Any stimulus idref target (fallback)
+          const allStimulusTargets = Array.from(this.querySelectorAll('[data-stimulus-idref]'));
+          targets = allStimulusTargets;
+          console.info('Using fallback targets:', allStimulusTargets.length);
         }
       }
+
+      if (targets.length === 0) {
+        console.warn('No targets found for stimulus content');
+        return;
+      }
+
+      // Apply content to all targets
+      targets.forEach((target, index) => {
+        target.innerHTML = '';
+        const clonedElements = Array.from(elements).map(el => el.cloneNode(true) as Element);
+        target.append(...clonedElements);
+        console.info(`Applied stimulus content to target ${index + 1}/${targets.length}`);
+      });
+    } // ===========================================
+    // LOADING INFRASTRUCTURE
+    // ===========================================
+
+    /**
+     * Cancel previous navigation and clean up all state
+     */
+    private _cancelPreviousNavigation(): void {
+      if (this._activeController) {
+        this._activeController.abort();
+        console.info('Previous navigation request cancelled');
+      }
+
+      this._clearNavigationState();
+    }
+
+    private _clearNavigationState(): void {
+      this._clearLoadedItems();
+      this._resetLoadingState();
+      this._loadResults = [];
+    }
+
+    /**
+     * Load items with simple tracking
+     */
+    private async _loadItems(itemIds: string[]): Promise<void> {
+      if (!this._testElement || itemIds.length === 0) return;
+
+      const itemRefs = itemIds.map(id => this._findItemRef(id));
+      this._clearLoadedItems();
+      this._clearStimulusRef();
+
+      const results = await Promise.all(itemRefs.map(ref => this._loadSingleItem(ref)));
+      const validResults = results.filter(Boolean);
+
+      validResults.forEach(({ itemRef, doc }) => {
+        if (itemRef && doc) itemRef.xmlDoc = doc;
+      });
+
+      this._loadResults = validResults;
+    }
+
+    private async _loadSingleItem(itemRef: QtiAssessmentItemRef) {
+      try {
+        let transformer = await qtiTransformItem(this.cacheTransform).load(
+          itemRef.href,
+          this._activeController?.signal
+        );
+
+        if (this.postLoadTransformCallback) {
+          transformer = await this.postLoadTransformCallback(transformer, itemRef);
+        }
+
+        return { itemRef, doc: transformer.htmlDoc() };
+      } catch (error) {
+        if (error.name === 'AbortError') {
+          console.info(`Item load for ${itemRef.identifier} was aborted`);
+          throw error;
+        }
+        console.warn(`Failed to load item ${itemRef.identifier}:`, error);
+        return null;
+      }
+    }
+
+    private async _loadStimulus(href: string): Promise<DocumentFragment | null> {
+      const transformer = await qtiTransformItem().load(href, this._activeController?.signal);
+      return transformer.htmlDoc();
+    }
+
+    // ===========================================
+    // UTILITIES
+    // ===========================================
+
+    private _findItemRef(itemId: string): QtiAssessmentItemRef {
+      const itemRef = this._testElement?.querySelector<QtiAssessmentItemRef>(
+        `qti-assessment-item-ref[identifier="${itemId}"]`
+      );
+
+      if (!itemRef) {
+        throw new Error(`Item with identifier "${itemId}" not found`);
+      }
+
+      return itemRef;
+    }
+
+    private _findSection(sectionId: string): QtiAssessmentSection | null {
+      return (
+        this._testElement?.querySelector<QtiAssessmentSection>(`qti-assessment-section[identifier="${sectionId}"]`) ||
+        null
+      );
+    }
+
+    private _updateSessionContext(itemRef: QtiAssessmentItemRef, itemId: string): void {
+      const navPartId = itemRef.closest('qti-test-part')?.identifier;
+      const navSectionId = itemRef.closest('qti-assessment-section')?.identifier;
+
+      this.sessionContext = {
+        ...this.sessionContext,
+        navPartId,
+        navSectionId,
+        navItemRefId: itemId
+      };
+    }
+
+    private _getSectionItemIds(sectionId: string): string[] {
+      return Array.from(
+        this._testElement.querySelectorAll<QtiAssessmentItemRef>(
+          `qti-assessment-section[identifier="${sectionId}"] > qti-assessment-item-ref`
+        )
+      )
+        .map(ref => ref.identifier)
+        .filter(Boolean);
+    }
+
+    private _clearLoadedItems(): void {
+      const itemRefs = this._testElement?.querySelectorAll<QtiAssessmentItemRef>('qti-assessment-item-ref');
+      Array.from(itemRefs || []).forEach(element => {
+        element.xmlDoc = null;
+      });
+    }
+
+    private _clearStimulusRef(): void {
+      this.querySelectorAll('[data-stimulus-idref]').forEach(el => (el.innerHTML = ''));
+    }
+
+    private _createNavigationError(error: any, type: string, id: string): NavigationError {
+      return {
+        message: error.message || `Failed to load ${type}: ${id}`,
+        details: error,
+        itemId: type === 'item' ? id : undefined,
+        sectionId: type === 'section' ? id : undefined
+      };
+    }
+
+    // ===========================================
+    // EVENT DISPATCHING
+    // ===========================================
+
+    private _dispatchLoadingStarted(type: string, id: string): void {
       this.dispatchEvent(
-        new CustomEvent('qti-request-navigation', {
+        new CustomEvent('qti-navigation-loading-started', {
           detail: { type, id },
           bubbles: true,
           composed: true
         })
       );
     }
-    /**
-     * Navigates to a specific item
-     */
-    private async _navigateToItem(itemId: string): Promise<void> {
-      const itemRefEl = this._testElement?.querySelector<QtiAssessmentItemRef>(
-        `qti-assessment-item-ref[identifier="${itemId}"]`
+
+    private _dispatchLoadingEnded(type: string, id: string): void {
+      this.dispatchEvent(
+        new CustomEvent('qti-navigation-loading-ended', {
+          detail: { type, id },
+          bubbles: true,
+          composed: true
+        })
       );
-
-      if (!itemRefEl) {
-        throw {
-          type: NavigationErrorType.ITEM_NOT_FOUND,
-          message: `Item with identifier "${itemId}" not found.`,
-          itemId
-        };
-      }
-
-      // Update the session context immediately to record navigation intent
-      // This ensures we remember the target item even if loading is interrupted
-      const navPartId = itemRefEl.closest('qti-test-part')?.identifier;
-      const navSectionId = itemRefEl.closest('qti-assessment-section')?.identifier;
-
-      // Set loading state and update navigation context first
-      this.sessionContext = {
-        ...this.sessionContext,
-        navPartId,
-        navSectionId,
-        navItemRefId: itemId,
-        navItemLoading: true
-      };
-
-      // console.log('Navigating to item:', itemId);
-
-      // Then attempt to load the item content
-      try {
-        await this._loadItems([itemId]);
-      } finally {
-        // Even if loading fails or is interrupted, update loading state
-        // This ensures we don't get stuck in a loading state
-        this.sessionContext = {
-          ...this.sessionContext,
-          navItemLoading: false
-        };
-      }
     }
 
-    /**
-     * Navigates to a specific section
-     */
-    private async _navigateToSection(sectionId: string): Promise<void> {
-      const sectionRefEl = this._testElement?.querySelector<QtiAssessmentSection>(
-        `qti-assessment-section[identifier="${sectionId}"]`
-      );
-
-      if (!sectionRefEl) {
-        throw {
-          type: NavigationErrorType.SECTION_NOT_FOUND,
-          message: `Section with identifier "${sectionId}" not found.`,
-          sectionId
-        };
-      }
-
-      // Get navigation context first
-      const navPartId = sectionRefEl.closest('qti-test-part')?.identifier;
-
-      // Update navigation state before loading items
-      this.sessionContext = {
-        ...this.sessionContext,
-        navPartId,
-        navSectionId: sectionId,
-        navItemRefId: null,
-        navItemLoading: true
-      };
-
-      // Then attempt to load the section's items
-      try {
-        const itemIds = this._getSectionItemIds(sectionId);
-        await this._loadItems(itemIds);
-      } finally {
-        // Update loading state even if loading fails or is interrupted
-        this.sessionContext = {
-          ...this.sessionContext,
-          navItemLoading: false
-        };
-      }
-    }
-
-    /**
-     * Normalize different error types into a consistent NavigationError format
-     */
-    private _normalizeError(error: any, navigationType: string, id: string): NavigationError {
-      // If it's already a NavigationError, return it
-      if (error && error.type && Object.values(NavigationErrorType).includes(error.type)) {
-        return error as NavigationError;
-      }
-
-      // For XMLHttpRequest related errors
-      if (error instanceof DOMException && error.name === 'AbortError') {
-        return {
-          type: NavigationErrorType.NETWORK_ERROR,
-          message: 'Navigation was cancelled because a new navigation was requested.',
-          details: error
-        };
-      }
-
-      // For timeout errors
-      if (error.name === 'TimeoutError' || (error.message && error.message.includes('timeout'))) {
-        return {
-          type: NavigationErrorType.TIMEOUT_ERROR,
-          message: 'Request timed out. Please check your network connection.',
-          details: error
-        };
-      }
-
-      // For network errors
-      if (error instanceof TypeError && error.message.includes('network')) {
-        return {
-          type: NavigationErrorType.NETWORK_ERROR,
-          message: 'A network error occurred. Please check your connection.',
-          details: error
-        };
-      }
-
-      // Default to load error for anything else
-      return {
-        type: NavigationErrorType.LOAD_ERROR,
-        message: `Failed to load ${navigationType}: ${id}`,
-        details: error,
-        itemId: navigationType === 'item' ? id : undefined,
-        sectionId: navigationType === 'section' ? id : undefined
-      };
-    }
-
-    /**
-     * Dispatch error event to notify the UI
-     */
-    private _dispatchErrorEvent(error: NavigationError): void {
+    private _dispatchError(error: NavigationError): void {
       this.dispatchEvent(
         new CustomEvent('qti-navigation-error', {
           detail: error,
@@ -302,225 +561,19 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
       );
     }
 
-    /**
-     * Dispatch status event to indicate loading state
-     */
-    private _dispatchStatusEvent(status: { loading: boolean; type: string; id: string }): void {
-      if (this.showLoadingIndicators) {
+    private _dispatchTestLoaded(results: any[]): void {
+      requestAnimationFrame(() => {
         this.dispatchEvent(
-          new CustomEvent('qti-navigation-status', {
-            detail: status,
+          new CustomEvent('qti-test-loaded', {
+            detail: results.map(({ itemRef }) => ({
+              identifier: itemRef?.identifier,
+              element: itemRef
+            })),
             bubbles: true,
             composed: true
           })
         );
-      }
-    }
-
-    /**
-     * Cancels all active HTTP requests
-     */
-    private _cancelActiveRequests(): void {
-      if (this._activeRequests.length > 0) {
-        console.info(`Cancelling ${this._activeRequests.length} pending requests`);
-        this._activeRequests.forEach(request => {
-          if (request && request.readyState !== 4) {
-            // 4 is DONE
-            request.abort();
-          }
-        });
-        this._activeRequests = [];
-      }
-    }
-
-    /**
-     * Load items with improved error handling and timeout
-     */
-    private async _loadItems(
-      itemIds: string[]
-    ): Promise<{ itemRef: QtiAssessmentItemRef; doc: any; request: XMLHttpRequest }[]> {
-      if (!this._testElement || itemIds.length === 0) return;
-
-      const itemRefEls = itemIds.map(id =>
-        this._testElement!.querySelector<QtiAssessmentItemRef>(`qti-assessment-item-ref[identifier="${id}"]`)
-      );
-
-      // Check for missing items
-      const missingItems = itemRefEls.reduce((missing, el, index) => {
-        if (!el) missing.push(itemIds[index]);
-        return missing;
-      }, [] as string[]);
-
-      if (missingItems.length > 0) {
-        const error: NavigationError = {
-          type: NavigationErrorType.ITEM_NOT_FOUND,
-          message: `One or more items not found: ${missingItems.join(', ')}`,
-          details: { missingItems }
-        };
-        throw error;
-      }
-
-      this._clearLoadedItems();
-      // Note: We no longer update navItemLoading here since it's handled in the navigation methods
-
-      const itemLoadPromises = itemRefEls.map(async itemRef => {
-        if (!itemRef) return null;
-
-        // Create a timeout promise
-        const timeoutPromise = new Promise((_, reject) => {
-          setTimeout(() => {
-            reject({
-              name: 'TimeoutError',
-              message: `Request for item ${itemRef.identifier} timed out after ${this.requestTimeout}ms`
-            });
-          }, this.requestTimeout);
-        });
-
-        try {
-          const { promise, request } = qtiTransformItem(this.cacheTransform).load(itemRef.href);
-
-          // Track the request so it can be cancelled if needed
-          if (request instanceof XMLHttpRequest) {
-            this._activeRequests.push(request);
-          }
-
-          // Race the item loading against the timeout
-          const loadedTransformer = (await Promise.race([promise, timeoutPromise])) as transformItemApi;
-          // Apply external transformation if provided
-          let finalTransformer = loadedTransformer;
-
-          if (this.postLoadTransformCallback) {
-            finalTransformer = await this.postLoadTransformCallback(loadedTransformer, itemRef);
-          }
-          return {
-            itemRef,
-            doc: finalTransformer.htmlDoc(),
-            request
-          };
-        } catch (error) {
-          // If this is a cancellation or timeout, don't rethrow
-          if (
-            (error instanceof DOMException && error.name === 'AbortError') ||
-            (error && error.name === 'TimeoutError')
-          ) {
-            console.log(
-              `Request for item ${itemRef.identifier} was ${error.name === 'TimeoutError' ? 'timed out' : 'aborted'}`
-            );
-            return null;
-          }
-
-          // For other errors, add item context and rethrow
-          error.itemId = itemRef.identifier;
-          throw error;
-        }
       });
-
-      try {
-        const results = await Promise.all(itemLoadPromises);
-
-        // Filter out any null results (from aborted or timed out requests)
-        const validResults = results.filter(result => result !== null);
-
-        // Apply loaded docs to item refs
-        validResults.forEach(({ itemRef, doc }) => {
-          if (itemRef && doc) itemRef.xmlDoc = doc;
-        });
-
-        // Clear the active requests list after all are complete
-        this._activeRequests = [];
-
-        // Dispatch test loaded event
-        requestAnimationFrame(() => {
-          this.dispatchEvent(
-            new CustomEvent('qti-test-loaded', {
-              detail: validResults.map(({ itemRef }) => ({
-                identifier: itemRef?.identifier,
-                element: itemRef
-              })),
-              bubbles: true,
-              composed: true
-            })
-          );
-        });
-
-        // If no valid results but we had items to load, this is an error
-        if (validResults.length === 0 && itemIds.length > 0) {
-          throw {
-            type: NavigationErrorType.LOAD_ERROR,
-            message: 'All item requests failed to load',
-            details: { itemIds }
-          };
-        }
-
-        return validResults;
-      } catch (error) {
-        console.error('Error loading items:', error);
-        throw error;
-      }
-    }
-
-    /**
-     * Gets all item IDs in a section
-     */
-    private _getSectionItemIds(navSectionId: string): string[] {
-      const sectionRefEl = this._testElement?.querySelector<QtiAssessmentSection>(
-        `qti-assessment-section[identifier="${navSectionId}"]`
-      );
-
-      if (!sectionRefEl) {
-        throw {
-          type: NavigationErrorType.SECTION_NOT_FOUND,
-          message: `Section with identifier "${navSectionId}" not found.`,
-          sectionId: navSectionId
-        };
-      }
-
-      return Array.from(
-        this._testElement!.querySelectorAll<QtiAssessmentItemRef>(
-          `qti-assessment-section[identifier="${navSectionId}"] > qti-assessment-item-ref`
-        )
-      ).map(itemRef => itemRef.identifier);
-    }
-
-    /**
-     * Clears all loaded items
-     */
-    private _clearLoadedItems(): void {
-      const itemRefEls = this._testElement?.querySelectorAll<QtiAssessmentItemRef>(
-        `qti-assessment-test qti-assessment-item-ref`
-      );
-      Array.from(itemRefEls || []).forEach(itemElement => {
-        itemElement.xmlDoc = null;
-      });
-    }
-
-    /**
-     * Retry the last failed navigation
-     */
-    public retryNavigation(): void {
-      if (this._lastError) {
-        const type = this._lastError.itemId ? 'item' : 'section';
-        const id = this._lastError.itemId || this._lastError.sectionId;
-
-        if (id) {
-          this.dispatchEvent(
-            new CustomEvent('qti-request-navigation', {
-              detail: { type, id },
-              bubbles: true,
-              composed: true
-            })
-          );
-        }
-      } else if (this._targetNavigation) {
-        // If we have a target navigation but no error, we can retry that
-        this.dispatchEvent(
-          new CustomEvent('qti-request-navigation', {
-            detail: this._targetNavigation,
-            bubbles: true,
-            composed: true
-          })
-        );
-      }
     }
   }
 

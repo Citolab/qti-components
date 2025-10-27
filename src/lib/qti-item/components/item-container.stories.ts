@@ -15,7 +15,7 @@ type Story = StoryObj<ItemContainer & typeof args>;
 
 const meta: Meta<typeof ItemContainer & { 'item-url': string }> = {
   component: 'item-container',
-  args: { ...args, 'item-url': '/qti-item/example-choice-item.xml' },
+  args: { ...args, 'item-url': 'assets/qti-item/example-choice-item.xml' },
   argTypes,
   parameters: {
     actions: {
@@ -48,7 +48,7 @@ export const ItemDoc: Story = {
     async ({ args }) => {
       const itemDoc = qtiTransformItem()
         .load(args['item-url'])
-        .promise.then(api => api.htmlDoc());
+        .then(api => api.htmlDoc());
       return { itemDoc };
     }
   ],
@@ -68,7 +68,7 @@ export const ItemXML: Story = {
     async ({ args }) => {
       const itemXML = await qtiTransformItem()
         .load(args['item-url'])
-        .promise.then(api => api.xml());
+        .then(api => api.xml());
       return { itemXML };
     }
   ],

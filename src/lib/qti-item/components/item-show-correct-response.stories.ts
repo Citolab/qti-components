@@ -20,7 +20,7 @@ type Story = StoryObj<ItemShowCorrectResponse & typeof args>;
 
 const meta: Meta<typeof ItemContainer & { 'item-url': string }> = {
   component: 'item-container',
-  args: { ...args, 'item-url': '/qti-item/example-choice-item.xml' },
+  args: { ...args, 'item-url': 'assets/qti-item/example-choice-item.xml' },
   argTypes,
   parameters: {
     actions: {
@@ -95,7 +95,7 @@ export const Default: Story = {
 
 export const NoCorrectResponse: Story = {
   args: {
-    'item-url': '/qti-item/example-choice-nocorrect-item.xml' // Set the new item URL here
+    'item-url': 'assets/qti-item/example-choice-nocorrect-item.xml' // Set the new item URL here
   },
   render: args =>
     html` <qti-item>
@@ -286,7 +286,7 @@ export const ChoiceFullCorrectResponseOnlyWhenIncorrect: Story = {
 
 export const MultipleResponseInternalCorrectResponse: Story = {
   args: {
-    'item-url': '/qti-item/example-choice-multiple-item.xml' // Set the new item URL here
+    'item-url': 'assets/qti-item/example-choice-multiple-item.xml' // Set the new item URL here
   },
   render: args =>
     html` <qti-item>
@@ -340,7 +340,7 @@ export const MultipleResponseInternalCorrectResponse: Story = {
 
 export const MultipleResponseFullCorrectResponse: Story = {
   args: {
-    'item-url': '/qti-item/example-choice-multiple-item.xml' // Set the new item URL here
+    'item-url': 'assets/qti-item/example-choice-multiple-item.xml' // Set the new item URL here
   },
   render: args =>
     html` <qti-item>
@@ -394,7 +394,7 @@ export const MultipleResponseFullCorrectResponse: Story = {
 
 export const TextEntryInternalCorrectResponse: Story = {
   args: {
-    'item-url': '/qti-test-package/items/text_entry.xml' // Set the new item URL here
+    'item-url': 'assets/qti-test-package/items/text_entry.xml' // Set the new item URL here
   },
   render: args =>
     html` <qti-item navigate="item">
@@ -437,7 +437,7 @@ export const TextEntryInternalCorrectResponse: Story = {
 
 export const TextEntryFullCorrectResponse: Story = {
   args: {
-    'item-url': '/qti-test-package/items/text_entry.xml' // Set the new item URL here
+    'item-url': 'assets/qti-test-package/items/text_entry.xml' // Set the new item URL here
   },
   render: args =>
     html` <qti-item navigate="item">
@@ -481,7 +481,7 @@ export const TextEntryFullCorrectResponse: Story = {
 
 export const GapMatch: Story = {
   args: {
-    'item-url': '/qti-test-package/items/gap_match.xml' // Set the new item URL here
+    'item-url': 'assets/qti-test-package/items/gap_match.xml' // Set the new item URL here
   },
   render: args =>
     html` <qti-item>
@@ -522,7 +522,7 @@ export const GapMatch: Story = {
 
 export const Match: Story = {
   args: {
-    'item-url': '/qti-test-package/items/match.xml' // Set the new item URL here
+    'item-url': 'assets/qti-test-package/items/match.xml' // Set the new item URL here
     // 'item-url': 'api/kennisnet-1/ITEM002.xml' // Set the new item URL here
   },
   render: args =>
@@ -565,7 +565,7 @@ export const Match: Story = {
 
 export const MatchFullCorrectResponse: Story = {
   args: {
-    'item-url': '/qti-test-package/items/match.xml' // Set the new item URL here
+    'item-url': 'assets/qti-test-package/items/match.xml' // Set the new item URL here
     // 'item-url': 'api/kennisnet-1/ITEM002.xml' // Set the new item URL here
   },
   render: args =>
@@ -603,9 +603,7 @@ export const MatchFullCorrectResponse: Story = {
       await fireEvent.click(showCorrectButton);
 
       await step('Verify full correct response is shown', async () => {
-        const fullCorrectResponse = await waitFor(() =>
-          canvas.getByShadowRole('full-correct-response')
-        );
+        const fullCorrectResponse = await waitFor(() => canvas.getByShadowRole('full-correct-response'));
         expect(fullCorrectResponse).toBeVisible();
       });
     });
@@ -614,7 +612,7 @@ export const MatchFullCorrectResponse: Story = {
 
 export const MatchTabular: Story = {
   args: {
-    'item-url': '/qti-test-package/items/match-tabular.xml' // Set the new item URL here
+    'item-url': 'assets/qti-test-package/items/match-tabular.xml' // Set the new item URL here
     // 'item-url': 'api/kennisnet-1/ITEM002.xml' // Set the new item URL here
   },
   render: args =>
@@ -678,7 +676,7 @@ export const MatchTabular: Story = {
 
 export const SelectPoint: Story = {
   args: {
-    'item-url': '/qti-test-package/items/select_point.xml' // Set the new item URL here
+    'item-url': 'assets/qti-test-package/items/select_point.xml' // Set the new item URL here
   },
   render: args =>
     html`<qti-item>
@@ -719,7 +717,7 @@ export const SelectPoint: Story = {
 
 export const SelectPointMultipleNoAreaMapping: Story = {
   args: {
-    'item-url': '/qti-item/example-select-point.xml' // Set the new item URL here
+    'item-url': 'assets/qti-item/example-select-point.xml' // Set the new item URL here
   },
   render: args =>
     html` <qti-item>
@@ -764,7 +762,7 @@ export const SelectPointMultipleNoAreaMapping: Story = {
 
 export const GraphicOrder: Story = {
   args: {
-    'item-url': '/qti-item/example-graphic-order.xml' // Set the new item URL here
+    'item-url': 'assets/qti-item/example-graphic-order.xml' // Set the new item URL here
   },
   render: args =>
     html` <qti-item>
@@ -808,7 +806,7 @@ export const GraphicOrder: Story = {
 
 export const InlineChoiceInternalCorrectResponse: Story = {
   args: {
-    'item-url': '/qti-item/example-inline-choice.xml' // Set the new item URL here
+    'item-url': 'assets/qti-item/example-inline-choice.xml' // Set the new item URL here
   },
   render: args =>
     html` <qti-item>
@@ -853,7 +851,7 @@ export const InlineChoiceInternalCorrectResponse: Story = {
 
 export const InlineChoiceFullCorrectResponse: Story = {
   args: {
-    'item-url': '/qti-item/example-inline-choice.xml' // Zorg dat dit item een inline-choice bevat
+    'item-url': 'assets/qti-item/example-inline-choice.xml' // Zorg dat dit item een inline-choice bevat
   },
   render: args =>
     html`<qti-item>
@@ -890,9 +888,7 @@ export const InlineChoiceFullCorrectResponse: Story = {
       await fireEvent.click(showCorrectButton);
 
       await step('Verify full correct response is shown', async () => {
-        const fullCorrectResponse = await waitFor(() =>
-          canvas.getByShadowRole('full-correct-response')
-        );
+        const fullCorrectResponse = await waitFor(() => canvas.getByShadowRole('full-correct-response'));
         expect(fullCorrectResponse).toBeVisible();
 
         const interaction = fullCorrectResponse.querySelector('qti-inline-choice-interaction');
@@ -911,7 +907,7 @@ export const InlineChoiceFullCorrectResponse: Story = {
 
 export const GraphicAssociate: Story = {
   args: {
-    'item-url': '/qti-test-package/items/graphic_associate.xml' // Set the new item URL here
+    'item-url': 'assets/qti-test-package/items/graphic_associate.xml' // Set the new item URL here
   },
   render: args =>
     html` <qti-item>
@@ -951,7 +947,7 @@ export const GraphicAssociate: Story = {
 
 export const Slider: Story = {
   args: {
-    'item-url': '/qti-item/example-slider.xml' // Set the new item URL here
+    'item-url': 'assets/qti-item/example-slider.xml' // Set the new item URL here
   },
   render: args =>
     html` <qti-item>
@@ -992,7 +988,7 @@ export const Slider: Story = {
 
 export const MultipleInteractions: Story = {
   args: {
-    'item-url': '/qti-item/example-multiple-interactions.xml' // Set the new item URL here
+    'item-url': 'assets/qti-item/example-multiple-interactions.xml' // Set the new item URL here
   },
   render: args =>
     html` <qti-item>

@@ -21,7 +21,7 @@
   "engines": {
     "node": ">=22.0.0"
   },
-  "version": "7.9.0",
+  "version": "7.14.2",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -147,6 +147,10 @@
     "husky": "^9.1.7",
     "lit": "^3.3.0",
     "madge": "^8.0.0",
+    "mdx-mermaid": "^2.0.3",
+    "mermaid": "^11.12.0",
+    "msw": "^2.11.5",
+    "msw-storybook-addon": "^2.0.5",
     "nodemon": "^3.1.10",
     "npm-run-all": "^4.1.5",
     "path-browserify": "^1.0.1",
@@ -185,5 +189,10 @@
   "homepage": "https://github.com/Citolab/qti-components#readme",
   "overrides": {
     "storybook": "$storybook"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }
