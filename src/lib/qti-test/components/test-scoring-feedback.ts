@@ -4,9 +4,9 @@ import { customElement, property } from 'lit/decorators.js';
 
 import { computedContext } from '../../exports/computed.context';
 
+import type { View } from '../../exports/session.context';
 import type { OutcomeVariable } from '../../exports/variables';
 import type { ComputedContext } from '../../exports/computed.context';
-import type { ViewMode } from 'storybook/internal/types';
 
 @customElement('test-scoring-feedback')
 export class TestScoringFeedback extends LitElement {
@@ -14,7 +14,7 @@ export class TestScoringFeedback extends LitElement {
   protected computedContext?: ComputedContext;
 
   @property({ type: String, attribute: 'view' })
-  public view: ViewMode = null;
+  public view: View = null;
 
   render() {
     const activeItem = this.computedContext?.testParts
