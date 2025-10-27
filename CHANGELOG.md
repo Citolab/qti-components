@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.14.2](https://github.com/Citolab/qti-components/compare/v7.14.1...v7.14.2) (2025-10-27)
+
+
+### Bug Fixes
+
+* update view property type from ViewMode to View in TestScoringFeedback component ([#66](https://github.com/Citolab/qti-components/issues/66)) ([ed6eb67](https://github.com/Citolab/qti-components/commit/ed6eb6718a7d885563d8721891f700b1fb087b29))
+
 ## [7.14.1](https://github.com/Citolab/qti-components/compare/v7.14.0...v7.14.1) (2025-10-27)
 
 
