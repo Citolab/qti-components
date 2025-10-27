@@ -65,7 +65,8 @@ export function extendElementsWithClass(xmlFragment: XMLDocument, classNamePatte
 
 // Helper function to create a new element with a new tag name and copy attributes and children
 function createElementWithNewTagName(element, newTagName) {
-  const newElement = document.createElement(newTagName);
+  // create Elements on the ownerDocument which is usually the XMLDocument
+  const newElement = element.ownerDocument.createElement(newTagName);
   // Copy attributes
   for (const attr of element.attributes) {
     newElement.setAttribute(attr.name, attr.value);
