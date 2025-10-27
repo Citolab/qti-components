@@ -304,7 +304,6 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
 
       if (allItemsConnected && allStimulusLoaded && !this._loadingState.isComplete) {
         this._loadingState.isComplete = true;
-        console.info('Loading complete:', this._loadingState);
       }
     }
 
