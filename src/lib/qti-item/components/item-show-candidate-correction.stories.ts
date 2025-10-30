@@ -574,7 +574,7 @@ export const SelectPoint: Story = {
 
 export const GapMatch: Story = {
   args: {
-    'item-url': '/qti-test-package/items/gap_match.xml'
+    'item-url': 'assets/qti-test-package/items/gap_match.xml'
   },
   render: args =>
     html` <qti-item>
