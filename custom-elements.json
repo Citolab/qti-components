@@ -26742,21 +26742,27 @@
               "kind": "field",
               "name": "view",
               "type": {
-                "text": "ViewMode"
+                "text": "View"
               },
               "privacy": "public",
               "default": "null",
-              "attribute": "view"
+              "attribute": "view",
+              "parsedType": {
+                "text": "'' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor'"
+              }
             }
           ],
           "attributes": [
             {
               "name": "view",
               "type": {
-                "text": "ViewMode"
+                "text": "View"
               },
               "default": "null",
-              "fieldName": "view"
+              "fieldName": "view",
+              "parsedType": {
+                "text": "'' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor'"
+              }
             }
           ],
           "superclass": {
