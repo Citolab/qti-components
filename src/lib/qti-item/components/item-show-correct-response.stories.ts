@@ -5,13 +5,14 @@ import { expect, fireEvent, waitFor } from 'storybook/test';
 import { within } from 'shadow-dom-testing-library';
 
 import { getAssessmentItemFromItemContainer } from '../../../testing/test-utils';
+import drag from '../../../testing/drag';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { ItemShowCorrectResponse } from './item-show-correct-response';
 import './item-show-correct-response';
 import './item-correct-response-mode';
 import type { ItemContainer } from './item-container';
-import type { QtiSimpleChoice } from '../../qti-components';
+import type { QtiGapMatchInteraction, QtiSimpleChoice } from '../../qti-components';
 
 const { events, args, argTypes } = getStorybookHelpers('test-print-item-variables');
 
@@ -366,7 +367,7 @@ export const MultipleResponseFullCorrectResponse: Story = {
   play: async ({ canvasElement, step }) => {
     const item = document.querySelector('qti-item');
     item.configContext = {
-      correctResponseMode: 'full'
+      correctResponseMode: 'full',
     };
     const canvas = within(canvasElement);
     const showCorrectButton = await canvas.findByShadowText(/Show correct/i);
@@ -1037,6 +1038,60 @@ export const MultipleInteractions: Story = {
         const feedback = interaction.shadowRoot.querySelector('[part="correct-option"]');
         expect(feedback).not.toBeNull();
       }
+    });
+  }
+};
+
+export const GapMatchCorrectResponse: Story = {
+  args: {
+    'item-url': 'assets/qti-test-package/items/gap_match.xml'
+  },
+  render: args =>
+    html`<qti-item>
+      <div>
+        <item-container style="display: block; width: 400px; height: 350px;" item-url=${args['item-url'] as string}>
+          <template>
+            <style>
+              qti-assessment-item {
+                padding: 1rem;
+                display: block;
+                aspect-ratio: 4 / 3;
+                width: 800px;
+                border: 2px solid blue;
+                transform: scale(0.5);
+                transform-origin: top left;
+              }
+            </style>
+          </template>
+        </item-container>
+        <item-show-correct-response></item-show-correct-response>
+      </div>
+    </qti-item>`,
+
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const showCorrectButton = await canvas.findByShadowText(/Show correct/i);
+    const interaction = await getAssessmentItemFromItemContainer(canvasElement);
+
+    const matchItem1 = (await canvas.findByShadowText('winter')) as QtiGapMatchInteraction;
+    const matchItem2 = (await canvas.findByShadowText('spring')) as QtiGapMatchInteraction;
+
+    const dropZones = interaction.querySelectorAll(`qti-gap`);
+
+    const dropZone1 = dropZones[0]
+    const dropZone2 = dropZones[1]
+
+    await step('Drag and drop match interaction items', async () => {
+      await drag(matchItem1, { to: dropZone1 });
+      await drag(matchItem2, { to: dropZone2 });
+      await showCorrectButton.click();
+
+      await step('Verify correct response is shown', async () => {
+        const correctResponses = interaction.querySelectorAll('[class="correct-option"]');
+        expect(correctResponses.length).toBe(2);
+        expect(correctResponses[0].textContent).toBe('winter');
+        expect(correctResponses[1].textContent).toBe('summer');
+      });
     });
   }
 };

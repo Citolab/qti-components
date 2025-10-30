@@ -74,7 +74,7 @@
     "build-storybook": "npm run cem && storybook build",
     "-----------------------scripts--": "-",
     "build": "run-p cem css tsup",
-    "storybook:dev": "storybook dev -p 6006",
+    "storybook:dev": "storybook dev -p 6006 --no-open",
     "cem": "cem analyze",
     "cem:watch": "cem analyze --watch",
     "css": "postcss src/item.css -d dist -m",
@@ -90,7 +90,7 @@
     "madge": "madge --circular --extensions ts src",
     "commitlint": "commitlint --edit",
     "-----------------------npm--": "-",
-    "prepare": "husky"
+    "prepare": "husky && npm run build"
   },
   "peerDependencies": {
     "@heximal/templates": "^0.1.5",

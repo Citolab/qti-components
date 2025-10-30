@@ -15,7 +15,8 @@ import type {
   QtiSelectPointInteraction,
   QtiSimpleAssociableChoice,
   QtiSimpleChoice,
-  QtiTextEntryInteraction
+  QtiTextEntryInteraction,
+  QtiGapMatchInteraction
 } from '../../qti-components';
 
 const { events, args, argTypes } = getStorybookHelpers('test-print-item-variables');
@@ -566,6 +567,66 @@ export const SelectPoint: Story = {
 
         expect(buttonsCorrect).toHaveLength(1);
         expect(buttonsIncorrect).toHaveLength(2);
+      });
+    });
+  }
+};
+
+export const GapMatch: Story = {
+  args: {
+    'item-url': 'assets/qti-test-package/items/gap_match.xml'
+  },
+  render: args =>
+    html` <qti-item>
+      <div>
+        <item-container style="display: block;width: 400px; height: 350px;" item-url=${args['item-url'] as string}>
+          <template>
+            <style>
+              qti-assessment-item {
+                padding: 1rem;
+                display: block;
+                aspect-ratio: 4 / 3;
+                width: 800px;
+
+                border: 2px solid blue;
+                transform: scale(0.5);
+                transform-origin: top left;
+              }
+            </style>
+          </template>
+        </item-container>
+        <item-show-candidate-correction></item-show-candidate-correction>
+      </div>
+    </qti-item>`,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const interaction = await getAssessmentItemFromItemContainer(canvasElement);
+
+    const showCorrectButton = await canvas.findByShadowText(/Show candidate correction/i);
+
+    const matchItem1 = (await canvas.findByShadowText('winter')) as QtiGapMatchInteraction;
+    const matchItem2 = (await canvas.findByShadowText('spring')) as QtiGapMatchInteraction;
+
+    const dropZones = interaction.querySelectorAll(`qti-gap`);
+
+    const dropZone1 = dropZones[0]
+    const dropZone2 = dropZones[1]
+
+    await step('Drag and drop match interaction items', async () => {
+      await drag(matchItem1, { to: dropZone1 });
+      await drag(matchItem2, { to: dropZone2 });
+      await showCorrectButton.click();
+
+      await step('Verify candidate correction state is applied', async () => {
+        const matchItem1List = Array.from(await canvas.findAllByShadowText('winter'));
+        const matchItem1CandidateResponse = matchItem1List[1] as QtiGapMatchInteraction;
+        const matchItem2List = Array.from(await canvas.findAllByShadowText('spring'));
+        const matchItem2CandidateResponse = matchItem2List[1] as QtiGapMatchInteraction;
+
+        expect(matchItem1CandidateResponse.internals.states.has('candidate-correct')).toBe(true);
+        expect(matchItem2CandidateResponse.internals.states.has('candidate-correct')).toBe(false);
+        expect(matchItem1CandidateResponse.internals.states.has('candidate-incorrect')).toBe(false);
+        expect(matchItem2CandidateResponse.internals.states.has('candidate-incorrect')).toBe(true);
       });
     });
   }

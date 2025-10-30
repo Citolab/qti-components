@@ -5,6 +5,7 @@ export * from './qti-custom-operator/qti-custom-operator';
 export * from './qti-feedback/qti-feedback-block/qti-feedback-block';
 export * from './qti-feedback/qti-feedback-inline/qti-feedback-inline';
 export * from './qti-feedback/qti-modal-feedback/qti-modal-feedback';
+export { QtiFeedback } from './qti-feedback/qti-feedback';
 export * from './qti-interaction/qti-associable-hotspot';
 export * from './qti-interaction/qti-associate-interaction/qti-associate-interaction';
 export * from './qti-interaction/qti-choice-interaction/qti-choice-interaction';
