@@ -176,7 +176,10 @@ const optionsRightTemplate = html`
 
 const manyOptionsTemplate = html`
   <div>
-    <p><strong>Organellen en hun functies.</strong><br/><br/>Geef in het overzicht van de verschillende organellen in cellen hun functies.</p>
+    <p>
+      <strong>Organellen en hun functies.</strong><br /><br />Geef in het overzicht van de verschillende organellen in
+      cellen hun functies.
+    </p>
   </div>
   <qti-match-interaction response-identifier="RESPONSE" shuffle="true" max-associations="7">
     <qti-simple-match-set>
@@ -200,7 +203,6 @@ const manyOptionsTemplate = html`
       </qti-simple-associable-choice>
       <qti-simple-associable-choice identifier="A7" fixed="false" match-max="1" match-min="0">
         centrosomen
-
       </qti-simple-associable-choice>
     </qti-simple-match-set>
     <qti-simple-match-set>
@@ -224,7 +226,6 @@ const manyOptionsTemplate = html`
       </qti-simple-associable-choice>
       <qti-simple-associable-choice identifier="B7" fixed="false" match-max="1" match-min="0">
         vorming van draden bij de kerndeling
-
       </qti-simple-associable-choice>
     </qti-simple-match-set>
   </qti-match-interaction>
@@ -240,13 +241,13 @@ const withImagesTemplate = html`
     </qti-simple-match-set>
     <qti-simple-match-set>
       <qti-simple-associable-choice identifier="B1" match-max="1">
-        <img src="qti-match-interaction/8c571f983f691e42e7b3a0dc2664e51d.png" alt="afbeelding"/>
+        <img src="assets/qti-match-interaction/8c571f983f691e42e7b3a0dc2664e51d.png" alt="afbeelding" />
       </qti-simple-associable-choice>
       <qti-simple-associable-choice identifier="B2" match-max="1">
-        <img src="qti-match-interaction/80378beafd6b12ab7b97899ce39a2b78.jpg" alt="afbeelding"/>
+        <img src="assets/qti-match-interaction/80378beafd6b12ab7b97899ce39a2b78.jpg" alt="afbeelding" />
       </qti-simple-associable-choice>
       <qti-simple-associable-choice identifier="B3" match-max="1">
-        <img src="qti-match-interaction/72c4b1f4ea9f7ba5548683c37806580e.png" alt="afbeelding"/>
+        <img src="assets/qti-match-interaction/72c4b1f4ea9f7ba5548683c37806580e.png" alt="afbeelding" />
       </qti-simple-associable-choice>
     </qti-simple-match-set>
   </qti-match-interaction>

@@ -32,7 +32,7 @@ export const Circle: Story = {
     template(
       args,
       html`
-        <img src="qti-hotspot-interaction/uk.png" height="280" width="206" />
+        <img src="assets/qti-hotspot-interaction/uk.png" height="280" width="206" />
         <qti-hotspot-choice coords="77,115,10" identifier="A" shape="circle"></qti-hotspot-choice>
         <qti-hotspot-choice coords="118,184,10" identifier="B" shape="circle"></qti-hotspot-choice>
         <qti-hotspot-choice coords="150,235,10" identifier="C" shape="circle"></qti-hotspot-choice>
@@ -47,7 +47,7 @@ export const Circle2: Story = {
       args,
       html`
         <img
-          src="qti-hotspot-interaction/map_cape_cod.svg"
+          src="assets/qti-hotspot-interaction/map_cape_cod.svg"
           width="700"
           height="550"
           alt="a map of Cape Cod Massachusetts with 4 lighthouse icons distributed on the outer Cape"
@@ -66,7 +66,7 @@ export const Circle3: Story = {
       args,
       html`
         <qti-prompt>Which one is Glasgow?</qti-prompt>
-        <img type="image/png" width="206" height="280" src="qti-hotspot-interaction/ukair.png" />
+        <img type="image/png" width="206" height="280" src="assets/qti-hotspot-interaction/ukair.png" />
         <qti-hotspot-choice shape="circle" coords="77,115,8" identifier="A"></qti-hotspot-choice>
         <qti-hotspot-choice shape="circle" coords="118,184,8" identifier="B"></qti-hotspot-choice>
         <qti-hotspot-choice shape="circle" coords="150,235,8" identifier="C"></qti-hotspot-choice>
@@ -83,7 +83,7 @@ export const Rect = {
         <qti-prompt>
           <strong>Cliquer sur le nom des organes où passent les aliments.</strong>
         </qti-prompt>
-        <img src="/qti-hotspot-interaction/hotspot.PNG" width="688" height="558" />
+        <img src="assets/qti-hotspot-interaction/hotspot.PNG" width="688" height="558" />
         <qti-hotspot-choice identifier="hotspot_1" shape="rect" coords="484,68,655,112"></qti-hotspot-choice>
         <qti-hotspot-choice identifier="hotspot_2" shape="rect" coords="18,67,190,112"></qti-hotspot-choice>
         <qti-hotspot-choice identifier="hotspot_3" shape="rect" coords="19,178,191,221"></qti-hotspot-choice>
@@ -102,7 +102,7 @@ export const Poly = {
     template(
       args,
       html`
-        <img src="/qti-hotspot-interaction/VH5BG1e_v2.png" width="602" height="452" />
+        <img src="assets//qti-hotspot-interaction/VH5BG1e_v2.png" width="602" height="452" />
         <qti-hotspot-choice
           identifier="A"
           coords="288,219,251,183,215,147,179,110,142,74,129,89,117,105,106,122,97,140,145,160,192,180,240,200,288,219"

@@ -34,7 +34,7 @@ export const Default: Story = {
       html`
         <qti-prompt> Mark the airline's new routes on the airport map: </qti-prompt>
         <img
-          src="qti-graphic-associate-interaction/uk.png"
+          src="/assets/qti-graphic-associate-interaction/uk.png"
           alt="Map of United Kingdom airports"
           width="206"
           height="280"

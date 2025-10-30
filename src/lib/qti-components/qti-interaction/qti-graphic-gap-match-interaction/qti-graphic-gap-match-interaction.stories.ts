@@ -41,13 +41,13 @@ export const Default: Story = {
 
         <img
           alt="timeline from 1939 to 1991"
-          src="qti-graphic-gap-match-interaction/timeline-558.png"
+          src="assets/qti-graphic-gap-match-interaction/timeline-558.png"
           height="326"
           width="558"
         />
         <qti-gap-img identifier="DraggerA" match-max="2">
           <img
-            src="qti-graphic-gap-match-interaction/a-cw.png"
+            src="assets/qti-graphic-gap-match-interaction/a-cw.png"
             alt="Choice A, The Cold War Ends"
             height="63"
             width="78"
@@ -55,7 +55,7 @@ export const Default: Story = {
         </qti-gap-img>
         <qti-gap-img identifier="DraggerB" match-max="1">
           <img
-            src="qti-graphic-gap-match-interaction/b-ww2.png"
+            src="assets/qti-graphic-gap-match-interaction/b-ww2.png"
             alt="Choice B, World War 2 Ends"
             height="63"
             width="78"
@@ -63,14 +63,19 @@ export const Default: Story = {
         </qti-gap-img>
         <qti-gap-img identifier="DraggerC" match-max="1">
           <img
-            src="qti-graphic-gap-match-interaction/c-vietnam.png"
+            src="assets/qti-graphic-gap-match-interaction/c-vietnam.png"
             alt="Choice C, Vietnam Conflict Ends"
             height="63"
             width="78"
           />
         </qti-gap-img>
         <qti-gap-img identifier="DraggerD" match-max="1">
-          <img src="qti-graphic-gap-match-interaction/d-bay.png" alt="Choice D, Bay of Pigs" height="63" width="78" />
+          <img
+            src="assets/qti-graphic-gap-match-interaction/d-bay.png"
+            alt="Choice D, Bay of Pigs"
+            height="63"
+            width="78"
+          />
         </qti-gap-img>
         <qti-associable-hotspot
           coords="55,256,133,319"

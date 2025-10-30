@@ -32,7 +32,7 @@ export const Default: Story = {
     template(
       args,
       html`
-        <img src="qti-graphic-order-interaction/uk.png" height="280" width="206" />
+        <img src="assets/qti-graphic-order-interaction/uk.png" height="280" width="206" />
         <qti-hotspot-choice coords="78,102,8" identifier="A" shape="circle"></qti-hotspot-choice>
         <qti-hotspot-choice coords="117,171,8" identifier="B" shape="circle"></qti-hotspot-choice>
         <qti-hotspot-choice coords="166,227,8" identifier="C" shape="circle"></qti-hotspot-choice>
@@ -46,7 +46,7 @@ export const MultipleShapes: Story = {
     template(
       args,
       html`
-        <img src="qti-graphic-order-interaction/map-us.png" alt="" width="795" height="492" />
+        <img src="assets/qti-graphic-order-interaction/map-us.png" alt="" width="795" height="492" />
         <qti-hotspot-choice
           identifier="hotspot_1"
           fixed="false"
