@@ -9,7 +9,7 @@ import type { ComposedStoryFn } from 'storybook/internal/types';
 import type { WebComponentsRenderer } from '@storybook/web-components-vite';
 
 import '../../packages/qc-test';
-import '../../packages/qc-elements';
+import '@qti-components/elements';
 
 const testStory1: ComposedStoryFn<WebComponentsRenderer, Partial<any>> = composeStory(SlowLoadingStimulus, Meta);
 
