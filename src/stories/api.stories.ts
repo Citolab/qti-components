@@ -1,7 +1,7 @@
 import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 
-import { qtiTransformItem } from '../../packages/qti-transformers/qti-transform-item';
+import { qtiTransformItem } from '@qti-components/transformers';
 
 import type { QtiAssessmentItem, QtiItem } from '../../packages/qc-components';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';

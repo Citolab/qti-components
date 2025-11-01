@@ -14,7 +14,7 @@
     "packages/qc-shared/**/*.ts",
     "packages/qc-test/**/*.ts",
     "packages/qc-theme/**/*.ts",
-    "packages/qti-transformers/**/*.ts",
+    "packages/qc-transformers/**/*.ts",
     "shared/**/*.ts"
   ],
   "exclude": [
@@ -28,7 +28,7 @@
     "packages/qc-shared/**/*.d.ts",
     "packages/qc-test/**/*.d.ts",
     "packages/qc-theme/**/*.d.ts",
-    "packages/qti-transformers/**/*.d.ts",
+    "packages/qc-transformers/**/*.d.ts",
     "shared/**/*.d.ts"
   ],
   "references": []

@@ -64,7 +64,7 @@ export function extendElementsWithClass(xmlFragment: XMLDocument, classNamePatte
 }
 
 // Helper function to create a new element with a new tag name and copy attributes and children
-function createElementWithNewTagName(element, newTagName) {
+function createElementWithNewTagName(element: Element, newTagName: string) {
   // create Elements on the ownerDocument which is usually the XMLDocument
   const newElement = element.ownerDocument.createElement(newTagName);
   // Copy attributes
@@ -164,7 +164,7 @@ export function stripStyleSheets(xmlFragment: DocumentFragment) {
   xmlFragment.querySelectorAll('qti-stylesheet').forEach(stylesheet => stylesheet.remove());
 }
 
-export function getShuffleQuerySelectorByTagName(tagName: string) {
+export function getShuffleQuerySelectorByTagName(tagName: string): string | string[] | null {
   switch (tagName) {
     case 'qti-choice-interaction':
     case 'qti-order-interaction':
@@ -181,5 +181,6 @@ export function getShuffleQuerySelectorByTagName(tagName: string) {
     case 'qti-associate-interaction':
       return 'qti-simple-associable-choice';
     default:
+      return null;
   }
 }

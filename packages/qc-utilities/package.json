@@ -1,0 +1,32 @@
+{
+    "name": "@qti-components/utilities",
+    "version": "1.0.0",
+    "description": "shared utilities",
+    "main": "dist/index.js",
+    "scripts": {
+        "build": "wireit",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "qti",
+        "utilities"
+    ],
+    "author": "",
+    "license": "GPL-3.0-only",
+    "peerDependencies": {
+        "lit": "^3.2.1"
+    },
+    "wireit": {
+        "build": {
+            "command": "tsc --pretty",
+            "files": [
+                "src/**/*.ts",
+                "tsconfig.json"
+            ],
+            "output": [
+                "dist/*.{d.ts,d.ts.map,js,js.map}"
+            ],
+            "clean": "if-file-deleted"
+        }
+    }
+}

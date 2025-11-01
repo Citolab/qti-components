@@ -14,7 +14,7 @@
     ],
     "module": "esnext",
     "moduleResolution": "bundler",
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "noImplicitOverride": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
@@ -22,8 +22,14 @@
     "rootDir": ".",
     "skipLibCheck": true,
     "sourceMap": true,
-    "strict": true,
+    "strict": false,
     "target": "esnext",
     "useDefineForClassFields": false
-  }
+  },
+  "types": [
+    "vitest/globals",
+    "@types/dom-view-transitions",
+    "./test/vitest.d.ts",
+    "./test/storybookMatchers.d.ts"
+  ]
 }

@@ -1,7 +1,8 @@
 import { html } from 'lit';
 
+import { getManifestInfo } from '@qti-components/loader';
+
 import packages from '../assets/packages.json';
-import { getManifestInfo } from '../lib/qti-loader';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 

@@ -1,7 +1,7 @@
-import { qtiTransformItem, qtiTransformTest } from '../qti-transformers';
-import { qtiTransformManifest } from '../qti-transformers/qti-transform-manifest';
+import { qtiTransformItem, qtiTransformTest } from '@qti-components/transformers';
+import { qtiTransformManifest } from '@qti-components/transformers';
 
-import type { QtiAssessmentItem } from '../qti-components/qti-assessment-item/qti-assessment-item';
+import type { QtiAssessmentItem } from '@qti-components/elements';
 
 export type ManifestInfo = {
   testIdentifier: string;

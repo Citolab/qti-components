@@ -2,8 +2,9 @@
     "name": "@qti-components/test",
     "version": "1.0.0",
     "description": "QTI test utilities",
-    "main": "index.js",
+    "main": "dist/index.js",
     "scripts": {
+        "build": "wireit",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "keywords": [
@@ -11,5 +12,28 @@
         "test"
     ],
     "author": "",
-    "license": "GPL-3.0-only"
+    "license": "GPL-3.0-only",
+    "dependencies": {
+        "@qti-components/shared": "^1.0.0",
+        "@qti-components/transformers": "^1.0.0",
+        "@qti-components/utilities": "^1.0.0",
+        "@qti-components/elements": "^1.0.0"
+    },
+    "peerDependencies": {
+        "lit": "^3.2.1",
+        "@heximal/templates": "0.1.5"
+    },
+    "wireit": {
+        "build": {
+            "command": "tsc --pretty",
+            "files": [
+                "src/**/*.ts",
+                "tsconfig.json"
+            ],
+            "output": [
+                "dist/*.{d.ts,d.ts.map,js,js.map}"
+            ],
+            "clean": "if-file-deleted"
+        }
+    }
 }

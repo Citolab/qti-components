@@ -2,8 +2,9 @@
     "name": "@qti-components/elements",
     "version": "1.0.0",
     "description": "QTI elements utilities",
-    "main": "index.js",
+    "main": "dist/index.js",
     "scripts": {
+        "build": "wireit",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "keywords": [
@@ -11,5 +12,30 @@
         "elements"
     ],
     "author": "",
-    "license": "GPL-3.0-only"
+    "license": "GPL-3.0-only",
+    "dependencies": {
+        "@qti-components/shared": "^1.0.0",
+        "@qti-components/utilities": "^1.0.0"
+    },
+    "peerDependencies": {
+        "lit": "^3.2.1"
+    },
+    "wireit": {
+        "build": {
+            "command": "tsc --pretty",
+            "files": [
+                "src/**/*.ts",
+                "!src/**/*.stories.ts",
+                "!src/**/*.test.ts",
+                "!src/**/*.spec.ts",
+                "tsconfig.json"
+            ],
+            "output": [
+                "index.{d.ts,d.ts.map,js,js.map}",
+                "components/**/*.{d.ts,d.ts.map,js,js.map}",
+                "internal/**/*.{d.ts,d.ts.map,js,js.map}"
+            ],
+            "clean": "if-file-deleted"
+        }
+    }
 }

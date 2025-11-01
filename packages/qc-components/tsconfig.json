@@ -1,0 +1,22 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        "emitDeclarationOnly": false,
+        "tsBuildInfoFile": "./.tsbuildinfo",
+        "lib": [
+            "ES2023",
+            "DOM",
+            "DOM.Iterable"
+        ],
+        "outDir": "./dist",
+        "rootDir": "./src"
+    },
+    "include": [
+        "src/**/*.ts"
+    ],
+    "exclude": [
+        "src/**/*.test.ts",
+        "src/**/*.spec.ts",
+        "src/**/*.stories.ts"
+    ],
+}

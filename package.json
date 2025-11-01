@@ -23,16 +23,7 @@
   },
   "version": "7.14.2",
   "workspaces": [
-    "packages/qc-components",
-    "packages/qc-elements",
-    "packages/qc-interactions",
-    "packages/qc-item",
-    "packages/qc-loader",
-    "packages/qc-shared",
-    "packages/qc-test",
-    "packages/qc-theme",
-    "packages/qti-transformers",
-    "packages/shared"
+    "packages/*"
   ],
   "scripts": {
     "storybook": "run-p storybook:dev cem:watch",
@@ -51,7 +42,7 @@
     "tsup": "tsup",
     "publint": "publint",
     "lint": "eslint src/**/*.ts",
-    "stylelint": "stylelint \"src/**/*.css\"",
+    "stylelint": "stylelint \"packages/qc-theme/src/**/*.css\"",
     "test": "vitest run",
     "attw": "attw --profile esm-only --pack --exclude-entrypoints ./item.css ./react",
     "chromatic": "node chromatic-runner.cjs",
@@ -65,43 +56,31 @@
     "build": {
       "command": "run-p cem css tsup",
       "dependencies": [
-        "build:components",
-        "build:elements",
-        "build:interactions",
-        "build:item",
-        "build:loader",
-        "build:processing",
-        "build:shared",
-        "build:theme",
-        "build:transformers"
+        "./packages/qc-components:build",
+        "./packages/qc-elements:build",
+        "./packages/qc-interactions:build",
+        "./packages/qc-item:build",
+        "./packages/qc-loader:build",
+        "./packages/qc-processing:build",
+        "./packages/qc-shared:build",
+        "./packages/qc-theme:build",
+        "./packages/qc-transformers:build",
+        "./packages/qc-utilities:build"
       ]
     },
-    "build:components": {
-      "command": "cd packages/qc-components && npm run build"
-    },
-    "build:elements": {
-      "command": "cd packages/qc-elements && npm run build"
-    },
-    "build:interactions": {
-      "command": "cd packages/qc-interactions && npm run build"
-    },
-    "build:item": {
-      "command": "cd packages/qc-item && npm run build"
-    },
-    "build:loader": {
-      "command": "cd packages/qc-loader && npm run build"
-    },
-    "build:processing": {
-      "command": "cd packages/qc-processing && npm run build"
-    },
-    "build:shared": {
-      "command": "cd packages/qc-shared && npm run build"
-    },
-    "build:theme": {
-      "command": "cd packages/qc-theme && npm run build"
-    },
-    "build:transformers": {
-      "command": "cd packages/qti-transformers && npm run build"
+    "test": {
+      "dependencies": [
+        "./packages/qc-components:test",
+        "./packages/qc-elements:test",
+        "./packages/qc-interactions:test",
+        "./packages/qc-item:test",
+        "./packages/qc-loader:test",
+        "./packages/qc-processing:test",
+        "./packages/qc-shared:test",
+        "./packages/qc-theme:test",
+        "./packages/qc-transformers:test",
+        "./packages/qc-utilities:test"
+      ]
     }
   },
   "devDependencies": {
@@ -184,6 +163,7 @@
     "vite": "^6.3.5",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.2.4",
+    "wireit": "^0.14.12",
     "yalc": "^1.0.0-pre.53"
   },
   "customElements": "custom-elements.json",
