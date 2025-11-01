@@ -1,0 +1,15 @@
+{
+    "name": "@qti-components/transformers",
+    "version": "1.0.0",
+    "description": "QTI transformation utilities",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "qti",
+        "transformers"
+    ],
+    "author": "",
+    "license": "GPL-3.0-only"
+}

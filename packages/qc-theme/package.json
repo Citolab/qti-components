@@ -1,0 +1,15 @@
+{
+    "name": "@qti-components/theme",
+    "version": "1.0.0",
+    "description": "QTI theme utilities",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "qti",
+        "theme"
+    ],
+    "author": "",
+    "license": "GPL-3.0-only"
+}

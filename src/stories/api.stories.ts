@@ -1,9 +1,9 @@
 import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 
-import { qtiTransformItem } from '../lib/qti-transformers/qti-transform-item';
+import { qtiTransformItem } from '../../packages/qti-transformers/qti-transform-item';
 
-import type { QtiAssessmentItem, QtiItem } from '../lib';
+import type { QtiAssessmentItem, QtiItem } from '../../packages/qc-components';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 const meta: Meta = {

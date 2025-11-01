@@ -21,7 +21,7 @@ import type { Preview } from '@storybook/web-components-vite';
 
 import '../src/item.css';
 
-import '../src/lib';
+import '../packages/qc-components';
 
 export const loaders = [mswLoader];
 
