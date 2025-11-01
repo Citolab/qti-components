@@ -1,4 +1,4 @@
-import remarkGfm from 'remark-gfm';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
 import type { StorybookConfig } from '@storybook/web-components-vite';
 
@@ -16,12 +16,12 @@ const config: StorybookConfig = {
     name: '@storybook/web-components-vite',
     options: {}
   },
-  staticDirs: ['../public']
-  // async viteFinal(config, { configType }) {
-  //   return {
-  //     ...config,
-  //     plugins: [...config.plugins!, tsconfigPaths()]
-  //   };
-  // }
+  staticDirs: ['../public'],
+  async viteFinal(config: any, { configType }: { configType: string }) {
+    return {
+      ...config,
+      plugins: [...(config.plugins || []), tsconfigPaths()]
+    };
+  }
 };
 export default config;

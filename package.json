@@ -22,9 +22,6 @@
     "node": ">=22.0.0"
   },
   "version": "7.14.2",
-  "workspaces": [
-    "packages/*"
-  ],
   "scripts": {
     "storybook": "run-p storybook:dev cem:watch",
     "watch": "nodemon --watch src --ext ts,css --exec \"run-s tsup cem css && yalc push\"",

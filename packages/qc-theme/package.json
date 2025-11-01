@@ -4,6 +4,7 @@
     "description": "QTI theme utilities",
     "main": "index.js",
     "scripts": {
+        "build": "echo \"No build needed for theme package\"",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "keywords": [

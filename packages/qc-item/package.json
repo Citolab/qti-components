@@ -14,12 +14,12 @@
     "author": "",
     "license": "GPL-3.0-only",
     "dependencies": {
-        "@qti-components/elements": "^1.0.0",
-        "@qti-components/interactions": "^1.0.0",
-        "@qti-components/processing": "^1.0.0",
-        "@qti-components/utilities": "^1.0.0",
-        "@qti-components/transformers": "^1.0.0",
-        "@qti-components/shared": "^1.0.0"
+        "@qti-components/elements": "workspace:*",
+        "@qti-components/interactions": "workspace:*",
+        "@qti-components/processing": "workspace:*",
+        "@qti-components/utilities": "workspace:*",
+        "@qti-components/transformers": "workspace:*",
+        "@qti-components/shared": "workspace:*"
     },
     "peerDependencies": {
         "lit": "^3.2.1"

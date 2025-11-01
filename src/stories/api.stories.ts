@@ -3,7 +3,8 @@ import { createRef, ref } from 'lit/directives/ref.js';
 
 import { qtiTransformItem } from '@qti-components/transformers';
 
-import type { QtiAssessmentItem, QtiItem } from '../../packages/qc-components';
+import type { QtiAssessmentItem } from '@qti-components/elements';
+import type { QtiItem } from '@qti-components/item';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 const meta: Meta = {
@@ -94,12 +95,12 @@ export const Api: Story = {
         }
       } catch (error) {
         console.error('Error processing response:', error);
-        alert('Error processing response: ' + error.message);
+        alert('Error processing response: ' + (error as Error).message);
       }
     };
 
     return html`
-      <qti-item ${ref(testRef)} @qti-assessment-item-connected=${e => (assessmentItem = e.detail)}>
+      <qti-item ${ref(testRef)} @qti-assessment-item-connected=${(e: CustomEvent) => (assessmentItem = e.detail)}>
         <item-container .itemDoc=${loaded.itemHtmlDoc}></item-container>
       </qti-item>
       <button @click="${processResponse}">processResponse</button>
@@ -108,12 +109,12 @@ export const Api: Story = {
   loaders: [
     async ({ args }) => {
       try {
-        const fetchJson = url => fetch(url).then(res => (res.ok ? res.json() : Promise.reject('error')));
+        const fetchJson = (url: string) => fetch(url).then(res => (res.ok ? res.json() : Promise.reject('error')));
         const { items } = await fetchJson(`${args.serverLocation}/${args.packages}/items.json`);
         const href = items[args.itemIndex].href;
         const itemHtmlDoc = await qtiTransformItem()
           .load(`${args.serverLocation}/${args.packages}/items/${href}${args.scoreBackend ? '?scorebackend=true' : ''}`)
-          .then(api =>
+          .then((api: any) =>
             api
               .path(`${args.serverLocation}/static/${args.packages}/${href.includes('/') ? href.split('/')[0] : ''}`)
               .htmlDoc()
@@ -121,7 +122,7 @@ export const Api: Story = {
         return { itemHtmlDoc: itemHtmlDoc, item: items[args.itemIndex] };
       } catch (error) {
         console.error('Error loading item:', error);
-        alert('Error loading item: ' + error.message);
+        alert('Error loading item: ' + (error as Error).message);
       }
       return null;
     }

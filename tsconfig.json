@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "emitDeclarationOnly": false,
+    "paths": {
+      "@qti-components/*": [
+        "./packages/qc-*/src"
+      ]
+    }
+  },
+  "references": []
+}

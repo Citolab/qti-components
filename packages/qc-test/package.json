@@ -14,10 +14,10 @@
     "author": "",
     "license": "GPL-3.0-only",
     "dependencies": {
-        "@qti-components/shared": "^1.0.0",
-        "@qti-components/transformers": "^1.0.0",
-        "@qti-components/utilities": "^1.0.0",
-        "@qti-components/elements": "^1.0.0"
+        "@qti-components/shared": "workspace:*",
+        "@qti-components/transformers": "workspace:*",
+        "@qti-components/utilities": "workspace:*",
+        "@qti-components/elements": "workspace:*"
     },
     "peerDependencies": {
         "lit": "^3.2.1",

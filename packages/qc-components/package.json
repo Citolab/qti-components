@@ -56,10 +56,10 @@
         "custom-elements.json"
     ],
     "dependencies": {
-        "@qti-components/elements": "^1.0.0",
-        "@qti-components/test": "^1.0.0",
-        "@qti-components/item": "^1.0.0",
-        "@qti-components/transformers": "^1.0.0"
+        "@qti-components/elements": "workspace:*",
+        "@qti-components/test": "workspace:*",
+        "@qti-components/item": "workspace:*",
+        "@qti-components/transformers": "workspace:*"
     },
     "peerDependencies": {
         "@heximal/templates": "^0.1.5",
