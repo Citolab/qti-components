@@ -6,7 +6,7 @@ import { qtiTransformTest } from '@qti-components/transformers';
 
 // import itemCss from '../../../item.css?inline';
 
-import type { QtiTest } from '../qti-test';
+import type { QtiTest } from '../iqti-test';
 /**
  * `<test-container>` is a custom element designed for hosting the qti-assessment-item.
  * The `qti-assessment-test` will be placed inside the shadow DOM of this element.

@@ -1,22 +1,13 @@
 {
     "extends": "../../tsconfig.base.json",
     "compilerOptions": {
-        "emitDeclarationOnly": false,
-        "tsBuildInfoFile": "./.tsbuildinfo",
-        "lib": [
-            "ES2023",
-            "DOM",
-            "DOM.Iterable"
-        ],
-        "outDir": "./dist",
-        "rootDir": "./src"
+        "composite": true,
+        "declaration": true,
+        "emitDeclarationOnly": true, // Only emit .d.ts files
+        "outDir": "dist",
+        "rootDir": "src"
     },
     "include": [
-        "src/**/*.ts",
-    ],
-    "exclude": [
-        "src/**/*.test.ts",
-        "src/**/*.spec.ts",
-        "src/**/*.stories.ts"
+        "src/**/*.ts"
     ]
 }

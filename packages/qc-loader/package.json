@@ -4,7 +4,6 @@
     "description": "QTI loader utilities",
     "main": "dist/index.js",
     "scripts": {
-        "build": "wireit",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "keywords": [
@@ -15,18 +14,5 @@
     "license": "GPL-3.0-only",
     "dependencies": {
         "@qti-components/transformers": "workspace:*"
-    },
-    "wireit": {
-        "build": {
-            "command": "tsc --pretty",
-            "files": [
-                "src/**/*.ts",
-                "tsconfig.json"
-            ],
-            "output": [
-                "dist/*.{d.ts,d.ts.map,js,js.map}"
-            ],
-            "clean": "if-file-deleted"
-        }
     }
 }

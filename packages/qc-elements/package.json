@@ -4,7 +4,6 @@
     "description": "QTI elements utilities",
     "main": "dist/index.js",
     "scripts": {
-        "build": "wireit",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "keywords": [
@@ -19,23 +18,5 @@
     },
     "peerDependencies": {
         "lit": "^3.2.1"
-    },
-    "wireit": {
-        "build": {
-            "command": "tsc --pretty",
-            "files": [
-                "src/**/*.ts",
-                "!src/**/*.stories.ts",
-                "!src/**/*.test.ts",
-                "!src/**/*.spec.ts",
-                "tsconfig.json"
-            ],
-            "output": [
-                "index.{d.ts,d.ts.map,js,js.map}",
-                "components/**/*.{d.ts,d.ts.map,js,js.map}",
-                "internal/**/*.{d.ts,d.ts.map,js,js.map}"
-            ],
-            "clean": "if-file-deleted"
-        }
     }
 }

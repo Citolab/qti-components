@@ -5,7 +5,7 @@ import { TestNavigationMixin, TestViewMixin } from './mixins';
 import { TestBase } from './test-base';
 import { TestProcessingMixin } from './mixins/test-processing.mixin';
 
-import type { IQtiTest } from '../qti-test';
+import type { IQtiTest } from '../iqti-test';
 
 /**
  * `<qti-test>` is a custom element designed for rendering and interacting with QTI (Question and Test Interoperability) tests.

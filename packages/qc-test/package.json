@@ -4,7 +4,6 @@
     "description": "QTI test utilities",
     "main": "dist/index.js",
     "scripts": {
-        "build": "wireit",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "keywords": [
@@ -22,18 +21,5 @@
     "peerDependencies": {
         "lit": "^3.2.1",
         "@heximal/templates": "0.1.5"
-    },
-    "wireit": {
-        "build": {
-            "command": "tsc --pretty",
-            "files": [
-                "src/**/*.ts",
-                "tsconfig.json"
-            ],
-            "output": [
-                "dist/*.{d.ts,d.ts.map,js,js.map}"
-            ],
-            "clean": "if-file-deleted"
-        }
     }
 }

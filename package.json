@@ -56,16 +56,7 @@
     "build": {
       "command": "run-p cem css tsup",
       "dependencies": [
-        "./packages/qc-components:build",
-        "./packages/qc-elements:build",
-        "./packages/qc-interactions:build",
-        "./packages/qc-item:build",
-        "./packages/qc-loader:build",
-        "./packages/qc-processing:build",
-        "./packages/qc-shared:build",
-        "./packages/qc-theme:build",
-        "./packages/qc-transformers:build",
-        "./packages/qc-utilities:build"
+        "./packages/qc-components:build"
       ]
     },
     "test": {

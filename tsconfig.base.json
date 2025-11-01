@@ -24,7 +24,12 @@
     "sourceMap": true,
     "strict": false,
     "target": "esnext",
-    "useDefineForClassFields": false
+    "useDefineForClassFields": false,
+    "paths": {
+      "@qti-components/*": [
+        "./packages/qc-*/src"
+      ]
+    }
   },
   "types": [
     "vitest/globals",

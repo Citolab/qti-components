@@ -4,9 +4,9 @@ import type { TestContext } from '@qti-components/shared';
 import type { SessionContext } from '@qti-components/shared';
 import type { OutcomeVariable, VariableDeclaration, VariableValue } from '@qti-components/shared';
 
-export interface QtiTest extends LitElement, ITestNavigationMixin, ITestProcessingMixin, IQtiTest {}
+export interface IQtiTest extends LitElement, ITestNavigationMixin, ITestProcessingMixin, IMyQtiTest {}
 
-export interface IQtiTest {
+export interface IMyQtiTest {
   // Properties from TestBase
   testContext: Readonly<TestContext>;
   sessionContext: Readonly<SessionContext>;
