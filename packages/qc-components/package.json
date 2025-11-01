@@ -56,10 +56,12 @@
         "custom-elements.json"
     ],
     "dependencies": {
-        "@qti-components/elements": "workspace:*",
         "@qti-components/test": "workspace:*",
         "@qti-components/item": "workspace:*",
-        "@qti-components/transformers": "workspace:*"
+        "@qti-components/elements": "workspace:*",
+        "@qti-components/transformers": "workspace:*",
+        "@qti-components/loader": "workspace:*",
+        "@qti-components/shared": "workspace:*"
     },
     "peerDependencies": {
         "@heximal/templates": "^0.1.5",
@@ -68,26 +70,7 @@
     },
     "wireit": {
         "build": {
-            "command": "tsc --pretty",
-            "dependencies": [
-                "../qc-elements:build",
-                "../qc-test:build",
-                "../qc-item:build",
-                "../qc-transformers:build"
-            ],
-            "files": [
-                "src/**/*.ts",
-                "!src/**/*.stories.ts",
-                "!src/**/*.test.ts",
-                "!src/**/*.spec.ts",
-                "tsconfig.json"
-            ],
-            "output": [
-                "index.{d.ts,d.ts.map,js,js.map}",
-                "components/**/*.{d.ts,d.ts.map,js,js.map}",
-                "internal/**/*.{d.ts,d.ts.map,js,js.map}"
-            ],
-            "clean": "if-file-deleted"
+            "command": "tsup"
         }
     }
 }

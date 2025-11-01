@@ -10,7 +10,7 @@ const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(file
 // import viteConfig from './vite.config';
 
 export default defineConfig({
-  base: process.env.VITEST ? undefined : './src',
+  base: process.env.VITEST ? undefined : './',
 
   test: {
     browser: {
@@ -72,7 +72,7 @@ export default defineConfig({
         test: {
           name: 'tests',
           setupFiles: ['./test/setup/index.js'],
-          include: ['src/**/*.spec.ts', 'src/**/*.test.ts'],
+          include: ['src/**/*.spec.ts', 'src/**/*.test.ts', 'packages/**/*.spec.ts', 'packages/**/*.test.ts'],
           globals: true,
 
           browser: {

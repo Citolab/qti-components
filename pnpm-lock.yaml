@@ -266,6 +266,12 @@ importers:
       '@qti-components/item':
         specifier: workspace:*
         version: link:../qc-item
+      '@qti-components/loader':
+        specifier: workspace:*
+        version: link:../qc-loader
+      '@qti-components/shared':
+        specifier: workspace:*
+        version: link:../qc-shared
       '@qti-components/test':
         specifier: workspace:*
         version: link:../qc-test

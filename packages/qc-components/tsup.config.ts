@@ -2,7 +2,7 @@ import { defineConfig } from 'tsup';
 import { globby } from 'globby';
 
 import pkgJson from './package.json' assert { type: 'json' };
-import { InlineCSSPlugin } from './scripts/inline-css-plugin';
+import { InlineCSSPlugin } from '../../scripts/inline-css-plugin';
 
 import type { Options } from 'tsup';
 
@@ -14,13 +14,13 @@ export default defineConfig(async () => {
     outDir: 'dist',
     format: 'esm',
     entry: [
-      './src/lib/index.ts',
-      './src/lib/qti-test/index.ts',
-      './src/lib/qti-item/index.ts',
-      './src/lib/qti-components/index.ts',
-      './src/lib/qti-transformers/index.ts',
-      './src/lib/qti-loader/index.ts',
-      ...(await globby('./src/lib/exports/**/!(*.(style|test|stories)).ts'))
+      './src/index.ts',
+      './src/test.ts',
+      './src/item.ts',
+      './src/elements.ts',
+      './src/transformers.ts',
+      './src/loader.ts',
+      './src/shared.ts'
     ],
     external: peerDependencies,
     splitting: true,
@@ -38,7 +38,7 @@ export default defineConfig(async () => {
     outDir: 'cdn',
     format: 'esm',
     entry: {
-      index: './src/lib/index.ts'
+      index: './src/index.ts'
     },
     external: undefined,
     noExternal: [/(.*)/],
@@ -55,7 +55,7 @@ export default defineConfig(async () => {
     outDir: 'cdn',
     format: 'iife',
     entry: {
-      index: './src/lib/index.ts'
+      index: './src/index.ts'
     },
     globalName: 'QtiComponents',
     target: 'es5',
