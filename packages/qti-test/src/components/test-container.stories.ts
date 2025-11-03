@@ -2,7 +2,7 @@ import { expect } from 'storybook/test';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { html } from 'lit';
 
-import { qtiTransformTest } from '../../../qc-transformers/src';
+import { qtiTransformTest } from '../../../qti-transformers/src';
 import { getAssessmentItemFromTestContainerByDataTitle } from '../../../../src/testing/test-utils';
 
 import type { TestContainer } from './test-container';

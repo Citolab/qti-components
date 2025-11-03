@@ -38,12 +38,12 @@
     "storybook:dev": "storybook dev -p 6006 --no-open",
     "cem": "cem analyze",
     "cem:watch": "cem analyze --watch",
-    "css": "postcss packages/qc-theme/src/item.css -d dist -m",
+    "css": "postcss packages/qti-theme/src/item.css -d dist -m",
     "ci": "npm ci",
     "tsup": "tsup",
     "publint": "publint",
     "lint": "eslint packages/**/*.ts",
-    "stylelint": "stylelint \"packages/qc-theme/src/**/*.css\"",
+    "stylelint": "stylelint \"packages/qti-theme/src/**/*.css\"",
     "test": "wireit",
     "attw": "attw --profile esm-only --pack --exclude-entrypoints ./item.css ./react",
     "chromatic": "node chromatic-runner.cjs",
@@ -56,7 +56,7 @@
   "wireit": {
     "build": {
       "dependencies": [
-        "./packages/qc-components:build"
+        "./packages/qti-components:build"
       ],
       "command": "run-p cem css"
     },

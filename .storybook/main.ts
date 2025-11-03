@@ -27,16 +27,16 @@ const config: StorybookConfig = {
         ...config.resolve,
         alias: {
           // Ensure Storybook uses source files, not built dist files
-          '@qti-components/shared': path.resolve(__dirname, '../packages/qc-shared/src'),
-          '@qti-components/utilities': path.resolve(__dirname, '../packages/qc-utilities/src'),
-          '@qti-components/transformers': path.resolve(__dirname, '../packages/qc-transformers/src'),
-          '@qti-components/processing': path.resolve(__dirname, '../packages/qc-processing/src'),
-          '@qti-components/elements': path.resolve(__dirname, '../packages/qc-elements/src'),
-          '@qti-components/interactions': path.resolve(__dirname, '../packages/qc-interactions'),
-          '@qti-components/item': path.resolve(__dirname, '../packages/qc-item/src'),
-          '@qti-components/test': path.resolve(__dirname, '../packages/qc-test/src'),
-          '@qti-components/components': path.resolve(__dirname, '../packages/qc-components/src'),
-          '@qti-components/loader': path.resolve(__dirname, '../packages/qc-loader/src'),
+          '@qti-components/shared': path.resolve(__dirname, '../packages/qti-shared/src'),
+          '@qti-components/utilities': path.resolve(__dirname, '../packages/qti-utilities/src'),
+          '@qti-components/transformers': path.resolve(__dirname, '../packages/qti-transformers/src'),
+          '@qti-components/processing': path.resolve(__dirname, '../packages/qti-processing/src'),
+          '@qti-components/elements': path.resolve(__dirname, '../packages/qti-elements/src'),
+          '@qti-components/interactions': path.resolve(__dirname, '../packages/qti-interactions'),
+          '@qti-components/item': path.resolve(__dirname, '../packages/qti-item/src'),
+          '@qti-components/test': path.resolve(__dirname, '../packages/qti-test/src'),
+          '@qti-components/components': path.resolve(__dirname, '../packages/qti-components/src'),
+          '@qti-components/loader': path.resolve(__dirname, '../packages/qti-loader/src'),
           ...config.resolve?.alias
         }
       }

@@ -10,11 +10,11 @@ const outdir = './';
 export default {
   /** Globs to analyze */
   globs: [
-    'packages/qc-components/src/**/*.ts',
-    'packages/qc-item/src/**/*.ts',
-    'packages/qc-test/src/**/*.ts',
-    'packages/qc-elements/src/**/*.ts',
-    'packages/qc-interactions/**/*.ts'
+    'packages/qti-components/src/**/*.ts',
+    'packages/qti-item/src/**/*.ts',
+    'packages/qti-test/src/**/*.ts',
+    'packages/qti-elements/src/**/*.ts',
+    'packages/qti-interactions/**/*.ts'
   ],
   /** Globs to exclude */
   exclude: ['packages/**/qti-*.stories.ts', 'packages/**/qti-*.spec.ts', 'packages/**/qti-*.styles.ts'],

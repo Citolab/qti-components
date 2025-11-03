@@ -19,9 +19,9 @@ import { toBePositionedRelativeTo } from '../test/setup/toBePositionedRelativeTo
 
 import type { Preview } from '@storybook/web-components-vite';
 
-import '../packages/qc-theme/src/item.css';
+import '../packages/qti-theme/src/item.css';
 
-import '../packages/qc-components/src';
+import '../packages/qti-components/src';
 
 export const loaders = [mswLoader];
 

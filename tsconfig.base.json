@@ -26,34 +26,34 @@
     "useDefineForClassFields": false,
     "paths": {
       "@qti-components/shared": [
-        "packages/qc-shared/src"
+        "packages/qti-shared/src"
       ],
       "@qti-components/utilities": [
-        "packages/qc-utilities/src"
+        "packages/qti-utilities/src"
       ],
       "@qti-components/transformers": [
-        "packages/qc-transformers/src"
+        "packages/qti-transformers/src"
       ],
       "@qti-components/processing": [
-        "packages/qc-processing/src"
+        "packages/qti-processing/src"
       ],
       "@qti-components/elements": [
-        "packages/qc-elements/src"
+        "packages/qti-elements/src"
       ],
       "@qti-components/interactions": [
-        "packages/qc-interactions"
+        "packages/qti-interactions"
       ],
       "@qti-components/item": [
-        "packages/qc-item/src"
+        "packages/qti-item/src"
       ],
       "@qti-components/test": [
-        "packages/qc-test/src"
+        "packages/qti-test/src"
       ],
       "@qti-components/components": [
-        "packages/qc-components/src"
+        "packages/qti-components/src"
       ],
       "@qti-components/loader": [
-        "packages/qc-loader/src"
+        "packages/qti-loader/src"
       ]
     }
   },
