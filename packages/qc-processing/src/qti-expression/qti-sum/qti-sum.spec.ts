@@ -1,15 +1,14 @@
+import { describe, it, expect } from 'vitest';
 import { html, render } from 'lit';
 
 // import '../qti-basevalue/qti-basevalue';
-import '../../../qti-assessment-item/qti-assessment-item';
-import '../../../qti-variable-declaration/qti-outcome-declaration/qti-outcome-declaration';
-import '../../../../qc-elements/components/qti-response-processing/qti-response-processing';
+import '@qti-components/elements';
 import './../../qti-rule/qti-set-outcome-value/qti-set-outcome-value';
 import '../qti-basevalue/qti-basevalue';
 import './qti-sum';
-import type { ItemContext } from '../../../../exports/item.context';
+import type { ItemContext } from '@qti-components/shared';
+import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { QtiSum } from './qti-sum';
-import type { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
 
 describe('QtiComponent qti-sum', () => {
   it('all true', () => {

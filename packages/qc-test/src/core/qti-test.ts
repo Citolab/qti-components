@@ -56,7 +56,8 @@ import type { IQtiTest } from '../iqti-test';
  *
  */
 @customElement('qti-test')
-export class QtiTest extends TestNavigationMixin(TestViewMixin(TestProcessingMixin(TestBase))) implements IQtiTest {
+export class QtiTest extends TestNavigationMixin(TestViewMixin(TestProcessingMixin(TestBase))) {
+  // TODO: Properly implement IQtiTest interface
   // export class QtiTest extends TestLoaderMixin(TestNavigationMixin(TestViewMixin(TestBase))) {
 
   /**

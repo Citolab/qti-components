@@ -1,5 +1,5 @@
 import { html, render } from 'lit';
-import { expect, describe, it } from 'vitest';
+import { expect, describe, it, beforeEach, afterEach } from 'vitest';
 
 import '../../index';
 import type { QtiLookupOutcomeValue } from './qti-lookup-outcome-value';

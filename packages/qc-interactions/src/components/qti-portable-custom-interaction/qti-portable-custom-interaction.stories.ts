@@ -283,24 +283,48 @@ export const TapToReveal = {
 
 export const ConvertedTAO = {
   render: () =>
-    html`<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd" identifier="i605b50d60c465892a88c0651ffd390" title="decisiontask" label="decisiontask" xml:lang="en-US" adaptive="false" time-dependent="false" tool-name="TAO" tool-version="3.4.0-sprint134">
-  <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="string"></qti-response-declaration>
-  <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float"></qti-outcome-declaration>
-  <qti-stylesheet  href="/assets/qti-portable-interaction/i605b50d60c465892a88c0651ffd390/decisiontask/runtime/css/base.css" type="text/css" title="base"></qti-stylesheet>
-              <qti-stylesheet  href="/assets/qti-portable-interaction/i605b50d60c465892a88c0651ffd390/decisiontask/runtime/css/decisiontask.css" type="text/css" title="decisiontask"></qti-stylesheet>
-  <qti-item-body>
-    <div class="grid-row">
-      <div class="col-12"></div>
-    </div>
-    <div class="grid-row">
-      <div class="col-12"></div>
-    </div>
-    <div class="grid-row">
-      <div class="col-12">
-        <qti-portable-custom-interaction-test
-    custom-interaction-type-identifier="decisiontask" 
-    module="decisiontask" 
-                  data-use-default-paths="true"
+    html`<qti-assessment-item
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+      xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+      identifier="i605b50d60c465892a88c0651ffd390"
+      title="decisiontask"
+      label="decisiontask"
+      xml:lang="en-US"
+      adaptive="false"
+      time-dependent="false"
+      tool-name="TAO"
+      tool-version="3.4.0-sprint134"
+    >
+      <qti-response-declaration
+        identifier="RESPONSE"
+        cardinality="single"
+        base-type="string"
+      ></qti-response-declaration>
+      <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float"></qti-outcome-declaration>
+      <qti-stylesheet
+        href="/assets/qti-portable-interaction/i605b50d60c465892a88c0651ffd390/decisiontask/runtime/css/base.css"
+        type="text/css"
+        title="base"
+      ></qti-stylesheet>
+      <qti-stylesheet
+        href="/assets/qti-portable-interaction/i605b50d60c465892a88c0651ffd390/decisiontask/runtime/css/decisiontask.css"
+        type="text/css"
+        title="decisiontask"
+      ></qti-stylesheet>
+      <qti-item-body>
+        <div class="grid-row">
+          <div class="col-12"></div>
+        </div>
+        <div class="grid-row">
+          <div class="col-12"></div>
+        </div>
+        <div class="grid-row">
+          <div class="col-12">
+            <qti-portable-custom-interaction-test
+              custom-interaction-type-identifier="decisiontask"
+              module="decisiontask"
+              data-use-default-paths="true"
               data-use-default-shims="true"
               data-version="1.0.1"
               data-data__0__stimulusindex="1"
@@ -339,33 +363,33 @@ export const ConvertedTAO = {
               data-stimulus="7 + 6 = 13"
               data-response="1"
               response-identifier="RESPONSE"
-      data-base-url="/assets/qti-portable-interaction/i605b50d60c465892a88c0651ffd390/"
-    >
-     <qti-interaction-modules>
-         <qti-interaction-module
-            id="decisiontask"
-            primary-path="decisiontask/runtime/decisiontask.amd.js"
-          ></qti-interaction-module>
-          <qti-interaction-module
-            id="IMSGlobal/jquery_2_1_1"
-            primary-path="IMSGlobal/jquery_2_1_1"
-          ></qti-interaction-module>
-          <qti-interaction-module
-            id="decisiontask/runtime/js/renderer"
-            primary-path="decisiontask/runtime/js/renderer"
-          ></qti-interaction-module>
-      <qti-interaction-markup>
-        <div class="decisiontask">
-          <div class="prompt"></div>
-          <div class="globalWrapper"></div>
+              data-base-url="/assets/qti-portable-interaction/i605b50d60c465892a88c0651ffd390/"
+            >
+              <qti-interaction-modules>
+                <qti-interaction-module
+                  id="decisiontask"
+                  primary-path="decisiontask/runtime/decisiontask.amd.js"
+                ></qti-interaction-module>
+                <qti-interaction-module
+                  id="IMSGlobal/jquery_2_1_1"
+                  primary-path="IMSGlobal/jquery_2_1_1"
+                ></qti-interaction-module>
+                <qti-interaction-module
+                  id="decisiontask/runtime/js/renderer"
+                  primary-path="decisiontask/runtime/js/renderer"
+                ></qti-interaction-module>
+              </qti-interaction-modules>
+              <qti-interaction-markup>
+                <div class="decisiontask">
+                  <div class="prompt"></div>
+                  <div class="globalWrapper"></div>
+                </div>
+              </qti-interaction-markup>
+            </qti-portable-custom-interaction-test>
+          </div>
         </div>
-      </qti-interaction-markup>
-    </qti-portable-custom-interaction-test>
-    </div>
-    </div>
-  </qti-item-body>
-</qti-assessment-item>
-    `,
+      </qti-item-body>
+    </qti-assessment-item> `,
   play: async ({ canvasElement, step }) => {
     let pciElement = canvasElement.querySelector('qti-portable-custom-interaction-test');
     await step('check response without interaction', async () => {

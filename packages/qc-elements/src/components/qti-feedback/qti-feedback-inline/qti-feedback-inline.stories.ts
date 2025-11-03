@@ -28,7 +28,7 @@ const meta: Meta<QtiFeedbackInline> = {
 export default meta;
 
 export const FeedbackInline: Story = {
-  render: args =>
+  render: _args =>
     html` <qti-assessment-item
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation=" http://www.imsglobal.org/xsd/imsqtiasi_v3p0 

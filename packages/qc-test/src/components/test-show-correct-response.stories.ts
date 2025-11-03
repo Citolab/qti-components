@@ -5,10 +5,10 @@ import { spread } from '@open-wc/lit-helpers';
 import { html } from 'lit';
 import { fireEvent } from 'storybook/test';
 
-import { getAssessmentItemFromTestContainerByDataTitle } from '../../../testing/test-utils';
+import { getAssessmentItemFromTestContainerByDataTitle } from '../../../../src/testing/test-utils.js';
 
+import type { QtiSimpleChoice } from '@qti-components/interactions';
 import type { TestNavigation } from './test-navigation.ts';
-import type { QtiSimpleChoice } from '../../qti-components';
 import type { TestShowCorrectResponse } from './test-show-correct-response';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 

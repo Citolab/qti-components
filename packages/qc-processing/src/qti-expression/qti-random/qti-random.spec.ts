@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import '../../../../qti-components';
 import { html, render } from 'lit';
 import './qti-random';

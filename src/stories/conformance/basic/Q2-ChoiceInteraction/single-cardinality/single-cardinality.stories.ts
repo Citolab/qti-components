@@ -3,16 +3,17 @@ import { expect, within } from 'storybook/test';
 import { fireEvent } from 'storybook/test';
 import { html } from 'lit';
 
-import { getItemByUri } from '../../../../../lib/qti-loader';
+import { getItemByUri } from '@qti-components/loader';
 
-import type { QtiAssessmentItem, QtiSimpleChoice } from '../../../../../lib';
+import type { QtiSimpleChoice } from '@qti-components/interactions';
+import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {
   title: 'qti-conformance/basic/Q2 - Choice Interaction/single-cardinality',
-  beforeEach: async ({ args }) => {}
+  beforeEach: async () => {}
 };
 export default meta;
 
@@ -50,7 +51,7 @@ export const Q2_L1_D51: Story = {
     expect(response, 'RESPONSE = NULL').toBe(null);
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality.xml')
     })
   ]
@@ -93,7 +94,7 @@ export const Q2_L1_D52: Story = {
     expect(response.value).toBe('choice_a');
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality.xml')
     })
   ]
@@ -135,7 +136,7 @@ export const Q2_L1_D53: Story = {
     expect(response.value).toBe('choice_b');
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality.xml')
     })
   ]
@@ -177,7 +178,7 @@ export const Q2_L1_D54: Story = {
     expect(response.value).toBe('choice_c');
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality.xml')
     })
   ]
@@ -218,7 +219,7 @@ export const Q2_L1_D55: Story = {
     expect(response.value).toBe('choice_b');
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality.xml')
     })
   ]
@@ -258,7 +259,7 @@ export const Q2_L1_D56: Story = {
     }
   },
   loaders: [
-    async ({ args }) => {
+    async () => {
       try {
         const xml = await getItemByUri('/assets/qti-conformance/Basic/Q2/single-cardinality-invalid.xml');
         return { xml };

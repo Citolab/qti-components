@@ -5,7 +5,7 @@ import { expect } from 'storybook/test';
 import type { QtiFeedbackBlock } from './qti-feedback-block';
 import type { StoryObj, Meta } from '@storybook/web-components-vite';
 
-const { events, args, argTypes, template } = getStorybookHelpers('qti-feedback-block');
+const { events, args, argTypes } = getStorybookHelpers('qti-feedback-block');
 
 type Story = StoryObj<QtiFeedbackBlock & typeof args>;
 
@@ -27,7 +27,7 @@ const meta: Meta<QtiFeedbackBlock> = {
 export default meta;
 
 export const FeedbackBlock: Story = {
-  render: args =>
+  render: _args =>
     html` <qti-assessment-item
       xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -377,7 +377,7 @@ export const FeedbackBlock: Story = {
         </qti-content-body>
       </qti-modal-feedback>
     </qti-assessment-item>`,
-  play: async ({ canvasElement }) => {
+  play: async () => {
     // const canvas = within(canvasElement);
     expect(true).toBe(true);
   }

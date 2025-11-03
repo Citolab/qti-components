@@ -1,16 +1,12 @@
-import '../../../../qti-components';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { html, render } from 'lit';
 import { provide } from '@lit/context';
 import { LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
+import { itemContext, testContext, type ItemContext } from '@qti-components/shared';
 
-import { itemContext } from '../../../../exports/qti-assessment-item.context';
-import { testContext } from '../../../../exports/test.context';
-
+import type { OutcomeVariable, VariableDeclaration, TestContext } from '@qti-components/shared';
 import type { QtiDefault } from './qti-default';
-import type { ItemContext } from '../../../../exports/item.context';
-import type { TestContext } from '../../../../exports/test.context';
-import type { OutcomeVariable, VariableDeclaration } from '../../../../exports/variables';
 
 // Mock item context provider
 @customElement('mock-item-provider')

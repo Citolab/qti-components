@@ -7,6 +7,7 @@ import { InlineCSSPlugin } from '../../scripts/inline-css-plugin';
 import type { Options } from 'tsup';
 
 const peerDependencies = Object.keys(pkgJson.peerDependencies || {});
+const dependencies = Object.keys(pkgJson.dependencies || {});
 
 export default defineConfig(async () => {
   const npmOptions: Options = {
@@ -23,13 +24,12 @@ export default defineConfig(async () => {
       './src/shared.ts'
     ],
     external: peerDependencies,
+    noExternal: dependencies,
+
     splitting: true,
     esbuildPlugins: [InlineCSSPlugin],
     sourcemap: true,
-    dts: true,
-    esbuildOptions(options) {
-      options.chunkNames = 'chunks/[name]-[hash]';
-    }
+    dts: false // Disable DTS for meta-package - consumers should import from individual packages
   };
 
   // CDN build (ESM, bundled deps)

@@ -8,6 +8,7 @@
   "author": {
     "name": "Patrick de Klein"
   },
+  "type": "module",
   "contributors": [
     {
       "name": "Sander Looise"
@@ -37,13 +38,13 @@
     "storybook:dev": "storybook dev -p 6006 --no-open",
     "cem": "cem analyze",
     "cem:watch": "cem analyze --watch",
-    "css": "postcss src/item.css -d dist -m",
+    "css": "postcss packages/qc-theme/src/item.css -d dist -m",
     "ci": "npm ci",
     "tsup": "tsup",
     "publint": "publint",
-    "lint": "eslint src/**/*.ts",
+    "lint": "eslint packages/**/*.ts",
     "stylelint": "stylelint \"packages/qc-theme/src/**/*.css\"",
-    "test": "vitest run",
+    "test": "wireit",
     "attw": "attw --profile esm-only --pack --exclude-entrypoints ./item.css ./react",
     "chromatic": "node chromatic-runner.cjs",
     "clean": "rm -rf dist cdn",
@@ -54,24 +55,13 @@
   },
   "wireit": {
     "build": {
-      "command": "run-p cem css tsup",
       "dependencies": [
         "./packages/qc-components:build"
-      ]
+      ],
+      "command": "run-p cem css"
     },
     "test": {
-      "dependencies": [
-        "./packages/qc-components:test",
-        "./packages/qc-elements:test",
-        "./packages/qc-interactions:test",
-        "./packages/qc-item:test",
-        "./packages/qc-loader:test",
-        "./packages/qc-processing:test",
-        "./packages/qc-shared:test",
-        "./packages/qc-theme:test",
-        "./packages/qc-transformers:test",
-        "./packages/qc-utilities:test"
-      ]
+      "command": "vitest run"
     }
   },
   "devDependencies": {
@@ -169,5 +159,6 @@
     "workerDirectory": [
       "public"
     ]
-  }
+  },
+  "packageManager": "pnpm@10.20.0+sha512.cf9998222162dd85864d0a8102e7892e7ba4ceadebbf5a31f9c2fce48dfce317a9c53b9f6464d1ef9042cba2e02ae02a9f7c143a2b438cd93c91840f0192b9dd"
 }

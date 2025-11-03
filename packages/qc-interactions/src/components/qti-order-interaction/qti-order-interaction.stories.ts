@@ -3,7 +3,7 @@ import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { expect, fn } from 'storybook/test';
 import { within } from 'shadow-dom-testing-library';
 
-import drag from '../../../../testing/drag';
+import drag from '../../../../../src/testing/drag';
 
 import type { InputType } from 'storybook/internal/types';
 import type { StoryObj, Meta } from '@storybook/web-components-vite';
@@ -76,7 +76,7 @@ export const Test: Story = {
     'min-choices': 1,
     'max-choices': 2
   },
-  play: async ({ args, canvasElement, step }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
     const interaction = canvas.getByTestId<QtiOrderInteraction>('order-interaction');

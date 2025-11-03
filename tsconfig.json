@@ -1,13 +1,13 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
+    "declaration": false,
     "noEmit": true,
-    "emitDeclarationOnly": false,
-    "paths": {
-      "@qti-components/*": [
-        "./packages/qc-*/src"
-      ]
-    }
+    "baseUrl": ".",
   },
-  "references": []
+  "include": [
+    "src/**/*",
+    "packages/**/*",
+    "*.d.ts"
+  ]
 }

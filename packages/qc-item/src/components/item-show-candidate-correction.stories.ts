@@ -4,8 +4,8 @@ import { html } from 'lit';
 import { expect, fireEvent, userEvent, waitFor } from 'storybook/test';
 import { within } from 'shadow-dom-testing-library';
 
-import { getAssessmentItemFromItemContainer } from '../../../testing/test-utils';
-import drag from '../../../testing/drag.ts';
+import { getAssessmentItemFromItemContainer } from '../../../../src/testing/test-utils';
+import drag from '../../../../src/testing/drag';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { ItemShowCandidateCorrection } from './item-show-candidate-correction.ts';
@@ -17,7 +17,7 @@ import type {
   QtiSimpleChoice,
   QtiTextEntryInteraction,
   QtiGapMatchInteraction
-} from '@qti-components/elements';
+} from '@qti-components/interactions';
 
 const { events, args, argTypes } = getStorybookHelpers('test-print-item-variables');
 

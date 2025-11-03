@@ -1,10 +1,10 @@
-import '../../../../qti-components';
-
+import { describe, it, expect } from 'vitest';
 import { html, render } from 'lit';
 
-import type { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
 import type { QtiDelete } from './qti-delete';
+
 import './qti-delete';
+import type { QtiAssessmentItem } from '@qti-components/elements';
 
 describe('qti-delete', () => {
   it('should check if the variable identified in the first child is contained in the second one', () => {

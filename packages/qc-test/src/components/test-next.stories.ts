@@ -4,10 +4,7 @@ import { findByShadowTitle, within } from 'shadow-dom-testing-library';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { spread } from '@open-wc/lit-helpers';
 
-import {
-  getAssessmentItemFromItemContainer,
-  getAssessmentItemFromTestContainerByDataTitle
-} from '../../../testing/test-utils';
+import { getAssessmentItemFromTestContainerByDataTitle } from '../../../../src/testing/test-utils';
 
 import type { TestNext } from './test-next';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
@@ -41,7 +38,7 @@ export const Default: Story = {
 };
 
 export const Test: Story = {
-  render: args => html`
+  render: () => html`
     <qti-test navigate="item">
       <test-navigation>
         <test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"> </test-container>

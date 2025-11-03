@@ -1,5 +1,4 @@
 import { html } from 'lit';
-
 import { QtiExpression } from '@qti-components/shared';
 
 export class QtiNot extends QtiExpression<boolean> {

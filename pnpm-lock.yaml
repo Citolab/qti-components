@@ -263,6 +263,9 @@ importers:
       '@qti-components/elements':
         specifier: workspace:*
         version: link:../qc-elements
+      '@qti-components/interactions':
+        specifier: workspace:*
+        version: link:../qc-interactions
       '@qti-components/item':
         specifier: workspace:*
         version: link:../qc-item

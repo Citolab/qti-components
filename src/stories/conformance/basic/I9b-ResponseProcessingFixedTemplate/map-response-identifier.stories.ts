@@ -3,21 +3,22 @@ import { expect, within } from 'storybook/test';
 import { fireEvent } from 'storybook/test';
 import { html } from 'lit';
 
-import { getItemByUri } from '../../../../lib/qti-loader';
+import { getItemByUri } from '@qti-components/loader';
 
-import type { QtiAssessmentItem, QtiSimpleChoice } from '../../../../lib';
+import type { QtiSimpleChoice } from '@qti-components/interactions';
+import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { ArgTypes, Meta, StoryObj } from '@storybook/web-components-vite';
 
 type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {
   title: 'qti-conformance/basic/I9b Response Processing Fixed Template/map-response-identifier',
-  beforeEach: async ({ args }) => {}
+  beforeEach: async () => {}
 };
 export default meta;
 
 const Default = {
-  render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
+  render: (_args, { loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
@@ -62,7 +63,7 @@ export const D1: Story = {
     expect(response, 'RESPONSE = NULL').toBe(null);
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri(`/assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
     })
   ]
@@ -94,7 +95,7 @@ export const D2: Story = {
     expect(response, 'RESPONSE = choice_a').toEqual(['choice_a']);
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri(`/assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
     })
   ]
@@ -126,7 +127,7 @@ export const D3: Story = {
     expect(response, 'RESPONSE = choice_a').toEqual(['choice_b']);
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri(`/assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
     })
   ]
@@ -158,7 +159,7 @@ export const D4: Story = {
     expect(response, 'RESPONSE = choice_c').toEqual(['choice_c']);
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri(`/assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
     })
   ]
@@ -189,7 +190,7 @@ export const D5: Story = {
     expect(response, 'RESPONSE = choice_d').toEqual(['choice_d']);
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri(`/assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
     })
   ]
@@ -220,7 +221,7 @@ export const D6: Story = {
     expect(response, 'RESPONSE = choice_e').toEqual(['choice_e']);
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri(`/assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
     })
   ]
@@ -253,7 +254,7 @@ export const D7: Story = {
     expect(response, 'RESPONSE = choice_a and choice_b').toEqual(['choice_a', 'choice_b']);
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri(`/assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
     })
   ]
@@ -287,7 +288,7 @@ export const D8: Story = {
     expect(response, 'RESPONSE = choice_b and choice_c').toEqual(['choice_b', 'choice_c']);
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri(`/assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
     })
   ]
@@ -319,7 +320,7 @@ export const D9: Story = {
     expect(response, 'RESPONSE = choice_d and choice_c').toEqual(['choice_c', 'choice_d']);
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri(`/assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
     })
   ]
@@ -355,7 +356,7 @@ export const D10: Story = {
     expect(response, 'RESPONSE = choice_d, choice_e and choice_f').toEqual(['choice_d', 'choice_e', 'choice_f']);
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri(`/assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
     })
   ]
@@ -404,7 +405,7 @@ export const D11: Story = {
     ]);
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri(`/assets/qti-conformance/Basic/I9b/map-response-identifier.xml`)
     })
   ]

@@ -1,16 +1,17 @@
 import { expect } from 'storybook/test';
 import { fireEvent } from 'storybook/test';
 
-import { getItemByUri } from '../../../../../lib/qti-loader';
+import { getItemByUri } from '@qti-components/loader';
 
-import type { QtiAssessmentItem, QtiSimpleChoice } from '../../../../../lib';
+import type { QtiSimpleChoice } from '@qti-components/interactions';
+import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {
   title: 'qti-conformance/basic/Q2 - Choice Interaction/multiple-cardinality',
-  beforeEach: async ({ args }) => {}
+  beforeEach: async () => {}
 };
 export default meta;
 
@@ -31,7 +32,7 @@ export const Q2_L1_D1: Story = {
     expect(response, 'RESPONSE = NULL').toBe(null);
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri(`/assets/qti-conformance/Basic/Q2/multiple-cardinality.xml`)
     })
   ]
@@ -58,7 +59,7 @@ export const Q2_L1_D2: Story = {
     expect(JSON.stringify(responseVariable.value), 'containing a value choice_a').toBe(JSON.stringify(['choice_a']));
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri(`/assets/qti-conformance/Basic/Q2/multiple-cardinality.xml`)
     })
   ]
@@ -80,7 +81,7 @@ export const Q2_L1_D3: Story = {
     expect(responseVariable.value).toStrictEqual(['choice_b']);
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri(`/assets/qti-conformance/Basic/Q2/multiple-cardinality.xml`)
     })
   ]
@@ -102,7 +103,7 @@ export const Q2_L1_D4: Story = {
     expect(responseVariable.value).toStrictEqual(['choice_c']);
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri(`/assets/qti-conformance/Basic/Q2/multiple-cardinality.xml`)
     })
   ]
@@ -126,7 +127,7 @@ export const Q2_L1_D5: Story = {
     expect(responseVariable.value).toStrictEqual(['choice_a', 'choice_b']);
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri(`/assets/qti-conformance/Basic/Q2/multiple-cardinality.xml`)
     })
   ]
@@ -150,7 +151,7 @@ export const Q2_L1_D6: Story = {
     expect(responseVariable.value).toStrictEqual(['choice_b', 'choice_c']);
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri(`/assets/qti-conformance/Basic/Q2/multiple-cardinality.xml`)
     })
   ]
@@ -176,7 +177,7 @@ export const Q2_L1_D7: Story = {
     expect(responseVariable.value).toStrictEqual(['choice_a', 'choice_b', 'choice_c']);
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri(`/assets/qti-conformance/Basic/Q2/multiple-cardinality.xml`)
     })
   ]

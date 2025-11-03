@@ -1,7 +1,8 @@
-import '../../../qti-components';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import '@qti-components/components';
 import { html, render } from 'lit';
 
-import type { QtiAssessmentItem } from '../../qti-assessment-item/qti-assessment-item';
+import type { QtiAssessmentItem } from '@qti-components/components';
 
 const match_correct_item = html` <qti-assessment-item identifier="choice" title="Unattended Luggage">
   <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="identifier">
@@ -37,7 +38,7 @@ describe('qti-response-processed', () => {
     assessmentItem.updateResponseVariable('RESPONSE', 'ChoiceA');
 
     assessmentItem.processResponse();
-    const score = assessmentItem.getOutcome('SCORE');
+    const score = assessmentItem['getOutcome']('SCORE'); // getOutcome is not public
     expect(score.value).toEqual('1');
   });
 
@@ -45,6 +46,6 @@ describe('qti-response-processed', () => {
     const assessmentItem = document.body.querySelector('qti-assessment-item') as QtiAssessmentItem;
     assessmentItem.updateResponseVariable('RESPONSE', 'choiceB');
     assessmentItem.processResponse();
-    expect(+assessmentItem.getOutcome('SCORE').value).toEqual(0);
+    expect(+assessmentItem['getOutcome']('SCORE').value).toEqual(0); // getOutcome is not public
   });
 });

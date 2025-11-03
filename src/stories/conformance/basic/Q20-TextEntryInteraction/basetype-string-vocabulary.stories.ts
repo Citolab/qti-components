@@ -2,9 +2,9 @@ import { expect } from 'storybook/test';
 import { userEvent } from 'storybook/test';
 import { html } from 'lit';
 
-import { getItemByUri } from '../../../../lib/qti-loader/qti-loader';
+import { getItemByUri } from '@qti-components/loader';
 
-import type { QtiAssessmentItem } from '@citolab/qti-components/qti-components';
+import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 type Story = StoryObj;

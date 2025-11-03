@@ -3,10 +3,10 @@ import { expect } from 'storybook/test';
 import { fireEvent, screen, userEvent } from 'storybook/test';
 import { html } from 'lit';
 
-import { getItemByUri } from '../../../../lib/qti-loader/qti-loader';
+import { getItemByUri } from '@qti-components/loader';
 
-import type { QtiTextEntryInteraction } from '../../../../lib/qti-components/qti-interaction/qti-text-entry-interaction/qti-text-entry-interaction';
-import type { QtiAssessmentItem } from '../../../../lib/qti-components/qti-assessment-item/qti-assessment-item';
+import type { QtiAssessmentItem } from '@qti-components/elements';
+import type { QtiTextEntryInteraction } from '@qti-components/interactions';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 type Story = StoryObj;

@@ -3,7 +3,7 @@ import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { expect, fireEvent } from 'storybook/test';
 import { within } from 'shadow-dom-testing-library';
 
-import type { QtiEndAttemptInteraction } from '../../qti-interaction/qti-end-attempt-interaction/qti-end-attempt-interaction';
+import type { QtiEndAttemptInteraction } from '@qti-components/interactions';
 import type { QtiModalFeedback } from './qti-modal-feedback';
 import type { StoryObj, Meta } from '@storybook/web-components-vite';
 
@@ -29,7 +29,7 @@ const meta: Meta<QtiModalFeedback> = {
 export default meta;
 
 export const ModalFeedback: Story = {
-  render: args =>
+  render: _args =>
     html` <qti-assessment-item
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 

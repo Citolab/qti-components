@@ -1,13 +1,21 @@
 {
     "extends": "../../tsconfig.base.json",
     "compilerOptions": {
-        "composite": true,
-        "declaration": true,
-        "emitDeclarationOnly": true, // Only emit .d.ts files
-        "outDir": "dist",
-        "rootDir": "src"
+        "outDir": "./dist"
     },
     "include": [
         "src/**/*.ts"
+    ],
+    "exclude": [
+        "dist",
+        "node_modules",
+        "**/*.spec.ts",
+        "**/*.stories.ts",
+        "**/*.test.ts"
+    ],
+    "references": [
+        {
+            "path": "./tsconfig.test.json"
+        }
     ]
 }

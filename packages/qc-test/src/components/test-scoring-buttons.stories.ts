@@ -3,7 +3,7 @@ import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { html } from 'lit';
 import { within } from 'shadow-dom-testing-library';
 
-import { getAssessmentTest } from '../../../testing/test-utils';
+import { getAssessmentTest } from '../../../../src/testing/test-utils';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { TestScoringButtons } from './test-scoring-buttons';

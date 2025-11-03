@@ -9,9 +9,15 @@ const outdir = './';
 
 export default {
   /** Globs to analyze */
-  globs: ['src/lib/qti-components/**/*.ts', 'src/lib/qti-item/**/*.ts', 'src/lib/qti-test/**/*.ts'],
+  globs: [
+    'packages/qc-components/src/**/*.ts',
+    'packages/qc-item/src/**/*.ts',
+    'packages/qc-test/src/**/*.ts',
+    'packages/qc-elements/src/**/*.ts',
+    'packages/qc-interactions/**/*.ts'
+  ],
   /** Globs to exclude */
-  exclude: ['src/**/qti-*.stories.ts', 'src/**/qti-*.spec.ts', 'src/**/qti-*.styles.ts'],
+  exclude: ['packages/**/qti-*.stories.ts', 'packages/**/qti-*.spec.ts', 'packages/**/qti-*.styles.ts'],
   /** Directory to output CEM to */
   outdir: outdir,
   /** Run in dev mode, provides extra logging */

@@ -1,8 +1,8 @@
 import { expect } from 'storybook/test';
 
-import { getItemByUri } from '../../../../../lib/qti-loader';
+import { getItemByUri } from '@qti-components/loader';
 
-import type { QtiAssessmentItem } from '../../../../../lib';
+import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 type Story = StoryObj;

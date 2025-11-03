@@ -2,7 +2,7 @@ import { html } from 'lit';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { within } from 'shadow-dom-testing-library';
 
-import drag from '../../../../testing/drag';
+import drag from '../../../../../src/testing/drag';
 
 import type { QtiSliderInteraction } from './qti-slider-interaction';
 import type { StoryObj, Meta } from '@storybook/web-components-vite';

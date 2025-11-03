@@ -46,7 +46,6 @@ export default [
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-empty-object-type': 'off',
       '@typescript-eslint/no-unused-vars': 'off',
-      'lit-plugin.rules.no-boolean-in-attribute-binding': 'off',
       '@typescript-eslint/consistent-type-imports': [
         'error',
         {

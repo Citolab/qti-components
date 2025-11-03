@@ -1,9 +1,16 @@
+import { describe, it, expect, afterEach, beforeEach } from 'vitest';
 import { html, render } from 'lit';
+import { Interaction } from '@qti-components/shared';
 
 import { VocabularyMixin } from './vocabulary-mixin';
-import '../../qti-simple-choice';
-import { Interaction } from '../../../../exports/interaction';
+
 class TestElement extends VocabularyMixin(Interaction, 'qti-simple-choice') {
+  get response(): string | string[] {
+    throw new Error('Method not implemented.');
+  }
+  set response(_val: string | string[]) {
+    throw new Error('Method not implemented.');
+  }
   class: string;
   shuffle: boolean;
   render() {

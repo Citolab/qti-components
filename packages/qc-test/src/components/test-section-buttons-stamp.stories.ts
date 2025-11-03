@@ -8,12 +8,12 @@ import {
   getAssessmentItemFromTestContainerByDataTitle,
   getAssessmentItemsFromTestContainer,
   getTestContainer
-} from '../../../testing/test-utils';
+} from '../../../../src/testing/test-utils.js';
 
 import '../../../../.storybook/utilities.css';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { TestSectionButtonsStamp } from './test-section-buttons-stamp';
-import type { QtiAssessmentStimulusRef } from '../../qti-components/qti-assessment-stimulus-ref/qti-assessment-stimulus-ref';
+import type { QtiAssessmentStimulusRef } from '@qti-components/elements';
 
 const { events, args, argTypes, template } = getStorybookHelpers('test-section-buttons-stamp');
 

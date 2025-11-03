@@ -2,9 +2,9 @@ import { action } from 'storybook/actions';
 import { expect, within } from 'storybook/test';
 import { html } from 'lit';
 
-import { getItemByUri } from '../../../../lib/qti-loader';
+import { getItemByUri } from '@qti-components/loader';
 
-import type { QtiAssessmentItem } from '../../../../lib';
+import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { ArgTypes, Meta, StoryObj } from '@storybook/web-components-vite';
 
 type Story = StoryObj;
@@ -15,7 +15,7 @@ const meta: Meta<QtiAssessmentItem> = {
 export default meta;
 
 export const A1L1D1: Story = {
-  render: (_args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
+  render: (_args, { loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
@@ -49,7 +49,7 @@ export const A1L1D1: Story = {
     expect(image).toBeVisible();
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri(`/assets/qti-conformance/Basic/A1/alternate-text-for-graphics.xml`)
     })
   ]

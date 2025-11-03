@@ -41,7 +41,7 @@ export const Test: Story = {
         @qti-test-loaded=${(e: CustomEvent) => {
           console.log('qti-test-loaded', e);
         }}
-        @qti-load-item-request=${e => {
+        @qti-load-item-request=${() => {
           // e.detail.returnedPromise = new Promise((resolve, reject) => {
           //   qtiTransformItem()
           //     .load(`${testURI}/${e.detail.href}`)
@@ -75,7 +75,7 @@ export const Test: Story = {
         @qti-request-navigation=${(e: CustomEvent) => {
           console.log('qti-request-navigation', e);
         }}
-        @qti-test-context-updated=${({ detail }) => {}}
+        @qti-test-context-updated=${() => {}}
       >
         <test-navigation
           auto-score-items

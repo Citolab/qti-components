@@ -1,7 +1,7 @@
-import '../../../../qti-components';
+import { describe, it, expect } from 'vitest';
 import { html, render } from 'lit';
 
-import type { QtiAssessmentItem } from '../../../../qti-components';
+import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { QtiMapResponse } from '../qti-map-response/qti-map-response';
 
 describe('qti-mapping', () => {

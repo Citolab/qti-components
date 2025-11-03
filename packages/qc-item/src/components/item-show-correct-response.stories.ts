@@ -4,15 +4,15 @@ import { html } from 'lit';
 import { expect, fireEvent, waitFor } from 'storybook/test';
 import { within } from 'shadow-dom-testing-library';
 
-import { getAssessmentItemFromItemContainer } from '../../../testing/test-utils';
-import drag from '../../../testing/drag';
+import { getAssessmentItemFromItemContainer } from '../../../../src/testing/test-utils';
+import drag from '../../../../src/testing/drag';
 
+import type { QtiSimpleChoice, QtiGapMatchInteraction } from '@qti-components/interactions';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { ItemShowCorrectResponse } from './item-show-correct-response';
 import './item-show-correct-response';
 import './item-correct-response-mode';
 import type { ItemContainer } from './item-container';
-import type { QtiGapMatchInteraction, QtiSimpleChoice } from '../../qti-components';
 
 const { events, args, argTypes } = getStorybookHelpers('test-print-item-variables');
 
@@ -367,7 +367,7 @@ export const MultipleResponseFullCorrectResponse: Story = {
   play: async ({ canvasElement, step }) => {
     const item = document.querySelector('qti-item');
     item.configContext = {
-      correctResponseMode: 'full',
+      correctResponseMode: 'full'
     };
     const canvas = within(canvasElement);
     const showCorrectButton = await canvas.findByShadowText(/Show correct/i);
@@ -1078,8 +1078,8 @@ export const GapMatchCorrectResponse: Story = {
 
     const dropZones = interaction.querySelectorAll(`qti-gap`);
 
-    const dropZone1 = dropZones[0]
-    const dropZone2 = dropZones[1]
+    const dropZone1 = dropZones[0];
+    const dropZone2 = dropZones[1];
 
     await step('Drag and drop match interaction items', async () => {
       await drag(matchItem1, { to: dropZone1 });

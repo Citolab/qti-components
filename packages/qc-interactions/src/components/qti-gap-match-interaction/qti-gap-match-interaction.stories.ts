@@ -2,13 +2,13 @@ import { action } from 'storybook/actions';
 import { expect } from 'storybook/test';
 import { html } from 'lit';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
+import { getItemByUri } from '@qti-components/loader';
 
-import { getItemByUri } from '../../../../lib/qti-loader';
-import drag from '../../../../testing/drag';
+import drag from '../../../../../src/testing/drag';
 
 import type { ArgTypes, Meta, StoryObj } from '@storybook/web-components-vite';
-import type { QtiAssessmentItem } from '../../qti-assessment-item/qti-assessment-item';
-import type { QtiGapText } from '../qti-gap-text';
+import type { QtiAssessmentItem } from '@qti-components/elements';
+import type { QtiGapText } from '../../elements/qti-gap-text';
 import type { QtiGapMatchInteraction } from './qti-gap-match-interaction';
 
 const { events, args, argTypes, template } = getStorybookHelpers('qti-gap-match-interaction');

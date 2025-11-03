@@ -1,3 +1,4 @@
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import '../../../../qti-components';
 import { html, render } from 'lit';
 
@@ -246,7 +247,7 @@ describe('qti-round', () => {
       { input: -6.5, expected: -6 } // negative n+0.5, should round towards zero
     ];
 
-    testCases.forEach(({ input, expected }, index) => {
+    testCases.forEach(({ input, expected }) => {
       // Create a fresh container for each test case
       const caseContainer = document.createElement('div');
       document.body.appendChild(caseContainer);

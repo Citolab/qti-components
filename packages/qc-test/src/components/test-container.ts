@@ -6,7 +6,7 @@ import { qtiTransformTest } from '@qti-components/transformers';
 
 // import itemCss from '../../../item.css?inline';
 
-import type { QtiTest } from '../iqti-test';
+import type { QtiTest } from '../core/qti-test';
 /**
  * `<test-container>` is a custom element designed for hosting the qti-assessment-item.
  * The `qti-assessment-test` will be placed inside the shadow DOM of this element.
@@ -46,7 +46,7 @@ export class TestContainer extends LitElement {
     try {
       let api = await qtiTransformTest().load(this.testURL);
       // Apply external transformation if provided
-      const qtiTest = this.closest('qti-test') as unknown as QtiTest;
+      const qtiTest = this.closest('qti-test') as any; // Type assertion to access mixin properties
       if (qtiTest?.postLoadTestTransformCallback) {
         // Create a temporary document to get the test element reference
         const tempDoc = api.htmlDoc();

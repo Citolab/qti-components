@@ -1,8 +1,7 @@
+import { describe, it, expect } from 'vitest';
 import { html, render } from 'lit';
+import { QtiConditionExpression } from '@qti-components/shared';
 
-import { QtiConditionExpression } from '../../../../exports/qti-condition-expression';
-
-import './qti-or';
 import type { QtiOr } from './qti-or';
 class MockChild extends QtiConditionExpression {
   value = false;

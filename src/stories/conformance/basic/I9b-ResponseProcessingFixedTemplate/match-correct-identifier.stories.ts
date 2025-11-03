@@ -3,22 +3,22 @@ import { expect, within } from 'storybook/test';
 import { fireEvent } from 'storybook/test';
 import { html } from 'lit';
 
-import { getItemByUri } from '../../../../lib/qti-loader';
+import { getItemByUri } from '@qti-components/loader';
 
-import type { QtiAssessmentItem } from '../../../../lib';
+import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { ArgTypes, Meta, StoryObj } from '@storybook/web-components-vite';
 
 type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {
   title: 'qti-conformance/basic/I9b Response Processing Fixed Template/match-correct-identifier',
-  beforeEach: async ({ args }) => {}
+  beforeEach: async () => {}
 };
 export default meta;
 
 export const Default: Story = {
   name: 'I9-L1-D12',
-  render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
+  render: (_args, { loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
@@ -59,7 +59,7 @@ export const Default: Story = {
     expect(response, 'RESPONSE = NULL').toBe(null);
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri(`/assets/qti-conformance/Basic/I9b/match-correct-identifier.xml`)
     })
   ]
@@ -68,7 +68,7 @@ export const Default: Story = {
 export const D13: Story = {
   name: 'I9-L1-D13',
 
-  render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
+  render: (_args, { loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
@@ -113,7 +113,7 @@ export const D13: Story = {
     expect(response, 'RESPONSE = choice_a').toEqual('choice_a');
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri(`/assets/qti-conformance/Basic/I9b/match-correct-identifier.xml`)
     })
   ]
@@ -122,7 +122,7 @@ export const D13: Story = {
 export const D14: Story = {
   name: 'I9-L1-D14',
 
-  render: (args, { argTypes, loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
+  render: (_args, { loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
     const onOutcomeChangedAction = action('qti-outcome-changed');
@@ -167,7 +167,7 @@ export const D14: Story = {
     expect(response, 'RESPONSE = choice_b').toEqual('choice_b');
   },
   loaders: [
-    async ({ args }) => ({
+    async () => ({
       xml: await getItemByUri(`/assets/qti-conformance/Basic/I9b/match-correct-identifier.xml`)
     })
   ]

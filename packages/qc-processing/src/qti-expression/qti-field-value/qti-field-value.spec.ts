@@ -1,3 +1,4 @@
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import '../../../../qti-components';
 import { html, render } from 'lit';
 import { provide } from '@lit/context';

@@ -3,9 +3,10 @@ import { expect } from 'storybook/test';
 import { fireEvent, screen, userEvent } from 'storybook/test';
 import { html } from 'lit';
 
-import { getItemByUri } from '../../../../lib/qti-loader/qti-loader';
+import { getItemByUri } from '@qti-components/loader';
 
-import type { QtiAssessmentItem, QtiExtendedTextInteraction } from '../../../../lib';
+import type { QtiExtendedTextInteraction } from '@qti-components/interactions';
+import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 type Story = StoryObj;

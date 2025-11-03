@@ -6,7 +6,7 @@ import { spread } from '@open-wc/lit-helpers';
 
 import type { InputType } from 'storybook/internal/types';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
-import type { QtiSimpleChoice } from '../qti-simple-choice';
+import type { QtiSimpleChoice } from '../../elements/qti-simple-choice';
 import type { QtiChoiceInteraction } from './qti-choice-interaction';
 
 const { events, args, argTypes, template } = getStorybookHelpers('qti-choice-interaction', {

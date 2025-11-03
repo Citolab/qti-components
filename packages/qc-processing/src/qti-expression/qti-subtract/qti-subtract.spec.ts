@@ -1,14 +1,8 @@
+import { describe, it, expect } from 'vitest';
 import { html, render } from 'lit';
 
-// import '../qti-basevalue/qti-basevalue';
-import '../../../qti-assessment-item/qti-assessment-item';
-import '../../../qti-variable-declaration/qti-outcome-declaration/qti-outcome-declaration';
-import '../../../../qc-elements/components/qti-response-processing/qti-response-processing';
-import './../../qti-rule/qti-set-outcome-value/qti-set-outcome-value';
-import '../qti-basevalue/qti-basevalue';
-import './index';
-import type { ItemContext } from '../../../../exports/item.context';
-import type { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
+import type { QtiAssessmentItem } from '@qti-components/elements';
+import type { ItemContext } from '@qti-components/shared';
 
 describe('QtiComponent qti-subtract', () => {
   it('should calculate the difference of two values', () => {

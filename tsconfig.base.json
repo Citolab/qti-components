@@ -2,9 +2,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "declaration": true,
-    "emitDeclarationOnly": true,
     "experimentalDecorators": true,
-    "importHelpers": true,
+    "importHelpers": false,
     "inlineSources": true,
     "lib": [
       "ES2022",
@@ -15,25 +14,55 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "noImplicitAny": false,
-    "noImplicitOverride": true,
+    "noImplicitOverride": false,
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "noUnusedParameters": true,
-    "rootDir": ".",
+    "noUnusedLocals": false,
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": false,
     "target": "esnext",
     "useDefineForClassFields": false,
     "paths": {
-      "@qti-components/*": [
-        "./packages/qc-*/src"
+      "@qti-components/shared": [
+        "packages/qc-shared/src"
+      ],
+      "@qti-components/utilities": [
+        "packages/qc-utilities/src"
+      ],
+      "@qti-components/transformers": [
+        "packages/qc-transformers/src"
+      ],
+      "@qti-components/processing": [
+        "packages/qc-processing/src"
+      ],
+      "@qti-components/elements": [
+        "packages/qc-elements/src"
+      ],
+      "@qti-components/interactions": [
+        "packages/qc-interactions"
+      ],
+      "@qti-components/item": [
+        "packages/qc-item/src"
+      ],
+      "@qti-components/test": [
+        "packages/qc-test/src"
+      ],
+      "@qti-components/components": [
+        "packages/qc-components/src"
+      ],
+      "@qti-components/loader": [
+        "packages/qc-loader/src"
       ]
     }
   },
   "types": [
     "vitest/globals",
-    "@types/dom-view-transitions",
+    "@types/dom-view-transitions"
+  ],
+  "include": [
+    "./test/globals.d.ts",
     "./test/vitest.d.ts",
     "./test/storybookMatchers.d.ts"
   ]

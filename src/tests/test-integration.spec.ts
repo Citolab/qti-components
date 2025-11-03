@@ -1,6 +1,6 @@
 import { render } from 'lit';
 import { composeStory } from 'storybook/preview-api';
-import { vi } from 'vitest';
+import { afterEach, beforeEach, describe, test, vi } from 'vitest';
 
 import Meta, { SlowLoadingStimulus } from './test-integration.stories';
 import { ExtendedXMLHttpRequest } from '../testing/xmlHttpRequest';
@@ -8,7 +8,7 @@ import { ExtendedXMLHttpRequest } from '../testing/xmlHttpRequest';
 import type { ComposedStoryFn } from 'storybook/internal/types';
 import type { WebComponentsRenderer } from '@storybook/web-components-vite';
 
-import '../../packages/qc-test';
+import '@qti-components/test';
 import '@qti-components/elements';
 
 const testStory1: ComposedStoryFn<WebComponentsRenderer, Partial<any>> = composeStory(SlowLoadingStimulus, Meta);

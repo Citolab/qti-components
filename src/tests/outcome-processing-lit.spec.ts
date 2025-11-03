@@ -1,3 +1,4 @@
+import { describe, beforeEach, test, expect } from 'vitest';
 import { html, render } from 'lit';
 
 import type { QtiTest } from '@qti-components/test';

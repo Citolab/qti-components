@@ -1,7 +1,7 @@
 import { html } from 'lit';
 
+import type { QtiTest } from '@qti-components/test';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
-import type { QtiTest } from '../lib/qti-test/core';
 
 type Story = StoryObj<QtiTest>;
 

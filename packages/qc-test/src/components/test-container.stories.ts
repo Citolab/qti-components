@@ -1,10 +1,9 @@
 import { expect } from 'storybook/test';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { html } from 'lit';
-import { within } from 'shadow-dom-testing-library';
 
-import { qtiTransformTest } from '../../qti-transformers';
-import { getAssessmentItemFromTestContainerByDataTitle } from '../../../testing/test-utils';
+import { qtiTransformTest } from '../../../qc-transformers/src';
+import { getAssessmentItemFromTestContainerByDataTitle } from '../../../../src/testing/test-utils';
 
 import type { TestContainer } from './test-container';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';

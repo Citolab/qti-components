@@ -1,7 +1,7 @@
-import '../../../../qti-components';
+import { describe, it, expect } from 'vitest';
 import { html, render } from 'lit';
 
-import type { QtiAssessmentItem } from '../../../qti-assessment-item/qti-assessment-item';
+import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { QtiEqualRounded } from './qti-equal-rounded';
 
 describe('qti-equal-rounded', () => {

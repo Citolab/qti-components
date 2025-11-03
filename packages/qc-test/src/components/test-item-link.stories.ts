@@ -10,7 +10,7 @@ type Story = StoryObj<TestItemLink & typeof args>;
 
 const meta: Meta<TestItemLink> = {
   component: 'test-item-link',
-  args: { ...args, 'item-id': 'ITM-32cjnu' },
+  args: { ...args }, // itemId: 'ITM-32cjnu' - private property, set via attribute
   argTypes,
   parameters: {
     actions: {

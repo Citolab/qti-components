@@ -4,13 +4,11 @@ import { createRef, ref } from 'lit/directives/ref.js';
 import { expect, fn, waitFor, within } from 'storybook/test';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 
-import drag from '../../../../testing/drag';
+import drag from '../../../../../src/testing/drag';
 
+import type { QtiMatchInteraction } from './qti-match-interaction';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
-import type { QtiAssessmentItem, QtiMatchInteraction } from '../../..';
 import type { InputType } from 'storybook/internal/types';
-
-import '../../../../item.css';
 
 const { events, args, argTypes, template } = getStorybookHelpers('qti-match-interaction');
 
@@ -264,7 +262,7 @@ export const Test: Story = {
     const dropM = canvas.getByText('A Midsummer-Nights');
 
     // // Define the interaction response event handler to capture the response
-    const interactionResponse = fn(event => {
+    const interactionResponse = fn(() => {
       // Ensure the interaction response detail contains the expected values
       // console.log(event.detail.response);
     });
@@ -310,7 +308,6 @@ export const Test2: Story = {
     const canvas = within(canvasElement);
 
     // Retrieve interaction, source, and target elements from the canvas
-    const interaction = canvas.getByTestId<QtiMatchInteraction>('match-interaction');
     const dragC = canvas.getByText('Capulet');
     const dragD = canvas.getByText('Demetrius');
     const dragL = canvas.getByText('Lysander');
@@ -319,7 +316,7 @@ export const Test2: Story = {
     const dropR = canvas.getByText('Romeo and Juliet');
 
     // // Define the interaction response event handler to capture the response
-    const interactionResponse = fn(event => {
+    const interactionResponse = fn(() => {
       // Ensure the interaction response detail contains the expected values
       // console.log(event.detail.response);
     });
@@ -352,37 +349,27 @@ export const Test2: Story = {
 
 export const DragMultiple: Story = {
   render: () => multipleAssociationsTemplate,
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-  }
+  play: async () => {}
 };
 
 export const DragMultiple2: Story = {
   render: () => multipleAssociations2Template,
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-  }
+  play: async () => {}
 };
 
 export const OptionsRight: Story = {
   render: () => optionsRightTemplate,
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-  }
+  play: async () => {}
 };
 
 export const ManyOptions: Story = {
   render: () => manyOptionsTemplate,
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-  }
+  play: async () => {}
 };
 
 export const WithImages: Story = {
   render: () => withImagesTemplate,
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-  }
+  play: async () => {}
 };
 
 export const Tabular = {

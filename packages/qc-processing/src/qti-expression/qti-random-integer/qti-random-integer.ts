@@ -1,5 +1,4 @@
 import { property } from 'lit/decorators.js';
-
 import { QtiExpression } from '@qti-components/shared';
 
 /**

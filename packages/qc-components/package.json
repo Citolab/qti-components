@@ -13,39 +13,31 @@
     ],
     "author": "",
     "type": "module",
-    "types": "./dist/index.d.ts",
     "sideEffects": true,
     "license": "GPL-3.0-only",
     "exports": {
         ".": {
-            "types": "./dist/index.d.ts",
             "import": "./dist/index.js"
         },
         "./exports/*": {
             "import": "./dist/exports/*"
         },
         "./qti-components": {
-            "types": "./dist/qti-components/index.d.ts",
             "import": "./dist/qti-components/index.js"
         },
         "./qti-item": {
-            "types": "./dist/qti-item/index.d.ts",
             "import": "./dist/qti-item/index.js"
         },
         "./qti-test": {
-            "types": "./dist/qti-test/index.d.ts",
             "import": "./dist/qti-test/index.js"
         },
         "./qti-loader": {
-            "types": "./dist/qti-loader/index.d.ts",
             "import": "./dist/qti-loader/index.js"
         },
         "./qti-transformers": {
-            "types": "./dist/qti-transformers/index.d.ts",
             "import": "./dist/qti-transformers/index.js"
         },
         "./customElements": "./custom-elements.json",
-        "./react": "./dist/qti-components-jsx.d.ts",
         "./item.css": "./dist/item.css",
         "./cdn/*": "./cdn/*",
         "./package.json": "./package.json"
@@ -60,6 +52,7 @@
         "@qti-components/item": "workspace:*",
         "@qti-components/elements": "workspace:*",
         "@qti-components/transformers": "workspace:*",
+        "@qti-components/interactions": "workspace:*",
         "@qti-components/loader": "workspace:*",
         "@qti-components/shared": "workspace:*"
     },
