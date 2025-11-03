@@ -6,7 +6,6 @@ import { InlineCSSPlugin } from '../../scripts/inline-css-plugin';
 
 import type { Options } from 'tsup';
 
-const peerDependencies = Object.keys(pkgJson.peerDependencies || {});
 const dependencies = Object.keys(pkgJson.dependencies || {});
 
 export default defineConfig(async () => {
@@ -19,13 +18,12 @@ export default defineConfig(async () => {
       './src/test.ts',
       './src/item.ts',
       './src/elements.ts',
+      './src/interactions.ts',
       './src/transformers.ts',
       './src/loader.ts',
       './src/shared.ts'
     ],
-    external: peerDependencies,
     noExternal: dependencies,
-
     splitting: true,
     esbuildPlugins: [InlineCSSPlugin],
     sourcemap: true,

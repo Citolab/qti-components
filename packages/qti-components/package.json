@@ -6,8 +6,7 @@
     "scripts": {
         "build": "tsup",
         "clean": "rm -rf dist cdn",
-        "attw": "attw --profile esm-only --pack",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "attw": "attw --profile esm-only --pack"
     },
     "keywords": [
         "qti",
@@ -16,14 +15,17 @@
     "author": "",
     "type": "module",
     "sideEffects": [
-        "./dist/**/*.css"
+        "./dist/elements.js",
+        "./dist/interactions.js",
+        "./dist/item.js",
+        "./dist/test.js"
     ],
     "license": "GPL-3.0-only",
     "exports": {
         ".": {
             "import": "./dist/index.js"
         },
-        "./exports/*": {
+        "./exports": {
             "import": "./dist/shared.js"
         },
         "./qti-elements": {
@@ -44,7 +46,7 @@
         "./qti-transformers": {
             "import": "./dist/transformers.js"
         },
-        "./customElements": "./custom-elements.json",
+        "./customElements": "./dist/custom-elements.json",
         "./item.css": "./dist/item.css",
         "./cdn/*": "./cdn/*",
         "./package.json": "./package.json"
@@ -61,9 +63,7 @@
         "@qti-components/transformers": "workspace:*",
         "@qti-components/interactions": "workspace:*",
         "@qti-components/loader": "workspace:*",
-        "@qti-components/shared": "workspace:*"
-    },
-    "peerDependencies": {
+        "@qti-components/shared": "workspace:*",
         "lit": "^3.3.1",
         "@lit/context": "^1.1.6",
         "@heximal/templates": "^0.1.5"
