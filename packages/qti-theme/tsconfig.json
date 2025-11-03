@@ -13,9 +13,4 @@
         "**/*.stories.ts",
         "**/*.test.ts"
     ],
-    "references": [
-        {
-            "path": "./tsconfig.test.json"
-        }
-    ]
 }

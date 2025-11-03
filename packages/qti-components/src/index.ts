@@ -1,10 +1,10 @@
-export * from '@qti-components/test';
-export * from '@qti-components/item';
-export * from '@qti-components/elements';
-export * from '@qti-components/interactions';
-export * from '@qti-components/transformers';
-export * from '@qti-components/loader';
-export * from '@qti-components/shared';
+import '@qti-components/test';
+import '@qti-components/item';
+import '@qti-components/elements';
+import '@qti-components/interactions';
+import '@qti-components/transformers';
+import '@qti-components/loader';
+import '@qti-components/shared';
 
 // Import version from package.json
 // import packageJson from '../package.json' assert { type: 'json' };

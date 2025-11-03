@@ -2,7 +2,7 @@ import '@qti-components/components';
 import { describe, it, expect } from 'vitest';
 import { html, render } from 'lit';
 
-import type { QtiAssessmentItem } from '@qti-components/components';
+import type { QtiAssessmentItem } from '../../../../qti-components/src';
 import type { QtiContains } from './qti-contains';
 
 describe('qti-contains', () => {

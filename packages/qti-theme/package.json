@@ -4,7 +4,13 @@
     "description": "QTI theme utilities",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "build": "postcss ./src/item.css -d dist -m"
+    },
+    "exports": {
+        ".": {
+            "import": "./dist/item.css",
+            "default": "./dist/item.css"
+        }
     },
     "keywords": [
         "qti",

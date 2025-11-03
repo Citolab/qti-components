@@ -29,7 +29,7 @@ export default defineConfig(async () => {
     splitting: true,
     esbuildPlugins: [InlineCSSPlugin],
     sourcemap: true,
-    dts: false // Disable DTS for meta-package - consumers should import from individual packages
+    dts: true // Disable DTS for meta-package - consumers should import from individual packages
   };
 
   // CDN build (ESM, bundled deps)

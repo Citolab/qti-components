@@ -1,17 +1,14 @@
 import { html } from 'lit';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { expect, waitFor } from 'storybook/test';
+import { removeDoubleSlashes } from '@qti-components/utilities';
+import { qtiTransformItem } from '@qti-components/transformers';
 
-import { removeDoubleSlashes } from '../../internal/utils';
-import { qtiTransformItem } from '../../../qti-transformers';
-
-import type { StoryObj, Meta } from '@storybook/web-components-vite';
+import type { ItemContainer, QtiItem } from '@qti-components/item';
+import type { ModuleResolutionConfig } from '@qti-components/transformers';
 import type { QtiPortableCustomInteraction } from './qti-portable-custom-interaction';
-
-import './qti-portable-custom-test-interaction';
-import type { QtiAssessmentItem } from '../../qti-assessment-item/qti-assessment-item';
-import type { ItemContainer, QtiItem } from '../../../qti-item/core';
-import type { ModuleResolutionConfig } from '../../../qti-transformers';
+import type { QtiAssessmentItem } from '@qti-components/elements';
+import type { StoryObj, Meta } from '@storybook/web-components-vite';
 
 const { events, args, argTypes, template } = getStorybookHelpers('qti-portable-custom-interaction');
 

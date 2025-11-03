@@ -1,7 +1,13 @@
 {
     "extends": "../../tsconfig.base.json",
     "compilerOptions": {
-        "outDir": "./dist"
+        "outDir": "./dist",
+        "baseUrl": "/src",
+        "paths": {
+            "@qti-components/*": [
+                "../../qti-shared/src/*"
+            ]
+        }
     },
     "include": [
         "src/**/*.ts"
@@ -12,10 +18,5 @@
         "**/*.spec.ts",
         "**/*.stories.ts",
         "**/*.test.ts"
-    ],
-    "references": [
-        {
-            "path": "./tsconfig.test.json"
-        }
     ]
 }

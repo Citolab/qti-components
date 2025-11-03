@@ -9,5 +9,12 @@
     "src/**/*",
     "packages/**/*",
     "*.d.ts"
-  ]
+  ],
+  "exclude": [
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "node_modules",
+    "dist",
+    "cdn"
+  ],
 }

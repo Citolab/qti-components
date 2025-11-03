@@ -1,1 +1,1 @@
-export * from '@qti-components/transformers';
+import '@qti-components/transformers';

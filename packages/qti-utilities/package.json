@@ -4,7 +4,8 @@
     "description": "shared utilities",
     "main": "dist/index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "build": "tsc",
+        "clean": "rm -rf dist"
     },
     "keywords": [
         "qti",
@@ -13,6 +14,6 @@
     "author": "",
     "license": "GPL-3.0-only",
     "peerDependencies": {
-        "lit": "^3.2.1"
+        "lit": "^3.3.1"
     }
 }

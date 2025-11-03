@@ -4,6 +4,8 @@
     "description": "QTI interactions utilities",
     "main": "dist/index.js",
     "scripts": {
+        "build": "tsc",
+        "clean": "rm -rf dist",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "keywords": [

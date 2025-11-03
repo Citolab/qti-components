@@ -4,6 +4,8 @@
     "description": "QTI loader utilities",
     "main": "dist/index.js",
     "scripts": {
+        "build": "tsc",
+        "clean": "rm -rf dist",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "keywords": [
@@ -13,6 +15,7 @@
     "author": "",
     "license": "GPL-3.0-only",
     "dependencies": {
-        "@qti-components/transformers": "workspace:*"
+        "@qti-components/transformers": "workspace:*",
+        "@qti-components/elements": "workspace:*"
     }
 }

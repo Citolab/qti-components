@@ -34,35 +34,21 @@
     "commit-msg": "commitlint --edit",
     "build-storybook": "npm run cem && storybook build",
     "-----------------------scripts--": "-",
-    "build": "wireit",
+    "build": "run-p cem",
     "storybook:dev": "storybook dev -p 6006 --no-open",
     "cem": "cem analyze",
     "cem:watch": "cem analyze --watch",
     "css": "postcss packages/qti-theme/src/item.css -d dist -m",
-    "ci": "npm ci",
-    "tsup": "tsup",
     "publint": "publint",
     "lint": "eslint packages/**/*.ts",
     "stylelint": "stylelint \"packages/qti-theme/src/**/*.css\"",
-    "test": "wireit",
+    "test": "vitest run",
     "attw": "attw --profile esm-only --pack --exclude-entrypoints ./item.css ./react",
     "chromatic": "node chromatic-runner.cjs",
-    "clean": "rm -rf dist cdn",
     "madge": "madge --circular --extensions ts src",
     "commitlint": "commitlint --edit",
     "-----------------------npm--": "-",
     "-prepare": "husky && npm run build"
-  },
-  "wireit": {
-    "build": {
-      "dependencies": [
-        "./packages/qti-components:build"
-      ],
-      "command": "run-p cem css"
-    },
-    "test": {
-      "command": "vitest run"
-    }
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.2",

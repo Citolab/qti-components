@@ -252,7 +252,7 @@ importers:
         specifier: ^1.0.0-pre.53
         version: 1.0.0-pre.53
 
-  packages/qc-components:
+  packages/qti-components:
     dependencies:
       '@heximal/templates':
         specifier: ^0.1.5
@@ -262,102 +262,108 @@ importers:
         version: 1.1.6
       '@qti-components/elements':
         specifier: workspace:*
-        version: link:../qc-elements
+        version: link:../qti-elements
       '@qti-components/interactions':
         specifier: workspace:*
-        version: link:../qc-interactions
+        version: link:../qti-interactions
       '@qti-components/item':
         specifier: workspace:*
-        version: link:../qc-item
+        version: link:../qti-item
       '@qti-components/loader':
         specifier: workspace:*
-        version: link:../qc-loader
+        version: link:../qti-loader
       '@qti-components/shared':
         specifier: workspace:*
-        version: link:../qc-shared
+        version: link:../qti-shared
       '@qti-components/test':
         specifier: workspace:*
-        version: link:../qc-test
+        version: link:../qti-test
       '@qti-components/transformers':
         specifier: workspace:*
-        version: link:../qc-transformers
+        version: link:../qti-transformers
       lit:
         specifier: ^3.2.1
         version: 3.3.1
 
-  packages/qc-elements:
+  packages/qti-elements:
     dependencies:
       '@qti-components/shared':
         specifier: workspace:*
-        version: link:../qc-shared
+        version: link:../qti-shared
+      '@qti-components/transformers':
+        specifier: workspace:*
+        version: link:../qti-transformers
       '@qti-components/utilities':
         specifier: workspace:*
-        version: link:../qc-utilities
+        version: link:../qti-utilities
       lit:
         specifier: ^3.2.1
         version: 3.3.1
 
-  packages/qc-interactions:
+  packages/qti-interactions:
     dependencies:
       '@qti-components/shared':
         specifier: workspace:*
-        version: link:../qc-shared
+        version: link:../qti-shared
       '@qti-components/transformers':
         specifier: workspace:*
-        version: link:../qc-transformers
+        version: link:../qti-transformers
       '@qti-components/utilities':
         specifier: workspace:*
-        version: link:../qc-utilities
+        version: link:../qti-utilities
       lit:
         specifier: ^3.2.1
         version: 3.3.1
 
-  packages/qc-item:
+  packages/qti-item:
     dependencies:
       '@qti-components/elements':
         specifier: workspace:*
-        version: link:../qc-elements
+        version: link:../qti-elements
       '@qti-components/interactions':
         specifier: workspace:*
-        version: link:../qc-interactions
+        version: link:../qti-interactions
       '@qti-components/processing':
         specifier: workspace:*
-        version: link:../qc-processing
+        version: link:../qti-processing
       '@qti-components/shared':
         specifier: workspace:*
-        version: link:../qc-shared
+        version: link:../qti-shared
       '@qti-components/transformers':
         specifier: workspace:*
-        version: link:../qc-transformers
+        version: link:../qti-transformers
       '@qti-components/utilities':
         specifier: workspace:*
-        version: link:../qc-utilities
+        version: link:../qti-utilities
       lit:
         specifier: ^3.2.1
         version: 3.3.1
 
-  packages/qc-loader:
+  packages/qti-loader:
     dependencies:
+      '@qti-components/elements':
+        specifier: workspace:*
+        version: link:../qti-elements
       '@qti-components/transformers':
         specifier: workspace:*
-        version: link:../qc-transformers
+        version: link:../qti-transformers
 
-  packages/qc-processing:
+  packages/qti-processing:
     dependencies:
       '@qti-components/shared':
         specifier: workspace:*
-        version: link:../qc-shared
+        version: link:../qti-shared
       '@qti-components/transformers':
         specifier: workspace:*
-        version: link:../qc-transformers
+        version: link:../qti-transformers
       '@qti-components/utilities':
         specifier: workspace:*
-        version: link:../qc-utilities
+        version: link:../qti-utilities
       lit:
         specifier: ^3.2.1
         version: 3.3.1
 
-  packages/qc-shared:
+  packages/qti-shared:
     dependencies:
       '@lit/context':
         specifier: ^1.1.6
@@ -366,35 +372,35 @@ importers:
         specifier: ^3.2.1
         version: 3.3.1
 
-  packages/qc-test:
+  packages/qti-test:
     dependencies:
       '@heximal/templates':
         specifier: 0.1.5
         version: 0.1.5
       '@qti-components/elements':
         specifier: workspace:*
-        version: link:../qc-elements
+        version: link:../qti-elements
       '@qti-components/shared':
         specifier: workspace:*
-        version: link:../qc-shared
+        version: link:../qti-shared
       '@qti-components/transformers':
         specifier: workspace:*
-        version: link:../qc-transformers
+        version: link:../qti-transformers
       '@qti-components/utilities':
         specifier: workspace:*
-        version: link:../qc-utilities
+        version: link:../qti-utilities
       lit:
         specifier: ^3.2.1
         version: 3.3.1
 
-  packages/qc-theme: {}
+  packages/qti-theme: {}
 
-  packages/qc-transformers: {}
+  packages/qti-transformers: {}
 
-  packages/qc-utilities:
+  packages/qti-utilities:
     dependencies:
       lit:
-        specifier: ^3.2.1
+        specifier: ^3.3.1
         version: 3.3.1
 
 packages:

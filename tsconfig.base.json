@@ -24,38 +24,6 @@
     "strict": false,
     "target": "esnext",
     "useDefineForClassFields": false,
-    "paths": {
-      "@qti-components/shared": [
-        "packages/qti-shared/src"
-      ],
-      "@qti-components/utilities": [
-        "packages/qti-utilities/src"
-      ],
-      "@qti-components/transformers": [
-        "packages/qti-transformers/src"
-      ],
-      "@qti-components/processing": [
-        "packages/qti-processing/src"
-      ],
-      "@qti-components/elements": [
-        "packages/qti-elements/src"
-      ],
-      "@qti-components/interactions": [
-        "packages/qti-interactions"
-      ],
-      "@qti-components/item": [
-        "packages/qti-item/src"
-      ],
-      "@qti-components/test": [
-        "packages/qti-test/src"
-      ],
-      "@qti-components/components": [
-        "packages/qti-components/src"
-      ],
-      "@qti-components/loader": [
-        "packages/qti-loader/src"
-      ]
-    }
   },
   "types": [
     "vitest/globals",
@@ -65,5 +33,10 @@
     "./test/globals.d.ts",
     "./test/vitest.d.ts",
     "./test/storybookMatchers.d.ts"
+  ],
+  "references": [
+    {
+      "path": "./tsconfig.test.json"
+    }
   ]
 }
