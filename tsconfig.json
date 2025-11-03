@@ -1,20 +1,6 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "declaration": false,
     "noEmit": true,
-    "baseUrl": ".",
   },
-  "include": [
-    "src/**/*",
-    "packages/**/*",
-    "*.d.ts"
-  ],
-  "exclude": [
-    "**/*.spec.ts",
-    "**/*.test.ts",
-    "node_modules",
-    "dist",
-    "cdn"
-  ],
 }

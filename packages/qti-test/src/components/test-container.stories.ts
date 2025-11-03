@@ -3,7 +3,7 @@ import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { html } from 'lit';
 
 import { qtiTransformTest } from '../../../qti-transformers/src';
-import { getAssessmentItemFromTestContainerByDataTitle } from '../../../../src/testing/test-utils';
+import { getAssessmentItemFromTestContainerByDataTitle } from '../../../../apps/e2e/src/testing/test-utils';
 
 import type { TestContainer } from './test-container';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';

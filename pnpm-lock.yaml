@@ -26,12 +26,6 @@ importers:
       '@eslint/js':
         specifier: ^9.29.0
         version: 9.39.0
-      '@heximal/templates':
-        specifier: 0.1.5
-        version: 0.1.5
-      '@lit/context':
-        specifier: ^1.1.5
-        version: 1.1.6
       '@open-wc/lit-helpers':
         specifier: ^0.7.0
         version: 0.7.0(lit@3.3.1)
@@ -149,9 +143,6 @@ importers:
       husky:
         specifier: ^9.1.7
         version: 9.1.7
-      lit:
-        specifier: ^3.3.0
-        version: 3.3.1
       madge:
         specifier: ^8.0.0
         version: 8.0.0(typescript@5.9.3)
@@ -227,9 +218,6 @@ importers:
       stylelint-prettier:
         specifier: ^5.0.3
         version: 5.0.3(prettier@3.5.3)(stylelint@16.25.0(typescript@5.9.3))
-      tsup:
-        specifier: ^8.5.0
-        version: 8.5.0(@swc/core@1.14.0)(jiti@2.6.1)(postcss@8.5.6)(typescript@5.9.3)(yaml@2.8.1)
       typescript:
         specifier: ^5.8.3
         version: 5.9.3
@@ -245,9 +233,6 @@ importers:
       vitest:
         specifier: ^3.2.4
         version: 3.2.4(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/browser@3.2.4)(@vitest/ui@3.2.4)(jiti@2.6.1)(msw@2.11.6(@types/node@24.9.2)(typescript@5.9.3))(yaml@2.8.1)
-      wireit:
-        specifier: ^0.14.12
-        version: 0.14.12
       yalc:
         specifier: ^1.0.0-pre.53
         version: 1.0.0-pre.53
@@ -260,27 +245,9 @@ importers:
       '@lit/context':
         specifier: ^1.1.3
         version: 1.1.6
-      '@qti-components/elements':
+      '@qti-components/components':
         specifier: workspace:*
-        version: link:../../packages/qti-elements
-      '@qti-components/interactions':
-        specifier: workspace:*
-        version: link:../../packages/qti-interactions
-      '@qti-components/item':
-        specifier: workspace:*
-        version: link:../../packages/qti-item
-      '@qti-components/loader':
-        specifier: workspace:*
-        version: link:../../packages/qti-loader
-      '@qti-components/shared':
-        specifier: workspace:*
-        version: link:../../packages/qti-shared
-      '@qti-components/test':
-        specifier: workspace:*
-        version: link:../../packages/qti-test
-      '@qti-components/transformers':
-        specifier: workspace:*
-        version: link:../../packages/qti-transformers
+        version: link:../../packages/qti-components
       lit:
         specifier: ^3.2.1
         version: 3.3.1
@@ -291,7 +258,7 @@ importers:
         specifier: ^0.1.5
         version: 0.1.5
       '@lit/context':
-        specifier: ^1.1.3
+        specifier: ^1.1.6
         version: 1.1.6
       '@qti-components/elements':
         specifier: workspace:*
@@ -315,11 +282,18 @@ importers:
         specifier: workspace:*
         version: link:../qti-transformers
       lit:
-        specifier: ^3.2.1
+        specifier: ^3.3.1
         version: 3.3.1
+    devDependencies:
+      tsup:
+        specifier: ^8.5.0
+        version: 8.5.0(@swc/core@1.14.0)(jiti@2.6.1)(postcss@8.5.6)(typescript@5.9.3)(yaml@2.8.1)
 
   packages/qti-elements:
     dependencies:
+      '@lit/context':
+        specifier: ^1.1.6
+        version: 1.1.6
       '@qti-components/shared':
         specifier: workspace:*
         version: link:../qti-shared
@@ -335,6 +309,9 @@ importers:
 
   packages/qti-interactions:
     dependencies:
+      '@lit/context':
+        specifier: ^1.1.6
+        version: 1.1.6
       '@qti-components/shared':
         specifier: workspace:*
         version: link:../qti-shared
@@ -345,11 +322,14 @@ importers:
         specifier: workspace:*
         version: link:../qti-utilities
       lit:
-        specifier: ^3.2.1
+        specifier: ^3.3.1
         version: 3.3.1
 
   packages/qti-item:
     dependencies:
+      '@lit/context':
+        specifier: ^1.1.6
+        version: 1.1.6
       '@qti-components/elements':
         specifier: workspace:*
         version: link:../qti-elements
@@ -369,7 +349,7 @@ importers:
         specifier: workspace:*
         version: link:../qti-utilities
       lit:
-        specifier: ^3.2.1
+        specifier: ^3.3.1
         version: 3.3.1
 
   packages/qti-loader:
@@ -383,6 +363,9 @@ importers:
 
   packages/qti-processing:
     dependencies:
+      '@lit/context':
+        specifier: ^1.1.6
+        version: 1.1.6
       '@qti-components/shared':
         specifier: workspace:*
         version: link:../qti-shared
@@ -393,7 +376,7 @@ importers:
         specifier: workspace:*
         version: link:../qti-utilities
       lit:
-        specifier: ^3.2.1
+        specifier: ^3.3.1
         version: 3.3.1
 
   packages/qti-shared:
@@ -410,6 +393,9 @@ importers:
       '@heximal/templates':
         specifier: ^0.1.5
         version: 0.1.5
+      '@lit/context':
+        specifier: ^1.1.6
+        version: 1.1.6
       '@qti-components/elements':
         specifier: workspace:*
         version: link:../qti-elements
@@ -2061,10 +2047,6 @@ packages:
   balanced-match@2.0.0:
     resolution: {integrity: sha512-1ugUSr8BHXRnK23KfuYS+gVMC3LB8QGH9W1iGtDPsNWoQbgtXSExkBu2aDR4epiGWZOjZsj6lDl/N/AqqTC3UA==}
 
-  balanced-match@3.0.1:
-    resolution: {integrity: sha512-vjtV3hiLqYDNRoiAv0zC4QaGAMPomEoq83PRmYIofPswwZurCeWR5LByXm7SyoL0Zh5+2z0+HC7jG8gSZJUh0w==}
-    engines: {node: '>= 16'}
-
   bare-events@2.8.1:
     resolution: {integrity: sha512-oxSAxTS1hRfnyit2CL5QpAOS5ixfBjj6ex3yTNvXyY/kE719jQ/IjuESJBK2w5v4wwQRAHGseVJXx9QBYOtFGQ==}
     peerDependencies:
@@ -2133,10 +2115,6 @@ packages:
 
   brace-expansion@2.0.2:
     resolution: {integrity: sha512-Jt0vHyM+jmUBqojB7E1NIYadt0vI0Qxjxd2TErW94wDz+E2LAm5vKMXXwg6ZZBTHPuUlDgQHKXvjGBdfcF1ZDQ==}
-
-  brace-expansion@4.0.1:
-    resolution: {integrity: sha512-YClrbvTCXGe70pU2JiEiPLYXO9gQkyxYeKpJIQHVS/gOs6EWMQP2RYBwjFLNT322Ji8TOC3IMPfsYCedNpzKfA==}
-    engines: {node: '>= 18'}
 
   braces@3.0.3:
     resolution: {integrity: sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA==}
@@ -3775,9 +3753,6 @@ packages:
     engines: {node: '>=6'}
     hasBin: true
 
-  jsonc-parser@3.3.1:
-    resolution: {integrity: sha512-HUgH65KyejrUFPvHFPbqOY0rsFip3Bo5wb4ngvdi1EpCYWUQDC5V+Y7mZws+DLkr4M//zQJoanu1SP+87Dv1oQ==}
-
   jsonfile@4.0.0:
     resolution: {integrity: sha512-m6F1R3z8jjlf2imQHS2Qez5sjKWQzbuuhuJ/FKYFRZvPE3PuHcSMVZzfsLhGVOkfd20obL5SWEBew5ShlquNxg==}
 
@@ -4763,9 +4738,6 @@ packages:
   prop-types@15.8.1:
     resolution: {integrity: sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==}
 
-  proper-lockfile@4.1.2:
-    resolution: {integrity: sha512-TjNPblN4BwAWMXU8s9AEz4JmQxnD1NNL7bNOY/AKUzyamc379FWASUhc/K1pL2noVb+XmZKLL68cjzLsiOAMaA==}
-
   property-information@6.5.0:
     resolution: {integrity: sha512-PgTgs/BlvHxOu8QuEN7wi5A0OmXaBcHpmCSTehcs6Uuu9IkDIEo13Hy7n898RHfrQ49vKCoGeWZSaAK01nwVig==}
 
@@ -4933,10 +4905,6 @@ packages:
   restore-cursor@3.1.0:
     resolution: {integrity: sha512-l+sSefzHpj5qimhFSE5a8nufZYAM3sBSVMAPtYkmC+4EH2anSGaEMXSD0izRQbu9nfyQ9y5JrVmp7E8oZrUjvA==}
     engines: {node: '>=8'}
-
-  retry@0.12.0:
-    resolution: {integrity: sha512-9LkiTwjUh6rT555DtE9rTX+BKByPfrMzEAtnlEtdEwr3Nkffwiihqe2bWADg+OQRjt9gl6ICdmB/ZFDCGAtSow==}
-    engines: {node: '>= 4'}
 
   rettime@0.7.0:
     resolution: {integrity: sha512-LPRKoHnLKd/r3dVxcwO7vhCW+orkOGj9ViueosEBK6ie89CijnfRlhaDhHq/3Hxu4CkWQtxwlBG0mzTQY6uQjw==}
@@ -5827,11 +5795,6 @@ packages:
   why-is-node-running@2.3.0:
     resolution: {integrity: sha512-hUrmaWBdVDcxvYqnyh09zunKzROWjbZTiNy8dBEjkS7ehEDQibXJ7XvlmtbwuTclUiIyN+CyXQD4Vmko8fNm8w==}
     engines: {node: '>=8'}
-    hasBin: true
-
-  wireit@0.14.12:
-    resolution: {integrity: sha512-gNSd+nZmMo6cuICezYXRIayu6TSOeCSCDzjSF0q6g8FKDsRbdqrONrSZYzdk/uBISmRcv4vZtsno6GyGvdXwGA==}
-    engines: {node: '>=18.0.0'}
     hasBin: true
 
   word-wrap@1.2.5:
@@ -7587,8 +7550,6 @@ snapshots:
 
   balanced-match@2.0.0: {}
 
-  balanced-match@3.0.1: {}
-
   bare-events@2.8.1:
     optional: true
 
@@ -7656,10 +7617,6 @@ snapshots:
   brace-expansion@2.0.2:
     dependencies:
       balanced-match: 1.0.2
-
-  brace-expansion@4.0.1:
-    dependencies:
-      balanced-match: 3.0.1
 
   braces@3.0.3:
     dependencies:
@@ -9529,8 +9486,6 @@ snapshots:
 
   json5@2.2.3: {}
 
-  jsonc-parser@3.3.1: {}
-
   jsonfile@4.0.0:
     optionalDependencies:
       graceful-fs: 4.2.11
@@ -10981,12 +10936,6 @@ snapshots:
       object-assign: 4.1.1
       react-is: 16.13.1
 
-  proper-lockfile@4.1.2:
-    dependencies:
-      graceful-fs: 4.2.11
-      retry: 0.12.0
-      signal-exit: 3.0.7
-
   property-information@6.5.0:
     optional: true
 
@@ -11217,8 +11166,6 @@ snapshots:
     dependencies:
       onetime: 5.1.2
       signal-exit: 3.0.7
-
-  retry@0.12.0: {}
 
   rettime@0.7.0: {}
 
@@ -12337,14 +12284,6 @@ snapshots:
     dependencies:
       siginfo: 2.0.0
       stackback: 0.0.2
-
-  wireit@0.14.12:
-    dependencies:
-      brace-expansion: 4.0.1
-      chokidar: 3.6.0
-      fast-glob: 3.3.3
-      jsonc-parser: 3.3.1
-      proper-lockfile: 4.1.2
 
   word-wrap@1.2.5: {}
 

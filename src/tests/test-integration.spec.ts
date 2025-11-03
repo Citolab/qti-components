@@ -3,7 +3,7 @@ import { composeStory } from 'storybook/preview-api';
 import { afterEach, beforeEach, describe, test, vi } from 'vitest';
 
 import Meta, { SlowLoadingStimulus } from './test-integration.stories';
-import { ExtendedXMLHttpRequest } from '../testing/xmlHttpRequest';
+import { ExtendedXMLHttpRequest } from '../../apps/e2e/src/testing/xmlHttpRequest';
 
 import type { ComposedStoryFn } from 'storybook/internal/types';
 import type { WebComponentsRenderer } from '@storybook/web-components-vite';

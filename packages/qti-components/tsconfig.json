@@ -8,10 +8,7 @@
         "src/index.ts"
     ],
     "exclude": [
-        "dist",
-        "node_modules",
         "**/*.spec.ts",
         "**/*.stories.ts",
-        "**/*.test.ts"
     ]
 }

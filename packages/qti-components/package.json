@@ -6,6 +6,7 @@
     "scripts": {
         "build": "tsup",
         "clean": "rm -rf dist cdn",
+        "attw": "attw --profile esm-only --pack",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "keywords": [
@@ -23,13 +24,13 @@
             "import": "./dist/index.js"
         },
         "./exports/*": {
-            "import": "./dist/shared/*"
+            "import": "./dist/shared.js"
         },
         "./qti-elements": {
-            "import": "./dist/qti-elements.js"
+            "import": "./dist/elements.js"
         },
         "./qti-interactions": {
-            "import": "./dist/qti-interactions.js"
+            "import": "./dist/interactions.js"
         },
         "./qti-item": {
             "import": "./dist/item.js"
@@ -41,7 +42,7 @@
             "import": "./dist/loader.js"
         },
         "./qti-transformers": {
-            "import": "./dist/qti-transformers.js"
+            "import": "./dist/transformers.js"
         },
         "./customElements": "./custom-elements.json",
         "./item.css": "./dist/item.css",
@@ -63,8 +64,11 @@
         "@qti-components/shared": "workspace:*"
     },
     "peerDependencies": {
-        "@heximal/templates": "^0.1.5",
-        "@lit/context": "^1.1.3",
-        "lit": "^3.2.1"
+        "lit": "^3.3.1",
+        "@lit/context": "^1.1.6",
+        "@heximal/templates": "^0.1.5"
+    },
+    "devDependencies": {
+        "tsup": "^8.5.0"
     }
 }

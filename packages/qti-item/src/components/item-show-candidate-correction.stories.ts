@@ -4,8 +4,8 @@ import { html } from 'lit';
 import { expect, fireEvent, userEvent, waitFor } from 'storybook/test';
 import { within } from 'shadow-dom-testing-library';
 
-import { getAssessmentItemFromItemContainer } from '../../../../src/testing/test-utils';
-import drag from '../../../../src/testing/drag';
+import { getAssessmentItemFromItemContainer } from '../../../../apps/e2e/src/testing/test-utils';
+import drag from '../../../../apps/e2e/src/testing/drag';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { ItemShowCandidateCorrection } from './item-show-candidate-correction.ts';

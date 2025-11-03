@@ -4,7 +4,7 @@ import { createRef, ref } from 'lit/directives/ref.js';
 import { expect, fn, waitFor, within } from 'storybook/test';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 
-import drag from '../../../../../src/testing/drag';
+import drag from '../../../../../apps/e2e/src/testing/drag';
 
 import type { QtiMatchInteraction } from './qti-match-interaction';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';

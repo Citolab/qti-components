@@ -3,7 +3,7 @@ import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { expect, fn } from 'storybook/test';
 import { within } from 'shadow-dom-testing-library';
 
-import drag from '../../../../../src/testing/drag';
+import drag from '../../../../../apps/e2e/src/testing/drag';
 
 import type { InputType } from 'storybook/internal/types';
 import type { StoryObj, Meta } from '@storybook/web-components-vite';

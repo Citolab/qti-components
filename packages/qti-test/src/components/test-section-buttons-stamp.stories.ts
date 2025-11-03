@@ -8,7 +8,7 @@ import {
   getAssessmentItemFromTestContainerByDataTitle,
   getAssessmentItemsFromTestContainer,
   getTestContainer
-} from '../../../../src/testing/test-utils.js';
+} from '../../../../apps/e2e/src/testing/test-utils.js';
 
 import '../../../../.storybook/utilities.css';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';

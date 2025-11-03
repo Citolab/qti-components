@@ -4,7 +4,7 @@ import { findByShadowText, within } from 'shadow-dom-testing-library';
 import { spread } from '@open-wc/lit-helpers';
 import { html } from 'lit';
 
-import { getAssessmentItemFromTestContainerByDataTitle } from '../../../../src/testing/test-utils';
+import { getAssessmentItemFromTestContainerByDataTitle } from '../../../../apps/e2e/src/testing/test-utils';
 
 import type { TestEndAttempt } from './test-end-attempt';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';

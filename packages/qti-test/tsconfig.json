@@ -5,13 +5,10 @@
         "baseUrl": "./src"
     },
     "include": [
-        "src/**/index.ts"
+        "src/index.ts"
     ],
     "exclude": [
-        "dist",
-        "node_modules",
         "**/*.spec.ts",
         "**/*.stories.ts",
-        "**/*.test.ts"
     ]
 }

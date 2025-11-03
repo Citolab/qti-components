@@ -4,7 +4,7 @@ import { within } from 'shadow-dom-testing-library';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { qtiTransformItem } from '@qti-components/transformers';
 
-import { getAssessmentItemFromItemContainer } from '../../../../src/testing/test-utils';
+import { getAssessmentItemFromItemContainer } from '../../../../apps/e2e/src/testing/test-utils';
 
 import type { ItemContainer } from '../components/item-container';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';

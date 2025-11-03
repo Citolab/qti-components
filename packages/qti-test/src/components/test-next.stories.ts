@@ -4,7 +4,7 @@ import { findByShadowTitle, within } from 'shadow-dom-testing-library';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { spread } from '@open-wc/lit-helpers';
 
-import { getAssessmentItemFromTestContainerByDataTitle } from '../../../../src/testing/test-utils';
+import { getAssessmentItemFromTestContainerByDataTitle } from '../../../../apps/e2e/src/testing/test-utils';
 
 import type { TestNext } from './test-next';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
