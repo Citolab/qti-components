@@ -12,7 +12,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 const meta = {
   component: 'qti-assessment-stimulus-ref'
-} satisfies Meta<typeof QtiAssessmentStimulusRef>;
+} satisfies Meta<QtiAssessmentStimulusRef>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

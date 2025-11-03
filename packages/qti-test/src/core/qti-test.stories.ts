@@ -5,7 +5,7 @@ import type { QtiTest } from './qti-test';
 
 type Story = StoryObj<QtiTest>;
 
-const meta: Meta<typeof QtiTest> = {
+const meta: Meta<QtiTest> = {
   component: 'qti-test',
   subcomponents: { testContainer: 'test-container' },
   args: {},

@@ -7,7 +7,7 @@ import type { QtiStylesheet } from './qti-stylesheet';
 
 const meta = {
   component: 'qti-stylesheet'
-} satisfies Meta<typeof QtiStylesheet>;
+} satisfies Meta<QtiStylesheet>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

@@ -166,7 +166,9 @@ export class TestNavigation extends LitElement {
 
   private _handleInteractionChanged(_event: CustomEvent) {
     if (this.autoScoreItems) {
-      const assessmentItem = (_event.composedPath()[0] as HTMLElement).closest('qti-assessment-item');
+      const assessmentItem = (_event.composedPath()[0] as HTMLElement).closest<QtiAssessmentItem>(
+        'qti-assessment-item'
+      );
       const scoreOutcomeIdentifier = assessmentItem.variables.find(v => v.identifier === 'SCORE') as OutcomeVariable;
       if (
         scoreOutcomeIdentifier &&
@@ -320,11 +322,11 @@ export class TestNavigation extends LitElement {
                 const externalScored = scoreOutcome?.getAttribute('externalScored');
 
                 const responseDeclarations = itemElement.querySelectorAll<HTMLElement>('qti-response-declaration');
-                const containsCorrectResponse = Array.from(responseDeclarations).some(r =>
+                const containsCorrectResponse = Array.from(responseDeclarations).some((r: HTMLElement) =>
                   r.querySelector('qti-correct-response')
                 );
                 // check if every responseDeclaration has a correctResponse
-                const containsMapping = Array.from(responseDeclarations).some(r => {
+                const containsMapping = Array.from(responseDeclarations).some((r: HTMLElement) => {
                   const mapping = r.querySelector('qti-mapping');
                   const areaMapping = r.querySelector('qti-area-mapping');
                   return mapping?.querySelector('qti-map-entry') || areaMapping?.querySelector('qti-area-map-entry');

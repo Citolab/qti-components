@@ -47,8 +47,8 @@ export const getManifestInfo = async (manifestURL: string): Promise<ManifestInfo
 };
 
 // Fetches a single item by URI
-export const getItemByUri = async (itemUri: string): Promise<typeof QtiAssessmentItem> => {
+export const getItemByUri = async (itemUri: string): Promise<QtiAssessmentItem> => {
   return qtiTransformItem()
     .load(itemUri)
-    .then(api => api.htmlDoc().firstElementChild as typeof QtiAssessmentItem);
+    .then(api => api.htmlDoc().firstElementChild as QtiAssessmentItem);
 };

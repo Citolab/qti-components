@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "description": "QTI elements utilities",
     "main": "dist/index.js",
-    "types": "index.d.ts",
+    "types": "dist/index.d.ts",
     "scripts": {
         "build": "tsc",
         "clean": "rm -rf dist",
@@ -21,6 +21,6 @@
         "@qti-components/transformers": "workspace:*"
     },
     "peerDependencies": {
-        "lit": "^3.2.1"
+        "lit": "^3.3.1"
     }
 }

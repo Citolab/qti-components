@@ -8,7 +8,7 @@ const { events, args, argTypes, template } = getStorybookHelpers('qti-item');
 
 type Story = StoryObj<QtiItem & typeof args>;
 
-const meta: Meta<typeof QtiItem> = {
+const meta: Meta<QtiItem> = {
   component: 'qti-item',
   subcomponents: { ItemContainer: 'item-container' },
   args,
