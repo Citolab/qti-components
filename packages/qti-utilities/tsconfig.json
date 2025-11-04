@@ -10,10 +10,5 @@
     "exclude": [
         "**/*.spec.ts",
         "**/*.stories.ts",
-    ],
-    "references": [
-        {
-            "path": "./tsconfig.node.json"
-        }
     ]
 }
