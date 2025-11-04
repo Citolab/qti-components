@@ -62,47 +62,38 @@ export default defineConfig({
             screenshotFailures: false,
             instances: [
               {
-                browser: 'chromium'
-
-                // provide: {
-                //   launch: {
-                //     args: ['--remote-debugging-port=9222']
-                //   }
-                // }
+                browser: 'chromium',
+                provide: {
+                  launch: {
+                    args: ['--remote-debugging-port=9222']
+                  }
+                }
               }
             ]
           }
         }
-      },
-      /* this is for the normal spec files, which do not need storybook */
-      {
-        plugins: [tsconfigPaths({ configNames: ['tsconfig.vitest.json'] })],
-        test: {
-          name: 'tests',
-          setupFiles: ['./test/setup/index.js'],
-          include: ['src/**/*.spec.ts', 'src/**/*.test.ts', 'packages/**/*.spec.ts', 'packages/**/*.test.ts'],
-          globals: true,
-          typecheck: {
-            tsconfig: './tsconfig.vitest.json'
-          },
-
-          browser: {
-            enabled: true,
-            provider: 'playwright',
-            headless: true, // Both modes work fine
-            screenshotFailures: false,
-            instances: [{ browser: 'chromium', headless: true }]
-          }
-        }
-      },
-      /* this is for the normal spec files, which do not need storybook */
-      {
-        test: {
-          name: 'unit test who uses dist and node',
-          include: ['tests/**/*.spec.ts', 'tests/**/*.test.ts'],
-          globals: true
-        }
       }
+      /* this is for the normal spec files, which do not need storybook */
+      // {
+      //   plugins: [tsconfigPaths({ configNames: ['tsconfig.vitest.json'] })],
+      //   test: {
+      //     name: 'tests',
+      //     setupFiles: ['./test/setup/index.js'],
+      //     include: ['src/**/*.spec.ts', 'src/**/*.test.ts', 'packages/**/*.spec.ts', 'packages/**/*.test.ts'],
+      //     globals: true,
+      //     typecheck: {
+      //       tsconfig: './tsconfig.vitest.json'
+      //     },
+
+      //     browser: {
+      //       enabled: true,
+      //       provider: 'playwright',
+      //       headless: true, // Both modes work fine
+      //       screenshotFailures: false,
+      //       instances: [{ browser: 'chromium', headless: true }]
+      //     }
+      //   }
+      // }
     ]
   }
 });

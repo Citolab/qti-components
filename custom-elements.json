@@ -2713,6 +2713,30 @@
             "name": "*",
             "module": "packages/qti-elements/src/components/qti-stylesheet/qti-stylesheet"
           }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/qti-elements/src/components/qti-response-declaration/qti-response-declaration"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/qti-elements/src/components/qti-outcome-declaration/qti-outcome-declaration"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/qti-elements/src/components/qti-response-processing/qti-response-processing"
+          }
         }
       ]
     },

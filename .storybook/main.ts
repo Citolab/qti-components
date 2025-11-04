@@ -5,7 +5,11 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 import type { StorybookConfig } from '@storybook/web-components-vite';
 
 const config: StorybookConfig = {
-  stories: ['../src/**/*.mdx', '../app/**/*.stories.@(js|jsx|ts|tsx)', '../packages/**/*.stories.@(js|jsx|ts|tsx)'],
+  stories: [
+    '../docs/*/!(node_modules)/**/*.mdx',
+    '../apps/*/!(node_modules)/**/*.@(mdx|stories.@(js|jsx|ts|tsx))',
+    '../packages/*/!(node_modules)/**/*.@(mdx|stories.@(js|jsx|ts|tsx))'
+  ],
   addons: [
     '@storybook/addon-a11y',
     'storybook-addon-tag-badges',

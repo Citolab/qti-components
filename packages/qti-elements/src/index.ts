@@ -11,3 +11,6 @@ export * from './components/qti-prompt/qti-prompt';
 export * from './components/qti-rubric-block/qti-content-body';
 export * from './components/qti-rubric-block/qti-rubric-block';
 export * from './components/qti-stylesheet/qti-stylesheet';
+export * from './components/qti-response-declaration/qti-response-declaration';
+export * from './components/qti-outcome-declaration/qti-outcome-declaration';
+export * from './components/qti-response-processing/qti-response-processing';

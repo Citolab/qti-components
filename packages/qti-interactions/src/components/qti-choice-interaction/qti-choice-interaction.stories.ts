@@ -26,7 +26,7 @@ const meta: Meta<
 > = {
   component: 'qti-choice-interaction',
   title: '3.2 interaction types/02 Choice',
-  args,
+  // args,
   argTypes,
   parameters: {
     actions: {

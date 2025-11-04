@@ -2,7 +2,6 @@ import { action } from 'storybook/actions';
 import { expect, within } from 'storybook/test';
 import { fireEvent } from 'storybook/test';
 import { html } from 'lit';
-
 import { getItemByUri } from '@qti-components/loader';
 
 import type { QtiSimpleChoice } from '@qti-components/interactions';

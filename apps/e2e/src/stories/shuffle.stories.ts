@@ -1,9 +1,8 @@
 import { expect, waitFor } from 'storybook/test';
 import { within } from 'shadow-dom-testing-library';
-
 import { qtiTransformItem } from '@qti-components/transformers';
 
-import { toBePositionedRelativeTo } from '../../test/setup/toBePositionedRelativeTo';
+import { toBePositionedRelativeTo } from '../../../../test/setup/toBePositionedRelativeTo';
 
 import type { QtiSimpleChoice } from '@qti-components/interactions';
 import type { StoryObj, Meta } from '@storybook/web-components-vite';

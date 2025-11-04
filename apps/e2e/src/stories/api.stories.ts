@@ -1,6 +1,5 @@
 import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
-
 import { qtiTransformItem } from '@qti-components/transformers';
 
 import type { QtiAssessmentItem } from '@qti-components/elements';

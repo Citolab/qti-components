@@ -1,6 +1,4 @@
 import { html } from 'lit';
-
-// Test importing from built packages
 import { QtiAssessmentItem } from '@qti-components/elements';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';

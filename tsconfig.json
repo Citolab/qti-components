@@ -1,11 +1,65 @@
 {
-  "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "noEmit": true,
-  },
-  "references": [
-    {
-      "path": "./tsconfig.vitest.json"
+    "baseUrl": ".",
+    "declaration": true,
+    "experimentalDecorators": true,
+    "importHelpers": false,
+    "inlineSources": true,
+    "lib": [
+      "ES2022",
+      "ESNext",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "noImplicitAny": false,
+    "noImplicitOverride": false,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUnusedParameters": true,
+    "noUnusedLocals": false,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": false,
+    "target": "esnext",
+    "useDefineForClassFields": false,
+    "paths": {
+      "@qti-components/shared": [
+        "./packages/qti-shared/src/index.ts"
+      ],
+      "@qti-components/elements": [
+        "./packages/qti-elements/src/index.ts"
+      ],
+      "@qti-components/interactions": [
+        "./packages/qti-interactions/src/index.ts"
+      ],
+      "@qti-components/processing": [
+        "./packages/qti-processing/src/index.ts"
+      ],
+      "@qti-components/item": [
+        "./packages/qti-item/src/index.ts"
+      ],
+      "@qti-components/test": [
+        "./packages/qti-test/src/index.ts"
+      ],
+      "@qti-components/transformers": [
+        "./packages/qti-transformers/src/index.ts"
+      ],
+      "@qti-components/loader": [
+        "./packages/qti-loader/src/index.ts"
+      ],
+      "@qti-components/utilities": [
+        "./packages/qti-utilities/src/index.ts"
+      ],
     }
-  ]
+  },
+  "types": [
+    "@types/dom-view-transitions"
+  ],
+  // "references": [
+  //   {
+  //     "path": "./tsconfig.vitest.json"
+  //   }
+  // ]
 }

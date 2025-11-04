@@ -1,23 +1,26 @@
 {
-    "extends": "./tsconfig.base.json",
-    "compilerOptions": {
-        "baseUrl": ".",
-        "composite": true,
-        "types": [
-            "vitest/globals",
-            "@types/dom-view-transitions",
-            "./test/globals.d.ts",
-            "./test/vitest.d.ts",
-            "./test/storybookMatchers.d.ts"
-        ],
-    },
-    "include": [
-        "packages/**/*.ts",
-        "app/**/*.ts"
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    // "composite": true,
+    "types": [
+      "vitest/globals"
     ],
-    "exclude": [
-        "node_modules",
-        "dist",
-        "cdn"
-    ],
+    // "noEmit": true,
+    "paths": {
+      "@qti-components/components": [
+        "./packages/qti-components/src/index.ts"
+      ],
+      "@testing": [
+        "./test/setup"
+      ]
+    }
+  },
+  "include": [
+    "apps/**/*.spec.ts",
+    "apps/**/*.test.ts",
+    "apps/**/*.stories.ts",
+    "packages/**/*.spec.ts",
+    "packages/**/*.test.ts",
+    "packages/**/*.stories.ts"
+  ],
 }

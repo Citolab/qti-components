@@ -20,7 +20,7 @@ type Story = StoryObj<QtiChoiceInteraction & typeof args>;
 const meta: Meta<QtiChoiceInteraction> = {
   component: 'qti-choice-interaction',
   title: 'Shared Vocabulary/1.2.1 Choice Interaction',
-  args,
+  // args,
   argTypes,
   parameters: {
     actions: {

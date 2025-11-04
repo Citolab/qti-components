@@ -4,8 +4,8 @@ import { within } from 'shadow-dom-testing-library';
 import { http, HttpResponse, delay } from 'msw';
 import { mswLoader } from 'msw-storybook-addon';
 
-import UnbeleivableNight from '../../../public/assets/qti-test-package-stimulus/items/ref/unbelievableNight.xml?raw';
-import itemWithStimulusWithoutPlacement from '../../../../public/assets/qti-assessment-stimulus-ref/itemWithStimulusWithoutPlacement.xml?raw';
+import UnbeleivableNight from '../../../../../public/assets/qti-test-package-stimulus/items/ref/unbelievableNight.xml?raw';
+import itemWithStimulusWithoutPlacement from '../../../../../public/assets/qti-assessment-stimulus-ref/itemWithStimulusWithoutPlacement.xml?raw';
 
 import type { QtiAssessmentStimulusRef } from './qti-assessment-stimulus-ref';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';

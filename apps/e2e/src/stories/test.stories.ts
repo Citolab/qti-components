@@ -1,13 +1,12 @@
 import { html } from 'lit';
 import { useArgs } from 'storybook/preview-api';
-
 import { getManifestInfo } from '@qti-components/loader';
 
 import packages from '../assets/packages.json';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
-import '../../.storybook/utilities.css';
+import '../../../../.storybook/utilities.css';
 
 const meta: Meta = {
   title: 'Test',

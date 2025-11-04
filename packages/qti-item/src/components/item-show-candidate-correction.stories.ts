@@ -9,7 +9,6 @@ import drag from '../../../../apps/e2e/src/testing/drag';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { ItemShowCandidateCorrection } from './item-show-candidate-correction.ts';
-import './item-show-candidate-correction.ts';
 import type { ItemContainer } from './item-container';
 import type {
   QtiSelectPointInteraction,

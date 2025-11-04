@@ -1,6 +1,5 @@
 import { html } from 'lit';
-import { expect, waitFor } from 'storybook/test';
-import { within } from 'shadow-dom-testing-library';
+import { expect } from 'storybook/test';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { qtiTransformItem } from '@qti-components/transformers';
 

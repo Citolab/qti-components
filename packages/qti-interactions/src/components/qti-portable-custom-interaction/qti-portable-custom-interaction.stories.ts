@@ -10,6 +10,8 @@ import type { QtiPortableCustomInteraction } from './qti-portable-custom-interac
 import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { StoryObj, Meta } from '@storybook/web-components-vite';
 
+import './qti-portable-custom-test-interaction';
+
 const { events, args, argTypes, template } = getStorybookHelpers('qti-portable-custom-interaction');
 
 type Story = StoryObj<QtiPortableCustomInteraction & typeof args>;
@@ -23,7 +25,7 @@ type Story = StoryObj<QtiPortableCustomInteraction & typeof args>;
 const meta: Meta<QtiPortableCustomInteraction> = {
   component: 'qti-portable-custom-interaction',
   title: '3.2 interaction types/23 Portable Custom Interaction (PCI)',
-  args,
+  // args,
   argTypes,
   parameters: {
     actions: {
@@ -638,7 +640,7 @@ const createPciConformanceStory = (itemName: string): Story => ({
         };
 
         // Fetch the XML file using the parameterized item name
-        const baseUrl = `/qti-portable-interaction/pci-conformance/${itemName}`;
+        const baseUrl = `/assets/qti-portable-interaction/pci-conformance/${itemName}`;
         const response = await fetch(`${baseUrl}/qti.xml`);
         const xmlText = await response.text();
         const qti = xmlText

@@ -1,6 +1,6 @@
 import { html } from 'lit';
 
-import inlineCSS from '../../../../public/assets/qti-stylesheet/linked.css?inline';
+import inlineCSS from '../../../../../public/assets/qti-stylesheet/linked.css?inline';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { QtiStylesheet } from './qti-stylesheet';

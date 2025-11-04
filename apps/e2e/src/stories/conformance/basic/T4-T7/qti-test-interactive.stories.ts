@@ -2,7 +2,6 @@ import { expect, fireEvent, userEvent, waitFor } from 'storybook/test';
 import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { getByShadowText, findByShadowText, findByShadowRole, within } from 'shadow-dom-testing-library';
-
 import { getManifestInfo, type ManifestInfo } from '@qti-components/loader';
 
 import type { QtiTest } from '@qti-components/test';
