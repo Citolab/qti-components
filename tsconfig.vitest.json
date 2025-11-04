@@ -1,0 +1,23 @@
+{
+    "extends": "./tsconfig.base.json",
+    "compilerOptions": {
+        "baseUrl": ".",
+        "composite": true,
+        "types": [
+            "vitest/globals",
+            "@types/dom-view-transitions",
+            "./test/globals.d.ts",
+            "./test/vitest.d.ts",
+            "./test/storybookMatchers.d.ts"
+        ],
+    },
+    "include": [
+        "packages/**/*.ts",
+        "app/**/*.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist",
+        "cdn"
+    ],
+}

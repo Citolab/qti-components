@@ -1,8 +1,5 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import '@qti-components/components';
 import { html, render } from 'lit';
-
-import './qti-round-to';
-import '../qti-basevalue/qti-basevalue';
 
 import type { QtiRoundTo } from './qti-round-to';
 

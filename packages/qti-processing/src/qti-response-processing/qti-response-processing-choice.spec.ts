@@ -1,8 +1,7 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import '@qti-components/components';
 import { html, render } from 'lit';
 
-import type { QtiAssessmentItem } from '@qti-components/components';
+import type { QtiAssessmentItem } from '@qti-components/elements';
 
 const match_correct_item = html` <qti-assessment-item identifier="choice" title="Unattended Luggage">
   <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="identifier">

@@ -64,7 +64,7 @@ export const Test: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const textEntryInteraction = canvasElement.querySelector('qti-text-entry-interaction').shadowRoot;
-    const input = textEntryInteraction.querySelector('input');
+    const input = textEntryInteraction?.querySelector('input');
     const form = canvas.getByRole<HTMLFormElement>('form');
 
     const expectedValue = 'abc';

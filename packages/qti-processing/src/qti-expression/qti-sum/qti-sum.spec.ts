@@ -1,11 +1,6 @@
-import { describe, it, expect } from 'vitest';
+import '@qti-components/components';
 import { html, render } from 'lit';
 
-// import '../qti-basevalue/qti-basevalue';
-import '@qti-components/elements';
-import './../../qti-rule/qti-set-outcome-value/qti-set-outcome-value';
-import '../qti-basevalue/qti-basevalue';
-import './qti-sum';
 import type { ItemContext } from '@qti-components/shared';
 import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { QtiSum } from './qti-sum';

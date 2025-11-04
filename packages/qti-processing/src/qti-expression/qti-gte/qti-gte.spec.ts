@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import '../../../../qti-components';
+import '@qti-components/components';
+
 import { html, render } from 'lit';
 
 import type { QtiGte } from './qti-gte';

@@ -5,7 +5,7 @@ import '@qti-components/interactions';
 import '@qti-components/transformers';
 import '@qti-components/loader';
 import '@qti-components/shared';
-
+import '@qti-components/processing';
 // Import version from package.json
 // import packageJson from '../package.json' assert { type: 'json' };
 

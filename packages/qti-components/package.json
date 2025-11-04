@@ -31,6 +31,9 @@
         "./qti-elements": {
             "import": "./dist/elements.js"
         },
+        "./qti-processing": {
+            "import": "./dist/processing.js"
+        },
         "./qti-interactions": {
             "import": "./dist/interactions.js"
         },
@@ -62,6 +65,7 @@
         "@qti-components/elements": "workspace:*",
         "@qti-components/transformers": "workspace:*",
         "@qti-components/interactions": "workspace:*",
+        "@qti-components/processing": "workspace:*",
         "@qti-components/loader": "workspace:*",
         "@qti-components/shared": "workspace:*",
         "lit": "^3.3.1",

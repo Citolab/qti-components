@@ -3,4 +3,9 @@
   "compilerOptions": {
     "noEmit": true,
   },
+  "references": [
+    {
+      "path": "./tsconfig.vitest.json"
+    }
+  ]
 }

@@ -272,6 +272,9 @@ importers:
       '@qti-components/loader':
         specifier: workspace:*
         version: link:../qti-loader
+      '@qti-components/processing':
+        specifier: workspace:*
+        version: link:../qti-processing
       '@qti-components/shared':
         specifier: workspace:*
         version: link:../qti-shared

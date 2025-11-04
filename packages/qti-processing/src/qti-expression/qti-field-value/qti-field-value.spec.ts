@@ -1,14 +1,13 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import '../../../../qti-components';
+import '@qti-components/components';
+
 import { html, render } from 'lit';
 import { provide } from '@lit/context';
 import { LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
+import { qtiContext } from '@qti-components/shared';
 
-import { qtiContext } from '../../../../exports/qti.context';
-
+import type { QtiContext } from '@qti-components/shared';
 import type { QtiFieldValue } from './qti-field-value';
-import type { QtiContext } from '../../../../exports/qti.context';
 
 describe('qti-field-value with QTI_CONTEXT', () => {
   let testContainer: HTMLElement;

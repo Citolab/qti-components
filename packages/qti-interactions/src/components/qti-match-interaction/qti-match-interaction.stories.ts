@@ -9,6 +9,7 @@ import drag from '../../../../../apps/e2e/src/testing/drag';
 import type { QtiMatchInteraction } from './qti-match-interaction';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { InputType } from 'storybook/internal/types';
+import type { QtiAssessmentItem } from '@qti-components/elements';
 
 const { events, args, argTypes, template } = getStorybookHelpers('qti-match-interaction');
 
@@ -441,11 +442,11 @@ export const TabularAardrijkskunde = {
         time-dependent="false"
         label="3297cq"
          ${ref(testRef)}
-              @qti-interaction-changed="${e => {
-                testRef.value.processResponse();
+              @qti-interaction-changed="${(e: { detail: any }) => {
+                testRef?.value?.processResponse();
                 action(JSON.stringify(e.detail))();
               }}"
-      @qti-outcome-changed="${e => {
+      @qti-outcome-changed="${(e: { detail: any }) => {
         action(JSON.stringify(e.detail))();
       }}"
         xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"

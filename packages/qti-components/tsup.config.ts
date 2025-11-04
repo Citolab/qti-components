@@ -18,6 +18,7 @@ export default defineConfig(async () => {
       './src/test.ts',
       './src/item.ts',
       './src/elements.ts',
+      './src/processing.ts',
       './src/interactions.ts',
       './src/transformers.ts',
       './src/loader.ts',

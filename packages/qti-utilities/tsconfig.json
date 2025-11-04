@@ -1,14 +1,19 @@
 {
-    "extends": "../../tsconfig.base.json",
+    "extends": "../../tsconfig.json",
     "compilerOptions": {
         "outDir": "./dist",
-        "baseUrl": "./src"
+        "baseUrl": "."
     },
     "include": [
-        "src/index.ts"
+        "src"
     ],
     "exclude": [
         "**/*.spec.ts",
         "**/*.stories.ts",
+    ],
+    "references": [
+        {
+            "path": "./tsconfig.node.json"
+        }
     ]
 }

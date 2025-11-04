@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import '../../../../qti-components';
+import '@qti-components/components';
+
 import { html, render } from 'lit';
 
 import type { QtiPower } from './qti-power';

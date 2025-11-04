@@ -1,9 +1,8 @@
+import '@qti-components/components';
 import { describe, it, expect } from 'vitest';
 import { html, render } from 'lit';
 
 import type { QtiDelete } from './qti-delete';
-
-import './qti-delete';
 import type { QtiAssessmentItem } from '@qti-components/elements';
 
 describe('qti-delete', () => {
