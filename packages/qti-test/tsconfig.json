@@ -4,10 +4,11 @@
         "outDir": "./dist"
     },
     "include": [
-        "src/index.ts"
+        "src/**/*",
+        "../../src/vite-env.d.ts"
     ],
     "exclude": [
         "**/*.spec.ts",
-        "**/*.stories.ts",
+        "**/*.stories.ts"
     ]
 }

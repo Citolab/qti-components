@@ -127,7 +127,8 @@
     "vite": "^6.3.5",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.2.4",
-    "yalc": "^1.0.0-pre.53"
+    "yalc": "^1.0.0-pre.53",
+    "tsup": "^8.5.0"
   },
   "customElements": "custom-elements.json",
   "bugs": {

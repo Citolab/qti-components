@@ -4,9 +4,8 @@ import { until } from 'lit/directives/until.js';
 import { watch } from '@qti-components/utilities';
 import { qtiTransformTest } from '@qti-components/transformers';
 
-// import itemCss from '../../../item.css?inline';
+import itemCss from '../../../qti-theme/dist/theme.css';
 
-import type { QtiTest } from '../core/qti-test';
 /**
  * `<test-container>` is a custom element designed for hosting the qti-assessment-item.
  * The `qti-assessment-test` will be placed inside the shadow DOM of this element.
@@ -77,7 +76,7 @@ export class TestContainer extends LitElement {
   override async connectedCallback(): Promise<void> {
     super.connectedCallback();
     this.initializeTemplateContent();
-    // this.applyStyles();
+    this.applyStyles();
     if (this.testURL) {
       this.handleTestURLChange();
     }
@@ -91,11 +90,11 @@ export class TestContainer extends LitElement {
     this.templateContent = template ? template.content : html``;
   }
 
-  // private applyStyles() {
-  //   const sheet = new CSSStyleSheet();
-  //   sheet.replaceSync(itemCss);
-  //   this.shadowRoot.adoptedStyleSheets = [sheet];
-  // }
+  private applyStyles() {
+    const sheet = new CSSStyleSheet();
+    sheet.replaceSync(itemCss);
+    this.shadowRoot.adoptedStyleSheets = [sheet];
+  }
 
   override render() {
     return html`
