@@ -1,0 +1,11 @@
+{
+    "ignoreRules": [
+        "no-resolution"
+    ],
+    "exclude": [
+        "node10",
+        "node16-cjs",
+        "node16-esm"
+    ],
+    "format": "table-flipped"
+}

@@ -1,10 +1,12 @@
 {
     "extends": "../../tsconfig.json",
     "compilerOptions": {
-        "outDir": "./dist"
+        "outDir": "./dist",
+        "moduleResolution": "bundler"
     },
     "include": [
-        "src/index.ts"
+        "src/index.ts",
+        "../../src/vite-env.d.ts"
     ],
     "exclude": [
         "**/*.spec.ts",

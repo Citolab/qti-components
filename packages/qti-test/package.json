@@ -6,9 +6,9 @@
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "scripts": {
-        "build": "tsup",
+        "build": "tsc --paths null",
         "clean": "rm -rf dist",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "attw": "attw --profile esm-only --pack"
     },
     "keywords": [
         "qti",
@@ -21,7 +21,9 @@
         "@qti-components/transformers": "workspace:*",
         "@qti-components/utilities": "workspace:*",
         "@qti-components/elements": "workspace:*",
-        "@qti-components/theme": "workspace:*"
+        "@qti-components/theme": "workspace:*",
+        "@qti-components/interactions": "workspace:*",
+        "@qti-components/processing": "workspace:*"
     },
     "peerDependencies": {
         "lit": "^3.3.1",

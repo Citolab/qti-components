@@ -1,11 +1,8 @@
 {
     "name": "@qti-components/e2e",
     "version": "1.0.0",
-    "description": "QTI component utilities",
+    "description": "QTI e2e",
     "private": true,
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
     "type": "module",
     "dependencies": {
         "@qti-components/components": "workspace:*",

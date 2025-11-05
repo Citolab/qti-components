@@ -43,6 +43,14 @@ export default [
           pathGroupsExcludedImportTypes: ['type']
         }
       ],
+      // Enforce .js extensions for relative imports (ESM requirement)
+      // 'import/extensions': [
+      //   'error',
+      //   'always',
+      //   {
+      //     ignorePackages: true
+      //   }
+      // ],
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-empty-object-type': 'off',
       '@typescript-eslint/no-unused-vars': 'off',

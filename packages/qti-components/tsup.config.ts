@@ -1,5 +1,4 @@
 import { defineConfig } from 'tsup';
-import { globby } from 'globby';
 
 import pkgJson from './package.json' assert { type: 'json' };
 import { InlineCSSPlugin } from '../../scripts/inline-css-plugin';

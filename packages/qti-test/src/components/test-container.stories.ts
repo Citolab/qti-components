@@ -1,8 +1,8 @@
 import { expect } from 'storybook/test';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { html } from 'lit';
-
 import { qtiTransformTest } from '@qti-components/transformers';
+
 import { getAssessmentItemFromTestContainerByDataTitle } from '../../../../apps/e2e/src/testing/test-utils';
 
 import type { TestContainer } from './test-container';

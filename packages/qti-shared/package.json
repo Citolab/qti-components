@@ -2,12 +2,19 @@
     "name": "@qti-components/shared",
     "version": "1.0.0",
     "description": "QTI shared utilities",
+    "type": "module",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
+        }
+    },
     "scripts": {
         "build": "tsc --paths null",
         "clean": "rm -rf dist",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "attw": "attw --profile esm-only --pack"
     },
     "keywords": [
         "qti",

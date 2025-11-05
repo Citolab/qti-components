@@ -2,8 +2,10 @@
     "name": "@qti-components/theme",
     "version": "1.0.0",
     "description": "QTI theme utilities",
+    "type": "module",
     "scripts": {
-        "build": "postcss ./src/item.css -d dist -m"
+        "build": "postcss ./src/item.css -d dist -m",
+        "attw": "attw --profile esm-only --pack"
     },
     "files": [
         "dist"

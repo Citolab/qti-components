@@ -4,10 +4,11 @@
     "description": "QTI item utilities",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
+    "type": "module",
     "scripts": {
         "build": "tsc --paths null",
         "clean": "rm -rf dist",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "attw": "attw --profile esm-only --pack"
     },
     "keywords": [
         "qti",
@@ -16,12 +17,13 @@
     "author": "",
     "license": "GPL-3.0-only",
     "dependencies": {
-        "@qti-components/elements": "workspace:*",
-        "@qti-components/interactions": "workspace:*",
-        "@qti-components/processing": "workspace:*",
-        "@qti-components/utilities": "workspace:*",
+        "@qti-components/shared": "workspace:*",
         "@qti-components/transformers": "workspace:*",
-        "@qti-components/shared": "workspace:*"
+        "@qti-components/utilities": "workspace:*",
+        "@qti-components/elements": "workspace:*",
+        "@qti-components/theme": "workspace:*",
+        "@qti-components/interactions": "workspace:*",
+        "@qti-components/processing": "workspace:*"
     },
     "peerDependencies": {
         "lit": "^3.3.1",

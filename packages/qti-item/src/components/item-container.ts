@@ -3,8 +3,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { until } from 'lit/directives/until.js';
 import { watch } from '@qti-components/utilities';
 import { qtiTransformItem } from '@qti-components/transformers';
-
-// import itemCss from '../../../item.css?inline';
+import itemCss from '@qti-components/theme/dist/item.css?raw';
 
 /**
  * `<item-container>` is a custom element designed for hosting the qti-assessment-item.
@@ -61,7 +60,7 @@ export class ItemContainer extends LitElement {
   override async connectedCallback(): Promise<void> {
     super.connectedCallback();
     this.initializeTemplateContent();
-    // this.applyStyles();
+    this.applyStyles();
     if (this.itemURL) {
       this.handleItemURLChange();
     }
@@ -75,11 +74,11 @@ export class ItemContainer extends LitElement {
     this.templateContent = template ? template.content : html``;
   }
 
-  // private applyStyles() {
-  //   const sheet = new CSSStyleSheet();
-  //   sheet.replaceSync(itemCss);
-  //   this.shadowRoot.adoptedStyleSheets = [sheet];
-  // }
+  private applyStyles() {
+    const sheet = new CSSStyleSheet();
+    sheet.replaceSync(itemCss);
+    this.shadowRoot.adoptedStyleSheets = [sheet];
+  }
 
   override render() {
     return html`
