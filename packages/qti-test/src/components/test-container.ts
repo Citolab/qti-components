@@ -3,7 +3,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { until } from 'lit/directives/until.js';
 import { watch } from '@qti-components/utilities';
 import { qtiTransformTest } from '@qti-components/transformers';
-import itemCss from '@qti-components/theme/dist/item.css?raw';
+import itemCss from '@qti-components/theme/src/item.css?inline';
 
 /**
  * `<test-container>` is a custom element designed for hosting the qti-assessment-item.

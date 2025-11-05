@@ -19,7 +19,7 @@ import { toBePositionedRelativeTo } from '../test/setup/toBePositionedRelativeTo
 
 import type { Preview } from '@storybook/web-components-vite';
 
-import '../packages/qti-theme/dist/item.css';
+import '../packages/qti-theme/src/item.css';
 
 import '../packages/qti-components/src';
 

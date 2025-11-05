@@ -31164,6 +31164,11 @@
           "members": [
             {
               "kind": "method",
+              "name": "applyStyles",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
               "name": "handleItemURLChange",
               "privacy": "protected"
             },
@@ -33036,6 +33041,11 @@
           "description": "`<test-container>` is a custom element designed for hosting the qti-assessment-item.\nThe `qti-assessment-test` will be placed inside the shadow DOM of this element.\nThe element loads the test from the provided URL and renders it inside the shadow DOM.\n\n```html\n<qti-test>\n  <test-navigation>\n     <test-container class=\"m-4 bg-white\" test-url=\"./path/to/assessmenttest.xml\"></test-container>\n  </test-navigation>\n</qti-test>\n```",
           "name": "TestContainer",
           "members": [
+            {
+              "kind": "method",
+              "name": "applyStyles",
+              "privacy": "private"
+            },
             {
               "kind": "method",
               "name": "handleTestURLChange",

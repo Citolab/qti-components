@@ -4,7 +4,7 @@ import { join } from 'path';
 
 import postcss from 'postcss';
 
-import postcssConfig from '../packages/qti-theme/postcss.config.mjs';
+import postcssConfig from '../postcss.config.mjs';
 const inline_id = '?inline';
 
 export const InlineCSSPlugin = {

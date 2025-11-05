@@ -287,6 +287,9 @@ importers:
       '@qti-components/test':
         specifier: workspace:*
         version: link:../qti-test
+      '@qti-components/theme':
+        specifier: workspace:*
+        version: link:../qti-theme
       '@qti-components/transformers':
         specifier: workspace:*
         version: link:../qti-transformers
@@ -407,6 +410,12 @@ importers:
       '@qti-components/elements':
         specifier: workspace:*
         version: link:../qti-elements
+      '@qti-components/interactions':
+        specifier: workspace:*
+        version: link:../qti-interactions
+      '@qti-components/processing':
+        specifier: workspace:*
+        version: link:../qti-processing
       '@qti-components/shared':
         specifier: workspace:*
         version: link:../qti-shared

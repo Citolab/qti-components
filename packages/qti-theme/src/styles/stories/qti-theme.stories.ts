@@ -1,8 +1,7 @@
-import { html, LitElement } from 'lit';
-import { property } from 'lit/decorators.js';
-
 import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { Meta } from '@storybook/web-components-vite';
+
+const html = String.raw;
 
 const meta: Meta<QtiAssessmentItem> = {
   title: 'Theme',
@@ -15,26 +14,34 @@ const meta: Meta<QtiAssessmentItem> = {
 };
 export default meta;
 
-class ButtonComponent extends LitElement {
-  @property({ type: String }) ch: string;
-  @property({ type: String }) cha: string;
-  private placeChild = this.firstChild;
-
-  protected createRenderRoot(): HTMLElement | DocumentFragment {
-    return this;
-  }
+class ButtonComponent extends HTMLElement {
+  private placeChild: ChildNode | null;
 
   constructor() {
     super();
+    this.placeChild = this.firstChild;
     this.placeChild?.remove();
   }
 
+  connectedCallback() {
+    this.render();
+  }
+
+  get ch() {
+    return this.getAttribute('ch') || '';
+  }
+
+  get cha() {
+    return this.getAttribute('cha') || '';
+  }
+
   render() {
-    return html`<div class=${this.ch}><div class=${`check-size ${this.cha}`}></div></div>
-      <div>${this.placeChild}</div>
+    this.innerHTML = `<div class="${this.ch}"><div class="check-size ${this.cha}"></div></div>
+      <div>${this.placeChild ? this.placeChild.textContent || '' : ''}</div>
       <div part="drop"></div>`;
   }
 }
+
 window.customElements.define('button-component', ButtonComponent);
 
 // grid grid-cols-6 gap-4
