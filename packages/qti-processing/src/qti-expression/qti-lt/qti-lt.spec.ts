@@ -1,4 +1,3 @@
-import { describe, it, expect } from 'vitest';
 import '@qti-components/components';
 
 import { html, render } from 'lit';

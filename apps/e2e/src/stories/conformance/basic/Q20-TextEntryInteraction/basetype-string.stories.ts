@@ -2,6 +2,7 @@ import { action } from 'storybook/actions';
 import { expect } from 'storybook/test';
 import { fireEvent, screen, userEvent } from 'storybook/test';
 import { html } from 'lit';
+
 import { getItemByUri } from '@qti-components/loader';
 
 import type { QtiAssessmentItem } from '@qti-components/elements';

@@ -2,6 +2,7 @@ import { html, svg } from 'lit';
 import { customElement, queryAssignedElements, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { repeat } from 'lit/directives/repeat.js';
+
 import { Interaction } from '@qti-components/shared';
 
 import { positionShapes } from '../../internal/hotspots/hotspot';

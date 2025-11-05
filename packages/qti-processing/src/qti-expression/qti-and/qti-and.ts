@@ -1,4 +1,5 @@
 import { customElement } from 'lit/decorators.js';
+
 import { QtiConditionExpression } from '@qti-components/shared';
 
 import type { QtiExpression } from '@qti-components/shared';

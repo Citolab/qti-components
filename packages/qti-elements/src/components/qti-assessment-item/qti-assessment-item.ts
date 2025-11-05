@@ -1,6 +1,7 @@
 import { provide } from '@lit/context';
 import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+
 import { itemContext, itemContextVariables } from '@qti-components/shared';
 import { watch } from '@qti-components/utilities';
 

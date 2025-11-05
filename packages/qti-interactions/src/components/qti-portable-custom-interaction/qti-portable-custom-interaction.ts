@@ -1,6 +1,7 @@
 import { css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { consume } from '@lit/context';
+
 import { Interaction } from '@qti-components/shared';
 import { itemContext } from '@qti-components/shared';
 import { removeDoubleSlashes } from '@qti-components/utilities';
@@ -727,7 +728,8 @@ export class QtiPortableCustomInteraction extends Interaction {
         };
         requirePCI(['require'], require => {
           try {
-            require([this.module], () => {}, err => {
+            // eslint-disable-next-line import/no-dynamic-require
+            require([this.module], () => {}, (err: any) => {
               console.error('Error loading module:', err);
             });
           } catch (error) {

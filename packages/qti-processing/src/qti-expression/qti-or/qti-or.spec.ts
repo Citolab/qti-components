@@ -1,5 +1,6 @@
 import '@qti-components/components';
 import { html, render } from 'lit';
+
 import { QtiConditionExpression } from '@qti-components/shared';
 
 import type { QtiOr } from './qti-or';

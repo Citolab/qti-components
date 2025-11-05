@@ -1,5 +1,6 @@
 import { customElement } from 'lit/decorators.js';
 import { css, html } from 'lit';
+
 import { QtiModalFeedback } from '@qti-components/elements';
 
 @customElement('qti-test-feedback')

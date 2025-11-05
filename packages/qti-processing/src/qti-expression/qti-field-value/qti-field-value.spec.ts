@@ -4,6 +4,7 @@ import { html, render } from 'lit';
 import { provide } from '@lit/context';
 import { LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
+
 import { qtiContext } from '@qti-components/shared';
 
 import type { QtiContext } from '@qti-components/shared';

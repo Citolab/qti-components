@@ -1,5 +1,6 @@
 import { property, state } from 'lit/decorators.js';
 import { consume } from '@lit/context';
+
 import { itemContext } from '@qti-components/shared';
 import { QtiRule } from '@qti-components/shared';
 import { convertNumberToUniversalFormat } from '@qti-components/utilities';

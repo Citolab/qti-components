@@ -2,6 +2,7 @@ import { consume } from '@lit/context';
 import { html, LitElement, nothing } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { prepareTemplate } from '@heximal/templates';
+
 import { sessionContext } from '@qti-components/shared';
 
 import type { PropertyValues } from 'lit';

@@ -1,9 +1,9 @@
-import { html } from 'lit';
-
 import type { QtiTest } from '@qti-components/test';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 type Story = StoryObj<QtiTest>;
+
+const html = String.raw;
 
 const meta: Meta<QtiTest> = {
   tags: ['!dev']

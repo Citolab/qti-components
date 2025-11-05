@@ -1,5 +1,6 @@
 import { property, state } from 'lit/decorators.js';
 import { consume } from '@lit/context';
+
 import { QtiExpression } from '@qti-components/shared';
 import { itemContext } from '@qti-components/shared';
 import { testContext } from '@qti-components/shared';

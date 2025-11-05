@@ -1,4 +1,5 @@
 import { property } from 'lit/decorators.js';
+
 import { liveQuery } from '@qti-components/utilities';
 
 import { FlippablesMixin } from './flippables-mixin';

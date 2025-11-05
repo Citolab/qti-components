@@ -1,4 +1,5 @@
 import { property } from 'lit/decorators.js';
+
 import { qtiTransformItem } from '@qti-components/transformers';
 
 import type { QtiAssessmentStimulusRefConnectedEvent } from '@qti-components/elements';

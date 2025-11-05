@@ -2,6 +2,7 @@ import { html, nothing } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { createRef } from 'lit/directives/ref.js';
+
 import { Correctness, Interaction } from '@qti-components/shared';
 import { watch } from '@qti-components/utilities';
 

@@ -1,6 +1,7 @@
 import { consume } from '@lit/context';
 import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+
 import { computedContext } from '@qti-components/shared';
 
 import type { View } from '@qti-components/shared';

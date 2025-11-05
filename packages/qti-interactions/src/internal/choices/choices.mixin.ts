@@ -1,5 +1,6 @@
 import { property, query, state } from 'lit/decorators.js';
 import { consume } from '@lit/context';
+
 import { watch } from '@qti-components/utilities';
 import { configContext, type ConfigContext } from '@qti-components/shared';
 

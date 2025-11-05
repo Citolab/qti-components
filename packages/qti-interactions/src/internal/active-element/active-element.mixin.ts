@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import { property } from 'lit/decorators.js';
+
 import { watch } from '@qti-components/utilities';
 
 import type { ComplexAttributeConverter, LitElement } from 'lit';

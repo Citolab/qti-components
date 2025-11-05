@@ -1,5 +1,6 @@
 import { getByTestId, userEvent } from 'storybook/test';
 import { html, render } from 'lit';
+
 import { Interaction } from '@qti-components/shared';
 
 import { ChoicesMixin } from './choices.mixin';

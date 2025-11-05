@@ -1,4 +1,5 @@
 import { html } from 'lit';
+
 import { getManifestInfo } from '@qti-components/loader';
 
 import packages from '../assets/packages.json';

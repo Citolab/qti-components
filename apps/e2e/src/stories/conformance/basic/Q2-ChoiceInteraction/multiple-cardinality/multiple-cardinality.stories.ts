@@ -1,5 +1,6 @@
 import { expect } from 'storybook/test';
 import { fireEvent } from 'storybook/test';
+
 import { getItemByUri } from '@qti-components/loader';
 
 import type { QtiSimpleChoice } from '@qti-components/interactions';

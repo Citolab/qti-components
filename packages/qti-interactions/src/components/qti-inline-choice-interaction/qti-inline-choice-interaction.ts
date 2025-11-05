@@ -2,6 +2,7 @@ import { css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { consume } from '@lit/context';
+
 import { Interaction } from '@qti-components/shared';
 import { configContext } from '@qti-components/shared';
 

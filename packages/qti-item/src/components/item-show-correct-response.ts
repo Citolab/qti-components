@@ -1,6 +1,7 @@
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { consume } from '@lit/context';
+
 import { computedItemContext } from '@qti-components/shared';
 
 import * as styles from './styles';

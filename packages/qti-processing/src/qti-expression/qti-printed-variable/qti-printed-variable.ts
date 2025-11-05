@@ -1,6 +1,7 @@
 import { consume } from '@lit/context';
 import { LitElement, html, nothing } from 'lit';
 import { property, state } from 'lit/decorators.js';
+
 import { itemContext } from '@qti-components/shared';
 
 import type { VariableDeclaration } from '@qti-components/shared';

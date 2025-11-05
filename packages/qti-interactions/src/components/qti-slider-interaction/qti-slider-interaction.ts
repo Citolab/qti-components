@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
+
 import { Interaction } from '@qti-components/shared';
 
 import styles from './qti-slider-interaction.styles';

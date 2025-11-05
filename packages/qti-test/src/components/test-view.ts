@@ -1,6 +1,7 @@
 import { html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { consume } from '@lit/context';
+
 import { watch } from '@qti-components/utilities';
 import { sessionContext } from '@qti-components/shared';
 

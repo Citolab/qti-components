@@ -1,6 +1,7 @@
 import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { customElement, property, state } from 'lit/decorators.js';
+
 import { watch } from '@qti-components/utilities';
 import { Interaction } from '@qti-components/shared';
 

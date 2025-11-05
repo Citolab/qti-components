@@ -1,4 +1,5 @@
 import { customElement, property } from 'lit/decorators.js';
+
 import { QtiExpression } from '@qti-components/shared';
 
 import type { integer } from '@qti-components/shared';

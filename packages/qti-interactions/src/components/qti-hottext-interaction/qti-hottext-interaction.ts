@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+
 import { Interaction } from '@qti-components/shared';
 
 import { ChoicesMixin } from '../../internal/choices/choices.mixin';
@@ -48,6 +49,7 @@ export class QtiHottextInteraction extends ChoicesMixin(Interaction, 'qti-hottex
   private updateHostClasses() {
     // Clear existing classes and apply merged ones
     const classString = Object.keys(this.classObject).join(' ');
+    // eslint-disable-next-line wc/no-self-class
     this.className = classString;
   }
 }

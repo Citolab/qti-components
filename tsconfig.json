@@ -58,9 +58,9 @@
     "@types/dom-view-transitions",
     "./src/vite-env.d.ts"
   ],
-  // "references": [
-  //   {
-  //     "path": "./tsconfig.vitest.json"
-  //   }
-  // ]
+  "references": [
+    {
+      "path": "./tsconfig.vitest.json"
+    }
+  ]
 }

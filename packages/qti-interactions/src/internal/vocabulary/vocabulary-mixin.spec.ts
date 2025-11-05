@@ -2,6 +2,7 @@ import '@qti-components/components';
 
 import { describe, it, expect, afterEach, beforeEach } from 'vitest';
 import { html, render } from 'lit';
+
 import { Interaction } from '@qti-components/shared';
 
 import { VocabularyMixin } from './vocabulary-mixin';

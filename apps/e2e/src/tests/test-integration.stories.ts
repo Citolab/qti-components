@@ -4,7 +4,7 @@ import { within } from 'shadow-dom-testing-library';
 import { http, HttpResponse, delay } from 'msw';
 import { mswLoader } from 'msw-storybook-addon';
 
-import '../../.storybook/utilities.css';
+import '../../../../.storybook/utilities.css';
 
 type Story = StoryObj;
 
@@ -47,7 +47,7 @@ const meta: Meta = {
 };
 export default meta;
 
-import UnbeleivableNight from '../../public/assets/qti-test-package-stimulus/items/ref/unbelievableNight.xml?raw';
+import UnbeleivableNight from '../../../../public/assets/qti-test-package-stimulus/items/ref/unbelievableNight.xml?raw';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 

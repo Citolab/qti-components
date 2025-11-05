@@ -1,4 +1,5 @@
 import { property } from 'lit/decorators.js';
+
 import { ScoringHelper } from '@qti-components/shared';
 import { QtiExpression } from '@qti-components/shared';
 

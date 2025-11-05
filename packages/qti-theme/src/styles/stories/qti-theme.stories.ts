@@ -19,11 +19,11 @@ class ButtonComponent extends HTMLElement {
 
   constructor() {
     super();
-    this.placeChild = this.firstChild;
     this.placeChild?.remove();
   }
 
   connectedCallback() {
+    this.placeChild = this.firstChild;
     this.render();
   }
 

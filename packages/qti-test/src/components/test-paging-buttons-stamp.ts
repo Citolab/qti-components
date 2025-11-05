@@ -2,6 +2,7 @@ import { html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { prepareTemplate } from '@heximal/templates';
 import { consume } from '@lit/context';
+
 import { computedContext } from '@qti-components/shared';
 
 import type { ComputedContext } from '@qti-components/shared';

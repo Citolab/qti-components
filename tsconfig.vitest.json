@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    // "composite": true,
+    "composite": true,
     "types": [
       "vitest/globals"
     ],
@@ -16,11 +16,7 @@
     }
   },
   "include": [
-    "apps/**/*.spec.ts",
-    "apps/**/*.test.ts",
-    "apps/**/*.stories.ts",
-    "packages/**/*.spec.ts",
-    "packages/**/*.test.ts",
-    "packages/**/*.stories.ts"
+    "apps/**/*.ts",
+    "packages/**/*.ts",
   ],
 }
