@@ -7,6 +7,7 @@
     "type": "module",
     "scripts": {
         "build": "tsc --paths null",
+        "clean": "rm -rf dist",
         "attw": "attw --profile esm-only --pack"
     },
     "keywords": [
