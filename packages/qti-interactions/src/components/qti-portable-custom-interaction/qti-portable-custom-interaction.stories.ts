@@ -600,7 +600,7 @@ const createPciConformanceStory = (itemName: string): Story => ({
   args: {
     // Remove the item-url since we'll fetch the data ourselves
   },
-  render: args =>
+  render: () =>
     html`<qti-item>
       <div>
         <item-container style="display: block;width: 400px; height: 350px;" id="item-container">

@@ -19,7 +19,7 @@ export default meta;
 export const T4_T7: Story = {
   name: 'T4-L1-D1, T4-L1-D2, T7-L1-D1, T7-L1-D2, T14-L1-D1',
   render: (
-    args,
+    _args,
     { loaded: { manifestInfo } }: { argTypes: ArgTypes; loaded: Record<'manifestInfo', ManifestInfo> }
   ) => {
     const qtiTestRef = createRef<QtiTest | undefined | null>();
@@ -43,8 +43,6 @@ export const T4_T7: Story = {
     `;
   },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-
     const responses = [
       'correct',
       ['choice_a', 'choice_b'],
@@ -96,6 +94,6 @@ Nature’s lullaby.`
     }
   },
   loaders: [
-    async ({ args }) => ({ manifestInfo: await getManifestInfo(`/assets/qti-conformance/Basic/T4-T7/imsmanifest.xml`) })
+    async () => ({ manifestInfo: await getManifestInfo(`/assets/qti-conformance/Basic/T4-T7/imsmanifest.xml`) })
   ]
 };

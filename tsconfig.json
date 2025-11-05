@@ -25,6 +25,9 @@
     "target": "esnext",
     "useDefineForClassFields": false,
     "paths": {
+      "@qti-components/components": [
+        "./packages/qti-components/src/index.ts"
+      ],
       "@qti-components/shared": [
         "./packages/qti-shared/src/index.ts"
       ],
@@ -56,11 +59,8 @@
   },
   "types": [
     "@types/dom-view-transitions",
-    "./src/vite-env.d.ts"
+    "./src/vite-env.d.ts",
+    "vitest/globals"
   ],
-  "references": [
-    {
-      "path": "./tsconfig.vitest.json"
-    }
-  ]
+  "references": []
 }

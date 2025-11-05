@@ -1,3 +1,4 @@
+import '@qti-components/components';
 import { getByTestId, userEvent } from 'storybook/test';
 import { html, render } from 'lit';
 

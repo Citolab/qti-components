@@ -2,7 +2,7 @@ import { html } from 'lit';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { expect, fireEvent, fn, waitFor, within } from 'storybook/test';
 
-import type { QtiSelectPointInteraction } from '../../..';
+import type { QtiSelectPointInteraction } from './qti-select-point-interaction';
 import type { StoryObj, Meta } from '@storybook/web-components-vite';
 
 const { events, args, argTypes, template } = getStorybookHelpers('qti-select-point-interaction');

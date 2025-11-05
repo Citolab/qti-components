@@ -330,7 +330,7 @@ export class QtiAssessmentItem extends LitElement {
     return this.getVariable(identifier) as ResponseVariable;
   }
 
-  protected getOutcome(identifier: string): Readonly<OutcomeVariable> {
+  public getOutcome(identifier: string): Readonly<OutcomeVariable> {
     return this.getVariable(identifier) as OutcomeVariable;
   }
 

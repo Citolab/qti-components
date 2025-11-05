@@ -3,7 +3,6 @@ import { html } from 'lit';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { PrintItemVariables } from './print-item-variables';
-import './print-item-variables';
 import type { ItemContainer } from './item-container';
 
 const { events, args, argTypes } = getStorybookHelpers('print-item-variables');

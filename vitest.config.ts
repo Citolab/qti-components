@@ -12,11 +12,11 @@ const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(file
 
 export default defineConfig({
   base: process.env.VITEST ? undefined : './',
-  plugins: [tsconfigPaths({ configNames: ['tsconfig.vitest.json'] })],
+  plugins: [tsconfigPaths()],
 
   test: {
     typecheck: {
-      tsconfig: './tsconfig.vitest.json'
+      tsconfig: './tsconfig.json'
     },
     browser: {
       headless: true
@@ -26,7 +26,7 @@ export default defineConfig({
     coverage: {
       provider: 'v8' // or 'v8'
     },
-    onConsoleLog(log: string, type: 'stdout' | 'stderr'): boolean | void {
+    onConsoleLog(log: string): boolean | void {
       return !log.includes('Lit is in dev mode');
     },
     // dangerouslyIgnoreUnhandledErrors: true,
@@ -72,28 +72,28 @@ export default defineConfig({
             ]
           }
         }
-      }
+      },
       /* this is for the normal spec files, which do not need storybook */
-      // {
-      //   plugins: [tsconfigPaths({ configNames: ['tsconfig.vitest.json'] })],
-      //   test: {
-      //     name: 'tests',
-      //     setupFiles: ['./test/setup/index.js'],
-      //     include: ['src/**/*.spec.ts', 'src/**/*.test.ts', 'packages/**/*.spec.ts', 'packages/**/*.test.ts'],
-      //     globals: true,
-      //     typecheck: {
-      //       tsconfig: './tsconfig.vitest.json'
-      //     },
+      {
+        plugins: [tsconfigPaths()],
+        test: {
+          name: 'tests',
+          setupFiles: ['./test/setup/index.js'],
+          include: ['src/**/*.spec.ts', 'src/**/*.test.ts', 'packages/**/*.spec.ts', 'packages/**/*.test.ts'],
+          globals: true,
+          typecheck: {
+            tsconfig: './tsconfig.json'
+          },
 
-      //     browser: {
-      //       enabled: true,
-      //       provider: 'playwright',
-      //       headless: true, // Both modes work fine
-      //       screenshotFailures: false,
-      //       instances: [{ browser: 'chromium', headless: true }]
-      //     }
-      //   }
-      // }
+          browser: {
+            enabled: true,
+            provider: 'playwright',
+            headless: true, // Both modes work fine
+            screenshotFailures: false,
+            instances: [{ browser: 'chromium', headless: true }]
+          }
+        }
+      }
     ]
   }
 });
