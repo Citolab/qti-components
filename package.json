@@ -28,9 +28,9 @@
   "version": "7.14.2",
   "scripts": {
     "-----------------------workspace--": "-",
-    "lint": "eslint packages/**/*.ts",
+    "lint": "eslint",
     "test": "vitest run",
-    "-----------------------packages--": "-",
+    "tsc": "tsc --noEmit",
     "clean": "pnpm -r run clean",
     "build": "pnpm -r run build",
     "attw": "pnpm -r run attw",
