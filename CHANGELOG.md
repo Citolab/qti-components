@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.14.3](https://github.com/Citolab/qti-components/compare/v7.14.2...v7.14.3) (2025-10-30)
+
+
+### Bug Fixes
+
+* Various changes ([#68](https://github.com/Citolab/qti-components/issues/68)) ([7d6bfc2](https://github.com/Citolab/qti-components/commit/7d6bfc24dd5cfbd60346c7168a405e6ec328d530))
+
 ## [7.14.2](https://github.com/Citolab/qti-components/compare/v7.14.1...v7.14.2) (2025-10-27)
 
 
