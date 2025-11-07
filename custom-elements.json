@@ -34387,6 +34387,20 @@
             },
             {
               "kind": "method",
+              "name": "_initializeEventListeners",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "TestBaseMixin",
+                "module": "packages/qti-test/src/mixins/test-base.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "_initializeNavigation",
               "privacy": "private",
               "return": {
@@ -34625,9 +34639,9 @@
               "type": {
                 "text": "QtiAssessmentTest"
               },
-              "privacy": "protected",
+              "privacy": "public",
               "inheritedFrom": {
-                "name": "TestBase",
+                "name": "TestBaseMixin",
                 "module": "packages/qti-test/src/mixins/test-base.ts"
               }
             },
@@ -34652,7 +34666,7 @@
                 }
               ],
               "inheritedFrom": {
-                "name": "TestBase",
+                "name": "TestBaseMixin",
                 "module": "packages/qti-test/src/mixins/test-base.ts"
               }
             },
@@ -34680,7 +34694,7 @@
                 }
               ],
               "inheritedFrom": {
-                "name": "TestBase",
+                "name": "TestBaseMixin",
                 "module": "packages/qti-test/src/mixins/test-base.ts"
               }
             },
@@ -34913,7 +34927,7 @@
               "privacy": "public",
               "default": "{ ...this.sessionContext, view: 'candidate' }",
               "inheritedFrom": {
-                "name": "TestBase",
+                "name": "TestBaseMixin",
                 "module": "packages/qti-test/src/mixins/test-base.ts"
               }
             },
@@ -34926,7 +34940,7 @@
               "privacy": "public",
               "default": "INITIAL_TEST_CONTEXT",
               "inheritedFrom": {
-                "name": "TestBase",
+                "name": "TestBaseMixin",
                 "module": "packages/qti-test/src/mixins/test-base.ts"
               }
             },
@@ -34953,7 +34967,7 @@
                 }
               ],
               "inheritedFrom": {
-                "name": "TestBase",
+                "name": "TestBaseMixin",
                 "module": "packages/qti-test/src/mixins/test-base.ts"
               },
               "type": {
@@ -35040,7 +35054,7 @@
                 "text": "CustomEvent"
               },
               "inheritedFrom": {
-                "name": "TestBase",
+                "name": "TestBaseMixin",
                 "module": "packages/qti-test/src/mixins/test-base.ts"
               }
             },
@@ -35067,11 +35081,15 @@
             {
               "name": "TestProcessingMixin",
               "module": "/packages/qti-test/src/mixins/test-processing.mixin"
+            },
+            {
+              "name": "TestBaseMixin",
+              "module": "/packages/qti-test/src/mixins/test-base"
             }
           ],
           "superclass": {
-            "name": "TestBase",
-            "module": "/packages/qti-test/src/mixins/test-base"
+            "name": "LitElement",
+            "package": "lit"
           },
           "tagName": "qti-test",
           "customElement": true,
@@ -37939,6 +37957,14 @@
             "name": "*",
             "module": "packages/qti-test/src/mixins/test-view.mixin"
           }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/qti-test/src/mixins/test-base"
+          }
         }
       ]
     },
@@ -37950,14 +37976,178 @@
           "kind": "class",
           "description": "",
           "name": "TestBase",
+          "mixins": [
+            {
+              "name": "TestBaseMixin",
+              "module": "packages/qti-test/src/mixins/test-base.ts"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "customElement": true,
           "members": [
+            {
+              "kind": "method",
+              "name": "_initializeEventListeners",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "TestBaseMixin",
+                "module": "packages/qti-test/src/mixins/test-base.ts"
+              }
+            },
             {
               "kind": "field",
               "name": "_testElement",
               "type": {
                 "text": "QtiAssessmentTest"
               },
-              "privacy": "protected"
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "TestBaseMixin",
+                "module": "packages/qti-test/src/mixins/test-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_updateItemInTestContext",
+              "privacy": "private",
+              "description": "Updates the variables of an assessment item in the test context.\n- Matches the assessment item with the corresponding test context item.\n- If the item is not found, logs a warning.\n- Updates variables in the test context if exactly one variable exists.\n- Otherwise, syncs the assessment item's variables with the test context.",
+              "parameters": [
+                {
+                  "description": "The assessment item to update.",
+                  "name": "assessmentItem"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "TestBaseMixin",
+                "module": "packages/qti-test/src/mixins/test-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_updateItemVariablesInTestContext",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "variables",
+                  "type": {
+                    "text": "readonly VariableDeclaration<string | string[] | null>[]"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "TestBaseMixin",
+                "module": "packages/qti-test/src/mixins/test-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "sessionContext",
+              "type": {
+                "text": "Readonly<SessionContext>"
+              },
+              "privacy": "public",
+              "default": "INITIAL_SESSION_CONTEXT",
+              "inheritedFrom": {
+                "name": "TestBaseMixin",
+                "module": "packages/qti-test/src/mixins/test-base.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "testContext",
+              "type": {
+                "text": "Readonly<TestContext>"
+              },
+              "privacy": "public",
+              "default": "INITIAL_TEST_CONTEXT",
+              "inheritedFrom": {
+                "name": "TestBaseMixin",
+                "module": "packages/qti-test/src/mixins/test-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "updateItemVariables",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "itemRefID",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "variables",
+                  "type": {
+                    "text": "VariableValue<string | string[] | null>[]"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "TestBaseMixin",
+                "module": "packages/qti-test/src/mixins/test-base.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "qti-test-context-updated",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "inheritedFrom": {
+                "name": "TestBaseMixin",
+                "module": "packages/qti-test/src/mixins/test-base.ts"
+              }
+            }
+          ],
+          "modulePath": "packages/qti-test/src/mixins/test-base.ts"
+        },
+        {
+          "kind": "mixin",
+          "description": "",
+          "name": "TestBaseMixin",
+          "members": [
+            {
+              "kind": "method",
+              "name": "_initializeEventListeners",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_testElement",
+              "type": {
+                "text": "QtiAssessmentTest"
+              },
+              "privacy": "public"
             },
             {
               "kind": "field",
@@ -38045,12 +38235,14 @@
               }
             }
           ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "customElement": true,
-          "modulePath": "packages/qti-test/src/mixins/test-base.ts"
+          "parameters": [
+            {
+              "name": "superClass",
+              "type": {
+                "text": "T"
+              }
+            }
+          ]
         }
       ],
       "exports": [
@@ -38059,6 +38251,14 @@
           "name": "TestBase",
           "declaration": {
             "name": "TestBase",
+            "module": "packages/qti-test/src/mixins/test-base.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TestBaseMixin",
+          "declaration": {
+            "name": "TestBaseMixin",
             "module": "packages/qti-test/src/mixins/test-base.ts"
           }
         }
@@ -38654,7 +38854,7 @@
               "type": {
                 "text": "QtiAssessmentTest"
               },
-              "privacy": "protected"
+              "privacy": "public"
             },
             {
               "kind": "method",

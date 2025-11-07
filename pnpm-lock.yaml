@@ -398,9 +398,6 @@ importers:
       '@qti-components/base':
         specifier: workspace:*
         version: link:../qti-base
-      '@qti-components/transformers':
-        specifier: workspace:*
-        version: link:../qti-transformers
       '@qti-components/utilities':
         specifier: workspace:*
         version: link:../lit-utilities
