@@ -1,20 +1,20 @@
 {
-    "name": "@qti-components/theme",
-    "version": "1.0.0",
-    "description": "QTI theme utilities",
-    "type": "module",
-    "scripts": {
-        "build": "postcss ./src/item.css -d dist -m",
-        "clean": "rm -rf dist",
-        "attw": "attw --profile esm-only --pack"
-    },
-    "files": [
-        "dist"
-    ],
-    "keywords": [
-        "qti",
-        "theme"
-    ],
-    "author": "",
-    "license": "GPL-3.0-only"
+  "name": "@qti-components/theme",
+  "version": "1.0.0",
+  "description": "QTI theme utilities",
+  "type": "module",
+  "scripts": {
+    "build": "postcss ./src/item.css -d dist -m",
+    "clean": "rm -rf dist",
+    "attw": "attw --profile esm-only --pack"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "qti",
+    "theme"
+  ],
+  "author": "",
+  "license": "GPL-3.0-only"
 }

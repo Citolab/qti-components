@@ -93,7 +93,7 @@ const preview: Preview = {
       }
     },
 
-    viewport: { viewports: customViewports },
+    viewport: { options: customViewports },
     controls: {
       expanded: true,
       matchers: {
