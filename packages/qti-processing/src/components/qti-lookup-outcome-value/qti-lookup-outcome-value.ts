@@ -4,7 +4,7 @@ import { consume } from '@lit/context';
 import { convertNumberToUniversalFormat } from '@qti-components/base';
 import { itemContext } from '@qti-components/base';
 
-import { QtiRule } from '../qti-rule';
+import { QtiRule } from '../qti-rule/qti-rule';
 
 import type { QtiExpression } from '@qti-components/base';
 import type { OutcomeVariable } from '@qti-components/base';

@@ -1,6 +1,6 @@
 import { html } from 'lit';
 
-import { QtiRule } from '../qti-rule';
+import { QtiRule } from '../qti-rule/qti-rule';
 
 import type { QtiExpression } from '@qti-components/base';
 

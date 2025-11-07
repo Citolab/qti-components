@@ -1,7 +1,7 @@
-import { QtiResponseElse } from '../qti-response-else';
+import { QtiResponseElse } from '../qti-response-else/qti-response-else';
 
 import type { QtiExpression } from '@qti-components/base';
-import type { QtiRule } from '../../qti-rule/qti-rule';
+import type { QtiRule } from '../qti-rule/qti-rule';
 
 export class QtiResponseIf extends QtiResponseElse {
   public override calculate() {
