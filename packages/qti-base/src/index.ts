@@ -10,6 +10,7 @@ export * from './context/test.context.js';
 export * from './abstract/interaction.js';
 export * from './abstract/qti-variable-declaration.js';
 export * from './abstract/qti-condition-expression.js';
+export * from './abstract/qti-feedback.js';
 export * from './abstract/qti-expression.js';
 
 export * from './lib/expression-result.js';

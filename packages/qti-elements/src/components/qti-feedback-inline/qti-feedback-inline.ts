@@ -2,7 +2,7 @@ import { css, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
-import { QtiFeedback } from '../qti-feedback';
+import { QtiFeedback } from '../../../../qti-base/src/abstract/qti-feedback';
 
 @customElement('qti-feedback-inline')
 export class QtiFeedbackInline extends QtiFeedback {
