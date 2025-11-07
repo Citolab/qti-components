@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { defineConfig } from 'vitest/config';
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
+import { playwright } from '@vitest/browser-playwright';
 
 const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
 
@@ -24,7 +25,17 @@ export default defineConfig({
     // Suppress console output during tests
     silent: true,
     coverage: {
-      provider: 'v8' // or 'v8'
+      provider: 'v8',
+      include: ['packages/**/src/**/*.{js,jsx,ts,tsx}', 'src/**/*.{js,jsx,ts,tsx}'],
+      exclude: [
+        '**/node_modules/**',
+        '**/dist/**',
+        '**/*.spec.ts',
+        '**/*.test.ts',
+        '**/*.stories.ts',
+        '**/*.config.*',
+        '**/coverage/**'
+      ]
     },
     onConsoleLog(log: string): boolean | void {
       return !log.includes('Lit is in dev mode');
@@ -56,18 +67,13 @@ export default defineConfig({
           globals: true,
           browser: {
             enabled: true,
-            provider: 'playwright',
+            provider: playwright(),
             headless: true,
             viewport: { width: 1280, height: 600 },
             screenshotFailures: false,
             instances: [
               {
-                browser: 'chromium',
-                provide: {
-                  launch: {
-                    args: ['--remote-debugging-port=9222']
-                  }
-                }
+                browser: 'chromium'
               }
             ]
           }
@@ -87,7 +93,7 @@ export default defineConfig({
 
           browser: {
             enabled: true,
-            provider: 'playwright',
+            provider: playwright(),
             headless: true, // Both modes work fine
             screenshotFailures: false,
             instances: [{ browser: 'chromium', headless: true }]

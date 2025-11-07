@@ -5,7 +5,7 @@ import type { ItemPrintVariables } from './item-print-variables';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { ItemContainer } from '../item-container/item-container';
 
-const { events, args, argTypes } = getStorybookHelpers('print-item-variables');
+const { events, args, argTypes } = getStorybookHelpers('item-print-variables');
 
 type Story = StoryObj<ItemPrintVariables & typeof args>;
 
