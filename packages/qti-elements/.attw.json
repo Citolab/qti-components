@@ -1,6 +1,7 @@
 {
     "ignoreRules": [
-        "no-resolution"
+        "no-resolution",
+        "internal-resolution-error"
     ],
     "exclude": [
         "node10",

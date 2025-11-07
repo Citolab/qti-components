@@ -51,36 +51,25 @@ describe('qti-lookup-outcome-value', () => {
           <qti-value>1</qti-value>
         </qti-default-value>
       </qti-outcome-declaration>
-      <qti-assessment-stimulus-ref
-        identifier="_86bee4be-0126-43f1-aea6-87207b42ab9e"
-        href="Stimulus/86bee4be-0126-43f1-aea6-87207b42ab9e.xml"
-      ></qti-assessment-stimulus-ref>
       <qti-item-body>
-        <div class="qti-layout-row">
-          <div class="qti-layout-col6">
-            <div class="qti-base-stimulus" data-stimulus-idref="_86bee4be-0126-43f1-aea6-87207b42ab9e"></div>
-          </div>
-          <div class="qti-layout-col6">
-            <div class="question">
-              <p>Lees: De jongen &#x2026; boos aan. (r. 2 en 3)</p>
-              <p>Wat hoort op de puntjes (&#x2026;) te staan?</p>
-            </div>
-            <qti-choice-interaction max-choices="1" min-choices="0" shuffle="false" response-identifier="RESPONSE">
-              <qti-simple-choice identifier="A"
-                ><p xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0">Ik ben ontspannen</p></qti-simple-choice
-              >
-              <qti-simple-choice identifier="B"
-                ><p xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0">Ik moet &#x2018;m niet</p></qti-simple-choice
-              >
-              <qti-simple-choice identifier="C"
-                ><p xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0">Ik vind &#x2018;m leuk</p></qti-simple-choice
-              >
-              <qti-simple-choice identifier="D"
-                ><p xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0">Ik kwispel blij</p></qti-simple-choice
-              >
-            </qti-choice-interaction>
-          </div>
+        <div class="question">
+          <p>Lees: De jongen &#x2026; boos aan. (r. 2 en 3)</p>
+          <p>Wat hoort op de puntjes (&#x2026;) te staan?</p>
         </div>
+        <qti-choice-interaction max-choices="1" min-choices="0" shuffle="false" response-identifier="RESPONSE">
+          <qti-simple-choice identifier="A"
+            ><p xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0">Ik ben ontspannen</p></qti-simple-choice
+          >
+          <qti-simple-choice identifier="B"
+            ><p xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0">Ik moet &#x2018;m niet</p></qti-simple-choice
+          >
+          <qti-simple-choice identifier="C"
+            ><p xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0">Ik vind &#x2018;m leuk</p></qti-simple-choice
+          >
+          <qti-simple-choice identifier="D"
+            ><p xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0">Ik kwispel blij</p></qti-simple-choice
+          >
+        </qti-choice-interaction>
       </qti-item-body>
       <qti-response-processing>
         <qti-response-condition>

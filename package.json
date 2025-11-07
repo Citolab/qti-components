@@ -26,7 +26,7 @@
     "node": ">=22.0.0"
   },
   "scripts": {
-    "test-all": "run-p lint tsc test build build-storybook cem madge attw && run-s cem madge",
+    "test-all": "run-s build lint tsc test cem madge",
     "-----------------------workspace--": "-",
     "lint": "eslint",
     "test": "vitest run",

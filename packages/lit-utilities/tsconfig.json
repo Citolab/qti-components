@@ -2,15 +2,13 @@
     "extends": "../../tsconfig.json",
     "compilerOptions": {
         "outDir": "./dist",
-        "baseUrl": ".",
         "moduleResolution": "bundler"
     },
     "include": [
-        "src",
-        "../qti-base/src/utils/utils.ts"
+        "src/index.ts"
     ],
     "exclude": [
         "**/*.spec.ts",
-        "**/*.stories.ts",
+        "**/*.stories.ts"
     ]
 }
