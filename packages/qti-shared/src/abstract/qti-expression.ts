@@ -6,7 +6,7 @@ import { itemContext } from '../context/qti-assessment-item.context';
 import { qtiContext } from '../context/qti.context';
 
 import type { QtiContext, QtiContextType } from '../context/qti.context';
-import type { ResponseVariable, VariableDeclaration } from './variables';
+import type { ResponseVariable, VariableDeclaration } from '../lib/variables';
 import type { ItemContext } from '../context/item.context';
 
 export interface QtiExpressionBase<T> {

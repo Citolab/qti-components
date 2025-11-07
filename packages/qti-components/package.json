@@ -18,8 +18,9 @@
     "sideEffects": [
         "./dist/elements.js",
         "./dist/interactions.js",
-        "./dist/item.js",
-        "./dist/test.js"
+        "./dist/processing.js",
+        "./dist/test.js",
+        "./dist/item.js"
     ],
     "license": "GPL-3.0-only",
     "repository": {

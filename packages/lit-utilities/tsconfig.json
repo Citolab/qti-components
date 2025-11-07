@@ -6,7 +6,8 @@
         "moduleResolution": "bundler"
     },
     "include": [
-        "src"
+        "src",
+        "../qti-shared/src/utils/utils.ts"
     ],
     "exclude": [
         "**/*.spec.ts",

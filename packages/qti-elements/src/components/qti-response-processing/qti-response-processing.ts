@@ -1,7 +1,7 @@
 import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
-import { type QtiRule } from '@qti-components/shared';
+import { type QtiRuleBase } from '@qti-components/shared';
 
 import { mapResponse, mapResponsePoint, matchCorrect } from '../../internal/template-strings';
 
@@ -24,7 +24,7 @@ export class QtiResponseProcessing extends LitElement {
   public process() {
     const assessmentItem = this.closest('qti-assessment-item');
     if (!assessmentItem) return;
-    const rules = [...this.children] as QtiRule[];
+    const rules = [...this.children] as unknown as QtiRuleBase[];
     for (const rule of rules) {
       rule.process();
     }

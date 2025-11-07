@@ -2,9 +2,9 @@ import { css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { consume } from '@lit/context';
 
+import { removeDoubleSlashes } from '@qti-components/shared';
 import { Interaction } from '@qti-components/shared';
 import { itemContext } from '@qti-components/shared';
-import { removeDoubleSlashes } from '@qti-components/utilities';
 
 import styles from './qti-portable-custom-interaction.styles';
 

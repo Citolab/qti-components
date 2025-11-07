@@ -2,7 +2,7 @@ import { LitElement, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
 import type { QtiExpression } from '@qti-components/shared';
-import type { QtiRule } from '@qti-components/shared';
+import type { QtiRuleBase } from '@qti-components/shared';
 
 /**
  * @summary The qti-template-constraint element is a processing rule available only in Template Processing.
@@ -14,7 +14,7 @@ import type { QtiRule } from '@qti-components/shared';
  * condition is satisfied.
  */
 @customElement('qti-template-constraint')
-export class QtiTemplateConstraint extends LitElement implements QtiRule {
+export class QtiTemplateConstraint extends LitElement implements QtiRuleBase {
   override render() {
     return html`<slot></slot>`;
   }
@@ -43,7 +43,7 @@ export class QtiTemplateConstraint extends LitElement implements QtiRule {
   /**
    * Template constraints don't have sub-rules like conditions
    */
-  public getSubRules(): QtiRule[] {
+  public getSubRules(): QtiRuleBase[] {
     return [];
   }
 

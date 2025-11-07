@@ -87,6 +87,23 @@ export default [
       'import/no-nodejs-modules': ['error', { allow: ['path', 'fs'] }],
       'import/no-unresolved': 'error',
 
+      // Monorepo-specific import rules
+      // 1. Prevent direct package path imports - use relative or named imports
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['packages/*', 'packages/*/src', 'packages/*/src/*'],
+              message: 'Use relative imports within the same package or @qti-components/* for cross-package imports'
+            }
+          ]
+        }
+      ],
+
+      // 2. Prevent relative imports from going outside package boundaries
+      'import/no-relative-packages': 'error',
+
       // Organize imports by type and source
       'import/order': [
         'error',
@@ -129,11 +146,23 @@ export default [
       '@typescript-eslint/no-unsafe-assignment': 'off',
       '@typescript-eslint/no-unsafe-member-access': 'off',
       '@typescript-eslint/no-unsafe-call': 'off',
-      '@typescript-eslint/no-unsafe-return': 'off'
+      '@typescript-eslint/no-unsafe-return': 'off',
+
+      // Allow cross-package relative imports in test files
+      'import/no-relative-packages': 'off'
     }
   },
 
-  // CommonJS files (different rules)
+  // Special rules for Storybook configuration
+  {
+    files: ['.storybook/**/*.{js,ts}'],
+    rules: {
+      // Allow cross-package relative imports in Storybook config
+      'import/no-relative-packages': 'off',
+      // Allow direct package path imports in Storybook config
+      'no-restricted-imports': 'off'
+    }
+  }, // CommonJS files (different rules)
   {
     files: ['**/*.cjs'],
     languageOptions: {
@@ -153,6 +182,7 @@ export default [
       'build/**',
       'coverage/**',
       'public/**',
+      'storybook-static/**', // Storybook build output
       '**/*.d.ts', // TypeScript declaration files
       '**/*.config.*', // Config files (prettier, etc.)
       '**/*.mjs', // Module JavaScript files

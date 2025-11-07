@@ -1,9 +1,10 @@
 import { property, state } from 'lit/decorators.js';
 import { consume } from '@lit/context';
 
+import { convertNumberToUniversalFormat } from '@qti-components/shared';
 import { itemContext } from '@qti-components/shared';
-import { QtiRule } from '@qti-components/shared';
-import { convertNumberToUniversalFormat } from '@qti-components/utilities';
+
+import { QtiRule } from '../qti-rule';
 
 import type { QtiExpression } from '@qti-components/shared';
 import type { OutcomeVariable } from '@qti-components/shared';

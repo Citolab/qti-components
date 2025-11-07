@@ -1,7 +1,7 @@
 import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
-import type { QtiRule } from '@qti-components/shared';
+import type { QtiRuleBase } from '@qti-components/shared';
 import type { QtiTemplateConstraint } from '../qti-template-constraint/qti-template-constraint';
 import type { PropertyValueMap } from 'lit';
 
@@ -48,7 +48,7 @@ export class QtiTemplateProcessing extends LitElement {
       }
 
       try {
-        const rules = [...this.children] as QtiRule[];
+        const rules = [...this.children] as unknown as (Element & QtiRuleBase)[];
         for (const rule of rules) {
           // Check if this is a template constraint that failed
           if (rule.tagName.toLowerCase() === 'qti-template-constraint') {

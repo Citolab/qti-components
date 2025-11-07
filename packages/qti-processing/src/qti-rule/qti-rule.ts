@@ -1,6 +1,8 @@
 import { customElement } from 'lit/decorators.js';
 import { html, LitElement } from 'lit';
 
+import type { QtiRuleBase } from '@qti-components/shared';
+
 @customElement('qti-rule')
 export class QtiRule extends LitElement implements QtiRuleBase {
   override render() {
@@ -10,10 +12,6 @@ export class QtiRule extends LitElement implements QtiRuleBase {
   public process() {
     throw new Error('Not implemented');
   }
-}
-
-export interface QtiRuleBase {
-  process(): any;
 }
 
 declare global {

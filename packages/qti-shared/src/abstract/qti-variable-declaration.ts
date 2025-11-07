@@ -1,6 +1,6 @@
 import { html, LitElement } from 'lit';
 
-import type { Cardinality } from './expression-result';
+import type { Cardinality } from '../lib/expression-result';
 
 export abstract class QtiVariableDeclaration extends LitElement {
   override render() {

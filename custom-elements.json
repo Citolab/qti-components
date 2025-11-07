@@ -51,11 +51,26 @@
       "kind": "javascript-module",
       "path": "packages/qti-components/src/shared.ts",
       "declarations": [],
-      "exports": []
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "package": "@qti-components/shared"
+          }
+        }
+      ]
     },
     {
       "kind": "javascript-module",
       "path": "packages/qti-components/src/test.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-components/src/transformers.ts",
       "declarations": [],
       "exports": [
         {
@@ -63,16 +78,10 @@
           "name": "*",
           "declaration": {
             "name": "*",
-            "package": "@qti-components/test"
+            "package": "@qti-components/transformers"
           }
         }
       ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "packages/qti-components/src/transformers.ts",
-      "declarations": [],
-      "exports": []
     },
     {
       "kind": "javascript-module",
@@ -241,7 +250,7 @@
             {
               "kind": "method",
               "name": "getOutcome",
-              "privacy": "protected",
+              "privacy": "public",
               "return": {
                 "type": {
                   "text": "Readonly<OutcomeVariable>"
@@ -254,7 +263,10 @@
                     "text": "string"
                   }
                 }
-              ]
+              ],
+              "type": {
+                "text": "getOutcome(identifier: string) => Readonly<OutcomeVariable>"
+              }
             },
             {
               "kind": "method",
@@ -5947,239 +5959,6 @@
           "declaration": {
             "name": "toHTML",
             "module": "packages/qti-interactions/node_modules/@qti-components/transformers/src/qti-transformers.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "packages/qti-interactions/node_modules/@qti-components/utilities/src/decorators/index.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "*",
-          "declaration": {
-            "name": "*",
-            "module": "packages/qti-interactions/node_modules/@qti-components/utilities/src/decorators/live-query.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "*",
-          "declaration": {
-            "name": "*",
-            "module": "packages/qti-interactions/node_modules/@qti-components/utilities/src/decorators/watch.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "*",
-          "declaration": {
-            "name": "*",
-            "module": "packages/qti-interactions/node_modules/@qti-components/utilities/src/decorators/prop-internal-state.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "packages/qti-interactions/node_modules/@qti-components/utilities/src/decorators/live-query.ts",
-      "declarations": [
-        {
-          "kind": "function",
-          "name": "liveQuery",
-          "parameters": [
-            {
-              "name": "querySelector",
-              "type": {
-                "text": "string"
-              }
-            },
-            {
-              "name": "options",
-              "optional": true,
-              "type": {
-                "text": "LiveQueryOptions"
-              }
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "liveQuery",
-          "declaration": {
-            "name": "liveQuery",
-            "module": "packages/qti-interactions/node_modules/@qti-components/utilities/src/decorators/live-query.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "packages/qti-interactions/node_modules/@qti-components/utilities/src/decorators/prop-internal-state.ts",
-      "declarations": [
-        {
-          "kind": "function",
-          "name": "propInternalState",
-          "parameters": [
-            {
-              "name": "options",
-              "type": {
-                "text": "InternalStateOptions"
-              }
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "propInternalState",
-          "declaration": {
-            "name": "propInternalState",
-            "module": "packages/qti-interactions/node_modules/@qti-components/utilities/src/decorators/prop-internal-state.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "packages/qti-interactions/node_modules/@qti-components/utilities/src/decorators/watch.ts",
-      "declarations": [
-        {
-          "kind": "function",
-          "name": "watch",
-          "parameters": [
-            {
-              "name": "propertyName",
-              "type": {
-                "text": "string | string[]"
-              }
-            },
-            {
-              "name": "options",
-              "optional": true,
-              "type": {
-                "text": "WatchOptions"
-              }
-            }
-          ],
-          "description": "Runs when observed properties change, e.g."
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "watch",
-          "declaration": {
-            "name": "watch",
-            "module": "packages/qti-interactions/node_modules/@qti-components/utilities/src/decorators/watch.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "packages/qti-interactions/node_modules/@qti-components/utilities/src/index.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "*",
-          "declaration": {
-            "name": "*",
-            "module": "packages/qti-interactions/node_modules/@qti-components/utilities/src/decorators"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "*",
-          "declaration": {
-            "name": "*",
-            "module": "packages/qti-interactions/node_modules/@qti-components/utilities/src/utils"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "packages/qti-interactions/node_modules/@qti-components/utilities/src/utils.ts",
-      "declarations": [
-        {
-          "kind": "function",
-          "name": "convertNumberToUniversalFormat",
-          "parameters": [
-            {
-              "name": "number",
-              "type": {
-                "text": "number | string"
-              }
-            }
-          ]
-        },
-        {
-          "kind": "function",
-          "name": "decimalSeparator"
-        },
-        {
-          "kind": "function",
-          "name": "IsNullOrUndefined",
-          "parameters": [
-            {
-              "name": "value",
-              "type": {
-                "text": "unknown"
-              }
-            }
-          ]
-        },
-        {
-          "kind": "function",
-          "name": "removeDoubleSlashes",
-          "parameters": [
-            {
-              "name": "str",
-              "type": {
-                "text": "string"
-              }
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "convertNumberToUniversalFormat",
-          "declaration": {
-            "name": "convertNumberToUniversalFormat",
-            "module": "packages/qti-interactions/node_modules/@qti-components/utilities/src/utils.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "decimalSeparator",
-          "declaration": {
-            "name": "decimalSeparator",
-            "module": "packages/qti-interactions/node_modules/@qti-components/utilities/src/utils.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "IsNullOrUndefined",
-          "declaration": {
-            "name": "IsNullOrUndefined",
-            "module": "packages/qti-interactions/node_modules/@qti-components/utilities/src/utils.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "removeDoubleSlashes",
-          "declaration": {
-            "name": "removeDoubleSlashes",
-            "module": "packages/qti-interactions/node_modules/@qti-components/utilities/src/utils.ts"
           }
         }
       ]

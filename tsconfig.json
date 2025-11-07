@@ -53,8 +53,8 @@
         "./packages/qti-loader/src/index.ts"
       ],
       "@qti-components/utilities": [
-        "./packages/qti-utilities/src/index.ts"
-      ],
+        "packages/lit-utilities/src/index.ts"
+      ]
     }
   },
   "types": [

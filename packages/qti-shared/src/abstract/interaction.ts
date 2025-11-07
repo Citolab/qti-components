@@ -6,8 +6,8 @@ import { configContext } from '../context/config.context';
 import { itemContext } from '../context/qti-assessment-item.context';
 
 import type { ConfigContext } from '../context/config.context';
-import type { ResponseVariable } from './variables';
-import type { IInteraction } from './interaction.interface';
+import type { ResponseVariable } from '../lib/variables';
+import type { IInteraction } from '../lib/interaction.interface';
 import type { ItemContext } from '../context/item.context';
 
 export enum Correctness {

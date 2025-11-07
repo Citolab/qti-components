@@ -1,5 +1,6 @@
-import { QtiRule } from '@qti-components/shared';
-import { convertNumberToUniversalFormat } from '@qti-components/utilities';
+import { convertNumberToUniversalFormat } from '@qti-components/shared';
+
+import { QtiRule } from '../qti-rule';
 
 import type { ResponseVariable } from '@qti-components/shared';
 import type { QtiExpression, QtiExpressionBase } from '@qti-components/shared';

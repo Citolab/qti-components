@@ -1,6 +1,6 @@
 import { LitElement, html } from 'lit';
 
-import type { QtiRule } from '@qti-components/shared';
+import type { QtiRule } from '../qti-rule/qti-rule';
 
 export class QtiResponseElse extends LitElement {
   override render() {

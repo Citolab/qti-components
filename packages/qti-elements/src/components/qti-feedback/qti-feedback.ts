@@ -2,8 +2,8 @@ import { consume } from '@lit/context';
 import { LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
+import { IsNullOrUndefined } from '@qti-components/shared';
 import { itemContext } from '@qti-components/shared';
-import { IsNullOrUndefined } from '@qti-components/utilities';
 
 import type { ItemContext } from '@qti-components/shared';
 
