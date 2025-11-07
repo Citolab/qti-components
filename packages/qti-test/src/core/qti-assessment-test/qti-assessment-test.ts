@@ -2,9 +2,9 @@ import { consume } from '@lit/context';
 import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
-import { testContext } from '@qti-components/shared';
+import { testContext } from '@qti-components/base';
 
-import type { TestContext } from '@qti-components/shared';
+import type { TestContext } from '@qti-components/base';
 
 @customElement('qti-assessment-test')
 export class QtiAssessmentTest extends LitElement {

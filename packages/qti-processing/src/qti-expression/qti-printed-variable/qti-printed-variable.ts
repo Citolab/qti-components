@@ -2,10 +2,10 @@ import { consume } from '@lit/context';
 import { LitElement, html, nothing } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
-import { itemContext } from '@qti-components/shared';
+import { itemContext } from '@qti-components/base';
 
-import type { VariableDeclaration } from '@qti-components/shared';
-import type { ItemContext } from '@qti-components/shared';
+import type { VariableDeclaration } from '@qti-components/base';
+import type { ItemContext } from '@qti-components/base';
 
 export class QtiPrintedVariable extends LitElement {
   @property({ type: String })

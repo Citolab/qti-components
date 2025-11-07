@@ -1,9 +1,9 @@
 import { property } from 'lit/decorators.js';
 
-import { QtiExpression } from '@qti-components/shared';
-import { ScoringHelper } from '@qti-components/shared';
+import { QtiExpression } from '@qti-components/base';
+import { ScoringHelper } from '@qti-components/base';
 
-import type { ResponseVariable } from '@qti-components/shared';
+import type { ResponseVariable } from '@qti-components/base';
 
 export class QtiEqual extends QtiExpression<boolean> {
   @property({ type: String }) toleranceMode: 'exact' | 'relative' | 'absolute' = 'exact';

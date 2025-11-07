@@ -1,6 +1,6 @@
 import { property } from 'lit/decorators.js';
 
-import { QtiExpression } from '@qti-components/shared';
+import { QtiExpression } from '@qti-components/base';
 
 /**
  * @summary The qti-random-integer operator selects a random integer from a specified range.

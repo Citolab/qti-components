@@ -2,11 +2,11 @@ import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { consume } from '@lit/context';
 
-import { computedContext } from '@qti-components/shared';
+import { computedContext } from '@qti-components/base';
 
 import * as styles from './styles';
 
-import type { ComputedContext } from '@qti-components/shared';
+import type { ComputedContext } from '@qti-components/base';
 
 /**
  * @deprecated test-show-correct-response is deprecated and will be removed in the future.

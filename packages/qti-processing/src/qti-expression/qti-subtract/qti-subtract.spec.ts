@@ -1,9 +1,9 @@
-import '@qti-components/components';
+import '@citolab/qti-components';
 
 import { html, render } from 'lit';
 
 import type { QtiAssessmentItem } from '@qti-components/elements';
-import type { ItemContext } from '@qti-components/shared';
+import type { ItemContext } from '@qti-components/base';
 
 describe('QtiComponent qti-subtract', () => {
   it('should calculate the difference of two values', () => {

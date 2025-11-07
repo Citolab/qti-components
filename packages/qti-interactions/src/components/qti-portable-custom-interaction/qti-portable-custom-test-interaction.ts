@@ -2,7 +2,7 @@ import { customElement } from 'lit/decorators.js';
 
 import { QtiPortableCustomInteraction } from './qti-portable-custom-interaction';
 
-import type { ItemContext } from '@qti-components/shared';
+import type { ItemContext } from '@qti-components/base';
 
 /**
  * Test-specific extension of QtiPortableCustomInteraction that adds methods

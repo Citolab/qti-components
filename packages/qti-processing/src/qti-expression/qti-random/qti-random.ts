@@ -1,4 +1,4 @@
-import { QtiExpression } from '@qti-components/shared';
+import { QtiExpression } from '@qti-components/base';
 
 export class QtiRandom extends QtiExpression<string> {
   public override getResult() {

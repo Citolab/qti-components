@@ -2,9 +2,9 @@ import { html, LitElement } from 'lit';
 import { consume } from '@lit/context';
 import { customElement, state } from 'lit/decorators.js';
 
-import { computedContext } from '@qti-components/shared';
+import { computedContext } from '@qti-components/base';
 
-import type { ComputedContext } from '@qti-components/shared';
+import type { ComputedContext } from '@qti-components/base';
 
 @customElement('test-print-context')
 export class TestPrintContext extends LitElement {

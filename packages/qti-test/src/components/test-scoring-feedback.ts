@@ -2,11 +2,11 @@ import { consume } from '@lit/context';
 import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
-import { computedContext } from '@qti-components/shared';
+import { computedContext } from '@qti-components/base';
 
-import type { View } from '@qti-components/shared';
-import type { OutcomeVariable } from '@qti-components/shared';
-import type { ComputedContext } from '@qti-components/shared';
+import type { View } from '@qti-components/base';
+import type { OutcomeVariable } from '@qti-components/base';
+import type { ComputedContext } from '@qti-components/base';
 
 @customElement('test-scoring-feedback')
 export class TestScoringFeedback extends LitElement {

@@ -1,5 +1,5 @@
 import type { QtiOutcomeProcessing } from '../../qti-outcome-processing/qti-outcome-processing';
-import type { OutcomeVariable, VariableDeclaration } from '@qti-components/shared';
+import type { OutcomeVariable, VariableDeclaration } from '@qti-components/base';
 import type { TestBase } from '../test-base';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;

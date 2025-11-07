@@ -1,6 +1,6 @@
-import { QtiExpression } from '@qti-components/shared';
+import { QtiExpression } from '@qti-components/base';
 
-import type { ResponseVariable } from '@qti-components/shared';
+import type { ResponseVariable } from '@qti-components/base';
 
 export class QtiGt extends QtiExpression<boolean> {
   public override getResult(): boolean {

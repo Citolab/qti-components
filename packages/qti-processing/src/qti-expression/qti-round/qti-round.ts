@@ -1,6 +1,6 @@
-import { QtiExpression } from '@qti-components/shared';
+import { QtiExpression } from '@qti-components/base';
 
-import type { ResponseVariable } from '@qti-components/shared';
+import type { ResponseVariable } from '@qti-components/base';
 
 /**
  * @summary The qti-round operator rounds a numerical value to the nearest integer.

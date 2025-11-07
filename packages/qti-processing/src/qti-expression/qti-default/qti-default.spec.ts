@@ -1,13 +1,13 @@
-import '@qti-components/components';
+import '@citolab/qti-components';
 
 import { html, render } from 'lit';
 import { provide } from '@lit/context';
 import { LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
-import { itemContext, testContext, type ItemContext } from '@qti-components/shared';
+import { itemContext, testContext, type ItemContext } from '@qti-components/base';
 
-import type { OutcomeVariable, VariableDeclaration, TestContext } from '@qti-components/shared';
+import type { OutcomeVariable, VariableDeclaration, TestContext } from '@qti-components/base';
 import type { QtiDefault } from './qti-default';
 
 // Mock item context provider

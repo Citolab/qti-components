@@ -2,10 +2,10 @@ import { consume } from '@lit/context';
 import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
-import { computedItemContext } from '@qti-components/shared';
+import { computedItemContext } from '@qti-components/base';
 
-import type { ResponseVariable } from '@qti-components/shared';
-import type { ComputedItemContext } from '@qti-components/shared';
+import type { ResponseVariable } from '@qti-components/base';
+import type { ComputedItemContext } from '@qti-components/base';
 
 @customElement('print-item-variables')
 export class PrintItemVariables extends LitElement {

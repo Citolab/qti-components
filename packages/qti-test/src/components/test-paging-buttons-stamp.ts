@@ -3,9 +3,9 @@ import { customElement } from 'lit/decorators.js';
 import { prepareTemplate } from '@heximal/templates';
 import { consume } from '@lit/context';
 
-import { computedContext } from '@qti-components/shared';
+import { computedContext } from '@qti-components/base';
 
-import type { ComputedContext } from '@qti-components/shared';
+import type { ComputedContext } from '@qti-components/base';
 import type { TemplateFunction } from '@heximal/templates';
 
 /**

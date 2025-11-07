@@ -2,19 +2,19 @@ import { provide } from '@lit/context';
 import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
-import { itemContext, itemContextVariables } from '@qti-components/shared';
+import { itemContext, itemContextVariables } from '@qti-components/base';
 import { watch } from '@qti-components/utilities';
 
 import type { QtiTemplateProcessing } from '../qti-template-processing/qti-template-declaration/qti-template-processing.ts';
 import type { InteractionChangedDetails, OutcomeChangedDetails } from '../../internal/event-types.ts';
-import type { ResponseInteraction } from '@qti-components/shared';
-import type { VariableDeclaration, VariableValue } from '@qti-components/shared';
-import type { OutcomeVariable, ResponseVariable } from '@qti-components/shared';
+import type { ResponseInteraction } from '@qti-components/base';
+import type { VariableDeclaration, VariableValue } from '@qti-components/base';
+import type { OutcomeVariable, ResponseVariable } from '@qti-components/base';
 import type { QtiFeedback } from '../qti-feedback/qti-feedback.ts';
 import type { QtiResponseProcessing } from '../qti-response-processing/qti-response-processing.ts';
 import type QtiRegisterVariable from '../../internal/events/qti-register-variable.ts';
-import type { ItemContext } from '@qti-components/shared';
-import type { Interaction } from '@qti-components/shared';
+import type { ItemContext } from '@qti-components/base';
+import type { Interaction } from '@qti-components/base';
 // import type { ItemShowCandidateCorrection } from '../../qti-item/components/item-show-candidate-correction.ts';
 // import type { ItemShowCorrectResponse } from '../../qti-item/components/item-show-correct-response.ts';
 

@@ -1,4 +1,4 @@
-import '@qti-components/components';
+import '@citolab/qti-components';
 import { html, render } from 'lit';
 
 import type { QtiLookupOutcomeValue } from './qti-lookup-outcome-value';
@@ -58,7 +58,7 @@ describe('qti-lookup-outcome-value', () => {
       <qti-item-body>
         <div class="qti-layout-row">
           <div class="qti-layout-col6">
-            <div class="qti-shared-stimulus" data-stimulus-idref="_86bee4be-0126-43f1-aea6-87207b42ab9e"></div>
+            <div class="qti-base-stimulus" data-stimulus-idref="_86bee4be-0126-43f1-aea6-87207b42ab9e"></div>
           </div>
           <div class="qti-layout-col6">
             <div class="question">

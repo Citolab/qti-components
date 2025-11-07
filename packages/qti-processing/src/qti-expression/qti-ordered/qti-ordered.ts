@@ -1,6 +1,6 @@
-import { QtiExpression } from '@qti-components/shared';
+import { QtiExpression } from '@qti-components/base';
 
-import type { ResponseVariable } from '@qti-components/shared';
+import type { ResponseVariable } from '@qti-components/base';
 export class QtiOrdered extends QtiExpression<ResponseVariable[]> {
   public override getResult(): ResponseVariable[] {
     const variables = this.getVariables() as ResponseVariable[];

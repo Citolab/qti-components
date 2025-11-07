@@ -2,21 +2,21 @@ import { consume, provide } from '@lit/context';
 import { html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
-import { computedContext } from '@qti-components/shared';
-import { configContext } from '@qti-components/shared';
-import { testContext } from '@qti-components/shared';
-import { sessionContext } from '@qti-components/shared';
-import { qtiContext } from '@qti-components/shared';
+import { computedContext } from '@qti-components/base';
+import { configContext } from '@qti-components/base';
+import { testContext } from '@qti-components/base';
+import { sessionContext } from '@qti-components/base';
+import { qtiContext } from '@qti-components/base';
 
 import type { QtiAssessmentItem } from '@qti-components/elements';
-import type { QtiContext } from '@qti-components/shared';
-import type { OutcomeVariable } from '@qti-components/shared';
-import type { ComputedContext } from '@qti-components/shared';
+import type { QtiContext } from '@qti-components/base';
+import type { OutcomeVariable } from '@qti-components/base';
+import type { ComputedContext } from '@qti-components/base';
 import type { PropertyValues } from 'lit';
 import type { QtiAssessmentItemRef, QtiAssessmentSection, QtiAssessmentTest, QtiTestPart } from '../core';
-import type { ConfigContext } from '@qti-components/shared';
-import type { SessionContext } from '@qti-components/shared';
-import type { TestContext } from '@qti-components/shared';
+import type { ConfigContext } from '@qti-components/base';
+import type { SessionContext } from '@qti-components/base';
+import type { TestContext } from '@qti-components/base';
 
 type CustomEventMap = {
   'test-end-attempt': CustomEvent;

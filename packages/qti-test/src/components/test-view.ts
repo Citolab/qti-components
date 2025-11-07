@@ -3,9 +3,9 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { consume } from '@lit/context';
 
 import { watch } from '@qti-components/utilities';
-import { sessionContext } from '@qti-components/shared';
+import { sessionContext } from '@qti-components/base';
 
-import type { SessionContext } from '@qti-components/shared';
+import type { SessionContext } from '@qti-components/base';
 
 @customElement('test-view')
 export class TestView extends LitElement {

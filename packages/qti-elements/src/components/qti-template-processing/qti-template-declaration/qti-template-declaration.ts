@@ -1,8 +1,8 @@
 import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
-import type { TemplateVariable } from '@qti-components/shared';
-import type { BaseType } from '@qti-components/shared';
+import type { TemplateVariable } from '@qti-components/base';
+import type { BaseType } from '@qti-components/base';
 
 /**
  * @summary The qti-template-declaration element declares template variables for item cloning.

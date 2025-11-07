@@ -3,11 +3,11 @@ import { customElement, property } from 'lit/decorators.js';
 import { consume } from '@lit/context';
 
 import { watch } from '@qti-components/utilities';
-import { computedContext } from '@qti-components/shared';
+import { computedContext } from '@qti-components/base';
 
 import * as styles from './styles';
 
-import type { ComputedContext, ComputedItem } from '@qti-components/shared';
+import type { ComputedContext, ComputedItem } from '@qti-components/base';
 
 /**
  * Represents a custom element for navigating to the next test item.

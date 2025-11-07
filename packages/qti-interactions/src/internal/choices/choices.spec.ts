@@ -1,8 +1,8 @@
-import '@qti-components/components';
+import '@citolab/qti-components';
 import { getByTestId, userEvent } from 'storybook/test';
 import { html, render } from 'lit';
 
-import { Interaction } from '@qti-components/shared';
+import { Interaction } from '@qti-components/base';
 
 import { ChoicesMixin } from './choices.mixin';
 

@@ -2,15 +2,15 @@ import { provide } from '@lit/context';
 import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 
-import { INITIAL_TEST_CONTEXT, testContext } from '@qti-components/shared';
-import { INITIAL_SESSION_CONTEXT, type SessionContext, sessionContext } from '@qti-components/shared';
+import { INITIAL_TEST_CONTEXT, testContext } from '@qti-components/base';
+import { INITIAL_SESSION_CONTEXT, type SessionContext, sessionContext } from '@qti-components/base';
 
 import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { QtiAssessmentItemRef } from './qti-assessment-test/qti-assessment-item-ref';
 import type { QtiAssessmentTest } from './qti-assessment-test/qti-assessment-test';
-import type { ItemContext } from '@qti-components/shared';
-import type { TestContext } from '@qti-components/shared';
-import type { OutcomeVariable, VariableDeclaration, VariableValue } from '@qti-components/shared';
+import type { ItemContext } from '@qti-components/base';
+import type { TestContext } from '@qti-components/base';
+import type { OutcomeVariable, VariableDeclaration, VariableValue } from '@qti-components/base';
 
 export abstract class TestBase extends LitElement {
   @property({ attribute: false, type: Object })

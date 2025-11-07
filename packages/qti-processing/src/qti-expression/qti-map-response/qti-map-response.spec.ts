@@ -1,4 +1,4 @@
-import '@qti-components/components';
+import '@citolab/qti-components';
 
 import { describe, it, expect } from 'vitest';
 import { html, render } from 'lit';

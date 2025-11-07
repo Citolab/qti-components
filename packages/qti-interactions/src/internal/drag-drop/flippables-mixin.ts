@@ -7,7 +7,7 @@
 // and a tutorial how to make a mixin
 // https://lit.dev/docs/composition/mixins/
 
-import type { Interaction } from '@qti-components/shared';
+import type { Interaction } from '@qti-components/base';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 

@@ -1,7 +1,7 @@
-import '@qti-components/components';
+import '@citolab/qti-components';
 import { html, render } from 'lit';
 
-import { QtiConditionExpression } from '@qti-components/shared';
+import { QtiConditionExpression } from '@qti-components/base';
 
 import type { QtiOr } from './qti-or';
 class MockChild extends QtiConditionExpression {

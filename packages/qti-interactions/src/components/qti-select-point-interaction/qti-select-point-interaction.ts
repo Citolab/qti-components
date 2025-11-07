@@ -3,12 +3,12 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
-import { Interaction } from '@qti-components/shared';
-import { ScoringHelper } from '@qti-components/shared';
+import { Interaction } from '@qti-components/base';
+import { ScoringHelper } from '@qti-components/base';
 
 import { positionShapes } from '../../internal/hotspots/hotspot.js';
 
-import type { QtiAreaMapEntry, QtiAreaMapping } from '@qti-components/shared';
+import type { QtiAreaMapEntry, QtiAreaMapping } from '@qti-components/base';
 
 @customElement('qti-select-point-interaction')
 export class QtiSelectPointInteraction extends Interaction {

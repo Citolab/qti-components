@@ -1,9 +1,9 @@
 import { customElement, property } from 'lit/decorators.js';
 
-import { QtiExpression } from '@qti-components/shared';
+import { QtiExpression } from '@qti-components/base';
 
-import type { integer } from '@qti-components/shared';
-import type { ResponseVariable } from '@qti-components/shared';
+import type { integer } from '@qti-components/base';
+import type { ResponseVariable } from '@qti-components/base';
 
 @customElement('qti-index')
 export class QtiIndex extends QtiExpression<any> {

@@ -2,14 +2,14 @@ import { consume } from '@lit/context';
 import { css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
-import { itemContext } from '@qti-components/shared';
-import { QtiVariableDeclaration } from '@qti-components/shared';
+import { itemContext } from '@qti-components/base';
+import { QtiVariableDeclaration } from '@qti-components/base';
 
-import type { QtiAreaMapping } from '@qti-components/shared';
-import type { BaseType, Cardinality } from '@qti-components/shared';
-import type { ResponseVariable } from '@qti-components/shared';
-import type { QtiMapping } from '@qti-components/shared';
-import type { ItemContext } from '@qti-components/shared';
+import type { QtiAreaMapping } from '@qti-components/base';
+import type { BaseType, Cardinality } from '@qti-components/base';
+import type { ResponseVariable } from '@qti-components/base';
+import type { QtiMapping } from '@qti-components/base';
+import type { ItemContext } from '@qti-components/base';
 
 @customElement('qti-response-declaration')
 export class QtiResponseDeclaration extends QtiVariableDeclaration {

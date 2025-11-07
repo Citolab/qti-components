@@ -1,13 +1,13 @@
-import '@qti-components/components';
+import '@citolab/qti-components';
 
 import { html, render } from 'lit';
 import { provide } from '@lit/context';
 import { LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
-import { qtiContext } from '@qti-components/shared';
+import { qtiContext } from '@qti-components/base';
 
-import type { QtiContext } from '@qti-components/shared';
+import type { QtiContext } from '@qti-components/base';
 import type { QtiFieldValue } from './qti-field-value';
 
 describe('qti-field-value with QTI_CONTEXT', () => {

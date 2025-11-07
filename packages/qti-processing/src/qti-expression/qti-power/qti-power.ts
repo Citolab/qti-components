@@ -1,6 +1,6 @@
-import { QtiExpression } from '@qti-components/shared';
+import { QtiExpression } from '@qti-components/base';
 
-import type { ResponseVariable } from '@qti-components/shared';
+import type { ResponseVariable } from '@qti-components/base';
 
 /**
  * @summary The qti-power operator raises the first expression to the power of the second.

@@ -2,11 +2,11 @@ import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { consume } from '@lit/context';
 
-import { computedItemContext } from '@qti-components/shared';
+import { computedItemContext } from '@qti-components/base';
 
 import * as styles from './styles';
 
-import type { ComputedItemContext } from '@qti-components/shared';
+import type { ComputedItemContext } from '@qti-components/base';
 
 @customElement('item-show-correct-response')
 export class ItemShowCorrectResponse extends LitElement {

@@ -1,8 +1,8 @@
 import { property } from 'lit/decorators.js';
 
-import { QtiExpression } from '@qti-components/shared';
+import { QtiExpression } from '@qti-components/base';
 
-import type { ResponseVariable } from '@qti-components/shared';
+import type { ResponseVariable } from '@qti-components/base';
 
 /**
  * @summary The qti-math-operator performs mathematical operations on numerical values.

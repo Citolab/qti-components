@@ -3,11 +3,11 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { prepareTemplate } from '@heximal/templates';
 import { consume } from '@lit/context';
 
-import { computedContext } from '@qti-components/shared';
+import { computedContext } from '@qti-components/base';
 
-import type { View } from '@qti-components/shared';
+import type { View } from '@qti-components/base';
 import type { PropertyValues } from 'lit';
-import type { ComputedContext } from '@qti-components/shared';
+import type { ComputedContext } from '@qti-components/base';
 import type { TemplateFunction } from '@heximal/templates';
 
 /**

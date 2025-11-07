@@ -2,11 +2,11 @@ import { consume } from '@lit/context';
 import { LitElement, html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 
-import { itemContext } from '@qti-components/shared';
+import { itemContext } from '@qti-components/base';
 
-import type { ResponseVariable } from '@qti-components/shared';
-import type { Calculate } from '@qti-components/shared';
-import type { ItemContext } from '@qti-components/shared';
+import type { ResponseVariable } from '@qti-components/base';
+import type { Calculate } from '@qti-components/base';
+import type { ItemContext } from '@qti-components/base';
 
 /**
  * https://www.imsglobal.org/spec/qti/v3p0/impl#h.fi29q8dubjgw

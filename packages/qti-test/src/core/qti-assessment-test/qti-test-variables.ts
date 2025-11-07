@@ -1,12 +1,12 @@
 import { consume } from '@lit/context';
 
-import { testContext } from '@qti-components/shared';
-import { QtiExpression } from '@qti-components/shared';
+import { testContext } from '@qti-components/base';
+import { QtiExpression } from '@qti-components/base';
 
 import type { QtiAssessmentTest } from './qti-assessment-test';
-import type { TestContext } from '@qti-components/shared';
+import type { TestContext } from '@qti-components/base';
 import type { QtiAssessmentItemRef } from './qti-assessment-item-ref';
-import type { QtiExpressionBase } from '@qti-components/shared';
+import type { QtiExpressionBase } from '@qti-components/base';
 
 // <qti-custom-operator definition="trim">
 export class QtiTestVariables extends QtiExpression<number> {

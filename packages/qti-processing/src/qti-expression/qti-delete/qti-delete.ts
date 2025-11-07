@@ -1,6 +1,6 @@
-import { QtiExpression } from '@qti-components/shared';
+import { QtiExpression } from '@qti-components/base';
 
-import type { ResponseVariable } from '@qti-components/shared';
+import type { ResponseVariable } from '@qti-components/base';
 
 export class QtiDelete extends QtiExpression<string[] | null> {
   override getResult(): string[] | null {

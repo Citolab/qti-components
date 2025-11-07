@@ -27,7 +27,7 @@ export const StimulusLoadedByItemPlacedInItem: Story = {
       ></qti-assessment-stimulus-ref>
       <qti-item-body>
         <div
-          class="qti-shared-stimulus"
+          class="qti-base-stimulus"
           data-stimulus-idref="Stimulus1"
           style="outline: 2px solid red; outline-offset: 2px;"
         ></div>
@@ -64,7 +64,7 @@ export const StimulusLoadedByTestPlacedInItem: Story = {
             ></qti-assessment-stimulus-ref>
             <qti-item-body>
               <div
-                class="qti-shared-stimulus"
+                class="qti-base-stimulus"
                 data-stimulus-idref="Stimulus1"
                 style="outline: 2px solid red; outline-offset: 2px;"
               ></div>
@@ -99,7 +99,7 @@ export const StimulusLoadedByTestPlacedInTest: Story = {
           </qti-assessment-item>
         </qti-assessment-item-ref>
       </qti-assessment-test>
-      <div class="qti-shared-stimulus" data-stimulus-idref style="outline: 2px solid red; outline-offset: 2px;"></div>
+      <div class="qti-base-stimulus" data-stimulus-idref style="outline: 2px solid red; outline-offset: 2px;"></div>
     </qti-test>`,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -115,7 +115,7 @@ export const StimulusLoadedByTestPlacedInTest: Story = {
 export const ItemAndStimulusLoadedByTestWithPlacement: Story = {
   render: _args =>
     html` <style>
-        .qti-shared-stimulus {
+        .qti-base-stimulus {
           outline: 2px solid red;
           outline-offset: 2px;
         }
@@ -150,7 +150,7 @@ export const ItemAndStimulusLoadedTestByWithoutPlacement: Story = {
         >
         </qti-assessment-item-ref>
       </qti-assessment-test>
-      <div class="qti-shared-stimulus" data-stimulus-idref style="outline: 2px solid red; outline-offset: 2px;"></div>
+      <div class="qti-base-stimulus" data-stimulus-idref style="outline: 2px solid red; outline-offset: 2px;"></div>
     </qti-test>`,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -187,7 +187,7 @@ export const ItemAndStimulusSlowLoadedTestByWithoutPlacement: Story = {
         >
         </qti-assessment-item-ref>
       </qti-assessment-test>
-      <div class="qti-shared-stimulus" data-stimulus-idref style="outline: 2px solid red; outline-offset: 2px;"></div>
+      <div class="qti-base-stimulus" data-stimulus-idref style="outline: 2px solid red; outline-offset: 2px;"></div>
     </qti-test>`,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

@@ -25,11 +25,11 @@
     "target": "esnext",
     "useDefineForClassFields": false,
     "paths": {
-      "@qti-components/components": [
+      "@citolab/qti-components": [
         "./packages/qti-components/src/index.ts"
       ],
-      "@qti-components/shared": [
-        "./packages/qti-shared/src/index.ts"
+      "@qti-components/base": [
+        "./packages/qti-base/src/index.ts"
       ],
       "@qti-components/elements": [
         "./packages/qti-elements/src/index.ts"

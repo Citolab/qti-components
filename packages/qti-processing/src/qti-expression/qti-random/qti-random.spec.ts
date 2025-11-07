@@ -1,4 +1,4 @@
-import '@qti-components/components';
+import '@citolab/qti-components';
 
 import { html, render } from 'lit';
 import './qti-random';

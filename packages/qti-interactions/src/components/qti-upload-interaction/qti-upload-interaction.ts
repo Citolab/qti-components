@@ -1,7 +1,7 @@
 import { css, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
-import { Interaction } from '@qti-components/shared';
+import { Interaction } from '@qti-components/base';
 
 @customElement('qti-upload-interaction')
 export class QtiUploadInteraction extends Interaction {

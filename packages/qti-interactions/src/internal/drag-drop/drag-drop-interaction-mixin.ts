@@ -4,7 +4,7 @@ import { liveQuery, watch } from '@qti-components/utilities';
 
 import { FlippablesMixin } from './flippables-mixin';
 
-import type { Interaction, IInteraction } from '@qti-components/shared';
+import type { Interaction, IInteraction } from '@qti-components/base';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 

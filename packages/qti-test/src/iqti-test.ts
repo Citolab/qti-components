@@ -1,8 +1,8 @@
 import type { PostLoadTransformCallback, PostLoadTestTransformCallback } from './core/mixins/test-navigation.mixin';
 import type { LitElement } from 'lit';
-import type { TestContext } from '@qti-components/shared';
-import type { SessionContext } from '@qti-components/shared';
-import type { OutcomeVariable, VariableDeclaration, VariableValue } from '@qti-components/shared';
+import type { TestContext } from '@qti-components/base';
+import type { SessionContext } from '@qti-components/base';
+import type { OutcomeVariable, VariableDeclaration, VariableValue } from '@qti-components/base';
 
 export interface IQtiTest extends LitElement, ITestNavigationMixin, ITestProcessingMixin, IMyQtiTest {}
 

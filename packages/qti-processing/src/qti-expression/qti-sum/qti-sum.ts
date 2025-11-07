@@ -1,6 +1,6 @@
-import { QtiExpression } from '@qti-components/shared';
+import { QtiExpression } from '@qti-components/base';
 
-import type { QtiExpressionBase } from '@qti-components/shared';
+import type { QtiExpressionBase } from '@qti-components/base';
 
 export class QtiSum extends QtiExpression<number> {
   private _expression: QtiSumExpression;

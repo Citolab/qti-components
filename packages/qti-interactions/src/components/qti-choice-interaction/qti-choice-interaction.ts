@@ -1,7 +1,7 @@
 import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
-import { Interaction } from '@qti-components/shared';
+import { Interaction } from '@qti-components/base';
 
 import { ChoicesMixin } from '../../internal/choices/choices.mixin';
 import { VocabularyMixin } from '../../internal/vocabulary/vocabulary-mixin';

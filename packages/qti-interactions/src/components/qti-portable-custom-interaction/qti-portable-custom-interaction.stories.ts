@@ -2,7 +2,7 @@ import { html } from 'lit';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { expect, waitFor } from 'storybook/test';
 
-import { removeDoubleSlashes } from '@qti-components/shared';
+import { removeDoubleSlashes } from '@qti-components/base';
 import { qtiTransformItem } from '@qti-components/transformers';
 
 import type { ItemContainer, QtiItem } from '@qti-components/item';

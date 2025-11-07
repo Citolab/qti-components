@@ -1,5 +1,5 @@
 {
-    "name": "@qti-components/shared",
+    "name": "@qti-components/base",
     "version": "1.0.0",
     "description": "QTI shared utilities",
     "type": "module",

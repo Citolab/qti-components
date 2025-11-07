@@ -1,8 +1,8 @@
 import { customElement } from 'lit/decorators.js';
 
-import { QtiConditionExpression } from '@qti-components/shared';
+import { QtiConditionExpression } from '@qti-components/base';
 
-import type { QtiExpression } from '@qti-components/shared';
+import type { QtiExpression } from '@qti-components/base';
 
 type Constructor<T> = new (...args: any[]) => T;
 

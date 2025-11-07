@@ -7,7 +7,7 @@
     },
     "include": [
         "src",
-        "../qti-shared/src/utils/utils.ts"
+        "../qti-base/src/utils/utils.ts"
     ],
     "exclude": [
         "**/*.spec.ts",

@@ -1,6 +1,6 @@
 import { QtiResponseElse } from '../qti-response-else';
 
-import type { QtiExpression } from '@qti-components/shared';
+import type { QtiExpression } from '@qti-components/base';
 import type { QtiRule } from '../../qti-rule/qti-rule';
 
 export class QtiResponseIf extends QtiResponseElse {

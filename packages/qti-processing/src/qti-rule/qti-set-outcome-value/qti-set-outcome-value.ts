@@ -1,10 +1,10 @@
-import { convertNumberToUniversalFormat } from '@qti-components/shared';
+import { convertNumberToUniversalFormat } from '@qti-components/base';
 
 import { QtiRule } from '../qti-rule';
 
-import type { ResponseVariable } from '@qti-components/shared';
-import type { QtiExpression, QtiExpressionBase } from '@qti-components/shared';
-import type { QtiRuleBase } from '@qti-components/shared';
+import type { ResponseVariable } from '@qti-components/base';
+import type { QtiExpression, QtiExpressionBase } from '@qti-components/base';
+import type { QtiRuleBase } from '@qti-components/base';
 
 /**
  * Web component that processes `setOutcomeValue` in QTI.

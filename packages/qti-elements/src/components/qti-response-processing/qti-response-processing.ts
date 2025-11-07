@@ -1,7 +1,7 @@
 import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
-import { type QtiRuleBase } from '@qti-components/shared';
+import { type QtiRuleBase } from '@qti-components/base';
 
 import { mapResponse, mapResponsePoint, matchCorrect } from '../../internal/template-strings';
 

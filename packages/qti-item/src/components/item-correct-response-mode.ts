@@ -2,9 +2,9 @@ import { html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { consume } from '@lit/context';
 
-import { configContext } from '@qti-components/shared';
+import { configContext } from '@qti-components/base';
 
-import type { ConfigContext, CorrectResponseMode } from '@qti-components/shared';
+import type { ConfigContext, CorrectResponseMode } from '@qti-components/base';
 
 @customElement('item-correct-response-mode')
 export class ItemCorrectResponseMode extends LitElement {

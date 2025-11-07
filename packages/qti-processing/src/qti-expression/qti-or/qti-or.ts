@@ -1,6 +1,6 @@
-import { QtiConditionExpression } from '@qti-components/shared';
+import { QtiConditionExpression } from '@qti-components/base';
 
-import type { QtiExpression } from '@qti-components/shared';
+import type { QtiExpression } from '@qti-components/base';
 
 export class QtiOr extends QtiConditionExpression {
   public override getResult() {

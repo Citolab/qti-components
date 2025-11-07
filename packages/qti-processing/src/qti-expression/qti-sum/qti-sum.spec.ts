@@ -1,7 +1,7 @@
-import '@qti-components/components';
+import '@citolab/qti-components';
 import { html, render } from 'lit';
 
-import type { ItemContext } from '@qti-components/shared';
+import type { ItemContext } from '@qti-components/base';
 import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { QtiSum } from './qti-sum';
 

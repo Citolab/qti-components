@@ -2,9 +2,9 @@ import { consume } from '@lit/context';
 import { html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 
-import { testContext } from '@qti-components/shared';
+import { testContext } from '@qti-components/base';
 
-import type { TestContext } from '@qti-components/shared';
+import type { TestContext } from '@qti-components/base';
 
 // https://www.imsglobal.org/sites/default/files/spec/qti/v3/info/index.html#Root_AssessmentSection
 

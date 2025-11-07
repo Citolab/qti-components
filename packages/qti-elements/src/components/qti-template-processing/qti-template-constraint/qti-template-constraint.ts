@@ -1,8 +1,8 @@
 import { LitElement, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
-import type { QtiExpression } from '@qti-components/shared';
-import type { QtiRuleBase } from '@qti-components/shared';
+import type { QtiExpression } from '@qti-components/base';
+import type { QtiRuleBase } from '@qti-components/base';
 
 /**
  * @summary The qti-template-constraint element is a processing rule available only in Template Processing.

@@ -1,4 +1,4 @@
-import type { BaseType } from '@qti-components/shared';
+import type { BaseType } from '@qti-components/base';
 
 export class ScoringHelper {
   /**

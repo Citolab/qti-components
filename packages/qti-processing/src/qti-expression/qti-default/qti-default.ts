@@ -1,12 +1,12 @@
 import { property, state } from 'lit/decorators.js';
 import { consume } from '@lit/context';
 
-import { QtiExpression } from '@qti-components/shared';
-import { itemContext } from '@qti-components/shared';
-import { testContext } from '@qti-components/shared';
+import { QtiExpression } from '@qti-components/base';
+import { itemContext } from '@qti-components/base';
+import { testContext } from '@qti-components/base';
 
-import type { ItemContext } from '@qti-components/shared';
-import type { TestContext } from '@qti-components/shared';
+import type { ItemContext } from '@qti-components/base';
+import type { TestContext } from '@qti-components/base';
 
 /**
  * @summary The qti-default expression returns the default value of a declared variable.

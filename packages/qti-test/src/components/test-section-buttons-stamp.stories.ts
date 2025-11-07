@@ -99,7 +99,7 @@ export const StimulusDeliveryPlatform: Story = {
           </template>`
         )}
         <div class="flex">
-          <div class="qti-shared-stimulus" ${ref(placeholderRef)}></div>
+          <div class="qti-base-stimulus" ${ref(placeholderRef)}></div>
           <test-container test-url="/assets/qti-test-package-stimulus/assessment.xml"></test-container>
         </div>
       </test-navigation>

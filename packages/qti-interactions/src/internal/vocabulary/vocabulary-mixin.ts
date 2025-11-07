@@ -1,7 +1,7 @@
 import { property } from 'lit/decorators.js';
 
 import type { QtiSimpleChoice } from '../../elements/qti-simple-choice';
-import type { Interaction } from '@qti-components/shared';
+import type { Interaction } from '@qti-components/base';
 import type { PropertyValues } from 'lit';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;

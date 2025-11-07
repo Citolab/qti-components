@@ -1,4 +1,4 @@
-import type { View } from '@qti-components/shared';
+import type { View } from '@qti-components/base';
 import type { QtiAssessmentItemRef } from '../qti-assessment-test/qti-assessment-item-ref';
 import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { TestBase } from '../test-base';

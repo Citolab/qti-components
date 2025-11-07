@@ -1,6 +1,6 @@
-import { QtiExpression } from '@qti-components/shared';
+import { QtiExpression } from '@qti-components/base';
 
-import type { ResponseVariable, VariableDeclaration } from '@qti-components/shared';
+import type { ResponseVariable, VariableDeclaration } from '@qti-components/base';
 export class QtiMultiple extends QtiExpression<VariableDeclaration<string | string[]>[]> {
   public override getResult(): ResponseVariable[] {
     console.debug('qti-multiple getResult called', this.innerHTML);

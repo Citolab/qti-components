@@ -77,7 +77,7 @@
         "@qti-components/interactions": "workspace:*",
         "@qti-components/processing": "workspace:*",
         "@qti-components/loader": "workspace:*",
-        "@qti-components/shared": "workspace:*",
+        "@qti-components/base": "workspace:*",
         "@qti-components/theme": "workspace:*",
         "lit": "^3.3.1",
         "@lit/context": "^1.1.6",

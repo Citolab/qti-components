@@ -1,4 +1,4 @@
-import { QtiExpression } from '@qti-components/shared';
+import { QtiExpression } from '@qti-components/base';
 
 type Constructor<T> = new (...args: any[]) => T;
 export class QtiSubtract extends qtiSubtractMixin(QtiExpression<any> as unknown as Constructor<QtiExpression<number>>) {

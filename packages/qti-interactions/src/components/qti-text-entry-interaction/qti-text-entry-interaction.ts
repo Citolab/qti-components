@@ -4,7 +4,7 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import { createRef } from 'lit/directives/ref.js';
 
 import { watch } from '@qti-components/utilities';
-import { Correctness, Interaction } from '@qti-components/shared';
+import { Correctness, Interaction } from '@qti-components/base';
 
 import styles from './qti-text-entry-interaction.styles';
 

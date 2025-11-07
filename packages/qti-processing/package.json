@@ -18,7 +18,7 @@
     "license": "GPL-3.0-only",
     "dependencies": {
         "@qti-components/transformers": "workspace:*",
-        "@qti-components/shared": "workspace:*",
+        "@qti-components/base": "workspace:*",
         "@qti-components/utilities": "workspace:*"
     },
     "peerDependencies": {

@@ -1,7 +1,7 @@
 import { html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
-import { Interaction } from '@qti-components/shared';
+import { Interaction } from '@qti-components/base';
 
 import { DragDropInteractionMixin } from '../../internal/drag-drop';
 import styles from './qti-order-interaction.styles';

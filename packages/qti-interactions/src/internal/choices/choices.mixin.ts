@@ -2,9 +2,9 @@ import { property, query, state } from 'lit/decorators.js';
 import { consume } from '@lit/context';
 
 import { watch } from '@qti-components/utilities';
-import { configContext, type ConfigContext } from '@qti-components/shared';
+import { configContext, type ConfigContext } from '@qti-components/base';
 
-import type { Interaction, IInteraction } from '@qti-components/shared';
+import type { Interaction, IInteraction } from '@qti-components/base';
 import type { ChoiceInterface } from '../active-element/active-element.mixin';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;

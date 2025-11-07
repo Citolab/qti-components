@@ -15,7 +15,7 @@ const meta: Meta = {
   render: () => {
     return html` <qti-test>
       <style>
-        .qti-shared-stimulus:empty {
+        .qti-base-stimulus:empty {
           display: none;
         }
       </style>
@@ -26,12 +26,12 @@ const meta: Meta = {
           </template>
         </test-section-buttons-stamp>
         <div class="flex space-between">
-          <div class="qti-shared-stimulus w-1/2" data-stimulus-idref="Stimulus1"></div>
+          <div class="qti-base-stimulus w-1/2" data-stimulus-idref="Stimulus1"></div>
 
           <test-container class="w-1/2" test-url="/assets/qti-test-package-stimulus/assessment.xml">
             <template
               ><style>
-                .qti-layout-col6:has(.qti-shared-stimulus:empty) {
+                .qti-layout-col6:has(.qti-base-stimulus:empty) {
                   display: none;
                 }
                 .qti-layout-col6 {
@@ -82,7 +82,7 @@ export const SlowLoadingStimulus: Story = {
       // const lastItem = await canvas.findByShadowTitle('Info End');
       // expect(lastItem).toBeInTheDocument();
 
-      // const qtiSharedStimulus = canvasElement.querySelector('.qti-shared-stimulus');
+      // const qtiSharedStimulus = canvasElement.querySelector('.qti-base-stimulus');
 
       await new Promise(resolve => setTimeout(resolve, 1500));
       // expect(qtiSharedStimulus?.children.length).toBe(0);

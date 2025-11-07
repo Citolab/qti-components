@@ -1,14 +1,14 @@
 import { property, state } from 'lit/decorators.js';
 import { consume } from '@lit/context';
 
-import { convertNumberToUniversalFormat } from '@qti-components/shared';
-import { itemContext } from '@qti-components/shared';
+import { convertNumberToUniversalFormat } from '@qti-components/base';
+import { itemContext } from '@qti-components/base';
 
 import { QtiRule } from '../qti-rule';
 
-import type { QtiExpression } from '@qti-components/shared';
-import type { OutcomeVariable } from '@qti-components/shared';
-import type { ItemContext } from '@qti-components/shared';
+import type { QtiExpression } from '@qti-components/base';
+import type { OutcomeVariable } from '@qti-components/base';
+import type { ItemContext } from '@qti-components/base';
 
 /**
  * The lookupOutcomeValue rule sets the value of an outcome variable to the value obtained

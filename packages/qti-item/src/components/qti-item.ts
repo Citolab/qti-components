@@ -2,14 +2,14 @@ import { provide } from '@lit/context';
 import { html, LitElement } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 
-import { computedItemContext } from '@qti-components/shared';
-import { configContext } from '@qti-components/shared';
+import { computedItemContext } from '@qti-components/base';
+import { configContext } from '@qti-components/base';
 
 import type { QtiAssessmentItem } from '@qti-components/elements';
-import type { ConfigContext, CorrectResponseMode } from '@qti-components/shared';
-import type { ItemContext } from '@qti-components/shared';
-import type { VariableDeclaration } from '@qti-components/shared';
-import type { ComputedItemContext } from '@qti-components/shared';
+import type { ConfigContext, CorrectResponseMode } from '@qti-components/base';
+import type { ItemContext } from '@qti-components/base';
+import type { VariableDeclaration } from '@qti-components/base';
+import type { ComputedItemContext } from '@qti-components/base';
 
 /**
  * `<qti-item>` is a custom element designed for rendering a single `qti-assessment-item`.

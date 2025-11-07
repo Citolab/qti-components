@@ -1,6 +1,6 @@
 import { html } from 'lit';
 
-import { QtiExpression } from '@qti-components/shared';
+import { QtiExpression } from '@qti-components/base';
 
 export class QtiNot extends QtiExpression<boolean> {
   override render() {

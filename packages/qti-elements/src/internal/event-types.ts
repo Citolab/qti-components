@@ -1,4 +1,4 @@
-import type { ResponseInteraction } from '@qti-components/shared';
+import type { ResponseInteraction } from '@qti-components/base';
 
 export interface OutcomeChangedDetails {
   item: string;

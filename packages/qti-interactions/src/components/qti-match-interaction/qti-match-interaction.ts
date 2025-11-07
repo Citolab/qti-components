@@ -2,14 +2,14 @@ import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
-import { Interaction } from '@qti-components/shared';
+import { Interaction } from '@qti-components/base';
 
 import { DragDropInteractionMixin } from '../../internal/drag-drop';
 import styles from './qti-match-interaction.styles';
 
-import type { ResponseVariable } from '@qti-components/shared';
+import type { ResponseVariable } from '@qti-components/base';
 import type { CSSResultGroup } from 'lit';
-import type { ResponseInteraction } from '@qti-components/shared';
+import type { ResponseInteraction } from '@qti-components/base';
 import type { QtiSimpleAssociableChoice } from '../../elements/qti-simple-associable-choice';
 
 @customElement('qti-match-interaction')
