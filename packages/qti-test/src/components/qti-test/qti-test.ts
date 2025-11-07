@@ -1,8 +1,8 @@
-import { html } from 'lit';
+import { html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
 import { TestNavigationMixin, TestViewMixin } from '../../mixins';
-import { TestBase } from '../../mixins/test-base';
+import { TestBaseMixin } from '../../mixins/test-base';
 import { TestProcessingMixin } from '../../mixins/test-processing.mixin';
 
 import type { IQtiTest } from '../../types/iqti-test';
@@ -56,7 +56,7 @@ import type { IQtiTest } from '../../types/iqti-test';
  *
  */
 @customElement('qti-test')
-export class QtiTest extends TestNavigationMixin(TestViewMixin(TestProcessingMixin(TestBase))) {
+export class QtiTest extends TestNavigationMixin(TestViewMixin(TestProcessingMixin(TestBaseMixin(LitElement)))) {
   // TODO: Properly implement IQtiTest interface
   // export class QtiTest extends TestLoaderMixin(TestNavigationMixin(TestViewMixin(TestBase))) {
 

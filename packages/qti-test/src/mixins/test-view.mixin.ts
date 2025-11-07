@@ -1,13 +1,13 @@
 import type { View } from '@qti-components/base';
 import type { QtiAssessmentItemRef } from '../components/qti-assessment-item-ref/qti-assessment-item-ref';
 import type { QtiAssessmentItem } from '@qti-components/elements';
-import type { TestBase } from './test-base';
+import type { TestBaseInterface } from './test-base';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 
 declare class TestViewInterface {}
 
-export const TestViewMixin = <T extends Constructor<TestBase>>(superClass: T) => {
+export const TestViewMixin = <T extends Constructor<TestBaseInterface>>(superClass: T) => {
   abstract class TestViewClass extends superClass implements TestViewInterface {
     constructor(...args: any[]) {
       super(...args);
@@ -26,7 +26,7 @@ export const TestViewMixin = <T extends Constructor<TestBase>>(superClass: T) =>
       });
     }
 
-    override willUpdate(changedProperties: Map<string | number | symbol, unknown>) {
+    willUpdate(changedProperties: Map<string | number | symbol, unknown>) {
       super.willUpdate(changedProperties);
       if (changedProperties.has('sessionContext')) {
         this._updateElementView();

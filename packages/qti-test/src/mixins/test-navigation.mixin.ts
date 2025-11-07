@@ -5,7 +5,7 @@ import { qtiTransformItem } from '@qti-components/transformers';
 import type { QtiAssessmentStimulusRefConnectedEvent } from '@qti-components/elements';
 import type { transformItemApi, transformTestApi } from '@qti-components/transformers';
 import type { QtiAssessmentItemRef, QtiAssessmentSection, QtiAssessmentTest } from '../';
-import type { TestBase } from './test-base';
+import type { TestBaseInterface } from './test-base';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 
@@ -37,7 +37,7 @@ declare class TestNavigationInterface {}
  * - Proper event timing and state management
  * - Error handling and edge case coverage
  */
-export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass: T) => {
+export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(superClass: T) => {
   abstract class TestNavigationClass extends superClass implements TestNavigationInterface {
     @property({ type: String }) navigate: 'item' | 'section' | null = null;
     @property({ type: Boolean, attribute: 'cache-transform' }) cacheTransform: boolean = false;
@@ -45,7 +45,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBase>>(superClass:
     @property({ attribute: false }) postLoadTransformCallback: PostLoadTransformCallback | null = null;
     @property({ attribute: false }) postLoadTestTransformCallback: PostLoadTestTransformCallback | null = null;
 
-    protected override _testElement: QtiAssessmentTest;
+    public _testElement: QtiAssessmentTest;
 
     // Navigation state tracking
     private _activeController: AbortController | null = null;

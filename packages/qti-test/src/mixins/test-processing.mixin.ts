@@ -1,6 +1,6 @@
 import type { QtiOutcomeProcessing } from '../components/qti-outcome-processing/qti-outcome-processing';
 import type { OutcomeVariable, VariableDeclaration } from '@qti-components/base';
-import type { TestBase } from './test-base';
+import type { TestBaseInterface } from './test-base';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 
@@ -10,7 +10,7 @@ declare class TestProcessingInterface {
   getVariable(identifier: string): Readonly<VariableDeclaration<string | string[] | null>>;
   outcomeProcessing(): boolean;
 }
-export const TestProcessingMixin = <T extends Constructor<TestBase>>(superClass: T) => {
+export const TestProcessingMixin = <T extends Constructor<TestBaseInterface>>(superClass: T) => {
   abstract class TestProcessingElement extends superClass implements TestProcessingInterface {
     constructor(...args: any[]) {
       super(...args);
