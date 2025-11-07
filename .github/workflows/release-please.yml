@@ -29,22 +29,24 @@ jobs:
       pull-requests: write
       repository-projects: write
     outputs:
-      release_created: ${{ steps.release.outputs.release_created }}
+      releases_created: ${{ steps.release.outputs.releases_created }}
+      paths_released: ${{ steps.release.outputs.paths_released }}
     steps:
       - uses: googleapis/release-please-action@v4
         id: release
         with:
-          release-type: node
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
           token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
 
   publish:
     needs: release
-    if: needs.release.outputs.release_created
+    if: needs.release.outputs.releases_created
     uses: ./.github/workflows/publish.yml
     secrets:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   deploy:
     needs: [release, publish]
-    if: needs.release.outputs.release_created
+    if: needs.release.outputs.releases_created
     uses: ./.github/workflows/deploy.yml

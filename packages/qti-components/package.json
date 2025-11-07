@@ -1,12 +1,13 @@
 {
-    "name": "@qti-components/components",
-    "version": "1.0.0",
+    "name": "@citolab/qti-components",
+    "version": "7.14.3",
     "description": "QTI component utilities",
     "main": "dist/index.js",
     "scripts": {
         "build": "tsup",
         "clean": "rm -rf dist cdn",
-        "attw": "attw --profile esm-only --pack"
+        "attw": "attw --profile esm-only --pack",
+        "publish": "npm publish --access public"
     },
     "keywords": [
         "qti",
@@ -21,6 +22,14 @@
         "./dist/test.js"
     ],
     "license": "GPL-3.0-only",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Citolab/qti-components.git",
+        "directory": "packages/qti-components"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
     "exports": {
         ".": {
             "import": "./dist/index.js"
