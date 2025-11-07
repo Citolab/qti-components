@@ -3,11 +3,11 @@ import { customElement, property } from 'lit/decorators.js';
 
 import { Interaction } from '@qti-components/base';
 
-import { ChoicesMixin } from '../../internal/choices/choices.mixin';
-import { VocabularyMixin } from '../../internal/vocabulary/vocabulary-mixin';
+import { ChoicesMixin } from '../../mixins/choices/choices.mixin';
+import { VocabularyMixin } from '../../mixins/vocabulary/vocabulary-mixin';
 import styles from './qti-choice-interaction.styles';
 
-import type { ChoicesInterface } from '../../internal/choices/choices.mixin';
+import type { ChoicesInterface } from '../../mixins/choices/choices.mixin';
 import type { CSSResultGroup } from 'lit';
 
 export type Orientation = 'horizontal' | 'vertical' | undefined;

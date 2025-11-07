@@ -3,7 +3,7 @@ import { customElement } from 'lit/decorators.js';
 
 import { Interaction } from '@qti-components/base';
 
-import { ChoicesMixin } from '../../internal/choices/choices.mixin';
+import { ChoicesMixin } from '../../mixins/choices/choices.mixin';
 import { positionShapes } from '../../internal/hotspots/hotspot';
 import styles from './qti-hotspot-interaction.styles';
 

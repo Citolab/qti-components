@@ -3,12 +3,12 @@ import { customElement } from 'lit/decorators.js';
 
 import { Interaction } from '@qti-components/base';
 
-import { ChoicesMixin } from '../../internal/choices/choices.mixin';
+import { ChoicesMixin } from '../../mixins/choices/choices.mixin';
 import { positionShapes } from '../../internal/hotspots/hotspot';
 import styles from './qti-graphic-order-interaction.styles';
 
 import type { QtiHotspotChoice } from '../../elements/qti-hotspot-choice';
-import type { Choice } from '../../internal/choices/choices.mixin';
+import type { Choice } from '../../mixins/choices/choices.mixin';
 import type { CSSResultGroup } from 'lit';
 
 type HotspotChoice = Choice & { order: number; orderCorrect?: number };

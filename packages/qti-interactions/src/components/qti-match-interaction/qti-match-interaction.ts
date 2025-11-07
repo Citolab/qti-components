@@ -4,7 +4,7 @@ import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
 import { Interaction } from '@qti-components/base';
 
-import { DragDropInteractionMixin } from '../../internal/drag-drop';
+import { DragDropInteractionMixin } from '../../mixins/drag-drop';
 import styles from './qti-match-interaction.styles';
 
 import type { ResponseVariable } from '@qti-components/base';

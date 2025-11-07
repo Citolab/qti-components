@@ -3,7 +3,7 @@ import { customElement, state } from 'lit/decorators.js';
 
 import { Interaction } from '@qti-components/base';
 
-import { DragDropInteractionMixin } from '../../internal/drag-drop';
+import { DragDropInteractionMixin } from '../../mixins/drag-drop';
 import styles from './qti-associate-interaction.styles';
 
 import type { QtiSimpleAssociableChoice } from '../../elements/qti-simple-associable-choice';

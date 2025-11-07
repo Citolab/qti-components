@@ -1,4 +1,3 @@
-// /* eslint-disable lit-plugin(no-invalid-css) */
 import { css } from 'lit';
 
 export const form = css`

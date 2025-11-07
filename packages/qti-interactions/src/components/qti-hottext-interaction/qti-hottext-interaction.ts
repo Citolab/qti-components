@@ -3,7 +3,7 @@ import { customElement, property } from 'lit/decorators.js';
 
 import { Interaction } from '@qti-components/base';
 
-import { ChoicesMixin } from '../../internal/choices/choices.mixin';
+import { ChoicesMixin } from '../../mixins/choices/choices.mixin';
 
 import type { PropertyValues } from 'lit';
 

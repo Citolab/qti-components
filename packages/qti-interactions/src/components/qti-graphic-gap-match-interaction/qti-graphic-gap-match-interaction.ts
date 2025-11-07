@@ -3,7 +3,7 @@ import { customElement } from 'lit/decorators.js';
 
 import { Interaction } from '@qti-components/base';
 
-import { DragDropInteractionMixin } from '../../internal/drag-drop';
+import { DragDropInteractionMixin } from '../../mixins/drag-drop';
 import styles from './qti-graphic-gap-match-interaction.styles';
 
 import type { QtiHotspotChoice } from '../../elements/qti-hotspot-choice';

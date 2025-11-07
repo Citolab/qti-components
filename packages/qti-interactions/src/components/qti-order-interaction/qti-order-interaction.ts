@@ -3,7 +3,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 
 import { Interaction } from '@qti-components/base';
 
-import { DragDropInteractionMixin } from '../../internal/drag-drop';
+import { DragDropInteractionMixin } from '../../mixins/drag-drop';
 import styles from './qti-order-interaction.styles';
 
 import type { PropertyValueMap } from 'lit';

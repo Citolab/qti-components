@@ -1,7 +1,7 @@
 import { css, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
-import { ActiveElementMixin } from '../internal/active-element/active-element.mixin';
+import { ActiveElementMixin } from '../mixins/active-element/active-element.mixin';
 
 // type shape = { shape: 'rect' | 'circle' | 'poly'; coords: number[] };
 
