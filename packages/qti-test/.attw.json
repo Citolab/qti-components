@@ -1,12 +1,11 @@
 {
     "ignoreRules": [
         "no-resolution",
+        "cjs-resolves-to-esm",
         "internal-resolution-error"
     ],
     "exclude": [
-        "node10",
-        "node16-cjs",
-        "node16-esm"
+        "node10"
     ],
     "format": "table-flipped"
 }
