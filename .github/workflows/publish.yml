@@ -30,18 +30,23 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'npm'
+          cache: 'pnpm'
           registry-url: 'https://registry.npmjs.org/'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
 
       - name: Install dependencies
         run: |
           echo "📦 Installing dependencies..."
-          npm ci
+          pnpm install --frozen-lockfile
 
       - name: Build project 🔨
-        run: npm run build
+        run: pnpm run build
 
       - name: Publish to NPM 🚀
-        run: npm publish
+        run: pnpm run publish:packages
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

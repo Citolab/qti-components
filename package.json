@@ -41,7 +41,7 @@
     "-----------------------cmds--": "-",
     "pre-commit": "run-s lint stylelint madge",
     "commit-msg": "commitlint --edit",
-    "build-storybook": "npm run cem && storybook build",
+    "build-storybook": "pnpm run cem && storybook build",
     "-----------------------scripts--": "-",
     "storybook:dev": "storybook dev -p 6006 --no-open",
     "cem": "cem analyze",
@@ -54,7 +54,7 @@
     "-----------------------npm--": "-",
     "release": "release-please",
     "publish:packages": "pnpm -r --filter='./packages/*' publish --access public --no-git-checks",
-    "-prepare": "husky && npm run build"
+    "-prepare": "husky && pnpm run build"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.2",
