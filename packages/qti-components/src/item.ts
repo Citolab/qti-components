@@ -1,1 +1,1 @@
-import '@qti-components/item';
+export * from '@qti-components/item';

@@ -41,9 +41,9 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./shared": {
-      "types": "./dist/shared.d.ts",
-      "import": "./dist/shared.js"
+    "./qti-base": {
+      "types": "./dist/base.d.ts",
+      "import": "./dist/base.js"
     },
     "./qti-elements": {
       "types": "./dist/elements.d.ts",
@@ -73,7 +73,7 @@
       "types": "./dist/transformers.d.ts",
       "import": "./dist/transformers.js"
     },
-    "./customElements": "./dist/custom-elements.json",
+    "./customElements": "./custom-elements.json",
     "./item.css": "./dist/item.css",
     "./cdn/*": "./cdn/*",
     "./package.json": "./package.json",

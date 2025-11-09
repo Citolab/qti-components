@@ -12,17 +12,7 @@ export default defineConfig(async () => {
     clean: false, // handled by our npm script
     outDir: 'dist',
     format: 'esm',
-    entry: [
-      './src/index.ts',
-      './src/test.ts',
-      './src/item.ts',
-      './src/elements.ts',
-      './src/processing.ts',
-      './src/interactions.ts',
-      './src/transformers.ts',
-      './src/loader.ts',
-      './src/shared.ts'
-    ],
+    entry: ['./src/**/*.ts'],
     noExternal: dependencies,
     splitting: true,
     esbuildPlugins: [InlineCSSPlugin],
