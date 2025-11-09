@@ -1,0 +1,102 @@
+{
+  "name": "@citolab/qti-components",
+  "version": "7.14.3",
+  "description": "QTI component utilities",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "run-p tsup css cem",
+    "clean": "rm -rf dist cdn",
+    "attw": "attw --pack --profile esm-only --format table",
+    "publint": "publint",
+    "publish": "npm publish --access public",
+    "-": "---build---",
+    "tsup": "tsup",
+    "css": "postcss ../qti-theme/src/item.css -d dist -m",
+    "cem": "cd ../../ && CEM_OUTDIR=packages/qti-components/ cem analyze --config custom-elements-manifest.config.mjs"
+  },
+  "keywords": [
+    "qti",
+    "components"
+  ],
+  "author": "",
+  "type": "module",
+  "sideEffects": [
+    "./dist/elements.js",
+    "./dist/interactions.js",
+    "./dist/processing.js",
+    "./dist/test.js",
+    "./dist/item.js"
+  ],
+  "license": "GPL-3.0-only",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Citolab/qti-components.git",
+    "directory": "packages/qti-components"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./qti-base": {
+      "types": "./dist/base.d.ts",
+      "import": "./dist/base.js"
+    },
+    "./qti-elements": {
+      "types": "./dist/elements.d.ts",
+      "import": "./dist/elements.js"
+    },
+    "./qti-processing": {
+      "types": "./dist/processing.d.ts",
+      "import": "./dist/processing.js"
+    },
+    "./qti-interactions": {
+      "types": "./dist/interactions.d.ts",
+      "import": "./dist/interactions.js"
+    },
+    "./qti-item": {
+      "types": "./dist/item.d.ts",
+      "import": "./dist/item.js"
+    },
+    "./qti-test": {
+      "types": "./dist/test.d.ts",
+      "import": "./dist/test.js"
+    },
+    "./qti-loader": {
+      "types": "./dist/loader.d.ts",
+      "import": "./dist/loader.js"
+    },
+    "./qti-transformers": {
+      "types": "./dist/transformers.d.ts",
+      "import": "./dist/transformers.js"
+    },
+    "./customElements": "./custom-elements.json",
+    "./item.css": "./dist/item.css",
+    "./cdn/*": "./cdn/*",
+    "./package.json": "./package.json",
+    "./react": "./dist/qti-components-jsx.d.ts"
+  },
+  "files": [
+    "dist",
+    "cdn",
+    "custom-elements.json"
+  ],
+  "dependencies": {
+    "@qti-components/test": "workspace:*",
+    "@qti-components/item": "workspace:*",
+    "@qti-components/elements": "workspace:*",
+    "@qti-components/transformers": "workspace:*",
+    "@qti-components/interactions": "workspace:*",
+    "@qti-components/processing": "workspace:*",
+    "@qti-components/loader": "workspace:*",
+    "@qti-components/base": "workspace:*",
+    "@qti-components/theme": "workspace:*",
+    "lit": "^3.3.1",
+    "@lit/context": "^1.1.6",
+    "@heximal/templates": "^0.1.5"
+  },
+  "customElements": "dist/custom-elements.json"
+}

@@ -1,7 +1,9 @@
 /* eslint-disable no-undef */
 import fs from 'fs';
 import { join } from 'path';
+
 import postcss from 'postcss';
+
 import postcssConfig from '../postcss.config.mjs';
 const inline_id = '?inline';
 
@@ -25,36 +27,8 @@ export const InlineCSSPlugin = {
           // Resolve relative paths
           cssFullPath = join(args.pluginData.resolveDir, importPath);
         } else {
-          // Resolve Node module paths
-          const segments = importPath.split('/');
-          let packageName;
-
-          // Check if it is a scoped package (starts with @)
-          if (segments[0].startsWith('@')) {
-            packageName = `${segments[0]}/${segments[1]}`; // e.g., @citolab/qti-components
-          } else {
-            packageName = segments[0]; // e.g., lodash
-          }
-
-          const modulePath = join(process.cwd(), 'node_modules', packageName);
-          const packageJsonPath = join(modulePath, 'package.json');
-
-          // Read the package.json of the specific package
-          if (!fs.existsSync(packageJsonPath)) {
-            throw new Error(`package.json not found for ${packageName} in ${modulePath}`);
-          }
-          const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
-          const exportsMap = packageJson.exports || {};
-
-          // Derive the import key (e.g., './item.css')
-          const importKey = `.${importPath.slice(packageName.length)}`;
-          const resolvedPath = exportsMap[importKey];
-
-          if (resolvedPath) {
-            cssFullPath = join(modulePath, resolvedPath);
-          } else {
-            throw new Error(`Unable to resolve ${importKey} in exports map of ${packageName}`);
-          }
+          // EVEN SIMPLER: All packages are linked in node_modules, just read directly from there
+          cssFullPath = join(process.cwd(), 'node_modules', importPath);
         }
 
         // Ensure the resolved path exists

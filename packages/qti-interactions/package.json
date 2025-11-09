@@ -1,0 +1,28 @@
+{
+  "name": "@qti-components/interactions",
+  "version": "1.0.0",
+  "description": "QTI interactions utilities",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc --paths null",
+    "clean": "rm -rf dist",
+    "attw": "attw --profile esm-only --pack"
+  },
+  "keywords": [
+    "qti",
+    "interactions"
+  ],
+  "author": "",
+  "license": "GPL-3.0-only",
+  "dependencies": {
+    "@qti-components/base": "workspace:*",
+    "@qti-components/transformers": "workspace:*",
+    "@qti-components/utilities": "workspace:*"
+  },
+  "peerDependencies": {
+    "lit": "^3.3.1",
+    "@lit/context": "^1.1.6"
+  }
+}

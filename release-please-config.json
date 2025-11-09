@@ -1,0 +1,12 @@
+{
+    "packages": {
+        "packages/qti-components": {
+            "release-type": "node",
+            "package-name": "@citolab/qti-components"
+        }
+    },
+    "plugins": [
+        "node-workspace"
+    ],
+    "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json"
+}

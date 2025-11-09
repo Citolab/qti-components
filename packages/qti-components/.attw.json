@@ -1,0 +1,14 @@
+{
+    "ignoreRules": [
+        "internal-resolution-error",
+        "cjs-resolves-to-esm"
+    ],
+    "excludeEntrypoints": [
+        "./item.css",
+        "./react",
+        "./customElements",
+        "./package.json",
+        "./cdn/*"
+    ],
+    "format": "auto"
+}
