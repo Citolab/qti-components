@@ -85,6 +85,11 @@
     "custom-elements.json"
   ],
   "dependencies": {
+    "lit": "^3.3.1",
+    "@lit/context": "^1.1.6",
+    "@heximal/templates": "^0.1.5"
+  },
+  "peerDependencies": {
     "@qti-components/test": "workspace:*",
     "@qti-components/item": "workspace:*",
     "@qti-components/elements": "workspace:*",
@@ -93,10 +98,7 @@
     "@qti-components/processing": "workspace:*",
     "@qti-components/loader": "workspace:*",
     "@qti-components/base": "workspace:*",
-    "@qti-components/theme": "workspace:*",
-    "lit": "^3.3.1",
-    "@lit/context": "^1.1.6",
-    "@heximal/templates": "^0.1.5"
+    "@qti-components/theme": "workspace:*"
   },
   "customElements": "dist/custom-elements.json"
 }
