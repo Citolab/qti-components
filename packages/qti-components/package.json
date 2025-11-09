@@ -41,7 +41,7 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./exports": {
+    "./shared": {
       "types": "./dist/shared.d.ts",
       "import": "./dist/shared.js"
     },
