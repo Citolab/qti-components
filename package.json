@@ -35,6 +35,7 @@
     "build": "pnpm -r run build",
     "attw": "pnpm -r run attw",
     "publint": "pnpm -r run publint",
+    "publish": "pnpm -r run publish",
     "-----------------------development--": "-",
     "storybook": "run-p storybook:dev cem:watch",
     "watch": "nodemon --watch src --ext ts,css --exec \"run-s tsup cem css && yalc push\"",
@@ -53,7 +54,6 @@
     "commitlint": "commitlint --edit",
     "-----------------------npm--": "-",
     "release": "release-please",
-    "publish:packages": "pnpm -r --filter='./packages/*' publish --access public --no-git-checks",
     "-prepare": "husky && pnpm run build"
   },
   "devDependencies": {
