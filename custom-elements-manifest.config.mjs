@@ -5,7 +5,8 @@ import { cemSorterPlugin } from '@wc-toolkit/cem-sorter';
 
 console.log('Building the custom element manifest...');
 
-const outdir = './';
+// Allow overriding outdir via environment variable or default to root
+const outdir = process.env.CEM_OUTDIR || './';
 
 export default {
   /** Globs to analyze */

@@ -12,7 +12,7 @@
     "-": "---build---",
     "tsup": "tsup",
     "css": "postcss ../qti-theme/src/item.css -d dist -m",
-    "cem": "cem analyze --outdir dist"
+    "cem": "cd ../../ && CEM_OUTDIR=packages/qti-components/ cem analyze --config custom-elements-manifest.config.mjs"
   },
   "keywords": [
     "qti",

@@ -26,7 +26,7 @@
     "node": ">=22.0.0"
   },
   "scripts": {
-    "test-all": "run-s clean build cem publint lint tsc test madge",
+    "test-all": "run-s clean build cem publint lint tsc test madge attw",
     "-----------------------workspace--": "-",
     "lint": "eslint",
     "test": "vitest run",
@@ -34,6 +34,7 @@
     "clean": "pnpm -r run clean",
     "build": "pnpm -r run build",
     "attw": "pnpm -r run attw",
+    "publint": "pnpm -r run publint",
     "-----------------------development--": "-",
     "storybook": "run-p storybook:dev cem:watch",
     "watch": "nodemon --watch src --ext ts,css --exec \"run-s tsup cem css && yalc push\"",
@@ -46,7 +47,6 @@
     "cem": "cem analyze",
     "cem:watch": "cem analyze --watch",
     "css": "postcss packages/qti-theme/src/item.css -d dist -m",
-    "publint": "pnpm -r run build",
     "stylelint": "stylelint \"packages/qti-theme/src/**/*.css\"",
     "chromatic": "node chromatic-runner.cjs",
     "madge": "madge --circular --extensions ts src",
