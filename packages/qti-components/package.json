@@ -1,6 +1,6 @@
 {
   "name": "@citolab/qti-components",
-  "version": "7.14.3",
+  "version": "7.15.0",
   "description": "QTI component utilities",
   "main": "dist/index.js",
   "scripts": {
