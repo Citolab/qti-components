@@ -6,7 +6,8 @@
   "scripts": {
     "build": "run-p tsup css cem",
     "clean": "rm -rf dist cdn",
-    "attw": "attw --profile esm-only --pack",
+    "attw": "attw --pack --profile esm-only --format table",
+    "publint": "publint",
     "publish": "npm publish --access public",
     "-": "---build---",
     "tsup": "tsup",
@@ -37,36 +38,46 @@
   },
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
     "./exports": {
+      "types": "./dist/shared.d.ts",
       "import": "./dist/shared.js"
     },
     "./qti-elements": {
+      "types": "./dist/elements.d.ts",
       "import": "./dist/elements.js"
     },
     "./qti-processing": {
+      "types": "./dist/processing.d.ts",
       "import": "./dist/processing.js"
     },
     "./qti-interactions": {
+      "types": "./dist/interactions.d.ts",
       "import": "./dist/interactions.js"
     },
     "./qti-item": {
+      "types": "./dist/item.d.ts",
       "import": "./dist/item.js"
     },
     "./qti-test": {
+      "types": "./dist/test.d.ts",
       "import": "./dist/test.js"
     },
     "./qti-loader": {
+      "types": "./dist/loader.d.ts",
       "import": "./dist/loader.js"
     },
     "./qti-transformers": {
+      "types": "./dist/transformers.d.ts",
       "import": "./dist/transformers.js"
     },
     "./customElements": "./dist/custom-elements.json",
     "./item.css": "./dist/item.css",
     "./cdn/*": "./cdn/*",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./react": "./dist/qti-components-jsx.d.ts"
   },
   "files": [
     "dist",

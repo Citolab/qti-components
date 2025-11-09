@@ -62,5 +62,9 @@
     "./src/vite-env.d.ts",
     "vitest/globals"
   ],
+  "exclude": [
+    "**/dist/**/*",
+    "**/node_modules/**/*"
+  ],
   "references": []
 }

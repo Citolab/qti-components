@@ -26,7 +26,7 @@
     "node": ">=22.0.0"
   },
   "scripts": {
-    "test-all": "run-s build lint tsc test cem madge",
+    "test-all": "run-s clean build cem publint lint tsc test madge",
     "-----------------------workspace--": "-",
     "lint": "eslint",
     "test": "vitest run",
@@ -46,7 +46,7 @@
     "cem": "cem analyze",
     "cem:watch": "cem analyze --watch",
     "css": "postcss packages/qti-theme/src/item.css -d dist -m",
-    "publint": "publint",
+    "publint": "pnpm -r run build",
     "stylelint": "stylelint \"packages/qti-theme/src/**/*.css\"",
     "chromatic": "node chromatic-runner.cjs",
     "madge": "madge --circular --extensions ts src",

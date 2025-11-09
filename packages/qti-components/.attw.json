@@ -1,12 +1,14 @@
 {
     "ignoreRules": [
-        "no-resolution",
-        "internal-resolution-error"
+        "internal-resolution-error",
+        "cjs-resolves-to-esm"
     ],
-    "exclude": [
-        "node10",
-        "node16-cjs",
-        "node16-esm"
+    "excludeEntrypoints": [
+        "./item.css",
+        "./react",
+        "./customElements",
+        "./package.json",
+        "./cdn/*"
     ],
-    "format": "table-flipped"
+    "format": "auto"
 }
