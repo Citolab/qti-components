@@ -66,14 +66,6 @@ const config: StorybookConfig = {
       plugins: [...(config.plugins || []), tsconfigPaths()],
       resolve: {
         ...config.resolve
-      },
-      build: {
-        ...config.build,
-        rollupOptions: {
-          ...config.build?.rollupOptions,
-          // Disable tree shaking for static builds to ensure component registrations are preserved
-          treeshake: configType === 'PRODUCTION' ? false : config.build?.rollupOptions?.treeshake
-        }
       }
     };
   }

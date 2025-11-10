@@ -20,14 +20,7 @@
   ],
   "author": "",
   "type": "module",
-  "sideEffects": [
-    "./dist/index.js",
-    "./dist/elements.js",
-    "./dist/interactions.js",
-    "./dist/processing.js",
-    "./dist/test.js",
-    "./dist/item.js"
-  ],
+  "sideEffects": true,
   "license": "GPL-3.0-only",
   "repository": {
     "type": "git",
