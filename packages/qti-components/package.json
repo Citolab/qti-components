@@ -8,7 +8,6 @@
     "clean": "rm -rf dist cdn",
     "attw": "attw --pack --profile esm-only --format table",
     "publint": "publint",
-    "publish": "pnpm publish --access public",
     "-": "---build---",
     "tsup": "tsup",
     "css": "postcss ../qti-theme/src/item.css -d dist -m",
