@@ -21,6 +21,7 @@
   "author": "",
   "type": "module",
   "sideEffects": [
+    "./dist/index.js",
     "./dist/elements.js",
     "./dist/interactions.js",
     "./dist/processing.js",

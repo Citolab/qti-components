@@ -10,6 +10,7 @@
     "clean": "rm -rf dist",
     "attw": "attw --profile esm-only --pack"
   },
+  "sideEffects": true,
   "keywords": [
     "qti",
     "item"
