@@ -45,6 +45,6 @@ jobs:
         run: pnpm run build
 
       - name: Publish to NPM 🚀
-        run: pnpm run publish
+        run: pnpm --filter @citolab/qti-components run publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
