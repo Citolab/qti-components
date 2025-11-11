@@ -19,9 +19,9 @@ import pluginJs from '@eslint/js';
 import globals from 'globals';
 import { configs } from 'typescript-eslint';
 import importPlugin from 'eslint-plugin-import';
-import litPlugin from 'eslint-plugin-lit';
-import storybook from 'eslint-plugin-storybook';
-import wcPlugin from 'eslint-plugin-wc';
+import litPlugin, { configs as litConfigs } from 'eslint-plugin-lit';
+import { configs as storybookConfigs } from 'eslint-plugin-storybook';
+import wcPlugin, { configs as wcConfigs } from 'eslint-plugin-wc';
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
@@ -35,9 +35,9 @@ export default [
   pluginJs.configs.recommended, // JavaScript best practices
   ...configs.recommended, // TypeScript recommended rules
   importPlugin.flatConfigs.recommended, // Import/export validation
-  litPlugin.configs['flat/recommended'], // Lit web component rules
-  wcPlugin.configs['flat/recommended'], // Web Components best practices
-  ...storybook.configs['flat/recommended'], // Storybook-specific rules
+  litConfigs['flat/recommended'], // Lit web component rules
+  wcConfigs['flat/recommended'], // Web Components best practices
+  ...storybookConfigs['flat/recommended'], // Storybook-specific rules
 
   // Main configuration block
   {
@@ -86,6 +86,10 @@ export default [
       'import/no-dynamic-require': 'warn',
       'import/no-nodejs-modules': ['error', { allow: ['path', 'fs'] }],
       'import/no-unresolved': 'error',
+
+      // Prevent circular dependencies - handled by madge for better performance
+      // Use: pnpm run madge
+      // 'import/no-cycle': ['error', { maxDepth: 2, ignoreExternal: true }],
 
       // Monorepo-specific import rules
       // 1. Prevent direct package path imports - use relative or named imports

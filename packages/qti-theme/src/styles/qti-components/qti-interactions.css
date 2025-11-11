@@ -109,7 +109,6 @@
       }
     }
 
-    /* stylelint-disable-next-line no-descending-specificity */
     & qti-simple-choice {
       width: fit-content;
       cursor: pointer;
@@ -117,7 +116,6 @@
       /* Keep the checkmark for non-hidden input controls */
       &:state(correct-response),
       &[data-correct-response='true'] {
-        /* stylelint-disable-next-line no-descending-specificity */
         &::after {
           content: '\02714';
           color: var(--qti-correct);
@@ -340,7 +338,7 @@
       &:focus {
         @apply foc;
       }
-      
+
       &:state(candidate-correct) {
         background-color: var(--qti-correct);
       }

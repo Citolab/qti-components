@@ -39,7 +39,7 @@
     "-----------------------development--": "-",
     "watch": "nodemon --watch src --ext ts,css --exec \"run-s tsup cem css && yalc push\"",
     "-----------------------cmds--": "-",
-    "pre-commit": "run-s lint stylelint madge",
+    "pre-commit": "run-s tsc lint madge",
     "commit-msg": "commitlint --edit",
     "build-storybook": "pnpm run cem && storybook build",
     "-----------------------scripts--": "-",
@@ -47,13 +47,12 @@
     "cem": "cem analyze",
     "cem:watch": "cem analyze --watch",
     "css": "postcss packages/qti-theme/src/item.css -d dist -m",
-    "stylelint": "stylelint \"packages/qti-theme/src/**/*.css\"",
     "chromatic": "node chromatic-runner.cjs",
     "madge": "madge packages/*/src --extensions ts,tsx,js --circular",
     "commitlint": "commitlint --edit",
     "-----------------------npm--": "-",
     "release": "release-please",
-    "prepare": "husky && pnpm run build"
+    "prepare": "husky"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.2",
@@ -125,9 +124,6 @@
     "shadow-dom-testing-library": "^1.12.0",
     "storybook": "^10.0.6",
     "storybook-addon-tag-badges": "^3.0.2",
-    "stylelint": "^16.20.0",
-    "stylelint-config-standard": "^38.0.0",
-    "stylelint-prettier": "^5.0.3",
     "tsup": "^8.5.0",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.34.1",
