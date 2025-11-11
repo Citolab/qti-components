@@ -53,7 +53,7 @@
     "commitlint": "commitlint --edit",
     "-----------------------npm--": "-",
     "release": "release-please",
-    "prepare": "husky && pnpm run build"
+    "prepare": "husky"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.2",
