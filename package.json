@@ -26,6 +26,7 @@
     "node": ">=22.0.0"
   },
   "scripts": {
+    "storybook": "run-p storybook:dev cem:watch",
     "test-all": "run-s clean build cem publint lint tsc test madge attw",
     "-----------------------workspace--": "-",
     "lint": "eslint",
@@ -36,7 +37,6 @@
     "attw": "pnpm -r run attw",
     "publint": "pnpm -r run publint",
     "-----------------------development--": "-",
-    "storybook": "run-p storybook:dev cem:watch",
     "watch": "nodemon --watch src --ext ts,css --exec \"run-s tsup cem css && yalc push\"",
     "-----------------------cmds--": "-",
     "pre-commit": "run-s lint stylelint madge",

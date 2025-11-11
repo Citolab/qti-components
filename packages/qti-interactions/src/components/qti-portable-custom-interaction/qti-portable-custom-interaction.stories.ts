@@ -25,7 +25,7 @@ type Story = StoryObj<QtiPortableCustomInteraction & typeof args>;
  */
 const meta: Meta<QtiPortableCustomInteraction> = {
   component: 'qti-portable-custom-interaction',
-  title: '3.2 interaction types/23 Portable Custom Interaction (PCI)',
+  title: '23 Portable Custom Interaction (PCI)',
   // args,
   argTypes,
   parameters: {

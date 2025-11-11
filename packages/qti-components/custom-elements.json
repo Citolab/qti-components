@@ -15295,62 +15295,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "packages/qti-test/src/components/test-view-toggle/test-view.stories.ts",
-      "declarations": [
-        {
-          "kind": "variable",
-          "name": "Default",
-          "type": {
-            "text": "Story"
-          },
-          "default": "{ render: args => html` <qti-test navigate=\"item\"> <test-navigation> <test-container test-url=\"/assets/qti-conformance/Basic/T4-T7/assessment.xml\"></test-container> ${template(args)} </test-navigation> </qti-test>` }"
-        },
-        {
-          "kind": "variable",
-          "name": "meta",
-          "type": {
-            "text": "Meta<TestViewClass>"
-          },
-          "default": "{ component: 'test-view', args, argTypes, parameters: { actions: { handles: events } }, tags: ['no-tests'] }"
-        },
-        {
-          "kind": "variable",
-          "name": "Test",
-          "type": {
-            "text": "Story"
-          },
-          "default": "{ render: args => html` <qti-test navigate=\"item\"> <test-navigation> <test-container test-url=\"/assets/qti-conformance/Basic/T4-T7/assessment.xml\"> </test-container> <test-view ${spread(args)}>vorige</test-view> </test-navigation> </qti-test> `, play: async ({ canvasElement }) => { const canvas = within(canvasElement); const selectElement = await canvas.findByShadowLabelText('view'); // 1 Wait for the item to load const itemElement = await canvas.findByShadowTitle('T1 - Test Entry - Item 1'); expect(itemElement).toBeInTheDocument(); // 2 Assume the candidate rubric is not visible const rubricElement = await canvas.findByShadowText('candidate rubric block'); expect(rubricElement).toBeVisible(); // 3 Select the candidate view await userEvent.selectOptions(selectElement, 'candidate'); // 4 Wait for the candidate rubric to be visible expect(rubricElement).toBeVisible(); // 5 Assume correctResponse is not set const firstChoiceElement = await canvas.findByShadowText('Correct'); const afterStyle = getComputedStyle(firstChoiceElement, '::after'); expect(afterStyle.content).toBe('none'); // 6 Set the view to scorer await userEvent.selectOptions(selectElement, 'scorer'); // Expect the correctResponse to be visible expect(afterStyle.content).not.toBe('none'); }, args: { 'view-options': 'candidate, scorer' } }"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "meta",
-            "module": "packages/qti-test/src/components/test-view-toggle/test-view.stories.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "Default",
-          "declaration": {
-            "name": "Default",
-            "module": "packages/qti-test/src/components/test-view-toggle/test-view.stories.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "Test",
-          "declaration": {
-            "name": "Test",
-            "module": "packages/qti-test/src/components/test-view-toggle/test-view.stories.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "packages/qti-test/src/components/test-view-toggle/test-view.ts",
       "declarations": [
         {
@@ -15478,6 +15422,62 @@
           "declaration": {
             "name": "TestView",
             "module": "packages/qti-test/src/components/test-view-toggle/test-view.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-test/src/components/test-view/test-view.stories.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "Default",
+          "type": {
+            "text": "Story"
+          },
+          "default": "{ render: args => html` <qti-test navigate=\"item\"> <test-navigation> <test-container test-url=\"/assets/qti-conformance/Basic/T4-T7/assessment.xml\"></test-container> ${template(args)} </test-navigation> </qti-test>` }"
+        },
+        {
+          "kind": "variable",
+          "name": "meta",
+          "type": {
+            "text": "Meta<TestViewClass>"
+          },
+          "default": "{ component: 'test-view', args, argTypes, parameters: { actions: { handles: events } }, tags: ['no-tests'] }"
+        },
+        {
+          "kind": "variable",
+          "name": "Test",
+          "type": {
+            "text": "Story"
+          },
+          "default": "{ render: args => html` <qti-test navigate=\"item\"> <test-navigation> <test-container test-url=\"/assets/qti-conformance/Basic/T4-T7/assessment.xml\"> </test-container> <test-view ${spread(args)}>vorige</test-view> </test-navigation> </qti-test> `, play: async ({ canvasElement }) => { const canvas = within(canvasElement); const selectElement = await canvas.findByShadowLabelText('view'); // 1 Wait for the item to load const itemElement = await canvas.findByShadowTitle('T1 - Test Entry - Item 1'); expect(itemElement).toBeInTheDocument(); // 2 Assume the candidate rubric is not visible const rubricElement = await canvas.findByShadowText('candidate rubric block'); expect(rubricElement).toBeVisible(); // 3 Select the candidate view await userEvent.selectOptions(selectElement, 'candidate'); // 4 Wait for the candidate rubric to be visible expect(rubricElement).toBeVisible(); // 5 Assume correctResponse is not set const firstChoiceElement = await canvas.findByShadowText('Correct'); const afterStyle = getComputedStyle(firstChoiceElement, '::after'); expect(afterStyle.content).toBe('none'); // 6 Set the view to scorer await userEvent.selectOptions(selectElement, 'scorer'); // Expect the correctResponse to be visible expect(afterStyle.content).not.toBe('none'); }, args: { 'view-options': 'candidate, scorer' } }"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "meta",
+            "module": "packages/qti-test/src/components/test-view/test-view.stories.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "Default",
+          "declaration": {
+            "name": "Default",
+            "module": "packages/qti-test/src/components/test-view/test-view.stories.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "Test",
+          "declaration": {
+            "name": "Test",
+            "module": "packages/qti-test/src/components/test-view/test-view.stories.ts"
           }
         }
       ]

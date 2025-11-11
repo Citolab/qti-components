@@ -17,7 +17,7 @@ type Story = StoryObj<QtiInlineChoiceInteraction & typeof args>;
  */
 const meta: Meta<QtiInlineChoiceInteraction> = {
   component: 'qti-inline-choice-interaction',
-  title: '3.2 interaction types/08 Inline Choice',
+  title: '08 Inline Choice',
   args,
   argTypes,
   parameters: {
@@ -46,18 +46,17 @@ export const DataPrompt: Story = {
 };
 
 export const WithConfigContext: Story = {
-  render: args =>
-    html`
-      <qti-item>
-        ${template(
-          args,
-          html`
-            <qti-inline-choice identifier="G">Gloucester</qti-inline-choice>
-            <qti-inline-choice identifier="L">Lancaster</qti-inline-choice>
-          `
-        )}
-      </qti-item>
-    `,
+  render: args => html`
+    <qti-item>
+      ${template(
+        args,
+        html`
+          <qti-inline-choice identifier="G">Gloucester</qti-inline-choice>
+          <qti-inline-choice identifier="L">Lancaster</qti-inline-choice>
+        `
+      )}
+    </qti-item>
+  `,
   args: {},
   play: async ({ canvasElement, step }) => {
     const item = canvasElement.querySelector('qti-item')!;

@@ -16,7 +16,7 @@ type Story = StoryObj<QtiHottextInteraction & typeof args>;
  */
 const meta: Meta<QtiHottextInteraction> = {
   component: 'qti-hottext-interaction',
-  title: '3.2 interaction types/07 Hot Text',
+  title: '07 Hot Text',
   args,
   argTypes,
   parameters: {
