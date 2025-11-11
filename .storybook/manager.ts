@@ -1,6 +1,6 @@
 // .storybook/manager.ts
 import { addons } from 'storybook/manager-api';
-import { defaultConfig, type TagBadgeParameters } from 'storybook-addon-tag-badges';
+import { defaultConfig, type TagBadgeParameters } from 'storybook-addon-tag-badges/manager-helpers';
 
 addons.setConfig({
   tagBadges: [
@@ -9,13 +9,21 @@ addons.setConfig({
       tags: 'frog',
       badge: {
         text: 'Frog 🐸',
-        bgColor: '#001c13',
-        fgColor: '#e0eb0b',
+        style: {
+          backgroundColor: '#001c13',
+          color: '#e0eb0b'
+        },
         tooltip: 'This component can catch flies!'
       },
       display: {
-        sidebar: ['component'],
-        toolbar: false
+        sidebar: [
+          {
+            type: 'component',
+            skipInherited: true
+          }
+        ],
+        toolbar: false,
+        mdx: true
       }
     },
     // Place the default config after your custom matchers.

@@ -1,0 +1,21 @@
+{
+    "name": "@qti-components/utilities",
+    "version": "1.0.0",
+    "description": "shared utilities",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "type": "module",
+    "scripts": {
+        "build": "tsc --paths null",
+        "clean": "rm -rf dist"
+    },
+    "keywords": [
+        "qti",
+        "utilities"
+    ],
+    "author": "",
+    "license": "GPL-3.0-only",
+    "peerDependencies": {
+        "lit": "^3.3.1"
+    }
+}

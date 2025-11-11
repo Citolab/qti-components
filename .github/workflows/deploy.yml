@@ -27,22 +27,25 @@ jobs:
           ref: ${{ inputs.tag || github.ref }}
           fetch-depth: 0
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'npm'
+          cache: 'pnpm'
 
       - name: Install dependencies
         run: |
           echo "📦 Installing dependencies..."
-          npm ci
+          pnpm install --frozen-lockfile
 
       - name: Build project 🔨
-        run: npm run build
+        run: pnpm run build
 
       - name: Build Storybook
-        run: npm run build-storybook
+        run: pnpm run build-storybook
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

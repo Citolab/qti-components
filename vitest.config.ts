@@ -1,27 +1,40 @@
-/* eslint-disable import/no-nodejs-modules */
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import tsconfigPaths from 'vite-tsconfig-paths';
 import { defineConfig } from 'vitest/config';
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
+import { playwright } from '@vitest/browser-playwright';
 
 const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
 
-// import viteConfig from './vite.config';
-
 export default defineConfig({
-  base: process.env.VITEST ? undefined : './src',
+  base: process.env.VITEST ? undefined : './',
+  plugins: [tsconfigPaths()],
 
   test: {
+    typecheck: {
+      tsconfig: './tsconfig.json'
+    },
     browser: {
       headless: true
     },
     // Suppress console output during tests
     silent: true,
     coverage: {
-      provider: 'v8' // or 'v8'
+      provider: 'v8',
+      include: ['packages/**/src/**/*.{js,jsx,ts,tsx}'],
+      exclude: [
+        '**/node_modules/**',
+        '**/dist/**',
+        '**/*.spec.ts',
+        '**/*.test.ts',
+        '**/*.stories.ts',
+        '**/*.config.*',
+        '**/coverage/**'
+      ]
     },
-    onConsoleLog(log: string, type: 'stdout' | 'stderr'): boolean | void {
+    onConsoleLog(log: string): boolean | void {
       return !log.includes('Lit is in dev mode');
     },
     // dangerouslyIgnoreUnhandledErrors: true,
@@ -41,8 +54,9 @@ export default defineConfig({
             configDir: path.join(dirname, '.storybook'),
             // This should match your package.json script to run Storybook
             // The --ci flag will skip prompts and not open a browser
-            storybookScript: 'npm run storybook -- --ci'
-          })
+            storybookScript: 'pnpm run storybook -- --ci'
+          }),
+          tsconfigPaths()
         ],
         test: {
           name: 'stories',
@@ -50,18 +64,14 @@ export default defineConfig({
           globals: true,
           browser: {
             enabled: true,
-            provider: 'playwright',
+            // @ts-ignore
+            provider: playwright(),
             headless: true,
             viewport: { width: 1280, height: 600 },
+            screenshotFailures: false,
             instances: [
               {
                 browser: 'chromium'
-
-                // provide: {
-                //   launch: {
-                //     args: ['--remote-debugging-port=9222']
-                //   }
-                // }
               }
             ]
           }
@@ -69,26 +79,24 @@ export default defineConfig({
       },
       /* this is for the normal spec files, which do not need storybook */
       {
+        plugins: [tsconfigPaths()],
         test: {
           name: 'tests',
-          setupFiles: ['./test/setup/index.js'],
-          include: ['src/**/*.spec.ts', 'src/**/*.test.ts'],
+          setupFiles: ['./tools/testing/setup/index.js'],
+          include: ['packages/**/*.spec.ts', 'packages/**/*.test.ts', 'apps/**/*.spec.ts', 'apps/**/*.test.ts'],
           globals: true,
+          typecheck: {
+            tsconfig: './tsconfig.json'
+          },
 
           browser: {
             enabled: true,
-            provider: 'playwright',
+            // @ts-ignore
+            provider: playwright(),
             headless: true, // Both modes work fine
+            screenshotFailures: false,
             instances: [{ browser: 'chromium', headless: true }]
           }
-        }
-      },
-      /* this is for the normal spec files, which do not need storybook */
-      {
-        test: {
-          name: 'unit test who uses dist and node',
-          include: ['tests/**/*.spec.ts', 'tests/**/*.test.ts'],
-          globals: true
         }
       }
     ]

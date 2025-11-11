@@ -1,0 +1,15 @@
+{
+    "extends": "../../tsconfig.json",
+    "compilerOptions": {
+        "outDir": "./dist",
+        "module": "es2022",
+    },
+    "include": [
+        "src/index.ts",
+        "../../tools/storybook/vite-env.d.ts"
+    ],
+    "exclude": [
+        "**/*.spec.ts",
+        "**/*.stories.ts",
+    ]
+}

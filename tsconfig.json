@@ -1,26 +1,70 @@
 {
   "compilerOptions": {
-    "target": "es2022",
+    "baseUrl": ".",
+    "declaration": true,
     "experimentalDecorators": true,
-    "useDefineForClassFields": false,
-    "module": "ESNext",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "skipLibCheck": true,
-
+    "importHelpers": false,
+    "inlineSources": true,
+    "lib": [
+      "ES2022",
+      "ESNext",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "module": "esnext",
     "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "isolatedModules": true,
-    "moduleDetection": "force",
-    "noEmit": true,
-
-    "strict": false,
-    "noUnusedLocals": true,
+    "target": "esnext",
+    "noImplicitAny": false,
+    "noImplicitOverride": false,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true,
-
-    "types": ["vitest/globals","@types/dom-view-transitions","./test/vitest.d.ts", "./test/storybookMatchers.d.ts"]
+    "noUnusedLocals": false,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": false,
+    "useDefineForClassFields": false,
+    "paths": {
+      "@citolab/qti-components": [
+        "./packages/qti-components/src/index.ts"
+      ],
+      "@qti-components/base": [
+        "./packages/qti-base/src/index.ts"
+      ],
+      "@qti-components/elements": [
+        "./packages/qti-elements/src/index.ts"
+      ],
+      "@qti-components/interactions": [
+        "./packages/qti-interactions/src/index.ts"
+      ],
+      "@qti-components/processing": [
+        "./packages/qti-processing/src/index.ts"
+      ],
+      "@qti-components/item": [
+        "./packages/qti-item/src/index.ts"
+      ],
+      "@qti-components/test": [
+        "./packages/qti-test/src/index.ts"
+      ],
+      "@qti-components/transformers": [
+        "./packages/qti-transformers/src/index.ts"
+      ],
+      "@qti-components/loader": [
+        "./packages/qti-loader/src/index.ts"
+      ],
+      "@qti-components/utilities": [
+        "packages/lit-utilities/src/index.ts"
+      ]
+    }
   },
-  "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "types": [
+    "@types/dom-view-transitions",
+    "./tools/storybook/vite-env.d.ts",
+    "vitest/globals"
+  ],
+  "exclude": [
+    "**/dist/**/*",
+    "**/node_modules/**/*"
+  ],
+  "references": []
 }

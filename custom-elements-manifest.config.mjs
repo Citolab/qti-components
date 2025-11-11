@@ -1,17 +1,24 @@
-import { customElementVsCodePlugin } from 'custom-element-vs-code-integration';
+// import { customElementVsCodePlugin } from 'custom-element-vs-code-integration';
 import { jsxTypesPlugin } from '@wc-toolkit/jsx-types';
 import { getTsProgram, typeParserPlugin } from '@wc-toolkit/type-parser';
 import { cemSorterPlugin } from '@wc-toolkit/cem-sorter';
 
 console.log('Building the custom element manifest...');
 
-const outdir = './';
+// Allow overriding outdir via environment variable or default to root
+const outdir = process.env.CEM_OUTDIR || './';
 
 export default {
   /** Globs to analyze */
-  globs: ['src/lib/qti-components/**/*.ts', 'src/lib/qti-item/**/*.ts', 'src/lib/qti-test/**/*.ts'],
+  globs: [
+    'packages/qti-item/src/components/**/*.ts',
+    'packages/qti-test/src/components/**/*.ts',
+    'packages/qti-elements/src/components/**/*.ts',
+    'packages/qti-interactions/src/components/**/*.ts',
+    'packages/qti-processing/src/components/**/*.ts'
+  ],
   /** Globs to exclude */
-  exclude: ['src/**/qti-*.stories.ts', 'src/**/qti-*.spec.ts', 'src/**/qti-*.styles.ts'],
+  exclude: ['packages/**/*.stories.ts', 'packages/**/*.spec.ts', 'packages/**/*.styles.ts'],
   /** Directory to output CEM to */
   outdir: outdir,
   /** Run in dev mode, provides extra logging */
@@ -35,9 +42,9 @@ export default {
     typeParserPlugin({
       outdir: outdir + 'dist'
     }),
-    customElementVsCodePlugin({
-      outdir: outdir + 'dist'
-    }),
+    // customElementVsCodePlugin({
+    //   outdir: outdir + 'dist'
+    // }),
     jsxTypesPlugin({
       outdir: outdir + 'dist',
       exclude: [],
