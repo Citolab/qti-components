@@ -1,7 +1,7 @@
 import { defineConfig } from 'tsup';
 
 import pkgJson from './package.json' assert { type: 'json' };
-import { InlineCSSPlugin } from '../../scripts/inline-css-plugin';
+import { InlineCSSPlugin } from '../../tools/build/inline-css-plugin';
 
 import type { Options } from 'tsup';
 

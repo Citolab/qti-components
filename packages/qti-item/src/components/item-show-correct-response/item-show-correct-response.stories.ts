@@ -4,8 +4,8 @@ import { html } from 'lit';
 import { expect, fireEvent, waitFor } from 'storybook/test';
 import { within } from 'shadow-dom-testing-library';
 
-import { getAssessmentItemFromItemContainer } from '../../../../../apps/e2e/src/testing/test-utils';
-import drag from '../../../../../apps/e2e/src/testing/drag';
+import { getAssessmentItemFromItemContainer } from '../../../../../tools/testing/test-utils';
+import drag from '../../../../../tools/testing/drag';
 
 import type { QtiSimpleChoice, QtiGapMatchInteraction } from '@qti-components/interactions';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';

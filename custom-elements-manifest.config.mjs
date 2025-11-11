@@ -1,4 +1,4 @@
-import { customElementVsCodePlugin } from 'custom-element-vs-code-integration';
+// import { customElementVsCodePlugin } from 'custom-element-vs-code-integration';
 import { jsxTypesPlugin } from '@wc-toolkit/jsx-types';
 import { getTsProgram, typeParserPlugin } from '@wc-toolkit/type-parser';
 import { cemSorterPlugin } from '@wc-toolkit/cem-sorter';
@@ -42,9 +42,9 @@ export default {
     typeParserPlugin({
       outdir: outdir + 'dist'
     }),
-    customElementVsCodePlugin({
-      outdir: outdir + 'dist'
-    }),
+    // customElementVsCodePlugin({
+    //   outdir: outdir + 'dist'
+    // }),
     jsxTypesPlugin({
       outdir: outdir + 'dist',
       exclude: [],

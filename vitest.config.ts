@@ -82,7 +82,7 @@ export default defineConfig({
         plugins: [tsconfigPaths()],
         test: {
           name: 'tests',
-          setupFiles: ['./test/setup/index.js'],
+          setupFiles: ['./tools/testing/setup/index.js'],
           include: ['src/**/*.spec.ts', 'src/**/*.test.ts', 'packages/**/*.spec.ts', 'packages/**/*.test.ts'],
           globals: true,
           typecheck: {

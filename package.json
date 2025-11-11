@@ -49,7 +49,7 @@
     "css": "postcss packages/qti-theme/src/item.css -d dist -m",
     "stylelint": "stylelint \"packages/qti-theme/src/**/*.css\"",
     "chromatic": "node chromatic-runner.cjs",
-    "madge": "madge --circular --extensions ts src",
+    "madge": "madge packages/*/src --extensions ts,tsx,js --circular",
     "commitlint": "commitlint --edit",
     "-----------------------npm--": "-",
     "release": "release-please",

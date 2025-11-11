@@ -15,7 +15,7 @@ initialize({
   onUnhandledRequest: 'bypass'
 });
 import customElements from '../custom-elements.json';
-import { toBePositionedRelativeTo } from '../test/setup/toBePositionedRelativeTo';
+import { toBePositionedRelativeTo } from '../tools/testing/setup/toBePositionedRelativeTo';
 
 import type { Preview } from '@storybook/web-components-vite';
 

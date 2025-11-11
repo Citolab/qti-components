@@ -59,7 +59,7 @@
   },
   "types": [
     "@types/dom-view-transitions",
-    "./src/vite-env.d.ts",
+    "./tools/storybook/vite-env.d.ts",
     "vitest/globals"
   ],
   "exclude": [
