@@ -18,7 +18,7 @@ export default {
     'packages/qti-processing/src/components/**/*.ts'
   ],
   /** Globs to exclude */
-  exclude: ['packages/**/qti-*.stories.ts', 'packages/**/qti-*.spec.ts', 'packages/**/qti-*.styles.ts'],
+  exclude: ['packages/**/*.stories.ts', 'packages/**/*.spec.ts', 'packages/**/*.styles.ts'],
   /** Directory to output CEM to */
   outdir: outdir,
   /** Run in dev mode, provides extra logging */
