@@ -23,7 +23,7 @@ export default defineConfig({
     silent: true,
     coverage: {
       provider: 'v8',
-      include: ['packages/**/src/**/*.{js,jsx,ts,tsx}', 'src/**/*.{js,jsx,ts,tsx}'],
+      include: ['packages/**/src/**/*.{js,jsx,ts,tsx}'],
       exclude: [
         '**/node_modules/**',
         '**/dist/**',
@@ -82,8 +82,8 @@ export default defineConfig({
         plugins: [tsconfigPaths()],
         test: {
           name: 'tests',
-          setupFiles: ['./test/setup/index.js'],
-          include: ['src/**/*.spec.ts', 'src/**/*.test.ts', 'packages/**/*.spec.ts', 'packages/**/*.test.ts'],
+          setupFiles: ['./tools/testing/setup/index.js'],
+          include: ['packages/**/*.spec.ts', 'packages/**/*.test.ts', 'apps/**/*.spec.ts', 'apps/**/*.test.ts'],
           globals: true,
           typecheck: {
             tsconfig: './tsconfig.json'

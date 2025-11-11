@@ -1,10 +1,4 @@
 {
-  "html.customData": [
-    "./dist/vscode.html-custom-data.json"
-  ],
-  "css.customData": [
-    "./dist/vscode.css-custom-data.json"
-  ],
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.codeActionsOnSave": {
@@ -17,7 +11,6 @@
   "[xml]": {
     "editor.defaultFormatter": "redhat.vscode-xml"
   },
-  "git.allowNoVerifyCommit": true,
   "files.watcherExclude": {
     "**/.git/objects/**": true,
     "**/.git/subtree-cache/**": true,

@@ -3,7 +3,7 @@ import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { expect, fn } from 'storybook/test';
 import { within } from 'shadow-dom-testing-library';
 
-import drag from '../../../../../apps/e2e/src/testing/drag';
+import drag from '../../../../../tools/testing/drag';
 
 import type { InputType } from 'storybook/internal/types';
 import type { StoryObj, Meta } from '@storybook/web-components-vite';
@@ -22,7 +22,7 @@ type Story = StoryObj<QtiOrderInteraction & typeof args>;
  */
 const meta: Meta<QtiOrderInteraction & { class: InputType }> = {
   component: 'qti-order-interaction',
-  title: '3.2 interaction types/10 Order',
+  title: '10 Order',
   args,
   argTypes: {
     ...argTypes,

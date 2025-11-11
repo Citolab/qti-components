@@ -1,4 +1,3 @@
-/* stylelint-disable number-max-precision */
 @layer qti-base {
   .qti-layout-row {
     display: flex;

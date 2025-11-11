@@ -5,7 +5,7 @@ import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 
 import { getItemByUri } from '@qti-components/loader';
 
-import drag from '../../../../../apps/e2e/src/testing/drag';
+import drag from '../../../../../tools/testing/drag';
 
 import type { ArgTypes, Meta, StoryObj } from '@storybook/web-components-vite';
 import type { QtiAssessmentItem } from '@qti-components/elements';
@@ -24,7 +24,7 @@ type Story = StoryObj<QtiGapMatchInteraction & typeof args>;
  */
 const meta: Meta<QtiGapMatchInteraction> = {
   component: 'qti-gap-match-interaction',
-  title: '3.2 interaction types/05 Gap Match',
+  title: '05 Gap Match',
   args,
   argTypes,
   parameters: {

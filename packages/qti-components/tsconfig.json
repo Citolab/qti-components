@@ -6,7 +6,7 @@
     },
     "include": [
         "src/index.ts",
-        "../../src/vite-env.d.ts"
+        "../../tools/storybook/vite-env.d.ts"
     ],
     "exclude": [
         "**/*.spec.ts",

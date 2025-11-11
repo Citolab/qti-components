@@ -110,12 +110,10 @@ body.sb-main-fullscreen #storybook-root #root-inner {
 }
 
 @media (width >= 768px) {
-  /* stylelint-disable-next-line selector-class-pattern */
   .md\:columns-4 {
     columns: 4;
   }
 
-  /* stylelint-disable-next-line selector-class-pattern */
   .md\:flex {
     display: flex;
   }

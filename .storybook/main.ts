@@ -24,12 +24,17 @@ const config: StorybookConfig = {
     {
       directory: '../packages/qti-elements/src/components',
       files: '**/*.stories.*',
-      titlePrefix: 'Elements'
+      titlePrefix: 'QTI Elements'
     },
     {
       directory: '../packages/qti-interactions/src/components',
       files: '**/*.stories.*',
-      titlePrefix: 'Interactions'
+      titlePrefix: 'QTI Interactions'
+    },
+    {
+      directory: '../packages/qti-processing/src/components',
+      files: '**/*.stories.*',
+      titlePrefix: 'QTI Processing'
     },
     {
       directory: '../packages/qti-item/src/components',

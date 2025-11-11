@@ -4,7 +4,7 @@ import { createRef, ref } from 'lit/directives/ref.js';
 import { expect, fn, waitFor, within } from 'storybook/test';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 
-import drag from '../../../../../apps/e2e/src/testing/drag';
+import drag from '../../../../../tools/testing/drag';
 
 import type { QtiMatchInteraction } from './qti-match-interaction';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
@@ -23,7 +23,7 @@ type Story = StoryObj<QtiMatchInteraction & typeof args>;
  */
 const meta: Meta<QtiMatchInteraction & { class: InputType; 'response-identifier': string }> = {
   component: 'qti-match-interaction',
-  title: '3.2 interaction types/09 Match',
+  title: '09 Match',
 
   subcomponents: { QtiSimpleAssociableChoice: 'qti-simple-associable-choice' },
   args: { ...args, 'response-identifier': 'RESPONSE' } /* set default value for response-identifier */,

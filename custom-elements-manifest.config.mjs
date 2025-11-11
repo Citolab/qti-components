@@ -1,4 +1,4 @@
-import { customElementVsCodePlugin } from 'custom-element-vs-code-integration';
+// import { customElementVsCodePlugin } from 'custom-element-vs-code-integration';
 import { jsxTypesPlugin } from '@wc-toolkit/jsx-types';
 import { getTsProgram, typeParserPlugin } from '@wc-toolkit/type-parser';
 import { cemSorterPlugin } from '@wc-toolkit/cem-sorter';
@@ -18,7 +18,7 @@ export default {
     'packages/qti-processing/src/components/**/*.ts'
   ],
   /** Globs to exclude */
-  exclude: ['packages/**/qti-*.stories.ts', 'packages/**/qti-*.spec.ts', 'packages/**/qti-*.styles.ts'],
+  exclude: ['packages/**/*.stories.ts', 'packages/**/*.spec.ts', 'packages/**/*.styles.ts'],
   /** Directory to output CEM to */
   outdir: outdir,
   /** Run in dev mode, provides extra logging */
@@ -42,9 +42,9 @@ export default {
     typeParserPlugin({
       outdir: outdir + 'dist'
     }),
-    customElementVsCodePlugin({
-      outdir: outdir + 'dist'
-    }),
+    // customElementVsCodePlugin({
+    //   outdir: outdir + 'dist'
+    // }),
     jsxTypesPlugin({
       outdir: outdir + 'dist',
       exclude: [],

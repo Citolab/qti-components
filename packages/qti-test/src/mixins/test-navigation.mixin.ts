@@ -4,7 +4,9 @@ import { qtiTransformItem } from '@qti-components/transformers';
 
 import type { QtiAssessmentStimulusRefConnectedEvent } from '@qti-components/elements';
 import type { transformItemApi, transformTestApi } from '@qti-components/transformers';
-import type { QtiAssessmentItemRef, QtiAssessmentSection, QtiAssessmentTest } from '../';
+import type { QtiAssessmentItemRef } from '../components/qti-assessment-item-ref/qti-assessment-item-ref';
+import type { QtiAssessmentSection } from '../components/qti-assessment-section/qti-assessment-section';
+import type { QtiAssessmentTest } from '../components/qti-assessment-test/qti-assessment-test';
 import type { TestBaseInterface } from './test-base';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;

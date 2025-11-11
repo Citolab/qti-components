@@ -4,7 +4,7 @@ import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 
 import { qtiTransformItem } from '@qti-components/transformers';
 
-import { getAssessmentItemFromItemContainer } from '../../../../../apps/e2e/src/testing/test-utils';
+import { getAssessmentItemFromItemContainer } from '../../../../../tools/testing/test-utils';
 
 import type { ItemContainer } from './item-container';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';

@@ -4,7 +4,7 @@ import { html } from 'lit';
 
 import { qtiTransformTest } from '@qti-components/transformers';
 
-import { getAssessmentItemFromTestContainerByDataTitle } from '../../../../../apps/e2e/src/testing/test-utils';
+import { getAssessmentItemFromTestContainerByDataTitle } from '../../../../../tools/testing/test-utils';
 
 import type { TestContainer } from './test-container';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
