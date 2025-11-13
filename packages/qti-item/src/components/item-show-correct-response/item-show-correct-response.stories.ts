@@ -1184,17 +1184,29 @@ export const OrderInPlace: Story = {
       await new Promise(resolve => setTimeout(resolve, 200));
 
       await step('Verify correct response is shown', async () => {
-        const updatedChoices = Array.from(orderInteraction.querySelectorAll('qti-simple-choice'));
+        // Check for the new correct order display
+        const correctDisplay = orderInteraction.querySelector('.correct-order-display');
+        expect(correctDisplay).toBeTruthy();
 
-        const correctOptions = updatedChoices.filter(choice => choice.classList.contains('correct-option'));
+        // Check for the correct choice displays within the correct order display
+        const correctChoiceDisplays = correctDisplay?.querySelectorAll('.correct-choice-display');
+        expect(correctChoiceDisplays?.length).toBe(4);
 
-        // Should show the correct order: EventA, EventB, EventC, EventD
-        expect(correctOptions.length).toBe(4);
+        // Verify the order is correct by checking the text content
+        // The correct order should be: EventA, EventB, EventC, EventD (based on the XML)
+        const expectedTexts = [
+          "The Wright brothers' first flight (1903)",
+          'The first man on the moon (1969)',
+          'The invention of the internet (1989)',
+          'The launch of the first smartphone (2007)'
+        ];
 
-        expect(correctOptions[0].getAttribute('identifier')).toBe('EventA');
-        expect(correctOptions[1].getAttribute('identifier')).toBe('EventB');
-        expect(correctOptions[2].getAttribute('identifier')).toBe('EventC');
-        expect(correctOptions[3].getAttribute('identifier')).toBe('EventD');
+        correctChoiceDisplays?.forEach((display, index) => {
+          const textContent = display.textContent?.trim();
+          // Remove the order number (1, 2, 3, 4) from the beginning
+          const choiceText = textContent?.replace(/^\d+/, '').trim();
+          expect(choiceText).toBe(expectedTexts[index]);
+        });
       });
     });
   }
