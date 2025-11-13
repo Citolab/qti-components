@@ -1,1 +1,1 @@
-export { QtiOrderInteractionInPlace as QtiOrderInPlaceInteraction } from './qti-order-interaction-in-place';
+export { QtiOrderInteractionInPlace } from './qti-order-interaction-in-place';

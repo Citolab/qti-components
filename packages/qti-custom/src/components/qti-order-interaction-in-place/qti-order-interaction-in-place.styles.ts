@@ -39,14 +39,32 @@ export default css`
   }
 
   ::slotted(qti-simple-choice.dragging) {
-    cursor: grabbing;
-    border: 1px solid var(--qti-border-active) !important;
-    background-color: var(--qti-bg-active) !important;
-    padding: var(--qti-padding-vertical) var(--qti-padding-horizontal) !important;
+    cursor: grabbing !important;
+    border: 2px solid var(--qti-primary-color, #007acc) !important;
+    background-color: var(--qti-choice-hover-background, #f0f8ff) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+    z-index: 1000 !important;
+    opacity: 0.9 !important;
+
     /* Override global .dragging styles that cause rotation */
     rotate: none !important;
     transform: none !important;
     transition: none !important;
+  }
+
+  /* Candidate correction states */
+  ::slotted(qti-simple-choice:state(candidate-correct)),
+  ::slotted(qti-simple-choice[candidate-correct]) {
+    background-color: var(--qti-correct, #66bb6a) !important;
+    border-color: var(--qti-correct-border, var(--qti-correct, #66bb6a)) !important;
+    color: white !important;
+  }
+
+  ::slotted(qti-simple-choice:state(candidate-incorrect)),
+  ::slotted(qti-simple-choice[candidate-incorrect]) {
+    background-color: var(--qti-incorrect, #f44336) !important;
+    border-color: var(--qti-incorrect-border, var(--qti-incorrect, #f44336)) !important;
+    color: white !important;
   }
 
   ::slotted(qti-simple-choice[data-dnd-dragging]) {

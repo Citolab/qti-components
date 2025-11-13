@@ -271,6 +271,55 @@ export class QtiOrderInteractionInPlace extends Interaction {
     setTimeout(() => this.setupSortable(), 0);
   }
 
+  public override toggleCandidateCorrection(show: boolean): void {
+    const responseVariable = this.responseVariable;
+
+    if (!responseVariable?.correctResponse) {
+      return;
+    }
+
+    // Always get fresh choices from DOM in current order
+    this.choices = Array.from(this.querySelectorAll('qti-simple-choice')) as QtiSimpleChoice[];
+
+    const correctOrder = Array.isArray(responseVariable.correctResponse)
+      ? responseVariable.correctResponse
+      : [responseVariable.correctResponse];
+
+    // Clear existing candidate states from all choices
+    this.choices.forEach(choice => {
+      if (choice.internals) {
+        choice.internals.states.delete('candidate-correct');
+        choice.internals.states.delete('candidate-incorrect');
+      }
+      choice.removeAttribute('candidate-correct');
+      choice.removeAttribute('candidate-incorrect');
+    });
+
+    if (!show) {
+      return;
+    }
+
+    // For order interactions, we compare the current DOM order with the correct order
+    this.choices.forEach((choice, index) => {
+      const identifier = choice.getAttribute('identifier');
+      if (identifier && index < correctOrder.length) {
+        const isCorrectPosition = correctOrder[index] === identifier;
+
+        if (isCorrectPosition) {
+          if (choice.internals) {
+            choice.internals.states.add('candidate-correct');
+          }
+          choice.setAttribute('candidate-correct', '');
+        } else {
+          if (choice.internals) {
+            choice.internals.states.add('candidate-incorrect');
+          }
+          choice.setAttribute('candidate-incorrect', '');
+        }
+      }
+    });
+  }
+
   override disconnectedCallback() {
     super.disconnectedCallback();
     clearTimeout(this.setupTimeout);

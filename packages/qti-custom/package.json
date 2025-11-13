@@ -1,7 +1,7 @@
 {
-  "name": "@qti-components/elements",
+  "name": "@qti-components/custom",
   "version": "1.0.0",
-  "description": "QTI elements utilities",
+  "description": "QTI custom interactions",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
@@ -13,12 +13,13 @@
   "sideEffects": true,
   "keywords": [
     "qti",
-    "elements"
+    "custom"
   ],
   "author": "",
   "license": "GPL-3.0-only",
   "dependencies": {
-    "@qti-components/base": "workspace:*"
+    "@qti-components/base": "workspace:*",
+    "@qti-components/interactions": "workspace:*"
   },
   "peerDependencies": {
     "lit": "^3.3.1",

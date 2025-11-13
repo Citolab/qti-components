@@ -8,11 +8,15 @@ import { getAssessmentItemFromItemContainer } from '../../../../../tools/testing
 import drag from '../../../../../tools/testing/drag';
 
 import type { QtiSimpleChoice, QtiGapMatchInteraction } from '@qti-components/interactions';
+import type { QtiOrderInteractionInPlace } from '@qti-components/custom';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { ItemShowCorrectResponse } from './item-show-correct-response';
 import './item-show-correct-response';
 import '../item-correct-response-mode/item-correct-response-mode';
 import type { ItemContainer } from '../item-container/item-container';
+
+// Import the order-in-place component to register it
+import '@qti-components/custom';
 
 const { events, args, argTypes } = getStorybookHelpers('test-print-item-variables');
 
@@ -1091,6 +1095,106 @@ export const GapMatchCorrectResponse: Story = {
         expect(correctResponses.length).toBe(2);
         expect(correctResponses[0].textContent).toBe('winter');
         expect(correctResponses[1].textContent).toBe('summer');
+      });
+    });
+  }
+};
+
+export const OrderInPlace: Story = {
+  args: {
+    'item-url': 'assets/qti-test-package/items/order_in_place.xml'
+  },
+  render: args =>
+    html` <qti-item>
+      <div>
+        <item-container style="display: block;width: 400px; height: 350px;" item-url=${args['item-url'] as string}>
+          <template>
+            <style>
+              qti-assessment-item {
+                padding: 1rem;
+                display: block;
+                aspect-ratio: 4 / 3;
+                width: 800px;
+
+                border: 2px solid blue;
+                transform: scale(0.5);
+                transform-origin: top left;
+              }
+
+              /* Fix drag overlay positioning for scaled content */
+              [data-dnd-overlay],
+              .dnd-kit-overlay,
+              [data-dnd-dragging-overlay] {
+                transform: scale(0.5) !important;
+                transform-origin: top left !important;
+              }
+
+              /* Alternative approach: hide overlay entirely if positioning can't be fixed */
+              body > [data-dnd-overlay],
+              body > .dnd-kit-overlay {
+                display: none !important;
+              }
+            </style>
+          </template>
+        </item-container>
+        <item-show-correct-response></item-show-correct-response>
+      </div>
+    </qti-item>`,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const item = await getAssessmentItemFromItemContainer(canvasElement);
+
+    const showCorrectButton = await canvas.findByShadowText(/Show correct response/i);
+
+    const orderInteraction: QtiOrderInteractionInPlace = await waitFor(
+      () => {
+        const interaction = item.querySelector('qti-order-interaction-in-place') as QtiOrderInteractionInPlace;
+        if (!interaction) throw new Error('Order interaction not found');
+        return interaction;
+      },
+      { timeout: 5000 }
+    );
+
+    await waitFor(
+      () => {
+        // Check if the component has been properly set up by looking for choices
+        const choices = orderInteraction.querySelectorAll('qti-simple-choice');
+        if (choices.length === 0) throw new Error('Choices not ready');
+
+        return choices;
+      },
+      { timeout: 5000 }
+    );
+
+    // Additional wait for the sortable system to be fully initialized
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    const choices = Array.from(orderInteraction.querySelectorAll('qti-simple-choice'));
+
+    await step('Reorder items by dragging', async () => {
+      if (choices.length >= 2) {
+        await drag(choices[0], { to: choices[1] });
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+    });
+
+    await step('Click on the Show Correct Response button', async () => {
+      await showCorrectButton.click();
+
+      await new Promise(resolve => setTimeout(resolve, 200));
+
+      await step('Verify correct response is shown', async () => {
+        const updatedChoices = Array.from(orderInteraction.querySelectorAll('qti-simple-choice'));
+
+        const correctOptions = updatedChoices.filter(choice => choice.classList.contains('correct-option'));
+
+        // Should show the correct order: EventA, EventB, EventC, EventD
+        expect(correctOptions.length).toBe(4);
+
+        expect(correctOptions[0].getAttribute('identifier')).toBe('EventA');
+        expect(correctOptions[1].getAttribute('identifier')).toBe('EventB');
+        expect(correctOptions[2].getAttribute('identifier')).toBe('EventC');
+        expect(correctOptions[3].getAttribute('identifier')).toBe('EventD');
       });
     });
   }

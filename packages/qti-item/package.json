@@ -24,6 +24,7 @@
     "@qti-components/elements": "workspace:*",
     "@qti-components/theme": "workspace:*",
     "@qti-components/interactions": "workspace:*",
+    "@qti-components/custom": "workspace:*",
     "@qti-components/processing": "workspace:*"
   },
   "peerDependencies": {
