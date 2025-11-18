@@ -3,13 +3,13 @@ import { customElement, property, state } from 'lit/decorators.js';
 
 import { Interaction } from '@qti-components/base';
 
-import { ObservableDragDropMixin } from '../../mixins/drag-drop';
+import { DragDropInteractionMixin } from '../../mixins/drag-drop';
 import styles from './qti-order-interaction.styles';
 
 import type { PropertyValueMap } from 'lit';
 import type { QtiSimpleChoice } from '../../elements/qti-simple-choice';
 @customElement('qti-order-interaction')
-export class QtiOrderInteraction extends ObservableDragDropMixin(
+export class QtiOrderInteraction extends DragDropInteractionMixin(
   Interaction,
   `qti-simple-choice`,
   'drop-list',

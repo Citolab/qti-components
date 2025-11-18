@@ -90,6 +90,7 @@ export const ObservableDragDropMixin = <T extends Constructor<Interaction>>(
       await this.updateComplete;
 
       this.cacheInteractiveElements();
+      this.updateMinDimensionsForDropZones();
       this.setupDragObservables();
     }
 
@@ -125,6 +126,60 @@ export const ObservableDragDropMixin = <T extends Constructor<Interaction>>(
         (draggable.style as any).webkitTouchCallout = 'none'; // Prevent iOS callout
         draggable.setAttribute('qti-draggable', 'true');
         draggable.setAttribute('tabindex', '0');
+      });
+    }
+
+    private updateMinDimensionsForDropZones(): void {
+      if (this.trackedDraggables.length === 0) return;
+
+      // Find the maximum dimensions from all draggables
+      let maxDraggableHeight = 0;
+      let maxDraggableWidth = 0;
+
+      this.trackedDraggables.forEach(draggable => {
+        const rect = draggable.getBoundingClientRect();
+        maxDraggableHeight = Math.max(maxDraggableHeight, rect.height);
+        maxDraggableWidth = Math.max(maxDraggableWidth, rect.width);
+      });
+
+      const dropContainer: HTMLElement | null =
+        this.trackedDroppables.length > 0 ? this.trackedDroppables[0].parentElement : null;
+
+      // Detect if this is a grid-based layout (match-interaction) by checking if droppables are qti-simple-associable-choice
+      // For associate-interaction, droppables are .dl divs, not qti-simple-associable-choice
+      const isGridLayout =
+        this.trackedDroppables.length > 0 && this.trackedDroppables[0].tagName === 'QTI-SIMPLE-ASSOCIABLE-CHOICE';
+
+      if (isGridLayout && dropContainer) {
+        let maxWidth: number;
+
+        if (dropContainer.clientWidth > 0) {
+          const styles = window.getComputedStyle(dropContainer);
+          const paddingLeft = parseFloat(styles.paddingLeft);
+          const paddingRight = parseFloat(styles.paddingRight);
+          maxWidth = dropContainer.clientWidth - paddingLeft - paddingRight;
+        } else {
+          maxWidth = Math.min(window.innerWidth * 0.8, 600);
+        }
+
+        dropContainer.style.gridTemplateColumns = `repeat(auto-fit, minmax(calc(min(${maxWidth}px, ${maxDraggableWidth}px + 2 * var(--qti-dropzone-padding, 0.5rem))), 1fr))`;
+      }
+
+      this.trackedDroppables.forEach(droppable => {
+        droppable.style.minHeight = `${maxDraggableHeight}px`;
+
+        if (isGridLayout) {
+          droppable.style.minWidth = `${maxDraggableWidth}px`;
+        }
+
+        const dropSlot: HTMLElement | null = droppable.shadowRoot?.querySelector('slot[part="dropslot"]');
+        if (dropSlot) {
+          dropSlot.style.minHeight = `${maxDraggableHeight}px`;
+        }
+      });
+
+      this.trackedDragContainers.forEach(dragContainer => {
+        dragContainer.style.minHeight = `${maxDraggableHeight}px`;
       });
     }
 
@@ -166,64 +221,60 @@ export const ObservableDragDropMixin = <T extends Constructor<Interaction>>(
           }, delay);
         });
 
-      const keyboardStream = (shadowRoot as any)
-        .when('keydown')
-        .map((e: KeyboardEvent) => {
-          const draggables = this.trackedDraggables.filter(d => d.style.opacity !== '0');
-          const allDropTargets = [...this.trackedDroppables, ...this.trackedDragContainers];
-          return { e, draggables, dropTargets: allDropTargets };
-        })
-        .scan((state, { e, draggables, dropTargets }) => {
-          if (!state) {
-            state = {
-              dragging: false,
-              dragElement: null,
-              dragIndex: 0,
+      let keyboardState = {
+        dragging: false,
+        dragElement: null as HTMLElement | null,
+        dragIndex: 0,
+        dropIndex: 0,
+        dropElement: null as HTMLElement | null
+      };
+
+      const keyboardStream = (shadowRoot as any).when('keydown').subscribe((e: KeyboardEvent) => {
+        const draggables = this.trackedDraggables.filter(d => d.style.opacity !== '0');
+        const dropTargets = [...this.trackedDroppables, ...this.trackedDragContainers];
+
+        // Start drag
+        if (!keyboardState.dragging) {
+          const target = this.findDraggableTarget(e);
+          if (target && ['Space', 'Enter'].includes(e.code)) {
+            e.preventDefault();
+            target.setAttribute('data-keyboard-dragging', 'true');
+            keyboardState = {
+              dragging: true,
+              dragElement: target,
+              dragIndex: draggables.indexOf(target),
               dropIndex: 0,
-              dropElement: null
+              dropElement: dropTargets[0]
             };
           }
-          // Start drag
-          if (!state.dragging) {
-            const target = this.findDraggableTarget(e);
-            if (target && ['Space', 'Enter'].includes(e.code)) {
-              e.preventDefault();
-              target.setAttribute('data-keyboard-dragging', 'true');
-              return {
-                dragging: true,
-                dragElement: target,
-                dragIndex: draggables.indexOf(target),
-                dropIndex: 0,
-                dropElement: dropTargets[0]
-              };
-            }
-            return state;
-          }
+        } else {
           // Navigation and drop/cancel
           switch (e.code) {
             case 'ArrowRight':
             case 'ArrowDown': {
               e.preventDefault();
-              const nextDropIndex = (state.dropIndex + 1) % dropTargets.length;
-              return { ...state, dropIndex: nextDropIndex, dropElement: dropTargets[nextDropIndex] };
+              const nextDropIndex = (keyboardState.dropIndex + 1) % dropTargets.length;
+              keyboardState = { ...keyboardState, dropIndex: nextDropIndex, dropElement: dropTargets[nextDropIndex] };
+              break;
             }
             case 'ArrowLeft':
             case 'ArrowUp': {
               e.preventDefault();
-              const prevDropIndex = (state.dropIndex - 1 + dropTargets.length) % dropTargets.length;
-              return { ...state, dropIndex: prevDropIndex, dropElement: dropTargets[prevDropIndex] };
+              const prevDropIndex = (keyboardState.dropIndex - 1 + dropTargets.length) % dropTargets.length;
+              keyboardState = { ...keyboardState, dropIndex: prevDropIndex, dropElement: dropTargets[prevDropIndex] };
+              break;
             }
             case 'Space':
             case 'Enter':
             case 'Tab': {
               e.preventDefault();
-              if (state.dragElement && state.dropElement) {
-                const identifier = state.dragElement.getAttribute('identifier');
-                const isDroppingToInventory = this.trackedDragContainers.includes(state.dropElement);
+              if (keyboardState.dragElement && keyboardState.dropElement) {
+                const identifier = keyboardState.dragElement.getAttribute('identifier');
+                const isDroppingToInventory = this.trackedDragContainers.includes(keyboardState.dropElement);
 
                 if (isDroppingToInventory) {
                   // Return item to inventory
-                  state.dragElement.remove();
+                  keyboardState.dragElement.remove();
                   if (identifier) {
                     this.restoreOriginalInInventory(identifier);
                   }
@@ -237,50 +288,50 @@ export const ObservableDragDropMixin = <T extends Constructor<Interaction>>(
                       if (existing) existing.remove();
                     });
                     this.findInventoryItems(identifier).forEach(item => {
-                      if (item !== state.dragElement) item.remove();
+                      if (item !== keyboardState.dragElement) item.remove();
                     });
                   }
-                  this.dropDraggableInDroppable(state.dragElement, state.dropElement);
+                  this.dropDraggableInDroppable(keyboardState.dragElement, keyboardState.dropElement);
                 }
 
                 this.trackedDraggables.forEach(d => d.removeAttribute('data-keyboard-dragging'));
                 this.saveResponse();
               }
-              return {
+              keyboardState = {
                 dragging: false,
                 dragElement: null,
                 dragIndex: 0,
                 dropIndex: 0,
                 dropElement: null
               };
+              break;
             }
             case 'Escape': {
               e.preventDefault();
               this.trackedDraggables.forEach(d => d.removeAttribute('data-keyboard-dragging'));
-              return {
+              keyboardState = {
                 dragging: false,
                 dragElement: null,
                 dragIndex: 0,
                 dropIndex: 0,
                 dropElement: null
               };
-            }
-            default:
-              return state;
-          }
-        }, null)
-        .subscribe((state: any) => {
-          // Highlight dropzone if dragging
-          this.allDropzones.forEach(zone => zone.removeAttribute('hover'));
-          if (state && state.dragging && state.dropElement) {
-            state.dropElement.setAttribute('hover', '');
-            // Only focus the drop element if it's focusable and won't interfere with tab navigation
-            // Don't steal focus from the currently focused element (the draggable being moved)
-            if (state.dropElement.hasAttribute('tabindex') && state.dropElement.getAttribute('tabindex') !== '-1') {
-              state.dropElement.focus();
+              break;
             }
           }
-        });
+        }
+
+        this.allDropzones.forEach(zone => zone.removeAttribute('hover'));
+        if (keyboardState.dragging && keyboardState.dropElement) {
+          keyboardState.dropElement.setAttribute('hover', '');
+          if (
+            keyboardState.dropElement.hasAttribute('tabindex') &&
+            keyboardState.dropElement.getAttribute('tabindex') !== '-1'
+          ) {
+            keyboardState.dropElement.focus();
+          }
+        }
+      });
 
       this.subscriptions.push(pointerDragSub, keyboardStream);
     }
@@ -290,23 +341,20 @@ export const ObservableDragDropMixin = <T extends Constructor<Interaction>>(
 
       for (const element of composedPath) {
         if (element instanceof HTMLElement && element.tagName !== 'SLOT') {
-          if (this.isDraggableTarget(element)) {
+          // Check if this element itself is a draggable
+          if (element.matches(draggablesSelector) || element.hasAttribute('qti-draggable')) {
             return element;
+          }
+
+          // Otherwise, check if it has a draggable ancestor and return the ancestor
+          const closest = element.closest(draggablesSelector) || element.closest('[qti-draggable="true"]');
+          if (closest) {
+            return closest as HTMLElement;
           }
         }
       }
 
       return null;
-    }
-
-    private isDraggableTarget(element: HTMLElement): boolean {
-      if (!element) return false;
-
-      if (element.matches(draggablesSelector) || element.hasAttribute('qti-draggable')) {
-        return true;
-      }
-
-      return !!element.closest(draggablesSelector) || !!element.closest('[qti-draggable="true"]');
     }
 
     private initiateDrag(dragElement: HTMLElement, startX: number, startY: number, inputType: 'mouse' | 'touch'): void {
@@ -324,7 +372,7 @@ export const ObservableDragDropMixin = <T extends Constructor<Interaction>>(
 
       this.dragState = {
         dragging: true,
-        dragSource: dragElement, // Keep it simple - this is what we clicked
+        dragSource: dragElement,
         dragClone: this.createDragClone(dragElement, rect),
         startOffset: {
           x: startX - rect.left,
@@ -335,11 +383,9 @@ export const ObservableDragDropMixin = <T extends Constructor<Interaction>>(
       };
 
       if (isCloneInDroppable) {
-        // If dragging from a droppable, remove the clone completely
         dragElement.remove();
         this.cacheInteractiveElements();
       } else {
-        // If dragging from inventory, hide the original during drag
         dragElement.style.opacity = '0';
         dragElement.style.pointerEvents = 'none';
       }
@@ -350,7 +396,6 @@ export const ObservableDragDropMixin = <T extends Constructor<Interaction>>(
     }
 
     private setupMoveObservables(inputType: 'mouse' | 'touch'): void {
-      // Enhanced touch handling - use pointer capture to maintain touch session
       if (inputType === 'touch') {
         document.body.setPointerCapture(1); // Use a generic pointer ID for touch
 
@@ -483,7 +528,6 @@ export const ObservableDragDropMixin = <T extends Constructor<Interaction>>(
         clone.style.setProperty(property, computedStyles.getPropertyValue(property));
       }
 
-      // Set clone positioning and ensure it never interferes with pointer events
       clone.style.position = 'fixed';
       clone.style.width = `${rect.width}px`;
       clone.style.height = `${rect.height}px`;
@@ -495,8 +539,6 @@ export const ObservableDragDropMixin = <T extends Constructor<Interaction>>(
 
       clone.removeAttribute('qti-draggable');
       clone.removeAttribute('tabindex');
-
-      // Mark as clone to avoid confusion in element tracking
       clone.setAttribute('data-drag-clone', 'true');
 
       document.body.appendChild(clone);
@@ -551,14 +593,19 @@ export const ObservableDragDropMixin = <T extends Constructor<Interaction>>(
         return;
       }
 
-      // Remove existing item in droppable and return it to inventory
-      const existing = droppable.querySelector(draggablesSelector) || droppable.querySelector('[qti-draggable="true"]');
-      if (existing) {
-        const existingId = existing.getAttribute('identifier');
-        existing.remove();
+      const matchMax = parseInt(droppable.getAttribute('match-max') || '1', 10) || 1;
+      const allowsMultiple = matchMax === 0 || matchMax > 1;
 
-        if (existingId) {
-          this.restoreOriginalInInventory(existingId);
+      if (!allowsMultiple) {
+        const existing =
+          droppable.querySelector(draggablesSelector) || droppable.querySelector('[qti-draggable="true"]');
+        if (existing) {
+          const existingId = existing.getAttribute('identifier');
+          existing.remove();
+
+          if (existingId) {
+            this.restoreOriginalInInventory(existingId);
+          }
         }
       }
 
@@ -568,7 +615,14 @@ export const ObservableDragDropMixin = <T extends Constructor<Interaction>>(
       cleanClone.setAttribute('qti-draggable', 'true');
       cleanClone.setAttribute('tabindex', '0');
 
-      droppable.appendChild(cleanClone);
+      if (droppable.tagName === 'SLOT') {
+        cleanClone.setAttribute('slot', droppable.getAttribute('name') || '');
+      } else if (droppable.tagName === 'QTI-SIMPLE-ASSOCIABLE-CHOICE') {
+        cleanClone.setAttribute('slot', 'qti-simple-associable-choice');
+        droppable.appendChild(cleanClone);
+      } else {
+        droppable.appendChild(cleanClone);
+      }
 
       const identifier = draggable.getAttribute('identifier');
       if (identifier) {
@@ -590,7 +644,7 @@ export const ObservableDragDropMixin = <T extends Constructor<Interaction>>(
 
     private restoreOriginalInInventory(identifier: string): void {
       const inventoryItems = this.findInventoryItems(identifier);
-      console.log('restoreOriginalInInventory called for identifier:', identifier, inventoryItems);
+
       inventoryItems.forEach(item => {
         item.style.opacity = '1.0';
         item.style.pointerEvents = 'auto';
@@ -621,21 +675,12 @@ export const ObservableDragDropMixin = <T extends Constructor<Interaction>>(
     private findInventoryItems(identifier: string): HTMLElement[] {
       const items: HTMLElement[] = [];
 
-      this.trackedDragContainers.forEach((container, index) => {
+      this.trackedDragContainers.forEach(container => {
         let matches: Element[] = [];
 
         if (container.tagName.toLowerCase() === 'slot') {
           const slotElement = container as HTMLSlotElement;
           const assignedElements = slotElement.assignedElements({ flatten: true });
-
-          console.log(`🎰 [Observable DnD] Slot ${index} assigned elements:`, {
-            assignedCount: assignedElements.length,
-            assigned: assignedElements.map(el => ({
-              tag: el.tagName,
-              id: el.getAttribute('id'),
-              identifier: el.getAttribute('identifier')
-            }))
-          });
 
           matches = assignedElements.filter(el => el.getAttribute('identifier') === identifier);
         } else {
@@ -679,7 +724,10 @@ export const ObservableDragDropMixin = <T extends Constructor<Interaction>>(
 
     private checkAllMaxAssociations(): void {
       const totalAssociations = this.trackedDroppables.reduce((total, droppable) => {
-        return total + droppable.querySelectorAll(draggablesSelector).length;
+        // Count using both selectors to be flexible
+        const selectorMatches = droppable.querySelectorAll(draggablesSelector).length;
+        const attributeMatches = droppable.querySelectorAll('[qti-draggable="true"]').length;
+        return total + Math.max(selectorMatches, attributeMatches);
       }, 0);
 
       const maxReached = this.maxAssociations > 0 && totalAssociations >= this.maxAssociations;
@@ -698,8 +746,13 @@ export const ObservableDragDropMixin = <T extends Constructor<Interaction>>(
       const matchMax = parseInt(droppable.getAttribute('match-max') || '1', 10) || 1;
       if (matchMax === 0) return false;
 
-      const current = droppable.querySelectorAll(draggablesSelector).length;
-      return current >= matchMax;
+      // Count items using both the draggablesSelector and the qti-draggable attribute fallback
+      const selectorMatches = droppable.querySelectorAll(draggablesSelector);
+      const attributeMatches = droppable.querySelectorAll('[qti-draggable="true"]');
+      const current = Math.max(selectorMatches.length, attributeMatches.length);
+      const atCapacity = current >= matchMax;
+
+      return atCapacity;
     }
 
     private resetDragState(): void {

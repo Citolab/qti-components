@@ -52,10 +52,8 @@ export default css`
 
   [part='drop-list'][hover] {
     border-color: var(--qti-border-active) !important;
+    border-style: solid !important;
     background-color: var(--qti-bg-active) !important;
-    outline: 3px solid var(--qti-border-active) !important;
-    outline-offset: 2px !important;
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3) !important;
   }
 
   [part='container'] {
