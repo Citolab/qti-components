@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+	xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+	identifier="ITM-order-in-place" title="Chronological Order" adaptive="false" time-dependent="false">
+	<qti-response-declaration identifier="RESPONSE" cardinality="ordered" base-type="identifier">
+		<qti-correct-response>
+			<qti-value>EventA</qti-value>
+			<qti-value>EventB</qti-value>
+			<qti-value>EventC</qti-value>
+			<qti-value>EventD</qti-value>
+		</qti-correct-response>
+	</qti-response-declaration>
+	<qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float" />
+	<qti-item-body>
+		<qti-order-interaction-in-place response-identifier="RESPONSE" orientation="vertical">
+			<qti-prompt>The following historical events need to be arranged in chronological order.
+				Drag and drop the items to put them in the correct sequence from earliest to latest.</qti-prompt>
+			<qti-simple-choice identifier="EventA">The Wright brothers' first flight (1903)</qti-simple-choice>
+			<qti-simple-choice identifier="EventB">The first man on the moon (1969)</qti-simple-choice>
+			<qti-simple-choice identifier="EventC">The invention of the internet (1989)</qti-simple-choice>
+			<qti-simple-choice identifier="EventD">The launch of the first smartphone (2007)</qti-simple-choice>
+		</qti-order-interaction-in-place>
+	</qti-item-body>
+	<qti-response-processing
+		template="https://purl.imsglobal.org/spec/qti/v3p0/rptemplates/match_correct.xml" />
+</qti-assessment-item>
