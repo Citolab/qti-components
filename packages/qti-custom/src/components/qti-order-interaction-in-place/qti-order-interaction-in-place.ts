@@ -102,14 +102,22 @@ export class QtiOrderInteractionInPlace extends Interaction {
       const source = event.operation?.source;
       if (source?.element) {
         source.element.classList.add('dragging');
+
+        // Add keyboard dragging attribute if initiated via keyboard
+        // We can detect keyboard usage by checking if the element has focus when drag starts
+        // Keyboard sensor requires the element to be focused
+        if (document.activeElement === source.element) {
+          source.element.setAttribute('data-keyboard-dragging', 'true');
+        }
       }
     });
 
     this.manager.monitor.addEventListener('dragend', () => {
       this.isDragging = false;
-      // Remove dragging class from all elements
+      // Remove dragging class and keyboard attribute from all elements
       this.choices.forEach(choice => {
         choice.classList.remove('dragging');
+        choice.removeAttribute('data-keyboard-dragging');
       });
 
       // Update choices order after drag
