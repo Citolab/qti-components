@@ -108,4 +108,23 @@ export default css`
     outline: 2px solid var(--qti-focus-color, #007acc);
     outline-offset: 2px;
   }
+
+  /* Keyboard dragging visual feedback - unified with order interaction */
+  ::slotted(qti-simple-choice[data-keyboard-dragging]) {
+    outline: 2px solid var(--qti-border-active) !important;
+    outline-offset: 2px !important;
+    opacity: 0.7 !important;
+    border-color: var(--qti-border-active) !important;
+    background-color: var(--qti-bg-active) !important;
+  }
+
+  /* Drop zone hover state during keyboard navigation */
+  [part='items-container'][hover] {
+    background-color: var(--qti-bg-active) !important;
+    border-radius: 0.25rem;
+    padding: 0.5rem;
+    outline: 3px solid var(--qti-border-active) !important;
+    outline-offset: 2px !important;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3) !important;
+  }
 `;
