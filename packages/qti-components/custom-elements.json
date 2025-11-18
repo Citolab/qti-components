@@ -3787,6 +3787,31 @@
             },
             {
               "kind": "field",
+              "name": "response",
+              "type": {
+                "text": "string[]"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "setResponseValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
               "name": "showCorrectResponses",
               "type": {
                 "text": "boolean"
@@ -3813,6 +3838,18 @@
               "type": {
                 "text": "toggleCorrectResponse(show: boolean) => void"
               }
+            },
+            {
+              "kind": "method",
+              "name": "validate",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "type": {
+                "text": "validate() => boolean"
+              }
             }
           ],
           "attributes": [
@@ -3827,8 +3864,8 @@
           ],
           "mixins": [
             {
-              "name": "DragDropInteractionMixin",
-              "module": "/packages/qti-interactions/src/mixins/drag-drop"
+              "name": "ObservableDragDropMixin",
+              "module": "/packages/qti-interactions/src/mixins/observable-drag-drop-mixin"
             }
           ],
           "superclass": {

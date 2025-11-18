@@ -96,6 +96,12 @@ export default async function drag(
   fireEvent.mouseMove(element, current);
   fireEvent.mouseDown(element, current);
 
+  // Simulate drag start with pointer events (for observable drag-drop mixin)
+  fireEvent.pointerEnter(element, { ...current, pointerType: 'mouse', isPrimary: true, bubbles: true });
+  fireEvent.pointerOver(element, { ...current, pointerType: 'mouse', isPrimary: true, bubbles: true });
+  fireEvent.pointerMove(element, { ...current, pointerType: 'mouse', isPrimary: true, bubbles: true });
+  fireEvent.pointerDown(element, { ...current, pointerType: 'mouse', isPrimary: true, bubbles: true, button: 0 });
+
   // Simulate drag movement in steps
   for (let i = 0; i < steps; i++) {
     if (i === steps - 1) {
@@ -108,10 +114,13 @@ export default async function drag(
       current.clientY += step.y;
     }
     await sleep(duration / steps);
+
     fireEvent.mouseMove(element, current);
+    fireEvent.pointerMove(element, { ...current, pointerType: 'mouse', isPrimary: true, bubbles: true });
   }
 
   // Simulate drag end
   fireEvent.mouseUp(element, current);
+  fireEvent.pointerUp(element, { ...current, pointerType: 'mouse', isPrimary: true, bubbles: true, button: 0 });
   await sleep(100);
 }
