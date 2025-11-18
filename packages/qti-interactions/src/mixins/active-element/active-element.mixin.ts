@@ -83,12 +83,16 @@ export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, t
       this.addEventListener('keyup', this._onKeyUp);
       this.addEventListener('click', this._onClick);
 
-      this.dispatchEvent(
-        new CustomEvent(`register-${type}`, {
-          bubbles: true,
-          composed: true
-        })
-      );
+      const isClone = this.hasAttribute('qti-draggable');
+
+      if (!isClone) {
+        this.dispatchEvent(
+          new CustomEvent(`register-${type}`, {
+            bubbles: true,
+            composed: true
+          })
+        );
+      }
     }
 
     override disconnectedCallback() {
