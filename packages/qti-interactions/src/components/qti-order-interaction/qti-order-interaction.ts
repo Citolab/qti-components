@@ -3,13 +3,18 @@ import { customElement, property, state } from 'lit/decorators.js';
 
 import { Interaction } from '@qti-components/base';
 
-import { ObservableDragDropMixin } from '../../mixins/drag-drop/observable-drag-drop-mixin';
+import { ObservableDragDropMixin } from '../../mixins/drag-drop';
 import styles from './qti-order-interaction.styles';
 
 import type { PropertyValueMap } from 'lit';
-
+import type { QtiSimpleChoice } from '../../elements/qti-simple-choice';
 @customElement('qti-order-interaction')
-export class QtiOrderInteraction extends ObservableDragDropMixin(Interaction, 'qti-simple-choice', 'drop-list') {
+export class QtiOrderInteraction extends ObservableDragDropMixin(
+  Interaction,
+  `qti-simple-choice`,
+  'drop-list',
+  `slot[part='drags']`
+) {
   static override styles = styles;
   protected childrenMap: Element[];
 
@@ -20,25 +25,6 @@ export class QtiOrderInteraction extends ObservableDragDropMixin(Interaction, 'q
   /** orientation of choices */
   @property({ type: String })
   public orientation: 'horizontal' | 'vertical';
-
-  // Required abstract methods from Interaction base class
-  get response(): string[] {
-    return this.getResponse();
-  }
-
-  set response(value: string | string[] | null) {
-    // For order interaction, we need to place items in the correct droplists
-    if (Array.isArray(value)) {
-      this.setResponseValue(value);
-    }
-  }
-
-  validate(): boolean {
-    // Basic validation - check if we have choices and droplists
-    const choices = this.querySelectorAll('qti-simple-choice');
-    const dropLists = this.shadowRoot?.querySelectorAll('drop-list');
-    return choices.length > 0 && (dropLists?.length || 0) > 0;
-  }
 
   override render() {
     const choices = Array.from(this.querySelectorAll('qti-simple-choice'));
@@ -51,8 +37,7 @@ export class QtiOrderInteraction extends ObservableDragDropMixin(Interaction, 'q
         <slot part="drags"> </slot>
         <div part="drops">
           ${[...Array(this.nrChoices)].map(
-            (_, i) =>
-              html`<drop-list role="region" part="drop-list" identifier="droplist${i}" tabindex="-1"></drop-list>`
+            (_, i) => html`<drop-list role="region" part="drop-list" identifier="droplist${i}"></drop-list>`
           )}
         </div>
       </div>`;
@@ -119,7 +104,7 @@ export class QtiOrderInteraction extends ObservableDragDropMixin(Interaction, 'q
   // cause they are different for some interactions.
   // MH: is this function called? Shouldn't we use getValue?
   protected getResponse(): string[] {
-    const droppables = Array.from(this.shadowRoot.querySelectorAll('drop-list'));
+    const droppables = Array.from<QtiSimpleChoice>(this.shadowRoot.querySelectorAll('drop-list'));
 
     const response = droppables.map(droppable => {
       const dragsInDroppable = droppable.querySelectorAll('[qti-draggable="true"]');
@@ -127,35 +112,6 @@ export class QtiOrderInteraction extends ObservableDragDropMixin(Interaction, 'q
       return [...identifiers].join(' ');
     });
     return response;
-  }
-
-  private setResponseValue(value: string[]): void {
-    // This method should programmatically set the response by moving items to correct droplists
-    // For now, implement basic functionality - this can be enhanced later
-    const droppables = Array.from(this.shadowRoot.querySelectorAll('drop-list'));
-    const choices = Array.from(this.querySelectorAll('qti-simple-choice'));
-
-    // Clear existing placements
-    choices.forEach(choice => {
-      // Remove from current droplist if any
-      if (choice.parentElement?.tagName.toLowerCase() === 'drop-list') {
-        const slot = this.shadowRoot.querySelector('slot[part="drags"]');
-        if (slot) {
-          slot.appendChild(choice);
-        }
-      }
-    });
-
-    // Place items according to response value
-    value.forEach((responseItem, index) => {
-      const [identifier] = responseItem.split(' ');
-      const choice = choices.find(c => c.getAttribute('identifier') === identifier);
-      const droplist = droppables[index];
-
-      if (choice && droplist) {
-        droplist.appendChild(choice);
-      }
-    });
   }
 
   override async firstUpdated(changedProps: PropertyValueMap<any> | Map<PropertyKey, unknown>) {

@@ -1,10 +1,9 @@
 import { property } from 'lit/decorators.js';
-
-import { initObservablePolyfill } from '../../utils/simple-observable-polyfill.js';
+import { isSupported, apply } from 'observable-polyfill/fn';
 
 import type { Interaction, IInteraction } from '@qti-components/base';
 
-initObservablePolyfill();
+if (!isSupported()) apply();
 
 // Global setup for iOS Safari touch events
 const patchedWindows = new WeakSet<Window>();
@@ -285,6 +284,7 @@ export const ObservableDragDropMixin = <T extends Constructor<Interaction>>(
 
       this.subscriptions.push(pointerDragSub, keyboardStream);
     }
+
     private findDraggableTarget(e: Event): HTMLElement | null {
       const composedPath = e.composedPath ? e.composedPath() : [e.target];
 
