@@ -1,6 +1,5 @@
-export * from './drag-drop.api';
-// export * from './drag-drop-interaction-mixin';
-export { ObservableDragDropMixin as DragDropInteractionMixin } from './drag-drop-interaction-observables-mixin';
-export { ObservableDragDropMixin } from './drag-drop-interaction-observables-mixin';
+export { DragDropSlottedMixin as DragDropInteractionMixin } from './drag-drop-slotted.mixin';
+
+export { DragDropCoreMixin } from './drag-drop-core.mixin';
+export { DragDropSlottedMixin } from './drag-drop-slotted.mixin';
 export * from './flippables.mixin';
-// export * from './draggables-mixin'
