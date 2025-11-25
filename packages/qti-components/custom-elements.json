@@ -56,37 +56,63 @@
           "members": [
             {
               "kind": "method",
-              "name": "_handleTestElementChange",
+              "name": "_handleOrientationChange",
               "parameters": [
                 {
                   "name": "_oldValue",
                   "type": {
-                    "text": "ComputedContext"
+                    "text": "'vertical' | 'horizontal'"
                   }
                 },
                 {
                   "name": "newValue",
                   "type": {
-                    "text": "ComputedContext"
+                    "text": "'vertical' | 'horizontal'"
                   }
                 }
               ],
               "type": {
-                "text": "_handleTestElementChange(_oldValue: ComputedContext, newValue: ComputedContext) => void"
+                "text": "_handleOrientationChange(_oldValue: 'vertical' | 'horizontal', newValue: 'vertical' | 'horizontal') => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_handleTestElementChange",
+              "parameters": [
+                {
+                  "name": "_oldValue",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "newValue",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "type": {
+                "text": "_handleTestElementChange(_oldValue: number, newValue: number) => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "afterCache",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "type": {
+                "text": "afterCache() => void"
               }
             },
             {
               "kind": "method",
               "name": "applyInteractivityChanges",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "wasNonInteractive",
-                  "type": {
-                    "text": "boolean"
-                  }
-                }
-              ]
+              "privacy": "private"
             },
             {
               "kind": "field",
@@ -94,7 +120,8 @@
               "type": {
                 "text": "QtiSimpleChoice[]"
               },
-              "default": "[]"
+              "privacy": "private",
+              "readonly": true
             },
             {
               "kind": "field",
@@ -106,64 +133,6 @@
               "attribute": "data-choices-container-width"
             },
             {
-              "kind": "method",
-              "name": "cleanup",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "forceSetupReset",
-              "privacy": "private",
-              "description": "Force a complete reset of the sortable setup.\nUseful when the DOM structure changes programmatically."
-            },
-            {
-              "kind": "method",
-              "name": "getResponseValue",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "string[]"
-                }
-              }
-            },
-            {
-              "kind": "field",
-              "name": "isDragging",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "method",
-              "name": "isNonInteractive",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              }
-            },
-            {
-              "kind": "field",
-              "name": "isSetupComplete",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "manager",
-              "type": {
-                "text": "DragDropManager | null"
-              },
-              "privacy": "private",
-              "default": "null"
-            },
-            {
               "kind": "field",
               "name": "orientation",
               "type": {
@@ -172,78 +141,6 @@
               "default": "'vertical'",
               "attribute": "orientation",
               "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "response",
-              "type": {
-                "text": "string[]"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "setResponseOrder",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "identifiers",
-                  "type": {
-                    "text": "string[]"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "setupChoiceAsSortable",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "choice",
-                  "type": {
-                    "text": "QtiSimpleChoice"
-                  }
-                },
-                {
-                  "name": "index",
-                  "type": {
-                    "text": "number"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "setupSortable",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "setupTimeout",
-              "type": {
-                "text": "any"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "sortableInstances",
-              "type": {
-                "text": "Map<string, Sortable>"
-              },
-              "privacy": "private",
-              "default": "new Map()"
-            },
-            {
-              "kind": "method",
-              "name": "syncChoiceInteractivity",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "forceNonInteractive",
-                  "default": "this.isNonInteractive()"
-                }
-              ]
             },
             {
               "kind": "method",
@@ -289,12 +186,8 @@
             },
             {
               "kind": "method",
-              "name": "updateChoicesOrder",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
               "name": "validate",
+              "privacy": "public",
               "return": {
                 "type": {
                   "text": "boolean"
@@ -321,6 +214,12 @@
               },
               "default": "'vertical'",
               "fieldName": "orientation"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "DragDropSortableMixin",
+              "package": "@qti-components/interactions"
             }
           ],
           "superclass": {
@@ -2395,7 +2294,7 @@
               "deprecated": ", use 'qti-orientation-horizontal' or 'qti-orientation-vertical' instead",
               "attribute": "orientation",
               "parsedType": {
-                "text": "'horizontal' | 'vertical'"
+                "text": "'vertical' | 'horizontal'"
               }
             }
           ],
@@ -2409,7 +2308,7 @@
               "deprecated": ", use 'qti-orientation-horizontal' or 'qti-orientation-vertical' instead",
               "fieldName": "orientation",
               "parsedType": {
-                "text": "'horizontal' | 'vertical'"
+                "text": "'vertical' | 'horizontal'"
               }
             }
           ],

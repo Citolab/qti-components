@@ -26,12 +26,23 @@ export type DragDropCore = Interaction & {
   trackedDroppables: HTMLElement[];
   trackedDragContainers: HTMLElement[];
   allDropzones: HTMLElement[];
+  dragState: DragState;
+  get response(): string | string[] | null;
+  set response(value: string | string[] | null);
+  saveResponse(value?: string | string[]): void;
+  validate(): boolean;
+  reportValidity(): boolean;
   cacheInteractiveElements(): void;
   resetDragState(): void;
   afterCache(): void;
   allowDrop(draggable: HTMLElement, droppable: HTMLElement): boolean;
   handleDrop(draggable: HTMLElement, droppable: HTMLElement): void;
   handleInvalidDrop(dragSource: HTMLElement | null): void;
+  initiateDrag(dragElement: HTMLElement, startX: number, startY: number, inputType: 'mouse' | 'touch'): void;
+  createDragClone(element: HTMLElement, rect: DOMRect): HTMLElement;
+  updateClonePosition(clientX: number, clientY: number): void;
+  activateAllDroppables(): void;
+  setupMoveObservables(inputType: 'mouse' | 'touch'): void;
 };
 
 interface DragState {
@@ -92,11 +103,11 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       this.setupDragObservables();
     }
 
-    protected afterCache(): void {
+    public afterCache(): void {
       // Extension hook
     }
 
-    protected cacheInteractiveElements(): void {
+    public cacheInteractiveElements(): void {
       const collect = (selector: string, scope: ParentNode | ShadowRoot | null | undefined) =>
         Array.from(scope?.querySelectorAll<HTMLElement>(selector) ?? []);
 
@@ -432,13 +443,13 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       this.saveResponse();
     }
 
-    protected allowDrop(_draggable: HTMLElement, droppable: HTMLElement): boolean {
+    public allowDrop(_draggable: HTMLElement, droppable: HTMLElement): boolean {
       return this.trackedDroppables.includes(droppable);
     }
 
-    protected abstract handleDrop(draggable: HTMLElement, droppable: HTMLElement): void;
+    public abstract handleDrop(draggable: HTMLElement, droppable: HTMLElement): void;
 
-    protected handleInvalidDrop(dragSource: HTMLElement | null): void {
+    public handleInvalidDrop(dragSource: HTMLElement | null): void {
       if (dragSource) {
         dragSource.style.opacity = '1.0';
         dragSource.style.pointerEvents = 'auto';
@@ -503,7 +514,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       });
     }
 
-    protected resetDragState(): void {
+    public resetDragState(): void {
       if (this.dragState.activationTimeout) {
         clearTimeout(this.dragState.activationTimeout);
       }

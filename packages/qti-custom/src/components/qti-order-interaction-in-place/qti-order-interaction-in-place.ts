@@ -1,27 +1,44 @@
 import { html } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
-import { DragDropManager, PointerSensor, KeyboardSensor } from '@dnd-kit/dom';
-import { Sortable } from '@dnd-kit/dom/sortable';
+import { customElement, property } from 'lit/decorators.js';
 
 import { Interaction, InteractionReviewController } from '@qti-components/base';
 import { watch } from '@qti-components/utilities';
+import {
+  DragDropSortableMixin,
+  VerticalListSortingStrategy,
+  HorizontalListSortingStrategy
+} from '@qti-components/interactions';
 
 import styles from './qti-order-interaction-in-place.styles';
 
-import type { PropertyValueMap } from 'lit';
 import type { ComputedContext } from '@qti-components/base';
+import type { PropertyValueMap } from 'lit';
 import type { QtiSimpleChoice } from '@qti-components/interactions';
 
+// Create strategy instances for reuse
+const verticalStrategy = new VerticalListSortingStrategy();
+const horizontalStrategy = new HorizontalListSortingStrategy();
+
 @customElement('qti-order-interaction-in-place')
-export class QtiOrderInteractionInPlace extends Interaction {
+export class QtiOrderInteractionInPlace extends DragDropSortableMixin(
+  Interaction,
+  'qti-simple-choice',
+  `slot[part="drags"]`,
+  verticalStrategy
+) {
   static styles = [styles];
 
   @property({ attribute: 'orientation', reflect: true }) orientation: 'vertical' | 'horizontal' = 'vertical';
 
   @property({ type: Number, attribute: 'data-choices-container-width' }) choiceWidth = 200;
 
-  @watch('choiceWidth')
-  _handleTestElementChange(_oldValue: ComputedContext, newValue: ComputedContext) {
+  @watch('orientation')
+  _handleOrientationChange(_oldValue: 'vertical' | 'horizontal', newValue: 'vertical' | 'horizontal') {
+    // Dynamically switch sorting strategy based on orientation
+    (this as any).strategy = newValue === 'horizontal' ? horizontalStrategy : verticalStrategy;
+  }
+
+  @watch('choiceWidth') _handleTestElementChange(_oldValue: ComputedContext, newValue: ComputedContext) {
     if (newValue != null) {
       this.style.setProperty('--choice-width', `${newValue}px`);
     } else {
@@ -34,9 +51,9 @@ export class QtiOrderInteractionInPlace extends Interaction {
     this.reviewController = new InteractionReviewController(this);
   }
 
-  @state() choices: QtiSimpleChoice[] = [];
-  private manager: DragDropManager | null = null;
-  private sortableInstances: Map<string, Sortable> = new Map();
+  // @state() choices: QtiSimpleChoice[] = [];
+  // private manager: DragDropManager | null = null;
+  // private sortableInstances: Map<string, Sortable> = new Map();
 
   override render() {
     return html`
@@ -45,182 +62,34 @@ export class QtiOrderInteractionInPlace extends Interaction {
     `;
   }
 
-  private setupTimeout: any;
-  private isSetupComplete = false;
-  private isDragging = false;
+  private get choices(): QtiSimpleChoice[] {
+    return this.trackedDraggables as QtiSimpleChoice[];
+  }
 
   public async connectedCallback(): Promise<void> {
     super.connectedCallback();
     const prompt = this.querySelector('qti-prompt');
-    prompt.setAttribute('slot', 'prompt');
-
-    // Don't setup during drag operations, when non-interactive, or if already set up
-    if (this.isDragging || this.isSetupComplete || this.isNonInteractive()) {
-      this.syncChoiceInteractivity();
-      return;
+    if (prompt) {
+      prompt.setAttribute('slot', 'prompt');
     }
+  }
 
-    // Simple debounced setup
-    clearTimeout(this.setupTimeout);
-    this.setupTimeout = setTimeout(() => this.setupSortable(), 0);
+  public override afterCache(): void {
+    super.afterCache();
+    this.applyInteractivityChanges();
   }
 
   protected override updated(changedProps: PropertyValueMap<any>) {
     super.updated(changedProps);
 
     if (changedProps.has('disabled') || changedProps.has('readonly')) {
-      const wasNonInteractive = Boolean(changedProps.get('disabled') || changedProps.get('readonly'));
-      this.applyInteractivityChanges(wasNonInteractive);
+      this.applyInteractivityChanges();
     }
-  }
-
-  private async setupSortable() {
-    await this.updateComplete;
-
-    if (this.isNonInteractive()) {
-      this.syncChoiceInteractivity(true);
-      return;
-    }
-
-    // Don't setup if already complete
-    if (this.isSetupComplete) {
-      return;
-    }
-
-    // Clean up previous instances
-    this.cleanup();
-
-    // Get the slotted qti-simple-choice elements
-    this.choices = Array.from(this.querySelectorAll('qti-simple-choice')) as QtiSimpleChoice[];
-    this.syncChoiceInteractivity();
-
-    if (this.choices.length === 0) {
-      return;
-    }
-
-    // Create the drag drop manager with touch and keyboard support
-    this.manager = new DragDropManager({
-      sensors: [
-        PointerSensor.configure({
-          activationConstraints: {
-            distance: {
-              value: 5
-            },
-            delay: {
-              value: 100,
-              tolerance: 10
-            }
-          }
-        }),
-        KeyboardSensor.configure({
-          keyboardCodes: {
-            start: ['Space', 'Enter'],
-            cancel: ['Escape'],
-            end: ['Space', 'Enter'],
-            up: ['ArrowUp'],
-            down: ['ArrowDown'],
-            left: ['ArrowLeft'],
-            right: ['ArrowRight']
-          }
-        })
-      ]
-    });
-
-    // Listen for drag start/end to track dragging state
-    this.manager.monitor.addEventListener('dragstart', event => {
-      this.isDragging = true;
-      // Add dragging class to the element being dragged
-      const source = event.operation?.source;
-      if (source?.element) {
-        source.element.classList.add('dragging');
-
-        // Add keyboard dragging attribute if initiated via keyboard
-        // We can detect keyboard usage by checking if the element has focus when drag starts
-        // Keyboard sensor requires the element to be focused
-        if (document.activeElement === source.element) {
-          source.element.setAttribute('data-keyboard-dragging', 'true');
-        }
-      }
-    });
-
-    this.manager.monitor.addEventListener('dragend', () => {
-      this.isDragging = false;
-      // Remove dragging class and keyboard attribute from all elements
-      this.choices.forEach(choice => {
-        choice.classList.remove('dragging');
-        choice.removeAttribute('data-keyboard-dragging');
-      });
-
-      // Update choices order after drag
-      requestAnimationFrame(() => {
-        this.updateChoicesOrder();
-      });
-    });
-
-    // Set up each choice as sortable
-    this.choices.forEach((choice, index) => {
-      this.setupChoiceAsSortable(choice, index);
-    });
-
-    this.isSetupComplete = true;
-  }
-
-  private setupChoiceAsSortable(choice: QtiSimpleChoice, index: number) {
-    const identifier = choice.getAttribute('identifier') || `choice-${index}`;
-
-    if (!this.manager) return;
-
-    const sortable = new Sortable(
-      {
-        id: identifier,
-        element: choice,
-        index: index,
-        data: { choice, identifier },
-
-        transition: {
-          duration: 500,
-          easing: 'cubic-bezier(0.25, 1, 0.5, 1)'
-        }
-      },
-      this.manager
-    );
-
-    this.sortableInstances.set(identifier, sortable);
-
-    choice.style.cursor = 'grab';
-    choice.style.userSelect = 'none';
-  }
-
-  private async updateChoicesOrder() {
-    // Get the updated choices in their new DOM order
-    await new Promise(resolve => setTimeout(resolve, 300));
-    this.choices = Array.from(this.querySelectorAll('qti-simple-choice')) as QtiSimpleChoice[];
-
-    // this.applyUniformWidth();
-
-    this._internals.setFormValue(this.getResponseValue().join(','));
-
-    this.saveResponse(this.getResponseValue());
-  }
-
-  private cleanup() {
-    this.sortableInstances.forEach(sortable => {
-      sortable.destroy();
-    });
-    this.sortableInstances.clear();
-
-    if (this.manager) {
-      this.manager.destroy();
-      this.manager = null;
-    }
-
-    this.isSetupComplete = false;
   }
 
   public toggleCorrectResponse(show: boolean): void {
     const responseVariable = this.responseVariable;
 
-    // Always start by removing old correct answer display
     this.querySelectorAll('.correct-order-display').forEach(display => display.remove());
 
     if (show && responseVariable?.correctResponse) {
@@ -228,7 +97,6 @@ export class QtiOrderInteractionInPlace extends Interaction {
         ? responseVariable.correctResponse
         : [responseVariable.correctResponse];
 
-      // Create a container for the correct order display
       const correctDisplay = document.createElement('div');
       correctDisplay.classList.add('correct-order-display');
       correctDisplay.style.cssText = `
@@ -239,7 +107,6 @@ export class QtiOrderInteractionInPlace extends Interaction {
         background-color: var(--qti-correct-bg, rgba(46, 125, 50, 0.1));
       `;
 
-      // Add a label
       const label = document.createElement('div');
       label.style.cssText = `
         font-weight: bold;
@@ -250,7 +117,6 @@ export class QtiOrderInteractionInPlace extends Interaction {
       label.textContent = 'Correct Order:';
       correctDisplay.appendChild(label);
 
-      // Create the correct order list
       const correctList = document.createElement('div');
       correctList.style.cssText = `
         display: flex;
@@ -274,7 +140,6 @@ export class QtiOrderInteractionInPlace extends Interaction {
             position: relative;
           `;
 
-          // Add order number
           const orderNumber = document.createElement('span');
           orderNumber.style.cssText = `
             position: absolute;
@@ -294,7 +159,6 @@ export class QtiOrderInteractionInPlace extends Interaction {
           orderNumber.textContent = (index + 1).toString();
           correctChoice.appendChild(orderNumber);
 
-          // Add choice content
           const content = document.createElement('span');
           content.textContent = originalChoice.textContent?.trim() || '';
           correctChoice.appendChild(content);
@@ -304,81 +168,23 @@ export class QtiOrderInteractionInPlace extends Interaction {
       });
 
       correctDisplay.appendChild(correctList);
-
-      // Insert the correct display after the interaction
       this.appendChild(correctDisplay);
     }
   }
 
-  private getResponseValue(): string[] {
-    return this.choices.map(choice => choice.getAttribute('identifier') || '').filter(Boolean);
-  }
-
-  // Required abstract methods from Interaction base class
-  get response(): string[] {
-    return this.getResponseValue();
-  }
-
-  set response(value: string | string[] | null) {
-    if (Array.isArray(value) && value.length > 0) {
-      this.setResponseOrder(value);
-    }
-  }
-
-  validate(): boolean {
-    // Basic validation - ensure we have choices
+  public override validate(): boolean {
     return this.choices.length > 0;
   }
 
   override async firstUpdated(changedProps: any) {
     super.firstUpdated(changedProps);
-    await this.setupSortable();
+    this.applyInteractivityChanges();
+    this.saveResponse();
   }
 
-  private setResponseOrder(identifiers: string[]) {
-    // Reorder choices in the light DOM based on identifiers
-    identifiers.forEach(identifier => {
-      const choice = this.choices.find(c => c.getAttribute('identifier') === identifier);
-      if (choice) {
-        // Move to end of container
-        this.appendChild(choice);
-      }
-    });
+  private applyInteractivityChanges() {
+    const forceNonInteractive = this.disabled || this.readonly;
 
-    // Update our choices array
-    this.choices = Array.from(this.querySelectorAll('qti-simple-choice')) as QtiSimpleChoice[];
-
-    // Force a setup reset since DOM order changed
-    this.forceSetupReset();
-  }
-
-  /**
-   * Force a complete reset of the sortable setup.
-   * Useful when the DOM structure changes programmatically.
-   */
-  private forceSetupReset() {
-    this.isSetupComplete = false;
-    this.cleanup();
-    setTimeout(() => this.setupSortable(), 0);
-  }
-
-  private applyInteractivityChanges(wasNonInteractive: boolean) {
-    const nowNonInteractive = this.isNonInteractive();
-    this.syncChoiceInteractivity(nowNonInteractive);
-
-    if (nowNonInteractive) {
-      clearTimeout(this.setupTimeout);
-      this.cleanup();
-      return;
-    }
-
-    if (wasNonInteractive || !this.isSetupComplete) {
-      this.forceSetupReset();
-    }
-  }
-
-  private syncChoiceInteractivity(forceNonInteractive = this.isNonInteractive()) {
-    this.choices = Array.from(this.querySelectorAll('qti-simple-choice')) as QtiSimpleChoice[];
     this.choices.forEach(choice => {
       if (this.disabled) {
         choice.setAttribute('aria-disabled', 'true');
@@ -397,19 +203,12 @@ export class QtiOrderInteractionInPlace extends Interaction {
     });
   }
 
-  private isNonInteractive(): boolean {
-    return this.disabled || this.readonly;
-  }
-
   public override toggleCandidateCorrection(show: boolean): void {
     const responseVariable = this.responseVariable;
 
     if (!responseVariable?.correctResponse) {
       return;
     }
-
-    // Always get fresh choices from DOM in current order
-    this.choices = Array.from(this.querySelectorAll('qti-simple-choice')) as QtiSimpleChoice[];
 
     const correctOrder = Array.isArray(responseVariable.correctResponse)
       ? responseVariable.correctResponse
@@ -452,8 +251,6 @@ export class QtiOrderInteractionInPlace extends Interaction {
 
   override disconnectedCallback() {
     super.disconnectedCallback();
-    clearTimeout(this.setupTimeout);
-    this.cleanup();
   }
 }
 
