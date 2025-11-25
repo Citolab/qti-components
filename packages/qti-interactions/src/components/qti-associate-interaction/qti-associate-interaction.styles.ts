@@ -14,6 +14,13 @@ export default css`
     gap: 0.5rem;
   }
 
+  [part='drop-list'] {
+    display: block;
+    /* flex: 1; */
+    border: 2px solid transparent;
+    border-radius: 0.25rem;
+  }
+
   [part='drop-list'][active] {
     border-color: var(--qti-border-active) !important;
     background-color: var(--qti-bg-active) !important;
@@ -23,9 +30,16 @@ export default css`
     background-color: var(--qti-bg-active) !important;
   }
 
+  [part='drop-list'][hover] {
+    border-color: var(--qti-border-active) !important;
+    border-style: solid !important;
+    background-color: var(--qti-bg-active) !important;
+  }
+
   :host::part(associables-container) {
     display: flex;
     padding: 0.5rem;
+    min-height: 3rem;
     justify-content: space-between;
     background: linear-gradient(
       180deg,

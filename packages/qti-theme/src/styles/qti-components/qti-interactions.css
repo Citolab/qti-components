@@ -912,7 +912,8 @@
         @apply dragging;
       }
 
-      &:hover {
+      &:hover,
+      &[hover] {
         @apply hov;
       }
 
