@@ -82,18 +82,18 @@
                 {
                   "name": "_oldValue",
                   "type": {
-                    "text": "number"
+                    "text": "ComputedContext"
                   }
                 },
                 {
                   "name": "newValue",
                   "type": {
-                    "text": "number"
+                    "text": "ComputedContext"
                   }
                 }
               ],
               "type": {
-                "text": "_handleTestElementChange(_oldValue: number, newValue: number) => void"
+                "text": "_handleTestElementChange(_oldValue: ComputedContext, newValue: ComputedContext) => void"
               }
             },
             {
@@ -141,6 +141,11 @@
               "default": "'vertical'",
               "attribute": "orientation",
               "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "reviewController",
+              "default": "new InteractionReviewController(this)"
             },
             {
               "kind": "method",
@@ -2294,7 +2299,7 @@
               "deprecated": ", use 'qti-orientation-horizontal' or 'qti-orientation-vertical' instead",
               "attribute": "orientation",
               "parsedType": {
-                "text": "'vertical' | 'horizontal'"
+                "text": "'horizontal' | 'vertical'"
               }
             }
           ],
@@ -2308,7 +2313,7 @@
               "deprecated": ", use 'qti-orientation-horizontal' or 'qti-orientation-vertical' instead",
               "fieldName": "orientation",
               "parsedType": {
-                "text": "'vertical' | 'horizontal'"
+                "text": "'horizontal' | 'vertical'"
               }
             }
           ],

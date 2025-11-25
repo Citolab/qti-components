@@ -56,6 +56,27 @@
           "members": [
             {
               "kind": "method",
+              "name": "_handleOrientationChange",
+              "parameters": [
+                {
+                  "name": "_oldValue",
+                  "type": {
+                    "text": "'vertical' | 'horizontal'"
+                  }
+                },
+                {
+                  "name": "newValue",
+                  "type": {
+                    "text": "'vertical' | 'horizontal'"
+                  }
+                }
+              ],
+              "type": {
+                "text": "_handleOrientationChange(_oldValue: 'vertical' | 'horizontal', newValue: 'vertical' | 'horizontal') => void"
+              }
+            },
+            {
+              "kind": "method",
               "name": "_handleTestElementChange",
               "parameters": [
                 {
@@ -77,16 +98,21 @@
             },
             {
               "kind": "method",
-              "name": "applyInteractivityChanges",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "wasNonInteractive",
-                  "type": {
-                    "text": "boolean"
-                  }
+              "name": "afterCache",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
                 }
-              ]
+              },
+              "type": {
+                "text": "afterCache() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "applyInteractivityChanges",
+              "privacy": "private"
             },
             {
               "kind": "field",
@@ -94,7 +120,8 @@
               "type": {
                 "text": "QtiSimpleChoice[]"
               },
-              "default": "[]"
+              "privacy": "private",
+              "readonly": true
             },
             {
               "kind": "field",
@@ -104,64 +131,6 @@
               },
               "default": "200",
               "attribute": "data-choices-container-width"
-            },
-            {
-              "kind": "method",
-              "name": "cleanup",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "forceSetupReset",
-              "privacy": "private",
-              "description": "Force a complete reset of the sortable setup.\nUseful when the DOM structure changes programmatically."
-            },
-            {
-              "kind": "method",
-              "name": "getResponseValue",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "string[]"
-                }
-              }
-            },
-            {
-              "kind": "field",
-              "name": "isDragging",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "method",
-              "name": "isNonInteractive",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              }
-            },
-            {
-              "kind": "field",
-              "name": "isSetupComplete",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "manager",
-              "type": {
-                "text": "DragDropManager | null"
-              },
-              "privacy": "private",
-              "default": "null"
             },
             {
               "kind": "field",
@@ -175,75 +144,8 @@
             },
             {
               "kind": "field",
-              "name": "response",
-              "type": {
-                "text": "string[]"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "setResponseOrder",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "identifiers",
-                  "type": {
-                    "text": "string[]"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "setupChoiceAsSortable",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "choice",
-                  "type": {
-                    "text": "QtiSimpleChoice"
-                  }
-                },
-                {
-                  "name": "index",
-                  "type": {
-                    "text": "number"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "setupSortable",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "setupTimeout",
-              "type": {
-                "text": "any"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "sortableInstances",
-              "type": {
-                "text": "Map<string, Sortable>"
-              },
-              "privacy": "private",
-              "default": "new Map()"
-            },
-            {
-              "kind": "method",
-              "name": "syncChoiceInteractivity",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "forceNonInteractive",
-                  "default": "this.isNonInteractive()"
-                }
-              ]
+              "name": "reviewController",
+              "default": "new InteractionReviewController(this)"
             },
             {
               "kind": "method",
@@ -289,12 +191,8 @@
             },
             {
               "kind": "method",
-              "name": "updateChoicesOrder",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
               "name": "validate",
+              "privacy": "public",
               "return": {
                 "type": {
                   "text": "boolean"
@@ -321,6 +219,12 @@
               },
               "default": "'vertical'",
               "fieldName": "orientation"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "DragDropSortableMixin",
+              "package": "@qti-components/interactions"
             }
           ],
           "superclass": {
