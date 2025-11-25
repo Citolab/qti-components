@@ -639,7 +639,14 @@ export const OrderInPlaceComplete: Story = {
 
     await step('Reorder items by dragging', async () => {
       if (choices.length >= 2) {
-        await drag(choices[0], { to: choices[1] });
+        await drag(choices[0])
+          .fromCenter()
+          .pointerDown()
+          .wait(200)
+          .moveToElementCenter(choices[1])
+          .wait(200)
+          .pointerUpDocument()
+          .run();
         await new Promise(resolve => setTimeout(resolve, 100));
       }
     });
