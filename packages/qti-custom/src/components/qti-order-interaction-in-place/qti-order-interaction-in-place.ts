@@ -1,4 +1,4 @@
-import { html, css, unsafeCSS, LitElement } from 'lit';
+import { html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { DragDropManager, PointerSensor, KeyboardSensor } from '@dnd-kit/dom';
 import { Sortable } from '@dnd-kit/dom/sortable';
@@ -8,6 +8,7 @@ import { watch } from '@qti-components/utilities';
 
 import styles from './qti-order-interaction-in-place.styles';
 
+import type { PropertyValueMap } from 'lit';
 import type { ComputedContext } from '@qti-components/base';
 import type { QtiSimpleChoice } from '@qti-components/interactions';
 
@@ -18,6 +19,33 @@ export class QtiOrderInteractionInPlace extends Interaction {
   @property({ attribute: 'orientation', reflect: true }) orientation: 'vertical' | 'horizontal' = 'vertical';
 
   @property({ type: Number, attribute: 'data-choices-container-width' }) choiceWidth = 200;
+
+  // @property({ type: String }) response: string | string[] | null = null;
+  // @property({ type: String, attribute: 'correct-inline' }) correctInline: string | string[] | null = null;
+  // @property({ type: String, attribute: 'correct-complete' }) correctComplete: string | string[] | null = null;
+  // @property({ type: String, attribute: 'correct-response' }) correctResponse: string | string[] | null = null;
+  // @property({ type: String }) corrected: string | string[] | null = null;
+
+  // @watch('response')
+  // _handleResponseChange(_oldValue: string, newValue: string) {
+  //   console.log('Response changed to:', newValue);
+  //   // this.response = newValue;
+  // }
+  // @watch('correctInline')
+  // _handleCorrectInlineChange(_oldValue: string, newValue: string) {
+  //   console.log('Correct Inline changed to:', newValue);
+  //   this.toggleCorrectResponse(!!newValue);
+  // }
+  // @watch('correctComplete')
+  // _handleCorrectCompleteChange(_oldValue: string, newValue: string) {
+  //   console.log('Correct Complete changed to:', newValue);
+  //   this.toggleCorrectResponse(!!newValue);
+  // }
+  // @watch('corrected')
+  // _handleCorrectedChange(_oldValue: string, newValue: string) {
+  //   console.log('Corrected changed to:', newValue);
+  //   this.toggleCandidateCorrection(!!newValue);
+  // }
 
   @watch('choiceWidth')
   _handleTestElementChange(_oldValue: ComputedContext, newValue: ComputedContext) {
@@ -49,8 +77,9 @@ export class QtiOrderInteractionInPlace extends Interaction {
     const prompt = this.querySelector('qti-prompt');
     prompt.setAttribute('slot', 'prompt');
 
-    // Don't setup during drag operations or if already set up
-    if (this.isDragging || this.isSetupComplete) {
+    // Don't setup during drag operations, when non-interactive, or if already set up
+    if (this.isDragging || this.isSetupComplete || this.isNonInteractive()) {
+      this.syncChoiceInteractivity();
       return;
     }
 
@@ -59,8 +88,22 @@ export class QtiOrderInteractionInPlace extends Interaction {
     this.setupTimeout = setTimeout(() => this.setupSortable(), 0);
   }
 
+  protected override updated(changedProps: PropertyValueMap<any>) {
+    super.updated(changedProps);
+
+    if (changedProps.has('disabled') || changedProps.has('readonly')) {
+      const wasNonInteractive = Boolean(changedProps.get('disabled') || changedProps.get('readonly'));
+      this.applyInteractivityChanges(wasNonInteractive);
+    }
+  }
+
   private async setupSortable() {
     await this.updateComplete;
+
+    if (this.isNonInteractive()) {
+      this.syncChoiceInteractivity(true);
+      return;
+    }
 
     // Don't setup if already complete
     if (this.isSetupComplete) {
@@ -72,6 +115,7 @@ export class QtiOrderInteractionInPlace extends Interaction {
 
     // Get the slotted qti-simple-choice elements
     this.choices = Array.from(this.querySelectorAll('qti-simple-choice')) as QtiSimpleChoice[];
+    this.syncChoiceInteractivity();
 
     if (this.choices.length === 0) {
       return;
@@ -339,6 +383,45 @@ export class QtiOrderInteractionInPlace extends Interaction {
     this.isSetupComplete = false;
     this.cleanup();
     setTimeout(() => this.setupSortable(), 0);
+  }
+
+  private applyInteractivityChanges(wasNonInteractive: boolean) {
+    const nowNonInteractive = this.isNonInteractive();
+    this.syncChoiceInteractivity(nowNonInteractive);
+
+    if (nowNonInteractive) {
+      clearTimeout(this.setupTimeout);
+      this.cleanup();
+      return;
+    }
+
+    if (wasNonInteractive || !this.isSetupComplete) {
+      this.forceSetupReset();
+    }
+  }
+
+  private syncChoiceInteractivity(forceNonInteractive = this.isNonInteractive()) {
+    this.choices = Array.from(this.querySelectorAll('qti-simple-choice')) as QtiSimpleChoice[];
+    this.choices.forEach(choice => {
+      if (this.disabled) {
+        choice.setAttribute('aria-disabled', 'true');
+      } else {
+        choice.removeAttribute('aria-disabled');
+      }
+
+      if (this.readonly) {
+        choice.setAttribute('aria-readonly', 'true');
+      } else {
+        choice.removeAttribute('aria-readonly');
+      }
+
+      choice.style.cursor = forceNonInteractive ? 'default' : 'grab';
+      choice.style.userSelect = forceNonInteractive ? 'auto' : 'none';
+    });
+  }
+
+  private isNonInteractive(): boolean {
+    return this.disabled || this.readonly;
   }
 
   public override toggleCandidateCorrection(show: boolean): void {

@@ -76,6 +76,19 @@
               }
             },
             {
+              "kind": "method",
+              "name": "applyInteractivityChanges",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "wasNonInteractive",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
               "kind": "field",
               "name": "choices",
               "type": {
@@ -121,6 +134,16 @@
               },
               "privacy": "private",
               "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "isNonInteractive",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
             },
             {
               "kind": "field",
@@ -210,6 +233,17 @@
               },
               "privacy": "private",
               "default": "new Map()"
+            },
+            {
+              "kind": "method",
+              "name": "syncChoiceInteractivity",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "forceNonInteractive",
+                  "default": "this.isNonInteractive()"
+                }
+              ]
             },
             {
               "kind": "method",

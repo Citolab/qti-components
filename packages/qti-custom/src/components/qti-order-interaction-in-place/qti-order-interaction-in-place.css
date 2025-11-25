@@ -11,12 +11,32 @@ qti-order-interaction-in-place {
     @apply dropping;
   }
 
+  &[disabled] {
+    & qti-simple-choice {
+      @apply dis;
+    }
+  }
+
+  &[readonly] {
+    & qti-simple-choice {
+      @apply rdo;
+    }
+  }
+
   & qti-simple-choice {
     flex-grow: 1;
     flex-basis: 0;
     /* width: fit-content; */
 
     @apply drag;
+
+    &:state(candidate-correct) {
+      background-color: var(--qti-correct);
+    }
+
+    &:state(candidate-incorrect) {
+      background-color: var(--qti-incorrect);
+    }
 
     &[dragging] {
       @apply dragging;

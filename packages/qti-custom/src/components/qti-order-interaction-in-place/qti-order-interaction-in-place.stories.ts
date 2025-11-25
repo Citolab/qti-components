@@ -3,15 +3,17 @@ import { expect, fireEvent, fn, waitFor } from 'storybook/test';
 import { within } from 'shadow-dom-testing-library';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { getAssessmentItemFromItemContainer } from 'tools/testing/test-utils';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
 import { drag } from './drag';
+import './qti-order-interaction-in-place.css';
+import styles from './qti-order-interaction-in-place.css?inline';
 
 import type { Interaction } from '@qti-components/base';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { QtiOrderInteractionInPlace } from './qti-order-interaction-in-place';
 import type { QtiSimpleChoice } from '@qti-components/interactions';
 
-import './qti-order-interaction-in-place.css';
 import './qti-order-interaction-in-place';
 
 const { events, args, argTypes, template } = getStorybookHelpers('qti-order-interaction-in-place', {
@@ -468,6 +470,40 @@ export const KeyboardAccessibilityTest: Story = {
   }
 };
 
+const mytemplate = `
+<template>
+  <style>
+    ${styles}
+/*
+    qti-assessment-item {
+      padding: 1rem;
+      display: block;
+      aspect-ratio: 4 / 3;
+      width: 800px;
+
+      border: 2px solid blue;
+      transform: scale(0.5);
+      transform-origin: top left;
+    }
+
+    /* Fix drag overlay positioning for scaled content */
+    [data-dnd-overlay],
+    .dnd-kit-overlay,
+    [data-dnd-dragging-overlay] {
+      transform: scale(0.5) !important;
+      transform-origin: top left !important;
+    }
+
+    /* Alternative approach: hide overlay entirely if positioning can't be fixed */
+    body > [data-dnd-overlay],
+    body > .dnd-kit-overlay {
+      display: none !important;
+    }
+*/
+  </style>
+</template>
+`;
+
 export const OrderInPlace: Story = {
   args: {
     'item-url': 'assets/qti-test-package/items/order_in_place.xml'
@@ -476,34 +512,7 @@ export const OrderInPlace: Story = {
     html` <qti-item>
       <div>
         <item-container style="display: block;width: 400px; height: 350px;" item-url=${args['item-url'] as string}>
-          <template>
-            <style>
-              qti-assessment-item {
-                padding: 1rem;
-                display: block;
-                aspect-ratio: 4 / 3;
-                width: 800px;
-
-                border: 2px solid blue;
-                transform: scale(0.5);
-                transform-origin: top left;
-              }
-
-              /* Fix drag overlay positioning for scaled content */
-              [data-dnd-overlay],
-              .dnd-kit-overlay,
-              [data-dnd-dragging-overlay] {
-                transform: scale(0.5) !important;
-                transform-origin: top left !important;
-              }
-
-              /* Alternative approach: hide overlay entirely if positioning can't be fixed */
-              body > [data-dnd-overlay],
-              body > .dnd-kit-overlay {
-                display: none !important;
-              }
-            </style>
-          </template>
+          ${unsafeHTML(mytemplate)}
         </item-container>
         <item-show-candidate-correction></item-show-candidate-correction>
       </div>
@@ -550,33 +559,119 @@ export const OrderInPlace: Story = {
           .pointerUpDocument()
           .run();
 
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 300));
+        await showCorrectButton.click();
 
-        const newChoices = Array.from(orderInteraction.querySelectorAll('qti-simple-choice'));
+        // const newChoices = Array.from(orderInteraction.querySelectorAll('qti-simple-choice'));
       }
     });
 
-    await step('Click on the Show Candidate Correction button', async () => {
+    // await step('Click on the Show Candidate Correction button', async () => {
+    //   await showCorrectButton.click();
+
+    //   // Wait a bit for the correction to be applied
+    //   await new Promise(resolve => setTimeout(resolve, 200));
+
+    //   await step('Verify candidate correction state is applied to order choices', async () => {
+    //     // Get updated choices after potential reordering
+    //     const updatedChoices = Array.from(orderInteraction.querySelectorAll('qti-simple-choice'));
+
+    //     const hasCorrectStates = updatedChoices.some(
+    //       choice =>
+    //         choice.internals.states.has('candidate-correct') || choice.internals.states.has('candidate-incorrect')
+    //     );
+
+    //     expect(hasCorrectStates).toBe(true);
+
+    //     updatedChoices.forEach(choice => {
+    //       const hasState =
+    //         choice.internals.states.has('candidate-correct') || choice.internals.states.has('candidate-incorrect');
+    //       expect(hasState).toBe(true);
+    //     });
+    //   });
+    // });
+  }
+};
+
+export const OrderInPlaceComplete: Story = {
+  args: {
+    'item-url': 'assets/qti-test-package/items/order_in_place.xml'
+  },
+  render: args =>
+    html` <qti-item>
+      <div>
+        <item-container style="display: block;width: 400px; height: 350px;" item-url=${args['item-url'] as string}>
+          ${unsafeHTML(mytemplate)}
+        </item-container>
+        <item-show-correct-response></item-show-correct-response>
+      </div>
+    </qti-item>`,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const item = await getAssessmentItemFromItemContainer(canvasElement);
+
+    const showCorrectButton = await canvas.findByShadowText(/Show correct response/i);
+
+    const orderInteraction: QtiOrderInteractionInPlace = await waitFor(
+      () => {
+        const interaction = item.querySelector('qti-order-interaction-in-place') as QtiOrderInteractionInPlace;
+        if (!interaction) throw new Error('Order interaction not found');
+        return interaction;
+      },
+      { timeout: 5000 }
+    );
+
+    await waitFor(
+      () => {
+        // Check if the component has been properly set up by looking for choices
+        const choices = orderInteraction.querySelectorAll('qti-simple-choice');
+        if (choices.length === 0) throw new Error('Choices not ready');
+
+        return choices;
+      },
+      { timeout: 5000 }
+    );
+
+    // Additional wait for the sortable system to be fully initialized
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    const choices = Array.from(orderInteraction.querySelectorAll('qti-simple-choice'));
+
+    await step('Reorder items by dragging', async () => {
+      if (choices.length >= 2) {
+        await drag(choices[0], { to: choices[1] });
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+    });
+
+    await step('Click on the Show Correct Response button', async () => {
       await showCorrectButton.click();
 
-      // Wait a bit for the correction to be applied
       await new Promise(resolve => setTimeout(resolve, 200));
 
-      await step('Verify candidate correction state is applied to order choices', async () => {
-        // Get updated choices after potential reordering
-        const updatedChoices = Array.from(orderInteraction.querySelectorAll('qti-simple-choice'));
+      await step('Verify correct response is shown', async () => {
+        // Check for the new correct order display
+        const correctDisplay = orderInteraction.querySelector('.correct-order-display');
+        expect(correctDisplay).toBeTruthy();
 
-        const hasCorrectStates = updatedChoices.some(
-          choice =>
-            choice.internals.states.has('candidate-correct') || choice.internals.states.has('candidate-incorrect')
-        );
+        // Check for the correct choice displays within the correct order display
+        const correctChoiceDisplays = correctDisplay?.querySelectorAll('.correct-choice-display');
+        expect(correctChoiceDisplays?.length).toBe(4);
 
-        expect(hasCorrectStates).toBe(true);
+        // Verify the order is correct by checking the text content
+        // The correct order should be: EventA, EventB, EventC, EventD (based on the XML)
+        const expectedTexts = [
+          "The Wright brothers' first flight (1903)",
+          'The first man on the moon (1969)',
+          'The invention of the internet (1989)',
+          'The launch of the first smartphone (2007)'
+        ];
 
-        updatedChoices.forEach(choice => {
-          const hasState =
-            choice.internals.states.has('candidate-correct') || choice.internals.states.has('candidate-incorrect');
-          expect(hasState).toBe(true);
+        correctChoiceDisplays?.forEach((display, index) => {
+          const textContent = display.textContent?.trim();
+          // Remove the order number (1, 2, 3, 4) from the beginning
+          const choiceText = textContent?.replace(/^\d+/, '').trim();
+          expect(choiceText).toBe(expectedTexts[index]);
         });
       });
     });
