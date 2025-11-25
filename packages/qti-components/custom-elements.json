@@ -3159,7 +3159,7 @@
           "mixins": [
             {
               "name": "DragDropInteractionMixin",
-              "module": "/packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction.mixin.js"
+              "module": "/packages/qti-interactions/src/mixins/drag-drop"
             }
           ],
           "superclass": {

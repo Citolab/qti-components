@@ -3,7 +3,7 @@ import { customElement } from 'lit/decorators.js';
 
 import { Interaction, InteractionReviewController } from '@qti-components/base';
 
-import { DragDropInteractionMixin } from '../../mixins/drag-drop/drag-drop-interaction.mixin.js';
+import { DragDropInteractionMixin } from '../../mixins/drag-drop';
 import styles from './qti-gap-match-interaction.styles.js';
 import {
   toggleGapMatchCandidateCorrection,
