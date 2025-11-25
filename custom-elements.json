@@ -55,12 +55,42 @@
           "name": "QtiOrderInteractionInPlace",
           "members": [
             {
+              "kind": "method",
+              "name": "_handleTestElementChange",
+              "parameters": [
+                {
+                  "name": "_oldValue",
+                  "type": {
+                    "text": "ComputedContext"
+                  }
+                },
+                {
+                  "name": "newValue",
+                  "type": {
+                    "text": "ComputedContext"
+                  }
+                }
+              ],
+              "type": {
+                "text": "_handleTestElementChange(_oldValue: ComputedContext, newValue: ComputedContext) => void"
+              }
+            },
+            {
               "kind": "field",
               "name": "choices",
               "type": {
                 "text": "QtiSimpleChoice[]"
               },
               "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "choiceWidth",
+              "type": {
+                "text": "number"
+              },
+              "default": "200",
+              "attribute": "data-choices-container-width"
             },
             {
               "kind": "method",
@@ -242,6 +272,14 @@
             }
           ],
           "attributes": [
+            {
+              "name": "data-choices-container-width",
+              "type": {
+                "text": "number"
+              },
+              "default": "200",
+              "fieldName": "choiceWidth"
+            },
             {
               "name": "orientation",
               "type": {

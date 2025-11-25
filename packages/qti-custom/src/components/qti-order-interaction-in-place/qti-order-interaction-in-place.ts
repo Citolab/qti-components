@@ -4,20 +4,29 @@ import { DragDropManager, PointerSensor, KeyboardSensor } from '@dnd-kit/dom';
 import { Sortable } from '@dnd-kit/dom/sortable';
 
 import { Interaction } from '@qti-components/base';
+import { watch } from '@qti-components/utilities';
 
 import styles from './qti-order-interaction-in-place.styles';
 
+import type { ComputedContext } from '@qti-components/base';
 import type { QtiSimpleChoice } from '@qti-components/interactions';
 
 @customElement('qti-order-interaction-in-place')
 export class QtiOrderInteractionInPlace extends Interaction {
-  static styles = [
-    css`
-      ${unsafeCSS(styles)}
-    `
-  ];
+  static styles = [styles];
 
   @property({ attribute: 'orientation', reflect: true }) orientation: 'vertical' | 'horizontal' = 'vertical';
+
+  @property({ type: Number, attribute: 'data-choices-container-width' }) choiceWidth = 200;
+
+  @watch('choiceWidth')
+  _handleTestElementChange(_oldValue: ComputedContext, newValue: ComputedContext) {
+    if (newValue != null) {
+      this.style.setProperty('--choice-width', `${newValue}px`);
+    } else {
+      this.style.removeProperty('--choice-width');
+    }
+  }
 
   @state() choices: QtiSimpleChoice[] = [];
   private manager: DragDropManager | null = null;
@@ -25,12 +34,9 @@ export class QtiOrderInteractionInPlace extends Interaction {
 
   override render() {
     return html`
-      ${this.choices.map(choice => html`<div>${choice.identifier}</div>`)}
       <slot name="prompt"></slot>
 
-      <div part="drags" class="sortable-container" orientation="${this.orientation}">
-        <slot part="slot"></slot>
-      </div>
+      <slot part="drags"></slot>
     `;
   }
 
@@ -135,35 +141,8 @@ export class QtiOrderInteractionInPlace extends Interaction {
       this.setupChoiceAsSortable(choice, index);
     });
 
-    // Apply uniform width to all choices
-    // this.applyUniformWidth();
-
     this.isSetupComplete = true;
   }
-
-  // private applyUniformWidth() {
-  //   if (this.choices.length === 0) return;
-
-  //   // Reset any previous width constraints to get natural widths
-  //   this.choices.forEach(choice => {
-  //     choice.style.width = '';
-  //   });
-
-  //   // Force a layout recalculation by accessing offsetWidth
-  //   void this.choices[0].offsetWidth;
-
-  //   // Find the maximum width among all choices
-  //   let maxWidth = 0;
-  //   this.choices.forEach(choice => {
-  //     const width = choice.getBoundingClientRect().width;
-  //     maxWidth = Math.max(maxWidth, width);
-  //   });
-
-  //   // Apply the maximum width to all choices
-  //   this.choices.forEach(choice => {
-  //     choice.style.width = `${maxWidth}px`;
-  //   });
-  // }
 
   private setupChoiceAsSortable(choice: QtiSimpleChoice, index: number) {
     const identifier = choice.getAttribute('identifier') || `choice-${index}`;

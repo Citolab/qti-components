@@ -22,7 +22,10 @@ type Story = StoryObj<QtiOrderInteractionInPlace & typeof args>;
 
 const meta: Meta = {
   component: 'qti-order-interaction-in-place',
-  argTypes: argTypes
+  argTypes: argTypes,
+  args: {
+    'data-choices-container-width': '200'
+  }
 };
 
 export default meta;
