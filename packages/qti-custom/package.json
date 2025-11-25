@@ -19,7 +19,8 @@
   "license": "GPL-3.0-only",
   "dependencies": {
     "@qti-components/base": "workspace:*",
-    "@qti-components/interactions": "workspace:*"
+    "@qti-components/interactions": "workspace:*",
+    "@qti-components/utilities": "workspace:*"
   },
   "peerDependencies": {
     "lit": "^3.3.1",
