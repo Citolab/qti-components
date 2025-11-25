@@ -9,7 +9,6 @@ export * from './flippables.mixin';
 export {
   VerticalListSortingStrategy,
   HorizontalListSortingStrategy,
-  AdaptiveSortingStrategy,
   defaultSortingStrategy
 } from './strategies/sorting-strategy';
-export type { SortingStrategy, SortOrientation, InsertPosition } from './strategies/sorting-strategy';
+export type { SortingStrategy, InsertPosition } from './strategies/sorting-strategy';

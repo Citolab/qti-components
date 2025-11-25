@@ -2,8 +2,6 @@
  * Sorting strategies for different layouts.
  */
 
-export type SortOrientation = 'vertical' | 'horizontal';
-
 export interface InsertPosition {
   index: number;
   placeAfter: boolean;
@@ -26,27 +24,9 @@ export interface SortingStrategy {
     clientX: number,
     clientY: number
   ): InsertPosition | null;
-
-  /**
-   * Determine the orientation of the sortable container
-   */
-  getOrientation(container: HTMLElement): SortOrientation;
 }
 
 export class VerticalListSortingStrategy implements SortingStrategy {
-  getOrientation(container: HTMLElement): SortOrientation {
-    const styles = getComputedStyle(container);
-    const flexDir = styles.flexDirection;
-    const gridFlow = styles.gridAutoFlow;
-
-    // Check if explicitly horizontal
-    if (flexDir?.startsWith('row') || gridFlow?.includes('column')) {
-      return 'horizontal';
-    }
-
-    return 'vertical';
-  }
-
   getInsertPosition(
     elements: HTMLElement[],
     _activeElement: HTMLElement,
@@ -73,10 +53,6 @@ export class VerticalListSortingStrategy implements SortingStrategy {
 }
 
 export class HorizontalListSortingStrategy implements SortingStrategy {
-  getOrientation(_container: HTMLElement): SortOrientation {
-    return 'horizontal';
-  }
-
   getInsertPosition(
     elements: HTMLElement[],
     _activeElement: HTMLElement,
@@ -103,38 +79,8 @@ export class HorizontalListSortingStrategy implements SortingStrategy {
 }
 
 /**
- * Adaptive sorting strategy
- * Automatically detects container orientation and applies appropriate logic
+ * Default sorting strategy (vertical)
+ * Use VerticalListSortingStrategy or HorizontalListSortingStrategy explicitly
+ * for better control over orientation.
  */
-export class AdaptiveSortingStrategy implements SortingStrategy {
-  private verticalStrategy = new VerticalListSortingStrategy();
-  private horizontalStrategy = new HorizontalListSortingStrategy();
-
-  getOrientation(container: HTMLElement): SortOrientation {
-    return this.verticalStrategy.getOrientation(container);
-  }
-
-  getInsertPosition(
-    elements: HTMLElement[],
-    activeElement: HTMLElement,
-    targetElement: HTMLElement,
-    clientX: number,
-    clientY: number
-  ): InsertPosition | null {
-    const container = elements[0]?.parentElement;
-    if (!container) return null;
-
-    const orientation = this.getOrientation(container);
-
-    if (orientation === 'horizontal') {
-      return this.horizontalStrategy.getInsertPosition(elements, activeElement, targetElement, clientX, clientY);
-    } else {
-      return this.verticalStrategy.getInsertPosition(elements, activeElement, targetElement, clientX, clientY);
-    }
-  }
-}
-
-/**
- * Default sorting strategy (adaptive)
- */
-export const defaultSortingStrategy = new AdaptiveSortingStrategy();
+export const defaultSortingStrategy = new VerticalListSortingStrategy();
