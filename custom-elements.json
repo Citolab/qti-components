@@ -4,6 +4,284 @@
   "modules": [
     {
       "kind": "javascript-module",
+      "path": "packages/qti-custom/src/components/qti-order-interaction-in-place/drag.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "drag",
+          "parameters": [
+            {
+              "name": "element",
+              "type": {
+                "text": "Element"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "drag",
+          "declaration": {
+            "name": "drag",
+            "module": "packages/qti-custom/src/components/qti-order-interaction-in-place/drag.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-custom/src/components/qti-order-interaction-in-place/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiOrderInteractionInPlace",
+          "declaration": {
+            "name": "QtiOrderInteractionInPlace",
+            "module": "./qti-order-interaction-in-place"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-custom/src/components/qti-order-interaction-in-place/qti-order-interaction-in-place.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiOrderInteractionInPlace",
+          "members": [
+            {
+              "kind": "field",
+              "name": "choices",
+              "type": {
+                "text": "QtiSimpleChoice[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "method",
+              "name": "cleanup",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "forceSetupReset",
+              "privacy": "private",
+              "description": "Force a complete reset of the sortable setup.\nUseful when the DOM structure changes programmatically."
+            },
+            {
+              "kind": "method",
+              "name": "getResponseValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string[]"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "isDragging",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "isSetupComplete",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "manager",
+              "type": {
+                "text": "DragDropManager | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "orientation",
+              "type": {
+                "text": "'vertical' | 'horizontal'"
+              },
+              "default": "'vertical'",
+              "attribute": "orientation",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "response",
+              "type": {
+                "text": "string[]"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "setResponseOrder",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "identifiers",
+                  "type": {
+                    "text": "string[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "setupChoiceAsSortable",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "choice",
+                  "type": {
+                    "text": "QtiSimpleChoice"
+                  }
+                },
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "setupSortable",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "setupTimeout",
+              "type": {
+                "text": "any"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "sortableInstances",
+              "type": {
+                "text": "Map<string, Sortable>"
+              },
+              "privacy": "private",
+              "default": "new Map()"
+            },
+            {
+              "kind": "method",
+              "name": "toggleCandidateCorrection",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "show",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "type": {
+                "text": "toggleCandidateCorrection(show: boolean) => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "toggleCorrectResponse",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "show",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "type": {
+                "text": "toggleCorrectResponse(show: boolean) => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "updateChoicesOrder",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "validate",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "type": {
+                "text": "validate() => boolean"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "orientation",
+              "type": {
+                "text": "'vertical' | 'horizontal'"
+              },
+              "default": "'vertical'",
+              "fieldName": "orientation"
+            }
+          ],
+          "superclass": {
+            "name": "Interaction",
+            "package": "@qti-components/base"
+          },
+          "tagName": "qti-order-interaction-in-place",
+          "customElement": true,
+          "modulePath": "packages/qti-custom/src/components/qti-order-interaction-in-place/qti-order-interaction-in-place.ts",
+          "definitionPath": "packages/qti-custom/src/components/qti-order-interaction-in-place/qti-order-interaction-in-place.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-order-interaction-in-place",
+          "declaration": {
+            "name": "QtiOrderInteractionInPlace",
+            "module": "packages/qti-custom/src/components/qti-order-interaction-in-place/qti-order-interaction-in-place.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiOrderInteractionInPlace",
+          "declaration": {
+            "name": "QtiOrderInteractionInPlace",
+            "module": "packages/qti-custom/src/components/qti-order-interaction-in-place/qti-order-interaction-in-place.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/qti-elements/src/components/qti-assessment-item/qti-assessment-item.ts",
       "declarations": [
         {

@@ -1,5 +1,5 @@
-import { html, css, unsafeCSS } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { html, css, unsafeCSS, LitElement } from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
 import { DragDropManager, PointerSensor, KeyboardSensor } from '@dnd-kit/dom';
 import { Sortable } from '@dnd-kit/dom/sortable';
 
@@ -19,17 +19,17 @@ export class QtiOrderInteractionInPlace extends Interaction {
 
   @property({ attribute: 'orientation', reflect: true }) orientation: 'vertical' | 'horizontal' = 'vertical';
 
-  choices: QtiSimpleChoice[] = [];
+  @state() choices: QtiSimpleChoice[] = [];
   private manager: DragDropManager | null = null;
   private sortableInstances: Map<string, Sortable> = new Map();
 
   override render() {
     return html`
+      ${this.choices.map(choice => html`<div>${choice.identifier}</div>`)}
       <slot name="prompt"></slot>
-      <div part="container">
-        <div part="items-container" class="sortable-container" orientation="${this.orientation}">
-          <slot @slotchange=${this.handleSlotChange}></slot>
-        </div>
+
+      <div part="drags" class="sortable-container" orientation="${this.orientation}">
+        <slot part="slot"></slot>
       </div>
     `;
   }
@@ -38,7 +38,11 @@ export class QtiOrderInteractionInPlace extends Interaction {
   private isSetupComplete = false;
   private isDragging = false;
 
-  private handleSlotChange() {
+  public async connectedCallback(): Promise<void> {
+    super.connectedCallback();
+    const prompt = this.querySelector('qti-prompt');
+    prompt.setAttribute('slot', 'prompt');
+
     // Don't setup during drag operations or if already set up
     if (this.isDragging || this.isSetupComplete) {
       return;
@@ -76,7 +80,7 @@ export class QtiOrderInteractionInPlace extends Interaction {
               value: 5
             },
             delay: {
-              value: 200,
+              value: 100,
               tolerance: 10
             }
           }
@@ -132,34 +136,34 @@ export class QtiOrderInteractionInPlace extends Interaction {
     });
 
     // Apply uniform width to all choices
-    this.applyUniformWidth();
+    // this.applyUniformWidth();
 
     this.isSetupComplete = true;
   }
 
-  private applyUniformWidth() {
-    if (this.choices.length === 0) return;
+  // private applyUniformWidth() {
+  //   if (this.choices.length === 0) return;
 
-    // Reset any previous width constraints to get natural widths
-    this.choices.forEach(choice => {
-      choice.style.width = '';
-    });
+  //   // Reset any previous width constraints to get natural widths
+  //   this.choices.forEach(choice => {
+  //     choice.style.width = '';
+  //   });
 
-    // Force a layout recalculation by accessing offsetWidth
-    void this.choices[0].offsetWidth;
+  //   // Force a layout recalculation by accessing offsetWidth
+  //   void this.choices[0].offsetWidth;
 
-    // Find the maximum width among all choices
-    let maxWidth = 0;
-    this.choices.forEach(choice => {
-      const width = choice.getBoundingClientRect().width;
-      maxWidth = Math.max(maxWidth, width);
-    });
+  //   // Find the maximum width among all choices
+  //   let maxWidth = 0;
+  //   this.choices.forEach(choice => {
+  //     const width = choice.getBoundingClientRect().width;
+  //     maxWidth = Math.max(maxWidth, width);
+  //   });
 
-    // Apply the maximum width to all choices
-    this.choices.forEach(choice => {
-      choice.style.width = `${maxWidth}px`;
-    });
-  }
+  //   // Apply the maximum width to all choices
+  //   this.choices.forEach(choice => {
+  //     choice.style.width = `${maxWidth}px`;
+  //   });
+  // }
 
   private setupChoiceAsSortable(choice: QtiSimpleChoice, index: number) {
     const identifier = choice.getAttribute('identifier') || `choice-${index}`;
@@ -172,7 +176,11 @@ export class QtiOrderInteractionInPlace extends Interaction {
         element: choice,
         index: index,
         data: { choice, identifier },
-        transition: null
+
+        transition: {
+          duration: 500,
+          easing: 'cubic-bezier(0.25, 1, 0.5, 1)'
+        }
       },
       this.manager
     );
@@ -183,11 +191,15 @@ export class QtiOrderInteractionInPlace extends Interaction {
     choice.style.userSelect = 'none';
   }
 
-  private updateChoicesOrder() {
+  private async updateChoicesOrder() {
     // Get the updated choices in their new DOM order
+    await new Promise(resolve => setTimeout(resolve, 300));
     this.choices = Array.from(this.querySelectorAll('qti-simple-choice')) as QtiSimpleChoice[];
 
-    this.applyUniformWidth();
+    // this.applyUniformWidth();
+
+    this._internals.setFormValue(this.getResponseValue().join(','));
+
     this.saveResponse(this.getResponseValue());
   }
 

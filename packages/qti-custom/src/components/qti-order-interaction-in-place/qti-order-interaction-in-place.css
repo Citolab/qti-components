@@ -1,0 +1,129 @@
+@layer qti-base, qti-components, qti-utilities, qti-variants, qti-extended;
+
+@import url('../../../../qti-theme/src/styles/qti-base.css');
+
+qti-order-interaction-in-place {
+  &:state(--dragzone-active)::part(drags) {
+    @apply act;
+  }
+
+  &:state(--dragzone-enabled)::part(drags) {
+    @apply dropping;
+  }
+
+  &::part(qti-simple-choice),
+  & qti-simple-choice {
+    @apply drag;
+
+    &[dragging] {
+      @apply dragging;
+    }
+
+    &:hover {
+      @apply hov;
+    }
+
+    &:focus {
+      @apply foc;
+    }
+  }
+
+  &::part(qti-simple-choice) {
+    display: flex;
+    overflow: hidden;
+    align-items: center;
+    width: 100%;
+    text-overflow: ellipsis;
+  }
+
+  &::part(drops) {
+    gap: 0.5rem; /* gap-2 */
+  }
+
+  &::part(drags) {
+    gap: 0.5rem; /* gap-2 */
+  }
+
+  &::part(drop-list) {
+    @apply drop;
+
+    &[enabled] {
+      @apply dropping;
+
+      /* Light theme override */
+      .qti-selections-light {
+        border-color: var(--qti-light-border-active);
+      }
+
+      /* Dark theme override */
+      .qti-selections-dark {
+        border-color: var(--qti-dark-border-active);
+      }
+    }
+
+    &:hover {
+      @apply hov;
+    }
+
+    &:focus {
+      @apply foc;
+    }
+
+    display: flex;
+    min-height: 4rem;
+  }
+
+  &::part(active) {
+    @apply act;
+  }
+
+  & drop-list {
+    &[shape='circle'] {
+      @apply spot;
+
+      &:hover {
+        @apply hov;
+      }
+
+      &:focus {
+        @apply foc;
+      }
+
+      &[aria-checked='true'] {
+        @apply act;
+      }
+
+      &[aria-readonly='true'] {
+        @apply rdo;
+      }
+
+      &[aria-disabled='true'] {
+        @apply dis;
+      }
+    }
+
+    &[shape='square'] {
+      @apply spot;
+
+      &:hover {
+        @apply hov;
+      }
+
+      &:focus {
+        @apply foc;
+      }
+
+      &[aria-checked='true'] {
+        @apply act;
+      }
+
+      &[aria-readonly='true'] {
+        @apply rdo;
+      }
+
+      &[aria-disabled='true'] {
+        @apply dis;
+      }
+    }
+  }
+}
