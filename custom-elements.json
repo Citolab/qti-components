@@ -2416,7 +2416,7 @@
           "mixins": [
             {
               "name": "VocabularyMixin",
-              "module": "/packages/qti-interactions/src/mixins/vocabulary/vocabulary-mixin"
+              "module": "/packages/qti-interactions/src/mixins/vocabulary/vocabulary.mixin"
             },
             {
               "name": "ChoicesMixin",
@@ -3159,7 +3159,7 @@
           "mixins": [
             {
               "name": "DragDropInteractionMixin",
-              "module": "/packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.js"
+              "module": "/packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction.mixin.js"
             }
           ],
           "superclass": {
