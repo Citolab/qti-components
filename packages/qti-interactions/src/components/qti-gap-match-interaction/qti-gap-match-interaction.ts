@@ -1,7 +1,7 @@
 import { html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
-import { Interaction } from '@qti-components/base';
+import { Interaction, InteractionReviewController } from '@qti-components/base';
 
 import { DragDropInteractionMixin } from '../../mixins/drag-drop/drag-drop-interaction-mixin.js';
 import styles from './qti-gap-match-interaction.styles.js';
@@ -88,6 +88,11 @@ export class QtiGapMatchInteraction extends DragDropInteractionMixin(
       });
     }
     return matches;
+  }
+
+  constructor() {
+    super();
+    this.reviewController = new InteractionReviewController(this);
   }
 
   public override toggleCandidateCorrection(show: boolean) {

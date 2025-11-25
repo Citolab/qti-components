@@ -1,7 +1,7 @@
 import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
-import { Interaction } from '@qti-components/base';
+import { Interaction, InteractionReviewController } from '@qti-components/base';
 
 import { ChoicesMixin } from '../../mixins/choices/choices.mixin';
 import { VocabularyMixin } from '../../mixins/vocabulary/vocabulary-mixin';
@@ -22,6 +22,11 @@ export class QtiChoiceInteraction
   /** @deprecated, use 'qti-orientation-horizontal' or 'qti-orientation-vertical' instead */
   @property({ type: String })
   public orientation: Orientation = 'vertical';
+
+  constructor() {
+    super();
+    this.reviewController = new InteractionReviewController(this);
+  }
 
   private _handleSlotChange() {
     // count the number of choices, set a css variable for the number of choices

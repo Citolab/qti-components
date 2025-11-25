@@ -1,8 +1,7 @@
 import { html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
-import { removeDoubleSlashes } from '@qti-components/base';
-import { Interaction } from '@qti-components/base';
+import { Interaction, InteractionReviewController, removeDoubleSlashes } from '@qti-components/base';
 
 @customElement('qti-custom-interaction')
 export class QtiCustomInteraction extends Interaction {
@@ -21,6 +20,7 @@ export class QtiCustomInteraction extends Interaction {
 
   constructor() {
     super();
+    this.reviewController = new InteractionReviewController(this);
     this.handlePostMessage = this.handlePostMessage.bind(this);
   }
 

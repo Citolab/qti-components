@@ -1,7 +1,7 @@
 import { html } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 
-import { Interaction } from '@qti-components/base';
+import { Interaction, InteractionReviewController } from '@qti-components/base';
 
 import styles from './qti-slider-interaction.styles';
 
@@ -19,6 +19,11 @@ export class QtiSliderInteraction extends Interaction {
   @property({ type: Number, attribute: 'lower-bound' }) min = 0;
   @property({ type: Number, attribute: 'upper-bound' }) max = 100;
   @property({ type: Number, attribute: 'step' }) step = 1;
+
+  constructor() {
+    super();
+    this.reviewController = new InteractionReviewController(this);
+  }
 
   validate(): boolean {
     return true;
@@ -47,7 +52,7 @@ export class QtiSliderInteraction extends Interaction {
     if (!responseVariable?.correctResponse) return;
 
     if (show) {
-      this._correctResponse = responseVariable.correctResponse.toString();
+      this.correctResponse = responseVariable.correctResponse.toString();
       const nr = parseFloat(responseVariable.correctResponse.toString());
       if (!isNaN(nr)) {
         this._correctResponseNumber = nr;

@@ -3,7 +3,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
-import { Interaction } from '@qti-components/base';
+import { Interaction, InteractionReviewController } from '@qti-components/base';
 import { ScoringHelper } from '@qti-components/base';
 
 import { positionShapes } from '../../internal/hotspots/hotspot.js';
@@ -58,6 +58,11 @@ export class QtiSelectPointInteraction extends Interaction {
   private _scaleY = 1;
   private _imageWidthOriginal = 0;
   private _imageHeightOriginal = 0;
+
+  constructor() {
+    super();
+    this.reviewController = new InteractionReviewController(this);
+  }
 
   // Extracted click handler method
   private _onImageClick = (event: MouseEvent) => {

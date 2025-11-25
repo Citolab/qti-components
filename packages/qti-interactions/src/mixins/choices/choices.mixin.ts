@@ -59,7 +59,7 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
     @state()
     @consume({ context: configContext, subscribe: true })
     protected _configContext: ConfigContext; //configContext
-    override get value(): string | null {
+    get value(): string | null {
       if (Array.isArray(this.response) && this.response.length === 0) {
         return null;
       } else if (this.response === '') {
@@ -68,7 +68,7 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       return Array.isArray(this.response) ? this.response.join(',') : this.response;
     }
 
-    override set value(val: string | null) {
+    set value(val: string | null) {
       if (this.maxChoices > 1 && (typeof val === 'string' || val === null)) {
         this.response = !val ? [] : val.toString().split(',');
       } else {
@@ -76,7 +76,7 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       }
     }
 
-    protected override toggleInternalCorrectResponse(show: boolean) {
+    protected toggleInternalCorrectResponse(show: boolean) {
       const responseVariable = this.responseVariable;
       if (responseVariable?.correctResponse) {
         const responseArray = Array.isArray(responseVariable.correctResponse)
@@ -96,7 +96,7 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       }
     }
 
-    public override toggleCandidateCorrection(show: boolean) {
+    public toggleCandidateCorrection(show: boolean) {
       const responseVariable = this.responseVariable;
 
       if (!responseVariable?.correctResponse) {
@@ -128,14 +128,14 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       });
     }
 
-    override connectedCallback() {
+    connectedCallback() {
       super.connectedCallback();
       this.addEventListener(`register-${selector}`, this._registerChoiceElement);
       this.addEventListener(`unregister-${selector}`, this._unregisterChoiceElement);
       this.addEventListener(`activate-${selector}`, this._choiceElementSelectedHandler);
     }
 
-    override disconnectedCallback() {
+    disconnectedCallback() {
       super.disconnectedCallback();
       this.removeEventListener(`register-${selector}`, this._registerChoiceElement);
       this.removeEventListener(`unregister-${selector}`, this._unregisterChoiceElement);
@@ -168,7 +168,7 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       return isValid;
     }
 
-    override reportValidity() {
+    reportValidity() {
       if (this._validationMessageElement) {
         if (!this._internals.validity.valid) {
           this._validationMessageElement.textContent = this._internals.validationMessage;

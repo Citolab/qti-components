@@ -1,7 +1,7 @@
 import { html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
-import { Interaction } from '@qti-components/base';
+import { Interaction, InteractionReviewController } from '@qti-components/base';
 
 import { DragDropInteractionMixin } from '../../mixins/drag-drop';
 import styles from './qti-order-interaction.styles';
@@ -25,6 +25,11 @@ export class QtiOrderInteraction extends DragDropInteractionMixin(
   /** orientation of choices */
   @property({ type: String })
   public orientation: 'horizontal' | 'vertical';
+
+  constructor() {
+    super();
+    this.reviewController = new InteractionReviewController(this);
+  }
 
   override render() {
     const choices = Array.from(this.querySelectorAll('qti-simple-choice'));

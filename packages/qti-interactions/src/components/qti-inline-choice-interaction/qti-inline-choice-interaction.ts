@@ -3,7 +3,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { consume } from '@lit/context';
 
-import { Interaction } from '@qti-components/base';
+import { Interaction, InteractionReviewController } from '@qti-components/base';
 import { configContext } from '@qti-components/base';
 
 import type { PropertyValues } from 'lit';
@@ -74,6 +74,11 @@ export class QtiInlineChoiceInteraction extends Interaction {
   @consume({ context: configContext, subscribe: true })
   @property({ attribute: false })
   declare configContext: ConfigContext;
+
+  constructor() {
+    super();
+    this.reviewController = new InteractionReviewController(this);
+  }
 
   override render() {
     return html`
