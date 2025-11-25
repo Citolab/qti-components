@@ -2,20 +2,16 @@ import { html } from 'lit';
 import { expect, fireEvent, fn, waitFor } from 'storybook/test';
 import { within } from 'shadow-dom-testing-library';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
-
-// import drag from '../../../../../tools/testing/drag';
 import { getAssessmentItemFromItemContainer } from 'tools/testing/test-utils';
 
 import { drag } from './drag';
 
 import type { Interaction } from '@qti-components/base';
-
-import './qti-order-interaction-in-place.css';
-
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { QtiOrderInteractionInPlace } from './qti-order-interaction-in-place';
 import type { QtiSimpleChoice } from '@qti-components/interactions';
 
+import './qti-order-interaction-in-place.css';
 import './qti-order-interaction-in-place';
 
 const { events, args, argTypes, template } = getStorybookHelpers('qti-order-interaction-in-place', {
@@ -542,7 +538,14 @@ export const OrderInPlace: Story = {
     await step('Reorder items by dragging', async () => {
       if (choices.length >= 2) {
         // Simulate dragging the first choice to change order
-        await drag(choices[0], { to: choices[1] });
+        await drag(choices[0])
+          .fromCenter()
+          .pointerDown()
+          .wait(200)
+          .moveToElementCenter(choices[1])
+          .wait(200)
+          .pointerUpDocument()
+          .run();
 
         await new Promise(resolve => setTimeout(resolve, 100));
 
