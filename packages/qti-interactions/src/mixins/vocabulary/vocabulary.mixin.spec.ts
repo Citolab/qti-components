@@ -5,7 +5,7 @@ import { html, render } from 'lit';
 
 import { Interaction } from '@qti-components/base';
 
-import { VocabularyMixin } from './vocabulary-mixin';
+import { VocabularyMixin } from './vocabulary.mixin';
 
 class TestElement extends VocabularyMixin(Interaction, 'qti-simple-choice') {
   get response(): string | string[] {

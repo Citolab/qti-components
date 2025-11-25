@@ -1,7 +1,7 @@
 import { css, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
-import { Interaction } from '@qti-components/base';
+import { Interaction, InteractionReviewController } from '@qti-components/base';
 
 @customElement('qti-media-interaction')
 export class QtiMediaInteraction extends Interaction {
@@ -51,6 +51,7 @@ export class QtiMediaInteraction extends Interaction {
 
   constructor() {
     super();
+    this.reviewController = new InteractionReviewController(this);
   }
 
   override connectedCallback() {

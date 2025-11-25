@@ -2,8 +2,7 @@ import { css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { consume } from '@lit/context';
 
-import { removeDoubleSlashes } from '@qti-components/base';
-import { Interaction } from '@qti-components/base';
+import { Interaction, InteractionReviewController, removeDoubleSlashes } from '@qti-components/base';
 import { itemContext } from '@qti-components/base';
 
 import styles from './qti-portable-custom-interaction.styles';
@@ -57,8 +56,13 @@ export class QtiPortableCustomInteraction extends Interaction {
   @property({ type: String, attribute: 'module' })
   module: string;
 
-  @property({ type: String, attribute: 'custom-interaction-type-identifier' })
+@property({ type: String, attribute: 'custom-interaction-type-identifier' })
   customInteractionTypeIdentifier: string;
+
+  constructor() {
+    super();
+    this.reviewController = new InteractionReviewController(this);
+  }
 
   @property({ type: String, attribute: 'data-require-paths' })
   requirePathsJson: string = '';

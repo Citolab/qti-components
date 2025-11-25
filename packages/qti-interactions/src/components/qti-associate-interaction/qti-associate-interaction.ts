@@ -1,7 +1,7 @@
 import { html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 
-import { Interaction } from '@qti-components/base';
+import { Interaction, InteractionReviewController } from '@qti-components/base';
 
 import { DragDropInteractionMixin } from '../../mixins/drag-drop';
 import styles from './qti-associate-interaction.styles';
@@ -18,11 +18,11 @@ export class QtiAssociateInteraction extends DragDropInteractionMixin(
 ) {
   static override styles: CSSResultGroup = styles;
   @state() protected _childrenMap: Element[] = [];
-
   protected _registerChoiceHandler: (event: CustomEvent) => void;
 
   constructor() {
     super();
+    this.reviewController = new InteractionReviewController(this);
     this._registerChoiceHandler = this._registerChoice.bind(this);
     this.addEventListener('register-qti-simple-associable-choice', this._registerChoiceHandler);
   }
@@ -36,17 +36,23 @@ export class QtiAssociateInteraction extends DragDropInteractionMixin(
     return html` <slot name="prompt"></slot>
       <slot name="qti-simple-associable-choice"></slot>
       <div part="drop-container">
-        ${this._childrenMap.length > 0 &&
-        Array.from(Array(Math.ceil(this._childrenMap.length / 2)).keys()).map(
-          (_, index) =>
-            html`<div part="associables-container">
-              <div name="left${index}" part="drop-list" class="dl" identifier="droplist${index}_left"></div>
-              <div name="right${index}" part="drop-list" class="dl" identifier="droplist${index}_right"></div>
-            </div>`
-        )}
-
+        ${this.renderDropRows()}
         <div role="alert" part="message" id="validation-message"></div>
       </div>`;
+  }
+
+  private renderDropRows() {
+    if (this._childrenMap.length === 0) {
+      return null;
+    }
+
+    return Array.from(Array(Math.ceil(this._childrenMap.length / 2)).keys()).map(
+      (_, index) =>
+        html`<div part="associables-container">
+          <div name="left${index}" part="drop-list" class="dl" identifier="droplist${index}_left"></div>
+          <div name="right${index}" part="drop-list" class="dl" identifier="droplist${index}_right"></div>
+        </div>`
+    );
   }
 
   override disconnectedCallback() {

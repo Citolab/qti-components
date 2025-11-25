@@ -4,11 +4,14 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import { createRef } from 'lit/directives/ref.js';
 
 import { watch } from '@qti-components/utilities';
-import { Correctness, Interaction } from '@qti-components/base';
+import { Interaction, InteractionReviewController } from '@qti-components/base';
 
 import styles from './qti-text-entry-interaction.styles';
+import { evaluateTextEntryCorrectness, toggleTextEntryInternalCorrectResponse } from './qti-text-entry-review.helpers';
 
+import type { CorrectnessStates } from '@qti-components/base';
 import type { CSSResultGroup } from 'lit';
+
 @customElement('qti-text-entry-interaction')
 export class QtiTextEntryInteraction extends Interaction {
   static override styles: CSSResultGroup = styles;
@@ -24,6 +27,8 @@ export class QtiTextEntryInteraction extends Interaction {
 
   @state()
   response: string | null = null;
+  @state()
+  protected _correctResponse: string | string[] = '';
 
   @query('input') private _input!: HTMLInputElement;
 
@@ -35,6 +40,11 @@ export class QtiTextEntryInteraction extends Interaction {
     this.validate();
   };
 
+  constructor() {
+    super();
+    this.reviewController = new InteractionReviewController(this);
+  }
+
   override get value(): string | null {
     return this.response || null;
   }
@@ -42,44 +52,8 @@ export class QtiTextEntryInteraction extends Interaction {
     this.response = val || null;
   }
 
-  override get correctness(): Readonly<Correctness | null> {
-    const responseVariable = this.responseVariable;
-
-    if (!responseVariable) {
-      return null;
-    }
-
-    if (responseVariable.value === null) {
-      return Correctness.Incorrect;
-    }
-
-    if (responseVariable.mapping) {
-      const maxScore = responseVariable.mapping.mapEntries.reduce<number>(
-        (currentMax, mapEntry) => Math.max(mapEntry.mappedValue, currentMax),
-        0
-      );
-      for (const mapEntry of responseVariable.mapping.mapEntries) {
-        let mapAnswer = mapEntry.mapKey;
-        let responseAnswer = responseVariable.value as string;
-        if (!mapEntry.caseSensitive) {
-          mapAnswer = mapAnswer.toLowerCase();
-          responseAnswer = responseAnswer.toLowerCase();
-        }
-        if (mapAnswer === responseAnswer) {
-          if (mapEntry.mappedValue === maxScore) {
-            return Correctness.Correct;
-          }
-          if (mapEntry.mappedValue <= (responseVariable.mapping.defaultValue || 0)) {
-            return Correctness.Incorrect;
-          }
-          return Correctness.PartiallyCorrect;
-        }
-      }
-    }
-
-    // Fallback to the correct response
-
-    return responseVariable.correctResponse === responseVariable.value ? Correctness.Correct : Correctness.Incorrect;
+  override get correctnessState(): Readonly<CorrectnessStates | null> {
+    return evaluateTextEntryCorrectness(this.responseVariable);
   }
 
   override get isInline(): boolean {
@@ -106,33 +80,15 @@ export class QtiTextEntryInteraction extends Interaction {
   }
 
   public override toggleInternalCorrectResponse(show: boolean): void {
-    const responseVariable = this.responseVariable;
-
-    if (show && responseVariable?.correctResponse) {
-      const text = responseVariable.correctResponse.toString();
-      this._correctResponse = text;
-      //   if (text) {
-      //     if (!this._input.nextElementSibling?.classList.contains('correct-option')) {
-      //       const textSpan = document.createElement('span');
-      //       textSpan.classList.add('correct-option');
-      //       textSpan.textContent = text;
-
-      //       // Apply styles
-      //       textSpan.style.border = '1px solid var(--qti-correct)';
-      //       textSpan.style.borderRadius = '4px';
-      //       textSpan.style.padding = '2px 4px';
-      //       textSpan.style.margin = '4px';
-      //       textSpan.style.display = 'inline-block';
-
-      //       this._input.insertAdjacentElement('afterend', textSpan);
-      //     }
-      //   } else if (this._input.nextElementSibling?.classList.contains('correct-option')) {
-      //     this._input.nextElementSibling?.remove();
-      //   }
-    } else {
-      // this._input.nextElementSibling?.remove();
-      this._correctResponse = null;
-    }
+    toggleTextEntryInternalCorrectResponse(
+      {
+        responseVariable: this.responseVariable,
+        setCorrectResponseDisplay: value => {
+          this._correctResponse = value;
+        }
+      },
+      show
+    );
   }
 
   override render() {

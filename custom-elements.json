@@ -2318,6 +2318,16 @@
                 "text": "(event: CustomEvent) => void"
               },
               "privacy": "protected"
+            },
+            {
+              "kind": "method",
+              "name": "renderDropRows",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "reviewController",
+              "default": "new InteractionReviewController(this)"
             }
           ],
           "mixins": [
@@ -2368,6 +2378,11 @@
               "kind": "method",
               "name": "_handleSlotChange",
               "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "reviewController",
+              "default": "new InteractionReviewController(this)"
             },
             {
               "kind": "field",
@@ -2574,6 +2589,11 @@
               "type": {
                 "text": "string | string[] | null"
               }
+            },
+            {
+              "kind": "field",
+              "name": "reviewController",
+              "default": "new InteractionReviewController(this)"
             },
             {
               "kind": "method",
@@ -2892,6 +2912,11 @@
               "default": "null"
             },
             {
+              "kind": "field",
+              "name": "reviewController",
+              "default": "new InteractionReviewController(this)"
+            },
+            {
               "kind": "method",
               "name": "setEmptyAttribute",
               "privacy": "protected",
@@ -3011,6 +3036,76 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/qti-interactions/src/components/qti-gap-match-interaction/qti-gap-match-interaction-review.helpers.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "toggleGapMatchCandidateCorrection",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "context",
+              "type": {
+                "text": "GapMatchReviewContext"
+              }
+            },
+            {
+              "name": "show",
+              "type": {
+                "text": "boolean"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "toggleGapMatchCorrectResponse",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "context",
+              "type": {
+                "text": "GapMatchReviewContext"
+              }
+            },
+            {
+              "name": "show",
+              "type": {
+                "text": "boolean"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "toggleGapMatchCandidateCorrection",
+          "declaration": {
+            "name": "toggleGapMatchCandidateCorrection",
+            "module": "packages/qti-interactions/src/components/qti-gap-match-interaction/qti-gap-match-interaction-review.helpers.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "toggleGapMatchCorrectResponse",
+          "declaration": {
+            "name": "toggleGapMatchCorrectResponse",
+            "module": "packages/qti-interactions/src/components/qti-gap-match-interaction/qti-gap-match-interaction-review.helpers.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/qti-interactions/src/components/qti-gap-match-interaction/qti-gap-match-interaction.ts",
       "declarations": [
         {
@@ -3019,22 +3114,9 @@
           "name": "QtiGapMatchInteraction",
           "members": [
             {
-              "kind": "method",
-              "name": "getMatches",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "{ source: string; target: string }[]"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "responseVariable",
-                  "type": {
-                    "text": "ResponseVariable"
-                  }
-                }
-              ]
+              "kind": "field",
+              "name": "reviewController",
+              "default": "new InteractionReviewController(this)"
             },
             {
               "kind": "method",
@@ -3202,6 +3284,11 @@
             {
               "kind": "field",
               "name": "response"
+            },
+            {
+              "kind": "field",
+              "name": "reviewController",
+              "default": "new InteractionReviewController(this)"
             },
             {
               "kind": "field",
@@ -3717,6 +3804,11 @@
               }
             },
             {
+              "kind": "field",
+              "name": "reviewController",
+              "default": "new InteractionReviewController(this)"
+            },
+            {
               "kind": "method",
               "name": "toggleInternalCorrectResponse",
               "parameters": [
@@ -3786,6 +3878,76 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/qti-interactions/src/components/qti-match-interaction/qti-match-interaction-review.helpers.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "toggleMatchCandidateCorrection",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "host",
+              "type": {
+                "text": "MatchCandidateCorrectionOptions"
+              }
+            },
+            {
+              "name": "show",
+              "type": {
+                "text": "boolean"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "toggleMatchInternalCorrectResponse",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "host",
+              "type": {
+                "text": "MatchInternalCorrectResponseOptions"
+              }
+            },
+            {
+              "name": "show",
+              "type": {
+                "text": "boolean"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "toggleMatchCandidateCorrection",
+          "declaration": {
+            "name": "toggleMatchCandidateCorrection",
+            "module": "packages/qti-interactions/src/components/qti-match-interaction/qti-match-interaction-review.helpers.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "toggleMatchInternalCorrectResponse",
+          "declaration": {
+            "name": "toggleMatchInternalCorrectResponse",
+            "module": "packages/qti-interactions/src/components/qti-match-interaction/qti-match-interaction-review.helpers.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/qti-interactions/src/components/qti-match-interaction/qti-match-interaction.ts",
       "declarations": [
         {
@@ -3821,24 +3983,6 @@
               "default": "null"
             },
             {
-              "kind": "method",
-              "name": "getMatches",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "{ source: string; target: string }[]"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "responseVariable",
-                  "type": {
-                    "text": "ResponseVariable"
-                  }
-                }
-              ]
-            },
-            {
               "kind": "field",
               "name": "handleRadioChange",
               "privacy": "protected"
@@ -3872,6 +4016,11 @@
               },
               "default": "''",
               "attribute": "response-identifier"
+            },
+            {
+              "kind": "field",
+              "name": "reviewController",
+              "default": "new InteractionReviewController(this)"
             },
             {
               "kind": "field",
@@ -4025,6 +4174,11 @@
               }
             },
             {
+              "kind": "field",
+              "name": "reviewController",
+              "default": "new InteractionReviewController(this)"
+            },
+            {
               "kind": "method",
               "name": "validate",
               "return": {
@@ -4062,6 +4216,45 @@
           "declaration": {
             "name": "QtiMediaInteraction",
             "module": "packages/qti-interactions/src/components/qti-media-interaction/qti-media-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-interactions/src/components/qti-order-interaction/qti-order-interaction-review.helpers.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "toggleOrderInteractionCorrectResponse",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "context",
+              "type": {
+                "text": "OrderReviewContext"
+              }
+            },
+            {
+              "name": "show",
+              "type": {
+                "text": "boolean"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "toggleOrderInteractionCorrectResponse",
+          "declaration": {
+            "name": "toggleOrderInteractionCorrectResponse",
+            "module": "packages/qti-interactions/src/components/qti-order-interaction/qti-order-interaction-review.helpers.ts"
           }
         }
       ]
@@ -4134,6 +4327,11 @@
               "privacy": "public",
               "description": "orientation of choices",
               "attribute": "orientation"
+            },
+            {
+              "kind": "field",
+              "name": "reviewController",
+              "default": "new InteractionReviewController(this)"
             },
             {
               "kind": "field",
@@ -4678,6 +4876,11 @@
                 }
               ],
               "description": "Converts response variables to QtiVariableJSON"
+            },
+            {
+              "kind": "field",
+              "name": "reviewController",
+              "default": "new InteractionReviewController(this)"
             },
             {
               "kind": "method",
@@ -5755,6 +5958,15 @@
               }
             },
             {
+              "kind": "field",
+              "name": "reviewController",
+              "default": "new InteractionReviewController(this)",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "sendIframeInitData",
               "privacy": "private",
@@ -6234,6 +6446,64 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/qti-interactions/src/components/qti-select-point-interaction/qti-select-point-interaction-review.helpers.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "getSelectPointCandidateCorrection",
+          "return": {
+            "type": {
+              "text": "boolean[]"
+            }
+          },
+          "parameters": [
+            {
+              "name": "context",
+              "type": {
+                "text": "SelectPointCandidateContext"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "getSelectPointCorrectAreas",
+          "return": {
+            "type": {
+              "text": "{ shape: string; coords: string }[]"
+            }
+          },
+          "parameters": [
+            {
+              "name": "context",
+              "type": {
+                "text": "SelectPointCorrectResponseContext"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "getSelectPointCandidateCorrection",
+          "declaration": {
+            "name": "getSelectPointCandidateCorrection",
+            "module": "packages/qti-interactions/src/components/qti-select-point-interaction/qti-select-point-interaction-review.helpers.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "getSelectPointCorrectAreas",
+          "declaration": {
+            "name": "getSelectPointCorrectAreas",
+            "module": "packages/qti-interactions/src/components/qti-select-point-interaction/qti-select-point-interaction-review.helpers.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/qti-interactions/src/components/qti-select-point-interaction/qti-select-point-interaction.ts",
       "declarations": [
         {
@@ -6353,6 +6623,11 @@
               "readonly": true
             },
             {
+              "kind": "field",
+              "name": "reviewController",
+              "default": "new InteractionReviewController(this)"
+            },
+            {
               "kind": "method",
               "name": "toggleCandidateCorrection",
               "privacy": "public",
@@ -6440,6 +6715,39 @@
           "declaration": {
             "name": "QtiSelectPointInteraction",
             "module": "packages/qti-interactions/src/components/qti-select-point-interaction/qti-select-point-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-interactions/src/components/qti-slider-interaction/qti-slider-interaction-review.helpers.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "getSliderCorrectResponseState",
+          "return": {
+            "type": {
+              "text": "SliderCorrectResponseState"
+            }
+          },
+          "parameters": [
+            {
+              "name": "context",
+              "type": {
+                "text": "SliderCorrectResponseContext"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "getSliderCorrectResponseState",
+          "declaration": {
+            "name": "getSliderCorrectResponseState",
+            "module": "packages/qti-interactions/src/components/qti-slider-interaction/qti-slider-interaction-review.helpers.ts"
           }
         }
       ]
@@ -6576,6 +6884,11 @@
             },
             {
               "kind": "field",
+              "name": "reviewController",
+              "default": "new InteractionReviewController(this)"
+            },
+            {
+              "kind": "field",
               "name": "step",
               "type": {
                 "text": "number"
@@ -6686,6 +6999,15 @@
           "members": [
             {
               "kind": "field",
+              "name": "_correctResponse",
+              "type": {
+                "text": "string | string[]"
+              },
+              "privacy": "protected",
+              "default": "''"
+            },
+            {
+              "kind": "field",
               "name": "_handleValueChange",
               "privacy": "protected"
             },
@@ -6699,9 +7021,9 @@
             },
             {
               "kind": "field",
-              "name": "correctness",
+              "name": "correctnessState",
               "type": {
-                "text": "Readonly<Correctness | null>"
+                "text": "Readonly<CorrectnessStates | null>"
               },
               "readonly": true
             },
@@ -6780,6 +7102,11 @@
                 "text": "string | null"
               },
               "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "reviewController",
+              "default": "new InteractionReviewController(this)"
             },
             {
               "kind": "method",
@@ -6914,6 +7241,71 @@
           "declaration": {
             "name": "QtiTextEntryInteraction",
             "module": "packages/qti-interactions/src/components/qti-text-entry-interaction/qti-text-entry-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-interactions/src/components/qti-text-entry-interaction/qti-text-entry-review.helpers.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "evaluateTextEntryCorrectness",
+          "return": {
+            "type": {
+              "text": "CorrectnessStates | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "responseVariable",
+              "optional": true,
+              "type": {
+                "text": "ResponseVariable"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "toggleTextEntryInternalCorrectResponse",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "host",
+              "type": {
+                "text": "TextEntryCorrectResponseHost"
+              }
+            },
+            {
+              "name": "show",
+              "type": {
+                "text": "boolean"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "evaluateTextEntryCorrectness",
+          "declaration": {
+            "name": "evaluateTextEntryCorrectness",
+            "module": "packages/qti-interactions/src/components/qti-text-entry-interaction/qti-text-entry-review.helpers.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "toggleTextEntryInternalCorrectResponse",
+          "declaration": {
+            "name": "toggleTextEntryInternalCorrectResponse",
+            "module": "packages/qti-interactions/src/components/qti-text-entry-interaction/qti-text-entry-review.helpers.ts"
           }
         }
       ]
