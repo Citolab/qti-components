@@ -4,7 +4,7 @@ import { customElement, property } from 'lit/decorators.js';
 import { Interaction, InteractionReviewController } from '@qti-components/base';
 
 import { ChoicesMixin } from '../../mixins/choices/choices.mixin';
-import { VocabularyMixin } from '../../mixins/vocabulary/vocabulary-mixin';
+import { VocabularyMixin } from '../../mixins/vocabulary/vocabulary.mixin';
 import styles from './qti-choice-interaction.styles';
 
 import type { ChoicesInterface } from '../../mixins/choices/choices.mixin';

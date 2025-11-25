@@ -2,7 +2,7 @@ import { property } from 'lit/decorators.js';
 
 import { liveQuery, watch } from '@qti-components/utilities';
 
-import { FlippablesMixin } from './flippables-mixin';
+import { FlippablesMixin } from './flippables.mixin';
 
 import type { Interaction, IInteraction } from '@qti-components/base';
 

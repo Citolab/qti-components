@@ -4,11 +4,13 @@ import { repeat } from 'lit/directives/repeat.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
 import { Interaction, InteractionReviewController } from '@qti-components/base';
-import { ScoringHelper } from '@qti-components/base';
 
 import { positionShapes } from '../../internal/hotspots/hotspot.js';
+import {
+  getSelectPointCandidateCorrection,
+  getSelectPointCorrectAreas
+} from './qti-select-point-interaction-review.helpers';
 
-import type { QtiAreaMapEntry, QtiAreaMapping } from '@qti-components/base';
 
 @customElement('qti-select-point-interaction')
 export class QtiSelectPointInteraction extends Interaction {
@@ -119,57 +121,18 @@ export class QtiSelectPointInteraction extends Interaction {
   }
 
   public override toggleCandidateCorrection(show: boolean) {
-    this._responseCorrection = [];
-    if (!show) {
-      return;
-    }
-    this.responsePoints.forEach(point => {
-      const correct = (this.responseVariable.areaMapping as QtiAreaMapping).areaMapEntries.some(correctArea =>
-        ScoringHelper.isPointInArea(
-          `${point.x} ${point.y}`,
-          `${correctArea.shape},${correctArea.coords}`,
-          this.responseVariable.baseType
-        )
-      );
-      this._responseCorrection.push(correct);
+    this._responseCorrection = getSelectPointCandidateCorrection({
+      show,
+      responseVariable: this.responseVariable,
+      responsePoints: this.responsePoints
     });
   }
 
   public override toggleCorrectResponse(show: boolean) {
-    const responseVariable = this.responseVariable;
-    if (!show || !responseVariable) {
-      this._correctAreas = [];
-      return;
-    }
-    // Find the area mapping element from the response variable
-    const areaMapping = responseVariable.areaMapping as QtiAreaMapping;
-    let areaMapEntries: QtiAreaMapEntry[] = [];
-    if (!areaMapping || areaMapping.areaMapEntries.length === 0) {
-      if (responseVariable.correctResponse) {
-        const correctResponses = Array.isArray(responseVariable.correctResponse)
-          ? responseVariable.correctResponse
-          : [responseVariable.correctResponse];
-        if (correctResponses.length === 0 || correctResponses.find(r => r.split(' ').length < 2)) {
-          console.error('No valid correct responses found for the response variable.');
-          return null;
-        }
-        console.warn(
-          `No area mapping found for the response variable. Using the correct responses to display the correct response but it probably won't score correct.`
-        );
-        // Create a new area mapping object with the correct responses
-        areaMapEntries = correctResponses.map(r => {
-          const coords = r.split(' ').join(',').concat(',10'); // Add a radius of 10 pixels to the coordinates
-          return { shape: 'circle', coords, defaultValue: 1, mappedValue: 1 };
-        });
-      } else {
-        console.error('No area mapping found for the response variable.');
-        return;
-      }
-    } else {
-      // Get all map entries from the area mapping
-      areaMapEntries = areaMapping.areaMapEntries;
-    }
-    this._correctAreas = areaMapEntries.map(e => ({ coords: e.coords, shape: e.shape }));
+    this._correctAreas = getSelectPointCorrectAreas({
+      show,
+      responseVariable: this.responseVariable
+    });
   }
 
   override updated(changedProperties: Map<string | number | symbol, unknown>) {
