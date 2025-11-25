@@ -510,12 +510,10 @@ export const OrderInPlace: Story = {
   },
   render: args =>
     html` <qti-item>
-      <div>
-        <item-container style="display: block;width: 400px; height: 350px;" item-url=${args['item-url'] as string}>
-          ${unsafeHTML(mytemplate)}
-        </item-container>
-        <item-show-candidate-correction></item-show-candidate-correction>
-      </div>
+      <item-container style="display: block;width: 400px; height: 350px;" item-url=${args['item-url'] as string}>
+        ${unsafeHTML(mytemplate)}
+      </item-container>
+      <item-show-candidate-correction></item-show-candidate-correction>
     </qti-item>`,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -682,5 +680,15 @@ export const OrderInPlaceComplete: Story = {
         });
       });
     });
+  }
+};
+
+export const CorrectOrderInline: Story = {
+  render: args => OrderTemplate(args),
+  args: {
+    value: '["mars","venus","earth","mercury"]',
+    'correct-response': '["earth", "mars", "mercury", "venus"]',
+    'correct-inline': false,
+    'correct-complete': false
   }
 };

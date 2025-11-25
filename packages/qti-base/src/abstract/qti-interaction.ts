@@ -2,12 +2,13 @@ import { property } from 'lit/decorators.js';
 import { LitElement } from 'lit';
 import { consume } from '@lit/context';
 
-import { configContext } from '../context/config.context';
-import { itemContext } from '../context/qti-assessment-item.context';
+// import { configContext } from '../context/config.context';
+// import { itemContext } from '../context/qti-assessment-item.context';
 import { CorrectnessStates } from '../lib/correctness-states';
 import { InteractionViewState } from '../controllers/interaction-review.controller';
+import { configContext, type ConfigContext } from '../context/config.context';
+import { itemContext } from '../context/qti-assessment-item.context';
 
-import type { ConfigContext } from '../context/config.context';
 import type { InteractionReviewController } from '../controllers/interaction-review.controller';
 import type { ResponseVariable } from '../lib/variables';
 import type { IInteraction } from '../lib/interaction.interface';
@@ -28,6 +29,38 @@ export abstract class Interaction extends LitElement implements IInteraction {
 
   get internals(): ElementInternals {
     return this._internals;
+  }
+
+  abstract get response(): string | string[] | null;
+  abstract set response(val: string | string[] | null);
+
+  @property({ type: String })
+  set value(val: string | null) {
+    this.response = val ? JSON.parse(val) : null;
+  }
+  get value(): string | null {
+    return JSON.stringify(this.response);
+  }
+
+  @property({ type: String, attribute: 'correct-response' })
+  public set correctResponse(val: Readonly<string | string[]>) {
+    console.log('Setting correct response:', val);
+    this._correctResponseValue = val as string | string[];
+  }
+  public get correctResponse(): Readonly<string | string[]> {
+    return this._correctResponseValue;
+  }
+
+  @property({ type: Boolean, attribute: 'correct-inline', reflect: true })
+  public set _toggleCorrectResponse(show) {
+    console.log('Setting correct response:', show);
+    this.reviewController?.toggleCorrectResponse(show);
+  }
+
+  @property({ type: Boolean, attribute: 'correct-complete', reflect: true })
+  public set _toggleCandidateCorrection(show) {
+    console.log('Setting correct response:', show);
+    this.reviewController?.toggleCandidateCorrection(show);
   }
 
   @property({ type: String, attribute: 'response-identifier' }) responseIdentifier: string;
@@ -85,24 +118,6 @@ export abstract class Interaction extends LitElement implements IInteraction {
   }
 
   abstract validate(): boolean;
-
-  get value(): string | null {
-    return JSON.stringify(this.response);
-  }
-
-  set value(val: string | null) {
-    this.response = val ? JSON.parse(val) : null;
-  }
-
-  abstract get response(): string | string[] | null;
-  abstract set response(val: string | string[] | null);
-
-  public get correctResponse(): Readonly<string | string[]> {
-    return this._correctResponseValue;
-  }
-  public set correctResponse(val: Readonly<string | string[]>) {
-    this._correctResponseValue = val as string | string[];
-  }
 
   public reportValidity(): boolean {
     return this._internals.reportValidity();

@@ -3,7 +3,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { DragDropManager, PointerSensor, KeyboardSensor } from '@dnd-kit/dom';
 import { Sortable } from '@dnd-kit/dom/sortable';
 
-import { Interaction } from '@qti-components/base';
+import { Interaction, InteractionReviewController } from '@qti-components/base';
 import { watch } from '@qti-components/utilities';
 
 import styles from './qti-order-interaction-in-place.styles';
@@ -20,33 +20,6 @@ export class QtiOrderInteractionInPlace extends Interaction {
 
   @property({ type: Number, attribute: 'data-choices-container-width' }) choiceWidth = 200;
 
-  // @property({ type: String }) response: string | string[] | null = null;
-  // @property({ type: String, attribute: 'correct-inline' }) correctInline: string | string[] | null = null;
-  // @property({ type: String, attribute: 'correct-complete' }) correctComplete: string | string[] | null = null;
-  // @property({ type: String, attribute: 'correct-response' }) correctResponse: string | string[] | null = null;
-  // @property({ type: String }) corrected: string | string[] | null = null;
-
-  // @watch('response')
-  // _handleResponseChange(_oldValue: string, newValue: string) {
-  //   console.log('Response changed to:', newValue);
-  //   // this.response = newValue;
-  // }
-  // @watch('correctInline')
-  // _handleCorrectInlineChange(_oldValue: string, newValue: string) {
-  //   console.log('Correct Inline changed to:', newValue);
-  //   this.toggleCorrectResponse(!!newValue);
-  // }
-  // @watch('correctComplete')
-  // _handleCorrectCompleteChange(_oldValue: string, newValue: string) {
-  //   console.log('Correct Complete changed to:', newValue);
-  //   this.toggleCorrectResponse(!!newValue);
-  // }
-  // @watch('corrected')
-  // _handleCorrectedChange(_oldValue: string, newValue: string) {
-  //   console.log('Corrected changed to:', newValue);
-  //   this.toggleCandidateCorrection(!!newValue);
-  // }
-
   @watch('choiceWidth')
   _handleTestElementChange(_oldValue: ComputedContext, newValue: ComputedContext) {
     if (newValue != null) {
@@ -56,6 +29,11 @@ export class QtiOrderInteractionInPlace extends Interaction {
     }
   }
 
+  constructor() {
+    super();
+    this.reviewController = new InteractionReviewController(this);
+  }
+
   @state() choices: QtiSimpleChoice[] = [];
   private manager: DragDropManager | null = null;
   private sortableInstances: Map<string, Sortable> = new Map();
@@ -63,7 +41,6 @@ export class QtiOrderInteractionInPlace extends Interaction {
   override render() {
     return html`
       <slot name="prompt"></slot>
-
       <slot part="drags"></slot>
     `;
   }
