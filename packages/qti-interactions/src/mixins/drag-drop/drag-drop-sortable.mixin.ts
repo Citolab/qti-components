@@ -9,7 +9,7 @@ import type { SortingStrategy } from './strategies/sorting-strategy';
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 
 /**
- * Drag/drop mixin that keeps a single list of draggables sortable.
+ * Drag/drop mixin that keeps a single list of sortable draggables.
  * Draggables are treated as both the draggable items and the drop targets.
  * A response is the ordered list of `identifier` attributes for all draggables.
  */
@@ -32,8 +32,8 @@ export const DragDropSortableMixin = <T extends Constructor<Interaction>>(
 
     // FLIP animation configuration
     public flipAnimationConfig: FlipAnimationOptions = {
-      duration: 300,
-      easing: 'cubic-bezier(0.26, 0.86, 0.44, 0.985)'
+      duration: 250,
+      easing: 'ease'
     };
     public enableFlipAnimations = true;
 
@@ -46,14 +46,12 @@ export const DragDropSortableMixin = <T extends Constructor<Interaction>>(
       this._response = next;
       this._internals.setFormValue(JSON.stringify(this._response));
 
-      // Reorder the DOM to match the provided response
       this.reorderDOMByIdentifiers(next);
       this.cacheInteractiveElements();
     }
 
     /**
      * Reorder DOM elements to match a given array of identifiers.
-     * Inspired by dnd-kit's approach to separating data from DOM manipulation.
      * Uses FLIP animation technique for smooth transitions.
      *
      * @param identifiers - Ordered array of identifier strings
@@ -68,7 +66,6 @@ export const DragDropSortableMixin = <T extends Constructor<Interaction>>(
 
       if (!container) return;
 
-      // Create a map of identifiers to elements
       const byId = new Map(
         this.trackedDraggables
           .map(el => [el.getAttribute('identifier') ?? '', el] as const)
@@ -106,7 +103,6 @@ export const DragDropSortableMixin = <T extends Constructor<Interaction>>(
       this.sortableContainer =
         this.trackedDraggables[0]?.parentElement ?? this.trackedDragContainers[0] ?? (this as unknown as HTMLElement);
 
-      // Capture the initial DOM order once so reset can restore it.
       if (this._initialOrder.length === 0) {
         this._initialOrder = this.collectResponse();
       }
@@ -172,16 +168,13 @@ export const DragDropSortableMixin = <T extends Constructor<Interaction>>(
     protected placePlaceholder(dropTarget: HTMLElement | null, clientX: number, clientY: number): void {
       if (!this.dropPlaceholder || !this.sortableContainer) return;
 
-      // Use the provided dropTarget, or fall back to the last known hover target
       const target = dropTarget || this.lastHoverTarget;
       if (!target || target === this.dragState.dragSource) return;
 
-      // Keep placeholder in the container
       if (this.dropPlaceholder.parentElement !== this.sortableContainer) {
         this.sortableContainer.appendChild(this.dropPlaceholder);
       }
 
-      // Get all siblings excluding the placeholder and the hidden drag source
       const siblings = Array.from(this.sortableContainer.querySelectorAll<HTMLElement>(draggablesSelector)).filter(
         el => el !== this.dropPlaceholder && el.style.display !== 'none'
       );
@@ -218,8 +211,8 @@ export const DragDropSortableMixin = <T extends Constructor<Interaction>>(
       // FLIP: Invert & Play - animate siblings to their new positions
       if (flipStates && this.enableFlipAnimations) {
         animateMultipleFlips(flipStates, {
-          duration: this.flipAnimationConfig.duration ? this.flipAnimationConfig.duration * 0.6 : 180,
-          easing: this.flipAnimationConfig.easing
+          duration: 150,
+          easing: 'ease'
         });
       }
     }
@@ -249,7 +242,6 @@ export const DragDropSortableMixin = <T extends Constructor<Interaction>>(
         }
       }
 
-      // Restore draggable element visibility
       draggable.style.opacity = '1.0';
       draggable.style.display = '';
       draggable.style.pointerEvents = 'auto';

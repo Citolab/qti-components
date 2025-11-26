@@ -25,8 +25,8 @@ export interface FlipAnimationOptions {
 }
 
 export const DEFAULT_FLIP_OPTIONS: Required<FlipAnimationOptions> = {
-  duration: 300,
-  easing: 'cubic-bezier(0.26, 0.86, 0.44, 0.985)',
+  duration: 250,
+  easing: 'ease',
   fill: 'both'
 };
 
@@ -57,7 +57,10 @@ export function captureMultipleFlipStates(elements: Element[]): Map<Element, Fli
 /**
  * Calculate the transform needed to invert an element back to its first state
  */
-export function calculateInversion(first: FlipState, last: FlipState): {
+export function calculateInversion(
+  first: FlipState,
+  last: FlipState
+): {
   deltaX: number;
   deltaY: number;
   deltaW: number;
@@ -79,20 +82,15 @@ export function animateFlip(
   first: FlipState,
   options: FlipAnimationOptions = {}
 ): Animation | null {
-  // Capture the final (last) state
   const last = captureFlipState(element);
-
-  // Calculate deltas
   const { deltaX, deltaY, deltaW, deltaH } = calculateInversion(first, last);
 
-  // If no movement occurred, skip animation
   if (deltaX === 0 && deltaY === 0 && deltaW === 1 && deltaH === 1) {
     return null;
   }
 
   const { duration, easing, fill } = { ...DEFAULT_FLIP_OPTIONS, ...options };
 
-  // Animate from inverted position back to final position
   const animation = element.animate(
     [
       {
@@ -170,7 +168,5 @@ export async function performFlip(
   const animations = animateMultipleFlips(firstStates, options);
 
   // Wait for all animations to complete
-  await Promise.all(
-    Array.from(animations.values()).map(animation => animation.finished)
-  );
+  await Promise.all(Array.from(animations.values()).map(animation => animation.finished));
 }

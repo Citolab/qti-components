@@ -8,6 +8,7 @@ import {
   isDroppableAtCapacity
 } from './utils/drag-drop.utils';
 import { DragDropCoreMixin } from './drag-drop-core.mixin';
+import { captureMultipleFlipStates, animateMultipleFlips, type FlipAnimationOptions } from './utils/flip.utils';
 
 import type { Interaction, IInteraction } from '@qti-components/base';
 
@@ -41,16 +42,19 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
 
     protected _response: string[] = [];
 
+    // FLIP animation configuration
+    public flipAnimationConfig: FlipAnimationOptions = {
+      duration: 200, // Slightly faster for slotted interactions
+      easing: 'ease' // Simple, browser-optimized easing
+    };
+    public enableFlipAnimations = true;
+
     get response(): string[] {
       return [...this._response];
     }
 
     set response(value: string | string[]) {
-      this._response = Array.isArray(value)
-        ? [...value]
-        : typeof value === 'string' && value.length > 0
-          ? [value]
-          : [];
+      this._response = Array.isArray(value) ? [...value] : typeof value === 'string' && value.length > 0 ? [value] : [];
 
       this._internals.setFormValue(JSON.stringify(this._response));
     }
@@ -64,7 +68,11 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
     }
 
     public override handleDrop(draggable: HTMLElement, droppable: HTMLElement): void {
-      this.dropDraggableInDroppable(draggable, droppable);
+      // Capture the drag clone's position before it gets removed
+      // The dragClone is the visual element being dragged
+      const dragClonePosition = this.dragState.dragClone?.getBoundingClientRect();
+
+      this.dropDraggableInDroppable(draggable, droppable, dragClonePosition);
       const identifier = draggable.getAttribute('identifier');
 
       if (identifier) {
@@ -141,7 +149,11 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       dragSource.style.pointerEvents = 'auto';
     }
 
-    private dropDraggableInDroppable(draggable: HTMLElement, droppable: HTMLElement): void {
+    private dropDraggableInDroppable(
+      draggable: HTMLElement,
+      droppable: HTMLElement,
+      dragClonePosition?: DOMRect
+    ): void {
       const isDragContainer = this.trackedDragContainers.includes(droppable);
       if (isDragContainer) {
         console.warn('⚠️ [Observable DnD] Attempted to drop into drag container via dropDraggableInDroppable');
@@ -160,6 +172,11 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
 
       const matchMax = parseInt(droppable.getAttribute('match-max') || '1', 10) || 1;
       const allowsMultiple = matchMax === 0 || matchMax > 1;
+
+      // FLIP: First - capture positions of existing children in droppable
+      const existingChildren = Array.from(droppable.querySelectorAll<HTMLElement>('[qti-draggable="true"]'));
+      const flipStates =
+        this.enableFlipAnimations && existingChildren.length > 0 ? captureMultipleFlipStates(existingChildren) : null;
 
       if (!allowsMultiple) {
         const existing =
@@ -180,6 +197,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       cleanClone.setAttribute('qti-draggable', 'true');
       cleanClone.setAttribute('tabindex', '0');
 
+      // FLIP: Last - add the new element (this may cause siblings to shift)
       if (droppable.tagName === 'SLOT') {
         cleanClone.setAttribute('slot', droppable.getAttribute('name') || '');
       } else if (droppable.tagName === 'QTI-SIMPLE-ASSOCIABLE-CHOICE') {
@@ -187,6 +205,41 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
         droppable.appendChild(cleanClone);
       } else {
         droppable.appendChild(cleanClone);
+      }
+
+      if (flipStates && this.enableFlipAnimations) {
+        animateMultipleFlips(flipStates, this.flipAnimationConfig);
+      }
+
+      // FLIP: Animate the newly dropped element from drag position to final position
+      if (dragClonePosition && this.enableFlipAnimations) {
+        requestAnimationFrame(() => {
+          const finalPosition = cleanClone.getBoundingClientRect();
+
+          const deltaX = dragClonePosition.left - finalPosition.left;
+          const deltaY = dragClonePosition.top - finalPosition.top;
+
+          // Only animate if there's actual movement
+          if (deltaX !== 0 || deltaY !== 0) {
+            cleanClone.animate(
+              [
+                {
+                  transform: `translate(${deltaX}px, ${deltaY}px)`,
+                  opacity: 0.8
+                },
+                {
+                  transform: 'translate(0, 0)',
+                  opacity: 1
+                }
+              ],
+              {
+                duration: this.flipAnimationConfig.duration || 200,
+                easing: this.flipAnimationConfig.easing || 'ease',
+                fill: 'both'
+              }
+            );
+          }
+        });
       }
 
       const identifier = draggable.getAttribute('identifier');
@@ -210,6 +263,16 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
     private restoreOriginalInInventory(identifier: string): void {
       const inventoryItems = findInventoryItems(this.trackedDragContainers, identifier);
 
+      // FLIP: First - capture positions of all items in inventory containers
+      const allInventoryItems: HTMLElement[] = [];
+      this.trackedDragContainers.forEach(container => {
+        allInventoryItems.push(...Array.from(container.querySelectorAll<HTMLElement>('[qti-draggable="true"]')));
+      });
+
+      const flipStates =
+        this.enableFlipAnimations && allInventoryItems.length > 0 ? captureMultipleFlipStates(allInventoryItems) : null;
+
+      // FLIP: Last - restore the inventory items (may cause reflow)
       inventoryItems.forEach(item => {
         item.style.opacity = '1.0';
         item.style.pointerEvents = 'auto';
@@ -219,6 +282,11 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
         item.style.setProperty('opacity', '1.0', 'important');
         item.style.setProperty('pointer-events', 'auto', 'important');
       });
+
+      // FLIP: Invert & Play - animate items that may have shifted
+      if (flipStates && this.enableFlipAnimations) {
+        animateMultipleFlips(flipStates, this.flipAnimationConfig);
+      }
     }
 
     private updateInventoryBasedOnMatchMax(identifier: string): void {
