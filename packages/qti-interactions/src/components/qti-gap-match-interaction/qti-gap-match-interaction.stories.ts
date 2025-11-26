@@ -79,8 +79,34 @@ export const Default: Story = {
           <qti-gap-text identifier="A" match-max="1">autumn</qti-gap-text>
           <blockquote>
             <p>
-              Now is the <qti-gap class="qti-input-width-4" identifier="G1"></qti-gap> of our discontent<br />
-              Made glorious <qti-gap class="qti-input-width-4" identifier="G2"></qti-gap> by this sun of York;<br />
+              Now is the <qti-gap class="qti-input-width-6" identifier="G1"></qti-gap> of our discontent<br />
+              Made glorious <qti-gap class="qti-input-width-6" identifier="G2"></qti-gap> by this sun of York;<br />
+              And all the clouds that lour'd upon our house<br />
+              In the deep bosom of the ocean buried.
+            </p>
+          </blockquote>`
+      )}
+    `;
+  }
+};
+
+export const AutoSizedDropzones: Story = {
+  name: 'qti-gap-match-interaction (auto-size dropzones)',
+  render: args => {
+    const templateArgs = { ...args, autoSizeDropzones: true, 'auto-size-dropzones': true };
+
+    return html`
+      ${template(
+        templateArgs,
+        html`<qti-prompt>This variant opts into auto sizing dropzones to fit the draggable choices.</qti-prompt>
+          <qti-gap-text identifier="W" match-max="1">winter</qti-gap-text>
+          <qti-gap-text identifier="Sp" match-max="1">spring</qti-gap-text>
+          <qti-gap-text identifier="Su" match-max="1">summer</qti-gap-text>
+          <qti-gap-text identifier="A" match-max="1">autumn</qti-gap-text>
+          <blockquote>
+            <p>
+              Now is the <qti-gap identifier="G1"></qti-gap> of our discontent<br />
+              Made glorious <qti-gap identifier="G2"></qti-gap> by this sun of York;<br />
               And all the clouds that lour'd upon our house<br />
               In the deep bosom of the ocean buried.
             </p>

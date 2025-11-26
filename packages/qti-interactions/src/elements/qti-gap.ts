@@ -7,6 +7,8 @@ export class QtiGap extends LitElement {
     :host {
       display: flex;
       user-select: none;
+      min-height: var(--qti-gap-min-height, 2rem);
+      min-width: var(--qti-gap-min-width, 6rem);
     }
 
     :host(.qti-input-width-1) {

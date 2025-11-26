@@ -19,6 +19,12 @@ export default css`
     /* flex: 1; */
     border: 2px solid transparent;
     border-radius: 0.25rem;
+    min-width: var(--qti-drop-min-width, 6rem);
+  }
+
+  [part='drop-list'] > qti-simple-associable-choice {
+    width: 100%;
+    box-sizing: border-box;
   }
 
   [part='drop-list'][active] {

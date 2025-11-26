@@ -14,6 +14,7 @@ export class QtiSimpleAssociableChoice extends ActiveElementMixin(LitElement, 'q
     :host {
       display: flex;
       user-select: none;
+      align-items: center;
     }
     :host(:focus) {
       outline: none;
@@ -22,8 +23,15 @@ export class QtiSimpleAssociableChoice extends ActiveElementMixin(LitElement, 'q
       width: 100%;
       display: block;
     }
+    slot[part='dropslot'] {
+      display: inline-flex;
+    }
+    :host-context(qti-associate-interaction) slot[part='dropslot'] {
+      display: none;
+    }
     slot[name='qti-simple-associable-choice'] {
-      width: auto;
+      min-height: var(--qti-drop-min-height, 2rem);
+      min-width: var(--qti-drop-min-width, 6rem);
     }
     :host([hover]) slot[part='dropslot'] {
       border: 2px solid var(--qti-border-active) !important;

@@ -5,7 +5,8 @@ import {
   countTotalAssociations,
   findInventoryItems,
   getMatchMaxValue,
-  isDroppableAtCapacity
+  isDroppableAtCapacity,
+  applyDropzoneAutoSizing
 } from './utils/drag-drop.utils';
 import { DragDropCoreMixin } from './drag-drop-core.mixin';
 import { captureMultipleFlipStates, animateMultipleFlips, type FlipAnimationOptions } from './utils/flip.utils';
@@ -48,6 +49,8 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       easing: 'ease' // Simple, browser-optimized easing
     };
     public enableFlipAnimations = true;
+    @property({ type: Boolean, attribute: 'auto-size-dropzones' })
+    public autoSizeDropzones = false;
 
     get response(): string[] {
       return [...this._response];
@@ -91,57 +94,9 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
     }
 
     private updateMinDimensionsForDropZones(): void {
-      if (this.trackedDraggables.length === 0) return;
+      if (!this.autoSizeDropzones || this.trackedDraggables.length === 0) return;
 
-      // Find the maximum dimensions from all draggables
-      let maxDraggableHeight = 0;
-      let maxDraggableWidth = 0;
-
-      this.trackedDraggables.forEach(draggable => {
-        const rect = draggable.getBoundingClientRect();
-        maxDraggableHeight = Math.max(maxDraggableHeight, rect.height);
-        maxDraggableWidth = Math.max(maxDraggableWidth, rect.width);
-      });
-
-      const dropContainer: HTMLElement | null =
-        this.trackedDroppables.length > 0 ? this.trackedDroppables[0].parentElement : null;
-
-      const isGridLayout =
-        this.trackedDroppables.length > 0 && this.trackedDroppables[0].tagName === 'QTI-SIMPLE-ASSOCIABLE-CHOICE';
-      const isGapElement =
-        this.trackedDroppables.length > 0 && this.trackedDroppables[0].tagName === 'QTI-GAP';
-
-      if (isGridLayout && dropContainer) {
-        let maxWidth: number;
-
-        if (dropContainer.clientWidth > 0) {
-          const styles = window.getComputedStyle(dropContainer);
-          const paddingLeft = parseFloat(styles.paddingLeft);
-          const paddingRight = parseFloat(styles.paddingRight);
-          maxWidth = dropContainer.clientWidth - paddingLeft - paddingRight;
-        } else {
-          maxWidth = Math.min(window.innerWidth * 0.8, 600);
-        }
-
-        dropContainer.style.gridTemplateColumns = `repeat(auto-fit, minmax(calc(min(${maxWidth}px, ${maxDraggableWidth}px + 2 * var(--qti-dropzone-padding, 0.5rem))), 1fr))`;
-      }
-
-      this.trackedDroppables.forEach(droppable => {
-        droppable.style.minHeight = `${maxDraggableHeight}px`;
-
-        if (isGridLayout || isGapElement) {
-          droppable.style.minWidth = `${maxDraggableWidth}px`;
-        }
-
-        const dropSlot: HTMLElement | null = droppable.shadowRoot?.querySelector('slot[part="dropslot"]');
-        if (dropSlot) {
-          dropSlot.style.minHeight = `${maxDraggableHeight}px`;
-        }
-      });
-
-      this.trackedDragContainers.forEach(dragContainer => {
-        dragContainer.style.minHeight = `${maxDraggableHeight}px`;
-      });
+      applyDropzoneAutoSizing(this.trackedDraggables, this.trackedDroppables, this.trackedDragContainers);
     }
 
     private restoreInventoryItem(dragSource: HTMLElement): void {

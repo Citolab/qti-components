@@ -48,7 +48,7 @@ export const Default: Story = {
   render: args =>
     template(
       /* add data-testid to args, without adding it to the controls of the story */
-      { ...args, 'data-testid': 'match-interaction' },
+      { ...args, 'data-testid': 'match-interaction', autoSizeDropzones: true, 'auto-size-dropzones': true },
       html`<qti-prompt>Match the following characters to the Shakespeare play they appeared in:</qti-prompt>
         <qti-simple-match-set>
           <qti-simple-associable-choice identifier="C" match-max="1">Capulet</qti-simple-associable-choice>
@@ -68,7 +68,12 @@ export const Default: Story = {
 const testTemplate = html`<qti-prompt
     >Match the following characters to the Shakespeare play they appeared in:</qti-prompt
   >
-  <qti-match-interaction data-testid="match-interaction" response-identifier="RESPONSE" max-associations="3">
+  <qti-match-interaction
+    data-testid="match-interaction"
+    response-identifier="RESPONSE"
+    max-associations="3"
+    auto-size-dropzones
+  >
     <qti-simple-match-set>
       <qti-simple-associable-choice identifier="C" match-max="1">Capulet</qti-simple-associable-choice>
       <qti-simple-associable-choice identifier="D" match-max="1">Demetrius</qti-simple-associable-choice>
@@ -88,6 +93,7 @@ const multipleAssociationsTemplate = html` <qti-match-interaction
   shuffle="false"
   max-associations="5"
   min-associations="0"
+  auto-size-dropzones
 >
   <qti-prompt>Can you match the cities below with the language most likely to be spoken there?</qti-prompt>
   <qti-simple-match-set>
@@ -130,7 +136,7 @@ const multipleAssociations2Template = html`
   <div>
     <p>Which properties do the following animal classes have?</p>
 
-    <qti-match-interaction max-associations="3" response-identifier="RESPONSE">
+    <qti-match-interaction max-associations="3" response-identifier="RESPONSE" auto-size-dropzones>
       <qti-simple-match-set>
         <qti-simple-associable-choice identifier="r1" match-max="0">
           <p>Asexual</p>
@@ -156,7 +162,13 @@ const multipleAssociations2Template = html`
 `;
 
 const optionsRightTemplate = html`
-  <qti-match-interaction response-identifier="RESPONSE" shuffle="true" max-associations="4" class="qti-choices-right">
+  <qti-match-interaction
+    response-identifier="RESPONSE"
+    shuffle="true"
+    max-associations="4"
+    class="qti-choices-right"
+    auto-size-dropzones
+  >
     <qti-prompt>Combineer de teksten</qti-prompt>
     <qti-simple-match-set>
       <qti-simple-associable-choice identifier="A1" match-max="1">Berlijn</qti-simple-associable-choice>
@@ -180,7 +192,7 @@ const manyOptionsTemplate = html`
       cellen hun functies.
     </p>
   </div>
-  <qti-match-interaction response-identifier="RESPONSE" shuffle="true" max-associations="7">
+  <qti-match-interaction response-identifier="RESPONSE" shuffle="true" max-associations="7" auto-size-dropzones>
     <qti-simple-match-set>
       <qti-simple-associable-choice identifier="A1" fixed="false" match-max="1" match-min="0">
         endoplasmatisch reticulum

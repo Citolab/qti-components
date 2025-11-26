@@ -94,3 +94,58 @@ export function collectResponseData(droppables: HTMLElement[], draggablesSelecto
     })
     .flat();
 }
+
+export function applyDropzoneAutoSizing(
+  draggables: HTMLElement[],
+  droppables: HTMLElement[],
+  dragContainers: HTMLElement[],
+  hostWindow: Window | null = typeof window !== 'undefined' ? window : null
+): void {
+  if (!draggables.length || !droppables.length || !hostWindow) return;
+
+  let maxDraggableHeight = 0;
+  let maxDraggableWidth = 0;
+
+  draggables.forEach(draggable => {
+    const rect = draggable.getBoundingClientRect();
+    maxDraggableHeight = Math.max(maxDraggableHeight, rect.height);
+    maxDraggableWidth = Math.max(maxDraggableWidth, rect.width);
+  });
+
+  const dropContainer: HTMLElement | null = droppables[0].parentElement;
+
+  const isGridLayout = droppables[0].tagName === 'QTI-SIMPLE-ASSOCIABLE-CHOICE';
+  const isGapElement = droppables[0].tagName === 'QTI-GAP';
+
+  if (isGridLayout && dropContainer) {
+    let maxWidth: number;
+
+    if (dropContainer.clientWidth > 0) {
+      const styles = hostWindow.getComputedStyle(dropContainer);
+      const paddingLeft = parseFloat(styles.paddingLeft);
+      const paddingRight = parseFloat(styles.paddingRight);
+      maxWidth = dropContainer.clientWidth - paddingLeft - paddingRight;
+    } else {
+      maxWidth = Math.min(hostWindow.innerWidth * 0.8, 600);
+    }
+
+    dropContainer.style.gridTemplateColumns = `repeat(auto-fit, minmax(calc(min(${maxWidth}px, ${maxDraggableWidth}px + 2 * var(--qti-dropzone-padding, 0.5rem))), 1fr))`;
+  }
+
+  droppables.forEach(droppable => {
+    droppable.style.minHeight = `${maxDraggableHeight}px`;
+
+    if (isGridLayout || isGapElement) {
+      droppable.style.minWidth = `${maxDraggableWidth}px`;
+    }
+
+    const dropSlot: HTMLElement | null = droppable.shadowRoot?.querySelector('slot[part="dropslot"]');
+    if (dropSlot) {
+      dropSlot.style.minHeight = `${maxDraggableHeight}px`;
+    }
+  });
+
+  dragContainers.forEach(dragContainer => {
+    dragContainer.style.minHeight = `${maxDraggableHeight}px`;
+  });
+}

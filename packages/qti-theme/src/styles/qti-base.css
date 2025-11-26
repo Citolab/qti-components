@@ -116,6 +116,7 @@
   @apply bordered;
 
   border-radius: var(--qti-border-radius);
+  min-height: var(--qti-drag-min-height, 2rem);
   padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
 }
 
