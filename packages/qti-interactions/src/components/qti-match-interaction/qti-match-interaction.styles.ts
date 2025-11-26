@@ -37,22 +37,58 @@ export default css`
     padding: 0.5rem;
     border: 2px solid transparent;
     border-radius: 0.25rem;
-    transition: all 0.2s ease;
   }
 
   ::slotted(qti-simple-associable-choice[enabled]) {
-    background-color: var(--qti-bg-active, rgba(0, 123, 255, 0.05));
-    border-color: var(--qti-border-color-gray, #dee2e6);
+    background-color: var(--qti-bg-active) !important;
   }
 
   ::slotted(qti-simple-associable-choice[active]) {
-    background-color: var(--qti-bg-active, rgba(0, 123, 255, 0.1));
-    border-color: var(--qti-border-active, #007bff);
+    border-color: var(--qti-border-active) !important;
+    background-color: var(--qti-bg-active) !important;
   }
 
   ::slotted(qti-simple-associable-choice[hover]) {
-    background-color: var(--qti-bg-active, rgba(0, 123, 255, 0.15));
-    border-color: var(--qti-border-active, #007bff);
-    border-style: solid;
+    border-color: var(--qti-border-active) !important;
+    border-style: solid !important;
+    background-color: var(--qti-bg-active) !important;
+  }
+
+  /* Drag clone styles */
+  .qti-droplist-clone {
+    display: block !important;
+    margin: 0 !important;
+    position: static !important;
+    transform: none !important;
+    z-index: auto !important;
+  }
+
+  /* Dragging state */
+  ::slotted(.dragging),
+  .dragging {
+    opacity: 0.5 !important;
+  }
+
+  /* Original element visibility utilities */
+  :host .qti-original-hidden,
+  ::slotted(.qti-original-hidden) {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+  }
+
+  :host .qti-original-visible,
+  ::slotted(.qti-original-visible) {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    visibility: visible !important;
+  }
+
+  /* Keyboard dragging state */
+  ::slotted([data-keyboard-dragging]),
+  [data-keyboard-dragging] {
+    outline: 2px solid var(--qti-border-active) !important;
+    outline-offset: 2px !important;
+    opacity: 0.7 !important;
   }
 `;

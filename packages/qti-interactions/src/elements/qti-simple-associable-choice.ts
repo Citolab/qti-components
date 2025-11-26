@@ -15,12 +15,23 @@ export class QtiSimpleAssociableChoice extends ActiveElementMixin(LitElement, 'q
       display: flex;
       user-select: none;
     }
+    :host(:focus) {
+      outline: none;
+    }
     slot {
       width: 100%;
       display: block;
     }
     slot[name='qti-simple-associable-choice'] {
       width: auto;
+    }
+    :host([hover]) slot[part='dropslot'] {
+      border: 2px solid var(--qti-border-active) !important;
+      border-radius: 0.25rem;
+      background-color: var(--qti-bg-active) !important;
+      min-height: 3rem;
+      padding: 0.5rem;
+      box-sizing: border-box;
     }
   `;
 

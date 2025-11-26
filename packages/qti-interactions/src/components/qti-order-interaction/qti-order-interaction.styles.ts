@@ -73,7 +73,6 @@ export default css`
     flex-direction: row-reverse;
   }
 
-  /* Clones placed in droplists - minimal styling to avoid drag issues */
   .qti-droplist-clone {
     display: block !important;
     margin: 0 !important;
@@ -82,13 +81,11 @@ export default css`
     z-index: auto !important;
   }
 
-  /* Hide the source element during drag to let dnd-kit handle the drag preview */
   :host ::slotted(.dragging),
   .dragging {
     opacity: 0.5 !important;
   }
 
-  /* Hidden original elements */
   :host .qti-original-hidden,
   ::slotted(.qti-original-hidden) {
     opacity: 0 !important;
@@ -96,7 +93,6 @@ export default css`
     visibility: hidden !important;
   }
 
-  /* Visible original elements */
   :host .qti-original-visible,
   ::slotted(.qti-original-visible) {
     opacity: 1 !important;
@@ -104,7 +100,6 @@ export default css`
     visibility: visible !important;
   }
 
-  /* Keyboard dragging visual feedback */
   ::slotted([data-keyboard-dragging]),
   [data-keyboard-dragging] {
     outline: 2px solid var(--qti-border-active) !important;
@@ -112,7 +107,6 @@ export default css`
     opacity: 0.7 !important;
   }
 
-  /* Inventory/drag container hover state during keyboard navigation */
   [part='drags'][hover] {
     background-color: var(--qti-bg-active) !important;
   }
