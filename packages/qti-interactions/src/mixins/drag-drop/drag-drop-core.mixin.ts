@@ -154,7 +154,8 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         .filter((e: PointerEvent) => {
           const target = findDraggableTarget(e, draggablesSelector);
           const hostDisabled = (this as any).disabled || (this as any).readonly;
-          const targetDisabled = target?.hasAttribute('disabled') || target?.hasAttribute('aria-disabled');
+          const targetDisabled =
+            target?.hasAttribute('disabled') || target?.getAttribute('aria-disabled') === 'true';
           return target && e.isPrimary !== false && e.button === 0 && !hostDisabled && !targetDisabled;
         })
         .subscribe((downEvent: PointerEvent) => {
@@ -198,7 +199,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         if (!keyboardState.dragging) {
           const target = findDraggableTarget(e, draggablesSelector);
           const hostDisabled = (this as any).disabled || (this as any).readonly;
-          const targetDisabled = target?.hasAttribute('disabled') || target?.hasAttribute('aria-disabled');
+          const targetDisabled = target?.hasAttribute('disabled') || target?.getAttribute('aria-disabled') === 'true';
 
           if (target && ['Space', 'Enter'].includes(e.code) && !hostDisabled && !targetDisabled) {
             e.preventDefault();

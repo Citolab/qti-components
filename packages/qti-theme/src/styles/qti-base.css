@@ -293,10 +293,12 @@
 
 /* Apply .rdo for readonly state */
 .rdo {
-  cursor: pointer;
+  cursor: default !important;
   background-color: var(--qti-bg);
   outline: 0;
-  border: none;
+  border: 1px solid var(--qti-border-color);
+  border-radius: var(--qti-border-radius);
+  pointer-events: auto !important;
 }
 
 /* Apply .dis for disabled state */

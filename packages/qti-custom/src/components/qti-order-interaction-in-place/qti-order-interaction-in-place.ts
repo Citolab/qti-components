@@ -198,6 +198,13 @@ export class QtiOrderInteractionInPlace extends DragDropSortableMixin(
         choice.removeAttribute('aria-readonly');
       }
 
+      // Remove tabindex in readonly/disabled mode to prevent focus
+      if (forceNonInteractive) {
+        choice.setAttribute('tabindex', '-1');
+      } else {
+        choice.setAttribute('tabindex', '0');
+      }
+
       choice.style.cursor = forceNonInteractive ? 'default' : 'grab';
       choice.style.userSelect = forceNonInteractive ? 'auto' : 'none';
     });

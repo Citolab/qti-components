@@ -13,6 +13,11 @@ export default css`
     box-sizing: border-box;
   }
 
+  ::slotted(qti-simple-choice:focus) {
+    outline: none;
+    box-shadow: none !important;
+  }
+
   :host([orientation='horizontal']) [part='drags'] {
     flex-direction: row;
   }
