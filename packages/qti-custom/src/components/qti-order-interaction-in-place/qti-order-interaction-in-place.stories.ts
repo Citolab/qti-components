@@ -674,13 +674,21 @@ export const OrderInPlaceComplete: Story = {
     </qti-item>`,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const item = await getAssessmentItemFromItemContainer(canvasElement);
+
+    const item = document.querySelector('qti-item');
+    item.configContext = {
+      correctResponseMode: 'full',
+      fullCorrectResponseOnlyWhenIncorrect: false
+    };
+    const assessmentItem = await getAssessmentItemFromItemContainer(canvasElement);
 
     const showCorrectButton = await canvas.findByShadowText(/Show correct response/i);
 
     const orderInteraction: QtiOrderInteractionInPlace = await waitFor(
       () => {
-        const interaction = item.querySelector('qti-order-interaction-in-place') as QtiOrderInteractionInPlace;
+        const interaction = assessmentItem.querySelector(
+          'qti-order-interaction-in-place'
+        ) as QtiOrderInteractionInPlace;
         if (!interaction) throw new Error('Order interaction not found');
         return interaction;
       },
@@ -724,11 +732,11 @@ export const OrderInPlaceComplete: Story = {
 
       await step('Verify correct response is shown', async () => {
         // Check for the new correct order display
-        const correctDisplay = orderInteraction.querySelector('.correct-order-display');
-        expect(correctDisplay).toBeTruthy();
+        const fullCorrectResponse = await canvas.findByShadowRole('full-correct-response');
+        expect(fullCorrectResponse).toBeVisible();
 
-        // Check for the correct choice displays within the correct order display
-        const correctChoiceDisplays = correctDisplay?.querySelectorAll('.correct-choice-display');
+        // // Check for the correct choice displays within the correct order display
+        const correctChoiceDisplays = fullCorrectResponse?.querySelectorAll('qti-simple-choice');
         expect(correctChoiceDisplays?.length).toBe(4);
 
         // Verify the order is correct by checking the text content
