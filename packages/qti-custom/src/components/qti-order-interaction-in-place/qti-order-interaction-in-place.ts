@@ -106,30 +106,9 @@ export class QtiOrderInteractionInPlace extends DragDropSortableMixin(
   }
 
   private applyInteractivityChanges() {
-    const forceNonInteractive = this.disabled || this.readonly;
-
     this.choices.forEach(choice => {
-      if (this.disabled) {
-        choice.setAttribute('aria-disabled', 'true');
-      } else {
-        choice.removeAttribute('aria-disabled');
-      }
-
-      if (this.readonly) {
-        choice.setAttribute('aria-readonly', 'true');
-      } else {
-        choice.removeAttribute('aria-readonly');
-      }
-
-      // Remove tabindex in readonly/disabled mode to prevent focus
-      if (forceNonInteractive) {
-        choice.setAttribute('tabindex', '-1');
-      } else {
-        choice.setAttribute('tabindex', '0');
-      }
-
-      choice.style.cursor = forceNonInteractive ? 'default' : 'grab';
-      choice.style.userSelect = forceNonInteractive ? 'auto' : 'none';
+      choice.disabled = this.disabled;
+      choice.readonly = this.readonly;
     });
   }
 
