@@ -8,8 +8,8 @@ export {
   VerticalListSortingStrategy,
   HorizontalListSortingStrategy,
   defaultSortingStrategy
-} from './strategies/sorting-strategy';
-export type { SortingStrategy, InsertPosition } from './strategies/sorting-strategy';
+} from './strategies/sorting.strategy';
+export type { SortingStrategy, InsertPosition } from './strategies/sorting.strategy';
 
 export {
   captureFlipState,

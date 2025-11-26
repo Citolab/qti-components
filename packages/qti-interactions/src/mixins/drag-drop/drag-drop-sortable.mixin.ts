@@ -1,10 +1,10 @@
 import { DragDropCoreMixin } from './drag-drop-core.mixin';
-import { defaultSortingStrategy } from './strategies/sorting-strategy';
+import { defaultSortingStrategy } from './strategies/sorting.strategy';
 import { captureMultipleFlipStates, animateMultipleFlips, type FlipAnimationOptions } from './utils/flip.utils';
 
 import type { DragDropCore } from './drag-drop-core.mixin';
 import type { Interaction } from '@qti-components/base';
-import type { SortingStrategy } from './strategies/sorting-strategy';
+import type { SortingStrategy } from './strategies/sorting.strategy';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 
