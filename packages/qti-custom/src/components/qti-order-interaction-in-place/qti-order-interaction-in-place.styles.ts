@@ -37,4 +37,20 @@ export default css`
   :host(.qti-choices-right) [part='container'] {
     flex-direction: row-reverse;
   }
+
+  /* Disabled state */
+  :host([disabled]) {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  :host([disabled]) ::slotted(qti-simple-choice) {
+    cursor: not-allowed !important;
+    opacity: 0.7;
+  }
+
+  /* Readonly state */
+  :host([readonly]) ::slotted(qti-simple-choice) {
+    cursor: default !important;
+  }
 `;

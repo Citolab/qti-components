@@ -153,7 +153,9 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         .when('pointerdown')
         .filter((e: PointerEvent) => {
           const target = findDraggableTarget(e, draggablesSelector);
-          return target && e.isPrimary !== false && e.button === 0;
+          const hostDisabled = (this as any).disabled || (this as any).readonly;
+          const targetDisabled = target?.hasAttribute('disabled') || target?.hasAttribute('aria-disabled');
+          return target && e.isPrimary !== false && e.button === 0 && !hostDisabled && !targetDisabled;
         })
         .subscribe((downEvent: PointerEvent) => {
           const dragTarget = findDraggableTarget(downEvent, draggablesSelector);
@@ -195,7 +197,10 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         // Start drag
         if (!keyboardState.dragging) {
           const target = findDraggableTarget(e, draggablesSelector);
-          if (target && ['Space', 'Enter'].includes(e.code)) {
+          const hostDisabled = (this as any).disabled || (this as any).readonly;
+          const targetDisabled = target?.hasAttribute('disabled') || target?.hasAttribute('aria-disabled');
+
+          if (target && ['Space', 'Enter'].includes(e.code) && !hostDisabled && !targetDisabled) {
             e.preventDefault();
             target.setAttribute('data-keyboard-dragging', 'true');
             keyboardState = {
