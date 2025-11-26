@@ -5,9 +5,9 @@ import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { getAssessmentItemFromItemContainer } from 'tools/testing/test-utils';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
-import { drag } from './drag';
 import './qti-order-interaction-in-place.css';
 import styles from './qti-order-interaction-in-place.css?inline';
+import drag from '../../../../../tools/testing/drag';
 
 import type { Interaction } from '@qti-components/base';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
@@ -106,14 +106,7 @@ export const Form: Story = {
     const formData = new FormData(form);
 
     await step('event', async () => {
-      await drag(choiceA)
-        .fromCenter()
-        .pointerDown()
-        .wait(200)
-        .moveToElementCenter(choiceB)
-        .wait(200)
-        .pointerUpDocument()
-        .run();
+      await drag(choiceA, { to: choiceB, duration: 300 });
 
       await fireEvent.submit(form);
 
@@ -210,14 +203,7 @@ export const InteractiveTest: Story = {
         callback.mockClear();
 
         // Drag EventA to the position of EventC
-        await drag(choiceA)
-          .fromCenter()
-          .pointerDown()
-          .wait(50)
-          .moveToElementCenter(choiceC)
-          .wait(50)
-          .pointerUpDocument()
-          .run();
+        await drag(choiceA, { to: choiceC, duration: 300 });
 
         const newResponse = interaction.response;
 
@@ -329,14 +315,7 @@ export const TouchDeviceTest: Story = {
       expect(interaction.response).toEqual(['A', 'B', 'C']);
 
       // Drag first choice (A) to the position of third choice (C)
-      await drag(choiceA)
-        .fromCenter()
-        .pointerDown()
-        .wait(50)
-        .moveToElementCenter(choiceC)
-        .wait(50)
-        .pointerUpDocument()
-        .run();
+      await drag(choiceA, { to: choiceC, duration: 300 });
 
       // Wait for any updates to complete
       await new Promise(resolve => setTimeout(resolve, 100));
@@ -605,14 +584,7 @@ export const OrderInPlace: Story = {
         const initialResponse = [...orderInteraction.response];
 
         // Drag the first choice to the third position (more noticeable change)
-        await drag(choices[0])
-          .fromCenter()
-          .pointerDown()
-          .wait(50)
-          .moveToElementCenter(choices[2])
-          .wait(50)
-          .pointerUpDocument()
-          .run();
+        await drag(choices[0], { to: choices[2], duration: 300 });
 
         await new Promise(resolve => setTimeout(resolve, 100));
 
@@ -643,8 +615,7 @@ export const OrderInPlace: Story = {
 
       // Verify candidate correction states are applied
       const hasCorrectStates = updatedChoices.some(
-        choice =>
-          choice.internals.states.has('candidate-correct') || choice.internals.states.has('candidate-incorrect')
+        choice => choice.internals.states.has('candidate-correct') || choice.internals.states.has('candidate-incorrect')
       );
 
       expect(hasCorrectStates).toBe(true);
@@ -713,14 +684,8 @@ export const OrderInPlaceComplete: Story = {
 
     await step('Reorder items by dragging', async () => {
       if (choices.length >= 2) {
-        await drag(choices[0])
-          .fromCenter()
-          .pointerDown()
-          .wait(200)
-          .moveToElementCenter(choices[1])
-          .wait(200)
-          .pointerUpDocument()
-          .run();
+        await drag(choices[0], { to: choices[1], duration: 300 });
+
         await new Promise(resolve => setTimeout(resolve, 100));
       }
     });
