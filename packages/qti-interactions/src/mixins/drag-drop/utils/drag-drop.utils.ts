@@ -1,3 +1,7 @@
+import { detectCollision } from './collision.utils';
+
+import type { CollisionDetectionAlgorithm } from './collision.utils';
+
 export function findDraggableTarget(event: Event, draggablesSelector: string): HTMLElement | null {
   const composedPath = event.composedPath ? event.composedPath() : [event.target];
 
@@ -17,22 +21,30 @@ export function findDraggableTarget(event: Event, draggablesSelector: string): H
   return null;
 }
 
+/**
+ * Find the closest dropzone using the specified collision detection algorithm
+ * @deprecated Use detectCollision from collision.utils.ts instead
+ */
 export function findClosestDropzone(
   dropzones: HTMLElement[],
   clientX: number,
-  clientY: number
+  clientY: number,
+  dragElement?: HTMLElement | null,
+  algorithm: CollisionDetectionAlgorithm = 'pointerWithin'
 ): HTMLElement | null {
-  const activeZones = dropzones.filter(zone => !zone.hasAttribute('disabled'));
-
-  for (const zone of activeZones) {
-    const rect = zone.getBoundingClientRect();
-    if (clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom) {
-      return zone;
-    }
-  }
-
-  return null;
+  return detectCollision(dropzones, clientX, clientY, dragElement, algorithm);
 }
+
+// Re-export collision detection types and functions for convenience
+export type { CollisionDetectionAlgorithm } from './collision.utils';
+export {
+  detectCollision,
+  getCollisionDetectionStrategy,
+  pointerWithinCollision,
+  rectangleIntersectionCollision,
+  closestCenterCollision,
+  closestCornersCollision
+} from './collision.utils';
 
 export function findInventoryItems(dragContainers: HTMLElement[], identifier: string): HTMLElement[] {
   const items: HTMLElement[] = [];

@@ -5,6 +5,7 @@ import { captureMultipleFlipStates, animateMultipleFlips, type FlipAnimationOpti
 import type { DragDropCore } from './drag-drop-core.mixin';
 import type { Interaction } from '@qti-components/base';
 import type { SortingStrategy } from './strategies/sorting.strategy';
+import type { CollisionDetectionAlgorithm } from './utils/drag-drop.utils';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 
@@ -17,9 +18,17 @@ export const DragDropSortableMixin = <T extends Constructor<Interaction>>(
   superClass: T,
   draggablesSelector: string,
   dragContainersSelector = 'slot[part="drags"]',
-  sortingStrategy: SortingStrategy = defaultSortingStrategy
+  sortingStrategy: SortingStrategy = defaultSortingStrategy,
+  collisionAlgorithm: CollisionDetectionAlgorithm = 'closestCenter'
 ) => {
-  const Core = DragDropCoreMixin(superClass, draggablesSelector, draggablesSelector, dragContainersSelector);
+  // Use 'closestCenter' by default for sortable lists as recommended by dnd-kit
+  const Core = DragDropCoreMixin(
+    superClass,
+    draggablesSelector,
+    draggablesSelector,
+    dragContainersSelector,
+    collisionAlgorithm
+  );
 
   abstract class DragDropSortableElement extends Core {
     protected _response: string[] = [];

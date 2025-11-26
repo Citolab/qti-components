@@ -1,8 +1,9 @@
 import { isSupported, apply } from 'observable-polyfill/fn';
 
-import { findClosestDropzone, findDraggableTarget } from './utils/drag-drop.utils';
+import { detectCollision, findDraggableTarget } from './utils/drag-drop.utils';
 
 import type { Interaction } from '@qti-components/base';
+import type { CollisionDetectionAlgorithm } from './utils/drag-drop.utils';
 
 if (!isSupported()) apply();
 
@@ -27,6 +28,7 @@ export type DragDropCore = Interaction & {
   trackedDragContainers: HTMLElement[];
   allDropzones: HTMLElement[];
   dragState: DragState;
+  collisionDetectionAlgorithm: CollisionDetectionAlgorithm;
   get response(): string | string[] | null;
   set response(value: string | string[] | null);
   saveResponse(value?: string | string[]): void;
@@ -56,19 +58,27 @@ interface DragState {
   initialCoordinates?: { x: number; y: number };
   activationTimeout?: number;
   touchCleanup?: () => void;
+  lastTargetChangeTime?: number;
 }
 
 export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
   superClass: T,
   draggablesSelector: string,
   droppablesSelector: string,
-  dragContainersSelector = 'slot[part="drags"]'
+  dragContainersSelector = 'slot[part="drags"]',
+  defaultCollisionAlgorithm: CollisionDetectionAlgorithm = 'pointerWithin'
 ) => {
   abstract class DragDropCoreElement extends superClass {
     protected trackedDraggables: HTMLElement[] = [];
     protected trackedDroppables: HTMLElement[] = [];
     protected trackedDragContainers: HTMLElement[] = [];
     protected allDropzones: HTMLElement[] = [];
+
+    /**
+     * The collision detection algorithm to use for drag and drop
+     * Can be overridden by subclasses or configured per interaction type
+     */
+    public collisionDetectionAlgorithm: CollisionDetectionAlgorithm = defaultCollisionAlgorithm;
 
     protected dragState: DragState = {
       dragging: false,
@@ -408,14 +418,29 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
 
       this.updateClonePosition(clientX, clientY);
 
-      const dropTarget = findClosestDropzone(this.allDropzones, clientX, clientY);
+      const dropTarget = detectCollision(
+        this.allDropzones,
+        clientX,
+        clientY,
+        this.dragState.dragClone,
+        this.collisionDetectionAlgorithm
+      );
+
+      // Add hysteresis: only switch targets if enough time has passed (reduces flickering)
+      const now = Date.now();
+      const timeSinceLastChange = now - (this.dragState.lastTargetChangeTime || 0);
+      const MIN_TARGET_SWITCH_INTERVAL = 50; // milliseconds
 
       if (dropTarget !== this.dragState.currentTarget) {
-        this.allDropzones.forEach(zone => zone.removeAttribute('hover'));
-        if (dropTarget) {
-          dropTarget.setAttribute('hover', '');
+        // Allow immediate switch to null (leaving a zone) or if enough time has passed
+        if (dropTarget === null || timeSinceLastChange >= MIN_TARGET_SWITCH_INTERVAL) {
+          this.allDropzones.forEach(zone => zone.removeAttribute('hover'));
+          if (dropTarget) {
+            dropTarget.setAttribute('hover', '');
+          }
+          this.dragState.currentTarget = dropTarget;
+          this.dragState.lastTargetChangeTime = now;
         }
-        this.dragState.currentTarget = dropTarget;
       }
     }
 
