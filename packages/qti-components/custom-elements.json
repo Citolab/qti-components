@@ -134,6 +134,14 @@
             },
             {
               "kind": "field",
+              "name": "disableAnimations",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "disable-animations"
+            },
+            {
+              "kind": "field",
               "name": "orientation",
               "type": {
                 "text": "'vertical' | 'horizontal'"
@@ -211,6 +219,13 @@
               },
               "default": "200",
               "fieldName": "choiceWidth"
+            },
+            {
+              "name": "disable-animations",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "disableAnimations"
             },
             {
               "name": "orientation",

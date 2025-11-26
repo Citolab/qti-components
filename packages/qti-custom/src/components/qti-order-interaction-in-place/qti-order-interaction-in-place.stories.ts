@@ -133,10 +133,10 @@ export const Form: Story = {
 
 export const LayoutHorizontal: Story = {
   args: {
-    orientation: 'horizontal'
+    orientation: 'horizontal' as const
   },
   render: args => html`
-    <qti-order-interaction-in-place response-identifier="RESPONSE" orientation="${args.orientation}">
+    <qti-order-interaction-in-place response-identifier="RESPONSE" orientation=${args.orientation}>
       <qti-prompt> Arrange the planets in order from the Sun: </qti-prompt>
       <qti-simple-choice identifier="earth">Earth</qti-simple-choice>
       <qti-simple-choice identifier="mars">Mars</qti-simple-choice>
@@ -148,10 +148,10 @@ export const LayoutHorizontal: Story = {
 
 export const WithManyItems: Story = {
   args: {
-    orientation: 'vertical'
+    orientation: 'vertical' as const
   },
   render: args => html`
-    <qti-order-interaction-in-place response-identifier="RESPONSE" orientation="${args.orientation}">
+    <qti-order-interaction-in-place response-identifier="RESPONSE" orientation=${args.orientation}>
       <qti-prompt> Arrange the numbers in ascending order: </qti-prompt>
       <qti-simple-choice identifier="seven">7</qti-simple-choice>
       <qti-simple-choice identifier="three">3</qti-simple-choice>
@@ -168,13 +168,14 @@ export const WithManyItems: Story = {
 
 export const InteractiveTest: Story = {
   args: {
-    orientation: 'vertical'
+    orientation: 'vertical' as const
   },
   render: args => html`
     <qti-order-interaction-in-place
       data-testid="order-in-place-interaction"
       response-identifier="RESPONSE"
-      orientation="${args.orientation}"
+      orientation=${args.orientation}
+      disable-animations
     >
       <qti-prompt>Arrange the following historical events in chronological order (earliest first):</qti-prompt>
       <qti-simple-choice identifier="EventA">World War I begins (1914)</qti-simple-choice>
@@ -185,124 +186,77 @@ export const InteractiveTest: Story = {
   `,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-
-    // Wait for the interaction to be found and ready
     const interaction = await canvas.findByTestId<QtiOrderInteractionInPlace>('order-in-place-interaction');
 
     // Wait for component initialization
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    // Get the choice elements
-    const choiceA = canvas.getByText<QtiSimpleChoice>('World War I begins (1914)');
-    const choiceB = canvas.getByText<QtiSimpleChoice>('Titanic sinks (1912)');
-    const choiceC = canvas.getByText<QtiSimpleChoice>('World War II begins (1939)');
-    const choiceD = canvas.getByText<QtiSimpleChoice>('Moon landing (1969)');
+    await interaction.updateComplete;
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     const callback = fn(e => e.detail.response);
     interaction.addEventListener('qti-interaction-response', callback);
 
     try {
-      // await step('Initial order should match DOM order', async () => {
-      //   const initialResponse = interaction.response;
-      //   expect(initialResponse).toEqual(['EventA', 'EventB', 'EventC', 'EventD']);
-      // });
+      await step('Verify initial order', async () => {
+        const initialResponse = interaction.response;
+        expect(initialResponse).toEqual(['EventA', 'EventB', 'EventC', 'EventD']);
+      });
 
       await step('Drag items to reorder them', async () => {
+        const choiceA = canvas.getByText<QtiSimpleChoice>('World War I begins (1914)');
+        const choiceC = canvas.getByText<QtiSimpleChoice>('World War II begins (1939)');
         const initialResponse = [...interaction.response];
-        const initialChoices = Array.from(interaction.querySelectorAll('qti-simple-choice'));
-        const initialDomOrder = initialChoices.map(c => c.getAttribute('identifier'));
 
-        console.log(interaction.response);
+        // Clear callback to track this specific drag
+        callback.mockClear();
 
-        // Drag EventD (Moon landing, 1969) to the second position
+        // Drag EventA to the position of EventC
         await drag(choiceA)
           .fromCenter()
           .pointerDown()
-          .wait(200)
-          .moveToElementCenter(choiceB)
-          .wait(200)
+          .wait(50)
+          .moveToElementCenter(choiceC)
+          .wait(50)
           .pointerUpDocument()
           .run();
 
-        // Wait for drag operation to complete and DOM to settle
-        await new Promise(resolve => setTimeout(resolve, 500));
-
-        const newChoices = Array.from(interaction.querySelectorAll('qti-simple-choice'));
-        const newDomOrder = newChoices.map(c => c.getAttribute('identifier'));
         const newResponse = interaction.response;
 
-        // The new order should reflect the drag operation
-        expect(Array.isArray(newResponse)).toBe(true);
-        console.log(newResponse);
+        // Verify the order changed
+        expect(newResponse).not.toEqual(initialResponse);
         expect(newResponse.length).toBe(4);
 
-        // Check if DOM order actually changed - if not, the drag might not work in test
-        const domChanged = !initialDomOrder.every((id, index) => id === newDomOrder[index]);
+        // Verify all events are still in the response
+        expect(newResponse).toContain('EventA');
+        expect(newResponse).toContain('EventB');
+        expect(newResponse).toContain('EventC');
+        expect(newResponse).toContain('EventD');
 
-        if (domChanged) {
-          // If DOM changed, response should change too
-          expect(newResponse).not.toEqual(initialResponse);
-        } else {
-          // If DOM didn't change, log it but don't fail the test
-          console.warn('DOM order did not change - drag might not work in test environment');
-        }
+        // EventA should no longer be first
+        expect(newResponse[0]).not.toBe('EventA');
 
-        // // Verify that all events are still in the response
-        // expect(newResponse).toContain('EventA');
-        // expect(newResponse).toContain('EventB');
-        // expect(newResponse).toContain('EventC');
-        // expect(newResponse).toContain('EventD');
+        // Verify event was emitted during drag
+        expect(callback).toHaveBeenCalled();
       });
 
-      // await step('Test manual response setting', async () => {
-      //   // Test that we can manually set the response
-      //   const testResponse = ['EventC', 'EventA', 'EventD', 'EventB'];
-      //   interaction.response = testResponse;
+      await step('Test manual response setting', async () => {
+        // Test that we can manually set the response
+        const testResponse = ['EventC', 'EventA', 'EventD', 'EventB'];
+        interaction.response = testResponse;
 
-      //   await new Promise(resolve => setTimeout(resolve, 200));
+        const newResponse = interaction.response;
+        expect(newResponse).toEqual(testResponse);
 
-      //   const newResponse = interaction.response;
-      //   expect(newResponse).toEqual(testResponse);
+        // Verify DOM was reordered to match
+        const choices = Array.from(interaction.querySelectorAll('qti-simple-choice'));
+        const domOrder = choices.map(c => c.getAttribute('identifier'));
+        expect(domOrder).toEqual(testResponse);
+      });
 
-      //   // Verify DOM was reordered to match
-      //   const choices = Array.from(interaction.querySelectorAll('qti-simple-choice'));
-      //   const domOrder = choices.map(c => c.getAttribute('identifier'));
-      //   expect(domOrder).toEqual(testResponse);
-      // });
-
-      // await step('Test response getter returns array', async () => {
-      //   // Just verify the response getter works
-      //   const currentResponse = interaction.response;
-      //   expect(Array.isArray(currentResponse)).toBe(true);
-      //   expect(currentResponse.length).toBe(4);
-      //   expect(currentResponse).toContain('EventA');
-      //   expect(currentResponse).toContain('EventB');
-      //   expect(currentResponse).toContain('EventC');
-      //   expect(currentResponse).toContain('EventD');
-      // });
-
-      // await step('Test disabled state', async () => {
-      //   interaction.disabled = true;
-
-      //   // Should still have the same response
-      //   const responseBeforeDisable = [...interaction.response];
-
-      //   // Try to drag (should not work when disabled)
-      //   await drag(choiceA, { to: choiceC, duration: 300 });
-      //   await new Promise(resolve => setTimeout(resolve, 200));
-
-      //   // Response should not have changed
-      //   expect(interaction.response).toEqual(responseBeforeDisable);
-
-      //   // Re-enable for further tests
-      //   interaction.disabled = false;
-      // });
-
-      // await step('Test validation', async () => {
-      //   const isValid = interaction.validate();
-      //   expect(typeof isValid).toBe('boolean');
-      //   expect(isValid).toBe(true); // Should be valid when choices are present
-      // });
+      await step('Test validation', async () => {
+        const isValid = interaction.validate();
+        expect(typeof isValid).toBe('boolean');
+        expect(isValid).toBe(true); // Should be valid when choices are present
+      });
     } finally {
       interaction.removeEventListener('qti-interaction-response', callback);
     }
@@ -311,13 +265,13 @@ export const InteractiveTest: Story = {
 
 export const TouchDeviceTest: Story = {
   args: {
-    orientation: 'horizontal'
+    orientation: 'horizontal' as const
   },
   render: args => html`
     <qti-order-interaction-in-place
       data-testid="touch-order-interaction"
       response-identifier="RESPONSE"
-      orientation="${args.orientation}"
+      orientation=${args.orientation}
       disable-animations
     >
       <qti-prompt>Test touch-specific styling and properties:</qti-prompt>
@@ -375,7 +329,14 @@ export const TouchDeviceTest: Story = {
       expect(interaction.response).toEqual(['A', 'B', 'C']);
 
       // Drag first choice (A) to the position of third choice (C)
-      await drag(choiceA).fromCenter().pointerDown().wait(50).moveToElementCenter(choiceC).wait(50).pointerUpDocument().run();
+      await drag(choiceA)
+        .fromCenter()
+        .pointerDown()
+        .wait(50)
+        .moveToElementCenter(choiceC)
+        .wait(50)
+        .pointerUpDocument()
+        .run();
 
       // Wait for any updates to complete
       await new Promise(resolve => setTimeout(resolve, 100));
@@ -395,13 +356,13 @@ export const TouchDeviceTest: Story = {
 
 export const KeyboardAccessibilityTest: Story = {
   args: {
-    orientation: 'vertical'
+    orientation: 'vertical' as const
   },
   render: args => html`
     <qti-order-interaction-in-place
       data-testid="keyboard-order-interaction"
       response-identifier="RESPONSE"
-      orientation="${args.orientation}"
+      orientation=${args.orientation}
       disable-animations
     >
       <qti-prompt>Test keyboard accessibility:</qti-prompt>
