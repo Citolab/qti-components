@@ -32,6 +32,14 @@ export class QtiOrderInteractionInPlace extends DragDropSortableMixin(
 
   @property({ type: Number, attribute: 'data-choices-container-width' }) choiceWidth = 200;
 
+  @property({ type: Boolean, attribute: 'disable-animations' })
+  set disableAnimations(value: boolean) {
+    (this as any).enableFlipAnimations = !value;
+  }
+  get disableAnimations(): boolean {
+    return !(this as any).enableFlipAnimations;
+  }
+
   @watch('orientation')
   _handleOrientationChange(_oldValue: 'vertical' | 'horizontal', newValue: 'vertical' | 'horizontal') {
     // Dynamically switch sorting strategy based on orientation
@@ -178,6 +186,10 @@ export class QtiOrderInteractionInPlace extends DragDropSortableMixin(
 
   override async firstUpdated(changedProps: any) {
     super.firstUpdated(changedProps);
+
+    // Wait for drag-drop initialization to complete
+    await new Promise(resolve => setTimeout(resolve, 0));
+
     this.applyInteractivityChanges();
     this.saveResponse();
   }

@@ -318,6 +318,7 @@ export const TouchDeviceTest: Story = {
       data-testid="touch-order-interaction"
       response-identifier="RESPONSE"
       orientation="${args.orientation}"
+      disable-animations
     >
       <qti-prompt>Test touch-specific styling and properties:</qti-prompt>
       <qti-simple-choice identifier="A">First</qti-simple-choice>
@@ -331,7 +332,9 @@ export const TouchDeviceTest: Story = {
 
     // Wait for component initialization to complete
     await interaction.updateComplete;
-    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    // Wait for drag-drop setup to complete and response to be initialized
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     const choices = Array.from(interaction.querySelectorAll('qti-simple-choice'));
 
@@ -362,6 +365,31 @@ export const TouchDeviceTest: Story = {
         expect(choice.getAttribute('qti-draggable')).toBe('true');
       });
     });
+
+    await step('Test drag and drop reordering', async () => {
+      // Get fresh references to choices
+      const choiceA = choices[0];
+      const choiceC = choices[2];
+
+      // Verify initial order
+      expect(interaction.response).toEqual(['A', 'B', 'C']);
+
+      // Drag first choice (A) to the position of third choice (C)
+      await drag(choiceA).fromCenter().pointerDown().wait(50).moveToElementCenter(choiceC).wait(50).pointerUpDocument().run();
+
+      // Wait for any updates to complete
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      // Verify the order has changed
+      const newResponse = interaction.response;
+      expect(newResponse).not.toEqual(['A', 'B', 'C']);
+
+      // A should have moved to the right, expected order: ['B', 'C', 'A'] or ['B', 'A', 'C']
+      expect(newResponse[0]).not.toBe('A'); // A should no longer be first
+      expect(newResponse).toContain('A');
+      expect(newResponse).toContain('B');
+      expect(newResponse).toContain('C');
+    });
   }
 };
 
@@ -374,6 +402,7 @@ export const KeyboardAccessibilityTest: Story = {
       data-testid="keyboard-order-interaction"
       response-identifier="RESPONSE"
       orientation="${args.orientation}"
+      disable-animations
     >
       <qti-prompt>Test keyboard accessibility:</qti-prompt>
       <qti-simple-choice identifier="K1">First Item</qti-simple-choice>
@@ -387,7 +416,8 @@ export const KeyboardAccessibilityTest: Story = {
     const interaction = await canvas.findByTestId<QtiOrderInteractionInPlace>('keyboard-order-interaction');
 
     // Wait for initialization
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await interaction.updateComplete;
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     const choices = Array.from(interaction.querySelectorAll('qti-simple-choice'));
 

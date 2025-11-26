@@ -241,13 +241,21 @@ export const DragDropSortableMixin = <T extends Constructor<Interaction>>(
       return this.trackedDraggables.includes(droppable) || this.trackedDragContainers.includes(droppable);
     }
 
-    public override handleDrop(draggable: HTMLElement, _droppable: HTMLElement): void {
+    public override handleDrop(draggable: HTMLElement, droppable: HTMLElement): void {
       if (this.dropPlaceholder?.parentElement) {
         this.dropPlaceholder.parentElement.replaceChild(draggable, this.dropPlaceholder);
       } else {
+        // For keyboard navigation, insert relative to the droppable target
         const container = this.sortableContainer ?? draggable.parentElement;
         if (container) {
-          container.appendChild(draggable);
+          // If droppable is one of the draggables, insert after it
+          if (this.trackedDraggables.includes(droppable) && droppable !== draggable) {
+            const nextSibling = droppable.nextElementSibling;
+            container.insertBefore(draggable, nextSibling);
+          } else {
+            // Otherwise append to container
+            container.appendChild(draggable);
+          }
         }
       }
 
