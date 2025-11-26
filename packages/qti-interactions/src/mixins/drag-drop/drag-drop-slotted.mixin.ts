@@ -108,6 +108,8 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
 
       const isGridLayout =
         this.trackedDroppables.length > 0 && this.trackedDroppables[0].tagName === 'QTI-SIMPLE-ASSOCIABLE-CHOICE';
+      const isGapElement =
+        this.trackedDroppables.length > 0 && this.trackedDroppables[0].tagName === 'QTI-GAP';
 
       if (isGridLayout && dropContainer) {
         let maxWidth: number;
@@ -127,7 +129,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       this.trackedDroppables.forEach(droppable => {
         droppable.style.minHeight = `${maxDraggableHeight}px`;
 
-        if (isGridLayout) {
+        if (isGridLayout || isGapElement) {
           droppable.style.minWidth = `${maxDraggableWidth}px`;
         }
 

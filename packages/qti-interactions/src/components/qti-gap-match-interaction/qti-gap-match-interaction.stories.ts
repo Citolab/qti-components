@@ -79,8 +79,8 @@ export const Default: Story = {
           <qti-gap-text identifier="A" match-max="1">autumn</qti-gap-text>
           <blockquote>
             <p>
-              Now is the <qti-gap identifier="G1"></qti-gap> of our discontent<br />
-              Made glorious <qti-gap identifier="G2"></qti-gap> by this sun of York;<br />
+              Now is the <qti-gap class="qti-input-width-4" identifier="G1"></qti-gap> of our discontent<br />
+              Made glorious <qti-gap class="qti-input-width-4" identifier="G2"></qti-gap> by this sun of York;<br />
               And all the clouds that lour'd upon our house<br />
               In the deep bosom of the ocean buried.
             </p>
@@ -123,7 +123,7 @@ export const DontDropInOtherInteraction = {
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
     assessmentItem.querySelector('qti-prompt').innerHTML = `
       Don't allow to drop a Gap from interaction 1 to interaction 2.
-      
+
       ${assessmentItem.querySelector('qti-prompt').textContent}
     `;
     const interaction1 = assessmentItem.querySelector(`qti-gap-match-interaction[response-identifier='RESPONSE1'`);

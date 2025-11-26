@@ -14,6 +14,7 @@
  * qtiTransformItem().parse(storyXML).html()
  */
 import {
+  calculateGapSizeToClass,
   convertCDATAtoComment,
   extendElementName,
   extendElementsWithClass,
@@ -59,6 +60,7 @@ export type transformItemApi = {
   convertCDATAtoComment: () => transformItemApi;
   shuffleInteractions: () => transformItemApi;
   stripStyleSheets: () => transformItemApi;
+  calculateGapSizeToClass: () => transformItemApi;
   html: () => string;
   xml: () => string;
   htmlDoc: () => DocumentFragment;
@@ -388,6 +390,10 @@ export const qtiTransformItem = (cache: boolean = false) => {
     },
     stripStyleSheets(): typeof api {
       stripStyleSheets(xmlFragment);
+      return api;
+    },
+    calculateGapSizeToClass(): typeof api {
+      calculateGapSizeToClass(xmlFragment);
       return api;
     },
     html() {

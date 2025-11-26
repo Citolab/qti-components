@@ -18,6 +18,13 @@ export default css`
     box-shadow: none !important;
   }
 
+  /* Keyboard dragging state */
+  ::slotted(qti-simple-choice[data-keyboard-dragging]) {
+    outline: 2px solid var(--qti-border-active) !important;
+    outline-offset: 2px !important;
+    opacity: 0.7 !important;
+  }
+
   :host([orientation='horizontal']) [part='drags'] {
     flex-direction: row;
   }
