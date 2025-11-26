@@ -1,5 +1,6 @@
 import { DragDropCoreMixin } from './drag-drop-core.mixin';
 import { defaultSortingStrategy } from './strategies/sorting-strategy';
+import { captureMultipleFlipStates, animateMultipleFlips, type FlipAnimationOptions } from './utils/flip.utils';
 
 import type { DragDropCore } from './drag-drop-core.mixin';
 import type { Interaction } from '@qti-components/base';
@@ -29,6 +30,13 @@ export const DragDropSortableMixin = <T extends Constructor<Interaction>>(
     protected lastPlacement: { target: HTMLElement; after: boolean } | null = null;
     protected strategy: SortingStrategy = sortingStrategy;
 
+    // FLIP animation configuration
+    public flipAnimationConfig: FlipAnimationOptions = {
+      duration: 300,
+      easing: 'cubic-bezier(0.26, 0.86, 0.44, 0.985)'
+    };
+    public enableFlipAnimations = true;
+
     public get response(): string | string[] | null {
       return [...this._response];
     }
@@ -46,10 +54,12 @@ export const DragDropSortableMixin = <T extends Constructor<Interaction>>(
     /**
      * Reorder DOM elements to match a given array of identifiers.
      * Inspired by dnd-kit's approach to separating data from DOM manipulation.
+     * Uses FLIP animation technique for smooth transitions.
      *
      * @param identifiers - Ordered array of identifier strings
+     * @param animate - Whether to animate the reordering (default: true)
      */
-    protected reorderDOMByIdentifiers(identifiers: string[]): void {
+    protected reorderDOMByIdentifiers(identifiers: string[], animate = true): void {
       const container =
         this.sortableContainer ??
         this.trackedDraggables[0]?.parentElement ??
@@ -65,6 +75,11 @@ export const DragDropSortableMixin = <T extends Constructor<Interaction>>(
           .filter(([id]) => Boolean(id))
       );
 
+      // FLIP: First - capture initial positions before DOM changes
+      const shouldAnimate = animate && this.enableFlipAnimations;
+      const flipStates = shouldAnimate ? captureMultipleFlipStates(this.trackedDraggables) : null;
+
+      // FLIP: Last - perform the DOM mutation
       // Append elements in the specified order
       identifiers.forEach(id => {
         const el = byId.get(id);
@@ -80,6 +95,11 @@ export const DragDropSortableMixin = <T extends Constructor<Interaction>>(
           return id && !identifiers.includes(id);
         })
         .forEach(el => container.appendChild(el));
+
+      // FLIP: Invert & Play - animate elements to their new positions
+      if (flipStates && shouldAnimate) {
+        animateMultipleFlips(flipStates, this.flipAnimationConfig);
+      }
     }
 
     public override afterCache(): void {
@@ -147,6 +167,7 @@ export const DragDropSortableMixin = <T extends Constructor<Interaction>>(
     /**
      * Place the placeholder element at the appropriate position.
      * Uses the sorting strategy to calculate insertion position.
+     * Applies FLIP animations to siblings when they move.
      */
     protected placePlaceholder(dropTarget: HTMLElement | null, clientX: number, clientY: number): void {
       if (!this.dropPlaceholder || !this.sortableContainer) return;
@@ -178,13 +199,29 @@ export const DragDropSortableMixin = <T extends Constructor<Interaction>>(
         return;
       }
 
+      // FLIP: First - capture positions of all visible siblings before moving placeholder
+      const visibleSiblings = Array.from(this.sortableContainer.children).filter(
+        child => child !== this.dropPlaceholder && (child as HTMLElement).style.display !== 'none'
+      ) as HTMLElement[];
+
+      const flipStates = this.enableFlipAnimations ? captureMultipleFlipStates(visibleSiblings) : null;
+
       // Calculate the reference node for insertion
       // If placeAfter is true, insert after the target (before its next sibling)
       // If placeAfter is false, insert before the target
       const referenceNode = placeAfter ? target.nextElementSibling : target;
 
+      // FLIP: Last - perform the DOM mutation
       this.sortableContainer.insertBefore(this.dropPlaceholder, referenceNode);
       this.lastPlacement = { target, after: placeAfter };
+
+      // FLIP: Invert & Play - animate siblings to their new positions
+      if (flipStates && this.enableFlipAnimations) {
+        animateMultipleFlips(flipStates, {
+          duration: this.flipAnimationConfig.duration ? this.flipAnimationConfig.duration * 0.6 : 180,
+          easing: this.flipAnimationConfig.easing
+        });
+      }
     }
 
     protected handleDragMove(clientX: number, clientY: number): void {

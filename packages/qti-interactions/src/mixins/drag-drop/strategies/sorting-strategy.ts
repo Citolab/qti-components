@@ -67,9 +67,13 @@ export class HorizontalListSortingStrategy implements SortingStrategy {
     const relative = (clientX - rect.left) / rect.width;
     const clampedRelative = Math.min(1, Math.max(0, relative));
 
-    // Use 50% threshold
-    // If pointer is in left half, place before; if in right half, place after
-    const placeAfter = clampedRelative > 0.5;
+    // Check if this is the last item in the list
+    const isLastItem = targetIndex === elements.length - 1;
+
+    // For the last item, use a 33% threshold to make it easier to place items after it
+    // For other items, use 50% threshold for balanced behavior
+    const threshold = isLastItem ? 0.33 : 0.5;
+    const placeAfter = clampedRelative > threshold;
 
     return {
       index: targetIndex,

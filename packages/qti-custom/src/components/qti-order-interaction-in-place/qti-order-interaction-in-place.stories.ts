@@ -319,7 +319,7 @@ export const TouchDeviceTest: Story = {
       response-identifier="RESPONSE"
       orientation="${args.orientation}"
     >
-      <qti-prompt>Test touch device interaction:</qti-prompt>
+      <qti-prompt>Test touch-specific styling and properties:</qti-prompt>
       <qti-simple-choice identifier="A">First</qti-simple-choice>
       <qti-simple-choice identifier="B">Second</qti-simple-choice>
       <qti-simple-choice identifier="C">Third</qti-simple-choice>
@@ -329,25 +329,38 @@ export const TouchDeviceTest: Story = {
     const canvas = within(canvasElement);
     const interaction = await canvas.findByTestId<QtiOrderInteractionInPlace>('touch-order-interaction');
 
-    // Wait for initialization
+    // Wait for component initialization to complete
+    await interaction.updateComplete;
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    await step('Verify touch sensors are configured', async () => {
-      // Check that the component is properly initialized with drag capabilities
-      const choices = interaction.querySelectorAll('qti-simple-choice');
-      expect(choices.length).toBe(3);
+    const choices = Array.from(interaction.querySelectorAll('qti-simple-choice'));
 
-      // Verify choices have drag styling
+    await step('Verify touch-specific properties are configured', async () => {
+      // Verify component is initialized
+      expect(choices.length).toBe(3);
+      expect(interaction.getAttribute('orientation')).toBe('horizontal');
+
+      // Verify initial order
+      const initialResponse = interaction.response;
+      expect(initialResponse).toEqual(['A', 'B', 'C']);
+
+      // Verify touch-specific CSS properties are set to prevent default touch behaviors
       choices.forEach(choice => {
         const computedStyle = window.getComputedStyle(choice);
-        expect(computedStyle.cursor).toContain('grab');
-      });
-    });
 
-    await step('Test horizontal orientation', async () => {
-      expect(interaction.getAttribute('orientation')).toBe('horizontal');
-      const response = interaction.response;
-      expect(response).toEqual(['A', 'B', 'C']);
+        // Touch action should be disabled to prevent scrolling/zooming during drag
+        expect(computedStyle.touchAction).toBe('none');
+
+        // User select should be disabled to prevent text selection on touch
+        expect(computedStyle.userSelect).toBe('none');
+
+        // Should have grab cursor for visual feedback
+        expect(computedStyle.cursor).toContain('grab');
+
+        // Should be focusable for accessibility
+        expect(choice.getAttribute('tabindex')).toBe('0');
+        expect(choice.getAttribute('qti-draggable')).toBe('true');
+      });
     });
   }
 };
@@ -394,24 +407,64 @@ export const KeyboardAccessibilityTest: Story = {
       });
     });
 
-    await step('Verify KeyboardSensor is configured', async () => {
-      // The component should have KeyboardSensor configured in @dnd-kit
-      // We can't directly test the sensor, but we can verify the setup conditions
-
-      // Check that the component is initialized and choices are ready
+    await step('Test keyboard drag and drop functionality', async () => {
+      // Check initial order
       const initialResponse = interaction.response;
       expect(initialResponse).toEqual(['K1', 'K2', 'K3', 'K4']);
 
-      // Verify that choices have keyboard-friendly styling
-      choices.forEach(choice => {
-        const computedStyle = window.getComputedStyle(choice);
+      // Tab to the first choice and focus it
+      const firstChoice = choices[0];
+      firstChoice.focus();
+      await new Promise(resolve => setTimeout(resolve, 100));
 
-        // Should have focus indicators
-        expect(computedStyle.outline).toBeDefined();
+      // Verify it's focused
+      expect(document.activeElement).toBe(firstChoice);
 
-        // Should be styled as interactive elements
-        expect(computedStyle.cursor).toContain('grab');
+      // Create a KeyboardEvent for Space key
+      const spaceDownEvent = new KeyboardEvent('keydown', {
+        key: ' ',
+        code: 'Space',
+        bubbles: true,
+        composed: true,
+        cancelable: true
       });
+
+      // Press Space to start dragging
+      firstChoice.dispatchEvent(spaceDownEvent);
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      // Verify the element has keyboard dragging state
+      expect(firstChoice.hasAttribute('data-keyboard-dragging')).toBe(true);
+
+      // Press ArrowDown to move to next drop position
+      const arrowDownEvent = new KeyboardEvent('keydown', {
+        key: 'ArrowDown',
+        code: 'ArrowDown',
+        bubbles: true,
+        composed: true,
+        cancelable: true
+      });
+      firstChoice.dispatchEvent(arrowDownEvent);
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      // Press Space/Enter to drop
+      const spaceUpEvent = new KeyboardEvent('keydown', {
+        key: ' ',
+        code: 'Space',
+        bubbles: true,
+        composed: true,
+        cancelable: true
+      });
+      firstChoice.dispatchEvent(spaceUpEvent);
+      await new Promise(resolve => setTimeout(resolve, 200));
+
+      // Verify the dragging state is removed
+      expect(firstChoice.hasAttribute('data-keyboard-dragging')).toBe(false);
+
+      // Verify the order changed - first item should now be in second position
+      const newResponse = interaction.response;
+      expect(newResponse).not.toEqual(initialResponse);
+      expect(newResponse[1]).toBe('K1'); // First item moved to second position
     });
 
     await step('Test keyboard focus management', async () => {
