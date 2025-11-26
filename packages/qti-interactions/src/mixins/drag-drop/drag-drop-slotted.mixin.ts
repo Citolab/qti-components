@@ -160,6 +160,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       } else if (droppable.tagName === 'QTI-SIMPLE-ASSOCIABLE-CHOICE') {
         cleanClone.setAttribute('slot', 'qti-simple-associable-choice');
         droppable.appendChild(cleanClone);
+        droppable.setAttribute('data-has-drop', 'true');
       } else {
         droppable.appendChild(cleanClone);
       }
@@ -313,6 +314,9 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       this.trackedDroppables.forEach(droppable => {
         const items = Array.from(droppable.querySelectorAll(draggablesSelector));
         items.forEach(item => item.remove());
+        if (droppable.tagName === 'QTI-SIMPLE-ASSOCIABLE-CHOICE') {
+          droppable.removeAttribute('data-has-drop');
+        }
       });
 
       this.trackedDraggables.forEach(draggable => {

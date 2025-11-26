@@ -24,10 +24,21 @@ export class QtiSimpleAssociableChoice extends ActiveElementMixin(LitElement, 'q
       display: block;
     }
     slot[part='dropslot'] {
+      display: none;
+      width: auto;
+    }
+    :host([data-has-drop]) slot[part='dropslot'] {
       display: inline-flex;
+      width: 100%;
+      box-sizing: border-box;
     }
     :host-context(qti-associate-interaction) slot[part='dropslot'] {
       display: none;
+    }
+    :host-context(qti-match-interaction) slot[part='dropslot'] {
+      display: inline-flex;
+      width: 100%;
+      box-sizing: border-box;
     }
     slot[name='qti-simple-associable-choice'] {
       min-height: var(--qti-drop-min-height, 2rem);
