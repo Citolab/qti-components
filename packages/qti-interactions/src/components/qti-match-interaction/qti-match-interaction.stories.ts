@@ -48,7 +48,7 @@ export const Default: Story = {
   render: args =>
     template(
       /* add data-testid to args, without adding it to the controls of the story */
-      { ...args, 'data-testid': 'match-interaction', autoSizeDropzones: true, 'auto-size-dropzones': true },
+      { ...args, 'data-testid': 'match-interaction' },
       html`<qti-prompt>Match the following characters to the Shakespeare play they appeared in:</qti-prompt>
         <qti-simple-match-set>
           <qti-simple-associable-choice identifier="C" match-max="1">Capulet</qti-simple-associable-choice>
@@ -68,12 +68,7 @@ export const Default: Story = {
 const testTemplate = html`<qti-prompt
     >Match the following characters to the Shakespeare play they appeared in:</qti-prompt
   >
-  <qti-match-interaction
-    data-testid="match-interaction"
-    response-identifier="RESPONSE"
-    max-associations="3"
-    auto-size-dropzones
-  >
+  <qti-match-interaction data-testid="match-interaction" response-identifier="RESPONSE" max-associations="3">
     <qti-simple-match-set>
       <qti-simple-associable-choice identifier="C" match-max="1">Capulet</qti-simple-associable-choice>
       <qti-simple-associable-choice identifier="D" match-max="1">Demetrius</qti-simple-associable-choice>
@@ -162,13 +157,7 @@ const multipleAssociations2Template = html`
 `;
 
 const optionsRightTemplate = html`
-  <qti-match-interaction
-    response-identifier="RESPONSE"
-    shuffle="true"
-    max-associations="4"
-    class="qti-choices-right"
-    auto-size-dropzones
-  >
+  <qti-match-interaction response-identifier="RESPONSE" shuffle="true" max-associations="4" class="qti-choices-right">
     <qti-prompt>Combineer de teksten</qti-prompt>
     <qti-simple-match-set>
       <qti-simple-associable-choice identifier="A1" match-max="1">Berlijn</qti-simple-associable-choice>

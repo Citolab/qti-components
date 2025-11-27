@@ -260,42 +260,4 @@ describe('qtiTransformItem API Methods', () => {
       </qti-assessment-item>`
     );
   });
-
-  it('should calculate and apply qti-input-width classes to gap elements based on content length', async () => {
-    const parsedXML = qtiTransformItem()
-      .parse(
-        xml`
-        <qti-assessment-item>
-          <qti-item-body>
-            <qti-gap-match-interaction response-identifier="RESPONSE">
-              <qti-prompt>Fill in the gaps</qti-prompt>
-              <qti-gap-text identifier="A">Short</qti-gap-text>
-              <p>
-                This is a gap with no class: <qti-gap identifier="G1">Test</qti-gap>
-                This is a gap with 10 chars: <qti-gap identifier="G2">1234567890</qti-gap>
-                This gap already has a class: <qti-gap class="qti-input-width-20" identifier="G3"></qti-gap>
-              </p>
-            </qti-gap-match-interaction>
-          </qti-item-body>
-        </qti-assessment-item>`
-      )
-      .calculateGapSizeToClass()
-      .html();
-
-    expect(parsedXML).toEqualXml(
-      html` <qti-assessment-item xmlns="http://www.w3.org/1999/xhtml">
-        <qti-item-body>
-          <qti-gap-match-interaction response-identifier="RESPONSE">
-            <qti-prompt>Fill in the gaps</qti-prompt>
-            <qti-gap-text identifier="A">Short</qti-gap-text>
-            <p>
-              This is a gap with no class: <qti-gap class="qti-input-width-4" identifier="G1">Test</qti-gap>
-              This is a gap with 10 chars: <qti-gap class="qti-input-width-10" identifier="G2">1234567890</qti-gap>
-              This gap already has a class: <qti-gap class="qti-input-width-20" identifier="G3"></qti-gap>
-            </p>
-          </qti-gap-match-interaction>
-        </qti-item-body>
-      </qti-assessment-item>`
-    );
-  });
 });

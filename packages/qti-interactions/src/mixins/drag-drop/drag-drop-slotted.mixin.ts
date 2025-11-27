@@ -103,7 +103,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
     }
 
     private updateMinDimensionsForDropZones(): void {
-      if (!this.autoSizeDropzones || this.trackedDraggables.length === 0) return;
+      if (this.trackedDraggables.length === 0) return;
 
       applyDropzoneAutoSizing(this.trackedDraggables, this.trackedDroppables, this.trackedDragContainers);
     }
