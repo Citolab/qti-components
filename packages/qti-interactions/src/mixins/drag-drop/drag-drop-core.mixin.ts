@@ -166,8 +166,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         .filter((e: PointerEvent) => {
           const target = findDraggableTarget(e, draggablesSelector);
           const hostDisabled = (this as any).disabled || (this as any).readonly;
-          const targetDisabled =
-            target?.hasAttribute('disabled') || target?.getAttribute('aria-disabled') === 'true';
+          const targetDisabled = target?.hasAttribute('disabled') || target?.getAttribute('aria-disabled') === 'true';
           return target && e.isPrimary !== false && e.button === 0 && !hostDisabled && !targetDisabled;
         })
         .subscribe((downEvent: PointerEvent) => {
@@ -427,32 +426,14 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
 
       this.updateClonePosition(clientX, clientY);
 
-      let dropTarget = detectCollision(
+      const dropTarget = detectCollision(
         this.allDropzones,
         clientX,
         clientY,
         this.dragState.dragClone,
-        this.collisionDetectionAlgorithm
+        this.collisionDetectionAlgorithm,
+        this.trackedDragContainers
       );
-
-      // If we detected a collision with the source droppable, prefer it over other targets
-      // to make it easier to drop back where the item came from
-      if (this.dragState.sourceDroppable && this.dragState.sourceDroppable !== dropTarget) {
-        // Use a more forgiving check for the source droppable
-        // Check if the pointer is within the source droppable's expanded bounds
-        const sourceRect = this.dragState.sourceDroppable.getBoundingClientRect();
-        const TOLERANCE = 20; // pixels of tolerance around the source droppable
-
-        const isNearSource =
-          clientX >= sourceRect.left - TOLERANCE &&
-          clientX <= sourceRect.right + TOLERANCE &&
-          clientY >= sourceRect.top - TOLERANCE &&
-          clientY <= sourceRect.bottom + TOLERANCE;
-
-        if (isNearSource) {
-          dropTarget = this.dragState.sourceDroppable;
-        }
-      }
 
       // Add hysteresis: only switch targets if enough time has passed (reduces flickering)
       const now = Date.now();
@@ -479,7 +460,8 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
 
       // Allow dropping into the source droppable even if it's marked as disabled
       // The data-drag-source marker indicates this droppable should accept the item being returned
-      const isDisabledButSource = currentTarget?.hasAttribute('disabled') && currentTarget.hasAttribute('data-drag-source');
+      const isDisabledButSource =
+        currentTarget?.hasAttribute('disabled') && currentTarget.hasAttribute('data-drag-source');
 
       const canDrop =
         !!dragSource &&
@@ -512,7 +494,8 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
     }
 
     public allowDrop(_draggable: HTMLElement, droppable: HTMLElement): boolean {
-      return this.trackedDroppables.includes(droppable);
+      // Allow drops into both regular droppables and drag containers (inventory)
+      return this.trackedDroppables.includes(droppable) || this.trackedDragContainers.includes(droppable);
     }
 
     public abstract handleDrop(draggable: HTMLElement, droppable: HTMLElement): void;

@@ -14,6 +14,17 @@ export default css`
     gap: 0.5rem;
   }
 
+  slot[name='qti-simple-associable-choice'][hover] {
+    border-color: var(--qti-border-active) !important;
+    border-style: solid !important;
+    background-color: var(--qti-bg-active) !important;
+  }
+
+  slot[name='qti-simple-associable-choice'][active] {
+    border-color: var(--qti-border-active) !important;
+    background-color: var(--qti-bg-active) !important;
+  }
+
   [part='drop-list'] {
     display: flex;
     flex-direction: column;

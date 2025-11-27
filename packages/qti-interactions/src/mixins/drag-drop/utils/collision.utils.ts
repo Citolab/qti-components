@@ -3,14 +3,25 @@
  * Based on dnd-kit collision detection strategies
  */
 
-export type CollisionDetectionAlgorithm = 'pointerWithin' | 'rectangleIntersection' | 'closestCenter' | 'closestCorners' | 'closestCornersWithInventoryPriority';
+export type CollisionDetectionAlgorithm =
+  | 'pointerWithin'
+  | 'rectangleIntersection'
+  | 'closestCenter'
+  | 'closestCorners'
+  | 'closestCornersWithInventoryPriority';
 
 export interface CollisionDetectionOptions {
   algorithm: CollisionDetectionAlgorithm;
 }
 
 export interface CollisionDetectionStrategy {
-  (dropzones: HTMLElement[], clientX: number, clientY: number, dragElement?: HTMLElement | null): HTMLElement | null;
+  (
+    dropzones: HTMLElement[],
+    clientX: number,
+    clientY: number,
+    dragElement?: HTMLElement | null,
+    dragContainers?: HTMLElement[]
+  ): HTMLElement | null;
 }
 
 /**
@@ -18,11 +29,7 @@ export interface CollisionDetectionStrategy {
  * Only registers collision when the pointer is contained within the bounding rectangle
  * of the droppable container. Best for high-precision interfaces.
  */
-export function pointerWithinCollision(
-  dropzones: HTMLElement[],
-  clientX: number,
-  clientY: number
-): HTMLElement | null {
+export function pointerWithinCollision(dropzones: HTMLElement[], clientX: number, clientY: number): HTMLElement | null {
   const activeZones = dropzones.filter(zone => !zone.hasAttribute('disabled'));
 
   for (const zone of activeZones) {
@@ -106,9 +113,7 @@ export function closestCenterCollision(
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
 
-    const distance = Math.sqrt(
-      Math.pow(dragCenterX - centerX, 2) + Math.pow(dragCenterY - centerY, 2)
-    );
+    const distance = Math.sqrt(Math.pow(dragCenterX - centerX, 2) + Math.pow(dragCenterY - centerY, 2));
 
     if (distance < minDistance) {
       minDistance = distance;
@@ -175,9 +180,7 @@ export function closestCornersCollision(
 
     for (const dragCorner of dragCorners) {
       for (const dropCorner of dropCorners) {
-        const distance = Math.sqrt(
-          Math.pow(dragCorner.x - dropCorner.x, 2) + Math.pow(dragCorner.y - dropCorner.y, 2)
-        );
+        const distance = Math.sqrt(Math.pow(dragCorner.x - dropCorner.x, 2) + Math.pow(dragCorner.y - dropCorner.y, 2));
         totalDistance += distance;
         pairCount++;
       }
@@ -210,16 +213,27 @@ export function closestCornersWithInventoryPriorityCollision(
   dropzones: HTMLElement[],
   clientX: number,
   clientY: number,
-  dragElement?: HTMLElement | null
+  dragElement?: HTMLElement | null,
+  dragContainers?: HTMLElement[]
 ): HTMLElement | null {
-  const activeZones = dropzones.filter(zone => !zone.hasAttribute('disabled'));
-  if (activeZones.length === 0) return null;
+  // Separate drag containers from regular droppables BEFORE filtering by disabled
+  // Drag containers (inventory) should always be available for dropping
+  // Use the provided dragContainers array if available, otherwise fall back to detecting by attributes
+  const identifiedDragContainers =
+    dragContainers && dragContainers.length > 0
+      ? dropzones.filter(zone => dragContainers.includes(zone))
+      : dropzones.filter(
+          zone => zone.tagName === 'SLOT' && zone.hasAttribute('part') && zone.getAttribute('part')?.includes('drags')
+        );
+  const allRegularDroppables = dropzones.filter(zone => !identifiedDragContainers.includes(zone));
 
-  // Separate drag containers from regular droppables
-  const dragContainers = activeZones.filter(zone =>
-    zone.tagName === 'SLOT' && zone.hasAttribute('part') && zone.getAttribute('part')?.includes('drags')
+  // Only filter disabled for regular droppables, not drag containers
+  // BUT: keep droppables with data-drag-source marker (returning to source)
+  const regularDroppables = allRegularDroppables.filter(
+    zone => !zone.hasAttribute('disabled') || zone.hasAttribute('data-drag-source')
   );
-  const regularDroppables = activeZones.filter(zone => !dragContainers.includes(zone));
+
+  if (identifiedDragContainers.length === 0 && regularDroppables.length === 0) return null;
 
   // Get drag corners (use pointer or element corners)
   let dragCorners: { x: number; y: number }[];
@@ -256,9 +270,7 @@ export function closestCornersWithInventoryPriorityCollision(
 
     for (const dragCorner of dragCorners) {
       for (const dropCorner of dropCorners) {
-        const distance = Math.sqrt(
-          Math.pow(dragCorner.x - dropCorner.x, 2) + Math.pow(dragCorner.y - dropCorner.y, 2)
-        );
+        const distance = Math.sqrt(Math.pow(dragCorner.x - dropCorner.x, 2) + Math.pow(dragCorner.y - dropCorner.y, 2));
         totalDistance += distance;
         pairCount++;
       }
@@ -271,7 +283,7 @@ export function closestCornersWithInventoryPriorityCollision(
   let closestDragContainer: HTMLElement | null = null;
   let minDragContainerDistance = Infinity;
 
-  for (const container of dragContainers) {
+  for (const container of identifiedDragContainers) {
     const distance = calculateAverageDistance(container);
     if (distance < minDragContainerDistance) {
       minDragContainerDistance = distance;
@@ -291,8 +303,29 @@ export function closestCornersWithInventoryPriorityCollision(
     }
   }
 
-  // Priority logic: prefer drag container if it's within 1.5x the distance of closest droppable
-  // This threshold makes it easier to return items to inventory
+  // FIRST: Check if pointer/drag is actually INSIDE any drag container
+  // If the user is hovering directly over inventory, give it absolute priority
+  if (closestDragContainer && dragElement) {
+    const dragRect = dragElement.getBoundingClientRect();
+    const containerRect = closestDragContainer.getBoundingClientRect();
+
+    // Check if drag element's center is inside the container
+    const dragCenterX = dragRect.left + dragRect.width / 2;
+    const dragCenterY = dragRect.top + dragRect.height / 2;
+
+    const isInsideContainer =
+      dragCenterX >= containerRect.left &&
+      dragCenterX <= containerRect.right &&
+      dragCenterY >= containerRect.top &&
+      dragCenterY <= containerRect.bottom;
+
+    if (isInsideContainer) {
+      return closestDragContainer;
+    }
+  }
+
+  // SECOND: Use distance-based priority with threshold
+  // Priority logic: prefer drag container if it's within threshold of closest droppable
   const INVENTORY_PRIORITY_THRESHOLD = 1.5;
 
   if (closestDragContainer && closestDroppable) {
@@ -304,7 +337,8 @@ export function closestCornersWithInventoryPriorityCollision(
   }
 
   // Return whichever is available
-  return closestDragContainer || closestDroppable;
+  const result = closestDragContainer || closestDroppable;
+  return result;
 }
 
 /**
@@ -323,7 +357,6 @@ export function getCollisionDetectionStrategy(algorithm: CollisionDetectionAlgor
     case 'closestCornersWithInventoryPriority':
       return closestCornersWithInventoryPriorityCollision;
     default:
-      console.warn(`Unknown collision detection algorithm: ${algorithm}, falling back to pointerWithin`);
       return pointerWithinCollision;
   }
 }
@@ -336,8 +369,9 @@ export function detectCollision(
   clientX: number,
   clientY: number,
   dragElement?: HTMLElement | null,
-  algorithm: CollisionDetectionAlgorithm = 'pointerWithin'
+  algorithm: CollisionDetectionAlgorithm = 'pointerWithin',
+  dragContainers?: HTMLElement[]
 ): HTMLElement | null {
   const strategy = getCollisionDetectionStrategy(algorithm);
-  return strategy(dropzones, clientX, clientY, dragElement);
+  return strategy(dropzones, clientX, clientY, dragElement, dragContainers);
 }
