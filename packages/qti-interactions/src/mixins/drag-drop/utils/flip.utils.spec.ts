@@ -68,6 +68,7 @@ describe('flip.utils', () => {
 
     mockRect(el, { left: 10, top: 10, width: 20, height: 20 });
 
+    el.animate = vi.fn().mockReturnValue({ finished: Promise.resolve() } as unknown as Animation);
     const animateSpy = vi.spyOn(el, 'animate');
     const animation = animateFlip(el, first);
     expect(animation).not.toBeNull();
@@ -90,12 +91,13 @@ describe('flip.utils', () => {
   it('animateMultipleFlips returns animations for changed elements only', () => {
     const el = document.createElement('div');
     mockRect(el, { left: 0, top: 0, width: 10, height: 10 });
+    el.animate = vi.fn().mockReturnValue({ finished: Promise.resolve() } as unknown as Animation);
     const states = captureMultipleFlipStates([el]);
     // change rect so animation happens
     mockRect(el, { left: 5, top: 0, width: 10, height: 10 });
     const result = animateMultipleFlips(states);
     expect(result.size).toBe(1);
-    expect(result.get(el)).toBeInstanceOf(Animation);
+    expect(el.animate).toHaveBeenCalled();
   });
 
   it('performFlip captures, mutates, and awaits animations', async () => {
