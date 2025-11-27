@@ -4,34 +4,6 @@
   "modules": [
     {
       "kind": "javascript-module",
-      "path": "packages/qti-custom/src/components/qti-order-interaction-in-place/drag.ts",
-      "declarations": [
-        {
-          "kind": "function",
-          "name": "drag",
-          "parameters": [
-            {
-              "name": "element",
-              "type": {
-                "text": "Element"
-              }
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "drag",
-          "declaration": {
-            "name": "drag",
-            "module": "packages/qti-custom/src/components/qti-order-interaction-in-place/drag.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "packages/qti-custom/src/components/qti-order-interaction-in-place/index.ts",
       "declarations": [],
       "exports": [
@@ -174,27 +146,6 @@
               ],
               "type": {
                 "text": "toggleCandidateCorrection(show: boolean) => void"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "toggleCorrectResponse",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "show",
-                  "type": {
-                    "text": "boolean"
-                  }
-                }
-              ],
-              "type": {
-                "text": "toggleCorrectResponse(show: boolean) => void"
               }
             },
             {

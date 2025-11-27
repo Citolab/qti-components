@@ -76,7 +76,14 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
     }
 
     public override allowDrop(_draggable: HTMLElement, droppable: HTMLElement): boolean {
-      return this.trackedDroppables.includes(droppable) && !droppable.hasAttribute('disabled');
+      // Allow drop if:
+      // 1. The droppable is tracked
+      // 2. AND either: it's not disabled OR it has the data-drag-source marker (returning to source)
+      const isTracked = this.trackedDroppables.includes(droppable);
+      const isDisabled = droppable.hasAttribute('disabled');
+      const isReturningToSource = droppable.hasAttribute('data-drag-source');
+
+      return isTracked && (!isDisabled || isReturningToSource);
     }
 
     public override handleDrop(draggable: HTMLElement, droppable: HTMLElement): void {
@@ -278,8 +285,11 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       const maxReached = this.maxAssociations > 0 && totalAssociations >= this.maxAssociations;
 
       this.trackedDroppables.forEach(droppable => {
+        // Don't disable the source droppable during an active drag
+        const isDragSource = droppable.hasAttribute('data-drag-source');
         const isAtCapacity = isDroppableAtCapacity(droppable, draggablesSelector);
-        if (maxReached || isAtCapacity) {
+
+        if ((maxReached || isAtCapacity) && !isDragSource) {
           droppable.setAttribute('disabled', '');
         } else {
           droppable.removeAttribute('disabled');

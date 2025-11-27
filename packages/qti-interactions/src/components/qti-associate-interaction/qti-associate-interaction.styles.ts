@@ -15,11 +15,13 @@ export default css`
   }
 
   [part='drop-list'] {
-    display: block;
-    /* flex: 1; */
+    display: flex;
+    flex-direction: column;
     border: 2px solid transparent;
     border-radius: 0.25rem;
     min-width: var(--qti-drop-min-width, 6rem);
+    min-height: var(--qti-drop-min-height, 2.5rem);
+    box-sizing: border-box;
   }
 
   [part='drop-list'] > qti-simple-associable-choice {

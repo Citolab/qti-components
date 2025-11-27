@@ -53,6 +53,7 @@ interface DragState {
   dragClone: HTMLElement | null;
   startOffset: { x: number; y: number };
   currentTarget: HTMLElement | null;
+  sourceDroppable: HTMLElement | null;
   inputType: 'mouse' | 'touch' | null;
   pointerId?: number;
   initialCoordinates?: { x: number; y: number };
@@ -86,6 +87,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       dragClone: null,
       startOffset: { x: 0, y: 0 },
       currentTarget: null,
+      sourceDroppable: null,
       inputType: null
     };
 
@@ -311,6 +313,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       }
 
       const isCloneInDroppable = this.trackedDroppables.some(d => d.contains(dragElement));
+      const sourceDroppable = this.trackedDroppables.find(d => d.contains(dragElement)) || null;
       const rect = dragElement.getBoundingClientRect();
 
       this.dragState = {
@@ -322,12 +325,18 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
           y: startY - rect.top
         },
         currentTarget: null,
+        sourceDroppable: sourceDroppable,
         inputType: inputType
       };
 
       if (isCloneInDroppable) {
         dragElement.remove();
         this.cacheInteractiveElements();
+
+        // Mark the source droppable so it won't be disabled during drag
+        if (sourceDroppable) {
+          sourceDroppable.setAttribute('data-drag-source', 'true');
+        }
       } else {
         dragElement.style.opacity = '0';
         dragElement.style.pointerEvents = 'none';
@@ -418,13 +427,32 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
 
       this.updateClonePosition(clientX, clientY);
 
-      const dropTarget = detectCollision(
+      let dropTarget = detectCollision(
         this.allDropzones,
         clientX,
         clientY,
         this.dragState.dragClone,
         this.collisionDetectionAlgorithm
       );
+
+      // If we detected a collision with the source droppable, prefer it over other targets
+      // to make it easier to drop back where the item came from
+      if (this.dragState.sourceDroppable && this.dragState.sourceDroppable !== dropTarget) {
+        // Use a more forgiving check for the source droppable
+        // Check if the pointer is within the source droppable's expanded bounds
+        const sourceRect = this.dragState.sourceDroppable.getBoundingClientRect();
+        const TOLERANCE = 20; // pixels of tolerance around the source droppable
+
+        const isNearSource =
+          clientX >= sourceRect.left - TOLERANCE &&
+          clientX <= sourceRect.right + TOLERANCE &&
+          clientY >= sourceRect.top - TOLERANCE &&
+          clientY <= sourceRect.bottom + TOLERANCE;
+
+        if (isNearSource) {
+          dropTarget = this.dragState.sourceDroppable;
+        }
+      }
 
       // Add hysteresis: only switch targets if enough time has passed (reduces flickering)
       const now = Date.now();
@@ -447,13 +475,17 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
     protected handleDragEnd(): void {
       if (!this.dragState.dragging) return;
 
-      const { dragSource, dragClone, currentTarget } = this.dragState;
+      const { dragSource, dragClone, currentTarget, sourceDroppable } = this.dragState;
+
+      // Allow dropping into the source droppable even if it's marked as disabled
+      // The data-drag-source marker indicates this droppable should accept the item being returned
+      const isDisabledButSource = currentTarget?.hasAttribute('disabled') && currentTarget.hasAttribute('data-drag-source');
 
       const canDrop =
         !!dragSource &&
         !!currentTarget &&
         this.allowDrop(dragSource, currentTarget) &&
-        !currentTarget.hasAttribute('disabled');
+        (!currentTarget.hasAttribute('disabled') || isDisabledButSource);
 
       if (canDrop && dragSource && currentTarget) {
         this.handleDrop(dragSource, currentTarget);
@@ -472,6 +504,11 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       this.resetDragState();
       this.deactivateAllDroppables();
       this.saveResponse();
+
+      // Clear the drag-source marker AFTER saveResponse to ensure it's not disabled during drop processing
+      if (sourceDroppable) {
+        sourceDroppable.removeAttribute('data-drag-source');
+      }
     }
 
     public allowDrop(_draggable: HTMLElement, droppable: HTMLElement): boolean {
@@ -567,6 +604,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         dragClone: null,
         startOffset: { x: 0, y: 0 },
         currentTarget: null,
+        sourceDroppable: null,
         inputType: null
       };
     }

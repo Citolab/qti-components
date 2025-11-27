@@ -16,7 +16,8 @@ export class QtiGapMatchInteraction extends DragDropInteractionMixin(
   Interaction,
   'qti-gap-text',
   'qti-gap',
-  `slot[part='drags']`
+  `slot[part='drags']`,
+  'closestCornersWithInventoryPriority'
 ) {
   static override styles: CSSResultGroup = styles;
 

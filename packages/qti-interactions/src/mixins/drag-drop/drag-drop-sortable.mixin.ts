@@ -158,6 +158,7 @@ export const DragDropSortableMixin = <T extends Constructor<Interaction>>(
           y: startY - rect.top
         },
         currentTarget: null,
+        sourceDroppable: null,
         inputType: inputType
       };
 

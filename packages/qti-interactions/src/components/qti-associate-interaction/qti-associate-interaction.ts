@@ -14,7 +14,8 @@ export class QtiAssociateInteraction extends DragDropInteractionMixin(
   Interaction,
   'qti-simple-associable-choice',
   '.dl',
-  `slot[name='qti-simple-associable-choice']`
+  `slot[name='qti-simple-associable-choice']`,
+  'closestCornersWithInventoryPriority'
 ) {
   static override styles: CSSResultGroup = styles;
   @state() protected _childrenMap: Element[] = [];
