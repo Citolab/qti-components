@@ -1,7 +1,3 @@
-import { detectCollision } from './collision.utils';
-
-import type { CollisionDetectionAlgorithm } from './collision.utils';
-
 export function findDraggableTarget(event: Event, draggablesSelector: string): HTMLElement | null {
   const composedPath = event.composedPath ? event.composedPath() : [event.target];
 
@@ -19,20 +15,6 @@ export function findDraggableTarget(event: Event, draggablesSelector: string): H
   }
 
   return null;
-}
-
-/**
- * Find the closest dropzone using the specified collision detection algorithm
- * @deprecated Use detectCollision from collision.utils.ts instead
- */
-export function findClosestDropzone(
-  dropzones: HTMLElement[],
-  clientX: number,
-  clientY: number,
-  dragElement?: HTMLElement | null,
-  algorithm: CollisionDetectionAlgorithm = 'pointerWithin'
-): HTMLElement | null {
-  return detectCollision(dropzones, clientX, clientY, dragElement, algorithm);
 }
 
 // Re-export collision detection types and functions for convenience
