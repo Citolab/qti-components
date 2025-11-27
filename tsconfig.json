@@ -37,6 +37,9 @@
       "@qti-components/interactions": [
         "./packages/qti-interactions/src/index.ts"
       ],
+      "@qti-components/custom": [
+        "./packages/qti-custom/src/index.ts"
+      ],
       "@qti-components/processing": [
         "./packages/qti-processing/src/index.ts"
       ],

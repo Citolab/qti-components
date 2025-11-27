@@ -1,9 +1,10 @@
 import { html } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 
-import { Interaction } from '@qti-components/base';
+import { Interaction, InteractionReviewController } from '@qti-components/base';
 
 import styles from './qti-slider-interaction.styles';
+import { getSliderCorrectResponseState } from './qti-slider-interaction-review.helpers';
 
 import type { CSSResultGroup } from 'lit';
 
@@ -19,6 +20,11 @@ export class QtiSliderInteraction extends Interaction {
   @property({ type: Number, attribute: 'lower-bound' }) min = 0;
   @property({ type: Number, attribute: 'upper-bound' }) max = 100;
   @property({ type: Number, attribute: 'step' }) step = 1;
+
+  constructor() {
+    super();
+    this.reviewController = new InteractionReviewController(this);
+  }
 
   validate(): boolean {
     return true;
@@ -43,22 +49,20 @@ export class QtiSliderInteraction extends Interaction {
   }
 
   public override toggleCorrectResponse(show: boolean) {
-    const responseVariable = this.responseVariable;
-    if (!responseVariable?.correctResponse) return;
+    const state = getSliderCorrectResponseState({
+      show,
+      responseVariable: this.responseVariable,
+      min: this.min,
+      max: this.max
+    });
 
-    if (show) {
-      this._correctResponse = responseVariable.correctResponse.toString();
-      const nr = parseFloat(responseVariable.correctResponse.toString());
-      if (!isNaN(nr)) {
-        this._correctResponseNumber = nr;
-        const valuePercentage = ((this._correctResponseNumber - this.min) / (this.max - this.min)) * 100;
-        this.style.setProperty('--value-percentage-correct', `${valuePercentage}%`);
-      } else {
-        this._correctResponseNumber = null;
-      }
-    } else {
-      this._correctResponseNumber = null;
+    this.correctResponse = state.correctResponseText;
+    this._correctResponseNumber = state.numericValue;
+
+    if (state.percentage !== null) {
+      this.style.setProperty('--value-percentage-correct', `${state.percentage}%`);
     }
+
     this.requestUpdate();
   }
 

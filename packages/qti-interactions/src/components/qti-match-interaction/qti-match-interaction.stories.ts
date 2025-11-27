@@ -88,6 +88,7 @@ const multipleAssociationsTemplate = html` <qti-match-interaction
   shuffle="false"
   max-associations="5"
   min-associations="0"
+  auto-size-dropzones
 >
   <qti-prompt>Can you match the cities below with the language most likely to be spoken there?</qti-prompt>
   <qti-simple-match-set>
@@ -130,7 +131,7 @@ const multipleAssociations2Template = html`
   <div>
     <p>Which properties do the following animal classes have?</p>
 
-    <qti-match-interaction max-associations="3" response-identifier="RESPONSE">
+    <qti-match-interaction max-associations="3" response-identifier="RESPONSE" auto-size-dropzones>
       <qti-simple-match-set>
         <qti-simple-associable-choice identifier="r1" match-max="0">
           <p>Asexual</p>
@@ -180,7 +181,7 @@ const manyOptionsTemplate = html`
       cellen hun functies.
     </p>
   </div>
-  <qti-match-interaction response-identifier="RESPONSE" shuffle="true" max-associations="7">
+  <qti-match-interaction response-identifier="RESPONSE" shuffle="true" max-associations="7" auto-size-dropzones>
     <qti-simple-match-set>
       <qti-simple-associable-choice identifier="A1" fixed="false" match-max="1" match-min="0">
         endoplasmatisch reticulum

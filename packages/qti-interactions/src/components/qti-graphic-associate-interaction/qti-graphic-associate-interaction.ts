@@ -3,7 +3,7 @@ import { customElement, queryAssignedElements, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { repeat } from 'lit/directives/repeat.js';
 
-import { Interaction } from '@qti-components/base';
+import { Interaction, InteractionReviewController } from '@qti-components/base';
 
 import { positionShapes } from '../../internal/hotspots/hotspot';
 import styles from './qti-graphic-associate-interaction.styles';
@@ -30,6 +30,7 @@ export class QtiGraphicAssociateInteraction extends Interaction {
 
   constructor() {
     super();
+    this.reviewController = new InteractionReviewController(this);
     this.addEventListener('qti-register-hotspot', this.positionHotspotOnRegister);
   }
 

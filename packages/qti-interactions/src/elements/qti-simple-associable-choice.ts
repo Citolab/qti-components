@@ -14,13 +14,43 @@ export class QtiSimpleAssociableChoice extends ActiveElementMixin(LitElement, 'q
     :host {
       display: flex;
       user-select: none;
+      align-items: center;
+    }
+    :host(:focus) {
+      outline: none;
     }
     slot {
       width: 100%;
       display: block;
     }
-    slot[name='qti-simple-associable-choice'] {
+    slot[part='dropslot'] {
+      display: none;
       width: auto;
+    }
+    :host([data-has-drop]) slot[part='dropslot'] {
+      display: inline-flex;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    :host-context(qti-associate-interaction) slot[part='dropslot'] {
+      display: none;
+    }
+    :host-context(qti-match-interaction) slot[part='dropslot'] {
+      display: inline-flex;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    slot[name='qti-simple-associable-choice'] {
+      min-height: var(--qti-drop-min-height, 2rem);
+      min-width: var(--qti-drop-min-width, 6rem);
+    }
+    :host([hover]) slot[part='dropslot'] {
+      border: 2px solid var(--qti-border-active) !important;
+      border-radius: 0.25rem;
+      background-color: var(--qti-bg-active) !important;
+      min-height: 3rem;
+      padding: 0.5rem;
+      box-sizing: border-box;
     }
   `;
 

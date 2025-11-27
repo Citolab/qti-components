@@ -1,0 +1,61 @@
+@layer qti-base, qti-components, qti-utilities, qti-variants, qti-extended;
+
+@import url('../../../../qti-theme/src/styles/qti-base.css');
+
+qti-order-interaction-in-place {
+  &:state(--dragzone-active)::part(drags) {
+    @apply act;
+  }
+
+  &:state(--dragzone-enabled)::part(drags) {
+    @apply dropping;
+  }
+
+  &[disabled] {
+    & qti-simple-choice {
+      @apply dis;
+    }
+  }
+
+  &[readonly] {
+    & qti-simple-choice {
+      @apply rdo;
+    }
+  }
+
+  & qti-simple-choice {
+    flex-grow: 1;
+    flex-basis: 0;
+    /* width: fit-content; */
+
+    @apply drag;
+
+    &:state(candidate-correct) {
+      background-color: var(--qti-correct);
+    }
+
+    &:state(candidate-incorrect) {
+      background-color: var(--qti-incorrect);
+    }
+
+    &[dragging] {
+      @apply dragging;
+    }
+
+    &:hover {
+      @apply hov;
+    }
+
+    &:focus {
+      @apply foc;
+    }
+  }
+
+  &::part(drags) {
+    gap: 0.5rem; /* gap-2 */
+  }
+
+  &::part(active) {
+    @apply act;
+  }
+}

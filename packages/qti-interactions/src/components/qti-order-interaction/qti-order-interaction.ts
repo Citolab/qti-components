@@ -1,10 +1,11 @@
 import { html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
-import { Interaction } from '@qti-components/base';
+import { Interaction, InteractionReviewController } from '@qti-components/base';
 
 import { DragDropInteractionMixin } from '../../mixins/drag-drop';
 import styles from './qti-order-interaction.styles';
+import { toggleOrderInteractionCorrectResponse } from './qti-order-interaction-review.helpers';
 
 import type { PropertyValueMap } from 'lit';
 import type { QtiSimpleChoice } from '../../elements/qti-simple-choice';
@@ -26,6 +27,11 @@ export class QtiOrderInteraction extends DragDropInteractionMixin(
   @property({ type: String })
   public orientation: 'horizontal' | 'vertical';
 
+  constructor() {
+    super();
+    this.reviewController = new InteractionReviewController(this);
+  }
+
   override render() {
     const choices = Array.from(this.querySelectorAll('qti-simple-choice'));
     if (this.nrChoices < choices.length) {
@@ -44,50 +50,14 @@ export class QtiOrderInteraction extends DragDropInteractionMixin(
   }
 
   public override toggleCorrectResponse(show: boolean): void {
-    const responseVariable = this.responseVariable;
-    // Always start by removing old correct answers
-    this.shadowRoot.querySelectorAll('.correct-option').forEach(option => option.remove());
-
-    if (show && responseVariable?.correctResponse) {
-      const response = Array.isArray(responseVariable.correctResponse)
-        ? responseVariable.correctResponse
-        : [responseVariable.correctResponse];
-
-      const correctIds = response.map(r => r.split(' ')[0]); // e.g., ['A', 'B', 'C']
-
-      const used = new Set<string>(); // to track already rendered correct-answers
-
-      const gaps = this.querySelectorAll('qti-simple-choice');
-
-      gaps.forEach((gap, i) => {
-        const identifier = gap.getAttribute('identifier');
-        if (!identifier || !correctIds.includes(identifier)) return;
-
-        // Only render once per identifier
-        if (used.has(identifier)) return;
-        used.add(identifier);
-
-        // Get the choice label
-        const text = gap.textContent?.trim();
-        if (!text) return;
-
-        const relativeDrop = this.shadowRoot.querySelector(`drop-list[identifier="droplist${i}"]`);
-        if (!relativeDrop) return;
-
-        const span = document.createElement('span');
-        span.classList.add('correct-option');
-        span.textContent = text;
-
-        // Style
-        span.style.border = '1px solid var(--qti-correct)';
-        span.style.borderRadius = '4px';
-        span.style.padding = '2px 4px';
-        span.style.display = 'inline-block';
-        span.style.marginTop = '4px';
-
-        relativeDrop.insertAdjacentElement('afterend', span);
-      });
-    }
+    toggleOrderInteractionCorrectResponse(
+      {
+        responseVariable: this.responseVariable,
+        shadowRoot: this.shadowRoot,
+        choices: this.querySelectorAll('qti-simple-choice')
+      },
+      show
+    );
   }
 
   // some interactions have a different way of getting the response

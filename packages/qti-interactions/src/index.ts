@@ -20,6 +20,7 @@ export * from './components/qti-select-point-interaction/qti-select-point-intera
 export * from './components/qti-slider-interaction/qti-slider-interaction';
 export * from './components/qti-text-entry-interaction/qti-text-entry-interaction';
 export * from './components/qti-upload-interaction/qti-upload-interaction';
+export * from './mixins/drag-drop';
 
 export * from './elements/qti-gap-img';
 export * from './elements/qti-gap-text';

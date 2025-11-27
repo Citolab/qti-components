@@ -3,7 +3,7 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import { customElement, property, state } from 'lit/decorators.js';
 
 import { watch } from '@qti-components/utilities';
-import { Interaction } from '@qti-components/base';
+import { Interaction, InteractionReviewController } from '@qti-components/base';
 
 import styles from './qti-extended-text-interaction.styles';
 
@@ -53,6 +53,11 @@ export class QtiExtendedTextInteraction extends Interaction {
     this._internals.setFormValue(this.value);
     this.validate();
   };
+
+  constructor() {
+    super();
+    this.reviewController = new InteractionReviewController(this);
+  }
 
   override get value(): string | null {
     return this.response || null;

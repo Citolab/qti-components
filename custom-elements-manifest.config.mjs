@@ -11,6 +11,7 @@ const outdir = process.env.CEM_OUTDIR || './';
 export default {
   /** Globs to analyze */
   globs: [
+    'packages/qti-custom/src/components/**/*.ts',
     'packages/qti-item/src/components/**/*.ts',
     'packages/qti-test/src/components/**/*.ts',
     'packages/qti-elements/src/components/**/*.ts',

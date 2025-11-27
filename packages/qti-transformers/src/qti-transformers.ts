@@ -184,3 +184,32 @@ export function getShuffleQuerySelectorByTagName(tagName: string): string | stri
       return null;
   }
 }
+
+/**
+ * Calculates and applies appropriate qti-input-width class to gap elements based on character count
+ * @param xmlFragment - The document fragment containing gap elements
+ */
+export function calculateGapSizeToClass(xmlFragment: DocumentFragment) {
+  const validWidths = [1, 2, 3, 4, 6, 10, 15, 20, 25, 30, 35, 40, 45, 50, 72];
+
+  xmlFragment.querySelectorAll('qti-gap').forEach(gap => {
+    // Skip if gap already has a qti-input-width class
+    if (gap.className && gap.className.includes('qti-input-width-')) {
+      return;
+    }
+
+    // Get the text content length (if any)
+    const textContent = gap.textContent?.trim() || '';
+    const contentLength = textContent.length;
+
+    if (contentLength > 0) {
+      // Find the closest matching width from validWidths
+      const closestWidth = validWidths.find(width => width >= contentLength) || validWidths[validWidths.length - 1];
+
+      // Add the class
+      const existingClasses = gap.className ? gap.className.split(' ') : [];
+      existingClasses.push(`qti-input-width-${closestWidth}`);
+      gap.setAttribute('class', existingClasses.join(' '));
+    }
+  });
+}

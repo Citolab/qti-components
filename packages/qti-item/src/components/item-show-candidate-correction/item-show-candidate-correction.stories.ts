@@ -17,6 +17,10 @@ import type {
   QtiTextEntryInteraction,
   QtiGapMatchInteraction
 } from '@qti-components/interactions';
+import type { QtiOrderInteractionInPlace } from '@qti-components/custom';
+
+// Import the component to register it
+import '@qti-components/custom';
 
 const { events, args, argTypes } = getStorybookHelpers('test-print-item-variables');
 

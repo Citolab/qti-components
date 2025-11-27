@@ -116,6 +116,7 @@
   @apply bordered;
 
   border-radius: var(--qti-border-radius);
+  min-height: var(--qti-drag-min-height, 2rem);
   padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
 }
 
@@ -293,10 +294,13 @@
 
 /* Apply .rdo for readonly state */
 .rdo {
-  cursor: pointer;
+  cursor: default !important;
   background-color: var(--qti-bg);
   outline: 0;
-  border: none;
+  border: var(--qti-border-thickness) dashed var(--qti-border-color);
+  border-radius: var(--qti-border-radius);
+  pointer-events: auto !important;
+  color: var(--qti-disabled-color);
 }
 
 /* Apply .dis for disabled state */

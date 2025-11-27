@@ -8,11 +8,15 @@ import { getAssessmentItemFromItemContainer } from '../../../../../tools/testing
 import drag from '../../../../../tools/testing/drag';
 
 import type { QtiSimpleChoice, QtiGapMatchInteraction } from '@qti-components/interactions';
+import type { QtiOrderInteractionInPlace } from '@qti-components/custom';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { ItemShowCorrectResponse } from './item-show-correct-response';
 import './item-show-correct-response';
 import '../item-correct-response-mode/item-correct-response-mode';
 import type { ItemContainer } from '../item-container/item-container';
+
+// Import the order-in-place component to register it
+import '@qti-components/custom';
 
 const { events, args, argTypes } = getStorybookHelpers('test-print-item-variables');
 

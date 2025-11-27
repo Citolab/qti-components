@@ -97,16 +97,16 @@ export const Test: Story = {
         await drag(dragC, { to: drops[2], duration: 500 });
         const receivedEvent = callback.mock.calls.at(-1)?.[0];
         const expectedResponse = ['DriverA', 'DriverB', 'DriverC'];
-        expect(interaction.response).toEqual(expectedResponse.join(','));
-        expect(receivedEvent.detail.response).toEqual(expectedResponse);
+        expect(interaction.response).toEqual(expectedResponse); // array
+        expect(receivedEvent.detail.response).toEqual(expectedResponse); // array
         expect(drops[0]).toHaveTextContent('Rubens Barrichello');
       });
       await step('reset interaction', async () => {
         interaction.reset();
         const receivedEvent = callback.mock.calls.at(-1)?.[0];
         const expectedResponse = ['', '', ''];
-        expect(receivedEvent.detail.response).toEqual(expectedResponse);
-        expect(interaction.response).toEqual(expectedResponse.join(','));
+        expect(receivedEvent.detail.response).toEqual(expectedResponse); // array
+        expect(interaction.response).toEqual(expectedResponse); // array
       });
       await step('set value of interaction', async () => {
         interaction.response = ['DriverA', 'DriverB', 'DriverC'];
