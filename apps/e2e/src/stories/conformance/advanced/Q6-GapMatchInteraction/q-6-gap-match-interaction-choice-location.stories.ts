@@ -1,4 +1,4 @@
-import { getItemByUri } from '@citolab/qti-components/qti-loader';
+import { getItemByUri } from '@citolab/qti-components';
 import { html } from 'lit';
 import { within } from 'shadow-dom-testing-library';
 import { action } from 'storybook/actions';
