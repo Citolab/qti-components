@@ -148,6 +148,15 @@ export const DragDropSortableMixin = <T extends Constructor<Interaction>>(
 
       const rect = dragElement.getBoundingClientRect();
       this.dropPlaceholder = this.createDropPlaceholder(dragElement, rect);
+      const container =
+        this.sortableContainer ??
+        this.trackedDraggables[0]?.parentElement ??
+        this.trackedDragContainers[0] ??
+        dragElement.parentElement;
+      if (this.dropPlaceholder && container) {
+        // Insert the placeholder immediately so the layout doesn't collapse before movement
+        container.insertBefore(this.dropPlaceholder, dragElement);
+      }
 
       this.dragState = {
         dragging: true,
