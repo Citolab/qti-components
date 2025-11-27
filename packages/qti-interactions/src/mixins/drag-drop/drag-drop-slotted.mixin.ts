@@ -1,4 +1,4 @@
-import { property, query } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
 
 import {
   collectResponseData,
@@ -39,25 +39,64 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
   );
 
   abstract class DragDropSlottedElement extends Core implements IInteraction {
-    @query('#validation-message')
-    protected _validationMessageElement?: HTMLElement;
-
     @property({ attribute: false, type: Object }) protected configuration: InteractionConfiguration = {
       copyStylesDragClone: true,
       dragCanBePlacedBack: true,
       dragOnClick: false
     };
     @property({ type: Number, reflect: true, attribute: 'min-associations' }) minAssociations = 1;
-    @property({ type: Number, reflect: true, attribute: 'max-associations' }) maxAssociations = 0;
+
+    private _maxAssociations = 0;
+    private _maxAssociationsDefaultApplied = false;
+
+    @property({ type: Number, reflect: true, attribute: 'max-associations' })
+    get maxAssociations(): number {
+      // Apply QTI spec default for gap-match interactions when attribute is not set
+      if (!this._maxAssociationsDefaultApplied) {
+        this._maxAssociationsDefaultApplied = true;
+        const tagName = this.tagName?.toLowerCase() || '';
+        const isGapMatchInteraction =
+          tagName === 'qti-graphic-gap-match-interaction' || tagName === 'qti-gap-match-interaction';
+
+        // If it's a gap-match interaction and no explicit attribute was set, default to 1
+        if (isGapMatchInteraction && !this.hasAttribute('max-associations') && this._maxAssociations === 0) {
+          this._maxAssociations = 1;
+        }
+      }
+      return this._maxAssociations;
+    }
+
+    set maxAssociations(value: number) {
+      const oldValue = this._maxAssociations;
+      this._maxAssociations = value;
+      this.requestUpdate('maxAssociations', oldValue);
+    }
 
     protected _response: string[] = [];
+
+    // Track when a drop was blocked due to max capacity
+    private _dropBlockedDueToMax = false;
 
     // FLIP animation configuration
     public flipAnimationConfig: FlipAnimationOptions = {
       duration: 200, // Slightly faster for slotted interactions
       easing: 'ease' // Simple, browser-optimized easing
     };
-    public enableFlipAnimations = true;
+
+    private _enableFlipAnimations = true;
+
+    @property({ type: Boolean, attribute: 'disable-animations' })
+    set disableAnimations(value: boolean) {
+      this._enableFlipAnimations = !value;
+    }
+    get disableAnimations(): boolean {
+      return !this._enableFlipAnimations;
+    }
+
+    get enableFlipAnimations(): boolean {
+      return this._enableFlipAnimations;
+    }
+
     @property({ type: Boolean, attribute: 'auto-size-dropzones' })
     public autoSizeDropzones = false;
 
@@ -97,6 +136,17 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       if (identifier) {
         this.updateInventoryBasedOnMatchMax(identifier);
       }
+
+      // After drop, check if we've exceeded max and auto-validate if so
+      const totalAssociations = countTotalAssociations(this.trackedDroppables, draggablesSelector);
+      const exceedsMax = this.maxAssociations > 0 && totalAssociations > this.maxAssociations;
+
+      if (exceedsMax) {
+        // Automatically show validation message when max is exceeded
+        this._dropBlockedDueToMax = true;
+        this.validate();
+        this.reportValidity();
+      }
     }
 
     public override handleInvalidDrop(dragSource: HTMLElement | null): void {
@@ -106,6 +156,17 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
 
       if (dragSource) {
         this.returnToInventory(dragSource);
+      }
+
+      // Check if the drop was blocked due to max associations being reached
+      const totalAssociations = countTotalAssociations(this.trackedDroppables, draggablesSelector);
+      const maxReached = this.maxAssociations > 0 && totalAssociations >= this.maxAssociations;
+
+      if (maxReached) {
+        // Flag that drop was blocked and show validation message
+        this._dropBlockedDueToMax = true;
+        this.validate();
+        this.reportValidity();
       }
     }
 
@@ -128,8 +189,8 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       dragClonePosition?: DOMRect
     ): void {
       const isDragContainer = this.trackedDragContainers.includes(droppable);
+
       if (isDragContainer) {
-        console.warn('⚠️ [Observable DnD] Attempted to drop into drag container via dropDraggableInDroppable');
         const identifier = draggable.getAttribute('identifier');
         draggable.remove();
 
@@ -139,6 +200,10 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
 
         this.cacheInteractiveElements();
         this.checkAllMaxAssociations();
+
+        // Clear the blocked flag and re-validate since we've removed an association
+        this._dropBlockedDueToMax = false;
+        this.validate();
 
         return;
       }
@@ -228,6 +293,17 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
     private returnToInventory(element: HTMLElement): void {
       const identifier = element.getAttribute('identifier');
       if (identifier) {
+        // Remove all clones of this item from drop zones
+        this.trackedDroppables.forEach(droppable => {
+          const clones = Array.from(droppable.querySelectorAll(`[identifier="${identifier}"][qti-draggable="true"]`));
+          clones.forEach(clone => {
+            clone.remove();
+            if (droppable.tagName === 'QTI-SIMPLE-ASSOCIABLE-CHOICE') {
+              droppable.removeAttribute('data-has-drop');
+            }
+          });
+        });
+
         this.restoreOriginalInInventory(identifier);
       }
       this.cacheInteractiveElements();
@@ -357,22 +433,42 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
 
     public override validate(): boolean {
       const totalAssociations = countTotalAssociations(this.trackedDroppables, draggablesSelector);
+
+      // Check if we're at max capacity
+      const atMaxCapacity = this.maxAssociations > 0 && totalAssociations >= this.maxAssociations;
       const exceedsMax = this.maxAssociations > 0 && totalAssociations > this.maxAssociations;
       const belowMin = this.minAssociations > 0 && totalAssociations < this.minAssociations;
 
       let validityMessage = '';
       let isValid = true;
 
+      // Priority order: exceedsMax > (atMaxCapacity && _dropBlockedDueToMax) > belowMin
       if (exceedsMax) {
+        // QTI conformance: default platform message format
         validityMessage =
           this.dataset.maxAssociationsMessage ||
-          `Please create no more than ${this.maxAssociations} ${this.maxAssociations === 1 ? 'association' : 'associations'}.`;
+          this.dataset.maxSelectionsMessage ||
+          `You've selected too many associations. Maximum allowed is ${this.maxAssociations}.`;
+        isValid = false;
+      } else if (atMaxCapacity && this._dropBlockedDueToMax) {
+        // Show "max reached" message only when drop was actively blocked
+        // QTI conformance: default platform message format
+        validityMessage =
+          this.dataset.maxAssociationsMessage ||
+          this.dataset.maxSelectionsMessage ||
+          `You've selected too many associations. Maximum allowed is ${this.maxAssociations}.`;
         isValid = false;
       } else if (belowMin) {
         validityMessage =
           this.dataset.minAssociationsMessage ||
+          this.dataset.minSelectionsMessage ||
           `Please create at least ${this.minAssociations} ${this.minAssociations === 1 ? 'association' : 'associations'}.`;
         isValid = false;
+        // Clear the blocked flag since we're now in a different error state
+        this._dropBlockedDueToMax = false;
+      } else {
+        // Clear the blocked flag when validation passes
+        this._dropBlockedDueToMax = false;
       }
 
       const validityAnchor = this.trackedDroppables[0] ?? this.trackedDraggables[0] ?? this;
@@ -384,13 +480,17 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
     public override reportValidity(): boolean {
       const isValid = this._internals.reportValidity();
 
-      if (this._validationMessageElement) {
+      // Query the validation message element directly in the shadow root
+      // to avoid timing issues with @query decorator
+      const validationMessageElement = this.shadowRoot?.querySelector('#validation-message') as HTMLElement | null;
+
+      if (validationMessageElement) {
         if (!isValid) {
-          this._validationMessageElement.textContent = this._internals.validationMessage;
-          this._validationMessageElement.style.setProperty('display', 'block', 'important');
+          validationMessageElement.textContent = this._internals.validationMessage;
+          validationMessageElement.style.setProperty('display', 'block', 'important');
         } else {
-          this._validationMessageElement.textContent = '';
-          this._validationMessageElement.style.display = 'none';
+          validationMessageElement.textContent = '';
+          validationMessageElement.style.display = 'none';
         }
       }
 

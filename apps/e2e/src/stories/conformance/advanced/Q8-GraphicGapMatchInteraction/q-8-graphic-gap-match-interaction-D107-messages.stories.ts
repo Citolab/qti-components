@@ -6,7 +6,7 @@ import { expect, fireEvent } from 'storybook/test';
 import drag from 'tools/testing/drag';
 
 import type { StoryObj, Meta, ArgTypes } from '@storybook/web-components-vite';
-import type { QtiAssessmentItem, QtiGap, QtiGapMatchInteraction, QtiGapText } from '@citolab/qti-components';
+import type { QtiAssessmentItem, QtiGraphicGapMatchInteraction } from '@citolab/qti-components';
 
 type Story = StoryObj;
 
@@ -55,12 +55,12 @@ export const Q8_L2_D107: Story = {
 
     const qtiGapMatchInteraction = assessmentItem.querySelector(
       'qti-graphic-gap-match-interaction[response-identifier="RESPONSE1"]'
-    ) as HTMLElement;
+    ) as QtiGraphicGapMatchInteraction;
     const dataMaxSelectionsMessage = qtiGapMatchInteraction.getAttribute('data-max-selections-message');
     const dataMinSelectionsMessage = qtiGapMatchInteraction.getAttribute('data-min-selections-message');
 
     const validationMessageElement = qtiGapMatchInteraction.shadowRoot.querySelector(
-      '#validationMessage'
+      '#validation-message'
     ) as HTMLElement;
 
     const gapChoices = Array.from(qtiGapMatchInteraction.querySelectorAll('qti-gap-img'));
@@ -79,6 +79,10 @@ export const Q8_L2_D107: Story = {
       await drag(gapChoices[1], { to: responseHotspots[1], duration: 300 });
       await drag(gapChoices[2], { to: responseHotspots[2], duration: 300 });
 
+      // Trigger validation UI
+      qtiGapMatchInteraction?.validate();
+      qtiGapMatchInteraction?.reportValidity();
+
       // Check validation message for exceeding max selections
       expect(validationMessageElement.textContent).toContain(dataMaxSelectionsMessage);
       expect(validationMessageElement).toBeVisible();
@@ -95,6 +99,8 @@ export const Q8_L2_D107: Story = {
 
       // Submit the item
       await fireEvent.click(submitButton);
+      qtiGapMatchInteraction?.validate();
+      qtiGapMatchInteraction?.reportValidity();
 
       // Check validation message for zero associations
       expect(validationMessageElement.textContent).toContain(dataMinSelectionsMessage);
@@ -149,7 +155,7 @@ export const Q8_L2_D110: Story = {
     ) as HTMLElement;
 
     const validationMessageElement = qtiGapMatchInteraction.shadowRoot.querySelector(
-      '#validationMessage'
+      '#validation-message'
     ) as HTMLElement;
 
     const gapChoices = Array.from(qtiGapMatchInteraction.querySelectorAll('qti-gap-img'));

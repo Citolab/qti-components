@@ -6,7 +6,7 @@ import { expect, fireEvent } from 'storybook/test';
 import drag from 'tools/testing/drag';
 
 import type { StoryObj, Meta, ArgTypes } from '@storybook/web-components-vite';
-import type { QtiAssessmentItem, QtiGap, QtiGapMatchInteraction, QtiGapText } from '@citolab/qti-components';
+import type { QtiAssessmentItem, QtiGap } from '@citolab/qti-components';
 
 type Story = StoryObj;
 
@@ -39,6 +39,8 @@ function rgbStringToRgb(rgbString) {
       }
     : null;
 }
+
+const wait = (ms = 300) => new Promise(resolve => setTimeout(resolve, ms));
 
 const meta: Meta<QtiAssessmentItem> = {
   title: 'qti-conformance/advanced/Q-8 Graphic Gap Match Interaction'
@@ -98,6 +100,12 @@ export const Q8_L2_D108: Story = {
     const qtiDarkBgActiveRgb = rgbStringToRgb(qtiDarkBgActive) || hexToRgb(qtiDarkBgActive);
     const qtiDarkBorderActiveRgb = rgbStringToRgb(qtiDarkBorderActive) || hexToRgb(qtiDarkBorderActive);
 
+    // Disable animations for all graphic-gap-match-interaction elements to avoid timing issues
+    const allInteractions = assessmentItem.querySelectorAll('qti-graphic-gap-match-interaction');
+    allInteractions.forEach((interaction: any) => {
+      interaction.setAttribute('disable-animations', '');
+    });
+
     const qtiGapMatchInteraction = assessmentItem.querySelector(
       'qti-graphic-gap-match-interaction[class="qti-choices-top qti-selections-dark"]'
     ) as HTMLElement;
@@ -114,18 +122,24 @@ export const Q8_L2_D108: Story = {
     expect(gapChoices.length).toBeGreaterThan(0);
     expect(responseHotspots.length).toBeGreaterThan(0);
 
+    /*
+     * TODO got stuck on this test, there is something wrong with the disabled state being set after first drop.
+     * drag once - disabled
+     * drop in the same spot again, enabled
+     * move to different spot - disabled
+     * this means the background and border colors don't match the expected values
+     */
     // Test for dark hotspot selections on light background
     await step('Check that response areas use dark hotspot selections', async () => {
-      await drag(gapChoices[1], { to: responseHotspots[2], duration: 300 }).then(() => {
-        const computedStyle = getComputedStyle(responseHotspots[2]);
+      await drag(gapChoices[1], { to: responseHotspots[2], duration: 300 });
+      await wait(300);
+      const computedStyle = getComputedStyle(responseHotspots[2]);
 
-        const backgroundColor =
-          rgbStringToRgb(computedStyle.backgroundColor) || hexToRgb(computedStyle.backgroundColor);
-        const borderColor = rgbStringToRgb(computedStyle.borderColor) || hexToRgb(computedStyle.borderColor);
+      const backgroundColor = rgbStringToRgb(computedStyle.backgroundColor) || hexToRgb(computedStyle.backgroundColor);
+      const borderColor = rgbStringToRgb(computedStyle.borderColor) || hexToRgb(computedStyle.borderColor);
 
-        expect(rgbIsEqual(backgroundColor, qtiDarkBgActiveRgb)).toBe(true); // Ensure dark background
-        expect(rgbIsEqual(borderColor, qtiDarkBorderActiveRgb)).toBe(true); // Ensure dark border
-      });
+      expect(rgbIsEqual(backgroundColor, qtiDarkBgActiveRgb)).toBe(true); // Ensure dark background
+      expect(rgbIsEqual(borderColor, qtiDarkBorderActiveRgb)).toBe(true); // Ensure dark border
       action('Dark hotspot selections validated')();
     });
 
@@ -149,16 +163,15 @@ export const Q8_L2_D108: Story = {
     await step('Check that response areas use light hotspot selections', async () => {
       await drag(gapChoicesLight[1], { to: responseHotspotsLight[2], duration: 300 });
       await drag(gapChoicesLight[1], { to: qtiGapMatchInteractionLight, duration: 300 });
-      await drag(gapChoicesLight[1], { to: responseHotspotsLight[2], duration: 300 }).then(() => {
-        const computedStyle = getComputedStyle(responseHotspotsLight[2]);
+      await drag(gapChoicesLight[1], { to: responseHotspotsLight[2], duration: 300 });
+      await wait(300);
+      const computedStyle = getComputedStyle(responseHotspotsLight[2]);
 
-        const backgroundColor =
-          rgbStringToRgb(computedStyle.backgroundColor) || hexToRgb(computedStyle.backgroundColor);
-        const borderColor = rgbStringToRgb(computedStyle.borderColor) || hexToRgb(computedStyle.borderColor);
+      const backgroundColor = rgbStringToRgb(computedStyle.backgroundColor) || hexToRgb(computedStyle.backgroundColor);
+      const borderColor = rgbStringToRgb(computedStyle.borderColor) || hexToRgb(computedStyle.borderColor);
 
-        expect(rgbIsEqual(backgroundColor, qtiLightBgActiveRgb)).toBe(true); // Ensure light background
-        expect(rgbIsEqual(borderColor, qtiLightBorderActiveRgb)).toBe(true); // Ensure light border
-      });
+      expect(rgbIsEqual(backgroundColor, qtiLightBgActiveRgb)).toBe(true); // Ensure light background
+      expect(rgbIsEqual(borderColor, qtiLightBorderActiveRgb)).toBe(true); // Ensure light border
       action('Light hotspot selections validated')();
     });
   },

@@ -1,4 +1,4 @@
-import { property, query, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 import { consume } from '@lit/context';
 
 import { watch } from '@qti-components/utilities';
@@ -23,9 +23,6 @@ export interface ChoicesInterface extends IInteraction {
 export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, selector: string) => {
   abstract class ChoicesMixinElement extends superClass implements ChoicesInterface {
     protected _choiceElements: Choice[] = [];
-
-    @query('#validation-message')
-    protected _validationMessageElement!: HTMLElement;
 
     @property({ type: Number, attribute: 'min-choices' })
     public minChoices = 0;
@@ -169,15 +166,19 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
     }
 
     reportValidity() {
-      if (this._validationMessageElement) {
+      // Query the validation message element directly in the shadow root
+      // to avoid timing issues with @query decorator
+      const validationMessageElement = this.shadowRoot?.querySelector('#validation-message') as HTMLElement | null;
+
+      if (validationMessageElement) {
         if (!this._internals.validity.valid) {
-          this._validationMessageElement.textContent = this._internals.validationMessage;
+          validationMessageElement.textContent = this._internals.validationMessage;
           // Set the display to block to show the message, add important to override any styles
 
-          this._validationMessageElement.style.setProperty('display', 'block', 'important');
+          validationMessageElement.style.setProperty('display', 'block', 'important');
         } else {
-          this._validationMessageElement.textContent = '';
-          this._validationMessageElement.style.display = 'none';
+          validationMessageElement.textContent = '';
+          validationMessageElement.style.display = 'none';
         }
       }
       return this._internals.validity.valid;
