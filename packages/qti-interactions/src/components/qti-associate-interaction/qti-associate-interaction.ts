@@ -4,18 +4,17 @@ import { customElement, state } from 'lit/decorators.js';
 import { Interaction, InteractionReviewController } from '@qti-components/base';
 
 import styles from './qti-associate-interaction.styles';
-import { DragDropInteractionMixin } from '../../mixins/drag-drop';
+import { DragDropSlottedMixin } from '../../mixins/drag-drop';
 
 import type { QtiSimpleAssociableChoice } from '../../elements/qti-simple-associable-choice';
 import type { CSSResultGroup } from 'lit';
 
 @customElement('qti-associate-interaction')
-export class QtiAssociateInteraction extends DragDropInteractionMixin(
+export class QtiAssociateInteraction extends DragDropSlottedMixin(
   Interaction,
   'qti-simple-associable-choice',
   '.dl',
-  `slot[name='qti-simple-associable-choice']`,
-  'closestCornersWithInventoryPriority'
+  `slot[name='qti-simple-associable-choice']`
 ) {
   static override styles: CSSResultGroup = styles;
   @state() protected _childrenMap: Element[] = [];

@@ -4,7 +4,7 @@ import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
 import { Interaction, InteractionReviewController } from '@qti-components/base';
 
-import { DragDropInteractionMixin } from '../../mixins/drag-drop';
+import { DragDropSlottedMixin } from '../../mixins/drag-drop';
 import styles from './qti-match-interaction.styles';
 import {
   toggleMatchCandidateCorrection,
@@ -16,7 +16,7 @@ import type { ResponseInteraction } from '@qti-components/base';
 import type { QtiSimpleAssociableChoice } from '../../elements/qti-simple-associable-choice';
 
 @customElement('qti-match-interaction')
-export class QtiMatchInteraction extends DragDropInteractionMixin(
+export class QtiMatchInteraction extends DragDropSlottedMixin(
   Interaction,
   'qti-simple-match-set:first-of-type qti-simple-associable-choice, qti-simple-match-set:last-of-type > qti-simple-associable-choice > qti-simple-associable-choice',
   'qti-simple-match-set:last-of-type > qti-simple-associable-choice',

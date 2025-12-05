@@ -3,19 +3,18 @@ import { customElement } from 'lit/decorators.js';
 
 import { Interaction } from '@qti-components/base';
 
-import { DragDropInteractionMixin } from '../../mixins/drag-drop';
+import { DragDropSlottedMixin } from '../../mixins/drag-drop';
 import styles from './qti-graphic-gap-match-interaction.styles';
 
 import type { QtiHotspotChoice } from '../../elements/qti-hotspot-choice';
 import type { CSSResultGroup } from 'lit';
 
 @customElement('qti-graphic-gap-match-interaction')
-export class QtiGraphicGapMatchInteraction extends DragDropInteractionMixin(
+export class QtiGraphicGapMatchInteraction extends DragDropSlottedMixin(
   Interaction,
   'qti-gap-img, qti-gap-text',
   'qti-associable-hotspot',
-  `slot[part='drags']`,
-  'closestCornersWithInventoryPriority'
+  `slot[part='drags']`
 ) {
   static override styles: CSSResultGroup = styles;
 

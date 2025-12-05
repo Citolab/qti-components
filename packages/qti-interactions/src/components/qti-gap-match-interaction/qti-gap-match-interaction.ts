@@ -3,7 +3,7 @@ import { customElement } from 'lit/decorators.js';
 
 import { Interaction, InteractionReviewController } from '@qti-components/base';
 
-import { DragDropInteractionMixin } from '../../mixins/drag-drop';
+import { DragDropSlottedMixin } from '../../mixins/drag-drop';
 import styles from './qti-gap-match-interaction.styles.js';
 import {
   toggleGapMatchCandidateCorrection,
@@ -12,12 +12,11 @@ import {
 
 import type { CSSResultGroup } from 'lit';
 @customElement('qti-gap-match-interaction')
-export class QtiGapMatchInteraction extends DragDropInteractionMixin(
+export class QtiGapMatchInteraction extends DragDropSlottedMixin(
   Interaction,
   'qti-gap-text',
   'qti-gap',
-  `slot[part='drags']`,
-  'closestCornersWithInventoryPriority'
+  `slot[part='drags']`
 ) {
   static override styles: CSSResultGroup = styles;
 
