@@ -1,3 +1,4 @@
+import { expect, waitFor } from 'storybook/test';
 import { html } from 'lit';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 
@@ -446,7 +447,7 @@ export const QTISpecGraphicCompliance: Story = {
       interaction.response = ['DraggerA A', 'DraggerA C'];
 
       await waitFor(() => {
-        const response = interaction.response;
+        const response = interaction.response as string[];
         expect(response.filter(r => r.startsWith('DraggerA')).length).toBe(2);
       });
 
@@ -463,7 +464,7 @@ export const QTISpecGraphicCompliance: Story = {
       interaction.response = ['DraggerA A', 'DraggerB A'];
 
       await waitFor(() => {
-        const response = interaction.response;
+        const response = interaction.response as string[];
         expect(response.filter(r => r.endsWith(' A')).length).toBe(2);
       });
 
@@ -471,7 +472,7 @@ export const QTISpecGraphicCompliance: Story = {
       interaction.response = ['DraggerC B'];
 
       await waitFor(() => {
-        const response = interaction.response;
+        const response = interaction.response as string[];
         expect(response.filter(r => r.endsWith(' B')).length).toBe(1);
       });
     });

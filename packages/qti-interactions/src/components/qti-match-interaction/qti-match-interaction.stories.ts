@@ -1,4 +1,4 @@
-import { expect } from 'storybook/test';
+import { expect, waitFor } from 'storybook/test';
 import { html } from 'lit';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 
@@ -70,7 +70,7 @@ export const Default: Story = {
           ${baseMatchSets}`
       )
     ),
-  play: async ({ canvasElement }) => {
+  play: async () => {
     // TODO: Drag associations and assert response updates; submit should surface validation state.
   }
 };
@@ -108,7 +108,7 @@ export const MaxAssociations: Story = {
         html`<qti-prompt>Only two matches allowed.</qti-prompt> ${baseMatchSets}`
       )
     ),
-  play: async ({ canvasElement }) => {
+  play: async () => {
     // TODO: Create two pairs, attempt third; expect rejection/flag on validation (no global disabling).
   }
 };
@@ -121,7 +121,7 @@ export const MinAndMaxAssociations: Story = {
         html`<qti-prompt>Exactly one match required.</qti-prompt> ${baseMatchSets}`
       )
     ),
-  play: async ({ canvasElement }) => {
+  play: async () => {
     // TODO: 0 pairs -> validation error; 1 pair -> pass; second pair should fail validation.
   }
 };
@@ -144,7 +144,7 @@ export const MixedMatchMaxPerChoice: Story = {
           </qti-simple-match-set>`
       )
     ),
-  play: async ({ canvasElement }) => {
+  play: async () => {
     // TODO: Verify match-max per choice is respected (A/X single, B/Y twice, C/Z unlimited) and validation behaves accordingly.
   }
 };
@@ -154,7 +154,7 @@ export const DisabledMode: Story = {
     withForm(
       template({ ...args, disabled: true }, html`<qti-prompt>Interaction is disabled.</qti-prompt> ${baseMatchSets}`)
     ),
-  play: async ({ canvasElement }) => {
+  play: async () => {
     // TODO: Assert drags are ignored and validation state remains unchanged on submit.
   }
 };
@@ -164,7 +164,7 @@ export const ReadonlyMode: Story = {
     withForm(
       template({ ...args, readonly: true }, html`<qti-prompt>Interaction is readonly.</qti-prompt> ${baseMatchSets}`)
     ),
-  play: async ({ canvasElement }) => {
+  play: async () => {
     // TODO: Pre-fill (via args/initial response) and ensure matches render but cannot be changed; submit should not alter state.
   }
 };
@@ -177,7 +177,7 @@ export const PrefilledValue: Story = {
         html`<qti-prompt>Prefilled matches.</qti-prompt> ${baseMatchSets}`
       )
     ),
-  play: async ({ canvasElement }) => {
+  play: async () => {
     // TODO: Assert prefilled pairs render in correct matrix cells and validation reflects placed matches.
   }
 };
@@ -191,7 +191,7 @@ export const TabularLayout: Story = {
         html`<qti-prompt>Tabular presentation.</qti-prompt> ${baseMatchSets}`
       )
     ),
-  play: async ({ canvasElement }) => {
+  play: async () => {
     // TODO: Ensure tabular layout renders correctly and accepts matches; validate after submit.
   }
 };

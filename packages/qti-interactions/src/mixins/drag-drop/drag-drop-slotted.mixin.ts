@@ -13,8 +13,21 @@ import { captureMultipleFlipStates, animateMultipleFlips, type FlipAnimationOpti
 
 import type { CollisionDetectionAlgorithm } from './utils/drag-drop.utils';
 import type { Interaction, IInteraction } from '@qti-components/base';
+import type { DragDropCore } from './drag-drop-core.mixin';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
+
+export type DragDropSlotted = DragDropCore & {
+  minAssociations: number;
+  maxAssociations: number;
+  disableAnimations: boolean;
+  enableFlipAnimations: boolean;
+  autoSizeDropzones: boolean;
+  validate(): boolean;
+  reportValidity(): boolean;
+  reset(): void;
+  saveResponse(value?: string | string[]): void;
+};
 
 interface InteractionConfiguration {
   copyStylesDragClone: boolean;
@@ -27,7 +40,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
   draggablesSelector: string,
   droppablesSelector: string,
   dragContainersSelector = 'slot[part="drags"]',
-  collisionAlgorithm: CollisionDetectionAlgorithm = 'closestCorners'
+  collisionAlgorithm: CollisionDetectionAlgorithm = 'closestCornersWithInventoryPriority'
 ) => {
   // Use 'closestCorners' by default for associate interactions (better for multiple drop zones)
   const Core = DragDropCoreMixin(
@@ -498,5 +511,5 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
     }
   }
 
-  return DragDropSlottedElement as Constructor<IInteraction> & T;
+  return DragDropSlottedElement as unknown as Constructor<DragDropSlotted> & T;
 };
