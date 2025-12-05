@@ -20,7 +20,7 @@ const meta: Meta<TestViewClass> = {
       handles: events
     }
   },
-  tags: ['no-tests']
+  tags: ['skip-test']
 };
 export default meta;
 

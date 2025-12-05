@@ -13,7 +13,7 @@ import type { QtiSimpleChoice } from '../../elements/qti-simple-choice';
 export class QtiOrderInteraction extends DragDropInteractionMixin(
   Interaction,
   `qti-simple-choice`,
-  'drop-list',
+  '[part="drop-list"]',
   `slot[part='drags']`
 ) {
   static override styles = styles;
@@ -43,7 +43,7 @@ export class QtiOrderInteraction extends DragDropInteractionMixin(
         <slot part="drags"> </slot>
         <div part="drops">
           ${[...Array(this.nrChoices)].map(
-            (_, i) => html`<drop-list role="region" part="drop-list" identifier="droplist${i}"></drop-list>`
+            (_, i) => html`<div role="region" part="drop-list" class="dl" identifier="droplist${i}"></div>`
           )}
         </div>
       </div>`;
@@ -74,14 +74,14 @@ export class QtiOrderInteraction extends DragDropInteractionMixin(
   // cause they are different for some interactions.
   // MH: is this function called? Shouldn't we use getValue?
   protected getResponse(): string[] {
-    const droppables = Array.from<QtiSimpleChoice>(this.shadowRoot.querySelectorAll('drop-list'));
-
-    const response = droppables.map(droppable => {
-      const dragsInDroppable = droppable.querySelectorAll('[qti-draggable="true"]');
-      const identifiers = Array.from(dragsInDroppable).map(d => d.getAttribute('identifier'));
-      return [...identifiers].join(' ');
+    const droppables = Array.from(this.shadowRoot.querySelectorAll<HTMLElement>('[part="drop-list"]'));
+    return droppables.flatMap((droppable, index) => {
+      const dragsInDroppable = Array.from(droppable.querySelectorAll<HTMLElement>('[qti-draggable="true"]'));
+      return dragsInDroppable
+        .map(d => d.getAttribute('identifier'))
+        .filter(Boolean)
+        .map(id => `${id} droplist${index}`);
     });
-    return response;
   }
 
   override async firstUpdated(changedProps: PropertyValueMap<any> | Map<PropertyKey, unknown>) {

@@ -27,7 +27,8 @@ const meta: Meta = {
   argTypes: argTypes,
   args: {
     'data-choices-container-width': '200'
-  }
+  },
+  tags: ['drag-drop']
 };
 
 export default meta;

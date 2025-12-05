@@ -27,7 +27,7 @@ const meta: Meta<QtiChoiceInteraction> = {
       handles: events
     }
   },
-  tags: ['autodocs']
+  tags: ['autodocs', 'basic-conformance', 'shared-vocabulary']
 };
 export default meta;
 
@@ -394,7 +394,6 @@ export const ChoiceMinMessage: Story = {
 
 export const ChoiceVerticalWritingVerticalRL: Story = {
   render: TemplateSixOptions,
-  tags: ['danger'],
   args: {
     class: 'qti-writing-orientation-vertical-rl'
   }
@@ -402,7 +401,6 @@ export const ChoiceVerticalWritingVerticalRL: Story = {
 
 export const ChoiceVerticalWritingVerticalLR: Story = {
   render: TemplateSixOptions,
-  tags: ['danger'],
   args: {
     class: 'qti-writing-orientation-vertical-lr'
   }
@@ -410,7 +408,6 @@ export const ChoiceVerticalWritingVerticalLR: Story = {
 
 export const ChoiceVerticalWritingCJKIdeographic: Story = {
   render: TemplateSixOptions,
-  tags: ['danger'],
   args: {
     class: 'qti-labels-cjk-ideographic'
   }
@@ -418,7 +415,6 @@ export const ChoiceVerticalWritingCJKIdeographic: Story = {
 
 export const ChoiceVerticalWritingHiddenStacking2CJKIdeographic: Story = {
   render: TemplateSixOptions,
-  tags: ['danger'],
   args: {
     class: 'qti-input-control-hidden qti-choices-stacking-2 qti-labels-cjk-ideographic'
   }

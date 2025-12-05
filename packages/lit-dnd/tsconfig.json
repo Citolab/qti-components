@@ -1,0 +1,14 @@
+{
+    "extends": "../../tsconfig.json",
+    "compilerOptions": {
+        "outDir": "./dist",
+        "moduleResolution": "bundler"
+    },
+    "include": [
+        "src/index.ts"
+    ],
+    "exclude": [
+        "**/*.spec.ts",
+        "**/*.stories.ts"
+    ]
+}

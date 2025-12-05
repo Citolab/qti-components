@@ -27,7 +27,7 @@ const meta: Meta = {
       expanded: false
     }
   },
-  tags: ['no-tests']
+  tags: ['skip-test']
 };
 
 /*

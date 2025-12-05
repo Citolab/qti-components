@@ -16,7 +16,7 @@ const meta: Meta<QtiTest> = {
     },
     controls: { disable: true }
   },
-  tags: ['autodocs', 'no-tests']
+  tags: ['autodocs', 'skip-test']
 };
 export default meta;
 

@@ -34,6 +34,9 @@ export abstract class Interaction extends LitElement implements IInteraction {
   abstract get response(): string | string[] | null;
   abstract set response(val: string | string[] | null);
 
+  @property({ type: String, attribute: 'validation-display' })
+  public validationDisplay: 'native' | 'custom' | 'both' | 'none' = 'both';
+
   @property({ type: String })
   set value(val: string | null) {
     this.response = val ? JSON.parse(val) : null;
@@ -109,6 +112,20 @@ export abstract class Interaction extends LitElement implements IInteraction {
     this._internals = this.attachInternals();
   }
 
+  private _form: HTMLFormElement | null = null;
+  private _formSubmitHandler = (event: Event) => {
+    // Ensure our validity is up to date and surface messages; cancel submit when invalid.
+    if (!this.checkValidity()) {
+      event.preventDefault();
+      this.reportValidity();
+    }
+  };
+  private _formResetHandler = () => {
+    // Let concrete implementations reset their state, then clear validity quietly.
+    // this.formResetCallback?.(this._form as HTMLFormElement);
+    this._internals.setValidity({});
+  };
+
   public toggleCorrectResponse(show: boolean): void {
     this.reviewController?.toggleCorrectResponse(show);
   }
@@ -120,7 +137,16 @@ export abstract class Interaction extends LitElement implements IInteraction {
   abstract validate(): boolean;
 
   public reportValidity(): boolean {
+    // Ensure validators run before surfacing validity state (e.g., during form submission).
+    // Custom interactions must implement validate() and set ElementInternals validity.
+    this.validate();
     return this._internals.reportValidity();
+  }
+
+  public checkValidity(): boolean {
+    // Align checkValidity with reportValidity by invoking the interaction's validate logic first.
+    this.validate();
+    return this._internals.checkValidity();
   }
 
   public reset(): void {
@@ -145,6 +171,15 @@ export abstract class Interaction extends LitElement implements IInteraction {
         }
       })
     );
+  }
+
+  public override disconnectedCallback(): void {
+    if (this._form) {
+      this._form.removeEventListener('submit', this._formSubmitHandler, true);
+      this._form.removeEventListener('reset', this._formResetHandler, true);
+      this._form = null;
+    }
+    super.disconnectedCallback();
   }
 
   public saveResponse(value: string | string[]): void {
@@ -175,6 +210,21 @@ export abstract class Interaction extends LitElement implements IInteraction {
 
   protected toggleInternalCorrectResponse(show: boolean): void {
     this.reviewController?.applyDefaultInternalCorrectResponse(show);
+  }
+
+  /**
+   * Track associated form so we can hook submit and surface validity.
+   */
+  formAssociatedCallback(form: HTMLFormElement | null) {
+    if (this._form) {
+      this._form.removeEventListener('submit', this._formSubmitHandler, true);
+      this._form.removeEventListener('reset', this._formResetHandler, true);
+    }
+    this._form = form;
+    if (this._form) {
+      this._form.addEventListener('submit', this._formSubmitHandler, true);
+      this._form.addEventListener('reset', this._formResetHandler, true);
+    }
   }
 
   public invokeInternalCorrectResponseToggle(show: boolean): void {

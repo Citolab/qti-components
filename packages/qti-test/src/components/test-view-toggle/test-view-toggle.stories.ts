@@ -20,7 +20,7 @@ const meta: Meta<TestViewToggle> = {
       handles: events
     }
   },
-  tags: ['no-tests']
+  tags: ['skip-test']
 };
 export default meta;
 

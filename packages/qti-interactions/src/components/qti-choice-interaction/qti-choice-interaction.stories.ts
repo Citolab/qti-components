@@ -33,7 +33,7 @@ const meta: Meta<
       handles: events
     }
   },
-  tags: ['autodocs']
+  tags: ['autodocs', 'basic-conformance']
 };
 export default meta;
 

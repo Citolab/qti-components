@@ -1,0 +1,21 @@
+{
+    "name": "@qti-components/dnd",
+    "version": "1.0.0",
+    "description": "drag and drop mixins",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "type": "module",
+    "scripts": {
+        "build": "tsc --paths null",
+        "clean": "rm -rf dist"
+    },
+    "keywords": [
+        "qti",
+        "utilities"
+    ],
+    "author": "",
+    "license": "GPL-3.0-only",
+    "peerDependencies": {
+        "lit": "^3.3.1"
+    }
+}

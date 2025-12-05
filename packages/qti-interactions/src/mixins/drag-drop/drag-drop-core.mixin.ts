@@ -139,6 +139,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
 
       const lightDragContainers = collect(dragContainersSelector, this);
       const shadowDragContainers = collect(dragContainersSelector, this.shadowRoot);
+
       this.trackedDragContainers = Array.from(new Set([...lightDragContainers, ...shadowDragContainers]));
 
       this.allDropzones = [...this.trackedDroppables, ...this.trackedDragContainers];

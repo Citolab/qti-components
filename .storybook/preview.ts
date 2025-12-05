@@ -111,9 +111,9 @@ const preview: Preview = {
       // 'off' - skip a11y checks entirely
       test: 'todo'
     }
-  },
+  }
 
-  tags: ['!autodocs']
+  // tags: ['!autodocs']
 };
 
 export default preview;

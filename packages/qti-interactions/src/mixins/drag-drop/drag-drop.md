@@ -12,7 +12,18 @@ The drag-drop system provides a flexible, reusable way to implement drag-and-dro
 
 ## Interaction Types
 
+match gap-match order
+
+[3.2.9 qti-match-interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.be4ll1tm4t99)
+[3.2.5 qti-gap-match-interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.7sroqk3xl8e1)
+[3.2.10 qti-order-interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.4n8gips6tlv4)
+
+[3.2.12 qti-associate-interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.7cs7637r54vv)
+[3.2.14 qti-graphic-gap-match-interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.ous502odpreo)
+
 ### qti-match-interaction
+
+[3.2.9 qti-match-interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.7sroqk3xl8e1)
 
 **Drag selector**: `qti-simple-match-set:first-of-type qti-simple-associable-choice`
 **Drop selector**: `qti-simple-match-set:last-of-type qti-simple-associable-choice`
@@ -35,6 +46,8 @@ The drag-drop system provides a flexible, reusable way to implement drag-and-dro
 ```
 
 ### qti-order-interaction
+
+[3.2.10 qti-order-interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.4n8gips6tlv4)
 
 **Drag selector**: `qti-simple-choice`
 **Drop selector**: `drop-list`
@@ -60,6 +73,7 @@ The drag-drop system provides a flexible, reusable way to implement drag-and-dro
 
 ### qti-gap-match-interaction
 
+[3.2.5 qti-gap-match-interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.7sroqk3xl8e1)
 **Drag selector**: `qti-gap-text`
 **Drop selector**: `qti-gap`
 **Uses clone drags**: `false`
@@ -88,6 +102,8 @@ The drag-drop system provides a flexible, reusable way to implement drag-and-dro
 
 ### qti-associate-interaction
 
+[3.2.12 qti-associate-interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.7cs7637r54vv)
+
 **Drag selector**: `qti-simple-associable-choice`
 **Drop selector**: `.dl`
 **Uses clone drags**: `true`
@@ -112,6 +128,8 @@ The drag-drop system provides a flexible, reusable way to implement drag-and-dro
 ```
 
 ### qti-graphic-gap-match-interaction
+
+[3.2.14 qti-graphic-gap-match-interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.ous502odpreo)
 
 **Drag selector**: `qti-gap-img`
 **Drop selector**: `qti-associable-hotspot`
@@ -138,18 +156,21 @@ The drag-drop system supports multiple collision detection algorithms based on [
 ### Available Algorithms
 
 #### 1. Pointer Within (Default)
+
 - **Algorithm**: `'pointerWithin'`
 - **Behavior**: Only registers collision when the pointer is contained within the bounding rectangle of the droppable
 - **Best For**: High-precision interfaces where you want strict pointer-based detection
 - **Use Case**: Most standard drag-and-drop interactions
 
 #### 2. Rectangle Intersection
+
 - **Algorithm**: `'rectangleIntersection'`
 - **Behavior**: Ensures there is no gap between any of the 4 sides of the rectangles. A draggable is considered over a droppable only when their bounding boxes physically intersect.
 - **Best For**: Standard drag-and-drop scenarios where you want contact-based detection
 - **Use Case**: When you want the draggable element itself (not just the pointer) to visibly overlap the droppable
 
 #### 3. Closest Center
+
 - **Algorithm**: `'closestCenter'`
 - **Behavior**: Identifies the droppable container whose center is closest to the center of the draggable item
 - **Best For**: Sortable lists where you want more forgiving detection
@@ -157,6 +178,7 @@ The drag-drop system supports multiple collision detection algorithms based on [
 - **Note**: May select underlying dropzones in stacked layouts
 
 #### 4. Closest Corners
+
 - **Algorithm**: `'closestCorners'`
 - **Behavior**: Measures the distance between all four corners of the draggable and the four corners of each droppable
 - **Best For**: Kanban boards and interfaces with stacked droppable containers
@@ -164,12 +186,12 @@ The drag-drop system supports multiple collision detection algorithms based on [
 
 ### Recommended Algorithms by Interaction Type
 
-| Interaction Type | Recommended Algorithm | Reason |
-|-----------------|----------------------|---------|
-| Associate Interaction (Slotted) | `closestCorners` | Better handling of multiple drop zones and spatial positioning |
-| Order Interaction (Sortable) | `closestCenter` | More forgiving for reordering lists |
-| Graphic Associate | `rectangleIntersection` | Visual overlap important for spatial positioning |
-| Kanban/Multi-column | `closestCorners` | Better handling of stacked containers |
+| Interaction Type                | Recommended Algorithm   | Reason                                                         |
+| ------------------------------- | ----------------------- | -------------------------------------------------------------- |
+| Associate Interaction (Slotted) | `closestCorners`        | Better handling of multiple drop zones and spatial positioning |
+| Order Interaction (Sortable)    | `closestCenter`         | More forgiving for reordering lists                            |
+| Graphic Associate               | `rectangleIntersection` | Visual overlap important for spatial positioning               |
+| Kanban/Multi-column             | `closestCorners`        | Better handling of stacked containers                          |
 
 ### Usage
 
@@ -236,13 +258,7 @@ const CoreMixin = DragDropCoreMixin(
 );
 
 // Use closest corners for Kanban-style boards
-const KanbanCore = DragDropCoreMixin(
-  superClass,
-  '.card',
-  '.column',
-  'slot[part="drags"]',
-  'closestCorners'
-);
+const KanbanCore = DragDropCoreMixin(superClass, '.card', '.column', 'slot[part="drags"]', 'closestCorners');
 ```
 
 #### Changing Algorithm at Runtime
@@ -278,21 +294,10 @@ import {
 } from './utils/drag-drop.utils';
 
 // Use the generic function with algorithm parameter
-const dropTarget = detectCollision(
-  dropzones,
-  clientX,
-  clientY,
-  dragElement,
-  'closestCenter'
-);
+const dropTarget = detectCollision(dropzones, clientX, clientY, dragElement, 'closestCenter');
 
 // Or use a specific algorithm function directly
-const dropTarget = closestCenterCollision(
-  dropzones,
-  clientX,
-  clientY,
-  dragElement
-);
+const dropTarget = closestCenterCollision(dropzones, clientX, clientY, dragElement);
 ```
 
 ### Implementation Details
