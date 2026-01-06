@@ -3,6 +3,46 @@
         "packages/qti-components": {
             "release-type": "node",
             "package-name": "@citolab/qti-components"
+        },
+        "packages/lit-utilities": {
+            "release-type": "node",
+            "package-name": "@qti-components/lit-utilities"
+        },
+        "packages/qti-base": {
+            "release-type": "node",
+            "package-name": "@qti-components/base"
+        },
+        "packages/qti-elements": {
+            "release-type": "node",
+            "package-name": "@qti-components/elements"
+        },
+        "packages/qti-interactions": {
+            "release-type": "node",
+            "package-name": "@qti-components/interactions"
+        },
+        "packages/qti-item": {
+            "release-type": "node",
+            "package-name": "@qti-components/item"
+        },
+        "packages/qti-loader": {
+            "release-type": "node",
+            "package-name": "@qti-components/loader"
+        },
+        "packages/qti-processing": {
+            "release-type": "node",
+            "package-name": "@qti-components/processing"
+        },
+        "packages/qti-test": {
+            "release-type": "node",
+            "package-name": "@qti-components/test"
+        },
+        "packages/qti-theme": {
+            "release-type": "node",
+            "package-name": "@qti-components/theme"
+        },
+        "packages/qti-transformers": {
+            "release-type": "node",
+            "package-name": "@qti-components/transformers"
         }
     },
     "plugins": [
