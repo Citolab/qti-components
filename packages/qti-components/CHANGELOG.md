@@ -1,5 +1,22 @@
 # Changelog
 
+## [7.17.1](https://github.com/Citolab/qti-components/compare/qti-components-v7.17.0...qti-components-v7.17.1) (2026-01-06)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @qti-components/test bumped to 1.0.0
+    * @qti-components/item bumped to 1.0.0
+    * @qti-components/elements bumped to 1.0.0
+    * @qti-components/transformers bumped to 1.0.0
+    * @qti-components/interactions bumped to 1.0.0
+    * @qti-components/processing bumped to 1.0.0
+    * @qti-components/loader bumped to 1.0.0
+    * @qti-components/base bumped to 1.0.0
+    * @qti-components/theme bumped to 1.0.0
+
 ## [7.17.0](https://github.com/Citolab/qti-components/compare/qti-components-v7.16.1...qti-components-v7.17.0) (2025-11-10)
 
 
