@@ -52,6 +52,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
     // Navigation state tracking
     private _activeController: AbortController | null = null;
     private _loadResults: any[] = [];
+    private _navigationId = 0;
 
     // Simple loading progress tracking
     private _loadingState = {
@@ -207,16 +208,20 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
       if (!detail?.id) return;
 
       this._cancelPreviousNavigation();
+      const navigationId = ++this._navigationId;
+      const controller = new AbortController();
 
       try {
         this._dispatchLoadingStarted(detail.type, detail.id);
-        this._activeController = new AbortController();
+        this._activeController = controller;
 
-        await this._executeNavigation(detail.type, detail.id);
+        await this._executeNavigation(detail.type, detail.id, navigationId, controller);
       } catch (error) {
         this._handleNavigationError(error, detail.type, detail.id);
       } finally {
-        this._activeController = null;
+        if (this._activeController === controller) {
+          this._activeController = null;
+        }
         this._dispatchLoadingEnded(detail.type, detail.id);
       }
     }
@@ -227,26 +232,32 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
       }
     }
 
-    private async _executeNavigation(type: 'item' | 'section', id: string): Promise<void> {
+    private async _executeNavigation(
+      type: 'item' | 'section',
+      id: string,
+      navigationId: number,
+      controller: AbortController
+    ): Promise<void> {
       if (type === 'item') {
-        await this._navigateToItem(id);
+        await this._navigateToItem(id, navigationId, controller);
       } else {
-        await this._navigateToSection(id);
+        await this._navigateToSection(id, navigationId, controller);
       }
     }
 
     /**
      * Navigate to specific item with simple state tracking
      */
-    private async _navigateToItem(itemId: string): Promise<void> {
+    private async _navigateToItem(itemId: string, navigationId: number, controller: AbortController): Promise<void> {
       const itemRef = this._findItemRef(itemId);
       this._updateSessionContext(itemRef, itemId);
 
       this._resetLoadingState();
       this._loadingState.expectedItems = 1;
 
-      await this._loadItems([itemId]);
-      await this._waitForLoadingComplete();
+      await this._loadItems([itemId], navigationId, controller);
+      await this._waitForLoadingComplete(navigationId, controller);
+      if (this._isStaleNavigation(navigationId, controller)) return;
 
       this._dispatchTestLoaded(this._loadResults);
     }
@@ -254,7 +265,11 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
     /**
      * Navigate to section with simple state tracking
      */
-    private async _navigateToSection(sectionId: string): Promise<void> {
+    private async _navigateToSection(
+      sectionId: string,
+      navigationId: number,
+      controller: AbortController
+    ): Promise<void> {
       const sectionEl = this._findSection(sectionId);
       const navPartId = sectionEl?.closest('qti-test-part')?.identifier;
 
@@ -270,8 +285,9 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
       this._resetLoadingState();
       this._loadingState.expectedItems = itemIds.length;
 
-      await this._loadItems(itemIds);
-      await this._waitForLoadingComplete();
+      await this._loadItems(itemIds, navigationId, controller);
+      await this._waitForLoadingComplete(navigationId, controller);
+      if (this._isStaleNavigation(navigationId, controller)) return;
 
       this._dispatchTestLoaded(this._loadResults);
     }
@@ -312,8 +328,9 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
     /**
      * Wait for loading to complete with simple polling
      */
-    private async _waitForLoadingComplete(): Promise<void> {
+    private async _waitForLoadingComplete(navigationId: number, controller: AbortController): Promise<void> {
       while (!this._loadingState.isComplete) {
+        if (this._isStaleNavigation(navigationId, controller)) return;
         await new Promise(resolve => setTimeout(resolve, 10));
       }
     }
@@ -419,15 +436,17 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
     /**
      * Load items with simple tracking
      */
-    private async _loadItems(itemIds: string[]): Promise<void> {
+    private async _loadItems(itemIds: string[], navigationId: number, controller: AbortController): Promise<void> {
       if (!this._testElement || itemIds.length === 0) return;
 
       const itemRefs = itemIds.map(id => this._findItemRef(id));
       this._clearLoadedItems();
       this._clearStimulusRef();
 
-      const results = await Promise.all(itemRefs.map(ref => this._loadSingleItem(ref)));
+      const results = await Promise.all(itemRefs.map(ref => this._loadSingleItem(ref, navigationId, controller)));
       const validResults = results.filter(Boolean);
+
+      if (this._isStaleNavigation(navigationId, controller)) return;
 
       validResults.forEach(({ itemRef, doc }) => {
         if (itemRef && doc) itemRef.xmlDoc = doc;
@@ -436,15 +455,16 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
       this._loadResults = validResults;
     }
 
-    private async _loadSingleItem(itemRef: QtiAssessmentItemRef) {
+    private async _loadSingleItem(itemRef: QtiAssessmentItemRef, navigationId: number, controller: AbortController) {
       try {
-        let transformer = await qtiTransformItem(this.cacheTransform).load(
-          itemRef.href,
-          this._activeController?.signal
-        );
+        let transformer = await qtiTransformItem(this.cacheTransform).load(itemRef.href, controller.signal);
 
         if (this.postLoadTransformCallback) {
           transformer = await this.postLoadTransformCallback(transformer, itemRef);
+        }
+
+        if (this._isStaleNavigation(navigationId, controller)) {
+          return null;
         }
 
         return { itemRef, doc: transformer.htmlDoc() };
@@ -517,6 +537,10 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
 
     private _clearStimulusRef(): void {
       this.querySelectorAll('[data-stimulus-idref]').forEach(el => (el.innerHTML = ''));
+    }
+
+    private _isStaleNavigation(navigationId: number, controller: AbortController): boolean {
+      return controller.signal.aborted || navigationId !== this._navigationId;
     }
 
     private _createNavigationError(error: any, type: string, id: string): NavigationError {
