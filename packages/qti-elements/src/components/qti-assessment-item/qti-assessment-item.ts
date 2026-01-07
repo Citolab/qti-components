@@ -293,18 +293,10 @@ export class QtiAssessmentItem extends LitElement {
     }
 
     const responseProcessor = this.querySelector<QtiResponseProcessing>('qti-response-processing');
-    if (!responseProcessor) {
-      // console.info('Client side response processing template not available');
-      return false;
+    const canProcess = !!(responseProcessor && typeof responseProcessor.process === 'function');
+    if (canProcess) {
+      responseProcessor.process();
     }
-
-    if (!responseProcessor.process) {
-      // console.info('Client side response webcomponents not available');
-      return false;
-    }
-
-    responseProcessor.process();
-
     if (this.adaptive === 'false') {
       // if adaptive, completionStatus is set by the processing template
       this.updateOutcomeVariable('completionStatus', this._getCompletionStatus());
@@ -318,7 +310,7 @@ export class QtiAssessmentItem extends LitElement {
       })
     );
 
-    return true;
+    return canProcess;
   }
 
   public resetResponses() {
