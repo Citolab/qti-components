@@ -15,7 +15,8 @@ export default {
     'packages/qti-test/src/components/**/*.ts',
     'packages/qti-elements/src/components/**/*.ts',
     'packages/qti-interactions/src/components/**/*.ts',
-    'packages/qti-processing/src/components/**/*.ts'
+    'packages/qti-processing/src/components/**/*.ts',
+    'packages/qti-custom/src/components/**/*.ts'
   ],
   /** Globs to exclude */
   exclude: ['packages/**/*.stories.ts', 'packages/**/*.spec.ts', 'packages/**/*.styles.ts'],

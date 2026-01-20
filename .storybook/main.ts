@@ -50,6 +50,11 @@ const config: StorybookConfig = {
       directory: '../packages/qti-theme/src/components',
       files: '**/*.stories.*',
       titlePrefix: 'Theme'
+    },
+    {
+      directory: '../packages/qti-custom/src/components',
+      files: '**/*.stories.*',
+      titlePrefix: 'Custom'
     }
   ],
   addons: [

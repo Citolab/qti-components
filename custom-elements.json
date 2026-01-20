@@ -4,6 +4,221 @@
   "modules": [
     {
       "kind": "javascript-module",
+      "path": "packages/qti-custom/src/components/qti-order-interaction-in-place/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiOrderInteractionInPlace",
+          "declaration": {
+            "name": "QtiOrderInteractionInPlace",
+            "module": "./qti-order-interaction-in-place"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-custom/src/components/qti-order-interaction-in-place/qti-order-interaction-in-place.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiOrderInteractionInPlace",
+          "members": [
+            {
+              "kind": "method",
+              "name": "_handleOrientationChange",
+              "parameters": [
+                {
+                  "name": "_oldValue",
+                  "type": {
+                    "text": "'vertical' | 'horizontal'"
+                  }
+                },
+                {
+                  "name": "newValue",
+                  "type": {
+                    "text": "'vertical' | 'horizontal'"
+                  }
+                }
+              ],
+              "type": {
+                "text": "_handleOrientationChange(_oldValue: 'vertical' | 'horizontal', newValue: 'vertical' | 'horizontal') => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_handleTestElementChange",
+              "parameters": [
+                {
+                  "name": "_oldValue",
+                  "type": {
+                    "text": "ComputedContext"
+                  }
+                },
+                {
+                  "name": "newValue",
+                  "type": {
+                    "text": "ComputedContext"
+                  }
+                }
+              ],
+              "type": {
+                "text": "_handleTestElementChange(_oldValue: ComputedContext, newValue: ComputedContext) => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "afterCache",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "type": {
+                "text": "afterCache() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "applyInteractivityChanges",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "choices",
+              "type": {
+                "text": "QtiSimpleChoice[]"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "choiceWidth",
+              "type": {
+                "text": "number"
+              },
+              "default": "200",
+              "attribute": "data-choices-container-width"
+            },
+            {
+              "kind": "field",
+              "name": "disableAnimations",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "disable-animations"
+            },
+            {
+              "kind": "field",
+              "name": "orientation",
+              "type": {
+                "text": "'vertical' | 'horizontal'"
+              },
+              "default": "'vertical'",
+              "attribute": "orientation",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "toggleCandidateCorrection",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "show",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "type": {
+                "text": "toggleCandidateCorrection(show: boolean) => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "validate",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "type": {
+                "text": "validate() => boolean"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "data-choices-container-width",
+              "type": {
+                "text": "number"
+              },
+              "default": "200",
+              "fieldName": "choiceWidth"
+            },
+            {
+              "name": "disable-animations",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "disableAnimations"
+            },
+            {
+              "name": "orientation",
+              "type": {
+                "text": "'vertical' | 'horizontal'"
+              },
+              "default": "'vertical'",
+              "fieldName": "orientation"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "DragDropSortableMixin",
+              "module": "/packages/qti-custom/src/drag-drop"
+            }
+          ],
+          "superclass": {
+            "name": "Interaction",
+            "package": "@qti-components/base"
+          },
+          "tagName": "qti-order-interaction-in-place",
+          "customElement": true,
+          "modulePath": "packages/qti-custom/src/components/qti-order-interaction-in-place/qti-order-interaction-in-place.ts",
+          "definitionPath": "packages/qti-custom/src/components/qti-order-interaction-in-place/qti-order-interaction-in-place.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-order-interaction-in-place",
+          "declaration": {
+            "name": "QtiOrderInteractionInPlace",
+            "module": "packages/qti-custom/src/components/qti-order-interaction-in-place/qti-order-interaction-in-place.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiOrderInteractionInPlace",
+          "declaration": {
+            "name": "QtiOrderInteractionInPlace",
+            "module": "packages/qti-custom/src/components/qti-order-interaction-in-place/qti-order-interaction-in-place.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/qti-elements/src/components/qti-assessment-item/qti-assessment-item.ts",
       "declarations": [
         {

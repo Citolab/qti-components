@@ -167,6 +167,9 @@ importers:
       npm-run-all:
         specifier: ^4.1.5
         version: 4.1.5
+      observable-polyfill:
+        specifier: ^0.0.29
+        version: 0.0.29
       path-browserify:
         specifier: ^1.0.1
         version: 1.0.1
@@ -306,6 +309,27 @@ importers:
       '@qti-components/transformers':
         specifier: workspace:*
         version: link:../qti-transformers
+
+  packages/qti-custom:
+    dependencies:
+      '@dnd-kit/dom':
+        specifier: ^0.1.21
+        version: 0.1.21
+      '@lit/context':
+        specifier: ^1.1.6
+        version: 1.1.6
+      '@qti-components/base':
+        specifier: workspace:*
+        version: link:../qti-base
+      '@qti-components/interactions':
+        specifier: workspace:*
+        version: link:../qti-interactions
+      '@qti-components/utilities':
+        specifier: workspace:*
+        version: link:../lit-utilities
+      lit:
+        specifier: ^3.3.1
+        version: 3.3.1
 
   packages/qti-elements:
     dependencies:
@@ -611,6 +635,21 @@ packages:
   '@dependents/detective-less@5.0.1':
     resolution: {integrity: sha512-Y6+WUMsTFWE5jb20IFP4YGa5IrGY/+a/FbOSjDF/wz9gepU2hwCYSXRHP/vPwBvwcY3SVMASt4yXxbXNXigmZQ==}
     engines: {node: '>=18'}
+
+  '@dnd-kit/abstract@0.1.21':
+    resolution: {integrity: sha512-6sJut6/D21xPIK8EFMu+JJeF+fBCOmQKN1BRpeUYFi5m9P1CJpTYbBwfI107h7PHObI6a5bsckiKkRpF2orHpw==}
+
+  '@dnd-kit/collision@0.1.21':
+    resolution: {integrity: sha512-9AJ4NbuwGDexxMCZXZyKdNQhbAe93p6C6IezQaDaWmdCqZHMHmC3+ul7pGefBQfOooSarGwIf8Bn182o9SMa1A==}
+
+  '@dnd-kit/dom@0.1.21':
+    resolution: {integrity: sha512-6UDc1y2Y3oLQKArGlgCrZxz5pdEjRSiQujXOn5JdbuWvKqTdUR5RTYDeicr+y2sVm3liXjTqs3WlUoV+eqhqUQ==}
+
+  '@dnd-kit/geometry@0.1.21':
+    resolution: {integrity: sha512-Tir97wNJbopN2HgkD7AjAcoB3vvrVuUHvwdPALmNDUH0fWR637c4MKQ66YjjZAbUEAR8KL6mlDiHH4MzTLd7CQ==}
+
+  '@dnd-kit/state@0.1.21':
+    resolution: {integrity: sha512-pdhntEPvn/QttcF295bOJpWiLsRqA/Iczh1ODOJUxGiR+E4GkYVz9VapNNm9gDq6ST0tr/e1Q2xBztUHlJqQgA==}
 
   '@emnapi/core@1.6.0':
     resolution: {integrity: sha512-zq/ay+9fNIJJtJiZxdTnXS20PllcYMX3OE23ESc4HK/bdYu3cOWYVhsOhVnXALfU/uqJIxn5NBPd9z4v+SfoSg==}
@@ -1065,6 +1104,9 @@ packages:
 
   '@polka/url@1.0.0-next.29':
     resolution: {integrity: sha512-wwQAWhWSuHaag8c4q/KN/vCoeOJYshAIvMQwD4GpSb3OiZklFfvAgmj0VCBBImRpuF/aFgIRzllXlVX93Jevww==}
+
+  '@preact/signals-core@1.12.1':
+    resolution: {integrity: sha512-BwbTXpj+9QutoZLQvbttRg5x3l5468qaV2kufh+51yha1c53ep5dY4kTuZR35+3pAZxpfQerGJiQqg34ZNZ6uA==}
 
   '@prettier/sync@0.5.5':
     resolution: {integrity: sha512-6BMtNr7aQhyNcGzmumkL0tgr1YQGfm9d7ZdmRpWqWuqpc9vZBind4xMe5NMiRECOhjuSiWHfBWLBnXkpeE90bw==}
@@ -4520,6 +4562,9 @@ packages:
     resolution: {integrity: sha512-gXah6aZrcUxjWg2zR2MwouP2eHlCBzdV4pygudehaKXSGW4v2AsRQUK+lwwXhii6KFZcunEnmSUoYp5CXibxtA==}
     engines: {node: '>= 0.4'}
 
+  observable-polyfill@0.0.29:
+    resolution: {integrity: sha512-/sOoCFLPOgxkabgJ6uppEbQzMa22wStqDoSDaklyt/QwSqhJmG11PwZvVq+pquzvkXKYWbRED9oL/XnHV3R6sw==}
+
   once@1.4.0:
     resolution: {integrity: sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==}
 
@@ -6287,6 +6332,36 @@ snapshots:
       gonzales-pe: 4.3.0
       node-source-walk: 7.0.1
 
+  '@dnd-kit/abstract@0.1.21':
+    dependencies:
+      '@dnd-kit/geometry': 0.1.21
+      '@dnd-kit/state': 0.1.21
+      tslib: 2.8.1
+
+  '@dnd-kit/collision@0.1.21':
+    dependencies:
+      '@dnd-kit/abstract': 0.1.21
+      '@dnd-kit/geometry': 0.1.21
+      tslib: 2.8.1
+
+  '@dnd-kit/dom@0.1.21':
+    dependencies:
+      '@dnd-kit/abstract': 0.1.21
+      '@dnd-kit/collision': 0.1.21
+      '@dnd-kit/geometry': 0.1.21
+      '@dnd-kit/state': 0.1.21
+      tslib: 2.8.1
+
+  '@dnd-kit/geometry@0.1.21':
+    dependencies:
+      '@dnd-kit/state': 0.1.21
+      tslib: 2.8.1
+
+  '@dnd-kit/state@0.1.21':
+    dependencies:
+      '@preact/signals-core': 1.12.1
+      tslib: 2.8.1
+
   '@emnapi/core@1.6.0':
     dependencies:
       '@emnapi/wasi-threads': 1.1.0
@@ -6708,6 +6783,8 @@ snapshots:
     optional: true
 
   '@polka/url@1.0.0-next.29': {}
+
+  '@preact/signals-core@1.12.1': {}
 
   '@prettier/sync@0.5.5(prettier@3.5.3)':
     dependencies:
@@ -10891,6 +10968,8 @@ snapshots:
       call-bound: 1.0.4
       define-properties: 1.2.1
       es-object-atoms: 1.1.1
+
+  observable-polyfill@0.0.29: {}
 
   once@1.4.0:
     dependencies:
