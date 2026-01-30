@@ -1,5 +1,4 @@
 import { html } from 'lit';
-import { customElement } from 'lit/decorators.js';
 
 import { Interaction } from '@qti-components/base';
 
@@ -9,8 +8,6 @@ import styles from './qti-hotspot-interaction.styles';
 
 import type { QtiHotspotChoice } from '../../elements/qti-hotspot-choice';
 import type { CSSResultGroup } from 'lit';
-
-@customElement('qti-hotspot-interaction')
 export class QtiHotspotInteraction extends ChoicesMixin(Interaction, 'qti-hotspot-choice') {
   static override styles: CSSResultGroup = styles;
 

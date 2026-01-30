@@ -1,5 +1,5 @@
 import { css, html } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 import { consume } from '@lit/context';
 
 import { removeDoubleSlashes } from '@qti-components/base';
@@ -21,8 +21,6 @@ import type {
 
 declare const requirejs: any;
 declare const define: any;
-
-@customElement('qti-portable-custom-interaction')
 export class QtiPortableCustomInteraction extends Interaction {
   private _value: string | string[];
 

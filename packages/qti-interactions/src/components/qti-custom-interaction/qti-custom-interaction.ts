@@ -1,10 +1,8 @@
 import { html } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 
 import { removeDoubleSlashes } from '@qti-components/base';
 import { Interaction } from '@qti-components/base';
-
-@customElement('qti-custom-interaction')
 export class QtiCustomInteraction extends Interaction {
   // This custom-interaction support the CES API which is use in FACET
   //

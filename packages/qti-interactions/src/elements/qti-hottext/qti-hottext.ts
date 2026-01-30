@@ -1,9 +1,6 @@
 import { css, html, LitElement } from 'lit';
-import { customElement } from 'lit/decorators.js';
 
 import { ActiveElementMixin } from '../../mixins/active-element/active-element.mixin';
-
-@customElement('qti-hottext')
 export class QtiHottext extends ActiveElementMixin(LitElement, 'qti-hottext') {
   static override styles = css`
     :host {

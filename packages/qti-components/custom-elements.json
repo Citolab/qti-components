@@ -1151,44 +1151,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "packages/qti-elements/src/components/qti-prompt/qti-prompt.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "QtiPrompt",
-          "members": [],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "qti-prompt",
-          "customElement": true,
-          "modulePath": "packages/qti-elements/src/components/qti-prompt/qti-prompt.ts",
-          "definitionPath": "packages/qti-elements/src/components/qti-prompt/qti-prompt.ts"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-prompt",
-          "declaration": {
-            "name": "QtiPrompt",
-            "module": "packages/qti-elements/src/components/qti-prompt/qti-prompt.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "QtiPrompt",
-          "declaration": {
-            "name": "QtiPrompt",
-            "module": "packages/qti-elements/src/components/qti-prompt/qti-prompt.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "packages/qti-elements/src/components/qti-response-declaration/qti-response-declaration.ts",
       "declarations": [
         {
@@ -1983,24 +1945,31 @@
           "tagName": "qti-associate-interaction",
           "customElement": true,
           "modulePath": "packages/qti-interactions/src/components/qti-associate-interaction/qti-associate-interaction.ts",
-          "definitionPath": "packages/qti-interactions/src/components/qti-associate-interaction/qti-associate-interaction.ts"
+          "definitionPath": "packages/qti-interactions/src/components/qti-associate-interaction/register.ts"
         }
       ],
       "exports": [
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-associate-interaction",
-          "declaration": {
-            "name": "QtiAssociateInteraction",
-            "module": "packages/qti-interactions/src/components/qti-associate-interaction/qti-associate-interaction.ts"
-          }
-        },
         {
           "kind": "js",
           "name": "QtiAssociateInteraction",
           "declaration": {
             "name": "QtiAssociateInteraction",
             "module": "packages/qti-interactions/src/components/qti-associate-interaction/qti-associate-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-interactions/src/components/qti-associate-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-associate-interaction",
+          "declaration": {
+            "name": "QtiAssociateInteraction",
+            "module": "/packages/qti-interactions/src/components/qti-associate-interaction/qti-associate-interaction"
           }
         }
       ]
@@ -2065,24 +2034,31 @@
           "tagName": "qti-choice-interaction",
           "customElement": true,
           "modulePath": "packages/qti-interactions/src/components/qti-choice-interaction/qti-choice-interaction.ts",
-          "definitionPath": "packages/qti-interactions/src/components/qti-choice-interaction/qti-choice-interaction.ts"
+          "definitionPath": "packages/qti-interactions/src/components/qti-choice-interaction/register.ts"
         }
       ],
       "exports": [
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-choice-interaction",
-          "declaration": {
-            "name": "QtiChoiceInteraction",
-            "module": "packages/qti-interactions/src/components/qti-choice-interaction/qti-choice-interaction.ts"
-          }
-        },
         {
           "kind": "js",
           "name": "QtiChoiceInteraction",
           "declaration": {
             "name": "QtiChoiceInteraction",
             "module": "packages/qti-interactions/src/components/qti-choice-interaction/qti-choice-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-interactions/src/components/qti-choice-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-choice-interaction",
+          "declaration": {
+            "name": "QtiChoiceInteraction",
+            "module": "/packages/qti-interactions/src/components/qti-choice-interaction/qti-choice-interaction"
           }
         }
       ]
@@ -2282,24 +2258,31 @@
           "tagName": "qti-custom-interaction",
           "customElement": true,
           "modulePath": "packages/qti-interactions/src/components/qti-custom-interaction/qti-custom-interaction.ts",
-          "definitionPath": "packages/qti-interactions/src/components/qti-custom-interaction/qti-custom-interaction.ts"
+          "definitionPath": "packages/qti-interactions/src/components/qti-custom-interaction/register.ts"
         }
       ],
       "exports": [
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-custom-interaction",
-          "declaration": {
-            "name": "QtiCustomInteraction",
-            "module": "packages/qti-interactions/src/components/qti-custom-interaction/qti-custom-interaction.ts"
-          }
-        },
         {
           "kind": "js",
           "name": "QtiCustomInteraction",
           "declaration": {
             "name": "QtiCustomInteraction",
             "module": "packages/qti-interactions/src/components/qti-custom-interaction/qti-custom-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-interactions/src/components/qti-custom-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-custom-interaction",
+          "declaration": {
+            "name": "QtiCustomInteraction",
+            "module": "/packages/qti-interactions/src/components/qti-custom-interaction/qti-custom-interaction"
           }
         }
       ]
@@ -2418,24 +2401,31 @@
           "tagName": "qti-end-attempt-interaction",
           "customElement": true,
           "modulePath": "packages/qti-interactions/src/components/qti-end-attempt-interaction/qti-end-attempt-interaction.ts",
-          "definitionPath": "packages/qti-interactions/src/components/qti-end-attempt-interaction/qti-end-attempt-interaction.ts"
+          "definitionPath": "packages/qti-interactions/src/components/qti-end-attempt-interaction/register.ts"
         }
       ],
       "exports": [
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-end-attempt-interaction",
-          "declaration": {
-            "name": "QtiEndAttemptInteraction",
-            "module": "packages/qti-interactions/src/components/qti-end-attempt-interaction/qti-end-attempt-interaction.ts"
-          }
-        },
         {
           "kind": "js",
           "name": "QtiEndAttemptInteraction",
           "declaration": {
             "name": "QtiEndAttemptInteraction",
             "module": "packages/qti-interactions/src/components/qti-end-attempt-interaction/qti-end-attempt-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-interactions/src/components/qti-end-attempt-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-end-attempt-interaction",
+          "declaration": {
+            "name": "QtiEndAttemptInteraction",
+            "module": "/packages/qti-interactions/src/components/qti-end-attempt-interaction/qti-end-attempt-interaction"
           }
         }
       ]
@@ -2637,24 +2627,31 @@
           "tagName": "qti-extended-text-interaction",
           "customElement": true,
           "modulePath": "packages/qti-interactions/src/components/qti-extended-text-interaction/qti-extended-text-interaction.ts",
-          "definitionPath": "packages/qti-interactions/src/components/qti-extended-text-interaction/qti-extended-text-interaction.ts"
+          "definitionPath": "packages/qti-interactions/src/components/qti-extended-text-interaction/register.ts"
         }
       ],
       "exports": [
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-extended-text-interaction",
-          "declaration": {
-            "name": "QtiExtendedTextInteraction",
-            "module": "packages/qti-interactions/src/components/qti-extended-text-interaction/qti-extended-text-interaction.ts"
-          }
-        },
         {
           "kind": "js",
           "name": "QtiExtendedTextInteraction",
           "declaration": {
             "name": "QtiExtendedTextInteraction",
             "module": "packages/qti-interactions/src/components/qti-extended-text-interaction/qti-extended-text-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-interactions/src/components/qti-extended-text-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-extended-text-interaction",
+          "declaration": {
+            "name": "QtiExtendedTextInteraction",
+            "module": "/packages/qti-interactions/src/components/qti-extended-text-interaction/qti-extended-text-interaction"
           }
         }
       ]
@@ -2737,24 +2734,31 @@
           "tagName": "qti-gap-match-interaction",
           "customElement": true,
           "modulePath": "packages/qti-interactions/src/components/qti-gap-match-interaction/qti-gap-match-interaction.ts",
-          "definitionPath": "packages/qti-interactions/src/components/qti-gap-match-interaction/qti-gap-match-interaction.ts"
+          "definitionPath": "packages/qti-interactions/src/components/qti-gap-match-interaction/register.ts"
         }
       ],
       "exports": [
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-gap-match-interaction",
-          "declaration": {
-            "name": "QtiGapMatchInteraction",
-            "module": "packages/qti-interactions/src/components/qti-gap-match-interaction/qti-gap-match-interaction.ts"
-          }
-        },
         {
           "kind": "js",
           "name": "QtiGapMatchInteraction",
           "declaration": {
             "name": "QtiGapMatchInteraction",
             "module": "packages/qti-interactions/src/components/qti-gap-match-interaction/qti-gap-match-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-interactions/src/components/qti-gap-match-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-gap-match-interaction",
+          "declaration": {
+            "name": "QtiGapMatchInteraction",
+            "module": "/packages/qti-interactions/src/components/qti-gap-match-interaction/qti-gap-match-interaction"
           }
         }
       ]
@@ -2906,24 +2910,31 @@
           "tagName": "qti-graphic-associate-interaction",
           "customElement": true,
           "modulePath": "packages/qti-interactions/src/components/qti-graphic-associate-interaction/qti-graphic-associate-interaction.ts",
-          "definitionPath": "packages/qti-interactions/src/components/qti-graphic-associate-interaction/qti-graphic-associate-interaction.ts"
+          "definitionPath": "packages/qti-interactions/src/components/qti-graphic-associate-interaction/register.ts"
         }
       ],
       "exports": [
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-graphic-associate-interaction",
-          "declaration": {
-            "name": "QtiGraphicAssociateInteraction",
-            "module": "packages/qti-interactions/src/components/qti-graphic-associate-interaction/qti-graphic-associate-interaction.ts"
-          }
-        },
         {
           "kind": "js",
           "name": "QtiGraphicAssociateInteraction",
           "declaration": {
             "name": "QtiGraphicAssociateInteraction",
             "module": "packages/qti-interactions/src/components/qti-graphic-associate-interaction/qti-graphic-associate-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-interactions/src/components/qti-graphic-associate-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-graphic-associate-interaction",
+          "declaration": {
+            "name": "QtiGraphicAssociateInteraction",
+            "module": "/packages/qti-interactions/src/components/qti-graphic-associate-interaction/qti-graphic-associate-interaction"
           }
         }
       ]
@@ -2969,24 +2980,31 @@
           "tagName": "qti-graphic-gap-match-interaction",
           "customElement": true,
           "modulePath": "packages/qti-interactions/src/components/qti-graphic-gap-match-interaction/qti-graphic-gap-match-interaction.ts",
-          "definitionPath": "packages/qti-interactions/src/components/qti-graphic-gap-match-interaction/qti-graphic-gap-match-interaction.ts"
+          "definitionPath": "packages/qti-interactions/src/components/qti-graphic-gap-match-interaction/register.ts"
         }
       ],
       "exports": [
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-graphic-gap-match-interaction",
-          "declaration": {
-            "name": "QtiGraphicGapMatchInteraction",
-            "module": "packages/qti-interactions/src/components/qti-graphic-gap-match-interaction/qti-graphic-gap-match-interaction.ts"
-          }
-        },
         {
           "kind": "js",
           "name": "QtiGraphicGapMatchInteraction",
           "declaration": {
             "name": "QtiGraphicGapMatchInteraction",
             "module": "packages/qti-interactions/src/components/qti-graphic-gap-match-interaction/qti-graphic-gap-match-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-interactions/src/components/qti-graphic-gap-match-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-graphic-gap-match-interaction",
+          "declaration": {
+            "name": "QtiGraphicGapMatchInteraction",
+            "module": "/packages/qti-interactions/src/components/qti-graphic-gap-match-interaction/qti-graphic-gap-match-interaction"
           }
         }
       ]
@@ -3083,24 +3101,31 @@
           "tagName": "qti-graphic-order-interaction",
           "customElement": true,
           "modulePath": "packages/qti-interactions/src/components/qti-graphic-order-interaction/qti-graphic-order-interaction.ts",
-          "definitionPath": "packages/qti-interactions/src/components/qti-graphic-order-interaction/qti-graphic-order-interaction.ts"
+          "definitionPath": "packages/qti-interactions/src/components/qti-graphic-order-interaction/register.ts"
         }
       ],
       "exports": [
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-graphic-order-interaction",
-          "declaration": {
-            "name": "QtiGraphicOrderInteraction",
-            "module": "packages/qti-interactions/src/components/qti-graphic-order-interaction/qti-graphic-order-interaction.ts"
-          }
-        },
         {
           "kind": "js",
           "name": "QtiGraphicOrderInteraction",
           "declaration": {
             "name": "QtiGraphicOrderInteraction",
             "module": "packages/qti-interactions/src/components/qti-graphic-order-interaction/qti-graphic-order-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-interactions/src/components/qti-graphic-order-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-graphic-order-interaction",
+          "declaration": {
+            "name": "QtiGraphicOrderInteraction",
+            "module": "/packages/qti-interactions/src/components/qti-graphic-order-interaction/qti-graphic-order-interaction"
           }
         }
       ]
@@ -3173,24 +3198,31 @@
           "tagName": "qti-hotspot-interaction",
           "customElement": true,
           "modulePath": "packages/qti-interactions/src/components/qti-hotspot-interaction/qti-hotspot-interaction.ts",
-          "definitionPath": "packages/qti-interactions/src/components/qti-hotspot-interaction/qti-hotspot-interaction.ts"
+          "definitionPath": "packages/qti-interactions/src/components/qti-hotspot-interaction/register.ts"
         }
       ],
       "exports": [
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-hotspot-interaction",
-          "declaration": {
-            "name": "QtiHotspotInteraction",
-            "module": "packages/qti-interactions/src/components/qti-hotspot-interaction/qti-hotspot-interaction.ts"
-          }
-        },
         {
           "kind": "js",
           "name": "QtiHotspotInteraction",
           "declaration": {
             "name": "QtiHotspotInteraction",
             "module": "packages/qti-interactions/src/components/qti-hotspot-interaction/qti-hotspot-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-interactions/src/components/qti-hotspot-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-hotspot-interaction",
+          "declaration": {
+            "name": "QtiHotspotInteraction",
+            "module": "/packages/qti-interactions/src/components/qti-hotspot-interaction/qti-hotspot-interaction"
           }
         }
       ]
@@ -3249,24 +3281,31 @@
           "tagName": "qti-hottext-interaction",
           "customElement": true,
           "modulePath": "packages/qti-interactions/src/components/qti-hottext-interaction/qti-hottext-interaction.ts",
-          "definitionPath": "packages/qti-interactions/src/components/qti-hottext-interaction/qti-hottext-interaction.ts"
+          "definitionPath": "packages/qti-interactions/src/components/qti-hottext-interaction/register.ts"
         }
       ],
       "exports": [
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-hottext-interaction",
-          "declaration": {
-            "name": "QtiHottextInteraction",
-            "module": "packages/qti-interactions/src/components/qti-hottext-interaction/qti-hottext-interaction.ts"
-          }
-        },
         {
           "kind": "js",
           "name": "QtiHottextInteraction",
           "declaration": {
             "name": "QtiHottextInteraction",
             "module": "packages/qti-interactions/src/components/qti-hottext-interaction/qti-hottext-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-interactions/src/components/qti-hottext-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-hottext-interaction",
+          "declaration": {
+            "name": "QtiHottextInteraction",
+            "module": "/packages/qti-interactions/src/components/qti-hottext-interaction/qti-hottext-interaction"
           }
         }
       ]
@@ -3412,24 +3451,31 @@
           "tagName": "qti-inline-choice-interaction",
           "customElement": true,
           "modulePath": "packages/qti-interactions/src/components/qti-inline-choice-interaction/qti-inline-choice-interaction.ts",
-          "definitionPath": "packages/qti-interactions/src/components/qti-inline-choice-interaction/qti-inline-choice-interaction.ts"
+          "definitionPath": "packages/qti-interactions/src/components/qti-inline-choice-interaction/register.ts"
         }
       ],
       "exports": [
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-inline-choice-interaction",
-          "declaration": {
-            "name": "QtiInlineChoiceInteraction",
-            "module": "packages/qti-interactions/src/components/qti-inline-choice-interaction/qti-inline-choice-interaction.ts"
-          }
-        },
         {
           "kind": "js",
           "name": "QtiInlineChoiceInteraction",
           "declaration": {
             "name": "QtiInlineChoiceInteraction",
             "module": "packages/qti-interactions/src/components/qti-inline-choice-interaction/qti-inline-choice-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-interactions/src/components/qti-inline-choice-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-inline-choice-interaction",
+          "declaration": {
+            "name": "QtiInlineChoiceInteraction",
+            "module": "/packages/qti-interactions/src/components/qti-inline-choice-interaction/qti-inline-choice-interaction"
           }
         }
       ]
@@ -3620,24 +3666,31 @@
           "tagName": "qti-match-interaction",
           "customElement": true,
           "modulePath": "packages/qti-interactions/src/components/qti-match-interaction/qti-match-interaction.ts",
-          "definitionPath": "packages/qti-interactions/src/components/qti-match-interaction/qti-match-interaction.ts"
+          "definitionPath": "packages/qti-interactions/src/components/qti-match-interaction/register.ts"
         }
       ],
       "exports": [
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-match-interaction",
-          "declaration": {
-            "name": "QtiMatchInteraction",
-            "module": "packages/qti-interactions/src/components/qti-match-interaction/qti-match-interaction.ts"
-          }
-        },
         {
           "kind": "js",
           "name": "QtiMatchInteraction",
           "declaration": {
             "name": "QtiMatchInteraction",
             "module": "packages/qti-interactions/src/components/qti-match-interaction/qti-match-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-interactions/src/components/qti-match-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-match-interaction",
+          "declaration": {
+            "name": "QtiMatchInteraction",
+            "module": "/packages/qti-interactions/src/components/qti-match-interaction/qti-match-interaction"
           }
         }
       ]
@@ -3694,24 +3747,31 @@
           "tagName": "qti-media-interaction",
           "customElement": true,
           "modulePath": "packages/qti-interactions/src/components/qti-media-interaction/qti-media-interaction.ts",
-          "definitionPath": "packages/qti-interactions/src/components/qti-media-interaction/qti-media-interaction.ts"
+          "definitionPath": "packages/qti-interactions/src/components/qti-media-interaction/register.ts"
         }
       ],
       "exports": [
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-media-interaction",
-          "declaration": {
-            "name": "QtiMediaInteraction",
-            "module": "packages/qti-interactions/src/components/qti-media-interaction/qti-media-interaction.ts"
-          }
-        },
         {
           "kind": "js",
           "name": "QtiMediaInteraction",
           "declaration": {
             "name": "QtiMediaInteraction",
             "module": "packages/qti-interactions/src/components/qti-media-interaction/qti-media-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-interactions/src/components/qti-media-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-media-interaction",
+          "declaration": {
+            "name": "QtiMediaInteraction",
+            "module": "/packages/qti-interactions/src/components/qti-media-interaction/qti-media-interaction"
           }
         }
       ]
@@ -3838,24 +3898,31 @@
           "tagName": "qti-order-interaction",
           "customElement": true,
           "modulePath": "packages/qti-interactions/src/components/qti-order-interaction/qti-order-interaction.ts",
-          "definitionPath": "packages/qti-interactions/src/components/qti-order-interaction/qti-order-interaction.ts"
+          "definitionPath": "packages/qti-interactions/src/components/qti-order-interaction/register.ts"
         }
       ],
       "exports": [
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-order-interaction",
-          "declaration": {
-            "name": "QtiOrderInteraction",
-            "module": "packages/qti-interactions/src/components/qti-order-interaction/qti-order-interaction.ts"
-          }
-        },
         {
           "kind": "js",
           "name": "QtiOrderInteraction",
           "declaration": {
             "name": "QtiOrderInteraction",
             "module": "packages/qti-interactions/src/components/qti-order-interaction/qti-order-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-interactions/src/components/qti-order-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-order-interaction",
+          "declaration": {
+            "name": "QtiOrderInteraction",
+            "module": "/packages/qti-interactions/src/components/qti-order-interaction/qti-order-interaction"
           }
         }
       ]
@@ -4552,18 +4619,10 @@
           "tagName": "qti-portable-custom-interaction",
           "customElement": true,
           "modulePath": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts",
-          "definitionPath": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+          "definitionPath": "packages/qti-interactions/src/components/qti-portable-custom-interaction/register.ts"
         }
       ],
       "exports": [
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-portable-custom-interaction",
-          "declaration": {
-            "name": "QtiPortableCustomInteraction",
-            "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
-          }
-        },
         {
           "kind": "js",
           "name": "QtiPortableCustomInteraction",
@@ -5728,24 +5787,39 @@
             }
           ],
           "modulePath": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-test-interaction.ts",
-          "definitionPath": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-test-interaction.ts"
+          "definitionPath": "packages/qti-interactions/src/components/qti-portable-custom-interaction/register.ts"
         }
       ],
       "exports": [
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-portable-custom-interaction-test",
-          "declaration": {
-            "name": "QtiPortableCustomInteractionTest",
-            "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-test-interaction.ts"
-          }
-        },
         {
           "kind": "js",
           "name": "QtiPortableCustomInteractionTest",
           "declaration": {
             "name": "QtiPortableCustomInteractionTest",
             "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-test-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-interactions/src/components/qti-portable-custom-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-portable-custom-interaction",
+          "declaration": {
+            "name": "QtiPortableCustomInteraction",
+            "module": "/packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-portable-custom-interaction-test",
+          "declaration": {
+            "name": "QtiPortableCustomInteractionTest",
+            "module": "/packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-test-interaction"
           }
         }
       ]
@@ -5766,7 +5840,7 @@
           "tagName": "qti-position-object-interaction",
           "customElement": true,
           "modulePath": "packages/qti-interactions/src/components/qti-position-object-interaction/qti-position-object-interaction.ts",
-          "definitionPath": "packages/qti-interactions/src/components/qti-position-object-interaction/qti-position-object-interaction.ts"
+          "definitionPath": "packages/qti-interactions/src/components/qti-position-object-interaction/register.ts"
         }
       ],
       "exports": [
@@ -5860,24 +5934,39 @@
           "tagName": "qti-position-object-stage",
           "customElement": true,
           "modulePath": "packages/qti-interactions/src/components/qti-position-object-interaction/qti-position-object-stage.ts",
-          "definitionPath": "packages/qti-interactions/src/components/qti-position-object-interaction/qti-position-object-stage.ts"
+          "definitionPath": "packages/qti-interactions/src/components/qti-position-object-interaction/register.ts"
         }
       ],
       "exports": [
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-position-object-stage",
-          "declaration": {
-            "name": "QtiPositionObjectStage",
-            "module": "packages/qti-interactions/src/components/qti-position-object-interaction/qti-position-object-stage.ts"
-          }
-        },
         {
           "kind": "js",
           "name": "QtiPositionObjectStage",
           "declaration": {
             "name": "QtiPositionObjectStage",
             "module": "packages/qti-interactions/src/components/qti-position-object-interaction/qti-position-object-stage.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-interactions/src/components/qti-position-object-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-position-object-interaction",
+          "declaration": {
+            "name": "QtiPositionObjectInteraction",
+            "module": "/packages/qti-interactions/src/components/qti-position-object-interaction/qti-position-object-interaction"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-position-object-stage",
+          "declaration": {
+            "name": "QtiPositionObjectStage",
+            "module": "/packages/qti-interactions/src/components/qti-position-object-interaction/qti-position-object-stage"
           }
         }
       ]
@@ -6072,24 +6161,31 @@
           "tagName": "qti-select-point-interaction",
           "customElement": true,
           "modulePath": "packages/qti-interactions/src/components/qti-select-point-interaction/qti-select-point-interaction.ts",
-          "definitionPath": "packages/qti-interactions/src/components/qti-select-point-interaction/qti-select-point-interaction.ts"
+          "definitionPath": "packages/qti-interactions/src/components/qti-select-point-interaction/register.ts"
         }
       ],
       "exports": [
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-select-point-interaction",
-          "declaration": {
-            "name": "QtiSelectPointInteraction",
-            "module": "packages/qti-interactions/src/components/qti-select-point-interaction/qti-select-point-interaction.ts"
-          }
-        },
         {
           "kind": "js",
           "name": "QtiSelectPointInteraction",
           "declaration": {
             "name": "QtiSelectPointInteraction",
             "module": "packages/qti-interactions/src/components/qti-select-point-interaction/qti-select-point-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-interactions/src/components/qti-select-point-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-select-point-interaction",
+          "declaration": {
+            "name": "QtiSelectPointInteraction",
+            "module": "/packages/qti-interactions/src/components/qti-select-point-interaction/qti-select-point-interaction"
           }
         }
       ]
@@ -6303,24 +6399,31 @@
           "tagName": "qti-slider-interaction",
           "customElement": true,
           "modulePath": "packages/qti-interactions/src/components/qti-slider-interaction/qti-slider-interaction.ts",
-          "definitionPath": "packages/qti-interactions/src/components/qti-slider-interaction/qti-slider-interaction.ts"
+          "definitionPath": "packages/qti-interactions/src/components/qti-slider-interaction/register.ts"
         }
       ],
       "exports": [
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-slider-interaction",
-          "declaration": {
-            "name": "QtiSliderInteraction",
-            "module": "packages/qti-interactions/src/components/qti-slider-interaction/qti-slider-interaction.ts"
-          }
-        },
         {
           "kind": "js",
           "name": "QtiSliderInteraction",
           "declaration": {
             "name": "QtiSliderInteraction",
             "module": "packages/qti-interactions/src/components/qti-slider-interaction/qti-slider-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-interactions/src/components/qti-slider-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-slider-interaction",
+          "declaration": {
+            "name": "QtiSliderInteraction",
+            "module": "/packages/qti-interactions/src/components/qti-slider-interaction/qti-slider-interaction"
           }
         }
       ]
@@ -6546,24 +6649,31 @@
           "tagName": "qti-text-entry-interaction",
           "customElement": true,
           "modulePath": "packages/qti-interactions/src/components/qti-text-entry-interaction/qti-text-entry-interaction.ts",
-          "definitionPath": "packages/qti-interactions/src/components/qti-text-entry-interaction/qti-text-entry-interaction.ts"
+          "definitionPath": "packages/qti-interactions/src/components/qti-text-entry-interaction/register.ts"
         }
       ],
       "exports": [
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-text-entry-interaction",
-          "declaration": {
-            "name": "QtiTextEntryInteraction",
-            "module": "packages/qti-interactions/src/components/qti-text-entry-interaction/qti-text-entry-interaction.ts"
-          }
-        },
         {
           "kind": "js",
           "name": "QtiTextEntryInteraction",
           "declaration": {
             "name": "QtiTextEntryInteraction",
             "module": "packages/qti-interactions/src/components/qti-text-entry-interaction/qti-text-entry-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-interactions/src/components/qti-text-entry-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-text-entry-interaction",
+          "declaration": {
+            "name": "QtiTextEntryInteraction",
+            "module": "/packages/qti-interactions/src/components/qti-text-entry-interaction/qti-text-entry-interaction"
           }
         }
       ]
@@ -6668,24 +6778,31 @@
           "tagName": "qti-upload-interaction",
           "customElement": true,
           "modulePath": "packages/qti-interactions/src/components/qti-upload-interaction/qti-upload-interaction.ts",
-          "definitionPath": "packages/qti-interactions/src/components/qti-upload-interaction/qti-upload-interaction.ts"
+          "definitionPath": "packages/qti-interactions/src/components/qti-upload-interaction/register.ts"
         }
       ],
       "exports": [
-        {
-          "kind": "custom-element-definition",
-          "name": "qti-upload-interaction",
-          "declaration": {
-            "name": "QtiUploadInteraction",
-            "module": "packages/qti-interactions/src/components/qti-upload-interaction/qti-upload-interaction.ts"
-          }
-        },
         {
           "kind": "js",
           "name": "QtiUploadInteraction",
           "declaration": {
             "name": "QtiUploadInteraction",
             "module": "packages/qti-interactions/src/components/qti-upload-interaction/qti-upload-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-interactions/src/components/qti-upload-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-upload-interaction",
+          "declaration": {
+            "name": "QtiUploadInteraction",
+            "module": "/packages/qti-interactions/src/components/qti-upload-interaction/qti-upload-interaction"
           }
         }
       ]

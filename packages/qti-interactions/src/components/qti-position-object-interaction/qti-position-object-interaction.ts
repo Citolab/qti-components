@@ -20,5 +20,3 @@ export class QtiPositionObjectInteraction extends LitElement {
     `
   ];
 }
-
-customElements.define('qti-position-object-interaction', QtiPositionObjectInteraction);

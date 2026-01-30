@@ -1,5 +1,4 @@
 import { html } from 'lit';
-import { customElement } from 'lit/decorators.js';
 
 import { Interaction } from '@qti-components/base';
 
@@ -12,8 +11,6 @@ import type { Choice } from '../../mixins/choices/choices.mixin';
 import type { CSSResultGroup } from 'lit';
 
 type HotspotChoice = Choice & { order: number; orderCorrect?: number };
-
-@customElement('qti-graphic-order-interaction')
 export class QtiGraphicOrderInteraction extends ChoicesMixin(Interaction, 'qti-hotspot-choice') {
   static override styles: CSSResultGroup = styles;
 

@@ -1,7 +1,5 @@
 import { css, html, LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
-
-@customElement('qti-inline-choice')
+import { property } from 'lit/decorators.js';
 export class QtiInlineChoice extends LitElement {
   static override get styles() {
     return [

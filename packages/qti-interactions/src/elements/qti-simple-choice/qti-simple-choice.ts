@@ -1,5 +1,5 @@
 import { css, html, LitElement, nothing } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
 
 import { ActiveElementMixin } from '../../mixins/active-element/active-element.mixin';
 
@@ -7,7 +7,6 @@ import { ActiveElementMixin } from '../../mixins/active-element/active-element.m
  * qti-order-interaction
  * qti-choice-interaction
  */
-@customElement('qti-simple-choice')
 export class QtiSimpleChoice extends ActiveElementMixin(LitElement, 'qti-simple-choice') {
   @property({ type: String, attribute: 'template-identifier' })
   public templateIdentifier: string | null = null;

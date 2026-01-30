@@ -1,6 +1,5 @@
 import { html, LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
-@customElement('qti-end-attempt-interaction')
+import { property } from 'lit/decorators.js';
 export class QtiEndAttemptInteraction extends LitElement {
   @property({ type: String, attribute: 'response-identifier' }) responseIdentifier: string;
 

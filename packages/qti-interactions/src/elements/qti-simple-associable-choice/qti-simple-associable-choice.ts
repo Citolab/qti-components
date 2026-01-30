@@ -1,5 +1,5 @@
 import { css, html, LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
 
 import { ActiveElementMixin } from '../../mixins/active-element/active-element.mixin';
 
@@ -7,7 +7,6 @@ import { ActiveElementMixin } from '../../mixins/active-element/active-element.m
 qti-match-interaction
 qti-associate-interaction
 */
-@customElement('qti-simple-associable-choice')
 // tslint:disable: indent
 export class QtiSimpleAssociableChoice extends ActiveElementMixin(LitElement, 'qti-simple-associable-choice') {
   static override styles = css`

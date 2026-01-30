@@ -1,6 +1,6 @@
 import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 
 import { watch } from '@qti-components/utilities';
 import { Interaction } from '@qti-components/base';
@@ -8,8 +8,6 @@ import { Interaction } from '@qti-components/base';
 import styles from './qti-extended-text-interaction.styles';
 
 import type { CSSResultGroup } from 'lit';
-
-@customElement('qti-extended-text-interaction')
 export class QtiExtendedTextInteraction extends Interaction {
   static override styles: CSSResultGroup = styles;
 

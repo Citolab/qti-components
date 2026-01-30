@@ -1,3 +1,5 @@
+import './register-all';
+
 export * from './components/qti-associate-interaction/qti-associate-interaction';
 export * from './components/qti-choice-interaction/qti-choice-interaction';
 export * from './components/qti-custom-interaction/qti-custom-interaction';

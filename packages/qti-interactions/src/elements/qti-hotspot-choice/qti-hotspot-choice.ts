@@ -1,11 +1,9 @@
 import { css, LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
 
 import { ActiveElementMixin } from '../../mixins/active-element/active-element.mixin';
 
 // type shape = { shape: 'rect' | 'circle' | 'poly'; coords: number[] };
-
-@customElement('qti-hotspot-choice')
 export class QtiHotspotChoice extends ActiveElementMixin(LitElement, 'qti-hotspot-choice') {
   static override styles = css`
     :host {
