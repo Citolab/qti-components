@@ -6,7 +6,6 @@ export * from './components/qti-feedback-block/qti-feedback-block';
 export * from './components/qti-feedback-inline/qti-feedback-inline';
 export * from './components/qti-modal-feedback/qti-modal-feedback';
 export * from './components/qti-item-body/qti-item-body';
-export * from './components/qti-prompt/qti-prompt';
 export * from './components/qti-content-body/qti-content-body';
 export * from './components/qti-rubric-block/qti-rubric-block';
 export * from './components/qti-stylesheet/qti-stylesheet';

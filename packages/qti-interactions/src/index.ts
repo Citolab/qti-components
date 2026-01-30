@@ -30,3 +30,4 @@ export * from './elements/qti-simple-associable-choice';
 export * from './elements/qti-simple-choice';
 export * from './elements/qti-hotspot-choice';
 export * from './elements/qti-associable-hotspot';
+export * from './elements/qti-prompt';
