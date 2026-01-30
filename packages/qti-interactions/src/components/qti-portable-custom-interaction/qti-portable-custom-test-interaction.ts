@@ -24,6 +24,7 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
         const { data } = event;
         if (
           data?.source === 'qti-pci-iframe' &&
+          (!data?.responseIdentifier || data?.responseIdentifier === this.responseIdentifier) &&
           data?.method === 'getContentResponse' &&
           data?.messageId === messageId
         ) {
@@ -123,7 +124,12 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
 
       const messageHandler = (event: MessageEvent) => {
         const { data } = event;
-        if (data?.source === 'qti-pci-iframe' && data?.method === 'clickResponse' && data?.messageId === messageId) {
+        if (
+          data?.source === 'qti-pci-iframe' &&
+          (!data?.responseIdentifier || data?.responseIdentifier === this.responseIdentifier) &&
+          data?.method === 'clickResponse' &&
+          data?.messageId === messageId
+        ) {
           window.removeEventListener('message', messageHandler);
           resolve();
         }
@@ -154,6 +160,7 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
         const { data } = event;
         if (
           data?.source === 'qti-pci-iframe' &&
+          (!data?.responseIdentifier || data?.responseIdentifier === this.responseIdentifier) &&
           data?.method === 'clickSelectorResponse' &&
           data?.messageId === messageId
         ) {
@@ -187,6 +194,7 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
         const { data } = event;
         if (
           data?.source === 'qti-pci-iframe' &&
+          (!data?.responseIdentifier || data?.responseIdentifier === this.responseIdentifier) &&
           data?.method === 'clickTextResponse' &&
           data?.messageId === messageId
         ) {
@@ -219,7 +227,12 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
 
       const messageHandler = (event: MessageEvent) => {
         const { data } = event;
-        if (data?.source === 'qti-pci-iframe' && data?.method === 'setValueResponse' && data?.messageId === messageId) {
+        if (
+          data?.source === 'qti-pci-iframe' &&
+          (!data?.responseIdentifier || data?.responseIdentifier === this.responseIdentifier) &&
+          data?.method === 'setValueResponse' &&
+          data?.messageId === messageId
+        ) {
           window.removeEventListener('message', messageHandler);
           resolve(data.success);
         }
@@ -251,6 +264,7 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
         const { data } = event;
         if (
           data?.source === 'qti-pci-iframe' &&
+          (!data?.responseIdentifier || data?.responseIdentifier === this.responseIdentifier) &&
           data?.method === 'setValueByTextResponse' &&
           data?.messageId === messageId
         ) {
@@ -284,6 +298,7 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
         const { data } = event;
         if (
           data?.source === 'qti-pci-iframe' &&
+          (!data?.responseIdentifier || data?.responseIdentifier === this.responseIdentifier) &&
           data?.method === 'mousedownSelectorResponse' &&
           data?.messageId === messageId
         ) {
@@ -325,6 +340,7 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
       const root = container.shadowRoot || container;
       window.parent.postMessage({
         source: 'qti-pci-iframe',
+        responseIdentifier: PCIManager.responseIdentifier,
         method: 'getContentResponse',
         messageId: params.messageId,
         content: root.innerHTML
@@ -348,6 +364,7 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
         
         window.parent.postMessage({
           source: 'qti-pci-iframe',
+          responseIdentifier: PCIManager.responseIdentifier,
           method: 'clickResponse',
           messageId: params.messageId,
           success: !!element
@@ -356,6 +373,7 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
         console.error('Error simulating click:', error);
         window.parent.postMessage({
           source: 'qti-pci-iframe',
+          responseIdentifier: PCIManager.responseIdentifier,
           method: 'clickResponse',
           messageId: params.messageId,
           success: false,
@@ -390,6 +408,7 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
         
         window.parent.postMessage({
           source: 'qti-pci-iframe',
+          responseIdentifier: PCIManager.responseIdentifier,
           method: 'clickSelectorResponse',
           messageId: params.messageId,
           success
@@ -398,6 +417,7 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
         console.error('Error clicking selector:', error);
         window.parent.postMessage({
           source: 'qti-pci-iframe',
+          responseIdentifier: PCIManager.responseIdentifier,
           method: 'clickSelectorResponse',
           messageId: params.messageId,
           success: false,
@@ -447,6 +467,7 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
         
         window.parent.postMessage({
           source: 'qti-pci-iframe',
+          responseIdentifier: PCIManager.responseIdentifier,
           method: 'clickTextResponse',
           messageId: params.messageId,
           success
@@ -455,6 +476,7 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
         console.error('Error clicking by text:', error);
         window.parent.postMessage({
           source: 'qti-pci-iframe',
+          responseIdentifier: PCIManager.responseIdentifier,
           method: 'clickTextResponse',
           messageId: params.messageId,
           success: false,
@@ -483,6 +505,7 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
         
         window.parent.postMessage({
           source: 'qti-pci-iframe',
+          responseIdentifier: PCIManager.responseIdentifier,
           method: 'setValueResponse',
           messageId: params.messageId,
           success
@@ -491,6 +514,7 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
         console.error('Error setting value:', error);
         window.parent.postMessage({
           source: 'qti-pci-iframe',
+          responseIdentifier: PCIManager.responseIdentifier,
           method: 'setValueResponse',
           messageId: params.messageId,
           success: false,
@@ -552,6 +576,7 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
         
         window.parent.postMessage({
           source: 'qti-pci-iframe',
+          responseIdentifier: PCIManager.responseIdentifier,
           method: 'setValueByTextResponse',
           messageId: params.messageId,
           success
@@ -560,6 +585,7 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
         console.error('Error setting value by text:', error);
         window.parent.postMessage({
           source: 'qti-pci-iframe',
+          responseIdentifier: PCIManager.responseIdentifier,
           method: 'setValueByTextResponse',
           messageId: params.messageId,
           success: false,
@@ -597,6 +623,7 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
         
         window.parent.postMessage({
           source: 'qti-pci-iframe',
+          responseIdentifier: PCIManager.responseIdentifier,
           method: 'mousedownSelectorResponse',
           messageId: params.messageId,
           success
@@ -605,6 +632,7 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
         console.error('Error performing mousedown on selector:', error);
         window.parent.postMessage({
           source: 'qti-pci-iframe',
+          responseIdentifier: PCIManager.responseIdentifier,
           method: 'mousedownSelectorResponse',
           messageId: params.messageId,
           success: false,
@@ -632,49 +660,29 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
       return false;
     }
     
-    // Add test-related message handlers to the existing message event listener
-    const originalMessageListener = window.onmessage;
-    window.onmessage = function(event) {
-      const { data } = event;
-      
-      // Handle test-related messages
-      if (data && data.source === 'qti-portable-custom-interaction') {
-        switch(data.method) {
-          case 'getContent':
-            PCIManager.getContent(data.params);
-            return;
-            
-          case 'simulateClick':
-            PCIManager.simulateClick(data.params);
-            return;
-            
-          case 'clickOnSelector':
-            PCIManager.clickOnSelector(data.params);
-            return;
-            
-          case 'clickOnElementByText':
-            PCIManager.clickOnElementByText(data.params);
-            return;
-            
-          case 'setValueElement':
-            PCIManager.setValueElement(data.params);
-            return;
-            
+    // Add test-related message handlers (do not override global handlers)
+    let expectedParentOriginTest = null;
+    window.addEventListener(
+      'message',
+      function(event) {
+        const { data } = event;
+
+        if (event.source !== window.parent || !data || data.source !== 'qti-portable-custom-interaction') return;
+        if (expectedParentOriginTest === null) expectedParentOriginTest = event.origin;
+        else if (event.origin !== expectedParentOriginTest) return;
+        if (data.responseIdentifier && data.responseIdentifier !== PCIManager.responseIdentifier) return;
+
+        switch (data.method) {
           case 'setValueElementByText':
             PCIManager.setValueElementByText(data.params);
             return;
-            
           case 'mousedownOnSelector':
             PCIManager.mousedownOnSelector(data.params);
             return;
         }
-      }
-      
-      // Call the original message handler for non-test messages
-      if (originalMessageListener) {
-        originalMessageListener(event);
-      }
-    };`;
+      },
+      true
+    );`;
 
     // Find the position to insert our test handlers
     const insertPosition = originalContent.lastIndexOf('</script>');

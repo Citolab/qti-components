@@ -20,6 +20,7 @@ export class QtiPortableCustomInteraction extends Interaction {
   protected _iframeLoaded = false;
   protected _pendingMessages: Array<{ method: string; params: any }> = [];
   protected iframe: HTMLIFrameElement;
+  protected _iframeMessageOrigin: string | null = null;
 
   // This implementation always renders inside an iframe.
   static override styles: CSSResultGroup = [
@@ -391,6 +392,11 @@ export class QtiPortableCustomInteraction extends Interaction {
       return;
     }
     if (data.responseIdentifier && data.responseIdentifier !== this.responseIdentifier) {
+      return;
+    }
+    if (this._iframeMessageOrigin === null) {
+      this._iframeMessageOrigin = event.origin;
+    } else if (event.origin !== this._iframeMessageOrigin) {
       return;
     }
     switch (data.method) {
@@ -985,11 +991,17 @@ export class QtiPortableCustomInteraction extends Interaction {
     };
 
 	    // Set up message listener for communication with parent
+	    let expectedParentOrigin = null;
 	    window.addEventListener('message', function(event) {
 	      const { data } = event;
 
 	      // Ensure the message is from our parent
 	      if (event.source !== window.parent || !data || data.source !== 'qti-portable-custom-interaction') {
+	        return;
+	      }
+	      if (expectedParentOrigin === null) {
+	        expectedParentOrigin = event.origin;
+	      } else if (event.origin !== expectedParentOrigin) {
 	        return;
 	      }
 
