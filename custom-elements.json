@@ -3868,12 +3868,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction-iframe.ts",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
       "path": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts",
       "declarations": [
         {
