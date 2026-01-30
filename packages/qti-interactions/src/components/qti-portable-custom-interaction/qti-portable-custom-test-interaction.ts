@@ -12,12 +12,6 @@ import type { ItemContext } from '@qti-components/base';
 export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteraction {
   private _recreatingIframe = false;
 
-  constructor() {
-    super();
-    // Initialize the iframe and other properties
-    this.useIframe = true;
-  }
-
   /**
    * Gets the HTML content of the iframe for testing purposes
    * @returns Promise that resolves with the HTML content string

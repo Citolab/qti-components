@@ -4445,15 +4445,6 @@
               "attribute": "data-use-default-shims"
             },
             {
-              "kind": "field",
-              "name": "useIframe",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "data-use-iframe"
-            },
-            {
               "kind": "method",
               "name": "validate",
               "return": {
@@ -4528,14 +4519,6 @@
               },
               "default": "false",
               "fieldName": "useDefaultShims"
-            },
-            {
-              "name": "data-use-iframe",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "useIframe"
             },
             {
               "name": "module",
@@ -5573,19 +5556,6 @@
               }
             },
             {
-              "kind": "field",
-              "name": "useIframe",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "attribute": "data-use-iframe",
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
-              }
-            },
-            {
               "kind": "method",
               "name": "validate",
               "return": {
@@ -5698,18 +5668,6 @@
               },
               "default": "false",
               "fieldName": "useDefaultShims",
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
-              }
-            },
-            {
-              "name": "data-use-iframe",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "useIframe",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
