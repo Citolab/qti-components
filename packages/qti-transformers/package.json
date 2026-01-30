@@ -1,18 +1,18 @@
 {
-    "name": "@qti-components/transformers",
-    "version": "1.0.0",
-    "description": "QTI transformation utilities",
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
-    "type": "module",
-    "scripts": {
-        "build": "tsc --paths null",
-        "clean": "rm -rf dist"
-    },
-    "keywords": [
-        "qti",
-        "transformers"
-    ],
-    "author": "",
-    "license": "GPL-3.0-only"
+  "name": "@qti-components/transformers",
+  "description": "QTI transformation utilities",
+  "version": "1.0.0",
+  "author": "",
+  "keywords": [
+    "qti",
+    "transformers"
+  ],
+  "license": "GPL-3.0-only",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc --paths null",
+    "clean": "rm -rf dist"
+  },
+  "type": "module",
+  "types": "dist/index.d.ts"
 }

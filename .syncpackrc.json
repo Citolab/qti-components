@@ -1,0 +1,32 @@
+{
+  "$schema": "./node_modules/syncpack/schema.json",
+  "source": [
+    "packages/*/package.json"
+  ],
+  "versionGroups": [
+    {
+      "label": "Workspace internal packages",
+      "dependencies": [
+        "@qti-components/*"
+      ],
+      "packages": [
+        "@qti-components/base",
+        "@qti-components/elements",
+        "@qti-components/interactions",
+        "@qti-components/item",
+        "@qti-components/loader",
+        "@qti-components/processing",
+        "@qti-components/test",
+        "@qti-components/theme",
+        "@qti-components/transformers",
+        "@qti-components/utilities"
+      ],
+      "pinVersion": "workspace:^"
+    }
+  ],
+  "semverGroups": [
+    {
+      "range": "^"
+    }
+  ]
+}
