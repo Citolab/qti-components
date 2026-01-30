@@ -1,7 +1,7 @@
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
-import { ActiveElementMixin } from '../mixins/active-element/active-element.mixin';
+import { ActiveElementMixin } from '../../mixins/active-element/active-element.mixin';
 
 @customElement('qti-gap-text')
 export class QtiGapText extends ActiveElementMixin(LitElement, 'qti-gap-text') {
