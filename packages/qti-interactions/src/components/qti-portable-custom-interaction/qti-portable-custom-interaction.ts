@@ -350,13 +350,15 @@ export class QtiPortableCustomInteraction extends Interaction {
    * IFRAME MODE: Send message to iframe
    */
   protected sendMessageToIframe(method: string, params: any) {
-    if (!this._iframeLoaded) {
+    const targetWindow = this.iframe?.contentWindow;
+    if (!this._iframeLoaded || !targetWindow) {
       this._pendingMessages.push({ method, params });
       return;
     }
-    this.iframe.contentWindow.postMessage(
+    targetWindow.postMessage(
       {
         source: 'qti-portable-custom-interaction',
+        responseIdentifier: this.responseIdentifier,
         method,
         params
       },
@@ -383,6 +385,12 @@ export class QtiPortableCustomInteraction extends Interaction {
     const { data } = event;
     // Ensure the message is from our iframe
     if (!data || data.source !== 'qti-pci-iframe') {
+      return;
+    }
+    if (!this.iframe?.contentWindow || event.source !== this.iframe.contentWindow) {
+      return;
+    }
+    if (data.responseIdentifier && data.responseIdentifier !== this.responseIdentifier) {
       return;
     }
     switch (data.method) {
@@ -623,14 +631,15 @@ export class QtiPortableCustomInteraction extends Interaction {
           console.error('Script error usually indicates a network or CORS issue with:', err.requireModules);
         }
 
-        // Notify parent window about the error
-        window.parent.postMessage({
-          source: 'qti-pci-iframe',
-          method: 'error',
-          params: {
-            message: 'RequireJS ' + err.requireType + ' error for modules: ' + err.requireModules,
-            details: {
-              type: err.requireType,
+	        // Notify parent window about the error
+	        window.parent.postMessage({
+	          source: 'qti-pci-iframe',
+	          responseIdentifier: (window.PCIManager && window.PCIManager.responseIdentifier) || null,
+	          method: 'error',
+	          params: {
+	            message: 'RequireJS ' + err.requireType + ' error for modules: ' + err.requireModules,
+	            details: {
+	              type: err.requireType,
               modules: err.requireModules,
               error: err.toString()
             }
@@ -907,29 +916,32 @@ export class QtiPortableCustomInteraction extends Interaction {
         }
       },
 
-      notifyReady: function() {
-        window.parent.postMessage({
-          source: 'qti-pci-iframe',
-          method: 'iframeReady'
-        }, '*');
-      },
+	      notifyReady: function() {
+	        window.parent.postMessage({
+	          source: 'qti-pci-iframe',
+	          responseIdentifier: this.responseIdentifier,
+	          method: 'iframeReady'
+	        }, '*');
+	      },
 
-      notifyInteractionChanged: function(response) {
-        window.parent.postMessage({
-          source: 'qti-pci-iframe',
-          method: 'interactionChanged',
-          params: { value: response }
-        }, '*');
-      },
+	      notifyInteractionChanged: function(response) {
+	        window.parent.postMessage({
+	          source: 'qti-pci-iframe',
+	          responseIdentifier: this.responseIdentifier,
+	          method: 'interactionChanged',
+	          params: { value: response }
+	        }, '*');
+	      },
 
-      notifyError: function(message) {
-        console.error('PCI Error:', message);
-        window.parent.postMessage({
-          source: 'qti-pci-iframe',
-          method: 'error',
-          params: { message: message }
-        }, '*');
-      },
+	      notifyError: function(message) {
+	        console.error('PCI Error:', message);
+	        window.parent.postMessage({
+	          source: 'qti-pci-iframe',
+	          responseIdentifier: this.responseIdentifier,
+	          method: 'error',
+	          params: { message: message }
+	        }, '*');
+	      },
 
       setMarkup: function(markupHtml) {
         if (!this.container) {
@@ -972,14 +984,14 @@ export class QtiPortableCustomInteraction extends Interaction {
       },
     };
 
-    // Set up message listener for communication with parent
-    window.addEventListener('message', function(event) {
-      const { data } = event;
+	    // Set up message listener for communication with parent
+	    window.addEventListener('message', function(event) {
+	      const { data } = event;
 
-      // Ensure the message is from our parent
-      if (!data || data.source !== 'qti-portable-custom-interaction') {
-        return;
-      }
+	      // Ensure the message is from our parent
+	      if (event.source !== window.parent || !data || data.source !== 'qti-portable-custom-interaction') {
+	        return;
+	      }
 
       function deepQuerySelector(root, selector) {
         if (!root) return null;
@@ -1059,15 +1071,16 @@ export class QtiPortableCustomInteraction extends Interaction {
             return parts;
           };
           const shadowHtml = collectShadowHtml(document).join('\\n');
-          window.parent.postMessage(
-            {
-              source: 'qti-pci-iframe',
-              method: 'getContentResponse',
-              messageId: messageId,
-              content: (document.documentElement ? document.documentElement.outerHTML : '') + '\\n' + shadowHtml
-            },
-            '*'
-          );
+	          window.parent.postMessage(
+	            {
+	              source: 'qti-pci-iframe',
+	              responseIdentifier: PCIManager.responseIdentifier,
+	              method: 'getContentResponse',
+	              messageId: messageId,
+	              content: (document.documentElement ? document.documentElement.outerHTML : '') + '\\n' + shadowHtml
+	            },
+	            '*'
+	          );
           break;
         }
 
@@ -1076,39 +1089,56 @@ export class QtiPortableCustomInteraction extends Interaction {
           const x = data.params && data.params.x;
           const y = data.params && data.params.y;
           const el = typeof x === 'number' && typeof y === 'number' ? document.elementFromPoint(x, y) : null;
-          if (el && typeof el.click === 'function') el.click();
-          window.parent.postMessage(
-            { source: 'qti-pci-iframe', method: 'clickResponse', messageId: messageId },
-            '*'
-          );
-          break;
-        }
+	          if (el && typeof el.click === 'function') el.click();
+	          window.parent.postMessage(
+	            {
+	              source: 'qti-pci-iframe',
+	              responseIdentifier: PCIManager.responseIdentifier,
+	              method: 'clickResponse',
+	              messageId: messageId
+	            },
+	            '*'
+	          );
+	          break;
+	        }
 
         case 'clickOnSelector': {
           const messageId = data.params && data.params.messageId;
           const selector = data.params && data.params.selector;
           const el = selector ? deepQuerySelector(document, selector) : null;
-          const success = !!el;
-          if (el && typeof el.click === 'function') el.click();
-          window.parent.postMessage(
-            { source: 'qti-pci-iframe', method: 'clickSelectorResponse', messageId: messageId, success: success },
-            '*'
-          );
-          break;
-        }
+	          const success = !!el;
+	          if (el && typeof el.click === 'function') el.click();
+	          window.parent.postMessage(
+	            {
+	              source: 'qti-pci-iframe',
+	              responseIdentifier: PCIManager.responseIdentifier,
+	              method: 'clickSelectorResponse',
+	              messageId: messageId,
+	              success: success
+	            },
+	            '*'
+	          );
+	          break;
+	        }
 
         case 'clickOnElementByText': {
           const messageId = data.params && data.params.messageId;
           const text = data.params && data.params.text;
           const target = text ? deepFindElementByExactText(document, text) : null;
-          const success = !!target;
-          if (target && typeof target.click === 'function') target.click();
-          window.parent.postMessage(
-            { source: 'qti-pci-iframe', method: 'clickTextResponse', messageId: messageId, success: success },
-            '*'
-          );
-          break;
-        }
+	          const success = !!target;
+	          if (target && typeof target.click === 'function') target.click();
+	          window.parent.postMessage(
+	            {
+	              source: 'qti-pci-iframe',
+	              responseIdentifier: PCIManager.responseIdentifier,
+	              method: 'clickTextResponse',
+	              messageId: messageId,
+	              success: success
+	            },
+	            '*'
+	          );
+	          break;
+	        }
 
         case 'setValueElement': {
           const messageId = data.params && data.params.messageId;
@@ -1125,13 +1155,19 @@ export class QtiPortableCustomInteraction extends Interaction {
             } catch (e) {
               success = false;
             }
-          }
-          window.parent.postMessage(
-            { source: 'qti-pci-iframe', method: 'setValueResponse', messageId: messageId, success: success },
-            '*'
-          );
-          break;
-        }
+	          }
+	          window.parent.postMessage(
+	            {
+	              source: 'qti-pci-iframe',
+	              responseIdentifier: PCIManager.responseIdentifier,
+	              method: 'setValueResponse',
+	              messageId: messageId,
+	              success: success
+	            },
+	            '*'
+	          );
+	          break;
+	        }
       }
     });
 
@@ -1143,14 +1179,15 @@ export class QtiPortableCustomInteraction extends Interaction {
       if (newHeight !== previousHeight) {
         previousHeight = newHeight;
         clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => {
-          window.parent.postMessage({
-            source: 'qti-pci-iframe',
-            method: 'resize',
-            height: newHeight,
-            width: container.scrollWidth
-          }, '*');
-        }, 100); // Adjust debounce time as needed
+	        resizeTimeout = setTimeout(() => {
+	          window.parent.postMessage({
+	            source: 'qti-pci-iframe',
+	            responseIdentifier: PCIManager.responseIdentifier,
+	            method: 'resize',
+	            height: newHeight,
+	            width: container.scrollWidth
+	          }, '*');
+	        }, 100); // Adjust debounce time as needed
       }
     };
 
@@ -1192,14 +1229,15 @@ export class QtiPortableCustomInteraction extends Interaction {
             if (!PCIManager.hadResponse) return;
             PCIManager.hadResponse = false;
             PCIManager.lastResponseStr = null;
-            window.parent.postMessage(
-              {
-                source: 'qti-pci-iframe',
-                method: 'interactionChanged',
-                params: { value: null }
-              },
-              '*'
-            );
+	            window.parent.postMessage(
+	              {
+	                source: 'qti-pci-iframe',
+	                responseIdentifier: PCIManager.responseIdentifier,
+	                method: 'interactionChanged',
+	                params: { value: null }
+	              },
+	              '*'
+	            );
             return;
           }
 
@@ -1208,14 +1246,15 @@ export class QtiPortableCustomInteraction extends Interaction {
           if (responseStr !== PCIManager.lastResponseStr) {
             PCIManager.lastResponseStr = responseStr;
             PCIManager.hadResponse = true;
-            window.parent.postMessage(
-              {
-                source: 'qti-pci-iframe',
-                method: 'interactionChanged',
-                params: { value: response }
-              },
-              '*'
-            );
+	            window.parent.postMessage(
+	              {
+	                source: 'qti-pci-iframe',
+	                responseIdentifier: PCIManager.responseIdentifier,
+	                method: 'interactionChanged',
+	                params: { value: response }
+	              },
+	              '*'
+	            );
           }
         }
       }, 500); // Check every 500ms
