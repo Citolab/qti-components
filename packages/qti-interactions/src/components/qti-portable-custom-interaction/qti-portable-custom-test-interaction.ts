@@ -340,88 +340,110 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
     
     // Base iframe implementation already provides PCIManager.setValueElement
     
-    PCIManager.setValueElementByText = function(params) {
+    function deepQuerySelector(root, selector) {
+      if (!root) return null;
       try {
-        // Find the pci-container element
-        const container = document.querySelector('#pci-container');
-        if (!container) {
-          throw new Error('#pci-container not found');
+        const direct = root.querySelector ? root.querySelector(selector) : null;
+        if (direct) return direct;
+      } catch (e) {
+        // ignore invalid selector for this root
+      }
+      if (!root.querySelectorAll) return null;
+      const nodes = root.querySelectorAll('*');
+      for (const node of nodes) {
+        if (node && node.shadowRoot) {
+          const found = deepQuerySelector(node.shadowRoot, selector);
+          if (found) return found;
         }
-        
-        // Try to get the shadow root first, fall back to the container itself
-        const root = container.shadowRoot || container;
-        
-        // Find elements containing the text
-        const textNodes = [];
-        const walk = document.createTreeWalker(
-          root, 
-          NodeFilter.SHOW_TEXT,
-          { acceptNode: function(node) { return node.nodeValue.trim() !== '' ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT; } }
+      }
+      return null;
+    }
+
+    function deepFindElementByExactText(root, text) {
+      if (!root || !text) return null;
+      if (root.querySelectorAll) {
+        const nodes = root.querySelectorAll('*');
+        for (const node of nodes) {
+          if ((node.textContent || '').trim() === text) return node;
+          if (node.shadowRoot) {
+            const found = deepFindElementByExactText(node.shadowRoot, text);
+            if (found) return found;
+          }
+        }
+      }
+      return null;
+    }
+
+    function escapeSelectorId(id) {
+      try {
+        if (window.CSS && typeof window.CSS.escape === 'function') return window.CSS.escape(id);
+      } catch (e) {
+        // ignore
+      }
+      return String(id).replace(/([ #;?%&,.+*~\\':"!^$[\\]()=>|\\/])/g, '\\\\$1');
+    }
+
+    PCIManager.setValueElementByText = function(params) {
+      const messageId = params && params.messageId;
+      try {
+        const text = params && params.text;
+        const value = params && params.value;
+
+        const textEl = text ? deepFindElementByExactText(document, text) : null;
+        let target = null;
+
+        if (textEl) {
+          const tag = (textEl.tagName || '').toUpperCase();
+          if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') {
+            target = textEl;
+          } else if (tag === 'LABEL' && textEl.htmlFor) {
+            const id = escapeSelectorId(textEl.htmlFor);
+            target = deepQuerySelector(document, '#' + id);
+          }
+
+          if (!target) {
+            let parent = textEl.parentElement;
+            while (parent) {
+              const candidate = parent.querySelector ? parent.querySelector('input, textarea, select') : null;
+              if (candidate) {
+                target = candidate;
+                break;
+              }
+              parent = parent.parentElement;
+            }
+          }
+        }
+
+        const success = !!target && setValueOnElement(target, value);
+        window.parent.postMessage(
+          {
+            source: 'qti-pci-iframe',
+            responseIdentifier: PCIManager.responseIdentifier,
+            method: 'setValueByTextResponse',
+            messageId: messageId,
+            success: success
+          },
+          '*'
         );
-        
-        let node;
-        while (node = walk.nextNode()) {
-          if (node.nodeValue.includes(params.text)) {
-            textNodes.push(node);
-          }
-        }
-        
-        let success = false;
-        // Look for input elements near the text node
-        if (textNodes.length > 0) {
-          const textElement = textNodes[0].parentElement;
-          
-          // Try different strategies to find the related input
-          // 1. Check if the text is inside a label with a "for" attribute
-          if (textElement.tagName === 'LABEL' && textElement.htmlFor) {
-            const input = root.getElementById(textElement.htmlFor);
-            if (input) {
-              success = setValueOnElement(input, params.value);
-            }
-          }
-          
-          // 2. Check if there's an input near the text (sibling or parent's child)
-          if (!success) {
-            let parentElement = textElement.parentElement;
-            const inputElements = parentElement.querySelectorAll('input, textarea, select');
-            
-            if (inputElements.length > 0) {
-              success = setValueOnElement(inputElements[0], params.value);
-            }
-          }
-        }
-        
-        window.parent.postMessage({
-          source: 'qti-pci-iframe',
-          responseIdentifier: PCIManager.responseIdentifier,
-          method: 'setValueByTextResponse',
-          messageId: params.messageId,
-          success
-        }, '*');
       } catch (error) {
         console.error('Error setting value by text:', error);
-        window.parent.postMessage({
-          source: 'qti-pci-iframe',
-          responseIdentifier: PCIManager.responseIdentifier,
-          method: 'setValueByTextResponse',
-          messageId: params.messageId,
-          success: false,
-          error: error.toString()
-        }, '*');
+        window.parent.postMessage(
+          {
+            source: 'qti-pci-iframe',
+            responseIdentifier: PCIManager.responseIdentifier,
+            method: 'setValueByTextResponse',
+            messageId: messageId,
+            success: false,
+            error: error.toString()
+          },
+          '*'
+        );
       }
     };
     
     PCIManager.mousedownOnSelector = function(params) {
       try {
-        // Find the pci-container element
-        const container = document.querySelector('#pci-container');
-        if (!container) {
-          throw new Error('#pci-container not found');
-        }
-        
-        // Try to get the shadow root first, fall back to the container itself
-        const root = container.shadowRoot || container;
-        let element = root.querySelector(params.selector);
+        const element = params && params.selector ? deepQuerySelector(document, params.selector) : null;
         
         let success = false;
         
