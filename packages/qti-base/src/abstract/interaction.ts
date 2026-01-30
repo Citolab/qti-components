@@ -238,7 +238,7 @@ export abstract class Interaction extends LitElement implements IInteraction {
     );
   }
 
-  public saveResponse(value: string | string[]): void {
+  public saveResponse(value: string | string[], state?: string | null): void {
     this.dispatchEvent(
       new CustomEvent('qti-interaction-response', {
         bubbles: true,
@@ -246,7 +246,8 @@ export abstract class Interaction extends LitElement implements IInteraction {
         cancelable: false,
         detail: {
           responseIdentifier: this.responseIdentifier,
-          response: Array.isArray(value) ? [...value] : value
+          response: Array.isArray(value) ? [...value] : value,
+          ...(state !== undefined ? { state } : {})
         }
       })
     );
