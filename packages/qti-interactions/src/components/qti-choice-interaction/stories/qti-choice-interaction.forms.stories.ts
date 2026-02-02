@@ -27,7 +27,19 @@ const meta: Meta<QtiChoiceInteraction> = {
 export default meta;
 
 const formTemplate = (storyArgs, context) => html`
-  <form data-testid="form" role="form" @submit=${e => e.preventDefault()} @reset=${e => e.preventDefault()}>
+  <form
+    data-testid="form"
+    role="form"
+    @submit=${e => e.preventDefault()}
+    @reset=${e => {
+      e.preventDefault();
+      // Manually reset form-associated custom elements since we prevent default
+      const interaction = e.target.querySelector('qti-choice-interaction');
+      if (interaction?.formResetCallback) {
+        interaction.formResetCallback();
+      }
+    }}
+  >
     ${Test.render(storyArgs, context)}
     <input type="submit" value="submit" />
     <input type="reset" value="reset" />
@@ -85,26 +97,35 @@ export const Disabled: Story = {
 
 export const Readonly: Story = {
   render: formTemplate,
-  tags: ['form-associated', 'xfail'],
+  tags: ['form-associated'],
   args: {
     name: 'RESPONSE',
     'max-choices': 1
   },
   play: async ({ canvasElement }) => {
     const { form, interaction, choiceA } = getInteractionAndChoice(canvasElement);
+
+    // First select a value while not readonly
+    await setChoiceValue(choiceA);
+    expect(getFormDataValues(form, 'RESPONSE')).toEqual(['A']);
+
+    // Now set readonly - value should still be submitted
     interaction.readonly = true;
     await interaction.updateComplete;
+    await fireEvent.submit(form);
+    expect(getFormDataValues(form, 'RESPONSE')).toEqual(['A']);
 
+    // Try to click again to deselect - should NOT work in readonly mode
     await setChoiceValue(choiceA);
     await fireEvent.submit(form);
-
+    // Value should still be 'A' because readonly prevents changes
     expect(getFormDataValues(form, 'RESPONSE')).toEqual(['A']);
   }
 };
 
 export const Reset: Story = {
   render: formTemplate,
-  tags: ['form-associated', 'xfail'],
+  tags: ['form-associated'],
   args: {
     name: 'RESPONSE',
     'max-choices': 1
@@ -201,7 +222,7 @@ export const Reenable: Story = {
 
 export const ComprehensiveTest: Story = {
   render: formTemplate,
-  tags: ['form-associated', 'xfail'],
+  tags: ['form-associated'],
   args: {
     name: 'RESPONSE',
     'min-choices': 1,
@@ -236,11 +257,19 @@ export const ComprehensiveTest: Story = {
     });
 
     await step('Test readonly state', async () => {
+      // First make a selection while not readonly
+      await setChoiceValue(choiceA);
+      await fireEvent.submit(form);
+      expect(getFormDataValues(form, 'RESPONSE')).toEqual(['A']);
+
+      // Set readonly - existing value should be preserved and submitted
       interaction.readonly = true;
       await interaction.updateComplete;
 
+      // Try to toggle selection - should NOT work in readonly mode
       await setChoiceValue(choiceA);
       await fireEvent.submit(form);
+      // Value should still be 'A' because readonly prevents changes
       expect(getFormDataValues(form, 'RESPONSE')).toEqual(['A']);
 
       // Reset readonly for next tests

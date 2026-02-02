@@ -345,6 +345,14 @@ export abstract class Interaction extends LitElement implements IInteraction {
     this.response = null;
   }
 
+  /**
+   * Called by the browser when the associated form is reset.
+   * Part of the Form-Associated Custom Elements API.
+   */
+  public formResetCallback(): void {
+    this.reset();
+  }
+
   // attributeChangedCallback(name: string, _old: string | null, value: string | null): void {
   //   super.attributeChangedCallback(name, _old, value);
   //   // changing attributes in lit is not a thing, they are defined in the QTI XML and will never change

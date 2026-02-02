@@ -114,6 +114,17 @@
               "default": "true"
             },
             {
+              "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API."
+            },
+            {
               "kind": "field",
               "name": "internals",
               "type": {
@@ -4543,6 +4554,24 @@
             },
             {
               "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
+              }
+            },
+            {
+              "kind": "method",
               "name": "getDraggablesFromDroppable",
               "privacy": "private",
               "return": {
@@ -6077,6 +6106,24 @@
               }
             },
             {
+              "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
+              }
+            },
+            {
               "kind": "field",
               "name": "internals",
               "type": {
@@ -6850,6 +6897,24 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
               }
             },
             {
@@ -7786,6 +7851,24 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
               }
             },
             {
@@ -9128,6 +9211,24 @@
             },
             {
               "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
+              }
+            },
+            {
+              "kind": "method",
               "name": "getDraggablesFromDroppable",
               "privacy": "private",
               "return": {
@@ -10366,6 +10467,24 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
               }
             },
             {
@@ -11660,6 +11779,24 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
               }
             },
             {
@@ -13144,6 +13281,24 @@
               }
             },
             {
+              "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
+              }
+            },
+            {
               "kind": "field",
               "name": "internals",
               "type": {
@@ -14131,6 +14286,24 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
               }
             },
             {
@@ -15149,6 +15322,24 @@
               }
             },
             {
+              "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
+              }
+            },
+            {
               "kind": "field",
               "name": "internals",
               "type": {
@@ -15891,6 +16082,24 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
               }
             },
             {
@@ -17186,6 +17395,24 @@
             },
             {
               "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
+              }
+            },
+            {
+              "kind": "method",
               "name": "getDraggablesFromDroppable",
               "privacy": "private",
               "return": {
@@ -18454,6 +18681,24 @@
               }
             },
             {
+              "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
+              }
+            },
+            {
               "kind": "field",
               "name": "internals",
               "type": {
@@ -19702,6 +19947,24 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
               }
             },
             {
@@ -21187,6 +21450,24 @@
             },
             {
               "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
+              }
+            },
+            {
+              "kind": "method",
               "name": "generateIframeContent",
               "privacy": "protected",
               "return": {
@@ -22520,6 +22801,24 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
               }
             },
             {
@@ -24152,6 +24451,24 @@
               }
             },
             {
+              "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
+              }
+            },
+            {
               "kind": "field",
               "name": "internals",
               "type": {
@@ -24926,6 +25243,24 @@
               }
             },
             {
+              "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
+              }
+            },
+            {
               "kind": "field",
               "name": "internals",
               "type": {
@@ -25645,6 +25980,24 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
               }
             },
             {
@@ -26416,6 +26769,24 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
               }
             },
             {
