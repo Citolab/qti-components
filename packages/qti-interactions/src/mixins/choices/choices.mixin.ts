@@ -27,6 +27,8 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
     @query('#validation-message')
     protected _validationMessageElement!: HTMLElement;
 
+    private _validationMessageShown = false;
+
     @property({ type: Number, attribute: 'min-choices' })
     public minChoices = 0;
 
@@ -164,13 +166,14 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
           this.dataset.minSelectionsMessage ||
           `Please select at least ${this.minChoices} ${this.minChoices === 1 ? 'option' : 'options'}.`;
       }
-      if (selectedChoices.length > 0) {
-        this._internals.setValidity(
-          isValid ? {} : { customError: true },
-          validityMessage,
-          selectedChoices[selectedCount - 1] || this._choiceElements[0] || this
-        );
-      }
+
+      // Always set validity state, regardless of whether there are selections
+      this._internals.setValidity(
+        isValid ? {} : { customError: true },
+        validityMessage,
+        selectedChoices[selectedCount - 1] || this._choiceElements[0] || this
+      );
+
       return isValid;
     }
 
@@ -179,11 +182,12 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
         if (!this._internals.validity.valid) {
           this._validationMessageElement.textContent = this._internals.validationMessage;
           // Set the display to block to show the message, add important to override any styles
-
           this._validationMessageElement.style.setProperty('display', 'block', 'important');
+          this._validationMessageShown = true; // Track that validation message was shown
         } else {
           this._validationMessageElement.textContent = '';
           this._validationMessageElement.style.display = 'none';
+          // Don't reset _validationMessageShown here - let it be cleared by user input
         }
       }
       return this._internals.validity.valid;
@@ -272,6 +276,16 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       this.response = this.maxChoices === 1 ? selectedIdentifiers[0] || '' : selectedIdentifiers;
 
       this.validate();
+
+      // Auto-update validation message if it was previously shown (FACE behavior)
+      if (this._validationMessageShown) {
+        this.reportValidity();
+        // Reset flag if now valid to prevent unnecessary future auto-updates
+        if (this._internals.validity.valid) {
+          this._validationMessageShown = false;
+        }
+      }
+
       this.saveResponse(this.response);
     }
 

@@ -5974,6 +5974,19 @@
             },
             {
               "kind": "field",
+              "name": "_validationMessageShown",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "ChoicesMixin",
+                "module": "packages/qti-interactions/src/mixins/choices/choices.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "class",
               "type": {
                 "text": "string"
@@ -13033,6 +13046,19 @@
             },
             {
               "kind": "field",
+              "name": "_validationMessageShown",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "ChoicesMixin",
+                "module": "packages/qti-interactions/src/mixins/choices/choices.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "choiceOrdering",
               "type": {
                 "text": "boolean"
@@ -14011,6 +14037,19 @@
                 "text": "HTMLElement"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "ChoicesMixin",
+                "module": "packages/qti-interactions/src/mixins/choices/choices.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_validationMessageShown",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
               "inheritedFrom": {
                 "name": "ChoicesMixin",
                 "module": "packages/qti-interactions/src/mixins/choices/choices.mixin.ts"
@@ -14997,6 +15036,19 @@
                 "text": "HTMLElement"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "ChoicesMixin",
+                "module": "packages/qti-interactions/src/mixins/choices/choices.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_validationMessageShown",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
               "inheritedFrom": {
                 "name": "ChoicesMixin",
                 "module": "packages/qti-interactions/src/mixins/choices/choices.mixin.ts"
@@ -27195,6 +27247,15 @@
                 "text": "HTMLElement"
               },
               "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "_validationMessageShown",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
             },
             {
               "kind": "field",

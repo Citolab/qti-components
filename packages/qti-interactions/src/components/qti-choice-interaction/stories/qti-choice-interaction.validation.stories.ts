@@ -60,8 +60,8 @@ export const MinChoicesNotMet: Story = {
   render: formTemplate,
   args: {
     name: 'RESPONSE',
-    minChoices: 2,
-    maxChoices: 4
+    'min-choices': 2,
+    'max-choices': 4
   },
   play: async ({ canvasElement }) => {
     const { interaction, choices } = getElements(canvasElement);
@@ -84,8 +84,8 @@ export const MinChoicesMet: Story = {
   render: formTemplate,
   args: {
     name: 'RESPONSE',
-    minChoices: 1,
-    maxChoices: 4
+    'min-choices': 1,
+    'max-choices': 4
   },
   play: async ({ canvasElement }) => {
     const { interaction, choices } = getElements(canvasElement);
@@ -104,8 +104,8 @@ export const MinChoicesZero: Story = {
   render: formTemplate,
   args: {
     name: 'RESPONSE',
-    minChoices: 0,
-    maxChoices: 4
+    'min-choices': 0,
+    'max-choices': 4
   },
   play: async ({ canvasElement }) => {
     const { interaction } = getElements(canvasElement);
@@ -124,8 +124,8 @@ export const MaxChoicesExceeded: Story = {
   render: formTemplate,
   args: {
     name: 'RESPONSE',
-    minChoices: 0,
-    maxChoices: 2
+    'min-choices': 0,
+    'max-choices': 2
   },
   play: async ({ canvasElement }) => {
     const { interaction, choices } = getElements(canvasElement);
@@ -146,8 +146,8 @@ export const MaxChoicesUnlimited: Story = {
   render: formTemplate,
   args: {
     name: 'RESPONSE',
-    minChoices: 0,
-    maxChoices: 0
+    'min-choices': 0,
+    'max-choices': 0
   },
   play: async ({ canvasElement }) => {
     const { interaction, choices } = getElements(canvasElement);
@@ -166,8 +166,8 @@ export const MaxChoicesSingle: Story = {
   render: formTemplate,
   args: {
     name: 'RESPONSE',
-    minChoices: 1,
-    maxChoices: 1
+    'min-choices': 1,
+    'max-choices': 1
   },
   play: async ({ canvasElement }) => {
     const { interaction, choices } = getElements(canvasElement);
@@ -190,12 +190,12 @@ export const MaxChoicesSingle: Story = {
 
 export const ValidationMessageMinChoices: Story = {
   name: 'Validation Message - Min Choices',
-  tags: ['validation', 'specific', 'xfail'],
+  tags: ['validation', 'specific'],
   render: formTemplate,
   args: {
     name: 'RESPONSE',
-    minChoices: 2,
-    maxChoices: 4
+    'min-choices': 2,
+    'max-choices': 4
   },
   play: async ({ canvasElement }) => {
     const { interaction } = getElements(canvasElement);
@@ -215,8 +215,8 @@ export const ValidationMessageMaxChoices: Story = {
   render: formTemplate,
   args: {
     name: 'RESPONSE',
-    minChoices: 0,
-    maxChoices: 2
+    'min-choices': 0,
+    'max-choices': 2
   },
   play: async ({ canvasElement }) => {
     const { interaction, choices } = getElements(canvasElement);
@@ -237,12 +237,12 @@ export const ValidationMessageMaxChoices: Story = {
 
 export const ValidationMessageCleared: Story = {
   name: 'Validation Message - Cleared When Valid',
-  tags: ['validation', 'specific', 'xfail'],
+  tags: ['validation', 'specific'],
   render: formTemplate,
   args: {
     name: 'RESPONSE',
-    minChoices: 1,
-    maxChoices: 4
+    'min-choices': 1,
+    'max-choices': 4
   },
   play: async ({ canvasElement }) => {
     const { interaction, choices } = getElements(canvasElement);
@@ -265,7 +265,7 @@ export const ValidationMessageCleared: Story = {
 };
 
 export const CustomValidationMessage: Story = {
-  tags: ['validation', 'specific', 'xfail'],
+  tags: ['validation', 'specific'],
   render: () => html`
     <form data-testid="form" role="form" @submit=${e => e.preventDefault()}>
       <qti-choice-interaction
@@ -306,8 +306,8 @@ export const ValidationStateTransition: Story = {
   render: formTemplate,
   args: {
     name: 'RESPONSE',
-    minChoices: 1,
-    maxChoices: 2
+    'min-choices': 1,
+    'max-choices': 2
   },
   play: async ({ canvasElement, step }) => {
     const { interaction, choices } = getElements(canvasElement);
