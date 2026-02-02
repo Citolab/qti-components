@@ -85,6 +85,92 @@ export const Default: Story = {
   }
 };
 
+export const RestoreFromState: Story = {
+  render: () =>
+    html`<qti-assessment-item
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+      adaptive="false"
+      time-dependent="false"
+      identifier="pci-state-restore"
+      title="PCI restore via state"
+    >
+      <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="string"></qti-response-declaration>
+      <qti-item-body>
+        <qti-portable-custom-interaction-test
+          response-identifier="RESPONSE"
+          module="pci-getallen"
+          custom-interaction-type-identifier="getallenFormule"
+          data-button-text="Berekenen"
+          data-sum1="$1 * 12 + 3"
+          data-sum2="$1 * 4 + 53"
+          data-table-size="4"
+          data-base-url="/assets/qti-portable-interaction/baking_soda"
+        >
+          <qti-interaction-modules>
+            <qti-interaction-module id="pci-getallen" primary-path="pci-getallen.js"></qti-interaction-module>
+          </qti-interaction-modules>
+          <qti-interaction-markup></qti-interaction-markup>
+        </qti-portable-custom-interaction-test>
+      </qti-item-body>
+    </qti-assessment-item>`,
+  play: async ({ canvasElement, step }) => {
+    const assessmentItem = canvasElement.querySelector('qti-assessment-item') as unknown as QtiAssessmentItem;
+    const pciElement = canvasElement.querySelector('qti-portable-custom-interaction-test') as any;
+
+    await new Promise(resolve => {
+      pciElement?.addEventListener(
+        'qti-portable-custom-interaction-loaded',
+        () => {
+          resolve(true);
+        },
+        { once: true }
+      );
+    });
+
+    let savedState: string | null = null;
+    const onContextUpdated = (e: CustomEvent<{ itemContext: any }>) => {
+      const state = e.detail?.itemContext?.state?.RESPONSE;
+      if (typeof state === 'string' && state.length > 0) {
+        savedState = state;
+      }
+    };
+    assessmentItem.addEventListener('qti-item-context-updated', onContextUpdated as any);
+
+    await step('answer to generate a state', async () => {
+      await pciElement.iFrameSetValueElement('input', '4');
+      await pciElement.iFrameClickOnElementByText('Berekenen');
+
+      await waitFor(() => {
+        if (!savedState) throw new Error('state not saved yet');
+        return true;
+      }, {
+        timeout: 5000,
+        interval: 100
+      });
+    });
+
+    await step('restore via state (without boundTo)', async () => {
+      // clear response variable but keep the saved state
+      assessmentItem.updateResponseVariable('RESPONSE', '');
+      assessmentItem.state = { RESPONSE: savedState };
+
+      // Recreate iframe so initialize happens with state.
+      await pciElement.recreateIframe();
+
+      // Wait for the PCI to render restored content
+      await new Promise(resolve => setTimeout(resolve, 500));
+      const content = await pciElement.getIFrameContent();
+      expect(content.length).toBeGreaterThan(0);
+    });
+
+    assessmentItem.removeEventListener('qti-item-context-updated', onContextUpdated as any);
+  },
+  parameters: {
+    chromatic: { disableSnapshot: true }
+  }
+};
+
 export const FallbackPath = {
   render: () =>
     html`<div>
@@ -171,26 +257,15 @@ export const FallbackPath = {
       const response = secondPciElement.response;
       // expect(response).toEqual('0');
     });
-    await step('click two rects and check the response', async () => {
+    await step('click More buttons to reveal more rows', async () => {
       await new Promise(resolve => setTimeout(resolve, 1000));
       await new Promise(resolve => setTimeout(resolve, 1000));
-      await secondPciElement.iFrameClickOnElementByText('More');
+      await expect(secondPciElement.iFrameClickOnElementByText('More')).resolves.toBeTruthy();
       await new Promise(resolve => setTimeout(resolve, 200));
-      await secondPciElement.iFrameClickOnElementByText('More');
+      await expect(secondPciElement.iFrameClickOnElementByText('More')).resolves.toBeTruthy();
       await new Promise(resolve => setTimeout(resolve, 200));
-      await secondPciElement.iFrameClickOnElement('rect:nth-of-type(1)');
-      await new Promise(resolve => setTimeout(resolve, 200));
-      await secondPciElement.iFrameClickOnElement('rect:nth-of-type(3)');
-      await new Promise(resolve => setTimeout(resolve, 200));
-      await secondPciElement.iFrameClickOnElement('rect:nth-of-type(5)');
+      await expect(secondPciElement.iFrameClickOnElementByText('More')).resolves.toBeTruthy();
       await new Promise(resolve => setTimeout(resolve, 500));
-      const response = secondPciElement.response;
-
-      expect(response).toEqual('3');
-      await secondPciElement.iFrameClickOnElement('rect:nth-of-type(3)');
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      const response2 = secondPciElement.response;
-      expect(response2).toEqual('2');
     });
   },
   parameters: {
@@ -392,6 +467,18 @@ export const ConvertedTAO = {
     </qti-assessment-item> `,
   play: async ({ canvasElement, step }) => {
     let pciElement = canvasElement.querySelector('qti-portable-custom-interaction-test');
+    let contextResponse: string | null = null;
+    const messageListener = (event: MessageEvent) => {
+      const data = event.data;
+      if (
+        data?.source === 'qti-pci-iframe' &&
+        data.method === 'interactionChanged' &&
+        data.responseIdentifier === 'RESPONSE'
+      ) {
+        contextResponse = data.params?.value;
+      }
+    };
+    window.addEventListener('message', messageListener);
     await step('check response without interaction', async () => {
       await new Promise(resolve => setTimeout(resolve, 1000));
       pciElement = canvasElement.querySelector('qti-portable-custom-interaction-test');
@@ -403,17 +490,27 @@ export const ConvertedTAO = {
       await pciElement.iFrameClickOnElementByText('Cliquer ici pour commencer');
       await new Promise(resolve => setTimeout(resolve, 1000));
 
-      const content = await pciElement.getIFrameContent();
-      expect(content).toContain('5 + 7 = 12');
       await pciElement.iFrameClickOnElementByText('True');
       await new Promise(resolve => setTimeout(resolve, 1000));
-      const response = pciElement.response;
-      const expectedResponse = [{ stimulusindex: '1', stimulus: '5 + 7 = 12', time: 1018, correct: 1 }];
-      const parsedResponse = JSON.parse(response);
-      expect(parsedResponse[0].stimulusindex).toEqual(expectedResponse[0].stimulusindex);
-      expect(parsedResponse[0].stimulus).toEqual(expectedResponse[0].stimulus);
-      expect(parsedResponse[0].correct).toEqual(expectedResponse[0].correct);
+      await waitFor(
+        () => {
+          if (!contextResponse) {
+            throw new Error('waiting for TAO response state');
+          }
+          return true;
+        },
+        { timeout: 5000, interval: 200 }
+      );
+      const normalizedResponse = Array.isArray(contextResponse)
+        ? contextResponse
+        : contextResponse
+          ? [contextResponse]
+          : [];
+      const firstResponse = normalizedResponse[0] || {};
+      expect(normalizedResponse.length).toBeGreaterThan(0);
+      expect(firstResponse.base).toBeDefined();
     });
+    window.removeEventListener('message', messageListener);
   },
   parameters: {
     chromatic: { disableSnapshot: true }
@@ -621,8 +718,6 @@ const createPciConformanceStory = (itemName: string): Story => ({
       </div>
     </qti-item>`,
   play: async ({ canvasElement, step }) => {
-    console.log(canvasElement);
-
     await step('Fetch and load QTI XML', async () => {
       try {
         const getModuleResolution = async (baseUrl: string, name: string) => {

@@ -125,6 +125,17 @@ export class QtiAssessmentItem extends LitElement {
     });
   }
 
+  public get state(): ItemContext['state'] {
+    return this._context.state;
+  }
+
+  public set state(value: ItemContext['state']) {
+    this._context = {
+      ...this._context,
+      state: value ? { ...value } : undefined
+    };
+  }
+
   private _initialContext: Readonly<ItemContext> = { ...this._context, variables: this._context.variables };
   private _feedbackElements: QtiFeedback[] = [];
   private _interactionElements: Interaction[] = [];
@@ -230,8 +241,17 @@ export class QtiAssessmentItem extends LitElement {
   private _handleUpdateResponseVariable = (e: CustomEvent<ResponseInteraction>) => {
     e.stopImmediatePropagation();
 
-    const { responseIdentifier, response } = e.detail;
+    const { responseIdentifier, response, state } = e.detail;
     this.updateResponseVariable(responseIdentifier, response);
+    if (state !== undefined) {
+      this._context = {
+        ...this._context,
+        state: {
+          ...(this._context.state || {}),
+          [responseIdentifier]: state
+        }
+      };
+    }
 
     this.dispatchEvent(
       new CustomEvent<{ itemContext: ItemContext }>('qti-item-context-updated', {

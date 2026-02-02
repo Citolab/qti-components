@@ -11,42 +11,22 @@ import styles from './qti-portable-custom-interaction.styles';
 import type { CSSResultGroup } from 'lit';
 import type { ItemContext } from '@qti-components/base';
 import type { BaseType, Cardinality } from '@qti-components/base';
-import type {
-  ConfigProperties,
-  IMSpci,
-  ModuleResolutionConfig,
-  QtiVariableJSON,
-  ResponseVariableType
-} from './interface';
-
-declare const requirejs: any;
-declare const define: any;
+import type { QtiVariableJSON, ResponseVariableType } from './interface';
 
 @customElement('qti-portable-custom-interaction')
 export class QtiPortableCustomInteraction extends Interaction {
   private _value: string | string[];
 
-  // Only used in direct mode
-  private pci: IMSpci<ConfigProperties<unknown>>;
-
-  // Only used in iframe mode
   protected _iframeLoaded = false;
   protected _pendingMessages: Array<{ method: string; params: any }> = [];
   protected iframe: HTMLIFrameElement;
+  protected _iframeMessageOrigin: string | null = null;
 
-  private _responseCheckInterval: number | null = null;
-
-  // Define a static style that applies to both direct and iframe modes
+  // This implementation always renders inside an iframe.
   static override styles: CSSResultGroup = [
     styles,
-    // Add default width/height for direct mode
     css`
       :host {
-        display: block;
-        width: 100%;
-        min-height: 50px;
-      }
-      .qti-customInteraction {
         display: block;
         width: 100%;
         min-height: 50px;
@@ -72,9 +52,6 @@ export class QtiPortableCustomInteraction extends Interaction {
   @property({ type: String, attribute: 'data-base-url' })
   baseUrl: string = '';
 
-  @property({ type: Boolean, attribute: 'data-use-iframe' })
-  useIframe = false;
-
   @property({ type: Boolean, attribute: 'data-use-default-shims' })
   useDefaultShims = false;
 
@@ -88,9 +65,7 @@ export class QtiPortableCustomInteraction extends Interaction {
   @state()
   protected context?: ItemContext;
 
-  @state() response: string | string[] = [];
-
-  private dom: HTMLElement;
+  @state() response: string | string[] | null = null;
 
   private _parsedRequirePaths: Record<string, string | string[]> = null;
   private _parsedRequireShim: Record<string, any> = null;
@@ -280,7 +255,12 @@ export class QtiPortableCustomInteraction extends Interaction {
   }
 
   validate(): boolean {
-    return true;
+    if (this.response === null || this.response === undefined) return false;
+    if (Array.isArray(this.response)) {
+      if (this.response.length === 0) return false;
+      return this.response.some(v => v !== '' && v !== null && v !== undefined);
+    }
+    return this.response !== '';
   }
 
   override set value(v: string | null) {
@@ -294,19 +274,8 @@ export class QtiPortableCustomInteraction extends Interaction {
   }
 
   override get value(): string | null {
-    if (this.useIframe) {
-      return this._value?.toString() || null;
-    } else {
-      // Try to get the value from the PCI first for direct mode
-      const pciValue = this.pci?.getResponse();
-      if (pciValue) {
-        const convertedValue = this.convertQtiVariableJSON(pciValue);
-        return Array.isArray(convertedValue) ? convertedValue.join(',') : convertedValue;
-      }
-    }
-
-    // Fallback to stored value
-    return Array.isArray(this._value) ? this._value.join(',') : this._value?.toString() || null;
+    if (this._value === null || this._value === undefined) return null;
+    return Array.isArray(this._value) ? this._value.join(',') : String(this._value);
   }
 
   set boundTo(newValue: Record<string, ResponseVariableType>) {
@@ -373,165 +342,24 @@ export class QtiPortableCustomInteraction extends Interaction {
     return unescaped;
   }
 
-  /**
-   * DIRECT MODE: Register PCI instance
-   */
-  register(pci: IMSpci<ConfigProperties<unknown>>) {
-    this.pci = pci;
-    this.dom = this.querySelector('qti-interaction-markup');
-    if (!this.dom) {
-      this.dom = document.createElement('div');
-      this.appendChild(this.dom);
-    }
-    this.dom.classList.add('qti-customInteraction');
-
-    // Add explicit styling to DOM element for direct mode
-    this.dom.style.width = '100%';
-    this.dom.style.minHeight = '50px';
-    this.dom.style.display = 'block';
-
-    this.dom.addEventListener('qti-interaction-changed', this._onInteractionChanged);
-    if (this.querySelector('properties')) {
-      (this.querySelector('properties') as HTMLElement).style.display = 'none';
-    }
-
-    const config: any = {
-      properties: this.addHyphenatedKeys(this.unescapeDataAttributes({ ...this.dataset })),
-      contextVariables: {},
-      templateVariables: {},
-      onready: pciInstance => {
-        this.pci = pciInstance;
-        // Set up a ResizeObserver to handle dynamic size changes in direct mode
-        try {
-          const resizeObserver = new ResizeObserver(entries => {
-            for (const entry of entries) {
-              if (entry.contentRect) {
-                // Adjust container height based on content
-                if (entry.contentRect.height > 0) {
-                  // Add a small buffer for padding
-                  this.style.height = `${entry.contentRect.height + 20}px`;
-                }
-              }
-            }
-          });
-
-          // Observe the DOM element
-          resizeObserver.observe(this.dom);
-
-          // Store reference for cleanup
-          (this as any)._resizeObserver = resizeObserver;
-        } catch (e) {
-          console.warn('ResizeObserver not supported, falling back to static sizing');
-        }
-      },
-      ondone: (_pciInstance, response, _state, _status: 'interacting' | 'closed' | 'solution' | 'review') => {
-        this.response = this.convertQtiVariableJSON(response);
-        this.saveResponse(this.response);
-      },
-      responseIdentifier: this.responseIdentifier,
-      boundTo: this.boundTo
-    };
-
-    if (pci.getInstance) {
-      pci.getInstance(this.dom, config, undefined);
-    } else {
-      // Try the TAO custom interaction initialization.
-      const restoreTAOConfig = (element: HTMLElement): any => {
-        const config: any = {};
-
-        const parseDataAttributes = (element: HTMLElement) => {
-          const result: Record<string, any> = {};
-
-          // Separate direct attributes from nested ones
-          Object.entries(element.dataset).forEach(([key, value]) => {
-            if (!key.includes('__')) {
-              // Direct attributes (like version)
-              result[key] = value;
-            }
-          });
-
-          // Parse nested attributes
-          const nestedData: Record<string, Record<string, any>> = {};
-
-          Object.entries(element.dataset).forEach(([key, value]) => {
-            const parts = key.split('__');
-            if (parts.length > 1) {
-              const [group, index, prop] = parts;
-              nestedData[group] = nestedData[group] || {};
-              nestedData[group][index] = nestedData[group][index] || {};
-              nestedData[group][index][prop] = value;
-            }
-          });
-
-          // Convert nested groups to arrays
-          Object.entries(nestedData).forEach(([key, group]) => {
-            result[key] = Object.values(group);
-          });
-
-          return result;
-        };
-
-        const data = parseDataAttributes(element);
-        for (const key in data) {
-          if (Object.prototype.hasOwnProperty.call(data, key)) {
-            const value = data[key];
-            if (key === 'config') {
-              config[key] = JSON.parse(value);
-            } else {
-              config[key] = value;
-            }
-          }
-        }
-        return config;
-      };
-      const taoConfig = restoreTAOConfig(this);
-      (pci as any).initialize(
-        this.customInteractionTypeIdentifier,
-        this.dom.firstElementChild || this.dom,
-        Object.keys(taoConfig).length ? taoConfig : null
-      );
-    }
-  }
-
-  /* ... rest of the code remains the same ... */
-
   override disconnectedCallback(): void {
     super.disconnectedCallback();
-
-    if (this.useIframe) {
-      // IFRAME MODE cleanup
-      window.removeEventListener('message', this.handleIframeMessage);
-    } else {
-      // DIRECT MODE cleanup
-      // Clean up ResizeObserver if it exists
-      // DIRECT MODE cleanup
-      // Stop response checking interval
-      this.stopResponseCheck();
-      if ((this as any)._resizeObserver) {
-        (this as any)._resizeObserver.disconnect();
-        (this as any)._resizeObserver = null;
-      }
-
-      requirejs.undef(this.customInteractionTypeIdentifier);
-      // Clear the modules in the context
-      const context = requirejs.s.contexts;
-      delete context[this.customInteractionTypeIdentifier];
-      // Remove the event listener when the component is disconnected
-      this.removeEventListener('qti-interaction-changed', this._onInteractionChanged);
-    }
+    window.removeEventListener('message', this.handleIframeMessage);
   }
 
   /**
    * IFRAME MODE: Send message to iframe
    */
   protected sendMessageToIframe(method: string, params: any) {
-    if (!this._iframeLoaded) {
+    const targetWindow = this.iframe?.contentWindow;
+    if (!this._iframeLoaded || !targetWindow) {
       this._pendingMessages.push({ method, params });
       return;
     }
-    this.iframe.contentWindow.postMessage(
+    targetWindow.postMessage(
       {
         source: 'qti-portable-custom-interaction',
+        responseIdentifier: this.responseIdentifier,
         method,
         params
       },
@@ -560,6 +388,17 @@ export class QtiPortableCustomInteraction extends Interaction {
     if (!data || data.source !== 'qti-pci-iframe') {
       return;
     }
+    if (!this.iframe?.contentWindow || event.source !== this.iframe.contentWindow) {
+      return;
+    }
+    if (data.responseIdentifier && data.responseIdentifier !== this.responseIdentifier) {
+      return;
+    }
+    if (this._iframeMessageOrigin === null) {
+      this._iframeMessageOrigin = event.origin;
+    } else if (event.origin !== this._iframeMessageOrigin) {
+      return;
+    }
     switch (data.method) {
       case 'iframeReady':
         this.initializeInteraction();
@@ -579,10 +418,23 @@ export class QtiPortableCustomInteraction extends Interaction {
         break;
 
       case 'interactionChanged': {
-        const value = this.convertQtiVariableJSON(data.params.value);
-        this.response = value;
+        const raw = data?.params?.value;
+        const converted = raw && typeof raw === 'object' ? this.convertQtiVariableJSON(raw as QtiVariableJSON) : null;
+        const state = typeof data?.params?.state === 'string' ? data.params.state : null;
+
+        // Treat null/undefined or unconvertible responses as "cleared".
+        // The iframe side is responsible for not emitting an initial clear on load.
+        if (converted === null) {
+          const emptyResponse = this.responseVariable?.cardinality === 'single' ? '' : [];
+          this.response = emptyResponse;
+          this.validate();
+          this.saveResponse(emptyResponse, state);
+          break;
+        }
+
+        this.response = converted;
         this.validate();
-        this.saveResponse(this.response);
+        this.saveResponse(converted, state);
         break;
       }
       case 'error':
@@ -634,6 +486,9 @@ export class QtiPortableCustomInteraction extends Interaction {
    */
   private sendIframeInitData() {
     // Once iframe is loaded, send initialization data
+    const properties = this.addHyphenatedKeys(this.unescapeDataAttributes({ ...this.dataset }));
+    const storedStateRaw = this.context?.state?.[this.responseIdentifier];
+    const storedState = typeof storedStateRaw === 'string' && storedStateRaw.length > 0 ? storedStateRaw : null;
     const initData = {
       module: this.module,
       customInteractionTypeIdentifier: this.customInteractionTypeIdentifier,
@@ -643,9 +498,11 @@ export class QtiPortableCustomInteraction extends Interaction {
           ? this.baseUrl
           : removeDoubleSlashes(`${window.location.origin}${this.baseUrl}`),
       responseIdentifier: this.responseIdentifier,
+      properties,
       dataAttributes: { ...this.dataset },
       interactionModules: this.getInteractionModules(),
-      boundTo: this.boundTo
+      boundTo: storedState ? null : this.boundTo,
+      state: storedState
     };
 
     this.sendMessageToIframe('initialize', initData);
@@ -698,172 +555,11 @@ export class QtiPortableCustomInteraction extends Interaction {
 
   override connectedCallback(): void {
     super.connectedCallback();
-
-    if (this.useIframe) {
-      // IFRAME MODE
-      window.addEventListener('message', this.handleIframeMessage);
-      this.createIframe();
-    } else {
-      // DIRECT MODE
-      define('qtiCustomInteractionContext', () => {
-        return {
-          register: ctxA => {
-            this.register(ctxA);
-          },
-          notifyReady: () => {
-            /* only used in the TAO version */
-          }
-        };
-      });
-
-      const config = this.buildRequireConfig();
-      if (config) {
-        const requirePCI = requirejs.config(config);
-        requirejs.onError = function (err) {
-          console.error('RequireJS error:', err);
-          if (err.requireType === 'timeout') {
-            console.error('Modules that timed out:', err.requireModules);
-          }
-          throw err;
-        };
-        requirePCI(['require'], require => {
-          try {
-            // eslint-disable-next-line import/no-dynamic-require
-            require([this.module], () => {}, (err: any) => {
-              console.error('Error loading module:', err);
-            });
-          } catch (error) {
-            console.error('Error in require call:', error);
-          }
-        });
-      }
-    }
+    // Reflect any pre-existing response (e.g. restored session) for validation/completionStatus.
+    this.response = (this.responseVariable?.value as string | string[] | null) ?? null;
+    window.addEventListener('message', this.handleIframeMessage);
+    this.createIframe();
   }
-
-  /**
-   * Stop checking for response changes
-   */
-  private stopResponseCheck(): void {
-    if (this._responseCheckInterval !== null) {
-      window.clearInterval(this._responseCheckInterval);
-      this._responseCheckInterval = null;
-    }
-  }
-
-  private _onInteractionChanged = (event: CustomEvent) => {
-    // Prevent further propagation of the event
-    event.stopPropagation();
-
-    // Optionally, handle the event here (e.g., update internal state)
-    const value = this.convertQtiVariableJSON(event.detail.value);
-    this.response = value;
-    this.saveResponse(value);
-  };
-
-  /**
-   * DIRECT MODE: Build RequireJS configuration
-   */
-  buildRequireConfig() {
-    // Set RequireJS paths and shim configuration if available
-    const config: ModuleResolutionConfig = {
-      context: this.customInteractionTypeIdentifier,
-      catchError: true,
-      paths: { ...this.getFinalRequirePaths(), ...(window['requirePaths'] || {}) },
-      shim: { ...this.getFinalRequireShim(), ...(window['requireShim'] || {}) }
-    };
-    // Check if RequireJS is available, if not, set an error message
-    if (!globalThis.require) {
-      this._errorMessage = `RequireJS not found. Please load it via CDN: https://cdnjs.com/libraries/require.js`;
-      return null;
-    }
-    const baseUrl = this.getAttribute('data-base-url');
-    const interactionModules = this.querySelector('qti-interaction-modules');
-
-    if (interactionModules) {
-      const modules = interactionModules.querySelectorAll('qti-interaction-module');
-      for (const module of modules) {
-        const moduleId = module.getAttribute('id');
-        const primaryPath = module.getAttribute('primary-path');
-        const fallbackPath = module.getAttribute('fallback-path');
-
-        if (moduleId && primaryPath) {
-          // Set the paths using RequireJS's fallback array
-          const paths = fallbackPath
-            ? this.combineRequireResolvePaths(
-                this.getResolvablePath(primaryPath, baseUrl),
-                this.getResolvablePath(fallbackPath, baseUrl)
-              )
-            : this.getResolvablePath(primaryPath, baseUrl);
-          const existingPath = config.paths[moduleId] || [];
-          config.paths[moduleId] = this.combineRequireResolvePaths(existingPath, paths);
-        }
-      }
-    }
-    return config;
-  }
-
-  /**
-   * DIRECT MODE: Helper method to combine require paths
-   */
-  private combineRequireResolvePaths(path1: string | string[], path2: string | string[]) {
-    const path1Array = Array.isArray(path1) ? path1 : [path1];
-    const path2Array = Array.isArray(path2) ? path2 : [path2];
-    return path1Array.concat(path2Array).filter((value, index, self) => self.indexOf(value) === index);
-  }
-
-  /**
-   * DIRECT MODE: Helper method to remove double slashes
-   */
-  private removeDoubleSlashes(str: string) {
-    const singleForwardSlashes = str
-      .replace(/([^:]\/)\/+/g, '$1')
-      .replace(/\/\//g, '/')
-      .replace('http:/', 'http://')
-      .replace('https:/', 'https://');
-    return singleForwardSlashes;
-  }
-
-  /**
-   * DIRECT MODE: Load config from URL
-   */
-  loadConfig = async (url: string, baseUrl?: string): Promise<ModuleResolutionConfig> => {
-    url = this.removeDoubleSlashes(url);
-    try {
-      const requireConfig = await fetch(url);
-      if (requireConfig.ok) {
-        const config = await requireConfig.json();
-        const moduleCong = config as ModuleResolutionConfig;
-        for (const moduleId in moduleCong.paths) {
-          if (baseUrl) {
-            moduleCong.paths[moduleId] = this.getResolvablePath(moduleCong.paths[moduleId], baseUrl);
-          }
-        }
-        return moduleCong;
-      }
-    } catch (e) {
-      // do nothing
-    }
-    return null;
-  };
-
-  /**
-   * DIRECT MODE: Helper method to get resolvable path string
-   */
-  getResolvablePathString = (path: string, basePath?: string) => {
-    path = path.replace(/\.js$/, '');
-    return path?.toLocaleLowerCase().startsWith('http') || !basePath
-      ? path
-      : this.removeDoubleSlashes(`${basePath}/${path}`);
-  };
-
-  /**
-   * DIRECT MODE: Helper method to get resolvable path
-   */
-  getResolvablePath = (path: string | string[], basePath?: string) => {
-    return Array.isArray(path)
-      ? path.map(p => this.getResolvablePathString(p, basePath))
-      : this.getResolvablePathString(path, basePath);
-  };
 
   /**
    * IFRAME MODE: Generate iframe HTML content
@@ -905,6 +601,12 @@ export class QtiPortableCustomInteraction extends Interaction {
     }
     #pci-container {
       width: 100%;
+    }
+    qti-interaction-markup {
+      display: block;
+      width: 100%;
+      min-height: 50px;
+    }
   </style>
   <script src="${this.requireJsUrl}"></script>
   <script>
@@ -939,14 +641,15 @@ export class QtiPortableCustomInteraction extends Interaction {
           console.error('Script error usually indicates a network or CORS issue with:', err.requireModules);
         }
 
-        // Notify parent window about the error
-        window.parent.postMessage({
-          source: 'qti-pci-iframe',
-          method: 'error',
-          params: {
-            message: 'RequireJS ' + err.requireType + ' error for modules: ' + err.requireModules,
-            details: {
-              type: err.requireType,
+	        // Notify parent window about the error
+	        window.parent.postMessage({
+	          source: 'qti-pci-iframe',
+	          responseIdentifier: (window.PCIManager && window.PCIManager.responseIdentifier) || null,
+	          method: 'error',
+	          params: {
+	            message: 'RequireJS ' + err.requireType + ' error for modules: ' + err.requireModules,
+	            details: {
+	              type: err.requireType,
               modules: err.requireModules,
               error: err.toString()
             }
@@ -959,12 +662,95 @@ export class QtiPortableCustomInteraction extends Interaction {
     window.PCIManager = {
       pciInstance: null,
       container: null,
+      markupEl: null,
+      propertiesEl: null,
       customInteractionTypeIdentifier: null,
+      responseIdentifier: null,
+      pendingBoundTo: null,
+      pendingMarkup: null,
+      pendingProperties: null,
+      pendingState: null,
+      interactionChangedViaEvent: false,
+      eventBridgeAttached: false,
+      lastResponseStr: null,
+      hadResponse: false,
 
       initialize: function(config) {
         this.customInteractionTypeIdentifier = config.customInteractionTypeIdentifier;
+        this.responseIdentifier = config.responseIdentifier;
         this.container = document.getElementById('pci-container');
         this.container.classList.add('qti-customInteraction');
+
+        function qtiVariableHasValue(qtiVar) {
+          if (!qtiVar) return false;
+          if (qtiVar.base) {
+            for (const k in qtiVar.base) {
+              if (!Object.prototype.hasOwnProperty.call(qtiVar.base, k)) continue;
+              const v = qtiVar.base[k];
+              if (v !== null && v !== undefined && v !== '') return true;
+            }
+          }
+          if (qtiVar.list) {
+            for (const k in qtiVar.list) {
+              if (!Object.prototype.hasOwnProperty.call(qtiVar.list, k)) continue;
+              const v = qtiVar.list[k];
+              if (Array.isArray(v) && v.some(x => x !== null && x !== undefined && x !== '')) return true;
+            }
+          }
+          if (Array.isArray(qtiVar.record) && qtiVar.record.length > 0) return true;
+          return false;
+        }
+
+        const initialBoundTo = config.boundTo && config.boundTo[this.responseIdentifier];
+        this.hadResponse = qtiVariableHasValue(initialBoundTo);
+        this.lastResponseStr = this.hadResponse ? JSON.stringify(initialBoundTo) : null;
+        // Ensure expected DOM structure exists (markup + properties)
+        this.markupEl = this.container.querySelector('qti-interaction-markup');
+        if (!this.markupEl) {
+          this.markupEl = document.createElement('qti-interaction-markup');
+          this.container.appendChild(this.markupEl);
+        }
+        this.markupEl.classList.add('qti-customInteraction');
+        this.propertiesEl = this.container.querySelector('properties');
+        if (!this.propertiesEl) {
+          this.propertiesEl = document.createElement('properties');
+          this.propertiesEl.style.display = 'none';
+          this.container.appendChild(this.propertiesEl);
+        } else {
+          this.propertiesEl.style.display = 'none';
+        }
+
+        // Apply any markup/properties that arrived before initialization
+        if (this.pendingMarkup !== null) {
+          this.setMarkup(this.pendingMarkup);
+          this.pendingMarkup = null;
+        }
+        if (this.pendingProperties !== null) {
+          this.setProperties(this.pendingProperties);
+          this.pendingProperties = null;
+        }
+
+        // Bridge qti-interaction-changed events (preferred over polling)
+        if (!this.eventBridgeAttached) {
+          this.eventBridgeAttached = true;
+          const self = this;
+	          this.container.addEventListener(
+	            'qti-interaction-changed',
+	            function(evt) {
+	              try {
+	                self.interactionChangedViaEvent = true;
+	                const value = evt && evt.detail ? evt.detail.value : undefined;
+	                if (value !== undefined) {
+	                  const state = self.pciInstance && typeof self.pciInstance.getState === 'function' ? self.pciInstance.getState() : null;
+	                  self.notifyInteractionChanged(value, state);
+	                }
+	              } catch (e) {
+	                // ignore bridge errors, polling fallback may still work
+	              }
+	            },
+            true
+          );
+        }
 
         function getResolvablePath(path, basePath) {
           if (Array.isArray(path)) {
@@ -1028,23 +814,33 @@ export class QtiPortableCustomInteraction extends Interaction {
               this.pciInstance = pciInstance;
               // Configure PCI instance
               const pciConfig = {
-                properties: this.addHyphenatedKeys(this.unescapeDataAttributes({ ...config.dataAttributes })),
+                properties: config.properties || {},
                 contextVariables: config.contextVariables || {},
                 templateVariables: config.templateVariables || {},
                 onready: pciInstance => {
                   this.pciInstance = pciInstance;
+                  // Apply any pending updates that arrived before onready
+                  if (this.pendingBoundTo) {
+                    this.applyBoundTo(this.pendingBoundTo);
+                    this.pendingBoundTo = null;
+                  }
+                  if (this.pendingState && typeof this.pciInstance.setState === 'function') {
+                    this.pciInstance.setState(this.pendingState);
+                    this.pendingState = null;
+                  }
                   this.notifyReady();
                 },
-                ondone: (pciInstance, response, state, status) => {
-                  this.notifyInteractionChanged(response);
-                },
-                responseIdentifier: config.responseIdentifier,
-                boundTo: config.boundTo,
-              };
+	                ondone: (pciInstance, response, state, status) => {
+	                  this.notifyInteractionChanged(response, typeof state === 'string' ? state : null);
+	                },
+	                responseIdentifier: config.responseIdentifier,
+	                boundTo: config.boundTo,
+	              };
 
-              if (pciInstance.getInstance) {
-                pciInstance.getInstance(this.container, pciConfig, undefined);
-              } else {
+	              if (pciInstance.getInstance) {
+	                const dom = this.markupEl || this.container;
+	                pciInstance.getInstance(dom, pciConfig, config.state || undefined);
+	              } else {
                 // TAO custom interaction initialization
                 const restoreTAOConfig = (dataset) => {
                     const config = {};
@@ -1052,7 +848,7 @@ export class QtiPortableCustomInteraction extends Interaction {
                       const result = {};
 
                       // Separate direct attributes from nested ones
-                      Object.entries(dataset || []).forEach(([key, value]) => {
+                      Object.entries(dataset || {}).forEach(([key, value]) => {
                         if (!key.includes('__')) {
                           // Direct attributes (like version)
                           result[key] = value;
@@ -1062,7 +858,7 @@ export class QtiPortableCustomInteraction extends Interaction {
                       // Parse nested attributes
                       const nestedData = {};
 
-                      Object.entries(dataset || []).forEach(([key, value]) => {
+                      Object.entries(dataset || {}).forEach(([key, value]) => {
                         const parts = key.split('__');
                         if (parts.length > 1) {
                           const [group, index, prop] = parts;
@@ -1095,17 +891,13 @@ export class QtiPortableCustomInteraction extends Interaction {
 
               this.pciInstance.initialize(
                 this.customInteractionTypeIdentifier,
-                this.container.firstElementChild || this.container,
+                (this.markupEl || this.container).firstElementChild || (this.markupEl || this.container),
                 Object.keys(taoConfig).length ? taoConfig : null
               );
               }
             },
             notifyReady: () => {
-              // Notify parent that the PCI is ready
-              window.parent.postMessage({
-                source: 'qti-pci-iframe',
-                method: 'pciReady'
-              }, '*');
+              PCIManager.notifyReady();
             }
           };
         });
@@ -1135,73 +927,121 @@ export class QtiPortableCustomInteraction extends Interaction {
         }
       },
 
-      notifyReady: function() {
-        window.parent.postMessage({
-          source: 'qti-pci-iframe',
-          method: 'iframeReady'
-        }, '*');
-      },
+	      notifyReady: function() {
+	        window.parent.postMessage({
+	          source: 'qti-pci-iframe',
+	          responseIdentifier: this.responseIdentifier,
+	          method: 'iframeReady'
+	        }, '*');
+	      },
 
-      notifyInteractionChanged: function(response) {
-        window.parent.postMessage({
-          source: 'qti-pci-iframe',
-          method: 'interactionChanged',
-          params: { value: response }
-        }, '*');
-      },
+	      notifyInteractionChanged: function(response, state) {
+	        window.parent.postMessage({
+	          source: 'qti-pci-iframe',
+	          responseIdentifier: this.responseIdentifier,
+	          method: 'interactionChanged',
+	          params: { value: response, state: state }
+	        }, '*');
+	      },
 
-      notifyError: function(message) {
-        console.error('PCI Error:', message);
-        window.parent.postMessage({
-          source: 'qti-pci-iframe',
-          method: 'error',
-          params: { message: message }
-        }, '*');
-      },
+	      notifyError: function(message) {
+	        console.error('PCI Error:', message);
+	        window.parent.postMessage({
+	          source: 'qti-pci-iframe',
+	          responseIdentifier: this.responseIdentifier,
+	          method: 'error',
+	          params: { message: message }
+	        }, '*');
+	      },
 
       setMarkup: function(markupHtml) {
-        this.container = document.getElementById('pci-container');
-        this.container.innerHTML = markupHtml;
+        if (!this.container) {
+          this.container = document.getElementById('pci-container');
+        }
+        if (!this.container) {
+          this.pendingMarkup = markupHtml;
+          return;
+        }
+        this.markupEl = this.container.querySelector('qti-interaction-markup');
+        if (!this.markupEl) {
+          this.markupEl = document.createElement('qti-interaction-markup');
+          this.container.appendChild(this.markupEl);
+        }
+        this.markupEl.classList.add('qti-customInteraction');
+        this.markupEl.innerHTML = markupHtml || '';
       },
 
-      addHyphenatedKeys: function(properties) {
-        const updatedProperties = { ...properties };
-        for (const key in properties) {
-          if (Object.prototype.hasOwnProperty.call(properties, key)) {
-            const hyphenatedKey = key.replace(/[A-Z]/g, char => \`-\${char.toLowerCase()}\`);
-            updatedProperties[hyphenatedKey] = properties[key];
-          }
+      setProperties: function(propertiesHtml) {
+        if (!this.container) {
+          this.container = document.getElementById('pci-container');
         }
-        return updatedProperties;
+        if (!this.container) {
+          this.pendingProperties = propertiesHtml;
+          return;
+        }
+        this.propertiesEl = this.container.querySelector('properties');
+        if (!this.propertiesEl) {
+          this.propertiesEl = document.createElement('properties');
+          this.container.appendChild(this.propertiesEl);
+        }
+        this.propertiesEl.style.display = 'none';
+        this.propertiesEl.innerHTML = propertiesHtml || '';
       },
-      unescapeDataAttributes: function(obj) {
-        const unescaped = {};
-        for (const [key, value] of Object.entries(obj)) {
-          if (typeof value === 'string') {
-            unescaped[key] = value
-              .replace(/&amp;/g, '&')
-              .replace(/&lt;/g, '<')
-              .replace(/&gt;/g, '>')
-              .replace(/&quot;/g, '"')
-              .replace(/&#x27;/g, "'")
-              .replace(/&#x2F;/g, '/')
-              .replace(/&#x60;/g, '\`')
-              .replace(/&#x3D;/g, '=');
-          } else {
-            unescaped[key] = value;
-          }
-        }
-        return unescaped;
+
+      applyBoundTo: function(boundTo) {
+        if (!this.pciInstance || typeof this.pciInstance.setResponse !== 'function') return;
+        const value = boundTo && (boundTo[this.responseIdentifier] || boundTo[Object.keys(boundTo)[0]]);
+        if (value) this.pciInstance.setResponse(value);
       },
     };
 
-    // Set up message listener for communication with parent
-    window.addEventListener('message', function(event) {
-      const { data } = event;
+	    // Set up message listener for communication with parent
+	    let expectedParentOrigin = null;
+	    window.addEventListener('message', function(event) {
+	      const { data } = event;
 
-      // Ensure the message is from our parent
-      if (!data || data.source !== 'qti-portable-custom-interaction') {
-        return;
+	      // Ensure the message is from our parent
+	      if (event.source !== window.parent || !data || data.source !== 'qti-portable-custom-interaction') {
+	        return;
+	      }
+	      if (expectedParentOrigin === null) {
+	        expectedParentOrigin = event.origin;
+	      } else if (event.origin !== expectedParentOrigin) {
+	        return;
+	      }
+
+      function deepQuerySelector(root, selector) {
+        if (!root) return null;
+        try {
+          const direct = root.querySelector ? root.querySelector(selector) : null;
+          if (direct) return direct;
+        } catch (e) {
+          // ignore invalid selector for this root
+        }
+        if (!root.querySelectorAll) return null;
+        const nodes = root.querySelectorAll('*');
+        for (const node of nodes) {
+          if (node && node.shadowRoot) {
+            const found = deepQuerySelector(node.shadowRoot, selector);
+            if (found) return found;
+          }
+        }
+        return null;
+      }
+
+      function deepFindElementByExactText(root, text) {
+        if (!root || !text) return null;
+        if (root.querySelectorAll) {
+          const nodes = root.querySelectorAll('*');
+          for (const node of nodes) {
+            if ((node.textContent || '').trim() === text) return node;
+            if (node.shadowRoot) {
+              const found = deepFindElementByExactText(node.shadowRoot, text);
+              if (found) return found;
+            }
+          }
+        }
+        return null;
       }
 
       switch(data.method) {
@@ -1214,22 +1054,140 @@ export class QtiPortableCustomInteraction extends Interaction {
           break;
 
         case 'setBoundTo':
-          // Handle setting boundTo
+          if (PCIManager.pciInstance) {
+            PCIManager.applyBoundTo(data.params);
+          } else {
+            PCIManager.pendingBoundTo = data.params;
+          }
           break;
 
         case 'setProperties':
-          // Handle setting properties
+          PCIManager.setProperties(data.params);
           break;
+
+        case 'setState':
+          if (PCIManager.pciInstance && typeof PCIManager.pciInstance.setState === 'function') {
+            PCIManager.pciInstance.setState((data.params && data.params.state) || data.params);
+          } else {
+            PCIManager.pendingState = (data.params && data.params.state) || data.params;
+          }
+          break;
+
+        case 'getContent': {
+          const messageId = data.params && data.params.messageId;
+          const collectShadowHtml = root => {
+            const parts = [];
+            if (!root || !root.querySelectorAll) return parts;
+            const nodes = root.querySelectorAll('*');
+            for (const node of nodes) {
+              if (node && node.shadowRoot) {
+                parts.push(node.shadowRoot.innerHTML || '');
+                parts.push(...collectShadowHtml(node.shadowRoot));
+              }
+            }
+            return parts;
+          };
+          const shadowHtml = collectShadowHtml(document).join('\\n');
+	          window.parent.postMessage(
+	            {
+	              source: 'qti-pci-iframe',
+	              responseIdentifier: PCIManager.responseIdentifier,
+	              method: 'getContentResponse',
+	              messageId: messageId,
+	              content: (document.documentElement ? document.documentElement.outerHTML : '') + '\\n' + shadowHtml
+	            },
+	            '*'
+	          );
+          break;
+        }
+
+        case 'simulateClick': {
+          const messageId = data.params && data.params.messageId;
+          const x = data.params && data.params.x;
+          const y = data.params && data.params.y;
+          const el = typeof x === 'number' && typeof y === 'number' ? document.elementFromPoint(x, y) : null;
+	          if (el && typeof el.click === 'function') el.click();
+	          window.parent.postMessage(
+	            {
+	              source: 'qti-pci-iframe',
+	              responseIdentifier: PCIManager.responseIdentifier,
+	              method: 'clickResponse',
+	              messageId: messageId
+	            },
+	            '*'
+	          );
+	          break;
+	        }
+
+        case 'clickOnSelector': {
+          const messageId = data.params && data.params.messageId;
+          const selector = data.params && data.params.selector;
+          const el = selector ? deepQuerySelector(document, selector) : null;
+	          const success = !!el;
+	          if (el && typeof el.click === 'function') el.click();
+	          window.parent.postMessage(
+	            {
+	              source: 'qti-pci-iframe',
+	              responseIdentifier: PCIManager.responseIdentifier,
+	              method: 'clickSelectorResponse',
+	              messageId: messageId,
+	              success: success
+	            },
+	            '*'
+	          );
+	          break;
+	        }
+
+        case 'clickOnElementByText': {
+          const messageId = data.params && data.params.messageId;
+          const text = data.params && data.params.text;
+          const target = text ? deepFindElementByExactText(document, text) : null;
+	          const success = !!target;
+	          if (target && typeof target.click === 'function') target.click();
+	          window.parent.postMessage(
+	            {
+	              source: 'qti-pci-iframe',
+	              responseIdentifier: PCIManager.responseIdentifier,
+	              method: 'clickTextResponse',
+	              messageId: messageId,
+	              success: success
+	            },
+	            '*'
+	          );
+	          break;
+	        }
+
+        case 'setValueElement': {
+          const messageId = data.params && data.params.messageId;
+          const selector = data.params && data.params.selector;
+          const value = data.params && data.params.value;
+          const el = selector ? deepQuerySelector(document, selector) : null;
+          let success = false;
+          if (el && 'value' in el) {
+            try {
+              el.value = value;
+              el.dispatchEvent(new Event('input', { bubbles: true }));
+              el.dispatchEvent(new Event('change', { bubbles: true }));
+              success = true;
+            } catch (e) {
+              success = false;
+            }
+	          }
+	          window.parent.postMessage(
+	            {
+	              source: 'qti-pci-iframe',
+	              responseIdentifier: PCIManager.responseIdentifier,
+	              method: 'setValueResponse',
+	              messageId: messageId,
+	              success: success
+	            },
+	            '*'
+	          );
+	          break;
+	        }
       }
     });
 
-    // Notify parent that iframe has loaded
-    window.addEventListener('load', function() {
-      window.parent.postMessage({
-        source: 'qti-pci-iframe',
-        method: 'iframeLoaded'
-      }, '*');
-    });
     let resizeTimeout;
     let previousHeight = 0;
     const notifyResize = () => {
@@ -1238,14 +1196,15 @@ export class QtiPortableCustomInteraction extends Interaction {
       if (newHeight !== previousHeight) {
         previousHeight = newHeight;
         clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => {
-          window.parent.postMessage({
-            source: 'qti-pci-iframe',
-            method: 'resize',
-            height: newHeight,
-            width: container.scrollWidth
-          }, '*');
-        }, 100); // Adjust debounce time as needed
+	        resizeTimeout = setTimeout(() => {
+	          window.parent.postMessage({
+	            source: 'qti-pci-iframe',
+	            responseIdentifier: PCIManager.responseIdentifier,
+	            method: 'resize',
+	            height: newHeight,
+	            width: container.scrollWidth
+	          }, '*');
+	        }, 100); // Adjust debounce time as needed
       }
     };
 
@@ -1279,18 +1238,43 @@ export class QtiPortableCustomInteraction extends Interaction {
       });
       let lastResponseStr = '';
       setInterval(() => {
+        if (PCIManager.interactionChangedViaEvent) return;
         if (PCIManager.pciInstance && PCIManager.pciInstance.getResponse) {
           const response = PCIManager.pciInstance.getResponse();
+	          if (response === undefined) {
+	            // Don't emit an initial empty on load; only emit a clear if we previously had a value
+	            if (!PCIManager.hadResponse) return;
+	            PCIManager.hadResponse = false;
+	            PCIManager.lastResponseStr = null;
+	            const state = PCIManager.pciInstance && typeof PCIManager.pciInstance.getState === 'function' ? PCIManager.pciInstance.getState() : null;
+	            window.parent.postMessage(
+	              {
+	                source: 'qti-pci-iframe',
+	                responseIdentifier: PCIManager.responseIdentifier,
+	                method: 'interactionChanged',
+	                params: { value: null, state: state }
+	              },
+	              '*'
+	            );
+	            return;
+	          }
+
           const responseStr = JSON.stringify(response);
 
-          if (responseStr !== lastResponseStr) {
-            lastResponseStr = responseStr;
-              window.parent.postMessage({
-                source: 'qti-pci-iframe',
-                method: 'interactionChanged',
-                params: { value: response }
-              }, '*');
-          }
+	          if (responseStr !== PCIManager.lastResponseStr) {
+	            PCIManager.lastResponseStr = responseStr;
+	            PCIManager.hadResponse = true;
+	            const state = PCIManager.pciInstance && typeof PCIManager.pciInstance.getState === 'function' ? PCIManager.pciInstance.getState() : null;
+	            window.parent.postMessage(
+	              {
+	                source: 'qti-pci-iframe',
+	                responseIdentifier: PCIManager.responseIdentifier,
+	                method: 'interactionChanged',
+	                params: { value: response, state: state }
+	              },
+	              '*'
+	            );
+	          }
         }
       }, 500); // Check every 500ms
   </script>
@@ -1387,104 +1371,41 @@ export class QtiPortableCustomInteraction extends Interaction {
     // Store the correct response value
     const correctResponseValue = responseVariable.correctResponse;
 
-    // Different initialization based on mode
-    if (this.useIframe) {
-      // For iframe mode, add a custom connected callback
-      const originalConnectedCallback = correctResponseViewer.connectedCallback;
-      correctResponseViewer.connectedCallback = function () {
-        // Call the original connected callback to set up the iframe
-        originalConnectedCallback.call(this);
+    // Ensure the correct-response viewer is initialized and then configured in the iframe
+    const originalConnectedCallback = correctResponseViewer.connectedCallback;
+    correctResponseViewer.connectedCallback = function () {
+      originalConnectedCallback.call(this);
 
-        // Wait for iframe to load then set the correct response
-        const checkIframeLoaded = () => {
-          if (this._iframeLoaded) {
-            // Set response after a small delay to ensure PCI is ready
-            setTimeout(() => {
-              const qtiVariableJSON = this.responseVariablesToQtiVariableJSON(
-                correctResponseValue,
-                responseVariable.cardinality,
-                responseVariable.baseType
-              );
+      const checkIframeLoaded = () => {
+        if (!this._iframeLoaded) return false;
 
-              // Send the correct response to the iframe
-              this.sendMessageToIframe('setBoundTo', {
-                [originalResponseId]: qtiVariableJSON
-              });
-
-              // Disable interaction with the correct response viewer
-              this.sendMessageToIframe('setState', { state: 'review' });
-            }, 1000);
-
-            return true;
-          }
-          return false;
-        };
-
-        // Try immediately
-        if (!checkIframeLoaded()) {
-          // If not loaded yet, set up an interval to check
-          const intervalId = setInterval(() => {
-            if (checkIframeLoaded()) {
-              clearInterval(intervalId);
-            }
-          }, 100);
-
-          // Safety timeout to clear interval after 10 seconds
-          setTimeout(() => {
-            clearInterval(intervalId);
-          }, 10000);
-        }
-      };
-    } else {
-      // For direct mode, add a custom register method
-      const originalRegister = correctResponseViewer.register;
-      correctResponseViewer.register = function (pci) {
-        // Call the original register method
-        originalRegister.call(this, pci);
-
-        // Once registered, set the correct response
-        const setCorrectResponse = () => {
-          if (this.pci) {
-            if (typeof this.pci.setResponse === 'function') {
-              // Convert to the format expected by the PCI
-              const pciResponse = this.responseVariablesToQtiVariableJSON(
-                correctResponseValue,
-                responseVariable.cardinality,
-                responseVariable.baseType
-              );
-
-              // Set the response
-              this.pci.setResponse(pciResponse);
-
-              // Disable interaction if the PCI supports it
-              if (typeof this.pci.setState === 'function') {
-                this.pci.setState('review');
-              }
-
-              return true;
-            }
-          }
-          return false;
-        };
-
-        // Try to set response after a delay to ensure PCI is fully initialized
+        // Set response after a small delay to ensure PCI is ready
         setTimeout(() => {
-          if (!setCorrectResponse()) {
-            // If not successful, try again with a longer delay
-            const intervalId = setInterval(() => {
-              if (setCorrectResponse()) {
-                clearInterval(intervalId);
-              }
-            }, 200);
+          const qtiVariableJSON = this.responseVariablesToQtiVariableJSON(
+            correctResponseValue,
+            responseVariable.cardinality,
+            responseVariable.baseType
+          );
 
-            // Safety timeout to clear interval after 5 seconds
-            setTimeout(() => {
-              clearInterval(intervalId);
-            }, 5000);
-          }
-        }, 500);
+          this.sendMessageToIframe('setBoundTo', {
+            [originalResponseId]: qtiVariableJSON
+          });
+          this.sendMessageToIframe('setState', { state: 'review' });
+        }, 1000);
+
+        return true;
       };
-    }
+
+      if (!checkIframeLoaded()) {
+        const intervalId = setInterval(() => {
+          if (checkIframeLoaded()) clearInterval(intervalId);
+        }, 100);
+
+        setTimeout(() => {
+          clearInterval(intervalId);
+        }, 10000);
+      }
+    };
 
     // Make sure the viewer is not interactive
     correctResponseViewer.style.pointerEvents = 'none';
@@ -1506,15 +1427,7 @@ export class QtiPortableCustomInteraction extends Interaction {
       position: this.style.position
     };
 
-    if (this.useIframe) {
-      // For iframe mode, send a message to disable interaction
-      this.sendMessageToIframe('setState', { state: 'disabled' });
-    } else {
-      // // For direct mode, use the PCI's disable method if available
-      // if (this.pci && typeof this.pci.setState === 'function') {
-      //   this.pci.setState('disabled');
-      // }
-    }
+    this.sendMessageToIframe('setState', { state: 'disabled' });
 
     // Add an overlay to prevent interaction if not already there
     const existingOverlay = this.querySelector('.pci-interaction-overlay');
@@ -1561,15 +1474,7 @@ export class QtiPortableCustomInteraction extends Interaction {
       this._previousState = null;
     }
 
-    if (this.useIframe) {
-      // For iframe mode, send a message to enable interaction
-      this.sendMessageToIframe('setState', { state: 'interacting' });
-    } else {
-      // // For direct mode, use the PCI's enable method if available
-      // if (this.pci && typeof this.pci.setState === 'function') {
-      //   this.pci.setState('interacting');
-      // }
-    }
+    this.sendMessageToIframe('setState', { state: 'interacting' });
   }
 
   // Add this property to store the previous state

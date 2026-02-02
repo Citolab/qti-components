@@ -1,42 +1,3 @@
-const xml = String.raw;
-
-/*   <!-- convert CDATA to comments -->
-  <xsl:template match="text()[contains(., 'CDATA')]">
-  <xsl:comment>
-    <xsl:value-of select="."/>
-  </xsl:comment>
-</xsl:template>
-*/
-
-/*
-  <!-- remove xml comments -->
-  <xsl:template match="comment()" />
-  */
-
-const xmlToHTML = xml`<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:output method="html" version="5.0" encoding="UTF-8" indent="yes" />
-  <xsl:template match="@*|node()">
-    <xsl:copy>
-      <xsl:apply-templates select="@*|node()"/>
-    </xsl:copy>
-  </xsl:template>
-
-  <!-- remove existing namespaces -->
-  <xsl:template match="*">
-    <!-- remove element prefix -->
-    <xsl:element name="{local-name()}">
-      <!-- process attributes -->
-      <xsl:for-each select="@*">
-        <!-- remove attribute prefix -->
-        <xsl:attribute name="{local-name()}">
-          <xsl:value-of select="."/>
-        </xsl:attribute>
-      </xsl:for-each>
-    <xsl:apply-templates/>
-  </xsl:element>
-</xsl:template>
-</xsl:stylesheet>`;
-
 // Function to extend elements with a specific tag name by adding an extension suffix
 export function extendElementName(xmlFragment: XMLDocument, tagName: string, extension: string) {
   xmlFragment.querySelectorAll(tagName).forEach(element => {
@@ -117,12 +78,28 @@ export function parseXML(xmlDocument: string) {
   return xmlFragment;
 }
 
+function stripNamespaces(node: Node, doc: Document): Node {
+  if (node.nodeType === Node.ELEMENT_NODE) {
+    const el = node as Element;
+    const newEl = doc.createElement(el.localName);
+    for (let i = 0; i < el.attributes.length; i++) {
+      const attr = el.attributes[i];
+      newEl.setAttribute(attr.localName, attr.value);
+    }
+    for (let i = 0; i < el.childNodes.length; i++) {
+      newEl.appendChild(stripNamespaces(el.childNodes[i], doc));
+    }
+    return newEl;
+  }
+  return node.cloneNode(false);
+}
+
 export function toHTML(xmlFragment: Document): DocumentFragment {
-  const processor = new XSLTProcessor();
-  const xsltDocument = new DOMParser().parseFromString(xmlToHTML, 'text/xml');
-  processor.importStylesheet(xsltDocument);
-  const itemHTMLFragment = processor.transformToFragment(xmlFragment, document);
-  return itemHTMLFragment;
+  const fragment = document.createDocumentFragment();
+  for (let i = 0; i < xmlFragment.childNodes.length; i++) {
+    fragment.appendChild(stripNamespaces(xmlFragment.childNodes[i], document));
+  }
+  return fragment;
 }
 
 export function setLocation(xmlFragment: DocumentFragment, location: string) {
