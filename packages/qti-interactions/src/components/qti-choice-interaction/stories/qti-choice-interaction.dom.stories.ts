@@ -19,7 +19,7 @@ type Story = StoryObj<QtiChoiceInteraction>;
  */
 const meta: Meta<QtiChoiceInteraction> = {
   component: 'qti-choice-interaction',
-  title: '01 Choice Interaction/DOM Manipulation',
+  title: '02 Choice Interaction/DOM Manipulation',
   tags: ['dom-manipulation']
 };
 export default meta;

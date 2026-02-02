@@ -22,7 +22,7 @@ type Story = StoryObj<QtiChoiceInteraction>;
  */
 const meta: Meta<QtiChoiceInteraction> = {
   component: 'qti-choice-interaction',
-  title: '01 Choice Interaction/Correct Response',
+  title: '02 Choice Interaction/Correct Response',
   tags: ['correct-response', 'standalone']
 };
 export default meta;

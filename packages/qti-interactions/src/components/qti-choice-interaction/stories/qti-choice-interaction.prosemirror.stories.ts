@@ -15,7 +15,7 @@ const meta: Meta<
   QtiChoiceInteraction & { classLabel: InputType; classLabelSuffix: InputType; classOrientation: InputType }
 > = {
   component: 'qti-choice-interaction',
-  title: '01 Choice Interaction/Prosemirror',
+  title: '02 Choice Interaction/Prosemirror',
   // args,
   argTypes,
   parameters: {
