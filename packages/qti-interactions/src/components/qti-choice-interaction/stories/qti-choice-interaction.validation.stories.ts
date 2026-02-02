@@ -60,6 +60,7 @@ export const MinChoicesNotMet: Story = {
   render: formTemplate,
   args: {
     name: 'RESPONSE',
+    // @ts-expect-error - using kebab-case attributes instead of camelCase props
     'min-choices': 2,
     'max-choices': 4
   },
@@ -84,6 +85,7 @@ export const MinChoicesMet: Story = {
   render: formTemplate,
   args: {
     name: 'RESPONSE',
+    // @ts-expect-error - using kebab-case attributes instead of camelCase props
     'min-choices': 1,
     'max-choices': 4
   },
@@ -104,6 +106,7 @@ export const MinChoicesZero: Story = {
   render: formTemplate,
   args: {
     name: 'RESPONSE',
+    // @ts-expect-error - using kebab-case attributes instead of camelCase props
     'min-choices': 0,
     'max-choices': 4
   },
@@ -124,6 +127,7 @@ export const MaxChoicesExceeded: Story = {
   render: formTemplate,
   args: {
     name: 'RESPONSE',
+    // @ts-expect-error - using kebab-case attributes instead of camelCase props
     'min-choices': 0,
     'max-choices': 2
   },
@@ -146,6 +150,7 @@ export const MaxChoicesUnlimited: Story = {
   render: formTemplate,
   args: {
     name: 'RESPONSE',
+    // @ts-expect-error - using kebab-case attributes instead of camelCase props
     'min-choices': 0,
     'max-choices': 0
   },
@@ -164,8 +169,10 @@ export const MaxChoicesUnlimited: Story = {
 export const MaxChoicesSingle: Story = {
   name: 'Max Choices - Single (Radio Behavior)',
   render: formTemplate,
+
   args: {
     name: 'RESPONSE',
+    // @ts-expect-error - using kebab-case attributes instead of camelCase props
     'min-choices': 1,
     'max-choices': 1
   },
@@ -194,6 +201,7 @@ export const ValidationMessageMinChoices: Story = {
   render: formTemplate,
   args: {
     name: 'RESPONSE',
+    // @ts-expect-error - using kebab-case attributes instead of camelCase props
     'min-choices': 2,
     'max-choices': 4
   },
@@ -215,6 +223,7 @@ export const ValidationMessageMaxChoices: Story = {
   render: formTemplate,
   args: {
     name: 'RESPONSE',
+    // @ts-expect-error - using kebab-case attributes instead of camelCase props
     'min-choices': 0,
     'max-choices': 2
   },
@@ -241,6 +250,7 @@ export const ValidationMessageCleared: Story = {
   render: formTemplate,
   args: {
     name: 'RESPONSE',
+    // @ts-expect-error - using kebab-case attributes instead of camelCase props
     'min-choices': 1,
     'max-choices': 4
   },
@@ -306,6 +316,7 @@ export const ValidationStateTransition: Story = {
   render: formTemplate,
   args: {
     name: 'RESPONSE',
+    // @ts-expect-error - using kebab-case attributes instead of camelCase props
     'min-choices': 1,
     'max-choices': 2
   },
