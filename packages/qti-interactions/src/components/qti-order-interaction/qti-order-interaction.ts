@@ -113,8 +113,8 @@ export class QtiOrderInteraction extends DragDropInteractionMixin(
     return response;
   }
 
-  override async firstUpdated(changedProps: PropertyValueMap<any> | Map<PropertyKey, unknown>) {
-    super.firstUpdated(changedProps);
+  override async firstUpdated() {
+    super.firstUpdated();
     this.childrenMap = Array.from(this.querySelectorAll('qti-simple-choice'));
     this.childrenMap.forEach(el => el.setAttribute('part', 'qti-simple-choice'));
   }

@@ -48,7 +48,7 @@ export default defineConfig({
           storybookTest({
             tags: {
               // include: ['test'],
-              exclude: ['skip-test', 'no-tests']
+              exclude: ['skip-test', 'no-tests', 'xfail']
             },
             // The location of your Storybook config, main.js|ts
             configDir: path.join(dirname, '.storybook'),

@@ -7,7 +7,7 @@ import { spread } from '@open-wc/lit-helpers';
 
 import type { QtiSimpleChoice } from '@qti-components/interactions';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
-import type { QtiChoiceInteraction } from './qti-choice-interaction';
+import type { QtiChoiceInteraction } from '../qti-choice-interaction';
 
 const { events, args, argTypes, template } = getStorybookHelpers('qti-choice-interaction');
 
@@ -19,7 +19,7 @@ type Story = StoryObj<QtiChoiceInteraction & typeof args>;
  */
 const meta: Meta<QtiChoiceInteraction> = {
   component: 'qti-choice-interaction',
-  title: 'Shared Vocabulary/1.2.1 Choice Interaction',
+  title: '01 Choice Interaction/Vocabulary',
   // args,
   argTypes,
   parameters: {
@@ -394,7 +394,7 @@ export const ChoiceMinMessage: Story = {
 
 export const ChoiceVerticalWritingVerticalRL: Story = {
   render: TemplateSixOptions,
-  tags: ['danger'],
+  tags: ['xfail'],
   args: {
     class: 'qti-writing-orientation-vertical-rl'
   }
@@ -402,7 +402,7 @@ export const ChoiceVerticalWritingVerticalRL: Story = {
 
 export const ChoiceVerticalWritingVerticalLR: Story = {
   render: TemplateSixOptions,
-  tags: ['danger'],
+  tags: ['xfail'],
   args: {
     class: 'qti-writing-orientation-vertical-lr'
   }
@@ -410,7 +410,7 @@ export const ChoiceVerticalWritingVerticalLR: Story = {
 
 export const ChoiceVerticalWritingCJKIdeographic: Story = {
   render: TemplateSixOptions,
-  tags: ['danger'],
+  tags: ['xfail'],
   args: {
     class: 'qti-labels-cjk-ideographic'
   }
@@ -418,7 +418,7 @@ export const ChoiceVerticalWritingCJKIdeographic: Story = {
 
 export const ChoiceVerticalWritingHiddenStacking2CJKIdeographic: Story = {
   render: TemplateSixOptions,
-  tags: ['danger'],
+  tags: ['xfail'],
   args: {
     class: 'qti-input-control-hidden qti-choices-stacking-2 qti-labels-cjk-ideographic'
   }

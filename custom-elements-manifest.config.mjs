@@ -2,6 +2,7 @@
 import { jsxTypesPlugin } from '@wc-toolkit/jsx-types';
 import { getTsProgram, typeParserPlugin } from '@wc-toolkit/type-parser';
 import { cemSorterPlugin } from '@wc-toolkit/cem-sorter';
+import { cemInheritancePlugin } from '@wc-toolkit/cem-inheritance';
 
 console.log('Building the custom element manifest...');
 
@@ -11,10 +12,12 @@ const outdir = process.env.CEM_OUTDIR || './';
 export default {
   /** Globs to analyze */
   globs: [
+    'packages/qti-base/src/**/*.ts',
     'packages/qti-item/src/components/**/*.ts',
     'packages/qti-test/src/components/**/*.ts',
     'packages/qti-elements/src/components/**/*.ts',
     'packages/qti-interactions/src/components/**/*.ts',
+    'packages/qti-interactions/src/mixins/**/*.ts',
     'packages/qti-processing/src/components/**/*.ts'
   ],
   /** Globs to exclude */
@@ -42,6 +45,7 @@ export default {
     typeParserPlugin({
       outdir: outdir + 'dist'
     }),
+    cemInheritancePlugin({}),
     // customElementVsCodePlugin({
     //   outdir: outdir + 'dist'
     // }),

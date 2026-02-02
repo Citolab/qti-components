@@ -77,11 +77,11 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
     }
 
     protected override toggleInternalCorrectResponse(show: boolean) {
-      const responseVariable = this.responseVariable;
-      if (responseVariable?.correctResponse) {
-        const responseArray = Array.isArray(responseVariable.correctResponse)
-          ? responseVariable.correctResponse
-          : [responseVariable.correctResponse];
+      // Get correct response from either responseVariable (item context) or local property (standalone)
+      const correctResponse = this.correctResponse;
+
+      if (correctResponse) {
+        const responseArray = Array.isArray(correctResponse) ? correctResponse : [correctResponse];
         this._choiceElements.forEach(choice => {
           choice.internals.states.delete('correct-response');
           choice.internals.states.delete('incorrect-response');
@@ -97,19 +97,22 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
     }
 
     public override toggleCandidateCorrection(show: boolean) {
-      const responseVariable = this.responseVariable;
+      // Get correct response from either responseVariable (item context) or local property (standalone)
+      const correctResponse = this.correctResponse;
 
-      if (!responseVariable?.correctResponse) {
+      if (!correctResponse) {
         return;
       }
 
-      const correctResponseArray = Array.isArray(responseVariable.correctResponse)
-        ? responseVariable.correctResponse
-        : [responseVariable.correctResponse];
+      const correctResponseArray = Array.isArray(correctResponse) ? correctResponse : [correctResponse];
 
-      const candidateResponseArray = Array.isArray(responseVariable.value)
-        ? responseVariable.value
-        : [responseVariable.value];
+      // Get current response (works in both standalone and item context modes)
+      const currentResponse = this.response;
+      const candidateResponseArray = Array.isArray(currentResponse)
+        ? currentResponse
+        : currentResponse
+          ? [currentResponse]
+          : [];
 
       this._choiceElements.forEach(choice => {
         choice.internals.states.delete('candidate-correct');
@@ -126,6 +129,9 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
           choice.internals.states.add('candidate-incorrect');
         }
       });
+
+      // Also update interaction-level states
+      super.toggleCandidateCorrection(show);
     }
 
     override connectedCallback() {
@@ -187,6 +193,7 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       event.stopPropagation();
       const choiceElement = event.target as Choice;
       choiceElement.disabled = this.disabled;
+      choiceElement.readonly = this.readonly;
 
       this._choiceElements.push(choiceElement);
       this._setInputType(choiceElement);

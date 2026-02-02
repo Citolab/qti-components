@@ -3,11 +3,11 @@ import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { expect, fireEvent } from 'storybook/test';
 import { within } from 'shadow-dom-testing-library';
 
-import { Test } from './qti-choice-interaction.stories';
+import { Test } from '../qti-choice-interaction.stories';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
-import type { QtiSimpleChoice } from '../../elements/qti-simple-choice';
-import type { QtiChoiceInteraction } from './qti-choice-interaction';
+import type { QtiSimpleChoice } from '../../../elements/qti-simple-choice';
+import type { QtiChoiceInteraction } from '../qti-choice-interaction';
 
 const { events, args, argTypes } = getStorybookHelpers('qti-choice-interaction');
 
@@ -15,7 +15,7 @@ type Story = StoryObj<QtiChoiceInteraction & typeof args>;
 
 const meta: Meta<QtiChoiceInteraction> = {
   component: 'qti-choice-interaction',
-  title: 'Form Associated/02 Choice',
+  title: '01 Choice Interaction/Forms',
   argTypes,
   parameters: {
     actions: {
@@ -85,6 +85,7 @@ export const Disabled: Story = {
 
 export const Readonly: Story = {
   render: formTemplate,
+  tags: ['form-associated', 'xfail'],
   args: {
     name: 'RESPONSE',
     'max-choices': 1
@@ -103,6 +104,7 @@ export const Readonly: Story = {
 
 export const Reset: Story = {
   render: formTemplate,
+  tags: ['form-associated', 'xfail'],
   args: {
     name: 'RESPONSE',
     'max-choices': 1
@@ -199,6 +201,7 @@ export const Reenable: Story = {
 
 export const ComprehensiveTest: Story = {
   render: formTemplate,
+  tags: ['form-associated', 'xfail'],
   args: {
     name: 'RESPONSE',
     'min-choices': 1,

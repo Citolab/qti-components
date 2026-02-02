@@ -110,8 +110,8 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       }
     }
 
-    override firstUpdated(changedProps): void {
-      super.firstUpdated(changedProps);
+    override firstUpdated(): void {
+      super.firstUpdated();
       if (this.isMatchTabular()) return;
       const disabled = this.hasAttribute('disabled');
       if (!disabled) {
