@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/Citolab/qti-components/compare/transformers-v1.0.0...transformers-v1.1.0) (2026-02-02)
+
+
+### Features
+
+* refactor toHTML function and add stripNamespaces helper for namespace handling ([aca5fc2](https://github.com/Citolab/qti-components/commit/aca5fc2f13bfd00a7c2698aad6f40080aad6af8e))
+
 ## 1.0.0 (2026-01-06)
 
 

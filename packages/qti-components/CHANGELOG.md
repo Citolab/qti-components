@@ -1,5 +1,28 @@
 # Changelog
 
+## [7.18.0](https://github.com/Citolab/qti-components/compare/qti-components-v7.17.1...qti-components-v7.18.0) (2026-02-02)
+
+
+### Features
+
+* enhance QtiCustomInteraction with CES support and improved resource handling ([2a9b41d](https://github.com/Citolab/qti-components/commit/2a9b41d03f8e0cd0451cbd304cabc78bc3c83fc8))
+* refactor portable custom interaction to remove iframe implementation ([6e56686](https://github.com/Citolab/qti-components/commit/6e5668615eafaab90455e4e6a6b527f52bb58c59))
+* remove iframe implementation from QtiPortableCustomInteraction and enhance response validation ([59c4b5e](https://github.com/Citolab/qti-components/commit/59c4b5ecf069e848e55a323fcac4909ec38b1083))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @qti-components/test bumped to 1.0.1
+    * @qti-components/item bumped to 1.0.1
+    * @qti-components/elements bumped to 1.1.0
+    * @qti-components/transformers bumped to 1.1.0
+    * @qti-components/interactions bumped to 1.1.0
+    * @qti-components/processing bumped to 1.0.1
+    * @qti-components/loader bumped to 1.0.1
+    * @qti-components/base bumped to 1.1.0
+
 ## [7.17.1](https://github.com/Citolab/qti-components/compare/qti-components-v7.17.0...qti-components-v7.17.1) (2026-01-06)
 
 

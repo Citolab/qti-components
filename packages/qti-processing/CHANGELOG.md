@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.0.1](https://github.com/Citolab/qti-components/compare/processing-v1.0.0...processing-v1.0.1) (2026-02-02)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @qti-components/base bumped to 1.1.0
+
 ## 1.0.0 (2026-01-06)
 
 
