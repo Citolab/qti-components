@@ -223,7 +223,7 @@ export const CorrectResponseMultiple: Story = {
 
 export const CustomValidationMessages: Story = {
   name: 'Custom Validation Messages via Data Attributes',
-  tags: ['configuration', 'specific', 'xfail'],
+  tags: ['configuration', 'specific'],
   render: () => html`
     <qti-choice-interaction
       name="RESPONSE"
