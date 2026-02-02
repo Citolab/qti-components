@@ -324,7 +324,7 @@ export const MethodValidate: Story = {
 
 export const MethodReportValidity: Story = {
   name: 'Method: reportValidity()',
-  tags: ['api', 'xfail'],
+  tags: ['api'],
   render: baseTemplate,
   play: async ({ canvasElement }) => {
     const { interaction } = getElements(canvasElement);
@@ -410,7 +410,7 @@ export const InternalsFormValue: Story = {
 
 export const InternalsValidity: Story = {
   name: 'Internals: validity state',
-  tags: ['api', 'xfail'],
+  tags: ['api'],
   render: baseTemplate,
   play: async ({ canvasElement }) => {
     const { interaction, choices } = getElements(canvasElement);
