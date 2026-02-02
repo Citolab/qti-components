@@ -196,8 +196,17 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
     protected _registerChoiceElement(event: CustomEvent) {
       event.stopPropagation();
       const choiceElement = event.target as Choice;
-      choiceElement.disabled = this.disabled;
+
+      // Only override disabled if the interaction is disabled, otherwise respect element's own state
+      if (this.disabled) {
+        choiceElement.disabled = true;
+      }
       choiceElement.readonly = this.readonly;
+
+      // Initialize ariaChecked state
+      if (!choiceElement.internals.ariaChecked) {
+        choiceElement.internals.ariaChecked = 'false';
+      }
 
       this._choiceElements.push(choiceElement);
       this._setInputType(choiceElement);
