@@ -349,6 +349,14 @@
             },
             {
               "kind": "field",
+              "name": "state",
+              "type": {
+                "text": "ItemContext['state']"
+              },
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
               "name": "timeDependent",
               "type": {
                 "text": "'true' | 'false' | null"
@@ -2099,12 +2107,39 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "",
+          "description": "QTI Custom Interaction component for legacy CES-based interactions.\n\nThis component implements support for custom interactions originally built for the CES\n(Custom Element Standard) player - the predecessor to FACET and the Trifork QTI Player.",
           "name": "QtiCustomInteraction",
           "members": [
             {
               "kind": "field",
+              "name": "_contentBlobUrl",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
               "name": "_errorMessage",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_manifestUrl",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_resourceBaseUrl",
               "type": {
                 "text": "string"
               },
@@ -2137,6 +2172,16 @@
             },
             {
               "kind": "method",
+              "name": "getBaseCandidates",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
               "name": "getIFrames",
               "privacy": "private"
             },
@@ -2159,6 +2204,26 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "getManifestBaseUrl",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getManifestParentBaseUrl",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | null"
+                }
+              }
             },
             {
               "kind": "method",
@@ -2219,6 +2284,37 @@
               "default": "''"
             },
             {
+              "kind": "method",
+              "name": "resolveResourceWithFallback",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<{ url: string; baseUrl: string | null; text?: string }>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "ref",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "baseCandidates",
+                  "type": {
+                    "text": "string[]"
+                  }
+                },
+                {
+                  "name": "options",
+                  "default": "{}",
+                  "type": {
+                    "text": "{ returnText?: boolean }"
+                  }
+                }
+              ]
+            },
+            {
               "kind": "field",
               "name": "response",
               "type": {
@@ -2228,6 +2324,7 @@
             {
               "kind": "method",
               "name": "setupCES",
+              "description": "Sets up the CES custom interaction by creating the iframe structure and\nhandling the CES API communication via postMessage.\n\nFor interactions that use CES, this method:\n1. Fetches the original bootstrap.js and checks if it uses CES\n2. If CES is used, fetches index.html and injects the registerCES proxy\n3. Creates a blob URL for the modified HTML (stored in _contentBlobUrl)\n4. Replaces bootstrap.js with ciBootstrap that loads the blob URL\n5. Sets up postMessage listeners for CES API calls",
               "type": {
                 "text": "setupCES() => void"
               }
@@ -3895,8 +3992,12 @@
             },
             {
               "kind": "field",
-              "name": "_onInteractionChanged",
-              "privacy": "private"
+              "name": "_iframeMessageOrigin",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "protected",
+              "default": "null"
             },
             {
               "kind": "field",
@@ -3930,15 +4031,6 @@
               "name": "_previousState",
               "type": {
                 "text": "{\n    pointerEvents?: string;\n    position?: string;\n  }"
-              },
-              "privacy": "private",
-              "default": "null"
-            },
-            {
-              "kind": "field",
-              "name": "_responseCheckInterval",
-              "type": {
-                "text": "number | null"
               },
               "privacy": "private",
               "default": "null"
@@ -3993,34 +4085,6 @@
               }
             },
             {
-              "kind": "method",
-              "name": "buildRequireConfig",
-              "description": "DIRECT MODE: Build RequireJS configuration",
-              "type": {
-                "text": "buildRequireConfig() => void"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "combineRequireResolvePaths",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "path1",
-                  "type": {
-                    "text": "string | string[]"
-                  }
-                },
-                {
-                  "name": "path2",
-                  "type": {
-                    "text": "string | string[]"
-                  }
-                }
-              ],
-              "description": "DIRECT MODE: Helper method to combine require paths"
-            },
-            {
               "kind": "field",
               "name": "context",
               "type": {
@@ -4069,14 +4133,6 @@
               "type": {
                 "text": "disable() => void"
               }
-            },
-            {
-              "kind": "field",
-              "name": "dom",
-              "type": {
-                "text": "HTMLElement"
-              },
-              "privacy": "private"
             },
             {
               "kind": "method",
@@ -4172,16 +4228,6 @@
             },
             {
               "kind": "field",
-              "name": "getResolvablePath",
-              "description": "DIRECT MODE: Helper method to get resolvable path"
-            },
-            {
-              "kind": "field",
-              "name": "getResolvablePathString",
-              "description": "DIRECT MODE: Helper method to get resolvable path string"
-            },
-            {
-              "kind": "field",
               "name": "handleIframeMessage",
               "privacy": "protected",
               "description": "IFRAME MODE: Handle iframe messages"
@@ -4202,11 +4248,6 @@
             },
             {
               "kind": "field",
-              "name": "loadConfig",
-              "description": "DIRECT MODE: Load config from URL"
-            },
-            {
-              "kind": "field",
               "name": "module",
               "type": {
                 "text": "string"
@@ -4214,48 +4255,10 @@
               "attribute": "module"
             },
             {
-              "kind": "field",
-              "name": "pci",
-              "type": {
-                "text": "IMSpci<ConfigProperties<unknown>>"
-              },
-              "privacy": "private"
-            },
-            {
               "kind": "method",
               "name": "processPendingMessages",
               "privacy": "private",
               "description": "IFRAME MODE: Process pending messages"
-            },
-            {
-              "kind": "method",
-              "name": "register",
-              "parameters": [
-                {
-                  "name": "pci",
-                  "type": {
-                    "text": "IMSpci<ConfigProperties<unknown>>"
-                  }
-                }
-              ],
-              "description": "DIRECT MODE: Register PCI instance",
-              "type": {
-                "text": "register(pci: IMSpci<ConfigProperties<unknown>>) => void"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "removeDoubleSlashes",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "str",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ],
-              "description": "DIRECT MODE: Helper method to remove double slashes"
             },
             {
               "kind": "field",
@@ -4288,9 +4291,9 @@
               "kind": "field",
               "name": "response",
               "type": {
-                "text": "string | string[]"
+                "text": "string | string[] | null"
               },
-              "default": "[]"
+              "default": "null"
             },
             {
               "kind": "method",
@@ -4348,17 +4351,6 @@
                 }
               ],
               "description": "IFRAME MODE: Send message to iframe"
-            },
-            {
-              "kind": "method",
-              "name": "stopResponseCheck",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "description": "Stop checking for response changes"
             },
             {
               "kind": "method",
@@ -4588,8 +4580,12 @@
             },
             {
               "kind": "field",
-              "name": "_onInteractionChanged",
-              "privacy": "private",
+              "name": "_iframeMessageOrigin",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "protected",
+              "default": "null",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
@@ -4658,19 +4654,6 @@
             },
             {
               "kind": "field",
-              "name": "_responseCheckInterval",
-              "type": {
-                "text": "number | null"
-              },
-              "privacy": "private",
-              "default": "null",
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
               "name": "_value",
               "type": {
                 "text": "string | string[]"
@@ -4733,42 +4716,6 @@
               "type": {
                 "text": "Record<string, QtiVariableJSON>"
               },
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "buildRequireConfig",
-              "description": "DIRECT MODE: Build RequireJS configuration",
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
-              },
-              "type": {
-                "text": "buildRequireConfig() => void"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "combineRequireResolvePaths",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "path1",
-                  "type": {
-                    "text": "string | string[]"
-                  }
-                },
-                {
-                  "name": "path2",
-                  "type": {
-                    "text": "string | string[]"
-                  }
-                }
-              ],
-              "description": "DIRECT MODE: Helper method to combine require paths",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
@@ -4842,18 +4789,6 @@
               },
               "type": {
                 "text": "disable() => void"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "dom",
-              "type": {
-                "text": "HTMLElement"
-              },
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
               }
             },
             {
@@ -4992,24 +4927,6 @@
                 }
               },
               "description": "Parse the require shim JSON string into an object",
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "getResolvablePath",
-              "description": "DIRECT MODE: Helper method to get resolvable path",
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "getResolvablePathString",
-              "description": "DIRECT MODE: Helper method to get resolvable path string",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
@@ -5202,32 +5119,11 @@
             },
             {
               "kind": "field",
-              "name": "loadConfig",
-              "description": "DIRECT MODE: Load config from URL",
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
               "name": "module",
               "type": {
                 "text": "string"
               },
               "attribute": "module",
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "pci",
-              "type": {
-                "text": "IMSpci<ConfigProperties<unknown>>"
-              },
-              "privacy": "private",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
@@ -5255,44 +5151,6 @@
               "description": "Recreates the iframe completely",
               "type": {
                 "text": "recreateIframe() => void"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "register",
-              "parameters": [
-                {
-                  "name": "pci",
-                  "type": {
-                    "text": "IMSpci<ConfigProperties<unknown>>"
-                  }
-                }
-              ],
-              "description": "DIRECT MODE: Register PCI instance",
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
-              },
-              "type": {
-                "text": "register(pci: IMSpci<ConfigProperties<unknown>>) => void"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "removeDoubleSlashes",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "str",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ],
-              "description": "DIRECT MODE: Helper method to remove double slashes",
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
               }
             },
             {
@@ -5338,9 +5196,9 @@
               "kind": "field",
               "name": "response",
               "type": {
-                "text": "string | string[]"
+                "text": "string | string[] | null"
               },
-              "default": "[]",
+              "default": "null",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
@@ -5434,21 +5292,6 @@
               ],
               "type": {
                 "text": "setTestContext(newContext: ItemContext) => void"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "stopResponseCheck",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "description": "Stop checking for response changes",
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
               }
             },
             {
