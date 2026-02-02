@@ -131,7 +131,7 @@ export const RemoveUnselectedChoice: Story = {
 };
 
 export const RemoveSelectedChoice: Story = {
-  tags: ['dom-manipulation', 'xfail'],
+  tags: ['dom-manipulation'],
   render: baseTemplate,
   play: async ({ canvasElement }) => {
     const { canvas, form, interaction } = getElements(canvasElement);
@@ -147,6 +147,8 @@ export const RemoveSelectedChoice: Story = {
     // Remove A (selected)
     choiceA.remove();
     await interaction.updateComplete;
+    // Wait for deferred response cleanup (requestAnimationFrame)
+    await new Promise(r => requestAnimationFrame(r));
 
     // Form value should be empty now
     await fireEvent.submit(form);
@@ -178,7 +180,7 @@ export const RemoveAllChoices: Story = {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 export const ReplaceAllChoices: Story = {
-  tags: ['dom-manipulation', 'xfail'],
+  tags: ['dom-manipulation'],
   render: baseTemplate,
   play: async ({ canvasElement }) => {
     const { canvas, form, interaction } = getElements(canvasElement);
@@ -200,6 +202,8 @@ export const ReplaceAllChoices: Story = {
     });
 
     await interaction.updateComplete;
+    // Wait for deferred response cleanup (requestAnimationFrame)
+    await new Promise(r => requestAnimationFrame(r));
 
     // Old selection should be cleared
     await fireEvent.submit(form);
@@ -288,7 +292,7 @@ export const MoveToNewForm: Story = {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 export const StatePreservedAfterDOMChange: Story = {
-  tags: ['dom-manipulation', 'xfail'],
+  tags: ['dom-manipulation'],
   render: baseTemplate,
   play: async ({ canvasElement, step }) => {
     const { canvas, form, interaction } = getElements(canvasElement);
@@ -301,8 +305,9 @@ export const StatePreservedAfterDOMChange: Story = {
 
       await fireEvent.submit(form);
       const values = getFormDataValues(form, 'RESPONSE');
-      expect(values).toContain('A');
-      expect(values).toContain('B');
+      // Multi-select returns comma-separated string
+      expect(values[0]).toContain('A');
+      expect(values[0]).toContain('B');
     });
 
     await step('Add new choice - state preserved', async () => {
@@ -314,19 +319,23 @@ export const StatePreservedAfterDOMChange: Story = {
 
       await fireEvent.submit(form);
       const values = getFormDataValues(form, 'RESPONSE');
-      expect(values).toContain('A');
-      expect(values).toContain('B');
+      // Multi-select returns comma-separated string
+      expect(values[0]).toContain('A');
+      expect(values[0]).toContain('B');
     });
 
     await step('Remove unrelated choice - state preserved', async () => {
       const choiceC = canvas.getByText<QtiSimpleChoice>('Option C');
       choiceC.remove();
       await interaction.updateComplete;
+      // Wait for deferred response cleanup (requestAnimationFrame)
+      await new Promise(r => requestAnimationFrame(r));
 
       await fireEvent.submit(form);
       const values = getFormDataValues(form, 'RESPONSE');
-      expect(values).toContain('A');
-      expect(values).toContain('B');
+      // Multi-select returns comma-separated string
+      expect(values[0]).toContain('A');
+      expect(values[0]).toContain('B');
     });
   }
 };

@@ -5889,17 +5889,13 @@
               }
             },
             {
-              "kind": "method",
-              "name": "_registerChoiceElement",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "CustomEvent"
-                  }
-                }
-              ],
+              "kind": "field",
+              "name": "_mutationObserver",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "privacy": "private",
+              "default": "null",
               "inheritedFrom": {
                 "name": "ChoicesMixin",
                 "module": "packages/qti-interactions/src/mixins/choices/choices.mixin.ts"
@@ -5947,16 +5943,9 @@
             },
             {
               "kind": "method",
-              "name": "_toggleChoiceChecked",
+              "name": "_syncChoicesFromDOM",
               "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "choice",
-                  "type": {
-                    "text": "Choice"
-                  }
-                }
-              ],
+              "description": "Synchronizes the internal choice elements list with the current DOM state.\nAlso filters the response to only include valid identifiers.",
               "inheritedFrom": {
                 "name": "ChoicesMixin",
                 "module": "packages/qti-interactions/src/mixins/choices/choices.mixin.ts"
@@ -5964,13 +5953,13 @@
             },
             {
               "kind": "method",
-              "name": "_unregisterChoiceElement",
+              "name": "_toggleChoiceChecked",
               "privacy": "protected",
               "parameters": [
                 {
-                  "name": "event",
+                  "name": "choice",
                   "type": {
-                    "text": "CustomEvent"
+                    "text": "Choice"
                   }
                 }
               ],
@@ -13069,17 +13058,13 @@
               }
             },
             {
-              "kind": "method",
-              "name": "_registerChoiceElement",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "CustomEvent"
-                  }
-                }
-              ],
+              "kind": "field",
+              "name": "_mutationObserver",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "privacy": "private",
+              "default": "null",
               "inheritedFrom": {
                 "name": "ChoicesMixin",
                 "module": "packages/qti-interactions/src/mixins/choices/choices.mixin.ts"
@@ -13127,16 +13112,9 @@
             },
             {
               "kind": "method",
-              "name": "_toggleChoiceChecked",
+              "name": "_syncChoicesFromDOM",
               "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "choice",
-                  "type": {
-                    "text": "Choice"
-                  }
-                }
-              ],
+              "description": "Synchronizes the internal choice elements list with the current DOM state.\nAlso filters the response to only include valid identifiers.",
               "inheritedFrom": {
                 "name": "ChoicesMixin",
                 "module": "packages/qti-interactions/src/mixins/choices/choices.mixin.ts"
@@ -13144,13 +13122,13 @@
             },
             {
               "kind": "method",
-              "name": "_unregisterChoiceElement",
+              "name": "_toggleChoiceChecked",
               "privacy": "protected",
               "parameters": [
                 {
-                  "name": "event",
+                  "name": "choice",
                   "type": {
-                    "text": "CustomEvent"
+                    "text": "Choice"
                   }
                 }
               ],
@@ -14085,17 +14063,13 @@
               }
             },
             {
-              "kind": "method",
-              "name": "_registerChoiceElement",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "CustomEvent"
-                  }
-                }
-              ],
+              "kind": "field",
+              "name": "_mutationObserver",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "privacy": "private",
+              "default": "null",
               "inheritedFrom": {
                 "name": "ChoicesMixin",
                 "module": "packages/qti-interactions/src/mixins/choices/choices.mixin.ts"
@@ -14143,16 +14117,9 @@
             },
             {
               "kind": "method",
-              "name": "_toggleChoiceChecked",
+              "name": "_syncChoicesFromDOM",
               "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "choice",
-                  "type": {
-                    "text": "Choice"
-                  }
-                }
-              ],
+              "description": "Synchronizes the internal choice elements list with the current DOM state.\nAlso filters the response to only include valid identifiers.",
               "inheritedFrom": {
                 "name": "ChoicesMixin",
                 "module": "packages/qti-interactions/src/mixins/choices/choices.mixin.ts"
@@ -14160,13 +14127,13 @@
             },
             {
               "kind": "method",
-              "name": "_unregisterChoiceElement",
+              "name": "_toggleChoiceChecked",
               "privacy": "protected",
               "parameters": [
                 {
-                  "name": "event",
+                  "name": "choice",
                   "type": {
-                    "text": "CustomEvent"
+                    "text": "Choice"
                   }
                 }
               ],
@@ -15102,17 +15069,13 @@
               }
             },
             {
-              "kind": "method",
-              "name": "_registerChoiceElement",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "CustomEvent"
-                  }
-                }
-              ],
+              "kind": "field",
+              "name": "_mutationObserver",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "privacy": "private",
+              "default": "null",
               "inheritedFrom": {
                 "name": "ChoicesMixin",
                 "module": "packages/qti-interactions/src/mixins/choices/choices.mixin.ts"
@@ -15160,16 +15123,9 @@
             },
             {
               "kind": "method",
-              "name": "_toggleChoiceChecked",
+              "name": "_syncChoicesFromDOM",
               "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "choice",
-                  "type": {
-                    "text": "Choice"
-                  }
-                }
-              ],
+              "description": "Synchronizes the internal choice elements list with the current DOM state.\nAlso filters the response to only include valid identifiers.",
               "inheritedFrom": {
                 "name": "ChoicesMixin",
                 "module": "packages/qti-interactions/src/mixins/choices/choices.mixin.ts"
@@ -15177,13 +15133,13 @@
             },
             {
               "kind": "method",
-              "name": "_unregisterChoiceElement",
+              "name": "_toggleChoiceChecked",
               "privacy": "protected",
               "parameters": [
                 {
-                  "name": "event",
+                  "name": "choice",
                   "type": {
-                    "text": "CustomEvent"
+                    "text": "Choice"
                   }
                 }
               ],
@@ -27535,17 +27491,13 @@
               "privacy": "protected"
             },
             {
-              "kind": "method",
-              "name": "_registerChoiceElement",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "CustomEvent"
-                  }
-                }
-              ]
+              "kind": "field",
+              "name": "_mutationObserver",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "privacy": "private",
+              "default": "null"
             },
             {
               "kind": "method",
@@ -27581,6 +27533,12 @@
             },
             {
               "kind": "method",
+              "name": "_syncChoicesFromDOM",
+              "privacy": "protected",
+              "description": "Synchronizes the internal choice elements list with the current DOM state.\nAlso filters the response to only include valid identifiers."
+            },
+            {
+              "kind": "method",
               "name": "_toggleChoiceChecked",
               "privacy": "protected",
               "parameters": [
@@ -27588,19 +27546,6 @@
                   "name": "choice",
                   "type": {
                     "text": "Choice"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_unregisterChoiceElement",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "CustomEvent"
                   }
                 }
               ]
