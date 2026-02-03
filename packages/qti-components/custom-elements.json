@@ -4006,12 +4006,6 @@
                   "type": {
                     "text": "number"
                   }
-                },
-                {
-                  "name": "element",
-                  "type": {
-                    "text": "HTMLElement"
-                  }
                 }
               ],
               "inheritedFrom": {
@@ -4051,13 +4045,13 @@
                 {
                   "name": "rect1",
                   "type": {
-                    "text": "DOMRect"
+                    "text": "RectLike"
                   }
                 },
                 {
                   "name": "rect2",
                   "type": {
-                    "text": "DOMRect"
+                    "text": "RectLike"
                   }
                 }
               ],
@@ -4369,12 +4363,61 @@
             },
             {
               "kind": "field",
+              "name": "dragBounds",
+              "type": {
+                "text": "{\n      minLeft: number;\n      maxLeft: number;\n      minTop: number;\n      maxTop: number;\n      width: number;\n      height: number;\n    } | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dragBoundsDirty",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "dragClone",
               "type": {
                 "text": "HTMLElement"
               },
               "privacy": "private",
               "default": "null",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dragCloneRect",
+              "type": {
+                "text": "RectLike | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dragCloneStyleCache",
+              "privacy": "private",
+              "default": "new WeakMap<HTMLElement, string>()",
               "inheritedFrom": {
                 "name": "DragDropInteractionMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
@@ -4435,6 +4478,19 @@
               "kind": "field",
               "name": "draggablesModified",
               "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dragMoveRaf",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0",
               "inheritedFrom": {
                 "name": "DragDropInteractionMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
@@ -4511,6 +4567,29 @@
               "kind": "field",
               "name": "droppablesModified",
               "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dropzoneRects",
+              "privacy": "private",
+              "default": "new Map<HTMLElement, DOMRect>()",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dropzoneRectsDirty",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
               "inheritedFrom": {
                 "name": "DragDropInteractionMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
@@ -4603,6 +4682,50 @@
               },
               "type": {
                 "text": "formResetCallback() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getCachedDropzoneRect",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "DOMRect"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "el",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getComputedStyleText",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "source",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
               }
             },
             {
@@ -5078,6 +5201,29 @@
               }
             },
             {
+              "kind": "field",
+              "name": "onScrollOrResize",
+              "privacy": "private",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "pendingMove",
+              "type": {
+                "text": "{ clientX: number; clientY: number } | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "placeResponse",
               "privacy": "private",
@@ -5100,6 +5246,23 @@
               }
             },
             {
+              "kind": "method",
+              "name": "processDragMove",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "currentTouch",
+                  "type": {
+                    "text": "{ clientX: number; clientY: number }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "readonly",
               "type": {
@@ -5111,6 +5274,24 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "refreshDragBounds",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "refreshDropzoneRects",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
               }
             },
             {
@@ -5240,6 +5421,15 @@
               },
               "type": {
                 "text": "saveResponse(value: string | string[], state?: string | null) => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "scheduleDragMove",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
               }
             },
             {
@@ -8784,12 +8974,6 @@
                   "type": {
                     "text": "number"
                   }
-                },
-                {
-                  "name": "element",
-                  "type": {
-                    "text": "HTMLElement"
-                  }
                 }
               ],
               "inheritedFrom": {
@@ -8829,13 +9013,13 @@
                 {
                   "name": "rect1",
                   "type": {
-                    "text": "DOMRect"
+                    "text": "RectLike"
                   }
                 },
                 {
                   "name": "rect2",
                   "type": {
-                    "text": "DOMRect"
+                    "text": "RectLike"
                   }
                 }
               ],
@@ -9147,12 +9331,61 @@
             },
             {
               "kind": "field",
+              "name": "dragBounds",
+              "type": {
+                "text": "{\n      minLeft: number;\n      maxLeft: number;\n      minTop: number;\n      maxTop: number;\n      width: number;\n      height: number;\n    } | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dragBoundsDirty",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "dragClone",
               "type": {
                 "text": "HTMLElement"
               },
               "privacy": "private",
               "default": "null",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dragCloneRect",
+              "type": {
+                "text": "RectLike | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dragCloneStyleCache",
+              "privacy": "private",
+              "default": "new WeakMap<HTMLElement, string>()",
               "inheritedFrom": {
                 "name": "DragDropInteractionMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
@@ -9213,6 +9446,19 @@
               "kind": "field",
               "name": "draggablesModified",
               "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dragMoveRaf",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0",
               "inheritedFrom": {
                 "name": "DragDropInteractionMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
@@ -9289,6 +9535,29 @@
               "kind": "field",
               "name": "droppablesModified",
               "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dropzoneRects",
+              "privacy": "private",
+              "default": "new Map<HTMLElement, DOMRect>()",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dropzoneRectsDirty",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
               "inheritedFrom": {
                 "name": "DragDropInteractionMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
@@ -9381,6 +9650,50 @@
               },
               "type": {
                 "text": "formResetCallback() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getCachedDropzoneRect",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "DOMRect"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "el",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getComputedStyleText",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "source",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
               }
             },
             {
@@ -9874,6 +10187,29 @@
               }
             },
             {
+              "kind": "field",
+              "name": "onScrollOrResize",
+              "privacy": "private",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "pendingMove",
+              "type": {
+                "text": "{ clientX: number; clientY: number } | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "placeResponse",
               "privacy": "private",
@@ -9896,6 +10232,23 @@
               }
             },
             {
+              "kind": "method",
+              "name": "processDragMove",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "currentTouch",
+                  "type": {
+                    "text": "{ clientX: number; clientY: number }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "readonly",
               "type": {
@@ -9907,6 +10260,24 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "refreshDragBounds",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "refreshDropzoneRects",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
               }
             },
             {
@@ -10036,6 +10407,15 @@
               },
               "type": {
                 "text": "saveResponse(value: string | string[], state?: string | null) => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "scheduleDragMove",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
               }
             },
             {
@@ -11378,12 +11758,6 @@
                   "type": {
                     "text": "number"
                   }
-                },
-                {
-                  "name": "element",
-                  "type": {
-                    "text": "HTMLElement"
-                  }
                 }
               ],
               "inheritedFrom": {
@@ -11423,13 +11797,13 @@
                 {
                   "name": "rect1",
                   "type": {
-                    "text": "DOMRect"
+                    "text": "RectLike"
                   }
                 },
                 {
                   "name": "rect2",
                   "type": {
-                    "text": "DOMRect"
+                    "text": "RectLike"
                   }
                 }
               ],
@@ -11741,12 +12115,61 @@
             },
             {
               "kind": "field",
+              "name": "dragBounds",
+              "type": {
+                "text": "{\n      minLeft: number;\n      maxLeft: number;\n      minTop: number;\n      maxTop: number;\n      width: number;\n      height: number;\n    } | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dragBoundsDirty",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "dragClone",
               "type": {
                 "text": "HTMLElement"
               },
               "privacy": "private",
               "default": "null",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dragCloneRect",
+              "type": {
+                "text": "RectLike | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dragCloneStyleCache",
+              "privacy": "private",
+              "default": "new WeakMap<HTMLElement, string>()",
               "inheritedFrom": {
                 "name": "DragDropInteractionMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
@@ -11807,6 +12230,19 @@
               "kind": "field",
               "name": "draggablesModified",
               "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dragMoveRaf",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0",
               "inheritedFrom": {
                 "name": "DragDropInteractionMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
@@ -11883,6 +12319,29 @@
               "kind": "field",
               "name": "droppablesModified",
               "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dropzoneRects",
+              "privacy": "private",
+              "default": "new Map<HTMLElement, DOMRect>()",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dropzoneRectsDirty",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
               "inheritedFrom": {
                 "name": "DragDropInteractionMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
@@ -11975,6 +12434,50 @@
               },
               "type": {
                 "text": "formResetCallback() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getCachedDropzoneRect",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "DOMRect"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "el",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getComputedStyleText",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "source",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
               }
             },
             {
@@ -12450,6 +12953,29 @@
               }
             },
             {
+              "kind": "field",
+              "name": "onScrollOrResize",
+              "privacy": "private",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "pendingMove",
+              "type": {
+                "text": "{ clientX: number; clientY: number } | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "placeResponse",
               "privacy": "private",
@@ -12490,6 +13016,23 @@
               ]
             },
             {
+              "kind": "method",
+              "name": "processDragMove",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "currentTouch",
+                  "type": {
+                    "text": "{ clientX: number; clientY: number }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "readonly",
               "type": {
@@ -12501,6 +13044,24 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "refreshDragBounds",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "refreshDropzoneRects",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
               }
             },
             {
@@ -12630,6 +13191,15 @@
               },
               "type": {
                 "text": "saveResponse(value: string | string[], state?: string | null) => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "scheduleDragMove",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
               }
             },
             {
@@ -17082,12 +17652,6 @@
                   "type": {
                     "text": "number"
                   }
-                },
-                {
-                  "name": "element",
-                  "type": {
-                    "text": "HTMLElement"
-                  }
                 }
               ],
               "inheritedFrom": {
@@ -17127,13 +17691,13 @@
                 {
                   "name": "rect1",
                   "type": {
-                    "text": "DOMRect"
+                    "text": "RectLike"
                   }
                 },
                 {
                   "name": "rect2",
                   "type": {
-                    "text": "DOMRect"
+                    "text": "RectLike"
                   }
                 }
               ],
@@ -17463,12 +18027,61 @@
             },
             {
               "kind": "field",
+              "name": "dragBounds",
+              "type": {
+                "text": "{\n      minLeft: number;\n      maxLeft: number;\n      minTop: number;\n      maxTop: number;\n      width: number;\n      height: number;\n    } | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dragBoundsDirty",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "dragClone",
               "type": {
                 "text": "HTMLElement"
               },
               "privacy": "private",
               "default": "null",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dragCloneRect",
+              "type": {
+                "text": "RectLike | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dragCloneStyleCache",
+              "privacy": "private",
+              "default": "new WeakMap<HTMLElement, string>()",
               "inheritedFrom": {
                 "name": "DragDropInteractionMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
@@ -17529,6 +18142,19 @@
               "kind": "field",
               "name": "draggablesModified",
               "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dragMoveRaf",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0",
               "inheritedFrom": {
                 "name": "DragDropInteractionMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
@@ -17605,6 +18231,29 @@
               "kind": "field",
               "name": "droppablesModified",
               "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dropzoneRects",
+              "privacy": "private",
+              "default": "new Map<HTMLElement, DOMRect>()",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dropzoneRectsDirty",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
               "inheritedFrom": {
                 "name": "DragDropInteractionMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
@@ -17697,6 +18346,50 @@
               },
               "type": {
                 "text": "formResetCallback() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getCachedDropzoneRect",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "DOMRect"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "el",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getComputedStyleText",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "source",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
               }
             },
             {
@@ -18209,6 +18902,29 @@
               }
             },
             {
+              "kind": "field",
+              "name": "onScrollOrResize",
+              "privacy": "private",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "pendingMove",
+              "type": {
+                "text": "{ clientX: number; clientY: number } | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "placeResponse",
               "privacy": "private",
@@ -18231,6 +18947,23 @@
               }
             },
             {
+              "kind": "method",
+              "name": "processDragMove",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "currentTouch",
+                  "type": {
+                    "text": "{ clientX: number; clientY: number }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "readonly",
               "type": {
@@ -18242,6 +18975,24 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "refreshDragBounds",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "refreshDropzoneRects",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
               }
             },
             {
@@ -18372,6 +19123,15 @@
               },
               "type": {
                 "text": "saveResponse(value: string | string[], state?: string | null) => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "scheduleDragMove",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
               }
             },
             {
@@ -19662,12 +20422,6 @@
                   "type": {
                     "text": "number"
                   }
-                },
-                {
-                  "name": "element",
-                  "type": {
-                    "text": "HTMLElement"
-                  }
                 }
               ],
               "inheritedFrom": {
@@ -19707,13 +20461,13 @@
                 {
                   "name": "rect1",
                   "type": {
-                    "text": "DOMRect"
+                    "text": "RectLike"
                   }
                 },
                 {
                   "name": "rect2",
                   "type": {
-                    "text": "DOMRect"
+                    "text": "RectLike"
                   }
                 }
               ],
@@ -20041,12 +20795,61 @@
             },
             {
               "kind": "field",
+              "name": "dragBounds",
+              "type": {
+                "text": "{\n      minLeft: number;\n      maxLeft: number;\n      minTop: number;\n      maxTop: number;\n      width: number;\n      height: number;\n    } | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dragBoundsDirty",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "dragClone",
               "type": {
                 "text": "HTMLElement"
               },
               "privacy": "private",
               "default": "null",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dragCloneRect",
+              "type": {
+                "text": "RectLike | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dragCloneStyleCache",
+              "privacy": "private",
+              "default": "new WeakMap<HTMLElement, string>()",
               "inheritedFrom": {
                 "name": "DragDropInteractionMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
@@ -20107,6 +20910,19 @@
               "kind": "field",
               "name": "draggablesModified",
               "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dragMoveRaf",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0",
               "inheritedFrom": {
                 "name": "DragDropInteractionMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
@@ -20183,6 +20999,29 @@
               "kind": "field",
               "name": "droppablesModified",
               "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dropzoneRects",
+              "privacy": "private",
+              "default": "new Map<HTMLElement, DOMRect>()",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dropzoneRectsDirty",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
               "inheritedFrom": {
                 "name": "DragDropInteractionMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
@@ -20275,6 +21114,50 @@
               },
               "type": {
                 "text": "formResetCallback() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getCachedDropzoneRect",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "DOMRect"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "el",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getComputedStyleText",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "source",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
               }
             },
             {
@@ -20785,6 +21668,16 @@
             },
             {
               "kind": "field",
+              "name": "onScrollOrResize",
+              "privacy": "private",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "orientation",
               "type": {
                 "text": "'horizontal' | 'vertical'"
@@ -20792,6 +21685,19 @@
               "privacy": "public",
               "description": "orientation of choices",
               "attribute": "orientation"
+            },
+            {
+              "kind": "field",
+              "name": "pendingMove",
+              "type": {
+                "text": "{ clientX: number; clientY: number } | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
             },
             {
               "kind": "method",
@@ -20816,6 +21722,23 @@
               }
             },
             {
+              "kind": "method",
+              "name": "processDragMove",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "currentTouch",
+                  "type": {
+                    "text": "{ clientX: number; clientY: number }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "readonly",
               "type": {
@@ -20827,6 +21750,24 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "refreshDragBounds",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "refreshDropzoneRects",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
               }
             },
             {
@@ -20956,6 +21897,15 @@
               },
               "type": {
                 "text": "saveResponse(value: string | string[], state?: string | null) => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "scheduleDragMove",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "DragDropInteractionMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
               }
             },
             {
@@ -28322,12 +29272,6 @@
                   "type": {
                     "text": "number"
                   }
-                },
-                {
-                  "name": "element",
-                  "type": {
-                    "text": "HTMLElement"
-                  }
                 }
               ]
             },
@@ -28359,13 +29303,13 @@
                 {
                   "name": "rect1",
                   "type": {
-                    "text": "DOMRect"
+                    "text": "RectLike"
                   }
                 },
                 {
                   "name": "rect2",
                   "type": {
-                    "text": "DOMRect"
+                    "text": "RectLike"
                   }
                 }
               ]
@@ -28552,12 +29496,45 @@
             },
             {
               "kind": "field",
+              "name": "dragBounds",
+              "type": {
+                "text": "{\n      minLeft: number;\n      maxLeft: number;\n      minTop: number;\n      maxTop: number;\n      width: number;\n      height: number;\n    } | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "dragBoundsDirty",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
               "name": "dragClone",
               "type": {
                 "text": "HTMLElement"
               },
               "privacy": "private",
               "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "dragCloneRect",
+              "type": {
+                "text": "RectLike | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "dragCloneStyleCache",
+              "privacy": "private",
+              "default": "new WeakMap<HTMLElement, string>()"
             },
             {
               "kind": "field",
@@ -28599,6 +29576,15 @@
               "kind": "field",
               "name": "draggablesModified",
               "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "dragMoveRaf",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
             },
             {
               "kind": "field",
@@ -28657,6 +29643,21 @@
               "privacy": "private"
             },
             {
+              "kind": "field",
+              "name": "dropzoneRects",
+              "privacy": "private",
+              "default": "new Map<HTMLElement, DOMRect>()"
+            },
+            {
+              "kind": "field",
+              "name": "dropzoneRectsDirty",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
               "kind": "method",
               "name": "enableDroppable",
               "privacy": "private",
@@ -28698,6 +29699,42 @@
                   "name": "identifier",
                   "type": {
                     "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getCachedDropzoneRect",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "DOMRect"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "el",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getComputedStyleText",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "source",
+                  "type": {
+                    "text": "HTMLElement"
                   }
                 }
               ]
@@ -29018,6 +30055,21 @@
               "privacy": "private"
             },
             {
+              "kind": "field",
+              "name": "onScrollOrResize",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "pendingMove",
+              "type": {
+                "text": "{ clientX: number; clientY: number } | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
               "kind": "method",
               "name": "placeResponse",
               "privacy": "private",
@@ -29034,6 +30086,29 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "processDragMove",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "currentTouch",
+                  "type": {
+                    "text": "{ clientX: number; clientY: number }"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "refreshDragBounds",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "refreshDropzoneRects",
+              "privacy": "private"
             },
             {
               "kind": "method",
@@ -29089,6 +30164,11 @@
                   "text": "void"
                 }
               }
+            },
+            {
+              "kind": "method",
+              "name": "scheduleDragMove",
+              "privacy": "private"
             },
             {
               "kind": "method",
