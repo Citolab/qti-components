@@ -3,6 +3,7 @@
   "description": "QTI prosemirror schemas and helpers",
   "version": "1.0.0",
   "author": "",
+  "customElements": "custom-elements.json",
   "dependencies": {
     "@qti-components/base": "workspace:^",
     "@qti-components/interactions": "workspace:^",
@@ -32,7 +33,10 @@
   "scripts": {
     "attw": "attw --profile esm-only --pack",
     "build": "tsc --paths null",
+    "cem": "cem analyze --config ../../custom-elements-manifest.config.mjs --globs 'src/components/**/*.ts' --outdir ./",
     "clean": "rm -rf dist",
+    "yalc": "yalc publish",
+    "yalc:push": "yalc push",
     "storybook": "storybook dev -p 6007 --no-open",
     "build-storybook": "storybook build"
   },

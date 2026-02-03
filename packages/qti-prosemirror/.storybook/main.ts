@@ -3,7 +3,7 @@ import type { StorybookConfig } from '@storybook/web-components-vite';
 const config: StorybookConfig = {
   stories: [
     {
-      directory: '../src/components',
+      directory: '../src/stories',
       files: '**/*.stories.*',
       titlePrefix: 'QTI ProseMirror'
     }
