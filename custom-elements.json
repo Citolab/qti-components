@@ -220,6 +220,13 @@
                   "type": {
                     "text": "string | string[]"
                   }
+                },
+                {
+                  "name": "state",
+                  "optional": true,
+                  "type": {
+                    "text": "string | null"
+                  }
                 }
               ]
             },
@@ -5198,6 +5205,13 @@
                   "type": {
                     "text": "string | string[]"
                   }
+                },
+                {
+                  "name": "state",
+                  "optional": true,
+                  "type": {
+                    "text": "string | null"
+                  }
                 }
               ],
               "inheritedFrom": {
@@ -5205,7 +5219,7 @@
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               },
               "type": {
-                "text": "saveResponse(value: string | string[]) => void"
+                "text": "saveResponse(value: string | string[], state?: string | null) => void"
               }
             },
             {
@@ -6290,6 +6304,13 @@
                   "type": {
                     "text": "string | string[]"
                   }
+                },
+                {
+                  "name": "state",
+                  "optional": true,
+                  "type": {
+                    "text": "string | null"
+                  }
                 }
               ],
               "inheritedFrom": {
@@ -6297,7 +6318,7 @@
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               },
               "type": {
-                "text": "saveResponse(value: string | string[]) => void"
+                "text": "saveResponse(value: string | string[], state?: string | null) => void"
               }
             },
             {
@@ -6710,7 +6731,110 @@
           "members": [
             {
               "kind": "field",
+              "name": "_contentBlobUrl",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_context",
+              "type": {
+                "text": "ItemContext"
+              },
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_correctResponse",
+              "type": {
+                "text": "string | string[] | null"
+              },
+              "privacy": "protected",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_errorMessage",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_handleShowCandidateCorrectionChange",
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_handleShowCorrectResponseChange",
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_handleShowFullCorrectResponseChange",
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_internals",
+              "type": {
+                "text": "ElementInternals"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_isFullCorrectResponse",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_manifestUrl",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_resourceBaseUrl",
               "type": {
                 "text": "string"
               },
@@ -6791,6 +6915,61 @@
                 "text": "string"
               },
               "attribute": "data"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getBaseCandidates",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string[]"
+                }
+              }
             },
             {
               "kind": "method",
@@ -6941,6 +7120,85 @@
             },
             {
               "kind": "field",
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "readonly",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "reportValidity() => boolean"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "reset",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "reset() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveResourceWithFallback",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<{ url: string; baseUrl: string | null; text?: string }>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "ref",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "baseCandidates",
+                  "type": {
+                    "text": "string[]"
+                  }
+                },
+                {
+                  "name": "options",
+                  "default": "{}",
+                  "type": {
+                    "text": "{ returnText?: boolean }"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
               "name": "response",
               "type": {
                 "text": "string | string[] | null"
@@ -6989,6 +7247,13 @@
                   "type": {
                     "text": "string | string[]"
                   }
+                },
+                {
+                  "name": "state",
+                  "optional": true,
+                  "type": {
+                    "text": "string | null"
+                  }
                 }
               ],
               "inheritedFrom": {
@@ -6996,7 +7261,7 @@
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               },
               "type": {
-                "text": "saveResponse(value: string | string[]) => void"
+                "text": "saveResponse(value: string | string[], state?: string | null) => void"
               }
             },
             {
@@ -7900,6 +8165,13 @@
                   "type": {
                     "text": "string | string[]"
                   }
+                },
+                {
+                  "name": "state",
+                  "optional": true,
+                  "type": {
+                    "text": "string | null"
+                  }
                 }
               ],
               "inheritedFrom": {
@@ -7907,7 +8179,7 @@
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               },
               "type": {
-                "text": "saveResponse(value: string | string[]) => void"
+                "text": "saveResponse(value: string | string[], state?: string | null) => void"
               }
             },
             {
@@ -9713,6 +9985,13 @@
                   "type": {
                     "text": "string | string[]"
                   }
+                },
+                {
+                  "name": "state",
+                  "optional": true,
+                  "type": {
+                    "text": "string | null"
+                  }
                 }
               ],
               "inheritedFrom": {
@@ -9720,7 +9999,7 @@
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               },
               "type": {
-                "text": "saveResponse(value: string | string[]) => void"
+                "text": "saveResponse(value: string | string[], state?: string | null) => void"
               }
             },
             {
@@ -10519,6 +10798,13 @@
                   "type": {
                     "text": "string | string[]"
                   }
+                },
+                {
+                  "name": "state",
+                  "optional": true,
+                  "type": {
+                    "text": "string | null"
+                  }
                 }
               ],
               "inheritedFrom": {
@@ -10526,7 +10812,7 @@
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               },
               "type": {
-                "text": "saveResponse(value: string | string[]) => void"
+                "text": "saveResponse(value: string | string[], state?: string | null) => void"
               }
             },
             {
@@ -12285,6 +12571,13 @@
                   "type": {
                     "text": "string | string[]"
                   }
+                },
+                {
+                  "name": "state",
+                  "optional": true,
+                  "type": {
+                    "text": "string | null"
+                  }
                 }
               ],
               "inheritedFrom": {
@@ -12292,7 +12585,7 @@
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               },
               "type": {
-                "text": "saveResponse(value: string | string[]) => void"
+                "text": "saveResponse(value: string | string[], state?: string | null) => void"
               }
             },
             {
@@ -13324,6 +13617,13 @@
                   "type": {
                     "text": "string | string[]"
                   }
+                },
+                {
+                  "name": "state",
+                  "optional": true,
+                  "type": {
+                    "text": "string | null"
+                  }
                 }
               ],
               "inheritedFrom": {
@@ -13331,7 +13631,7 @@
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               },
               "type": {
-                "text": "saveResponse(value: string | string[]) => void"
+                "text": "saveResponse(value: string | string[], state?: string | null) => void"
               }
             },
             {
@@ -14348,6 +14648,13 @@
                   "type": {
                     "text": "string | string[]"
                   }
+                },
+                {
+                  "name": "state",
+                  "optional": true,
+                  "type": {
+                    "text": "string | null"
+                  }
                 }
               ],
               "inheritedFrom": {
@@ -14355,7 +14662,7 @@
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               },
               "type": {
-                "text": "saveResponse(value: string | string[]) => void"
+                "text": "saveResponse(value: string | string[], state?: string | null) => void"
               }
             },
             {
@@ -15325,6 +15632,13 @@
                   "type": {
                     "text": "string | string[]"
                   }
+                },
+                {
+                  "name": "state",
+                  "optional": true,
+                  "type": {
+                    "text": "string | null"
+                  }
                 }
               ],
               "inheritedFrom": {
@@ -15332,7 +15646,7 @@
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               },
               "type": {
-                "text": "saveResponse(value: string | string[]) => void"
+                "text": "saveResponse(value: string | string[], state?: string | null) => void"
               }
             },
             {
@@ -16079,6 +16393,13 @@
                   "type": {
                     "text": "string | string[]"
                   }
+                },
+                {
+                  "name": "state",
+                  "optional": true,
+                  "type": {
+                    "text": "string | null"
+                  }
                 }
               ],
               "inheritedFrom": {
@@ -16086,7 +16407,7 @@
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               },
               "type": {
-                "text": "saveResponse(value: string | string[]) => void"
+                "text": "saveResponse(value: string | string[], state?: string | null) => void"
               }
             },
             {
@@ -17884,6 +18205,13 @@
                   "type": {
                     "text": "string | string[]"
                   }
+                },
+                {
+                  "name": "state",
+                  "optional": true,
+                  "type": {
+                    "text": "string | null"
+                  }
                 }
               ],
               "inheritedFrom": {
@@ -17891,7 +18219,7 @@
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               },
               "type": {
-                "text": "saveResponse(value: string | string[]) => void"
+                "text": "saveResponse(value: string | string[], state?: string | null) => void"
               }
             },
             {
@@ -18655,6 +18983,13 @@
                   "type": {
                     "text": "string | string[]"
                   }
+                },
+                {
+                  "name": "state",
+                  "optional": true,
+                  "type": {
+                    "text": "string | null"
+                  }
                 }
               ],
               "inheritedFrom": {
@@ -18662,7 +18997,7 @@
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               },
               "type": {
-                "text": "saveResponse(value: string | string[]) => void"
+                "text": "saveResponse(value: string | string[], state?: string | null) => void"
               }
             },
             {
@@ -20446,6 +20781,13 @@
                   "type": {
                     "text": "string | string[]"
                   }
+                },
+                {
+                  "name": "state",
+                  "optional": true,
+                  "type": {
+                    "text": "string | null"
+                  }
                 }
               ],
               "inheritedFrom": {
@@ -20453,7 +20795,7 @@
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               },
               "type": {
-                "text": "saveResponse(value: string | string[]) => void"
+                "text": "saveResponse(value: string | string[], state?: string | null) => void"
               }
             },
             {
@@ -20963,6 +21305,15 @@
             },
             {
               "kind": "field",
+              "name": "_iframeMessageOrigin",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "protected",
+              "default": "null"
+            },
+            {
+              "kind": "field",
               "name": "_internals",
               "type": {
                 "text": "ElementInternals"
@@ -20984,15 +21335,6 @@
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               }
-            },
-            {
-              "kind": "field",
-              "name": "_iframeMessageOrigin",
-              "type": {
-                "text": "string | null"
-              },
-              "privacy": "protected",
-              "default": "null"
             },
             {
               "kind": "field",
@@ -21080,32 +21422,16 @@
               }
             },
             {
-              "kind": "method",
-              "name": "buildRequireConfig",
-              "description": "DIRECT MODE: Build RequireJS configuration",
+              "kind": "field",
+              "name": "configContext",
               "type": {
-                "text": "buildRequireConfig() => void"
+                "text": "ConfigContext"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
-            },
-            {
-              "kind": "method",
-              "name": "combineRequireResolvePaths",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "path1",
-                  "type": {
-                    "text": "string | string[]"
-                  }
-                },
-                {
-                  "name": "path2",
-                  "type": {
-                    "text": "string | string[]"
-                  }
-                }
-              ],
-              "description": "DIRECT MODE: Helper method to combine require paths"
             },
             {
               "kind": "field",
@@ -21198,11 +21524,17 @@
             },
             {
               "kind": "field",
-              "name": "dom",
+              "name": "disabled",
               "type": {
-                "text": "HTMLElement"
+                "text": "boolean"
               },
-              "privacy": "private"
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
             },
             {
               "kind": "method",
@@ -21349,8 +21681,38 @@
             },
             {
               "kind": "field",
-              "name": "loadConfig",
-              "description": "DIRECT MODE: Load config from URL"
+              "name": "internals",
+              "type": {
+                "text": "ElementInternals"
+              },
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "isFullCorrectResponse",
+              "type": {
+                "text": "Readonly<boolean>"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "isInline",
+              "type": {
+                "text": "boolean"
+              },
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
             },
             {
               "kind": "field",
@@ -21362,11 +21724,12 @@
             },
             {
               "kind": "field",
-              "name": "pci",
-              "type": {
-                "text": "IMSpci<ConfigProperties<unknown>>"
-              },
-              "privacy": "private"
+              "name": "name",
+              "attribute": "name",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
             },
             {
               "kind": "method",
@@ -21375,34 +21738,35 @@
               "description": "IFRAME MODE: Process pending messages"
             },
             {
-              "kind": "method",
-              "name": "register",
-              "parameters": [
-                {
-                  "name": "pci",
-                  "type": {
-                    "text": "IMSpci<ConfigProperties<unknown>>"
-                  }
-                }
-              ],
-              "description": "DIRECT MODE: Register PCI instance",
+              "kind": "field",
+              "name": "readonly",
               "type": {
-                "text": "register(pci: IMSpci<ConfigProperties<unknown>>) => void"
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "readonly",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
               "kind": "method",
-              "name": "removeDoubleSlashes",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "str",
-                  "type": {
-                    "text": "string"
-                  }
+              "name": "reportValidity",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
                 }
-              ],
-              "description": "DIRECT MODE: Helper method to remove double slashes"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "reportValidity() => boolean"
+              }
             },
             {
               "kind": "field",
@@ -21454,7 +21818,35 @@
               "type": {
                 "text": "string | string[] | null"
               },
-              "default": "[]"
+              "default": "null",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "responseIdentifier",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "response-identifier",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "responseVariable",
+              "type": {
+                "text": "ResponseVariable | undefined"
+              },
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
             },
             {
               "kind": "method",
@@ -21502,6 +21894,13 @@
                   "type": {
                     "text": "string | string[]"
                   }
+                },
+                {
+                  "name": "state",
+                  "optional": true,
+                  "type": {
+                    "text": "string | null"
+                  }
                 }
               ],
               "inheritedFrom": {
@@ -21509,7 +21908,7 @@
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               },
               "type": {
-                "text": "saveResponse(value: string | string[]) => void"
+                "text": "saveResponse(value: string | string[], state?: string | null) => void"
               }
             },
             {
@@ -21539,15 +21938,49 @@
               "description": "IFRAME MODE: Send message to iframe"
             },
             {
-              "kind": "method",
-              "name": "stopResponseCheck",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
+              "kind": "field",
+              "name": "showCandidateCorrection",
+              "type": {
+                "text": "boolean"
               },
-              "description": "Stop checking for response changes"
+              "default": "false",
+              "description": "Shows feedback on candidate's selections compared to correct response.\nAdds `candidate-correct` / `candidate-incorrect` states to choices.",
+              "attribute": "show-candidate-correction",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "showCorrectResponse",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows which choices are correct with inline indicators.\nAdds `correct-response` / `incorrect-response` states to choices.",
+              "attribute": "show-correct-response",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "showFullCorrectResponse",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows a cloned interaction with the correct answers filled in.\nCreates a disabled copy positioned after this interaction.",
+              "attribute": "show-full-correct-response",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
             },
             {
               "kind": "method",
@@ -21802,12 +22235,16 @@
               "fieldName": "useDefaultShims"
             },
             {
-              "name": "data-use-iframe",
+              "name": "disabled",
               "type": {
                 "text": "boolean"
               },
               "default": "false",
-              "fieldName": "useIframe"
+              "fieldName": "disabled",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
             },
             {
               "name": "module",
@@ -22019,6 +22456,19 @@
             },
             {
               "kind": "field",
+              "name": "_iframeMessageOrigin",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "protected",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_internals",
               "type": {
                 "text": "ElementInternals"
@@ -22039,19 +22489,6 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_iframeMessageOrigin",
-              "type": {
-                "text": "string | null"
-              },
-              "privacy": "protected",
-              "default": "null",
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
               }
             },
             {
@@ -22185,39 +22622,15 @@
               }
             },
             {
-              "kind": "method",
-              "name": "buildRequireConfig",
-              "description": "DIRECT MODE: Build RequireJS configuration",
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
-              },
+              "kind": "field",
+              "name": "configContext",
               "type": {
-                "text": "buildRequireConfig() => void"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "combineRequireResolvePaths",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "path1",
-                  "type": {
-                    "text": "string | string[]"
-                  }
-                },
-                {
-                  "name": "path2",
-                  "type": {
-                    "text": "string | string[]"
-                  }
-                }
-              ],
-              "description": "DIRECT MODE: Helper method to combine require paths",
+                "text": "ConfigContext"
+              },
+              "privacy": "protected",
               "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -22331,14 +22744,16 @@
             },
             {
               "kind": "field",
-              "name": "dom",
+              "name": "disabled",
               "type": {
-                "text": "HTMLElement"
+                "text": "boolean"
               },
-              "privacy": "private",
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true,
               "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -22700,11 +23115,37 @@
             },
             {
               "kind": "field",
-              "name": "loadConfig",
-              "description": "DIRECT MODE: Load config from URL",
+              "name": "internals",
+              "type": {
+                "text": "ElementInternals"
+              },
+              "readonly": true,
               "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "isFullCorrectResponse",
+              "type": {
+                "text": "Readonly<boolean>"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "isInline",
+              "type": {
+                "text": "boolean"
+              },
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -22721,14 +23162,11 @@
             },
             {
               "kind": "field",
-              "name": "pci",
-              "type": {
-                "text": "IMSpci<ConfigProperties<unknown>>"
-              },
-              "privacy": "private",
+              "name": "name",
+              "attribute": "name",
               "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -22771,40 +23209,19 @@
             },
             {
               "kind": "method",
-              "name": "register",
-              "parameters": [
-                {
-                  "name": "pci",
-                  "type": {
-                    "text": "IMSpci<ConfigProperties<unknown>>"
-                  }
+              "name": "reportValidity",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
                 }
-              ],
-              "description": "DIRECT MODE: Register PCI instance",
+              },
               "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               },
               "type": {
-                "text": "register(pci: IMSpci<ConfigProperties<unknown>>) => void"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "removeDoubleSlashes",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "str",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ],
-              "description": "DIRECT MODE: Helper method to remove double slashes",
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+                "text": "reportValidity() => boolean"
               }
             },
             {
@@ -22949,6 +23366,13 @@
                   "type": {
                     "text": "string | string[]"
                   }
+                },
+                {
+                  "name": "state",
+                  "optional": true,
+                  "type": {
+                    "text": "string | null"
+                  }
                 }
               ],
               "inheritedFrom": {
@@ -22956,7 +23380,7 @@
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               },
               "type": {
-                "text": "saveResponse(value: string | string[]) => void"
+                "text": "saveResponse(value: string | string[], state?: string | null) => void"
               }
             },
             {
@@ -23015,18 +23439,48 @@
               }
             },
             {
-              "kind": "method",
-              "name": "stopResponseCheck",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
+              "kind": "field",
+              "name": "showCandidateCorrection",
+              "type": {
+                "text": "boolean"
               },
-              "description": "Stop checking for response changes",
+              "default": "false",
+              "description": "Shows feedback on candidate's selections compared to correct response.\nAdds `candidate-correct` / `candidate-incorrect` states to choices.",
+              "attribute": "show-candidate-correction",
+              "reflects": true,
               "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "showCorrectResponse",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows which choices are correct with inline indicators.\nAdds `correct-response` / `incorrect-response` states to choices.",
+              "attribute": "show-correct-response",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "showFullCorrectResponse",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows a cloned interaction with the correct answers filled in.\nCreates a disabled copy positioned after this interaction.",
+              "attribute": "show-full-correct-response",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -23332,15 +23786,15 @@
               }
             },
             {
-              "name": "data-use-iframe",
+              "name": "disabled",
               "type": {
                 "text": "boolean"
               },
               "default": "false",
-              "fieldName": "useIframe",
+              "fieldName": "disabled",
               "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -24051,6 +24505,13 @@
                   "type": {
                     "text": "string | string[]"
                   }
+                },
+                {
+                  "name": "state",
+                  "optional": true,
+                  "type": {
+                    "text": "string | null"
+                  }
                 }
               ],
               "inheritedFrom": {
@@ -24058,7 +24519,7 @@
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               },
               "type": {
-                "text": "saveResponse(value: string | string[]) => void"
+                "text": "saveResponse(value: string | string[], state?: string | null) => void"
               }
             },
             {
@@ -24835,6 +25296,13 @@
                   "type": {
                     "text": "string | string[]"
                   }
+                },
+                {
+                  "name": "state",
+                  "optional": true,
+                  "type": {
+                    "text": "string | null"
+                  }
                 }
               ],
               "inheritedFrom": {
@@ -24842,7 +25310,7 @@
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               },
               "type": {
-                "text": "saveResponse(value: string | string[]) => void"
+                "text": "saveResponse(value: string | string[], state?: string | null) => void"
               }
             },
             {
@@ -25578,6 +26046,13 @@
                   "type": {
                     "text": "string | string[]"
                   }
+                },
+                {
+                  "name": "state",
+                  "optional": true,
+                  "type": {
+                    "text": "string | null"
+                  }
                 }
               ],
               "inheritedFrom": {
@@ -25585,7 +26060,7 @@
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               },
               "type": {
-                "text": "saveResponse(value: string | string[]) => void"
+                "text": "saveResponse(value: string | string[], state?: string | null) => void"
               }
             },
             {
@@ -26346,6 +26821,13 @@
                   "type": {
                     "text": "string | string[]"
                   }
+                },
+                {
+                  "name": "state",
+                  "optional": true,
+                  "type": {
+                    "text": "string | null"
+                  }
                 }
               ],
               "inheritedFrom": {
@@ -26353,7 +26835,7 @@
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               },
               "type": {
-                "text": "saveResponse(value: string | string[]) => void"
+                "text": "saveResponse(value: string | string[], state?: string | null) => void"
               }
             },
             {

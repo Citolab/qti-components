@@ -209,11 +209,6 @@ export abstract class Interaction extends LitElement implements IInteraction {
   }
 
   get responseVariable(): ResponseVariable | undefined {
-    // In standalone mode (no item context), return undefined
-    if (!this._context?.variables) {
-      return undefined;
-    }
-
     // Get all response variables
     const responseVariables = this._context.variables.filter(v => v.type === 'response') as ResponseVariable[];
 
@@ -385,7 +380,6 @@ export abstract class Interaction extends LitElement implements IInteraction {
     );
   }
 
-<<<<<<< HEAD
   protected override firstUpdated(): void {
     // Skip for full correct response clones to avoid infinite loops
     if (this.isFullCorrectResponse) {
@@ -404,10 +398,7 @@ export abstract class Interaction extends LitElement implements IInteraction {
     }
   }
 
-  public saveResponse(value: string | string[]): void {
-=======
   public saveResponse(value: string | string[], state?: string | null): void {
->>>>>>> main
     this.dispatchEvent(
       new CustomEvent('qti-interaction-response', {
         bubbles: true,
