@@ -894,12 +894,18 @@ export const InlineChoiceFullCorrectResponse: Story = {
         const interaction = fullCorrectResponse.querySelector('qti-inline-choice-interaction');
         expect(interaction).not.toBeNull();
 
-        const select = interaction.shadowRoot.querySelector('select');
-        expect(select).not.toBeNull();
+        const root = interaction.shadowRoot;
+        expect(root).not.toBeNull();
 
-        const selectedOption = Array.from(select.options).find(opt => opt.selected);
-        expect(selectedOption).not.toBeUndefined();
-        expect(selectedOption.textContent.trim()).toBe('York');
+        const select = root.querySelector<HTMLSelectElement>('select[part="select"], select');
+        if (select) {
+          const selectedOption = Array.from(select.options).find(opt => opt.selected);
+          expect(selectedOption).not.toBeUndefined();
+          expect(selectedOption?.textContent?.trim()).toBe('York');
+        } else {
+          const displayedValue = root.querySelector('[part="value"]')?.textContent?.trim();
+          expect(displayedValue).toBe('York');
+        }
       });
     });
   }

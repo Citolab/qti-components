@@ -384,27 +384,49 @@ export const InlineChoice: Story = {
       return el;
     });
 
-    const selectElement = await waitFor(() => {
-      const select = interaction.shadowRoot?.querySelector<HTMLSelectElement>('select');
-      if (!select) throw new Error('select element not yet available');
-      return select;
-    });
-
     const showButton = await canvas.findByShadowText(/Show candidate correction/i);
 
     await step('Select an inline choice option', async () => {
-      selectElement.value = 'Y'; // de correcte identifier (York)
-      selectElement.dispatchEvent(new Event('change', { bubbles: true }));
+      const root = interaction.shadowRoot;
+      if (!root) throw new Error('inline-choice interaction has no shadowRoot');
+
+      const select = root.querySelector<HTMLSelectElement>('select[part="select"], select');
+      if (select) {
+        select.value = 'Y'; // de correcte identifier (York)
+        select.dispatchEvent(new Event('change', { bubbles: true }));
+        return;
+      }
+
+      const trigger = root.querySelector<HTMLButtonElement>('button[part="trigger"]');
+      if (!trigger) throw new Error('inline-choice trigger not found (no select present)');
+
+      trigger.click();
+      await interaction.updateComplete;
+
+      const options = Array.from(root.querySelectorAll<HTMLButtonElement>('button[part="option"]'));
+      const york = options.find(btn => btn.textContent?.includes('York'));
+      if (!york) throw new Error('York option not found in custom dropdown');
+      york.click();
     });
 
     await step('Click on the Show Candidate Correction button', async () => {
       await showButton.click();
 
       await step('Verify candidate correction by checking selected option', async () => {
-        const selectedOption = Array.from(selectElement.options).find(opt => opt.selected);
-        expect(selectedOption).not.toBeUndefined();
-        expect(selectedOption.value).toBe('Y');
-        expect(selectedOption.textContent.trim()).toBe('York');
+        const root = interaction.shadowRoot;
+        expect(root).not.toBeNull();
+
+        const select = root.querySelector<HTMLSelectElement>('select[part="select"], select');
+        if (select) {
+          const selectedOption = Array.from(select.options).find(opt => opt.selected);
+          expect(selectedOption).not.toBeUndefined();
+          expect(selectedOption?.value).toBe('Y');
+          expect(selectedOption?.textContent?.trim()).toBe('York');
+        } else {
+          const displayedValue = root.querySelector('[part="value"]')?.textContent?.trim();
+          expect(displayedValue).toBe('York');
+          expect(interaction.response).toBe('Y');
+        }
       });
     });
   }

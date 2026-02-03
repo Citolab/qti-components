@@ -246,8 +246,30 @@ export class QtiCustomInteraction extends Interaction {
    * 5. Sets up postMessage listeners for CES API calls
    */
   async setupCES() {
-    const iframe = this.shadowRoot.querySelector('#pciContainer') as HTMLIFrameElement;
-    const iframeDoc = iframe.contentDocument;
+    // Ensure the iframe exists and has a document before writing into it.
+    // In some environments (e.g. Storybook/Vitest browser mode) the iframe can exist but its
+    // `contentDocument` is still null momentarily, which would otherwise cause an unhandled rejection.
+    await this.updateComplete;
+    const iframe = this.shadowRoot?.querySelector('#pciContainer') as HTMLIFrameElement | null;
+    if (!iframe) {
+      this._errorMessage = 'pciContainer iframe not found';
+      return;
+    }
+
+    if (!iframe.getAttribute('src')) {
+      // Make sure the iframe navigates so we get a document we can write to.
+      iframe.setAttribute('src', 'about:blank');
+    }
+
+    let iframeDoc = iframe.contentDocument ?? iframe.contentWindow?.document ?? null;
+    if (!iframeDoc) {
+      await new Promise<void>(resolve => iframe.addEventListener('load', () => resolve(), { once: true }));
+      iframeDoc = iframe.contentDocument ?? iframe.contentWindow?.document ?? null;
+    }
+    if (!iframeDoc) {
+      this._errorMessage = 'pciContainer iframe document not available';
+      return;
+    }
 
     if (!this.manifest.script || this.manifest.script.length === 0) {
       this._errorMessage = 'No script found in manifest';
