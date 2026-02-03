@@ -23,8 +23,8 @@ import 'prosemirror-view/style/prosemirror.css';
 import 'prosemirror-gapcursor/style/gapcursor.css';
 
 // Import the base schema nodes/marks and plugins
-import { baseNodes, baseMarks } from '../schema/base.schema';
-import { createBasePlugins } from '../plugins/base.plugins';
+import { baseNodes, baseMarks } from './schema/base.schema';
+import { createBasePlugins } from './plugins/base.plugins';
 // Import component schemas
 import { qtiChoiceInteractionNodeSpec } from '../components/qti-choice-interaction/qti-choice-interaction.schema';
 import { qtiPromptNodeSpec } from '../components/qti-prompt/qti-prompt.schema';

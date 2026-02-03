@@ -4,6 +4,20 @@
   "version": "1.0.0",
   "author": "",
   "customElements": "custom-elements.json",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./src/*": "./src/*",
+    "./dist/*": "./dist/*"
+  },
+  "files": [
+    "dist/**/*",
+    "src/**/*",
+    "custom-elements.json",
+    "README.md"
+  ],
   "dependencies": {
     "@qti-components/base": "workspace:^",
     "@qti-components/interactions": "workspace:^",

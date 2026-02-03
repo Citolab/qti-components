@@ -24,11 +24,10 @@ import 'prosemirror-view/style/prosemirror.css';
 import 'prosemirror-gapcursor/style/gapcursor.css';
 
 // Import the base schema nodes/marks and plugins
-import { baseNodes, baseMarks } from '../schema/base.schema';
-import { createBasePlugins } from '../plugins/base.plugins';
+import { baseNodes, baseMarks } from './schema/base.schema';
+import { createBasePlugins } from './plugins/base.plugins';
 // Import component schema and keymap
 import { qtiTextEntryInteractionNodeSpec } from '../components/qti-text-entry-interaction/qti-text-entry-interaction.schema';
-import { createTextEntryInteractionKeymap } from '../components/qti-text-entry-interaction/qti-text-entry-interaction.keymap';
 
 // Import and register the custom element (side effect)
 import '../components/qti-text-entry-interaction/qti-text-entry-interaction';
@@ -45,7 +44,7 @@ const schema = new Schema({
 });
 
 // Configure plugins: base plugins + text entry keymap
-const plugins = [...createBasePlugins(schema), createTextEntryInteractionKeymap()];
+const plugins = [...createBasePlugins(schema)];
 
 const meta: Meta = {
   title: 'QTI ProseMirror/Text Entry Interaction Editor',

@@ -16,6 +16,8 @@ import { gapCursor } from 'prosemirror-gapcursor';
 import { dropCursor } from 'prosemirror-dropcursor';
 
 import { blockSelectPlugin } from './block-select-plugin';
+import { insertTextEntryInteraction } from '../../components/qti-text-entry-interaction/qti-text-entry-interaction.commands';
+import { insertChoiceInteraction } from '../../components/qti-choice-interaction/qti-choice-interaction.commands';
 
 import type { Plugin } from 'prosemirror-state';
 import type { Schema } from 'prosemirror-model';
@@ -43,7 +45,9 @@ export function createHistoryKeymap(): Plugin {
   return keymap({
     'Mod-z': undo,
     'Mod-Shift-z': redo,
-    'Mod-y': redo
+    'Mod-y': redo,
+    'Mod-Shift-t': insertTextEntryInteraction,
+    'Mod-Shift-c': insertChoiceInteraction
   });
 }
 

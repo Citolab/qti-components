@@ -1,5 +1,6 @@
 {
   "name": "qti-components-workspace",
+  "version": "1.0.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Citolab/qti-components.git"
@@ -37,10 +38,10 @@
     "build": "pnpm -r run build",
     "attw": "pnpm -r run attw",
     "publint": "pnpm -r run publint",
-    "yalc": "pnpm -r --if-present run yalc",
-    "yalc:push": "pnpm -r --if-present run yalc:push",
+    "yalc": "pnpm -r run yalc",
+    "yalc:push": "pnpm -r run yalc:push",
     "-----------------------development--": "-",
-    "watch": "pnpm --filter \"./packages/qti-components\" --filter \"./packages/qti-interactions\" --parallel exec -- nodemon --watch src --ext ts,css --exec \"pnpm run build && pnpm run yalc:push\"",
+    "watch": "pnpm --filter \"./packages/qti-components\" --filter \"./packages/qti-interactions\" --filter \"./packages/qti-prosemirror\" --parallel exec -- nodemon --watch src --ext ts,css --exec \"pnpm run build && pnpm run yalc:push\"",
     "-----------------------cmds--": "-",
     "pre-commit": "run-s tsc lint madge",
     "commit-msg": "commitlint --edit",
