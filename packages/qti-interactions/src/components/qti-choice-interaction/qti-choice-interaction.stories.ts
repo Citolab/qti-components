@@ -2,7 +2,8 @@ import { html } from 'lit';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { expect, fireEvent, fn } from 'storybook/test';
 import { within } from 'shadow-dom-testing-library';
-import { spread } from '@open-wc/lit-helpers';
+
+import { spreadArgs } from '@qti-components/utilities';
 
 import type { InputType } from 'storybook/internal/types';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
@@ -25,8 +26,8 @@ const meta: Meta<
   QtiChoiceInteraction & { classLabel: InputType; classLabelSuffix: InputType; classOrientation: InputType }
 > = {
   component: 'qti-choice-interaction',
-  title: '02 Choice',
-  // args,
+  title: '02 Choice Interaction',
+  args,
   argTypes,
   parameters: {
     actions: {
@@ -56,7 +57,7 @@ export const Default: Story = {
 
 export const Test: Story = {
   render: args => {
-    return html` <qti-choice-interaction ${spread(args)} data-testid="interaction">
+    return html` <qti-choice-interaction ${spreadArgs(args)} data-testid="interaction">
       <qti-prompt>
         <p>Which of the following features are <strong>new</strong> to QTI 3?</p>
       </qti-prompt>
@@ -228,12 +229,6 @@ export const FormRadio: Story = {
   }
 };
 
-export const ContentEditable = {
-  render: (args, context) => {
-    return html` <div contenteditable="true">${Test.render(args, context)}</div> `;
-  }
-};
-
 export const Multiple: Story = {
   render: Test.render,
   args: {
@@ -279,7 +274,7 @@ export const TextOverflowTest: Story = {
     // Create a wrapper with fixed width to test text wrapping
     return html`
       <div style="width: 300px; border: 1px solid #ccc;">
-        <qti-choice-interaction ${spread(args)} data-testid="interaction">
+        <qti-choice-interaction ${spreadArgs(args)} data-testid="interaction">
           <qti-prompt>
             <p>Which of the following features are <strong>new</strong> to QTI 3?</p>
           </qti-prompt>

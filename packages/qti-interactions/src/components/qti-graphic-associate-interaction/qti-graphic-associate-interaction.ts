@@ -1,5 +1,5 @@
 import { html, svg } from 'lit';
-import { customElement, queryAssignedElements, state } from 'lit/decorators.js';
+import { queryAssignedElements, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { repeat } from 'lit/directives/repeat.js';
 
@@ -11,8 +11,6 @@ import styles from './qti-graphic-associate-interaction.styles';
 import type { QtiAssociableHotspot } from '../../elements/qti-associable-hotspot';
 import type { QtiHotspotChoice } from '../../elements/qti-hotspot-choice';
 import type { CSSResultGroup } from 'lit';
-
-@customElement('qti-graphic-associate-interaction')
 export class QtiGraphicAssociateInteraction extends Interaction {
   static override styles: CSSResultGroup = styles;
 

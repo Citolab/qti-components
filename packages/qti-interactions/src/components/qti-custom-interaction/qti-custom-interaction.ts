@@ -1,8 +1,7 @@
 import { html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
-import { removeDoubleSlashes } from '@qti-components/base';
-import { Interaction } from '@qti-components/base';
+import { Interaction, removeDoubleSlashes } from '@qti-components/base';
 
 /**
  * CES (Custom Element Standard) Custom Interaction Support
@@ -157,7 +156,7 @@ const ciBootstrap = `
  * Messages are sent to all parent windows to support embedding scenarios like Storybook
  * where window.top might not be the actual host application.
  */
-@customElement('qti-custom-interaction')
+
 export class QtiCustomInteraction extends Interaction {
   private rawResponse: string | string[] = '';
   private _manifestUrl: string = null;
@@ -321,9 +320,7 @@ export class QtiCustomInteraction extends Interaction {
         // If no media array, try to construct index.html path from the manifest location
         // Assume index.html is in the same directory as the manifest
         const manifestPath = this.data || 'manifest.json';
-        const basePath = manifestPath.includes('/') 
-          ? manifestPath.substring(0, manifestPath.lastIndexOf('/'))
-          : '';
+        const basePath = manifestPath.includes('/') ? manifestPath.substring(0, manifestPath.lastIndexOf('/')) : '';
         const indexPath = basePath ? `${basePath}/index.html` : 'index.html';
         const indexResolved = await this.resolveResourceWithFallback(indexPath, baseCandidates, {
           returnText: true

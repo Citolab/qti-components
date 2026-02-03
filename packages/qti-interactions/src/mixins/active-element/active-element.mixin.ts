@@ -80,6 +80,14 @@ export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, t
     override connectedCallback() {
       super.connectedCallback();
 
+      // Initialize ARIA checked state
+      this.internals.ariaChecked = 'false';
+
+      // Set initial tabIndex based on disabled state
+      if (this.disabled) {
+        this.tabIndex = -1;
+      }
+
       this.addEventListener('keyup', this._onKeyUp);
       this.addEventListener('click', this._onClick);
 
@@ -106,7 +114,7 @@ export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, t
     private _onKeyUp(event: KeyboardEvent) {
       if (event.altKey) return;
 
-      if (event.code === 'Space') {
+      if (event.code === 'Space' || event.code === 'Enter') {
         event.preventDefault();
         this._activate();
       }

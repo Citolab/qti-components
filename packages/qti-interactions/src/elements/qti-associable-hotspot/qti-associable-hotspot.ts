@@ -1,7 +1,4 @@
 import { LitElement, css, html } from 'lit';
-import { customElement } from 'lit/decorators.js';
-
-@customElement('qti-associable-hotspot')
 export class QtiAssociableHotspot extends LitElement {
   static override styles = css`
     :host {

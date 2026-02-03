@@ -1,5 +1,5 @@
 import { html, nothing } from 'lit';
-import { customElement, property, query, state } from 'lit/decorators.js';
+import { property, query, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { createRef } from 'lit/directives/ref.js';
 
@@ -9,7 +9,6 @@ import { Correctness, Interaction } from '@qti-components/base';
 import styles from './qti-text-entry-interaction.styles';
 
 import type { CSSResultGroup } from 'lit';
-@customElement('qti-text-entry-interaction')
 export class QtiTextEntryInteraction extends Interaction {
   static override styles: CSSResultGroup = styles;
   inputRef = createRef<HTMLInputElement>();

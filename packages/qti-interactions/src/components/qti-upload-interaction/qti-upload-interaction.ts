@@ -1,9 +1,6 @@
 import { css, html } from 'lit';
-import { customElement } from 'lit/decorators.js';
 
 import { Interaction } from '@qti-components/base';
-
-@customElement('qti-upload-interaction')
 export class QtiUploadInteraction extends Interaction {
   private _file: File | null = null;
   private _base64: string | null = null;

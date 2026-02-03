@@ -24,8 +24,12 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
   abstract class ChoicesMixinElement extends superClass implements ChoicesInterface {
     protected _choiceElements: Choice[] = [];
 
+    private _mutationObserver: MutationObserver | null = null;
+
     @query('#validation-message')
     protected _validationMessageElement!: HTMLElement;
+
+    private _validationMessageShown = false;
 
     @property({ type: Number, attribute: 'min-choices' })
     public minChoices = 0;
@@ -77,11 +81,11 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
     }
 
     protected override toggleInternalCorrectResponse(show: boolean) {
-      const responseVariable = this.responseVariable;
-      if (responseVariable?.correctResponse) {
-        const responseArray = Array.isArray(responseVariable.correctResponse)
-          ? responseVariable.correctResponse
-          : [responseVariable.correctResponse];
+      // Get correct response from either responseVariable (item context) or local property (standalone)
+      const correctResponse = this.correctResponse;
+
+      if (correctResponse) {
+        const responseArray = Array.isArray(correctResponse) ? correctResponse : [correctResponse];
         this._choiceElements.forEach(choice => {
           choice.internals.states.delete('correct-response');
           choice.internals.states.delete('incorrect-response');
@@ -97,19 +101,22 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
     }
 
     public override toggleCandidateCorrection(show: boolean) {
-      const responseVariable = this.responseVariable;
+      // Get correct response from either responseVariable (item context) or local property (standalone)
+      const correctResponse = this.correctResponse;
 
-      if (!responseVariable?.correctResponse) {
+      if (!correctResponse) {
         return;
       }
 
-      const correctResponseArray = Array.isArray(responseVariable.correctResponse)
-        ? responseVariable.correctResponse
-        : [responseVariable.correctResponse];
+      const correctResponseArray = Array.isArray(correctResponse) ? correctResponse : [correctResponse];
 
-      const candidateResponseArray = Array.isArray(responseVariable.value)
-        ? responseVariable.value
-        : [responseVariable.value];
+      // Get current response (works in both standalone and item context modes)
+      const currentResponse = this.response;
+      const candidateResponseArray = Array.isArray(currentResponse)
+        ? currentResponse
+        : currentResponse
+          ? [currentResponse]
+          : [];
 
       this._choiceElements.forEach(choice => {
         choice.internals.states.delete('candidate-correct');
@@ -126,20 +133,72 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
           choice.internals.states.add('candidate-incorrect');
         }
       });
+
+      // Also update interaction-level states
+      super.toggleCandidateCorrection(show);
     }
 
     override connectedCallback() {
       super.connectedCallback();
-      this.addEventListener(`register-${selector}`, this._registerChoiceElement);
-      this.addEventListener(`unregister-${selector}`, this._unregisterChoiceElement);
       this.addEventListener(`activate-${selector}`, this._choiceElementSelectedHandler);
+
+      // Use MutationObserver to track choice elements (handles both direct children and nested descendants)
+      this._mutationObserver = new MutationObserver(() => this._syncChoicesFromDOM());
+      this._mutationObserver.observe(this, { childList: true, subtree: true });
+
+      // Initial sync after DOM is ready
+      this._syncChoicesFromDOM();
     }
 
     override disconnectedCallback() {
       super.disconnectedCallback();
-      this.removeEventListener(`register-${selector}`, this._registerChoiceElement);
-      this.removeEventListener(`unregister-${selector}`, this._unregisterChoiceElement);
       this.removeEventListener(`activate-${selector}`, this._choiceElementSelectedHandler);
+
+      // Disconnect the observer
+      if (this._mutationObserver) {
+        this._mutationObserver.disconnect();
+        this._mutationObserver = null;
+      }
+    }
+
+    /**
+     * Synchronizes the internal choice elements list with the current DOM state.
+     * Also filters the response to only include valid identifiers.
+     */
+    protected _syncChoicesFromDOM() {
+      const previousChoices = new Set(this._choiceElements);
+      this._choiceElements = Array.from(this.querySelectorAll(selector)) as Choice[];
+
+      // Initialize new choice elements
+      this._choiceElements.forEach(choiceElement => {
+        if (!previousChoices.has(choiceElement)) {
+          // New choice element - initialize it
+          if (this.disabled) {
+            choiceElement.disabled = true;
+          }
+          choiceElement.readonly = this.readonly;
+
+          if (choiceElement.internals && !choiceElement.internals.ariaChecked) {
+            choiceElement.internals.ariaChecked = 'false';
+          }
+
+          this._setInputType(choiceElement);
+        }
+      });
+
+      // Filter response to only include valid identifiers (handles removal)
+      const validIdentifiers = new Set(this._choiceElements.map(c => c.identifier));
+      if (Array.isArray(this.response)) {
+        const filteredResponse = this.response.filter(id => validIdentifiers.has(id));
+        if (filteredResponse.length !== this.response.length) {
+          this.response = filteredResponse;
+        }
+      } else if (this.response && !validIdentifiers.has(this.response)) {
+        this.response = '';
+      }
+
+      // Update selection state to match response
+      this._updateChoiceSelection();
     }
 
     public validate(): boolean {
@@ -158,13 +217,12 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
           this.dataset.minSelectionsMessage ||
           `Please select at least ${this.minChoices} ${this.minChoices === 1 ? 'option' : 'options'}.`;
       }
-      if (selectedChoices.length > 0) {
-        this._internals.setValidity(
-          isValid ? {} : { customError: true },
-          validityMessage,
-          selectedChoices[selectedCount - 1] || this._choiceElements[0] || this
-        );
-      }
+
+      // Always set validity state, regardless of whether there are selections
+      // Anchor must be a shadow-including descendant of this element, or use this as fallback
+      const anchor = this._choiceElements.find(c => this.contains(c)) || this;
+      this._internals.setValidity(isValid ? {} : { customError: true }, validityMessage, anchor);
+
       return isValid;
     }
 
@@ -173,29 +231,15 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
         if (!this._internals.validity.valid) {
           this._validationMessageElement.textContent = this._internals.validationMessage;
           // Set the display to block to show the message, add important to override any styles
-
           this._validationMessageElement.style.setProperty('display', 'block', 'important');
+          this._validationMessageShown = true; // Track that validation message was shown
         } else {
           this._validationMessageElement.textContent = '';
           this._validationMessageElement.style.display = 'none';
+          // Don't reset _validationMessageShown here - let it be cleared by user input
         }
       }
       return this._internals.validity.valid;
-    }
-
-    protected _registerChoiceElement(event: CustomEvent) {
-      event.stopPropagation();
-      const choiceElement = event.target as Choice;
-      choiceElement.disabled = this.disabled;
-
-      this._choiceElements.push(choiceElement);
-      this._setInputType(choiceElement);
-    }
-
-    protected _unregisterChoiceElement(event: CustomEvent) {
-      event.stopPropagation();
-      const choiceElement = event.target as Choice;
-      this._choiceElements = this._choiceElements.filter(choice => choice !== choiceElement);
     }
 
     protected _determineInputType() {
@@ -207,10 +251,12 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
     protected _setInputType(choiceElement: Choice) {
       this._internals.role = this.maxChoices === 1 ? 'radiogroup' : null;
 
-      const role = this.maxChoices === 1 ? 'radio' : 'checkbox';
-      choiceElement.internals.role = role;
-      choiceElement.internals.states.delete(role === 'radio' ? 'checkbox' : 'radio');
-      choiceElement.internals.states.add(role);
+      if (choiceElement.internals) {
+        const role = this.maxChoices === 1 ? 'radio' : 'checkbox';
+        choiceElement.internals.role = role;
+        choiceElement.internals.states.delete(role === 'radio' ? 'checkbox' : 'radio');
+        choiceElement.internals.states.add(role);
+      }
     }
 
     protected _choiceElementSelectedHandler(event: CustomEvent<{ identifier: string }>) {
@@ -265,6 +311,16 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       this.response = this.maxChoices === 1 ? selectedIdentifiers[0] || '' : selectedIdentifiers;
 
       this.validate();
+
+      // Auto-update validation message if it was previously shown (FACE behavior)
+      if (this._validationMessageShown) {
+        this.reportValidity();
+        // Reset flag if now valid to prevent unnecessary future auto-updates
+        if (this._internals.validity.valid) {
+          this._validationMessageShown = false;
+        }
+      }
+
       this.saveResponse(this.response);
     }
 

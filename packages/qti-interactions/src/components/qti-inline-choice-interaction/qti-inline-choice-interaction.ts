@@ -1,5 +1,5 @@
 import { css, html } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { consume } from '@lit/context';
 
@@ -14,8 +14,6 @@ interface OptionType {
   value: string;
   selected: boolean;
 }
-
-@customElement('qti-inline-choice-interaction')
 export class QtiInlineChoiceInteraction extends Interaction {
   override get isInline(): boolean {
     return true;

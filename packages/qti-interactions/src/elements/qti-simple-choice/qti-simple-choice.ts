@@ -1,14 +1,18 @@
 import { css, html, LitElement, nothing } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
 
-import { ActiveElementMixin } from '../mixins/active-element/active-element.mixin';
+import { ActiveElementMixin } from '../../mixins/active-element/active-element.mixin';
+import styles from './qti-simple-choice.styles';
+
+import type { CSSResultGroup } from 'lit';
 
 /**
  * qti-order-interaction
  * qti-choice-interaction
  */
-@customElement('qti-simple-choice')
 export class QtiSimpleChoice extends ActiveElementMixin(LitElement, 'qti-simple-choice') {
+  static override styles: CSSResultGroup = styles;
+
   @property({ type: String, attribute: 'template-identifier' })
   public templateIdentifier: string | null = null;
 
@@ -23,25 +27,6 @@ export class QtiSimpleChoice extends ActiveElementMixin(LitElement, 'qti-simple-
     }
   })
   public fixed: boolean = false;
-
-  static override styles = css`
-    :host {
-      display: flex;
-      align-items: center;
-      user-select: none;
-    }
-    slot {
-      width: 100%;
-      display: flex;
-      align-items: center;
-    }
-    [part='ch'] {
-      display: flex;
-      flex-shrink: 0;
-      align-items: center;
-      justify-content: center;
-    }
-  `;
 
   // property label
   @property({ type: String, attribute: false })

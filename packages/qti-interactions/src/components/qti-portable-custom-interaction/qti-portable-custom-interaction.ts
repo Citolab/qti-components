@@ -13,7 +13,6 @@ import type { ItemContext } from '@qti-components/base';
 import type { BaseType, Cardinality } from '@qti-components/base';
 import type { QtiVariableJSON, ResponseVariableType } from './interface';
 
-@customElement('qti-portable-custom-interaction')
 export class QtiPortableCustomInteraction extends Interaction {
   private _value: string | string[];
 

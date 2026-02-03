@@ -1,13 +1,11 @@
 import { html } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
+import { property, query } from 'lit/decorators.js';
 
 import { Interaction } from '@qti-components/base';
 
 import styles from './qti-slider-interaction.styles';
 
 import type { CSSResultGroup } from 'lit';
-
-@customElement('qti-slider-interaction')
 export class QtiSliderInteraction extends Interaction {
   static override styles: CSSResultGroup = styles;
 

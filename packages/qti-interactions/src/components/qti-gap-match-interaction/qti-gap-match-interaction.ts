@@ -1,5 +1,4 @@
 import { html } from 'lit';
-import { customElement } from 'lit/decorators.js';
 
 import { Interaction } from '@qti-components/base';
 
@@ -9,7 +8,6 @@ import styles from './qti-gap-match-interaction.styles.js';
 import type { ResponseVariable } from '@qti-components/base';
 import type { QtiGap } from '../../elements/qti-gap';
 import type { CSSResultGroup } from 'lit';
-@customElement('qti-gap-match-interaction')
 export class QtiGapMatchInteraction extends DragDropInteractionMixin(
   Interaction,
   'qti-gap-text',

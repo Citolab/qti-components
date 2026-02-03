@@ -1,29 +1,63 @@
 {
   "name": "@qti-components/interactions",
-  "version": "1.1.0",
   "description": "QTI interactions utilities",
+  "version": "1.0.0",
+  "author": "",
+  "dependencies": {
+    "@qti-components/base": "workspace:^",
+    "@qti-components/utilities": "workspace:^"
+  },
+  "devDependencies": {
+    "@lit/context": "^1.1.6",
+    "@qti-components/transformers": "workspace:^",
+    "lit": "^3.3.1"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./register-all": {
+      "types": "./dist/register-all.d.ts",
+      "import": "./dist/register-all.js"
+    },
+    "./components/*/register": {
+      "types": "./dist/components/*/register.d.ts",
+      "import": "./dist/components/*/register.js"
+    },
+    "./components/*/*": {
+      "types": "./dist/components/*/*.d.ts",
+      "import": "./dist/components/*/*.js"
+    },
+    "./elements/*/register": {
+      "types": "./dist/elements/*/register.d.ts",
+      "import": "./dist/elements/*/register.js"
+    },
+    "./elements/*/*": {
+      "types": "./dist/elements/*/*.d.ts",
+      "import": "./dist/elements/*/*.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "keywords": [
+    "interactions",
+    "qti"
+  ],
+  "license": "GPL-3.0-only",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "type": "module",
+  "peerDependencies": {
+    "@lit/context": "^1.1.6",
+    "lit": "^3.3.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
+    "attw": "attw --profile esm-only --pack",
     "build": "tsc --paths null",
-    "clean": "rm -rf dist",
-    "attw": "attw --profile esm-only --pack"
+    "clean": "rm -rf dist"
   },
   "sideEffects": true,
-  "keywords": [
-    "qti",
-    "interactions"
-  ],
-  "author": "",
-  "license": "GPL-3.0-only",
-  "dependencies": {
-    "@qti-components/base": "workspace:*",
-    "@qti-components/transformers": "workspace:*",
-    "@qti-components/utilities": "workspace:*"
-  },
-  "peerDependencies": {
-    "lit": "^3.3.1",
-    "@lit/context": "^1.1.6"
-  }
+  "type": "module",
+  "types": "dist/index.d.ts"
 }

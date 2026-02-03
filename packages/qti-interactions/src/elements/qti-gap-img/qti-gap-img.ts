@@ -1,7 +1,5 @@
 import { css, LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
-
-@customElement('qti-gap-img')
+import { property } from 'lit/decorators.js';
 export class QtiGapImg extends LitElement {
   static override styles = css`
     :host {

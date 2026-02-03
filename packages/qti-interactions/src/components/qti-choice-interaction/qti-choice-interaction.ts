@@ -1,5 +1,5 @@
 import { html } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
 
 import { Interaction } from '@qti-components/base';
 
@@ -11,8 +11,6 @@ import type { ChoicesInterface } from '../../mixins/choices/choices.mixin';
 import type { CSSResultGroup } from 'lit';
 
 export type Orientation = 'horizontal' | 'vertical' | undefined;
-
-@customElement('qti-choice-interaction')
 export class QtiChoiceInteraction
   extends VocabularyMixin(ChoicesMixin(Interaction, 'qti-simple-choice'), 'qti-simple-choice')
   implements ChoicesInterface

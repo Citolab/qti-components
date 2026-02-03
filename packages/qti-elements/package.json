@@ -1,29 +1,33 @@
 {
   "name": "@qti-components/elements",
-  "version": "1.1.0",
   "description": "QTI elements utilities",
+  "version": "1.0.0",
+  "author": "",
+  "dependencies": {
+    "@qti-components/base": "workspace:^",
+    "@qti-components/transformers": "workspace:^",
+    "@qti-components/utilities": "workspace:^"
+  },
+  "devDependencies": {
+    "@lit/context": "^1.1.6",
+    "lit": "^3.3.1"
+  },
+  "keywords": [
+    "elements",
+    "qti"
+  ],
+  "license": "GPL-3.0-only",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "type": "module",
+  "peerDependencies": {
+    "@lit/context": "^1.1.6",
+    "lit": "^3.3.1"
+  },
   "scripts": {
+    "attw": "attw --profile esm-only --pack",
     "build": "tsc --paths null",
-    "clean": "rm -rf dist",
-    "attw": "attw --profile esm-only --pack"
+    "clean": "rm -rf dist"
   },
   "sideEffects": true,
-  "keywords": [
-    "qti",
-    "elements"
-  ],
-  "author": "",
-  "license": "GPL-3.0-only",
-  "dependencies": {
-    "@qti-components/base": "workspace:*",
-    "@qti-components/utilities": "workspace:*",
-    "@qti-components/transformers": "workspace:*"
-  },
-  "peerDependencies": {
-    "lit": "^3.3.1",
-    "@lit/context": "^1.1.6"
-  }
+  "type": "module",
+  "types": "dist/index.d.ts"
 }

@@ -1,33 +1,24 @@
 {
   "name": "@citolab/qti-components",
-  "version": "7.18.0",
   "description": "QTI component utilities",
-  "main": "dist/index.js",
-  "scripts": {
-    "build": "run-p tsup css cem",
-    "clean": "rm -rf dist cdn",
-    "attw": "attw --pack --profile esm-only --format table",
-    "publint": "publint",
-    "-": "---build---",
-    "tsup": "tsup",
-    "css": "postcss ../qti-theme/src/item.css -d dist -m",
-    "cem": "cd ../../ && CEM_OUTDIR=packages/qti-components/ cem analyze --config custom-elements-manifest.config.mjs"
-  },
-  "keywords": [
-    "qti",
-    "components"
-  ],
+  "version": "7.18.0",
   "author": "",
-  "type": "module",
-  "sideEffects": true,
-  "license": "GPL-3.0-only",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Citolab/qti-components.git",
-    "directory": "packages/qti-components"
+  "customElements": "dist/custom-elements.json",
+  "dependencies": {
+    "@heximal/templates": "^0.1.5",
+    "@lit/context": "^1.1.6",
+    "lit": "^3.3.1"
   },
-  "publishConfig": {
-    "access": "public"
+  "devDependencies": {
+    "@qti-components/base": "workspace:^",
+    "@qti-components/elements": "workspace:^",
+    "@qti-components/interactions": "workspace:^",
+    "@qti-components/item": "workspace:^",
+    "@qti-components/loader": "workspace:^",
+    "@qti-components/processing": "workspace:^",
+    "@qti-components/test": "workspace:^",
+    "@qti-components/theme": "workspace:^",
+    "@qti-components/transformers": "workspace:^"
   },
   "exports": {
     ".": {
@@ -77,21 +68,30 @@
     "cdn",
     "custom-elements.json"
   ],
-  "dependencies": {
-    "lit": "^3.3.1",
-    "@lit/context": "^1.1.6",
-    "@heximal/templates": "^0.1.5"
+  "keywords": [
+    "components",
+    "qti"
+  ],
+  "license": "GPL-3.0-only",
+  "main": "dist/index.js",
+  "publishConfig": {
+    "access": "public"
   },
-  "devDependencies": {
-    "@qti-components/test": "workspace:*",
-    "@qti-components/item": "workspace:*",
-    "@qti-components/elements": "workspace:*",
-    "@qti-components/transformers": "workspace:*",
-    "@qti-components/interactions": "workspace:*",
-    "@qti-components/processing": "workspace:*",
-    "@qti-components/loader": "workspace:*",
-    "@qti-components/base": "workspace:*",
-    "@qti-components/theme": "workspace:*"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Citolab/qti-components.git",
+    "directory": "packages/qti-components"
   },
-  "customElements": "dist/custom-elements.json"
+  "scripts": {
+    "-": "---build---",
+    "attw": "attw --pack --profile esm-only --format table",
+    "build": "run-p tsup css cem",
+    "cem": "cd ../../ && CEM_OUTDIR=packages/qti-components/ cem analyze --config custom-elements-manifest.config.mjs",
+    "clean": "rm -rf dist cdn",
+    "css": "postcss ../qti-theme/src/item.css -d dist -m",
+    "publint": "publint",
+    "tsup": "tsup"
+  },
+  "sideEffects": true,
+  "type": "module"
 }

@@ -53,6 +53,30 @@ describe('ChoicesMixin', () => {
     });
   });
 
+  describe('readonly', () => {
+    beforeEach(async () => {
+      render(
+        html`
+          <test-element readonly>
+            <qti-simple-choice identifier="A" data-testid="A">Option A</qti-simple-choice>
+            <qti-simple-choice identifier="B" data-testid="B">Option B</qti-simple-choice>
+          </test-element>
+        `,
+        document.body
+      );
+      element = document.querySelector('test-element') as TestElement;
+      await element.updateComplete;
+    });
+
+    it('should propagate readonly to choices and prevent selection', async () => {
+      const choiceA = getByTestId(document.body, 'A') as Choice;
+
+      expect(choiceA.readonly).toBe(true);
+      await userEvent.click(choiceA);
+      expect(choiceA.internals.states.has('--checked')).toBe(false);
+    });
+  });
+
   describe('min-choices = 1', () => {
     beforeEach(async () => {
       render(

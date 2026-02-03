@@ -1,3 +1,5 @@
+import './register-all';
+
 export * from './components/qti-associate-interaction/qti-associate-interaction';
 export * from './components/qti-choice-interaction/qti-choice-interaction';
 export * from './components/qti-custom-interaction/qti-custom-interaction';
@@ -30,3 +32,10 @@ export * from './elements/qti-simple-associable-choice';
 export * from './elements/qti-simple-choice';
 export * from './elements/qti-hotspot-choice';
 export * from './elements/qti-associable-hotspot';
+export * from './elements/qti-prompt';
+
+/* splitted for the editor functionality */
+
+export * from './mixins/vocabulary/vocabulary-mixin';
+export * as qtiChoiceInteractionStyles from './components/qti-choice-interaction/qti-choice-interaction.styles';
+export * as qtiSimpleChoiceStyles from './elements/qti-simple-choice/qti-simple-choice.styles';

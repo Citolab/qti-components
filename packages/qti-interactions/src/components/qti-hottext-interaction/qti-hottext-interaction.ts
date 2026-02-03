@@ -1,13 +1,11 @@
 import { html } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
 
 import { Interaction } from '@qti-components/base';
 
 import { ChoicesMixin } from '../../mixins/choices/choices.mixin';
 
 import type { PropertyValues } from 'lit';
-
-@customElement('qti-hottext-interaction')
 export class QtiHottextInteraction extends ChoicesMixin(Interaction, 'qti-hottext') {
   @property({ type: String, reflect: true })
   class = '';
@@ -49,7 +47,7 @@ export class QtiHottextInteraction extends ChoicesMixin(Interaction, 'qti-hottex
   private updateHostClasses() {
     // Clear existing classes and apply merged ones
     const classString = Object.keys(this.classObject).join(' ');
-    // eslint-disable-next-line wc/no-self-class
+     
     this.className = classString;
   }
 }
