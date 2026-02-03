@@ -209,6 +209,11 @@ export abstract class Interaction extends LitElement implements IInteraction {
   }
 
   get responseVariable(): ResponseVariable | undefined {
+    // In standalone mode (no item context), return undefined
+    if (!this._context?.variables) {
+      return undefined;
+    }
+
     // Get all response variables
     const responseVariables = this._context.variables.filter(v => v.type === 'response') as ResponseVariable[];
 

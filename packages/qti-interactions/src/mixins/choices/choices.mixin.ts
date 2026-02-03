@@ -178,7 +178,7 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
           }
           choiceElement.readonly = this.readonly;
 
-          if (!choiceElement.internals.ariaChecked) {
+          if (choiceElement.internals && !choiceElement.internals.ariaChecked) {
             choiceElement.internals.ariaChecked = 'false';
           }
 
@@ -251,10 +251,12 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
     protected _setInputType(choiceElement: Choice) {
       this._internals.role = this.maxChoices === 1 ? 'radiogroup' : null;
 
-      const role = this.maxChoices === 1 ? 'radio' : 'checkbox';
-      choiceElement.internals.role = role;
-      choiceElement.internals.states.delete(role === 'radio' ? 'checkbox' : 'radio');
-      choiceElement.internals.states.add(role);
+      if (choiceElement.internals) {
+        const role = this.maxChoices === 1 ? 'radio' : 'checkbox';
+        choiceElement.internals.role = role;
+        choiceElement.internals.states.delete(role === 'radio' ? 'checkbox' : 'radio');
+        choiceElement.internals.states.add(role);
+      }
     }
 
     protected _choiceElementSelectedHandler(event: CustomEvent<{ identifier: string }>) {
