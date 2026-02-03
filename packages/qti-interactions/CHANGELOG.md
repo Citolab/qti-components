@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.3.0](https://github.com/Citolab/qti-components/compare/interactions-v1.2.0...interactions-v1.3.0) (2026-02-03)
+
+
+### Features
+
+* enhance qti-inline-choice-interaction ([5878343](https://github.com/Citolab/qti-components/commit/58783433b0f47dcf31bc75de0b6427c98860c2df))
+
+
+### Bug Fixes
+
+* fix tests ([7a75aa9](https://github.com/Citolab/qti-components/commit/7a75aa9222be3e3b68dbe18ef8895a968903d10c))
+* inline choice dropdown font size and positioning on mobile devices ([52d3216](https://github.com/Citolab/qti-components/commit/52d3216a0661f863b0f8384763bd829d6a41a19a))
+
 ## [1.2.0](https://github.com/Citolab/qti-components/compare/interactions-v1.1.0...interactions-v1.2.0) (2026-02-03)
 
 

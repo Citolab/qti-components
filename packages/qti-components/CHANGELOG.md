@@ -1,5 +1,27 @@
 # Changelog
 
+## [7.19.0](https://github.com/Citolab/qti-components/compare/qti-components-v7.18.1...qti-components-v7.19.0) (2026-02-03)
+
+
+### Features
+
+* enhance qti-inline-choice-interaction ([5878343](https://github.com/Citolab/qti-components/commit/58783433b0f47dcf31bc75de0b6427c98860c2df))
+
+
+### Bug Fixes
+
+* inline choice dropdown font size and positioning on mobile devices ([52d3216](https://github.com/Citolab/qti-components/commit/52d3216a0661f863b0f8384763bd829d6a41a19a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @qti-components/interactions bumped to 1.3.0
+    * @qti-components/item bumped to 1.0.2
+    * @qti-components/test bumped to 1.1.1
+    * @qti-components/theme bumped to 1.0.1
+
 ## [7.18.1](https://github.com/Citolab/qti-components/compare/qti-components-v7.18.0...qti-components-v7.18.1) (2026-02-03)
 
 
