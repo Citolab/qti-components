@@ -37,15 +37,24 @@ export class QtiGraphicAssociateInteraction extends Interaction {
   }
 
   validate(): boolean {
-    return this.response.length > 0;
+    return this.getResponseArray().length > 0;
   }
 
   set response(val) {
-    this._response = val;
+    this._response = this.normalizeResponse(val);
   }
 
   get response() {
     return this._response;
+  }
+
+  private normalizeResponse(value: string | string[] | null | undefined): string[] {
+    if (value === null || value === undefined || value === '') return [];
+    return Array.isArray(value) ? value : [value];
+  }
+
+  private getResponseArray(): string[] {
+    return this.normalizeResponse(this._response);
   }
 
   public override toggleInternalCorrectResponse(show: boolean) {
@@ -73,7 +82,7 @@ export class QtiGraphicAssociateInteraction extends Interaction {
           viewbox="0 0 ${this.grImage[0]?.width} ${this.grImage[0]?.height}"
         >
           ${repeat(
-            this.response || [],
+            this.getResponseArray(),
             line => line,
             (line, index) => svg`
               <line
@@ -171,8 +180,9 @@ export class QtiGraphicAssociateInteraction extends Interaction {
         } else if (!this.endPoint) {
           this.endPoint = event.target as HTMLElement;
 
+          this._response = this.getResponseArray();
           this._response = [
-            ...this.response,
+            ...this._response,
             `${this.startPoint.getAttribute('identifier')} ${this.endPoint.getAttribute('identifier')}`
           ];
           this.saveResponse(this.response);
