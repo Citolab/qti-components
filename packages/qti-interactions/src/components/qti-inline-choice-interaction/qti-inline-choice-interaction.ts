@@ -24,6 +24,8 @@ export class QtiInlineChoiceInteraction extends Interaction {
       css`
         :host {
           display: inline-block;
+          vertical-align: baseline;
+          position: relative;
         }
         slot {
           display: flex;
