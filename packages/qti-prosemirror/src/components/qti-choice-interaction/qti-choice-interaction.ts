@@ -14,16 +14,19 @@ export type Orientation = 'horizontal' | 'vertical' | undefined;
 export class QtiChoiceInteractionEdit extends VocabularyMixin(LitElement, 'qti-simple-choice') {
   static styles: CSSResultGroup = styles;
 
+  @property({ type: Number, attribute: 'min-choices' })
+  public minChoices = 0;
+
   @property({ type: Number, attribute: 'max-choices' })
   public maxChoices = 1;
 
-  protected _internals: ElementInternals;
-  private _mutationObserver: MutationObserver | null = null;
-
   @watch('maxChoices', { waitUntilFirstUpdate: true })
   protected _handleMaxChoicesChange() {
-    this._updateChoices();
+    this.#updateChoices();
   }
+
+  protected _internals: ElementInternals;
+  #mutationObserver: MutationObserver | null = null;
 
   constructor() {
     super();
@@ -32,18 +35,18 @@ export class QtiChoiceInteractionEdit extends VocabularyMixin(LitElement, 'qti-s
 
   connectedCallback(): void {
     super.connectedCallback();
-    this._updateChoices();
-    this._mutationObserver = new MutationObserver(() => this._updateChoices());
-    this._mutationObserver.observe(this, { childList: true, subtree: true });
+    this.#updateChoices();
+    this.#mutationObserver = new MutationObserver(() => this.#updateChoices());
+    this.#mutationObserver.observe(this, { childList: true, subtree: true });
   }
 
   disconnectedCallback(): void {
     super.disconnectedCallback();
-    this._mutationObserver?.disconnect();
-    this._mutationObserver = null;
+    this.#mutationObserver?.disconnect();
+    this.#mutationObserver = null;
   }
 
-  private _updateChoices() {
+  #updateChoices() {
     this._internals.role = this.maxChoices === 1 ? 'radiogroup' : null;
     const role = this.maxChoices === 1 ? 'radio' : 'checkbox';
 
@@ -63,10 +66,7 @@ export class QtiChoiceInteractionEdit extends VocabularyMixin(LitElement, 'qti-s
   // }
 
   override render() {
-    return html`
-      <slot part="prompt" name="prompt"></slot>
-      <slot part="slot"></slot>
-    `;
+    return html`<slot part="prompt" name="prompt"></slot><slot part="slot"></slot>`;
   }
 }
 

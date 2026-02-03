@@ -112,6 +112,11 @@ export const BasicEditor: Story = {
           user-select: unset;
           cursor: unset;
         }
+        qti-choice-interaction {
+          display: block;
+          margin: 16px 0;
+          border: 1px solid #46a1fd;
+        }
       </style>
 
       <div style="max-width: 850px; margin: 40px auto; padding: 0 20px; font-family: system-ui;">
@@ -174,6 +179,11 @@ export const MultipleChoiceEditor: Story = {
         qti-simple-choice {
           user-select: unset;
           cursor: unset;
+        }
+        qti-choice-interaction {
+          display: block;
+          margin: 16px 0;
+          border: 1px solid #46a1fd;
         }
       </style>
       <div style="max-width: 850px; margin: 40px auto;">

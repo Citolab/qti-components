@@ -16,19 +16,17 @@ export class QtiTextEntryInteractionEdit extends LitElement {
   @property({ type: String, attribute: 'placeholder-text' }) placeholderText: string;
 
   override render() {
-    return html`
-      <input
-        part="input"
-        spellcheck="false"
-        autocomplete="off"
-        @keydown="${(event: KeyboardEvent) => event.stopImmediatePropagation()}"
-        type="${this.patternMask == '[0-9]*' ? 'number' : 'text'}"
-        placeholder="${ifDefined(this.placeholderText ? this.placeholderText : undefined)}"
-        pattern="${ifDefined(this.patternMask ? this.patternMask : undefined)}"
-        maxlength=${1000}
-        readonly
-      />
-    `;
+    return html`<input
+      part="input"
+      spellcheck="false"
+      autocomplete="off"
+      @keydown="${(event: KeyboardEvent) => event.stopImmediatePropagation()}"
+      type="${this.patternMask == '[0-9]*' ? 'number' : 'text'}"
+      placeholder="${ifDefined(this.placeholderText ? this.placeholderText : undefined)}"
+      pattern="${ifDefined(this.patternMask ? this.patternMask : undefined)}"
+      maxlength=${1000}
+      readonly
+    />`;
   }
 }
 

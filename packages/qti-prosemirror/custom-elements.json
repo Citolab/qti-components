@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "elements": [
+    {
+      "tagName": "qti-choice-interaction",
+      "name": "QtiChoiceInteractionEdit",
+      "attributes": [
+        {
+          "name": "max-choices",
+          "type": {
+            "text": "number"
+          },
+          "default": "1"
+        },
+        {
+          "name": "min-choices",
+          "type": {
+            "text": "number"
+          },
+          "default": "0"
+        }
+      ]
+    },
+    {
+      "tagName": "qti-prompt",
+      "name": "QtiPromptEdit"
+    },
+    {
+      "tagName": "qti-simple-choice",
+      "name": "QtiSimpleChoiceEdit"
+    },
+    {
+      "tagName": "qti-text-entry-interaction",
+      "name": "QtiTextEntryInteractionEdit",
+      "attributes": [
+        {
+          "name": "pattern-mask",
+          "type": {
+            "text": "string"
+          }
+        },
+        {
+          "name": "placeholder-text",
+          "type": {
+            "text": "string"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -35,7 +35,7 @@
   "scripts": {
     "attw": "attw --profile esm-only --pack",
     "build": "tsc --paths null",
-    "cem": "cem analyze --config ../../custom-elements-manifest.config.mjs --globs 'src/components/**/*.ts' --outdir ./",
+    "cem": "cem analyze --config ./custom-elements-manifest.config.mjs",
     "clean": "rm -rf dist",
     "yalc": "yalc publish",
     "yalc:push": "yalc push",
