@@ -90,7 +90,9 @@
     "clean": "rm -rf dist cdn",
     "css": "postcss ../qti-theme/src/item.css -d dist -m",
     "publint": "publint",
-    "tsup": "tsup"
+    "tsup": "tsup",
+    "yalc": "yalc publish",
+    "yalc:push": "yalc push"
   },
   "sideEffects": true,
   "type": "module"
