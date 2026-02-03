@@ -3,12 +3,11 @@ import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { expect, fireEvent, fn, waitFor } from 'storybook/test';
 import { getByShadowRole } from 'shadow-dom-testing-library';
 import { within } from 'shadow-dom-testing-library';
-import { spread } from '@open-wc/lit-helpers';
 
-import type { QtiSimpleChoice } from '@qti-components/interactions';
+import { spreadArgs } from '@qti-components/utilities';
+
+import type { QtiChoiceInteraction, QtiSimpleChoice } from '@qti-components/interactions';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
-import type { QtiChoiceInteraction } from '../qti-choice-interaction';
-
 const { events, args, argTypes, template } = getStorybookHelpers('qti-choice-interaction');
 
 type Story = StoryObj<QtiChoiceInteraction & typeof args>;
@@ -35,7 +34,7 @@ export default meta;
 //   { ...args, 'response-identifier': 'RESPONSE', 'max-choices': 1 },
 //   html`
 const TemplateThreeOptions = args =>
-  html` <qti-choice-interaction ${spread({ ...args, 'response-identifier': 'RESPONSE', 'max-choices': 1 })}>
+  html` <qti-choice-interaction ${spreadArgs({ ...args, 'response-identifier': 'RESPONSE', 'max-choices': 1 })}>
     <qti-simple-choice identifier="ChoiceA">You must stay with your luggage at all times.</qti-simple-choice>
     <qti-simple-choice identifier="ChoiceB">Do not let someone else look after your luggage.</qti-simple-choice>
     <qti-simple-choice identifier="ChoiceC">Remember your luggage when you leave.</qti-simple-choice>
@@ -199,7 +198,7 @@ export const ChoiceOrientationHorizontal: Story = {
 //   html`
 
 const TemplateSixOptions = args =>
-  html` <qti-choice-interaction ${spread({ ...args, 'response-identifier': 'RESPONSE' })}>
+  html` <qti-choice-interaction ${spreadArgs({ ...args, 'response-identifier': 'RESPONSE' })}>
     <qti-simple-choice fixed="false" identifier="H">Hydrogen</qti-simple-choice>
     <qti-simple-choice fixed="false" identifier="He">Helium</qti-simple-choice>
     <qti-simple-choice fixed="false" identifier="C">Carbon</qti-simple-choice>

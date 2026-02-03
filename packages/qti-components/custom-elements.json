@@ -114,6 +114,17 @@
               "default": "true"
             },
             {
+              "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API."
+            },
+            {
               "kind": "field",
               "name": "internals",
               "type": {
@@ -4563,6 +4574,24 @@
             },
             {
               "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
+              }
+            },
+            {
+              "kind": "method",
               "name": "getDraggablesFromDroppable",
               "privacy": "private",
               "return": {
@@ -5884,17 +5913,13 @@
               }
             },
             {
-              "kind": "method",
-              "name": "_registerChoiceElement",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "CustomEvent"
-                  }
-                }
-              ],
+              "kind": "field",
+              "name": "_mutationObserver",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "privacy": "private",
+              "default": "null",
               "inheritedFrom": {
                 "name": "ChoicesMixin",
                 "module": "packages/qti-interactions/src/mixins/choices/choices.mixin.ts"
@@ -5942,16 +5967,9 @@
             },
             {
               "kind": "method",
-              "name": "_toggleChoiceChecked",
+              "name": "_syncChoicesFromDOM",
               "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "choice",
-                  "type": {
-                    "text": "Choice"
-                  }
-                }
-              ],
+              "description": "Synchronizes the internal choice elements list with the current DOM state.\nAlso filters the response to only include valid identifiers.",
               "inheritedFrom": {
                 "name": "ChoicesMixin",
                 "module": "packages/qti-interactions/src/mixins/choices/choices.mixin.ts"
@@ -5959,13 +5977,13 @@
             },
             {
               "kind": "method",
-              "name": "_unregisterChoiceElement",
+              "name": "_toggleChoiceChecked",
               "privacy": "protected",
               "parameters": [
                 {
-                  "name": "event",
+                  "name": "choice",
                   "type": {
-                    "text": "CustomEvent"
+                    "text": "Choice"
                   }
                 }
               ],
@@ -5998,12 +6016,24 @@
             },
             {
               "kind": "field",
+              "name": "_validationMessageShown",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "ChoicesMixin",
+                "module": "packages/qti-interactions/src/mixins/choices/choices.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "class",
               "type": {
                 "text": "string"
               },
               "attribute": "class",
-              "reflects": true,
               "inheritedFrom": {
                 "name": "VocabularyMixin",
                 "module": "packages/qti-interactions/src/mixins/vocabulary/vocabulary-mixin.ts"
@@ -6085,6 +6115,24 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
               }
             },
             {
@@ -6865,6 +6913,24 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
               }
             },
             {
@@ -7805,6 +7871,24 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
               }
             },
             {
@@ -9151,6 +9235,24 @@
             },
             {
               "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
+              }
+            },
+            {
+              "kind": "method",
               "name": "getDraggablesFromDroppable",
               "privacy": "private",
               "return": {
@@ -10393,6 +10495,24 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
               }
             },
             {
@@ -11695,6 +11815,24 @@
             },
             {
               "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
+              }
+            },
+            {
+              "kind": "method",
               "name": "getDraggablesFromDroppable",
               "privacy": "private",
               "return": {
@@ -12967,17 +13105,13 @@
               }
             },
             {
-              "kind": "method",
-              "name": "_registerChoiceElement",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "CustomEvent"
-                  }
-                }
-              ],
+              "kind": "field",
+              "name": "_mutationObserver",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "privacy": "private",
+              "default": "null",
               "inheritedFrom": {
                 "name": "ChoicesMixin",
                 "module": "packages/qti-interactions/src/mixins/choices/choices.mixin.ts"
@@ -13025,16 +13159,9 @@
             },
             {
               "kind": "method",
-              "name": "_toggleChoiceChecked",
+              "name": "_syncChoicesFromDOM",
               "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "choice",
-                  "type": {
-                    "text": "Choice"
-                  }
-                }
-              ],
+              "description": "Synchronizes the internal choice elements list with the current DOM state.\nAlso filters the response to only include valid identifiers.",
               "inheritedFrom": {
                 "name": "ChoicesMixin",
                 "module": "packages/qti-interactions/src/mixins/choices/choices.mixin.ts"
@@ -13042,13 +13169,13 @@
             },
             {
               "kind": "method",
-              "name": "_unregisterChoiceElement",
+              "name": "_toggleChoiceChecked",
               "privacy": "protected",
               "parameters": [
                 {
-                  "name": "event",
+                  "name": "choice",
                   "type": {
-                    "text": "CustomEvent"
+                    "text": "Choice"
                   }
                 }
               ],
@@ -13074,6 +13201,19 @@
                 "text": "HTMLElement"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "ChoicesMixin",
+                "module": "packages/qti-interactions/src/mixins/choices/choices.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_validationMessageShown",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
               "inheritedFrom": {
                 "name": "ChoicesMixin",
                 "module": "packages/qti-interactions/src/mixins/choices/choices.mixin.ts"
@@ -13163,6 +13303,24 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
               }
             },
             {
@@ -13956,17 +14114,13 @@
               }
             },
             {
-              "kind": "method",
-              "name": "_registerChoiceElement",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "CustomEvent"
-                  }
-                }
-              ],
+              "kind": "field",
+              "name": "_mutationObserver",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "privacy": "private",
+              "default": "null",
               "inheritedFrom": {
                 "name": "ChoicesMixin",
                 "module": "packages/qti-interactions/src/mixins/choices/choices.mixin.ts"
@@ -14014,16 +14168,9 @@
             },
             {
               "kind": "method",
-              "name": "_toggleChoiceChecked",
+              "name": "_syncChoicesFromDOM",
               "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "choice",
-                  "type": {
-                    "text": "Choice"
-                  }
-                }
-              ],
+              "description": "Synchronizes the internal choice elements list with the current DOM state.\nAlso filters the response to only include valid identifiers.",
               "inheritedFrom": {
                 "name": "ChoicesMixin",
                 "module": "packages/qti-interactions/src/mixins/choices/choices.mixin.ts"
@@ -14031,13 +14178,13 @@
             },
             {
               "kind": "method",
-              "name": "_unregisterChoiceElement",
+              "name": "_toggleChoiceChecked",
               "privacy": "protected",
               "parameters": [
                 {
-                  "name": "event",
+                  "name": "choice",
                   "type": {
-                    "text": "CustomEvent"
+                    "text": "Choice"
                   }
                 }
               ],
@@ -14063,6 +14210,19 @@
                 "text": "HTMLElement"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "ChoicesMixin",
+                "module": "packages/qti-interactions/src/mixins/choices/choices.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_validationMessageShown",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
               "inheritedFrom": {
                 "name": "ChoicesMixin",
                 "module": "packages/qti-interactions/src/mixins/choices/choices.mixin.ts"
@@ -14144,6 +14304,24 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
               }
             },
             {
@@ -14946,17 +15124,13 @@
               }
             },
             {
-              "kind": "method",
-              "name": "_registerChoiceElement",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "CustomEvent"
-                  }
-                }
-              ],
+              "kind": "field",
+              "name": "_mutationObserver",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "privacy": "private",
+              "default": "null",
               "inheritedFrom": {
                 "name": "ChoicesMixin",
                 "module": "packages/qti-interactions/src/mixins/choices/choices.mixin.ts"
@@ -15004,16 +15178,9 @@
             },
             {
               "kind": "method",
-              "name": "_toggleChoiceChecked",
+              "name": "_syncChoicesFromDOM",
               "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "choice",
-                  "type": {
-                    "text": "Choice"
-                  }
-                }
-              ],
+              "description": "Synchronizes the internal choice elements list with the current DOM state.\nAlso filters the response to only include valid identifiers.",
               "inheritedFrom": {
                 "name": "ChoicesMixin",
                 "module": "packages/qti-interactions/src/mixins/choices/choices.mixin.ts"
@@ -15021,13 +15188,13 @@
             },
             {
               "kind": "method",
-              "name": "_unregisterChoiceElement",
+              "name": "_toggleChoiceChecked",
               "privacy": "protected",
               "parameters": [
                 {
-                  "name": "event",
+                  "name": "choice",
                   "type": {
-                    "text": "CustomEvent"
+                    "text": "Choice"
                   }
                 }
               ],
@@ -15053,6 +15220,19 @@
                 "text": "HTMLElement"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "ChoicesMixin",
+                "module": "packages/qti-interactions/src/mixins/choices/choices.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_validationMessageShown",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
               "inheritedFrom": {
                 "name": "ChoicesMixin",
                 "module": "packages/qti-interactions/src/mixins/choices/choices.mixin.ts"
@@ -15150,6 +15330,24 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
               }
             },
             {
@@ -15899,6 +16097,24 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
               }
             },
             {
@@ -17198,6 +17414,24 @@
             },
             {
               "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
+              }
+            },
+            {
+              "kind": "method",
               "name": "getDraggablesFromDroppable",
               "privacy": "private",
               "return": {
@@ -18470,6 +18704,24 @@
               }
             },
             {
+              "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
+              }
+            },
+            {
               "kind": "field",
               "name": "internals",
               "type": {
@@ -19722,6 +19974,24 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
               }
             },
             {
@@ -21211,6 +21481,24 @@
             },
             {
               "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
+              }
+            },
+            {
+              "kind": "method",
               "name": "generateIframeContent",
               "privacy": "protected",
               "return": {
@@ -22548,6 +22836,24 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
               }
             },
             {
@@ -24184,6 +24490,24 @@
               }
             },
             {
+              "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
+              }
+            },
+            {
               "kind": "field",
               "name": "internals",
               "type": {
@@ -24962,6 +25286,24 @@
               }
             },
             {
+              "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
+              }
+            },
+            {
               "kind": "field",
               "name": "internals",
               "type": {
@@ -25685,6 +26027,24 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
               }
             },
             {
@@ -26463,6 +26823,24 @@
               }
             },
             {
+              "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
+              }
+            },
+            {
               "kind": "field",
               "name": "internals",
               "type": {
@@ -27212,17 +27590,13 @@
               "privacy": "protected"
             },
             {
-              "kind": "method",
-              "name": "_registerChoiceElement",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "CustomEvent"
-                  }
-                }
-              ]
+              "kind": "field",
+              "name": "_mutationObserver",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "privacy": "private",
+              "default": "null"
             },
             {
               "kind": "method",
@@ -27258,6 +27632,12 @@
             },
             {
               "kind": "method",
+              "name": "_syncChoicesFromDOM",
+              "privacy": "protected",
+              "description": "Synchronizes the internal choice elements list with the current DOM state.\nAlso filters the response to only include valid identifiers."
+            },
+            {
+              "kind": "method",
               "name": "_toggleChoiceChecked",
               "privacy": "protected",
               "parameters": [
@@ -27265,19 +27645,6 @@
                   "name": "choice",
                   "type": {
                     "text": "Choice"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_unregisterChoiceElement",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "CustomEvent"
                   }
                 }
               ]
@@ -27295,6 +27662,15 @@
                 "text": "HTMLElement"
               },
               "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "_validationMessageShown",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
             },
             {
               "kind": "field",
@@ -28944,8 +29320,7 @@
               "type": {
                 "text": "string"
               },
-              "attribute": "class",
-              "reflects": true
+              "attribute": "class"
             }
           ],
           "attributes": [

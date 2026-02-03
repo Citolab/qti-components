@@ -6010,7 +6010,6 @@
                 "text": "string"
               },
               "attribute": "class",
-              "reflects": true,
               "inheritedFrom": {
                 "name": "VocabularyMixin",
                 "module": "packages/qti-interactions/src/mixins/vocabulary/vocabulary-mixin.ts"
@@ -29221,8 +29220,7 @@
               "type": {
                 "text": "string"
               },
-              "attribute": "class",
-              "reflects": true
+              "attribute": "class"
             }
           ],
           "attributes": [
