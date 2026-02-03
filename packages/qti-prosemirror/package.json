@@ -1,0 +1,48 @@
+{
+  "name": "@qti-components/prosemirror",
+  "description": "QTI prosemirror schemas and helpers",
+  "version": "1.0.0",
+  "author": "",
+  "dependencies": {
+    "@qti-components/base": "workspace:^",
+    "@qti-components/interactions": "workspace:^",
+    "@qti-components/utilities": "workspace:^"
+  },
+  "devDependencies": {
+    "@lit/context": "^1.1.6",
+    "@storybook/addon-a11y": "^10.2.2",
+    "@storybook/addon-docs": "^10.2.2",
+    "@storybook/addon-links": "^10.2.2",
+    "@storybook/addon-themes": "^10.2.2",
+    "@storybook/web-components": "^10.2.2",
+    "@storybook/web-components-vite": "^10.2.2",
+    "lit": "^3.3.1",
+    "prosemirror-commands": "^1.7.1",
+    "prosemirror-history": "^1.5.0",
+    "prosemirror-keymap": "^1.2.3",
+    "prosemirror-model": "^1.25.4",
+    "prosemirror-state": "^1.4.4",
+    "prosemirror-view": "^1.41.5",
+    "storybook": "^10.2.2"
+  },
+  "keywords": [
+    "prosemirror",
+    "qti"
+  ],
+  "license": "GPL-3.0-only",
+  "main": "dist/index.js",
+  "peerDependencies": {
+    "@lit/context": "^1.1.6",
+    "lit": "^3.3.1"
+  },
+  "scripts": {
+    "attw": "attw --profile esm-only --pack",
+    "build": "tsc --paths null",
+    "clean": "rm -rf dist",
+    "storybook": "storybook dev -p 6007 --no-open",
+    "build-storybook": "storybook build"
+  },
+  "sideEffects": true,
+  "type": "module",
+  "types": "dist/index.d.ts"
+}

@@ -43,6 +43,9 @@
       "@qti-components/item": [
         "./packages/qti-item/src/index.ts"
       ],
+      "@qti-components/prosemirror": [
+        "./packages/qti-prosemirror/src/index.ts"
+      ],
       "@qti-components/test": [
         "./packages/qti-test/src/index.ts"
       ],
