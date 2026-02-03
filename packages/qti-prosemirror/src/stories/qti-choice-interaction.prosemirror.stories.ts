@@ -75,6 +75,7 @@ export const BasicEditor: Story = {
         <qti-simple-choice identifier="C">Option C</qti-simple-choice>
         <qti-simple-choice identifier="D">Option D</qti-simple-choice>
       </qti-choice-interaction>
+      <p>Use the editor to modify the question, prompt, and choices.</p>
     `;
 
     const initEditor = (container: HTMLElement) => {
