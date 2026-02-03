@@ -16110,6 +16110,20 @@
             },
             {
               "kind": "field",
+              "name": "_dropdownOpen",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "_focusTrigger",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
               "name": "_handleShowCandidateCorrectionChange",
               "privacy": "protected",
               "inheritedFrom": {
@@ -16160,22 +16174,96 @@
               }
             },
             {
-              "kind": "method",
-              "name": "_updateOptions",
+              "kind": "field",
+              "name": "_onCustomMenuKeyDown",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onCustomTriggerKeyDown",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onDocumentKeyDown",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onDocumentPointerDown",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onNativeChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onToggleCustomDropdown",
               "privacy": "private"
             },
             {
               "kind": "method",
-              "name": "choiceSelected",
-              "privacy": "protected",
+              "name": "_selectedOption",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "OptionType | undefined"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_selectValue",
+              "privacy": "private",
               "parameters": [
                 {
-                  "name": "event",
+                  "name": "value",
                   "type": {
-                    "text": "Event"
+                    "text": "string"
                   }
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "_setDropdownOpen",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "open",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_supportsCustomizableSelect",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Progressive enhancement for \"customizable select\" (WHATWG / MDN: `appearance: base-select` + `::picker()`).\n\nNotes on current browser behavior (observed around Feb 2026):\n- Chromium-based browsers can support customizable select in light DOM, but it does not reliably work when the\n  `<select>` lives inside a shadow root (e.g. the internal `<button>/<selectedcontent>` can end up effectively\n  not rendered, so rich content like images disappears).\n- Firefox support is not generally available yet, so we fall back to our custom listbox there as well.\n\nBecause `CSS.supports(...)` may return syntax-only true, we do a final DOM probe to ensure the customizable-select\nmarkup actually takes effect in the current environment before opting in."
+            },
+            {
+              "kind": "field",
+              "name": "_supportsCustomizableSelectCache",
+              "type": {
+                "text": "boolean | null"
+              },
+              "privacy": "private",
+              "static": true,
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "_updateOptions",
+              "privacy": "private"
             },
             {
               "kind": "field",

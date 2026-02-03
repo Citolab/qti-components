@@ -39,3 +39,4 @@ dev
 /.yalc
 yalc.lock
 .npmrc
+tools/playwright/
