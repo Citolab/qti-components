@@ -26,7 +26,6 @@ import 'prosemirror-gapcursor/style/gapcursor.css';
 // Import the base schema nodes/marks and plugins
 import { baseNodes, baseMarks } from '../schema/base.schema';
 import { createBasePlugins } from '../plugins/base.plugins';
-
 // Import component schema and keymap
 import { qtiTextEntryInteractionNodeSpec } from '../components/qti-text-entry-interaction/qti-text-entry-interaction.schema';
 import { createTextEntryInteractionKeymap } from '../components/qti-text-entry-interaction/qti-text-entry-interaction.keymap';
