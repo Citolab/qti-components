@@ -41,7 +41,6 @@ export class QtiAssessmentItemRef extends LitElement {
   myTemplate: TemplateFunction;
 
   override async connectedCallback(): Promise<void> {
-    // debugger;
     super.connectedCallback();
 
     /*

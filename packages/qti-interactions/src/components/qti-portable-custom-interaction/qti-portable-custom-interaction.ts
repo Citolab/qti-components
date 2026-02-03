@@ -419,7 +419,26 @@ export class QtiPortableCustomInteraction extends Interaction {
       case 'interactionChanged': {
         const raw = data?.params?.value;
         const converted = raw && typeof raw === 'object' ? this.convertQtiVariableJSON(raw as QtiVariableJSON) : null;
-        const state = typeof data?.params?.state === 'string' ? data.params.state : null;
+        // PCI state "should" be an opaque string, but a lot of existing PCIs (including the
+        // IMS conformance examples) return a structured object from getState().
+        //
+        // We store a string in itemContext.state, so we serialize non-string states with a
+        // prefix to safely round-trip them without accidentally parsing user-provided strings.
+        const stateRaw = data?.params?.state as unknown;
+        let state: string | null | undefined;
+        if (stateRaw === undefined) {
+          state = undefined;
+        } else if (stateRaw === null) {
+          state = null;
+        } else if (typeof stateRaw === 'string') {
+          state = stateRaw;
+        } else {
+          try {
+            state = `__qti_json__::${JSON.stringify(stateRaw)}`;
+          } catch {
+            state = null;
+          }
+        }
 
         // Treat null/undefined or unconvertible responses as "cleared".
         // The iframe side is responsible for not emitting an initial clear on load.
@@ -622,8 +641,6 @@ export class QtiPortableCustomInteraction extends Interaction {
       baseUrl: '${this.dataset.baseUrl}',
       shim: window.requireShim,
       onNodeCreated: function(node, config, moduleName, url) {
-        console.log('RequireJS creating node for module:', moduleName, 'URL:', url);
-
         // Add error handler to script node
         node.addEventListener('error', function(evt) {
           console.error('Script load error for module:', moduleName, 'URL:', url, 'Event:', evt);
@@ -838,7 +855,18 @@ export class QtiPortableCustomInteraction extends Interaction {
 
 	              if (pciInstance.getInstance) {
 	                const dom = this.markupEl || this.container;
-	                pciInstance.getInstance(dom, pciConfig, config.state || undefined);
+	                // Round-trip support for object states (stored as a prefixed JSON string by the host).
+	                // For strict string-based PCIs we pass the original string through unchanged.
+	                let restoredState = config.state;
+	                if (typeof restoredState === 'string' && restoredState.indexOf('__qti_json__::') === 0) {
+	                  try {
+	                    restoredState = JSON.parse(restoredState.substring('__qti_json__::'.length));
+	                  } catch (e) {
+	                    // If parsing fails, fall back to the raw string.
+	                    restoredState = config.state;
+	                  }
+	                }
+	                pciInstance.getInstance(dom, pciConfig, restoredState || undefined);
 	              } else {
                 // TAO custom interaction initialization
                 const restoreTAOConfig = (dataset) => {

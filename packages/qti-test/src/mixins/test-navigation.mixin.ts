@@ -3,6 +3,7 @@ import { property } from 'lit/decorators.js';
 import { qtiTransformItem } from '@qti-components/transformers';
 
 import type { QtiAssessmentStimulusRefConnectedEvent } from '@qti-components/elements';
+import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { transformItemApi, transformTestApi } from '@qti-components/transformers';
 import type { QtiAssessmentItemRef } from '../components/qti-assessment-item-ref/qti-assessment-item-ref';
 import type { QtiAssessmentSection } from '../components/qti-assessment-section/qti-assessment-section';
@@ -450,6 +451,23 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
 
       validResults.forEach(({ itemRef, doc }) => {
         if (itemRef && doc) itemRef.xmlDoc = doc;
+      });
+
+      // Restore per-item state as early as possible (before iframe-based interactions initialize).
+      // Some PCIs (including IMS conformance examples) only support restoration via getInstance(state),
+      // so the state needs to be present on the provided itemContext at initial render time.
+      validResults.forEach(({ itemRef }) => {
+        const itemId = itemRef?.identifier;
+        if (!itemRef || !itemId) return;
+
+        const savedState = this.testContext.items.find(i => i.identifier === itemId)?.state;
+        if (savedState === undefined) return;
+
+        itemRef.updateComplete.then(() => {
+          const assessmentItem = itemRef.assessmentItem as QtiAssessmentItem | null;
+          if (!assessmentItem) return;
+          assessmentItem.state = savedState;
+        });
       });
 
       this._loadResults = validResults;
