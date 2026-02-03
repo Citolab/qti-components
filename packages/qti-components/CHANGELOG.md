@@ -1,5 +1,13 @@
 # Changelog
 
+## [7.20.0](https://github.com/Citolab/qti-components/compare/qti-components-v7.19.0...qti-components-v7.20.0) (2026-02-03)
+
+
+### Features
+
+* add private methods for response handling and normalization ([a763136](https://github.com/Citolab/qti-components/commit/a7631361a728df10dfd3cbb37114075505ac7b00))
+* add private methods for response handling and normalization ([9a5e165](https://github.com/Citolab/qti-components/commit/9a5e165600c67276cd0108f2de9c581c1e80b404))
+
 ## [7.19.0](https://github.com/Citolab/qti-components/compare/qti-components-v7.18.1...qti-components-v7.19.0) (2026-02-03)
 
 
