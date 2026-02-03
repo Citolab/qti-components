@@ -145,17 +145,19 @@ export const qtiTransformItem = (cache: boolean = false) => {
         }
         if (moduleResolutionFallbackConfig === null) {
           try {
-            moduleResolutionFallbackConfig = await getModuleResolutionConfig(baseUrl, '/modules/fallback_module_resolution.js');
+            moduleResolutionFallbackConfig = await getModuleResolutionConfig(
+              baseUrl,
+              '/modules/fallback_module_resolution.js'
+            );
           } catch {
             moduleResolutionFallbackConfig = null;
           }
         }
       };
 
-      {
-        for (const interaction of Array.from(portableCustomInteractions)) {
-          // set data-base-url
-          interaction.setAttribute('data-base-url', baseUrl);
+      for (const interaction of Array.from(portableCustomInteractions)) {
+        // set data-base-url
+        interaction.setAttribute('data-base-url', baseUrl);
 
           let customInteractionTypeIdentifier = interaction.getAttribute('custom-interaction-type-identifier');
           if (
@@ -309,7 +311,6 @@ export const qtiTransformItem = (cache: boolean = false) => {
                 }
               }
             }
-          }
         }
       }
 
