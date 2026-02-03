@@ -1,13 +1,13 @@
 {
-    "packages/qti-components": "7.17.1",
-    "packages/qti-base": "1.0.0",
-    "packages/qti-elements": "1.0.0",
-    "packages/qti-interactions": "1.0.0",
-    "packages/qti-item": "1.0.0",
-    "packages/qti-loader": "1.0.0",
-    "packages/qti-processing": "1.0.0",
-    "packages/qti-test": "1.0.0",
+    "packages/qti-components": "7.18.0",
+    "packages/qti-base": "1.1.0",
+    "packages/qti-elements": "1.1.0",
+    "packages/qti-interactions": "1.1.0",
+    "packages/qti-item": "1.0.1",
+    "packages/qti-loader": "1.0.1",
+    "packages/qti-processing": "1.0.1",
+    "packages/qti-test": "1.0.1",
     "packages/qti-theme": "1.0.0",
-    "packages/qti-transformers": "1.0.0",
+    "packages/qti-transformers": "1.1.0",
     "packages/lit-utilities": "1.0.0"
 }

@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.1.0](https://github.com/Citolab/qti-components/compare/elements-v1.0.0...elements-v1.1.0) (2026-02-02)
+
+
+### Features
+
+* besides from response, also make it possible to store state. use for pci's ([d43fed7](https://github.com/Citolab/qti-components/commit/d43fed712fe592ce4bb43a335d8ca3d6a3e0f9d5))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @qti-components/base bumped to 1.1.0
+    * @qti-components/transformers bumped to 1.1.0
+
 ## 1.0.0 (2026-01-06)
 
 
