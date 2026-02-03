@@ -66,7 +66,7 @@ export const BasicEditor: Story = {
     const initialContent = `
       <h1>QTI Choice Interaction Example</h1>
       <p>Edit the content below:</p>
-      <qti-choice-interaction max-choices="1" class="qti-labels-decimal">
+      <qti-choice-interaction max-choices="1" class="qti-labels-decimal qti-choices-stacking-2">
         <qti-prompt>
           <p>Which of the following features are <strong>new</strong> to QTI 3?</p>
         </qti-prompt>
