@@ -11035,6 +11035,16 @@
               }
             },
             {
+              "kind": "method",
+              "name": "getResponseArray",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string[]"
+                }
+              }
+            },
+            {
               "kind": "field",
               "name": "grImage",
               "type": {
@@ -11101,6 +11111,24 @@
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               }
+            },
+            {
+              "kind": "method",
+              "name": "normalizeResponse",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string | string[] | null | undefined"
+                  }
+                }
+              ]
             },
             {
               "kind": "method",
