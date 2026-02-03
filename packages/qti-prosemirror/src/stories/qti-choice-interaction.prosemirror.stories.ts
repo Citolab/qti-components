@@ -4,8 +4,14 @@
  * This story demonstrates how to:
  * 1. Import the QTI custom elements and their ProseMirror schemas
  * 2. Compose a ProseMirror schema from base nodes and QTI node specs
- * 3. Set up plugins (history, keymap)
+ * 3. Set up plugins with base functionality
  * 4. Create an EditorView with the schema
+ *
+ * Keyboard shortcuts:
+ * - Mod-b: Toggle bold
+ * - Mod-i: Toggle italic
+ * - Mod-z: Undo
+ * - Mod-Shift-z / Mod-y: Redo
  */
 
 import { html } from 'lit';
@@ -13,13 +19,13 @@ import { ref } from 'lit/directives/ref.js';
 import { Schema, DOMParser } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
 import { EditorState } from 'prosemirror-state';
-import { keymap } from 'prosemirror-keymap';
-import { baseKeymap } from 'prosemirror-commands';
-import { history } from 'prosemirror-history';
-
 import 'prosemirror-view/style/prosemirror.css';
-// Import the base schema nodes/marks
+import 'prosemirror-gapcursor/style/gapcursor.css';
+
+// Import the base schema nodes/marks and plugins
 import { baseNodes, baseMarks } from '../schema/base.schema';
+import { createBasePlugins } from '../plugins/base.plugins';
+
 // Import component schemas
 import { qtiChoiceInteractionNodeSpec } from '../components/qti-choice-interaction/qti-choice-interaction.schema';
 import { qtiPromptNodeSpec } from '../components/qti-prompt/qti-prompt.schema';
@@ -43,8 +49,8 @@ const schema = new Schema({
   marks: baseMarks
 });
 
-// Configure plugins
-const plugins = [history(), keymap(baseKeymap)];
+// Configure plugins with base functionality
+const plugins = createBasePlugins(schema);
 
 const meta: Meta = {
   title: 'QTI ProseMirror/Choice Interaction Editor',

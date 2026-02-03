@@ -11,6 +11,9 @@ export * from './components/qti-prompt/qti-prompt.schema.js';
 export * from './components/qti-simple-choice/qti-simple-choice.schema.js';
 export * from './components/qti-text-entry-interaction/qti-text-entry-interaction.schema.js';
 
+// Plugins
+export * from './plugins/base.plugins.js';
+
 // Commands
 export * from './components/qti-text-entry-interaction/qti-text-entry-interaction.commands.js';
 

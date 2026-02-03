@@ -4,8 +4,15 @@
  * This story demonstrates how to:
  * 1. Import the QTI text entry custom element and its ProseMirror schema
  * 2. Compose a ProseMirror schema with inline text entry nodes
- * 3. Set up plugins including custom keymap (Mod-Shift-T to insert)
+ * 3. Set up plugins including base plugins and custom keymap
  * 4. Create an EditorView with the schema
+ *
+ * Keyboard shortcuts:
+ * - Mod-b: Toggle bold
+ * - Mod-i: Toggle italic
+ * - Mod-z: Undo
+ * - Mod-Shift-z / Mod-y: Redo
+ * - Mod-Shift-T: Insert text entry field
  */
 
 import { html } from 'lit';
@@ -13,14 +20,14 @@ import { ref } from 'lit/directives/ref.js';
 import { Schema, DOMParser } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
 import { EditorState } from 'prosemirror-state';
-import { keymap } from 'prosemirror-keymap';
-import { baseKeymap } from 'prosemirror-commands';
-import { history } from 'prosemirror-history';
 import 'prosemirror-view/style/prosemirror.css';
+import 'prosemirror-gapcursor/style/gapcursor.css';
 
-// Import the base schema nodes/marks
+// Import the base schema nodes/marks and plugins
 import { baseNodes, baseMarks } from '../schema/base.schema';
-// Import component schema, commands, and keymap
+import { createBasePlugins } from '../plugins/base.plugins';
+
+// Import component schema and keymap
 import { qtiTextEntryInteractionNodeSpec } from '../components/qti-text-entry-interaction/qti-text-entry-interaction.schema';
 import { createTextEntryInteractionKeymap } from '../components/qti-text-entry-interaction/qti-text-entry-interaction.keymap';
 
@@ -38,8 +45,8 @@ const schema = new Schema({
   marks: baseMarks
 });
 
-// Configure plugins including the text entry keymap
-const plugins = [history(), keymap(baseKeymap), createTextEntryInteractionKeymap()];
+// Configure plugins: base plugins + text entry keymap
+const plugins = [...createBasePlugins(schema), createTextEntryInteractionKeymap()];
 
 const meta: Meta = {
   title: 'QTI ProseMirror/Text Entry Interaction Editor',
