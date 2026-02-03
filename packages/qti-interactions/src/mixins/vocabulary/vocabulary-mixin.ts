@@ -1,7 +1,6 @@
 import { property } from 'lit/decorators.js';
 
 import type { QtiSimpleChoice } from '../../elements/qti-simple-choice';
-import type { Interaction } from '@qti-components/base';
 import type { LitElement, PropertyValues } from 'lit';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
@@ -16,6 +15,7 @@ export const VocabularyMixin = <T extends Constructor<LitElement>>(superClass: T
     private _classes: string[] = [];
     private _allLabels = ['qti-labels-decimal', 'qti-labels-lower-alpha', 'qti-labels-upper-alpha'];
     private _allLabelSuffixes = ['qti-labels-suffix-period', 'qti-labels-suffix-parenthesis'] as LabelSuffixType[];
+    private _mutationObserver: MutationObserver | null = null;
     // Define the property with the custom converter
     @property({
       type: String
@@ -39,6 +39,18 @@ export const VocabularyMixin = <T extends Constructor<LitElement>>(superClass: T
       // if (_changedProperties.has('shuffle')) {
       this._addLabels();
       // }
+    }
+
+    override connectedCallback(): void {
+      super.connectedCallback();
+      this._mutationObserver = new MutationObserver(() => this._addLabels());
+      this._mutationObserver.observe(this, { childList: true, subtree: true });
+    }
+
+    override disconnectedCallback(): void {
+      super.disconnectedCallback();
+      this._mutationObserver?.disconnect();
+      this._mutationObserver = null;
     }
 
     private _addLabels() {

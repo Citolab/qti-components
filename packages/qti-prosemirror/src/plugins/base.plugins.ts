@@ -15,6 +15,8 @@ import { history, undo, redo } from 'prosemirror-history';
 import { gapCursor } from 'prosemirror-gapcursor';
 import { dropCursor } from 'prosemirror-dropcursor';
 
+import { blockSelectPlugin } from './block-select-plugin';
+
 import type { Plugin } from 'prosemirror-state';
 import type { Schema } from 'prosemirror-model';
 
@@ -49,5 +51,13 @@ export function createHistoryKeymap(): Plugin {
  * Creates the base set of plugins for a functional editor
  */
 export function createBasePlugins(schema: Schema): Plugin[] {
-  return [history(), createHistoryKeymap(), createMarkKeymaps(schema), gapCursor(), dropCursor(), keymap(baseKeymap)];
+  return [
+    history(),
+    createHistoryKeymap(),
+    createMarkKeymaps(schema),
+    gapCursor(),
+    dropCursor(),
+    keymap(baseKeymap),
+    blockSelectPlugin
+  ];
 }
