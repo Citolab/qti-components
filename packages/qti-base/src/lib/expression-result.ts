@@ -7,6 +7,7 @@ export interface directedPair {
 export interface ResponseInteraction {
   responseIdentifier: string;
   response: string | string[];
+  state?: string | null;
 }
 
 export interface Calculate {

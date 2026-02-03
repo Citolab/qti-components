@@ -385,6 +385,7 @@ export abstract class Interaction extends LitElement implements IInteraction {
     );
   }
 
+<<<<<<< HEAD
   protected override firstUpdated(): void {
     // Skip for full correct response clones to avoid infinite loops
     if (this.isFullCorrectResponse) {
@@ -404,6 +405,9 @@ export abstract class Interaction extends LitElement implements IInteraction {
   }
 
   public saveResponse(value: string | string[]): void {
+=======
+  public saveResponse(value: string | string[], state?: string | null): void {
+>>>>>>> main
     this.dispatchEvent(
       new CustomEvent('qti-interaction-response', {
         bubbles: true,
@@ -411,7 +415,8 @@ export abstract class Interaction extends LitElement implements IInteraction {
         cancelable: false,
         detail: {
           responseIdentifier: this.responseIdentifier,
-          response: Array.isArray(value) ? [...value] : value
+          response: Array.isArray(value) ? [...value] : value,
+          ...(state !== undefined ? { state } : {})
         }
       })
     );

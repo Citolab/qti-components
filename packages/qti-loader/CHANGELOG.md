@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.0.1](https://github.com/Citolab/qti-components/compare/loader-v1.0.0...loader-v1.0.1) (2026-02-02)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @qti-components/transformers bumped to 1.1.0
+    * @qti-components/elements bumped to 1.1.0
+
 ## 1.0.0 (2026-01-06)
 
 

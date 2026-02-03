@@ -1740,6 +1740,14 @@
             },
             {
               "kind": "field",
+              "name": "state",
+              "type": {
+                "text": "ItemContext['state']"
+              },
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
               "name": "timeDependent",
               "type": {
                 "text": "'true' | 'false' | null"
@@ -6697,34 +6705,9 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "",
+          "description": "QTI Custom Interaction component for legacy CES-based interactions.\n\nThis component implements support for custom interactions originally built for the CES\n(Custom Element Standard) player - the predecessor to FACET and the Trifork QTI Player.",
           "name": "QtiCustomInteraction",
           "members": [
-            {
-              "kind": "field",
-              "name": "_context",
-              "type": {
-                "text": "ItemContext"
-              },
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_correctResponse",
-              "type": {
-                "text": "string | string[] | null"
-              },
-              "privacy": "protected",
-              "default": "null",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
             {
               "kind": "field",
               "name": "_errorMessage",
@@ -6733,57 +6716,6 @@
               },
               "privacy": "private",
               "default": "null"
-            },
-            {
-              "kind": "field",
-              "name": "_handleShowCandidateCorrectionChange",
-              "privacy": "protected",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_handleShowCorrectResponseChange",
-              "privacy": "protected",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_handleShowFullCorrectResponseChange",
-              "privacy": "protected",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_internals",
-              "type": {
-                "text": "ElementInternals"
-              },
-              "privacy": "protected",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_isFullCorrectResponse",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "protected",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
             },
             {
               "kind": "field",
@@ -6861,51 +6793,6 @@
               "attribute": "data"
             },
             {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "formAssociated",
-              "type": {
-                "text": "boolean"
-              },
-              "static": true,
-              "default": "true",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "formResetCallback",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              },
-              "type": {
-                "text": "formResetCallback() => void"
-              }
-            },
-            {
               "kind": "method",
               "name": "getIFrames",
               "privacy": "private"
@@ -6929,6 +6816,26 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "getManifestBaseUrl",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getManifestParentBaseUrl",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | null"
+                }
+              }
             },
             {
               "kind": "method",
@@ -7034,54 +6941,6 @@
             },
             {
               "kind": "field",
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "readonly",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "reportValidity",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              },
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              },
-              "type": {
-                "text": "reportValidity() => boolean"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "reset",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              },
-              "type": {
-                "text": "reset() => void"
-              }
-            },
-            {
-              "kind": "field",
               "name": "response",
               "type": {
                 "text": "string | string[] | null"
@@ -7143,6 +7002,7 @@
             {
               "kind": "method",
               "name": "setupCES",
+              "description": "Sets up the CES custom interaction by creating the iframe structure and\nhandling the CES API communication via postMessage.\n\nFor interactions that use CES, this method:\n1. Fetches the original bootstrap.js and checks if it uses CES\n2. If CES is used, fetches index.html and injects the registerCES proxy\n3. Creates a blob URL for the modified HTML (stored in _contentBlobUrl)\n4. Replaces bootstrap.js with ciBootstrap that loads the blob URL\n5. Sets up postMessage listeners for CES API calls",
               "type": {
                 "text": "setupCES() => void"
               }
@@ -21024,12 +20884,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction-iframe.ts",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
       "path": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts",
       "declarations": [
         {
@@ -21133,8 +20987,12 @@
             },
             {
               "kind": "field",
-              "name": "_onInteractionChanged",
-              "privacy": "private"
+              "name": "_iframeMessageOrigin",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "protected",
+              "default": "null"
             },
             {
               "kind": "field",
@@ -21168,15 +21026,6 @@
               "name": "_previousState",
               "type": {
                 "text": "{\n    pointerEvents?: string;\n    position?: string;\n  }"
-              },
-              "privacy": "private",
-              "default": "null"
-            },
-            {
-              "kind": "field",
-              "name": "_responseCheckInterval",
-              "type": {
-                "text": "number | null"
               },
               "privacy": "private",
               "default": "null"
@@ -21257,18 +21106,6 @@
                 }
               ],
               "description": "DIRECT MODE: Helper method to combine require paths"
-            },
-            {
-              "kind": "field",
-              "name": "configContext",
-              "type": {
-                "text": "ConfigContext"
-              },
-              "privacy": "protected",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
             },
             {
               "kind": "field",
@@ -21357,20 +21194,6 @@
               "description": "Method to disable the PCI for review mode\nThis can be used when showing the correct response",
               "type": {
                 "text": "disable() => void"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -21506,16 +21329,6 @@
             },
             {
               "kind": "field",
-              "name": "getResolvablePath",
-              "description": "DIRECT MODE: Helper method to get resolvable path"
-            },
-            {
-              "kind": "field",
-              "name": "getResolvablePathString",
-              "description": "DIRECT MODE: Helper method to get resolvable path string"
-            },
-            {
-              "kind": "field",
               "name": "handleIframeMessage",
               "privacy": "protected",
               "description": "IFRAME MODE: Handle iframe messages"
@@ -21536,41 +21349,6 @@
             },
             {
               "kind": "field",
-              "name": "internals",
-              "type": {
-                "text": "ElementInternals"
-              },
-              "readonly": true,
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "isFullCorrectResponse",
-              "type": {
-                "text": "Readonly<boolean>"
-              },
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "isInline",
-              "type": {
-                "text": "boolean"
-              },
-              "readonly": true,
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
               "name": "loadConfig",
               "description": "DIRECT MODE: Load config from URL"
             },
@@ -21581,15 +21359,6 @@
                 "text": "string"
               },
               "attribute": "module"
-            },
-            {
-              "kind": "field",
-              "name": "name",
-              "attribute": "name",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
             },
             {
               "kind": "field",
@@ -21604,20 +21373,6 @@
               "name": "processPendingMessages",
               "privacy": "private",
               "description": "IFRAME MODE: Process pending messages"
-            },
-            {
-              "kind": "field",
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "readonly",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
             },
             {
               "kind": "method",
@@ -21648,23 +21403,6 @@
                 }
               ],
               "description": "DIRECT MODE: Helper method to remove double slashes"
-            },
-            {
-              "kind": "method",
-              "name": "reportValidity",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              },
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              },
-              "type": {
-                "text": "reportValidity() => boolean"
-              }
             },
             {
               "kind": "field",
@@ -21716,35 +21454,7 @@
               "type": {
                 "text": "string | string[] | null"
               },
-              "default": "[]",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "responseIdentifier",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "response-identifier",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "responseVariable",
-              "type": {
-                "text": "ResponseVariable | undefined"
-              },
-              "readonly": true,
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
+              "default": "[]"
             },
             {
               "kind": "method",
@@ -21827,51 +21537,6 @@
                 }
               ],
               "description": "IFRAME MODE: Send message to iframe"
-            },
-            {
-              "kind": "field",
-              "name": "showCandidateCorrection",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Shows feedback on candidate's selections compared to correct response.\nAdds `candidate-correct` / `candidate-incorrect` states to choices.",
-              "attribute": "show-candidate-correction",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "showCorrectResponse",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Shows which choices are correct with inline indicators.\nAdds `correct-response` / `incorrect-response` states to choices.",
-              "attribute": "show-correct-response",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "showFullCorrectResponse",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Shows a cloned interaction with the correct answers filled in.\nCreates a disabled copy positioned after this interaction.",
-              "attribute": "show-full-correct-response",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
             },
             {
               "kind": "method",
@@ -22041,15 +21706,6 @@
               "attribute": "data-use-default-shims"
             },
             {
-              "kind": "field",
-              "name": "useIframe",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "data-use-iframe"
-            },
-            {
               "kind": "method",
               "name": "validate",
               "return": {
@@ -22152,18 +21808,6 @@
               },
               "default": "false",
               "fieldName": "useIframe"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
             },
             {
               "name": "module",
@@ -22399,8 +22043,12 @@
             },
             {
               "kind": "field",
-              "name": "_onInteractionChanged",
-              "privacy": "private",
+              "name": "_iframeMessageOrigin",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "protected",
+              "default": "null",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
@@ -22466,19 +22114,6 @@
               },
               "privacy": "private",
               "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "_responseCheckInterval",
-              "type": {
-                "text": "number | null"
-              },
-              "privacy": "private",
-              "default": "null",
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
-              }
             },
             {
               "kind": "field",
@@ -22583,18 +22218,6 @@
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "configContext",
-              "type": {
-                "text": "ConfigContext"
-              },
-              "privacy": "protected",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -22704,20 +22327,6 @@
               },
               "type": {
                 "text": "disable() => void"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -22899,24 +22508,6 @@
                 }
               },
               "description": "Parse the require shim JSON string into an object",
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "getResolvablePath",
-              "description": "DIRECT MODE: Helper method to get resolvable path",
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "getResolvablePathString",
-              "description": "DIRECT MODE: Helper method to get resolvable path string",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
@@ -23109,41 +22700,6 @@
             },
             {
               "kind": "field",
-              "name": "internals",
-              "type": {
-                "text": "ElementInternals"
-              },
-              "readonly": true,
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "isFullCorrectResponse",
-              "type": {
-                "text": "Readonly<boolean>"
-              },
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "isInline",
-              "type": {
-                "text": "boolean"
-              },
-              "readonly": true,
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
               "name": "loadConfig",
               "description": "DIRECT MODE: Load config from URL",
               "inheritedFrom": {
@@ -23161,15 +22717,6 @@
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "name",
-              "attribute": "name",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -23261,23 +22808,6 @@
               }
             },
             {
-              "kind": "method",
-              "name": "reportValidity",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              },
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              },
-              "type": {
-                "text": "reportValidity() => boolean"
-              }
-            },
-            {
               "kind": "field",
               "name": "requireJsUrl",
               "type": {
@@ -23339,7 +22869,7 @@
               "type": {
                 "text": "string | string[] | null"
               },
-              "default": "[]",
+              "default": "null",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -23482,51 +23012,6 @@
               ],
               "type": {
                 "text": "setTestContext(newContext: ItemContext) => void"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "showCandidateCorrection",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Shows feedback on candidate's selections compared to correct response.\nAdds `candidate-correct` / `candidate-incorrect` states to choices.",
-              "attribute": "show-candidate-correction",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "showCorrectResponse",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Shows which choices are correct with inline indicators.\nAdds `correct-response` / `incorrect-response` states to choices.",
-              "attribute": "show-correct-response",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "showFullCorrectResponse",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Shows a cloned interaction with the correct answers filled in.\nCreates a disabled copy positioned after this interaction.",
-              "attribute": "show-full-correct-response",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -23717,19 +23202,6 @@
               }
             },
             {
-              "kind": "field",
-              "name": "useIframe",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "attribute": "data-use-iframe",
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
-              }
-            },
-            {
               "kind": "method",
               "name": "validate",
               "return": {
@@ -23869,18 +23341,6 @@
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
-              }
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {

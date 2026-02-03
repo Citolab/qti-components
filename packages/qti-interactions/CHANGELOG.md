@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.1.0](https://github.com/Citolab/qti-components/compare/interactions-v1.0.0...interactions-v1.1.0) (2026-02-02)
+
+
+### Features
+
+* besides from response, also make it possible to store state. use for pci's ([d43fed7](https://github.com/Citolab/qti-components/commit/d43fed712fe592ce4bb43a335d8ca3d6a3e0f9d5))
+* enhance message handling in QtiPortableCustomInteraction with response identifiers ([6c367b0](https://github.com/Citolab/qti-components/commit/6c367b00d4dd8a47cedfaff51cdf769d15fbbb76))
+* enhance message handling in QtiPortableCustomInteractionTest with response identifiers ([ccb8fc1](https://github.com/Citolab/qti-components/commit/ccb8fc175fcbde461c7d0ad593f625456717b456))
+* enhance PCIManager.setValueElementByText with deep querying and error handling ([849d79a](https://github.com/Citolab/qti-components/commit/849d79a98e5149b021300dbd6b5af2ec3068ce39))
+* enhance QtiCustomInteraction with CES support and improved resource handling ([2a9b41d](https://github.com/Citolab/qti-components/commit/2a9b41d03f8e0cd0451cbd304cabc78bc3c83fc8))
+* refactor portable custom interaction to remove iframe implementation ([6e56686](https://github.com/Citolab/qti-components/commit/6e5668615eafaab90455e4e6a6b527f52bb58c59))
+* remove iframe implementation from QtiPortableCustomInteraction and enhance response validation ([59c4b5e](https://github.com/Citolab/qti-components/commit/59c4b5ecf069e848e55a323fcac4909ec38b1083))
+* streamline PCIManager methods ([615a073](https://github.com/Citolab/qti-components/commit/615a0738d9a437eef347fdd1f4297cf5fd652b55))
+* update QtiPortableCustomInteraction stories for improved response handling ([65d3974](https://github.com/Citolab/qti-components/commit/65d3974223c6c80f08747c387796eea0e7e42734))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @qti-components/base bumped to 1.1.0
+    * @qti-components/transformers bumped to 1.1.0
+
 ## 1.0.0 (2026-01-06)
 
 
