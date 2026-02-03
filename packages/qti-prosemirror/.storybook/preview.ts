@@ -2,6 +2,7 @@ import '../src';
 
 // eslint-disable-next-line import/no-relative-packages
 import '../../../packages/qti-theme/src/item.css';
+import './styles.css';
 
 export const parameters = {
   docs: {

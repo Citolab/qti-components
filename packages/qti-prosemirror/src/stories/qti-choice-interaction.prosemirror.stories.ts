@@ -96,30 +96,6 @@ export const BasicEditor: Story = {
     };
 
     return html`
-      <style>
-        .ProseMirror {
-          padding: 12px;
-          outline: none;
-          min-height: 280px;
-        }
-        .editor-container {
-          border: 1px solid #ddd;
-        }
-        .editor-container:focus-within {
-          border-color: #0066cc;
-          box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
-        }
-        qti-simple-choice {
-          user-select: unset;
-          cursor: unset;
-        }
-        qti-choice-interaction {
-          display: block;
-          margin: 16px 0;
-          border: 1px solid #46a1fd;
-        }
-      </style>
-
       <div style="max-width: 850px; margin: 40px auto; padding: 0 20px; font-family: system-ui;">
         <h3>Interactive QTI Editor</h3>
         <div
@@ -168,25 +144,6 @@ export const MultipleChoiceEditor: Story = {
     };
 
     return html`
-      <style>
-        .ProseMirror {
-          padding: 12px;
-          outline: none;
-          min-height: 200px;
-        }
-        .editor-container {
-          border: 1px solid #ddd;
-        }
-        qti-simple-choice {
-          user-select: unset;
-          cursor: unset;
-        }
-        qti-choice-interaction {
-          display: block;
-          margin: 16px 0;
-          border: 1px solid #46a1fd;
-        }
-      </style>
       <div style="max-width: 850px; margin: 40px auto;">
         <h3>Multiple Choice (checkboxes)</h3>
         <div

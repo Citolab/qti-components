@@ -82,21 +82,6 @@ export const BasicEditor: Story = {
     };
 
     return html`
-      <style>
-        .ProseMirror {
-          padding: 12px;
-          outline: none;
-          min-height: 200px;
-        }
-        .editor-container {
-          border: 1px solid #ddd;
-        }
-        .editor-container:focus-within {
-          border-color: #0066cc;
-          box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
-        }
-      </style>
-
       <div style="max-width: 850px; margin: 40px auto; padding: 0 20px; font-family: system-ui;">
         <h3>Text Entry Interaction Editor</h3>
         <div
@@ -139,16 +124,6 @@ export const MultipleBlanks: Story = {
     };
 
     return html`
-      <style>
-        .ProseMirror {
-          padding: 12px;
-          outline: none;
-          min-height: 150px;
-        }
-        .editor-container {
-          border: 1px solid #ddd;
-        }
-      </style>
       <div style="max-width: 850px; margin: 40px auto;">
         <h3>Multiple Text Entry Fields</h3>
         <div
