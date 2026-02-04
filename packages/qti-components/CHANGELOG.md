@@ -1,5 +1,21 @@
 # Changelog
 
+## [7.20.1](https://github.com/Citolab/qti-components/compare/qti-components-v7.20.0...qti-components-v7.20.1) (2026-02-04)
+
+
+### Bug Fixes
+
+* add private method for positioning custom menu ([0a596de](https://github.com/Citolab/qti-components/commit/0a596de0db4c23be54b4c90592918cf1f5c8c929))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @qti-components/interactions bumped to 1.3.1
+    * @qti-components/item bumped to 1.0.3
+    * @qti-components/test bumped to 1.1.2
+
 ## [7.20.0](https://github.com/Citolab/qti-components/compare/qti-components-v7.19.0...qti-components-v7.20.0) (2026-02-03)
 
 
