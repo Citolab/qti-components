@@ -107,7 +107,7 @@ export function createVirtualCursor(options?: VirtualCursorOptions): Plugin {
       },
 
       decorations: state => {
-        if (!_cursor || !isTextSelection(state.selection) || !state.selection.empty) return;
+        if (!_cursor || !isTextSelection(state.selection) || !state.selection.empty) return undefined;
 
         return DecorationSet.create(state.doc, [
           Decoration.widget(0, _cursor, {
@@ -161,7 +161,7 @@ function isTextSelection(selection: Selection): selection is TextSelection {
   return selection && typeof selection === 'object' && '$cursor' in selection;
 }
 
-function updateCursor(view?: EditorView, cursor?: HTMLElement) {
+function updateCursor(view?: EditorView, cursor?: HTMLElement): void | HTMLElement {
   if (!view || !view.dom || view.isDestroyed || !cursor) return;
 
   const { state, dom } = view;
@@ -199,7 +199,7 @@ function restartAnimation(element: HTMLElement, className: string) {
   element.classList.remove(className);
 
   // -> triggering reflow /* The actual magic */
-  // eslint-disable-next-line no-void
+
   void element.offsetWidth;
 
   // -> and re-adding the class
