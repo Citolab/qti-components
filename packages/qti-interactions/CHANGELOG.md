@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.1](https://github.com/Citolab/qti-components/compare/interactions-v1.3.0...interactions-v1.3.1) (2026-02-04)
+
+
+### Bug Fixes
+
+* **graphic-associate:** add play test for association creation and removal ([141f23a](https://github.com/Citolab/qti-components/commit/141f23aae8fa8ba35d9aa4c33b038fea779f494f))
+* **inline-choice:** ensure visibility within viewport ([5fb499e](https://github.com/Citolab/qti-components/commit/5fb499e352bc0c89bd3982fed8d8de28225e5e09))
+
 ## [1.3.0](https://github.com/Citolab/qti-components/compare/interactions-v1.2.0...interactions-v1.3.0) (2026-02-03)
 
 
