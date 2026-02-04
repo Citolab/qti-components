@@ -1,4 +1,5 @@
 import { html } from 'lit';
+import { expect, waitFor } from 'storybook/test';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 
 import type { QtiGraphicAssociateInteraction } from './qti-graphic-associate-interaction';
@@ -46,4 +47,54 @@ export const Default: Story = {
       `
     )}
   `
+};
+
+export const ConnectAndRemoveAssociation: Story = {
+  render: Default.render,
+  parameters: {
+    chromatic: { disableSnapshot: true },
+    docs: {
+      description: {
+        story: 'Play test: create an association by clicking two hotspots, then remove it by clicking the line.'
+      }
+    }
+  },
+  play: async ({ canvasElement, step }) => {
+    const interaction = canvasElement.querySelector<QtiGraphicAssociateInteraction>('qti-graphic-associate-interaction');
+    if (!interaction) return;
+
+    const image = interaction.querySelector('img');
+    await waitFor(() => {
+      expect(image).toBeTruthy();
+      expect(image?.complete).toBe(true);
+      expect(image?.naturalWidth).toBeGreaterThan(0);
+    });
+
+    const hotspots = Array.from(
+      interaction.querySelectorAll<HTMLElement>('qti-associable-hotspot')
+    );
+    expect(hotspots.length).toBeGreaterThanOrEqual(2);
+
+    await step('Create an association', async () => {
+      hotspots[0]?.click();
+      hotspots[1]?.click();
+
+      await waitFor(() => {
+        const response = interaction.response as string[] | null;
+        expect(response?.length).toBe(1);
+      });
+    });
+
+    await step('Remove the association by clicking the line', async () => {
+      const line = await waitFor(() =>
+        interaction.shadowRoot?.querySelector<SVGLineElement>('line[part="line"]')
+      );
+      line.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
+
+      await waitFor(() => {
+        const response = interaction.response as string[] | null;
+        expect(response?.length ?? 0).toBe(0);
+      });
+    });
+  }
 };
