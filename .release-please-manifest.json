@@ -1,12 +1,12 @@
 {
-    "packages/qti-components": "7.20.2",
+    "packages/qti-components": "7.20.3",
     "packages/qti-base": "1.1.0",
     "packages/qti-elements": "1.0.1",
-    "packages/qti-interactions": "1.4.0",
-    "packages/qti-item": "1.0.4",
+    "packages/qti-interactions": "1.4.1",
+    "packages/qti-item": "1.0.5",
     "packages/qti-loader": "1.0.1",
     "packages/qti-processing": "1.0.1",
-    "packages/qti-test": "1.1.3",
+    "packages/qti-test": "1.1.4",
     "packages/qti-theme": "1.0.1",
     "packages/qti-transformers": "1.2.0",
     "packages/lit-utilities": "1.0.0"

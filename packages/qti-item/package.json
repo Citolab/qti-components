@@ -1,7 +1,7 @@
 {
   "name": "@qti-components/item",
   "description": "QTI item utilities",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "author": "",
   "dependencies": {
     "@qti-components/base": "workspace:^",
