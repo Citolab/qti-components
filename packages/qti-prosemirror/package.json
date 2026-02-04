@@ -48,7 +48,7 @@
   },
   "scripts": {
     "attw": "attw --profile esm-only --pack",
-    "build": "tsc --paths null",
+    "build": "tsc --paths null --moduleResolution node",
     "cem": "cem analyze --config ./custom-elements-manifest.config.mjs",
     "clean": "rm -rf dist",
     "yalc": "yalc publish",

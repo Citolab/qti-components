@@ -29158,6 +29158,15 @@
             },
             {
               "kind": "field",
+              "name": "_mutationObserver",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
               "name": "class",
               "type": {
                 "text": "string"

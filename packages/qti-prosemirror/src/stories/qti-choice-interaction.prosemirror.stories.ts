@@ -29,6 +29,8 @@ import { createBasePlugins } from './plugins/base.plugins';
 import { qtiChoiceInteractionNodeSpec } from '../components/qti-choice-interaction/qti-choice-interaction.schema';
 import { qtiPromptNodeSpec } from '../components/qti-prompt/qti-prompt.schema';
 import { qtiSimpleChoiceNodeSpec } from '../components/qti-simple-choice/qti-simple-choice.schema';
+// Import command
+import { insertChoiceInteraction } from '../components/qti-choice-interaction/qti-choice-interaction.commands';
 
 // Import and register the custom elements (side effect)
 import '../components/qti-choice-interaction/qti-choice-interaction';
@@ -65,17 +67,8 @@ export const BasicEditor: Story = {
 
     const initialContent = `
       <h1>QTI Choice Interaction Example</h1>
-      <p>Edit the content below:</p>
-      <qti-choice-interaction max-choices="1" class="qti-labels-decimal qti-choices-stacking-2">
-        <qti-prompt>
-          <p>Which of the following features are <strong>new</strong> to QTI 3?</p>
-        </qti-prompt>
-        <qti-simple-choice identifier="A">Option A</qti-simple-choice>
-        <qti-simple-choice identifier="B">Option B</qti-simple-choice>
-        <qti-simple-choice identifier="C">Option C</qti-simple-choice>
-        <qti-simple-choice identifier="D">Option D</qti-simple-choice>
-      </qti-choice-interaction>
-      <p>Use the editor to modify the question, prompt, and choices.</p>
+      <p>Click the button below to insert a choice interaction using the ProseMirror command.</p>
+      <p>Position your cursor where you want to insert the interaction and click "Insert Choice Interaction".</p>
     `;
 
     const initEditor = (container: HTMLElement) => {
@@ -95,9 +88,24 @@ export const BasicEditor: Story = {
       });
     };
 
+    const handleInsertChoice = () => {
+      if (currentView) {
+        insertChoiceInteraction(currentView.state, currentView.dispatch);
+        currentView.focus();
+      }
+    };
+
     return html`
       <div style="max-width: 850px; margin: 40px auto; padding: 0 20px; font-family: system-ui;">
         <h3>Interactive QTI Editor</h3>
+        <div style="margin-bottom: 10px;">
+          <button
+            @click=${handleInsertChoice}
+            style="padding: 8px 16px; background: #007acc; color: white; border: none; border-radius: 4px; cursor: pointer;"
+          >
+            Insert Choice Interaction
+          </button>
+        </div>
         <div
           class="editor-container"
           ${ref(el => {
@@ -105,7 +113,8 @@ export const BasicEditor: Story = {
           })}
         ></div>
         <p style="color: #666; font-size: 0.9rem;">
-          Click inside to begin editing. The editor uses ProseMirror with QTI custom element schemas.
+          Click inside to position cursor, then use the button or press <strong>Cmd/Ctrl + Shift + C</strong> to insert
+          a choice interaction.
         </p>
       </div>
     `;

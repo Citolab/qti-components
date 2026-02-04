@@ -17,28 +17,13 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./register-all": {
-      "types": "./dist/register-all.d.ts",
-      "import": "./dist/register-all.js"
-    },
-    "./components/*/register": {
-      "types": "./dist/components/*/register.d.ts",
-      "import": "./dist/components/*/register.js"
-    },
-    "./components/*/*": {
-      "types": "./dist/components/*/*.d.ts",
-      "import": "./dist/components/*/*.js"
-    },
-    "./elements/*/register": {
-      "types": "./dist/elements/*/register.d.ts",
-      "import": "./dist/elements/*/register.js"
-    },
-    "./elements/*/*": {
-      "types": "./dist/elements/*/*.d.ts",
-      "import": "./dist/elements/*/*.js"
-    },
-    "./package.json": "./package.json"
+    "./src/*": "./src/*",
+    "./dist/*": "./dist/*"
   },
+  "files": [
+    "dist/**/*",
+    "src/**/*"
+  ],
   "keywords": [
     "interactions",
     "qti"
@@ -54,7 +39,7 @@
   },
   "scripts": {
     "attw": "attw --profile esm-only --pack",
-    "build": "tsc --paths null",
+    "build": "tsc --paths null --moduleResolution node",
     "clean": "rm -rf dist",
     "yalc": "yalc publish",
     "yalc:push": "yalc push"

@@ -25,5 +25,7 @@ export const qtiChoiceInteractionNodeSpec: NodeSpec = {
     const attrs: Record<string, string> = { 'max-choices': String(node.attrs.maxChoices) };
     if (node.attrs.class) attrs.class = node.attrs.class;
     return ['qti-choice-interaction', attrs, 0];
-  }
+  },
+  defining: true,
+  isolating: true
 };

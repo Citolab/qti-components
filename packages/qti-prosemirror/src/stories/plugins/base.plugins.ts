@@ -18,6 +18,7 @@ import { dropCursor } from 'prosemirror-dropcursor';
 import { blockSelectPlugin } from './block-select-plugin';
 import { insertTextEntryInteraction } from '../../components/qti-text-entry-interaction/qti-text-entry-interaction.commands';
 import { insertChoiceInteraction } from '../../components/qti-choice-interaction/qti-choice-interaction.commands';
+import { createVirtualCursor } from './virtual-cursor-plugin';
 
 import type { Plugin } from 'prosemirror-state';
 import type { Schema } from 'prosemirror-model';
@@ -37,6 +38,14 @@ export function createMarkKeymaps(schema: Schema): Plugin {
 
   return keymap(bindings);
 }
+
+// stupid globe drag image issue workaround
+const img = new Image();
+img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
+
+document.addEventListener('dragstart', event => {
+  event?.dataTransfer?.setDragImage(img, 0, 0);
+});
 
 /**
  * Creates a keymap for history (undo/redo)
@@ -62,6 +71,7 @@ export function createBasePlugins(schema: Schema): Plugin[] {
     gapCursor(),
     dropCursor(),
     keymap(baseKeymap),
-    blockSelectPlugin
+    blockSelectPlugin,
+    createVirtualCursor({ skipWarning: true })
   ];
 }

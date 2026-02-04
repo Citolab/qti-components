@@ -1,8 +1,7 @@
-import { html, LitElement, nothing } from 'lit';
+import { css, html, LitElement, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
 
-// eslint-disable-next-line import/no-relative-packages
-import styles from '../../../../qti-interactions/src/elements/qti-simple-choice/qti-simple-choice.styles';
+import styles from '@qti-components/interactions/src/elements/qti-simple-choice/qti-simple-choice.styles';
 
 import type { CSSResultGroup } from 'lit';
 
@@ -11,8 +10,16 @@ import type { CSSResultGroup } from 'lit';
  * qti-choice-interaction
  */
 export class QtiSimpleChoiceEdit extends LitElement {
-  static override styles: CSSResultGroup = styles;
-
+  // make sure we can text select and click the choices
+  static override styles: CSSResultGroup = [
+    styles,
+    css`
+      :host {
+        user-select: unset !important;
+        cursor: unset !important;
+      }
+    `
+  ];
   public internals: ElementInternals;
   constructor() {
     super();

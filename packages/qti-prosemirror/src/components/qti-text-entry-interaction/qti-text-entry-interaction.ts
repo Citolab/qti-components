@@ -3,8 +3,7 @@ import { property, query, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { createRef } from 'lit/directives/ref.js';
 
-// eslint-disable-next-line import/no-relative-packages
-import styles from '../../../../qti-interactions/src/components/qti-text-entry-interaction/qti-text-entry-interaction.styles';
+import styles from '@qti-components/interactions/src/components/qti-text-entry-interaction/qti-text-entry-interaction.styles';
 
 import type { CSSResultGroup } from 'lit';
 export class QtiTextEntryInteractionEdit extends LitElement {
