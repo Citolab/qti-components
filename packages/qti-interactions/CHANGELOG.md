@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.1](https://github.com/Citolab/qti-components/compare/interactions-v1.4.0...interactions-v1.4.1) (2026-02-04)
+
+
+### Bug Fixes
+
+* **qti-custom-interaction:** improve iframe handling and script injection ([ca63c11](https://github.com/Citolab/qti-components/commit/ca63c110fc73a72e02f9255516163540b99a880d))
+* **qti-custom-interaction:** improve iframe handling and script injection logic ([fb4c394](https://github.com/Citolab/qti-components/commit/fb4c394352951421edb865ac623d6596273312a7))
+
 ## [1.4.0](https://github.com/Citolab/qti-components/compare/interactions-v1.3.1...interactions-v1.4.0) (2026-02-04)
 
 
