@@ -71,7 +71,7 @@ export function createBasePlugins(schema: Schema): Plugin[] {
     gapCursor(),
     dropCursor(),
     keymap(baseKeymap),
-    blockSelectPlugin,
-    createVirtualCursor({ skipWarning: true })
+    blockSelectPlugin
+    // createVirtualCursor({ skipWarning: true })
   ];
 }
