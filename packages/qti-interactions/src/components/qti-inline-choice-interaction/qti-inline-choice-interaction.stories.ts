@@ -1,6 +1,6 @@
 import { html } from 'lit';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
-import { expect } from 'storybook/test';
+import { expect, waitFor } from 'storybook/test';
 
 import type { QtiInlineChoiceInteraction } from './qti-inline-choice-interaction';
 import type { StoryObj, Meta } from '@storybook/web-components-vite';
@@ -8,6 +8,18 @@ import type { StoryObj, Meta } from '@storybook/web-components-vite';
 const { events, args, argTypes, template } = getStorybookHelpers('qti-inline-choice-interaction');
 
 type Story = StoryObj<QtiInlineChoiceInteraction & typeof args>;
+
+const openListboxMenu = async (interaction: QtiInlineChoiceInteraction) => {
+  await interaction.updateComplete;
+  const root = interaction.shadowRoot;
+  if (!root) return null;
+  const trigger = root.querySelector<HTMLButtonElement>('[part="trigger"]');
+  if (!trigger) return null;
+  trigger.click();
+  await interaction.updateComplete;
+  const menu = await waitFor(() => root.querySelector<HTMLElement>('[part="menu"]'));
+  return { menu, trigger };
+};
 
 /**
  *
@@ -163,6 +175,158 @@ export const InlineInText: Story = {
           'Baseline story for inline choice used inside running text (no transforms, no nested scrolling containers).'
       }
     }
+  }
+};
+
+export const MenuClampsToViewportRightEdge: Story = {
+  render: () => html`
+    <style>
+      .inline-choice-edge {
+        width: 100%;
+        height: 100vh;
+        padding: 16px;
+        box-sizing: border-box;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        background: #f8fafc;
+      }
+    </style>
+
+    <div class="inline-choice-edge">
+      <qti-inline-choice-interaction>
+        <qti-inline-choice identifier="A">A very long option label that would otherwise overflow off-screen</qti-inline-choice>
+        <qti-inline-choice identifier="B">Another long option label to force the menu wider than the trigger</qti-inline-choice>
+        <qti-inline-choice identifier="C">Short</qti-inline-choice>
+      </qti-inline-choice-interaction>
+    </div>
+  `,
+  parameters: {
+    viewport: { defaultViewport: 'phone' },
+    docs: {
+      description: {
+        story:
+          'Listbox fallback: opening the menu near the right edge should keep the menu within the viewport.'
+      }
+    },
+    chromatic: { disableSnapshot: true }
+  },
+  play: async ({ canvasElement, step }) => {
+    const interaction = canvasElement.querySelector<QtiInlineChoiceInteraction>('qti-inline-choice-interaction');
+    if (!interaction) return;
+
+    const opened = await openListboxMenu(interaction);
+    if (!opened) return;
+
+    await step('Menu stays within viewport horizontally', async () => {
+      const menuRect = opened.menu.getBoundingClientRect();
+      const viewportWidth = document.documentElement?.clientWidth || window.innerWidth;
+      const margin = 4;
+      expect(menuRect.left).toBeGreaterThanOrEqual(margin - 1);
+      expect(menuRect.right).toBeLessThanOrEqual(viewportWidth - margin + 1);
+    });
+  }
+};
+
+export const MenuClampsToViewportLeftEdge: Story = {
+  render: () => html`
+    <style>
+      .inline-choice-edge-left {
+        width: 100%;
+        height: 100vh;
+        padding: 16px;
+        box-sizing: border-box;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        background: #f8fafc;
+      }
+    </style>
+
+    <div class="inline-choice-edge-left">
+      <qti-inline-choice-interaction>
+        <qti-inline-choice identifier="A">Alpha</qti-inline-choice>
+        <qti-inline-choice identifier="B">Bravo</qti-inline-choice>
+        <qti-inline-choice identifier="C">Charlie</qti-inline-choice>
+        <qti-inline-choice identifier="D">Delta</qti-inline-choice>
+      </qti-inline-choice-interaction>
+    </div>
+  `,
+  parameters: {
+    viewport: { defaultViewport: 'phone' },
+    docs: {
+      description: {
+        story:
+          'Listbox fallback: opening the menu near the left edge should keep the menu within the viewport.'
+      }
+    },
+    chromatic: { disableSnapshot: true }
+  },
+  play: async ({ canvasElement, step }) => {
+    const interaction = canvasElement.querySelector<QtiInlineChoiceInteraction>('qti-inline-choice-interaction');
+    if (!interaction) return;
+
+    const opened = await openListboxMenu(interaction);
+    if (!opened) return;
+
+    await step('Menu stays within viewport horizontally', async () => {
+      const menuRect = opened.menu.getBoundingClientRect();
+      const margin = 4;
+      expect(menuRect.left).toBeGreaterThanOrEqual(margin - 1);
+    });
+  }
+};
+
+export const MenuClampsToViewportBottomEdge: Story = {
+  render: () => html`
+    <style>
+      .inline-choice-edge-bottom {
+        width: 100%;
+        height: 100vh;
+        padding: 16px;
+        box-sizing: border-box;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        background: #f8fafc;
+      }
+    </style>
+
+    <div class="inline-choice-edge-bottom">
+      <qti-inline-choice-interaction>
+        <qti-inline-choice identifier="A">Alpha</qti-inline-choice>
+        <qti-inline-choice identifier="B">Bravo</qti-inline-choice>
+        <qti-inline-choice identifier="C">Charlie</qti-inline-choice>
+        <qti-inline-choice identifier="D">Delta</qti-inline-choice>
+        <qti-inline-choice identifier="E">Echo</qti-inline-choice>
+        <qti-inline-choice identifier="F">Foxtrot</qti-inline-choice>
+      </qti-inline-choice-interaction>
+    </div>
+  `,
+  parameters: {
+    viewport: { defaultViewport: 'phone' },
+    docs: {
+      description: {
+        story:
+          'Listbox fallback: opening the menu near the bottom edge should keep the menu within the viewport.'
+      }
+    },
+    chromatic: { disableSnapshot: true }
+  },
+  play: async ({ canvasElement, step }) => {
+    const interaction = canvasElement.querySelector<QtiInlineChoiceInteraction>('qti-inline-choice-interaction');
+    if (!interaction) return;
+
+    const opened = await openListboxMenu(interaction);
+    if (!opened) return;
+
+    await step('Menu stays within viewport vertically', async () => {
+      const menuRect = opened.menu.getBoundingClientRect();
+      const viewportHeight = document.documentElement?.clientHeight || window.innerHeight;
+      const margin = 4;
+      expect(menuRect.top).toBeGreaterThanOrEqual(margin - 1);
+      expect(menuRect.bottom).toBeLessThanOrEqual(viewportHeight - margin + 1);
+    });
   }
 };
 

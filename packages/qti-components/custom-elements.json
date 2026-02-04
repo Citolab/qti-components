@@ -16803,6 +16803,11 @@
             },
             {
               "kind": "method",
+              "name": "_positionCustomMenu",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
               "name": "_selectedOption",
               "privacy": "private",
               "return": {

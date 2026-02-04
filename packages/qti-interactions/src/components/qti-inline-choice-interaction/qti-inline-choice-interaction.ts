@@ -172,6 +172,15 @@ export class QtiInlineChoiceInteraction extends Interaction {
             0 10px 15px -3px rgb(0 0 0 / 10%),
             0 4px 6px -4px rgb(0 0 0 / 10%);
           padding: 4px;
+          transform: translate(
+            var(--qti-menu-shift-x, 0px),
+            var(--qti-menu-shift-y, 0px)
+          );
+        }
+
+        [part='menu'][data-placement='top'] {
+          top: auto;
+          bottom: calc(100% + 4px);
         }
 
         button[part='option'] {
@@ -493,6 +502,7 @@ export class QtiInlineChoiceInteraction extends Interaction {
 
     if (open) {
       void this.updateComplete.then(() => {
+        this._positionCustomMenu();
         const selected = this.renderRoot.querySelector<HTMLButtonElement>(
           'button[part="option"][aria-selected="true"]'
         );
@@ -539,7 +549,7 @@ export class QtiInlineChoiceInteraction extends Interaction {
   };
 
   private _focusTrigger() {
-    this.renderRoot.querySelector<HTMLButtonElement>('button[part="select"]')?.focus();
+    this.renderRoot.querySelector<HTMLButtonElement>('button[part="trigger"]')?.focus();
   }
 
   private _onDocumentPointerDown = (event: Event) => {
@@ -556,6 +566,44 @@ export class QtiInlineChoiceInteraction extends Interaction {
     this._setDropdownOpen(false);
     this._focusTrigger();
   };
+
+  private _positionCustomMenu() {
+    if (!this._dropdownOpen) return;
+    const menu = this.renderRoot.querySelector<HTMLElement>('[part="menu"]');
+    const trigger = this.renderRoot.querySelector<HTMLElement>('button[part="trigger"]');
+    if (!menu || !trigger) return;
+
+    menu.dataset.placement = 'bottom';
+    menu.style.setProperty('--qti-menu-shift-x', '0px');
+    menu.style.setProperty('--qti-menu-shift-y', '0px');
+
+    const viewportWidth = document.documentElement?.clientWidth || window.innerWidth;
+    const viewportHeight = document.documentElement?.clientHeight || window.innerHeight;
+    const margin = 8;
+
+    const triggerRect = trigger.getBoundingClientRect();
+    let menuRect = menu.getBoundingClientRect();
+
+    const spaceBelow = viewportHeight - triggerRect.bottom;
+    const spaceAbove = triggerRect.top;
+    if (menuRect.bottom > viewportHeight - margin && spaceAbove > spaceBelow) {
+      menu.dataset.placement = 'top';
+      menuRect = menu.getBoundingClientRect();
+    }
+
+    let shiftX = 0;
+    if (menuRect.right > viewportWidth - margin) {
+      shiftX = viewportWidth - margin - menuRect.right;
+    } else if (menuRect.left < margin) {
+      shiftX = margin - menuRect.left;
+    }
+
+    if (shiftX !== 0) {
+      const scaleX = menu.offsetWidth > 0 ? menuRect.width / menu.offsetWidth : 1;
+      const adjustedShiftX = Number.isFinite(scaleX) && scaleX !== 0 ? shiftX / scaleX : shiftX;
+      menu.style.setProperty('--qti-menu-shift-x', `${adjustedShiftX}px`);
+    }
+  }
 }
 
 declare global {
