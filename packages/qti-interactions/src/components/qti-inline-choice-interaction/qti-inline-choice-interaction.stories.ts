@@ -1,6 +1,7 @@
 import { html } from 'lit';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
-import { expect, waitFor } from 'storybook/test';
+import { expect, waitFor, fireEvent } from 'storybook/test';
+import { within } from 'shadow-dom-testing-library';
 
 import type { QtiInlineChoiceInteraction } from './qti-inline-choice-interaction';
 import type { StoryObj, Meta } from '@storybook/web-components-vite';
@@ -472,5 +473,251 @@ export const InlineInTextScaledAndScrollableFixed: Story = {
       }
     },
     chromatic: { disableSnapshot: true }
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// CORRECT RESPONSE TESTS
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/**
+ * ## Correct Response Not Shown By Default
+ *
+ * Verifies that the correct response indicator is NOT shown by default,
+ * even when a correct-response attribute is set.
+ */
+export const CorrectResponseNotShownByDefault: Story = {
+  render: () => html`
+    <qti-inline-choice-interaction
+      response-identifier="RESPONSE"
+      correct-response="Y"
+      data-testid="interaction"
+    >
+      <qti-inline-choice identifier="G">Gloucester</qti-inline-choice>
+      <qti-inline-choice identifier="L">Lancaster</qti-inline-choice>
+      <qti-inline-choice identifier="Y">York</qti-inline-choice>
+    </qti-inline-choice-interaction>
+  `,
+  play: async ({ canvasElement }) => {
+    const interaction = canvasElement.querySelector<QtiInlineChoiceInteraction>('qti-inline-choice-interaction')!;
+    await interaction.updateComplete;
+
+    // The correct option indicator should NOT be visible by default
+    const correctOptionSpan = interaction.shadowRoot?.querySelector('[part="correct-option"]');
+    expect(correctOptionSpan).toBeNull();
+
+    // Verify the correct-response attribute is set
+    expect(interaction.getAttribute('correct-response')).toBe('Y');
+
+    // But showCorrectResponse should be false
+    expect(interaction.showCorrectResponse).toBe(false);
+  }
+};
+
+/**
+ * ## Show Correct Response Inline
+ *
+ * When `show-correct-response` is set, an inline indicator shows the correct answer.
+ */
+export const ShowCorrectResponseInline: Story = {
+  render: () => html`
+    <qti-inline-choice-interaction
+      response-identifier="RESPONSE"
+      correct-response="Y"
+      show-correct-response
+      data-testid="interaction"
+    >
+      <qti-inline-choice identifier="G">Gloucester</qti-inline-choice>
+      <qti-inline-choice identifier="L">Lancaster</qti-inline-choice>
+      <qti-inline-choice identifier="Y">York</qti-inline-choice>
+    </qti-inline-choice-interaction>
+  `,
+  play: async ({ canvasElement }) => {
+    const interaction = canvasElement.querySelector<QtiInlineChoiceInteraction>('qti-inline-choice-interaction')!;
+    await interaction.updateComplete;
+
+    // The correct option indicator should be visible
+    const correctOptionSpan = interaction.shadowRoot?.querySelector('[part="correct-option"]');
+    expect(correctOptionSpan).toBeTruthy();
+    expect(correctOptionSpan?.textContent).toBe('York');
+  }
+};
+
+/**
+ * ## Toggle Correct Response Dynamically
+ *
+ * The `show-correct-response` attribute can be toggled at runtime.
+ */
+export const ToggleCorrectResponse: Story = {
+  render: () => html`
+    <button data-testid="toggle-btn">Toggle Correct Response</button>
+    <qti-inline-choice-interaction
+      response-identifier="RESPONSE"
+      correct-response="Y"
+      data-testid="interaction"
+    >
+      <qti-inline-choice identifier="G">Gloucester</qti-inline-choice>
+      <qti-inline-choice identifier="L">Lancaster</qti-inline-choice>
+      <qti-inline-choice identifier="Y">York</qti-inline-choice>
+    </qti-inline-choice-interaction>
+  `,
+  play: async ({ canvasElement, step }) => {
+    const interaction = canvasElement.querySelector<QtiInlineChoiceInteraction>('qti-inline-choice-interaction')!;
+    const toggleBtn = canvasElement.querySelector<HTMLButtonElement>('[data-testid="toggle-btn"]')!;
+
+    await interaction.updateComplete;
+
+    await step('Initially correct response is not shown', async () => {
+      const correctOptionSpan = interaction.shadowRoot?.querySelector('[part="correct-option"]');
+      expect(correctOptionSpan).toBeNull();
+    });
+
+    await step('Toggle on - correct response should appear', async () => {
+      toggleBtn.addEventListener('click', () => {
+        interaction.showCorrectResponse = !interaction.showCorrectResponse;
+      });
+
+      await fireEvent.click(toggleBtn);
+      await interaction.updateComplete;
+
+      const correctOptionSpan = interaction.shadowRoot?.querySelector('[part="correct-option"]');
+      expect(correctOptionSpan).toBeTruthy();
+      expect(correctOptionSpan?.textContent).toBe('York');
+    });
+
+    await step('Toggle off - correct response should disappear', async () => {
+      await fireEvent.click(toggleBtn);
+      await interaction.updateComplete;
+
+      const correctOptionSpan = interaction.shadowRoot?.querySelector('[part="correct-option"]');
+      expect(correctOptionSpan).toBeNull();
+    });
+  }
+};
+
+/**
+ * ## Show Full Correct Response
+ *
+ * When `show-full-correct-response` is set, a cloned interaction is inserted
+ * after the original, showing the correct answer filled in.
+ */
+export const ShowFullCorrectResponse: Story = {
+  render: () => html`
+    <qti-inline-choice-interaction
+      response-identifier="RESPONSE"
+      correct-response="Y"
+      show-full-correct-response
+      data-testid="interaction"
+    >
+      <qti-inline-choice identifier="G">Gloucester</qti-inline-choice>
+      <qti-inline-choice identifier="L">Lancaster</qti-inline-choice>
+      <qti-inline-choice identifier="Y">York</qti-inline-choice>
+    </qti-inline-choice-interaction>
+  `,
+  play: async ({ canvasElement }) => {
+    const interaction = canvasElement.querySelector<QtiInlineChoiceInteraction>('qti-inline-choice-interaction')!;
+    await interaction.updateComplete;
+
+    // Wait for the clone to be created
+    await waitFor(() => {
+      const fullCorrectDiv = canvasElement.querySelector('.full-correct-response');
+      expect(fullCorrectDiv).toBeTruthy();
+    });
+
+    const fullCorrectDiv = canvasElement.querySelector('.full-correct-response');
+    const clonedInteraction = fullCorrectDiv?.querySelector('qti-inline-choice-interaction') as QtiInlineChoiceInteraction;
+
+    expect(clonedInteraction).toBeTruthy();
+    expect(clonedInteraction.disabled).toBe(true);
+    expect(clonedInteraction.response).toBe('Y');
+  }
+};
+
+/**
+ * ## Full Correct Response Not Shown By Default
+ *
+ * Verifies that the full correct response clone is NOT created by default.
+ */
+export const FullCorrectResponseNotShownByDefault: Story = {
+  render: () => html`
+    <qti-inline-choice-interaction
+      response-identifier="RESPONSE"
+      correct-response="Y"
+      data-testid="interaction"
+    >
+      <qti-inline-choice identifier="G">Gloucester</qti-inline-choice>
+      <qti-inline-choice identifier="L">Lancaster</qti-inline-choice>
+      <qti-inline-choice identifier="Y">York</qti-inline-choice>
+    </qti-inline-choice-interaction>
+  `,
+  play: async ({ canvasElement }) => {
+    const interaction = canvasElement.querySelector<QtiInlineChoiceInteraction>('qti-inline-choice-interaction')!;
+    await interaction.updateComplete;
+
+    // Give a bit of time for any potential clone to be created
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    // The full correct response clone should NOT exist
+    const fullCorrectDiv = canvasElement.querySelector('.full-correct-response');
+    expect(fullCorrectDiv).toBeNull();
+
+    // Verify the attributes
+    expect(interaction.getAttribute('correct-response')).toBe('Y');
+    expect(interaction.showFullCorrectResponse).toBe(false);
+  }
+};
+
+/**
+ * ## Correct Response Within QTI Item Context
+ *
+ * Tests correct response behavior when the interaction is within a qti-item
+ * that has a response declaration with correct response.
+ */
+export const CorrectResponseWithinQtiItem: Story = {
+  render: () => html`
+    <qti-assessment-item identifier="test-item">
+      <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="identifier">
+        <qti-correct-response>
+          <qti-value>Y</qti-value>
+        </qti-correct-response>
+      </qti-response-declaration>
+      <qti-item-body>
+        <p>
+          Select the correct city:
+          <qti-inline-choice-interaction response-identifier="RESPONSE" data-testid="interaction">
+            <qti-inline-choice identifier="G">Gloucester</qti-inline-choice>
+            <qti-inline-choice identifier="L">Lancaster</qti-inline-choice>
+            <qti-inline-choice identifier="Y">York</qti-inline-choice>
+          </qti-inline-choice-interaction>
+        </p>
+      </qti-item-body>
+    </qti-assessment-item>
+  `,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const interaction = canvas.getByTestId<QtiInlineChoiceInteraction>('interaction');
+    await interaction.updateComplete;
+
+    await step('Correct response is NOT shown by default', async () => {
+      const correctOptionSpan = interaction.shadowRoot?.querySelector('[part="correct-option"]');
+      expect(correctOptionSpan).toBeNull();
+    });
+
+    await step('Setting showCorrectResponse shows the correct answer', async () => {
+      interaction.showCorrectResponse = true;
+      await interaction.updateComplete;
+
+      const correctOptionSpan = interaction.shadowRoot?.querySelector('[part="correct-option"]');
+      expect(correctOptionSpan).toBeTruthy();
+      expect(correctOptionSpan?.textContent).toBe('York');
+    });
+
+    await step('Setting showCorrectResponse to false hides the correct answer', async () => {
+      interaction.showCorrectResponse = false;
+      await interaction.updateComplete;
+
+      const correctOptionSpan = interaction.shadowRoot?.querySelector('[part="correct-option"]');
+      expect(correctOptionSpan).toBeNull();
+    });
   }
 };

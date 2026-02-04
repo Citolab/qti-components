@@ -463,25 +463,24 @@ export class QtiInlineChoiceInteraction extends Interaction {
   }
 
   override toggleInternalCorrectResponse(show: boolean) {
-    this.correctResponse = show && this.responseVariable?.correctResponse?.toString();
-    if (!this.correctResponse) {
+    // Call base class implementation to manage CSS states
+    super.toggleInternalCorrectResponse(show);
+
+    // Get correct response from either responseVariable (item context) or local property (standalone)
+    const correctResponseValue = this.correctResponse;
+
+    if (!show || !correctResponseValue) {
       this.correctOption = '';
       return;
     }
 
-    // textSpan.classList.add('correct-option');
-    //       textSpan.textContent = text;
+    const correctOptionData = this.options.find(option => correctResponseValue === option.value);
+    if (!correctOptionData) {
+      this.correctOption = '';
+      return;
+    }
 
-    //       // Apply styles
-    //       textSpan.style.border = '1px solid var(--qti-correct)';
-    //       textSpan.style.borderRadius = '4px';
-    //       textSpan.style.padding = '2px 4px';
-    //       textSpan.style.margin = '4px';
-    //       textSpan.style.display = 'inline-block';
-
-    this.correctOption = `<span part="correct-option" style="border:1px solid var(--qti-correct); border-radius:4px; padding: 2px 4px; margin: 4px; display:inline-block">${
-      this.options.find(option => this.correctResponse === option.value).textContent
-    }</span>`;
+    this.correctOption = `<span part="correct-option" style="border:1px solid var(--qti-correct); border-radius:4px; padding: 2px 4px; margin: 4px; display:inline-block">${correctOptionData.textContent}</span>`;
   }
 
   private _onNativeChange = (event: Event) => {
