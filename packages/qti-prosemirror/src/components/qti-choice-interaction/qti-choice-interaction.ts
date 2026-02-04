@@ -17,6 +17,9 @@ export class QtiChoiceInteractionEdit extends VocabularyMixin(LitElement, 'qti-s
   @property({ type: Number, attribute: 'max-choices' })
   public maxChoices = 1;
 
+  @property({ type: String, attribute: 'class' })
+  public classes: 'qti-orientation-vertical' | 'qti-orientation-horizontal' | undefined;
+
   @watch('maxChoices', { waitUntilFirstUpdate: true })
   protected _handleMaxChoicesChange() {
     this.#updateChoices();

@@ -73,16 +73,14 @@ export default {
   /** Enable special handling for litelement */
   litelement: true,
 
-  overrideModuleCreation: ({ ts, globs }) => {
+  overrideModuleCreation({ ts, globs }) {
     const program = getTsProgram(ts, globs, 'tsconfig.json');
     return program.getSourceFiles().filter(sf => globs.find(glob => sf.fileName.includes(glob)));
   },
 
   /** Custom elements manifest plugins */
   plugins: [
-    typeParserPlugin({
-      outdir: outdir + 'dist'
-    }),
+    typeParserPlugin(),
     cemInheritancePlugin({}),
     cemSorterPlugin({
       deprecatedLast: true

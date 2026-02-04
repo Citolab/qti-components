@@ -4,20 +4,6 @@
   "version": "1.0.0",
   "author": "",
   "customElements": "custom-elements.json",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    },
-    "./src/*": "./src/*",
-    "./dist/*": "./dist/*"
-  },
-  "files": [
-    "dist/**/*",
-    "src/**/*",
-    "custom-elements.json",
-    "README.md"
-  ],
   "dependencies": {
     "@qti-components/base": "workspace:^",
     "@qti-components/interactions": "workspace:^",
@@ -36,6 +22,20 @@
     "prosemirror-view": "^1.41.5",
     "storybook": "^10.2.2"
   },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./src/*": "./src/*",
+    "./dist/*": "./dist/*"
+  },
+  "files": [
+    "dist/**/*",
+    "src/**/*",
+    "custom-elements.json",
+    "README.md"
+  ],
   "keywords": [
     "prosemirror",
     "qti"
@@ -49,12 +49,12 @@
   "scripts": {
     "attw": "attw --profile esm-only --pack",
     "build": "tsc --paths null --moduleResolution node",
+    "build-storybook": "storybook build",
     "cem": "cem analyze --config ./custom-elements-manifest.config.mjs",
     "clean": "rm -rf dist",
-    "yalc": "yalc publish",
-    "yalc:push": "yalc push",
     "storybook": "storybook dev -p 6007 --no-open",
-    "build-storybook": "storybook build"
+    "yalc": "yalc publish",
+    "yalc:push": "yalc push"
   },
   "sideEffects": true,
   "type": "module",

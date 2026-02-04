@@ -7,6 +7,12 @@
       "name": "QtiChoiceInteractionEdit",
       "attributes": [
         {
+          "name": "class",
+          "type": {
+            "text": "'qti-orientation-vertical' | 'qti-orientation-horizontal' | undefined"
+          }
+        },
+        {
           "name": "max-choices",
           "type": {
             "text": "number"
@@ -18,7 +24,7 @@
           "type": {
             "text": "number"
           },
-          "default": "1"
+          "default": "0"
         }
       ]
     },

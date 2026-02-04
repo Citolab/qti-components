@@ -17,6 +17,7 @@ export class QtiSimpleChoiceEdit extends LitElement {
       :host {
         user-select: unset !important;
         cursor: unset !important;
+        border: 2px solid blue;
       }
     `
   ];
