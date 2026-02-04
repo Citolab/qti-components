@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.0](https://github.com/Citolab/qti-components/compare/interactions-v1.3.1...interactions-v1.4.0) (2026-02-04)
+
+
+### Features
+
+* **qti-inline-choice-interaction:** enhance correct response handlin… ([11d8810](https://github.com/Citolab/qti-components/commit/11d88101556c69ae72c1507916e06e536050671b))
+* **qti-inline-choice-interaction:** enhance correct response handling in stories and implementation ([9510525](https://github.com/Citolab/qti-components/commit/951052549deec72650ea001006d54c5649fec28a))
+
 ## [1.3.1](https://github.com/Citolab/qti-components/compare/interactions-v1.3.0...interactions-v1.3.1) (2026-02-04)
 
 

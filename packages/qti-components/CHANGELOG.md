@@ -1,5 +1,16 @@
 # Changelog
 
+## [7.20.2](https://github.com/Citolab/qti-components/compare/qti-components-v7.20.1...qti-components-v7.20.2) (2026-02-04)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @qti-components/interactions bumped to 1.4.0
+    * @qti-components/item bumped to 1.0.4
+    * @qti-components/test bumped to 1.1.3
+
 ## [7.20.1](https://github.com/Citolab/qti-components/compare/qti-components-v7.20.0...qti-components-v7.20.1) (2026-02-04)
 
 
