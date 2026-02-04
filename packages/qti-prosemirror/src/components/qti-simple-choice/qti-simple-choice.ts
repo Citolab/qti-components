@@ -1,7 +1,7 @@
 import { css, html, LitElement, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
 
-import styles from '@qti-components/interactions/src/elements/qti-simple-choice/qti-simple-choice.styles';
+import styles from '@qti-components/interactions/elements/qti-simple-choice/qti-simple-choice.styles.js';
 
 import type { CSSResultGroup } from 'lit';
 
@@ -17,7 +17,6 @@ export class QtiSimpleChoiceEdit extends LitElement {
       :host {
         user-select: unset !important;
         cursor: unset !important;
-        border: 2px solid blue;
       }
     `
   ];

@@ -3,7 +3,7 @@ import { property, query, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { createRef } from 'lit/directives/ref.js';
 
-import styles from '@qti-components/interactions/src/components/qti-text-entry-interaction/qti-text-entry-interaction.styles';
+import styles from '@qti-components/interactions/components/qti-text-entry-interaction/qti-text-entry-interaction.styles.js';
 
 import type { CSSResultGroup } from 'lit';
 export class QtiTextEntryInteractionEdit extends LitElement {

@@ -252,8 +252,8 @@ importers:
   apps/e2e:
     dependencies:
       '@citolab/qti-components':
-        specifier: 7.17.1
-        version: 7.17.1
+        specifier: workspace:^
+        version: link:../../packages/qti-components
       '@heximal/templates':
         specifier: ^0.1.5
         version: 0.1.5
@@ -576,9 +576,6 @@ packages:
     engines: {node: '>=20.0.0', yarn: '>=1.22.18'}
     peerDependencies:
       storybook: ^0.0.0-0 || ^10.1.0 || ^10.1.0-0 || ^10.2.0-0 || ^10.3.0-0
-
-  '@citolab/qti-components@7.17.1':
-    resolution: {integrity: sha512-6UVboPyZoMb0N9jwbjrfuqQT6lj1fExrEP9DQy84NVYzNyctFB1+PaR64qQKKGkAQO2A/6YQS3OuF7rIoIGvuA==}
 
   '@colors/colors@1.5.0':
     resolution: {integrity: sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==}
@@ -6514,12 +6511,6 @@ snapshots:
     transitivePeerDependencies:
       - '@chromatic-com/cypress'
       - '@chromatic-com/playwright'
-
-  '@citolab/qti-components@7.17.1':
-    dependencies:
-      '@heximal/templates': 0.1.5
-      '@lit/context': 1.1.6
-      lit: 3.3.1
 
   '@colors/colors@1.5.0':
     optional: true

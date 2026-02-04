@@ -1,3 +1,5 @@
+import tsconfigPaths from 'vite-tsconfig-paths';
+
 import type { StorybookConfig } from '@storybook/web-components-vite';
 
 const config: StorybookConfig = {
@@ -13,17 +15,14 @@ const config: StorybookConfig = {
     name: '@storybook/web-components-vite',
     options: {}
   },
-  viteFinal: config => {
-    // Ensure proper handling of workspace dependencies
-    if (config.optimizeDeps) {
-      config.optimizeDeps.include = [
-        ...(config.optimizeDeps.include || []),
-        '@qti-components/base',
-        '@qti-components/interactions',
-        '@qti-components/utilities'
-      ];
-    }
-    return config;
+  async viteFinal(config: any, { configType }: { configType?: string }) {
+    return {
+      ...config,
+      plugins: [...(config.plugins || []), tsconfigPaths()],
+      resolve: {
+        ...config.resolve
+      }
+    };
   }
 };
 

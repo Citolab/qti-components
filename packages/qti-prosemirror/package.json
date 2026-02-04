@@ -27,12 +27,10 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./src/*": "./src/*",
-    "./dist/*": "./dist/*"
+    "./*": "./dist/*"
   },
   "files": [
     "dist/**/*",
-    "src/**/*",
     "custom-elements.json",
     "README.md"
   ],
@@ -48,7 +46,7 @@
   },
   "scripts": {
     "attw": "attw --profile esm-only --pack",
-    "build": "tsc --paths null --moduleResolution node",
+    "build": "tsc --paths null",
     "build-storybook": "storybook build",
     "cem": "cem analyze --config ./custom-elements-manifest.config.mjs",
     "clean": "rm -rf dist",

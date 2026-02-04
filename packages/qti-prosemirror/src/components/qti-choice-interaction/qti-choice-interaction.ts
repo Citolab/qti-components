@@ -2,8 +2,8 @@ import { html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 
 import { watch } from '@qti-components/utilities';
-import { VocabularyMixin } from '@qti-components/interactions/src/mixins/vocabulary/vocabulary-mixin';
-import styles from '@qti-components/interactions/src/components/qti-choice-interaction/qti-choice-interaction.styles';
+import { VocabularyMixin } from '@qti-components/interactions/mixins/vocabulary/vocabulary-mixin.js';
+import styles from '@qti-components/interactions/components/qti-choice-interaction/qti-choice-interaction.styles.js';
 
 import type { CSSResultGroup } from 'lit';
 

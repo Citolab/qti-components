@@ -17,12 +17,10 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./src/*": "./src/*",
-    "./dist/*": "./dist/*"
+    "./*": "./dist/*"
   },
   "files": [
-    "dist/**/*",
-    "src/**/*"
+    "dist/**/*"
   ],
   "keywords": [
     "interactions",
@@ -39,7 +37,7 @@
   },
   "scripts": {
     "attw": "attw --profile esm-only --pack",
-    "build": "tsc --paths null --moduleResolution node",
+    "build": "tsc --paths null",
     "clean": "rm -rf dist",
     "yalc": "yalc publish",
     "yalc:push": "yalc push"
