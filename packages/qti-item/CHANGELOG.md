@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.0.6](https://github.com/Citolab/qti-components/compare/item-v1.0.5...item-v1.0.6) (2026-02-05)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @qti-components/interactions bumped to 1.4.2
+
 ## [1.0.5](https://github.com/Citolab/qti-components/compare/item-v1.0.4...item-v1.0.5) (2026-02-04)
 
 
