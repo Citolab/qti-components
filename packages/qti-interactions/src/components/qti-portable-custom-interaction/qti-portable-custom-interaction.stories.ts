@@ -95,7 +95,11 @@ export const RestoreFromState: Story = {
       identifier="pci-state-restore"
       title="PCI restore via state"
     >
-      <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="string"></qti-response-declaration>
+      <qti-response-declaration
+        identifier="RESPONSE"
+        cardinality="single"
+        base-type="string"
+      ></qti-response-declaration>
       <qti-item-body>
         <qti-portable-custom-interaction-test
           response-identifier="RESPONSE"
@@ -141,13 +145,16 @@ export const RestoreFromState: Story = {
       await pciElement.iFrameSetValueElement('input', '4');
       await pciElement.iFrameClickOnElementByText('Berekenen');
 
-      await waitFor(() => {
-        if (!savedState) throw new Error('state not saved yet');
-        return true;
-      }, {
-        timeout: 5000,
-        interval: 100
-      });
+      await waitFor(
+        () => {
+          if (!savedState) throw new Error('state not saved yet');
+          return true;
+        },
+        {
+          timeout: 5000,
+          interval: 100
+        }
+      );
     });
 
     await step('restore via state (without boundTo)', async () => {
@@ -789,11 +796,14 @@ const createPciConformanceStory = (itemName: string): Story => ({
 
         // Fetch the XML file using the parameterized item name
         const baseUrl = `/assets/qti-portable-interaction/pci-conformance/${itemName}`;
+        const assetBaseUrl = removeDoubleSlashes(`${window.location.origin}${baseUrl}`);
         const response = await fetch(`${baseUrl}/qti.xml`);
         const xmlText = await response.text();
         const qti = xmlText
           .replaceAll('<qti-portable-custom-interaction', '<qti-portable-custom-interaction-test')
-          .replaceAll('</qti-portable-custom-interaction>', '</qti-portable-custom-interaction-test>');
+          .replaceAll('</qti-portable-custom-interaction>', '</qti-portable-custom-interaction-test>')
+          .replaceAll('href="css/', `href="${assetBaseUrl}/css/`)
+          .replaceAll("href='css/", `href='${assetBaseUrl}/css/`);
         const transform = await qtiTransformItem()
           .parse(qti)
           .configurePci(baseUrl, getModuleResolution, 'qti-portable-custom-interaction-test');
