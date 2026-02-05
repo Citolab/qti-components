@@ -1,5 +1,29 @@
 # Changelog
 
+## [7.21.0](https://github.com/Citolab/qti-components/compare/qti-components-v7.20.4...qti-components-v7.21.0) (2026-02-05)
+
+
+### Features
+
+* add qti-context-declaration component with context variable declarations and methods ([bfe1d24](https://github.com/Citolab/qti-components/commit/bfe1d24e8f739d47717091ca19b25714c10fef2b))
+
+
+### Bug Fixes
+
+* change privacy level from private to protected in custom elements configuration ([3f34dc5](https://github.com/Citolab/qti-components/commit/3f34dc54658012cb6447f8e0fa849bd0b7ef8fc3))
+* estimate inline-choice width ([3cf160a](https://github.com/Citolab/qti-components/commit/3cf160a25e293eaea7da57b3b7f2d3dbb4c05f6e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @qti-components/elements bumped to 1.1.0
+    * @qti-components/interactions bumped to 1.5.0
+    * @qti-components/item bumped to 1.0.7
+    * @qti-components/loader bumped to 1.0.2
+    * @qti-components/test bumped to 1.1.6
+
 ## [7.20.4](https://github.com/Citolab/qti-components/compare/qti-components-v7.20.3...qti-components-v7.20.4) (2026-02-05)
 
 
