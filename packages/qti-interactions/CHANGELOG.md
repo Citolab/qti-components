@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.5.0](https://github.com/Citolab/qti-components/compare/interactions-v1.4.2...interactions-v1.5.0) (2026-02-05)
+
+
+### Features
+
+* add qti-stylesheet, copy styles to pci stylesheet and support for using variables in pci's ([e07750b](https://github.com/Citolab/qti-components/commit/e07750b16994f785a764c173d88134e20b6a2c35))
+* add qti-stylesheet, copy styles to pci stylesheet and support for using variables in pci's ([74943ec](https://github.com/Citolab/qti-components/commit/74943ec09a7a04578540a42d8b81220932a8b649))
+
+
+### Bug Fixes
+
+* estimate inline-choice width ([3cf160a](https://github.com/Citolab/qti-components/commit/3cf160a25e293eaea7da57b3b7f2d3dbb4c05f6e))
+* remove unnecessary blank line in width estimation function ([7d26fb9](https://github.com/Citolab/qti-components/commit/7d26fb906fb34d94761dd1f2e36978dd7989fb36))
+* update privacy level and enhance dropdown menu behavior in inline choice interaction ([0d10f45](https://github.com/Citolab/qti-components/commit/0d10f459413c452be97e4ddd4201c6083a889615))
+
 ## [1.4.2](https://github.com/Citolab/qti-components/compare/interactions-v1.4.1...interactions-v1.4.2) (2026-02-05)
 
 
