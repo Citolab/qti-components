@@ -49,6 +49,7 @@
     "-----------------------scripts--": "-",
     "storybook:dev": "storybook dev -p 6006 --no-open",
     "storybook:prosemirror": "cd packages/qti-prosemirror && pnpm run storybook",
+    "storybook:interactions": "cd packages/qti-interactions && pnpm run storybook",
     "cem": "cem analyze",
     "cem:watch": "cem analyze --watch",
     "css": "postcss packages/qti-theme/src/item.css -d dist -m",

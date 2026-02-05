@@ -38,11 +38,15 @@
   "scripts": {
     "attw": "attw --profile esm-only --pack",
     "build": "tsc --paths null",
+    "build-storybook": "storybook build",
+    "cem": "cem analyze --config ./custom-elements-manifest.config.mjs",
     "clean": "rm -rf dist",
+    "storybook": "storybook dev -p 6008 --no-open",
     "yalc": "yalc publish",
     "yalc:push": "yalc push"
   },
   "sideEffects": true,
   "type": "module",
-  "types": "dist/index.d.ts"
+  "types": "dist/index.d.ts",
+  "customElements": "custom-elements.json"
 }

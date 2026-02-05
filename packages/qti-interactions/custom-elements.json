@@ -1,0 +1,5461 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-associate-interaction/qti-associate-interaction.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiAssociateInteraction",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_childrenMap",
+              "type": {
+                "text": "Element[]"
+              },
+              "privacy": "protected",
+              "default": "[]"
+            },
+            {
+              "kind": "method",
+              "name": "_registerChoice",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "CustomEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "_registerChoiceHandler",
+              "type": {
+                "text": "(event: CustomEvent) => void"
+              },
+              "privacy": "protected"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "DragDropInteractionMixin",
+              "module": "/src/mixins/drag-drop"
+            }
+          ],
+          "superclass": {
+            "name": "Interaction",
+            "package": "@qti-components/base"
+          },
+          "tagName": "qti-associate-interaction",
+          "customElement": true,
+          "modulePath": "src/components/qti-associate-interaction/qti-associate-interaction.ts",
+          "definitionPath": "src/components/qti-associate-interaction/register.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiAssociateInteraction",
+          "declaration": {
+            "name": "QtiAssociateInteraction",
+            "module": "src/components/qti-associate-interaction/qti-associate-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-associate-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-associate-interaction",
+          "declaration": {
+            "name": "QtiAssociateInteraction",
+            "module": "/src/components/qti-associate-interaction/qti-associate-interaction"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-choice-interaction/qti-choice-interaction.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiChoiceInteraction",
+          "members": [
+            {
+              "kind": "method",
+              "name": "_handleSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "orientation",
+              "type": {
+                "text": "Orientation"
+              },
+              "privacy": "public",
+              "default": "'vertical'",
+              "deprecated": ", use 'qti-orientation-horizontal' or 'qti-orientation-vertical' instead",
+              "attribute": "orientation",
+              "parsedType": {
+                "text": "'horizontal' | 'vertical'"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "orientation",
+              "type": {
+                "text": "Orientation"
+              },
+              "default": "'vertical'",
+              "deprecated": ", use 'qti-orientation-horizontal' or 'qti-orientation-vertical' instead",
+              "fieldName": "orientation",
+              "parsedType": {
+                "text": "'horizontal' | 'vertical'"
+              }
+            }
+          ],
+          "mixins": [
+            {
+              "name": "VocabularyMixin",
+              "module": "/src/mixins/vocabulary/vocabulary-mixin"
+            },
+            {
+              "name": "ChoicesMixin",
+              "module": "/src/mixins/choices/choices.mixin"
+            }
+          ],
+          "superclass": {
+            "name": "Interaction",
+            "package": "@qti-components/base"
+          },
+          "tagName": "qti-choice-interaction",
+          "customElement": true,
+          "modulePath": "src/components/qti-choice-interaction/qti-choice-interaction.ts",
+          "definitionPath": "src/components/qti-choice-interaction/register.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiChoiceInteraction",
+          "declaration": {
+            "name": "QtiChoiceInteraction",
+            "module": "src/components/qti-choice-interaction/qti-choice-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-choice-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-choice-interaction",
+          "declaration": {
+            "name": "QtiChoiceInteraction",
+            "module": "/src/components/qti-choice-interaction/qti-choice-interaction"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-custom-interaction/interface.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-custom-interaction/qti-custom-interaction.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "QTI Custom Interaction component for legacy CES-based interactions.\n\nThis component implements support for custom interactions originally built for the CES\n(Custom Element Standard) player - the predecessor to FACET and the Trifork QTI Player.",
+          "name": "QtiCustomInteraction",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_contentBlobUrl",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_errorMessage",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_manifestUrl",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_resourceBaseUrl",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "baseItemUrl",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "data-base-item"
+            },
+            {
+              "kind": "field",
+              "name": "baseRefUrl",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "data-base-ref"
+            },
+            {
+              "kind": "field",
+              "name": "data",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "data"
+            },
+            {
+              "kind": "method",
+              "name": "getBaseCandidates",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getIFrames",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "getInnerIFrames",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "iframeDocument",
+                  "type": {
+                    "text": "Document"
+                  }
+                },
+                {
+                  "name": "iframes",
+                  "default": "[]",
+                  "type": {
+                    "text": "HTMLIFrameElement[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getManifestBaseUrl",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getManifestParentBaseUrl",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "handlePostMessage",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "MessageEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "id",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "id"
+            },
+            {
+              "kind": "field",
+              "name": "manifest",
+              "type": {
+                "text": "{\n    script: string[];\n    style: string[];\n    media: string[];\n  }"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "postToWindowAndIframes",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "data",
+                  "type": {
+                    "text": "any"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "rawResponse",
+              "type": {
+                "text": "string | string[]"
+              },
+              "privacy": "private",
+              "default": "''"
+            },
+            {
+              "kind": "method",
+              "name": "resolveResourceWithFallback",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<{ url: string; baseUrl: string | null; text?: string }>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "ref",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "baseCandidates",
+                  "type": {
+                    "text": "string[]"
+                  }
+                },
+                {
+                  "name": "options",
+                  "default": "{}",
+                  "type": {
+                    "text": "{ returnText?: boolean }"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "response",
+              "type": {
+                "text": "string | string[] | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "setupCES",
+              "description": "Sets up the CES custom interaction by creating the iframe structure and\nhandling the CES API communication via postMessage.\n\nFor interactions that use CES, this method:\n1. Fetches the original bootstrap.js and checks if it uses CES\n2. If CES is used, fetches index.html and injects the registerCES proxy\n3. Creates a blob URL for the modified HTML (stored in _contentBlobUrl)\n4. Replaces bootstrap.js with ciBootstrap that loads the blob URL\n5. Sets up postMessage listeners for CES API calls"
+            },
+            {
+              "kind": "method",
+              "name": "validate",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "data",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "data"
+            },
+            {
+              "name": "data-base-item",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "baseItemUrl"
+            },
+            {
+              "name": "data-base-ref",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "baseRefUrl"
+            },
+            {
+              "name": "id",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "id"
+            }
+          ],
+          "superclass": {
+            "name": "Interaction",
+            "package": "@qti-components/base"
+          },
+          "tagName": "qti-custom-interaction",
+          "customElement": true,
+          "modulePath": "src/components/qti-custom-interaction/qti-custom-interaction.ts",
+          "definitionPath": "src/components/qti-custom-interaction/register.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiCustomInteraction",
+          "declaration": {
+            "name": "QtiCustomInteraction",
+            "module": "src/components/qti-custom-interaction/qti-custom-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-custom-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-custom-interaction",
+          "declaration": {
+            "name": "QtiCustomInteraction",
+            "module": "/src/components/qti-custom-interaction/qti-custom-interaction"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-end-attempt-interaction/qti-end-attempt-interaction.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiEndAttemptInteraction",
+          "members": [
+            {
+              "kind": "field",
+              "name": "countAttempt",
+              "type": {
+                "text": "'true' | 'false' | null"
+              },
+              "privacy": "public",
+              "default": "null",
+              "description": "Defines the number of attempts that a user can make using the 'endAttemptInteraction' mechanism (this can be used to limit the number of hints, etc.). [More information](https://www.imsglobal.org/sites/default/files/spec/qti/v3/info/index.html#DataCharacteristic_EndAttemptInteraction.Attr_count-attempt)",
+              "attribute": "count-attempt"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "endAttempt",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "_",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "responseIdentifier",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "response-identifier"
+            },
+            {
+              "kind": "field",
+              "name": "title",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "default": "'end attempt'",
+              "attribute": "title"
+            }
+          ],
+          "events": [
+            {
+              "name": "end-attempt",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "count-attempt",
+              "type": {
+                "text": "'true' | 'false' | null"
+              },
+              "default": "null",
+              "description": "Defines the number of attempts that a user can make using the 'endAttemptInteraction' mechanism (this can be used to limit the number of hints, etc.). [More information](https://www.imsglobal.org/sites/default/files/spec/qti/v3/info/index.html#DataCharacteristic_EndAttemptInteraction.Attr_count-attempt)",
+              "fieldName": "countAttempt"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "response-identifier",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "responseIdentifier"
+            },
+            {
+              "name": "title",
+              "type": {
+                "text": "string"
+              },
+              "default": "'end attempt'",
+              "fieldName": "title"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "qti-end-attempt-interaction",
+          "customElement": true,
+          "modulePath": "src/components/qti-end-attempt-interaction/qti-end-attempt-interaction.ts",
+          "definitionPath": "src/components/qti-end-attempt-interaction/register.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiEndAttemptInteraction",
+          "declaration": {
+            "name": "QtiEndAttemptInteraction",
+            "module": "src/components/qti-end-attempt-interaction/qti-end-attempt-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-end-attempt-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-end-attempt-interaction",
+          "declaration": {
+            "name": "QtiEndAttemptInteraction",
+            "module": "/src/components/qti-end-attempt-interaction/qti-end-attempt-interaction"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-extended-text-interaction/qti-extended-text-interaction.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiExtendedTextInteraction",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_handleResponseChange",
+              "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "_rows",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "protected",
+              "default": "5"
+            },
+            {
+              "kind": "field",
+              "name": "classNames",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "class"
+            },
+            {
+              "kind": "field",
+              "name": "dataPatternmaskMessage",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "data-patternmask-message"
+            },
+            {
+              "kind": "field",
+              "name": "expectedLength",
+              "type": {
+                "text": "number"
+              },
+              "description": "expected length is mapped to the property maxlength on the textarea",
+              "attribute": "expected-length"
+            },
+            {
+              "kind": "method",
+              "name": "handleclassNamesChange",
+              "parameters": [
+                {
+                  "name": "_",
+                  "type": {
+                    "text": "any"
+                  }
+                },
+                {
+                  "name": "classes",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "patternMask",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "pattern-mask"
+            },
+            {
+              "kind": "field",
+              "name": "placeholderText",
+              "type": {
+                "text": "string"
+              },
+              "description": "text appearing in the extended-text-interaction if it is empty",
+              "attribute": "placeholder-text"
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity"
+            },
+            {
+              "kind": "field",
+              "name": "response",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "setEmptyAttribute",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "text",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "textChanged",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "toggleCorrectResponse",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "validate",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string | null"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "class",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "classNames"
+            },
+            {
+              "name": "data-patternmask-message",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "dataPatternmaskMessage"
+            },
+            {
+              "name": "expected-length",
+              "type": {
+                "text": "number"
+              },
+              "description": "expected length is mapped to the property maxlength on the textarea",
+              "fieldName": "expectedLength"
+            },
+            {
+              "name": "pattern-mask",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "patternMask"
+            },
+            {
+              "name": "placeholder-text",
+              "type": {
+                "text": "string"
+              },
+              "description": "text appearing in the extended-text-interaction if it is empty",
+              "fieldName": "placeholderText"
+            }
+          ],
+          "superclass": {
+            "name": "Interaction",
+            "package": "@qti-components/base"
+          },
+          "tagName": "qti-extended-text-interaction",
+          "customElement": true,
+          "modulePath": "src/components/qti-extended-text-interaction/qti-extended-text-interaction.ts",
+          "definitionPath": "src/components/qti-extended-text-interaction/register.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiExtendedTextInteraction",
+          "declaration": {
+            "name": "QtiExtendedTextInteraction",
+            "module": "src/components/qti-extended-text-interaction/qti-extended-text-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-extended-text-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-extended-text-interaction",
+          "declaration": {
+            "name": "QtiExtendedTextInteraction",
+            "module": "/src/components/qti-extended-text-interaction/qti-extended-text-interaction"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-gap-match-interaction/qti-gap-match-interaction.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiGapMatchInteraction",
+          "members": [
+            {
+              "kind": "method",
+              "name": "getMatches",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "{ source: string; target: string }[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "responseVariable",
+                  "type": {
+                    "text": "ResponseVariable"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "toggleCandidateCorrection",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "show",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "toggleCorrectResponse",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "show",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            }
+          ],
+          "mixins": [
+            {
+              "name": "DragDropInteractionMixin",
+              "module": "/src/mixins/drag-drop/drag-drop-interaction-mixin.js"
+            }
+          ],
+          "superclass": {
+            "name": "Interaction",
+            "package": "@qti-components/base"
+          },
+          "tagName": "qti-gap-match-interaction",
+          "customElement": true,
+          "modulePath": "src/components/qti-gap-match-interaction/qti-gap-match-interaction.ts",
+          "definitionPath": "src/components/qti-gap-match-interaction/register.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiGapMatchInteraction",
+          "declaration": {
+            "name": "QtiGapMatchInteraction",
+            "module": "src/components/qti-gap-match-interaction/qti-gap-match-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-gap-match-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-gap-match-interaction",
+          "declaration": {
+            "name": "QtiGapMatchInteraction",
+            "module": "/src/components/qti-gap-match-interaction/qti-gap-match-interaction"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-graphic-associate-interaction/qti-graphic-associate-interaction.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiGraphicAssociateInteraction",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_correctLines",
+              "type": {
+                "text": "string[]"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "_response",
+              "type": {
+                "text": "string[] | null"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "endPoint",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "grImage",
+              "type": {
+                "text": "any[]"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "hotspots",
+              "type": {
+                "text": "any[] | NodeListOf<QtiAssociableHotspot>"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "mouseCoord",
+              "type": {
+                "text": "{ x: number; y: number }"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "positionHotspotOnRegister",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "CustomEvent<QtiHotspotChoice>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "reset",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "response"
+            },
+            {
+              "kind": "field",
+              "name": "startCoord",
+              "type": {
+                "text": "{ x: number; y: number }"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "startPoint",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "toggleInternalCorrectResponse",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "show",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "validate",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            }
+          ],
+          "superclass": {
+            "name": "Interaction",
+            "package": "@qti-components/base"
+          },
+          "tagName": "qti-graphic-associate-interaction",
+          "customElement": true,
+          "modulePath": "src/components/qti-graphic-associate-interaction/qti-graphic-associate-interaction.ts",
+          "definitionPath": "src/components/qti-graphic-associate-interaction/register.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiGraphicAssociateInteraction",
+          "declaration": {
+            "name": "QtiGraphicAssociateInteraction",
+            "module": "src/components/qti-graphic-associate-interaction/qti-graphic-associate-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-graphic-associate-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-graphic-associate-interaction",
+          "declaration": {
+            "name": "QtiGraphicAssociateInteraction",
+            "module": "/src/components/qti-graphic-associate-interaction/qti-graphic-associate-interaction"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-graphic-gap-match-interaction/qti-graphic-gap-match-interaction.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiGraphicGapMatchInteraction",
+          "members": [
+            {
+              "kind": "method",
+              "name": "positionHotspotOnRegister",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "CustomEvent<null>"
+                  }
+                }
+              ]
+            }
+          ],
+          "mixins": [
+            {
+              "name": "DragDropInteractionMixin",
+              "module": "/src/mixins/drag-drop"
+            }
+          ],
+          "superclass": {
+            "name": "Interaction",
+            "package": "@qti-components/base"
+          },
+          "tagName": "qti-graphic-gap-match-interaction",
+          "customElement": true,
+          "modulePath": "src/components/qti-graphic-gap-match-interaction/qti-graphic-gap-match-interaction.ts",
+          "definitionPath": "src/components/qti-graphic-gap-match-interaction/register.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiGraphicGapMatchInteraction",
+          "declaration": {
+            "name": "QtiGraphicGapMatchInteraction",
+            "module": "src/components/qti-graphic-gap-match-interaction/qti-graphic-gap-match-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-graphic-gap-match-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-graphic-gap-match-interaction",
+          "declaration": {
+            "name": "QtiGraphicGapMatchInteraction",
+            "module": "/src/components/qti-graphic-gap-match-interaction/qti-graphic-gap-match-interaction"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-graphic-order-interaction/qti-graphic-order-interaction.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiGraphicOrderInteraction",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_choiceElements",
+              "type": {
+                "text": "Choice[]"
+              },
+              "privacy": "protected",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "choiceOrdering",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "protected"
+            },
+            {
+              "kind": "method",
+              "name": "positionHotspotOnRegister",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "CustomEvent<QtiHotspotChoice>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "setHotspotOrder",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "CustomEvent<{ identifier: string }>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "toggleCorrectResponse",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "show",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            }
+          ],
+          "mixins": [
+            {
+              "name": "ChoicesMixin",
+              "module": "/src/mixins/choices/choices.mixin"
+            }
+          ],
+          "superclass": {
+            "name": "Interaction",
+            "package": "@qti-components/base"
+          },
+          "tagName": "qti-graphic-order-interaction",
+          "customElement": true,
+          "modulePath": "src/components/qti-graphic-order-interaction/qti-graphic-order-interaction.ts",
+          "definitionPath": "src/components/qti-graphic-order-interaction/register.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiGraphicOrderInteraction",
+          "declaration": {
+            "name": "QtiGraphicOrderInteraction",
+            "module": "src/components/qti-graphic-order-interaction/qti-graphic-order-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-graphic-order-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-graphic-order-interaction",
+          "declaration": {
+            "name": "QtiGraphicOrderInteraction",
+            "module": "/src/components/qti-graphic-order-interaction/qti-graphic-order-interaction"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-hotspot-interaction/qti-hotspot-interaction.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiHotspotInteraction",
+          "members": [
+            {
+              "kind": "method",
+              "name": "getImageLoadPromise",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<HTMLImageElement>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "img",
+                  "type": {
+                    "text": "HTMLImageElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "imageLoadPromise",
+              "type": {
+                "text": "Promise<HTMLImageElement> | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "positionHotspotOnRegister",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "CustomEvent<QtiHotspotChoice>"
+                  }
+                }
+              ]
+            }
+          ],
+          "mixins": [
+            {
+              "name": "ChoicesMixin",
+              "module": "/src/mixins/choices/choices.mixin"
+            }
+          ],
+          "superclass": {
+            "name": "Interaction",
+            "package": "@qti-components/base"
+          },
+          "tagName": "qti-hotspot-interaction",
+          "customElement": true,
+          "modulePath": "src/components/qti-hotspot-interaction/qti-hotspot-interaction.ts",
+          "definitionPath": "src/components/qti-hotspot-interaction/register.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiHotspotInteraction",
+          "declaration": {
+            "name": "QtiHotspotInteraction",
+            "module": "src/components/qti-hotspot-interaction/qti-hotspot-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-hotspot-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-hotspot-interaction",
+          "declaration": {
+            "name": "QtiHotspotInteraction",
+            "module": "/src/components/qti-hotspot-interaction/qti-hotspot-interaction"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-hottext-interaction/qti-hottext-interaction.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiHottextInteraction",
+          "members": [
+            {
+              "kind": "field",
+              "name": "class",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "class",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "classObject",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "updateHostClasses",
+              "privacy": "private"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "class",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "class"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "ChoicesMixin",
+              "module": "/src/mixins/choices/choices.mixin"
+            }
+          ],
+          "superclass": {
+            "name": "Interaction",
+            "package": "@qti-components/base"
+          },
+          "tagName": "qti-hottext-interaction",
+          "customElement": true,
+          "modulePath": "src/components/qti-hottext-interaction/qti-hottext-interaction.ts",
+          "definitionPath": "src/components/qti-hottext-interaction/register.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiHottextInteraction",
+          "declaration": {
+            "name": "QtiHottextInteraction",
+            "module": "src/components/qti-hottext-interaction/qti-hottext-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-hottext-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-hottext-interaction",
+          "declaration": {
+            "name": "QtiHottextInteraction",
+            "module": "/src/components/qti-hottext-interaction/qti-hottext-interaction"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-inline-choice-interaction/qti-inline-choice-interaction.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiInlineChoiceInteraction",
+          "members": [
+            {
+              "kind": "method",
+              "name": "_updateOptions",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "choiceSelected",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "configContext",
+              "type": {
+                "text": "ConfigContext"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "correctOption",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "protected",
+              "default": "''"
+            },
+            {
+              "kind": "field",
+              "name": "dataPrompt",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "data-prompt"
+            },
+            {
+              "kind": "field",
+              "name": "inputWidthClass",
+              "type": {
+                "text": "array"
+              },
+              "privacy": "public",
+              "static": true,
+              "default": "[ '', 'qti-input-width-2', 'qti-input-width-1', 'qti-input-width-3', 'qti-input-width-4', 'qti-input-width-6', 'qti-input-width-10', 'qti-input-width-15', 'qti-input-width-20', 'qti-input-width-72' ]"
+            },
+            {
+              "kind": "field",
+              "name": "isInline",
+              "type": {
+                "text": "boolean"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "options",
+              "type": {
+                "text": "OptionType[]"
+              },
+              "privacy": "protected",
+              "default": "[]"
+            },
+            {
+              "kind": "method",
+              "name": "reset",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "response",
+              "privacy": "public",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "toggleInternalCorrectResponse",
+              "parameters": [
+                {
+                  "name": "show",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "validate",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "data-prompt",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "dataPrompt"
+            }
+          ],
+          "superclass": {
+            "name": "Interaction",
+            "package": "@qti-components/base"
+          },
+          "tagName": "qti-inline-choice-interaction",
+          "customElement": true,
+          "modulePath": "src/components/qti-inline-choice-interaction/qti-inline-choice-interaction.ts",
+          "definitionPath": "src/components/qti-inline-choice-interaction/register.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiInlineChoiceInteraction",
+          "declaration": {
+            "name": "QtiInlineChoiceInteraction",
+            "module": "src/components/qti-inline-choice-interaction/qti-inline-choice-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-inline-choice-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-inline-choice-interaction",
+          "declaration": {
+            "name": "QtiInlineChoiceInteraction",
+            "module": "/src/components/qti-inline-choice-interaction/qti-inline-choice-interaction"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-match-interaction/qti-match-interaction.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiMatchInteraction",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_response",
+              "type": {
+                "text": "string | string[]"
+              },
+              "privacy": "protected",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "class",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "class"
+            },
+            {
+              "kind": "field",
+              "name": "correctOptions",
+              "type": {
+                "text": "{ source: string; target: string }[]"
+              },
+              "privacy": "protected",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "getMatches",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "{ source: string; target: string }[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "responseVariable",
+                  "type": {
+                    "text": "ResponseVariable"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "handleRadioChange",
+              "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "handleRadioClick",
+              "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "lastCheckedRadio",
+              "type": {
+                "text": "HTMLInputElement | null"
+              },
+              "privacy": "protected",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "response",
+              "type": {
+                "text": "string[]"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "responseIdentifier",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "response-identifier"
+            },
+            {
+              "kind": "field",
+              "name": "sourceChoices",
+              "type": {
+                "text": "QtiSimpleAssociableChoice[]"
+              },
+              "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "targetChoices",
+              "type": {
+                "text": "QtiSimpleAssociableChoice[]"
+              },
+              "privacy": "protected"
+            },
+            {
+              "kind": "method",
+              "name": "toggleCandidateCorrection",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "show",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "toggleInternalCorrectResponse",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "show",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "validate",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "class",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "class"
+            },
+            {
+              "name": "response-identifier",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "responseIdentifier"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "DragDropInteractionMixin",
+              "module": "/src/mixins/drag-drop"
+            }
+          ],
+          "superclass": {
+            "name": "Interaction",
+            "package": "@qti-components/base"
+          },
+          "tagName": "qti-match-interaction",
+          "customElement": true,
+          "modulePath": "src/components/qti-match-interaction/qti-match-interaction.ts",
+          "definitionPath": "src/components/qti-match-interaction/register.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiMatchInteraction",
+          "declaration": {
+            "name": "QtiMatchInteraction",
+            "module": "src/components/qti-match-interaction/qti-match-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-match-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-match-interaction",
+          "declaration": {
+            "name": "QtiMatchInteraction",
+            "module": "/src/components/qti-match-interaction/qti-match-interaction"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-media-interaction/qti-media-interaction.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiMediaInteraction",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_value",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "reset"
+            },
+            {
+              "kind": "field",
+              "name": "response",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "validate",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            }
+          ],
+          "superclass": {
+            "name": "Interaction",
+            "package": "@qti-components/base"
+          },
+          "tagName": "qti-media-interaction",
+          "customElement": true,
+          "modulePath": "src/components/qti-media-interaction/qti-media-interaction.ts",
+          "definitionPath": "src/components/qti-media-interaction/register.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiMediaInteraction",
+          "declaration": {
+            "name": "QtiMediaInteraction",
+            "module": "src/components/qti-media-interaction/qti-media-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-media-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-media-interaction",
+          "declaration": {
+            "name": "QtiMediaInteraction",
+            "module": "/src/components/qti-media-interaction/qti-media-interaction"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-order-interaction/qti-order-interaction.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiOrderInteraction",
+          "members": [
+            {
+              "kind": "field",
+              "name": "childrenMap",
+              "type": {
+                "text": "Element[]"
+              },
+              "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "correctResponses",
+              "type": {
+                "text": "string[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "method",
+              "name": "getResponse",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "string[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getValue",
+              "parameters": [
+                {
+                  "name": "val",
+                  "type": {
+                    "text": "string[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "nrChoices",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "protected",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "orientation",
+              "type": {
+                "text": "'horizontal' | 'vertical'"
+              },
+              "privacy": "public",
+              "description": "orientation of choices",
+              "attribute": "orientation"
+            },
+            {
+              "kind": "field",
+              "name": "showCorrectResponses",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "toggleCorrectResponse",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "show",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "name": "orientation",
+              "type": {
+                "text": "'horizontal' | 'vertical'"
+              },
+              "description": "orientation of choices",
+              "fieldName": "orientation"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "DragDropInteractionMixin",
+              "module": "/src/mixins/drag-drop"
+            }
+          ],
+          "superclass": {
+            "name": "Interaction",
+            "package": "@qti-components/base"
+          },
+          "tagName": "qti-order-interaction",
+          "customElement": true,
+          "modulePath": "src/components/qti-order-interaction/qti-order-interaction.ts",
+          "definitionPath": "src/components/qti-order-interaction/register.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiOrderInteraction",
+          "declaration": {
+            "name": "QtiOrderInteraction",
+            "module": "src/components/qti-order-interaction/qti-order-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-order-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-order-interaction",
+          "declaration": {
+            "name": "QtiOrderInteraction",
+            "module": "/src/components/qti-order-interaction/qti-order-interaction"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-portable-custom-interaction/interface.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiPortableCustomInteraction",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_errorMessage",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_iframeLoaded",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "protected",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_iframeMessageOrigin",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "protected",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_parsedRequirePaths",
+              "type": {
+                "text": "Record<string, string | string[]>"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_parsedRequireShim",
+              "type": {
+                "text": "Record<string, any>"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_pendingMessages",
+              "type": {
+                "text": "Array<{ method: string; params: any }>"
+              },
+              "privacy": "protected",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "_previousState",
+              "type": {
+                "text": "{\n    pointerEvents?: string;\n    position?: string;\n  }"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_value",
+              "type": {
+                "text": "string | string[]"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "addHyphenatedKeys",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, any>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "properties",
+                  "type": {
+                    "text": "Record<string, any>"
+                  }
+                }
+              ],
+              "description": "Adds hyphenated versions of camelCase keys to properties object"
+            },
+            {
+              "kind": "method",
+              "name": "addMarkupToIframe",
+              "privacy": "private",
+              "description": "IFRAME MODE: Add markup and properties to iframe"
+            },
+            {
+              "kind": "field",
+              "name": "baseUrl",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "data-base-url"
+            },
+            {
+              "kind": "field",
+              "name": "boundTo",
+              "type": {
+                "text": "Record<string, QtiVariableJSON>"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "context",
+              "type": {
+                "text": "ItemContext | undefined"
+              },
+              "privacy": "protected"
+            },
+            {
+              "kind": "method",
+              "name": "convertQtiVariableJSON",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | string[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "input",
+                  "type": {
+                    "text": "QtiVariableJSON"
+                  }
+                }
+              ],
+              "description": "Converts QtiVariableJSON to a string or string array"
+            },
+            {
+              "kind": "method",
+              "name": "createIframe",
+              "privacy": "protected",
+              "description": "IFRAME MODE: Create iframe element"
+            },
+            {
+              "kind": "field",
+              "name": "customInteractionTypeIdentifier",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "custom-interaction-type-identifier"
+            },
+            {
+              "kind": "method",
+              "name": "disable",
+              "privacy": "public",
+              "description": "Method to disable the PCI for review mode\nThis can be used when showing the correct response"
+            },
+            {
+              "kind": "method",
+              "name": "enable",
+              "privacy": "public",
+              "description": "Method to enable the PCI for interactive mode"
+            },
+            {
+              "kind": "method",
+              "name": "generateIframeContent",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "description": "IFRAME MODE: Generate iframe HTML content"
+            },
+            {
+              "kind": "method",
+              "name": "getDefaultRequirePaths",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, string | string[]>"
+                }
+              },
+              "description": "Get the default require paths"
+            },
+            {
+              "kind": "method",
+              "name": "getDefaultRequireShim",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, any>"
+                }
+              },
+              "description": "Get the default require shim"
+            },
+            {
+              "kind": "method",
+              "name": "getFinalRequirePaths",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, string | string[]>"
+                }
+              },
+              "description": "Get the final require paths by combining defaults with user-provided paths"
+            },
+            {
+              "kind": "method",
+              "name": "getFinalRequireShim",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, any>"
+                }
+              },
+              "description": "Get the final require shim by combining defaults with user-provided shim"
+            },
+            {
+              "kind": "method",
+              "name": "getInteractionModules",
+              "privacy": "private",
+              "description": "IFRAME MODE: Get interaction modules from DOM"
+            },
+            {
+              "kind": "method",
+              "name": "getRequirePaths",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, string | string[]>"
+                }
+              },
+              "description": "Parse the require paths JSON string into an object"
+            },
+            {
+              "kind": "method",
+              "name": "getRequireShim",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, any>"
+                }
+              },
+              "description": "Parse the require shim JSON string into an object"
+            },
+            {
+              "kind": "field",
+              "name": "handleIframeMessage",
+              "privacy": "protected",
+              "description": "IFRAME MODE: Handle iframe messages"
+            },
+            {
+              "kind": "field",
+              "name": "iframe",
+              "type": {
+                "text": "HTMLIFrameElement"
+              },
+              "privacy": "protected"
+            },
+            {
+              "kind": "method",
+              "name": "initializeInteraction",
+              "privacy": "private",
+              "description": "IFRAME MODE: Initialize the interaction"
+            },
+            {
+              "kind": "field",
+              "name": "module",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "module"
+            },
+            {
+              "kind": "method",
+              "name": "processPendingMessages",
+              "privacy": "private",
+              "description": "IFRAME MODE: Process pending messages"
+            },
+            {
+              "kind": "field",
+              "name": "requireJsUrl",
+              "type": {
+                "text": "string"
+              },
+              "default": "'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js'",
+              "attribute": "data-require-js-url"
+            },
+            {
+              "kind": "field",
+              "name": "requirePathsJson",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "data-require-paths"
+            },
+            {
+              "kind": "field",
+              "name": "requireShimJson",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "data-require-shim"
+            },
+            {
+              "kind": "field",
+              "name": "response",
+              "type": {
+                "text": "string | string[] | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "responseVariablesToQtiVariableJSON",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "QtiVariableJSON"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "input",
+                  "type": {
+                    "text": "string | string[]"
+                  }
+                },
+                {
+                  "name": "cardinality",
+                  "type": {
+                    "text": "Cardinality"
+                  }
+                },
+                {
+                  "name": "baseType",
+                  "type": {
+                    "text": "BaseType"
+                  }
+                }
+              ],
+              "description": "Converts response variables to QtiVariableJSON"
+            },
+            {
+              "kind": "method",
+              "name": "sendIframeInitData",
+              "privacy": "private",
+              "description": "IFRAME MODE: Send initialization data to iframe"
+            },
+            {
+              "kind": "method",
+              "name": "sendMessageToIframe",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "method",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "params",
+                  "type": {
+                    "text": "any"
+                  }
+                }
+              ],
+              "description": "IFRAME MODE: Send message to iframe"
+            },
+            {
+              "kind": "method",
+              "name": "toggleInternalCorrectResponse",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "show",
+                  "type": {
+                    "text": "boolean"
+                  },
+                  "description": "Whether to show or hide the correct response"
+                },
+                {
+                  "description": "The response variable containing the correct response",
+                  "name": "responseVariable"
+                }
+              ],
+              "description": "Toggle the display of the correct response"
+            },
+            {
+              "kind": "method",
+              "name": "unescapeDataAttributes",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, any>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "obj",
+                  "type": {
+                    "text": "Record<string, any>"
+                  }
+                }
+              ],
+              "description": "Unescape HTML entities in all values of an object"
+            },
+            {
+              "kind": "method",
+              "name": "unescapeHtml",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "str",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Unescape HTML entities in a string"
+            },
+            {
+              "kind": "field",
+              "name": "useDefaultPaths",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "data-use-default-paths"
+            },
+            {
+              "kind": "field",
+              "name": "useDefaultShims",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "data-use-default-shims"
+            },
+            {
+              "kind": "method",
+              "name": "validate",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string | null"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "custom-interaction-type-identifier",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "customInteractionTypeIdentifier"
+            },
+            {
+              "name": "data-base-url",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "baseUrl"
+            },
+            {
+              "name": "data-require-js-url",
+              "type": {
+                "text": "string"
+              },
+              "default": "'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js'",
+              "fieldName": "requireJsUrl"
+            },
+            {
+              "name": "data-require-paths",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "requirePathsJson"
+            },
+            {
+              "name": "data-require-shim",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "requireShimJson"
+            },
+            {
+              "name": "data-use-default-paths",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "useDefaultPaths"
+            },
+            {
+              "name": "data-use-default-shims",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "useDefaultShims"
+            },
+            {
+              "name": "module",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "module"
+            }
+          ],
+          "superclass": {
+            "name": "Interaction",
+            "package": "@qti-components/base"
+          },
+          "tagName": "qti-portable-custom-interaction",
+          "customElement": true,
+          "modulePath": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts",
+          "definitionPath": "src/components/qti-portable-custom-interaction/register.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiPortableCustomInteraction",
+          "declaration": {
+            "name": "QtiPortableCustomInteraction",
+            "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-portable-custom-interaction/qti-portable-custom-test-interaction.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Test-specific extension of QtiPortableCustomInteraction that adds methods\nfor interacting with the iframe content in tests.",
+          "name": "QtiPortableCustomInteractionTest",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_errorMessage",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_iframeLoaded",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "protected",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_iframeMessageOrigin",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "protected",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_parsedRequirePaths",
+              "type": {
+                "text": "Record<string, string | string[]>"
+              },
+              "privacy": "private",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_parsedRequireShim",
+              "type": {
+                "text": "Record<string, any>"
+              },
+              "privacy": "private",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_pendingMessages",
+              "type": {
+                "text": "Array<{ method: string; params: any }>"
+              },
+              "privacy": "protected",
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_previousState",
+              "type": {
+                "text": "{\n    pointerEvents?: string;\n    position?: string;\n  }"
+              },
+              "privacy": "private",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_recreatingIframe",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_value",
+              "type": {
+                "text": "string | string[]"
+              },
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "addHyphenatedKeys",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, any>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "properties",
+                  "type": {
+                    "text": "Record<string, any>"
+                  }
+                }
+              ],
+              "description": "Adds hyphenated versions of camelCase keys to properties object",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "addMarkupToIframe",
+              "privacy": "private",
+              "description": "IFRAME MODE: Add markup and properties to iframe",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "baseUrl",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "data-base-url",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "boundTo",
+              "type": {
+                "text": "Record<string, QtiVariableJSON>"
+              },
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "context",
+              "type": {
+                "text": "ItemContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "convertQtiVariableJSON",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | string[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "input",
+                  "type": {
+                    "text": "QtiVariableJSON"
+                  }
+                }
+              ],
+              "description": "Converts QtiVariableJSON to a string or string array",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "createIframe",
+              "privacy": "protected",
+              "description": "IFRAME MODE: Create iframe element",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "customInteractionTypeIdentifier",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "custom-interaction-type-identifier",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "disable",
+              "privacy": "public",
+              "description": "Method to disable the PCI for review mode\nThis can be used when showing the correct response",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "enable",
+              "privacy": "public",
+              "description": "Method to enable the PCI for interactive mode",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "generateIframeContent",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "description": "Override the original generateIframeContent method to include\nthe test message handlers in the iframe HTML",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getDefaultRequirePaths",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, string | string[]>"
+                }
+              },
+              "description": "Get the default require paths",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getDefaultRequireShim",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, any>"
+                }
+              },
+              "description": "Get the default require shim",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getFinalRequirePaths",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, string | string[]>"
+                }
+              },
+              "description": "Get the final require paths by combining defaults with user-provided paths",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getFinalRequireShim",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, any>"
+                }
+              },
+              "description": "Get the final require shim by combining defaults with user-provided shim",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getIFrameContent",
+              "return": {
+                "type": {
+                  "text": ""
+                }
+              },
+              "description": "Gets the HTML content of the iframe for testing purposes"
+            },
+            {
+              "kind": "method",
+              "name": "getInteractionModules",
+              "privacy": "private",
+              "description": "IFRAME MODE: Get interaction modules from DOM",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getRequirePaths",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, string | string[]>"
+                }
+              },
+              "description": "Parse the require paths JSON string into an object",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getRequireShim",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, any>"
+                }
+              },
+              "description": "Parse the require shim JSON string into an object",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "handleIframeMessage",
+              "privacy": "protected",
+              "description": "IFRAME MODE: Handle iframe messages",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "iframe",
+              "type": {
+                "text": "HTMLIFrameElement"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "iFrameClickOnElement",
+              "return": {
+                "type": {
+                  "text": ""
+                }
+              },
+              "parameters": [
+                {
+                  "name": "selector",
+                  "type": {
+                    "text": "string"
+                  },
+                  "description": "The CSS selector string"
+                }
+              ],
+              "description": "Clicks on an element identified by a CSS selector"
+            },
+            {
+              "kind": "method",
+              "name": "iFrameClickOnElementByText",
+              "return": {
+                "type": {
+                  "text": ""
+                }
+              },
+              "parameters": [
+                {
+                  "name": "text",
+                  "type": {
+                    "text": "string"
+                  },
+                  "description": "The text to search for within elements"
+                }
+              ],
+              "description": "Clicks on an element containing the specified text"
+            },
+            {
+              "kind": "method",
+              "name": "iFrameMouseClick",
+              "return": {
+                "type": {
+                  "text": ""
+                }
+              },
+              "parameters": [
+                {
+                  "name": "x",
+                  "type": {
+                    "text": "number"
+                  },
+                  "description": "The x coordinate"
+                },
+                {
+                  "name": "y",
+                  "type": {
+                    "text": "number"
+                  },
+                  "description": "The y coordinate"
+                }
+              ],
+              "description": "Simulates a mouse click at specific coordinates within the iframe"
+            },
+            {
+              "kind": "method",
+              "name": "iFrameMousedownOnElement",
+              "return": {
+                "type": {
+                  "text": ""
+                }
+              },
+              "parameters": [
+                {
+                  "name": "selector",
+                  "type": {
+                    "text": "string"
+                  },
+                  "description": "The CSS selector string"
+                }
+              ],
+              "description": "Performs a mousedown event on an element identified by a CSS selector"
+            },
+            {
+              "kind": "method",
+              "name": "iFrameSetValueElement",
+              "return": {
+                "type": {
+                  "text": ""
+                }
+              },
+              "parameters": [
+                {
+                  "name": "selector",
+                  "type": {
+                    "text": "string"
+                  },
+                  "description": "The CSS selector string"
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  },
+                  "description": "The value to set"
+                }
+              ],
+              "description": "Sets the value of an input element identified by a CSS selector"
+            },
+            {
+              "kind": "method",
+              "name": "iFrameSetValueElementByText",
+              "return": {
+                "type": {
+                  "text": ""
+                }
+              },
+              "parameters": [
+                {
+                  "name": "text",
+                  "type": {
+                    "text": "string"
+                  },
+                  "description": "The text to search for within elements"
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  },
+                  "description": "The value to set"
+                }
+              ],
+              "description": "Sets the value of an input element containing the specified text"
+            },
+            {
+              "kind": "method",
+              "name": "initializeInteraction",
+              "privacy": "private",
+              "description": "IFRAME MODE: Initialize the interaction",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "module",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "module",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "processPendingMessages",
+              "privacy": "private",
+              "description": "IFRAME MODE: Process pending messages",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "recreateIframe",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": ""
+                }
+              },
+              "description": "Recreates the iframe completely"
+            },
+            {
+              "kind": "field",
+              "name": "requireJsUrl",
+              "type": {
+                "text": "string"
+              },
+              "default": "'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js'",
+              "attribute": "data-require-js-url",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "requirePathsJson",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "data-require-paths",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "requireShimJson",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "data-require-shim",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "response",
+              "type": {
+                "text": "string | string[] | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "responseVariablesToQtiVariableJSON",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "QtiVariableJSON"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "input",
+                  "type": {
+                    "text": "string | string[]"
+                  }
+                },
+                {
+                  "name": "cardinality",
+                  "type": {
+                    "text": "Cardinality"
+                  }
+                },
+                {
+                  "name": "baseType",
+                  "type": {
+                    "text": "BaseType"
+                  }
+                }
+              ],
+              "description": "Converts response variables to QtiVariableJSON",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "sendIframeInitData",
+              "privacy": "private",
+              "description": "IFRAME MODE: Send initialization data to iframe",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "sendMessageToIframe",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "method",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "params",
+                  "type": {
+                    "text": "any"
+                  }
+                }
+              ],
+              "description": "IFRAME MODE: Send message to iframe",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "setTestContext",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "newContext",
+                  "type": {
+                    "text": "ItemContext"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "toggleInternalCorrectResponse",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "show",
+                  "type": {
+                    "text": "boolean"
+                  },
+                  "description": "Whether to show or hide the correct response"
+                },
+                {
+                  "description": "The response variable containing the correct response",
+                  "name": "responseVariable"
+                }
+              ],
+              "description": "Toggle the display of the correct response",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "unescapeDataAttributes",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, any>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "obj",
+                  "type": {
+                    "text": "Record<string, any>"
+                  }
+                }
+              ],
+              "description": "Unescape HTML entities in all values of an object",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "unescapeHtml",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "str",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Unescape HTML entities in a string",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "useDefaultPaths",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "data-use-default-paths",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "useDefaultShims",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "data-use-default-shims",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "validate",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string | null"
+              },
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "QtiPortableCustomInteraction",
+            "module": "/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction"
+          },
+          "tagName": "qti-portable-custom-interaction-test",
+          "customElement": true,
+          "attributes": [
+            {
+              "name": "custom-interaction-type-identifier",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "customInteractionTypeIdentifier",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "name": "data-base-url",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "baseUrl",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "name": "data-require-js-url",
+              "type": {
+                "text": "string"
+              },
+              "default": "'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js'",
+              "fieldName": "requireJsUrl",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "name": "data-require-paths",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "requirePathsJson",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "name": "data-require-shim",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "requireShimJson",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "name": "data-use-default-paths",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "useDefaultPaths",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "name": "data-use-default-shims",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "useDefaultShims",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "name": "module",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "module",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            }
+          ],
+          "modulePath": "src/components/qti-portable-custom-interaction/qti-portable-custom-test-interaction.ts",
+          "definitionPath": "src/components/qti-portable-custom-interaction/register.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "events": [],
+          "slots": []
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiPortableCustomInteractionTest",
+          "declaration": {
+            "name": "QtiPortableCustomInteractionTest",
+            "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-test-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-portable-custom-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-portable-custom-interaction",
+          "declaration": {
+            "name": "QtiPortableCustomInteraction",
+            "module": "/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-portable-custom-interaction-test",
+          "declaration": {
+            "name": "QtiPortableCustomInteractionTest",
+            "module": "/src/components/qti-portable-custom-interaction/qti-portable-custom-test-interaction"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-position-object-interaction/qti-position-object-interaction.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiPositionObjectInteraction",
+          "members": [],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "qti-position-object-interaction",
+          "customElement": true,
+          "modulePath": "src/components/qti-position-object-interaction/qti-position-object-interaction.ts",
+          "definitionPath": "src/components/qti-position-object-interaction/register.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiPositionObjectInteraction",
+          "declaration": {
+            "name": "QtiPositionObjectInteraction",
+            "module": "src/components/qti-position-object-interaction/qti-position-object-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-position-object-interaction/qti-position-object-stage.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiPositionObjectStage",
+          "members": [
+            {
+              "kind": "field",
+              "name": "choiceOrdering",
+              "type": {
+                "text": "boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dragElement",
+              "type": {
+                "text": "any"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "dragElementHandler",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "removeMoveListener"
+            },
+            {
+              "kind": "field",
+              "name": "startX",
+              "type": {
+                "text": "any"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "startY",
+              "type": {
+                "text": "any"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "qti-position-object-stage",
+          "customElement": true,
+          "modulePath": "src/components/qti-position-object-interaction/qti-position-object-stage.ts",
+          "definitionPath": "src/components/qti-position-object-interaction/register.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiPositionObjectStage",
+          "declaration": {
+            "name": "QtiPositionObjectStage",
+            "module": "src/components/qti-position-object-interaction/qti-position-object-stage.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-position-object-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-position-object-interaction",
+          "declaration": {
+            "name": "QtiPositionObjectInteraction",
+            "module": "/src/components/qti-position-object-interaction/qti-position-object-interaction"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-position-object-stage",
+          "declaration": {
+            "name": "QtiPositionObjectStage",
+            "module": "/src/components/qti-position-object-interaction/qti-position-object-stage"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-select-point-interaction/qti-select-point-interaction.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiSelectPointInteraction",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_correctAreas",
+              "type": {
+                "text": "{ shape: string; coords: string }[]"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "_imageHeightOriginal",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "_imageWidthOriginal",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "_imgElement",
+              "type": {
+                "text": "HTMLImageElement | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_onImageClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_onResize",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_responseCorrection",
+              "type": {
+                "text": "boolean[]"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "_scaleX",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "1"
+            },
+            {
+              "kind": "field",
+              "name": "_scaleY",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "1"
+            },
+            {
+              "kind": "method",
+              "name": "calculateScale",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "maxChoices",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "public",
+              "default": "Infinity",
+              "attribute": "max-choices"
+            },
+            {
+              "kind": "field",
+              "name": "minChoices",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "public",
+              "default": "0",
+              "attribute": "min-choices"
+            },
+            {
+              "kind": "field",
+              "name": "response",
+              "type": {
+                "text": "string[] | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "responsePoints",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "toggleCandidateCorrection",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "show",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "toggleCorrectResponse",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "show",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "validate",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "max-choices",
+              "type": {
+                "text": "number"
+              },
+              "default": "Infinity",
+              "fieldName": "maxChoices"
+            },
+            {
+              "name": "min-choices",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "fieldName": "minChoices"
+            }
+          ],
+          "superclass": {
+            "name": "Interaction",
+            "package": "@qti-components/base"
+          },
+          "tagName": "qti-select-point-interaction",
+          "customElement": true,
+          "modulePath": "src/components/qti-select-point-interaction/qti-select-point-interaction.ts",
+          "definitionPath": "src/components/qti-select-point-interaction/register.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiSelectPointInteraction",
+          "declaration": {
+            "name": "QtiSelectPointInteraction",
+            "module": "src/components/qti-select-point-interaction/qti-select-point-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-select-point-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-select-point-interaction",
+          "declaration": {
+            "name": "QtiSelectPointInteraction",
+            "module": "/src/components/qti-select-point-interaction/qti-select-point-interaction"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-slider-interaction/qti-slider-interaction.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiSliderInteraction",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_correctResponseNumber",
+              "type": {
+                "text": "number | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "_onDrag",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "pageX",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_onDragEnd",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_onMouseDown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_onTouchStart",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "TouchEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "_rail",
+              "type": {
+                "text": "HTMLElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_startDrag",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "pageX",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_updateValue",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "newValue",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "_value",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "max",
+              "type": {
+                "text": "number"
+              },
+              "default": "100",
+              "attribute": "upper-bound"
+            },
+            {
+              "kind": "field",
+              "name": "min",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "attribute": "lower-bound"
+            },
+            {
+              "kind": "field",
+              "name": "response",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "step",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "attribute": "step"
+            },
+            {
+              "kind": "method",
+              "name": "toggleCorrectResponse",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "show",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "validate",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "change",
+              "type": {
+                "text": "Event"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "lower-bound",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "fieldName": "min"
+            },
+            {
+              "name": "step",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "fieldName": "step"
+            },
+            {
+              "name": "upper-bound",
+              "type": {
+                "text": "number"
+              },
+              "default": "100",
+              "fieldName": "max"
+            }
+          ],
+          "superclass": {
+            "name": "Interaction",
+            "package": "@qti-components/base"
+          },
+          "tagName": "qti-slider-interaction",
+          "customElement": true,
+          "modulePath": "src/components/qti-slider-interaction/qti-slider-interaction.ts",
+          "definitionPath": "src/components/qti-slider-interaction/register.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiSliderInteraction",
+          "declaration": {
+            "name": "QtiSliderInteraction",
+            "module": "src/components/qti-slider-interaction/qti-slider-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-slider-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-slider-interaction",
+          "declaration": {
+            "name": "QtiSliderInteraction",
+            "module": "/src/components/qti-slider-interaction/qti-slider-interaction"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-text-entry-interaction/qti-text-entry-interaction.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiTextEntryInteraction",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_handleValueChange",
+              "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "_input",
+              "type": {
+                "text": "HTMLInputElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "correctness",
+              "type": {
+                "text": "Readonly<Correctness | null>"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "dataPatternmaskMessage",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "data-patternmask-message"
+            },
+            {
+              "kind": "field",
+              "name": "expectedLength",
+              "type": {
+                "text": "number"
+              },
+              "attribute": "expected-length"
+            },
+            {
+              "kind": "field",
+              "name": "inputRef"
+            },
+            {
+              "kind": "field",
+              "name": "isInline",
+              "type": {
+                "text": "boolean"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "patternMask",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "pattern-mask"
+            },
+            {
+              "kind": "field",
+              "name": "placeholderText",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "placeholder-text"
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "reset",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "response",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "setEmptyAttribute",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "text",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "textChanged",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "toggleInternalCorrectResponse",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "show",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "validate",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string | null"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "data-patternmask-message",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "dataPatternmaskMessage"
+            },
+            {
+              "name": "expected-length",
+              "type": {
+                "text": "number"
+              },
+              "fieldName": "expectedLength"
+            },
+            {
+              "name": "pattern-mask",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "patternMask"
+            },
+            {
+              "name": "placeholder-text",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "placeholderText"
+            }
+          ],
+          "superclass": {
+            "name": "Interaction",
+            "package": "@qti-components/base"
+          },
+          "tagName": "qti-text-entry-interaction",
+          "customElement": true,
+          "modulePath": "src/components/qti-text-entry-interaction/qti-text-entry-interaction.ts",
+          "definitionPath": "src/components/qti-text-entry-interaction/register.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiTextEntryInteraction",
+          "declaration": {
+            "name": "QtiTextEntryInteraction",
+            "module": "src/components/qti-text-entry-interaction/qti-text-entry-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-text-entry-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-text-entry-interaction",
+          "declaration": {
+            "name": "QtiTextEntryInteraction",
+            "module": "/src/components/qti-text-entry-interaction/qti-text-entry-interaction"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-upload-interaction/qti-upload-interaction.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiUploadInteraction",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_base64",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "_convertToBase64",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<string>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "file",
+                  "type": {
+                    "text": "File"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "_file",
+              "type": {
+                "text": "File | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "_onFileChange",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "reset"
+            },
+            {
+              "kind": "field",
+              "name": "response",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "validate",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "qti-interaction-response",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "Interaction",
+            "package": "@qti-components/base"
+          },
+          "tagName": "qti-upload-interaction",
+          "customElement": true,
+          "modulePath": "src/components/qti-upload-interaction/qti-upload-interaction.ts",
+          "definitionPath": "src/components/qti-upload-interaction/register.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiUploadInteraction",
+          "declaration": {
+            "name": "QtiUploadInteraction",
+            "module": "src/components/qti-upload-interaction/qti-upload-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-upload-interaction/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-upload-interaction",
+          "declaration": {
+            "name": "QtiUploadInteraction",
+            "module": "/src/components/qti-upload-interaction/qti-upload-interaction"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/qti-associable-hotspot/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/elements/qti-associable-hotspot/qti-associable-hotspot"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/qti-associable-hotspot/qti-associable-hotspot.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiAssociableHotspot",
+          "members": [],
+          "events": [
+            {
+              "name": "qti-register-hotspot",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "qti-associable-hotspot",
+          "customElement": true,
+          "modulePath": "src/elements/qti-associable-hotspot/qti-associable-hotspot.ts",
+          "definitionPath": "src/elements/qti-associable-hotspot/register.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiAssociableHotspot",
+          "declaration": {
+            "name": "QtiAssociableHotspot",
+            "module": "src/elements/qti-associable-hotspot/qti-associable-hotspot.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/qti-associable-hotspot/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-associable-hotspot",
+          "declaration": {
+            "name": "QtiAssociableHotspot",
+            "module": "/src/elements/qti-associable-hotspot/qti-associable-hotspot"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/qti-gap-img/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/elements/qti-gap-img/qti-gap-img"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/qti-gap-img/qti-gap-img.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiGapImg",
+          "members": [
+            {
+              "kind": "field",
+              "name": "tabindex",
+              "type": {
+                "text": "number | undefined"
+              },
+              "default": "0",
+              "attribute": "tabindex",
+              "reflects": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "tabindex",
+              "type": {
+                "text": "number | undefined"
+              },
+              "default": "0",
+              "fieldName": "tabindex"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "qti-gap-img",
+          "customElement": true,
+          "modulePath": "src/elements/qti-gap-img/qti-gap-img.ts",
+          "definitionPath": "src/elements/qti-gap-img/register.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiGapImg",
+          "declaration": {
+            "name": "QtiGapImg",
+            "module": "src/elements/qti-gap-img/qti-gap-img.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/qti-gap-img/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-gap-img",
+          "declaration": {
+            "name": "QtiGapImg",
+            "module": "/src/elements/qti-gap-img/qti-gap-img"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/qti-gap-text/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/elements/qti-gap-text/qti-gap-text"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/qti-gap-text/qti-gap-text.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiGapText",
+          "members": [
+            {
+              "kind": "field",
+              "name": "tabindex",
+              "type": {
+                "text": "number | undefined"
+              },
+              "default": "0",
+              "attribute": "tabindex",
+              "reflects": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "tabindex",
+              "type": {
+                "text": "number | undefined"
+              },
+              "default": "0",
+              "fieldName": "tabindex"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "ActiveElementMixin",
+              "module": "/src/mixins/active-element/active-element.mixin"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "qti-gap-text",
+          "customElement": true,
+          "modulePath": "src/elements/qti-gap-text/qti-gap-text.ts",
+          "definitionPath": "src/elements/qti-gap-text/register.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiGapText",
+          "declaration": {
+            "name": "QtiGapText",
+            "module": "src/elements/qti-gap-text/qti-gap-text.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/qti-gap-text/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-gap-text",
+          "declaration": {
+            "name": "QtiGapText",
+            "module": "/src/elements/qti-gap-text/qti-gap-text"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/qti-gap/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/elements/qti-gap/qti-gap"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/qti-gap/qti-gap.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiGap",
+          "members": [
+            {
+              "kind": "field",
+              "name": "tabindex",
+              "type": {
+                "text": "number | undefined"
+              },
+              "default": "0",
+              "attribute": "tabindex",
+              "reflects": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "tabindex",
+              "type": {
+                "text": "number | undefined"
+              },
+              "default": "0",
+              "fieldName": "tabindex"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "qti-gap",
+          "customElement": true,
+          "modulePath": "src/elements/qti-gap/qti-gap.ts",
+          "definitionPath": "src/elements/qti-gap/register.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiGap",
+          "declaration": {
+            "name": "QtiGap",
+            "module": "src/elements/qti-gap/qti-gap.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/qti-gap/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-gap",
+          "declaration": {
+            "name": "QtiGap",
+            "module": "/src/elements/qti-gap/qti-gap"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/qti-hotspot-choice/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/elements/qti-hotspot-choice/qti-hotspot-choice"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/qti-hotspot-choice/qti-hotspot-choice.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiHotspotChoice",
+          "members": [
+            {
+              "kind": "field",
+              "name": "order",
+              "type": {
+                "text": "number"
+              },
+              "attribute": "aria-ordervalue",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "orderCorrect",
+              "type": {
+                "text": "number"
+              },
+              "attribute": "aria-ordercorrectvalue",
+              "reflects": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "aria-ordercorrectvalue",
+              "type": {
+                "text": "number"
+              },
+              "fieldName": "orderCorrect"
+            },
+            {
+              "name": "aria-ordervalue",
+              "type": {
+                "text": "number"
+              },
+              "fieldName": "order"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "ActiveElementMixin",
+              "module": "/src/mixins/active-element/active-element.mixin"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "qti-hotspot-choice",
+          "customElement": true,
+          "modulePath": "src/elements/qti-hotspot-choice/qti-hotspot-choice.ts",
+          "definitionPath": "src/elements/qti-hotspot-choice/register.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiHotspotChoice",
+          "declaration": {
+            "name": "QtiHotspotChoice",
+            "module": "src/elements/qti-hotspot-choice/qti-hotspot-choice.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/qti-hotspot-choice/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-hotspot-choice",
+          "declaration": {
+            "name": "QtiHotspotChoice",
+            "module": "/src/elements/qti-hotspot-choice/qti-hotspot-choice"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/qti-hottext/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/elements/qti-hottext/qti-hottext"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/qti-hottext/qti-hottext.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiHottext",
+          "members": [],
+          "mixins": [
+            {
+              "name": "ActiveElementMixin",
+              "module": "/src/mixins/active-element/active-element.mixin"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "qti-hottext",
+          "customElement": true,
+          "modulePath": "src/elements/qti-hottext/qti-hottext.ts",
+          "definitionPath": "src/elements/qti-hottext/register.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiHottext",
+          "declaration": {
+            "name": "QtiHottext",
+            "module": "src/elements/qti-hottext/qti-hottext.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/qti-hottext/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-hottext",
+          "declaration": {
+            "name": "QtiHottext",
+            "module": "/src/elements/qti-hottext/qti-hottext"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/qti-inline-choice/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/elements/qti-inline-choice/qti-inline-choice"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/qti-inline-choice/qti-inline-choice.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiInlineChoice",
+          "members": [
+            {
+              "kind": "method",
+              "name": "_onSelectInlineChoice",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "identifier",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "identifier"
+            }
+          ],
+          "events": [
+            {
+              "name": "qti-inline-choice-register",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "qti-inline-choice-select",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "identifier",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "identifier"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "qti-inline-choice",
+          "customElement": true,
+          "modulePath": "src/elements/qti-inline-choice/qti-inline-choice.ts",
+          "definitionPath": "src/elements/qti-inline-choice/register.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiInlineChoice",
+          "declaration": {
+            "name": "QtiInlineChoice",
+            "module": "src/elements/qti-inline-choice/qti-inline-choice.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/qti-inline-choice/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-inline-choice",
+          "declaration": {
+            "name": "QtiInlineChoice",
+            "module": "/src/elements/qti-inline-choice/qti-inline-choice"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/qti-prompt/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/elements/qti-prompt/qti-prompt"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/qti-prompt/qti-prompt.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiPrompt",
+          "members": [],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "qti-prompt",
+          "customElement": true,
+          "modulePath": "src/elements/qti-prompt/qti-prompt.ts",
+          "definitionPath": "src/elements/qti-prompt/register.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiPrompt",
+          "declaration": {
+            "name": "QtiPrompt",
+            "module": "src/elements/qti-prompt/qti-prompt.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/qti-prompt/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-prompt",
+          "declaration": {
+            "name": "QtiPrompt",
+            "module": "/src/elements/qti-prompt/qti-prompt"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/qti-simple-associable-choice/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/elements/qti-simple-associable-choice/qti-simple-associable-choice"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/qti-simple-associable-choice/qti-simple-associable-choice.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiSimpleAssociableChoice",
+          "members": [
+            {
+              "kind": "field",
+              "name": "fixed",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "fixed"
+            },
+            {
+              "kind": "field",
+              "name": "matchMax",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "public",
+              "default": "1",
+              "description": "the maximum number of selections a candidate must make, the other options will be disabled when max options is checked",
+              "attribute": "match-max"
+            },
+            {
+              "kind": "field",
+              "name": "matchMin",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "public",
+              "default": "0",
+              "description": "the minimal number of selections a candidate must make",
+              "attribute": "match-min"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "fixed",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "fixed"
+            },
+            {
+              "name": "match-max",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "the maximum number of selections a candidate must make, the other options will be disabled when max options is checked",
+              "fieldName": "matchMax"
+            },
+            {
+              "name": "match-min",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "the minimal number of selections a candidate must make",
+              "fieldName": "matchMin"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "ActiveElementMixin",
+              "module": "/src/mixins/active-element/active-element.mixin"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "qti-simple-associable-choice",
+          "customElement": true,
+          "modulePath": "src/elements/qti-simple-associable-choice/qti-simple-associable-choice.ts",
+          "definitionPath": "src/elements/qti-simple-associable-choice/register.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiSimpleAssociableChoice",
+          "declaration": {
+            "name": "QtiSimpleAssociableChoice",
+            "module": "src/elements/qti-simple-associable-choice/qti-simple-associable-choice.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/qti-simple-associable-choice/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-simple-associable-choice",
+          "declaration": {
+            "name": "QtiSimpleAssociableChoice",
+            "module": "/src/elements/qti-simple-associable-choice/qti-simple-associable-choice"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/qti-simple-choice/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/elements/qti-simple-choice/qti-simple-choice"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/qti-simple-choice/qti-simple-choice.styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/elements/qti-simple-choice/qti-simple-choice.styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/qti-simple-choice/qti-simple-choice.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "qti-order-interaction\nqti-choice-interaction",
+          "name": "QtiSimpleChoice",
+          "members": [
+            {
+              "kind": "field",
+              "name": "checked",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "fixed",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "fixed"
+            },
+            {
+              "kind": "field",
+              "name": "marker",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "showHide",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "public",
+              "default": "'show'",
+              "attribute": "show-hide"
+            },
+            {
+              "kind": "field",
+              "name": "templateIdentifier",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "public",
+              "default": "null",
+              "attribute": "template-identifier"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "fixed",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "fixed"
+            },
+            {
+              "name": "show-hide",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "'show'",
+              "fieldName": "showHide"
+            },
+            {
+              "name": "template-identifier",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "fieldName": "templateIdentifier"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "ActiveElementMixin",
+              "module": "/src/mixins/active-element/active-element.mixin"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "qti-simple-choice",
+          "customElement": true,
+          "modulePath": "src/elements/qti-simple-choice/qti-simple-choice.ts",
+          "definitionPath": "src/elements/qti-simple-choice/register.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiSimpleChoice",
+          "declaration": {
+            "name": "QtiSimpleChoice",
+            "module": "src/elements/qti-simple-choice/qti-simple-choice.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/qti-simple-choice/register.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-simple-choice",
+          "declaration": {
+            "name": "QtiSimpleChoice",
+            "module": "/src/elements/qti-simple-choice/qti-simple-choice"
+          }
+        }
+      ]
+    }
+  ]
+}
