@@ -28,7 +28,7 @@ export default meta;
 // ═══════════════════════════════════════════════════════════════════════════════
 
 const baseTemplate = () => html`
-  <form data-testid="form" role="form" @submit=${e => e.preventDefault()}>
+  <form data-testid="form" role="form" @submit=${(e: Event) => e.preventDefault()}>
     <qti-text-entry-interaction
       name="RESPONSE"
       response-identifier="RESPONSE"
@@ -210,7 +210,7 @@ export const AttributeResponseIdentifier: Story = {
 export const AttributeName: Story = {
   name: 'Attribute: name',
   render: () => html`
-    <form data-testid="form" role="form" @submit=${e => e.preventDefault()}>
+    <form data-testid="form" role="form" @submit=${(e: Event) => e.preventDefault()}>
       <qti-text-entry-interaction
         name="FORM_FIELD"
         response-identifier="RESPONSE"

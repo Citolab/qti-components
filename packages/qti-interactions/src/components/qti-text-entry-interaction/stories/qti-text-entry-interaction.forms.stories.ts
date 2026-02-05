@@ -30,10 +30,10 @@ const formTemplate = () => html`
   <form
     data-testid="form"
     role="form"
-    @submit=${e => e.preventDefault()}
-    @reset=${e => {
+    @submit=${(e: Event) => e.preventDefault()}
+    @reset=${(e: Event) => {
       e.preventDefault();
-      const interaction = e.target.querySelector('qti-text-entry-interaction');
+      const interaction = (e.target as HTMLElement)?.querySelector('qti-text-entry-interaction');
       if (interaction?.formResetCallback) {
         interaction.formResetCallback();
       }
@@ -216,7 +216,7 @@ export const FormDataIncludesValue: Story = {
 export const FormDataMultipleInteractions: Story = {
   name: 'FormData - Multiple Interactions',
   render: () => html`
-    <form data-testid="form" role="form" @submit=${e => e.preventDefault()}>
+    <form data-testid="form" role="form" @submit=${(e: Event) => e.preventDefault()}>
       <qti-text-entry-interaction
         name="RESPONSE1"
         response-identifier="RESPONSE1"
@@ -261,7 +261,7 @@ export const FormDataMultipleInteractions: Story = {
 export const FormValidationBlocking: Story = {
   name: 'Form Validation - Blocking Invalid Submit',
   render: () => html`
-    <form data-testid="form" role="form" @submit=${e => e.preventDefault()}>
+    <form data-testid="form" role="form" @submit=${(e: Event) => e.preventDefault()}>
       <qti-text-entry-interaction
         name="RESPONSE"
         response-identifier="RESPONSE"

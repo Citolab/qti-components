@@ -28,7 +28,7 @@ export default meta;
 // ═══════════════════════════════════════════════════════════════════════════════
 
 const formTemplate = (patternMask?: string, message?: string) => html`
-  <form data-testid="form" role="form" @submit=${e => e.preventDefault()}>
+  <form data-testid="form" role="form" @submit=${(e: Event) => e.preventDefault()}>
     <qti-text-entry-interaction
       name="RESPONSE"
       response-identifier="RESPONSE"
@@ -266,7 +266,7 @@ export const NoPatternMaskAnyInput: Story = {
   name: 'No Pattern Mask - Any Input Valid',
   tags: ['xfail'],
   render: () => html`
-    <form data-testid="form" role="form" @submit=${e => e.preventDefault()}>
+    <form data-testid="form" role="form" @submit=${(e: Event) => e.preventDefault()}>
       <qti-text-entry-interaction
         name="RESPONSE"
         response-identifier="RESPONSE"
