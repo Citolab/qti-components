@@ -14,7 +14,7 @@ import type { BaseType, Cardinality } from '@qti-components/base';
 import type { QtiVariableJSON, ResponseVariableType } from './interface';
 
 export class QtiPortableCustomInteraction extends Interaction {
-  private _value: string | string[];
+  #value: string | string[];
 
   protected _iframeLoaded = false;
   protected _pendingMessages: Array<{ method: string; params: any }> = [];
@@ -66,58 +66,58 @@ export class QtiPortableCustomInteraction extends Interaction {
 
   @state() response: string | string[] | null = null;
 
-  private _parsedRequirePaths: Record<string, string | string[]> = null;
-  private _parsedRequireShim: Record<string, any> = null;
+  #parsedRequirePaths: Record<string, string | string[]> = null;
+  #parsedRequireShim: Record<string, any> = null;
 
   /**
    * Parse the require paths JSON string into an object
    */
-  private getRequirePaths(): Record<string, string | string[]> {
-    if (this._parsedRequirePaths === null && this.requirePathsJson) {
+  #getRequirePaths(): Record<string, string | string[]> {
+    if (this.#parsedRequirePaths === null && this.requirePathsJson) {
       try {
         // Handle the array format [{name: "path/name", value: "path/value"}, ...]
         // and convert to object format {name: value, ...}
         const parsedJson = JSON.parse(this.requirePathsJson);
         if (Array.isArray(parsedJson)) {
-          this._parsedRequirePaths = {};
+          this.#parsedRequirePaths = {};
           parsedJson.forEach(item => {
             if (item.name && item.value) {
-              this._parsedRequirePaths[item.name] = item.value;
+              this.#parsedRequirePaths[item.name] = item.value;
             }
           });
         } else {
           // If it's already in object format, use it directly
-          this._parsedRequirePaths = parsedJson;
+          this.#parsedRequirePaths = parsedJson;
         }
       } catch (e) {
         console.error('Error parsing require paths JSON:', e);
         this._errorMessage = `Error parsing require paths JSON: ${e.message}`;
-        this._parsedRequirePaths = {};
+        this.#parsedRequirePaths = {};
       }
     }
-    return this._parsedRequirePaths || {};
+    return this.#parsedRequirePaths || {};
   }
 
   /**
    * Parse the require shim JSON string into an object
    */
-  private getRequireShim(): Record<string, any> {
-    if (this._parsedRequireShim === null && this.requireShimJson) {
+  #getRequireShim(): Record<string, any> {
+    if (this.#parsedRequireShim === null && this.requireShimJson) {
       try {
-        this._parsedRequireShim = JSON.parse(this.requireShimJson);
+        this.#parsedRequireShim = JSON.parse(this.requireShimJson);
       } catch (e) {
         console.error('Error parsing require shim JSON:', e);
         this._errorMessage = `Error parsing require shim JSON: ${e.message}`;
-        this._parsedRequireShim = {};
+        this.#parsedRequireShim = {};
       }
     }
-    return this._parsedRequireShim || {};
+    return this.#parsedRequireShim || {};
   }
 
   /**
    * Get the default require paths
    */
-  private getDefaultRequirePaths(): Record<string, string | string[]> {
+  #getDefaultRequirePaths(): Record<string, string | string[]> {
     return {
       'taoQtiItem/portableLib/OAT/util/event': '/assets/pci-scripts/portableLib/OAT/util/event',
       'taoQtiItem/portableLib/OAT/util/html': '/assets/pci-scripts/portableLib/OAT/util/html',
@@ -162,7 +162,7 @@ export class QtiPortableCustomInteraction extends Interaction {
   /**
    * Get the default require shim
    */
-  private getDefaultRequireShim(): Record<string, any> {
+  #getDefaultRequireShim(): Record<string, any> {
     return {
       mathJax: {
         exports: 'MathJax',
@@ -188,9 +188,9 @@ export class QtiPortableCustomInteraction extends Interaction {
   /**
    * Get the final require paths by combining defaults with user-provided paths
    */
-  private getFinalRequirePaths(): Record<string, string | string[]> {
-    const defaults = this.getDefaultRequirePaths();
-    const userPaths = this.getRequirePaths();
+  #getFinalRequirePaths(): Record<string, string | string[]> {
+    const defaults = this.#getDefaultRequirePaths();
+    const userPaths = this.#getRequirePaths();
     if (this.useDefaultPaths) {
       return { ...defaults, ...userPaths };
     }
@@ -200,9 +200,9 @@ export class QtiPortableCustomInteraction extends Interaction {
   /**
    * Get the final require shim by combining defaults with user-provided shim
    */
-  private getFinalRequireShim(): Record<string, any> {
-    const userShim = this.getRequireShim();
-    const defaults = this.getDefaultRequireShim();
+  #getFinalRequireShim(): Record<string, any> {
+    const userShim = this.#getRequireShim();
+    const defaults = this.#getDefaultRequireShim();
     if (this.useDefaultShims) {
       return { ...defaults, ...userShim };
     }
@@ -212,7 +212,7 @@ export class QtiPortableCustomInteraction extends Interaction {
   /**
    * Converts QtiVariableJSON to a string or string array
    */
-  private convertQtiVariableJSON(input: QtiVariableJSON): string | string[] {
+  #convertQtiVariableJSON(input: QtiVariableJSON): string | string[] {
     for (const topLevelKey in input) {
       // eslint-disable-next-line no-prototype-builtins
       if (input.hasOwnProperty(topLevelKey)) {
@@ -238,7 +238,7 @@ export class QtiPortableCustomInteraction extends Interaction {
   /**
    * Adds hyphenated versions of camelCase keys to properties object
    */
-  private addHyphenatedKeys(properties: Record<string, any>): Record<string, any> {
+  #addHyphenatedKeys(properties: Record<string, any>): Record<string, any> {
     const updatedProperties = { ...properties };
 
     for (const key in properties) {
@@ -281,17 +281,17 @@ export class QtiPortableCustomInteraction extends Interaction {
 
   override set value(v: string | null) {
     if (v === null) {
-      this._value = [];
+      this.#value = [];
     } else {
-      this._value = Array.isArray(v) ? v : v.split(',');
+      this.#value = Array.isArray(v) ? v : v.split(',');
     }
     // PCI handles response setting via boundTo property during initialization
     // No need to call setResponse directly
   }
 
   override get value(): string | null {
-    if (this._value === null || this._value === undefined) return null;
-    return Array.isArray(this._value) ? this._value.join(',') : String(this._value);
+    if (this.#value === null || this.#value === undefined) return null;
+    return Array.isArray(this.#value) ? this.#value.join(',') : String(this.#value);
   }
 
   set boundTo(newValue: Record<string, ResponseVariableType>) {
@@ -299,8 +299,8 @@ export class QtiPortableCustomInteraction extends Interaction {
       return;
     }
 
-    const value = this.convertQtiVariableJSON(newValue[this.responseIdentifier]);
-    this._value = value;
+    const value = this.#convertQtiVariableJSON(newValue[this.responseIdentifier]);
+    this.#value = value;
 
     // No direct call to setResponse - PCI will handle this during initialization
     // through the boundTo property in the config
@@ -327,7 +327,7 @@ export class QtiPortableCustomInteraction extends Interaction {
   /**
    * Unescape HTML entities in a string
    */
-  private unescapeHtml(str: string): string {
+  #unescapeHtml(str: string): string {
     if (!str) return str;
 
     return str
@@ -344,12 +344,12 @@ export class QtiPortableCustomInteraction extends Interaction {
   /**
    * Unescape HTML entities in all values of an object
    */
-  private unescapeDataAttributes(obj: Record<string, any>): Record<string, any> {
+  #unescapeDataAttributes(obj: Record<string, any>): Record<string, any> {
     const unescaped: Record<string, any> = {};
 
     for (const [key, value] of Object.entries(obj)) {
       if (typeof value === 'string') {
-        unescaped[key] = this.unescapeHtml(value);
+        unescaped[key] = this.#unescapeHtml(value);
       } else {
         unescaped[key] = value;
       }
@@ -386,7 +386,7 @@ export class QtiPortableCustomInteraction extends Interaction {
   /**
    * IFRAME MODE: Process pending messages
    */
-  private processPendingMessages() {
+  #processPendingMessages() {
     if (this._pendingMessages.length) {
       this._pendingMessages.forEach(message => {
         this.sendMessageToIframe(message.method, message.params);
@@ -417,8 +417,8 @@ export class QtiPortableCustomInteraction extends Interaction {
     }
     switch (data.method) {
       case 'iframeReady':
-        this.initializeInteraction();
-        this.processPendingMessages();
+        this.#initializeInteraction();
+        this.#processPendingMessages();
         this.dispatchEvent(
           new CustomEvent('qti-portable-custom-interaction-loaded', {
             bubbles: true
@@ -435,7 +435,7 @@ export class QtiPortableCustomInteraction extends Interaction {
 
       case 'interactionChanged': {
         const raw = data?.params?.value;
-        const converted = raw && typeof raw === 'object' ? this.convertQtiVariableJSON(raw as QtiVariableJSON) : null;
+        const converted = raw && typeof raw === 'object' ? this.#convertQtiVariableJSON(raw as QtiVariableJSON) : null;
         // PCI state "should" be an opaque string, but a lot of existing PCIs (including the
         // IMS conformance examples) return a structured object from getState().
         //
@@ -496,9 +496,9 @@ export class QtiPortableCustomInteraction extends Interaction {
     // Handle iframe load event
     this.iframe.onload = () => {
       this._iframeLoaded = true;
-      this.addMarkupToIframe();
+      this.#addMarkupToIframe();
       // Send initialization data to iframe
-      this.sendIframeInitData();
+      this.#sendIframeInitData();
     };
 
     // Create a unique name for the iframe
@@ -519,9 +519,9 @@ export class QtiPortableCustomInteraction extends Interaction {
   /**
    * IFRAME MODE: Send initialization data to iframe
    */
-  private sendIframeInitData() {
+  #sendIframeInitData() {
     // Once iframe is loaded, send initialization data
-    const properties = this.addHyphenatedKeys(this.unescapeDataAttributes({ ...this.dataset }));
+    const properties = this.#addHyphenatedKeys(this.#unescapeDataAttributes({ ...this.dataset }));
     const storedStateRaw = this.context?.state?.[this.responseIdentifier];
     const storedState = typeof storedStateRaw === 'string' && storedStateRaw.length > 0 ? storedStateRaw : null;
     const initData = {
@@ -535,7 +535,7 @@ export class QtiPortableCustomInteraction extends Interaction {
       responseIdentifier: this.responseIdentifier,
       properties,
       dataAttributes: { ...this.dataset },
-      interactionModules: this.getInteractionModules(),
+      interactionModules: this.#getInteractionModules(),
       boundTo: storedState ? null : this.boundTo,
       state: storedState
     };
@@ -546,7 +546,7 @@ export class QtiPortableCustomInteraction extends Interaction {
   /**
    * IFRAME MODE: Get interaction modules from DOM
    */
-  private getInteractionModules() {
+  #getInteractionModules() {
     const modules = [];
     const interactionModules = this.querySelector('qti-interaction-modules');
 
@@ -567,7 +567,7 @@ export class QtiPortableCustomInteraction extends Interaction {
   /**
    * IFRAME MODE: Add markup and properties to iframe
    */
-  private addMarkupToIframe() {
+  #addMarkupToIframe() {
     // Get interaction markup if any
     const markup = this.querySelector('qti-interaction-markup');
     if (markup) {
@@ -583,7 +583,7 @@ export class QtiPortableCustomInteraction extends Interaction {
   /**
    * IFRAME MODE: Initialize the interaction
    */
-  private initializeInteraction() {
+  #initializeInteraction() {
     // No explicit action needed, as the PCI will initialize
     // with the boundTo property already provided
   }
@@ -603,8 +603,8 @@ export class QtiPortableCustomInteraction extends Interaction {
     const parentStyles = window.getComputedStyle(document.body);
 
     // Get the configured require paths and shim
-    const requirePaths = JSON.stringify(this.getFinalRequirePaths());
-    const requireShim = JSON.stringify(this.getFinalRequireShim());
+    const requirePaths = JSON.stringify(this.#getFinalRequirePaths());
+    const requireShim = JSON.stringify(this.#getFinalRequireShim());
 
     // Extract just the font-related properties you want to copy
     const fontStyles = `
@@ -1466,7 +1466,7 @@ export class QtiPortableCustomInteraction extends Interaction {
    */
   public disable() {
     // First, store the current state of the PCI
-    this._previousState = {
+    this.#previousState = {
       pointerEvents: this.style.pointerEvents,
       position: this.style.position
     };
@@ -1508,21 +1508,21 @@ export class QtiPortableCustomInteraction extends Interaction {
     }
 
     // Restore previous state if available
-    if (this._previousState) {
-      if (this._previousState.pointerEvents) {
-        this.style.pointerEvents = this._previousState.pointerEvents;
+    if (this.#previousState) {
+      if (this.#previousState.pointerEvents) {
+        this.style.pointerEvents = this.#previousState.pointerEvents;
       }
-      if (this._previousState.position) {
-        this.style.position = this._previousState.position;
+      if (this.#previousState.position) {
+        this.style.position = this.#previousState.position;
       }
-      this._previousState = null;
+      this.#previousState = null;
     }
 
     this.sendMessageToIframe('setState', { state: 'interacting' });
   }
 
   // Add this property to store the previous state
-  private _previousState: {
+  #previousState: {
     pointerEvents?: string;
     position?: string;
   } = null;

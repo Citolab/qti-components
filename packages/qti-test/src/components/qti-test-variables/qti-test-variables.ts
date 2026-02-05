@@ -13,11 +13,11 @@ export class QtiTestVariables extends QtiExpression<number> {
   @consume({ context: testContext, subscribe: true })
   public _testContext?: TestContext;
 
-  private _testElement: QtiAssessmentTest;
+  #testElement: QtiAssessmentTest;
 
   constructor() {
     super();
-    this.addEventListener('qti-assessment-test-connected', (e: CustomEvent) => (this._testElement = e.detail));
+    this.addEventListener('qti-assessment-test-connected', (e: CustomEvent) => (this.#testElement = e.detail));
   }
 
   public override getResult() {
@@ -28,7 +28,7 @@ export class QtiTestVariables extends QtiExpression<number> {
     const itemVariable = this.getAttribute('variable-identifier');
 
     const itemRefEls = Array.from<QtiAssessmentItemRef>(
-      this._testElement.querySelectorAll<QtiAssessmentItemRef>(`qti-asssessment-test qti-assessment-item-ref`)
+      this.#testElement.querySelectorAll<QtiAssessmentItemRef>(`qti-asssessment-test qti-assessment-item-ref`)
     );
 
     const includedItems = itemRefEls

@@ -15,15 +15,15 @@ const meta: Meta<QtiAssessmentItem> = {
 export default meta;
 
 class ButtonComponent extends HTMLElement {
-  private placeChild: ChildNode | null;
+  #placeChild: ChildNode | null;
 
   constructor() {
     super();
-    this.placeChild?.remove();
+    this.#placeChild?.remove();
   }
 
   connectedCallback() {
-    this.placeChild = this.firstChild;
+    this.#placeChild = this.firstChild;
     this.render();
   }
 
@@ -37,7 +37,7 @@ class ButtonComponent extends HTMLElement {
 
   render() {
     this.innerHTML = `<div class="${this.ch}"><div class="check-size ${this.cha}"></div></div>
-      <div>${this.placeChild ? this.placeChild.textContent || '' : ''}</div>
+      <div>${this.#placeChild ? this.#placeChild.textContent || '' : ''}</div>
       <div part="drop"></div>`;
   }
 }

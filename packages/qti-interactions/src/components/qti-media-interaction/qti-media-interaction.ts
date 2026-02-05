@@ -2,24 +2,24 @@ import { css, html } from 'lit';
 
 import { Interaction } from '@qti-components/base';
 export class QtiMediaInteraction extends Interaction {
-  private _value: number = null;
+  #value: number = null;
 
   override reset() {
-    this._value = null;
+    this.#value = null;
   }
   validate(): boolean {
     return true;
   }
 
   get response(): string | null {
-    return this._value ? this._value.toString() : null;
+    return this.#value ? this.#value.toString() : null;
   }
 
   set response(val: string | null) {
     if (val) {
       const isNumber = !isNaN(parseInt(val?.toString()));
       if (isNumber) {
-        this._value = parseInt(val.toString());
+        this.#value = parseInt(val.toString());
       } else {
         throw new Error(`Value must be a number ${val}`);
       }
@@ -59,7 +59,7 @@ export class QtiMediaInteraction extends Interaction {
       mediaObject.addEventListener('ended', () => {
         // set value to 0
         // check if this.value is a number
-        this._value++;
+        this.#value++;
         this.saveResponse(this.value);
       });
     }

@@ -85,19 +85,19 @@ export class TestNavigation extends LitElement {
   // };
   // @property({ type: Boolean, reflect: true }) public debug = false;
 
-  private _testElement: QtiAssessmentTest;
+  #testElement: QtiAssessmentTest;
 
   constructor() {
     super();
-    this.addEventListener('qti-assessment-test-connected', this._handleTestConnected.bind(this));
-    this.addEventListener('qti-assessment-item-connected', this._handleItemConnected.bind(this));
+    this.addEventListener('qti-assessment-test-connected', this.#handleTestConnected.bind(this));
+    this.addEventListener('qti-assessment-item-connected', this.#handleItemConnected.bind(this));
 
-    this.addEventListener('qti-interaction-changed', this._handleInteractionChanged.bind(this));
+    this.addEventListener('qti-interaction-changed', this.#handleInteractionChanged.bind(this));
 
-    this.addEventListener('test-end-attempt', this._handleTestEndAttempt.bind(this));
-    this.addEventListener('test-show-correct-response', this._handleTestShowCorrectResponse.bind(this));
-    this.addEventListener('test-show-candidate-correction', this._handleTestShowCandidateCorrection.bind(this));
-    this.addEventListener('test-update-outcome-variable', this._handleTestUpdateOutcomeVariable.bind(this));
+    this.addEventListener('test-end-attempt', this.#handleTestEndAttempt.bind(this));
+    this.addEventListener('test-show-correct-response', this.#handleTestShowCorrectResponse.bind(this));
+    this.addEventListener('test-show-candidate-correction', this.#handleTestShowCandidateCorrection.bind(this));
+    this.addEventListener('test-update-outcome-variable', this.#handleTestUpdateOutcomeVariable.bind(this));
   }
 
   /**
@@ -106,8 +106,8 @@ export class TestNavigation extends LitElement {
    * @listens TestNavigation#test-end-attempt
    * @param {CustomEvent} event - The custom event object.
    */
-  private _handleTestEndAttempt(_event: CustomEvent) {
-    const qtiItemEl = this._testElement.querySelector<QtiAssessmentItemRef>(
+  #handleTestEndAttempt(_event: CustomEvent) {
+    const qtiItemEl = this.#testElement.querySelector<QtiAssessmentItemRef>(
       `qti-assessment-item-ref[identifier="${this._sessionContext.navItemRefId}"]`
     );
     const qtiAssessmentItemEl = qtiItemEl.assessmentItem;
@@ -137,8 +137,8 @@ export class TestNavigation extends LitElement {
    * @listens TestNavigation#test-show-correct-response
    * @param {CustomEvent} event - The custom event object.
    */
-  private _handleTestShowCorrectResponse(event: CustomEvent) {
-    const qtiItemEl = this._testElement.querySelector<QtiAssessmentItemRef>(
+  #handleTestShowCorrectResponse(event: CustomEvent) {
+    const qtiItemEl = this.#testElement.querySelector<QtiAssessmentItemRef>(
       `qti-assessment-item-ref[identifier="${this._sessionContext.navItemRefId}"]`
     );
     const qtiAssessmentItemEl = qtiItemEl.assessmentItem;
@@ -152,23 +152,23 @@ export class TestNavigation extends LitElement {
    * @listens TestNavigation#test-show-candidate-correction
    * @param {CustomEvent} event - The custom event object.
    */
-  private _handleTestShowCandidateCorrection(event: CustomEvent) {
-    const qtiItemEl = this._testElement.querySelector<QtiAssessmentItemRef>(
+  #handleTestShowCandidateCorrection(event: CustomEvent) {
+    const qtiItemEl = this.#testElement.querySelector<QtiAssessmentItemRef>(
       `qti-assessment-item-ref[identifier="${this._sessionContext.navItemRefId}"]`
     );
     const qtiAssessmentItemEl = qtiItemEl.assessmentItem;
     qtiAssessmentItemEl.showCandidateCorrection(event.detail);
   }
 
-  private _handleTestUpdateOutcomeVariable(event: CustomEvent) {
-    const qtiItemEl = this._testElement.querySelector<QtiAssessmentItemRef>(
+  #handleTestUpdateOutcomeVariable(event: CustomEvent) {
+    const qtiItemEl = this.#testElement.querySelector<QtiAssessmentItemRef>(
       `qti-assessment-item-ref[identifier="${event.detail.assessmentItemRefId}"]`
     );
     const qtiAssessmentItemEl = qtiItemEl.assessmentItem;
     qtiAssessmentItemEl.setOutcomeVariable(event.detail.outcomeVariableId, event.detail.value);
   }
 
-  private _handleInteractionChanged(_event: CustomEvent) {
+  #handleInteractionChanged(_event: CustomEvent) {
     if (this.autoScoreItems) {
       const assessmentItem = (_event.composedPath()[0] as HTMLElement).closest<QtiAssessmentItem>(
         'qti-assessment-item'
@@ -191,8 +191,8 @@ export class TestNavigation extends LitElement {
   }
 
   /* PK: on test connected we can build the computed context */
-  private _handleTestConnected(event: CustomEvent) {
-    this._testElement = event.detail as QtiAssessmentTest;
+  #handleTestConnected(event: CustomEvent) {
+    this.#testElement = event.detail as QtiAssessmentTest;
     // Set the testIdentifier in qtiContext if not already set
     if (!this.qtiContext.QTI_CONTEXT?.testIdentifier) {
       const currentContext = this.qtiContext.QTI_CONTEXT || {
@@ -203,17 +203,17 @@ export class TestNavigation extends LitElement {
       this.qtiContext = {
         QTI_CONTEXT: {
           ...currentContext,
-          testIdentifier: this._testElement.identifier,
+          testIdentifier: this.#testElement.identifier,
           environmentIdentifier: currentContext.environmentIdentifier || 'default'
         }
       };
     }
 
     // Process qti-context-declaration elements to get default values
-    const contextDeclarations = this._testElement.querySelectorAll('qti-context-declaration[identifier="QTI_CONTEXT"]');
+    const contextDeclarations = this.#testElement.querySelectorAll('qti-context-declaration[identifier="QTI_CONTEXT"]');
 
     contextDeclarations.forEach(declaration => {
-      const defaultValues = this._extractDefaultValues(declaration);
+      const defaultValues = this.#extractDefaultValues(declaration);
       if (Object.keys(defaultValues).length > 0) {
         // Merge default values with current context, but don't override existing runtime values
         this.qtiContext = {
@@ -225,10 +225,10 @@ export class TestNavigation extends LitElement {
       }
     });
 
-    const testPartElements = Array.from(this._testElement?.querySelectorAll<QtiTestPart>(`qti-test-part`) || []);
+    const testPartElements = Array.from(this.#testElement?.querySelectorAll<QtiTestPart>(`qti-test-part`) || []);
     this.computedContext = {
-      identifier: this._testElement.identifier,
-      title: this._testElement.title,
+      identifier: this.#testElement.identifier,
+      title: this.#testElement.title,
       view: this._sessionContext?.view,
       testParts: testPartElements.map(testPart => {
         const sectionElements = [...testPart.querySelectorAll<QtiAssessmentSection>(`qti-assessment-section`)];
@@ -261,7 +261,7 @@ export class TestNavigation extends LitElement {
   /**
    * Extract default values from a qti-context-declaration element
    */
-  private _extractDefaultValues(declaration: Element): Record<string, any> {
+  #extractDefaultValues(declaration: Element): Record<string, any> {
     const defaultValues: Record<string, any> = {};
 
     const defaultValueElement = declaration.querySelector('qti-default-value');
@@ -303,7 +303,7 @@ export class TestNavigation extends LitElement {
   }
 
   /* PK: on item connected we can add item only properties in the xml */
-  private _handleItemConnected(event: CustomEvent) {
+  #handleItemConnected(event: CustomEvent) {
     const itemElement = event.detail as QtiAssessmentItem;
 
     this.computedContext = {

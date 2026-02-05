@@ -50,29 +50,29 @@ export class QtiSelectPointInteraction extends Interaction {
   private _responseCorrection: boolean[] = [];
 
   // Reference to the image element
-  private _imgElement: HTMLImageElement | null = null;
+  #imgElement: HTMLImageElement | null = null;
 
-  private _scaleX = 1;
-  private _scaleY = 1;
-  private _imageWidthOriginal = 0;
-  private _imageHeightOriginal = 0;
+  #scaleX = 1;
+  #scaleY = 1;
+  #imageWidthOriginal = 0;
+  #imageHeightOriginal = 0;
 
   // Extracted click handler method
-  private _onImageClick = (event: MouseEvent) => {
+  #onImageClick = (event: MouseEvent) => {
     if (this.disabled) {
       return;
     }
-    if (!this._imgElement) {
+    if (!this.#imgElement) {
       console.warn('No <img> element found in <qti-select-point-interaction>');
       return;
     }
-    this.calculateScale();
+    this.#calculateScale();
     // Get the image's bounding rectangle and calculate scaling factors
-    const rect = this._imgElement.getBoundingClientRect();
+    const rect = this.#imgElement.getBoundingClientRect();
 
     // Calculate the x and y coordinates relative to the original image size
-    const x = (event.clientX - rect.left) * this._scaleX;
-    const y = (event.clientY - rect.top) * this._scaleY;
+    const x = (event.clientX - rect.left) * this.#scaleX;
+    const y = (event.clientY - rect.top) * this.#scaleY;
 
     // Save the new point as a string
     const newPoint = `${x.toFixed()} ${y.toFixed()}`;
@@ -95,11 +95,11 @@ export class QtiSelectPointInteraction extends Interaction {
 
   override connectedCallback() {
     super.connectedCallback();
-    window.addEventListener('resize', this._onResize);
+    window.addEventListener('resize', this.#onResize);
   }
 
-  private _onResize = () => {
-    this.calculateScale();
+  #onResize = () => {
+    this.#calculateScale();
   };
 
   get responsePoints() {
@@ -167,9 +167,9 @@ export class QtiSelectPointInteraction extends Interaction {
 
   override updated(changedProperties: Map<string | number | symbol, unknown>) {
     super.updated(changedProperties);
-    const img = this._imgElement;
+    const img = this.#imgElement;
     if (img && changedProperties.has('_correctAreas') && this._correctAreas.length > 0) {
-      this.calculateScale();
+      this.#calculateScale();
       this.shadowRoot.querySelectorAll('div').forEach((el: HTMLElement) => {
         const coords = el.dataset.coord;
         const shape = el.dataset.shape;
@@ -194,14 +194,14 @@ export class QtiSelectPointInteraction extends Interaction {
           (point, index) => {
             const [x, y] = point.split(' ').map(Number);
             // point are based on the original image size, so we need calculate the percentage based on the original image
-            const leftPercentage = (x / (this._imageWidthOriginal || 1)) * 100;
-            const topPercentage = (y / (this._imageHeightOriginal || 1)) * 100;
+            const leftPercentage = (x / (this.#imageWidthOriginal || 1)) * 100;
+            const topPercentage = (y / (this.#imageHeightOriginal || 1)) * 100;
 
             // Base size is 1rem (16px), scaled proportionally to the image's current size
             // Base size is 1rem in the original image size
             const baseSize = 16; // Assuming 1rem = 16px
-            const widthPercentage = (baseSize / (this._imageWidthOriginal || 1)) * 100;
-            const heightPercentage = (baseSize / (this._imageHeightOriginal || 1)) * 100;
+            const widthPercentage = (baseSize / (this.#imageWidthOriginal || 1)) * 100;
+            const heightPercentage = (baseSize / (this.#imageHeightOriginal || 1)) * 100;
 
             let correctionPart = '';
             if (this._responseCorrection[index] === true) {
@@ -261,27 +261,27 @@ export class QtiSelectPointInteraction extends Interaction {
     return this.response !== null && this.response.length >= this.minChoices && this.response.length <= this.maxChoices;
   }
 
-  private calculateScale() {
+  #calculateScale() {
     // Get the image dimensions
-    this._imageWidthOriginal = this._imgElement.getAttribute('width')
-      ? parseFloat(this._imgElement.getAttribute('width')!)
-      : this._imgElement.naturalWidth;
-    this._imageHeightOriginal = this._imgElement.getAttribute('height')
-      ? parseFloat(this._imgElement.getAttribute('height')!)
-      : this._imgElement.naturalHeight;
+    this.#imageWidthOriginal = this.#imgElement.getAttribute('width')
+      ? parseFloat(this.#imgElement.getAttribute('width')!)
+      : this.#imgElement.naturalWidth;
+    this.#imageHeightOriginal = this.#imgElement.getAttribute('height')
+      ? parseFloat(this.#imgElement.getAttribute('height')!)
+      : this.#imgElement.naturalHeight;
     // Get the image's bounding rectangle and calculate scaling factors
-    const rect = this._imgElement.getBoundingClientRect();
-    this._scaleX = rect.width === 0 ? 1 : this._imageWidthOriginal / rect.width; // Horizontal scaling factor
-    this._scaleY = rect.height === 0 ? 1 : this._imageHeightOriginal / rect.height; // Vertical scaling factor
+    const rect = this.#imgElement.getBoundingClientRect();
+    this.#scaleX = rect.width === 0 ? 1 : this.#imageWidthOriginal / rect.width; // Horizontal scaling factor
+    this.#scaleY = rect.height === 0 ? 1 : this.#imageHeightOriginal / rect.height; // Vertical scaling factor
   }
 
   override firstUpdated(): void {
-    this._imgElement = this.querySelector('img');
+    this.#imgElement = this.querySelector('img');
 
-    if (this._imgElement) {
-      this.calculateScale();
+    if (this.#imgElement) {
+      this.#calculateScale();
       // Attach the click event listener to the image element
-      this._imgElement.addEventListener('click', this._onImageClick);
+      this.#imgElement.addEventListener('click', this.#onImageClick);
     } else {
       console.warn('No <img> element found in <qti-select-point-interaction>');
     }
@@ -290,10 +290,10 @@ export class QtiSelectPointInteraction extends Interaction {
   override disconnectedCallback(): void {
     super.disconnectedCallback();
 
-    window.removeEventListener('resize', this._onResize);
-    if (this._imgElement) {
+    window.removeEventListener('resize', this.#onResize);
+    if (this.#imgElement) {
       // Remove the click event listener from the image element
-      this._imgElement.removeEventListener('click', this._onImageClick);
+      this.#imgElement.removeEventListener('click', this.#onImageClick);
     }
   }
 }

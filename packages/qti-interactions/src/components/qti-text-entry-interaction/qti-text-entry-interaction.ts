@@ -163,7 +163,7 @@ export class QtiTextEntryInteraction extends Interaction {
   protected textChanged(event: Event): void {
     if (this.disabled || this.readonly) return;
     const input = event.target as HTMLInputElement;
-    this.setEmptyAttribute(input.value);
+    this.#setEmptyAttribute(input.value);
     if (this.response !== input.value) {
       this.value = input.value;
       this.saveResponse(input.value);
@@ -186,7 +186,7 @@ export class QtiTextEntryInteraction extends Interaction {
     this.response = '';
   }
 
-  private setEmptyAttribute(text: string): void {
+  #setEmptyAttribute(text: string): void {
     this.setAttribute('empty', text === '' ? 'true' : 'false');
   }
 }

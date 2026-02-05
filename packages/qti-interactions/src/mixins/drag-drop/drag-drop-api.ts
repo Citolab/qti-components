@@ -5,14 +5,14 @@ export class TouchDragAndDrop {
   public dragClone: HTMLElement = null; // Clone of drag source for visual feedback
   public dragSource: HTMLElement = null; // The source element being dragged
 
-  private touchStartPoint = null; // Point of the first touch
-  private isDraggable = false; // Whether a draggable element is active
+  #touchStartPoint = null; // Point of the first touch
+  #isDraggable = false; // Whether a draggable element is active
 
-  private isDragging = false; // Whether a drag operation is ongoing
-  private rootNode: Node = null; // Root node for boundary calculations
-  private allDropzones: HTMLElement[] = []; // All dropzones for keyboard navigation
+  #isDragging = false; // Whether a drag operation is ongoing
+  #rootNode: Node = null; // Root node for boundary calculations
+  #allDropzones: HTMLElement[] = []; // All dropzones for keyboard navigation
 
-  private dataTransfer = {
+  #dataTransfer = {
     data: {},
     setData(type, val) {
       this.data[type] = val;
@@ -22,33 +22,33 @@ export class TouchDragAndDrop {
     },
     effectAllowed: 'move'
   };
-  private cloneOffset = { x: 0, y: 0 }; // Offset for positioning the drag clone
+  #cloneOffset = { x: 0, y: 0 }; // Offset for positioning the drag clone
 
-  private lastTarget = null; // Last touch target
-  private currentDropTarget = null; // Current droppable element
+  #lastTarget = null; // Last touch target
+  #currentDropTarget = null; // Current droppable element
 
-  private readonly MIN_DRAG_DISTANCE = 5; // Minimum pixel movement to start dragging
-  private readonly DRAG_CLONE_OPACITY = 1; // Opacity of the drag clone element
+  readonly #MIN_DRAG_DISTANCE = 5; // Minimum pixel movement to start dragging
+  readonly #DRAG_CLONE_OPACITY = 1; // Opacity of the drag clone element
 
   constructor() {
-    document.addEventListener('touchmove', this.handleTouchMove.bind(this), { passive: false });
-    document.addEventListener('mousemove', this.handleTouchMove.bind(this), { passive: false });
-    document.addEventListener('touchend', this.handleTouchEnd.bind(this), { passive: false });
-    document.addEventListener('mouseup', this.handleTouchEnd.bind(this), { passive: false });
-    document.addEventListener('touchcancel', this.handleTouchCancel.bind(this), { passive: false });
+    document.addEventListener('touchmove', this.#handleTouchMove.bind(this), { passive: false });
+    document.addEventListener('mousemove', this.#handleTouchMove.bind(this), { passive: false });
+    document.addEventListener('touchend', this.#handleTouchEnd.bind(this), { passive: false });
+    document.addEventListener('mouseup', this.#handleTouchEnd.bind(this), { passive: false });
+    document.addEventListener('touchcancel', this.#handleTouchCancel.bind(this), { passive: false });
   }
 
   dragContainersModified(addedDragContainers: HTMLElement[], removedDragContainers: HTMLElement[]) {
     for (const removedContainer of removedDragContainers) {
       if (this.dragContainers.includes(removedContainer)) {
         this.dragContainers = this.dragContainers.filter(container => container !== removedContainer);
-        this.allDropzones = this.allDropzones.filter(dropzone => dropzone !== removedContainer);
+        this.#allDropzones = this.#allDropzones.filter(dropzone => dropzone !== removedContainer);
       }
     }
     for (const dragContainer of addedDragContainers) {
       if (!this.dragContainers.includes(dragContainer)) {
         this.dragContainers.push(dragContainer);
-        this.allDropzones.push(dragContainer);
+        this.#allDropzones.push(dragContainer);
       }
     }
   }
@@ -58,8 +58,8 @@ export class TouchDragAndDrop {
       if (this.draggables.includes(removedDraggable)) {
         this.draggables = this.draggables.filter(draggable => draggable !== removedDraggable);
         removedDraggable.removeAttribute('tabindex');
-        removedDraggable.removeEventListener('touchstart', this.handleTouchStart.bind(this));
-        removedDraggable.removeEventListener('mousedown', this.handleTouchStart.bind(this));
+        removedDraggable.removeEventListener('touchstart', this.#handleTouchStart.bind(this));
+        removedDraggable.removeEventListener('mousedown', this.#handleTouchStart.bind(this));
       }
     }
     for (const draggable of addedDraggables) {
@@ -70,8 +70,8 @@ export class TouchDragAndDrop {
         // el.addEventListener('focus', () => (this.focusedElement = el as HTMLElement));
         // el.addEventListener('blur', () => (this.focusedElement = null));
 
-        draggable.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: false });
-        draggable.addEventListener('mousedown', this.handleTouchStart.bind(this), { passive: false });
+        draggable.addEventListener('touchstart', this.#handleTouchStart.bind(this), { passive: false });
+        draggable.addEventListener('mousedown', this.#handleTouchStart.bind(this), { passive: false });
         // });
       }
     }
@@ -81,39 +81,39 @@ export class TouchDragAndDrop {
     for (const removedDroppable of removedDroppables) {
       if (this.droppables.includes(removedDroppable)) {
         this.droppables = this.droppables.filter(droppable => droppable !== removedDroppable);
-        this.allDropzones = this.allDropzones.filter(dropzone => dropzone !== removedDroppable);
+        this.#allDropzones = this.#allDropzones.filter(dropzone => dropzone !== removedDroppable);
       }
     }
     for (const droppable of addedDroppables) {
       if (!this.droppables.includes(droppable)) {
         this.droppables.push(droppable);
-        this.allDropzones.push(droppable);
+        this.#allDropzones.push(droppable);
       }
     }
   }
 
-  private handleTouchStart(e) {
-    const { x, y } = this.getEventCoordinates(e);
-    this.touchStartPoint = { x, y };
+  #handleTouchStart(e) {
+    const { x, y } = this.#getEventCoordinates(e);
+    this.#touchStartPoint = { x, y };
     this.dragSource = e.currentTarget;
-    this.isDraggable = true;
-    this.rootNode = this.dragSource.getRootNode();
+    this.#isDraggable = true;
+    this.#rootNode = this.dragSource.getRootNode();
 
     // Create and position the drag clone
     const rect = this.dragSource.getBoundingClientRect();
-    this.cloneOffset.x = x - rect.left;
-    this.cloneOffset.y = y - rect.top;
+    this.#cloneOffset.x = x - rect.left;
+    this.#cloneOffset.y = y - rect.top;
 
     // clone the element if it is not in a dropzone
     const parent = this.dragSource.parentElement;
     if (!this.droppables.includes(parent)) {
       // TODO: check if this is a correct check in all cases
       this.dragClone = this.dragSource.cloneNode(true) as HTMLElement;
-      this.setDragCloneStyles(rect);
+      this.#setDragCloneStyles(rect);
 
-      if (this.rootNode instanceof ShadowRoot) {
-        this.rootNode.host.appendChild(this.dragClone);
-      } else if (this.rootNode instanceof Document) {
+      if (this.#rootNode instanceof ShadowRoot) {
+        this.#rootNode.host.appendChild(this.dragClone);
+      } else if (this.#rootNode instanceof Document) {
         document.body.appendChild(this.dragClone);
       }
 
@@ -124,51 +124,51 @@ export class TouchDragAndDrop {
     }
   }
 
-  private handleTouchMove(e) {
-    if (this.isDraggable && this.dragClone) {
-      const { x, y } = this.getEventCoordinates(e);
+  #handleTouchMove(e) {
+    if (this.#isDraggable && this.dragClone) {
+      const { x, y } = this.#getEventCoordinates(e);
       const currentTouch = { clientX: x, clientY: y };
 
-      if (this.calculateDragDistance(currentTouch) >= this.MIN_DRAG_DISTANCE) {
-        this.isDragging = true;
-        this.updateDragClonePosition(currentTouch);
+      if (this.#calculateDragDistance(currentTouch) >= this.#MIN_DRAG_DISTANCE) {
+        this.#isDragging = true;
+        this.#updateDragClonePosition(currentTouch);
       }
 
-      const closestDropzone = this.findClosestDropzone();
-      this.currentDropTarget = closestDropzone;
+      const closestDropzone = this.#findClosestDropzone();
+      this.#currentDropTarget = closestDropzone;
 
-      if (closestDropzone !== this.lastTarget) {
-        if (this.lastTarget) {
-          this.dispatchCustomEvent(this.lastTarget, 'dragleave');
+      if (closestDropzone !== this.#lastTarget) {
+        if (this.#lastTarget) {
+          this.#dispatchCustomEvent(this.#lastTarget, 'dragleave');
         }
         if (closestDropzone) {
-          this.dispatchCustomEvent(closestDropzone, 'dragenter');
+          this.#dispatchCustomEvent(closestDropzone, 'dragenter');
         }
-        this.lastTarget = closestDropzone;
+        this.#lastTarget = closestDropzone;
       }
 
-      if (this.lastTarget) {
-        this.dispatchCustomEvent(this.lastTarget, 'dragover');
+      if (this.#lastTarget) {
+        this.#dispatchCustomEvent(this.#lastTarget, 'dragover');
       }
 
       e.preventDefault();
     }
   }
 
-  private handleTouchEnd(_e) {
-    if (this.currentDropTarget) {
-      this.dispatchCustomEvent(this.currentDropTarget, 'drop');
+  #handleTouchEnd(_e) {
+    if (this.#currentDropTarget) {
+      this.#dispatchCustomEvent(this.#currentDropTarget, 'drop');
     }
-    this.dispatchCustomEvent(this.dragClone, 'dragend');
+    this.#dispatchCustomEvent(this.dragClone, 'dragend');
 
-    this.resetDragState();
+    this.#resetDragState();
   }
 
-  private handleTouchCancel(_e) {
-    this.resetDragState();
+  #handleTouchCancel(_e) {
+    this.#resetDragState();
   }
 
-  private setDragCloneStyles(rect: DOMRect) {
+  #setDragCloneStyles(rect: DOMRect) {
     this.dragClone.style.position = 'fixed';
     this.dragClone.style.top = `${rect.top}px`;
     this.dragClone.style.left = `${rect.left}px`;
@@ -176,25 +176,25 @@ export class TouchDragAndDrop {
     this.dragClone.style.height = `${rect.height}px`;
     this.dragClone.style.zIndex = '9999';
     this.dragClone.style.pointerEvents = 'none';
-    this.dragClone.style.opacity = this.DRAG_CLONE_OPACITY.toString();
+    this.dragClone.style.opacity = this.#DRAG_CLONE_OPACITY.toString();
   }
 
-  private updateDragClonePosition(touch) {
-    if (!this.isDragging || !this.dragClone) return;
+  #updateDragClonePosition(touch) {
+    if (!this.#isDragging || !this.dragClone) return;
 
-    const newLeft = touch.clientX - this.cloneOffset.x;
-    const newTop = touch.clientY - this.cloneOffset.y;
+    const newLeft = touch.clientX - this.#cloneOffset.x;
+    const newTop = touch.clientY - this.#cloneOffset.y;
 
-    const { newLeft: boundedLeft, newTop: boundedTop } = this.applyBoundaries(newLeft, newTop, this.dragClone);
+    const { newLeft: boundedLeft, newTop: boundedTop } = this.#applyBoundaries(newLeft, newTop, this.dragClone);
 
     this.dragClone.style.left = `${boundedLeft}px`;
     this.dragClone.style.top = `${boundedTop}px`;
   }
 
-  private resetDragState() {
+  #resetDragState() {
     if (this.dragClone) {
       // copy styles from dragSource to dragClone
-      const isDropped = this.currentDropTarget !== null;
+      const isDropped = this.#currentDropTarget !== null;
       if (isDropped) {
         const computedStyles = window.getComputedStyle(this.dragSource);
         for (let i = 0; i < computedStyles.length; i++) {
@@ -210,16 +210,16 @@ export class TouchDragAndDrop {
       this.dragSource.style.opacity = '1.0';
     }
 
-    this.isDragging = false;
-    this.isDraggable = false;
+    this.#isDragging = false;
+    this.#isDraggable = false;
     this.dragSource = null;
     this.dragClone = null;
-    this.touchStartPoint = null;
-    this.currentDropTarget = null;
-    this.lastTarget = null;
+    this.#touchStartPoint = null;
+    this.#currentDropTarget = null;
+    this.#lastTarget = null;
   }
 
-  private getEventCoordinates(event, page = false) {
+  #getEventCoordinates(event, page = false) {
     const touch = event.touches ? event.touches[0] : event;
     return {
       x: page ? touch.pageX : touch.clientX,
@@ -227,24 +227,24 @@ export class TouchDragAndDrop {
     };
   }
 
-  private calculateDragDistance(touch): number {
-    const xDist = Math.abs(touch.clientX - this.touchStartPoint.x);
-    const yDist = Math.abs(touch.clientY - this.touchStartPoint.y);
+  #calculateDragDistance(touch): number {
+    const xDist = Math.abs(touch.clientX - this.#touchStartPoint.x);
+    const yDist = Math.abs(touch.clientY - this.#touchStartPoint.y);
     return xDist + yDist;
   }
 
-  private dispatchCustomEvent(element, eventType, bubble = true) {
+  #dispatchCustomEvent(element, eventType, bubble = true) {
     if (!element) return;
     const event = new CustomEvent(eventType, { bubbles: bubble, cancelable: true });
-    event['dataTransfer'] = this.dataTransfer;
+    event['dataTransfer'] = this.#dataTransfer;
     element.dispatchEvent(event);
   }
 
-  private applyBoundaries(newLeft: number, newTop: number, element: HTMLElement) {
+  #applyBoundaries(newLeft: number, newTop: number, element: HTMLElement) {
     let boundaryRect: DOMRect = new DOMRect(0, 0, window.innerWidth, window.innerHeight);
-    if (this.rootNode instanceof ShadowRoot) {
-      boundaryRect = this.rootNode.host.getBoundingClientRect();
-    } else if (this.rootNode instanceof Document) {
+    if (this.#rootNode instanceof ShadowRoot) {
+      boundaryRect = this.#rootNode.host.getBoundingClientRect();
+    } else if (this.#rootNode instanceof Document) {
       boundaryRect = document.documentElement.getBoundingClientRect();
     }
 
@@ -258,13 +258,13 @@ export class TouchDragAndDrop {
     return { newLeft: boundedLeft, newTop: boundedTop };
   }
 
-  private getDropzoneRect(el: HTMLElement): DOMRect {
+  #getDropzoneRect(el: HTMLElement): DOMRect {
     const slot = el.shadowRoot?.querySelector<HTMLElement>('slot[part="dropslot"]');
     return (slot ?? el).getBoundingClientRect();
   }
 
-  private findClosestDropzone(): HTMLElement | null {
-    const activeDrops = this.allDropzones.filter(d => !d.hasAttribute('disabled'));
+  #findClosestDropzone(): HTMLElement | null {
+    const activeDrops = this.#allDropzones.filter(d => !d.hasAttribute('disabled'));
     if (!this.dragClone || activeDrops.length === 0) return null;
 
     const dragRect = this.dragClone.getBoundingClientRect();
@@ -274,8 +274,8 @@ export class TouchDragAndDrop {
     // prefer real droppables first
     const prefer = (elements: HTMLElement[]) => {
       for (const dz of elements) {
-        const dzRect = this.getDropzoneRect(dz);
-        const area = this.calculateOverlapArea(dragRect, dzRect);
+        const dzRect = this.#getDropzoneRect(dz);
+        const area = this.#calculateOverlapArea(dragRect, dzRect);
         if (area > maxArea) {
           maxArea = area;
           closestDropzone = dz;
@@ -293,7 +293,7 @@ export class TouchDragAndDrop {
     if (!closestDropzone) {
       let minDist = Number.POSITIVE_INFINITY;
       for (const dz of activeDrops) {
-        const dzRect = this.getDropzoneRect(dz);
+        const dzRect = this.#getDropzoneRect(dz);
         const dist = Math.hypot(dragRect.left - dzRect.left, dragRect.top - dzRect.top);
         if (dist < minDist) {
           minDist = dist;
@@ -304,7 +304,7 @@ export class TouchDragAndDrop {
     return closestDropzone;
   }
 
-  private calculateOverlapArea(rect1: DOMRect, rect2: DOMRect): number {
+  #calculateOverlapArea(rect1: DOMRect, rect2: DOMRect): number {
     const xOverlap = Math.max(0, Math.min(rect1.right, rect2.right) - Math.max(rect1.left, rect2.left));
     const yOverlap = Math.max(0, Math.min(rect1.bottom, rect2.bottom) - Math.max(rect1.top, rect2.top));
     return xOverlap * yOverlap;

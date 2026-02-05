@@ -37,7 +37,7 @@ export class QtiSetOutcomeValue extends QtiRule {
         composed: true,
         detail: {
           outcomeIdentifier,
-          value: this.formatValue(value)
+          value: this.#formatValue(value)
         }
       })
     );
@@ -47,7 +47,7 @@ export class QtiSetOutcomeValue extends QtiRule {
    * Formats the computed value before dispatching.
    * Ensures numbers are converted to a universal format.
    */
-  private formatValue(value: string | string[] | null): string | string[] | null {
+  #formatValue(value: string | string[] | null): string | string[] | null {
     if (Array.isArray(value)) {
       return value.map(convertNumberToUniversalFormat);
     }

@@ -43,11 +43,11 @@ export class QtiResponseDeclaration extends QtiVariableDeclaration {
     const responseVariable: ResponseVariable = {
       baseType: this.baseType,
       identifier: this.identifier,
-      correctResponse: this.correctResponse,
+      correctResponse: this.#correctResponse,
       cardinality: this.cardinality || 'single',
-      mapping: this.mapping,
+      mapping: this.#mapping,
       defaultValue,
-      areaMapping: this.areaMapping,
+      areaMapping: this.#areaMapping,
       value: null,
       type: 'response',
       candidateResponse: null
@@ -63,7 +63,7 @@ export class QtiResponseDeclaration extends QtiVariableDeclaration {
     );
   }
 
-  private get correctResponse(): string | string[] {
+  get #correctResponse(): string | string[] {
     let result: string | string[];
     const correctResponse = this.querySelector('qti-correct-response');
     if (correctResponse) {
@@ -82,7 +82,7 @@ export class QtiResponseDeclaration extends QtiVariableDeclaration {
     return result;
   }
 
-  private get mapping(): QtiMapping {
+  get #mapping(): QtiMapping {
     const mappingElement = this.querySelector('qti-mapping');
     const lowerBound = parseFloat(mappingElement?.getAttribute('lower-bound'));
     const uppperBound = parseFloat(mappingElement?.getAttribute('upper-bound'));
@@ -99,7 +99,7 @@ export class QtiResponseDeclaration extends QtiVariableDeclaration {
     return mappingValue;
   }
 
-  private get areaMapping(): QtiAreaMapping {
+  get #areaMapping(): QtiAreaMapping {
     const areaMappingElement = this.querySelector('qti-area-mapping') as HTMLElement;
 
     const defaultValue = Number(areaMappingElement?.getAttribute('default-value')) || 0;
