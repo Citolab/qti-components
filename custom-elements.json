@@ -2150,6 +2150,82 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/qti-elements/src/components/qti-context-declaration/qti-context-declaration.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiContextDeclaration",
+          "members": [
+            {
+              "kind": "field",
+              "name": "cardinality",
+              "type": {
+                "text": "'single' | 'multiple' | 'ordered' | 'record'"
+              },
+              "default": "'record'",
+              "attribute": "cardinality"
+            },
+            {
+              "kind": "field",
+              "name": "identifier",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "identifier"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "cardinality",
+              "type": {
+                "text": "'single' | 'multiple' | 'ordered' | 'record'"
+              },
+              "default": "'record'",
+              "fieldName": "cardinality"
+            },
+            {
+              "name": "identifier",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "identifier"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "summary": "The qti-context-declaration element declares context variables for an item.",
+          "tagName": "qti-context-declaration",
+          "customElement": true,
+          "modulePath": "packages/qti-elements/src/components/qti-context-declaration/qti-context-declaration.ts",
+          "definitionPath": "packages/qti-elements/src/components/qti-context-declaration/qti-context-declaration.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-context-declaration",
+          "declaration": {
+            "name": "QtiContextDeclaration",
+            "module": "packages/qti-elements/src/components/qti-context-declaration/qti-context-declaration.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiContextDeclaration",
+          "declaration": {
+            "name": "QtiContextDeclaration",
+            "module": "packages/qti-elements/src/components/qti-context-declaration/qti-context-declaration.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/qti-elements/src/components/qti-custom-operator/qti-custom-operator.ts",
       "declarations": [
         {
@@ -22409,6 +22485,15 @@
             },
             {
               "kind": "field",
+              "name": "_iframeObjectUrl",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
               "name": "_internals",
               "type": {
                 "text": "ElementInternals"
@@ -22501,6 +22586,12 @@
               "description": "IFRAME MODE: Add markup and properties to iframe"
             },
             {
+              "kind": "method",
+              "name": "addStylesheetsToIframe",
+              "privacy": "private",
+              "description": "IFRAME MODE: Add stylesheets to iframe"
+            },
+            {
               "kind": "field",
               "name": "baseUrl",
               "type": {
@@ -22515,6 +22606,31 @@
               "type": {
                 "text": "Record<string, QtiVariableJSON>"
               }
+            },
+            {
+              "kind": "method",
+              "name": "coerceBaseValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "baseType",
+                  "type": {
+                    "text": "BaseType"
+                  }
+                }
+              ],
+              "description": "Coerce a scalar value to the expected base-type when possible"
             },
             {
               "kind": "field",
@@ -22684,6 +22800,17 @@
             },
             {
               "kind": "method",
+              "name": "getContextVariables",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, QtiVariableJSON>"
+                }
+              },
+              "description": "Collect context variables referenced by qti-context-variable children"
+            },
+            {
+              "kind": "method",
               "name": "getDefaultRequirePaths",
               "privacy": "private",
               "return": {
@@ -22703,6 +22830,25 @@
                 }
               },
               "description": "Get the default require shim"
+            },
+            {
+              "kind": "method",
+              "name": "getDirectChildrenByTag",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Element[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "tagName",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Get direct child elements by tag name"
             },
             {
               "kind": "method",
@@ -22734,6 +22880,28 @@
             },
             {
               "kind": "method",
+              "name": "getQtiContextDefaultsFromItem",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, unknown>"
+                }
+              },
+              "description": "Extract default QTI_CONTEXT values from qti-context-declaration elements"
+            },
+            {
+              "kind": "method",
+              "name": "getQtiContextRecord",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "QtiVariableJSON | null"
+                }
+              },
+              "description": "Build a QTI_CONTEXT record for PCI consumption"
+            },
+            {
+              "kind": "method",
               "name": "getRequirePaths",
               "privacy": "private",
               "return": {
@@ -22753,6 +22921,48 @@
                 }
               },
               "description": "Parse the require shim JSON string into an object"
+            },
+            {
+              "kind": "method",
+              "name": "getSharedStylesheetConfig",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "{ content: string; scoped: boolean; key: string } | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getSharedStylesheetContent",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getStylesheetConfigs",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Array<{ href?: string; content?: string; scoped?: boolean; key?: string }>"
+                }
+              },
+              "description": "Collect qti-stylesheet elements for iframe injection"
+            },
+            {
+              "kind": "method",
+              "name": "getTemplateVariables",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, QtiVariableJSON>"
+                }
+              },
+              "description": "Collect template variables referenced by qti-template-variable children"
             },
             {
               "kind": "field",
@@ -22828,9 +23038,36 @@
             },
             {
               "kind": "method",
+              "name": "normalizeListValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "unknown[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "unknown"
+                  }
+                }
+              ],
+              "description": "Normalize an input into a list form"
+            },
+            {
+              "kind": "method",
               "name": "processPendingMessages",
               "privacy": "private",
               "description": "IFRAME MODE: Process pending messages"
+            },
+            {
+              "kind": "field",
+              "name": "qtiContext",
+              "type": {
+                "text": "QtiContext | undefined"
+              },
+              "privacy": "protected"
             },
             {
               "kind": "field",
@@ -22845,6 +23082,50 @@
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               }
+            },
+            {
+              "kind": "method",
+              "name": "recordEntryFromValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "QtiRecordItem"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "entryValue",
+                  "type": {
+                    "text": "unknown"
+                  }
+                }
+              ],
+              "description": "Build a record entry from an arbitrary value"
+            },
+            {
+              "kind": "method",
+              "name": "recordToQtiVariableJSON",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "QtiVariableJSON"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "unknown"
+                  }
+                }
+              ],
+              "description": "Convert a record object into QtiVariableJSON"
             },
             {
               "kind": "method",
@@ -22906,6 +23187,25 @@
               "type": {
                 "text": "reset() => void"
               }
+            },
+            {
+              "kind": "method",
+              "name": "resolveStylesheetHref",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "href",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve stylesheet href against baseUrl or document origin"
             },
             {
               "kind": "field",
@@ -23259,6 +23559,37 @@
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               }
+            },
+            {
+              "kind": "method",
+              "name": "variableToQtiVariableJSON",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "QtiVariableJSON"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "cardinality",
+                  "type": {
+                    "text": "Cardinality"
+                  }
+                },
+                {
+                  "name": "baseType",
+                  "type": {
+                    "text": "BaseType"
+                  }
+                }
+              ],
+              "description": "Convert a variable value to QtiVariableJSON"
             }
           ],
           "attributes": [
@@ -23564,6 +23895,19 @@
             },
             {
               "kind": "field",
+              "name": "_iframeObjectUrl",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_internals",
               "type": {
                 "text": "ElementInternals"
@@ -23693,6 +24037,16 @@
               }
             },
             {
+              "kind": "method",
+              "name": "addStylesheetsToIframe",
+              "privacy": "private",
+              "description": "IFRAME MODE: Add stylesheets to iframe",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "baseUrl",
               "type": {
@@ -23711,6 +24065,35 @@
               "type": {
                 "text": "Record<string, QtiVariableJSON>"
               },
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "coerceBaseValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "baseType",
+                  "type": {
+                    "text": "BaseType"
+                  }
+                }
+              ],
+              "description": "Coerce a scalar value to the expected base-type when possible",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
@@ -23912,6 +24295,21 @@
             },
             {
               "kind": "method",
+              "name": "getContextVariables",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, QtiVariableJSON>"
+                }
+              },
+              "description": "Collect context variables referenced by qti-context-variable children",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "getDefaultRequirePaths",
               "privacy": "private",
               "return": {
@@ -23935,6 +24333,29 @@
                 }
               },
               "description": "Get the default require shim",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getDirectChildrenByTag",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Element[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "tagName",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Get direct child elements by tag name",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
@@ -23995,6 +24416,36 @@
             },
             {
               "kind": "method",
+              "name": "getQtiContextDefaultsFromItem",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, unknown>"
+                }
+              },
+              "description": "Extract default QTI_CONTEXT values from qti-context-declaration elements",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getQtiContextRecord",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "QtiVariableJSON | null"
+                }
+              },
+              "description": "Build a QTI_CONTEXT record for PCI consumption",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "getRequirePaths",
               "privacy": "private",
               "return": {
@@ -24018,6 +24469,64 @@
                 }
               },
               "description": "Parse the require shim JSON string into an object",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getSharedStylesheetConfig",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "{ content: string; scoped: boolean; key: string } | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getSharedStylesheetContent",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getStylesheetConfigs",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Array<{ href?: string; content?: string; scoped?: boolean; key?: string }>"
+                }
+              },
+              "description": "Collect qti-stylesheet elements for iframe injection",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getTemplateVariables",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, QtiVariableJSON>"
+                }
+              },
+              "description": "Collect template variables referenced by qti-template-variable children",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
@@ -24266,9 +24775,44 @@
             },
             {
               "kind": "method",
+              "name": "normalizeListValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "unknown[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "unknown"
+                  }
+                }
+              ],
+              "description": "Normalize an input into a list form",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "processPendingMessages",
               "privacy": "private",
               "description": "IFRAME MODE: Process pending messages",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "qtiContext",
+              "type": {
+                "text": "QtiContext | undefined"
+              },
+              "privacy": "protected",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
@@ -24286,6 +24830,58 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "recordEntryFromValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "QtiRecordItem"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "entryValue",
+                  "type": {
+                    "text": "unknown"
+                  }
+                }
+              ],
+              "description": "Build a record entry from an arbitrary value",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "recordToQtiVariableJSON",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "QtiVariableJSON"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "unknown"
+                  }
+                }
+              ],
+              "description": "Convert a record object into QtiVariableJSON",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
               }
             },
             {
@@ -24373,6 +24969,29 @@
               },
               "type": {
                 "text": "reset() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveStylesheetHref",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "href",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve stylesheet href against baseUrl or document origin",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
               }
             },
             {
@@ -24775,6 +25394,41 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "variableToQtiVariableJSON",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "QtiVariableJSON"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "cardinality",
+                  "type": {
+                    "text": "Cardinality"
+                  }
+                },
+                {
+                  "name": "baseType",
+                  "type": {
+                    "text": "BaseType"
+                  }
+                }
+              ],
+              "description": "Convert a variable value to QtiVariableJSON",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
               }
             }
           ],
