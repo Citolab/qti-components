@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.2](https://github.com/Citolab/qti-components/compare/interactions-v1.4.1...interactions-v1.4.2) (2026-02-05)
+
+
+### Bug Fixes
+
+* added more js libs that are available in the tao platform by default ([0cea8a0](https://github.com/Citolab/qti-components/commit/0cea8a002a562b7866cefe7875ff52d25e82dac7))
+* added more js libs that are available in the tao platform by default ([013d28d](https://github.com/Citolab/qti-components/commit/013d28da0208dc16b6d0f487ccdcd66c01bd751f))
+
 ## [1.4.1](https://github.com/Citolab/qti-components/compare/interactions-v1.4.0...interactions-v1.4.1) (2026-02-04)
 
 
