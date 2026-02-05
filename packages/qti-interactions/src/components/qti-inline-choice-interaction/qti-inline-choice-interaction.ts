@@ -478,7 +478,7 @@ export class QtiInlineChoiceInteraction extends Interaction {
     // Em-based calculation works better across different font sizes
     const estimatedEm = Math.max(maxLength * 0.6 + 4, 8.75); // minimum ~140px (8.75em)
     const maxEm = Math.min(estimatedEm, 40); // maximum 40em
-    
+
     this._calculatedMinWidth = maxEm;
     this.style.setProperty('--qti-calculated-min-width', `${maxEm}em`);
   }
