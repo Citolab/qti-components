@@ -38,6 +38,7 @@ export class QtiInlineChoiceInteraction extends Interaction {
           border: var(--qti-border-thickness, 2px) var(--qti-border-style, solid) var(--qti-border-color, #c6cad0);
           border-radius: var(--qti-border-radius, 0.3rem);
           padding: 0.25rem 0.75rem;
+          min-width: var(--qti-calculated-min-width, auto);
           /* Enables full styling when supported (Chromium behind a flag / rolling out). */
           appearance: base-select;
         }
@@ -125,6 +126,7 @@ export class QtiInlineChoiceInteraction extends Interaction {
           border: var(--qti-border-thickness, 2px) var(--qti-border-style, solid) var(--qti-border-color, #c6cad0);
           border-radius: var(--qti-border-radius, 0.3rem);
           padding: 0.25rem 0.75rem;
+          min-width: var(--qti-calculated-min-width, auto);
         }
 
         [part='value'] {
@@ -172,10 +174,7 @@ export class QtiInlineChoiceInteraction extends Interaction {
             0 10px 15px -3px rgb(0 0 0 / 10%),
             0 4px 6px -4px rgb(0 0 0 / 10%);
           padding: 4px;
-          transform: translate(
-            var(--qti-menu-shift-x, 0px),
-            var(--qti-menu-shift-y, 0px)
-          );
+          transform: translate(var(--qti-menu-shift-x, 0px), var(--qti-menu-shift-y, 0px));
         }
 
         [part='menu'][data-placement='top'] {
@@ -194,6 +193,8 @@ export class QtiInlineChoiceInteraction extends Interaction {
           border-radius: calc(var(--qti-border-radius, 0.3rem) - 2px);
           cursor: pointer;
           white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
         button[part='option'][aria-selected='true'] {
@@ -215,6 +216,9 @@ export class QtiInlineChoiceInteraction extends Interaction {
           gap: 0.5rem;
           flex-wrap: nowrap;
           white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          min-width: 0;
         }
 
         select[part='select'] img,
@@ -251,6 +255,11 @@ export class QtiInlineChoiceInteraction extends Interaction {
 
   @state()
   private _dropdownOpen = false;
+
+  @state()
+  private _calculatedMinWidth: number = 0;
+
+  private _widthCalculationTimer: number | null = null;
 
   @property({ attribute: 'data-prompt', type: String })
   dataPrompt: string = '';
@@ -325,6 +334,8 @@ export class QtiInlineChoiceInteraction extends Interaction {
       document.addEventListener('pointerdown', this._onDocumentPointerDown, true);
       document.addEventListener('keydown', this._onDocumentKeyDown, true);
     }
+    // Simple width estimation - no recalculation needed
+    this._estimateOptimalWidth();
   }
 
   override disconnectedCallback() {
@@ -332,6 +343,10 @@ export class QtiInlineChoiceInteraction extends Interaction {
     if (!this._supportsCustomizableSelect()) {
       document.removeEventListener('pointerdown', this._onDocumentPointerDown, true);
       document.removeEventListener('keydown', this._onDocumentKeyDown, true);
+    }
+    if (this._widthCalculationTimer !== null) {
+      window.clearTimeout(this._widthCalculationTimer);
+      this._widthCalculationTimer = null;
     }
   }
 
@@ -441,6 +456,31 @@ export class QtiInlineChoiceInteraction extends Interaction {
 
     const hasSelected = nextOptions.some(o => o.selected);
     this.options = hasSelected ? nextOptions : nextOptions.map((o, i) => ({ ...o, selected: i === 0 }));
+
+    // Simple width estimation based on content length
+    this._estimateOptimalWidth();
+  }
+
+  /**
+   * Simple width estimation based on text content length - no DOM manipulation needed
+   */
+  private _estimateOptimalWidth() {
+    if (this.options.length === 0) return;
+
+    let maxLength = 0;
+    for (const option of this.options) {
+      // Strip HTML tags and get text length
+      const textContent = option.textContent.replace(/<[^>]*>/g, '').trim();
+      maxLength = Math.max(maxLength, textContent.length);
+    }
+
+    // Simple estimation: ~0.6em per character + base padding + dropdown arrow
+    // Em-based calculation works better across different font sizes
+    const estimatedEm = Math.max(maxLength * 0.6 + 4, 8.75); // minimum ~140px (8.75em)
+    const maxEm = Math.min(estimatedEm, 40); // maximum 40em
+    
+    this._calculatedMinWidth = maxEm;
+    this.style.setProperty('--qti-calculated-min-width', `${maxEm}em`);
   }
 
   public validate(): boolean {

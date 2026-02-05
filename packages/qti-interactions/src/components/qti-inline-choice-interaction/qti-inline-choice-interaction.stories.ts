@@ -140,6 +140,45 @@ export const WithConfigContext: Story = {
   }
 };
 
+export const WithConfigContexEmpty: Story = {
+  render: args => html`
+    <qti-item>
+      ${template(
+        args,
+        html`
+          <qti-inline-choice identifier="G">Gloucester</qti-inline-choice>
+          <qti-inline-choice identifier="L">Lancaster</qti-inline-choice>
+        `
+      )}
+    </qti-item>
+  `,
+  args: {},
+  play: async ({ canvasElement, step }) => {
+    const item = canvasElement.querySelector('qti-item')!;
+    item.configContext = {
+      inlineChoicePrompt: ' '
+    };
+
+    const interaction = item.querySelector('qti-inline-choice-interaction')!;
+    await interaction.updateComplete;
+
+    await step('Prompt from configContext is displayed', async () => {
+      const root = interaction.shadowRoot!;
+      const select = root.querySelector<HTMLSelectElement>('select');
+      if (select) {
+        const firstOption = select.options[0];
+        expect(firstOption).toBeDefined();
+        expect(firstOption.textContent?.trim()).toBe('');
+        return;
+      }
+
+      const trigger = root.querySelector<HTMLElement>('[part="trigger"]');
+      expect(trigger).toBeDefined();
+      expect(trigger?.textContent?.trim()).toContain('');
+    });
+  }
+};
+
 export const InlineInText: Story = {
   render: args => html`
     <style>
@@ -196,8 +235,12 @@ export const MenuClampsToViewportRightEdge: Story = {
 
     <div class="inline-choice-edge">
       <qti-inline-choice-interaction>
-        <qti-inline-choice identifier="A">A very long option label that would otherwise overflow off-screen</qti-inline-choice>
-        <qti-inline-choice identifier="B">Another long option label to force the menu wider than the trigger</qti-inline-choice>
+        <qti-inline-choice identifier="A"
+          >A very long option label that would otherwise overflow off-screen</qti-inline-choice
+        >
+        <qti-inline-choice identifier="B"
+          >Another long option label to force the menu wider than the trigger</qti-inline-choice
+        >
         <qti-inline-choice identifier="C">Short</qti-inline-choice>
       </qti-inline-choice-interaction>
     </div>
@@ -206,8 +249,7 @@ export const MenuClampsToViewportRightEdge: Story = {
     viewport: { defaultViewport: 'phone' },
     docs: {
       description: {
-        story:
-          'Listbox fallback: opening the menu near the right edge should keep the menu within the viewport.'
+        story: 'Listbox fallback: opening the menu near the right edge should keep the menu within the viewport.'
       }
     },
     chromatic: { disableSnapshot: true }
@@ -257,8 +299,7 @@ export const MenuClampsToViewportLeftEdge: Story = {
     viewport: { defaultViewport: 'phone' },
     docs: {
       description: {
-        story:
-          'Listbox fallback: opening the menu near the left edge should keep the menu within the viewport.'
+        story: 'Listbox fallback: opening the menu near the left edge should keep the menu within the viewport.'
       }
     },
     chromatic: { disableSnapshot: true }
@@ -308,8 +349,7 @@ export const MenuClampsToViewportBottomEdge: Story = {
     viewport: { defaultViewport: 'phone' },
     docs: {
       description: {
-        story:
-          'Listbox fallback: opening the menu near the bottom edge should keep the menu within the viewport.'
+        story: 'Listbox fallback: opening the menu near the bottom edge should keep the menu within the viewport.'
       }
     },
     chromatic: { disableSnapshot: true }
@@ -488,11 +528,7 @@ export const InlineInTextScaledAndScrollableFixed: Story = {
  */
 export const CorrectResponseNotShownByDefault: Story = {
   render: () => html`
-    <qti-inline-choice-interaction
-      response-identifier="RESPONSE"
-      correct-response="Y"
-      data-testid="interaction"
-    >
+    <qti-inline-choice-interaction response-identifier="RESPONSE" correct-response="Y" data-testid="interaction">
       <qti-inline-choice identifier="G">Gloucester</qti-inline-choice>
       <qti-inline-choice identifier="L">Lancaster</qti-inline-choice>
       <qti-inline-choice identifier="Y">York</qti-inline-choice>
@@ -551,11 +587,7 @@ export const ShowCorrectResponseInline: Story = {
 export const ToggleCorrectResponse: Story = {
   render: () => html`
     <button data-testid="toggle-btn">Toggle Correct Response</button>
-    <qti-inline-choice-interaction
-      response-identifier="RESPONSE"
-      correct-response="Y"
-      data-testid="interaction"
-    >
+    <qti-inline-choice-interaction response-identifier="RESPONSE" correct-response="Y" data-testid="interaction">
       <qti-inline-choice identifier="G">Gloucester</qti-inline-choice>
       <qti-inline-choice identifier="L">Lancaster</qti-inline-choice>
       <qti-inline-choice identifier="Y">York</qti-inline-choice>
@@ -625,7 +657,9 @@ export const ShowFullCorrectResponse: Story = {
     });
 
     const fullCorrectDiv = canvasElement.querySelector('.full-correct-response');
-    const clonedInteraction = fullCorrectDiv?.querySelector('qti-inline-choice-interaction') as QtiInlineChoiceInteraction;
+    const clonedInteraction = fullCorrectDiv?.querySelector(
+      'qti-inline-choice-interaction'
+    ) as QtiInlineChoiceInteraction;
 
     expect(clonedInteraction).toBeTruthy();
     expect(clonedInteraction.disabled).toBe(true);
@@ -640,11 +674,7 @@ export const ShowFullCorrectResponse: Story = {
  */
 export const FullCorrectResponseNotShownByDefault: Story = {
   render: () => html`
-    <qti-inline-choice-interaction
-      response-identifier="RESPONSE"
-      correct-response="Y"
-      data-testid="interaction"
-    >
+    <qti-inline-choice-interaction response-identifier="RESPONSE" correct-response="Y" data-testid="interaction">
       <qti-inline-choice identifier="G">Gloucester</qti-inline-choice>
       <qti-inline-choice identifier="L">Lancaster</qti-inline-choice>
       <qti-inline-choice identifier="Y">York</qti-inline-choice>

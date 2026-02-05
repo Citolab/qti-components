@@ -40,3 +40,5 @@ dev
 yalc.lock
 .npmrc
 tools/playwright/
+.playwright-mcp/
+packages/qti-components/tsup.config.bundled_z3j43jv4ey.mjs
