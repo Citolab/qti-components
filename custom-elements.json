@@ -16661,7 +16661,7 @@
               "type": {
                 "text": "boolean"
               },
-              "privacy": "private",
+              "privacy": "protected",
               "default": "false"
             },
             {

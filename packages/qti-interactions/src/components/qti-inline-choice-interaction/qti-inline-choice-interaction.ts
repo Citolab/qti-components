@@ -99,6 +99,8 @@ export class QtiInlineChoiceInteraction extends Interaction {
           gap: 0.5rem;
           padding: 0.5rem 0.5rem;
           white-space: nowrap;
+          line-height: 1.25;
+          min-height: 2.25rem;
         }
 
         option:hover {
@@ -174,6 +176,7 @@ export class QtiInlineChoiceInteraction extends Interaction {
             0 10px 15px -3px rgb(0 0 0 / 10%),
             0 4px 6px -4px rgb(0 0 0 / 10%);
           padding: 4px;
+          box-sizing: border-box;
           transform: translate(var(--qti-menu-shift-x, 0px), var(--qti-menu-shift-y, 0px));
         }
 
@@ -195,6 +198,8 @@ export class QtiInlineChoiceInteraction extends Interaction {
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
+          line-height: 1.25;
+          min-height: 2.25rem;
         }
 
         button[part='option'][aria-selected='true'] {
@@ -254,7 +259,7 @@ export class QtiInlineChoiceInteraction extends Interaction {
   protected correctOption: string = '';
 
   @state()
-  private _dropdownOpen = false;
+  protected _dropdownOpen = false;
 
   @state()
   private _calculatedMinWidth: number = 0;
@@ -353,6 +358,15 @@ export class QtiInlineChoiceInteraction extends Interaction {
   override willUpdate(changed: PropertyValues<this>) {
     if (changed.has('configContext') || changed.has('dataPrompt')) {
       this._updateOptions();
+    }
+  }
+
+  override updated(changed: PropertyValues<this>) {
+    const dropdownOpenKey = '_dropdownOpen' as keyof QtiInlineChoiceInteraction;
+    if (changed.has(dropdownOpenKey) && this._dropdownOpen) {
+      this._positionCustomMenu();
+      const selected = this.renderRoot.querySelector<HTMLButtonElement>('button[part="option"][aria-selected="true"]');
+      selected?.focus();
     }
   }
 
@@ -538,16 +552,6 @@ export class QtiInlineChoiceInteraction extends Interaction {
   private _setDropdownOpen(open: boolean) {
     if (this._dropdownOpen === open) return;
     this._dropdownOpen = open;
-
-    if (open) {
-      void this.updateComplete.then(() => {
-        this._positionCustomMenu();
-        const selected = this.renderRoot.querySelector<HTMLButtonElement>(
-          'button[part="option"][aria-selected="true"]'
-        );
-        selected?.focus();
-      });
-    }
   }
 
   private _onToggleCustomDropdown = () => {
@@ -615,12 +619,19 @@ export class QtiInlineChoiceInteraction extends Interaction {
     menu.dataset.placement = 'bottom';
     menu.style.setProperty('--qti-menu-shift-x', '0px');
     menu.style.setProperty('--qti-menu-shift-y', '0px');
+    menu.style.left = '0px';
+    menu.style.right = 'auto';
 
     const viewportWidth = document.documentElement?.clientWidth || window.innerWidth;
     const viewportHeight = document.documentElement?.clientHeight || window.innerHeight;
     const margin = 8;
 
     const triggerRect = trigger.getBoundingClientRect();
+    // Ensure the menu never exceeds the viewport width minus margins,
+    // even if long, unbroken labels would otherwise expand it.
+    const maxWidth = Math.max(0, viewportWidth - margin * 2);
+    menu.style.maxWidth = `${maxWidth}px`;
+    menu.style.minWidth = `${Math.min(triggerRect.width, maxWidth)}px`;
     let menuRect = menu.getBoundingClientRect();
 
     const spaceBelow = viewportHeight - triggerRect.bottom;
@@ -630,18 +641,10 @@ export class QtiInlineChoiceInteraction extends Interaction {
       menuRect = menu.getBoundingClientRect();
     }
 
-    let shiftX = 0;
-    if (menuRect.right > viewportWidth - margin) {
-      shiftX = viewportWidth - margin - menuRect.right;
-    } else if (menuRect.left < margin) {
-      shiftX = margin - menuRect.left;
-    }
-
-    if (shiftX !== 0) {
-      const scaleX = menu.offsetWidth > 0 ? menuRect.width / menu.offsetWidth : 1;
-      const adjustedShiftX = Number.isFinite(scaleX) && scaleX !== 0 ? shiftX / scaleX : shiftX;
-      menu.style.setProperty('--qti-menu-shift-x', `${adjustedShiftX}px`);
-    }
+    const maxLeft = Math.max(margin, viewportWidth - margin - menuRect.width);
+    const desiredLeft = Math.min(maxLeft, Math.max(margin, triggerRect.left));
+    const offsetLeft = desiredLeft - triggerRect.left;
+    menu.style.left = `${offsetLeft}px`;
   }
 }
 
