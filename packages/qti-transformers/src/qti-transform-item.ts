@@ -126,16 +126,38 @@ export const qtiTransformItem = (cache: boolean = false) => {
       const customInteractionTypeIdentifiers: string[] = [];
       const portableCustomInteractions = xmlFragment.querySelectorAll(selector);
 
-      const moduleResolutionConfig = await getModuleResolutionConfig(baseUrl, '/modules/module_resolution.js');
-      const moduleResolutionFallbackConfig = await getModuleResolutionConfig(
-        baseUrl,
-        '/modules/fallback_module_resolution.js'
-      );
+      // Avoid fetching module resolution configs for items that do not contain any PCIs.
+      // This prevents unnecessary network requests when configurePci() is called for every item.
+      if (portableCustomInteractions.length === 0) {
+        return api;
+      }
 
-      if (portableCustomInteractions.length > 0) {
-        for (const interaction of Array.from(portableCustomInteractions)) {
-          // set data-base-url
-          interaction.setAttribute('data-base-url', baseUrl);
+      // Lazily load (and cache) the default module resolution configs.
+      let moduleResolutionConfig: ModuleResolutionConfig | null = null;
+      let moduleResolutionFallbackConfig: ModuleResolutionConfig | null = null;
+      const ensureDefaultModuleResolutionConfigs = async () => {
+        if (moduleResolutionConfig === null) {
+          try {
+            moduleResolutionConfig = await getModuleResolutionConfig(baseUrl, '/modules/module_resolution.js');
+          } catch {
+            moduleResolutionConfig = null;
+          }
+        }
+        if (moduleResolutionFallbackConfig === null) {
+          try {
+            moduleResolutionFallbackConfig = await getModuleResolutionConfig(
+              baseUrl,
+              '/modules/fallback_module_resolution.js'
+            );
+          } catch {
+            moduleResolutionFallbackConfig = null;
+          }
+        }
+      };
+
+      for (const interaction of Array.from(portableCustomInteractions)) {
+        // set data-base-url
+        interaction.setAttribute('data-base-url', baseUrl);
 
           let customInteractionTypeIdentifier = interaction.getAttribute('custom-interaction-type-identifier');
           if (
@@ -155,6 +177,7 @@ export const qtiTransformItem = (cache: boolean = false) => {
 
           // If it exists and has primary-configuration, handle that format
           if (modulesElement && modulesElement.getAttribute('primary-configuration')) {
+            await ensureDefaultModuleResolutionConfigs();
             const primaryConfigPath = modulesElement.getAttribute('primary-configuration');
             if (primaryConfigPath) {
               try {
@@ -229,6 +252,7 @@ export const qtiTransformItem = (cache: boolean = false) => {
             }
           } else {
             // Original logic for when there's no existing qti-interaction-modules or no primary-configuration
+            await ensureDefaultModuleResolutionConfigs();
             if (moduleResolutionConfig) {
               // Create qti-interaction-modules if it doesn't exist
               if (interaction.querySelector('qti-interaction-modules') === null) {
@@ -287,7 +311,6 @@ export const qtiTransformItem = (cache: boolean = false) => {
                 }
               }
             }
-          }
         }
       }
 

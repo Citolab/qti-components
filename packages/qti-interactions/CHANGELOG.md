@@ -1,5 +1,65 @@
 # Changelog
 
+## [1.4.2](https://github.com/Citolab/qti-components/compare/interactions-v1.4.1...interactions-v1.4.2) (2026-02-05)
+
+
+### Bug Fixes
+
+* added more js libs that are available in the tao platform by default ([0cea8a0](https://github.com/Citolab/qti-components/commit/0cea8a002a562b7866cefe7875ff52d25e82dac7))
+* added more js libs that are available in the tao platform by default ([013d28d](https://github.com/Citolab/qti-components/commit/013d28da0208dc16b6d0f487ccdcd66c01bd751f))
+
+## [1.4.1](https://github.com/Citolab/qti-components/compare/interactions-v1.4.0...interactions-v1.4.1) (2026-02-04)
+
+
+### Bug Fixes
+
+* **qti-custom-interaction:** improve iframe handling and script injection ([ca63c11](https://github.com/Citolab/qti-components/commit/ca63c110fc73a72e02f9255516163540b99a880d))
+* **qti-custom-interaction:** improve iframe handling and script injection logic ([fb4c394](https://github.com/Citolab/qti-components/commit/fb4c394352951421edb865ac623d6596273312a7))
+
+## [1.4.0](https://github.com/Citolab/qti-components/compare/interactions-v1.3.1...interactions-v1.4.0) (2026-02-04)
+
+
+### Features
+
+* **qti-inline-choice-interaction:** enhance correct response handlin… ([11d8810](https://github.com/Citolab/qti-components/commit/11d88101556c69ae72c1507916e06e536050671b))
+* **qti-inline-choice-interaction:** enhance correct response handling in stories and implementation ([9510525](https://github.com/Citolab/qti-components/commit/951052549deec72650ea001006d54c5649fec28a))
+
+## [1.3.1](https://github.com/Citolab/qti-components/compare/interactions-v1.3.0...interactions-v1.3.1) (2026-02-04)
+
+
+### Bug Fixes
+
+* **graphic-associate:** add play test for association creation and removal ([141f23a](https://github.com/Citolab/qti-components/commit/141f23aae8fa8ba35d9aa4c33b038fea779f494f))
+* **inline-choice:** ensure visibility within viewport ([5fb499e](https://github.com/Citolab/qti-components/commit/5fb499e352bc0c89bd3982fed8d8de28225e5e09))
+
+## [1.3.0](https://github.com/Citolab/qti-components/compare/interactions-v1.2.0...interactions-v1.3.0) (2026-02-03)
+
+
+### Features
+
+* enhance qti-inline-choice-interaction ([5878343](https://github.com/Citolab/qti-components/commit/58783433b0f47dcf31bc75de0b6427c98860c2df))
+
+
+### Bug Fixes
+
+* fix tests ([7a75aa9](https://github.com/Citolab/qti-components/commit/7a75aa9222be3e3b68dbe18ef8895a968903d10c))
+* inline choice dropdown font size and positioning on mobile devices ([52d3216](https://github.com/Citolab/qti-components/commit/52d3216a0661f863b0f8384763bd829d6a41a19a))
+
+## [1.2.0](https://github.com/Citolab/qti-components/compare/interactions-v1.1.0...interactions-v1.2.0) (2026-02-03)
+
+
+### Features
+
+* enhance PCI state handling with serialization and restoration s… ([f56bc31](https://github.com/Citolab/qti-components/commit/f56bc311c24ef200ab49ebdcb2a0e5771c200f1a))
+* enhance PCI state handling with serialization and restoration support ([5a4638c](https://github.com/Citolab/qti-components/commit/5a4638c9bf6c0b246aba8f5d719852cad73b9757))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @qti-components/transformers bumped to 1.2.0
+
 ## [1.1.0](https://github.com/Citolab/qti-components/compare/interactions-v1.0.0...interactions-v1.1.0) (2026-02-02)
 
 

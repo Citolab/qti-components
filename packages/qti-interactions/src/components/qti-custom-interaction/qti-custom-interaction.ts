@@ -103,32 +103,49 @@ CES.load();
 
 // Simple bootstrap that just waits for the blob URL and creates the iframe
 const ciBootstrap = `
-  window.onload = function () {
+  (function() {
+    var blobUrlReceived = null;
+    
+    const createIframe = () => {
+      if (!blobUrlReceived || !document.body) return;
+      var n = document.createElement('iframe');
+      n.frameBorder = '0';
+      n.scrolling = 'no';
+      n.src = blobUrlReceived;
+      n.style.width = '100%';
+      n.style.height = '100%';
+      document.body.appendChild(n);
+    };
+    
     const handleMessage = (event) => {
       if (event.data.type === 'blobUrl') {
-        const blobUrl = event.data.data;
-        var n = document.createElement('iframe');
-        n.frameBorder = '0';
-        n.scrolling = 'no';
-        n.src = blobUrl;
-        n.style.width = '100%';
-        n.style.height = '100%';
-        document.body.appendChild(n);
+        blobUrlReceived = event.data.data;
         window.removeEventListener('message', handleMessage);
+        createIframe();
       }
     };
+    
     window.addEventListener('message', handleMessage);
-    // Request the blob URL from parent
-    let w = window.parent;
-    while (w) {
-      w.postMessage({ type: 'getBlobUrl' }, '*');
-      if (w !== w.parent) {
-        w = w.parent;
-      } else {
-        w = null;
+    
+    // Wait for document ready before requesting blobUrl
+    const requestBlobUrl = () => {
+      let w = window.parent;
+      while (w) {
+        w.postMessage({ type: 'getBlobUrl' }, '*');
+        if (w !== w.parent) {
+          w = w.parent;
+        } else {
+          w = null;
+        }
       }
+    };
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', requestBlobUrl);
+    } else {
+      requestBlobUrl();
     }
-  };
+  })();
 `;
 
 /**
@@ -246,8 +263,30 @@ export class QtiCustomInteraction extends Interaction {
    * 5. Sets up postMessage listeners for CES API calls
    */
   async setupCES() {
-    const iframe = this.shadowRoot.querySelector('#pciContainer') as HTMLIFrameElement;
-    const iframeDoc = iframe.contentDocument;
+    // Ensure the iframe exists and has a document before writing into it.
+    // In some environments (e.g. Storybook/Vitest browser mode) the iframe can exist but its
+    // `contentDocument` is still null momentarily, which would otherwise cause an unhandled rejection.
+    await this.updateComplete;
+    const iframe = this.shadowRoot?.querySelector('#pciContainer') as HTMLIFrameElement | null;
+    if (!iframe) {
+      this._errorMessage = 'pciContainer iframe not found';
+      return;
+    }
+
+    if (!iframe.getAttribute('src')) {
+      // Make sure the iframe navigates so we get a document we can write to.
+      iframe.setAttribute('src', 'about:blank');
+    }
+
+    let iframeDoc = iframe.contentDocument ?? iframe.contentWindow?.document ?? null;
+    if (!iframeDoc) {
+      await new Promise<void>(resolve => iframe.addEventListener('load', () => resolve(), { once: true }));
+      iframeDoc = iframe.contentDocument ?? iframe.contentWindow?.document ?? null;
+    }
+    if (!iframeDoc) {
+      this._errorMessage = 'pciContainer iframe document not available';
+      return;
+    }
 
     if (!this.manifest.script || this.manifest.script.length === 0) {
       this._errorMessage = 'No script found in manifest';
@@ -260,22 +299,17 @@ export class QtiCustomInteraction extends Interaction {
     const cssRef = this.manifest.style[0];
 
     const baseCandidates = this.getBaseCandidates();
-    console.debug('[qti-custom-interaction] manifest url', this._manifestUrl);
-    console.debug('[qti-custom-interaction] base candidates', baseCandidates);
-    console.debug('[qti-custom-interaction] refs', { cssRef, media: this.manifest.media });
 
     const cssResolved = await this.resolveResourceWithFallback(cssRef, baseCandidates);
     const cssUrl = cssResolved.url;
     if (cssResolved.baseUrl && !this._resourceBaseUrl) {
       this._resourceBaseUrl = cssResolved.baseUrl;
     }
-    console.debug('[qti-custom-interaction] css resolved', cssResolved);
 
     // Always use the built-in ciBootstrap instead of the package's bootstrap.js.
     // The package's bootstrap.js is the original CES version which doesn't work
     // in the iframe/postMessage setup. Our ciBootstrap handles this correctly.
     const usesCES = true;
-    console.debug('[qti-custom-interaction] using built-in ciBootstrap (skipping server bootstrap.js)');
 
     // If the original bootstrap.js uses CES, we need to:
     // 1. Fetch the index.html from here (main window, where service worker works)
@@ -294,22 +328,23 @@ export class QtiCustomInteraction extends Interaction {
         if (indexResolved.baseUrl && !this._resourceBaseUrl) {
           this._resourceBaseUrl = indexResolved.baseUrl;
         }
-        console.debug('[qti-custom-interaction] index resolved (media)', {
-          url: indexResolved.url,
-          baseUrl: indexResolved.baseUrl,
-          hasText: Boolean(indexResolved.text)
-        });
         if (indexResolved.text) {
           let html = indexResolved.text;
 
-          // Inject the CES proxy script after <head>
-          const cesScript = '<script>' + registerCES + '</' + 'script>';
-          const headIndex = html.indexOf('<head>');
-          if (headIndex !== -1) {
-            html = html.slice(0, headIndex + 6) + cesScript + html.slice(headIndex + 6);
-          } else {
-            // If no <head>, prepend to document
-            html = cesScript + html;
+          // Check if the HTML was already modified (e.g., by backend import process)
+          // If it already has postToParentWindows or CES proxy, skip injection
+          const alreadyModified = html.includes('postToParentWindows') || html.includes('window.CES');
+
+          if (!alreadyModified) {
+            // Inject the CES proxy script after <head>
+            const cesScript = '<script>' + registerCES + '</' + 'script>';
+            const headIndex = html.indexOf('<head>');
+            if (headIndex !== -1) {
+              html = html.slice(0, headIndex + 6) + cesScript + html.slice(headIndex + 6);
+            } else {
+              // If no <head>, prepend to document
+              html = cesScript + html;
+            }
           }
 
           // Create a blob URL for the modified HTML
@@ -329,22 +364,22 @@ export class QtiCustomInteraction extends Interaction {
         if (indexResolved.baseUrl && !this._resourceBaseUrl) {
           this._resourceBaseUrl = indexResolved.baseUrl;
         }
-        console.debug('[qti-custom-interaction] index resolved (fallback)', {
-          url: indexResolved.url,
-          baseUrl: indexResolved.baseUrl,
-          hasText: Boolean(indexResolved.text)
-        });
         if (indexResolved.text) {
           let html = indexResolved.text;
 
-          // Inject the CES proxy script after <head>
-          const cesScript = '<script>' + registerCES + '</' + 'script>';
-          const headIndex = html.indexOf('<head>');
-          if (headIndex !== -1) {
-            html = html.slice(0, headIndex + 6) + cesScript + html.slice(headIndex + 6);
-          } else {
-            // If no <head>, prepend to document
-            html = cesScript + html;
+          // Check if the HTML was already modified (e.g., by backend import process)
+          const alreadyModified = html.includes('postToParentWindows') || html.includes('window.CES');
+
+          if (!alreadyModified) {
+            // Inject the CES proxy script after <head>
+            const cesScript = '<script>' + registerCES + '</' + 'script>';
+            const headIndex = html.indexOf('<head>');
+            if (headIndex !== -1) {
+              html = html.slice(0, headIndex + 6) + cesScript + html.slice(headIndex + 6);
+            } else {
+              // If no <head>, prepend to document
+              html = cesScript + html;
+            }
           }
 
           // Create a blob URL for the modified HTML
@@ -359,14 +394,19 @@ export class QtiCustomInteraction extends Interaction {
           if (indexResponse.ok) {
             let html = await indexResponse.text();
 
-            // Inject the CES proxy script after <head>
-            const cesScript = '<script>' + registerCES + '</' + 'script>';
-            const headIndex = html.indexOf('<head>');
-            if (headIndex !== -1) {
-              html = html.slice(0, headIndex + 6) + cesScript + html.slice(headIndex + 6);
-            } else {
-              // If no <head>, prepend to document
-              html = cesScript + html;
+            // Check if the HTML was already modified (e.g., by backend import process)
+            const alreadyModified = html.includes('postToParentWindows') || html.includes('window.CES');
+
+            if (!alreadyModified) {
+              // Inject the CES proxy script after <head>
+              const cesScript = '<script>' + registerCES + '</' + 'script>';
+              const headIndex = html.indexOf('<head>');
+              if (headIndex !== -1) {
+                html = html.slice(0, headIndex + 6) + cesScript + html.slice(headIndex + 6);
+              } else {
+                // If no <head>, prepend to document
+                html = cesScript + html;
+              }
             }
 
             // Create a blob URL for the modified HTML
@@ -381,12 +421,12 @@ export class QtiCustomInteraction extends Interaction {
       }
     }
 
-    const inlineScript = `<script>${ciBootstrap}</script>`;
-    console.debug('[qti-custom-interaction] using ciBootstrap inline script');
+    const inlineScript = `<script>${ciBootstrap}</` + 'script>';
 
     window.addEventListener('message', this.handlePostMessage);
-    iframeDoc.open();
-    iframeDoc.write(`
+
+    const htmlContent = `
+      <!DOCTYPE html>
       <html>
         <head>
           ${cssUrl ? `<link href='${cssUrl}' rel="stylesheet" />` : ''}
@@ -394,9 +434,10 @@ export class QtiCustomInteraction extends Interaction {
         </head>
         <body></body>
       </html>
-      `);
+    `;
 
-    iframeDoc.close();
+    // Use srcdoc instead of document.write for better script execution
+    iframe.srcdoc = htmlContent;
   }
 
   private getIFrames() {
@@ -467,9 +508,6 @@ export class QtiCustomInteraction extends Interaction {
 
   handlePostMessage(event: MessageEvent) {
     const { type, data } = event.data;
-    if (type && type !== 'setResponse') {
-      console.debug('[qti-custom-interaction] postMessage', { type, data });
-    }
     switch (type) {
       case 'setResponse':
         if (data === null || !(Array.isArray(data) && data.length === 1 && data[0] === '')) {
@@ -485,6 +523,10 @@ export class QtiCustomInteraction extends Interaction {
         // Send the pre-created blob URL to the requesting iframe
         if (this._contentBlobUrl) {
           this.postToWindowAndIframes('blobUrl', this._contentBlobUrl);
+          // Also respond directly to the source window if possible
+          if (event.source && event.source !== window) {
+            (event.source as Window).postMessage({ type: 'blobUrl', data: this._contentBlobUrl }, '*');
+          }
         }
         break;
       }
@@ -500,7 +542,6 @@ export class QtiCustomInteraction extends Interaction {
           }
           return new URL(media, baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`).toString();
         });
-        console.debug('[qti-custom-interaction] mediaData', mediaData);
         this.postToWindowAndIframes('mediaData', mediaData);
         break;
       }

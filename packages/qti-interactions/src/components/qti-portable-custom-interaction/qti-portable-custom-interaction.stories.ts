@@ -594,6 +594,58 @@ export const TaoNew = {
   }
 };
 
+export const TaoTextReader = {
+  render: () =>
+    html`<qti-item>
+      <div>
+        <item-container style="display: block;width: 800px; height: 450px;" id="item-container"> </item-container>
+      </div>
+    </qti-item>`,
+  play: async ({ canvasElement, step }) => {
+    await step('Fetch and load QTI XML', async () => {
+      try {
+        const getModuleResolution = async (baseUrl: string, name: string) => {
+          const modulResolutionResource = await fetch(removeDoubleSlashes(`${baseUrl}/${name}`));
+          if (!modulResolutionResource.ok) {
+            return null;
+          }
+          const fileContent = await modulResolutionResource.text();
+          if (fileContent) {
+            const config = JSON.parse(fileContent) as ModuleResolutionConfig;
+            return config;
+          }
+          return null;
+        };
+
+        const baseUrl = `/assets/qti-portable-interaction/aaa_1_1770197193-qti3`;
+        const response = await fetch(`${baseUrl}/i6983104e4ae9020260204102430a569a934/qti.xml`);
+        const xmlText = await response.text();
+        const qti = xmlText
+          .replaceAll(
+            '<qti-portable-custom-interaction',
+            '<qti-portable-custom-interaction-test data-use-default-paths="true" data-use-default-shims="true"'
+          )
+          .replaceAll('</qti-portable-custom-interaction>', '</qti-portable-custom-interaction-test>')
+          .replaceAll('../runtime/', 'runtime/');
+
+        const transform = await qtiTransformItem()
+          .parse(qti)
+          .configurePci(baseUrl, getModuleResolution, 'qti-portable-custom-interaction-test');
+
+        const itemContainer = canvasElement.querySelector('#item-container') as ItemContainer;
+        if (itemContainer) {
+          itemContainer.itemXML = transform.xml();
+        }
+      } catch (error) {
+        console.error('Failed to fetch QTI XML:', error);
+      }
+    });
+  },
+  parameters: {
+    chromatic: { disableSnapshot: true }
+  }
+};
+
 export const VerhoudingenRestoreResponse = {
   render: () => {
     const qti = `<qti-assessment-item

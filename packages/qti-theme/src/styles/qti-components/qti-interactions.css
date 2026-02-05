@@ -633,6 +633,9 @@
     &::part(select) {
       @apply select;
 
+      font-size: inherit;
+      vertical-align: baseline;
+
       &:hover {
         @apply hov;
       }

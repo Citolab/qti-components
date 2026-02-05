@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd" identifier="i6983104e4ae9020260204102430a569a934" title="AAA 1" label="AAA 1" xml:lang="en-US" adaptive="false" time-dependent="false" tool-name="TAO" tool-version="2026.01">
+  <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="boolean">
+    <qti-default-value>
+      <qti-value>true</qti-value>
+    </qti-default-value>
+  </qti-response-declaration>
+  <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float" normal-maximum="0" normal-minimum="0"/>
+  <qti-outcome-declaration identifier="MAXSCORE" cardinality="single" base-type="float">
+    <qti-default-value>
+      <qti-value>0</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-item-body>
+    <div class="grid-row">
+      <div class="col-12">
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing ...</p>
+      </div>
+    </div>
+    <div class="grid-row">
+      <div class="col-12">
+        <qti-portable-custom-interaction custom-interaction-type-identifier="textReaderInteraction" data-version="1.3.4" data-page-height="200" data-tabs-position="top" data-navigation="both" data-multi-pages="true" data-pages="[{&quot;label&quot;:&quot;Page 3&quot;,&quot;content&quot;:[&quot;page 3 content&quot;],&quot;id&quot;:3},{&quot;label&quot;:&quot;Page 1&quot;,&quot;content&quot;:[&quot;page 1 column 1&quot;],&quot;id&quot;:0},{&quot;label&quot;:&quot;Page 2&quot;,&quot;content&quot;:[&quot;page 2 column 1&quot;,&quot;page 2 column 22&quot;],&quot;id&quot;:1},{&quot;label&quot;:&quot;Page 4&quot;,&quot;content&quot;:[&quot;page 4 content&quot;,&quot;ssss&quot;],&quot;id&quot;:4}]" data-button-labels="{&quot;prev&quot;:&quot;Previous&quot;,&quot;next&quot;:&quot;Next&quot;}" data-one-page-navigation="true" data-tooltips="[]" module="textReaderInteraction" response-identifier="RESPONSE">
+          <qti-interaction-modules>
+            <qti-interaction-module id="textReaderInteraction" primary-path="../runtime/textReaderInteraction.min.js"/>
+          </qti-interaction-modules>
+          <qti-interaction-markup>
+            <div class="textReaderInteraction qti-interaction">
+              <div class="tr-wrap">
+                <div class="tr-content js-page-container"/>
+                <div class="js-nav-container"/>
+              </div>
+              <script class="text-reader-pages-tpl" type="text/x-handlebars-template">&lt;div class=&quot;tr-tabs js-page-tabs tr-tabs-{{tabsPosition}} clearfix&quot;&gt;
+            {{#if showTabs}}
+            &lt;ul class=&quot;tr-tab-buttons js-tab-buttons&quot;&gt;
+                {{#each pages}}
+                &lt;li data-page-num=&quot;{{@index}}&quot; data-page-id=&quot;{{id}}&quot; class=&quot;tr-tab-buttons__item&quot; role=&quot;button&quot; tabindex=&quot;0&quot;&gt;
+                    &lt;span class=&quot;tr-tab-label&quot;&gt;{{inc @index}}&lt;/span&gt;
+                &lt;/li&gt;
+                {{/each}}
+            &lt;/ul&gt;
+            {{/if}}
+            &lt;div class=&quot;tr-pages-wrap clearfix&quot;&gt;
+                &lt;div class=&quot;tr-pages&quot; style=&quot;height: {{pageWrapperHeight}}px&quot;&gt;
+                    {{#each pages}}
+                    &lt;div data-page-num=&quot;{{@index}}&quot; data-page-id=&quot;{{id}}&quot; class=&quot;tr-page js-tab-content tr-tabs-{{@index}}&quot;&gt;
+                        &lt;div class=&quot;tr-passage&quot; style=&quot;height: {{../pageHeight}}px&quot; &gt;
+                            {{#each content}}
+                            &lt;div class=&quot;tr-passage-column widget-blockInteraction js-page-column&quot; data-page-col-index=&quot;{{@index}}&quot;&gt;
+                                {{{this}}}
+                            &lt;/div&gt;
+                            {{/each}}
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                    {{/each}}
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;</script>
+              <script class="text-reader-nav-tpl" type="text/x-handlebars-template">{{#if showNavigation}}
+        &lt;div class=&quot;tr-nav-wrap tr-nav-{{tabsPosition}}&quot;&gt;
+            &lt;div class=&quot;tr-nav&quot;&gt;
+                &lt;div class=&quot;tr-nav__col js-prev-page&quot;&gt;
+                    &lt;button class=&quot;btn-info small&quot;&gt;{{../buttonLabels.prev}}&lt;/button&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;tr-nav__col&quot;&gt;
+                    Page &lt;span class=&quot;js-current-page&quot;&gt;{{../currentPage}}&lt;/span&gt; / {{../pagesNum}}
+                &lt;/div&gt;
+                &lt;div class=&quot;tr-nav__col js-next-page&quot;&gt;
+                    &lt;button class=&quot;btn-info small&quot;&gt;{{../buttonLabels.next}}&lt;/button&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        {{/if}}</script>
+            </div>
+          </qti-interaction-markup>
+        </qti-portable-custom-interaction>
+      </div>
+    </div>
+  </qti-item-body>
+  <qti-response-processing template="https://purl.imsglobal.org/spec/qti/v3p0/rptemplates/match_correct.xml"/>
+</qti-assessment-item>
