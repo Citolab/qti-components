@@ -16699,6 +16699,15 @@
           "members": [
             {
               "kind": "field",
+              "name": "_calculatedMinWidth",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
               "name": "_context",
               "type": {
                 "text": "ItemContext"
@@ -16728,8 +16737,14 @@
               "type": {
                 "text": "boolean"
               },
-              "privacy": "private",
+              "privacy": "protected",
               "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "_estimateOptimalWidth",
+              "privacy": "private",
+              "description": "Simple width estimation based on text content length - no DOM manipulation needed"
             },
             {
               "kind": "method",
@@ -16883,6 +16898,15 @@
               "kind": "method",
               "name": "_updateOptions",
               "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_widthCalculationTimer",
+              "type": {
+                "text": "number | null"
+              },
+              "privacy": "private",
+              "default": "null"
             },
             {
               "kind": "field",
