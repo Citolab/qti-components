@@ -1,4 +1,4 @@
-import { LitElement, html } from 'lit';
+import { css, LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
 import type { TemplateVariable } from '@qti-components/base';
@@ -17,6 +17,14 @@ export class QtiTemplateDeclaration extends LitElement {
   @property({ type: Boolean, attribute: 'param-variable' }) paramVariable: boolean = false;
 
   #defaultValue: any = null;
+
+  static override styles = [
+    css`
+      :host {
+        display: none;
+      }
+    `
+  ];
 
   override render() {
     return html`<slot></slot>`;
