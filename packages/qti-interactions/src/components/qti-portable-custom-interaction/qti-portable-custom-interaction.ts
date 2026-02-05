@@ -2,16 +2,13 @@ import { css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { consume } from '@lit/context';
 
-import { removeDoubleSlashes } from '@qti-components/base';
-import { Interaction } from '@qti-components/base';
-import { itemContext } from '@qti-components/base';
+import { Interaction, itemContext, qtiContext, removeDoubleSlashes } from '@qti-components/base';
 
 import styles from './qti-portable-custom-interaction.styles';
 
 import type { CSSResultGroup } from 'lit';
-import type { ItemContext } from '@qti-components/base';
-import type { BaseType, Cardinality } from '@qti-components/base';
-import type { QtiVariableJSON, ResponseVariableType } from './interface';
+import type { BaseType, Cardinality, ItemContext, QtiContext } from '@qti-components/base';
+import type { QtiRecordItem, QtiVariableJSON, ResponseVariableType } from './interface';
 
 export class QtiPortableCustomInteraction extends Interaction {
   private _value: string | string[];
@@ -20,6 +17,7 @@ export class QtiPortableCustomInteraction extends Interaction {
   protected _pendingMessages: Array<{ method: string; params: any }> = [];
   protected iframe: HTMLIFrameElement;
   protected _iframeMessageOrigin: string | null = null;
+  private _iframeObjectUrl: string | null = null;
 
   // This implementation always renders inside an iframe.
   static override styles: CSSResultGroup = [
@@ -63,6 +61,10 @@ export class QtiPortableCustomInteraction extends Interaction {
   @consume({ context: itemContext, subscribe: true })
   @state()
   protected context?: ItemContext;
+
+  @consume({ context: qtiContext, subscribe: true })
+  @state()
+  protected qtiContext?: QtiContext;
 
   @state() response: string | string[] | null = null;
 
@@ -236,6 +238,231 @@ export class QtiPortableCustomInteraction extends Interaction {
   }
 
   /**
+   * Get direct child elements by tag name
+   */
+  private getDirectChildrenByTag(tagName: string): Element[] {
+    const needle = tagName.toLowerCase();
+    return Array.from(this.children).filter(child => child.tagName.toLowerCase() === needle);
+  }
+
+  /**
+   * Coerce a scalar value to the expected base-type when possible
+   */
+  private coerceBaseValue(value: unknown, baseType: BaseType): unknown {
+    if (value === null || value === undefined) return value;
+
+    switch (baseType) {
+      case 'integer': {
+        if (typeof value === 'number') return value;
+        const parsed = parseInt(String(value), 10);
+        return Number.isNaN(parsed) ? value : parsed;
+      }
+      case 'float':
+      case 'duration': {
+        if (typeof value === 'number') return value;
+        const parsed = parseFloat(String(value));
+        return Number.isNaN(parsed) ? value : parsed;
+      }
+      case 'boolean': {
+        if (typeof value === 'boolean') return value;
+        if (typeof value === 'string') {
+          const lowered = value.toLowerCase();
+          if (lowered === 'true') return true;
+          if (lowered === 'false') return false;
+        }
+        return value;
+      }
+      case 'string':
+      case 'identifier':
+      default:
+        return String(value);
+    }
+  }
+
+  /**
+   * Normalize an input into a list form
+   */
+  private normalizeListValue(value: unknown): unknown[] {
+    if (value === null || value === undefined) return [];
+    return Array.isArray(value) ? value : [value];
+  }
+
+  /**
+   * Convert a variable value to QtiVariableJSON
+   */
+  private variableToQtiVariableJSON(value: unknown, cardinality: Cardinality, baseType: BaseType): QtiVariableJSON {
+    if (cardinality === 'record' || baseType === 'record') {
+      return this.recordToQtiVariableJSON(value);
+    }
+
+    if (cardinality !== 'single') {
+      const listValues = this.normalizeListValue(value).map(v => this.coerceBaseValue(v, baseType));
+      return { list: { [baseType]: listValues } };
+    }
+
+    return { base: { [baseType]: this.coerceBaseValue(value, baseType) } };
+  }
+
+  /**
+   * Convert a record object into QtiVariableJSON
+   */
+  private recordToQtiVariableJSON(value: unknown): QtiVariableJSON {
+    if (!value || typeof value !== 'object') {
+      return { record: [] };
+    }
+
+    const recordEntries: QtiRecordItem[] = [];
+    for (const [name, entryValue] of Object.entries(value as Record<string, unknown>)) {
+      recordEntries.push(this.recordEntryFromValue(name, entryValue));
+    }
+
+    return { record: recordEntries };
+  }
+
+  /**
+   * Build a record entry from an arbitrary value
+   */
+  private recordEntryFromValue(name: string, entryValue: unknown): QtiRecordItem {
+    if (Array.isArray(entryValue)) {
+      const filtered = entryValue.filter(v => v !== null && v !== undefined);
+
+      if (filtered.length && filtered.every(v => typeof v === 'boolean')) {
+        return { name, list: { boolean: filtered as boolean[] } };
+      }
+
+      if (filtered.length && filtered.every(v => typeof v === 'number')) {
+        const numbers = filtered as number[];
+        const isIntegers = numbers.every(n => Number.isInteger(n));
+        return { name, list: { [isIntegers ? 'integer' : 'float']: numbers } };
+      }
+
+      return { name, list: { string: entryValue.map(v => (v === null || v === undefined ? '' : String(v))) } };
+    }
+
+    if (typeof entryValue === 'boolean') {
+      return { name, base: { boolean: entryValue } };
+    }
+
+    if (typeof entryValue === 'number') {
+      if (Number.isInteger(entryValue)) return { name, base: { integer: entryValue } };
+      return { name, base: { float: entryValue } };
+    }
+
+    if (entryValue === null || entryValue === undefined) {
+      return { name, base: { string: '' } };
+    }
+
+    if (typeof entryValue === 'object') {
+      try {
+        return { name, base: { string: JSON.stringify(entryValue) } };
+      } catch {
+        return { name, base: { string: String(entryValue) } };
+      }
+    }
+
+    return { name, base: { string: String(entryValue) } };
+  }
+
+  /**
+   * Extract default QTI_CONTEXT values from qti-context-declaration elements
+   */
+  private getQtiContextDefaultsFromItem(): Record<string, unknown> {
+    const itemElement = this.closest('qti-assessment-item');
+    if (!itemElement) return {};
+
+    const defaults: Record<string, unknown> = {};
+    const contextDeclarations = itemElement.querySelectorAll('qti-context-declaration[identifier="QTI_CONTEXT"]');
+
+    contextDeclarations.forEach(declaration => {
+      const defaultValueElement = declaration.querySelector('qti-default-value');
+      if (!defaultValueElement) return;
+
+      const valueElements = defaultValueElement.querySelectorAll('qti-value[field-identifier]');
+      valueElements.forEach(valueElement => {
+        const fieldIdentifier = valueElement.getAttribute('field-identifier');
+        if (!fieldIdentifier) return;
+
+        const baseType = (valueElement.getAttribute('base-type') || 'string') as BaseType;
+        const textContent = valueElement.textContent?.trim() || '';
+        defaults[fieldIdentifier] = this.coerceBaseValue(textContent, baseType);
+      });
+    });
+
+    return defaults;
+  }
+
+  /**
+   * Build a QTI_CONTEXT record for PCI consumption
+   */
+  private getQtiContextRecord(): QtiVariableJSON | null {
+    const defaults = this.getQtiContextDefaultsFromItem();
+    const runtime = this.qtiContext?.QTI_CONTEXT || {};
+    const merged: Record<string, unknown> = { ...defaults, ...runtime };
+    if (!Object.keys(merged).length) return null;
+
+    const normalized = {
+      candidateIdentifier: merged.candidateIdentifier ?? '',
+      testIdentifier: merged.testIdentifier ?? '',
+      environmentIdentifier: merged.environmentIdentifier ?? '',
+      ...merged
+    };
+
+    return this.recordToQtiVariableJSON(normalized);
+  }
+
+  /**
+   * Collect template variables referenced by qti-template-variable children
+   */
+  private getTemplateVariables(): Record<string, QtiVariableJSON> {
+    const templateVariables: Record<string, QtiVariableJSON> = {};
+    const templateVariableElements = this.getDirectChildrenByTag('qti-template-variable');
+    if (!templateVariableElements.length) return templateVariables;
+
+    templateVariableElements.forEach(el => {
+      const identifier = el.getAttribute('template-identifier') || el.getAttribute('identifier') || '';
+      if (!identifier) return;
+
+      const variable = this.context?.variables?.find(v => v.identifier === identifier);
+      if (!variable) return;
+
+      const cardinality = (variable.cardinality || 'single') as Cardinality;
+      const baseType = (variable.baseType || 'string') as BaseType;
+      templateVariables[identifier] = this.variableToQtiVariableJSON(variable.value, cardinality, baseType);
+    });
+
+    return templateVariables;
+  }
+
+  /**
+   * Collect context variables referenced by qti-context-variable children
+   */
+  private getContextVariables(): Record<string, QtiVariableJSON> {
+    const contextVariables: Record<string, QtiVariableJSON> = {};
+    const contextVariableElements = this.getDirectChildrenByTag('qti-context-variable');
+    if (!contextVariableElements.length) return contextVariables;
+
+    contextVariableElements.forEach(el => {
+      const identifier = el.getAttribute('identifier') || '';
+      if (!identifier) return;
+
+      if (identifier === 'QTI_CONTEXT') {
+        const record = this.getQtiContextRecord();
+        if (record) contextVariables[identifier] = record;
+        return;
+      }
+
+      const variable = this.context?.variables?.find(v => v.identifier === identifier);
+      if (!variable) return;
+
+      const cardinality = (variable.cardinality || 'single') as Cardinality;
+      const baseType = (variable.baseType || 'string') as BaseType;
+      contextVariables[identifier] = this.variableToQtiVariableJSON(variable.value, cardinality, baseType);
+    });
+
+    return contextVariables;
+  }
+
+  /**
    * Adds hyphenated versions of camelCase keys to properties object
    */
   private addHyphenatedKeys(properties: Record<string, any>): Record<string, any> {
@@ -358,9 +585,120 @@ export class QtiPortableCustomInteraction extends Interaction {
     return unescaped;
   }
 
+  /**
+   * Resolve stylesheet href against baseUrl or document origin
+   */
+  private resolveStylesheetHref(href: string): string {
+    if (!href) return href;
+
+    if (href.startsWith('http://') || href.startsWith('https://')) {
+      return href;
+    }
+
+    if (href.startsWith('//')) {
+      return `${window.location.protocol}${href}`;
+    }
+
+    const base =
+      this.baseUrl && this.baseUrl.length > 0
+        ? this.baseUrl.startsWith('http') || this.baseUrl.startsWith('blob') || this.baseUrl.startsWith('base64')
+          ? this.baseUrl
+          : removeDoubleSlashes(`${window.location.origin}${this.baseUrl}`)
+        : window.location.origin;
+
+    const normalizedBase = base.endsWith('/') ? base : `${base}/`;
+
+    try {
+      return new URL(href, normalizedBase).toString();
+    } catch {
+      return href;
+    }
+  }
+
+  /**
+   * Collect qti-stylesheet elements for iframe injection
+   */
+  private getStylesheetConfigs(): Array<{ href?: string; content?: string; scoped?: boolean; key?: string }> {
+    const stylesheets = this.getDirectChildrenByTag('qti-stylesheet');
+    if (!stylesheets.length) return [];
+
+    return stylesheets
+      .map((el, index) => {
+        const href = el.getAttribute('href');
+        if (href) {
+          const resolved = this.resolveStylesheetHref(href);
+          return { href: resolved, scoped: false, key: resolved };
+        }
+        const content = el.textContent?.trim();
+        if (content) {
+          return { content, scoped: false, key: `inline-${index}` };
+        }
+        return null;
+      })
+      .filter(Boolean);
+  }
+
+  private getSharedStylesheetContent(): string | null {
+    let cssText = '';
+    const seen = new Set<string>();
+    const sheets = Array.from(document.styleSheets || []);
+
+    for (const sheet of sheets) {
+      try {
+        if (sheet.href && !sheet.href.startsWith(window.location.origin)) {
+          continue;
+        }
+        const ownerNode = sheet.ownerNode as HTMLElement | null;
+        if (ownerNode && ownerNode.tagName === 'STYLE') {
+          const text = ownerNode.textContent || '';
+          if (text && !seen.has(text)) {
+            cssText += `${text}\n`;
+            seen.add(text);
+          }
+          continue;
+        }
+        const rules = sheet.cssRules ? Array.from(sheet.cssRules) : [];
+        if (rules.length) {
+          const text = rules.map(rule => rule.cssText).join('\n');
+          if (text && !seen.has(text)) {
+            cssText += `${text}\n`;
+            seen.add(text);
+          }
+        }
+      } catch {
+        // ignore cross-origin or inaccessible stylesheets
+      }
+    }
+
+    const trimmed = cssText.trim();
+    return trimmed.length ? trimmed : null;
+  }
+
+  private getSharedStylesheetConfig(): { content: string; scoped: boolean; key: string } | null {
+    const content = this.getSharedStylesheetContent();
+    if (!content) return null;
+    return { content, scoped: false, key: '__qti_shared_css__' };
+  }
+
+  /**
+   * IFRAME MODE: Add stylesheets to iframe
+   */
+  private addStylesheetsToIframe() {
+    const stylesheets = this.getStylesheetConfigs();
+    const shared = this.getSharedStylesheetConfig();
+    const payload = shared ? [shared, ...stylesheets] : stylesheets;
+    if (payload.length > 0) {
+      this.sendMessageToIframe('setStylesheets', payload);
+    }
+  }
+
   override disconnectedCallback(): void {
     super.disconnectedCallback();
     window.removeEventListener('message', this.handleIframeMessage);
+    if (this._iframeObjectUrl) {
+      URL.revokeObjectURL(this._iframeObjectUrl);
+      this._iframeObjectUrl = null;
+    }
   }
 
   /**
@@ -483,6 +821,10 @@ export class QtiPortableCustomInteraction extends Interaction {
    * IFRAME MODE: Create iframe element
    */
   protected createIframe() {
+    if (this._iframeObjectUrl) {
+      URL.revokeObjectURL(this._iframeObjectUrl);
+      this._iframeObjectUrl = null;
+    }
     this.iframe = document.createElement('iframe');
     this.iframe.id = `pci-iframe-${this.responseIdentifier}`;
     this.iframe.setAttribute('title', 'QTI PCI Iframe');
@@ -496,7 +838,12 @@ export class QtiPortableCustomInteraction extends Interaction {
     // Handle iframe load event
     this.iframe.onload = () => {
       this._iframeLoaded = true;
+      if (this._iframeObjectUrl) {
+        URL.revokeObjectURL(this._iframeObjectUrl);
+        this._iframeObjectUrl = null;
+      }
       this.addMarkupToIframe();
+      this.addStylesheetsToIframe();
       // Send initialization data to iframe
       this.sendIframeInitData();
     };
@@ -508,9 +855,15 @@ export class QtiPortableCustomInteraction extends Interaction {
     // Generate iframe HTML content with all required scripts
     const iframeContent = this.generateIframeContent();
 
-    // Set iframe src as data URI
-    const encodedContent = encodeURIComponent(iframeContent);
-    this.iframe.src = `data:text/html;charset=utf-8,${encodedContent}`;
+    // Prefer a same-origin blob URL to avoid postMessage target-origin mismatches (e.g. in Storybook).
+    try {
+      const blob = new Blob([iframeContent], { type: 'text/html' });
+      this._iframeObjectUrl = URL.createObjectURL(blob);
+      this.iframe.src = this._iframeObjectUrl;
+    } catch {
+      const encodedContent = encodeURIComponent(iframeContent);
+      this.iframe.src = `data:text/html;charset=utf-8,${encodedContent}`;
+    }
 
     // Append iframe to component
     this.appendChild(this.iframe);
@@ -534,6 +887,8 @@ export class QtiPortableCustomInteraction extends Interaction {
           : removeDoubleSlashes(`${window.location.origin}${this.baseUrl}`),
       responseIdentifier: this.responseIdentifier,
       properties,
+      contextVariables: this.getContextVariables(),
+      templateVariables: this.getTemplateVariables(),
       dataAttributes: { ...this.dataset },
       interactionModules: this.getInteractionModules(),
       boundTo: storedState ? null : this.boundTo,
@@ -703,6 +1058,8 @@ export class QtiPortableCustomInteraction extends Interaction {
       pendingMarkup: null,
       pendingProperties: null,
       pendingState: null,
+      pendingStylesheets: null,
+      stylesheetKeys: {},
       interactionChangedViaEvent: false,
       eventBridgeAttached: false,
       lastResponseStr: null,
@@ -761,6 +1118,10 @@ export class QtiPortableCustomInteraction extends Interaction {
         if (this.pendingProperties !== null) {
           this.setProperties(this.pendingProperties);
           this.pendingProperties = null;
+        }
+        if (this.pendingStylesheets !== null) {
+          this.setStylesheets(this.pendingStylesheets);
+          this.pendingStylesheets = null;
         }
 
         // Bridge qti-interaction-changed events (preferred over polling)
@@ -1032,6 +1393,51 @@ export class QtiPortableCustomInteraction extends Interaction {
         this.propertiesEl.innerHTML = propertiesHtml || '';
       },
 
+      minifyCss: function(cssContent) {
+        return cssContent
+          .replace(/\\/\\*[\\s\\S]*?\\*\\//g, '')
+          .replace(/\\s+/g, ' ')
+          .replace(/\\s*([{}:;])\\s*/g, '$1')
+          .trim();
+      },
+
+      injectStylesheet: function(cssContent, key, scoped) {
+        if (!cssContent) return;
+        const head = document.head || document.getElementsByTagName('head')[0] || document.body;
+        if (!head) return;
+        const resolvedKey = key || '';
+        if (resolvedKey && this.stylesheetKeys[resolvedKey]) return;
+        const shouldScope = scoped !== false;
+        const styleEl = document.createElement('style');
+        styleEl.media = 'screen';
+        if (resolvedKey) styleEl.setAttribute('data-qti-stylesheet', resolvedKey);
+        const minified = this.minifyCss(cssContent);
+        styleEl.textContent = shouldScope ? '@scope {' + minified + '}' : minified;
+        head.appendChild(styleEl);
+        if (resolvedKey) this.stylesheetKeys[resolvedKey] = true;
+      },
+
+      setStylesheets: function(stylesheets) {
+        if (!Array.isArray(stylesheets)) return;
+        stylesheets.forEach((sheet, index) => {
+          if (!sheet) return;
+          const key = sheet.key || sheet.href || ('inline-' + index);
+          const scoped = sheet.scoped !== false;
+          if (sheet.content) {
+            this.injectStylesheet(sheet.content, key, scoped);
+            return;
+          }
+          if (sheet.href) {
+            fetch(sheet.href)
+              .then(resp => resp.text())
+              .then(css => this.injectStylesheet(css, key, scoped))
+              .catch(() => {
+                // ignore stylesheet load errors
+              });
+          }
+        });
+      },
+
       applyBoundTo: function(boundTo) {
         if (!this.pciInstance || typeof this.pciInstance.setResponse !== 'function') return;
         const value = boundTo && (boundTo[this.responseIdentifier] || boundTo[Object.keys(boundTo)[0]]);
@@ -1107,6 +1513,10 @@ export class QtiPortableCustomInteraction extends Interaction {
 
         case 'setProperties':
           PCIManager.setProperties(data.params);
+          break;
+
+        case 'setStylesheets':
+          PCIManager.setStylesheets(data.params);
           break;
 
         case 'setState':
