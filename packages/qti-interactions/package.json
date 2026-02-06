@@ -1,7 +1,7 @@
 {
   "name": "@qti-components/interactions",
   "description": "QTI interactions utilities",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "author": "",
   "dependencies": {
     "@qti-components/base": "workspace:^",

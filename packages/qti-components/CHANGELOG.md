@@ -1,5 +1,24 @@
 # Changelog
 
+## [7.21.1](https://github.com/Citolab/qti-components/compare/qti-components-v7.21.0...qti-components-v7.21.1) (2026-02-06)
+
+
+### Bug Fixes
+
+* separate cem generation from build to avoid failing actions ([4dbef31](https://github.com/Citolab/qti-components/commit/4dbef31580b0e98c58f053382444090a2913c88a))
+* separate cem generation from build to avoid failing actions ([cd29f71](https://github.com/Citolab/qti-components/commit/cd29f716b1b76b9255a5dd0636b26e33fcbe1539))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @qti-components/elements bumped to 1.2.0
+    * @qti-components/interactions bumped to 1.5.1
+    * @qti-components/item bumped to 1.0.8
+    * @qti-components/loader bumped to 1.0.3
+    * @qti-components/test bumped to 1.1.7
+
 ## [7.21.0](https://github.com/Citolab/qti-components/compare/qti-components-v7.20.4...qti-components-v7.21.0) (2026-02-05)
 
 

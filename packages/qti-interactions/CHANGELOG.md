@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.1](https://github.com/Citolab/qti-components/compare/interactions-v1.5.0...interactions-v1.5.1) (2026-02-06)
+
+
+### Bug Fixes
+
+* separate cem generation from build to avoid failing actions ([4dbef31](https://github.com/Citolab/qti-components/commit/4dbef31580b0e98c58f053382444090a2913c88a))
+
 ## [1.5.0](https://github.com/Citolab/qti-components/compare/interactions-v1.4.2...interactions-v1.5.0) (2026-02-05)
 
 
