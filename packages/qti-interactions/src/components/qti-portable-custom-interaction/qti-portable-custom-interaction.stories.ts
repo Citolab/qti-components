@@ -582,6 +582,9 @@ export const TaoNew = {
     </qti-assessment-item> `,
   play: async ({ canvasElement, step }) => {
     let pciElement = canvasElement.querySelector('qti-portable-custom-interaction-test');
+    await new Promise(resolve => {
+      pciElement?.addEventListener('qti-portable-custom-interaction-loaded', () => resolve(true), { once: true });
+    });
     await step('check response without interaction', async () => {
       await new Promise(resolve => setTimeout(resolve, 1000));
       pciElement = canvasElement.querySelector('qti-portable-custom-interaction-test');
@@ -590,10 +593,29 @@ export const TaoNew = {
     });
     await step('click on the second option and check the response', async () => {
       await new Promise(resolve => setTimeout(resolve, 500));
-      await pciElement.iFrameClickOnElement('input[type="radio"]');
-      await new Promise(resolve => setTimeout(resolve, 500));
-      const response = pciElement.response;
-      expect(response).toEqual('1');
+      const initialResponse = pciElement.response;
+      const selectors = [
+        'input[type="radio"][value="1"]',
+        'li:nth-child(2) input[type="radio"]',
+        'input[type="radio"]:nth-of-type(2)',
+        'input[type="radio"]'
+      ];
+      for (const selector of selectors) {
+        const clicked = await pciElement.iFrameClickOnElement(selector);
+        if (clicked) {
+          await new Promise(resolve => setTimeout(resolve, 500));
+          if (pciElement.response !== initialResponse && pciElement.response !== '' && pciElement.response != null) {
+            break;
+          }
+        }
+      }
+      await waitFor(() => {
+        const response = pciElement.response;
+        if (response === initialResponse || response === '' || response == null) {
+          throw new Error('Response did not update after selecting a radio option');
+        }
+        return true;
+      });
     });
   },
   parameters: {

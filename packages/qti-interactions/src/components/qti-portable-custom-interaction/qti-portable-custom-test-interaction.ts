@@ -248,6 +248,41 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
   }
 
   /**
+   * Gets the bounding client rect for an element inside the iframe
+   * @param selector The CSS selector string
+   * @returns Promise that resolves with the rect or null
+   */
+  async iFrameGetBoundingClientRect(
+    selector: string
+  ): Promise<{ left: number; top: number; width: number; height: number } | null> {
+    return new Promise(resolve => {
+      const messageId = `get-bounding-rect-${Date.now()}`;
+
+      const messageHandler = (event: MessageEvent) => {
+        const { data } = event;
+        if (
+          data?.source === 'qti-pci-iframe' &&
+          (!data?.responseIdentifier || data?.responseIdentifier === this.responseIdentifier) &&
+          data?.method === 'getBoundingRectResponse' &&
+          data?.messageId === messageId
+        ) {
+          window.removeEventListener('message', messageHandler);
+          resolve(data.rect ?? null);
+        }
+      };
+
+      window.addEventListener('message', messageHandler);
+
+      this.sendMessageToIframe('getBoundingRect', { selector, messageId });
+
+      setTimeout(() => {
+        window.removeEventListener('message', messageHandler);
+        resolve(null);
+      }, 5000);
+    });
+  }
+
+  /**
    * Sets the value of an input element containing the specified text
    * @param text The text to search for within elements
    * @param value The value to set
