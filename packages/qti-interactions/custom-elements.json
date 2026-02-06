@@ -95,7 +95,7 @@
           "members": [
             {
               "kind": "method",
-              "name": "_handleSlotChange",
+              "name": "#handleSlotChange",
               "privacy": "private"
             },
             {
@@ -190,15 +190,6 @@
           "members": [
             {
               "kind": "field",
-              "name": "_contentBlobUrl",
-              "type": {
-                "text": "string"
-              },
-              "privacy": "private",
-              "default": "null"
-            },
-            {
-              "kind": "field",
               "name": "_errorMessage",
               "type": {
                 "text": "string"
@@ -208,20 +199,143 @@
             },
             {
               "kind": "field",
-              "name": "_manifestUrl",
+              "name": "#contentBlobUrl",
+              "privacy": "private",
               "type": {
                 "text": "string"
               },
-              "privacy": "private",
               "default": "null"
             },
             {
+              "kind": "method",
+              "name": "#getBaseCandidates",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#getIFrames",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#getInnerIFrames",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "iframeDocument",
+                  "type": {
+                    "text": "Document"
+                  }
+                },
+                {
+                  "name": "iframes",
+                  "default": "[]",
+                  "type": {
+                    "text": "HTMLIFrameElement[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#getManifestBaseUrl",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#getManifestParentBaseUrl",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | null"
+                }
+              }
+            },
+            {
               "kind": "field",
-              "name": "_resourceBaseUrl",
+              "name": "#manifestUrl",
+              "privacy": "private",
               "type": {
                 "text": "string"
               },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#postToWindowAndIframes",
               "privacy": "private",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "data",
+                  "type": {
+                    "text": "any"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#rawResponse",
+              "privacy": "private",
+              "type": {
+                "text": "string | string[]"
+              },
+              "default": "''"
+            },
+            {
+              "kind": "method",
+              "name": "#resolveResourceWithFallback",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<{ url: string; baseUrl: string | null; text?: string }>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "ref",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "baseCandidates",
+                  "type": {
+                    "text": "string[]"
+                  }
+                },
+                {
+                  "name": "options",
+                  "default": "{}",
+                  "type": {
+                    "text": "{ returnText?: boolean }"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#resourceBaseUrl",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
               "default": "null"
             },
             {
@@ -250,61 +364,6 @@
             },
             {
               "kind": "method",
-              "name": "getBaseCandidates",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "string[]"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "getIFrames",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "getInnerIFrames",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "iframeDocument",
-                  "type": {
-                    "text": "Document"
-                  }
-                },
-                {
-                  "name": "iframes",
-                  "default": "[]",
-                  "type": {
-                    "text": "HTMLIFrameElement[]"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "getManifestBaseUrl",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "string | null"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "getManifestParentBaseUrl",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "string | null"
-                }
-              }
-            },
-            {
-              "kind": "method",
               "name": "handlePostMessage",
               "parameters": [
                 {
@@ -329,65 +388,6 @@
               "type": {
                 "text": "{\n    script: string[];\n    style: string[];\n    media: string[];\n  }"
               }
-            },
-            {
-              "kind": "method",
-              "name": "postToWindowAndIframes",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "type",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "data",
-                  "type": {
-                    "text": "any"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "field",
-              "name": "rawResponse",
-              "type": {
-                "text": "string | string[]"
-              },
-              "privacy": "private",
-              "default": "''"
-            },
-            {
-              "kind": "method",
-              "name": "resolveResourceWithFallback",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "Promise<{ url: string; baseUrl: string | null; text?: string }>"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "ref",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "baseCandidates",
-                  "type": {
-                    "text": "string[]"
-                  }
-                },
-                {
-                  "name": "options",
-                  "default": "{}",
-                  "type": {
-                    "text": "{ returnText?: boolean }"
-                  }
-                }
-              ]
             },
             {
               "kind": "field",
@@ -842,7 +842,7 @@
           "members": [
             {
               "kind": "method",
-              "name": "getMatches",
+              "name": "#getMatches",
               "privacy": "private",
               "return": {
                 "type": {
@@ -961,40 +961,52 @@
             },
             {
               "kind": "field",
-              "name": "endPoint",
+              "name": "#endPoint",
+              "privacy": "private",
               "type": {
                 "text": "HTMLElement | null"
               },
-              "privacy": "private",
               "default": "null"
             },
             {
-              "kind": "field",
-              "name": "grImage",
-              "type": {
-                "text": "any[]"
-              },
-              "privacy": "private"
+              "kind": "method",
+              "name": "#getResponseArray",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string[]"
+                }
+              }
             },
             {
               "kind": "field",
-              "name": "hotspots",
+              "name": "#hotspots",
+              "privacy": "private",
               "type": {
                 "text": "any[] | NodeListOf<QtiAssociableHotspot>"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "mouseCoord",
-              "type": {
-                "text": "{ x: number; y: number }"
-              },
-              "privacy": "private"
+              }
             },
             {
               "kind": "method",
-              "name": "positionHotspotOnRegister",
+              "name": "#normalizeResponse",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string | string[] | null | undefined"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#positionHotspotOnRegister",
               "privacy": "private",
               "return": {
                 "type": {
@@ -1009,6 +1021,30 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "field",
+              "name": "#startPoint",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "grImage",
+              "type": {
+                "text": "any[]"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "mouseCoord",
+              "type": {
+                "text": "{ x: number; y: number }"
+              },
+              "privacy": "private"
             },
             {
               "kind": "method",
@@ -1030,15 +1066,6 @@
                 "text": "{ x: number; y: number }"
               },
               "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "startPoint",
-              "type": {
-                "text": "HTMLElement | null"
-              },
-              "privacy": "private",
-              "default": "null"
             },
             {
               "kind": "method",
@@ -1110,7 +1137,7 @@
           "members": [
             {
               "kind": "method",
-              "name": "positionHotspotOnRegister",
+              "name": "#positionHotspotOnRegister",
               "privacy": "private",
               "return": {
                 "type": {
@@ -1188,16 +1215,8 @@
               "default": "[]"
             },
             {
-              "kind": "field",
-              "name": "choiceOrdering",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "protected"
-            },
-            {
               "kind": "method",
-              "name": "positionHotspotOnRegister",
+              "name": "#positionHotspotOnRegister",
               "privacy": "private",
               "return": {
                 "type": {
@@ -1215,7 +1234,7 @@
             },
             {
               "kind": "method",
-              "name": "setHotspotOrder",
+              "name": "#setHotspotOrder",
               "privacy": "private",
               "return": {
                 "type": {
@@ -1230,6 +1249,14 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "field",
+              "name": "choiceOrdering",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "protected"
             },
             {
               "kind": "method",
@@ -1298,7 +1325,7 @@
           "members": [
             {
               "kind": "method",
-              "name": "getImageLoadPromise",
+              "name": "#getImageLoadPromise",
               "privacy": "private",
               "return": {
                 "type": {
@@ -1316,16 +1343,16 @@
             },
             {
               "kind": "field",
-              "name": "imageLoadPromise",
+              "name": "#imageLoadPromise",
+              "privacy": "private",
               "type": {
                 "text": "Promise<HTMLImageElement> | null"
               },
-              "privacy": "private",
               "default": "null"
             },
             {
               "kind": "method",
-              "name": "positionHotspotOnRegister",
+              "name": "#positionHotspotOnRegister",
               "privacy": "private",
               "return": {
                 "type": {
@@ -1395,6 +1422,17 @@
           "members": [
             {
               "kind": "field",
+              "name": "#classObject",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#updateHostClasses",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
               "name": "class",
               "type": {
                 "text": "string"
@@ -1402,17 +1440,6 @@
               "default": "''",
               "attribute": "class",
               "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "classObject",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "updateHostClasses",
-              "privacy": "private"
             }
           ],
           "attributes": [
@@ -1477,22 +1504,139 @@
           "name": "QtiInlineChoiceInteraction",
           "members": [
             {
+              "kind": "field",
+              "name": "_calculatedMinWidth",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "_dropdownOpen",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "protected",
+              "default": "false"
+            },
+            {
               "kind": "method",
-              "name": "_updateOptions",
+              "name": "_estimateOptimalWidth",
+              "privacy": "private",
+              "description": "Simple width estimation based on text content length - no DOM manipulation needed"
+            },
+            {
+              "kind": "field",
+              "name": "_supportsCustomizableSelectCache",
+              "type": {
+                "text": "boolean | null"
+              },
+              "privacy": "private",
+              "static": true,
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_widthCalculationTimer",
+              "type": {
+                "text": "number | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#focusTrigger",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#onCustomMenuKeyDown",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#onCustomTriggerKeyDown",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#onDocumentKeyDown",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#onDocumentPointerDown",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#onNativeChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#onToggleCustomDropdown",
               "privacy": "private"
             },
             {
               "kind": "method",
-              "name": "choiceSelected",
-              "privacy": "protected",
+              "name": "#positionCustomMenu",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#selectedOption",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "OptionType | undefined"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#selectValue",
+              "privacy": "private",
               "parameters": [
                 {
-                  "name": "event",
+                  "name": "value",
                   "type": {
-                    "text": "Event"
+                    "text": "string"
                   }
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "#setDropdownOpen",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "open",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#supportsCustomizableSelect",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Progressive enhancement for \"customizable select\" (WHATWG / MDN: `appearance: base-select` + `::picker()`).\n\nNotes on current browser behavior (observed around Feb 2026):\n- Chromium-based browsers can support customizable select in light DOM, but it does not reliably work when the\n  `<select>` lives inside a shadow root (e.g. the internal `<button>/<selectedcontent>` can end up effectively\n  not rendered, so rich content like images disappears).\n- Firefox support is not generally available yet, so we fall back to our custom listbox there as well.\n\nBecause `CSS.supports(...)` may return syntax-only true, we do a final DOM probe to ensure the customizable-select\nmarkup actually takes effect in the current environment before opting in."
+            },
+            {
+              "kind": "method",
+              "name": "#updateOptions",
+              "privacy": "private"
             },
             {
               "kind": "field",
@@ -1647,6 +1791,24 @@
               "default": "[]"
             },
             {
+              "kind": "method",
+              "name": "#getMatches",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "{ source: string; target: string }[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "responseVariable",
+                  "type": {
+                    "text": "ResponseVariable"
+                  }
+                }
+              ]
+            },
+            {
               "kind": "field",
               "name": "class",
               "type": {
@@ -1663,24 +1825,6 @@
               },
               "privacy": "protected",
               "default": "null"
-            },
-            {
-              "kind": "method",
-              "name": "getMatches",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "{ source: string; target: string }[]"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "responseVariable",
-                  "type": {
-                    "text": "ResponseVariable"
-                  }
-                }
-              ]
             },
             {
               "kind": "field",
@@ -1845,11 +1989,11 @@
           "members": [
             {
               "kind": "field",
-              "name": "_value",
+              "name": "#value",
+              "privacy": "private",
               "type": {
                 "text": "number"
               },
-              "privacy": "private",
               "default": "null"
             },
             {
@@ -2098,18 +2242,9 @@
             },
             {
               "kind": "field",
-              "name": "_parsedRequirePaths",
+              "name": "_iframeObjectUrl",
               "type": {
-                "text": "Record<string, string | string[]>"
-              },
-              "privacy": "private",
-              "default": "null"
-            },
-            {
-              "kind": "field",
-              "name": "_parsedRequireShim",
-              "type": {
-                "text": "Record<string, any>"
+                "text": "string | null"
               },
               "privacy": "private",
               "default": "null"
@@ -2124,25 +2259,8 @@
               "default": "[]"
             },
             {
-              "kind": "field",
-              "name": "_previousState",
-              "type": {
-                "text": "{\n    pointerEvents?: string;\n    position?: string;\n  }"
-              },
-              "privacy": "private",
-              "default": "null"
-            },
-            {
-              "kind": "field",
-              "name": "_value",
-              "type": {
-                "text": "string | string[]"
-              },
-              "privacy": "private"
-            },
-            {
               "kind": "method",
-              "name": "addHyphenatedKeys",
+              "name": "#addHyphenatedKeys",
               "privacy": "private",
               "return": {
                 "type": {
@@ -2161,9 +2279,197 @@
             },
             {
               "kind": "method",
-              "name": "addMarkupToIframe",
+              "name": "#addMarkupToIframe",
               "privacy": "private",
               "description": "IFRAME MODE: Add markup and properties to iframe"
+            },
+            {
+              "kind": "method",
+              "name": "#addStylesheetsToIframe",
+              "privacy": "private",
+              "description": "IFRAME MODE: Add stylesheets to iframe"
+            },
+            {
+              "kind": "method",
+              "name": "#convertQtiVariableJSON",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | string[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "input",
+                  "type": {
+                    "text": "QtiVariableJSON"
+                  }
+                }
+              ],
+              "description": "Converts QtiVariableJSON to a string or string array"
+            },
+            {
+              "kind": "method",
+              "name": "#getDefaultRequirePaths",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, string | string[]>"
+                }
+              },
+              "description": "Get the default require paths"
+            },
+            {
+              "kind": "method",
+              "name": "#getDefaultRequireShim",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, any>"
+                }
+              },
+              "description": "Get the default require shim"
+            },
+            {
+              "kind": "method",
+              "name": "#getFinalRequirePaths",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, string | string[]>"
+                }
+              },
+              "description": "Get the final require paths by combining defaults with user-provided paths"
+            },
+            {
+              "kind": "method",
+              "name": "#getFinalRequireShim",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, any>"
+                }
+              },
+              "description": "Get the final require shim by combining defaults with user-provided shim"
+            },
+            {
+              "kind": "method",
+              "name": "#getInteractionModules",
+              "privacy": "private",
+              "description": "IFRAME MODE: Get interaction modules from DOM"
+            },
+            {
+              "kind": "method",
+              "name": "#getRequirePaths",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, string | string[]>"
+                }
+              },
+              "description": "Parse the require paths JSON string into an object"
+            },
+            {
+              "kind": "method",
+              "name": "#getRequireShim",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, any>"
+                }
+              },
+              "description": "Parse the require shim JSON string into an object"
+            },
+            {
+              "kind": "method",
+              "name": "#initializeInteraction",
+              "privacy": "private",
+              "description": "IFRAME MODE: Initialize the interaction"
+            },
+            {
+              "kind": "field",
+              "name": "#parsedRequirePaths",
+              "privacy": "private",
+              "type": {
+                "text": "Record<string, string | string[]>"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#parsedRequireShim",
+              "privacy": "private",
+              "type": {
+                "text": "Record<string, any>"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#previousState",
+              "privacy": "private",
+              "type": {
+                "text": "{\n    pointerEvents?: string;\n    position?: string;\n  }"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#processPendingMessages",
+              "privacy": "private",
+              "description": "IFRAME MODE: Process pending messages"
+            },
+            {
+              "kind": "method",
+              "name": "#sendIframeInitData",
+              "privacy": "private",
+              "description": "IFRAME MODE: Send initialization data to iframe"
+            },
+            {
+              "kind": "method",
+              "name": "#unescapeDataAttributes",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, any>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "obj",
+                  "type": {
+                    "text": "Record<string, any>"
+                  }
+                }
+              ],
+              "description": "Unescape HTML entities in all values of an object"
+            },
+            {
+              "kind": "method",
+              "name": "#unescapeHtml",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "str",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Unescape HTML entities in a string"
+            },
+            {
+              "kind": "field",
+              "name": "#value",
+              "privacy": "private",
+              "type": {
+                "text": "string | string[]"
+              }
             },
             {
               "kind": "field",
@@ -2182,31 +2488,37 @@
               }
             },
             {
+              "kind": "method",
+              "name": "coerceBaseValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "baseType",
+                  "type": {
+                    "text": "BaseType"
+                  }
+                }
+              ],
+              "description": "Coerce a scalar value to the expected base-type when possible"
+            },
+            {
               "kind": "field",
               "name": "context",
               "type": {
                 "text": "ItemContext | undefined"
               },
               "privacy": "protected"
-            },
-            {
-              "kind": "method",
-              "name": "convertQtiVariableJSON",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "string | string[]"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "input",
-                  "type": {
-                    "text": "QtiVariableJSON"
-                  }
-                }
-              ],
-              "description": "Converts QtiVariableJSON to a string or string array"
             },
             {
               "kind": "method",
@@ -2247,75 +2559,97 @@
             },
             {
               "kind": "method",
-              "name": "getDefaultRequirePaths",
+              "name": "getContextVariables",
               "privacy": "private",
               "return": {
                 "type": {
-                  "text": "Record<string, string | string[]>"
+                  "text": "Record<string, QtiVariableJSON>"
                 }
               },
-              "description": "Get the default require paths"
+              "description": "Collect context variables referenced by qti-context-variable children"
             },
             {
               "kind": "method",
-              "name": "getDefaultRequireShim",
+              "name": "getDirectChildrenByTag",
               "privacy": "private",
               "return": {
                 "type": {
-                  "text": "Record<string, any>"
+                  "text": "Element[]"
                 }
               },
-              "description": "Get the default require shim"
+              "parameters": [
+                {
+                  "name": "tagName",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Get direct child elements by tag name"
             },
             {
               "kind": "method",
-              "name": "getFinalRequirePaths",
+              "name": "getQtiContextDefaultsFromItem",
               "privacy": "private",
               "return": {
                 "type": {
-                  "text": "Record<string, string | string[]>"
+                  "text": "Record<string, unknown>"
                 }
               },
-              "description": "Get the final require paths by combining defaults with user-provided paths"
+              "description": "Extract default QTI_CONTEXT values from qti-context-declaration elements"
             },
             {
               "kind": "method",
-              "name": "getFinalRequireShim",
+              "name": "getQtiContextRecord",
               "privacy": "private",
               "return": {
                 "type": {
-                  "text": "Record<string, any>"
+                  "text": "QtiVariableJSON | null"
                 }
               },
-              "description": "Get the final require shim by combining defaults with user-provided shim"
+              "description": "Build a QTI_CONTEXT record for PCI consumption"
             },
             {
               "kind": "method",
-              "name": "getInteractionModules",
-              "privacy": "private",
-              "description": "IFRAME MODE: Get interaction modules from DOM"
-            },
-            {
-              "kind": "method",
-              "name": "getRequirePaths",
+              "name": "getSharedStylesheetConfig",
               "privacy": "private",
               "return": {
                 "type": {
-                  "text": "Record<string, string | string[]>"
+                  "text": "{ content: string; scoped: boolean; key: string } | null"
                 }
-              },
-              "description": "Parse the require paths JSON string into an object"
+              }
             },
             {
               "kind": "method",
-              "name": "getRequireShim",
+              "name": "getSharedStylesheetContent",
               "privacy": "private",
               "return": {
                 "type": {
-                  "text": "Record<string, any>"
+                  "text": "string | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getStylesheetConfigs",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Array<{ href?: string; content?: string; scoped?: boolean; key?: string }>"
                 }
               },
-              "description": "Parse the require shim JSON string into an object"
+              "description": "Collect qti-stylesheet elements for iframe injection"
+            },
+            {
+              "kind": "method",
+              "name": "getTemplateVariables",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, QtiVariableJSON>"
+                }
+              },
+              "description": "Collect template variables referenced by qti-template-variable children"
             },
             {
               "kind": "field",
@@ -2332,12 +2666,6 @@
               "privacy": "protected"
             },
             {
-              "kind": "method",
-              "name": "initializeInteraction",
-              "privacy": "private",
-              "description": "IFRAME MODE: Initialize the interaction"
-            },
-            {
               "kind": "field",
               "name": "module",
               "type": {
@@ -2347,9 +2675,74 @@
             },
             {
               "kind": "method",
-              "name": "processPendingMessages",
+              "name": "normalizeListValue",
               "privacy": "private",
-              "description": "IFRAME MODE: Process pending messages"
+              "return": {
+                "type": {
+                  "text": "unknown[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "unknown"
+                  }
+                }
+              ],
+              "description": "Normalize an input into a list form"
+            },
+            {
+              "kind": "field",
+              "name": "qtiContext",
+              "type": {
+                "text": "QtiContext | undefined"
+              },
+              "privacy": "protected"
+            },
+            {
+              "kind": "method",
+              "name": "recordEntryFromValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "QtiRecordItem"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "entryValue",
+                  "type": {
+                    "text": "unknown"
+                  }
+                }
+              ],
+              "description": "Build a record entry from an arbitrary value"
+            },
+            {
+              "kind": "method",
+              "name": "recordToQtiVariableJSON",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "QtiVariableJSON"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "unknown"
+                  }
+                }
+              ],
+              "description": "Convert a record object into QtiVariableJSON"
             },
             {
               "kind": "field",
@@ -2377,6 +2770,25 @@
               },
               "default": "''",
               "attribute": "data-require-shim"
+            },
+            {
+              "kind": "method",
+              "name": "resolveStylesheetHref",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "href",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve stylesheet href against baseUrl or document origin"
             },
             {
               "kind": "field",
@@ -2419,12 +2831,6 @@
             },
             {
               "kind": "method",
-              "name": "sendIframeInitData",
-              "privacy": "private",
-              "description": "IFRAME MODE: Send initialization data to iframe"
-            },
-            {
-              "kind": "method",
               "name": "sendMessageToIframe",
               "privacy": "protected",
               "parameters": [
@@ -2463,44 +2869,6 @@
               "description": "Toggle the display of the correct response"
             },
             {
-              "kind": "method",
-              "name": "unescapeDataAttributes",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "Record<string, any>"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "obj",
-                  "type": {
-                    "text": "Record<string, any>"
-                  }
-                }
-              ],
-              "description": "Unescape HTML entities in all values of an object"
-            },
-            {
-              "kind": "method",
-              "name": "unescapeHtml",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "string"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "str",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ],
-              "description": "Unescape HTML entities in a string"
-            },
-            {
               "kind": "field",
               "name": "useDefaultPaths",
               "type": {
@@ -2533,6 +2901,37 @@
               "type": {
                 "text": "string | null"
               }
+            },
+            {
+              "kind": "method",
+              "name": "variableToQtiVariableJSON",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "QtiVariableJSON"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "cardinality",
+                  "type": {
+                    "text": "Cardinality"
+                  }
+                },
+                {
+                  "name": "baseType",
+                  "type": {
+                    "text": "BaseType"
+                  }
+                }
+              ],
+              "description": "Convert a variable value to QtiVariableJSON"
             }
           ],
           "attributes": [
@@ -2670,22 +3069,9 @@
             },
             {
               "kind": "field",
-              "name": "_parsedRequirePaths",
+              "name": "_iframeObjectUrl",
               "type": {
-                "text": "Record<string, string | string[]>"
-              },
-              "privacy": "private",
-              "default": "null",
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_parsedRequireShim",
-              "type": {
-                "text": "Record<string, any>"
+                "text": "string | null"
               },
               "privacy": "private",
               "default": "null",
@@ -2708,42 +3094,8 @@
               }
             },
             {
-              "kind": "field",
-              "name": "_previousState",
-              "type": {
-                "text": "{\n    pointerEvents?: string;\n    position?: string;\n  }"
-              },
-              "privacy": "private",
-              "default": "null",
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_recreatingIframe",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "_value",
-              "type": {
-                "text": "string | string[]"
-              },
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
-              }
-            },
-            {
               "kind": "method",
-              "name": "addHyphenatedKeys",
+              "name": "#addHyphenatedKeys",
               "privacy": "private",
               "return": {
                 "type": {
@@ -2766,9 +3118,278 @@
             },
             {
               "kind": "method",
-              "name": "addMarkupToIframe",
+              "name": "#addMarkupToIframe",
               "privacy": "private",
               "description": "IFRAME MODE: Add markup and properties to iframe",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#addStylesheetsToIframe",
+              "privacy": "private",
+              "description": "IFRAME MODE: Add stylesheets to iframe",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#convertQtiVariableJSON",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | string[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "input",
+                  "type": {
+                    "text": "QtiVariableJSON"
+                  }
+                }
+              ],
+              "description": "Converts QtiVariableJSON to a string or string array",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#getDefaultRequirePaths",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, string | string[]>"
+                }
+              },
+              "description": "Get the default require paths",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#getDefaultRequireShim",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, any>"
+                }
+              },
+              "description": "Get the default require shim",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#getFinalRequirePaths",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, string | string[]>"
+                }
+              },
+              "description": "Get the final require paths by combining defaults with user-provided paths",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#getFinalRequireShim",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, any>"
+                }
+              },
+              "description": "Get the final require shim by combining defaults with user-provided shim",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#getInteractionModules",
+              "privacy": "private",
+              "description": "IFRAME MODE: Get interaction modules from DOM",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#getRequirePaths",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, string | string[]>"
+                }
+              },
+              "description": "Parse the require paths JSON string into an object",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#getRequireShim",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, any>"
+                }
+              },
+              "description": "Parse the require shim JSON string into an object",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#initializeInteraction",
+              "privacy": "private",
+              "description": "IFRAME MODE: Initialize the interaction",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#parsedRequirePaths",
+              "privacy": "private",
+              "type": {
+                "text": "Record<string, string | string[]>"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#parsedRequireShim",
+              "privacy": "private",
+              "type": {
+                "text": "Record<string, any>"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#previousState",
+              "privacy": "private",
+              "type": {
+                "text": "{\n    pointerEvents?: string;\n    position?: string;\n  }"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#processPendingMessages",
+              "privacy": "private",
+              "description": "IFRAME MODE: Process pending messages",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#recreatingIframe",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "#sendIframeInitData",
+              "privacy": "private",
+              "description": "IFRAME MODE: Send initialization data to iframe",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#unescapeDataAttributes",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, any>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "obj",
+                  "type": {
+                    "text": "Record<string, any>"
+                  }
+                }
+              ],
+              "description": "Unescape HTML entities in all values of an object",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#unescapeHtml",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "str",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Unescape HTML entities in a string",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#value",
+              "privacy": "private",
+              "type": {
+                "text": "string | string[]"
+              },
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
@@ -2799,35 +3420,41 @@
               }
             },
             {
-              "kind": "field",
-              "name": "context",
-              "type": {
-                "text": "ItemContext | undefined"
+              "kind": "method",
+              "name": "coerceBaseValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
               },
-              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "baseType",
+                  "type": {
+                    "text": "BaseType"
+                  }
+                }
+              ],
+              "description": "Coerce a scalar value to the expected base-type when possible",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
               }
             },
             {
-              "kind": "method",
-              "name": "convertQtiVariableJSON",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "string | string[]"
-                }
+              "kind": "field",
+              "name": "context",
+              "type": {
+                "text": "ItemContext | undefined"
               },
-              "parameters": [
-                {
-                  "name": "input",
-                  "type": {
-                    "text": "QtiVariableJSON"
-                  }
-                }
-              ],
-              "description": "Converts QtiVariableJSON to a string or string array",
+              "privacy": "protected",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
@@ -2892,14 +3519,14 @@
             },
             {
               "kind": "method",
-              "name": "getDefaultRequirePaths",
+              "name": "getContextVariables",
               "privacy": "private",
               "return": {
                 "type": {
-                  "text": "Record<string, string | string[]>"
+                  "text": "Record<string, QtiVariableJSON>"
                 }
               },
-              "description": "Get the default require paths",
+              "description": "Collect context variables referenced by qti-context-variable children",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
@@ -2907,44 +3534,22 @@
             },
             {
               "kind": "method",
-              "name": "getDefaultRequireShim",
+              "name": "getDirectChildrenByTag",
               "privacy": "private",
               "return": {
                 "type": {
-                  "text": "Record<string, any>"
+                  "text": "Element[]"
                 }
               },
-              "description": "Get the default require shim",
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "getFinalRequirePaths",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "Record<string, string | string[]>"
+              "parameters": [
+                {
+                  "name": "tagName",
+                  "type": {
+                    "text": "string"
+                  }
                 }
-              },
-              "description": "Get the final require paths by combining defaults with user-provided paths",
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "getFinalRequireShim",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "Record<string, any>"
-                }
-              },
-              "description": "Get the final require shim by combining defaults with user-provided shim",
+              ],
+              "description": "Get direct child elements by tag name",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
@@ -2962,9 +3567,14 @@
             },
             {
               "kind": "method",
-              "name": "getInteractionModules",
+              "name": "getQtiContextDefaultsFromItem",
               "privacy": "private",
-              "description": "IFRAME MODE: Get interaction modules from DOM",
+              "return": {
+                "type": {
+                  "text": "Record<string, unknown>"
+                }
+              },
+              "description": "Extract default QTI_CONTEXT values from qti-context-declaration elements",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
@@ -2972,14 +3582,14 @@
             },
             {
               "kind": "method",
-              "name": "getRequirePaths",
+              "name": "getQtiContextRecord",
               "privacy": "private",
               "return": {
                 "type": {
-                  "text": "Record<string, string | string[]>"
+                  "text": "QtiVariableJSON | null"
                 }
               },
-              "description": "Parse the require paths JSON string into an object",
+              "description": "Build a QTI_CONTEXT record for PCI consumption",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
@@ -2987,14 +3597,57 @@
             },
             {
               "kind": "method",
-              "name": "getRequireShim",
+              "name": "getSharedStylesheetConfig",
               "privacy": "private",
               "return": {
                 "type": {
-                  "text": "Record<string, any>"
+                  "text": "{ content: string; scoped: boolean; key: string } | null"
                 }
               },
-              "description": "Parse the require shim JSON string into an object",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getSharedStylesheetContent",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getStylesheetConfigs",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Array<{ href?: string; content?: string; scoped?: boolean; key?: string }>"
+                }
+              },
+              "description": "Collect qti-stylesheet elements for iframe injection",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getTemplateVariables",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, QtiVariableJSON>"
+                }
+              },
+              "description": "Collect template variables referenced by qti-template-variable children",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
@@ -3158,16 +3811,6 @@
               "description": "Sets the value of an input element containing the specified text"
             },
             {
-              "kind": "method",
-              "name": "initializeInteraction",
-              "privacy": "private",
-              "description": "IFRAME MODE: Initialize the interaction",
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
-              }
-            },
-            {
               "kind": "field",
               "name": "module",
               "type": {
@@ -3181,9 +3824,86 @@
             },
             {
               "kind": "method",
-              "name": "processPendingMessages",
+              "name": "normalizeListValue",
               "privacy": "private",
-              "description": "IFRAME MODE: Process pending messages",
+              "return": {
+                "type": {
+                  "text": "unknown[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "unknown"
+                  }
+                }
+              ],
+              "description": "Normalize an input into a list form",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "qtiContext",
+              "type": {
+                "text": "QtiContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "recordEntryFromValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "QtiRecordItem"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "entryValue",
+                  "type": {
+                    "text": "unknown"
+                  }
+                }
+              ],
+              "description": "Build a record entry from an arbitrary value",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "recordToQtiVariableJSON",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "QtiVariableJSON"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "unknown"
+                  }
+                }
+              ],
+              "description": "Convert a record object into QtiVariableJSON",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
@@ -3240,6 +3960,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveStylesheetHref",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "href",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve stylesheet href against baseUrl or document origin",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "response",
               "type": {
@@ -3281,16 +4024,6 @@
                 }
               ],
               "description": "Converts response variables to QtiVariableJSON",
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "sendIframeInitData",
-              "privacy": "private",
-              "description": "IFRAME MODE: Send initialization data to iframe",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
@@ -3362,52 +4095,6 @@
               }
             },
             {
-              "kind": "method",
-              "name": "unescapeDataAttributes",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "Record<string, any>"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "obj",
-                  "type": {
-                    "text": "Record<string, any>"
-                  }
-                }
-              ],
-              "description": "Unescape HTML entities in all values of an object",
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "unescapeHtml",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "string"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "str",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ],
-              "description": "Unescape HTML entities in a string",
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
-              }
-            },
-            {
               "kind": "field",
               "name": "useDefaultPaths",
               "type": {
@@ -3452,6 +4139,41 @@
               "type": {
                 "text": "string | null"
               },
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "variableToQtiVariableJSON",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "QtiVariableJSON"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "cardinality",
+                  "type": {
+                    "text": "Cardinality"
+                  }
+                },
+                {
+                  "name": "baseType",
+                  "type": {
+                    "text": "BaseType"
+                  }
+                }
+              ],
+              "description": "Convert a variable value to QtiVariableJSON",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
@@ -3756,43 +4478,6 @@
             },
             {
               "kind": "field",
-              "name": "_imageHeightOriginal",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private",
-              "default": "0"
-            },
-            {
-              "kind": "field",
-              "name": "_imageWidthOriginal",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private",
-              "default": "0"
-            },
-            {
-              "kind": "field",
-              "name": "_imgElement",
-              "type": {
-                "text": "HTMLImageElement | null"
-              },
-              "privacy": "private",
-              "default": "null"
-            },
-            {
-              "kind": "field",
-              "name": "_onImageClick",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "_onResize",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
               "name": "_responseCorrection",
               "type": {
                 "text": "boolean[]"
@@ -3801,27 +4486,64 @@
               "default": "[]"
             },
             {
-              "kind": "field",
-              "name": "_scaleX",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private",
-              "default": "1"
-            },
-            {
-              "kind": "field",
-              "name": "_scaleY",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private",
-              "default": "1"
-            },
-            {
               "kind": "method",
-              "name": "calculateScale",
+              "name": "#calculateScale",
               "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#imageHeightOriginal",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#imageWidthOriginal",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#imgElement",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLImageElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#onImageClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#onResize",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#scaleX",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "1"
+            },
+            {
+              "kind": "field",
+              "name": "#scaleY",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "1"
             },
             {
               "kind": "field",
@@ -3957,16 +4679,24 @@
           "members": [
             {
               "kind": "field",
-              "name": "_correctResponseNumber",
+              "name": "_rail",
+              "type": {
+                "text": "HTMLElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#correctResponseNumber",
+              "privacy": "private",
               "type": {
                 "text": "number | null"
               },
-              "privacy": "private",
               "default": "null"
             },
             {
               "kind": "method",
-              "name": "_onDrag",
+              "name": "#onDrag",
               "privacy": "private",
               "parameters": [
                 {
@@ -3979,12 +4709,12 @@
             },
             {
               "kind": "method",
-              "name": "_onDragEnd",
+              "name": "#onDragEnd",
               "privacy": "private"
             },
             {
               "kind": "method",
-              "name": "_onMouseDown",
+              "name": "#onMouseDown",
               "privacy": "private",
               "parameters": [
                 {
@@ -3997,7 +4727,7 @@
             },
             {
               "kind": "method",
-              "name": "_onTouchStart",
+              "name": "#onTouchStart",
               "privacy": "private",
               "parameters": [
                 {
@@ -4009,16 +4739,8 @@
               ]
             },
             {
-              "kind": "field",
-              "name": "_rail",
-              "type": {
-                "text": "HTMLElement"
-              },
-              "privacy": "private"
-            },
-            {
               "kind": "method",
-              "name": "_startDrag",
+              "name": "#startDrag",
               "privacy": "private",
               "parameters": [
                 {
@@ -4031,7 +4753,7 @@
             },
             {
               "kind": "method",
-              "name": "_updateValue",
+              "name": "#updateValue",
               "privacy": "private",
               "parameters": [
                 {
@@ -4044,11 +4766,11 @@
             },
             {
               "kind": "field",
-              "name": "_value",
+              "name": "#value",
+              "privacy": "private",
               "type": {
                 "text": "number"
               },
-              "privacy": "private",
               "default": "0"
             },
             {
@@ -4201,6 +4923,24 @@
               "privacy": "private"
             },
             {
+              "kind": "method",
+              "name": "#setEmptyAttribute",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "text",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
               "kind": "field",
               "name": "correctness",
               "type": {
@@ -4277,24 +5017,6 @@
                 "text": "string | null"
               },
               "default": "null"
-            },
-            {
-              "kind": "method",
-              "name": "setEmptyAttribute",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "text",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
             },
             {
               "kind": "method",
@@ -4427,16 +5149,16 @@
           "members": [
             {
               "kind": "field",
-              "name": "_base64",
+              "name": "#base64",
+              "privacy": "private",
               "type": {
                 "text": "string | null"
               },
-              "privacy": "private",
               "default": "null"
             },
             {
               "kind": "method",
-              "name": "_convertToBase64",
+              "name": "#convertToBase64",
               "privacy": "private",
               "return": {
                 "type": {
@@ -4454,16 +5176,16 @@
             },
             {
               "kind": "field",
-              "name": "_file",
+              "name": "#file",
+              "privacy": "private",
               "type": {
                 "text": "File | null"
               },
-              "privacy": "private",
               "default": "null"
             },
             {
               "kind": "method",
-              "name": "_onFileChange",
+              "name": "#onFileChange",
               "privacy": "private",
               "parameters": [
                 {
@@ -5049,7 +5771,7 @@
           "members": [
             {
               "kind": "method",
-              "name": "_onSelectInlineChoice",
+              "name": "#onSelectInlineChoice",
               "privacy": "private"
             },
             {

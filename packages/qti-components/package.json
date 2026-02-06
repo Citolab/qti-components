@@ -85,8 +85,8 @@
   "scripts": {
     "-": "---build---",
     "attw": "attw --pack --profile esm-only --format table",
-    "build": "run-p tsup css cem",
-    "cem": "cd ../../ && CEM_OUTDIR=packages/qti-components/ cem analyze --config custom-elements-manifest.config.mjs",
+    "build": "run-p tsup css",
+    "cem": "node ../../tools/run-cem.mjs --outdir packages/qti-components/",
     "clean": "rm -rf dist cdn",
     "css": "postcss ../qti-theme/src/item.css -d dist -m",
     "publint": "publint",
