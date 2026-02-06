@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.6.0](https://github.com/Citolab/qti-components/compare/interactions-v1.5.1...interactions-v1.6.0) (2026-02-06)
+
+
+### Features
+
+* add iFrameGetBoundingClientRect method to retrieve bounding client rect of elements ([ad22812](https://github.com/Citolab/qti-components/commit/ad228121edf720a323b4b4d1a33fe44eaf67cabe))
+* added all pci-conformance tests ([64ef3c0](https://github.com/Citolab/qti-components/commit/64ef3c07b8456242c6edbcb9072103d0fd953668))
+* added all pci-conformance tests ([f568d38](https://github.com/Citolab/qti-components/commit/f568d38c05c57b639ac880a4094472bd755401b7))
+
+
+### Bug Fixes
+
+* append drag clone to fullscreen element if available ([e2a1bfc](https://github.com/Citolab/qti-components/commit/e2a1bfcc244026dfb6650c610cb1002fc91f81f4))
+* update method calls to use private class fields in QtiPortableCustomInteraction ([f69998c](https://github.com/Citolab/qti-components/commit/f69998cfd94b3b7c1db44879f538105cca33bc85))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @qti-components/transformers bumped to 1.3.0
+
 ## [1.5.1](https://github.com/Citolab/qti-components/compare/interactions-v1.5.0...interactions-v1.5.1) (2026-02-06)
 
 
