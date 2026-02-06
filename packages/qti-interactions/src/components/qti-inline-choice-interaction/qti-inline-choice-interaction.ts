@@ -38,6 +38,7 @@ export class QtiInlineChoiceInteraction extends Interaction {
           border: var(--qti-border-thickness, 2px) var(--qti-border-style, solid) var(--qti-border-color, #c6cad0);
           border-radius: var(--qti-border-radius, 0.3rem);
           padding: 0.25rem 0.75rem;
+          min-width: var(--qti-calculated-min-width, auto);
           /* Enables full styling when supported (Chromium behind a flag / rolling out). */
           appearance: base-select;
         }
@@ -98,6 +99,8 @@ export class QtiInlineChoiceInteraction extends Interaction {
           gap: 0.5rem;
           padding: 0.5rem 0.5rem;
           white-space: nowrap;
+          line-height: 1.25;
+          min-height: 2.25rem;
         }
 
         option:hover {
@@ -125,6 +128,7 @@ export class QtiInlineChoiceInteraction extends Interaction {
           border: var(--qti-border-thickness, 2px) var(--qti-border-style, solid) var(--qti-border-color, #c6cad0);
           border-radius: var(--qti-border-radius, 0.3rem);
           padding: 0.25rem 0.75rem;
+          min-width: var(--qti-calculated-min-width, auto);
         }
 
         [part='value'] {
@@ -172,10 +176,8 @@ export class QtiInlineChoiceInteraction extends Interaction {
             0 10px 15px -3px rgb(0 0 0 / 10%),
             0 4px 6px -4px rgb(0 0 0 / 10%);
           padding: 4px;
-          transform: translate(
-            var(--qti-menu-shift-x, 0px),
-            var(--qti-menu-shift-y, 0px)
-          );
+          box-sizing: border-box;
+          transform: translate(var(--qti-menu-shift-x, 0px), var(--qti-menu-shift-y, 0px));
         }
 
         [part='menu'][data-placement='top'] {
@@ -194,6 +196,10 @@ export class QtiInlineChoiceInteraction extends Interaction {
           border-radius: calc(var(--qti-border-radius, 0.3rem) - 2px);
           cursor: pointer;
           white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          line-height: 1.25;
+          min-height: 2.25rem;
         }
 
         button[part='option'][aria-selected='true'] {
@@ -215,6 +221,9 @@ export class QtiInlineChoiceInteraction extends Interaction {
           gap: 0.5rem;
           flex-wrap: nowrap;
           white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          min-width: 0;
         }
 
         select[part='select'] img,
@@ -250,7 +259,12 @@ export class QtiInlineChoiceInteraction extends Interaction {
   protected correctOption: string = '';
 
   @state()
-  private _dropdownOpen = false;
+  protected _dropdownOpen = false;
+
+  @state()
+  private _calculatedMinWidth: number = 0;
+
+  private _widthCalculationTimer: number | null = null;
 
   @property({ attribute: 'data-prompt', type: String })
   dataPrompt: string = '';
@@ -325,6 +339,8 @@ export class QtiInlineChoiceInteraction extends Interaction {
       document.addEventListener('pointerdown', this.#onDocumentPointerDown, true);
       document.addEventListener('keydown', this.#onDocumentKeyDown, true);
     }
+    // Simple width estimation - no recalculation needed
+    this._estimateOptimalWidth();
   }
 
   override disconnectedCallback() {
@@ -333,11 +349,24 @@ export class QtiInlineChoiceInteraction extends Interaction {
       document.removeEventListener('pointerdown', this.#onDocumentPointerDown, true);
       document.removeEventListener('keydown', this.#onDocumentKeyDown, true);
     }
+    if (this._widthCalculationTimer !== null) {
+      window.clearTimeout(this._widthCalculationTimer);
+      this._widthCalculationTimer = null;
+    }
   }
 
   override willUpdate(changed: PropertyValues<this>) {
     if (changed.has('configContext') || changed.has('dataPrompt')) {
       this.#updateOptions();
+    }
+  }
+
+  override updated(changed: PropertyValues<this>) {
+    const dropdownOpenKey = '_dropdownOpen' as keyof QtiInlineChoiceInteraction;
+    if (changed.has(dropdownOpenKey) && this._dropdownOpen) {
+      this.#positionCustomMenu();
+      const selected = this.renderRoot.querySelector<HTMLButtonElement>('button[part="option"][aria-selected="true"]');
+      selected?.focus();
     }
   }
 
@@ -441,6 +470,31 @@ export class QtiInlineChoiceInteraction extends Interaction {
 
     const hasSelected = nextOptions.some(o => o.selected);
     this.options = hasSelected ? nextOptions : nextOptions.map((o, i) => ({ ...o, selected: i === 0 }));
+
+    // Simple width estimation based on content length
+    this._estimateOptimalWidth();
+  }
+
+  /**
+   * Simple width estimation based on text content length - no DOM manipulation needed
+   */
+  private _estimateOptimalWidth() {
+    if (this.options.length === 0) return;
+
+    let maxLength = 0;
+    for (const option of this.options) {
+      // Strip HTML tags and get text length
+      const textContent = option.textContent.replace(/<[^>]*>/g, '').trim();
+      maxLength = Math.max(maxLength, textContent.length);
+    }
+
+    // Simple estimation: ~0.6em per character + base padding + dropdown arrow
+    // Em-based calculation works better across different font sizes
+    const estimatedEm = Math.max(maxLength * 0.6 + 4, 8.75); // minimum ~140px (8.75em)
+    const maxEm = Math.min(estimatedEm, 40); // maximum 40em
+
+    this._calculatedMinWidth = maxEm;
+    this.style.setProperty('--qti-calculated-min-width', `${maxEm}em`);
   }
 
   public validate(): boolean {
@@ -498,16 +552,6 @@ export class QtiInlineChoiceInteraction extends Interaction {
   #setDropdownOpen(open: boolean) {
     if (this._dropdownOpen === open) return;
     this._dropdownOpen = open;
-
-    if (open) {
-      void this.updateComplete.then(() => {
-        this.#positionCustomMenu();
-        const selected = this.renderRoot.querySelector<HTMLButtonElement>(
-          'button[part="option"][aria-selected="true"]'
-        );
-        selected?.focus();
-      });
-    }
   }
 
   #onToggleCustomDropdown = () => {
@@ -575,12 +619,19 @@ export class QtiInlineChoiceInteraction extends Interaction {
     menu.dataset.placement = 'bottom';
     menu.style.setProperty('--qti-menu-shift-x', '0px');
     menu.style.setProperty('--qti-menu-shift-y', '0px');
+    menu.style.left = '0px';
+    menu.style.right = 'auto';
 
     const viewportWidth = document.documentElement?.clientWidth || window.innerWidth;
     const viewportHeight = document.documentElement?.clientHeight || window.innerHeight;
     const margin = 8;
 
     const triggerRect = trigger.getBoundingClientRect();
+    // Ensure the menu never exceeds the viewport width minus margins,
+    // even if long, unbroken labels would otherwise expand it.
+    const maxWidth = Math.max(0, viewportWidth - margin * 2);
+    menu.style.maxWidth = `${maxWidth}px`;
+    menu.style.minWidth = `${Math.min(triggerRect.width, maxWidth)}px`;
     let menuRect = menu.getBoundingClientRect();
 
     const spaceBelow = viewportHeight - triggerRect.bottom;
@@ -590,18 +641,10 @@ export class QtiInlineChoiceInteraction extends Interaction {
       menuRect = menu.getBoundingClientRect();
     }
 
-    let shiftX = 0;
-    if (menuRect.right > viewportWidth - margin) {
-      shiftX = viewportWidth - margin - menuRect.right;
-    } else if (menuRect.left < margin) {
-      shiftX = margin - menuRect.left;
-    }
-
-    if (shiftX !== 0) {
-      const scaleX = menu.offsetWidth > 0 ? menuRect.width / menu.offsetWidth : 1;
-      const adjustedShiftX = Number.isFinite(scaleX) && scaleX !== 0 ? shiftX / scaleX : shiftX;
-      menu.style.setProperty('--qti-menu-shift-x', `${adjustedShiftX}px`);
-    }
+    const maxLeft = Math.max(margin, viewportWidth - margin - menuRect.width);
+    const desiredLeft = Math.min(maxLeft, Math.max(margin, triggerRect.left));
+    const offsetLeft = desiredLeft - triggerRect.left;
+    menu.style.left = `${offsetLeft}px`;
   }
 }
 
