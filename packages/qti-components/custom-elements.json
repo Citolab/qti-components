@@ -24680,6 +24680,28 @@
             },
             {
               "kind": "method",
+              "name": "iFrameGetBoundingClientRect",
+              "return": {
+                "type": {
+                  "text": ""
+                }
+              },
+              "parameters": [
+                {
+                  "name": "selector",
+                  "type": {
+                    "text": "string"
+                  },
+                  "description": "The CSS selector string"
+                }
+              ],
+              "description": "Gets the bounding client rect for an element inside the iframe",
+              "type": {
+                "text": "iFrameGetBoundingClientRect(selector: string) => void"
+              }
+            },
+            {
+              "kind": "method",
               "name": "iFrameMouseClick",
               "return": {
                 "type": {

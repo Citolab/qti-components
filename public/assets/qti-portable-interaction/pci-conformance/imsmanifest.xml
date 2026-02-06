@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest xmlns="http://www.imsglobal.org/xsd/qti/qtiv3p0/imscp_v1p1"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:imsmd="http://ltsc.ieee.org/xsd/LOM"
+    xsi:schemaLocation="http://www.imsglobal.org/xsd/qti/qtiv3p0/imscp_v1p1 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqtiv3p0_imscpv1p2_v1p0.xsd
+                        http://ltsc.ieee.org/xsd/LOM https://purl.imsglobal.org/spec/md/v1p3/schema/xsd/imsmd_loose_v1p3p2.xsd"
+    identifier="q16-portable-custom-interaction">
+    <metadata>
+        <schema>QTI Package</schema>
+        <schemaversion>3.0.1</schemaversion>
+    </metadata>
+    <organizations />
+    <resources>
+        <resource identifier="q16-pci-item1" type="imsqti_item_xmlv3p0" href="item-1/qti.xml">
+            <file href="item-1/qti.xml" />
+        </resource>
+        <resource identifier="q16-pci-item2" type="imsqti_item_xmlv3p0" href="item-2/qti.xml">
+            <file href="item-2/qti.xml" />
+        </resource>
+        <resource identifier="q16-pci-item3" type="imsqti_item_xmlv3p0" href="item-3/qti.xml">
+            <file href="item-3/qti.xml" />
+        </resource>
+        <resource identifier="q16-pci-item4" type="imsqti_item_xmlv3p0" href="item-4/qti.xml">
+            <file href="item-4/qti.xml" />
+        </resource>
+        <resource identifier="q16-pci-item5" type="imsqti_item_xmlv3p0" href="item-5/qti.xml">
+            <file href="item-5/qti.xml" />
+        </resource>
+        <resource identifier="q16-pci-item6" type="imsqti_item_xmlv3p0" href="item-6/qti.xml">
+            <file href="item-6/qti.xml" />
+        </resource>
+        <resource identifier="p16-pci-conformance-test" type="imsqti_test_xmlv3p0"
+            href="assessment.xml">
+            <file href="assessment.xml" />
+            <dependency identifierref="q16-pci-item1" />
+            <dependency identifierref="q16-pci-item2" />
+            <dependency identifierref="q16-pci-item3" />
+            <dependency identifierref="q16-pci-item4" />
+            <dependency identifierref="q16-pci-item5" />
+            <dependency identifierref="q16-pci-item6" />
+        </resource>
+    </resources>
+</manifest>

@@ -1,6 +1,14 @@
 // Function to extend elements with a specific tag name by adding an extension suffix
+// Uses localName matching to handle namespaced XML documents where querySelectorAll may not work
 export function extendElementName(xmlFragment: XMLDocument, tagName: string, extension: string) {
-  xmlFragment.querySelectorAll(tagName).forEach(element => {
+  // Use getElementsByTagName with '*' to find all elements, then filter by localName
+  // This works correctly for both namespaced and non-namespaced XML documents
+  const allElements = Array.from(xmlFragment.getElementsByTagName('*'));
+  const matchingElements = allElements.filter(
+    element => element.localName === tagName || element.localName?.toLowerCase() === tagName.toLowerCase()
+  );
+
+  matchingElements.forEach(element => {
     const newTagName = `${tagName}-${extension}`;
     const newElement = createElementWithNewTagName(element, newTagName);
     element.replaceWith(newElement);
@@ -102,28 +110,29 @@ export function toHTML(xmlFragment: Document): DocumentFragment {
   return fragment;
 }
 
+// Updates src and href attributes with the base location
+// Uses querySelectorAll('*') to find all elements, then checks attributes manually
+// This handles namespaced XML documents where attribute selectors like [href] may not work
+// Note: primary-path is NOT processed here because it is resolved separately
+// by the PCI component using data-base-url in the iframe's module resolution
 export function setLocation(xmlFragment: DocumentFragment, location: string) {
   if (!location.endsWith('/')) {
     location += '/';
   }
 
-  xmlFragment.querySelectorAll('[src],[href],[primary-path]').forEach(elWithSrc => {
-    let attr: 'src' | 'href' | 'primary-path' | '' = '';
+  // querySelectorAll('*') finds all descendant elements regardless of namespace
+  const allElements = xmlFragment.querySelectorAll('*');
 
-    if (elWithSrc.getAttribute('src')) {
-      attr = 'src';
-    }
-    if (elWithSrc.getAttribute('href')) {
-      attr = 'href';
-    }
-    if (elWithSrc.getAttribute('primary-path')) {
-      attr = 'primary-path';
-    }
-    const attrValue = elWithSrc.getAttribute(attr)?.trim();
+  allElements.forEach(el => {
+    // Check each attribute we care about
+    // Note: primary-path is excluded - PCI handles module path resolution via data-base-url
+    for (const attr of ['src', 'href'] as const) {
+      const attrValue = el.getAttribute(attr)?.trim();
 
-    if (!/^(data:|https?:|blob:)/.test(attrValue)) {
-      const newSrcValue = location + encodeURI(attrValue);
-      elWithSrc.setAttribute(attr, newSrcValue);
+      if (attrValue && !/^(data:|https?:|blob:)/.test(attrValue)) {
+        const newValue = location + encodeURI(attrValue);
+        el.setAttribute(attr, newValue);
+      }
     }
   });
 }

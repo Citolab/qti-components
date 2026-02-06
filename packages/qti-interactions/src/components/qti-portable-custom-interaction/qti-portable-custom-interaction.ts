@@ -770,6 +770,17 @@ export class QtiPortableCustomInteraction extends Interaction {
           this.iframe.style.width = `${data.width}px`;
         }
         break;
+      case 'console':
+        this.dispatchEvent(
+          new CustomEvent('qti-pci-console', {
+            detail: {
+              level: data.level,
+              args: data.args
+            },
+            bubbles: true
+          })
+        );
+        break;
 
       case 'interactionChanged': {
         const raw = data?.params?.value;
@@ -960,6 +971,12 @@ export class QtiPortableCustomInteraction extends Interaction {
     // Get the configured require paths and shim
     const requirePaths = JSON.stringify(this.getFinalRequirePaths());
     const requireShim = JSON.stringify(this.getFinalRequireShim());
+    const iframeBaseUrl = this.dataset.baseUrl
+      ? this.dataset.baseUrl.startsWith('/')
+        ? `${window.location.origin}${this.dataset.baseUrl}`
+        : this.dataset.baseUrl
+      : '';
+    const forwardConsole = this.dataset.forwardConsole === 'true';
 
     // Extract just the font-related properties you want to copy
     const fontStyles = `
@@ -1000,6 +1017,46 @@ export class QtiPortableCustomInteraction extends Interaction {
   </style>
   <script src="${this.requireJsUrl}"></script>
   <script>
+    const forwardConsole = ${forwardConsole ? 'true' : 'false'};
+    if (forwardConsole) {
+      const originalLog = console.log.bind(console);
+      const originalError = console.error.bind(console);
+      const stringifyArgs = args =>
+        args.map(arg => {
+          if (typeof arg === 'string') return arg;
+          try {
+            return JSON.stringify(arg);
+          } catch (e) {
+            return String(arg);
+          }
+        });
+      console.log = (...args) => {
+        originalLog(...args);
+        window.parent.postMessage(
+          {
+            source: 'qti-pci-iframe',
+            responseIdentifier: (window.PCIManager && window.PCIManager.responseIdentifier) || null,
+            method: 'console',
+            level: 'log',
+            args: stringifyArgs(args)
+          },
+          '*'
+        );
+      };
+      console.error = (...args) => {
+        originalError(...args);
+        window.parent.postMessage(
+          {
+            source: 'qti-pci-iframe',
+            responseIdentifier: (window.PCIManager && window.PCIManager.responseIdentifier) || null,
+            method: 'console',
+            level: 'error',
+            args: stringifyArgs(args)
+          },
+          '*'
+        );
+      };
+    }
     // Define standard paths and shims
     window.requirePaths = ${requirePaths};
 
@@ -1010,7 +1067,7 @@ export class QtiPortableCustomInteraction extends Interaction {
       catchError: true,
       waitSeconds: 30,
       paths: window.requirePaths,
-      baseUrl: '${this.dataset.baseUrl}',
+      baseUrl: '${iframeBaseUrl}',
       shim: window.requireShim,
       onNodeCreated: function(node, config, moduleName, url) {
         // Add error handler to script node
@@ -1560,7 +1617,18 @@ export class QtiPortableCustomInteraction extends Interaction {
           const x = data.params && data.params.x;
           const y = data.params && data.params.y;
           const el = typeof x === 'number' && typeof y === 'number' ? document.elementFromPoint(x, y) : null;
-	          if (el && typeof el.click === 'function') el.click();
+          const target = (el && el.closest && el.closest('.hitbox')) || document.querySelector('.hitbox') || el;
+            if (target) {
+              const evt = new MouseEvent('click', {
+                bubbles: true,
+                clientX: x,
+                clientY: y,
+                screenX: x,
+                screenY: y,
+                view: window
+              });
+              target.dispatchEvent(evt);
+            }
 	          window.parent.postMessage(
 	            {
 	              source: 'qti-pci-iframe',
@@ -1572,6 +1640,31 @@ export class QtiPortableCustomInteraction extends Interaction {
 	          );
 	          break;
 	        }
+
+        case 'getBoundingRect': {
+          const messageId = data.params && data.params.messageId;
+          const selector = data.params && data.params.selector;
+          const el = selector ? deepQuerySelector(document, selector) : null;
+          const rect = el && typeof el.getBoundingClientRect === 'function' ? el.getBoundingClientRect() : null;
+            window.parent.postMessage(
+              {
+                source: 'qti-pci-iframe',
+                responseIdentifier: PCIManager.responseIdentifier,
+                method: 'getBoundingRectResponse',
+                messageId: messageId,
+                rect: rect
+                  ? {
+                      left: rect.left,
+                      top: rect.top,
+                      width: rect.width,
+                      height: rect.height
+                    }
+                  : null
+              },
+              '*'
+            );
+          break;
+        }
 
         case 'clickOnSelector': {
           const messageId = data.params && data.params.messageId;
@@ -1639,6 +1732,19 @@ export class QtiPortableCustomInteraction extends Interaction {
 	          );
 	          break;
 	        }
+
+          case 'console':
+            window.parent.postMessage(
+              {
+                source: 'qti-pci-iframe',
+                responseIdentifier: PCIManager.responseIdentifier,
+                method: 'console',
+                level: data.level,
+                args: data.args
+              },
+              '*'
+            );
+            break;
       }
     });
 
