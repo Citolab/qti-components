@@ -969,8 +969,8 @@ export class QtiPortableCustomInteraction extends Interaction {
     const parentStyles = window.getComputedStyle(document.body);
 
     // Get the configured require paths and shim
-    const requirePaths = JSON.stringify(this.getFinalRequirePaths());
-    const requireShim = JSON.stringify(this.getFinalRequireShim());
+    const requirePaths = JSON.stringify(this.#getFinalRequirePaths());
+    const requireShim = JSON.stringify(this.#getFinalRequireShim());
     const iframeBaseUrl = this.dataset.baseUrl
       ? this.dataset.baseUrl.startsWith('/')
         ? `${window.location.origin}${this.dataset.baseUrl}`
