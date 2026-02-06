@@ -14,21 +14,21 @@ import type { CSSResultGroup } from 'lit';
 export class QtiGraphicAssociateInteraction extends Interaction {
   static override styles: CSSResultGroup = styles;
 
-  private hotspots: any[] | NodeListOf<QtiAssociableHotspot>;
-  private startPoint: HTMLElement | null = null;
-  private endPoint: HTMLElement | null = null;
+  #hotspots: any[] | NodeListOf<QtiAssociableHotspot>;
+  #startPoint: HTMLElement | null = null;
+  #endPoint: HTMLElement | null = null;
 
   @state() private _correctLines: string[] = [];
   @state() private startCoord: { x: number; y: number };
   @state() private mouseCoord: { x: number; y: number };
-  @queryAssignedElements({ selector: 'img' }) private grImage: any[];
+  @queryAssignedElements({ selector: 'img' }) grImage: any[];
 
   @state()
   private _response: string[] | null = [];
 
   constructor() {
     super();
-    this.addEventListener('qti-register-hotspot', this.positionHotspotOnRegister);
+    this.addEventListener('qti-register-hotspot', this.#positionHotspotOnRegister);
   }
 
   override reset(): void {
@@ -37,24 +37,24 @@ export class QtiGraphicAssociateInteraction extends Interaction {
   }
 
   validate(): boolean {
-    return this.getResponseArray().length > 0;
+    return this.#getResponseArray().length > 0;
   }
 
   set response(val) {
-    this._response = this.normalizeResponse(val);
+    this._response = this.#normalizeResponse(val);
   }
 
   get response() {
     return this._response;
   }
 
-  private normalizeResponse(value: string | string[] | null | undefined): string[] {
+  #normalizeResponse(value: string | string[] | null | undefined): string[] {
     if (value === null || value === undefined || value === '') return [];
     return Array.isArray(value) ? value : [value];
   }
 
-  private getResponseArray(): string[] {
-    return this.normalizeResponse(this._response);
+  #getResponseArray(): string[] {
+    return this.#normalizeResponse(this._response);
   }
 
   public override toggleInternalCorrectResponse(show: boolean) {
@@ -82,7 +82,7 @@ export class QtiGraphicAssociateInteraction extends Interaction {
           viewbox="0 0 ${this.grImage[0]?.width} ${this.grImage[0]?.height}"
         >
           ${repeat(
-            this.getResponseArray(),
+            this.#getResponseArray(),
             line => line,
             (line, index) => svg`
               <line
@@ -117,7 +117,7 @@ export class QtiGraphicAssociateInteraction extends Interaction {
               />
             `
           )}
-          ${this.startPoint &&
+          ${this.#startPoint &&
           svg`<line
             part="point"
             x1=${this.startCoord.x}
@@ -133,7 +133,7 @@ export class QtiGraphicAssociateInteraction extends Interaction {
       <div role="alert" part="message" id="validation-message"></div>`;
   }
 
-  private positionHotspotOnRegister(e: CustomEvent<QtiHotspotChoice>): void {
+  #positionHotspotOnRegister(e: CustomEvent<QtiHotspotChoice>): void {
     const img = this.querySelector('img') as HTMLImageElement;
     const hotspot = e.target as QtiHotspotChoice;
     const coords = hotspot.getAttribute('coords');
@@ -143,7 +143,7 @@ export class QtiGraphicAssociateInteraction extends Interaction {
   }
 
   override firstUpdated(): void {
-    this.hotspots = this.querySelectorAll('qti-associable-hotspot');
+    this.#hotspots = this.querySelectorAll('qti-associable-hotspot');
 
     this.addEventListener('mousemove', event => {
       const img = this.grImage[0];
@@ -161,8 +161,8 @@ export class QtiGraphicAssociateInteraction extends Interaction {
       };
     });
 
-    this.hotspots.forEach(hotspot => {
-      // const img = this.grImage[0];
+    this.#hotspots.forEach(hotspot => {
+      // const img = thisgrImage[0];
       // const scaleX = img.naturalWidth / img.clientWidth;
       // const scaleY = img.naturalHeight / img.clientHeight;
 
@@ -170,24 +170,24 @@ export class QtiGraphicAssociateInteraction extends Interaction {
       hotspot.style.top = hotspot.getAttribute('coords').split(',')[1] + 'px';
 
       hotspot.addEventListener('click', event => {
-        if (!this.startPoint) {
-          this.startPoint = event.target as HTMLElement;
+        if (!this.#startPoint) {
+          this.#startPoint = event.target as HTMLElement;
 
           this.startCoord = {
-            x: parseInt(this.startPoint.getAttribute('coords').split(',')[0]),
-            y: parseInt(this.startPoint.getAttribute('coords').split(',')[1])
+            x: parseInt(this.#startPoint.getAttribute('coords').split(',')[0]),
+            y: parseInt(this.#startPoint.getAttribute('coords').split(',')[1])
           };
-        } else if (!this.endPoint) {
-          this.endPoint = event.target as HTMLElement;
+        } else if (!this.#endPoint) {
+          this.#endPoint = event.target as HTMLElement;
 
-          this._response = this.getResponseArray();
+          this._response = this.#getResponseArray();
           this._response = [
             ...this._response,
-            `${this.startPoint.getAttribute('identifier')} ${this.endPoint.getAttribute('identifier')}`
+            `${this.#startPoint.getAttribute('identifier')} ${this.#endPoint.getAttribute('identifier')}`
           ];
           this.saveResponse(this.response);
-          this.startPoint = null;
-          this.endPoint = null;
+          this.#startPoint = null;
+          this.#endPoint = null;
         }
       });
     });
@@ -195,7 +195,7 @@ export class QtiGraphicAssociateInteraction extends Interaction {
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
-    this.removeEventListener('qti-register-hotspot', this.positionHotspotOnRegister);
+    this.removeEventListener('qti-register-hotspot', this.#positionHotspotOnRegister);
   }
 }
 

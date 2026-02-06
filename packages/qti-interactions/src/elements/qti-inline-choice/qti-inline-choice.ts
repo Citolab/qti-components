@@ -18,7 +18,7 @@ export class QtiInlineChoice extends LitElement {
   override connectedCallback() {
     super.connectedCallback();
 
-    this.addEventListener('click', this._onSelectInlineChoice);
+    this.addEventListener('click', this.#onSelectInlineChoice);
 
     this.dispatchEvent(
       new CustomEvent('qti-inline-choice-register', {
@@ -30,14 +30,14 @@ export class QtiInlineChoice extends LitElement {
   }
 
   override disconnectedCallback() {
-    this.removeEventListener('click', this._onSelectInlineChoice);
+    this.removeEventListener('click', this.#onSelectInlineChoice);
   }
 
   override render() {
     return html` <slot></slot> `;
   }
 
-  private _onSelectInlineChoice() {
+  #onSelectInlineChoice() {
     // if (this.disabled || this.readonly) return;
 
     this.dispatchEvent(

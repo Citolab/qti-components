@@ -20,7 +20,9 @@
   },
   "scripts": {
     "build": "tsc --paths null",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "yalc": "yalc publish",
+    "yalc:push": "yalc push"
   },
   "type": "module",
   "types": "dist/index.d.ts"

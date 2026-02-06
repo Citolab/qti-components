@@ -105,7 +105,7 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
     }
   }
 
-  private getMatches(responseVariable: ResponseVariable): { source: string; target: string }[] {
+  #getMatches(responseVariable: ResponseVariable): { source: string; target: string }[] {
     if (!responseVariable.correctResponse) {
       return [];
     }
@@ -131,7 +131,7 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
       this.querySelectorAll('.correct-option').forEach(el => el.remove());
       return;
     }
-    const matches = this.getMatches(responseVariable);
+    const matches = this.#getMatches(responseVariable);
 
     if (!this.class.split(' ').includes('qti-match-tabular')) {
       if (show) {
@@ -180,7 +180,7 @@ export class QtiMatchInteraction extends DragDropInteractionMixin(
     if (!responseVariable?.correctResponse) {
       return;
     }
-    const matches = this.getMatches(responseVariable);
+    const matches = this.#getMatches(responseVariable);
 
     this.targetChoices.forEach(targetChoice => {
       const targetId = targetChoice.getAttribute('identifier');

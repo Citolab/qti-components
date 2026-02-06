@@ -87,16 +87,16 @@ export class QtiRoundTo extends QtiExpression<number | null> {
 
     // Perform rounding
     if (this.roundingMode === 'decimalPlaces') {
-      return this._roundToDecimalPlaces(numericValue, this.figures);
+      return this.#roundToDecimalPlaces(numericValue, this.figures);
     } else {
-      return this._roundToSignificantFigures(numericValue, this.figures);
+      return this.#roundToSignificantFigures(numericValue, this.figures);
     }
   }
 
   /**
    * Round to specified number of decimal places
    */
-  private _roundToDecimalPlaces(value: number, decimalPlaces: number): number {
+  #roundToDecimalPlaces(value: number, decimalPlaces: number): number {
     if (value === 0) {
       return 0;
     }
@@ -108,7 +108,7 @@ export class QtiRoundTo extends QtiExpression<number | null> {
   /**
    * Round to specified number of significant figures
    */
-  private _roundToSignificantFigures(value: number, significantFigures: number): number {
+  #roundToSignificantFigures(value: number, significantFigures: number): number {
     if (value === 0) {
       return 0;
     }

@@ -274,15 +274,15 @@ export class QtiInlineChoiceInteraction extends Interaction {
   declare configContext: ConfigContext;
 
   override render() {
-    const selected = this._selectedOption();
-    const useCustomizableSelect = this._supportsCustomizableSelect();
+    const selected = this.#selectedOption();
+    const useCustomizableSelect = this.#supportsCustomizableSelect();
 
     return html`
       ${useCustomizableSelect
         ? html`
             <select
               part="select"
-              @change=${this._onNativeChange}
+              @change=${this.#onNativeChange}
               ?disabled="${this.disabled || this.readonly}"
               .value="${selected?.value ?? ''}"
             >
@@ -298,8 +298,8 @@ export class QtiInlineChoiceInteraction extends Interaction {
             <button
               part="trigger"
               type="button"
-              @click=${this._onToggleCustomDropdown}
-              @keydown=${this._onCustomTriggerKeyDown}
+              @click=${this.#onToggleCustomDropdown}
+              @keydown=${this.#onCustomTriggerKeyDown}
               aria-haspopup="listbox"
               aria-expanded="${this._dropdownOpen ? 'true' : 'false'}"
               ?disabled="${this.disabled}"
@@ -310,7 +310,7 @@ export class QtiInlineChoiceInteraction extends Interaction {
             </button>
             ${this._dropdownOpen
               ? html`
-                  <div part="menu" role="listbox" @keydown=${this._onCustomMenuKeyDown}>
+                  <div part="menu" role="listbox" @keydown=${this.#onCustomMenuKeyDown}>
                     ${this.options.map(
                       option => html`
                         <button
@@ -318,7 +318,7 @@ export class QtiInlineChoiceInteraction extends Interaction {
                           type="button"
                           role="option"
                           aria-selected="${option.selected ? 'true' : 'false'}"
-                          @click="${() => this._selectValue(option.value)}"
+                          @click="${() => this.#selectValue(option.value)}"
                         >
                           <span part="option-content">${unsafeHTML(option.textContent)}</span>
                         </button>
@@ -334,10 +334,10 @@ export class QtiInlineChoiceInteraction extends Interaction {
 
   override connectedCallback() {
     super.connectedCallback();
-    this._updateOptions();
-    if (!this._supportsCustomizableSelect()) {
-      document.addEventListener('pointerdown', this._onDocumentPointerDown, true);
-      document.addEventListener('keydown', this._onDocumentKeyDown, true);
+    this.#updateOptions();
+    if (!this.#supportsCustomizableSelect()) {
+      document.addEventListener('pointerdown', this.#onDocumentPointerDown, true);
+      document.addEventListener('keydown', this.#onDocumentKeyDown, true);
     }
     // Simple width estimation - no recalculation needed
     this._estimateOptimalWidth();
@@ -345,9 +345,9 @@ export class QtiInlineChoiceInteraction extends Interaction {
 
   override disconnectedCallback() {
     super.disconnectedCallback();
-    if (!this._supportsCustomizableSelect()) {
-      document.removeEventListener('pointerdown', this._onDocumentPointerDown, true);
-      document.removeEventListener('keydown', this._onDocumentKeyDown, true);
+    if (!this.#supportsCustomizableSelect()) {
+      document.removeEventListener('pointerdown', this.#onDocumentPointerDown, true);
+      document.removeEventListener('keydown', this.#onDocumentKeyDown, true);
     }
     if (this._widthCalculationTimer !== null) {
       window.clearTimeout(this._widthCalculationTimer);
@@ -357,20 +357,20 @@ export class QtiInlineChoiceInteraction extends Interaction {
 
   override willUpdate(changed: PropertyValues<this>) {
     if (changed.has('configContext') || changed.has('dataPrompt')) {
-      this._updateOptions();
+      this.#updateOptions();
     }
   }
 
   override updated(changed: PropertyValues<this>) {
     const dropdownOpenKey = '_dropdownOpen' as keyof QtiInlineChoiceInteraction;
     if (changed.has(dropdownOpenKey) && this._dropdownOpen) {
-      this._positionCustomMenu();
+      this.#positionCustomMenu();
       const selected = this.renderRoot.querySelector<HTMLButtonElement>('button[part="option"][aria-selected="true"]');
       selected?.focus();
     }
   }
 
-  private _selectedOption(): OptionType | undefined {
+  #selectedOption(): OptionType | undefined {
     return this.options.find(option => option.selected) ?? this.options[0];
   }
 
@@ -386,7 +386,7 @@ export class QtiInlineChoiceInteraction extends Interaction {
    * Because `CSS.supports(...)` may return syntax-only true, we do a final DOM probe to ensure the customizable-select
    * markup actually takes effect in the current environment before opting in.
    */
-  private _supportsCustomizableSelect(): boolean {
+  #supportsCustomizableSelect(): boolean {
     if (QtiInlineChoiceInteraction._supportsCustomizableSelectCache !== null) {
       return QtiInlineChoiceInteraction._supportsCustomizableSelectCache;
     }
@@ -447,7 +447,7 @@ export class QtiInlineChoiceInteraction extends Interaction {
     }
   }
 
-  private _updateOptions() {
+  #updateOptions() {
     const choices = Array.from(this.querySelectorAll('qti-inline-choice'));
     const prompt = this.dataPrompt || this.configContext?.inlineChoicePrompt || 'select';
 
@@ -503,7 +503,7 @@ export class QtiInlineChoiceInteraction extends Interaction {
   }
 
   public override reset() {
-    this._setDropdownOpen(false);
+    this.#setDropdownOpen(false);
     this.options = this.options.map((option, i) => ({ ...option, selected: i === 0 }));
   }
 
@@ -537,42 +537,42 @@ export class QtiInlineChoiceInteraction extends Interaction {
     this.correctOption = `<span part="correct-option" style="border:1px solid var(--qti-correct); border-radius:4px; padding: 2px 4px; margin: 4px; display:inline-block">${correctOptionData.textContent}</span>`;
   }
 
-  private _onNativeChange = (event: Event) => {
+  #onNativeChange = (event: Event) => {
     if (this.readonly) return;
     const selectedOptionValue = (event.target as HTMLSelectElement).value;
-    this._selectValue(selectedOptionValue);
+    this.#selectValue(selectedOptionValue);
   };
 
-  private _selectValue(value: string) {
+  #selectValue(value: string) {
     this.options = this.options.map(option => ({ ...option, selected: option.value === value }));
     this.saveResponse(value);
-    this._setDropdownOpen(false);
+    this.#setDropdownOpen(false);
   }
 
-  private _setDropdownOpen(open: boolean) {
+  #setDropdownOpen(open: boolean) {
     if (this._dropdownOpen === open) return;
     this._dropdownOpen = open;
   }
 
-  private _onToggleCustomDropdown = () => {
+  #onToggleCustomDropdown = () => {
     if (this.disabled || this.readonly) return;
-    this._setDropdownOpen(!this._dropdownOpen);
+    this.#setDropdownOpen(!this._dropdownOpen);
   };
 
-  private _onCustomTriggerKeyDown = (event: KeyboardEvent) => {
+  #onCustomTriggerKeyDown = (event: KeyboardEvent) => {
     if (this.disabled || this.readonly) return;
     if (event.key === 'ArrowDown' || event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
-      this._setDropdownOpen(true);
+      this.#setDropdownOpen(true);
     }
   };
 
-  private _onCustomMenuKeyDown = (event: KeyboardEvent) => {
+  #onCustomMenuKeyDown = (event: KeyboardEvent) => {
     if (!this._dropdownOpen) return;
     if (event.key === 'Escape') {
       event.preventDefault();
-      this._setDropdownOpen(false);
-      this._focusTrigger();
+      this.#setDropdownOpen(false);
+      this.#focusTrigger();
       return;
     }
 
@@ -591,26 +591,26 @@ export class QtiInlineChoiceInteraction extends Interaction {
     }
   };
 
-  private _focusTrigger() {
+  #focusTrigger() {
     this.renderRoot.querySelector<HTMLButtonElement>('button[part="trigger"]')?.focus();
   }
 
-  private _onDocumentPointerDown = (event: Event) => {
+  #onDocumentPointerDown = (event: Event) => {
     if (!this._dropdownOpen) return;
     const path = (event as any).composedPath?.() as EventTarget[] | undefined;
     if (path && path.includes(this)) return;
-    this._setDropdownOpen(false);
+    this.#setDropdownOpen(false);
   };
 
-  private _onDocumentKeyDown = (event: KeyboardEvent) => {
+  #onDocumentKeyDown = (event: KeyboardEvent) => {
     if (!this._dropdownOpen) return;
     if (event.key !== 'Escape') return;
     event.preventDefault();
-    this._setDropdownOpen(false);
-    this._focusTrigger();
+    this.#setDropdownOpen(false);
+    this.#focusTrigger();
   };
 
-  private _positionCustomMenu() {
+  #positionCustomMenu() {
     if (!this._dropdownOpen) return;
     const menu = this.renderRoot.querySelector<HTMLElement>('[part="menu"]');
     const trigger = this.renderRoot.querySelector<HTMLElement>('button[part="trigger"]');

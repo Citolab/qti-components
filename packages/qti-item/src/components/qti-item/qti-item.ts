@@ -28,64 +28,64 @@ export class QtiItem extends LitElement {
   @state()
   @provide({ context: computedItemContext })
   public computedContext: ComputedItemContext;
-  private _qtiAssessmentItem?: QtiAssessmentItem;
+  #qtiAssessmentItem?: QtiAssessmentItem;
 
   @state()
   @provide({ context: configContext })
   public configContext: ConfigContext = {};
 
   // Store event handlers as instance properties
-  private _onItemContextChanged = this._handleItemContextChanged.bind(this);
-  private _onAssessmentItemConnected = this._handleAssessmentItemConnected.bind(this);
+  #onItemContextChanged = this.#handleItemContextChanged.bind(this);
+  #onAssessmentItemConnected = this.#handleAssessmentItemConnected.bind(this);
 
-  private _onHandleShowCorrectResponse = this._handleShowCorrectResponse.bind(this);
-  private _onHandleShowCandidateCorrection = this._handleShowCandidateCorrection.bind(this);
-  private _onHandleSwitchCorrectResponseMode = this._handleSwitchCorrectResponseMode.bind(this);
+  #onHandleShowCorrectResponse = this.#handleShowCorrectResponse.bind(this);
+  #onHandleShowCandidateCorrection = this.#handleShowCandidateCorrection.bind(this);
+  #onHandleSwitchCorrectResponseMode = this.#handleSwitchCorrectResponseMode.bind(this);
 
   constructor() {
     super();
-    this.addEventListener('qti-item-context-updated', this._onItemContextChanged);
-    this.addEventListener('qti-assessment-item-connected', this._onAssessmentItemConnected);
-    this.addEventListener('item-show-correct-response', this._onHandleShowCorrectResponse);
-    this.addEventListener('item-show-candidate-correction', this._onHandleShowCandidateCorrection);
-    this.addEventListener('item-switch-correct-response-mode', this._onHandleSwitchCorrectResponseMode);
+    this.addEventListener('qti-item-context-updated', this.#onItemContextChanged);
+    this.addEventListener('qti-assessment-item-connected', this.#onAssessmentItemConnected);
+    this.addEventListener('item-show-correct-response', this.#onHandleShowCorrectResponse);
+    this.addEventListener('item-show-candidate-correction', this.#onHandleShowCandidateCorrection);
+    this.addEventListener('item-switch-correct-response-mode', this.#onHandleSwitchCorrectResponseMode);
   }
 
-  private _handleItemContextChanged(e: CustomEvent<{ itemContext: ItemContext }>) {
-    this._updateItemVariablesInTestContext(e.detail.itemContext.identifier, e.detail?.itemContext?.variables || []);
+  #handleItemContextChanged(e: CustomEvent<{ itemContext: ItemContext }>) {
+    this.#updateItemVariablesInTestContext(e.detail.itemContext.identifier, e.detail?.itemContext?.variables || []);
   }
 
-  private _handleAssessmentItemConnected(e: CustomEvent<QtiAssessmentItem>) {
+  #handleAssessmentItemConnected(e: CustomEvent<QtiAssessmentItem>) {
     const fullVariables = (e.detail as any)._context.variables;
-    this._qtiAssessmentItem = e.detail;
+    this.#qtiAssessmentItem = e.detail;
     this.computedContext =
-      this.computedContext?.identifier === this._qtiAssessmentItem.identifier
-        ? { ...this.computedContext, title: this._qtiAssessmentItem.title }
+      this.computedContext?.identifier === this.#qtiAssessmentItem.identifier
+        ? { ...this.computedContext, title: this.#qtiAssessmentItem.title }
         : ({
-            identifier: this._qtiAssessmentItem.identifier,
-            title: this._qtiAssessmentItem.title,
-            adaptive: this._qtiAssessmentItem.getAttribute('adaptive')?.toLowerCase() === 'true' || false,
+            identifier: this.#qtiAssessmentItem.identifier,
+            title: this.#qtiAssessmentItem.title,
+            adaptive: this.#qtiAssessmentItem.getAttribute('adaptive')?.toLowerCase() === 'true' || false,
             variables: fullVariables,
             correctResponseMode: 'internal'
           } as ComputedItemContext);
-    this._updateItemVariablesInTestContext(this._qtiAssessmentItem.identifier, fullVariables || []);
+    this.#updateItemVariablesInTestContext(this.#qtiAssessmentItem.identifier, fullVariables || []);
   }
 
-  private _handleShowCorrectResponse(e: CustomEvent<boolean>) {
-    if (this._qtiAssessmentItem) {
-      this._qtiAssessmentItem.showCorrectResponse(e.detail);
+  #handleShowCorrectResponse(e: CustomEvent<boolean>) {
+    if (this.#qtiAssessmentItem) {
+      this.#qtiAssessmentItem.showCorrectResponse(e.detail);
     }
   }
 
-  private _handleShowCandidateCorrection(e: CustomEvent<boolean>) {
-    if (this._qtiAssessmentItem) {
-      this._qtiAssessmentItem.showCandidateCorrection(e.detail);
+  #handleShowCandidateCorrection(e: CustomEvent<boolean>) {
+    if (this.#qtiAssessmentItem) {
+      this.#qtiAssessmentItem.showCandidateCorrection(e.detail);
     }
   }
 
-  private _handleSwitchCorrectResponseMode(e: CustomEvent<CorrectResponseMode>) {
+  #handleSwitchCorrectResponseMode(e: CustomEvent<CorrectResponseMode>) {
     // Switch off the correct response first
-    this._handleShowCorrectResponse(new CustomEvent('item-show-correct-response', { detail: false, bubbles: true }));
+    this.#handleShowCorrectResponse(new CustomEvent('item-show-correct-response', { detail: false, bubbles: true }));
 
     this.configContext = {
       ...this.configContext,
@@ -93,7 +93,7 @@ export class QtiItem extends LitElement {
     };
   }
 
-  private _updateItemVariablesInTestContext(
+  #updateItemVariablesInTestContext(
     identifier: string,
     variables: readonly VariableDeclaration<string | string[] | null>[]
   ): void {
@@ -120,8 +120,8 @@ export class QtiItem extends LitElement {
 
   override disconnectedCallback() {
     super.disconnectedCallback();
-    this.removeEventListener('qti-item-context-changed', this._onItemContextChanged);
-    this.removeEventListener('qti-assessment-item-connected', this._onAssessmentItemConnected);
+    this.removeEventListener('qti-item-context-changed', this.#onItemContextChanged);
+    this.removeEventListener('qti-assessment-item-connected', this.#onAssessmentItemConnected);
   }
 }
 

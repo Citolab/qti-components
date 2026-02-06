@@ -11,17 +11,17 @@ export class QtiAssessmentTest extends LitElement {
   @property({ type: String }) identifier: string;
   @property({ type: String })
   override get title(): string {
-    return this._title;
+    return this.#title;
   }
   override set title(value: string) {
-    this._title = value;
+    this.#title = value;
     this.removeAttribute('title');
     this.setAttribute('data-title', value);
   }
 
   @consume({ context: testContext, subscribe: true })
   public _testContext?: TestContext;
-  private _title = '';
+  #title = '';
 
   override async connectedCallback(): Promise<void> {
     super.connectedCallback();

@@ -1,5 +1,3 @@
-import path from 'path';
-
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 import type { StorybookConfig } from '@storybook/web-components-vite';

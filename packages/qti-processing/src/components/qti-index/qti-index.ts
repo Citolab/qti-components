@@ -38,7 +38,7 @@ export class QtiIndex extends QtiExpression<any> {
     } else {
       // n is an identifier - need to look up its value at runtime
       // This would require access to the QTI runtime context to resolve variables
-      const variableValue = this.lookupVariableValue(this.n);
+      const variableValue = this.#lookupVariableValue(this.n);
       if (variableValue === null) {
         console.error(`qti-index: variable "${this.n}" is not a valid number`);
         return null;
@@ -73,7 +73,7 @@ export class QtiIndex extends QtiExpression<any> {
 
   // Helper method to look up a variable value by identifier
   // This would need to be implemented based on your actual QTI runtime environment
-  private lookupVariableValue(identifier: string): integer | null {
+  #lookupVariableValue(identifier: string): integer | null {
     const value = this.context.variables.find(v => v.identifier === identifier)?.value;
     // check if value is a number
     if (value === null || isNaN(Number(value))) {

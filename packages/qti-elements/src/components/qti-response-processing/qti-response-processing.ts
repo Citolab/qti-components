@@ -37,21 +37,21 @@ export class QtiResponseProcessing extends LitElement {
       this.innerHTML = '';
       switch (templateName) {
         case 'map_response': {
-          this.appendChild(this.fragmentFromString(mapResponse).firstElementChild.firstElementChild);
+          this.appendChild(this.#fragmentFromString(mapResponse).firstElementChild.firstElementChild);
           break;
         }
         case 'map_response_point': {
-          this.appendChild(this.fragmentFromString(mapResponsePoint).firstElementChild.firstElementChild);
+          this.appendChild(this.#fragmentFromString(mapResponsePoint).firstElementChild.firstElementChild);
           break;
         }
         case 'match_correct':
-          this.appendChild(this.fragmentFromString(matchCorrect).firstElementChild.firstElementChild);
+          this.appendChild(this.#fragmentFromString(matchCorrect).firstElementChild.firstElementChild);
           break;
       }
     }
   }
 
-  private fragmentFromString(strHTML: string) {
+  #fragmentFromString(strHTML: string) {
     return document.createRange().createContextualFragment(strHTML);
   }
 }

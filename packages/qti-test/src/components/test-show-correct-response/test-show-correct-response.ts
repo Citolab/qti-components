@@ -31,7 +31,7 @@ export class TestShowCorrectResponse extends LitElement {
   @property({ type: String }) hideCorrectText = 'Hide correct response';
   @property({ type: String }) noCorrectResponseText = 'No correct response specified';
 
-  private _previousActiveItem?: unknown; // Store previous active item reference
+  #previousActiveItem?: unknown; // Store previous active item reference
 
   override willUpdate(_changedProperties: Map<string | number | symbol, unknown>) {
     const activeItem = this.computedContext?.testParts
@@ -39,9 +39,9 @@ export class TestShowCorrectResponse extends LitElement {
       .find(item => item.active);
 
     // If active item changed, reset shown before the update
-    if (this._previousActiveItem !== activeItem) {
+    if (this.#previousActiveItem !== activeItem) {
       this.shown = false;
-      this._previousActiveItem = activeItem; // Update previous active item
+      this.#previousActiveItem = activeItem; // Update previous active item
     }
 
     if (activeItem) {
@@ -54,7 +54,7 @@ export class TestShowCorrectResponse extends LitElement {
       this.disabled = true;
     }
   }
-  private _toggleState() {
+  #toggleState() {
     if (this.disabled) return;
     this.shown = !this.shown;
 
@@ -66,12 +66,12 @@ export class TestShowCorrectResponse extends LitElement {
     );
   }
 
-  private _getDisplayedText(): string {
+  #getDisplayedText(): string {
     return this.disabled ? this.noCorrectResponseText : this.shown ? this.hideCorrectText : this.showCorrectText;
   }
 
   override render() {
-    return html` <div @click="${this._toggleState}">${this._getDisplayedText()}</div> `;
+    return html` <div @click="${this.#toggleState}">${this.#getDisplayedText()}</div> `;
   }
 }
 

@@ -76,13 +76,13 @@ export class QtiGcd extends QtiExpression<number | null> {
     }
 
     // Calculate GCD of all values
-    return this._calculateGcd(allValues);
+    return this.#calculateGcd(allValues);
   }
 
   /**
    * Calculate the greatest common divisor of an array of integers
    */
-  private _calculateGcd(values: number[]): number {
+  #calculateGcd(values: number[]): number {
     if (values.length === 0) {
       return 0;
     }
@@ -96,7 +96,7 @@ export class QtiGcd extends QtiExpression<number | null> {
 
     // Calculate GCD with each subsequent value
     for (let i = 1; i < values.length; i++) {
-      result = this._gcdTwoNumbers(result, Math.abs(values[i]));
+      result = this.#gcdTwoNumbers(result, Math.abs(values[i]));
 
       // Early termination: if GCD becomes 1, it won't get smaller
       if (result === 1) {
@@ -110,7 +110,7 @@ export class QtiGcd extends QtiExpression<number | null> {
   /**
    * Calculate GCD of two numbers using Euclidean algorithm
    */
-  private _gcdTwoNumbers(a: number, b: number): number {
+  #gcdTwoNumbers(a: number, b: number): number {
     // Handle special cases according to QTI spec
     if (a === 0 && b === 0) {
       return 0; // gcd(0,0) = 0

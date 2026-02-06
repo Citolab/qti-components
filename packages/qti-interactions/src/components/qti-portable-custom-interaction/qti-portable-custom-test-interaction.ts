@@ -7,7 +7,7 @@ import type { ItemContext } from '@qti-components/base';
  * for interacting with the iframe content in tests.
  */
 export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteraction {
-  private _recreatingIframe = false;
+  #recreatingIframe = false;
 
   /**
    * Gets the HTML content of the iframe for testing purposes
@@ -64,7 +64,7 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
    * @returns Promise that resolves when the iframe is loaded
    */
   public async recreateIframe(): Promise<void> {
-    this._recreatingIframe = true;
+    this.#recreatingIframe = true;
 
     try {
       // Remove existing iframe if it exists
@@ -94,7 +94,7 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
         }, 5000);
       });
     } finally {
-      this._recreatingIframe = false;
+      this.#recreatingIframe = false;
     }
   }
 
@@ -104,7 +104,7 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
   override disconnectedCallback(): void {
     // Only call super if we're not in the process of recreating the iframe
     // This prevents removing event listeners that we still need
-    if (!this._recreatingIframe) {
+    if (!this.#recreatingIframe) {
       super.disconnectedCallback();
     }
   }

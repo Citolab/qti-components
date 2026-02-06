@@ -63,10 +63,10 @@ export class QtiMathOperator extends QtiExpression<number | null> {
     }
 
     // Perform the mathematical operation
-    return this._performOperation(this.name, values);
+    return this.#performOperation(this.name, values);
   }
 
-  private _performOperation(operation: string, values: number[]): number | null {
+  #performOperation(operation: string, values: number[]): number | null {
     try {
       switch (operation.toLowerCase()) {
         // Single argument functions

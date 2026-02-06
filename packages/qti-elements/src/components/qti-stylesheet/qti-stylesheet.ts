@@ -5,7 +5,7 @@ import type { PropertyValueMap } from 'lit';
 
 @customElement('qti-stylesheet')
 export class QtiStylesheet extends LitElement {
-  private styleElement: HTMLStyleElement | null = null;
+  #styleElement: HTMLStyleElement | null = null;
 
   protected override firstUpdated(_changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
     super.firstUpdated(_changedProperties);
@@ -18,16 +18,16 @@ export class QtiStylesheet extends LitElement {
         .then(response => response.text())
         .then(cssContent => {
           // Minify the CSS content by removing whitespace and comments
-          const minifiedCss = this.minifyCss(cssContent);
+          const minifiedCss = this.#minifyCss(cssContent);
 
           // Create a <style> element with @scope surrounding the minified CSS
-          this.styleElement = document.createElement('style');
-          this.styleElement.media = 'screen';
-          this.styleElement.textContent = `@scope {${minifiedCss}}`;
+          this.#styleElement = document.createElement('style');
+          this.#styleElement.media = 'screen';
+          this.#styleElement.textContent = `@scope {${minifiedCss}}`;
 
           // Append the style element to the parent element of this component
           if (this.parentElement) {
-            this.parentElement.appendChild(this.styleElement);
+            this.parentElement.appendChild(this.#styleElement);
           } else {
             console.warn('No parent element to append the scoped stylesheet to.');
           }
@@ -39,23 +39,23 @@ export class QtiStylesheet extends LitElement {
 
     if (this.textContent !== null && this.textContent.trim() !== '') {
       // Minify the inline CSS content
-      const minifiedCss = this.minifyCss(this.textContent);
+      const minifiedCss = this.#minifyCss(this.textContent);
 
       // Directly create a <style> element with the @scope surrounding the minified inline styles
-      this.styleElement = document.createElement('style');
-      this.styleElement.media = 'screen';
-      this.styleElement.textContent = `@scope {${minifiedCss}}`;
+      this.#styleElement = document.createElement('style');
+      this.#styleElement.media = 'screen';
+      this.#styleElement.textContent = `@scope {${minifiedCss}}`;
 
       // Append the style element to the parent element of this component
       if (this.parentElement) {
-        this.parentElement.appendChild(this.styleElement);
+        this.parentElement.appendChild(this.#styleElement);
       } else {
         console.warn('No parent element to append the scoped stylesheet to.');
       }
     }
   }
 
-  private minifyCss(cssContent: string): string {
+  #minifyCss(cssContent: string): string {
     // Remove comments, whitespace, and newline characters
     return cssContent
       .replace(/\/\*[\s\S]*?\*\//g, '') // Remove comments
@@ -65,9 +65,9 @@ export class QtiStylesheet extends LitElement {
   }
 
   override disconnectedCallback() {
-    if (this.styleElement) {
+    if (this.#styleElement) {
       try {
-        this.styleElement.remove();
+        this.#styleElement.remove();
       } catch (error) {
         console.error('Could not remove stylesheet:', error);
       }

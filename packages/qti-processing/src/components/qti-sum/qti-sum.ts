@@ -3,15 +3,15 @@ import { QtiExpression } from '@qti-components/base';
 import type { QtiExpressionBase } from '@qti-components/base';
 
 export class QtiSum extends QtiExpression<number> {
-  private _expression: QtiSumExpression;
+  #expression: QtiSumExpression;
   constructor() {
     super();
-    this._expression = new QtiSumExpression(Array.from(this.children as unknown as QtiExpressionBase<number>[]));
+    this.#expression = new QtiSumExpression(Array.from(this.children as unknown as QtiExpressionBase<number>[]));
   }
 
   public override getResult() {
     // children can be a mix of qti-expression and qti-condition-expression
-    const value = this._expression.calculate();
+    const value = this.#expression.calculate();
     return value;
   }
 }

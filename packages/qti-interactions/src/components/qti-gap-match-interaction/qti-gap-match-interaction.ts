@@ -70,7 +70,7 @@ export class QtiGapMatchInteraction extends DragDropInteractionMixin(
     }
   }
 
-  private getMatches(responseVariable: ResponseVariable): { source: string; target: string }[] {
+  #getMatches(responseVariable: ResponseVariable): { source: string; target: string }[] {
     if (!responseVariable.correctResponse) {
       return [];
     }
@@ -94,7 +94,7 @@ export class QtiGapMatchInteraction extends DragDropInteractionMixin(
     if (!responseVariable?.correctResponse) {
       return;
     }
-    const matches = this.getMatches(responseVariable);
+    const matches = this.#getMatches(responseVariable);
 
     const targetChoices = Array.from<QtiGap>(this.querySelectorAll('qti-gap'));
     targetChoices.forEach(targetChoice => {

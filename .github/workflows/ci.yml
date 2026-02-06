@@ -54,6 +54,12 @@ jobs:
           echo "🔨 Building project..."
           pnpm run build
 
+      - name: Check custom-elements.json is up to date
+        run: |
+          pnpm run cem
+          git diff --exit-code -- '**/custom-elements.json' || \
+            (echo "custom-elements.json is out of date. Run 'pnpm run cem' and commit the result." && exit 1)
+
       - name: Run tests
         run: |
           echo "🧪 Running tests..."

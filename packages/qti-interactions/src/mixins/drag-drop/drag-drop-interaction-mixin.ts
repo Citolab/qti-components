@@ -945,7 +945,9 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
 
     private appendClone() {
-      document.body.appendChild(this.dragClone);
+      const fullscreenRoot = document.fullscreenElement as HTMLElement | null;
+      const target = fullscreenRoot ?? document.body;
+      target.appendChild(this.dragClone);
     }
 
     private handleTouchStart(e) {

@@ -1,7 +1,7 @@
 {
   "name": "@qti-components/interactions",
   "description": "QTI interactions utilities",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "author": "",
   "dependencies": {
     "@qti-components/base": "workspace:^",
@@ -17,28 +17,11 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./register-all": {
-      "types": "./dist/register-all.d.ts",
-      "import": "./dist/register-all.js"
-    },
-    "./components/*/register": {
-      "types": "./dist/components/*/register.d.ts",
-      "import": "./dist/components/*/register.js"
-    },
-    "./components/*/*": {
-      "types": "./dist/components/*/*.d.ts",
-      "import": "./dist/components/*/*.js"
-    },
-    "./elements/*/register": {
-      "types": "./dist/elements/*/register.d.ts",
-      "import": "./dist/elements/*/register.js"
-    },
-    "./elements/*/*": {
-      "types": "./dist/elements/*/*.d.ts",
-      "import": "./dist/elements/*/*.js"
-    },
-    "./package.json": "./package.json"
+    "./*": "./dist/*"
   },
+  "files": [
+    "dist/**/*"
+  ],
   "keywords": [
     "interactions",
     "qti"
@@ -55,11 +38,15 @@
   "scripts": {
     "attw": "attw --profile esm-only --pack",
     "build": "tsc --paths null",
+    "build-storybook": "storybook build",
+    "cem": "cem analyze --config ./custom-elements-manifest.config.mjs",
     "clean": "rm -rf dist",
+    "storybook": "storybook dev -p 6008 --no-open",
     "yalc": "yalc publish",
     "yalc:push": "yalc push"
   },
   "sideEffects": true,
   "type": "module",
-  "types": "dist/index.d.ts"
+  "types": "dist/index.d.ts",
+  "customElements": "custom-elements.json"
 }

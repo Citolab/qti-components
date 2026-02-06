@@ -3,12 +3,12 @@
   "description": "QTI shared utilities",
   "version": "1.0.0",
   "author": "",
+  "dependencies": {
+    "@qti-components/utilities": "workspace:^"
+  },
   "devDependencies": {
     "@lit/context": "^1.1.6",
     "lit": "^3.3.1"
-  },
-  "dependencies": {
-    "@qti-components/utilities": "workspace:^"
   },
   "keywords": [
     "qti",
@@ -26,7 +26,9 @@
   "scripts": {
     "attw": "attw --profile esm-only --pack",
     "build": "tsc --paths null",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "yalc": "yalc publish",
+    "yalc:push": "yalc push"
   },
   "type": "module",
   "types": "dist/index.d.ts"
