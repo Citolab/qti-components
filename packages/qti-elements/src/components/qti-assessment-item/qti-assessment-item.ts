@@ -29,8 +29,8 @@ import type { Interaction } from '@qti-components/base';
  */
 @customElement('qti-assessment-item')
 export class QtiAssessmentItem extends LitElement {
-  private _itemTitle: string | undefined;
-  private _templateProcessing: QtiTemplateProcessing | null = null;
+  #itemTitle: string | undefined;
+  #templateProcessing: QtiTemplateProcessing | null = null;
 
   @property({ type: String }) identifier: string = '';
   @property({ type: String }) adaptive: 'true' | 'false' = 'false';
@@ -38,10 +38,10 @@ export class QtiAssessmentItem extends LitElement {
 
   @property({ type: String })
   override get title(): string {
-    return this._itemTitle;
+    return this.#itemTitle;
   }
   override set title(value: string) {
-    this._itemTitle = value;
+    this.#itemTitle = value;
     this.removeAttribute('title');
     this.setAttribute('data-title', value);
   }
@@ -49,13 +49,13 @@ export class QtiAssessmentItem extends LitElement {
   @property({ type: Boolean }) disabled: boolean;
   @watch('disabled', { waitUntilFirstUpdate: true })
   protected _handleDisabledChange = (_: boolean, disabled: boolean) => {
-    this._interactionElements.forEach(ch => (ch.disabled = disabled));
+    this.#interactionElements.forEach(ch => (ch.disabled = disabled));
   };
 
   @property({ type: Boolean }) readonly: boolean;
   @watch('readonly', { waitUntilFirstUpdate: true })
   protected _handleReadonlyChange = (_: boolean, readonly: boolean) =>
-    this._interactionElements.forEach(ch => (ch.readonly = readonly));
+    this.#interactionElements.forEach(ch => (ch.readonly = readonly));
 
   @provide({ context: itemContext })
   private _context: ItemContext = {
@@ -109,7 +109,7 @@ export class QtiAssessmentItem extends LitElement {
 
     this._context.variables.forEach(variable => {
       if (variable.type === 'response') {
-        const interactionElement = this._interactionElements.find(
+        const interactionElement = this.#interactionElements.find(
           (el: Interaction) => el.responseIdentifier === variable.identifier
         );
         if (interactionElement) {
@@ -120,7 +120,7 @@ export class QtiAssessmentItem extends LitElement {
 
     this.variables.forEach(variable => {
       if (variable.type === 'outcome') {
-        this._feedbackElements.forEach(fe => fe.checkShowFeedback(variable.identifier));
+        this.#feedbackElements.forEach(fe => fe.checkShowFeedback(variable.identifier));
       }
     });
   }
@@ -136,9 +136,9 @@ export class QtiAssessmentItem extends LitElement {
     };
   }
 
-  private _initialContext: Readonly<ItemContext> = { ...this._context, variables: this._context.variables };
-  private _feedbackElements: QtiFeedback[] = [];
-  private _interactionElements: Interaction[] = [];
+  #initialContext: Readonly<ItemContext> = { ...this._context, variables: this._context.variables };
+  #feedbackElements: QtiFeedback[] = [];
+  #interactionElements: Interaction[] = [];
 
   /** @deprecated use variables property instead */
   set responses(myResponses: ResponseInteraction[]) {
@@ -149,7 +149,7 @@ export class QtiAssessmentItem extends LitElement {
           this.updateResponseVariable(response.responseIdentifier, response.response);
         }
 
-        const interaction: Interaction | undefined = this._interactionElements.find(
+        const interaction: Interaction | undefined = this.#interactionElements.find(
           i => i.getAttribute('response-identifier') === response.responseIdentifier
         );
         if (interaction) {
@@ -164,7 +164,7 @@ export class QtiAssessmentItem extends LitElement {
   }
 
   override connectedCallback(): void {
-    this._attachEventListeners();
+    this.#attachEventListeners();
     super.connectedCallback();
     this.updateComplete.then(() => {
       this.dispatchEvent(
@@ -174,56 +174,56 @@ export class QtiAssessmentItem extends LitElement {
           detail: this
         })
       );
-      this._processTemplates();
+      this.#processTemplates();
     });
   }
 
   override disconnectedCallback(): void {
-    this._removeEventListeners();
+    this.#removeEventListeners();
     super.disconnectedCallback();
   }
 
-  private _attachEventListeners() {
-    this.addEventListener('qti-register-variable', this._handleRegisterVariable);
-    this.addEventListener('qti-register-feedback', this._handleRegisterFeedback);
-    this.addEventListener('qti-register-interaction', this._handleRegisterInteraction);
-    this.addEventListener('end-attempt', this._handleEndAttempt);
-    this.addEventListener('qti-set-outcome-value', this._handleSetOutcomeValue);
-    this.addEventListener('qti-interaction-response', this._handleUpdateResponseVariable);
+  #attachEventListeners() {
+    this.addEventListener('qti-register-variable', this.#handleRegisterVariable);
+    this.addEventListener('qti-register-feedback', this.#handleRegisterFeedback);
+    this.addEventListener('qti-register-interaction', this.#handleRegisterInteraction);
+    this.addEventListener('end-attempt', this.#handleEndAttempt);
+    this.addEventListener('qti-set-outcome-value', this.#handleSetOutcomeValue);
+    this.addEventListener('qti-interaction-response', this.#handleUpdateResponseVariable);
   }
 
-  private _removeEventListeners() {
-    this.removeEventListener('qti-register-variable', this._handleRegisterVariable);
-    this.removeEventListener('qti-register-feedback', this._handleRegisterFeedback);
-    this.removeEventListener('qti-register-interaction', this._handleRegisterInteraction);
-    this.removeEventListener('end-attempt', this._handleEndAttempt);
-    this.removeEventListener('qti-set-outcome-value', this._handleSetOutcomeValue);
-    this.removeEventListener('qti-interaction-response', this._handleUpdateResponseVariable);
+  #removeEventListeners() {
+    this.removeEventListener('qti-register-variable', this.#handleRegisterVariable);
+    this.removeEventListener('qti-register-feedback', this.#handleRegisterFeedback);
+    this.removeEventListener('qti-register-interaction', this.#handleRegisterInteraction);
+    this.removeEventListener('end-attempt', this.#handleEndAttempt);
+    this.removeEventListener('qti-set-outcome-value', this.#handleSetOutcomeValue);
+    this.removeEventListener('qti-interaction-response', this.#handleUpdateResponseVariable);
   }
 
-  private _handleRegisterVariable = (e: QtiRegisterVariable) => {
+  #handleRegisterVariable = (e: QtiRegisterVariable) => {
     e.stopImmediatePropagation();
     this._context = { ...this._context, variables: [...this._context.variables, e.detail.variable] };
-    this._initialContext = this._context;
+    this.#initialContext = this._context;
     e.stopPropagation();
   };
 
-  private _handleRegisterFeedback = (e: CustomEvent<QtiFeedback>) => {
+  #handleRegisterFeedback = (e: CustomEvent<QtiFeedback>) => {
     e.stopImmediatePropagation();
     const feedbackElement = e.detail;
-    this._feedbackElements.push(feedbackElement);
+    this.#feedbackElements.push(feedbackElement);
     const numAttempts = Number(this._context.variables.find(v => v.identifier === 'numAttempts')?.value) || 0;
     if (numAttempts > 0) {
       feedbackElement.checkShowFeedback(feedbackElement.outcomeIdentifier);
     }
   };
 
-  private _handleRegisterInteraction = (e: CustomEvent<{ interaction: string; interactionElement: Interaction }>) => {
+  #handleRegisterInteraction = (e: CustomEvent<{ interaction: string; interactionElement: Interaction }>) => {
     e.stopImmediatePropagation();
-    this._interactionElements.push(e.detail.interactionElement);
+    this.#interactionElements.push(e.detail.interactionElement);
   };
 
-  private _handleEndAttempt = (e: CustomEvent<{ responseIdentifier: string; countAttempt: boolean }>) => {
+  #handleEndAttempt = (e: CustomEvent<{ responseIdentifier: string; countAttempt: boolean }>) => {
     e.stopImmediatePropagation();
     const { responseIdentifier, countAttempt } = e.detail;
     this.validate();
@@ -231,14 +231,14 @@ export class QtiAssessmentItem extends LitElement {
     this.processResponse(countAttempt);
   };
 
-  private _handleSetOutcomeValue = (e: CustomEvent<{ outcomeIdentifier: string; value: string | string[] }>) => {
+  #handleSetOutcomeValue = (e: CustomEvent<{ outcomeIdentifier: string; value: string | string[] }>) => {
     e.stopImmediatePropagation();
     const { outcomeIdentifier, value } = e.detail;
     this.updateOutcomeVariable(outcomeIdentifier, value);
     e.stopPropagation();
   };
 
-  private _handleUpdateResponseVariable = (e: CustomEvent<ResponseInteraction>) => {
+  #handleUpdateResponseVariable = (e: CustomEvent<ResponseInteraction>) => {
     e.stopImmediatePropagation();
 
     const { responseIdentifier, response, state } = e.detail;
@@ -268,7 +268,7 @@ export class QtiAssessmentItem extends LitElement {
    */
   public showCorrectResponse(show: boolean): void {
     // Iterate through all interaction elements
-    for (const interaction of this._interactionElements) {
+    for (const interaction of this.#interactionElements) {
       interaction.toggleCorrectResponse(show);
     }
 
@@ -284,7 +284,7 @@ export class QtiAssessmentItem extends LitElement {
    */
   public showCandidateCorrection(show: boolean): void {
     // Iterate through all interaction elements
-    for (const interaction of this._interactionElements) {
+    for (const interaction of this.#interactionElements) {
       interaction.toggleCandidateCorrection(show);
     }
 
@@ -294,11 +294,11 @@ export class QtiAssessmentItem extends LitElement {
     });
   }
 
-  private _processTemplates(): void {
-    this._templateProcessing = this.querySelector<QtiTemplateProcessing>('qti-template-processing');
-    if (this._templateProcessing) {
+  #processTemplates(): void {
+    this.#templateProcessing = this.querySelector<QtiTemplateProcessing>('qti-template-processing');
+    if (this.#templateProcessing) {
       // Run template processing before first presentation
-      this._templateProcessing.process();
+      this.#templateProcessing.process();
     }
   }
 
@@ -319,7 +319,7 @@ export class QtiAssessmentItem extends LitElement {
     }
     if (this.adaptive === 'false') {
       // if adaptive, completionStatus is set by the processing template
-      this.updateOutcomeVariable('completionStatus', this._getCompletionStatus());
+      this.updateOutcomeVariable('completionStatus', this.#getCompletionStatus());
     }
 
     this.dispatchEvent(
@@ -334,7 +334,7 @@ export class QtiAssessmentItem extends LitElement {
   }
 
   public resetResponses() {
-    this._context = this._initialContext;
+    this._context = this.#initialContext;
   }
 
   protected getResponse(identifier: string): Readonly<ResponseVariable> {
@@ -385,7 +385,7 @@ export class QtiAssessmentItem extends LitElement {
 
     if (this.adaptive === 'false') {
       // if adaptive, completionStatus is set by the processing template
-      this.updateOutcomeVariable('completionStatus', this._getCompletionStatus());
+      this.updateOutcomeVariable('completionStatus', this.#getCompletionStatus());
     }
   }
 
@@ -431,7 +431,7 @@ export class QtiAssessmentItem extends LitElement {
         };
       })
     };
-    this._feedbackElements.forEach(fe => fe.checkShowFeedback(identifier));
+    this.#feedbackElements.forEach(fe => fe.checkShowFeedback(identifier));
 
     this.dispatchEvent(
       new CustomEvent<OutcomeChangedDetails>('qti-outcome-changed', {
@@ -447,7 +447,7 @@ export class QtiAssessmentItem extends LitElement {
   }
 
   public validate(reportValidity = true): boolean {
-    const isValid = this._interactionElements.every(interactionElement => interactionElement.validate());
+    const isValid = this.#interactionElements.every(interactionElement => interactionElement.validate());
 
     if (reportValidity) {
       this.reportValidity();
@@ -457,12 +457,12 @@ export class QtiAssessmentItem extends LitElement {
   }
 
   public reportValidity() {
-    for (const interactionElement of this._interactionElements) {
+    for (const interactionElement of this.#interactionElements) {
       interactionElement.reportValidity();
     }
   }
 
-  private _getCompletionStatus(): 'completed' | 'incomplete' | 'not_attempted' | 'unknown' {
+  #getCompletionStatus(): 'completed' | 'incomplete' | 'not_attempted' | 'unknown' {
     const valid = this.validate(false);
     if (valid === true) return 'completed';
     if (valid === false) return 'incomplete';

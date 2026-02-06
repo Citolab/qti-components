@@ -17,7 +17,7 @@ export class TestSectionButtonsStamp extends LitElement {
   private computedContext: ComputedContext;
 
   myTemplate: TemplateFunction;
-  private _internals: ElementInternals;
+  #internals: ElementInternals;
 
   protected override createRenderRoot(): HTMLElement | DocumentFragment {
     return this;
@@ -25,8 +25,8 @@ export class TestSectionButtonsStamp extends LitElement {
 
   constructor() {
     super();
-    this._internals = this.attachInternals();
-    this._internals.ariaLabel = 'pagination';
+    this.#internals = this.attachInternals();
+    this.#internals.ariaLabel = 'pagination';
   }
 
   override connectedCallback(): void {

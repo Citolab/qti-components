@@ -32,7 +32,7 @@ export class TestScoringButtons extends LitElement {
   @consume({ context: computedContext, subscribe: true })
   protected computedContext?: ComputedContext;
 
-  private _changeOutcomeScore(value: number) {
+  #changeOutcomeScore(value: number) {
     const testPart = this.computedContext?.testParts.find(testPart => testPart.active);
     const sectionItems = testPart.sections.flatMap(section => section.items);
     const currentItemIdentifier = sectionItems.find(item => item.active)?.identifier;
@@ -75,7 +75,7 @@ export class TestScoringButtons extends LitElement {
       const target = e.target as HTMLInputElement;
       const value = parseFloat(target.value);
       if (target.tagName === 'INPUT') {
-        this._changeOutcomeScore(value);
+        this.#changeOutcomeScore(value);
       }
     });
 

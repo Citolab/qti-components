@@ -19,7 +19,7 @@ export class QtiTemplateProcessing extends LitElement {
     `
   ];
 
-  private _maxIterations = 100; // Prevent infinite loops in template constraints
+  #maxIterations = 100; // Prevent infinite loops in template constraints
 
   override render() {
     return html`<slot></slot>`;
@@ -42,7 +42,7 @@ export class QtiTemplateProcessing extends LitElement {
       shouldReprocess = false;
       iterations++;
 
-      if (iterations > this._maxIterations) {
+      if (iterations > this.#maxIterations) {
         console.error('Template processing exceeded maximum iterations. Possible infinite loop.');
         break;
       }

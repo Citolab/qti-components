@@ -22,7 +22,7 @@ export class QtiGraphicGapMatchInteraction extends DragDropInteractionMixin(
       <div role="alert" part="message" id="validation-message"></div>`;
   }
 
-  private positionHotspotOnRegister(e: CustomEvent<null>): void {
+  #positionHotspotOnRegister(e: CustomEvent<null>): void {
     const hotspot = e.target as QtiHotspotChoice;
     const coords = hotspot.getAttribute('coords');
     const shape = hotspot.getAttribute('shape');
@@ -56,11 +56,11 @@ export class QtiGraphicGapMatchInteraction extends DragDropInteractionMixin(
 
   override connectedCallback(): void {
     super.connectedCallback();
-    this.addEventListener('qti-register-hotspot', this.positionHotspotOnRegister);
+    this.addEventListener('qti-register-hotspot', this.#positionHotspotOnRegister);
   }
   override disconnectedCallback() {
     super.disconnectedCallback();
-    this.removeEventListener('qti-register-hotspot', this.positionHotspotOnRegister);
+    this.removeEventListener('qti-register-hotspot', this.#positionHotspotOnRegister);
   }
 }
 

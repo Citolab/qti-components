@@ -34,7 +34,7 @@ export class TestContainer extends LitElement {
   testXML: string = null;
 
   /** Template content if provided */
-  private templateContent: unknown = null;
+  #templateContent: unknown = null;
 
   /** Callback function to transform the test after loading */
   // @property({ type: Function }) postLoadTestTransformCallback: PostLoadTestTransformCallback | null = null;
@@ -75,8 +75,8 @@ export class TestContainer extends LitElement {
 
   override async connectedCallback(): Promise<void> {
     super.connectedCallback();
-    this.initializeTemplateContent();
-    this.applyStyles();
+    this.#initializeTemplateContent();
+    this.#applyStyles();
     if (this.testURL) {
       this.handleTestURLChange();
     }
@@ -85,12 +85,12 @@ export class TestContainer extends LitElement {
     }
   }
 
-  private initializeTemplateContent() {
+  #initializeTemplateContent() {
     const template = this.querySelector('template') as HTMLTemplateElement;
-    this.templateContent = template ? template.content : html``;
+    this.#templateContent = template ? template.content : html``;
   }
 
-  private applyStyles() {
+  #applyStyles() {
     const sheet = new CSSStyleSheet();
     sheet.replaceSync(itemCss);
     this.shadowRoot.adoptedStyleSheets = [sheet];
@@ -98,7 +98,7 @@ export class TestContainer extends LitElement {
 
   override render() {
     return html`
-      ${this.templateContent}
+      ${this.#templateContent}
       <slot></slot>
       ${until(this.testDoc, html`<span>Loading...</span>`)}
     `;

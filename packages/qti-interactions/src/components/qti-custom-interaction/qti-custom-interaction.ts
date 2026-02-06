@@ -175,9 +175,9 @@ const ciBootstrap = `
  */
 
 export class QtiCustomInteraction extends Interaction {
-  private rawResponse: string | string[] = '';
-  private _manifestUrl: string = null;
-  private _resourceBaseUrl: string = null;
+  #rawResponse: string | string[] = '';
+  #manifestUrl: string = null;
+  #resourceBaseUrl: string = null;
 
   constructor() {
     super();
@@ -204,7 +204,7 @@ export class QtiCustomInteraction extends Interaction {
     media: string[];
   };
   // Pre-created blob URL for the index.html with injected CES proxy
-  private _contentBlobUrl: string = null;
+  #contentBlobUrl: string = null;
 
   override connectedCallback(): void {
     super.connectedCallback();
@@ -236,7 +236,7 @@ export class QtiCustomInteraction extends Interaction {
       manifestPath.startsWith('http') || manifestPath.startsWith('blob')
         ? manifestPath
         : removeDoubleSlashes((this.baseItemUrl || '') + '/' + manifestPath);
-    this._manifestUrl = new URL(uriToManifest, window.location.href).toString();
+    this.#manifestUrl = new URL(uriToManifest, window.location.href).toString();
     // fetch the json file located at the data attribute
     fetch(uriToManifest)
       .then(response => {
@@ -298,12 +298,12 @@ export class QtiCustomInteraction extends Interaction {
     }
     const cssRef = this.manifest.style[0];
 
-    const baseCandidates = this.getBaseCandidates();
+    const baseCandidates = this.#getBaseCandidates();
 
-    const cssResolved = await this.resolveResourceWithFallback(cssRef, baseCandidates);
+    const cssResolved = await this.#resolveResourceWithFallback(cssRef, baseCandidates);
     const cssUrl = cssResolved.url;
-    if (cssResolved.baseUrl && !this._resourceBaseUrl) {
-      this._resourceBaseUrl = cssResolved.baseUrl;
+    if (cssResolved.baseUrl && !this.#resourceBaseUrl) {
+      this.#resourceBaseUrl = cssResolved.baseUrl;
     }
 
     // Always use the built-in ciBootstrap instead of the package's bootstrap.js.
@@ -321,12 +321,12 @@ export class QtiCustomInteraction extends Interaction {
       let indexUrl = '';
       if (this.manifest.media && this.manifest.media.length > 0) {
         const mediaRef = this.manifest.media[0];
-        const indexResolved = await this.resolveResourceWithFallback(mediaRef, baseCandidates, {
+        const indexResolved = await this.#resolveResourceWithFallback(mediaRef, baseCandidates, {
           returnText: true
         });
         indexUrl = indexResolved.url;
-        if (indexResolved.baseUrl && !this._resourceBaseUrl) {
-          this._resourceBaseUrl = indexResolved.baseUrl;
+        if (indexResolved.baseUrl && !this.#resourceBaseUrl) {
+          this.#resourceBaseUrl = indexResolved.baseUrl;
         }
         if (indexResolved.text) {
           let html = indexResolved.text;
@@ -349,7 +349,7 @@ export class QtiCustomInteraction extends Interaction {
 
           // Create a blob URL for the modified HTML
           const blob = new Blob([html], { type: 'text/html' });
-          this._contentBlobUrl = URL.createObjectURL(blob);
+          this.#contentBlobUrl = URL.createObjectURL(blob);
         }
       } else {
         // If no media array, try to construct index.html path from the manifest location
@@ -357,12 +357,12 @@ export class QtiCustomInteraction extends Interaction {
         const manifestPath = this.data || 'manifest.json';
         const basePath = manifestPath.includes('/') ? manifestPath.substring(0, manifestPath.lastIndexOf('/')) : '';
         const indexPath = basePath ? `${basePath}/index.html` : 'index.html';
-        const indexResolved = await this.resolveResourceWithFallback(indexPath, baseCandidates, {
+        const indexResolved = await this.#resolveResourceWithFallback(indexPath, baseCandidates, {
           returnText: true
         });
         indexUrl = indexResolved.url;
-        if (indexResolved.baseUrl && !this._resourceBaseUrl) {
-          this._resourceBaseUrl = indexResolved.baseUrl;
+        if (indexResolved.baseUrl && !this.#resourceBaseUrl) {
+          this.#resourceBaseUrl = indexResolved.baseUrl;
         }
         if (indexResolved.text) {
           let html = indexResolved.text;
@@ -384,11 +384,11 @@ export class QtiCustomInteraction extends Interaction {
 
           // Create a blob URL for the modified HTML
           const blob = new Blob([html], { type: 'text/html' });
-          this._contentBlobUrl = URL.createObjectURL(blob);
+          this.#contentBlobUrl = URL.createObjectURL(blob);
         }
       }
 
-      if (indexUrl && !this._contentBlobUrl) {
+      if (indexUrl && !this.#contentBlobUrl) {
         try {
           const indexResponse = await fetch(indexUrl);
           if (indexResponse.ok) {
@@ -411,7 +411,7 @@ export class QtiCustomInteraction extends Interaction {
 
             // Create a blob URL for the modified HTML
             const blob = new Blob([html], { type: 'text/html' });
-            this._contentBlobUrl = URL.createObjectURL(blob);
+            this.#contentBlobUrl = URL.createObjectURL(blob);
           } else {
             console.error(`Failed to fetch index.html: ${indexResponse.status}`);
           }
@@ -440,7 +440,7 @@ export class QtiCustomInteraction extends Interaction {
     iframe.srcdoc = htmlContent;
   }
 
-  private getIFrames() {
+  #getIFrames() {
     const iframesInShadowRoot = this.shadowRoot.querySelectorAll('iframe');
     const iframe = this.querySelectorAll('iframe');
 
@@ -452,7 +452,7 @@ export class QtiCustomInteraction extends Interaction {
         try {
           const outerDoc = iframe.contentDocument || iframe.contentWindow.document;
           if (outerDoc) {
-            this.getInnerIFrames(outerDoc, outerIFrames);
+            this.#getInnerIFrames(outerDoc, outerIFrames);
           }
         } catch (e) {
           console.error('Error accessing nested iframe:', e);
@@ -468,7 +468,7 @@ export class QtiCustomInteraction extends Interaction {
     return outerIFrames;
   }
 
-  private getInnerIFrames(iframeDocument: Document, iframes: HTMLIFrameElement[] = []) {
+  #getInnerIFrames(iframeDocument: Document, iframes: HTMLIFrameElement[] = []) {
     // Get all iframes in the current document
     const currentIframes = iframeDocument.querySelectorAll('iframe');
 
@@ -484,7 +484,7 @@ export class QtiCustomInteraction extends Interaction {
       if (isSameOrigin) {
         try {
           const nestedDoc = iframe.contentDocument || iframe.contentWindow.document;
-          this.getInnerIFrames(nestedDoc, iframes);
+          this.#getInnerIFrames(nestedDoc, iframes);
         } catch (e) {
           console.error('Error accessing nested iframe:', e);
         }
@@ -496,9 +496,9 @@ export class QtiCustomInteraction extends Interaction {
     return iframes;
   }
 
-  private postToWindowAndIframes(type: string, data: any) {
+  #postToWindowAndIframes(type: string, data: any) {
     window.postMessage({ type, data }, '*');
-    const iframes = this.getIFrames();
+    const iframes = this.#getIFrames();
     for (const iframe of iframes) {
       if (iframe.contentWindow) {
         iframe.contentWindow.postMessage({ type, data }, '*');
@@ -511,38 +511,38 @@ export class QtiCustomInteraction extends Interaction {
     switch (type) {
       case 'setResponse':
         if (data === null || !(Array.isArray(data) && data.length === 1 && data[0] === '')) {
-          this.rawResponse = data;
+          this.#rawResponse = data;
           this.saveResponse(data);
         }
         break;
       case 'getResponse': {
-        this.postToWindowAndIframes('responseData', this.rawResponse);
+        this.#postToWindowAndIframes('responseData', this.#rawResponse);
         break;
       }
       case 'getBlobUrl': {
         // Send the pre-created blob URL to the requesting iframe
-        if (this._contentBlobUrl) {
-          this.postToWindowAndIframes('blobUrl', this._contentBlobUrl);
+        if (this.#contentBlobUrl) {
+          this.#postToWindowAndIframes('blobUrl', this.#contentBlobUrl);
           // Also respond directly to the source window if possible
           if (event.source && event.source !== window) {
-            (event.source as Window).postMessage({ type: 'blobUrl', data: this._contentBlobUrl }, '*');
+            (event.source as Window).postMessage({ type: 'blobUrl', data: this.#contentBlobUrl }, '*');
           }
         }
         break;
       }
       case 'getMedia': {
-        const baseCandidates = this.getBaseCandidates();
+        const baseCandidates = this.#getBaseCandidates();
         const mediaData = this.manifest.media.map(media => {
           if (media.startsWith('http') || media.startsWith('blob')) {
             return media;
           }
-          const baseUrl = this._resourceBaseUrl || baseCandidates[0];
+          const baseUrl = this.#resourceBaseUrl || baseCandidates[0];
           if (!baseUrl) {
             return media;
           }
           return new URL(media, baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`).toString();
         });
-        this.postToWindowAndIframes('mediaData', mediaData);
+        this.#postToWindowAndIframes('mediaData', mediaData);
         break;
       }
       case 'setStageHeight':
@@ -552,15 +552,15 @@ export class QtiCustomInteraction extends Interaction {
   }
 
   validate(): boolean {
-    if (!this.rawResponse) {
+    if (!this.#rawResponse) {
       return false;
     }
-    if (Array.isArray(this.rawResponse)) {
-      if (this.rawResponse.length === 0) {
+    if (Array.isArray(this.#rawResponse)) {
+      if (this.#rawResponse.length === 0) {
         return false;
       }
       // check if one of the values has a value
-      for (const value of this.rawResponse) {
+      for (const value of this.#rawResponse) {
         if (value !== '' && value !== null) {
           return true;
         }
@@ -570,15 +570,15 @@ export class QtiCustomInteraction extends Interaction {
   }
 
   get response(): string | string[] | null {
-    return (this.rawResponse as string | string[]) || null;
+    return (this.#rawResponse as string | string[]) || null;
   }
 
   set response(val: string | string[] | null) {
     if (typeof val === 'string') {
-      this.rawResponse = val;
+      this.#rawResponse = val;
       this.saveResponse(val);
     } else if (Array.isArray(val)) {
-      this.rawResponse = val;
+      this.#rawResponse = val;
     } else if (!val) {
       // do nothing
     } else {
@@ -607,12 +607,12 @@ export class QtiCustomInteraction extends Interaction {
       </div>`}`;
   }
 
-  private getBaseCandidates(): string[] {
-    const candidates = [this._resourceBaseUrl, this.baseRefUrl, this.baseItemUrl, this.getManifestBaseUrl()];
+  #getBaseCandidates(): string[] {
+    const candidates = [this.#resourceBaseUrl, this.baseRefUrl, this.baseItemUrl, this.#getManifestBaseUrl()];
     const resolved = candidates.filter(Boolean).map(base => new URL(base, window.location.href).toString());
 
     // Also add the manifest's parent directory (e.g. go up from .../json/ to .../)
-    const manifestParent = this.getManifestParentBaseUrl();
+    const manifestParent = this.#getManifestParentBaseUrl();
     if (manifestParent) {
       resolved.push(manifestParent);
     }
@@ -621,23 +621,23 @@ export class QtiCustomInteraction extends Interaction {
     return [...new Set(resolved)];
   }
 
-  private getManifestBaseUrl(): string | null {
-    if (!this._manifestUrl) {
+  #getManifestBaseUrl(): string | null {
+    if (!this.#manifestUrl) {
       return null;
     }
-    return new URL('.', this._manifestUrl).toString();
+    return new URL('.', this.#manifestUrl).toString();
   }
 
-  private getManifestParentBaseUrl(): string | null {
-    if (!this._manifestUrl) {
+  #getManifestParentBaseUrl(): string | null {
+    if (!this.#manifestUrl) {
       return null;
     }
     // Go up one more level from the manifest directory (e.g. from .../json/ to .../)
     // This helps when manifest.json is in a subdirectory but resources are at the parent level
-    return new URL('..', this._manifestUrl).toString();
+    return new URL('..', this.#manifestUrl).toString();
   }
 
-  private async resolveResourceWithFallback(
+  async #resolveResourceWithFallback(
     ref: string,
     baseCandidates: string[],
     options: { returnText?: boolean } = {}

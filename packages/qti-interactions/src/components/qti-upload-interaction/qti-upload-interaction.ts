@@ -2,26 +2,26 @@ import { css, html } from 'lit';
 
 import { Interaction } from '@qti-components/base';
 export class QtiUploadInteraction extends Interaction {
-  private _file: File | null = null;
-  private _base64: string | null = null;
+  #file: File | null = null;
+  #base64: string | null = null;
 
   override reset() {
-    this._file = null;
-    this._base64 = null;
+    this.#file = null;
+    this.#base64 = null;
     this.saveResponse(null);
   }
 
   validate(): boolean {
-    return this._base64 !== null; // Ensure the Base64 string is set
+    return this.#base64 !== null; // Ensure the Base64 string is set
   }
 
   get response(): string | null {
-    return this._base64; // Return the Base64 string
+    return this.#base64; // Return the Base64 string
   }
 
   set response(base64: string | null) {
     if (typeof base64 === 'string') {
-      this._base64 = base64;
+      this.#base64 = base64;
       this.saveResponse(base64); // Save Base64 string as the response
     } else if (base64 === null) {
       this.reset();
@@ -53,26 +53,26 @@ export class QtiUploadInteraction extends Interaction {
     return html`
       <div>
         <slot name="prompt"></slot>
-        <input type="file" @change="${this._onFileChange}" ?disabled="${this.disabled}" ?readonly="${this.readonly}" />
+        <input type="file" @change="${this.#onFileChange}" ?disabled="${this.disabled}" ?readonly="${this.readonly}" />
       </div>
     `;
   }
 
-  private async _onFileChange(event: Event) {
+  async #onFileChange(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
-      this._file = input.files[0];
-      this._base64 = await this._convertToBase64(this._file);
-      this.saveResponse(this._base64); // Save the Base64 string
+      this.#file = input.files[0];
+      this.#base64 = await this.#convertToBase64(this.#file);
+      this.saveResponse(this.#base64); // Save the Base64 string
       this.dispatchEvent(
         new CustomEvent('qti-interaction-response', {
-          detail: { response: this._base64 }
+          detail: { response: this.#base64 }
         })
       );
     }
   }
 
-  private _convertToBase64(file: File): Promise<string> {
+  #convertToBase64(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => resolve(reader.result as string);

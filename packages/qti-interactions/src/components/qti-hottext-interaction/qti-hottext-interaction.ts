@@ -14,7 +14,7 @@ export class QtiHottextInteraction extends ChoicesMixin(Interaction, 'qti-hottex
   // as the QTI standard does not define a way to specify this.
   // The default is to not show any radio or checkbox buttons just like amp-up does.
   // If they should be shown in the future, we should make a configuration option for it.
-  private get classObject() {
+  get #classObject() {
     const classes: { [key: string]: boolean } = {
       'qti-input-control-hidden': true
     };
@@ -36,17 +36,17 @@ export class QtiHottextInteraction extends ChoicesMixin(Interaction, 'qti-hottex
 
   override connectedCallback() {
     super.connectedCallback();
-    this.updateHostClasses();
+    this.#updateHostClasses();
   }
 
   override updated(_changedProperties: PropertyValues) {
     super.updated(_changedProperties);
-    this.updateHostClasses();
+    this.#updateHostClasses();
   }
 
-  private updateHostClasses() {
+  #updateHostClasses() {
     // Clear existing classes and apply merged ones
-    const classString = Object.keys(this.classObject).join(' ');
+    const classString = Object.keys(this.#classObject).join(' ');
      
     this.className = classString;
   }

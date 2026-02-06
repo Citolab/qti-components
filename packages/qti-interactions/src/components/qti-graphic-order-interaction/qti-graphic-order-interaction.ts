@@ -26,7 +26,7 @@ export class QtiGraphicOrderInteraction extends ChoicesMixin(Interaction, 'qti-h
     `;
   }
 
-  private setHotspotOrder(e: CustomEvent<{ identifier: string }>): void {
+  #setHotspotOrder(e: CustomEvent<{ identifier: string }>): void {
     const { identifier } = e.detail;
 
     const hotspot = this._choiceElements.find(el => el.getAttribute('identifier') === identifier) as HotspotChoice;
@@ -82,7 +82,7 @@ export class QtiGraphicOrderInteraction extends ChoicesMixin(Interaction, 'qti-h
     }
   }
 
-  private positionHotspotOnRegister(e: CustomEvent<QtiHotspotChoice>): void {
+  #positionHotspotOnRegister(e: CustomEvent<QtiHotspotChoice>): void {
     const img = this.querySelector('img') as HTMLImageElement;
     const hotspot = e.target as QtiHotspotChoice;
     const coords = hotspot.getAttribute('coords');
@@ -94,13 +94,13 @@ export class QtiGraphicOrderInteraction extends ChoicesMixin(Interaction, 'qti-h
 
   override connectedCallback(): void {
     super.connectedCallback();
-    this.addEventListener('activate-qti-hotspot-choice', this.setHotspotOrder);
-    this.addEventListener('register-qti-hotspot-choice', this.positionHotspotOnRegister);
+    this.addEventListener('activate-qti-hotspot-choice', this.#setHotspotOrder);
+    this.addEventListener('register-qti-hotspot-choice', this.#positionHotspotOnRegister);
   }
   override disconnectedCallback() {
     super.disconnectedCallback();
-    this.removeEventListener('activate-qti-hotspot-choice', this.setHotspotOrder);
-    this.removeEventListener('register-qti-hotspot-choice', this.positionHotspotOnRegister);
+    this.removeEventListener('activate-qti-hotspot-choice', this.#setHotspotOrder);
+    this.removeEventListener('register-qti-hotspot-choice', this.#positionHotspotOnRegister);
   }
 }
 

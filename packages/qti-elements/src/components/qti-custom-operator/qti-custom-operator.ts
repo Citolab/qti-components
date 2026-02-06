@@ -22,7 +22,7 @@ import type { ItemContext } from '@qti-components/base';
 @customElement('qti-custom-operator')
 export class QtiCustomOperator extends LitElement implements Calculate {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-  private operatorFunction: Function;
+  #operatorFunction: Function;
 
   @consume({ context: itemContext, subscribe: true })
   @state()
@@ -38,7 +38,7 @@ export class QtiCustomOperator extends LitElement implements Calculate {
       node => node.nodeType === Node.COMMENT_NODE
     );
     try {
-      this.operatorFunction = new Function('context', 'fn', 'item', commentNode?.textContent ?? '');
+      this.#operatorFunction = new Function('context', 'fn', 'item', commentNode?.textContent ?? '');
     } catch (e) {
       console.error('custom-operator contains invalid javascript code', e);
     }
@@ -81,7 +81,7 @@ export class QtiCustomOperator extends LitElement implements Calculate {
       }
     };
 
-    return this.operatorFunction(this._context, fn, item);
+    return this.#operatorFunction(this._context, fn, item);
   }
 }
 

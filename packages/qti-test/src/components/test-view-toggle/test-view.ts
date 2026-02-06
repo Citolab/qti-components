@@ -22,18 +22,18 @@ export class TestView extends LitElement {
   @property({ type: String, attribute: 'view-options' }) viewOptions: string;
   @watch('viewOptions', { waitUntilFirstUpdate: true })
   protected _handleViewOptionsChange = () => {
-    this.updateViewOptions();
+    this.#updateViewOptions();
   };
 
   override connectedCallback(): void {
     super.connectedCallback();
-    this.updateViewOptions();
+    this.#updateViewOptions();
   }
 
   @state()
   private _viewOptions: string[] = TestView.DEFAULT_VIEW_OPTIONS;
 
-  private updateViewOptions() {
+  #updateViewOptions() {
     if (this.viewOptions) {
       const options = this.viewOptions.split(',').map(opt => opt.trim());
       this._viewOptions = options.filter(opt => TestView.DEFAULT_VIEW_OPTIONS.includes(opt));

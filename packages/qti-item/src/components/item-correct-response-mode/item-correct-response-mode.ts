@@ -20,7 +20,7 @@ export class ItemCorrectResponseMode extends LitElement {
     full: 'Full (copy)'
   };
 
-  private _switchMode(view: CorrectResponseMode) {
+  #switchMode(view: CorrectResponseMode) {
     this.dispatchEvent(
       new CustomEvent('item-switch-correct-response-mode', {
         detail: view,
@@ -37,7 +37,7 @@ export class ItemCorrectResponseMode extends LitElement {
         id="modeSelect"
         @change=${(e: Event) => {
           const el = e.target as HTMLSelectElement;
-          this._switchMode(el.value as CorrectResponseMode);
+          this.#switchMode(el.value as CorrectResponseMode);
         }}
       >
         ${Object.keys(this._options).map(

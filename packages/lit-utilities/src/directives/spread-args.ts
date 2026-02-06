@@ -36,7 +36,7 @@ export class SpreadArgsDirective extends AsyncDirective {
 
   apply(data: { [key: string]: unknown }) {
     // Filter the data according to our rules
-    const filteredData = this.filterArgs(data);
+    const filteredData = this.#filterArgs(data);
 
     const { prevData, element } = this;
     for (const key in filteredData) {
@@ -67,7 +67,7 @@ export class SpreadArgsDirective extends AsyncDirective {
     if (!prevData) return;
 
     // Filter the current data to see what we should have
-    const filteredData = data ? this.filterArgs(data) : {};
+    const filteredData = data ? this.#filterArgs(data) : {};
 
     for (const key in prevData) {
       if (!filteredData || !(key in filteredData)) {
@@ -77,7 +77,7 @@ export class SpreadArgsDirective extends AsyncDirective {
     }
   }
 
-  private filterArgs(args: Record<string, unknown>): Record<string, unknown> {
+  #filterArgs(args: Record<string, unknown>): Record<string, unknown> {
     return Object.fromEntries(
       Object.entries(args).filter(([key, value]) => {
         // Always exclude functions (events/functions)
