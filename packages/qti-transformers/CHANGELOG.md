@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.0](https://github.com/Citolab/qti-components/compare/transformers-v1.2.0...transformers-v1.3.0) (2026-02-06)
+
+
+### Features
+
+* added all pci-conformance tests ([64ef3c0](https://github.com/Citolab/qti-components/commit/64ef3c07b8456242c6edbcb9072103d0fd953668))
+* added all pci-conformance tests ([f568d38](https://github.com/Citolab/qti-components/commit/f568d38c05c57b639ac880a4094472bd755401b7))
+
 ## [1.2.0](https://github.com/Citolab/qti-components/compare/transformers-v1.1.0...transformers-v1.2.0) (2026-02-03)
 
 

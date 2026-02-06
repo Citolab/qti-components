@@ -1,5 +1,25 @@
 # Changelog
 
+## [7.22.0](https://github.com/Citolab/qti-components/compare/qti-components-v7.21.1...qti-components-v7.22.0) (2026-02-06)
+
+
+### Features
+
+* added all pci-conformance tests ([64ef3c0](https://github.com/Citolab/qti-components/commit/64ef3c07b8456242c6edbcb9072103d0fd953668))
+* added all pci-conformance tests ([f568d38](https://github.com/Citolab/qti-components/commit/f568d38c05c57b639ac880a4094472bd755401b7))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @qti-components/elements bumped to 1.2.1
+    * @qti-components/interactions bumped to 1.6.0
+    * @qti-components/item bumped to 1.0.9
+    * @qti-components/loader bumped to 1.0.4
+    * @qti-components/test bumped to 1.1.8
+    * @qti-components/transformers bumped to 1.3.0
+
 ## [7.21.1](https://github.com/Citolab/qti-components/compare/qti-components-v7.21.0...qti-components-v7.21.1) (2026-02-06)
 
 
