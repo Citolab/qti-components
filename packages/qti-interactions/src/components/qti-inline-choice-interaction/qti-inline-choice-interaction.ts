@@ -6,6 +6,8 @@ import { consume } from '@lit/context';
 import { Interaction } from '@qti-components/base';
 import { configContext } from '@qti-components/base';
 
+import styles from './qti-inline-choice-interaction.styles.js';
+
 import type { PropertyValues } from 'lit';
 import type { ConfigContext } from '@qti-components/base';
 
@@ -14,6 +16,9 @@ interface OptionType {
   value: string;
   selected: boolean;
 }
+
+let inlineChoiceMenuCounter = 0;
+
 export class QtiInlineChoiceInteraction extends Interaction {
   override get isInline(): boolean {
     return true;
@@ -22,221 +27,7 @@ export class QtiInlineChoiceInteraction extends Interaction {
   private static _supportsCustomizableSelectCache: boolean | null = null;
 
   static override get styles() {
-    return [
-      css`
-        :host {
-          display: inline-block;
-          vertical-align: baseline;
-          position: relative;
-        }
-
-        /* --- Progressive enhancement: Customizable select (MDN / WHATWG) --- */
-        select[part='select'] {
-          font: inherit;
-          color: inherit;
-          background-color: var(--qti-bg, white);
-          border: var(--qti-border-thickness, 2px) var(--qti-border-style, solid) var(--qti-border-color, #c6cad0);
-          border-radius: var(--qti-border-radius, 0.3rem);
-          padding: 0.25rem 0.75rem;
-          min-width: var(--qti-calculated-min-width, auto);
-          /* Enables full styling when supported (Chromium behind a flag / rolling out). */
-          appearance: base-select;
-        }
-
-        select[part='select']:disabled {
-          opacity: 0.6;
-          cursor: not-allowed;
-        }
-
-        select[part='select']::picker(select) {
-          border: var(--qti-border-thickness, 2px) var(--qti-border-style, solid) var(--qti-border-color, #c6cad0);
-          border-radius: var(--qti-border-radius, 0.3rem);
-          background: var(--qti-bg, white);
-          box-shadow:
-            0 10px 15px -3px rgb(0 0 0 / 10%),
-            0 4px 6px -4px rgb(0 0 0 / 10%);
-          padding: 4px;
-          width: max-content;
-          min-width: 100%;
-          max-width: min(90vw, 36rem);
-        }
-
-        select[part='select']::picker-icon {
-          color: var(--qti-border-color, #c6cad0);
-          transition: 0.4s rotate;
-          font-size: 1.75em;
-        }
-
-        select[part='select']:open::picker-icon {
-          color: var(--qti-border-active, #f86d70);
-          rotate: 180deg;
-        }
-
-        select[part='select'] > button {
-          font: inherit;
-          color: inherit;
-          display: inline-flex;
-          align-items: center;
-          gap: 0.25rem;
-          padding: 0;
-          background: transparent;
-          border: 0;
-          cursor: pointer;
-        }
-
-        select[part='select'] selectedcontent {
-          display: inline-flex;
-          align-items: center;
-          gap: 0.5rem;
-          white-space: nowrap;
-        }
-
-        option {
-          font: inherit;
-          color: inherit;
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          padding: 0.5rem 0.5rem;
-          white-space: nowrap;
-          line-height: 1.25;
-          min-height: 2.25rem;
-        }
-
-        option:hover {
-          background-color: var(--qti-hover-bg, #f9fafb);
-        }
-
-        option:checked {
-          background-color: var(--qti-bg-active, #ffecec);
-        }
-
-        option::checkmark {
-          color: var(--qti-border-active, #f86d70);
-        }
-
-        /* --- Fallback custom listbox (for browsers without customizable select) --- */
-        button[part='trigger'] {
-          font: inherit;
-          color: inherit;
-          background-color: var(--qti-bg, white);
-          cursor: pointer;
-          display: inline-flex;
-          align-items: center;
-          gap: 0.5rem;
-          justify-content: space-between;
-          border: var(--qti-border-thickness, 2px) var(--qti-border-style, solid) var(--qti-border-color, #c6cad0);
-          border-radius: var(--qti-border-radius, 0.3rem);
-          padding: 0.25rem 0.75rem;
-          min-width: var(--qti-calculated-min-width, auto);
-        }
-
-        [part='value'] {
-          display: inline-flex;
-          align-items: center;
-          gap: 0.5rem;
-          min-width: 0;
-        }
-
-        [part='dropdown-icon'] {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          flex: 0 0 auto;
-          transition: transform 150ms ease;
-          transform-origin: 50% 50%;
-          color: var(--qti-border-color, #c6cad0);
-          font-size: 1.75em;
-          line-height: 1;
-        }
-
-        button[part='trigger'][aria-expanded='true'] [part='dropdown-icon'] {
-          transform: rotate(180deg);
-          color: var(--qti-border-active, #f86d70);
-        }
-
-        button[part='trigger'][disabled] {
-          cursor: not-allowed;
-          opacity: 0.6;
-        }
-
-        [part='menu'] {
-          position: absolute;
-          z-index: 1000;
-          top: calc(100% + 4px);
-          left: 0;
-          min-width: 100%;
-          max-width: min(90vw, 36rem);
-          max-height: min(40vh, 20rem);
-          overflow: auto;
-          background-color: var(--qti-bg, white);
-          border: var(--qti-border-thickness, 2px) var(--qti-border-style, solid) var(--qti-border-color, #c6cad0);
-          border-radius: var(--qti-border-radius, 0.3rem);
-          box-shadow:
-            0 10px 15px -3px rgb(0 0 0 / 10%),
-            0 4px 6px -4px rgb(0 0 0 / 10%);
-          padding: 4px;
-          box-sizing: border-box;
-          transform: translate(var(--qti-menu-shift-x, 0px), var(--qti-menu-shift-y, 0px));
-        }
-
-        [part='menu'][data-placement='top'] {
-          top: auto;
-          bottom: calc(100% + 4px);
-        }
-
-        button[part='option'] {
-          font: inherit;
-          color: inherit;
-          background-color: transparent;
-          border: 0;
-          padding: 0.5rem 0.5rem;
-          width: 100%;
-          text-align: left;
-          border-radius: calc(var(--qti-border-radius, 0.3rem) - 2px);
-          cursor: pointer;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          line-height: 1.25;
-          min-height: 2.25rem;
-        }
-
-        button[part='option'][aria-selected='true'] {
-          background-color: var(--qti-bg-active, #ffecec);
-        }
-
-        button[part='option']:hover {
-          background-color: var(--qti-hover-bg, #f9fafb);
-        }
-
-        button[part='option']:focus-visible {
-          outline: 2px solid var(--qti-border-active, #f86d70);
-          outline-offset: 2px;
-        }
-
-        [part='option-content'] {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          flex-wrap: nowrap;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          min-width: 0;
-        }
-
-        select[part='select'] img,
-        button[part='option'] img,
-        button[part='trigger'] img,
-        [part='menu'] img {
-          display: inline-block;
-          max-height: 1em;
-          max-width: 1.5em;
-          vertical-align: middle;
-        }
-      `
-    ];
+    return [styles];
   }
 
   public static inputWidthClass = [
@@ -265,6 +56,8 @@ export class QtiInlineChoiceInteraction extends Interaction {
   private _calculatedMinWidth: number = 0;
 
   private _widthCalculationTimer: number | null = null;
+  private _slotObserver: MutationObserver | null = null;
+  private readonly _menuId = `qti-inline-choice-menu-${inlineChoiceMenuCounter++}`;
 
   @property({ attribute: 'data-prompt', type: String })
   dataPrompt: string = '';
@@ -275,59 +68,43 @@ export class QtiInlineChoiceInteraction extends Interaction {
 
   override render() {
     const selected = this.#selectedOption();
-    const useCustomizableSelect = this.#supportsCustomizableSelect();
 
     return html`
-      ${useCustomizableSelect
-        ? html`
-            <select
-              part="select"
-              @change=${this.#onNativeChange}
-              ?disabled="${this.disabled || this.readonly}"
-              .value="${selected?.value ?? ''}"
-            >
-              <button type="button">
-                <selectedcontent></selectedcontent>
-              </button>
-              ${this.options.map(
-                option => html`<option value="${option.value}">${unsafeHTML(option.textContent)}</option>`
-              )}
-            </select>
-          `
-        : html`
-            <button
-              part="trigger"
-              type="button"
-              @click=${this.#onToggleCustomDropdown}
-              @keydown=${this.#onCustomTriggerKeyDown}
-              aria-haspopup="listbox"
-              aria-expanded="${this._dropdownOpen ? 'true' : 'false'}"
-              ?disabled="${this.disabled}"
-              data-readonly="${this.readonly ? 'true' : 'false'}"
-            >
-              <span part="value">${unsafeHTML(selected?.textContent ?? '')}</span>
-              <span part="dropdown-icon" aria-hidden="true">▾</span>
-            </button>
-            ${this._dropdownOpen
-              ? html`
-                  <div part="menu" role="listbox" @keydown=${this.#onCustomMenuKeyDown}>
-                    ${this.options.map(
-                      option => html`
-                        <button
-                          part="option"
-                          type="button"
-                          role="option"
-                          aria-selected="${option.selected ? 'true' : 'false'}"
-                          @click="${() => this.#selectValue(option.value)}"
-                        >
-                          <span part="option-content">${unsafeHTML(option.textContent)}</span>
-                        </button>
-                      `
-                    )}
-                  </div>
-                `
-              : null}
-          `}
+      <button
+        part="trigger"
+        type="button"
+        @click=${this.#onTriggerClick}
+        @keydown=${this.#onCustomTriggerKeyDown}
+        aria-haspopup="listbox"
+        aria-expanded="${this._dropdownOpen ? 'true' : 'false'}"
+        aria-controls="${this._menuId}"
+        popovertarget="${this._menuId}"
+        popovertargetaction="toggle"
+        ?disabled="${this.disabled}"
+        data-readonly="${this.readonly ? 'true' : 'false'}"
+      >
+        <span part="value">${unsafeHTML(selected?.textContent ?? '')}</span>
+        <span part="dropdown-icon" aria-hidden="true">▾</span>
+      </button>
+      <div
+        id="${this._menuId}"
+        part="menu"
+        role="listbox"
+        popover="auto"
+        @toggle=${this.#onMenuToggle}
+        @keydown=${this.#onCustomMenuKeyDown}
+      >
+        <button
+          part="option"
+          type="button"
+          role="option"
+          aria-selected="${this.options[0]?.selected ? 'true' : 'false'}"
+          @click=${() => this.#selectValue('')}
+        >
+          <span part="option-content">${unsafeHTML(this.options[0]?.textContent ?? '')}</span>
+        </button>
+        <slot @slotchange=${this.#onChoicesSlotChange}></slot>
+      </div>
       ${unsafeHTML(this.correctOption)}
     `;
   }
@@ -335,24 +112,18 @@ export class QtiInlineChoiceInteraction extends Interaction {
   override connectedCallback() {
     super.connectedCallback();
     this.#updateOptions();
-    if (!this.#supportsCustomizableSelect()) {
-      document.addEventListener('pointerdown', this.#onDocumentPointerDown, true);
-      document.addEventListener('keydown', this.#onDocumentKeyDown, true);
-    }
+    this.#startSlotObserver();
+
     // Simple width estimation - no recalculation needed
     this._estimateOptimalWidth();
   }
 
   override disconnectedCallback() {
     super.disconnectedCallback();
-    if (!this.#supportsCustomizableSelect()) {
-      document.removeEventListener('pointerdown', this.#onDocumentPointerDown, true);
-      document.removeEventListener('keydown', this.#onDocumentKeyDown, true);
-    }
-    if (this._widthCalculationTimer !== null) {
-      window.clearTimeout(this._widthCalculationTimer);
-      this._widthCalculationTimer = null;
-    }
+
+    this.#teardownSlottedChoices();
+    this._slotObserver?.disconnect();
+    this._slotObserver = null;
   }
 
   override willUpdate(changed: PropertyValues<this>) {
@@ -364,87 +135,14 @@ export class QtiInlineChoiceInteraction extends Interaction {
   override updated(changed: PropertyValues<this>) {
     const dropdownOpenKey = '_dropdownOpen' as keyof QtiInlineChoiceInteraction;
     if (changed.has(dropdownOpenKey) && this._dropdownOpen) {
-      this.#positionCustomMenu();
-      const selected = this.renderRoot.querySelector<HTMLButtonElement>('button[part="option"][aria-selected="true"]');
+      this.#syncSlottedChoices();
+      const selected = this.#allMenuOptions().find(option => option.getAttribute('aria-selected') === 'true');
       selected?.focus();
     }
   }
 
   #selectedOption(): OptionType | undefined {
     return this.options.find(option => option.selected) ?? this.options[0];
-  }
-
-  /**
-   * Progressive enhancement for "customizable select" (WHATWG / MDN: `appearance: base-select` + `::picker()`).
-   *
-   * Notes on current browser behavior (observed around Feb 2026):
-   * - Chromium-based browsers can support customizable select in light DOM, but it does not reliably work when the
-   *   `<select>` lives inside a shadow root (e.g. the internal `<button>/<selectedcontent>` can end up effectively
-   *   not rendered, so rich content like images disappears).
-   * - Firefox support is not generally available yet, so we fall back to our custom listbox there as well.
-   *
-   * Because `CSS.supports(...)` may return syntax-only true, we do a final DOM probe to ensure the customizable-select
-   * markup actually takes effect in the current environment before opting in.
-   */
-  #supportsCustomizableSelect(): boolean {
-    if (QtiInlineChoiceInteraction._supportsCustomizableSelectCache !== null) {
-      return QtiInlineChoiceInteraction._supportsCustomizableSelectCache;
-    }
-
-    if (typeof CSS === 'undefined' || typeof CSS.supports !== 'function') {
-      QtiInlineChoiceInteraction._supportsCustomizableSelectCache = false;
-      return false;
-    }
-
-    // CSS.supports can be a false-positive (syntax-only). We only enable the customizable-select
-    // markup if we can verify that `appearance: base-select` actually affects computed styles.
-    const supportsPickerSelector =
-      CSS.supports('selector(::picker(select))') || CSS.supports('selector(select::picker(select))');
-    const supportsAppearanceValue =
-      CSS.supports('appearance: base-select') || CSS.supports('-webkit-appearance: base-select');
-    if (!supportsPickerSelector || !supportsAppearanceValue) {
-      QtiInlineChoiceInteraction._supportsCustomizableSelectCache = false;
-      return false;
-    }
-
-    try {
-      // Final check: verify that the customizable select markup actually takes effect.
-      // In some browsers `CSS.supports(...)` returns true, but the internal <button> is not
-      // rendered (0x0 rect), meaning we effectively get a native select with broken rich content.
-      const container = document.createElement('div');
-      container.style.position = 'absolute';
-      container.style.top = '-9999px';
-      container.style.left = '-9999px';
-
-      const select = document.createElement('select');
-      select.style.appearance = 'base-select';
-      select.style.webkitAppearance = 'base-select';
-
-      const button = document.createElement('button');
-      button.type = 'button';
-      const selected = document.createElement('selectedcontent');
-      selected.textContent = 'probe';
-      button.appendChild(selected);
-
-      const option = document.createElement('option');
-      option.value = 'probe';
-      option.textContent = 'probe';
-
-      select.appendChild(button);
-      select.appendChild(option);
-      container.appendChild(select);
-      (document.body || document.documentElement).appendChild(container);
-
-      const rect = button.getBoundingClientRect();
-      container.remove();
-
-      const supported = rect.width > 0 && rect.height > 0;
-      QtiInlineChoiceInteraction._supportsCustomizableSelectCache = supported;
-      return supported;
-    } catch {
-      QtiInlineChoiceInteraction._supportsCustomizableSelectCache = false;
-      return false;
-    }
   }
 
   #updateOptions() {
@@ -470,6 +168,7 @@ export class QtiInlineChoiceInteraction extends Interaction {
 
     const hasSelected = nextOptions.some(o => o.selected);
     this.options = hasSelected ? nextOptions : nextOptions.map((o, i) => ({ ...o, selected: i === 0 }));
+    this.#syncSlottedChoices();
 
     // Simple width estimation based on content length
     this._estimateOptimalWidth();
@@ -505,11 +204,13 @@ export class QtiInlineChoiceInteraction extends Interaction {
   public override reset() {
     this.#setDropdownOpen(false);
     this.options = this.options.map((option, i) => ({ ...option, selected: i === 0 }));
+    this.#syncSlottedChoices();
   }
 
   public set response(value: string | null) {
     const nextValue = value ?? '';
     this.options = this.options.map(option => ({ ...option, selected: option.value === nextValue }));
+    this.#syncSlottedChoices();
   }
   get response(): string | null {
     const value = this.options.find(option => option.selected)?.value ?? '';
@@ -537,26 +238,33 @@ export class QtiInlineChoiceInteraction extends Interaction {
     this.correctOption = `<span part="correct-option" style="border:1px solid var(--qti-correct); border-radius:4px; padding: 2px 4px; margin: 4px; display:inline-block">${correctOptionData.textContent}</span>`;
   }
 
-  #onNativeChange = (event: Event) => {
-    if (this.readonly) return;
-    const selectedOptionValue = (event.target as HTMLSelectElement).value;
-    this.#selectValue(selectedOptionValue);
-  };
-
   #selectValue(value: string) {
     this.options = this.options.map(option => ({ ...option, selected: option.value === value }));
+    this.#syncSlottedChoices();
     this.saveResponse(value);
     this.#setDropdownOpen(false);
   }
 
   #setDropdownOpen(open: boolean) {
-    if (this._dropdownOpen === open) return;
-    this._dropdownOpen = open;
+    const menu = this.#menuElement();
+    if (!menu) return;
+
+    if (open) {
+      if (!menu.matches(':popover-open')) {
+        menu.showPopover();
+      }
+      return;
+    }
+
+    if (menu.matches(':popover-open')) {
+      menu.hidePopover();
+    }
   }
 
-  #onToggleCustomDropdown = () => {
-    if (this.disabled || this.readonly) return;
-    this.#setDropdownOpen(!this._dropdownOpen);
+  #onTriggerClick = (event: MouseEvent) => {
+    if (this.disabled || this.readonly) {
+      event.preventDefault();
+    }
   };
 
   #onCustomTriggerKeyDown = (event: KeyboardEvent) => {
@@ -564,6 +272,14 @@ export class QtiInlineChoiceInteraction extends Interaction {
     if (event.key === 'ArrowDown' || event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       this.#setDropdownOpen(true);
+    }
+  };
+
+  #onMenuToggle = (event: Event) => {
+    const toggleEvent = event as Event & { newState?: 'open' | 'closed' };
+    const open = toggleEvent.newState === 'open';
+    if (this._dropdownOpen !== open) {
+      this._dropdownOpen = open;
     }
   };
 
@@ -576,18 +292,35 @@ export class QtiInlineChoiceInteraction extends Interaction {
       return;
     }
 
-    const optionButtons = Array.from(this.renderRoot.querySelectorAll<HTMLButtonElement>('button[part="option"]'));
-    const active = (this.renderRoot as ShadowRoot).activeElement as HTMLElement | null;
-    const activeIndex = optionButtons.findIndex(btn => btn === active);
+    const optionElements = this.#allMenuOptions();
+    const shadowActive = (this.renderRoot as ShadowRoot).activeElement as HTMLElement | null;
+    const active =
+      shadowActive ||
+      (document.activeElement instanceof HTMLElement &&
+      document.activeElement.closest('qti-inline-choice-interaction') === this
+        ? document.activeElement
+        : null);
+    const activeIndex = optionElements.findIndex(el => el === active);
 
     if (event.key === 'ArrowDown') {
       event.preventDefault();
-      optionButtons[Math.min(optionButtons.length - 1, Math.max(0, activeIndex + 1))]?.focus();
+      optionElements[Math.min(optionElements.length - 1, Math.max(0, activeIndex + 1))]?.focus();
     }
 
     if (event.key === 'ArrowUp') {
       event.preventDefault();
-      optionButtons[Math.max(0, activeIndex - 1)]?.focus();
+      optionElements[Math.max(0, activeIndex - 1)]?.focus();
+    }
+
+    if (event.key === 'Enter' || event.key === ' ') {
+      if (!active) return;
+      event.preventDefault();
+      if (active instanceof HTMLButtonElement) {
+        active.click();
+      } else {
+        const value = active.getAttribute('identifier') ?? '';
+        this.#selectValue(value);
+      }
     }
   };
 
@@ -595,56 +328,55 @@ export class QtiInlineChoiceInteraction extends Interaction {
     this.renderRoot.querySelector<HTMLButtonElement>('button[part="trigger"]')?.focus();
   }
 
-  #onDocumentPointerDown = (event: Event) => {
-    if (!this._dropdownOpen) return;
-    const path = (event as any).composedPath?.() as EventTarget[] | undefined;
-    if (path && path.includes(this)) return;
-    this.#setDropdownOpen(false);
+  #menuElement(): HTMLElement | null {
+    return this.renderRoot.querySelector<HTMLElement>(`#${this._menuId}`);
+  }
+
+  #startSlotObserver() {
+    this._slotObserver = new MutationObserver(() => this.#updateOptions());
+    this._slotObserver.observe(this, { childList: true, subtree: true });
+  }
+
+  #onChoicesSlotChange = () => {
+    this.#updateOptions();
   };
 
-  #onDocumentKeyDown = (event: KeyboardEvent) => {
-    if (!this._dropdownOpen) return;
-    if (event.key !== 'Escape') return;
-    event.preventDefault();
-    this.#setDropdownOpen(false);
-    this.#focusTrigger();
+  #onSlottedChoiceClick = (event: Event) => {
+    if (this.disabled || this.readonly) return;
+    const target = event.currentTarget as HTMLElement;
+    const value = target.getAttribute('identifier') ?? '';
+    this.#selectValue(value);
   };
 
-  #positionCustomMenu() {
-    if (!this._dropdownOpen) return;
-    const menu = this.renderRoot.querySelector<HTMLElement>('[part="menu"]');
-    const trigger = this.renderRoot.querySelector<HTMLElement>('button[part="trigger"]');
-    if (!menu || !trigger) return;
-
-    menu.dataset.placement = 'bottom';
-    menu.style.setProperty('--qti-menu-shift-x', '0px');
-    menu.style.setProperty('--qti-menu-shift-y', '0px');
-    menu.style.left = '0px';
-    menu.style.right = 'auto';
-
-    const viewportWidth = document.documentElement?.clientWidth || window.innerWidth;
-    const viewportHeight = document.documentElement?.clientHeight || window.innerHeight;
-    const margin = 8;
-
-    const triggerRect = trigger.getBoundingClientRect();
-    // Ensure the menu never exceeds the viewport width minus margins,
-    // even if long, unbroken labels would otherwise expand it.
-    const maxWidth = Math.max(0, viewportWidth - margin * 2);
-    menu.style.maxWidth = `${maxWidth}px`;
-    menu.style.minWidth = `${Math.min(triggerRect.width, maxWidth)}px`;
-    let menuRect = menu.getBoundingClientRect();
-
-    const spaceBelow = viewportHeight - triggerRect.bottom;
-    const spaceAbove = triggerRect.top;
-    if (menuRect.bottom > viewportHeight - margin && spaceAbove > spaceBelow) {
-      menu.dataset.placement = 'top';
-      menuRect = menu.getBoundingClientRect();
+  #teardownSlottedChoices() {
+    const choices = Array.from(this.querySelectorAll<HTMLElement>('qti-inline-choice'));
+    for (const choice of choices) {
+      choice.removeEventListener('click', this.#onSlottedChoiceClick);
+      choice.removeAttribute('part');
+      choice.removeAttribute('role');
+      choice.removeAttribute('aria-selected');
+      choice.removeAttribute('tabindex');
     }
+  }
 
-    const maxLeft = Math.max(margin, viewportWidth - margin - menuRect.width);
-    const desiredLeft = Math.min(maxLeft, Math.max(margin, triggerRect.left));
-    const offsetLeft = desiredLeft - triggerRect.left;
-    menu.style.left = `${offsetLeft}px`;
+  #syncSlottedChoices() {
+    const selectedValue = this.options.find(option => option.selected)?.value ?? '';
+    const choices = Array.from(this.querySelectorAll<HTMLElement>('qti-inline-choice'));
+    for (const choice of choices) {
+      const value = choice.getAttribute('identifier') ?? '';
+      choice.removeEventListener('click', this.#onSlottedChoiceClick);
+      choice.addEventListener('click', this.#onSlottedChoiceClick);
+      choice.setAttribute('part', 'option');
+      choice.setAttribute('role', 'option');
+      choice.setAttribute('aria-selected', value === selectedValue ? 'true' : 'false');
+      choice.tabIndex = -1;
+    }
+  }
+
+  #allMenuOptions(): HTMLElement[] {
+    const promptOption = this.renderRoot.querySelector<HTMLElement>('button[part="option"]');
+    const slottedChoices = Array.from(this.querySelectorAll<HTMLElement>('qti-inline-choice[part="option"]'));
+    return [...(promptOption ? [promptOption] : []), ...slottedChoices];
   }
 }
 

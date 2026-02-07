@@ -16798,6 +16798,22 @@
             },
             {
               "kind": "field",
+              "name": "_menuId",
+              "privacy": "private",
+              "readonly": true,
+              "default": "`qti-inline-choice-menu-${inlineChoiceMenuCounter++}`"
+            },
+            {
+              "kind": "field",
+              "name": "_slotObserver",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
               "name": "_supportsCustomizableSelectCache",
               "type": {
                 "text": "boolean | null"
@@ -16817,7 +16833,32 @@
             },
             {
               "kind": "method",
+              "name": "#allMenuOptions",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
               "name": "#focusTrigger",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#menuElement",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#onChoicesSlotChange",
               "privacy": "private"
             },
             {
@@ -16832,27 +16873,17 @@
             },
             {
               "kind": "field",
-              "name": "#onDocumentKeyDown",
+              "name": "#onMenuToggle",
               "privacy": "private"
             },
             {
               "kind": "field",
-              "name": "#onDocumentPointerDown",
+              "name": "#onSlottedChoiceClick",
               "privacy": "private"
             },
             {
               "kind": "field",
-              "name": "#onNativeChange",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "#onToggleCustomDropdown",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "#positionCustomMenu",
+              "name": "#onTriggerClick",
               "privacy": "private"
             },
             {
@@ -16893,14 +16924,18 @@
             },
             {
               "kind": "method",
-              "name": "#supportsCustomizableSelect",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              },
-              "description": "Progressive enhancement for \"customizable select\" (WHATWG / MDN: `appearance: base-select` + `::picker()`).\n\nNotes on current browser behavior (observed around Feb 2026):\n- Chromium-based browsers can support customizable select in light DOM, but it does not reliably work when the\n  `<select>` lives inside a shadow root (e.g. the internal `<button>/<selectedcontent>` can end up effectively\n  not rendered, so rich content like images disappears).\n- Firefox support is not generally available yet, so we fall back to our custom listbox there as well.\n\nBecause `CSS.supports(...)` may return syntax-only true, we do a final DOM probe to ensure the customizable-select\nmarkup actually takes effect in the current environment before opting in."
+              "name": "#startSlotObserver",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#syncSlottedChoices",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#teardownSlottedChoices",
+              "privacy": "private"
             },
             {
               "kind": "method",
