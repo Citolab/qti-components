@@ -16742,8 +16742,7 @@
             {
               "kind": "method",
               "name": "_estimateOptimalWidth",
-              "privacy": "private",
-              "description": "Simple width estimation based on text content length - no DOM manipulation needed"
+              "privacy": "private"
             },
             {
               "kind": "field",
@@ -17001,15 +17000,6 @@
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               }
-            },
-            {
-              "kind": "field",
-              "name": "dataPrompt",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "data-prompt"
             },
             {
               "kind": "field",
@@ -17403,6 +17393,12 @@
               }
             }
           ],
+          "superclass": {
+            "name": "Interaction",
+            "package": "@qti-components/base"
+          },
+          "tagName": "qti-inline-choice-interaction",
+          "customElement": true,
           "attributes": [
             {
               "name": "correct-response",
@@ -17415,14 +17411,6 @@
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               }
-            },
-            {
-              "name": "data-prompt",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "dataPrompt"
             },
             {
               "name": "disabled",
@@ -17507,12 +17495,6 @@
               }
             }
           ],
-          "superclass": {
-            "name": "Interaction",
-            "package": "@qti-components/base"
-          },
-          "tagName": "qti-inline-choice-interaction",
-          "customElement": true,
           "events": [
             {
               "name": "qti-interaction-response",

@@ -56,7 +56,6 @@ const styles: CSSResultGroup = css`
   }
 
   [part='menu'] {
-    position: fixed;
     position-anchor: --qti-inline-choice-trigger;
     inset: auto;
     margin: 0;

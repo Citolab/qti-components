@@ -59,9 +59,6 @@ export class QtiInlineChoiceInteraction extends Interaction {
   private _slotObserver: MutationObserver | null = null;
   private readonly _menuId = `qti-inline-choice-menu-${inlineChoiceMenuCounter++}`;
 
-  @property({ attribute: 'data-prompt', type: String })
-  dataPrompt: string = '';
-
   @consume({ context: configContext, subscribe: true })
   @property({ attribute: false })
   declare configContext: ConfigContext;
@@ -127,7 +124,7 @@ export class QtiInlineChoiceInteraction extends Interaction {
   }
 
   override willUpdate(changed: PropertyValues<this>) {
-    if (changed.has('configContext') || changed.has('dataPrompt')) {
+    if (changed.has('configContext')) {
       this.#updateOptions();
     }
   }
@@ -147,7 +144,7 @@ export class QtiInlineChoiceInteraction extends Interaction {
 
   #updateOptions() {
     const choices = Array.from(this.querySelectorAll('qti-inline-choice'));
-    const prompt = this.dataPrompt || this.configContext?.inlineChoicePrompt || 'select';
+    const prompt = this.dataset.prompt || this.configContext?.inlineChoicePrompt || 'select';
 
     const currentlySelectedValue = this.options.find(o => o.selected)?.value ?? '';
     const nextOptions: OptionType[] = [
@@ -174,26 +171,27 @@ export class QtiInlineChoiceInteraction extends Interaction {
     this._estimateOptimalWidth();
   }
 
-  /**
-   * Simple width estimation based on text content length - no DOM manipulation needed
-   */
   private _estimateOptimalWidth() {
-    if (this.options.length === 0) return;
+    const menu = this.#menuElement();
+    const trigger = this.renderRoot.querySelector<HTMLElement>('button[part="trigger"]');
 
-    let maxLength = 0;
-    for (const option of this.options) {
-      // Strip HTML tags and get text length
-      const textContent = option.textContent.replace(/<[^>]*>/g, '').trim();
-      maxLength = Math.max(maxLength, textContent.length);
+    let widthPx = 0;
+    if (menu) {
+      const rectWidth = menu.getBoundingClientRect().width;
+      widthPx = Math.max(rectWidth, menu.scrollWidth);
     }
 
-    // Simple estimation: ~0.6em per character + base padding + dropdown arrow
-    // Em-based calculation works better across different font sizes
-    const estimatedEm = Math.max(maxLength * 0.6 + 4, 8.75); // minimum ~140px (8.75em)
-    const maxEm = Math.min(estimatedEm, 40); // maximum 40em
+    if (widthPx <= 0 && trigger) {
+      widthPx = trigger.getBoundingClientRect().width;
+    }
 
-    this._calculatedMinWidth = maxEm;
-    this.style.setProperty('--qti-calculated-min-width', `${maxEm}em`);
+    if (widthPx <= 0) return;
+
+    const fontSize = parseFloat(getComputedStyle(this).fontSize || '16') || 16;
+    const widthEm = Math.min(Math.max(widthPx / fontSize, 8.75), 40);
+
+    this._calculatedMinWidth = widthEm;
+    this.style.setProperty('--qti-calculated-min-width', `${widthEm}em`);
   }
 
   public validate(): boolean {
@@ -280,6 +278,9 @@ export class QtiInlineChoiceInteraction extends Interaction {
     const open = toggleEvent.newState === 'open';
     if (this._dropdownOpen !== open) {
       this._dropdownOpen = open;
+    }
+    if (open) {
+      requestAnimationFrame(() => this._estimateOptimalWidth());
     }
   };
 

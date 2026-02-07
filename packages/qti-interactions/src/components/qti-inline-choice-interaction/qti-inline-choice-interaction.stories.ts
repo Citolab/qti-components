@@ -54,7 +54,7 @@ export const Default: Story = {
 export const DataPrompt: Story = {
   render: Default.render,
   args: {
-    dataPrompt: 'Select the correct answer'
+    'data-prompt': 'Select the correct answer'
   }
 };
 
