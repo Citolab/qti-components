@@ -1,52 +1,12 @@
 import { getTsProgram, typeParserPlugin } from '@wc-toolkit/type-parser';
 import { cemSorterPlugin } from '@wc-toolkit/cem-sorter';
 import { cemInheritancePlugin } from '@wc-toolkit/cem-inheritance';
+import { cemValidatorPlugin } from '@wc-toolkit/cem-validator';
 
 console.log('Building the custom element manifest...');
 
 // Allow overriding outdir via environment variable or default to root
 const outdir = process.env.CEM_OUTDIR || './';
-
-/**
- * Plugin to strip everything except custom elements and their attributes
- */
-function stripToAttributesOnlyPlugin() {
-  return {
-    name: 'strip-to-attributes-only',
-    packageLinkPhase({ customElementsManifest }) {
-      // Flatten modules to just declarations
-      const elements = [];
-
-      customElementsManifest.modules?.forEach(mod => {
-        mod.declarations?.forEach(decl => {
-          if (decl.customElement) {
-            // Keep only essential fields
-            const element = {
-              tagName: decl.tagName,
-              name: decl.name
-            };
-
-            // Keep attributes if present
-            if (decl.attributes?.length > 0) {
-              element.attributes = decl.attributes.map(attr => {
-                const cleanAttr = { name: attr.name };
-                if (attr.type) cleanAttr.type = attr.type;
-                if (attr.default !== undefined) cleanAttr.default = attr.default;
-                return cleanAttr;
-              });
-            }
-
-            elements.push(element);
-          }
-        });
-      });
-
-      // Replace modules with flat elements array
-      delete customElementsManifest.modules;
-      customElementsManifest.elements = elements;
-    }
-  };
-}
 
 export default {
   /** Globs to analyze */
@@ -85,6 +45,30 @@ export default {
     cemSorterPlugin({
       deprecatedLast: true
     }),
-    stripToAttributesOnlyPlugin()
+    cemValidatorPlugin({
+      logErrors: true, // Log errors without stopping the build
+      // exclude: ['BaseComponent', 'InternalMixin'], // Skip base classes
+
+      rules: {
+        // Override default severity levels for validation
+        packageJson: {
+          packageType: 'off',
+          main: 'off',
+          module: 'off',
+          types: 'off',
+          exports: 'off',
+          customElementsProperty: 'off',
+          publishedCem: 'off'
+        },
+        manifest: {
+          schemaVersion: 'off',
+          modulePath: 'off',
+          definitionPath: 'off',
+          typeDefinitionPath: 'off',
+          exportTypes: 'off',
+          tagName: 'off'
+        }
+      }
+    })
   ]
 };

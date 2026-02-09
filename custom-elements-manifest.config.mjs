@@ -3,6 +3,7 @@ import { jsxTypesPlugin } from '@wc-toolkit/jsx-types';
 import { getTsProgram, typeParserPlugin } from '@wc-toolkit/type-parser';
 import { cemSorterPlugin } from '@wc-toolkit/cem-sorter';
 import { cemInheritancePlugin } from '@wc-toolkit/cem-inheritance';
+import { cemValidatorPlugin } from '@wc-toolkit/cem-validator';
 
 console.log('Building the custom element manifest...');
 
@@ -56,6 +57,31 @@ export default {
     }),
     cemSorterPlugin({
       deprecatedLast: true
+    }),
+    cemValidatorPlugin({
+      logErrors: true, // Log errors without stopping the build
+      // exclude: ['BaseComponent', 'InternalMixin'], // Skip base classes
+
+      rules: {
+        // Override default severity levels for validation
+        packageJson: {
+          packageType: 'off',
+          main: 'off',
+          module: 'off',
+          types: 'off',
+          exports: 'off',
+          customElementsProperty: 'off',
+          publishedCem: 'off'
+        },
+        manifest: {
+          schemaVersion: 'off',
+          modulePath: 'off',
+          definitionPath: 'off',
+          typeDefinitionPath: 'off',
+          exportTypes: 'off',
+          tagName: 'off'
+        }
+      }
     })
   ]
 };
