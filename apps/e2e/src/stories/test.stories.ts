@@ -10,7 +10,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import '../../../../.storybook/utilities.css';
 
 const meta: Meta = {
-  title: 'Test',
+  title: 'Qti Test',
   argTypes: {
     packages: {
       options: packages.packages,
@@ -29,7 +29,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const Test: Story = {
+export const QtiTest: Story = {
   render: (_, { loaded: { testURL } }) => {
     const [args, updateArgs] = useArgs();
     return html`

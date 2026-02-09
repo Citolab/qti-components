@@ -10,6 +10,11 @@ const config: StorybookConfig = {
   // ],
   stories: [
     {
+      directory: '../docs',
+      files: '**/*.stories.*',
+      titlePrefix: 'Docs'
+    },
+    {
       directory: '../apps/e2e/src',
       files: '**/*.stories.*',
       titlePrefix: 'E2E'
@@ -45,7 +50,7 @@ const config: StorybookConfig = {
       titlePrefix: 'Test'
     },
     {
-      directory: '../packages/qti-theme/src/components',
+      directory: '../packages/qti-theme/src',
       files: '**/*.stories.*',
       titlePrefix: 'Theme'
     }

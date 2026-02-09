@@ -1,4 +1,4 @@
-import { css, html } from 'lit';
+import { html } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { consume } from '@lit/context';
@@ -10,12 +10,15 @@ import styles from './qti-inline-choice-interaction.styles.js';
 
 import type { PropertyValues } from 'lit';
 import type { ConfigContext } from '@qti-components/base';
+import type { ActiveElementMixinInterface } from '../../mixins/active-element/active-element.mixin';
 
 interface OptionType {
   textContent: string;
   value: string;
   selected: boolean;
 }
+
+type InlineChoiceOptionElement = HTMLElement & ActiveElementMixinInterface;
 
 let inlineChoiceMenuCounter = 0;
 
@@ -37,10 +40,6 @@ export class QtiInlineChoiceInteraction extends Interaction {
   @state()
   protected _dropdownOpen = false;
 
-  @state()
-  private _calculatedMinWidth: number = 0;
-
-  private _widthCalculationTimer: number | null = null;
   private _slotObserver: MutationObserver | null = null;
   private readonly _menuId = `qti-inline-choice-menu-${inlineChoiceMenuCounter++}`;
 
@@ -66,7 +65,9 @@ export class QtiInlineChoiceInteraction extends Interaction {
         data-readonly="${this.readonly ? 'true' : 'false'}"
       >
         <span part="value">${unsafeHTML(selected?.textContent ?? '')}</span>
-        <span part="dropdown-icon" aria-hidden="true">▾</span>
+        <span part="${this._dropdownOpen ? 'dropdown-icon dropdown-icon-open' : 'dropdown-icon'}" aria-hidden="true"
+          >▾</span
+        >
       </button>
       <div
         id="${this._menuId}"
@@ -77,7 +78,7 @@ export class QtiInlineChoiceInteraction extends Interaction {
         @keydown=${this.#onCustomMenuKeyDown}
       >
         <button
-          part="option"
+          part="${this.options[0]?.selected ? 'option option-prompt option-selected' : 'option option-prompt'}"
           type="button"
           role="option"
           aria-selected="${this.options[0]?.selected ? 'true' : 'false'}"
@@ -118,8 +119,12 @@ export class QtiInlineChoiceInteraction extends Interaction {
     const dropdownOpenKey = '_dropdownOpen' as keyof QtiInlineChoiceInteraction;
     if (changed.has(dropdownOpenKey) && this._dropdownOpen) {
       this.#syncSlottedChoices();
-      const selected = this.#allMenuOptions().find(option => option.getAttribute('aria-selected') === 'true');
-      selected?.focus();
+      const first = this.#allMenuOptions()[0];
+      first?.focus();
+    }
+
+    if (changed.has('disabled') || changed.has('readonly')) {
+      this.#syncSlottedChoices();
     }
   }
 
@@ -175,8 +180,7 @@ export class QtiInlineChoiceInteraction extends Interaction {
     const fontSize = parseFloat(getComputedStyle(this).fontSize || '16') || 16;
     const widthEm = Math.min(Math.max(widthPx / fontSize, 8.75), 40);
 
-    this._calculatedMinWidth = widthEm;
-    this.style.setProperty('--qti-calculated-min-width', `${widthEm}em`);
+    trigger.style.setProperty('--qti-calculated-min-width', `${widthEm}em`);
   }
 
   public validate(): boolean {
@@ -280,12 +284,10 @@ export class QtiInlineChoiceInteraction extends Interaction {
 
     const optionElements = this.#allMenuOptions();
     const shadowActive = (this.renderRoot as ShadowRoot).activeElement as HTMLElement | null;
+    const deepActive = this.#getDeepActiveElement();
     const active =
       shadowActive ||
-      (document.activeElement instanceof HTMLElement &&
-      document.activeElement.closest('qti-inline-choice-interaction') === this
-        ? document.activeElement
-        : null);
+      (deepActive instanceof HTMLElement && this.#isElementInsideInteraction(deepActive) ? deepActive : null);
     const activeIndex = optionElements.findIndex(el => el === active);
 
     if (event.key === 'ArrowDown') {
@@ -314,6 +316,20 @@ export class QtiInlineChoiceInteraction extends Interaction {
     this.renderRoot.querySelector<HTMLButtonElement>('button[part="trigger"]')?.focus();
   }
 
+  #getDeepActiveElement(): Element | null {
+    let current: Element | null = document.activeElement;
+
+    while (current && current instanceof HTMLElement && current.shadowRoot?.activeElement) {
+      current = current.shadowRoot.activeElement;
+    }
+
+    return current;
+  }
+
+  #isElementInsideInteraction(element: HTMLElement): boolean {
+    return element === this || this.contains(element) || this.renderRoot.contains(element);
+  }
+
   #menuElement(): HTMLElement | null {
     return this.renderRoot.querySelector<HTMLElement>(`#${this._menuId}`);
   }
@@ -335,33 +351,46 @@ export class QtiInlineChoiceInteraction extends Interaction {
   };
 
   #teardownSlottedChoices() {
-    const choices = Array.from(this.querySelectorAll<HTMLElement>('qti-inline-choice'));
+    const choices = Array.from(this.querySelectorAll<InlineChoiceOptionElement>('qti-inline-choice'));
     for (const choice of choices) {
       choice.removeEventListener('click', this.#onSlottedChoiceClick);
-      choice.removeAttribute('part');
-      choice.removeAttribute('role');
-      choice.removeAttribute('aria-selected');
       choice.removeAttribute('tabindex');
+      choice.internals.role = null;
+      choice.internals.ariaSelected = null;
+      choice.internals.ariaChecked = 'false';
+      choice.internals.states.delete('--checked');
     }
   }
 
   #syncSlottedChoices() {
     const selectedValue = this.options.find(option => option.selected)?.value ?? '';
-    const choices = Array.from(this.querySelectorAll<HTMLElement>('qti-inline-choice'));
+    const choices = Array.from(this.querySelectorAll<InlineChoiceOptionElement>('qti-inline-choice'));
     for (const choice of choices) {
       const value = choice.getAttribute('identifier') ?? '';
+      const isSelected = value === selectedValue;
       choice.removeEventListener('click', this.#onSlottedChoiceClick);
       choice.addEventListener('click', this.#onSlottedChoiceClick);
-      choice.setAttribute('part', 'option');
-      choice.setAttribute('role', 'option');
-      choice.setAttribute('aria-selected', value === selectedValue ? 'true' : 'false');
+      choice.disabled = this.disabled;
+      choice.readonly = this.readonly;
+      choice.internals.role = 'option';
+      choice.internals.ariaSelected = isSelected ? 'true' : 'false';
+      choice.internals.ariaChecked = isSelected ? 'true' : 'false';
+      choice.internals.ariaDisabled = this.disabled ? 'true' : 'false';
+      choice.internals.ariaReadOnly = this.readonly ? 'true' : 'false';
+      choice.removeAttribute('aria-disabled');
+      choice.removeAttribute('aria-readonly');
+      if (isSelected) {
+        choice.internals.states.add('--checked');
+      } else {
+        choice.internals.states.delete('--checked');
+      }
       choice.tabIndex = -1;
     }
   }
 
   #allMenuOptions(): HTMLElement[] {
-    const promptOption = this.renderRoot.querySelector<HTMLElement>('button[part="option"]');
-    const slottedChoices = Array.from(this.querySelectorAll<HTMLElement>('qti-inline-choice[part="option"]'));
+    const promptOption = this.renderRoot.querySelector<HTMLElement>('button[part~="option"]');
+    const slottedChoices = Array.from(this.querySelectorAll<HTMLElement>('qti-inline-choice'));
     return [...(promptOption ? [promptOption] : []), ...slottedChoices];
   }
 }

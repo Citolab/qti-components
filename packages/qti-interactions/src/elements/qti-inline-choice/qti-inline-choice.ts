@@ -1,16 +1,14 @@
-import { css, html, LitElement } from 'lit';
+import { html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
-export class QtiInlineChoice extends LitElement {
-  static override get styles() {
-    return [
-      css`
-        :host {
-          display: block;
-          cursor: pointer;
-        }
-      `
-    ];
-  }
+
+import { ActiveElementMixin } from '@qti-components/interactions/mixins/active-element/active-element.mixin.js';
+
+import styles from './qti-inline-choice.styles.js';
+
+import type { CSSResultGroup } from 'lit';
+import type { PropertyValues } from 'lit';
+export class QtiInlineChoice extends ActiveElementMixin(LitElement, 'qti-inline-choice') {
+  static override styles: CSSResultGroup = styles;
 
   @property({ type: String })
   identifier: string;

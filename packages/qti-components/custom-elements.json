@@ -16758,15 +16758,6 @@
           "members": [
             {
               "kind": "field",
-              "name": "_calculatedMinWidth",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private",
-              "default": "0"
-            },
-            {
-              "kind": "field",
               "name": "_context",
               "type": {
                 "text": "ItemContext"
@@ -16802,8 +16793,7 @@
             {
               "kind": "method",
               "name": "_estimateOptimalWidth",
-              "privacy": "private",
-              "description": "Simple width estimation based on text content length - no DOM manipulation needed"
+              "privacy": "private"
             },
             {
               "kind": "field",
@@ -16858,26 +16848,76 @@
             },
             {
               "kind": "field",
-              "name": "_supportsCustomizableSelectCache",
-              "type": {
-                "text": "boolean | null"
-              },
+              "name": "_menuId",
               "privacy": "private",
-              "static": true,
-              "default": "null"
+              "readonly": true,
+              "default": "`qti-inline-choice-menu-${inlineChoiceMenuCounter++}`"
             },
             {
               "kind": "field",
-              "name": "_widthCalculationTimer",
+              "name": "_slotObserver",
               "type": {
-                "text": "number | null"
+                "text": "MutationObserver | null"
               },
               "privacy": "private",
               "default": "null"
             },
             {
               "kind": "method",
+              "name": "#allMenuOptions",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
               "name": "#focusTrigger",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#getDeepActiveElement",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Element | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#isElementInsideInteraction",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#menuElement",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#onChoicesSlotChange",
               "privacy": "private"
             },
             {
@@ -16892,27 +16932,17 @@
             },
             {
               "kind": "field",
-              "name": "#onDocumentKeyDown",
+              "name": "#onMenuToggle",
               "privacy": "private"
             },
             {
               "kind": "field",
-              "name": "#onDocumentPointerDown",
+              "name": "#onSlottedChoiceClick",
               "privacy": "private"
             },
             {
               "kind": "field",
-              "name": "#onNativeChange",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "#onToggleCustomDropdown",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "#positionCustomMenu",
+              "name": "#onTriggerClick",
               "privacy": "private"
             },
             {
@@ -16953,14 +16983,18 @@
             },
             {
               "kind": "method",
-              "name": "#supportsCustomizableSelect",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              },
-              "description": "Progressive enhancement for \"customizable select\" (WHATWG / MDN: `appearance: base-select` + `::picker()`).\n\nNotes on current browser behavior (observed around Feb 2026):\n- Chromium-based browsers can support customizable select in light DOM, but it does not reliably work when the\n  `<select>` lives inside a shadow root (e.g. the internal `<button>/<selectedcontent>` can end up effectively\n  not rendered, so rich content like images disappears).\n- Firefox support is not generally available yet, so we fall back to our custom listbox there as well.\n\nBecause `CSS.supports(...)` may return syntax-only true, we do a final DOM probe to ensure the customizable-select\nmarkup actually takes effect in the current environment before opting in."
+              "name": "#startSlotObserver",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#syncSlottedChoices",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#teardownSlottedChoices",
+              "privacy": "private"
             },
             {
               "kind": "method",
@@ -17029,15 +17063,6 @@
             },
             {
               "kind": "field",
-              "name": "dataPrompt",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "data-prompt"
-            },
-            {
-              "kind": "field",
               "name": "disabled",
               "type": {
                 "text": "boolean"
@@ -17080,16 +17105,6 @@
               "type": {
                 "text": "formResetCallback() => void"
               }
-            },
-            {
-              "kind": "field",
-              "name": "inputWidthClass",
-              "type": {
-                "text": "array"
-              },
-              "privacy": "public",
-              "static": true,
-              "default": "[ '', 'qti-input-width-2', 'qti-input-width-1', 'qti-input-width-3', 'qti-input-width-4', 'qti-input-width-6', 'qti-input-width-10', 'qti-input-width-15', 'qti-input-width-20', 'qti-input-width-72' ]"
             },
             {
               "kind": "field",
@@ -17428,6 +17443,12 @@
               }
             }
           ],
+          "superclass": {
+            "name": "Interaction",
+            "package": "@qti-components/base"
+          },
+          "tagName": "qti-inline-choice-interaction",
+          "customElement": true,
           "attributes": [
             {
               "name": "correct-response",
@@ -17440,14 +17461,6 @@
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               }
-            },
-            {
-              "name": "data-prompt",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "dataPrompt"
             },
             {
               "name": "disabled",
@@ -17532,12 +17545,6 @@
               }
             }
           ],
-          "superclass": {
-            "name": "Interaction",
-            "package": "@qti-components/base"
-          },
-          "tagName": "qti-inline-choice-interaction",
-          "customElement": true,
           "events": [
             {
               "name": "qti-interaction-response",

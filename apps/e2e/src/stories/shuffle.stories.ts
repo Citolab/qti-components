@@ -13,8 +13,7 @@ const xml = String.raw;
 
 const meta: Meta = {
   component: 'shuffle',
-  title: 'Stories/shuffle',
-  tags: ['!dev']
+  title: 'Stories/shuffle'
 };
 export default meta;
 

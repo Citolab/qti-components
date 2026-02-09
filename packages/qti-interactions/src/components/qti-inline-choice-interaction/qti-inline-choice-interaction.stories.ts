@@ -9,6 +9,7 @@ import type { StoryObj, Meta } from '@storybook/web-components-vite';
 const { events, args, argTypes, template } = getStorybookHelpers('qti-inline-choice-interaction');
 
 type Story = StoryObj<QtiInlineChoiceInteraction & typeof args>;
+type InlineChoiceWithInternals = HTMLElement & { internals: ElementInternals };
 
 const openListboxMenu = async (interaction: QtiInlineChoiceInteraction) => {
   await interaction.updateComplete;
@@ -21,6 +22,61 @@ const openListboxMenu = async (interaction: QtiInlineChoiceInteraction) => {
   const menu = await waitFor(() => root.querySelector<HTMLElement>('[part="menu"]'));
   return { menu, trigger };
 };
+
+const getDeepActiveElement = (): Element | null => {
+  let current: Element | null = document.activeElement;
+
+  while (current && current instanceof HTMLElement && current.shadowRoot?.activeElement) {
+    current = current.shadowRoot.activeElement;
+  }
+
+  return current;
+};
+
+const getFocusedInlineChoiceIdentifier = (): string | null => {
+  const active = getDeepActiveElement();
+  if (active instanceof HTMLElement && active.matches('qti-inline-choice')) {
+    return active.getAttribute('identifier');
+  }
+  return null;
+};
+
+const assertInlineChoiceInternals = (
+  interaction: QtiInlineChoiceInteraction,
+  expectedSelectedIdentifier: string
+) => {
+  const choices = Array.from(interaction.querySelectorAll<InlineChoiceWithInternals>('qti-inline-choice'));
+
+  for (const choice of choices) {
+    const identifier = choice.getAttribute('identifier') ?? '';
+    const isSelected = identifier === expectedSelectedIdentifier;
+    expect(choice.internals.role).toBe('option');
+    expect(choice.internals.ariaSelected).toBe(isSelected ? 'true' : 'false');
+    expect(choice.internals.states.has('--checked')).toBe(isSelected);
+  }
+};
+
+class InlineChoiceShadowHost extends HTMLElement {
+  connectedCallback() {
+    if (!this.shadowRoot) {
+      this.attachShadow({ mode: 'open' });
+    }
+
+    if (!this.shadowRoot) return;
+
+    this.shadowRoot.innerHTML = `
+      <qti-inline-choice-interaction data-testid="shadow-interaction">
+        <qti-inline-choice identifier="G">Gloucester</qti-inline-choice>
+        <qti-inline-choice identifier="L">Lancaster</qti-inline-choice>
+        <qti-inline-choice identifier="Y">York</qti-inline-choice>
+      </qti-inline-choice-interaction>
+    `;
+  }
+}
+
+if (!window.customElements.get('inline-choice-shadow-host')) {
+  window.customElements.define('inline-choice-shadow-host', InlineChoiceShadowHost);
+}
 
 /**
  *
@@ -55,6 +111,131 @@ export const DataPrompt: Story = {
   render: Default.render,
   args: {
     'data-prompt': 'Select the correct answer'
+  }
+};
+
+export const KeyboardNavigation: Story = {
+  render: Default.render,
+  play: async ({ canvasElement, step }) => {
+    const interaction = canvasElement.querySelector<QtiInlineChoiceInteraction>('qti-inline-choice-interaction');
+    expect(interaction).toBeTruthy();
+    if (!interaction) return;
+
+    await interaction.updateComplete;
+    const root = interaction.shadowRoot;
+    expect(root).toBeTruthy();
+    if (!root) return;
+
+    const trigger = root.querySelector<HTMLButtonElement>('[part~="trigger"]');
+    expect(trigger).toBeTruthy();
+    if (!trigger) return;
+
+    await step('Open via keyboard and focus prompt option first', async () => {
+      trigger.focus();
+      await fireEvent.keyDown(trigger, { key: 'Enter' });
+      await interaction.updateComplete;
+
+      const promptOption = await waitFor(() => root.querySelector<HTMLElement>('button[part~="option-prompt"]'));
+      await waitFor(() => {
+        expect(getDeepActiveElement()).toBe(promptOption);
+      });
+    });
+
+    const menu = root.querySelector<HTMLElement>('[part="menu"]');
+    expect(menu).toBeTruthy();
+    if (!menu) return;
+
+    await step('Arrow down navigates prompt -> Gloucester -> Lancaster', async () => {
+      await fireEvent.keyDown(menu, { key: 'ArrowDown' });
+      await waitFor(() => {
+        expect(getFocusedInlineChoiceIdentifier()).toBe('G');
+      });
+
+      await fireEvent.keyDown(menu, { key: 'ArrowDown' });
+      await waitFor(() => {
+        expect(getFocusedInlineChoiceIdentifier()).toBe('L');
+      });
+    });
+
+    await step('Enter selects focused option (Lancaster)', async () => {
+      await fireEvent.keyDown(menu, { key: 'Enter' });
+      await interaction.updateComplete;
+      expect(interaction.response).toBe('L');
+    });
+
+    await step('Element internals reflect selected option', async () => {
+      assertInlineChoiceInternals(interaction, 'L');
+    });
+  }
+};
+
+export const InsideShadowRoot: Story = {
+  render: () => html`<inline-choice-shadow-host></inline-choice-shadow-host>`,
+  parameters: {
+    docs: {
+      description: {
+        story: 'Verifies inline-choice interaction behavior when rendered inside an outer shadow root host.'
+      }
+    }
+  },
+  play: async ({ canvasElement, step }) => {
+    const host = canvasElement.querySelector<HTMLElement>('inline-choice-shadow-host');
+    expect(host).toBeTruthy();
+
+    const hostShadowRoot = host?.shadowRoot;
+    expect(hostShadowRoot).toBeTruthy();
+
+    const interaction =
+      hostShadowRoot?.querySelector<QtiInlineChoiceInteraction>('qti-inline-choice-interaction') || null;
+    expect(interaction).toBeTruthy();
+    if (!interaction) return;
+
+    await interaction.updateComplete;
+
+    const root = interaction.shadowRoot;
+    expect(root).toBeTruthy();
+    if (!root) return;
+
+    const trigger = root.querySelector<HTMLButtonElement>('[part~="trigger"]');
+    expect(trigger).toBeTruthy();
+    if (!trigger) return;
+
+    await step('Open via keyboard and focus prompt option first', async () => {
+      trigger.focus();
+      await fireEvent.keyDown(trigger, { key: 'Enter' });
+      await interaction.updateComplete;
+
+      const promptOption = await waitFor(() => root.querySelector<HTMLElement>('button[part~="option-prompt"]'));
+      await waitFor(() => {
+        expect(getDeepActiveElement()).toBe(promptOption);
+      });
+    });
+
+    const menu = root.querySelector<HTMLElement>('[part="menu"]');
+    expect(menu).toBeTruthy();
+    if (!menu) return;
+
+    await step('Arrow down navigates prompt -> Gloucester -> Lancaster', async () => {
+      await fireEvent.keyDown(menu, { key: 'ArrowDown' });
+      await waitFor(() => {
+        expect(getFocusedInlineChoiceIdentifier()).toBe('G');
+      });
+
+      await fireEvent.keyDown(menu, { key: 'ArrowDown' });
+      await waitFor(() => {
+        expect(getFocusedInlineChoiceIdentifier()).toBe('L');
+      });
+    });
+
+    await step('Enter selects focused option (Lancaster)', async () => {
+      await fireEvent.keyDown(menu, { key: 'Enter' });
+      await interaction.updateComplete;
+      expect(interaction.response).toBe('L');
+    });
+
+    await step('Element internals reflect selected option', async () => {
+      assertInlineChoiceInternals(interaction, 'L');
+    });
   }
 };
 
