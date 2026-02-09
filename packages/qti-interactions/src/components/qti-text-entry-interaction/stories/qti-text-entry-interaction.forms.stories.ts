@@ -151,7 +151,6 @@ export const FormSubmitEmpty: Story = {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 export const FormReset: Story = {
-  name: 'Form Reset',
   render: formTemplate,
   play: async ({ canvasElement }) => {
     const { form, interaction, input, resetButton } = getElements(canvasElement);
@@ -301,7 +300,6 @@ export const FormValidationBlocking: Story = {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 export const DynamicNameChange: Story = {
-  name: 'Dynamic Name Change',
   tags: ['xfail'],
   render: formTemplate,
   play: async ({ canvasElement }) => {

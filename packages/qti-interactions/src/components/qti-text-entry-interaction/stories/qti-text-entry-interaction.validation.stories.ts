@@ -195,7 +195,6 @@ export const EmptyAfterClearing: Story = {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 export const CustomValidationMessage: Story = {
-  name: 'Custom Validation Message',
   render: () => formTemplate('[A-Z]{2}', 'Enter exactly 2 uppercase letters'),
   play: async ({ canvasElement }) => {
     const { interaction, input } = getElements(canvasElement);
@@ -218,7 +217,6 @@ export const CustomValidationMessage: Story = {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 export const ValidationStateTransitions: Story = {
-  name: 'Validation State Transitions',
   tags: ['xfail'],
   render: () => formTemplate('[0-9]{4}', 'Enter a 4-digit number'),
   play: async ({ canvasElement, step }) => {

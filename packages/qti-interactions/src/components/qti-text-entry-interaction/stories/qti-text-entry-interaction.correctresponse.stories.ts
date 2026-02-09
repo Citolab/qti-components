@@ -60,7 +60,6 @@ const getElements = (canvasElement: HTMLElement) => {
  * on the interaction element without needing a `qti-response-declaration`.
  */
 export const CorrectResponseAttribute: Story = {
-  name: 'Correct Response Attribute',
   render: () => baseTemplate({ correctResponseAttr: 'Paris' }),
   play: async ({ canvasElement }) => {
     const { interaction } = getElements(canvasElement);
@@ -98,7 +97,6 @@ export const SetViaProperty: Story = {
  * Setting to null removes the correct response.
  */
 export const ClearCorrectResponse: Story = {
-  name: 'Clear Correct Response',
   render: () => baseTemplate({ correctResponseAttr: 'Paris' }),
   play: async ({ canvasElement }) => {
     const { interaction } = getElements(canvasElement);
@@ -323,7 +321,6 @@ export const ToggleShowCorrectResponse: Story = {
  * after the original, showing the correct answer filled in.
  */
 export const ShowFullCorrectResponse: Story = {
-  name: 'Show Full Correct Response',
   render: () =>
     baseTemplate({
       correctResponseAttr: 'Paris',
@@ -454,7 +451,6 @@ export const ToggleCandidateCorrection: Story = {
  * then results are shown.
  */
 export const FullWorkflow: Story = {
-  name: 'Full Workflow',
   tags: ['xfail'],
   render: () => baseTemplate({ correctResponseAttr: 'Paris' }),
   play: async ({ canvasElement, step }) => {
@@ -498,7 +494,6 @@ export const FullWorkflow: Story = {
  * Simulates a test scenario where the user enters the correct answer.
  */
 export const CorrectAnswerWorkflow: Story = {
-  name: 'Correct Answer Workflow',
   tags: ['xfail'],
   render: () => baseTemplate({ correctResponseAttr: 'Paris' }),
   play: async ({ canvasElement, step }) => {
@@ -529,7 +524,6 @@ export const CorrectAnswerWorkflow: Story = {
  * Tests how leading/trailing whitespace affects correctness.
  */
 export const WhitespaceHandling: Story = {
-  name: 'Whitespace Handling',
   tags: ['xfail'],
   render: () => baseTemplate({ correctResponseAttr: 'Paris' }),
   play: async ({ canvasElement }) => {
@@ -557,7 +551,6 @@ export const WhitespaceHandling: Story = {
  * Tests correct response with special characters.
  */
 export const SpecialCharacters: Story = {
-  name: 'Special Characters',
   tags: ['xfail'],
   render: () => baseTemplate({ correctResponseAttr: "Côte d'Ivoire" }),
   play: async ({ canvasElement }) => {
@@ -578,7 +571,6 @@ export const SpecialCharacters: Story = {
  * Tests correct response with numeric values.
  */
 export const NumericCorrectResponse: Story = {
-  name: 'Numeric Correct Response',
   tags: ['xfail'],
   render: () => html`
     <qti-text-entry-interaction

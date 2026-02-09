@@ -83,6 +83,9 @@ importers:
       '@wc-toolkit/cem-utilities':
         specifier: ^1.5.4
         version: 1.5.4
+      '@wc-toolkit/cem-validator':
+        specifier: ^1.3.0
+        version: 1.3.0
       '@wc-toolkit/changelog':
         specifier: ^1.0.2
         version: 1.0.2
@@ -2109,6 +2112,9 @@ packages:
 
   '@wc-toolkit/cem-utilities@1.5.4':
     resolution: {integrity: sha512-0JXTcMK27nT/hQb79XuBYeD0LLR70DLhBFMP9XLWLwSwRa5Ys85ShKvptscQmS+7z3Lx2kExY8xHRblI1fXc2A==}
+
+  '@wc-toolkit/cem-validator@1.3.0':
+    resolution: {integrity: sha512-+dsNqtG4GI5sxyv/mJl3BwsmVeItFTZHUjobiKJbDEeJSwtg6pFzud7VforCSW85VjMD+sGyQkvck/FH6cXM0Q==}
 
   '@wc-toolkit/changelog@1.0.2':
     resolution: {integrity: sha512-f50jllEMTw//MMvcCI1jk1eagKIlhOBGyaE66Vbfio0Ry20iT83n/YtQPw2NsShZ3KyK0wsDWy3/ExNFQNG/cw==}
@@ -8049,6 +8055,8 @@ snapshots:
   '@wc-toolkit/cem-sorter@1.0.1': {}
 
   '@wc-toolkit/cem-utilities@1.5.4': {}
+
+  '@wc-toolkit/cem-validator@1.3.0': {}
 
   '@wc-toolkit/changelog@1.0.2': {}
 

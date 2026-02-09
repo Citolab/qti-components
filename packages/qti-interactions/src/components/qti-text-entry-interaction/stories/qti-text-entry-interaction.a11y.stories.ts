@@ -39,7 +39,6 @@ const getElements = (canvasElement: HTMLElement) => {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 export const LabelAssociation: Story = {
-  name: 'Label Association',
   render: () => html`
     <form data-testid="form" role="form">
       <label for="text-input">Enter your answer:</label>
@@ -292,7 +291,6 @@ export const PlaceholderAccessible: Story = {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 export const IsInlineElement: Story = {
-  name: 'Is Inline Element',
   render: () => html`
     <p>
       The capital of France is
