@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.1](https://github.com/Citolab/qti-components/compare/interactions-v1.6.0...interactions-v1.6.1) (2026-02-09)
+
+
+### Bug Fixes
+
+* associate interaction line visibility ([#117](https://github.com/Citolab/qti-components/issues/117)) ([8139122](https://github.com/Citolab/qti-components/commit/8139122567d82bdf40b25a0fcfdcac99ac9dd9ff)), closes [#116](https://github.com/Citolab/qti-components/issues/116)
+
 ## [1.6.0](https://github.com/Citolab/qti-components/compare/interactions-v1.5.1...interactions-v1.6.0) (2026-02-06)
 
 
