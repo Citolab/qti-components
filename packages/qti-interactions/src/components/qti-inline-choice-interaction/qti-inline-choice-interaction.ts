@@ -24,24 +24,9 @@ export class QtiInlineChoiceInteraction extends Interaction {
     return true;
   }
 
-  private static _supportsCustomizableSelectCache: boolean | null = null;
-
   static override get styles() {
     return [styles];
   }
-
-  public static inputWidthClass = [
-    '',
-    'qti-input-width-2',
-    'qti-input-width-1',
-    'qti-input-width-3',
-    'qti-input-width-4',
-    'qti-input-width-6',
-    'qti-input-width-10',
-    'qti-input-width-15',
-    'qti-input-width-20',
-    'qti-input-width-72'
-  ];
 
   @state()
   protected options: OptionType[] = [];

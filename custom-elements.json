@@ -16813,16 +16813,6 @@
             },
             {
               "kind": "field",
-              "name": "_supportsCustomizableSelectCache",
-              "type": {
-                "text": "boolean | null"
-              },
-              "privacy": "private",
-              "static": true,
-              "default": "null"
-            },
-            {
-              "kind": "field",
               "name": "_widthCalculationTimer",
               "type": {
                 "text": "number | null"
@@ -17045,16 +17035,6 @@
               "type": {
                 "text": "formResetCallback() => void"
               }
-            },
-            {
-              "kind": "field",
-              "name": "inputWidthClass",
-              "type": {
-                "text": "array"
-              },
-              "privacy": "public",
-              "static": true,
-              "default": "[ '', 'qti-input-width-2', 'qti-input-width-1', 'qti-input-width-3', 'qti-input-width-4', 'qti-input-width-6', 'qti-input-width-10', 'qti-input-width-15', 'qti-input-width-20', 'qti-input-width-72' ]"
             },
             {
               "kind": "field",
