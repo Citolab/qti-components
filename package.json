@@ -68,6 +68,8 @@
     "deps:format:check": "syncpack format --check",
     "deps:check": "manypkg check",
     "deps:fix:manypkg": "manypkg fix",
+    "policy:qti-stories:check": "node tools/policy/check-qti-story-governance.mjs",
+    "policy:qti-stories:check:strict": "node tools/policy/check-qti-story-governance.mjs --fail-on-issues",
     "pm:check": "sherif",
     "preinstall": "sherif",
     "prepare": "husky"
