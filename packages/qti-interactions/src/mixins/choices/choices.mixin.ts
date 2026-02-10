@@ -248,8 +248,13 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       });
     }
 
-    protected _setInputType(choiceElement: Choice) {
+    protected async _setInputType(choiceElement: Choice) {
       this._internals.role = this.maxChoices === 1 ? 'radiogroup' : null;
+
+      // Wait for the next update cycle to ensure DOM is ready before setting input type
+      // There was a weird bug in the shuffle stories only where radiobuttons were not shown
+      // This was because the choices were not upgraded to custom elements yet when this code ran, so internals was not available and role was not set
+      await this.updateComplete;
 
       if (choiceElement.internals) {
         const role = this.maxChoices === 1 ? 'radio' : 'checkbox';

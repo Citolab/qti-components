@@ -176,6 +176,23 @@ export const MultipleSelectionUnlimited: Story = {
 // ROLE CHANGES
 // ═══════════════════════════════════════════════════════════════════════════════
 
+export const RoleRadioGroupDefault: Story = {
+  name: 'Role: radiogroup (no max-choices attribute)',
+  render: () => html`
+    <qti-choice-interaction name="RESPONSE" data-testid="interaction">
+      <qti-simple-choice identifier="A">Option A</qti-simple-choice>
+      <qti-simple-choice identifier="B">Option B</qti-simple-choice>
+    </qti-choice-interaction>
+  `,
+  play: async ({ canvasElement }) => {
+    const { interaction, choices } = getElements(canvasElement);
+
+    expect(interaction.internals.role).toBe('radiogroup');
+    expect(choices.A.internals.role).toBe('radio');
+    expect(choices.B.internals.role).toBe('radio');
+  }
+};
+
 export const RoleRadioGroup: Story = {
   name: 'Role: radiogroup (max-choices=1)',
   render: () => html`
