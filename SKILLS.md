@@ -3,10 +3,12 @@
 Repository skill catalog for agents and contributors.
 
 ## Skill Location
+
 - Installable skills are stored in `.codex/skills/`.
 - Each skill has a required `SKILL.md`.
 
 ## Skill: `workspace-start-build-test`
+
 - Path: `.codex/skills/workspace-start-build-test/SKILL.md`
 - Use when: starting local development, running builds, tests, and baseline checks.
 - Typical triggers:
@@ -25,6 +27,7 @@ Repository skill catalog for agents and contributors.
   - Must not publish artifacts.
 
 ## Skill: `storybook-runner`
+
 - Path: `.codex/skills/storybook-runner/SKILL.md`
 - Use when: running Storybook locally or building static Storybook output.
 - Typical triggers:
@@ -42,6 +45,7 @@ Repository skill catalog for agents and contributors.
   - Must not edit Storybook config unless explicitly asked.
 
 ## Skill: `chrome-devtools-mcp`
+
 - Path: `.codex/skills/chrome-devtools-mcp/SKILL.md`
 - Use when: starting, checking, and troubleshooting Chrome DevTools MCP server.
 - Typical triggers:
@@ -58,6 +62,7 @@ Repository skill catalog for agents and contributors.
   - Must not assume Chrome is already running with remote debugging.
 
 ## Skill: `qti-interactions-story-authoring`
+
 - Path: `.codex/skills/qti-interactions-story-authoring/SKILL.md`
 - Use when: creating/refactoring stories for `packages/qti-interactions`.
 - Typical triggers:
@@ -74,3 +79,24 @@ Repository skill catalog for agents and contributors.
 - Boundaries:
   - Must not add `autodocs` or `getStorybookHelpers` to split story files.
   - Must keep assertions focused on the interaction under test.
+
+## Skill: `feature-branch-workflow`
+
+- Path: `.codex/skills/feature-branch-workflow/SKILL.md`
+- Use when: committing changes to a feature branch with GitHub issue and PR creation.
+- Typical triggers:
+  - "commit my changes to a feature branch"
+  - "create a PR for these changes"
+  - "feature branch workflow"
+- Inputs:
+  - Uncommitted changes in working tree
+  - Optional: custom branch name, commit message
+- Expected outputs:
+  - Tests run and reported
+  - Feature branch created and pushed
+  - GitHub issue created and opened in browser
+  - Pull request created linking to issue
+- Boundaries:
+  - Pauses for user confirmation at each major step.
+  - Does not auto-merge PRs.
+  - Does not force-push or rewrite history.

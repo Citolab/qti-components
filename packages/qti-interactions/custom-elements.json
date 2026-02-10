@@ -1513,11 +1513,6 @@
               "default": "false"
             },
             {
-              "kind": "method",
-              "name": "_estimateOptimalWidth",
-              "privacy": "private"
-            },
-            {
               "kind": "field",
               "name": "_menuId",
               "privacy": "private",
@@ -1542,6 +1537,11 @@
                   "text": "HTMLElement[]"
                 }
               }
+            },
+            {
+              "kind": "method",
+              "name": "#estimateOptimalWidth",
+              "privacy": "private"
             },
             {
               "kind": "method",
