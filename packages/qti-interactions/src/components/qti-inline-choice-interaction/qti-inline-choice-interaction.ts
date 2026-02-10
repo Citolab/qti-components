@@ -23,6 +23,11 @@ type InlineChoiceOptionElement = HTMLElement & ActiveElementMixinInterface;
 let inlineChoiceMenuCounter = 0;
 
 export class QtiInlineChoiceInteraction extends Interaction {
+  constructor() {
+    super();
+    this.internals.role = 'listbox';
+  }
+
   override get isInline(): boolean {
     return true;
   }

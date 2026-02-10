@@ -15,7 +15,8 @@ import type {
   QtiSimpleAssociableChoice,
   QtiSimpleChoice,
   QtiTextEntryInteraction,
-  QtiGapMatchInteraction
+  QtiGapMatchInteraction,
+  QtiInlineChoice
 } from '@qti-components/interactions';
 
 const { events, args, argTypes } = getStorybookHelpers('test-print-item-variables');
@@ -403,7 +404,7 @@ export const InlineChoice: Story = {
       trigger.click();
       await interaction.updateComplete;
 
-      const options = Array.from(root.querySelectorAll<HTMLButtonElement>('button[part="option"]'));
+      const options = Array.from(interaction.querySelectorAll<QtiInlineChoice>('qti-inline-choice'));
       const york = options.find(btn => btn.textContent?.includes('York'));
       if (!york) throw new Error('York option not found in custom dropdown');
       york.click();

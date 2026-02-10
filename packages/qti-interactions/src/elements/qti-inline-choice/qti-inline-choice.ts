@@ -1,8 +1,7 @@
 import { html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 
-import { ActiveElementMixin } from '@qti-components/interactions/mixins/active-element/active-element.mixin.js';
-
+import { ActiveElementMixin } from '../../mixins/active-element/active-element.mixin.js';
 import styles from './qti-inline-choice.styles.js';
 
 import type { CSSResultGroup } from 'lit';

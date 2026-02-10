@@ -4,13 +4,12 @@ import type { CSSResultGroup } from 'lit';
 
 const styles: CSSResultGroup = css`
   :host {
-    display: contents;
-  }
-
-  button[part='trigger'] {
     display: inline-block;
     vertical-align: baseline;
     position: relative;
+  }
+
+  button[part='trigger'] {
     min-width: var(--qti-calculated-min-width, auto);
     anchor-name: --qti-inline-choice-trigger;
   }

@@ -17184,6 +17184,14 @@
               }
             },
             {
+              "kind": "field",
+              "name": "role",
+              "type": {
+                "text": "string"
+              },
+              "default": "'listbox'"
+            },
+            {
               "kind": "method",
               "name": "saveResponse",
               "privacy": "public",

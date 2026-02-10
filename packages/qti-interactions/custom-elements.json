@@ -1719,6 +1719,14 @@
               }
             },
             {
+              "kind": "field",
+              "name": "role",
+              "type": {
+                "text": "string"
+              },
+              "default": "'listbox'"
+            },
+            {
               "kind": "method",
               "name": "toggleInternalCorrectResponse",
               "parameters": [
@@ -5857,7 +5865,7 @@
           "mixins": [
             {
               "name": "ActiveElementMixin",
-              "package": "@qti-components/interactions/mixins/active-element/active-element.mixin.js"
+              "module": "/src/mixins/active-element/active-element.mixin.js"
             }
           ],
           "superclass": {
