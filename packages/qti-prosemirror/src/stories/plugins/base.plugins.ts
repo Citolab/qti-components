@@ -17,6 +17,7 @@ import { dropCursor } from 'prosemirror-dropcursor';
 
 import { insertTextEntryInteraction } from '../../components/qti-text-entry-interaction/qti-text-entry-interaction.commands';
 import { insertChoiceInteraction } from '../../components/qti-choice-interaction/qti-choice-interaction.commands';
+import { insertInlineChoiceInteraction } from '../../components/qti-inline-choice-interaction/qti-inline-choice-interaction.commands';
 import { blockSelectPlugin } from './block-select-plugin';
 
 import type { Plugin } from 'prosemirror-state';
@@ -55,7 +56,8 @@ export function createHistoryKeymap(): Plugin {
     'Mod-Shift-z': redo,
     'Mod-y': redo,
     'Mod-Shift-t': insertTextEntryInteraction,
-    'Mod-Shift-c': insertChoiceInteraction
+    'Mod-Shift-c': insertChoiceInteraction,
+    'Mod-Shift-l': insertInlineChoiceInteraction
   });
 }
 

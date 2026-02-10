@@ -195,5 +195,123 @@ export const Theme = (_mod: string) => html`
       <option>Button text</option>
     </select>
     <div></div>
+
+    <button type="button" class="dropdown-trigger">Dropdown trigger</button>
+    <button type="button" class="dropdown-trigger hov">Dropdown trigger</button>
+    <button type="button" class="dropdown-trigger foc">Dropdown trigger</button>
+    <button type="button" class="dropdown-trigger act">Dropdown trigger</button>
+    <button type="button" class="dropdown-trigger foc act">Dropdown trigger</button>
+    <button type="button" class="dropdown-trigger dis">Dropdown trigger</button>
+    <div></div>
+
+    <div class="dropdown-menu">Dropdown menu</div>
+    <div class="dropdown-menu hov">Dropdown menu</div>
+    <div class="dropdown-menu foc">Dropdown menu</div>
+    <div class="dropdown-menu act">Dropdown menu</div>
+    <div class="dropdown-menu foc act">Dropdown menu</div>
+    <div class="dropdown-menu dis">Dropdown menu</div>
+    <div></div>
+
+    <button type="button" class="dropdown-option">Dropdown option</button>
+    <button type="button" class="dropdown-option hov">Dropdown option</button>
+    <button type="button" class="dropdown-option foc">Dropdown option</button>
+    <button type="button" class="dropdown-option act-bg">Dropdown option</button>
+    <button type="button" class="dropdown-option foc act-bg">Dropdown option</button>
+    <button type="button" class="dropdown-option dis">Dropdown option</button>
+    <div></div>
+
+    <div class="dropdown-trigger" style="display:flex;justify-content:space-between;">
+      Dropdown icon
+      <span class="dropdown-icon" aria-hidden="true">▾</span>
+    </div>
+    <div class="dropdown-trigger hov" style="display:flex;justify-content:space-between;">
+      Dropdown icon
+      <span class="dropdown-icon" aria-hidden="true">▾</span>
+    </div>
+    <div class="dropdown-trigger foc" style="display:flex;justify-content:space-between;">
+      Dropdown icon
+      <span class="dropdown-icon" aria-hidden="true">▾</span>
+    </div>
+    <div class="dropdown-trigger act" style="display:flex;justify-content:space-between;">
+      Dropdown icon
+      <span class="dropdown-icon dropdown-icon-open" aria-hidden="true">▾</span>
+    </div>
+    <div class="dropdown-trigger foc act" style="display:flex;justify-content:space-between;">
+      Dropdown icon
+      <span class="dropdown-icon dropdown-icon-open" aria-hidden="true">▾</span>
+    </div>
+    <div class="dropdown-trigger dis" style="display:flex;justify-content:space-between;">
+      Dropdown icon
+      <span class="dropdown-icon" aria-hidden="true">▾</span>
+    </div>
+    <div></div>
+
+    <div style="display:grid;gap:0.35rem;">
+      <button type="button" class="dropdown-trigger" style="justify-content:space-between;">
+        Inline-choice
+        <span class="dropdown-icon" aria-hidden="true">▾</span>
+      </button>
+      <div class="dropdown-menu" style="display:grid;gap:0.25rem;">
+        <button type="button" class="dropdown-option">Select</button>
+        <button type="button" class="dropdown-option act-bg">York</button>
+        <button type="button" class="dropdown-option">Lancaster</button>
+      </div>
+    </div>
+    <div style="display:grid;gap:0.35rem;">
+      <button type="button" class="dropdown-trigger hov" style="justify-content:space-between;">
+        Inline-choice
+        <span class="dropdown-icon" aria-hidden="true">▾</span>
+      </button>
+      <div class="dropdown-menu hov" style="display:grid;gap:0.25rem;">
+        <button type="button" class="dropdown-option hov">Select</button>
+        <button type="button" class="dropdown-option act-bg">York</button>
+        <button type="button" class="dropdown-option">Lancaster</button>
+      </div>
+    </div>
+    <div style="display:grid;gap:0.35rem;">
+      <button type="button" class="dropdown-trigger foc" style="justify-content:space-between;">
+        Inline-choice
+        <span class="dropdown-icon" aria-hidden="true">▾</span>
+      </button>
+      <div class="dropdown-menu foc" style="display:grid;gap:0.25rem;">
+        <button type="button" class="dropdown-option foc">Select</button>
+        <button type="button" class="dropdown-option act-bg">York</button>
+        <button type="button" class="dropdown-option">Lancaster</button>
+      </div>
+    </div>
+    <div style="display:grid;gap:0.35rem;">
+      <button type="button" class="dropdown-trigger act" style="justify-content:space-between;">
+        Inline-choice
+        <span class="dropdown-icon dropdown-icon-open" aria-hidden="true">▾</span>
+      </button>
+      <div class="dropdown-menu act" style="display:grid;gap:0.25rem;">
+        <button type="button" class="dropdown-option">Select</button>
+        <button type="button" class="dropdown-option act-bg">York</button>
+        <button type="button" class="dropdown-option">Lancaster</button>
+      </div>
+    </div>
+    <div style="display:grid;gap:0.35rem;">
+      <button type="button" class="dropdown-trigger foc act" style="justify-content:space-between;">
+        Inline-choice
+        <span class="dropdown-icon dropdown-icon-open" aria-hidden="true">▾</span>
+      </button>
+      <div class="dropdown-menu foc act" style="display:grid;gap:0.25rem;">
+        <button type="button" class="dropdown-option foc">Select</button>
+        <button type="button" class="dropdown-option act-bg">York</button>
+        <button type="button" class="dropdown-option">Lancaster</button>
+      </div>
+    </div>
+    <div style="display:grid;gap:0.35rem;">
+      <button type="button" class="dropdown-trigger dis" style="justify-content:space-between;">
+        Inline-choice
+        <span class="dropdown-icon" aria-hidden="true">▾</span>
+      </button>
+      <div class="dropdown-menu dis" style="display:grid;gap:0.25rem;">
+        <button type="button" class="dropdown-option dis">Select</button>
+        <button type="button" class="dropdown-option dis">York</button>
+        <button type="button" class="dropdown-option dis">Lancaster</button>
+      </div>
+    </div>
+    <div></div>
   </div>
 `;

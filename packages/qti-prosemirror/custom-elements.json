@@ -130,6 +130,117 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/qti-inline-choice-interaction/qti-inline-choice-interaction.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiInlineChoiceInteraction",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_calculatedMinWidth",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_dropdownOpen",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "protected",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_menuId",
+              "privacy": "private",
+              "readonly": true,
+              "default": "`qti-inline-choice-menu-${inlineChoiceMenuCounter++}`"
+            },
+            {
+              "kind": "method",
+              "name": "#estimateOptimalWidth",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#onChoicesSlotChange",
+              "privacy": "private"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "qti-inline-choice-interaction",
+          "customElement": true,
+          "modulePath": "src/components/qti-inline-choice-interaction/qti-inline-choice-interaction.ts",
+          "definitionPath": "src/components/qti-inline-choice-interaction/qti-inline-choice-interaction.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-inline-choice-interaction",
+          "declaration": {
+            "name": "QtiInlineChoiceInteraction",
+            "module": "src/components/qti-inline-choice-interaction/qti-inline-choice-interaction.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiInlineChoiceInteraction",
+          "declaration": {
+            "name": "QtiInlineChoiceInteraction",
+            "module": "src/components/qti-inline-choice-interaction/qti-inline-choice-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/qti-inline-choice-interaction/qti-inline-choice.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiInlineChoice",
+          "members": [],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "qti-inline-choice",
+          "customElement": true,
+          "modulePath": "src/components/qti-inline-choice-interaction/qti-inline-choice.ts",
+          "definitionPath": "src/components/qti-inline-choice-interaction/qti-inline-choice.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-inline-choice",
+          "declaration": {
+            "name": "QtiInlineChoice",
+            "module": "src/components/qti-inline-choice-interaction/qti-inline-choice.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiInlineChoice",
+          "declaration": {
+            "name": "QtiInlineChoice",
+            "module": "src/components/qti-inline-choice-interaction/qti-inline-choice.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/qti-prompt/qti-prompt.ts",
       "declarations": [
         {

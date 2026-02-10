@@ -2,11 +2,15 @@ import { html } from 'lit';
 import { expect, fireEvent, fn } from 'storybook/test';
 import { within } from 'shadow-dom-testing-library';
 
+import { qtiTransformItem } from '@qti-components/transformers';
+
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { QtiSimpleChoice } from '../../../elements/qti-simple-choice';
 import type { QtiChoiceInteraction } from '../qti-choice-interaction';
 
 type Story = StoryObj<QtiChoiceInteraction>;
+
+const xml = String.raw;
 
 /**
  * ## Behavior Stories
@@ -176,6 +180,23 @@ export const MultipleSelectionUnlimited: Story = {
 // ROLE CHANGES
 // ═══════════════════════════════════════════════════════════════════════════════
 
+export const RoleRadioGroupDefault: Story = {
+  name: 'Role: radiogroup (no max-choices attribute)',
+  render: () => html`
+    <qti-choice-interaction name="RESPONSE" data-testid="interaction">
+      <qti-simple-choice identifier="A">Option A</qti-simple-choice>
+      <qti-simple-choice identifier="B">Option B</qti-simple-choice>
+    </qti-choice-interaction>
+  `,
+  play: async ({ canvasElement }) => {
+    const { interaction, choices } = getElements(canvasElement);
+
+    expect(interaction.internals.role).toBe('radiogroup');
+    expect(choices.A.internals.role).toBe('radio');
+    expect(choices.B.internals.role).toBe('radio');
+  }
+};
+
 export const RoleRadioGroup: Story = {
   name: 'Role: radiogroup (max-choices=1)',
   render: () => html`
@@ -202,6 +223,35 @@ export const RoleCheckboxGroup: Story = {
     // When max-choices > 1, choices should be checkboxes
     expect(choices.A.internals.role).toBe('checkbox');
     expect(choices.B.internals.role).toBe('checkbox');
+  }
+};
+
+export const Choice: StoryObj = {
+  render: () => {
+    const shuffledQti = qtiTransformItem()
+      .parse(
+        xml`
+            <qti-assessment-item>
+              <qti-item-body>
+                <qti-choice-interaction shuffle="true">
+                  <qti-simple-choice identifier="A">Optie A</qti-simple-choice>
+                  <qti-simple-choice identifier="B">Optie B</qti-simple-choice>
+                  <qti-simple-choice identifier="C">Optie C</qti-simple-choice>
+                </qti-choice-interaction>
+              </qti-item-body>
+            </qti-assessment-item>`
+      )
+      .shuffleInteractions()
+      .html();
+
+    return shuffledQti;
+  },
+  play: async ({ canvasElement, step }) => {
+    await step('Verify simple choice is radio', async () => {
+      const canvas = within(canvasElement);
+      const ChoiceA = canvas.getByText<QtiSimpleChoice>('Optie A');
+      expect(ChoiceA.internals.role).toBe('radio');
+    });
   }
 };
 

@@ -7,7 +7,7 @@ import packages from '../assets/packages.json';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 const meta: Meta = {
-  title: 'Item',
+  title: 'Qti-Item',
   argTypes: {
     qtipkg: {
       options: packages.packages,
@@ -24,7 +24,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const Item: Story = {
+export const QtiItem: Story = {
   render: (args, { loaded: { items } }) => {
     return html`
       <qti-item>
