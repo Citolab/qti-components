@@ -367,7 +367,8 @@ export class QtiInlineChoiceInteraction extends Interaction {
     }
   }
 
-  #syncSlottedChoices() {
+  async #syncSlottedChoices() {
+    await this.updateComplete;
     const selectedValue = this.options.find(option => option.selected)?.value ?? '';
     const choices = Array.from(this.querySelectorAll<InlineChoiceOptionElement>('qti-inline-choice'));
     for (const choice of choices) {

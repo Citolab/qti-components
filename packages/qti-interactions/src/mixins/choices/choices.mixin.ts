@@ -37,7 +37,8 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
     @property({ type: Number, attribute: 'max-choices' })
     public maxChoices = 1;
 
-    @watch('maxChoices', { waitUntilFirstUpdate: true })
+    /* removed waitUntilFirstUpdate to fix issues with stories and tests */
+    @watch('maxChoices')
     protected _handleMaxChoicesChange(_oldValue: number, _newValue: number) {
       this._determineInputType();
     }
@@ -254,7 +255,6 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       // Wait for the next update cycle to ensure DOM is ready before setting input type
       // There was a weird bug in the shuffle stories only where radiobuttons were not shown
       // This was because the choices were not upgraded to custom elements yet when this code ran, so internals was not available and role was not set
-      await this.updateComplete;
 
       if (choiceElement.internals) {
         const role = this.maxChoices === 1 ? 'radio' : 'checkbox';
