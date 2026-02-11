@@ -10,7 +10,6 @@ const styles: CSSResultGroup = css`
   }
 
   button[part='trigger'] {
-    min-width: var(--qti-calculated-min-width, auto);
     anchor-name: --qti-inline-choice-trigger;
   }
 

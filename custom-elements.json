@@ -16791,11 +16791,6 @@
               "default": "false"
             },
             {
-              "kind": "method",
-              "name": "_estimateOptimalWidth",
-              "privacy": "private"
-            },
-            {
               "kind": "field",
               "name": "_handleShowCandidateCorrectionChange",
               "privacy": "protected",
@@ -16871,6 +16866,11 @@
                   "text": "HTMLElement[]"
                 }
               }
+            },
+            {
+              "kind": "method",
+              "name": "#estimateOptimalWidth",
+              "privacy": "private"
             },
             {
               "kind": "method",
