@@ -97,13 +97,15 @@ export class QtiInlineChoiceInteraction extends Interaction {
     `;
   }
 
-  override connectedCallback() {
+  override async connectedCallback() {
     super.connectedCallback();
     this.#updateOptions();
     this.#startSlotObserver();
 
     // Simple width estimation - no recalculation needed
-    this._estimateOptimalWidth();
+    await this.updateComplete;
+
+    this.#estimateOptimalWidth();
   }
 
   override disconnectedCallback() {
@@ -163,29 +165,43 @@ export class QtiInlineChoiceInteraction extends Interaction {
     this.#syncSlottedChoices();
 
     // Simple width estimation based on content length
-    this._estimateOptimalWidth();
+    this.#estimateOptimalWidth();
   }
 
-  private _estimateOptimalWidth() {
+  #estimateOptimalWidth() {
     const menu = this.#menuElement();
     const trigger = this.renderRoot.querySelector<HTMLElement>('button[part="trigger"]');
 
-    let widthPx = 0;
-    if (menu) {
-      const rectWidth = menu.getBoundingClientRect().width;
-      widthPx = Math.max(rectWidth, menu.scrollWidth);
+    if (!menu || !trigger) return;
+
+    // Find dropdown icon element inside the trigger
+    const dropdownIcon = trigger.querySelector<HTMLElement>('span[part~="dropdown-icon"]');
+    const iconWidth = dropdownIcon ? dropdownIcon.getBoundingClientRect().width : 0;
+
+    // Save current popover state and style
+    const wasOpen = menu.matches(':popover-open');
+    const prevVisibility = menu.style.visibility;
+    const prevDisplay = menu.style.display;
+
+    // Open the menu invisibly for measurement
+    if (!wasOpen) {
+      menu.style.visibility = 'hidden';
+      menu.style.display = 'block';
+      menu.showPopover();
     }
 
-    if (widthPx <= 0 && trigger) {
-      widthPx = trigger.getBoundingClientRect().width;
+    // Measure width
+    const rectWidth = menu.getBoundingClientRect().width;
+    const widthPx = Math.max(rectWidth, menu.scrollWidth);
+
+    // Restore menu state and style
+    if (!wasOpen) {
+      menu.hidePopover();
+      menu.style.visibility = prevVisibility;
+      menu.style.display = prevDisplay;
     }
 
-    if (widthPx <= 0) return;
-
-    const fontSize = parseFloat(getComputedStyle(this).fontSize || '16') || 16;
-    const widthEm = Math.min(Math.max(widthPx / fontSize, 8.75), 40);
-
-    trigger.style.setProperty('--qti-calculated-min-width', `${widthEm}em`);
+    trigger.style.width = `${widthPx + iconWidth}px`;
   }
 
   public validate(): boolean {
@@ -272,9 +288,6 @@ export class QtiInlineChoiceInteraction extends Interaction {
     const open = toggleEvent.newState === 'open';
     if (this._dropdownOpen !== open) {
       this._dropdownOpen = open;
-    }
-    if (open) {
-      requestAnimationFrame(() => this._estimateOptimalWidth());
     }
   };
 

@@ -20,7 +20,7 @@ export class QtiChoiceInteractionEdit extends VocabularyMixin(LitElement, 'qti-s
   @property({ type: String, attribute: 'class' })
   public classes: 'qti-orientation-vertical' | 'qti-orientation-horizontal' | undefined;
 
-  @watch('maxChoices', { waitUntilFirstUpdate: true })
+  @watch('maxChoices')
   protected _handleMaxChoicesChange() {
     this.#updateChoices();
   }
@@ -51,11 +51,9 @@ export class QtiChoiceInteractionEdit extends VocabularyMixin(LitElement, 'qti-s
     const role = this.maxChoices === 1 ? 'radio' : 'checkbox';
 
     this.querySelectorAll('qti-simple-choice').forEach((choice: any) => {
-      if (!choice.internals?.states?.has('radio') && !choice.internals?.states?.has('checkbox')) {
-        choice.internals.role = role;
-        choice.internals.states.delete(role === 'radio' ? 'checkbox' : 'radio');
-        choice.internals.states.add(role);
-      }
+      choice.internals.role = role;
+      choice.internals.states.delete(role === 'radio' ? 'checkbox' : 'radio');
+      choice.internals.states.add(role);
     });
   }
   // @slotchange=${this._handleSlotChange}
