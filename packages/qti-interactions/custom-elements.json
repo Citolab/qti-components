@@ -2298,12 +2298,6 @@
             },
             {
               "kind": "method",
-              "name": "#addStylesheetsToIframe",
-              "privacy": "private",
-              "description": "IFRAME MODE: Add stylesheets to iframe"
-            },
-            {
-              "kind": "method",
               "name": "#convertQtiVariableJSON",
               "privacy": "private",
               "return": {
@@ -2624,37 +2618,6 @@
             },
             {
               "kind": "method",
-              "name": "getSharedStylesheetConfig",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "{ content: string; scoped: boolean; key: string } | null"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "getSharedStylesheetContent",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "string | null"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "getStylesheetConfigs",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "Array<{ href?: string; content?: string; scoped?: boolean; key?: string }>"
-                }
-              },
-              "description": "Collect qti-stylesheet elements for iframe injection"
-            },
-            {
-              "kind": "method",
               "name": "getTemplateVariables",
               "privacy": "private",
               "return": {
@@ -2783,25 +2746,6 @@
               },
               "default": "''",
               "attribute": "data-require-shim"
-            },
-            {
-              "kind": "method",
-              "name": "resolveStylesheetHref",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "string"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "href",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ],
-              "description": "Resolve stylesheet href against baseUrl or document origin"
             },
             {
               "kind": "field",
@@ -3134,16 +3078,6 @@
               "name": "#addMarkupToIframe",
               "privacy": "private",
               "description": "IFRAME MODE: Add markup and properties to iframe",
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "#addStylesheetsToIframe",
-              "privacy": "private",
-              "description": "IFRAME MODE: Add stylesheets to iframe",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
@@ -3610,49 +3544,6 @@
             },
             {
               "kind": "method",
-              "name": "getSharedStylesheetConfig",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "{ content: string; scoped: boolean; key: string } | null"
-                }
-              },
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "getSharedStylesheetContent",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "string | null"
-                }
-              },
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "getStylesheetConfigs",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "Array<{ href?: string; content?: string; scoped?: boolean; key?: string }>"
-                }
-              },
-              "description": "Collect qti-stylesheet elements for iframe injection",
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
-              }
-            },
-            {
-              "kind": "method",
               "name": "getTemplateVariables",
               "privacy": "private",
               "return": {
@@ -3986,29 +3877,6 @@
               },
               "default": "''",
               "attribute": "data-require-shim",
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "resolveStylesheetHref",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "string"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "href",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ],
-              "description": "Resolve stylesheet href against baseUrl or document origin",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"

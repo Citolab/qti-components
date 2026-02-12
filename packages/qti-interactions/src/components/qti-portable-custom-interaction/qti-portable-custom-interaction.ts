@@ -1,8 +1,9 @@
 import { css, html } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 import { consume } from '@lit/context';
 
 import { Interaction, itemContext, qtiContext, removeDoubleSlashes } from '@qti-components/base';
+import itemCss from '@qti-components/theme/item.css?inline';
 
 import styles from './qti-portable-custom-interaction.styles';
 
@@ -10,6 +11,7 @@ import type { CSSResultGroup } from 'lit';
 import type { BaseType, Cardinality, ItemContext, QtiContext } from '@qti-components/base';
 import type { QtiRecordItem, QtiVariableJSON, ResponseVariableType } from './interface';
 
+// const html = String.raw;
 export class QtiPortableCustomInteraction extends Interaction {
   #value: string | string[];
 
@@ -588,109 +590,109 @@ export class QtiPortableCustomInteraction extends Interaction {
   /**
    * Resolve stylesheet href against baseUrl or document origin
    */
-  private resolveStylesheetHref(href: string): string {
-    if (!href) return href;
+  // private resolveStylesheetHref(href: string): string {
+  //   if (!href) return href;
 
-    if (href.startsWith('http://') || href.startsWith('https://')) {
-      return href;
-    }
+  //   if (href.startsWith('http://') || href.startsWith('https://')) {
+  //     return href;
+  //   }
 
-    if (href.startsWith('//')) {
-      return `${window.location.protocol}${href}`;
-    }
+  //   if (href.startsWith('//')) {
+  //     return `${window.location.protocol}${href}`;
+  //   }
 
-    const base =
-      this.baseUrl && this.baseUrl.length > 0
-        ? this.baseUrl.startsWith('http') || this.baseUrl.startsWith('blob') || this.baseUrl.startsWith('base64')
-          ? this.baseUrl
-          : removeDoubleSlashes(`${window.location.origin}${this.baseUrl}`)
-        : window.location.origin;
+  //   const base =
+  //     this.baseUrl && this.baseUrl.length > 0
+  //       ? this.baseUrl.startsWith('http') || this.baseUrl.startsWith('blob') || this.baseUrl.startsWith('base64')
+  //         ? this.baseUrl
+  //         : removeDoubleSlashes(`${window.location.origin}${this.baseUrl}`)
+  //       : window.location.origin;
 
-    const normalizedBase = base.endsWith('/') ? base : `${base}/`;
+  //   const normalizedBase = base.endsWith('/') ? base : `${base}/`;
 
-    try {
-      return new URL(href, normalizedBase).toString();
-    } catch {
-      return href;
-    }
-  }
+  //   try {
+  //     return new URL(href, normalizedBase).toString();
+  //   } catch {
+  //     return href;
+  //   }
+  // }
 
   /**
    * Collect qti-stylesheet elements for iframe injection
    */
-  private getStylesheetConfigs(): Array<{ href?: string; content?: string; scoped?: boolean; key?: string }> {
-    const stylesheets = this.getDirectChildrenByTag('qti-stylesheet');
-    if (!stylesheets.length) return [];
+  // private getStylesheetConfigs(): Array<{ href?: string; content?: string; scoped?: boolean; key?: string }> {
+  //   const stylesheets = this.getDirectChildrenByTag('qti-stylesheet');
+  //   if (!stylesheets.length) return [];
 
-    return stylesheets
-      .map((el, index) => {
-        const href = el.getAttribute('href');
-        if (href) {
-          const resolved = this.resolveStylesheetHref(href);
-          return { href: resolved, scoped: false, key: resolved };
-        }
-        const content = el.textContent?.trim();
-        if (content) {
-          return { content, scoped: false, key: `inline-${index}` };
-        }
-        return null;
-      })
-      .filter(Boolean);
-  }
+  //   return stylesheets
+  //     .map((el, index) => {
+  //       const href = el.getAttribute('href');
+  //       if (href) {
+  //         const resolved = this.resolveStylesheetHref(href);
+  //         return { href: resolved, scoped: false, key: resolved };
+  //       }
+  //       const content = el.textContent?.trim();
+  //       if (content) {
+  //         return { content, scoped: false, key: `inline-${index}` };
+  //       }
+  //       return null;
+  //     })
+  //     .filter(Boolean);
+  // }
 
-  private getSharedStylesheetContent(): string | null {
-    let cssText = '';
-    const seen = new Set<string>();
-    const sheets = Array.from(document.styleSheets || []);
+  // private getSharedStylesheetContent(): string | null {
+  //   let cssText = '';
+  //   const seen = new Set<string>();
+  //   const sheets = Array.from(document.styleSheets || []);
 
-    for (const sheet of sheets) {
-      try {
-        if (sheet.href && !sheet.href.startsWith(window.location.origin)) {
-          continue;
-        }
-        const ownerNode = sheet.ownerNode as HTMLElement | null;
-        if (ownerNode && ownerNode.tagName === 'STYLE') {
-          const text = ownerNode.textContent || '';
-          if (text && !seen.has(text)) {
-            cssText += `${text}\n`;
-            seen.add(text);
-          }
-          continue;
-        }
-        const rules = sheet.cssRules ? Array.from(sheet.cssRules) : [];
-        if (rules.length) {
-          const text = rules.map(rule => rule.cssText).join('\n');
-          if (text && !seen.has(text)) {
-            cssText += `${text}\n`;
-            seen.add(text);
-          }
-        }
-      } catch {
-        // ignore cross-origin or inaccessible stylesheets
-      }
-    }
+  //   for (const sheet of sheets) {
+  //     try {
+  //       if (sheet.href && !sheet.href.startsWith(window.location.origin)) {
+  //         continue;
+  //       }
+  //       const ownerNode = sheet.ownerNode as HTMLElement | null;
+  //       if (ownerNode && ownerNode.tagName === 'STYLE') {
+  //         const text = ownerNode.textContent || '';
+  //         if (text && !seen.has(text)) {
+  //           cssText += `${text}\n`;
+  //           seen.add(text);
+  //         }
+  //         continue;
+  //       }
+  //       const rules = sheet.cssRules ? Array.from(sheet.cssRules) : [];
+  //       if (rules.length) {
+  //         const text = rules.map(rule => rule.cssText).join('\n');
+  //         if (text && !seen.has(text)) {
+  //           cssText += `${text}\n`;
+  //           seen.add(text);
+  //         }
+  //       }
+  //     } catch {
+  //       // ignore cross-origin or inaccessible stylesheets
+  //     }
+  //   }
 
-    const trimmed = cssText.trim();
-    return trimmed.length ? trimmed : null;
-  }
+  //   const trimmed = cssText.trim();
+  //   return trimmed.length ? trimmed : null;
+  // }
 
-  private getSharedStylesheetConfig(): { content: string; scoped: boolean; key: string } | null {
-    const content = this.getSharedStylesheetContent();
-    if (!content) return null;
-    return { content, scoped: false, key: '__qti_shared_css__' };
-  }
+  // private getSharedStylesheetConfig(): { content: string; scoped: boolean; key: string } | null {
+  //   const content = this.getSharedStylesheetContent();
+  //   if (!content) return null;
+  //   return { content, scoped: false, key: '__qti_shared_css__' };
+  // }
 
   /**
    * IFRAME MODE: Add stylesheets to iframe
    */
-  #addStylesheetsToIframe() {
-    const stylesheets = this.getStylesheetConfigs();
-    const shared = this.getSharedStylesheetConfig();
-    const payload = shared ? [shared, ...stylesheets] : stylesheets;
-    if (payload.length > 0) {
-      this.sendMessageToIframe('setStylesheets', payload);
-    }
-  }
+  // #addStylesheetsToIframe() {
+  //   const stylesheets = this.getStylesheetConfigs();
+  //   const shared = this.getSharedStylesheetConfig();
+  //   const payload = shared ? [shared, ...stylesheets] : stylesheets;
+  //   if (payload.length > 0) {
+  //     this.sendMessageToIframe('setStylesheets', payload);
+  //   }
+  // }
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
@@ -854,7 +856,7 @@ export class QtiPortableCustomInteraction extends Interaction {
         this._iframeObjectUrl = null;
       }
       this.#addMarkupToIframe();
-      this.#addStylesheetsToIframe();
+      // this.#addStylesheetsToIframe();
       // Send initialization data to iframe
       this.#sendIframeInitData();
     };
@@ -986,478 +988,503 @@ export class QtiPortableCustomInteraction extends Interaction {
     font-weight: ${parentStyles.getPropertyValue('font-weight')};
     color: ${parentStyles.getPropertyValue('color')};
   `;
-    return `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <title>QTI PCI Container</title>
-   <base href="${window.location.origin}" />
-  <style>
-    body, html {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: auto;
-      overflow: hidden;
-        /* Add the extracted font styles here */
-      ${fontStyles}
-    }
-    .qti-customInteraction {
-      width: 100%;
-      height: 100%;
-    }
-    #pci-container {
-      width: 100%;
-    }
-    qti-interaction-markup {
-      display: block;
-      width: 100%;
-      min-height: 50px;
-    }
-  </style>
-  <script src="${this.requireJsUrl}"></script>
-  <script>
-    const forwardConsole = ${forwardConsole ? 'true' : 'false'};
-    if (forwardConsole) {
-      const originalLog = console.log.bind(console);
-      const originalError = console.error.bind(console);
-      const stringifyArgs = args =>
-        args.map(arg => {
-          if (typeof arg === 'string') return arg;
-          try {
-            return JSON.stringify(arg);
-          } catch (e) {
-            return String(arg);
-          }
-        });
-      console.log = (...args) => {
-        originalLog(...args);
-        window.parent.postMessage(
-          {
-            source: 'qti-pci-iframe',
-            responseIdentifier: (window.PCIManager && window.PCIManager.responseIdentifier) || null,
-            method: 'console',
-            level: 'log',
-            args: stringifyArgs(args)
-          },
-          '*'
-        );
-      };
-      console.error = (...args) => {
-        originalError(...args);
-        window.parent.postMessage(
-          {
-            source: 'qti-pci-iframe',
-            responseIdentifier: (window.PCIManager && window.PCIManager.responseIdentifier) || null,
-            method: 'console',
-            level: 'error',
-            args: stringifyArgs(args)
-          },
-          '*'
-        );
-      };
-    }
-    // Define standard paths and shims
-    window.requirePaths = ${requirePaths};
 
-    window.requireShim = ${requireShim};
-
-    // Single initial RequireJS configuration with error handling
-    window.requirejs.config({
-      catchError: true,
-      waitSeconds: 30,
-      paths: window.requirePaths,
-      baseUrl: '${iframeBaseUrl}',
-      shim: window.requireShim,
-      onNodeCreated: function(node, config, moduleName, url) {
-        // Add error handler to script node
-        node.addEventListener('error', function(evt) {
-          console.error('Script load error for module:', moduleName, 'URL:', url, 'Event:', evt);
-        });
-      },
-      onError: function(err) {
-        console.error('RequireJS error:', {
-          type: err.requireType,
-          modules: err.requireModules,
-          error: err
-        });
-
-        if (err.requireType === 'scripterror') {
-          console.error('Script error usually indicates a network or CORS issue with:', err.requireModules);
-        }
-
-	        // Notify parent window about the error
-	        window.parent.postMessage({
-	          source: 'qti-pci-iframe',
-	          responseIdentifier: (window.PCIManager && window.PCIManager.responseIdentifier) || null,
-	          method: 'error',
-	          params: {
-	            message: 'RequireJS ' + err.requireType + ' error for modules: ' + err.requireModules,
-	            details: {
-	              type: err.requireType,
-              modules: err.requireModules,
-              error: err.toString()
+    return /* html */ `<!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="utf-8" />
+          <title>QTI PCI Container</title>
+          <base href="${window.location.origin}" />
+          <style>
+            body, html {
+              margin: 0;
+              padding: 0;
+              width: 100%;
+              height: auto;
+              overflow: hidden;
+                /* Add the extracted font styles here */
+              ${fontStyles}
+            };
+            .qti-customInteraction {
+              width: 100%;
+              height: 100%;
             }
-          }
-        }, '*');
-      }
-    });
-
-    // PCI Manager for iframe implementation
-    window.PCIManager = {
-      pciInstance: null,
-      container: null,
-      markupEl: null,
-      propertiesEl: null,
-      customInteractionTypeIdentifier: null,
-      responseIdentifier: null,
-      pendingBoundTo: null,
-      pendingMarkup: null,
-      pendingProperties: null,
-      pendingState: null,
-      pendingStylesheets: null,
-      stylesheetKeys: {},
-      interactionChangedViaEvent: false,
-      eventBridgeAttached: false,
-      lastResponseStr: null,
-      hadResponse: false,
-
-      initialize: function(config) {
-        this.customInteractionTypeIdentifier = config.customInteractionTypeIdentifier;
-        this.responseIdentifier = config.responseIdentifier;
-        this.container = document.getElementById('pci-container');
-        this.container.classList.add('qti-customInteraction');
-
-        function qtiVariableHasValue(qtiVar) {
-          if (!qtiVar) return false;
-          if (qtiVar.base) {
-            for (const k in qtiVar.base) {
-              if (!Object.prototype.hasOwnProperty.call(qtiVar.base, k)) continue;
-              const v = qtiVar.base[k];
-              if (v !== null && v !== undefined && v !== '') return true;
+            #pci-container {
+              width: 100%;
             }
-          }
-          if (qtiVar.list) {
-            for (const k in qtiVar.list) {
-              if (!Object.prototype.hasOwnProperty.call(qtiVar.list, k)) continue;
-              const v = qtiVar.list[k];
-              if (Array.isArray(v) && v.some(x => x !== null && x !== undefined && x !== '')) return true;
+            qti-interaction-markup {
+              display: block;
+              width: 100%;
+              min-height: 50px;
             }
-          }
-          if (Array.isArray(qtiVar.record) && qtiVar.record.length > 0) return true;
-          return false;
-        }
-
-        const initialBoundTo = config.boundTo && config.boundTo[this.responseIdentifier];
-        this.hadResponse = qtiVariableHasValue(initialBoundTo);
-        this.lastResponseStr = this.hadResponse ? JSON.stringify(initialBoundTo) : null;
-        // Ensure expected DOM structure exists (markup + properties)
-        this.markupEl = this.container.querySelector('qti-interaction-markup');
-        if (!this.markupEl) {
-          this.markupEl = document.createElement('qti-interaction-markup');
-          this.container.appendChild(this.markupEl);
-        }
-        this.markupEl.classList.add('qti-customInteraction');
-        this.propertiesEl = this.container.querySelector('properties');
-        if (!this.propertiesEl) {
-          this.propertiesEl = document.createElement('properties');
-          this.propertiesEl.style.display = 'none';
-          this.container.appendChild(this.propertiesEl);
-        } else {
-          this.propertiesEl.style.display = 'none';
-        }
-
-        // Apply any markup/properties that arrived before initialization
-        if (this.pendingMarkup !== null) {
-          this.setMarkup(this.pendingMarkup);
-          this.pendingMarkup = null;
-        }
-        if (this.pendingProperties !== null) {
-          this.setProperties(this.pendingProperties);
-          this.pendingProperties = null;
-        }
-        if (this.pendingStylesheets !== null) {
-          this.setStylesheets(this.pendingStylesheets);
-          this.pendingStylesheets = null;
-        }
-
-        // Bridge qti-interaction-changed events (preferred over polling)
-        if (!this.eventBridgeAttached) {
-          this.eventBridgeAttached = true;
-          const self = this;
-	          this.container.addEventListener(
-	            'qti-interaction-changed',
-	            function(evt) {
-	              try {
-	                self.interactionChangedViaEvent = true;
-	                const value = evt && evt.detail ? evt.detail.value : undefined;
-	                if (value !== undefined) {
-	                  const state = self.pciInstance && typeof self.pciInstance.getState === 'function' ? self.pciInstance.getState() : null;
-	                  self.notifyInteractionChanged(value, state);
-	                }
-	              } catch (e) {
-	                // ignore bridge errors, polling fallback may still work
-	              }
-	            },
-            true
-          );
-        }
-
-        function getResolvablePath(path, basePath) {
-          if (Array.isArray(path)) {
-            return path.map(p => getResolvablePathString(p, basePath));
-          } else {
-            return getResolvablePathString(path, basePath);
-          }
-        }
-
-        function removeDoubleSlashes(str) {
-          return str
-            .replace(/([^:\\/])\\/\\/+/g, '$1/')
-            .replace(/\\/\\//g, '/')
-            .replace('http:/', 'http://')
-            .replace('https:/', 'https://');
-        }
-
-        function getResolvablePathString(path, basePath) {
-            path = path.replace(/\\.js$/, '');
-            return path?.toLocaleLowerCase().startsWith('http') || !basePath
-              ? path
-              : removeDoubleSlashes(\`\${basePath}/\${path}\`);
-        }
-
-        function combineRequireResolvePaths(path1, path2, baseUrl) {
-          path1 = getResolvablePath(path1, baseUrl);
-          const path1Array = Array.isArray(path1) ? path1 : [path1];
-          if (!path2) {
-            return path1Array;
-          }
-          path2 = getResolvablePath(path2, baseUrl);
-          const path2Array = Array.isArray(path2) ? path2 : [path2];
-          return path1Array.concat(path2Array).filter((value, index, self) => self.indexOf(value) === index);
-        }
-
-        // Update paths with modules from the config
-        if (config.interactionModules && config.interactionModules.length > 0) {
-          config.interactionModules.forEach(module => {
-            if (module.id && module.primaryPath) {
-              const currentPath = window.requirePaths[module.id] || [];
-              const currentPaths = Array.isArray(currentPath) ? currentPath : [currentPath];
-              const newPath =  combineRequireResolvePaths(
-                module.primaryPath, module.fallbackPath, config.baseUrl
-              );
-              window.requirePaths[module.id] = currentPaths.concat(newPath).filter((value, index, self) => self.indexOf(value) === index);
-            }
-          });
-        }
-
-        // The ONLY other requirejs.config call - with the context for this specific PCI
-        window.requirejs.config({
-          context: this.customInteractionTypeIdentifier,
-          paths: window.requirePaths,
-          shim: window.requireShim
-        });
-
-        // Define qtiCustomInteractionContext for the PCI
-        define('qtiCustomInteractionContext', () => {
-          return {
-            register: pciInstance => {
-              this.pciInstance = pciInstance;
-              // Configure PCI instance
-              const pciConfig = {
-                properties: config.properties || {},
-                contextVariables: config.contextVariables || {},
-                templateVariables: config.templateVariables || {},
-                onready: pciInstance => {
-                  this.pciInstance = pciInstance;
-                  // Apply any pending updates that arrived before onready
-                  if (this.pendingBoundTo) {
-                    this.applyBoundTo(this.pendingBoundTo);
-                    this.pendingBoundTo = null;
+          </style>
+          <style>
+            ${itemCss}
+          </style>
+          <script src="${this.requireJsUrl}"></script>
+          <script>
+            const forwardConsole = ${forwardConsole ? 'true' : 'false'};
+            if (forwardConsole) {
+              const originalLog = console.log.bind(console);
+              const originalError = console.error.bind(console);
+              const stringifyArgs = args =>
+                args.map(arg => {
+                  if (typeof arg === 'string') return arg;
+                  try {
+                    return JSON.stringify(arg);
+                  } catch (e) {
+                    return String(arg);
                   }
-                  if (this.pendingState && typeof this.pciInstance.setState === 'function') {
-                    this.pciInstance.setState(this.pendingState);
-                    this.pendingState = null;
-                  }
-                  this.notifyReady();
-                },
-	                ondone: (pciInstance, response, state, status) => {
-	                  this.notifyInteractionChanged(response, typeof state === 'string' ? state : null);
-	                },
-	                responseIdentifier: config.responseIdentifier,
-	                boundTo: config.boundTo,
-	              };
+                });
+              console.log = (...args) => {
+                originalLog(...args);
+                window.parent.postMessage(
+                  {
+                    source: 'qti-pci-iframe',
+                    responseIdentifier: (window.PCIManager && window.PCIManager.responseIdentifier) || null,
+                    method: 'console',
+                    level: 'log',
+                    args: stringifyArgs(args)
+                  },
+                  '*'
+                );
+              };
+              console.error = (...args) => {
+                originalError(...args);
+                window.parent.postMessage(
+                  {
+                    source: 'qti-pci-iframe',
+                    responseIdentifier: (window.PCIManager && window.PCIManager.responseIdentifier) || null,
+                    method: 'console',
+                    level: 'error',
+                    args: stringifyArgs(args)
+                  },
+                  '*'
+                );
+              };
+            }
+            // Define standard paths and shims
+            window.requirePaths = ${requirePaths};
 
-	              if (pciInstance.getInstance) {
-	                const dom = this.markupEl || this.container;
-	                // Round-trip support for object states (stored as a prefixed JSON string by the host).
-	                // For strict string-based PCIs we pass the original string through unchanged.
-	                let restoredState = config.state;
-	                if (typeof restoredState === 'string' && restoredState.indexOf('__qti_json__::') === 0) {
-	                  try {
-	                    restoredState = JSON.parse(restoredState.substring('__qti_json__::'.length));
-	                  } catch (e) {
-	                    // If parsing fails, fall back to the raw string.
-	                    restoredState = config.state;
-	                  }
-	                }
-	                pciInstance.getInstance(dom, pciConfig, restoredState || undefined);
-	              } else {
-                // TAO custom interaction initialization
-                const restoreTAOConfig = (dataset) => {
-                    const config = {};
-                    const parseDataAttributes = () => {
-                      const result = {};
+            window.requireShim = ${requireShim};
 
-                      // Separate direct attributes from nested ones
-                      Object.entries(dataset || {}).forEach(([key, value]) => {
-                        if (!key.includes('__')) {
-                          // Direct attributes (like version)
-                          result[key] = value;
-                        }
-                      });
+            // Single initial RequireJS configuration with error handling
+            window.requirejs.config({
+              catchError: true,
+              waitSeconds: 30,
+              paths: window.requirePaths,
+              baseUrl: '${iframeBaseUrl}',
+              shim: window.requireShim,
+              onNodeCreated: function (node, config, moduleName, url) {
+                // Add error handler to script node
+                node.addEventListener('error', function (evt) {
+                  console.error('Script load error for module:', moduleName, 'URL:', url, 'Event:', evt);
+                });
+              },
+              onError: function (err) {
+                console.error('RequireJS error:', {
+                  type: err.requireType,
+                  modules: err.requireModules,
+                  error: err
+                });
 
-                      // Parse nested attributes
-                      const nestedData = {};
+                if (err.requireType === 'scripterror') {
+                  console.error('Script error usually indicates a network or CORS issue with:', err.requireModules);
+                }
 
-                      Object.entries(dataset || {}).forEach(([key, value]) => {
-                        const parts = key.split('__');
-                        if (parts.length > 1) {
-                          const [group, index, prop] = parts;
-                          nestedData[group] = nestedData[group] || {};
-                          nestedData[group][index] = nestedData[group][index] || {};
-                          nestedData[group][index][prop] = value;
-                        }
-                      });
+                // Notify parent window about the error
+                window.parent.postMessage(
+                  {
+                    source: 'qti-pci-iframe',
+                    responseIdentifier: (window.PCIManager && window.PCIManager.responseIdentifier) || null,
+                    method: 'error',
+                    params: {
+                      message: 'RequireJS ' + err.requireType + ' error for modules: ' + err.requireModules,
+                      details: {
+                        type: err.requireType,
+                        modules: err.requireModules,
+                        error: err.toString()
+                      }
+                    }
+                  },
+                  '*'
+                );
+              }
+            });
 
-                      // Convert nested groups to arrays
-                      Object.entries(nestedData).forEach(([key, group]) => {
-                        result[key] = Object.values(group);
-                      });
-                      return result;
-                };
-                const data = parseDataAttributes();
-                for (const key in data) {
-                  if (Object.prototype.hasOwnProperty.call(data, key)) {
-                    const value = data[key];
-                    if (key === 'config') {
-                      config[key] = JSON.parse(value);
-                    } else {
-                      config[key] = value;
+            // PCI Manager for iframe implementation
+            window.PCIManager = {
+              pciInstance: null,
+              container: null,
+              markupEl: null,
+              propertiesEl: null,
+              customInteractionTypeIdentifier: null,
+              responseIdentifier: null,
+              pendingBoundTo: null,
+              pendingMarkup: null,
+              pendingProperties: null,
+              pendingState: null,
+              pendingStylesheets: null,
+              stylesheetKeys: {},
+              interactionChangedViaEvent: false,
+              eventBridgeAttached: false,
+              lastResponseStr: null,
+              hadResponse: false,
+
+              initialize: function (config) {
+                this.customInteractionTypeIdentifier = config.customInteractionTypeIdentifier;
+                this.responseIdentifier = config.responseIdentifier;
+                this.container = document.getElementById('pci-container');
+                this.container.classList.add('qti-customInteraction');
+
+                function qtiVariableHasValue(qtiVar) {
+                  if (!qtiVar) return false;
+                  if (qtiVar.base) {
+                    for (const k in qtiVar.base) {
+                      if (!Object.prototype.hasOwnProperty.call(qtiVar.base, k)) continue;
+                      const v = qtiVar.base[k];
+                      if (v !== null && v !== undefined && v !== '') return true;
                     }
                   }
+                  if (qtiVar.list) {
+                    for (const k in qtiVar.list) {
+                      if (!Object.prototype.hasOwnProperty.call(qtiVar.list, k)) continue;
+                      const v = qtiVar.list[k];
+                      if (Array.isArray(v) && v.some(x => x !== null && x !== undefined && x !== '')) return true;
+                    }
+                  }
+                  if (Array.isArray(qtiVar.record) && qtiVar.record.length > 0) return true;
+                  return false;
                 }
-                return config;
-              };
-              const taoConfig = restoreTAOConfig(config.dataAttributes);
 
-              this.pciInstance.initialize(
-                this.customInteractionTypeIdentifier,
-                (this.markupEl || this.container).firstElementChild || (this.markupEl || this.container),
-                Object.keys(taoConfig).length ? taoConfig : null
-              );
-              }
-            },
-            notifyReady: () => {
-              PCIManager.notifyReady();
-            }
-          };
-        });
+                const initialBoundTo = config.boundTo && config.boundTo[this.responseIdentifier];
+                this.hadResponse = qtiVariableHasValue(initialBoundTo);
+                this.lastResponseStr = this.hadResponse ? JSON.stringify(initialBoundTo) : null;
+                // Ensure expected DOM structure exists (markup + properties)
+                this.markupEl = this.container.querySelector('qti-interaction-markup');
+                if (!this.markupEl) {
+                  this.markupEl = document.createElement('qti-interaction-markup');
+                  this.container.appendChild(this.markupEl);
+                }
+                this.markupEl.classList.add('qti-customInteraction');
+                this.propertiesEl = this.container.querySelector('properties');
+                if (!this.propertiesEl) {
+                  this.propertiesEl = document.createElement('properties');
+                  this.propertiesEl.style.display = 'none';
+                  this.container.appendChild(this.propertiesEl);
+                } else {
+                  this.propertiesEl.style.display = 'none';
+                }
 
-        // Load the PCI module
-        this.loadModule(config.module);
-      },
+                // Apply any markup/properties that arrived before initialization
+                if (this.pendingMarkup !== null) {
+                  this.setMarkup(this.pendingMarkup);
+                  this.pendingMarkup = null;
+                }
+                if (this.pendingProperties !== null) {
+                  this.setProperties(this.pendingProperties);
+                  this.pendingProperties = null;
+                }
+                if (this.pendingStylesheets !== null) {
+                  this.setStylesheets(this.pendingStylesheets);
+                  this.pendingStylesheets = null;
+                }
 
-      loadModule: function(modulePath) {
-        try {
-          // Get the context-specific require
-          const contextRequire = window.requirejs.config({
-            context: this.customInteractionTypeIdentifier
-          });
-          contextRequire(['require'], require => {
-             // Now load the actual module
-              require([modulePath], () => {
-              }, err => {
-                console.error('Error loading module:', modulePath, err);
-                this.notifyError('Module load error: ' + err.toString());
-              });
-          });
-        } catch (error) {
-          console.error('Exception in loadModule:', modulePath);
-          console.error(error);
-          this.notifyError('Error in require call: ' + error.toString());
-        }
-      },
+                // Bridge qti-interaction-changed events (preferred over polling)
+                if (!this.eventBridgeAttached) {
+                  this.eventBridgeAttached = true;
+                  const self = this;
+                  this.container.addEventListener(
+                    'qti-interaction-changed',
+                    function (evt) {
+                      try {
+                        self.interactionChangedViaEvent = true;
+                        const value = evt && evt.detail ? evt.detail.value : undefined;
+                        if (value !== undefined) {
+                          const state =
+                            self.pciInstance && typeof self.pciInstance.getState === 'function'
+                              ? self.pciInstance.getState()
+                              : null;
+                          self.notifyInteractionChanged(value, state);
+                        }
+                      } catch (e) {
+                        // ignore bridge errors, polling fallback may still work
+                      }
+                    },
+                    true
+                  );
+                }
 
-	      notifyReady: function() {
-	        window.parent.postMessage({
-	          source: 'qti-pci-iframe',
-	          responseIdentifier: this.responseIdentifier,
-	          method: 'iframeReady'
-	        }, '*');
-	      },
+                function getResolvablePath(path, basePath) {
+                  if (Array.isArray(path)) {
+                    return path.map(p => getResolvablePathString(p, basePath));
+                  } else {
+                    return getResolvablePathString(path, basePath);
+                  }
+                }
 
-	      notifyInteractionChanged: function(response, state) {
-	        window.parent.postMessage({
-	          source: 'qti-pci-iframe',
-	          responseIdentifier: this.responseIdentifier,
-	          method: 'interactionChanged',
-	          params: { value: response, state: state }
-	        }, '*');
-	      },
+                function removeDoubleSlashes(str) {
+                  return str
+                    .replace(/([^:\\/])\\/\\/+/g, '$1/')
+                    .replace(/\\/\\//g, '/')
+                    .replace('http:/', 'http://')
+                    .replace('https:/', 'https://');
+                }
 
-	      notifyError: function(message) {
-	        console.error('PCI Error:', message);
-	        window.parent.postMessage({
-	          source: 'qti-pci-iframe',
-	          responseIdentifier: this.responseIdentifier,
-	          method: 'error',
-	          params: { message: message }
-	        }, '*');
-	      },
 
-      setMarkup: function(markupHtml) {
-        if (!this.container) {
-          this.container = document.getElementById('pci-container');
-        }
-        if (!this.container) {
-          this.pendingMarkup = markupHtml;
-          return;
-        }
-        this.markupEl = this.container.querySelector('qti-interaction-markup');
-        if (!this.markupEl) {
-          this.markupEl = document.createElement('qti-interaction-markup');
-          this.container.appendChild(this.markupEl);
-        }
-        this.markupEl.classList.add('qti-customInteraction');
-        this.markupEl.innerHTML = markupHtml || '';
-      },
 
-      setProperties: function(propertiesHtml) {
-        if (!this.container) {
-          this.container = document.getElementById('pci-container');
-        }
-        if (!this.container) {
-          this.pendingProperties = propertiesHtml;
-          return;
-        }
-        this.propertiesEl = this.container.querySelector('properties');
-        if (!this.propertiesEl) {
-          this.propertiesEl = document.createElement('properties');
-          this.container.appendChild(this.propertiesEl);
-        }
-        this.propertiesEl.style.display = 'none';
-        this.propertiesEl.innerHTML = propertiesHtml || '';
-      },
+                function combineRequireResolvePaths(path1, path2, baseUrl) {
+                  path1 = getResolvablePath(path1, baseUrl);
+                  const path1Array = Array.isArray(path1) ? path1 : [path1];
+                  if (!path2) {
+                    return path1Array;
+                  }
+                  path2 = getResolvablePath(path2, baseUrl);
+                  const path2Array = Array.isArray(path2) ? path2 : [path2];
+                  return path1Array.concat(path2Array).filter((value, index, self) => self.indexOf(value) === index);
+                }
 
-      minifyCss: function(cssContent) {
-        return cssContent
-          .replace(/\\/\\*[\\s\\S]*?\\*\\//g, '')
-          .replace(/\\s+/g, ' ')
-          .replace(/\\s*([{}:;])\\s*/g, '$1')
-          .trim();
-      },
+                // Update paths with modules from the config
+                if (config.interactionModules && config.interactionModules.length > 0) {
+                  config.interactionModules.forEach(module => {
+                    if (module.id && module.primaryPath) {
+                      const currentPath = window.requirePaths[module.id] || [];
+                      const currentPaths = Array.isArray(currentPath) ? currentPath : [currentPath];
+                      const newPath = combineRequireResolvePaths(
+                        module.primaryPath,
+                        module.fallbackPath,
+                        config.baseUrl
+                      );
+                      window.requirePaths[module.id] = currentPaths
+                        .concat(newPath)
+                        .filter((value, index, self) => self.indexOf(value) === index);
+                    }
+                  });
+                }
 
+                // The ONLY other requirejs.config call - with the context for this specific PCI
+                window.requirejs.config({
+                  context: this.customInteractionTypeIdentifier,
+                  paths: window.requirePaths,
+                  shim: window.requireShim
+                });
+
+                // Define qtiCustomInteractionContext for the PCI
+                define('qtiCustomInteractionContext', () => {
+                  return {
+                    register: pciInstance => {
+                      this.pciInstance = pciInstance;
+                      // Configure PCI instance
+                      const pciConfig = {
+                        properties: config.properties || {},
+                        contextVariables: config.contextVariables || {},
+                        templateVariables: config.templateVariables || {},
+                        onready: pciInstance => {
+                          this.pciInstance = pciInstance;
+                          // Apply any pending updates that arrived before onready
+                          if (this.pendingBoundTo) {
+                            this.applyBoundTo(this.pendingBoundTo);
+                            this.pendingBoundTo = null;
+                          }
+                          if (this.pendingState && typeof this.pciInstance.setState === 'function') {
+                            this.pciInstance.setState(this.pendingState);
+                            this.pendingState = null;
+                          }
+                          this.notifyReady();
+                        },
+                        ondone: (pciInstance, response, state, status) => {
+                          this.notifyInteractionChanged(response, typeof state === 'string' ? state : null);
+                        },
+                        responseIdentifier: config.responseIdentifier,
+                        boundTo: config.boundTo
+                      };
+
+                      if (pciInstance.getInstance) {
+                        const dom = this.markupEl || this.container;
+                        // Round-trip support for object states (stored as a prefixed JSON string by the host).
+                        // For strict string-based PCIs we pass the original string through unchanged.
+                        let restoredState = config.state;
+                        if (typeof restoredState === 'string' && restoredState.indexOf('__qti_json__::') === 0) {
+                          try {
+                            restoredState = JSON.parse(restoredState.substring('__qti_json__::'.length));
+                          } catch (e) {
+                            // If parsing fails, fall back to the raw string.
+                            restoredState = config.state;
+                          }
+                        }
+                        pciInstance.getInstance(dom, pciConfig, restoredState || undefined);
+                      } else {
+                        // TAO custom interaction initialization
+                        const restoreTAOConfig = dataset => {
+                          const config = {};
+                          const parseDataAttributes = () => {
+                            const result = {};
+
+                            // Separate direct attributes from nested ones
+                            Object.entries(dataset || {}).forEach(([key, value]) => {
+                              if (!key.includes('__')) {
+                                // Direct attributes (like version)
+                                result[key] = value;
+                              }
+                            });
+
+                            // Parse nested attributes
+                            const nestedData = {};
+
+                            Object.entries(dataset || {}).forEach(([key, value]) => {
+                              const parts = key.split('__');
+                              if (parts.length > 1) {
+                                const [group, index, prop] = parts;
+                                nestedData[group] = nestedData[group] || {};
+                                nestedData[group][index] = nestedData[group][index] || {};
+                                nestedData[group][index][prop] = value;
+                              }
+                            });
+
+                            // Convert nested groups to arrays
+                            Object.entries(nestedData).forEach(([key, group]) => {
+                              result[key] = Object.values(group);
+                            });
+                            return result;
+                          };
+                          const data = parseDataAttributes();
+                          for (const key in data) {
+                            if (Object.prototype.hasOwnProperty.call(data, key)) {
+                              const value = data[key];
+                              if (key === 'config') {
+                                config[key] = JSON.parse(value);
+                              } else {
+                                config[key] = value;
+                              }
+                            }
+                          }
+                          return config;
+                        };
+                        const taoConfig = restoreTAOConfig(config.dataAttributes);
+
+                        this.pciInstance.initialize(
+                          this.customInteractionTypeIdentifier,
+                          (this.markupEl || this.container).firstElementChild || this.markupEl || this.container,
+                          Object.keys(taoConfig).length ? taoConfig : null
+                        );
+                      }
+                    },
+                    notifyReady: () => {
+                      PCIManager.notifyReady();
+                    }
+                  };
+                });
+
+                function getResolvablePathString(path, basePath) {
+                  path = path.replace(/\\.js$/, '');
+                  return path?.toLocaleLowerCase().startsWith('http') || !basePath
+                    ? path
+                    : removeDoubleSlashes(\`\${basePath}/\${path}\`);
+                }
+
+                // Load the PCI module
+                this.loadModule(config.module);
+              },
+
+              loadModule: function (modulePath) {
+                try {
+                  // Get the context-specific require
+                  const contextRequire = window.requirejs.config({
+                    context: this.customInteractionTypeIdentifier
+                  });
+                  contextRequire(['require'], require => {
+                    // Now load the actual module
+                    require([modulePath], () => {}, err => {
+                      console.error('Error loading module:', modulePath, err);
+                      this.notifyError('Module load error: ' + err.toString());
+                    });
+                  });
+                } catch (error) {
+                  console.error('Exception in loadModule:', modulePath);
+                  console.error(error);
+                  this.notifyError('Error in require call: ' + error.toString());
+                }
+              },
+
+              notifyReady: function () {
+                window.parent.postMessage(
+                  {
+                    source: 'qti-pci-iframe',
+                    responseIdentifier: this.responseIdentifier,
+                    method: 'iframeReady'
+                  },
+                  '*'
+                );
+              },
+
+              notifyInteractionChanged: function (response, state) {
+                window.parent.postMessage(
+                  {
+                    source: 'qti-pci-iframe',
+                    responseIdentifier: this.responseIdentifier,
+                    method: 'interactionChanged',
+                    params: { value: response, state: state }
+                  },
+                  '*'
+                );
+              },
+
+              notifyError: function (message) {
+                console.error('PCI Error:', message);
+                window.parent.postMessage(
+                  {
+                    source: 'qti-pci-iframe',
+                    responseIdentifier: this.responseIdentifier,
+                    method: 'error',
+                    params: { message: message }
+                  },
+                  '*'
+                );
+              },
+
+              setMarkup: function (markupHtml) {
+                if (!this.container) {
+                  this.container = document.getElementById('pci-container');
+                }
+                if (!this.container) {
+                  this.pendingMarkup = markupHtml;
+                  return;
+                }
+                this.markupEl = this.container.querySelector('qti-interaction-markup');
+                if (!this.markupEl) {
+                  this.markupEl = document.createElement('qti-interaction-markup');
+                  this.container.appendChild(this.markupEl);
+                }
+                this.markupEl.classList.add('qti-customInteraction');
+                this.markupEl.innerHTML = markupHtml || '';
+              },
+
+              setProperties: function (propertiesHtml) {
+                if (!this.container) {
+                  this.container = document.getElementById('pci-container');
+                }
+                if (!this.container) {
+                  this.pendingProperties = propertiesHtml;
+                  return;
+                }
+                this.propertiesEl = this.container.querySelector('properties');
+                if (!this.propertiesEl) {
+                  this.propertiesEl = document.createElement('properties');
+                  this.container.appendChild(this.propertiesEl);
+                }
+                this.propertiesEl.style.display = 'none';
+                this.propertiesEl.innerHTML = propertiesHtml || '';
+              },
+
+              minifyCss: function (cssContent) {
+                return cssContent
+                  .replace(/\\/\\*[\\s\\S]*?\\*\\//g, '')
+                  .replace(/\\s+/g, ' ')
+                  .replace(/\\s*([{}:;])\\s*/g, '$1')
+                  .trim();
+              },
+
+              /*
       injectStylesheet: function(cssContent, key, scoped) {
         if (!cssContent) return;
         const head = document.head || document.getElementsByTagName('head')[0] || document.body;
@@ -1494,355 +1521,365 @@ export class QtiPortableCustomInteraction extends Interaction {
           }
         });
       },
+      */
 
-      applyBoundTo: function(boundTo) {
-        if (!this.pciInstance || typeof this.pciInstance.setResponse !== 'function') return;
-        const value = boundTo && (boundTo[this.responseIdentifier] || boundTo[Object.keys(boundTo)[0]]);
-        if (value) this.pciInstance.setResponse(value);
-      },
-    };
-
-	    // Set up message listener for communication with parent
-	    let expectedParentOrigin = null;
-	    window.addEventListener('message', function(event) {
-	      const { data } = event;
-
-	      // Ensure the message is from our parent
-	      if (event.source !== window.parent || !data || data.source !== 'qti-portable-custom-interaction') {
-	        return;
-	      }
-	      if (expectedParentOrigin === null) {
-	        expectedParentOrigin = event.origin;
-	      } else if (event.origin !== expectedParentOrigin) {
-	        return;
-	      }
-
-      function deepQuerySelector(root, selector) {
-        if (!root) return null;
-        try {
-          const direct = root.querySelector ? root.querySelector(selector) : null;
-          if (direct) return direct;
-        } catch (e) {
-          // ignore invalid selector for this root
-        }
-        if (!root.querySelectorAll) return null;
-        const nodes = root.querySelectorAll('*');
-        for (const node of nodes) {
-          if (node && node.shadowRoot) {
-            const found = deepQuerySelector(node.shadowRoot, selector);
-            if (found) return found;
-          }
-        }
-        return null;
-      }
-
-      function deepFindElementByExactText(root, text) {
-        if (!root || !text) return null;
-        if (root.querySelectorAll) {
-          const nodes = root.querySelectorAll('*');
-          for (const node of nodes) {
-            if ((node.textContent || '').trim() === text) return node;
-            if (node.shadowRoot) {
-              const found = deepFindElementByExactText(node.shadowRoot, text);
-              if (found) return found;
-            }
-          }
-        }
-        return null;
-      }
-
-      switch(data.method) {
-        case 'initialize':
-          PCIManager.initialize(data.params);
-          break;
-
-        case 'setMarkup':
-          PCIManager.setMarkup(data.params);
-          break;
-
-        case 'setBoundTo':
-          if (PCIManager.pciInstance) {
-            PCIManager.applyBoundTo(data.params);
-          } else {
-            PCIManager.pendingBoundTo = data.params;
-          }
-          break;
-
-        case 'setProperties':
-          PCIManager.setProperties(data.params);
-          break;
-
-        case 'setStylesheets':
-          PCIManager.setStylesheets(data.params);
-          break;
-
-        case 'setState':
-          if (PCIManager.pciInstance && typeof PCIManager.pciInstance.setState === 'function') {
-            PCIManager.pciInstance.setState((data.params && data.params.state) || data.params);
-          } else {
-            PCIManager.pendingState = (data.params && data.params.state) || data.params;
-          }
-          break;
-
-        case 'getContent': {
-          const messageId = data.params && data.params.messageId;
-          const collectShadowHtml = root => {
-            const parts = [];
-            if (!root || !root.querySelectorAll) return parts;
-            const nodes = root.querySelectorAll('*');
-            for (const node of nodes) {
-              if (node && node.shadowRoot) {
-                parts.push(node.shadowRoot.innerHTML || '');
-                parts.push(...collectShadowHtml(node.shadowRoot));
+              applyBoundTo: function (boundTo) {
+                if (!this.pciInstance || typeof this.pciInstance.setResponse !== 'function') return;
+                const value = boundTo && (boundTo[this.responseIdentifier] || boundTo[Object.keys(boundTo)[0]]);
+                if (value) this.pciInstance.setResponse(value);
               }
-            }
-            return parts;
-          };
-          const shadowHtml = collectShadowHtml(document).join('\\n');
-	          window.parent.postMessage(
-	            {
-	              source: 'qti-pci-iframe',
-	              responseIdentifier: PCIManager.responseIdentifier,
-	              method: 'getContentResponse',
-	              messageId: messageId,
-	              content: (document.documentElement ? document.documentElement.outerHTML : '') + '\\n' + shadowHtml
-	            },
-	            '*'
-	          );
-          break;
-        }
+            };
 
-        case 'simulateClick': {
-          const messageId = data.params && data.params.messageId;
-          const x = data.params && data.params.x;
-          const y = data.params && data.params.y;
-          const el = typeof x === 'number' && typeof y === 'number' ? document.elementFromPoint(x, y) : null;
-          const target = (el && el.closest && el.closest('.hitbox')) || document.querySelector('.hitbox') || el;
-            if (target) {
-              const evt = new MouseEvent('click', {
-                bubbles: true,
-                clientX: x,
-                clientY: y,
-                screenX: x,
-                screenY: y,
-                view: window
-              });
-              target.dispatchEvent(evt);
-            }
-	          window.parent.postMessage(
-	            {
-	              source: 'qti-pci-iframe',
-	              responseIdentifier: PCIManager.responseIdentifier,
-	              method: 'clickResponse',
-	              messageId: messageId
-	            },
-	            '*'
-	          );
-	          break;
-	        }
+            // Set up message listener for communication with parent
+            let expectedParentOrigin = null;
+            window.addEventListener('message', function (event) {
+              const { data } = event;
 
-        case 'getBoundingRect': {
-          const messageId = data.params && data.params.messageId;
-          const selector = data.params && data.params.selector;
-          const el = selector ? deepQuerySelector(document, selector) : null;
-          const rect = el && typeof el.getBoundingClientRect === 'function' ? el.getBoundingClientRect() : null;
-            window.parent.postMessage(
-              {
-                source: 'qti-pci-iframe',
-                responseIdentifier: PCIManager.responseIdentifier,
-                method: 'getBoundingRectResponse',
-                messageId: messageId,
-                rect: rect
-                  ? {
-                      left: rect.left,
-                      top: rect.top,
-                      width: rect.width,
-                      height: rect.height
+              // Ensure the message is from our parent
+              if (event.source !== window.parent || !data || data.source !== 'qti-portable-custom-interaction') {
+                return;
+              }
+              if (expectedParentOrigin === null) {
+                expectedParentOrigin = event.origin;
+              } else if (event.origin !== expectedParentOrigin) {
+                return;
+              }
+
+              function deepQuerySelector(root, selector) {
+                if (!root) return null;
+                try {
+                  const direct = root.querySelector ? root.querySelector(selector) : null;
+                  if (direct) return direct;
+                } catch (e) {
+                  // ignore invalid selector for this root
+                }
+                if (!root.querySelectorAll) return null;
+                const nodes = root.querySelectorAll('*');
+                for (const node of nodes) {
+                  if (node && node.shadowRoot) {
+                    const found = deepQuerySelector(node.shadowRoot, selector);
+                    if (found) return found;
+                  }
+                }
+                return null;
+              }
+
+              function deepFindElementByExactText(root, text) {
+                if (!root || !text) return null;
+                if (root.querySelectorAll) {
+                  const nodes = root.querySelectorAll('*');
+                  for (const node of nodes) {
+                    if ((node.textContent || '').trim() === text) return node;
+                    if (node.shadowRoot) {
+                      const found = deepFindElementByExactText(node.shadowRoot, text);
+                      if (found) return found;
                     }
-                  : null
-              },
-              '*'
-            );
-          break;
-        }
+                  }
+                }
+                return null;
+              }
 
-        case 'clickOnSelector': {
-          const messageId = data.params && data.params.messageId;
-          const selector = data.params && data.params.selector;
-          const el = selector ? deepQuerySelector(document, selector) : null;
-	          const success = !!el;
-	          if (el && typeof el.click === 'function') el.click();
-	          window.parent.postMessage(
-	            {
-	              source: 'qti-pci-iframe',
-	              responseIdentifier: PCIManager.responseIdentifier,
-	              method: 'clickSelectorResponse',
-	              messageId: messageId,
-	              success: success
-	            },
-	            '*'
-	          );
-	          break;
-	        }
+              switch (data.method) {
+                case 'initialize':
+                  PCIManager.initialize(data.params);
+                  break;
 
-        case 'clickOnElementByText': {
-          const messageId = data.params && data.params.messageId;
-          const text = data.params && data.params.text;
-          const target = text ? deepFindElementByExactText(document, text) : null;
-	          const success = !!target;
-	          if (target && typeof target.click === 'function') target.click();
-	          window.parent.postMessage(
-	            {
-	              source: 'qti-pci-iframe',
-	              responseIdentifier: PCIManager.responseIdentifier,
-	              method: 'clickTextResponse',
-	              messageId: messageId,
-	              success: success
-	            },
-	            '*'
-	          );
-	          break;
-	        }
+                case 'setMarkup':
+                  PCIManager.setMarkup(data.params);
+                  break;
 
-        case 'setValueElement': {
-          const messageId = data.params && data.params.messageId;
-          const selector = data.params && data.params.selector;
-          const value = data.params && data.params.value;
-          const el = selector ? deepQuerySelector(document, selector) : null;
-          let success = false;
-          if (el && 'value' in el) {
-            try {
-              el.value = value;
-              el.dispatchEvent(new Event('input', { bubbles: true }));
-              el.dispatchEvent(new Event('change', { bubbles: true }));
-              success = true;
-            } catch (e) {
-              success = false;
+                case 'setBoundTo':
+                  if (PCIManager.pciInstance) {
+                    PCIManager.applyBoundTo(data.params);
+                  } else {
+                    PCIManager.pendingBoundTo = data.params;
+                  }
+                  break;
+
+                case 'setProperties':
+                  PCIManager.setProperties(data.params);
+                  break;
+
+                case 'setStylesheets':
+                  PCIManager.setStylesheets(data.params);
+                  break;
+
+                case 'setState':
+                  if (PCIManager.pciInstance && typeof PCIManager.pciInstance.setState === 'function') {
+                    PCIManager.pciInstance.setState((data.params && data.params.state) || data.params);
+                  } else {
+                    PCIManager.pendingState = (data.params && data.params.state) || data.params;
+                  }
+                  break;
+
+                case 'getContent': {
+                  const messageId = data.params && data.params.messageId;
+                  const collectShadowHtml = root => {
+                    const parts = [];
+                    if (!root || !root.querySelectorAll) return parts;
+                    const nodes = root.querySelectorAll('*');
+                    for (const node of nodes) {
+                      if (node && node.shadowRoot) {
+                        parts.push(node.shadowRoot.innerHTML || '');
+                        parts.push(...collectShadowHtml(node.shadowRoot));
+                      }
+                    }
+                    return parts;
+                  };
+                  const shadowHtml = collectShadowHtml(document).join('\\n');
+                  window.parent.postMessage(
+                    {
+                      source: 'qti-pci-iframe',
+                      responseIdentifier: PCIManager.responseIdentifier,
+                      method: 'getContentResponse',
+                      messageId: messageId,
+                      content: (document.documentElement ? document.documentElement.outerHTML : '') + '\\n' + shadowHtml
+                    },
+                    '*'
+                  );
+                  break;
+                }
+
+                case 'simulateClick': {
+                  const messageId = data.params && data.params.messageId;
+                  const x = data.params && data.params.x;
+                  const y = data.params && data.params.y;
+                  const el = typeof x === 'number' && typeof y === 'number' ? document.elementFromPoint(x, y) : null;
+                  const target = (el && el.closest && el.closest('.hitbox')) || document.querySelector('.hitbox') || el;
+                  if (target) {
+                    const evt = new MouseEvent('click', {
+                      bubbles: true,
+                      clientX: x,
+                      clientY: y,
+                      screenX: x,
+                      screenY: y,
+                      view: window
+                    });
+                    target.dispatchEvent(evt);
+                  }
+                  window.parent.postMessage(
+                    {
+                      source: 'qti-pci-iframe',
+                      responseIdentifier: PCIManager.responseIdentifier,
+                      method: 'clickResponse',
+                      messageId: messageId
+                    },
+                    '*'
+                  );
+                  break;
+                }
+
+                case 'getBoundingRect': {
+                  const messageId = data.params && data.params.messageId;
+                  const selector = data.params && data.params.selector;
+                  const el = selector ? deepQuerySelector(document, selector) : null;
+                  const rect = el && typeof el.getBoundingClientRect === 'function' ? el.getBoundingClientRect() : null;
+                  window.parent.postMessage(
+                    {
+                      source: 'qti-pci-iframe',
+                      responseIdentifier: PCIManager.responseIdentifier,
+                      method: 'getBoundingRectResponse',
+                      messageId: messageId,
+                      rect: rect
+                        ? {
+                            left: rect.left,
+                            top: rect.top,
+                            width: rect.width,
+                            height: rect.height
+                          }
+                        : null
+                    },
+                    '*'
+                  );
+                  break;
+                }
+
+                case 'clickOnSelector': {
+                  const messageId = data.params && data.params.messageId;
+                  const selector = data.params && data.params.selector;
+                  const el = selector ? deepQuerySelector(document, selector) : null;
+                  const success = !!el;
+                  if (el && typeof el.click === 'function') el.click();
+                  window.parent.postMessage(
+                    {
+                      source: 'qti-pci-iframe',
+                      responseIdentifier: PCIManager.responseIdentifier,
+                      method: 'clickSelectorResponse',
+                      messageId: messageId,
+                      success: success
+                    },
+                    '*'
+                  );
+                  break;
+                }
+
+                case 'clickOnElementByText': {
+                  const messageId = data.params && data.params.messageId;
+                  const text = data.params && data.params.text;
+                  const target = text ? deepFindElementByExactText(document, text) : null;
+                  const success = !!target;
+                  if (target && typeof target.click === 'function') target.click();
+                  window.parent.postMessage(
+                    {
+                      source: 'qti-pci-iframe',
+                      responseIdentifier: PCIManager.responseIdentifier,
+                      method: 'clickTextResponse',
+                      messageId: messageId,
+                      success: success
+                    },
+                    '*'
+                  );
+                  break;
+                }
+
+                case 'setValueElement': {
+                  const messageId = data.params && data.params.messageId;
+                  const selector = data.params && data.params.selector;
+                  const value = data.params && data.params.value;
+                  const el = selector ? deepQuerySelector(document, selector) : null;
+                  let success = false;
+                  if (el && 'value' in el) {
+                    try {
+                      el.value = value;
+                      el.dispatchEvent(new Event('input', { bubbles: true }));
+                      el.dispatchEvent(new Event('change', { bubbles: true }));
+                      success = true;
+                    } catch (e) {
+                      success = false;
+                    }
+                  }
+                  window.parent.postMessage(
+                    {
+                      source: 'qti-pci-iframe',
+                      responseIdentifier: PCIManager.responseIdentifier,
+                      method: 'setValueResponse',
+                      messageId: messageId,
+                      success: success
+                    },
+                    '*'
+                  );
+                  break;
+                }
+
+                case 'console':
+                  window.parent.postMessage(
+                    {
+                      source: 'qti-pci-iframe',
+                      responseIdentifier: PCIManager.responseIdentifier,
+                      method: 'console',
+                      level: data.level,
+                      args: data.args
+                    },
+                    '*'
+                  );
+                  break;
+              }
+            });
+
+            let resizeTimeout;
+            let previousHeight = 0;
+            const notifyResize = () => {
+              const container = document.getElementById('pci-container');
+              const newHeight = container.scrollHeight + 100;
+              if (newHeight !== previousHeight) {
+                previousHeight = newHeight;
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => {
+                  window.parent.postMessage(
+                    {
+                      source: 'qti-pci-iframe',
+                      responseIdentifier: PCIManager.responseIdentifier,
+                      method: 'resize',
+                      height: newHeight,
+                      width: container.scrollWidth
+                    },
+                    '*'
+                  );
+                }, 100); // Adjust debounce time as needed
+              }
+            };
+
+            function setupResizeObserver() {
+              const container = document.getElementById('pci-container');
+              if (!container || !(container instanceof Element)) {
+                console.warn('ResizeObserver: document.container is not an Element');
+                return;
+              }
+
+              const resizeObserver = new ResizeObserver(() => {
+                notifyResize();
+              });
+
+              resizeObserver.observe(container);
             }
-	          }
-	          window.parent.postMessage(
-	            {
-	              source: 'qti-pci-iframe',
-	              responseIdentifier: PCIManager.responseIdentifier,
-	              method: 'setValueResponse',
-	              messageId: messageId,
-	              success: success
-	            },
-	            '*'
-	          );
-	          break;
-	        }
 
-          case 'console':
-            window.parent.postMessage(
-              {
-                source: 'qti-pci-iframe',
-                responseIdentifier: PCIManager.responseIdentifier,
-                method: 'console',
-                level: data.level,
-                args: data.args
-              },
-              '*'
-            );
-            break;
-      }
-    });
+            // Run setup once DOM is ready
+            if (document.readyState === 'loading') {
+              document.addEventListener('DOMContentLoaded', () => {
+                notifyResize(); // initial resize
+                setupResizeObserver();
+              });
+            } else {
+              notifyResize();
+              setupResizeObserver();
+            }
 
-    let resizeTimeout;
-    let previousHeight = 0;
-    const notifyResize = () => {
-      const container = document.getElementById('pci-container');
-      const newHeight = container.scrollHeight + 100;
-      if (newHeight !== previousHeight) {
-        previousHeight = newHeight;
-        clearTimeout(resizeTimeout);
-	        resizeTimeout = setTimeout(() => {
-	          window.parent.postMessage({
-	            source: 'qti-pci-iframe',
-	            responseIdentifier: PCIManager.responseIdentifier,
-	            method: 'resize',
-	            height: newHeight,
-	            width: container.scrollWidth
-	          }, '*');
-	        }, 100); // Adjust debounce time as needed
-      }
-    };
+            window.addEventListener('load', () => {
+              notifyResize();
+            });
+            let lastResponseStr = '';
+            setInterval(() => {
+              if (PCIManager.interactionChangedViaEvent) return;
+              if (PCIManager.pciInstance && PCIManager.pciInstance.getResponse) {
+                const response = PCIManager.pciInstance.getResponse();
+                if (response === undefined) {
+                  // Don't emit an initial empty on load; only emit a clear if we previously had a value
+                  if (!PCIManager.hadResponse) return;
+                  PCIManager.hadResponse = false;
+                  PCIManager.lastResponseStr = null;
+                  const state =
+                    PCIManager.pciInstance && typeof PCIManager.pciInstance.getState === 'function'
+                      ? PCIManager.pciInstance.getState()
+                      : null;
+                  window.parent.postMessage(
+                    {
+                      source: 'qti-pci-iframe',
+                      responseIdentifier: PCIManager.responseIdentifier,
+                      method: 'interactionChanged',
+                      params: { value: null, state: state }
+                    },
+                    '*'
+                  );
+                  return;
+                }
 
-    function setupResizeObserver() {
-        const container = document.getElementById('pci-container');
-        if (!container || !(container instanceof Element)) {
-          console.warn('ResizeObserver: document.container is not an Element');
-          return;
-        }
+                const responseStr = JSON.stringify(response);
 
-        const resizeObserver = new ResizeObserver(() => {
-          notifyResize();
-        });
-
-        resizeObserver.observe(container);
-      }
-
-      // Run setup once DOM is ready
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => {
-          notifyResize(); // initial resize
-          setupResizeObserver();
-        });
-      } else {
-        notifyResize();
-        setupResizeObserver();
-      }
-
-      window.addEventListener('load', () => {
-        notifyResize();
-      });
-      let lastResponseStr = '';
-      setInterval(() => {
-        if (PCIManager.interactionChangedViaEvent) return;
-        if (PCIManager.pciInstance && PCIManager.pciInstance.getResponse) {
-          const response = PCIManager.pciInstance.getResponse();
-	          if (response === undefined) {
-	            // Don't emit an initial empty on load; only emit a clear if we previously had a value
-	            if (!PCIManager.hadResponse) return;
-	            PCIManager.hadResponse = false;
-	            PCIManager.lastResponseStr = null;
-	            const state = PCIManager.pciInstance && typeof PCIManager.pciInstance.getState === 'function' ? PCIManager.pciInstance.getState() : null;
-	            window.parent.postMessage(
-	              {
-	                source: 'qti-pci-iframe',
-	                responseIdentifier: PCIManager.responseIdentifier,
-	                method: 'interactionChanged',
-	                params: { value: null, state: state }
-	              },
-	              '*'
-	            );
-	            return;
-	          }
-
-          const responseStr = JSON.stringify(response);
-
-	          if (responseStr !== PCIManager.lastResponseStr) {
-	            PCIManager.lastResponseStr = responseStr;
-	            PCIManager.hadResponse = true;
-	            const state = PCIManager.pciInstance && typeof PCIManager.pciInstance.getState === 'function' ? PCIManager.pciInstance.getState() : null;
-	            window.parent.postMessage(
-	              {
-	                source: 'qti-pci-iframe',
-	                responseIdentifier: PCIManager.responseIdentifier,
-	                method: 'interactionChanged',
-	                params: { value: response, state: state }
-	              },
-	              '*'
-	            );
-	          }
-        }
-      }, 500); // Check every 500ms
-  </script>
-</head>
-<body>
-  <div id="pci-container"></div>
-</body>
-</html>`;
+                if (responseStr !== PCIManager.lastResponseStr) {
+                  PCIManager.lastResponseStr = responseStr;
+                  PCIManager.hadResponse = true;
+                  const state =
+                    PCIManager.pciInstance && typeof PCIManager.pciInstance.getState === 'function'
+                      ? PCIManager.pciInstance.getState()
+                      : null;
+                  window.parent.postMessage(
+                    {
+                      source: 'qti-pci-iframe',
+                      responseIdentifier: PCIManager.responseIdentifier,
+                      method: 'interactionChanged',
+                      params: { value: response, state: state }
+                    },
+                    '*'
+                  );
+                }
+              }
+            }, 500); // Check every 500ms
+          </script>
+        </head>
+        <body>
+          <div id="pci-container"></div>
+        </body>
+      </html>`;
   }
 
   /**

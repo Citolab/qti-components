@@ -9,6 +9,7 @@
   },
   "devDependencies": {
     "@lit/context": "^1.1.6",
+    "@qti-components/theme": "workspace:^",
     "@qti-components/transformers": "workspace:^",
     "lit": "^3.3.1"
   },

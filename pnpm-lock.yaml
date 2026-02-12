@@ -360,6 +360,9 @@ importers:
       '@lit/context':
         specifier: ^1.1.6
         version: 1.1.6
+      '@qti-components/theme':
+        specifier: workspace:^
+        version: link:../qti-theme
       '@qti-components/transformers':
         specifier: workspace:^
         version: link:../qti-transformers
@@ -500,7 +503,11 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1
 
-  packages/qti-theme: {}
+  packages/qti-theme:
+    devDependencies:
+      '@qti-components/theme':
+        specifier: workspace:^
+        version: 'link:'
 
   packages/qti-transformers: {}
 

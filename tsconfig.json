@@ -52,6 +52,9 @@
       "@qti-components/test": [
         "./packages/qti-test/src/index.ts"
       ],
+      "@qti-components/theme": [
+        "./packages/qti-theme/src/index.ts"
+      ],
       "@qti-components/transformers": [
         "./packages/qti-transformers/src/index.ts"
       ],

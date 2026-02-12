@@ -4,7 +4,7 @@ import { until } from 'lit/directives/until.js';
 
 import { watch } from '@qti-components/utilities';
 import { qtiTransformItem } from '@qti-components/transformers';
-import itemCss from '@qti-components/theme/src/item.css?inline';
+import itemCss from '@qti-components/theme/item.css?inline';
 
 /**
  * `<item-container>` is a custom element designed for hosting the qti-assessment-item.
