@@ -4,8 +4,6 @@ import { consume } from '@lit/context';
 
 import { Interaction, itemContext, qtiContext, removeDoubleSlashes } from '@qti-components/base';
 
-// eslint-disable-next-line import/no-relative-packages
-import itemCss from '../../../../qti-theme/src/item.css?inline';
 import styles from './qti-portable-custom-interaction.styles';
 
 import type { CSSResultGroup } from 'lit';
@@ -934,7 +932,7 @@ export class QtiPortableCustomInteraction extends Interaction {
   }
 
   /**
-   * IFRAME MODE: Add markup and properties to iframe
+   * IFRAME MODE: Add markup, stylesheets, and properties to iframe
    */
   #addMarkupToIframe() {
     // Get interaction markup if any
@@ -942,6 +940,13 @@ export class QtiPortableCustomInteraction extends Interaction {
     if (markup) {
       this.sendMessageToIframe('setMarkup', markup.innerHTML);
     }
+
+    const stylesheets = Array.from(this.querySelectorAll('qti-stylesheet'));
+    if (stylesheets.length) {
+      const stylesheetsHtml = stylesheets.map(sheet => sheet.outerHTML).join('\n');
+      this.sendMessageToIframe('setStylesheets', stylesheetsHtml);
+    }
+
     // Get properties if any
     const properties = this.querySelector('properties');
     if (properties) {
@@ -996,6 +1001,9 @@ export class QtiPortableCustomInteraction extends Interaction {
           <meta charset="utf-8" />
           <title>QTI PCI Container</title>
           <base href="${window.location.origin}" />
+          <script type="module">
+            import 'https://unpkg.com/@citolab/qti-components/cdn';
+          </script>
           <style>
             body, html {
               margin: 0;
@@ -1019,9 +1027,7 @@ export class QtiPortableCustomInteraction extends Interaction {
               min-height: 50px;
             }
           </style>
-          <style>
-            ${itemCss}
-          </style>
+          <link href="https://unpkg.com/@citolab/qti-components@latest/dist/item.css" rel="stylesheet" />
           <script src="${this.requireJsUrl}"></script>
           <script>
             const forwardConsole = ${forwardConsole ? 'true' : 'false'};
@@ -1483,6 +1489,16 @@ export class QtiPortableCustomInteraction extends Interaction {
                   .replace(/\\s+/g, ' ')
                   .replace(/\\s*([{}:;])\\s*/g, '$1')
                   .trim();
+              },
+
+              setStylesheets: function (stylesheetsHtml) {
+                if (!stylesheetsHtml) return;
+                if (!this.container) {
+                  this.container = document.getElementById('pci-container');
+                }
+                const target = this.container || document.body;
+                if (!target) return;
+                target.insertAdjacentHTML('afterbegin', stylesheetsHtml);
               },
 
               /*

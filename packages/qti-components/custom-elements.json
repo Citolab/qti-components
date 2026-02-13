@@ -22638,7 +22638,7 @@
               "kind": "method",
               "name": "#addMarkupToIframe",
               "privacy": "private",
-              "description": "IFRAME MODE: Add markup and properties to iframe"
+              "description": "IFRAME MODE: Add markup, stylesheets, and properties to iframe"
             },
             {
               "kind": "method",
@@ -24008,7 +24008,7 @@
               "kind": "method",
               "name": "#addMarkupToIframe",
               "privacy": "private",
-              "description": "IFRAME MODE: Add markup and properties to iframe",
+              "description": "IFRAME MODE: Add markup, stylesheets, and properties to iframe",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
