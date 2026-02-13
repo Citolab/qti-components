@@ -1,5 +1,21 @@
 # Changelog
 
+## [7.23.0](https://github.com/Citolab/qti-components/compare/qti-components-v7.22.1...qti-components-v7.23.0) (2026-02-13)
+
+
+### Features
+
+* pci to support stylesheets in iframe mode ([f909403](https://github.com/Citolab/qti-components/commit/f9094030a10613990dd563b35a626af4999c80f5))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @qti-components/interactions bumped to 1.7.0
+    * @qti-components/item bumped to 1.0.11
+    * @qti-components/test bumped to 1.1.10
+
 ## [7.22.1](https://github.com/Citolab/qti-components/compare/qti-components-v7.22.0...qti-components-v7.22.1) (2026-02-09)
 
 

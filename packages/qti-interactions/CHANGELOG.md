@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0](https://github.com/Citolab/qti-components/compare/interactions-v1.6.1...interactions-v1.7.0) (2026-02-13)
+
+
+### Features
+
+* pci to support stylesheets in iframe mode ([f909403](https://github.com/Citolab/qti-components/commit/f9094030a10613990dd563b35a626af4999c80f5))
+
 ## [1.6.1](https://github.com/Citolab/qti-components/compare/interactions-v1.6.0...interactions-v1.6.1) (2026-02-09)
 
 
