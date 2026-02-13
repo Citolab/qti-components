@@ -3,8 +3,9 @@ import { property, state } from 'lit/decorators.js';
 import { consume } from '@lit/context';
 
 import { Interaction, itemContext, qtiContext, removeDoubleSlashes } from '@qti-components/base';
-import itemCss from '@qti-components/theme/item.css?inline';
 
+// eslint-disable-next-line import/no-relative-packages
+import itemCss from '../../../../qti-theme/src/item.css?inline';
 import styles from './qti-portable-custom-interaction.styles';
 
 import type { CSSResultGroup } from 'lit';
