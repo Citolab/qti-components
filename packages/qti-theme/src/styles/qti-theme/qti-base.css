@@ -297,6 +297,16 @@
   cursor: pointer;
 }
 
+.validation-message {
+  display: none;
+  color: var(--qti-validation-text, #000);
+  background-color: var(--qti-validation-error-bg, #fff);
+  padding: 10px;
+  border: 3px solid var(--qti-validation-text, #000);
+  border-radius: 4px;
+  margin-top: 8px;
+}
+
 /* Apply .check-radio for outer circle of the radio buttons */
 .check-radio {
   @apply form;
