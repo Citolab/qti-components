@@ -585,7 +585,6 @@ export class QtiPortableCustomInteraction extends Interaction {
     return unescaped;
   }
 
-
   override disconnectedCallback(): void {
     super.disconnectedCallback();
     window.removeEventListener('message', this.handleIframeMessage);
