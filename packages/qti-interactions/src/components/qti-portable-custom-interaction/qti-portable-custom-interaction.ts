@@ -10,7 +10,6 @@ import type { CSSResultGroup } from 'lit';
 import type { BaseType, Cardinality, ItemContext, QtiContext } from '@qti-components/base';
 import type { QtiRecordItem, QtiVariableJSON, ResponseVariableType } from './interface';
 
-// const html = String.raw;
 export class QtiPortableCustomInteraction extends Interaction {
   #value: string | string[];
 
@@ -586,112 +585,6 @@ export class QtiPortableCustomInteraction extends Interaction {
     return unescaped;
   }
 
-  /**
-   * Resolve stylesheet href against baseUrl or document origin
-   */
-  // private resolveStylesheetHref(href: string): string {
-  //   if (!href) return href;
-
-  //   if (href.startsWith('http://') || href.startsWith('https://')) {
-  //     return href;
-  //   }
-
-  //   if (href.startsWith('//')) {
-  //     return `${window.location.protocol}${href}`;
-  //   }
-
-  //   const base =
-  //     this.baseUrl && this.baseUrl.length > 0
-  //       ? this.baseUrl.startsWith('http') || this.baseUrl.startsWith('blob') || this.baseUrl.startsWith('base64')
-  //         ? this.baseUrl
-  //         : removeDoubleSlashes(`${window.location.origin}${this.baseUrl}`)
-  //       : window.location.origin;
-
-  //   const normalizedBase = base.endsWith('/') ? base : `${base}/`;
-
-  //   try {
-  //     return new URL(href, normalizedBase).toString();
-  //   } catch {
-  //     return href;
-  //   }
-  // }
-
-  /**
-   * Collect qti-stylesheet elements for iframe injection
-   */
-  // private getStylesheetConfigs(): Array<{ href?: string; content?: string; scoped?: boolean; key?: string }> {
-  //   const stylesheets = this.getDirectChildrenByTag('qti-stylesheet');
-  //   if (!stylesheets.length) return [];
-
-  //   return stylesheets
-  //     .map((el, index) => {
-  //       const href = el.getAttribute('href');
-  //       if (href) {
-  //         const resolved = this.resolveStylesheetHref(href);
-  //         return { href: resolved, scoped: false, key: resolved };
-  //       }
-  //       const content = el.textContent?.trim();
-  //       if (content) {
-  //         return { content, scoped: false, key: `inline-${index}` };
-  //       }
-  //       return null;
-  //     })
-  //     .filter(Boolean);
-  // }
-
-  // private getSharedStylesheetContent(): string | null {
-  //   let cssText = '';
-  //   const seen = new Set<string>();
-  //   const sheets = Array.from(document.styleSheets || []);
-
-  //   for (const sheet of sheets) {
-  //     try {
-  //       if (sheet.href && !sheet.href.startsWith(window.location.origin)) {
-  //         continue;
-  //       }
-  //       const ownerNode = sheet.ownerNode as HTMLElement | null;
-  //       if (ownerNode && ownerNode.tagName === 'STYLE') {
-  //         const text = ownerNode.textContent || '';
-  //         if (text && !seen.has(text)) {
-  //           cssText += `${text}\n`;
-  //           seen.add(text);
-  //         }
-  //         continue;
-  //       }
-  //       const rules = sheet.cssRules ? Array.from(sheet.cssRules) : [];
-  //       if (rules.length) {
-  //         const text = rules.map(rule => rule.cssText).join('\n');
-  //         if (text && !seen.has(text)) {
-  //           cssText += `${text}\n`;
-  //           seen.add(text);
-  //         }
-  //       }
-  //     } catch {
-  //       // ignore cross-origin or inaccessible stylesheets
-  //     }
-  //   }
-
-  //   const trimmed = cssText.trim();
-  //   return trimmed.length ? trimmed : null;
-  // }
-
-  // private getSharedStylesheetConfig(): { content: string; scoped: boolean; key: string } | null {
-  //   const content = this.getSharedStylesheetContent();
-  //   if (!content) return null;
-  //   return { content, scoped: false, key: '__qti_shared_css__' };
-  // }
-
-  /**
-   * IFRAME MODE: Add stylesheets to iframe
-   */
-  // #addStylesheetsToIframe() {
-  //   const stylesheets = this.getStylesheetConfigs();
-  //   const shared = this.getSharedStylesheetConfig();
-  //   const payload = shared ? [shared, ...stylesheets] : stylesheets;
-  //   if (payload.length > 0) {
-  //     this.sendMessageToIframe('setStylesheets', payload);
-  //   }
-  // }
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
@@ -855,7 +748,6 @@ export class QtiPortableCustomInteraction extends Interaction {
         this._iframeObjectUrl = null;
       }
       this.#addMarkupToIframe();
-      // this.#addStylesheetsToIframe();
       // Send initialization data to iframe
       this.#sendIframeInitData();
     };
@@ -1501,44 +1393,6 @@ export class QtiPortableCustomInteraction extends Interaction {
                 target.insertAdjacentHTML('afterbegin', stylesheetsHtml);
               },
 
-              /*
-      injectStylesheet: function(cssContent, key, scoped) {
-        if (!cssContent) return;
-        const head = document.head || document.getElementsByTagName('head')[0] || document.body;
-        if (!head) return;
-        const resolvedKey = key || '';
-        if (resolvedKey && this.stylesheetKeys[resolvedKey]) return;
-        const shouldScope = scoped !== false;
-        const styleEl = document.createElement('style');
-        styleEl.media = 'screen';
-        if (resolvedKey) styleEl.setAttribute('data-qti-stylesheet', resolvedKey);
-        const minified = this.minifyCss(cssContent);
-        styleEl.textContent = shouldScope ? '@scope {' + minified + '}' : minified;
-        head.appendChild(styleEl);
-        if (resolvedKey) this.stylesheetKeys[resolvedKey] = true;
-      },
-
-      setStylesheets: function(stylesheets) {
-        if (!Array.isArray(stylesheets)) return;
-        stylesheets.forEach((sheet, index) => {
-          if (!sheet) return;
-          const key = sheet.key || sheet.href || ('inline-' + index);
-          const scoped = sheet.scoped !== false;
-          if (sheet.content) {
-            this.injectStylesheet(sheet.content, key, scoped);
-            return;
-          }
-          if (sheet.href) {
-            fetch(sheet.href)
-              .then(resp => resp.text())
-              .then(css => this.injectStylesheet(css, key, scoped))
-              .catch(() => {
-                // ignore stylesheet load errors
-              });
-          }
-        });
-      },
-      */
 
               applyBoundTo: function (boundTo) {
                 if (!this.pciInstance || typeof this.pciInstance.setResponse !== 'function') return;
