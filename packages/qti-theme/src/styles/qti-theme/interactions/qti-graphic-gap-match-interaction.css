@@ -1,0 +1,88 @@
+@layer qti-components {
+  qti-graphic-gap-match-interaction {
+    &::part(message) {
+      @apply validation-message;
+    }
+    position: relative;
+    &.qti-selections-light {
+      &:state(--dragzone-active)::part(drags) {
+        background-color: var(--qti-light-bg-active);
+        border-color: var(--qti-light-border-active);
+      }
+      &:state(--dragzone-enabled)::part(drags) {
+        background-color: var(--qti-light-bg-active);
+      }
+    }
+    &.qti-selections-dark {
+      &:state(--dragzone-active)::part(drags) {
+        background-color: var(--qti-dark-bg-active);
+        border-color: var(--qti-dark-border-active);
+      }
+      &:state(--dragzone-enabled)::part(drags) {
+        background-color: var(--qti-dark-bg-active);
+      }
+    }
+    &:state(--dragzone-active)::part(drags) {
+      @apply act;
+    }
+    &:state(--dragzone-enabled)::part(drags) {
+      @apply dropping;
+    }
+    & qti-gap-img,
+    qti-gap-text {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: grab;
+    }
+    & qti-associable-hotspot {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 2px solid transparent;
+      &[enabled] {
+        @apply dropping;
+        .qti-selections-light {
+          background-color: var(--qti-light-bg-active);
+        }
+        .qti-selections-dark {
+          background-color: var(--qti-dark-bg-active);
+        }
+      }
+      &[active] {
+        @apply act;
+        .qti-selections-light {
+          background-color: var(--qti-light-bg-active);
+          border-color: var(--qti-light-border-active);
+        }
+        .qti-selections-dark {
+          background-color: var(--qti-dark-bg-active);
+          border-color: var(--qti-dark-border-active);
+        }
+      }
+      &[disabled] {
+        @apply dis;
+        &:not(:empty) {
+          cursor: default !important;
+        }
+      }
+      &:empty::after {
+        padding: var(--qti-padding-md) var(--qti-padding-lg);
+        content: '\0000a0';
+      }
+      &:not(:empty) {
+        padding: 0;
+        width: auto;
+      }
+      &:not(:empty) > * {
+        flex: 1;
+        transform: rotate(0);
+        box-shadow: 0 0 0 1px #e5e7eb;
+      }
+    }
+    & img {
+      margin: 0;
+      padding: 0;
+    }
+  }
+}

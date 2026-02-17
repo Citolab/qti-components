@@ -1,0 +1,6 @@
+@layer qti-components {
+  qti-slider-interaction {
+    --qti-tick-color: rgb(229 231 235 / 100%);
+    --qti-tick-width: 1px;
+  }
+}
