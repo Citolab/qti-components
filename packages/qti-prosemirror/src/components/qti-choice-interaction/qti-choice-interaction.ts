@@ -5,10 +5,12 @@ import { watch } from '@qti-components/utilities';
 import { VocabularyMixin } from '@qti-components/interactions/mixins/vocabulary/vocabulary-mixin.js';
 import styles from '@qti-components/interactions/components/qti-choice-interaction/qti-choice-interaction.styles.js';
 
+import { Interaction } from '../interaction.js';
+
 import type { CSSResultGroup } from 'lit';
 
 export type Orientation = 'horizontal' | 'vertical' | undefined;
-export class QtiChoiceInteractionEdit extends VocabularyMixin(LitElement, 'qti-simple-choice') {
+export class QtiChoiceInteractionEdit extends VocabularyMixin(Interaction, 'qti-simple-choice') {
   static styles: CSSResultGroup = styles;
 
   @property({ type: Number, attribute: 'min-choices' })

@@ -4,14 +4,14 @@ export const qtiSimpleChoiceNodeSpec: NodeSpec = {
   group: 'block',
   content: 'inline*',
   attrs: {
-    identifier: { default: 'A' }
+    identifier: { default: 'SIMPLE-CHOICE-IDENTIFIER' }
   },
   parseDOM: [
     {
       tag: 'qti-simple-choice',
       getAttrs: (node: Node | string) => {
         if (!(node instanceof HTMLElement)) return {};
-        return { identifier: node.getAttribute('identifier') || 'A' };
+        return { identifier: node.getAttribute('identifier') || 'SIMPLE-CHOICE-IDENTIFIER' };
       }
     }
   ],

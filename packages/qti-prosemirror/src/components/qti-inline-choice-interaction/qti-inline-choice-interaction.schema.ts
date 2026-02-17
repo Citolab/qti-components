@@ -4,7 +4,8 @@ export const qtiInlineChoiceInteractionNodeSpec: NodeSpec = {
   attrs: {
     responseIdentifier: { default: null },
     shuffle: { default: false },
-    class: { default: null }
+    class: { default: null },
+    correctResponse: { default: null }
   },
   content: 'qtiInlineChoice+',
   group: 'block',
@@ -16,7 +17,8 @@ export const qtiInlineChoiceInteractionNodeSpec: NodeSpec = {
         return {
           responseIdentifier: node.getAttribute('response-identifier'),
           shuffle: node.getAttribute('shuffle') === 'true',
-          class: node.getAttribute('class') || null
+          class: node.getAttribute('class') || null,
+          correctResponse: node.getAttribute('correct-response')
         };
       }
     }
@@ -27,7 +29,9 @@ export const qtiInlineChoiceInteractionNodeSpec: NodeSpec = {
     if (node.attrs.responseIdentifier) {
       attrs['response-identifier'] = node.attrs.responseIdentifier;
     }
-
+    if (node.attrs.correctResponse) {
+      attrs['correct-response'] = node.attrs.correctResponse;
+    }
     attrs.shuffle = String(Boolean(node.attrs.shuffle));
 
     if (node.attrs.class) {

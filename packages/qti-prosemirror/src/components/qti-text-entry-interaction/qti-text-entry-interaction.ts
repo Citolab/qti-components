@@ -5,8 +5,10 @@ import { createRef } from 'lit/directives/ref.js';
 
 import styles from '@qti-components/interactions/components/qti-text-entry-interaction/qti-text-entry-interaction.styles.js';
 
+import { Interaction } from '../interaction';
+
 import type { CSSResultGroup } from 'lit';
-export class QtiTextEntryInteractionEdit extends LitElement {
+export class QtiTextEntryInteractionEdit extends Interaction {
   static override styles: CSSResultGroup = styles;
   inputRef = createRef<HTMLInputElement>();
 

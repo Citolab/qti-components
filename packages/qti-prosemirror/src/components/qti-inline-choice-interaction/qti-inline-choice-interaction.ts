@@ -3,9 +3,11 @@ import { state } from 'lit/decorators.js';
 
 import styles from '@qti-components/interactions/components/qti-inline-choice-interaction/qti-inline-choice-interaction.styles.js';
 
+import { Interaction } from '../interaction';
+
 let inlineChoiceMenuCounter = 0;
 
-export class QtiInlineChoiceInteraction extends LitElement {
+export class QtiInlineChoiceInteraction extends Interaction {
   private _calculatedMinWidth: number;
   static override get styles() {
     return [

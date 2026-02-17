@@ -4,6 +4,70 @@
   "modules": [
     {
       "kind": "javascript-module",
+      "path": "src/components/interaction.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "Interaction",
+          "members": [
+            {
+              "kind": "field",
+              "name": "correctResponse",
+              "type": {
+                "text": "string | string[] | null"
+              },
+              "privacy": "public",
+              "default": "null",
+              "attribute": "correct-response"
+            },
+            {
+              "kind": "field",
+              "name": "responseIdentifier",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "response-identifier"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "correct-response",
+              "type": {
+                "text": "string | string[] | null"
+              },
+              "default": "null",
+              "fieldName": "correctResponse"
+            },
+            {
+              "name": "response-identifier",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "responseIdentifier"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "customElement": true,
+          "modulePath": "src/components/interaction.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "Interaction",
+          "declaration": {
+            "name": "Interaction",
+            "module": "src/components/interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/qti-choice-interaction/qti-choice-interaction.ts",
       "declarations": [
         {
@@ -49,6 +113,20 @@
             },
             {
               "kind": "field",
+              "name": "correctResponse",
+              "type": {
+                "text": "string | string[] | null"
+              },
+              "privacy": "public",
+              "default": "null",
+              "attribute": "correct-response",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "src/components/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "maxChoices",
               "type": {
                 "text": "number"
@@ -66,6 +144,18 @@
               "privacy": "public",
               "default": "0",
               "attribute": "min-choices"
+            },
+            {
+              "kind": "field",
+              "name": "responseIdentifier",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "response-identifier",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "src/components/interaction.ts"
+              }
             }
           ],
           "attributes": [
@@ -75,6 +165,18 @@
                 "text": "'qti-orientation-vertical' | 'qti-orientation-horizontal' | undefined"
               },
               "fieldName": "classes"
+            },
+            {
+              "name": "correct-response",
+              "type": {
+                "text": "string | string[] | null"
+              },
+              "default": "null",
+              "fieldName": "correctResponse",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "src/components/interaction.ts"
+              }
             },
             {
               "name": "max-choices",
@@ -91,6 +193,17 @@
               },
               "default": "0",
               "fieldName": "minChoices"
+            },
+            {
+              "name": "response-identifier",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "responseIdentifier",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "src/components/interaction.ts"
+              }
             }
           ],
           "mixins": [
@@ -100,13 +213,18 @@
             }
           ],
           "superclass": {
-            "name": "LitElement",
-            "package": "lit"
+            "name": "Interaction",
+            "module": "/src/components/interaction.js"
           },
           "tagName": "qti-choice-interaction",
           "customElement": true,
           "modulePath": "src/components/qti-choice-interaction/qti-choice-interaction.ts",
-          "definitionPath": "src/components/qti-choice-interaction/qti-choice-interaction.ts"
+          "definitionPath": "src/components/qti-choice-interaction/qti-choice-interaction.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -170,16 +288,72 @@
               "kind": "field",
               "name": "#onChoicesSlotChange",
               "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "correctResponse",
+              "type": {
+                "text": "string | string[] | null"
+              },
+              "privacy": "public",
+              "default": "null",
+              "attribute": "correct-response",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "src/components/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "responseIdentifier",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "response-identifier",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "src/components/interaction.ts"
+              }
             }
           ],
           "superclass": {
-            "name": "LitElement",
-            "package": "lit"
+            "name": "Interaction",
+            "module": "/src/components/interaction"
           },
           "tagName": "qti-inline-choice-interaction",
           "customElement": true,
+          "attributes": [
+            {
+              "name": "correct-response",
+              "type": {
+                "text": "string | string[] | null"
+              },
+              "default": "null",
+              "fieldName": "correctResponse",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "src/components/interaction.ts"
+              }
+            },
+            {
+              "name": "response-identifier",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "responseIdentifier",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "src/components/interaction.ts"
+              }
+            }
+          ],
           "modulePath": "src/components/qti-inline-choice-interaction/qti-inline-choice-interaction.ts",
-          "definitionPath": "src/components/qti-inline-choice-interaction/qti-inline-choice-interaction.ts"
+          "definitionPath": "src/components/qti-inline-choice-interaction/qti-inline-choice-interaction.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -343,6 +517,20 @@
           "members": [
             {
               "kind": "field",
+              "name": "correctResponse",
+              "type": {
+                "text": "string | string[] | null"
+              },
+              "privacy": "public",
+              "default": "null",
+              "attribute": "correct-response",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "src/components/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "inputRef"
             },
             {
@@ -360,9 +548,33 @@
                 "text": "string"
               },
               "attribute": "placeholder-text"
+            },
+            {
+              "kind": "field",
+              "name": "responseIdentifier",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "response-identifier",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "src/components/interaction.ts"
+              }
             }
           ],
           "attributes": [
+            {
+              "name": "correct-response",
+              "type": {
+                "text": "string | string[] | null"
+              },
+              "default": "null",
+              "fieldName": "correctResponse",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "src/components/interaction.ts"
+              }
+            },
             {
               "name": "pattern-mask",
               "type": {
@@ -376,16 +588,32 @@
                 "text": "string"
               },
               "fieldName": "placeholderText"
+            },
+            {
+              "name": "response-identifier",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "responseIdentifier",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "src/components/interaction.ts"
+              }
             }
           ],
           "superclass": {
-            "name": "LitElement",
-            "package": "lit"
+            "name": "Interaction",
+            "module": "/src/components/interaction"
           },
           "tagName": "qti-text-entry-interaction",
           "customElement": true,
           "modulePath": "src/components/qti-text-entry-interaction/qti-text-entry-interaction.ts",
-          "definitionPath": "src/components/qti-text-entry-interaction/qti-text-entry-interaction.ts"
+          "definitionPath": "src/components/qti-text-entry-interaction/qti-text-entry-interaction.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
