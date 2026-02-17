@@ -2,7 +2,7 @@ import type { DOMOutputSpec, NodeSpec } from 'prosemirror-model';
 
 export const qtiSimpleChoiceNodeSpec: NodeSpec = {
   group: 'block',
-  content: 'inline*',
+  content: 'paragraph | image',
   attrs: {
     identifier: { default: 'SIMPLE-CHOICE-IDENTIFIER' }
   },
