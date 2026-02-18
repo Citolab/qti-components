@@ -10,13 +10,20 @@ import { baseMarks, baseNodes } from './schema/base.schema';
 import { createBasePlugins } from './plugins/base.plugins';
 import { qtiChoiceInteractionNodeSpec } from '../components/qti-choice-interaction/qti-choice-interaction.schema';
 import { qtiPromptNodeSpec } from '../components/qti-prompt/qti-prompt.schema';
-import { qtiSimpleChoiceNodeSpec } from '../components/qti-simple-choice/qti-simple-choice.schema';
+import {
+  qtiSimpleChoiceImageNodeSpec,
+  qtiSimpleChoiceNodeSpec,
+  qtiSimpleChoiceParagraphNodeSpec
+} from '../components/qti-simple-choice/qti-simple-choice.schema';
 import { qtiInlineChoiceInteractionNodeSpec } from '../components/qti-inline-choice-interaction/qti-inline-choice-interaction.schema';
 import { qtiInlineChoiceNodeSpec } from '../components/qti-inline-choice-interaction/qti-inline-choice.schema';
 import { qtiTextEntryInteractionNodeSpec } from '../components/qti-text-entry-interaction/qti-text-entry-interaction.schema';
 import { insertChoiceInteraction } from '../components/qti-choice-interaction/qti-choice-interaction.commands';
 import { insertInlineChoiceInteraction } from '../components/qti-inline-choice-interaction/qti-inline-choice-interaction.commands';
-import { insertTextEntryInteraction } from '../components/qti-text-entry-interaction/qti-text-entry-interaction.commands';
+import {
+  canInsertTextEntryInteraction,
+  insertTextEntryInteraction
+} from '../components/qti-text-entry-interaction/qti-text-entry-interaction.commands';
 
 import '../components/qti-choice-interaction/qti-choice-interaction';
 import '../components/qti-prompt/qti-prompt';
@@ -33,6 +40,8 @@ const schema = new Schema({
     qtiChoiceInteraction: qtiChoiceInteractionNodeSpec,
     qtiPrompt: qtiPromptNodeSpec,
     qtiSimpleChoice: qtiSimpleChoiceNodeSpec,
+    qtiSimpleChoiceParagraph: qtiSimpleChoiceParagraphNodeSpec,
+    qtiSimpleChoiceImage: qtiSimpleChoiceImageNodeSpec,
     qtiInlineChoiceInteraction: qtiInlineChoiceInteractionNodeSpec,
     qtiInlineChoice: qtiInlineChoiceNodeSpec,
     qtiTextEntryInteraction: qtiTextEntryInteractionNodeSpec
@@ -53,6 +62,7 @@ type Story = StoryObj;
 export const AllInteractionsInOneEditor: Story = {
   render: () => {
     let currentView: EditorView | null = null;
+    let textEntryButton: HTMLButtonElement | null = null;
 
     const initialContent = `
       <h1>QTI Combined Interaction Editor</h1>
@@ -73,8 +83,20 @@ export const AllInteractionsInOneEditor: Story = {
         dispatchTransaction(tr) {
           if (!currentView) return;
           currentView.updateState(currentView.state.apply(tr));
+          syncTextEntryButtonState();
         }
       });
+
+      syncTextEntryButtonState();
+    };
+
+    const syncTextEntryButtonState = () => {
+      if (!currentView || !textEntryButton) return;
+      const canInsert = canInsertTextEntryInteraction(currentView.state);
+      textEntryButton.disabled = !canInsert;
+      textEntryButton.title = canInsert
+        ? 'Insert Text Entry Interaction'
+        : 'Cannot insert text entry inside qti-simple-choice';
     };
 
     const insertChoice = () => {
@@ -93,6 +115,7 @@ export const AllInteractionsInOneEditor: Story = {
       if (!currentView) return;
       insertTextEntryInteraction(currentView.state, currentView.dispatch);
       currentView.focus();
+      syncTextEntryButtonState();
     };
 
     return html`
@@ -113,7 +136,11 @@ export const AllInteractionsInOneEditor: Story = {
           </button>
           <button
             @click=${insertTextEntry}
-            style="padding: 8px 16px; background: #8b5e00; color: white; border: none; border-radius: 4px; cursor: pointer;"
+            style="padding: 8px 16px;"
+            ${ref(el => {
+              textEntryButton = el as HTMLButtonElement;
+              syncTextEntryButtonState();
+            })}
           >
             Insert Text Entry Interaction
           </button>

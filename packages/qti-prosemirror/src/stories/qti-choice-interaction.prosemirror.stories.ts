@@ -28,7 +28,11 @@ import { createBasePlugins } from './plugins/base.plugins';
 // Import component schemas
 import { qtiChoiceInteractionNodeSpec } from '../components/qti-choice-interaction/qti-choice-interaction.schema';
 import { qtiPromptNodeSpec } from '../components/qti-prompt/qti-prompt.schema';
-import { qtiSimpleChoiceNodeSpec } from '../components/qti-simple-choice/qti-simple-choice.schema';
+import {
+  qtiSimpleChoiceImageNodeSpec,
+  qtiSimpleChoiceNodeSpec,
+  qtiSimpleChoiceParagraphNodeSpec
+} from '../components/qti-simple-choice/qti-simple-choice.schema';
 // Import command
 import { insertChoiceInteraction } from '../components/qti-choice-interaction/qti-choice-interaction.commands';
 
@@ -45,7 +49,9 @@ const schema = new Schema({
     ...baseNodes,
     qtiChoiceInteraction: qtiChoiceInteractionNodeSpec,
     qtiPrompt: qtiPromptNodeSpec,
-    qtiSimpleChoice: qtiSimpleChoiceNodeSpec
+    qtiSimpleChoice: qtiSimpleChoiceNodeSpec,
+    qtiSimpleChoiceParagraph: qtiSimpleChoiceParagraphNodeSpec,
+    qtiSimpleChoiceImage: qtiSimpleChoiceImageNodeSpec
   },
   marks: baseMarks
 });
@@ -130,9 +136,9 @@ export const MultipleChoiceEditor: Story = {
         <qti-prompt>
           <p>Select all that apply:</p>
         </qti-prompt>
-        <qti-simple-choice identifier="A">First option</qti-simple-choice>
-        <qti-simple-choice identifier="B">Second option</qti-simple-choice>
-        <qti-simple-choice identifier="C">Third option</qti-simple-choice>
+        <qti-simple-choice identifier="A"><p>First option</p></qti-simple-choice>
+        <qti-simple-choice identifier="B"><p>Second option</p></qti-simple-choice>
+        <qti-simple-choice identifier="C"><p>Third option</p></qti-simple-choice>
       </qti-choice-interaction>
     `;
 
