@@ -28,11 +28,7 @@ import { createBasePlugins } from './plugins/base.plugins';
 // Import component schemas
 import { qtiChoiceInteractionNodeSpec } from '../components/qti-choice-interaction/qti-choice-interaction.schema';
 import { qtiPromptNodeSpec } from '../components/qti-prompt/qti-prompt.schema';
-import {
-  qtiSimpleChoiceImageNodeSpec,
-  qtiSimpleChoiceNodeSpec,
-  qtiSimpleChoiceParagraphNodeSpec
-} from '../components/qti-simple-choice/qti-simple-choice.schema';
+import { qtiSimpleChoiceNodeSpec } from '../components/qti-simple-choice/qti-simple-choice.schema';
 // Import command
 import { insertChoiceInteraction } from '../components/qti-choice-interaction/qti-choice-interaction.commands';
 
@@ -49,9 +45,7 @@ const schema = new Schema({
     ...baseNodes,
     qtiChoiceInteraction: qtiChoiceInteractionNodeSpec,
     qtiPrompt: qtiPromptNodeSpec,
-    qtiSimpleChoice: qtiSimpleChoiceNodeSpec,
-    qtiSimpleChoiceParagraph: qtiSimpleChoiceParagraphNodeSpec,
-    qtiSimpleChoiceImage: qtiSimpleChoiceImageNodeSpec
+    qtiSimpleChoice: qtiSimpleChoiceNodeSpec
   },
   marks: baseMarks
 });
