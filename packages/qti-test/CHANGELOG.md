@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.2.0](https://github.com/Citolab/qti-components/compare/test-v1.1.10...test-v1.2.0) (2026-02-24)
+
+
+### Features
+
+* created GitHub workflows for PR package previews and StackBlitz links ([1299c78](https://github.com/Citolab/qti-components/commit/1299c78215481a23f48db1619f98650b177a7abc))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @qti-components/base bumped to 1.2.0
+    * @qti-components/elements bumped to 1.3.0
+    * @qti-components/interactions bumped to 1.7.1
+    * @qti-components/processing bumped to 1.1.0
+    * @qti-components/theme bumped to 1.1.0
+    * @qti-components/transformers bumped to 1.4.0
+    * @qti-components/utilities bumped to 1.1.0
+
 ## [1.1.10](https://github.com/Citolab/qti-components/compare/test-v1.1.9...test-v1.1.10) (2026-02-13)
 
 

@@ -1,7 +1,7 @@
 {
   "name": "@qti-components/loader",
   "description": "QTI loader utilities",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "author": "",
   "dependencies": {
     "@qti-components/elements": "workspace:^",

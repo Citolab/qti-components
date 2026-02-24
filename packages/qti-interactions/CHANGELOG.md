@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.7.1](https://github.com/Citolab/qti-components/compare/interactions-v1.7.0...interactions-v1.7.1) (2026-02-24)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @qti-components/base bumped to 1.2.0
+    * @qti-components/utilities bumped to 1.1.0
+  * devDependencies
+    * @qti-components/theme bumped to 1.1.0
+    * @qti-components/transformers bumped to 1.4.0
+
 ## [1.7.0](https://github.com/Citolab/qti-components/compare/interactions-v1.6.1...interactions-v1.7.0) (2026-02-13)
 
 

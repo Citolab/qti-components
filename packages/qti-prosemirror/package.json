@@ -1,7 +1,7 @@
 {
   "name": "@qti-components/prosemirror",
   "description": "QTI prosemirror schemas and helpers",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "",
   "customElements": "custom-elements.json",
   "dependencies": {
