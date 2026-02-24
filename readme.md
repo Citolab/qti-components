@@ -38,6 +38,10 @@ import '@citolab/qti-components';
 
 Explore the complete description of supported QTI tags, examples, and the ability to interactively play with changing attributes of the QTI items in our [Storybook](https://qti-components.citolab.nl/).
 
+## Branch Preview Via StackBlitz
+
+For pull requests, a bot comment includes one-click StackBlitz links that open the PR branch and start Storybook in-browser. Setup details and manual URL templates are documented in [docs/publishing.md](docs/publishing.md#pull-request-stackblitz-links).
+
 ## Contributing
 
 Contributions are welcome! Please follow these guidelines when contributing:
@@ -47,6 +51,10 @@ Contributions are welcome! Please follow these guidelines when contributing:
 - Commit your changes with clear and concise messages
 - Push your changes to your forked repository
 - Open a pull request to the original repository
+
+## Publishing
+
+Release and publish workflow details are documented in [docs/publishing.md](docs/publishing.md).
 
 ## Third-Party Components
 

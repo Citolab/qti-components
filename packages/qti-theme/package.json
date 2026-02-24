@@ -25,5 +25,8 @@
     "yalc": "yalc publish",
     "yalc:push": "yalc push"
   },
-  "type": "module"
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  }
 }

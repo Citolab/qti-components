@@ -270,7 +270,7 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1
 
-  packages/lit-utilities:
+  packages/qti-utilities:
     devDependencies:
       lit:
         specifier: ^3.3.1
@@ -280,7 +280,7 @@ importers:
     dependencies:
       '@qti-components/utilities':
         specifier: workspace:^
-        version: link:../lit-utilities
+        version: link:../qti-utilities
     devDependencies:
       '@lit/context':
         specifier: ^1.1.6
@@ -339,7 +339,7 @@ importers:
         version: link:../qti-transformers
       '@qti-components/utilities':
         specifier: workspace:^
-        version: link:../lit-utilities
+        version: link:../qti-utilities
     devDependencies:
       '@lit/context':
         specifier: ^1.1.6
@@ -355,7 +355,7 @@ importers:
         version: link:../qti-base
       '@qti-components/utilities':
         specifier: workspace:^
-        version: link:../lit-utilities
+        version: link:../qti-utilities
     devDependencies:
       '@lit/context':
         specifier: ^1.1.6
@@ -389,7 +389,7 @@ importers:
         version: link:../qti-transformers
       '@qti-components/utilities':
         specifier: workspace:^
-        version: link:../lit-utilities
+        version: link:../qti-utilities
     devDependencies:
       '@lit/context':
         specifier: ^1.1.6
@@ -417,7 +417,7 @@ importers:
         version: link:../qti-base
       '@qti-components/utilities':
         specifier: workspace:^
-        version: link:../lit-utilities
+        version: link:../qti-utilities
     devDependencies:
       '@lit/context':
         specifier: ^1.1.6
@@ -436,7 +436,7 @@ importers:
         version: link:../qti-interactions
       '@qti-components/utilities':
         specifier: workspace:^
-        version: link:../lit-utilities
+        version: link:../qti-utilities
     devDependencies:
       '@lit/context':
         specifier: ^1.1.6
@@ -491,7 +491,7 @@ importers:
         version: link:../qti-transformers
       '@qti-components/utilities':
         specifier: workspace:^
-        version: link:../lit-utilities
+        version: link:../qti-utilities
     devDependencies:
       '@heximal/templates':
         specifier: ^0.1.5

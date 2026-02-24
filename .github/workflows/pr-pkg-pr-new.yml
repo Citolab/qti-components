@@ -1,0 +1,40 @@
+name: PR pkg.pr.new
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: pr-pkg-pr-new-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  publish-pr-packages:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build workspace
+        run: pnpm run build
+
+      - name: Publish PR package previews
+        run: pnpm exec pkg-pr-new publish "./packages/*" --pnpm --packageManager pnpm --comment update

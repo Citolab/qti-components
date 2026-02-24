@@ -25,5 +25,8 @@
     "yalc:push": "yalc push"
   },
   "type": "module",
-  "types": "dist/index.d.ts"
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ]
 }

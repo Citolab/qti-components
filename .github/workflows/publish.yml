@@ -2,6 +2,16 @@ name: Publish to NPM
 
 on:
   workflow_call:
+    inputs:
+      tag:
+        description: 'Tag to publish (e.g., v1.2.3). Leave empty for latest commit on selected branch.'
+        required: false
+        type: string
+      dist_tag:
+        description: 'NPM dist-tag to publish (latest or next).'
+        required: false
+        type: string
+        default: latest
     secrets:
       NPM_TOKEN:
         required: true
@@ -11,6 +21,14 @@ on:
         description: 'Tag to publish (e.g., v1.2.3). Leave empty for latest commit on selected branch.'
         required: false
         type: string
+      dist_tag:
+        description: 'NPM dist-tag to publish (latest or next).'
+        required: false
+        default: latest
+        type: choice
+        options:
+          - latest
+          - next
 
 permissions:
   contents: read
@@ -44,7 +62,11 @@ jobs:
       - name: Build project 🔨
         run: pnpm run build
 
-      - name: Publish to NPM 🚀
-        run: pnpm --filter @citolab/qti-components publish
+      - name: Publish workspace packages to NPM 🚀
+        run: |
+          set -euo pipefail
+          DIST_TAG="${{ inputs.dist_tag || 'latest' }}"
+          echo "Using npm dist-tag: ${DIST_TAG}"
+          pnpm -r --filter ./packages/* publish --access public --no-git-checks --tag "${DIST_TAG}"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
