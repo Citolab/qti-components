@@ -3,9 +3,6 @@
   "description": "QTI theme utilities",
   "version": "1.0.1",
   "author": "",
-  "devDependencies": {
-    "@qti-components/theme": "workspace:^"
-  },
   "exports": {
     "./item.css": "./dist/item.css",
     "./native.css": "./dist/native.css"
