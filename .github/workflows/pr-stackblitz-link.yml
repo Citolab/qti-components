@@ -37,7 +37,7 @@ jobs:
             ## Branch Storybook Preview (StackBlitz)
 
             - Quick open (recommended): ${stackblitzUrl}
-            - Root Storybook (`storybook:dev`): ${storybookDevUrl}
+            - Root Storybook (storybook:dev): ${storybookDevUrl}
             - Interactions Storybook: ${storybookInteractionsUrl}
             - Prosemirror Storybook: ${storybookProsemirrorUrl}`;
 
