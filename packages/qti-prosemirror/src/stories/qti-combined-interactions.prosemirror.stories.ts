@@ -14,8 +14,10 @@ import { qtiSimpleChoiceNodeSpec } from '../components/qti-simple-choice/qti-sim
 import { qtiInlineChoiceInteractionNodeSpec } from '../components/qti-inline-choice-interaction/qti-inline-choice-interaction.schema';
 import { qtiInlineChoiceNodeSpec } from '../components/qti-inline-choice-interaction/qti-inline-choice.schema';
 import { qtiTextEntryInteractionNodeSpec } from '../components/qti-text-entry-interaction/qti-text-entry-interaction.schema';
+import { qtiSelectPointInteractionNodeSpec } from '../components/qti-select-point-interaction/qti-select-point-interaction.schema';
 import { insertChoiceInteraction } from '../components/qti-choice-interaction/qti-choice-interaction.commands';
 import { insertInlineChoiceInteraction } from '../components/qti-inline-choice-interaction/qti-inline-choice-interaction.commands';
+import { insertSelectPointInteraction } from '../components/qti-select-point-interaction/qti-select-point-interaction.commands';
 import {
   canInsertTextEntryInteraction,
   insertTextEntryInteraction
@@ -27,6 +29,7 @@ import '../components/qti-simple-choice/qti-simple-choice';
 import '../components/qti-inline-choice-interaction/qti-inline-choice-interaction';
 import '../components/qti-inline-choice-interaction/qti-inline-choice';
 import '../components/qti-text-entry-interaction/qti-text-entry-interaction';
+import '../components/qti-select-point-interaction/qti-select-point-interaction';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
@@ -38,7 +41,8 @@ const schema = new Schema({
     qtiSimpleChoice: qtiSimpleChoiceNodeSpec,
     qtiInlineChoiceInteraction: qtiInlineChoiceInteractionNodeSpec,
     qtiInlineChoice: qtiInlineChoiceNodeSpec,
-    qtiTextEntryInteraction: qtiTextEntryInteractionNodeSpec
+    qtiTextEntryInteraction: qtiTextEntryInteractionNodeSpec,
+    qtiSelectPointInteraction: qtiSelectPointInteractionNodeSpec
   },
   marks: baseMarks
 });
@@ -62,7 +66,7 @@ export const AllInteractionsInOneEditor: Story = {
       <h1>QTI Combined Interaction Editor</h1>
       <p>Use the buttons to insert all supported interaction types into this same editor.</p>
       <p>Example text entry: Answer: <qti-text-entry-interaction response-identifier="RESPONSE_1"></qti-text-entry-interaction></p>
-      <p>Place your cursor and insert either a choice interaction or an inline choice interaction below.</p>
+      <p>Place your cursor and insert a choice, inline choice, text entry, or select-point interaction below.</p>
     `;
 
     const initEditor = (container: HTMLElement) => {
@@ -112,6 +116,12 @@ export const AllInteractionsInOneEditor: Story = {
       syncTextEntryButtonState();
     };
 
+    const insertSelectPoint = () => {
+      if (!currentView) return;
+      insertSelectPointInteraction(currentView.state, currentView.dispatch);
+      currentView.focus();
+    };
+
     return html`
       <div style="max-width: 900px; margin: 40px auto; padding: 0 20px; font-family: system-ui;">
         <h3>Combined QTI Interaction Editor</h3>
@@ -137,6 +147,12 @@ export const AllInteractionsInOneEditor: Story = {
             })}
           >
             Insert Text Entry Interaction
+          </button>
+          <button
+            @click=${insertSelectPoint}
+            style="padding: 8px 16px; background: #7c3aed; color: white; border: none; border-radius: 4px; cursor: pointer;"
+          >
+            Insert Select Point Interaction
           </button>
         </div>
         <div

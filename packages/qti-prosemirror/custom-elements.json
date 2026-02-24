@@ -453,6 +453,648 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/qti-select-point-interaction/qti-select-point-interaction.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiSelectPointInteractionEdit",
+          "members": [
+            {
+              "kind": "field",
+              "name": "#activePointerId",
+              "privacy": "private",
+              "type": {
+                "text": "number | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#clearMappings",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#draftToEntry",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "AreaMappingEntry | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "draft",
+                  "type": {
+                    "text": "DraftShape"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#dragging",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "#emitAttrsChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#fileInputRef",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#findHitShapeIndex",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "x",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "y",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#imageElement",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLImageElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#loadImageDimensions",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<{ width: number; height: number }>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "src",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#moveShape",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "AreaMappingEntry | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "ShapeDragState"
+                  }
+                },
+                {
+                  "name": "x",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "y",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onFileChange",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onImageLoad",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onPointerCancel",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "PointerEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onPointerDown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "PointerEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onPointerMove",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "PointerEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onPointerUp",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "PointerEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#openFilePicker",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#parseCoords",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number[] | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "coords",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#persistAreaEntries",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "entries",
+                  "type": {
+                    "text": "AreaMappingEntry[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#renderAreaShape",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TemplateResult | typeof nothing"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "entry",
+                  "type": {
+                    "text": "AreaMappingEntry"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#renderDraft",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TemplateResult | typeof nothing"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setDrawMode",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "mode",
+                  "type": {
+                    "text": "DrawMode"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#shapeDrag",
+              "privacy": "private",
+              "type": {
+                "text": "ShapeDragState | null"
+              },
+              "default": "null",
+              "parsedType": {
+                "text": "{ index: number, startX: number, startY: number, originCoords: number[], shape: 'circle' | 'rect' } | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncAreaEntriesFromAttribute",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#toDataUrl",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<string>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "file",
+                  "type": {
+                    "text": "File"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#toOriginalCoords",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "{ x: number; y: number } | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "clientX",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "clientY",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "areaEntries",
+              "type": {
+                "text": "AreaMappingEntry[]"
+              },
+              "privacy": "protected",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "areaMappings",
+              "type": {
+                "text": "string"
+              },
+              "default": "'[]'",
+              "attribute": "area-mappings",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "classes",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "attribute": "class",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "correctResponse",
+              "type": {
+                "text": "string | string[] | null"
+              },
+              "privacy": "public",
+              "default": "null",
+              "attribute": "correct-response",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "src/components/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "draft",
+              "type": {
+                "text": "DraftShape | null"
+              },
+              "privacy": "protected",
+              "default": "null",
+              "parsedType": {
+                "text": "{ shape: 'circle' | 'rect', startX: number, startY: number, currentX: number, currentY: number } | null"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "drawMode",
+              "type": {
+                "text": "DrawMode"
+              },
+              "privacy": "protected",
+              "default": "'select'",
+              "parsedType": {
+                "text": "'select' | 'circle' | 'rect'"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "imageAlt",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "attribute": "image-alt",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "imageHeight",
+              "type": {
+                "text": "number | null"
+              },
+              "default": "null",
+              "attribute": "image-height",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "imageReady",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "protected",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "imageSrc",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "attribute": "image-src",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "imageWidth",
+              "type": {
+                "text": "number | null"
+              },
+              "default": "null",
+              "attribute": "image-width",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "maxChoices",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "attribute": "max-choices",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "minChoices",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "attribute": "min-choices",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "responseIdentifier",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "response-identifier",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "src/components/interaction.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "qti-prosemirror-node-attrs-change",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "area-mappings",
+              "type": {
+                "text": "string"
+              },
+              "default": "'[]'",
+              "fieldName": "areaMappings"
+            },
+            {
+              "name": "class",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "fieldName": "classes"
+            },
+            {
+              "name": "correct-response",
+              "type": {
+                "text": "string | string[] | null"
+              },
+              "default": "null",
+              "fieldName": "correctResponse",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "src/components/interaction.ts"
+              }
+            },
+            {
+              "name": "image-alt",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "fieldName": "imageAlt"
+            },
+            {
+              "name": "image-height",
+              "type": {
+                "text": "number | null"
+              },
+              "default": "null",
+              "fieldName": "imageHeight"
+            },
+            {
+              "name": "image-src",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "fieldName": "imageSrc"
+            },
+            {
+              "name": "image-width",
+              "type": {
+                "text": "number | null"
+              },
+              "default": "null",
+              "fieldName": "imageWidth"
+            },
+            {
+              "name": "max-choices",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "fieldName": "maxChoices"
+            },
+            {
+              "name": "min-choices",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "fieldName": "minChoices"
+            },
+            {
+              "name": "response-identifier",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "responseIdentifier",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "src/components/interaction.ts"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "Interaction",
+            "module": "/src/components/interaction"
+          },
+          "tagName": "qti-select-point-interaction",
+          "customElement": true,
+          "modulePath": "src/components/qti-select-point-interaction/qti-select-point-interaction.ts",
+          "definitionPath": "src/components/qti-select-point-interaction/qti-select-point-interaction.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": []
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-select-point-interaction",
+          "declaration": {
+            "name": "QtiSelectPointInteractionEdit",
+            "module": "src/components/qti-select-point-interaction/qti-select-point-interaction.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiSelectPointInteractionEdit",
+          "declaration": {
+            "name": "QtiSelectPointInteractionEdit",
+            "module": "src/components/qti-select-point-interaction/qti-select-point-interaction.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/qti-simple-choice/qti-simple-choice.ts",
       "declarations": [
         {

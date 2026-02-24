@@ -18,7 +18,9 @@ import { dropCursor } from 'prosemirror-dropcursor';
 import { insertTextEntryInteraction } from '../../components/qti-text-entry-interaction/qti-text-entry-interaction.commands';
 import { insertChoiceInteraction } from '../../components/qti-choice-interaction/qti-choice-interaction.commands';
 import { insertInlineChoiceInteraction } from '../../components/qti-inline-choice-interaction/qti-inline-choice-interaction.commands';
+import { insertSelectPointInteraction } from '../../components/qti-select-point-interaction/qti-select-point-interaction.commands';
 import { blockSelectPlugin } from './block-select-plugin';
+import { nodeAttrsSyncPlugin } from './node-attrs-sync-plugin';
 
 import type { Plugin } from 'prosemirror-state';
 import type { Schema } from 'prosemirror-model';
@@ -57,7 +59,8 @@ export function createHistoryKeymap(): Plugin {
     'Mod-y': redo,
     'Mod-Shift-t': insertTextEntryInteraction,
     'Mod-Shift-c': insertChoiceInteraction,
-    'Mod-Shift-l': insertInlineChoiceInteraction
+    'Mod-Shift-l': insertInlineChoiceInteraction,
+    'Mod-Shift-p': insertSelectPointInteraction
   });
 }
 
@@ -72,6 +75,7 @@ export function createBasePlugins(schema: Schema): Plugin[] {
     gapCursor(),
     dropCursor(),
     keymap(baseKeymap),
-    blockSelectPlugin
+    blockSelectPlugin,
+    nodeAttrsSyncPlugin
   ];
 }
