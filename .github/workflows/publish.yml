@@ -67,6 +67,6 @@ jobs:
           set -euo pipefail
           DIST_TAG="${{ inputs.dist_tag || 'latest' }}"
           echo "Using npm dist-tag: ${DIST_TAG}"
-          pnpm -r --filter ./packages/* publish --access public --no-git-checks --tag "${DIST_TAG}"
+          pnpm -r --filter "./packages/*" publish --access public --no-git-checks --tag "${DIST_TAG}"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
