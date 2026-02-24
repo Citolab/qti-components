@@ -44,7 +44,7 @@
     "-----------------------development--": "-",
     "watch": "pnpm --filter \"./packages/qti-components\" --filter \"./packages/qti-interactions\" --filter \"./packages/qti-prosemirror\" --parallel exec -- nodemon --watch src --ext ts,css --exec \"pnpm run build && pnpm run yalc:push\"",
     "-----------------------cmds--": "-",
-    "pre-commit": "run-s tsc lint madge cem cem:storybook",
+    "pre-commit": "run-s tsc lint madge",
     "commit-msg": "commitlint --edit",
     "build-storybook": "pnpm run cem && storybook build",
     "-----------------------scripts--": "-",
