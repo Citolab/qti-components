@@ -270,12 +270,6 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1
 
-  packages/qti-utilities:
-    devDependencies:
-      lit:
-        specifier: ^3.3.1
-        version: 3.3.1
-
   packages/qti-base:
     dependencies:
       '@qti-components/utilities':
@@ -503,13 +497,15 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1
 
-  packages/qti-theme:
-    devDependencies:
-      '@qti-components/theme':
-        specifier: workspace:^
-        version: 'link:'
+  packages/qti-theme: {}
 
   packages/qti-transformers: {}
+
+  packages/qti-utilities:
+    devDependencies:
+      lit:
+        specifier: ^3.3.1
+        version: 3.3.1
 
 packages:
 
