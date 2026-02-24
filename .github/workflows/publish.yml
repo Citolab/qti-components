@@ -67,6 +67,23 @@ jobs:
           set -euo pipefail
           DIST_TAG="${{ inputs.dist_tag || 'latest' }}"
           echo "Using npm dist-tag: ${DIST_TAG}"
-          pnpm -r --filter "./packages/*" publish --access public --no-git-checks --tag "${DIST_TAG}"
+          node -e '
+            const fs=require("fs"), path=require("path");
+            for (const d of fs.readdirSync("packages").sort()) {
+              const f=path.join("packages", d, "package.json");
+              if (!fs.existsSync(f)) continue;
+              const p=JSON.parse(fs.readFileSync(f,"utf8"));
+              if (!p.private) console.log(`${p.name}@${p.version}`);
+            }
+          ' | while read -r SPEC; do
+            NAME="${SPEC%@*}"
+            VERSION="${SPEC##*@}"
+            if npm view "${NAME}@${VERSION}" version >/dev/null 2>&1; then
+              echo "Skipping ${NAME}@${VERSION} (already published)"
+            else
+              echo "Publishing ${NAME}@${VERSION}"
+              pnpm --filter "${NAME}" publish --access public --no-git-checks --tag "${DIST_TAG}"
+            fi
+          done
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
