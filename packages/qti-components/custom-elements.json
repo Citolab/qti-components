@@ -1402,6 +1402,3774 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/qti-custom/src/components/qti-order-interaction-in-place/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiOrderInteractionInPlace",
+          "declaration": {
+            "name": "QtiOrderInteractionInPlace",
+            "module": "./qti-order-interaction-in-place"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-custom/src/components/qti-order-interaction-in-place/qti-order-interaction-in-place.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiOrderInteractionInPlace",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_context",
+              "type": {
+                "text": "ItemContext"
+              },
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_correctResponse",
+              "type": {
+                "text": "string | string[] | null"
+              },
+              "privacy": "protected",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_handleOrientationChange",
+              "parameters": [
+                {
+                  "name": "_oldValue",
+                  "type": {
+                    "text": "'vertical' | 'horizontal'"
+                  }
+                },
+                {
+                  "name": "newValue",
+                  "type": {
+                    "text": "'vertical' | 'horizontal'"
+                  }
+                }
+              ],
+              "type": {
+                "text": "_handleOrientationChange(_oldValue: 'vertical' | 'horizontal', newValue: 'vertical' | 'horizontal') => void"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_handleShowCandidateCorrectionChange",
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_handleShowCorrectResponseChange",
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_handleShowFullCorrectResponseChange",
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_handleTestElementChange",
+              "parameters": [
+                {
+                  "name": "_oldValue",
+                  "type": {
+                    "text": "ComputedContext"
+                  }
+                },
+                {
+                  "name": "newValue",
+                  "type": {
+                    "text": "ComputedContext"
+                  }
+                }
+              ],
+              "type": {
+                "text": "_handleTestElementChange(_oldValue: ComputedContext, newValue: ComputedContext) => void"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_initialOrder",
+              "type": {
+                "text": "string[]"
+              },
+              "privacy": "protected",
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "DragDropSortableMixin",
+                "module": "packages/qti-custom/src/drag-drop/drag-drop-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_internals",
+              "type": {
+                "text": "ElementInternals"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_isFullCorrectResponse",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_response",
+              "type": {
+                "text": "string[]"
+              },
+              "privacy": "protected",
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "DragDropSortableMixin",
+                "module": "packages/qti-custom/src/drag-drop/drag-drop-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "afterCache",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "DragDropSortableMixin",
+                "module": "packages/qti-custom/src/drag-drop/drag-drop-sortable.mixin.ts"
+              },
+              "type": {
+                "text": "afterCache() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "allowDrop",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "_draggable",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "droppable",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSortableMixin",
+                "module": "packages/qti-custom/src/drag-drop/drag-drop-sortable.mixin.ts"
+              },
+              "type": {
+                "text": "allowDrop(_draggable: HTMLElement, droppable: HTMLElement) => boolean"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "applyInteractivityChanges",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "choices",
+              "type": {
+                "text": "QtiSimpleChoice[]"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "choiceWidth",
+              "type": {
+                "text": "number"
+              },
+              "default": "200",
+              "attribute": "data-choices-container-width"
+            },
+            {
+              "kind": "method",
+              "name": "collectResponse",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "string[]"
+                }
+              },
+              "inheritedFrom": {
+                "name": "DragDropSortableMixin",
+                "module": "packages/qti-custom/src/drag-drop/drag-drop-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "configContext",
+              "type": {
+                "text": "ConfigContext"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "correctness",
+              "type": {
+                "text": "Readonly<Correctness | null>"
+              },
+              "description": "Returns the correctness of the current response compared to correct response.\nWorks in both standalone mode (using `correct-response` attribute) and\nitem context mode (using responseVariable).",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "correctResponse",
+              "type": {
+                "text": "Readonly<string | string[] | null>"
+              },
+              "description": "Get/set correct response programmatically.\nThis property syncs with the `correct-response` attribute.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "correctResponseAttr",
+              "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
+              "type": {
+                "text": "string | null"
+              },
+              "attribute": "correct-response",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "createDropPlaceholder",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "HTMLElement"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "source",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "rect",
+                  "type": {
+                    "text": "DOMRect"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSortableMixin",
+                "module": "packages/qti-custom/src/drag-drop/drag-drop-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "disableAnimations",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "disable-animations"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dropPlaceholder",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "privacy": "protected",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "DragDropSortableMixin",
+                "module": "packages/qti-custom/src/drag-drop/drag-drop-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "enableFlipAnimations",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "true",
+              "inheritedFrom": {
+                "name": "DragDropSortableMixin",
+                "module": "packages/qti-custom/src/drag-drop/drag-drop-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "flipAnimationConfig",
+              "type": {
+                "text": "FlipAnimationOptions"
+              },
+              "privacy": "public",
+              "default": "{ duration: 250, easing: 'ease' }",
+              "inheritedFrom": {
+                "name": "DragDropSortableMixin",
+                "module": "packages/qti-custom/src/drag-drop/drag-drop-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "handleDragMove",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "clientX",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "clientY",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSortableMixin",
+                "module": "packages/qti-custom/src/drag-drop/drag-drop-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "handleDrop",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "draggable",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "droppable",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSortableMixin",
+                "module": "packages/qti-custom/src/drag-drop/drag-drop-sortable.mixin.ts"
+              },
+              "type": {
+                "text": "handleDrop(draggable: HTMLElement, droppable: HTMLElement) => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "handleInvalidDrop",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "dragSource",
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSortableMixin",
+                "module": "packages/qti-custom/src/drag-drop/drag-drop-sortable.mixin.ts"
+              },
+              "type": {
+                "text": "handleInvalidDrop(dragSource: HTMLElement | null) => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "initiateDrag",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "dragElement",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "startX",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "startY",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "inputType",
+                  "type": {
+                    "text": "'mouse' | 'touch'"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSortableMixin",
+                "module": "packages/qti-custom/src/drag-drop/drag-drop-sortable.mixin.ts"
+              },
+              "type": {
+                "text": "initiateDrag(dragElement: HTMLElement, startX: number, startY: number, inputType: 'mouse' | 'touch') => void"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "internals",
+              "type": {
+                "text": "ElementInternals"
+              },
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "isFullCorrectResponse",
+              "type": {
+                "text": "Readonly<boolean>"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "isInline",
+              "type": {
+                "text": "boolean"
+              },
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastHoverTarget",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "privacy": "protected",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "DragDropSortableMixin",
+                "module": "packages/qti-custom/src/drag-drop/drag-drop-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastPlacement",
+              "type": {
+                "text": "{ target: HTMLElement; after: boolean } | null"
+              },
+              "privacy": "protected",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "DragDropSortableMixin",
+                "module": "packages/qti-custom/src/drag-drop/drag-drop-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "attribute": "name",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "orientation",
+              "type": {
+                "text": "'vertical' | 'horizontal'"
+              },
+              "default": "'vertical'",
+              "attribute": "orientation",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "placePlaceholder",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "dropTarget",
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                },
+                {
+                  "name": "clientX",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "clientY",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Place the placeholder element at the appropriate position.\nUses the sorting strategy to calculate insertion position.\nApplies FLIP animations to siblings when they move.",
+              "inheritedFrom": {
+                "name": "DragDropSortableMixin",
+                "module": "packages/qti-custom/src/drag-drop/drag-drop-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "readonly",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "reorderDOMByIdentifiers",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifiers",
+                  "type": {
+                    "text": "string[]"
+                  },
+                  "description": "Ordered array of identifier strings"
+                },
+                {
+                  "name": "animate",
+                  "default": "true",
+                  "description": "Whether to animate the reordering (default: true)"
+                }
+              ],
+              "description": "Reorder DOM elements to match a given array of identifiers.\nUses FLIP animation technique for smooth transitions.",
+              "inheritedFrom": {
+                "name": "DragDropSortableMixin",
+                "module": "packages/qti-custom/src/drag-drop/drag-drop-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "reportValidity() => boolean"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "reset",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "save",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "reset(save: boolean) => void"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "response",
+              "type": {
+                "text": "string | string[] | null"
+              },
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "responseIdentifier",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "response-identifier",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "responseVariable",
+              "type": {
+                "text": "ResponseVariable | undefined"
+              },
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "saveResponse",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string | string[]"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "saveResponse(value: string | string[]) => void"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "showCandidateCorrection",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows feedback on candidate's selections compared to correct response.\nAdds `candidate-correct` / `candidate-incorrect` states to choices.",
+              "attribute": "show-candidate-correction",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "showCorrectResponse",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows which choices are correct with inline indicators.\nAdds `correct-response` / `incorrect-response` states to choices.",
+              "attribute": "show-correct-response",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "showFullCorrectResponse",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows a cloned interaction with the correct answers filled in.\nCreates a disabled copy positioned after this interaction.",
+              "attribute": "show-full-correct-response",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "sortableContainer",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "privacy": "protected",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "DragDropSortableMixin",
+                "module": "packages/qti-custom/src/drag-drop/drag-drop-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "strategy",
+              "type": {
+                "text": "SortingStrategy"
+              },
+              "privacy": "protected",
+              "default": "sortingStrategy",
+              "inheritedFrom": {
+                "name": "DragDropSortableMixin",
+                "module": "packages/qti-custom/src/drag-drop/drag-drop-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "toggleCandidateCorrection",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "show",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "toggleCandidateCorrection(show: boolean) => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "toggleCorrectResponse",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "show",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "toggleCorrectResponse(show: boolean) => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "toggleFullCorrectResponse",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "show",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "toggleInternalCorrectResponse",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "show",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "validate",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "validate() => boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string | null"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "correct-response",
+              "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
+              "type": {
+                "text": "string | null"
+              },
+              "fieldName": "correctResponseAttr",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "name": "data-choices-container-width",
+              "type": {
+                "text": "number"
+              },
+              "default": "200",
+              "fieldName": "choiceWidth"
+            },
+            {
+              "name": "disable-animations",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "disableAnimations"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "name": "name",
+              "fieldName": "name",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "name": "orientation",
+              "type": {
+                "text": "'vertical' | 'horizontal'"
+              },
+              "default": "'vertical'",
+              "fieldName": "orientation"
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readonly",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "name": "response-identifier",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "responseIdentifier",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "name": "show-candidate-correction",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows feedback on candidate's selections compared to correct response.\nAdds `candidate-correct` / `candidate-incorrect` states to choices.",
+              "fieldName": "showCandidateCorrection",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "name": "show-correct-response",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows which choices are correct with inline indicators.\nAdds `correct-response` / `incorrect-response` states to choices.",
+              "fieldName": "showCorrectResponse",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "name": "show-full-correct-response",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows a cloned interaction with the correct answers filled in.\nCreates a disabled copy positioned after this interaction.",
+              "fieldName": "showFullCorrectResponse",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            }
+          ],
+          "mixins": [
+            {
+              "name": "DragDropSortableMixin",
+              "module": "/packages/qti-custom/src/drag-drop"
+            }
+          ],
+          "superclass": {
+            "name": "Interaction",
+            "package": "@qti-components/base"
+          },
+          "tagName": "qti-order-interaction-in-place",
+          "customElement": true,
+          "events": [
+            {
+              "name": "qti-interaction-response",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "name": "qti-register-interaction",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            }
+          ],
+          "modulePath": "packages/qti-custom/src/components/qti-order-interaction-in-place/qti-order-interaction-in-place.ts",
+          "definitionPath": "packages/qti-custom/src/components/qti-order-interaction-in-place/qti-order-interaction-in-place.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": []
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-order-interaction-in-place",
+          "declaration": {
+            "name": "QtiOrderInteractionInPlace",
+            "module": "packages/qti-custom/src/components/qti-order-interaction-in-place/qti-order-interaction-in-place.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiOrderInteractionInPlace",
+          "declaration": {
+            "name": "QtiOrderInteractionInPlace",
+            "module": "packages/qti-custom/src/components/qti-order-interaction-in-place/qti-order-interaction-in-place.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-custom/src/drag-drop/drag-drop-core.mixin.ts",
+      "declarations": [
+        {
+          "kind": "mixin",
+          "description": "",
+          "name": "DragDropCoreMixin",
+          "members": [
+            {
+              "kind": "method",
+              "name": "activateAllDroppables",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "afterCache",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "allDropzones",
+              "type": {
+                "text": "HTMLElement[]"
+              },
+              "privacy": "protected",
+              "default": "[]"
+            },
+            {
+              "kind": "method",
+              "name": "allowDrop",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "_draggable",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "droppable",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "cacheInteractiveElements",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "cleanup",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "collisionDetectionAlgorithm",
+              "type": {
+                "text": "CollisionDetectionAlgorithm"
+              },
+              "privacy": "public",
+              "default": "defaultCollisionAlgorithm",
+              "description": "The collision detection algorithm to use for drag and drop\nCan be overridden by subclasses or configured per interaction type"
+            },
+            {
+              "kind": "method",
+              "name": "createDragClone",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "HTMLElement"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "rect",
+                  "type": {
+                    "text": "DOMRect"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "deactivateAllDroppables",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dragState",
+              "type": {
+                "text": "DragState"
+              },
+              "privacy": "protected",
+              "default": "{ dragging: false, dragSource: null, dragClone: null, startOffset: { x: 0, y: 0 }, currentTarget: null, sourceDroppable: null, inputType: null }"
+            },
+            {
+              "kind": "field",
+              "name": "dragSubscriptions",
+              "type": {
+                "text": "Array<{ unsubscribe: () => void }>"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "method",
+              "name": "handleDragEnd",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "handleDragMove",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "clientX",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "clientY",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleDrop",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "draggable",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "droppable",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleInvalidDrop",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "dragSource",
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "initiateDrag",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "dragElement",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "startX",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "startY",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "inputType",
+                  "type": {
+                    "text": "'mouse' | 'touch'"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "resetDragState",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "saveResponse",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "optional": true,
+                  "type": {
+                    "text": "string | string[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "setInternalsState",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "enabled",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "setupDragDrop",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "setupDragObservables",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "setupMoveObservables",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "inputType",
+                  "type": {
+                    "text": "'mouse' | 'touch'"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "subscriptions",
+              "type": {
+                "text": "Array<{ unsubscribe: () => void }>"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "trackedDragContainers",
+              "type": {
+                "text": "HTMLElement[]"
+              },
+              "privacy": "protected",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "trackedDraggables",
+              "type": {
+                "text": "HTMLElement[]"
+              },
+              "privacy": "protected",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "trackedDroppables",
+              "type": {
+                "text": "HTMLElement[]"
+              },
+              "privacy": "protected",
+              "default": "[]"
+            },
+            {
+              "kind": "method",
+              "name": "updateClonePosition",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "clientX",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "clientY",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            }
+          ],
+          "parameters": [
+            {
+              "name": "superClass",
+              "type": {
+                "text": "T"
+              }
+            },
+            {
+              "name": "draggablesSelector",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "droppablesSelector",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "dragContainersSelector",
+              "default": "'slot[part=\"drags\"]'"
+            },
+            {
+              "name": "defaultCollisionAlgorithm",
+              "default": "'pointerWithin'",
+              "type": {
+                "text": "CollisionDetectionAlgorithm"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DragDropCoreMixin",
+          "declaration": {
+            "name": "DragDropCoreMixin",
+            "module": "packages/qti-custom/src/drag-drop/drag-drop-core.mixin.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-custom/src/drag-drop/drag-drop-slotted.mixin.ts",
+      "declarations": [
+        {
+          "kind": "mixin",
+          "description": "",
+          "name": "DragDropSlottedMixin",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_dropBlockedDueToMax",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_enableFlipAnimations",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "_maxAssociations",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "_maxAssociationsDefaultApplied",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_response",
+              "type": {
+                "text": "string[]"
+              },
+              "privacy": "protected",
+              "default": "[]"
+            },
+            {
+              "kind": "method",
+              "name": "afterCache",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "allowDrop",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "_draggable",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "droppable",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "autoSizeDropzones",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "auto-size-dropzones"
+            },
+            {
+              "kind": "method",
+              "name": "checkAllMaxAssociations",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "configuration",
+              "type": {
+                "text": "InteractionConfiguration"
+              },
+              "privacy": "protected",
+              "default": "{ copyStylesDragClone: true, dragCanBePlacedBack: true, dragOnClick: false }"
+            },
+            {
+              "kind": "field",
+              "name": "disableAnimations",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "disable-animations"
+            },
+            {
+              "kind": "method",
+              "name": "dropDraggableInDroppable",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "draggable",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "droppable",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "dragClonePosition",
+                  "optional": true,
+                  "type": {
+                    "text": "DOMRect"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "enableFlipAnimations",
+              "type": {
+                "text": "boolean"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "flipAnimationConfig",
+              "type": {
+                "text": "FlipAnimationOptions"
+              },
+              "privacy": "public",
+              "default": "{ duration: 200, // Slightly faster for slotted interactions easing: 'ease' // Simple, browser-optimized easing }"
+            },
+            {
+              "kind": "method",
+              "name": "handleDrop",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "draggable",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "droppable",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleInvalidDrop",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "dragSource",
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "maxAssociations",
+              "type": {
+                "text": "number"
+              },
+              "attribute": "max-associations",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "minAssociations",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "attribute": "min-associations",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "reset",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "reset",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "save",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "reset",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "save",
+                  "default": "true"
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "response",
+              "type": {
+                "text": "string[]"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "restoreInventoryItem",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "dragSource",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "restoreOriginalInInventory",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "returnToInventory",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "saveResponse",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "saveResponse",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string | string[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "saveResponse",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "optional": true,
+                  "type": {
+                    "text": "string | string[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "updateInventoryBasedOnMatchMax",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "updateMinDimensionsForDropZones",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "validate",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "qti-interaction-response",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "auto-size-dropzones",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "autoSizeDropzones"
+            },
+            {
+              "name": "disable-animations",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "disableAnimations"
+            },
+            {
+              "name": "max-associations",
+              "type": {
+                "text": "number"
+              },
+              "fieldName": "maxAssociations"
+            },
+            {
+              "name": "min-associations",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "fieldName": "minAssociations"
+            }
+          ],
+          "parameters": [
+            {
+              "name": "superClass",
+              "type": {
+                "text": "T"
+              }
+            },
+            {
+              "name": "draggablesSelector",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "droppablesSelector",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "dragContainersSelector",
+              "default": "'slot[part=\"drags\"]'"
+            },
+            {
+              "name": "collisionAlgorithm",
+              "default": "'closestCornersWithInventoryPriority'",
+              "type": {
+                "text": "CollisionDetectionAlgorithm"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DragDropSlottedMixin",
+          "declaration": {
+            "name": "DragDropSlottedMixin",
+            "module": "packages/qti-custom/src/drag-drop/drag-drop-slotted.mixin.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-custom/src/drag-drop/drag-drop-sortable.mixin.ts",
+      "declarations": [
+        {
+          "kind": "mixin",
+          "description": "Drag/drop mixin that keeps a single list of sortable draggables.\nDraggables are treated as both the draggable items and the drop targets.\nA response is the ordered list of `identifier` attributes for all draggables.",
+          "name": "DragDropSortableMixin",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_initialOrder",
+              "type": {
+                "text": "string[]"
+              },
+              "privacy": "protected",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "_response",
+              "type": {
+                "text": "string[]"
+              },
+              "privacy": "protected",
+              "default": "[]"
+            },
+            {
+              "kind": "method",
+              "name": "afterCache",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "allowDrop",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "_draggable",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "droppable",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "collectResponse",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "string[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "createDropPlaceholder",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "HTMLElement"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "source",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "rect",
+                  "type": {
+                    "text": "DOMRect"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "dropPlaceholder",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "privacy": "protected",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "enableFlipAnimations",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "flipAnimationConfig",
+              "type": {
+                "text": "FlipAnimationOptions"
+              },
+              "privacy": "public",
+              "default": "{ duration: 250, easing: 'ease' }"
+            },
+            {
+              "kind": "method",
+              "name": "handleDragMove",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "clientX",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "clientY",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleDrop",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "draggable",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "droppable",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleInvalidDrop",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "dragSource",
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "initiateDrag",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "dragElement",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "startX",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "startY",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "inputType",
+                  "type": {
+                    "text": "'mouse' | 'touch'"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "lastHoverTarget",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "privacy": "protected",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "lastPlacement",
+              "type": {
+                "text": "{ target: HTMLElement; after: boolean } | null"
+              },
+              "privacy": "protected",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "placePlaceholder",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "dropTarget",
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                },
+                {
+                  "name": "clientX",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "clientY",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Place the placeholder element at the appropriate position.\nUses the sorting strategy to calculate insertion position.\nApplies FLIP animations to siblings when they move."
+            },
+            {
+              "kind": "method",
+              "name": "reorderDOMByIdentifiers",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifiers",
+                  "type": {
+                    "text": "string[]"
+                  },
+                  "description": "Ordered array of identifier strings"
+                },
+                {
+                  "name": "animate",
+                  "default": "true",
+                  "description": "Whether to animate the reordering (default: true)"
+                }
+              ],
+              "description": "Reorder DOM elements to match a given array of identifiers.\nUses FLIP animation technique for smooth transitions."
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "reset",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "reset",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "save",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "reset",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "save",
+                  "default": "true"
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "response",
+              "type": {
+                "text": "string | string[] | null"
+              },
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "saveResponse",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "saveResponse",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string | string[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "saveResponse",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "optional": true,
+                  "type": {
+                    "text": "string | string[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "sortableContainer",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "privacy": "protected",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "strategy",
+              "type": {
+                "text": "SortingStrategy"
+              },
+              "privacy": "protected",
+              "default": "sortingStrategy"
+            },
+            {
+              "kind": "method",
+              "name": "validate",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "qti-interaction-response",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "parameters": [
+            {
+              "name": "superClass",
+              "type": {
+                "text": "T"
+              }
+            },
+            {
+              "name": "draggablesSelector",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "dragContainersSelector",
+              "default": "'slot[part=\"drags\"]'"
+            },
+            {
+              "name": "sortingStrategy",
+              "default": "defaultSortingStrategy",
+              "type": {
+                "text": "SortingStrategy"
+              }
+            },
+            {
+              "name": "collisionAlgorithm",
+              "default": "'closestCenter'",
+              "type": {
+                "text": "CollisionDetectionAlgorithm"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DragDropSortableMixin",
+          "declaration": {
+            "name": "DragDropSortableMixin",
+            "module": "packages/qti-custom/src/drag-drop/drag-drop-sortable.mixin.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-custom/src/drag-drop/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "animateFlip",
+          "declaration": {
+            "name": "animateFlip",
+            "module": "./utils/flip.utils"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "animateMultipleFlips",
+          "declaration": {
+            "name": "animateMultipleFlips",
+            "module": "./utils/flip.utils"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "calculateInversion",
+          "declaration": {
+            "name": "calculateInversion",
+            "module": "./utils/flip.utils"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "captureFlipState",
+          "declaration": {
+            "name": "captureFlipState",
+            "module": "./utils/flip.utils"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "captureMultipleFlipStates",
+          "declaration": {
+            "name": "captureMultipleFlipStates",
+            "module": "./utils/flip.utils"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DEFAULT_FLIP_OPTIONS",
+          "declaration": {
+            "name": "DEFAULT_FLIP_OPTIONS",
+            "module": "./utils/flip.utils"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defaultSortingStrategy",
+          "declaration": {
+            "name": "defaultSortingStrategy",
+            "module": "./strategies/sorting.strategy"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DragDropCoreMixin",
+          "declaration": {
+            "name": "DragDropCoreMixin",
+            "module": "./drag-drop-core.mixin"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DragDropSlottedMixin",
+          "declaration": {
+            "name": "DragDropSlottedMixin",
+            "module": "./drag-drop-slotted.mixin"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DragDropSortableMixin",
+          "declaration": {
+            "name": "DragDropSortableMixin",
+            "module": "./drag-drop-sortable.mixin"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FlipAnimationOptions",
+          "declaration": {
+            "name": "FlipAnimationOptions",
+            "module": "./utils/flip.utils"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FlipState",
+          "declaration": {
+            "name": "FlipState",
+            "module": "./utils/flip.utils"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "HorizontalListSortingStrategy",
+          "declaration": {
+            "name": "HorizontalListSortingStrategy",
+            "module": "./strategies/sorting.strategy"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "InsertPosition",
+          "declaration": {
+            "name": "InsertPosition",
+            "module": "./strategies/sorting.strategy"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "performFlip",
+          "declaration": {
+            "name": "performFlip",
+            "module": "./utils/flip.utils"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "SortingStrategy",
+          "declaration": {
+            "name": "SortingStrategy",
+            "module": "./strategies/sorting.strategy"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "VerticalListSortingStrategy",
+          "declaration": {
+            "name": "VerticalListSortingStrategy",
+            "module": "./strategies/sorting.strategy"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-custom/src/drag-drop/strategies/sorting.strategy.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "defaultSortingStrategy",
+          "default": "new VerticalListSortingStrategy()",
+          "description": "Default sorting strategy (vertical)\nUse VerticalListSortingStrategy or HorizontalListSortingStrategy explicitly\nfor better control over orientation."
+        },
+        {
+          "kind": "class",
+          "description": "",
+          "name": "HorizontalListSortingStrategy",
+          "members": [
+            {
+              "kind": "method",
+              "name": "getInsertPosition",
+              "return": {
+                "type": {
+                  "text": "InsertPosition | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "elements",
+                  "type": {
+                    "text": "HTMLElement[]"
+                  }
+                },
+                {
+                  "name": "_activeElement",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "targetElement",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "clientX",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "_clientY",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "description": "",
+          "name": "VerticalListSortingStrategy",
+          "members": [
+            {
+              "kind": "method",
+              "name": "getInsertPosition",
+              "return": {
+                "type": {
+                  "text": "InsertPosition | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "elements",
+                  "type": {
+                    "text": "HTMLElement[]"
+                  }
+                },
+                {
+                  "name": "_activeElement",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "targetElement",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "_clientX",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "clientY",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defaultSortingStrategy",
+          "declaration": {
+            "name": "defaultSortingStrategy",
+            "module": "packages/qti-custom/src/drag-drop/strategies/sorting.strategy.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "HorizontalListSortingStrategy",
+          "declaration": {
+            "name": "HorizontalListSortingStrategy",
+            "module": "packages/qti-custom/src/drag-drop/strategies/sorting.strategy.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "VerticalListSortingStrategy",
+          "declaration": {
+            "name": "VerticalListSortingStrategy",
+            "module": "packages/qti-custom/src/drag-drop/strategies/sorting.strategy.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-custom/src/drag-drop/utils/collision.utils.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "closestCenterCollision",
+          "return": {
+            "type": {
+              "text": "HTMLElement | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "dropzones",
+              "type": {
+                "text": "HTMLElement[]"
+              }
+            },
+            {
+              "name": "clientX",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "clientY",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "dragElement",
+              "optional": true,
+              "type": {
+                "text": "HTMLElement | null"
+              }
+            }
+          ],
+          "description": "Closest Center Algorithm\nIdentifies the droppable container whose center is closest to the center\nof the bounding rectangle of the active draggable item.\nRecommended for sortable lists."
+        },
+        {
+          "kind": "function",
+          "name": "closestCornersCollision",
+          "return": {
+            "type": {
+              "text": "HTMLElement | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "dropzones",
+              "type": {
+                "text": "HTMLElement[]"
+              }
+            },
+            {
+              "name": "clientX",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "clientY",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "dragElement",
+              "optional": true,
+              "type": {
+                "text": "HTMLElement | null"
+              }
+            }
+          ],
+          "description": "Closest Corners Algorithm\nMeasures the distance between all four corners of the active draggable item\nand the four corners of each droppable container.\nPreferred for Kanban boards and interfaces with stacked droppable containers.\n\nUses average corner distance rather than minimum to reduce flickering."
+        },
+        {
+          "kind": "function",
+          "name": "closestCornersWithInventoryPriorityCollision",
+          "return": {
+            "type": {
+              "text": "HTMLElement | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "dropzones",
+              "type": {
+                "text": "HTMLElement[]"
+              }
+            },
+            {
+              "name": "clientX",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "clientY",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "dragElement",
+              "optional": true,
+              "type": {
+                "text": "HTMLElement | null"
+              }
+            },
+            {
+              "name": "dragContainers",
+              "optional": true,
+              "type": {
+                "text": "HTMLElement[]"
+              }
+            }
+          ],
+          "description": "Closest Corners with Inventory Priority Algorithm\nSimilar to closestCorners but gives priority to drag containers (inventory slots).\nWhen a draggable is within reasonable range of a drag container, it will prefer\nthe drag container over other dropzones. This makes it easier to return items\nto the inventory without having to drag them far away from other drop zones.\n\nUses a threshold-based approach:\n- If drag container distance is within a threshold multiplier, prefer it\n- Otherwise, use standard closest corners logic"
+        },
+        {
+          "kind": "function",
+          "name": "detectCollision",
+          "return": {
+            "type": {
+              "text": "HTMLElement | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "dropzones",
+              "type": {
+                "text": "HTMLElement[]"
+              }
+            },
+            {
+              "name": "clientX",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "clientY",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "dragElement",
+              "optional": true,
+              "type": {
+                "text": "HTMLElement | null"
+              }
+            },
+            {
+              "name": "algorithm",
+              "default": "'pointerWithin'",
+              "type": {
+                "text": "CollisionDetectionAlgorithm"
+              }
+            },
+            {
+              "name": "dragContainers",
+              "optional": true,
+              "type": {
+                "text": "HTMLElement[]"
+              }
+            }
+          ],
+          "description": "Main collision detection function that delegates to the appropriate strategy"
+        },
+        {
+          "kind": "function",
+          "name": "getCollisionDetectionStrategy",
+          "return": {
+            "type": {
+              "text": "CollisionDetectionStrategy"
+            }
+          },
+          "parameters": [
+            {
+              "name": "algorithm",
+              "type": {
+                "text": "CollisionDetectionAlgorithm"
+              }
+            }
+          ],
+          "description": "Get the collision detection strategy based on the algorithm name"
+        },
+        {
+          "kind": "function",
+          "name": "pointerWithinCollision",
+          "return": {
+            "type": {
+              "text": "HTMLElement | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "dropzones",
+              "type": {
+                "text": "HTMLElement[]"
+              }
+            },
+            {
+              "name": "clientX",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "clientY",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "Pointer Within Algorithm\nOnly registers collision when the pointer is contained within the bounding rectangle\nof the droppable container. Best for high-precision interfaces."
+        },
+        {
+          "kind": "function",
+          "name": "rectangleIntersectionCollision",
+          "return": {
+            "type": {
+              "text": "HTMLElement | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "dropzones",
+              "type": {
+                "text": "HTMLElement[]"
+              }
+            },
+            {
+              "name": "_clientX",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "_clientY",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "dragElement",
+              "optional": true,
+              "type": {
+                "text": "HTMLElement | null"
+              }
+            }
+          ],
+          "description": "Rectangle Intersection Algorithm\nEnsures there is no gap between any of the 4 sides of the rectangles.\nA draggable is considered over a droppable only when their bounding boxes physically intersect."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "closestCenterCollision",
+          "declaration": {
+            "name": "closestCenterCollision",
+            "module": "packages/qti-custom/src/drag-drop/utils/collision.utils.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "closestCornersCollision",
+          "declaration": {
+            "name": "closestCornersCollision",
+            "module": "packages/qti-custom/src/drag-drop/utils/collision.utils.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "closestCornersWithInventoryPriorityCollision",
+          "declaration": {
+            "name": "closestCornersWithInventoryPriorityCollision",
+            "module": "packages/qti-custom/src/drag-drop/utils/collision.utils.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "detectCollision",
+          "declaration": {
+            "name": "detectCollision",
+            "module": "packages/qti-custom/src/drag-drop/utils/collision.utils.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "getCollisionDetectionStrategy",
+          "declaration": {
+            "name": "getCollisionDetectionStrategy",
+            "module": "packages/qti-custom/src/drag-drop/utils/collision.utils.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "pointerWithinCollision",
+          "declaration": {
+            "name": "pointerWithinCollision",
+            "module": "packages/qti-custom/src/drag-drop/utils/collision.utils.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "rectangleIntersectionCollision",
+          "declaration": {
+            "name": "rectangleIntersectionCollision",
+            "module": "packages/qti-custom/src/drag-drop/utils/collision.utils.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-custom/src/drag-drop/utils/drag-drop.utils.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "applyDropzoneAutoSizing",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "draggables",
+              "type": {
+                "text": "HTMLElement[]"
+              }
+            },
+            {
+              "name": "droppables",
+              "type": {
+                "text": "HTMLElement[]"
+              }
+            },
+            {
+              "name": "dragContainers",
+              "type": {
+                "text": "HTMLElement[]"
+              }
+            },
+            {
+              "name": "hostWindow",
+              "default": "typeof window !== 'undefined' ? window : null",
+              "type": {
+                "text": "Window | null"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "collectResponseData",
+          "return": {
+            "type": {
+              "text": "string[]"
+            }
+          },
+          "parameters": [
+            {
+              "name": "droppables",
+              "type": {
+                "text": "HTMLElement[]"
+              }
+            },
+            {
+              "name": "draggablesSelector",
+              "type": {
+                "text": "string"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "countTotalAssociations",
+          "return": {
+            "type": {
+              "text": "number"
+            }
+          },
+          "parameters": [
+            {
+              "name": "droppables",
+              "type": {
+                "text": "HTMLElement[]"
+              }
+            },
+            {
+              "name": "draggablesSelector",
+              "type": {
+                "text": "string"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "findDraggableTarget",
+          "return": {
+            "type": {
+              "text": "HTMLElement | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "event",
+              "type": {
+                "text": "Event"
+              }
+            },
+            {
+              "name": "draggablesSelector",
+              "type": {
+                "text": "string"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "findInventoryItems",
+          "return": {
+            "type": {
+              "text": "HTMLElement[]"
+            }
+          },
+          "parameters": [
+            {
+              "name": "dragContainers",
+              "type": {
+                "text": "HTMLElement[]"
+              }
+            },
+            {
+              "name": "identifier",
+              "type": {
+                "text": "string"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "getMatchMaxValue",
+          "return": {
+            "type": {
+              "text": "number"
+            }
+          },
+          "parameters": [
+            {
+              "name": "draggables",
+              "type": {
+                "text": "HTMLElement[]"
+              }
+            },
+            {
+              "name": "identifier",
+              "type": {
+                "text": "string"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "isDroppableAtCapacity",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "droppable",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "name": "draggablesSelector",
+              "type": {
+                "text": "string"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "applyDropzoneAutoSizing",
+          "declaration": {
+            "name": "applyDropzoneAutoSizing",
+            "module": "packages/qti-custom/src/drag-drop/utils/drag-drop.utils.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "closestCenterCollision",
+          "declaration": {
+            "name": "closestCenterCollision",
+            "module": "./collision.utils"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "closestCornersCollision",
+          "declaration": {
+            "name": "closestCornersCollision",
+            "module": "./collision.utils"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "collectResponseData",
+          "declaration": {
+            "name": "collectResponseData",
+            "module": "packages/qti-custom/src/drag-drop/utils/drag-drop.utils.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "CollisionDetectionAlgorithm",
+          "declaration": {
+            "name": "CollisionDetectionAlgorithm",
+            "module": "./collision.utils"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "countTotalAssociations",
+          "declaration": {
+            "name": "countTotalAssociations",
+            "module": "packages/qti-custom/src/drag-drop/utils/drag-drop.utils.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "detectCollision",
+          "declaration": {
+            "name": "detectCollision",
+            "module": "./collision.utils"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "findDraggableTarget",
+          "declaration": {
+            "name": "findDraggableTarget",
+            "module": "packages/qti-custom/src/drag-drop/utils/drag-drop.utils.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "findInventoryItems",
+          "declaration": {
+            "name": "findInventoryItems",
+            "module": "packages/qti-custom/src/drag-drop/utils/drag-drop.utils.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "getCollisionDetectionStrategy",
+          "declaration": {
+            "name": "getCollisionDetectionStrategy",
+            "module": "./collision.utils"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "getMatchMaxValue",
+          "declaration": {
+            "name": "getMatchMaxValue",
+            "module": "packages/qti-custom/src/drag-drop/utils/drag-drop.utils.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "isDroppableAtCapacity",
+          "declaration": {
+            "name": "isDroppableAtCapacity",
+            "module": "packages/qti-custom/src/drag-drop/utils/drag-drop.utils.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "pointerWithinCollision",
+          "declaration": {
+            "name": "pointerWithinCollision",
+            "module": "./collision.utils"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "rectangleIntersectionCollision",
+          "declaration": {
+            "name": "rectangleIntersectionCollision",
+            "module": "./collision.utils"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-custom/src/drag-drop/utils/flip.utils.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "animateFlip",
+          "return": {
+            "type": {
+              "text": "Animation | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "element",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "name": "first",
+              "type": {
+                "text": "FlipState"
+              }
+            },
+            {
+              "name": "options",
+              "default": "{}",
+              "type": {
+                "text": "FlipAnimationOptions"
+              }
+            }
+          ],
+          "description": "Animate a single element using FLIP technique"
+        },
+        {
+          "kind": "function",
+          "name": "animateMultipleFlips",
+          "return": {
+            "type": {
+              "text": "Map<Element, Animation>"
+            }
+          },
+          "parameters": [
+            {
+              "name": "previousStates",
+              "type": {
+                "text": "Map<Element, FlipState>"
+              }
+            },
+            {
+              "name": "options",
+              "default": "{}",
+              "type": {
+                "text": "FlipAnimationOptions"
+              }
+            }
+          ],
+          "description": "Animate multiple elements using their captured states\nReturns a map of elements to their animations"
+        },
+        {
+          "kind": "function",
+          "name": "calculateInversion",
+          "return": {
+            "type": {
+              "text": "{\n  deltaX: number;\n  deltaY: number;\n  deltaW: number;\n  deltaH: number;\n}"
+            }
+          },
+          "parameters": [
+            {
+              "name": "first",
+              "type": {
+                "text": "FlipState"
+              }
+            },
+            {
+              "name": "last",
+              "type": {
+                "text": "FlipState"
+              }
+            }
+          ],
+          "description": "Calculate the transform needed to invert an element back to its first state"
+        },
+        {
+          "kind": "function",
+          "name": "captureFlipState",
+          "return": {
+            "type": {
+              "text": "FlipState"
+            }
+          },
+          "parameters": [
+            {
+              "name": "element",
+              "type": {
+                "text": "Element"
+              }
+            }
+          ],
+          "description": "Capture the current position and dimensions of an element"
+        },
+        {
+          "kind": "function",
+          "name": "captureMultipleFlipStates",
+          "return": {
+            "type": {
+              "text": "Map<Element, FlipState>"
+            }
+          },
+          "parameters": [
+            {
+              "name": "elements",
+              "type": {
+                "text": "Element[]"
+              }
+            }
+          ],
+          "description": "Capture FLIP states for multiple elements"
+        },
+        {
+          "kind": "variable",
+          "name": "DEFAULT_FLIP_OPTIONS",
+          "type": {
+            "text": "Required<FlipAnimationOptions>"
+          },
+          "default": "{ duration: 250, easing: 'ease', fill: 'both' }"
+        },
+        {
+          "kind": "function",
+          "name": "performFlip",
+          "return": {
+            "type": {
+              "text": "Promise<void>"
+            }
+          },
+          "parameters": [
+            {
+              "name": "elements",
+              "type": {
+                "text": "Element[]"
+              },
+              "description": "Elements to animate"
+            },
+            {
+              "name": "mutationFn",
+              "type": {
+                "text": "() => void | Promise<void>"
+              },
+              "description": "Function that triggers DOM changes"
+            },
+            {
+              "name": "options",
+              "default": "{}",
+              "type": {
+                "text": "FlipAnimationOptions"
+              },
+              "description": "Animation options"
+            }
+          ],
+          "description": "Helper to perform a complete FLIP animation cycle"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "animateFlip",
+          "declaration": {
+            "name": "animateFlip",
+            "module": "packages/qti-custom/src/drag-drop/utils/flip.utils.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "animateMultipleFlips",
+          "declaration": {
+            "name": "animateMultipleFlips",
+            "module": "packages/qti-custom/src/drag-drop/utils/flip.utils.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "calculateInversion",
+          "declaration": {
+            "name": "calculateInversion",
+            "module": "packages/qti-custom/src/drag-drop/utils/flip.utils.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "captureFlipState",
+          "declaration": {
+            "name": "captureFlipState",
+            "module": "packages/qti-custom/src/drag-drop/utils/flip.utils.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "captureMultipleFlipStates",
+          "declaration": {
+            "name": "captureMultipleFlipStates",
+            "module": "packages/qti-custom/src/drag-drop/utils/flip.utils.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DEFAULT_FLIP_OPTIONS",
+          "declaration": {
+            "name": "DEFAULT_FLIP_OPTIONS",
+            "module": "packages/qti-custom/src/drag-drop/utils/flip.utils.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "performFlip",
+          "declaration": {
+            "name": "performFlip",
+            "module": "packages/qti-custom/src/drag-drop/utils/flip.utils.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-custom/src/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/qti-custom/src/components/qti-order-interaction-in-place"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/qti-elements/src/components/qti-assessment-item/qti-assessment-item.ts",
       "declarations": [
         {

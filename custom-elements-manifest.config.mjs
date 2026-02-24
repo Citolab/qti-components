@@ -14,6 +14,7 @@ export default {
   /** Globs to analyze */
   globs: [
     'packages/qti-base/src/**/*.ts',
+    'packages/qti-custom/src/**/*.ts',
     'packages/qti-item/src/components/**/*.ts',
     'packages/qti-test/src/components/**/*.ts',
     'packages/qti-elements/src/components/**/*.ts',

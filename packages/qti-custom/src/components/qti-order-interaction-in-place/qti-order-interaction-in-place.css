@@ -1,6 +1,6 @@
 @layer qti-base, qti-components, qti-utilities, qti-variants, qti-extended;
 
-@import url('../../../../qti-theme/src/styles/qti-base.css');
+@import url('../../../../qti-theme/src/styles/qti-theme/qti-base.css');
 
 qti-order-interaction-in-place {
   &:state(--dragzone-active)::part(drags) {
