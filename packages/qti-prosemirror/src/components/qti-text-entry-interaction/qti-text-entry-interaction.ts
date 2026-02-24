@@ -1,0 +1,34 @@
+import { html, LitElement, nothing } from 'lit';
+import { property, query, state } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
+import { createRef } from 'lit/directives/ref.js';
+
+import styles from '@qti-components/interactions/components/qti-text-entry-interaction/qti-text-entry-interaction.styles.js';
+
+import { Interaction } from '../interaction';
+
+import type { CSSResultGroup } from 'lit';
+export class QtiTextEntryInteractionEdit extends Interaction {
+  static override styles: CSSResultGroup = styles;
+  inputRef = createRef<HTMLInputElement>();
+
+  @property({ type: String, attribute: 'pattern-mask' }) patternMask: string;
+
+  @property({ type: String, attribute: 'placeholder-text' }) placeholderText: string;
+
+  override render() {
+    return html`<input
+      part="input"
+      spellcheck="false"
+      autocomplete="off"
+      @keydown="${(event: KeyboardEvent) => event.stopImmediatePropagation()}"
+      type="${this.patternMask == '[0-9]*' ? 'number' : 'text'}"
+      placeholder="${ifDefined(this.placeholderText ? this.placeholderText : undefined)}"
+      pattern="${ifDefined(this.patternMask ? this.patternMask : undefined)}"
+      maxlength=${1000}
+      readonly
+    />`;
+  }
+}
+
+customElements.define('qti-text-entry-interaction', QtiTextEntryInteractionEdit);

@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.3.0](https://github.com/Citolab/qti-components/compare/transformers-v1.2.0...transformers-v1.3.0) (2026-02-06)
+
+
+### Features
+
+* added all pci-conformance tests ([64ef3c0](https://github.com/Citolab/qti-components/commit/64ef3c07b8456242c6edbcb9072103d0fd953668))
+* added all pci-conformance tests ([f568d38](https://github.com/Citolab/qti-components/commit/f568d38c05c57b639ac880a4094472bd755401b7))
+
+## [1.2.0](https://github.com/Citolab/qti-components/compare/transformers-v1.1.0...transformers-v1.2.0) (2026-02-03)
+
+
+### Features
+
+* enhance PCI state handling with serialization and restoration s… ([f56bc31](https://github.com/Citolab/qti-components/commit/f56bc311c24ef200ab49ebdcb2a0e5771c200f1a))
+* enhance PCI state handling with serialization and restoration support ([5a4638c](https://github.com/Citolab/qti-components/commit/5a4638c9bf6c0b246aba8f5d719852cad73b9757))
+
+## [1.1.0](https://github.com/Citolab/qti-components/compare/transformers-v1.0.0...transformers-v1.1.0) (2026-02-02)
+
+
+### Features
+
+* refactor toHTML function and add stripNamespaces helper for namespace handling ([aca5fc2](https://github.com/Citolab/qti-components/commit/aca5fc2f13bfd00a7c2698aad6f40080aad6af8e))
+
 ## 1.0.0 (2026-01-06)
 
 

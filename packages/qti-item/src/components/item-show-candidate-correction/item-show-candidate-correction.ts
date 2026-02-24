@@ -28,26 +28,26 @@ export class ItemShowCandidateCorrection extends LitElement {
   @property({ type: String }) hideCandidateCorrectionText = 'Hide candidate correction';
   @property({ type: String }) noCorrectResponseText = 'No correct response specified';
 
-  private _hasCorrectResponse = false; // correct response is removed on certain point
-  private _previousActiveItem = ''; // Store previous active item reference
+  #hasCorrectResponse = false; // correct response is removed on certain point
+  #previousActiveItem = ''; // Store previous active item reference
 
   constructor() {
     super();
   }
 
   override updated() {
-    if (!this._hasCorrectResponse || this._previousActiveItem !== this.computedContext?.identifier) {
-      this._previousActiveItem = this.computedContext?.identifier;
+    if (!this.#hasCorrectResponse || this.#previousActiveItem !== this.computedContext?.identifier) {
+      this.#previousActiveItem = this.computedContext?.identifier;
       const containsCorrectResponse = !!this.computedContext?.variables.some(v => (v as any)['correctResponse']);
       const containsMapping = !!this.computedContext?.variables.some(v => {
         return (v as any)['mapping']?.mapEntries?.length > 0 || (v as any)['areaMapping']?.areaMapEntries?.length > 0;
       });
-      this._hasCorrectResponse = containsCorrectResponse || containsMapping;
+      this.#hasCorrectResponse = containsCorrectResponse || containsMapping;
     }
-    this.disabled = !this._hasCorrectResponse;
+    this.disabled = !this.#hasCorrectResponse;
   }
 
-  private _toggleState() {
+  #toggleState() {
     if (this.disabled) return; // Prevent toggle if disabled
 
     this.dispatchEvent(
@@ -58,7 +58,7 @@ export class ItemShowCandidateCorrection extends LitElement {
     );
   }
 
-  private _getDisplayedText(): string {
+  #getDisplayedText(): string {
     return this.disabled
       ? this.noCorrectResponseText
       : this.shown
@@ -67,7 +67,7 @@ export class ItemShowCandidateCorrection extends LitElement {
   }
 
   override render() {
-    return html` <div @click="${this._toggleState}">${this._getDisplayedText()}</div> `;
+    return html` <div @click="${this.#toggleState}">${this.#getDisplayedText()}</div> `;
   }
 }
 

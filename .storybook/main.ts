@@ -1,5 +1,3 @@
-import path from 'path';
-
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 import type { StorybookConfig } from '@storybook/web-components-vite';
@@ -11,6 +9,11 @@ const config: StorybookConfig = {
   //   '../packages/*/!(node_modules)/**/*.@(mdx|stories.@(js|jsx|ts|tsx))'
   // ],
   stories: [
+    {
+      directory: '../docs',
+      files: '**/*.stories.*',
+      titlePrefix: 'Docs'
+    },
     {
       directory: '../apps/e2e/src',
       files: '**/*.stories.*',
@@ -47,7 +50,7 @@ const config: StorybookConfig = {
       titlePrefix: 'Test'
     },
     {
-      directory: '../packages/qti-theme/src/components',
+      directory: '../packages/qti-theme/src',
       files: '**/*.stories.*',
       titlePrefix: 'Theme'
     },

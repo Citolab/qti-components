@@ -1,0 +1,59 @@
+{
+  "name": "@qti-components/prosemirror",
+  "description": "QTI prosemirror schemas and helpers",
+  "version": "1.0.0",
+  "author": "",
+  "customElements": "custom-elements.json",
+  "dependencies": {
+    "@qti-components/base": "workspace:^",
+    "@qti-components/interactions": "workspace:^",
+    "@qti-components/utilities": "workspace:^"
+  },
+  "devDependencies": {
+    "@lit/context": "^1.1.6",
+    "lit": "^3.3.1",
+    "prosemirror-commands": "^1.7.1",
+    "prosemirror-dropcursor": "^1.8.2",
+    "prosemirror-gapcursor": "^1.4.0",
+    "prosemirror-history": "^1.5.0",
+    "prosemirror-keymap": "^1.2.3",
+    "prosemirror-model": "^1.25.4",
+    "prosemirror-state": "^1.4.4",
+    "prosemirror-view": "^1.41.5"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./*": "./dist/*"
+  },
+  "files": [
+    "dist/**/*",
+    "custom-elements.json",
+    "README.md"
+  ],
+  "keywords": [
+    "prosemirror",
+    "qti"
+  ],
+  "license": "GPL-3.0-only",
+  "main": "dist/index.js",
+  "peerDependencies": {
+    "@lit/context": "^1.1.6",
+    "lit": "^3.3.1"
+  },
+  "scripts": {
+    "attw": "attw --profile esm-only --pack",
+    "build": "tsc --paths null",
+    "build-storybook": "storybook build",
+    "cem": "cem analyze --config ./custom-elements-manifest.config.mjs",
+    "clean": "rm -rf dist",
+    "storybook": "storybook dev -p 6007 --no-open",
+    "yalc": "yalc publish",
+    "yalc:push": "yalc push"
+  },
+  "sideEffects": true,
+  "type": "module",
+  "types": "dist/index.d.ts"
+}

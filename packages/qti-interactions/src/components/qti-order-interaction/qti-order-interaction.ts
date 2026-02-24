@@ -1,5 +1,5 @@
 import { html } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 
 import { Interaction } from '@qti-components/base';
 
@@ -8,7 +8,6 @@ import styles from './qti-order-interaction.styles';
 
 import type { PropertyValueMap } from 'lit';
 import type { QtiSimpleChoice } from '../../elements/qti-simple-choice';
-@customElement('qti-order-interaction')
 export class QtiOrderInteraction extends DragDropInteractionMixin(
   Interaction,
   `qti-simple-choice`,
@@ -114,8 +113,8 @@ export class QtiOrderInteraction extends DragDropInteractionMixin(
     return response;
   }
 
-  override async firstUpdated(changedProps: PropertyValueMap<any> | Map<PropertyKey, unknown>) {
-    super.firstUpdated(changedProps);
+  override async firstUpdated() {
+    super.firstUpdated();
     this.childrenMap = Array.from(this.querySelectorAll('qti-simple-choice'));
     this.childrenMap.forEach(el => el.setAttribute('part', 'qti-simple-choice'));
   }

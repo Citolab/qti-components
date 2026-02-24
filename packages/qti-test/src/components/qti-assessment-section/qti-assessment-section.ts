@@ -23,10 +23,10 @@ export class QtiAssessmentSection extends LitElement {
   @property({ type: Boolean, converter: stringToBooleanConverter }) fixed: boolean;
 
   override get title(): string {
-    return this._title;
+    return this.#title;
   }
   override set title(value: string) {
-    this._title = value;
+    this.#title = value;
     this.removeAttribute('title');
     this.setAttribute('data-title', value);
   }
@@ -36,10 +36,10 @@ export class QtiAssessmentSection extends LitElement {
   @consume({ context: testContext, subscribe: true })
   public _testContext?: TestContext;
 
-  private _title = '';
+  #title = '';
 
   override async connectedCallback(): Promise<void> {
-    this._title = this.getAttribute('title') || '';
+    this.#title = this.getAttribute('title') || '';
     super.connectedCallback();
     await this.updateComplete;
     this.dispatchEvent(

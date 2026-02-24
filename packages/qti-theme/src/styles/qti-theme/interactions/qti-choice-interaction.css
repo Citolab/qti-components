@@ -1,0 +1,111 @@
+@layer qti-components {
+  qti-choice-interaction {
+    &::part(message) {
+      @apply validation-message;
+    }
+
+    &.qti-input-control-hidden {
+      & qti-simple-choice {
+        position: relative;
+        @apply button;
+        &:hover {
+          @apply hov;
+        }
+        &:focus {
+          @apply foc;
+        }
+        &::part(ch) {
+          display: none;
+        }
+        &:state(--checked),
+        &[aria-checked='true'] {
+          @apply act;
+        }
+        &:state(readonly),
+        &[aria-readonly='true'] {
+          @apply rdo;
+        }
+        &:state(disabled),
+        &[aria-disabled='true'] {
+          @apply dis;
+        }
+        &:state(correct-response),
+        &[data-correct-response='true'] {
+          border: 3px solid var(--qti-correct) !important;
+          padding-right: 30px;
+          &::after {
+            content: '\02714';
+            color: var(--qti-correct);
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 1.2em;
+            font-weight: bold;
+          }
+        }
+      }
+    }
+
+    &:not(.qti-input-control-hidden) {
+      & qti-simple-choice {
+        @apply check;
+        &:not([aria-disabled='true'], [aria-readonly='true'], :state(--checked)):hover {
+          @apply hov;
+        }
+        &:focus {
+          @apply foc;
+        }
+        &:state(--checked),
+        &[aria-checked='true'] {
+          @apply act;
+        }
+        &:state(candidate-correct) {
+          background-color: var(--qti-correct);
+        }
+        &:state(candidate-incorrect) {
+          background-color: var(--qti-incorrect);
+        }
+        &:state(readonly),
+        &[aria-readonly='true'] {
+          @apply rdo;
+        }
+        &:state(disabled),
+        &[aria-disabled='true'] {
+          @apply dis;
+        }
+        &::part(cha) {
+          @apply check-size;
+        }
+        &:state(radio)::part(ch) {
+          @apply check-radio;
+        }
+        &:state(radio):state(--checked)::part(cha) {
+          @apply check-radio-checked;
+        }
+        &:state(checkbox)::part(ch) {
+          @apply check-checkbox;
+        }
+        &:state(checkbox):state(--checked)::part(cha) {
+          @apply check-checkbox-checked;
+        }
+      }
+    }
+
+    & qti-simple-choice {
+      width: fit-content;
+      cursor: pointer;
+      &:state(correct-response),
+      &[data-correct-response='true'] {
+        &::after {
+          content: '\02714';
+          color: var(--qti-correct);
+        }
+      }
+    }
+
+    & qti-simple-choice > p {
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+  }
+}

@@ -46,14 +46,14 @@ export class TestNext extends LitElement {
       ${styles.dis};
     }
   `;
-  private _internals: ElementInternals;
+  #internals: ElementInternals;
 
   constructor() {
     super();
 
-    this._internals = this.attachInternals();
-    this._internals.role = 'button';
-    this._internals.ariaLabel = 'Next item';
+    this.#internals = this.attachInternals();
+    this.#internals.role = 'button';
+    this.#internals.ariaLabel = 'Next item';
 
     this.addEventListener('click', e => {
       e.preventDefault();

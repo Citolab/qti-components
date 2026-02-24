@@ -17,7 +17,7 @@ export class TestSectionLink extends LitElement {
   @property({ type: String, attribute: 'section-id' })
   private sectionId: string = null;
 
-  private _requestItem(identifier: string) {
+  #requestItem(identifier: string) {
     this.dispatchEvent(
       new CustomEvent('qti-request-navigation', {
         composed: true,
@@ -32,7 +32,7 @@ export class TestSectionLink extends LitElement {
 
   constructor() {
     super();
-    this.addEventListener('click', () => this._requestItem(this.sectionId));
+    this.addEventListener('click', () => this.#requestItem(this.sectionId));
   }
 
   override render() {

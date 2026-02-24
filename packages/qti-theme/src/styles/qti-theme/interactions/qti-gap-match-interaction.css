@@ -1,0 +1,91 @@
+@layer qti-components {
+  qti-gap-match-interaction {
+    &.qti-selections-light {
+      &:state(--dragzone-active)::part(drags) {
+        background-color: var(--qti-light-bg-active);
+        border-color: var(--qti-light-border-active);
+      }
+      &:state(--dragzone-enabled)::part(drags) {
+        background-color: var(--qti-light-bg-active);
+      }
+    }
+    &.qti-selections-dark {
+      &:state(--dragzone-active)::part(drags) {
+        background-color: var(--qti-dark-bg-active);
+        border-color: var(--qti-dark-border-active);
+      }
+      &:state(--dragzone-enabled)::part(drags) {
+        background-color: var(--qti-dark-bg-active);
+      }
+    }
+    &:state(--dragzone-active)::part(drags) {
+      @apply act;
+    }
+    &:state(--dragzone-enabled)::part(drags) {
+      @apply dropping;
+    }
+    & qti-gap-text {
+      @apply drag;
+      &[dragging] {
+        @apply dragging;
+      }
+      &:hover {
+        @apply hov;
+      }
+      &:focus {
+        @apply foc;
+      }
+      &:state(candidate-correct) {
+        background-color: var(--qti-correct);
+      }
+      &:state(candidate-incorrect) {
+        background-color: var(--qti-incorrect);
+      }
+    }
+    & qti-gap {
+      @apply drop;
+      &[disabled] {
+        @apply dis;
+        &:not(:empty) {
+          cursor: default !important;
+        }
+      }
+      &[enabled] {
+        @apply dropping;
+        .qti-selections-light {
+          border-color: var(--qti-light-border-active);
+        }
+        .qti-selections-dark {
+          border-color: var(--qti-dark-border-active);
+        }
+      }
+      &[active] {
+        @apply act;
+        .qti-selections-light {
+          background-color: var(--qti-light-bg-active);
+          border-color: var(--qti-light-border-active);
+        }
+        .qti-selections-dark {
+          background-color: var(--qti-dark-bg-active);
+          border-color: var(--qti-dark-border-active);
+        }
+      }
+      display: inline-flex;
+      align-items: center;
+      &:empty::after {
+        padding: var(--qti-padding-md) var(--qti-padding-lg);
+        content: '\0000a0';
+      }
+      &:not(:empty) {
+        display: inline-flex;
+        padding: 0;
+        width: auto;
+      }
+      &:not(:empty) > * {
+        flex: 1;
+        transform: rotate(0);
+        box-shadow: 0 0 0 1px #e5e7eb;
+      }
+    }
+  }
+}

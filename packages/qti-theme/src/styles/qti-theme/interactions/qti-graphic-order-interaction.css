@@ -1,0 +1,72 @@
+@layer qti-components {
+  qti-graphic-order-interaction {
+    &::part(message) {
+      @apply validation-message;
+    }
+    & qti-hotspot-choice {
+      width: 100%;
+      height: 100%;
+      background-color: rgb(128 128 128 / 30%);
+      padding: 0;
+      &:hover {
+        background-color: rgb(128 128 128 / 70%);
+      }
+      &:focus {
+        background-color: rgb(128 128 128 / 70%);
+      }
+      &:state(--checked),
+      &[aria-checked='true'] {
+        background-color: rgb(128 128 128 / 70%);
+      }
+      &[aria-readonly='true'] {
+        @apply rdo;
+      }
+      &[aria-disabled='true'] {
+        @apply dis;
+      }
+      &[aria-ordervalue] {
+        display: grid;
+        place-content: center;
+      }
+      &[aria-ordervalue]::after {
+        content: attr(aria-ordervalue) !important;
+      }
+      &[aria-ordercorrectvalue] {
+        display: grid;
+        place-content: center;
+      }
+      &[aria-ordercorrectvalue][aria-ordervalue]::after {
+        content: 'C=' attr(aria-ordercorrectvalue) '  R=' attr(aria-ordervalue) !important;
+        color: var(--qti-correct);
+      }
+      &[aria-ordercorrectvalue]:not([aria-ordervalue])::after {
+        content: 'C=' attr(aria-ordercorrectvalue) !important;
+        color: var(--qti-correct);
+      }
+    }
+    &.qti-selections-light {
+      &:state(--dragzone-active)::part(drags) {
+        background-color: var(--qti-light-bg-active);
+        border-color: var(--qti-light-border-active);
+      }
+      &:state(--dragzone-enabled)::part(drags) {
+        background-color: var(--qti-light-bg-active);
+      }
+    }
+    &.qti-selections-dark {
+      &:state(--dragzone-active)::part(drags) {
+        background-color: var(--qti-dark-bg-active);
+        border-color: var(--qti-dark-border-active);
+      }
+      &:state(--dragzone-enabled)::part(drags) {
+        background-color: var(--qti-dark-bg-active);
+      }
+    }
+    &:state(--dragzone-active)::part(drags) {
+      @apply act;
+    }
+    &:state(--dragzone-enabled)::part(drags) {
+      @apply dropping;
+    }
+  }
+}

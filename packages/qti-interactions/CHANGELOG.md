@@ -1,5 +1,146 @@
 # Changelog
 
+## [1.7.0](https://github.com/Citolab/qti-components/compare/interactions-v1.6.1...interactions-v1.7.0) (2026-02-13)
+
+
+### Features
+
+* pci to support stylesheets in iframe mode ([f909403](https://github.com/Citolab/qti-components/commit/f9094030a10613990dd563b35a626af4999c80f5))
+
+## [1.6.1](https://github.com/Citolab/qti-components/compare/interactions-v1.6.0...interactions-v1.6.1) (2026-02-09)
+
+
+### Bug Fixes
+
+* associate interaction line visibility ([#117](https://github.com/Citolab/qti-components/issues/117)) ([8139122](https://github.com/Citolab/qti-components/commit/8139122567d82bdf40b25a0fcfdcac99ac9dd9ff)), closes [#116](https://github.com/Citolab/qti-components/issues/116)
+
+## [1.6.0](https://github.com/Citolab/qti-components/compare/interactions-v1.5.1...interactions-v1.6.0) (2026-02-06)
+
+
+### Features
+
+* add iFrameGetBoundingClientRect method to retrieve bounding client rect of elements ([ad22812](https://github.com/Citolab/qti-components/commit/ad228121edf720a323b4b4d1a33fe44eaf67cabe))
+* added all pci-conformance tests ([64ef3c0](https://github.com/Citolab/qti-components/commit/64ef3c07b8456242c6edbcb9072103d0fd953668))
+* added all pci-conformance tests ([f568d38](https://github.com/Citolab/qti-components/commit/f568d38c05c57b639ac880a4094472bd755401b7))
+
+
+### Bug Fixes
+
+* append drag clone to fullscreen element if available ([e2a1bfc](https://github.com/Citolab/qti-components/commit/e2a1bfcc244026dfb6650c610cb1002fc91f81f4))
+* update method calls to use private class fields in QtiPortableCustomInteraction ([f69998c](https://github.com/Citolab/qti-components/commit/f69998cfd94b3b7c1db44879f538105cca33bc85))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @qti-components/transformers bumped to 1.3.0
+
+## [1.5.1](https://github.com/Citolab/qti-components/compare/interactions-v1.5.0...interactions-v1.5.1) (2026-02-06)
+
+
+### Bug Fixes
+
+* separate cem generation from build to avoid failing actions ([4dbef31](https://github.com/Citolab/qti-components/commit/4dbef31580b0e98c58f053382444090a2913c88a))
+
+## [1.5.0](https://github.com/Citolab/qti-components/compare/interactions-v1.4.2...interactions-v1.5.0) (2026-02-05)
+
+
+### Features
+
+* add qti-stylesheet, copy styles to pci stylesheet and support for using variables in pci's ([e07750b](https://github.com/Citolab/qti-components/commit/e07750b16994f785a764c173d88134e20b6a2c35))
+* add qti-stylesheet, copy styles to pci stylesheet and support for using variables in pci's ([74943ec](https://github.com/Citolab/qti-components/commit/74943ec09a7a04578540a42d8b81220932a8b649))
+
+
+### Bug Fixes
+
+* estimate inline-choice width ([3cf160a](https://github.com/Citolab/qti-components/commit/3cf160a25e293eaea7da57b3b7f2d3dbb4c05f6e))
+* remove unnecessary blank line in width estimation function ([7d26fb9](https://github.com/Citolab/qti-components/commit/7d26fb906fb34d94761dd1f2e36978dd7989fb36))
+* update privacy level and enhance dropdown menu behavior in inline choice interaction ([0d10f45](https://github.com/Citolab/qti-components/commit/0d10f459413c452be97e4ddd4201c6083a889615))
+
+## [1.4.2](https://github.com/Citolab/qti-components/compare/interactions-v1.4.1...interactions-v1.4.2) (2026-02-05)
+
+
+### Bug Fixes
+
+* added more js libs that are available in the tao platform by default ([0cea8a0](https://github.com/Citolab/qti-components/commit/0cea8a002a562b7866cefe7875ff52d25e82dac7))
+* added more js libs that are available in the tao platform by default ([013d28d](https://github.com/Citolab/qti-components/commit/013d28da0208dc16b6d0f487ccdcd66c01bd751f))
+
+## [1.4.1](https://github.com/Citolab/qti-components/compare/interactions-v1.4.0...interactions-v1.4.1) (2026-02-04)
+
+
+### Bug Fixes
+
+* **qti-custom-interaction:** improve iframe handling and script injection ([ca63c11](https://github.com/Citolab/qti-components/commit/ca63c110fc73a72e02f9255516163540b99a880d))
+* **qti-custom-interaction:** improve iframe handling and script injection logic ([fb4c394](https://github.com/Citolab/qti-components/commit/fb4c394352951421edb865ac623d6596273312a7))
+
+## [1.4.0](https://github.com/Citolab/qti-components/compare/interactions-v1.3.1...interactions-v1.4.0) (2026-02-04)
+
+
+### Features
+
+* **qti-inline-choice-interaction:** enhance correct response handlin… ([11d8810](https://github.com/Citolab/qti-components/commit/11d88101556c69ae72c1507916e06e536050671b))
+* **qti-inline-choice-interaction:** enhance correct response handling in stories and implementation ([9510525](https://github.com/Citolab/qti-components/commit/951052549deec72650ea001006d54c5649fec28a))
+
+## [1.3.1](https://github.com/Citolab/qti-components/compare/interactions-v1.3.0...interactions-v1.3.1) (2026-02-04)
+
+
+### Bug Fixes
+
+* **graphic-associate:** add play test for association creation and removal ([141f23a](https://github.com/Citolab/qti-components/commit/141f23aae8fa8ba35d9aa4c33b038fea779f494f))
+* **inline-choice:** ensure visibility within viewport ([5fb499e](https://github.com/Citolab/qti-components/commit/5fb499e352bc0c89bd3982fed8d8de28225e5e09))
+
+## [1.3.0](https://github.com/Citolab/qti-components/compare/interactions-v1.2.0...interactions-v1.3.0) (2026-02-03)
+
+
+### Features
+
+* enhance qti-inline-choice-interaction ([5878343](https://github.com/Citolab/qti-components/commit/58783433b0f47dcf31bc75de0b6427c98860c2df))
+
+
+### Bug Fixes
+
+* fix tests ([7a75aa9](https://github.com/Citolab/qti-components/commit/7a75aa9222be3e3b68dbe18ef8895a968903d10c))
+* inline choice dropdown font size and positioning on mobile devices ([52d3216](https://github.com/Citolab/qti-components/commit/52d3216a0661f863b0f8384763bd829d6a41a19a))
+
+## [1.2.0](https://github.com/Citolab/qti-components/compare/interactions-v1.1.0...interactions-v1.2.0) (2026-02-03)
+
+
+### Features
+
+* enhance PCI state handling with serialization and restoration s… ([f56bc31](https://github.com/Citolab/qti-components/commit/f56bc311c24ef200ab49ebdcb2a0e5771c200f1a))
+* enhance PCI state handling with serialization and restoration support ([5a4638c](https://github.com/Citolab/qti-components/commit/5a4638c9bf6c0b246aba8f5d719852cad73b9757))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @qti-components/transformers bumped to 1.2.0
+
+## [1.1.0](https://github.com/Citolab/qti-components/compare/interactions-v1.0.0...interactions-v1.1.0) (2026-02-02)
+
+
+### Features
+
+* besides from response, also make it possible to store state. use for pci's ([d43fed7](https://github.com/Citolab/qti-components/commit/d43fed712fe592ce4bb43a335d8ca3d6a3e0f9d5))
+* enhance message handling in QtiPortableCustomInteraction with response identifiers ([6c367b0](https://github.com/Citolab/qti-components/commit/6c367b00d4dd8a47cedfaff51cdf769d15fbbb76))
+* enhance message handling in QtiPortableCustomInteractionTest with response identifiers ([ccb8fc1](https://github.com/Citolab/qti-components/commit/ccb8fc175fcbde461c7d0ad593f625456717b456))
+* enhance PCIManager.setValueElementByText with deep querying and error handling ([849d79a](https://github.com/Citolab/qti-components/commit/849d79a98e5149b021300dbd6b5af2ec3068ce39))
+* enhance QtiCustomInteraction with CES support and improved resource handling ([2a9b41d](https://github.com/Citolab/qti-components/commit/2a9b41d03f8e0cd0451cbd304cabc78bc3c83fc8))
+* refactor portable custom interaction to remove iframe implementation ([6e56686](https://github.com/Citolab/qti-components/commit/6e5668615eafaab90455e4e6a6b527f52bb58c59))
+* remove iframe implementation from QtiPortableCustomInteraction and enhance response validation ([59c4b5e](https://github.com/Citolab/qti-components/commit/59c4b5ecf069e848e55a323fcac4909ec38b1083))
+* streamline PCIManager methods ([615a073](https://github.com/Citolab/qti-components/commit/615a0738d9a437eef347fdd1f4297cf5fd652b55))
+* update QtiPortableCustomInteraction stories for improved response handling ([65d3974](https://github.com/Citolab/qti-components/commit/65d3974223c6c80f08747c387796eea0e7e42734))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @qti-components/base bumped to 1.1.0
+    * @qti-components/transformers bumped to 1.1.0
+
 ## 1.0.0 (2026-01-06)
 
 

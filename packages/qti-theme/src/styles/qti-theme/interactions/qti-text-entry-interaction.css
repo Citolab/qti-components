@@ -1,0 +1,30 @@
+@layer qti-components {
+  qti-text-entry-interaction {
+    &:state(candidate-correct) {
+      &::part(input) {
+        background-color: var(--qti-correct);
+      }
+    }
+    &:state(candidate-partially-correct) {
+      &::part(input) {
+        background-color: var(--qti-partially-correct);
+      }
+    }
+    &:state(candidate-incorrect) {
+      &::part(input) {
+        background-color: var(--qti-incorrect);
+      }
+    }
+    &::part(input) {
+      @apply text;
+    }
+    &:hover {
+      @apply hov;
+    }
+    &:focus-within {
+      &::part(input) {
+        @apply foc act-bor;
+      }
+    }
+  }
+}

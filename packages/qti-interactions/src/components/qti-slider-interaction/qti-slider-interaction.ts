@@ -1,18 +1,16 @@
 import { html } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
+import { property, query } from 'lit/decorators.js';
 
 import { Interaction } from '@qti-components/base';
 
 import styles from './qti-slider-interaction.styles';
 
 import type { CSSResultGroup } from 'lit';
-
-@customElement('qti-slider-interaction')
 export class QtiSliderInteraction extends Interaction {
   static override styles: CSSResultGroup = styles;
 
-  private _value = 0;
-  private _correctResponseNumber: number | null = null;
+  #value = 0;
+  #correctResponseNumber: number | null = null;
 
   @query('#rail') private _rail!: HTMLElement;
 
@@ -26,19 +24,19 @@ export class QtiSliderInteraction extends Interaction {
 
   override connectedCallback() {
     super.connectedCallback();
-    this._updateValue(this.min); // Set initial value
+    this.#updateValue(this.min); // Set initial value
     this.setAttribute('tabindex', '0');
     this.setAttribute('role', 'slider');
   }
 
   get response(): string {
-    return this._value.toString();
+    return this.#value.toString();
   }
 
   set response(val: string) {
     const newValue = parseInt(val, 10);
     if (!isNaN(newValue)) {
-      this._updateValue(newValue);
+      this.#updateValue(newValue);
     }
   }
 
@@ -50,25 +48,25 @@ export class QtiSliderInteraction extends Interaction {
       this._correctResponse = responseVariable.correctResponse.toString();
       const nr = parseFloat(responseVariable.correctResponse.toString());
       if (!isNaN(nr)) {
-        this._correctResponseNumber = nr;
-        const valuePercentage = ((this._correctResponseNumber - this.min) / (this.max - this.min)) * 100;
+        this.#correctResponseNumber = nr;
+        const valuePercentage = ((this.#correctResponseNumber - this.min) / (this.max - this.min)) * 100;
         this.style.setProperty('--value-percentage-correct', `${valuePercentage}%`);
       } else {
-        this._correctResponseNumber = null;
+        this.#correctResponseNumber = null;
       }
     } else {
-      this._correctResponseNumber = null;
+      this.#correctResponseNumber = null;
     }
     this.requestUpdate();
   }
 
-  private _updateValue(newValue: number) {
-    const oldValue = this._value;
-    this._value = Math.min(this.max, Math.max(this.min, newValue));
-    if (this._value === oldValue) {
+  #updateValue(newValue: number) {
+    const oldValue = this.#value;
+    this.#value = Math.min(this.max, Math.max(this.min, newValue));
+    if (this.#value === oldValue) {
       return; // Do not update if the value is the same as before
     }
-    const valuePercentage = ((this._value - this.min) / (this.max - this.min)) * 100;
+    const valuePercentage = ((this.#value - this.min) / (this.max - this.min)) * 100;
     this.style.setProperty('--value-percentage', `${valuePercentage}%`);
     this._internals.setFormValue(this.value); // Update form value
     this.saveResponse(this.response);
@@ -86,15 +84,15 @@ export class QtiSliderInteraction extends Interaction {
 
         <div id="ticks" part="ticks"></div>
 
-        <div id="rail" part="rail" @mousedown=${this._onMouseDown} @touchstart=${this._onTouchStart}>
+        <div id="rail" part="rail" @mousedown=${this.#onMouseDown} @touchstart=${this.#onTouchStart}>
           <div id="knob" part="knob">
             <div id="value" part="value">${this.response}</div>
           </div>
 
-          ${this._correctResponseNumber !== null
+          ${this.#correctResponseNumber !== null
             ? html`
                 <div id="knob-correct" part="knob-correct">
-                  <div id="value" part="value">${this._correctResponseNumber}</div>
+                  <div id="value" part="value">${this.#correctResponseNumber}</div>
                 </div>
               `
             : null}
@@ -103,45 +101,45 @@ export class QtiSliderInteraction extends Interaction {
     `;
   }
 
-  private _onMouseDown(event: MouseEvent) {
-    this._startDrag(event.pageX);
-    const handleMouseMove = (e: MouseEvent) => this._onDrag(e.pageX);
+  #onMouseDown(event: MouseEvent) {
+    this.#startDrag(event.pageX);
+    const handleMouseMove = (e: MouseEvent) => this.#onDrag(e.pageX);
     const handleMouseUp = () => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
-      this._onDragEnd();
+      this.#onDragEnd();
     };
 
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
   }
 
-  private _onTouchStart(event: TouchEvent) {
-    this._startDrag(event.touches[0].pageX);
-    const handleTouchMove = (e: TouchEvent) => this._onDrag(e.touches[0].pageX);
+  #onTouchStart(event: TouchEvent) {
+    this.#startDrag(event.touches[0].pageX);
+    const handleTouchMove = (e: TouchEvent) => this.#onDrag(e.touches[0].pageX);
     const handleTouchEnd = () => {
       document.removeEventListener('touchmove', handleTouchMove);
       document.removeEventListener('touchend', handleTouchEnd);
-      this._onDragEnd();
+      this.#onDragEnd();
     };
 
     document.addEventListener('touchmove', handleTouchMove, { passive: false });
     document.addEventListener('touchend', handleTouchEnd);
   }
 
-  private _startDrag(pageX: number) {
-    this._onDrag(pageX);
+  #startDrag(pageX: number) {
+    this.#onDrag(pageX);
   }
 
-  private _onDrag(pageX: number) {
+  #onDrag(pageX: number) {
     const railRect = this._rail.getBoundingClientRect();
     const diffX = pageX - railRect.left;
     const percentage = Math.min(1, Math.max(0, diffX / railRect.width));
     const steppedValue = this.min + Math.round((percentage * (this.max - this.min)) / this.step) * this.step;
-    this._updateValue(steppedValue);
+    this.#updateValue(steppedValue);
   }
 
-  private _onDragEnd() {
+  #onDragEnd() {
     this.dispatchEvent(new Event('change', { bubbles: true }));
   }
 }

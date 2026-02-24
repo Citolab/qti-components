@@ -4,7 +4,9 @@ import { until } from 'lit/directives/until.js';
 
 import { watch } from '@qti-components/utilities';
 import { qtiTransformItem } from '@qti-components/transformers';
-import itemCss from '@qti-components/theme/src/item.css?inline';
+
+// eslint-disable-next-line import/no-relative-packages
+import itemCss from '../../../../qti-theme/src/item.css?inline';
 
 /**
  * `<item-container>` is a custom element designed for hosting the qti-assessment-item.
@@ -35,7 +37,7 @@ export class ItemContainer extends LitElement {
   itemXML: string = null;
 
   /** Template content if provided */
-  private templateContent: unknown = null;
+  #templateContent: unknown = null;
 
   @watch('itemURL', { waitUntilFirstUpdate: true })
   protected async handleItemURLChange() {
@@ -60,8 +62,8 @@ export class ItemContainer extends LitElement {
 
   override async connectedCallback(): Promise<void> {
     super.connectedCallback();
-    this.initializeTemplateContent();
-    this.applyStyles();
+    this.#initializeTemplateContent();
+    this.#applyStyles();
     if (this.itemURL) {
       this.handleItemURLChange();
     }
@@ -70,12 +72,12 @@ export class ItemContainer extends LitElement {
     }
   }
 
-  private initializeTemplateContent() {
+  #initializeTemplateContent() {
     const template = this.querySelector('template') as HTMLTemplateElement;
-    this.templateContent = template ? template.content : html``;
+    this.#templateContent = template ? template.content : html``;
   }
 
-  private applyStyles() {
+  #applyStyles() {
     const sheet = new CSSStyleSheet();
     sheet.replaceSync(itemCss);
     this.shadowRoot.adoptedStyleSheets = [sheet];
@@ -83,7 +85,7 @@ export class ItemContainer extends LitElement {
 
   override render() {
     return html`
-      ${this.templateContent}
+      ${this.#templateContent}
       <slot></slot>
       ${until(this.itemDoc, html`<span>Loading...</span>`)}
     `;

@@ -1,5 +1,130 @@
 # Changelog
 
+## [1.0.11](https://github.com/Citolab/qti-components/compare/item-v1.0.10...item-v1.0.11) (2026-02-13)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @qti-components/interactions bumped to 1.7.0
+
+## [1.0.10](https://github.com/Citolab/qti-components/compare/item-v1.0.9...item-v1.0.10) (2026-02-09)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @qti-components/interactions bumped to 1.6.1
+
+## [1.0.9](https://github.com/Citolab/qti-components/compare/item-v1.0.8...item-v1.0.9) (2026-02-06)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @qti-components/elements bumped to 1.2.1
+    * @qti-components/interactions bumped to 1.6.0
+    * @qti-components/transformers bumped to 1.3.0
+
+## [1.0.8](https://github.com/Citolab/qti-components/compare/item-v1.0.7...item-v1.0.8) (2026-02-06)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @qti-components/elements bumped to 1.2.0
+    * @qti-components/interactions bumped to 1.5.1
+
+## [1.0.7](https://github.com/Citolab/qti-components/compare/item-v1.0.6...item-v1.0.7) (2026-02-05)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @qti-components/elements bumped to 1.1.0
+    * @qti-components/interactions bumped to 1.5.0
+
+## [1.0.6](https://github.com/Citolab/qti-components/compare/item-v1.0.5...item-v1.0.6) (2026-02-05)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @qti-components/interactions bumped to 1.4.2
+
+## [1.0.5](https://github.com/Citolab/qti-components/compare/item-v1.0.4...item-v1.0.5) (2026-02-04)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @qti-components/interactions bumped to 1.4.1
+
+## [1.0.4](https://github.com/Citolab/qti-components/compare/item-v1.0.3...item-v1.0.4) (2026-02-04)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @qti-components/interactions bumped to 1.4.0
+
+## [1.0.3](https://github.com/Citolab/qti-components/compare/item-v1.0.2...item-v1.0.3) (2026-02-04)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @qti-components/interactions bumped to 1.3.1
+
+## [1.0.2](https://github.com/Citolab/qti-components/compare/item-v1.0.1...item-v1.0.2) (2026-02-03)
+
+
+### Bug Fixes
+
+* fix tests ([7a75aa9](https://github.com/Citolab/qti-components/commit/7a75aa9222be3e3b68dbe18ef8895a968903d10c))
+* inline choice dropdown font size and positioning on mobile devices ([52d3216](https://github.com/Citolab/qti-components/commit/52d3216a0661f863b0f8384763bd829d6a41a19a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @qti-components/interactions bumped to 1.3.0
+    * @qti-components/theme bumped to 1.0.1
+
+## [1.0.1](https://github.com/Citolab/qti-components/compare/item-v1.0.1...item-v1.0.1) (2026-02-03)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @qti-components/elements bumped to 1.0.1
+    * @qti-components/interactions bumped to 1.2.0
+    * @qti-components/transformers bumped to 1.2.0
+
+## [1.0.1](https://github.com/Citolab/qti-components/compare/item-v1.0.0...item-v1.0.1) (2026-02-02)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @qti-components/base bumped to 1.1.0
+    * @qti-components/transformers bumped to 1.1.0
+    * @qti-components/elements bumped to 1.1.0
+    * @qti-components/interactions bumped to 1.1.0
+    * @qti-components/processing bumped to 1.0.1
+
 ## 1.0.0 (2026-01-06)
 
 

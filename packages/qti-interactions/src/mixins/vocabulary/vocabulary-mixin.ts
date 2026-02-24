@@ -1,8 +1,7 @@
 import { property } from 'lit/decorators.js';
 
 import type { QtiSimpleChoice } from '../../elements/qti-simple-choice';
-import type { Interaction } from '@qti-components/base';
-import type { PropertyValues } from 'lit';
+import type { LitElement, PropertyValues } from 'lit';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 
@@ -11,15 +10,15 @@ type LabelSuffixType = 'qti-labels-suffix-period' | 'qti-labels-suffix-parenthes
 
 declare class VocabularyInterface {}
 
-export const VocabularyMixin = <T extends Constructor<Interaction>>(superClass: T, _selector: string) => {
+export const VocabularyMixin = <T extends Constructor<LitElement>>(superClass: T, _selector: string) => {
   abstract class VocabularyElement extends superClass {
     private _classes: string[] = [];
     private _allLabels = ['qti-labels-decimal', 'qti-labels-lower-alpha', 'qti-labels-upper-alpha'];
     private _allLabelSuffixes = ['qti-labels-suffix-period', 'qti-labels-suffix-parenthesis'] as LabelSuffixType[];
+    private _mutationObserver: MutationObserver | null = null;
     // Define the property with the custom converter
     @property({
-      type: String,
-      reflect: true
+      type: String
     })
     set class(value: string) {
       if (!value) {
@@ -40,6 +39,18 @@ export const VocabularyMixin = <T extends Constructor<Interaction>>(superClass: 
       // if (_changedProperties.has('shuffle')) {
       this._addLabels();
       // }
+    }
+
+    override connectedCallback(): void {
+      super.connectedCallback();
+      this._mutationObserver = new MutationObserver(() => this._addLabels());
+      this._mutationObserver.observe(this, { childList: true, subtree: true });
+    }
+
+    override disconnectedCallback(): void {
+      super.disconnectedCallback();
+      this._mutationObserver?.disconnect();
+      this._mutationObserver = null;
     }
 
     private _addLabels() {

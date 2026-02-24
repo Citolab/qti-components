@@ -14,6 +14,15 @@ interface InteractionConfiguration {
   dragOnClick: boolean;
 }
 
+type RectLike = {
+  left: number;
+  right: number;
+  top: number;
+  bottom: number;
+  width: number;
+  height: number;
+};
+
 export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
   superClass: T,
   draggablesSelector: string,
@@ -42,6 +51,26 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     private allDropzones: HTMLElement[] = []; // All dropzones for keyboard navigation
     private lastTarget = null; // Last touch target
     private currentDropTarget = null; // Current droppable element
+    private dragMoveRaf = 0;
+    private pendingMove: { clientX: number; clientY: number } | null = null;
+    private dragBounds: {
+      minLeft: number;
+      maxLeft: number;
+      minTop: number;
+      maxTop: number;
+      width: number;
+      height: number;
+    } | null = null;
+    private dragCloneRect: RectLike | null = null;
+    private dropzoneRects = new Map<HTMLElement, DOMRect>();
+    private dropzoneRectsDirty = false;
+    private dragBoundsDirty = false;
+    private dragCloneStyleCache = new WeakMap<HTMLElement, string>();
+    private readonly onScrollOrResize = () => {
+      this.dropzoneRectsDirty = true;
+      this.dragBoundsDirty = true;
+      this.dragBoundsDirty = true;
+    };
 
     private onMove = this.handleTouchMove.bind(this);
     private onEnd = this.handleTouchEnd.bind(this);
@@ -92,6 +121,8 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
           this.allDropzones.push(dragContainer);
         }
       }
+      this.dropzoneRectsDirty = true;
+      this.dragBoundsDirty = true;
     }
 
     @liveQuery(draggablesSelector)
@@ -110,8 +141,8 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       }
     }
 
-    override firstUpdated(changedProps): void {
-      super.firstUpdated(changedProps);
+    override firstUpdated(): void {
+      super.firstUpdated();
       if (this.isMatchTabular()) return;
       const disabled = this.hasAttribute('disabled');
       if (!disabled) {
@@ -198,6 +229,8 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
           droppable.style.boxSizing = `border-box`;
         }
       }
+      this.dropzoneRectsDirty = true;
+      this.dragBoundsDirty = true;
     };
 
     private async moveDraggableToDroppable(draggable: HTMLElement, droppable: HTMLElement): Promise<void> {
@@ -250,6 +283,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     private async updateMinDimensionsForDropZones() {
       await this.updateComplete;
       if (this.isMatchTabular()) return;
+      this.dropzoneRectsDirty = true;
 
       const draggables: NodeListOf<HTMLElement> = this.querySelectorAll(draggablesSelector);
       const dragContainer: HTMLElement =
@@ -377,45 +411,72 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       document.removeEventListener('touchmove', this.onMove);
       document.removeEventListener('touchend', this.onEnd);
       document.removeEventListener('touchcancel', this.onCancel);
+      window.removeEventListener('scroll', this.onScrollOrResize, true);
+      window.removeEventListener('resize', this.onScrollOrResize);
     }
 
     private handleTouchMove(e) {
       if (this.isMatchTabular()) return;
       if (this.isDraggable && this.dragClone) {
         const { x, y } = this.getEventCoordinates(e);
-        const currentTouch = { clientX: x, clientY: y };
-
-        // Check if the minimum drag distance has been reached
-        if (this.calculateDragDistance(currentTouch) >= this.MIN_DRAG_DISTANCE) {
-          this.isDragging = true;
-          this.updateDragClonePosition(currentTouch);
-        }
-
-        // Find the closest dropzone to the current drag clone position
-        const closestDropzone = this.findClosestDropzone();
-        this.currentDropTarget = closestDropzone;
-
-        // Handle dragenter and dragleave
-        if (closestDropzone !== this.lastTarget) {
-          if (this.lastTarget) {
-            // Simulate dragleave for the previous target
-            this.deactivateDroppable(this.lastTarget);
-            this.dispatchCustomEvent(this.lastTarget, 'dragleave');
-          }
-          if (closestDropzone) {
-            // Simulate dragenter for the new target
-            this.activateDroppable(closestDropzone);
-            this.dispatchCustomEvent(closestDropzone, 'dragenter');
-          }
-          this.lastTarget = closestDropzone;
-        }
-
-        // Simulate dragover for the current dropzone
-        if (this.currentDropTarget) {
-          this.dispatchCustomEvent(this.currentDropTarget, 'dragover');
-        }
-
+        this.pendingMove = { clientX: x, clientY: y };
+        this.scheduleDragMove();
         e.preventDefault();
+      }
+    }
+
+    private scheduleDragMove() {
+      if (this.dragMoveRaf) return;
+      this.dragMoveRaf = requestAnimationFrame(() => {
+        this.dragMoveRaf = 0;
+        if (!this.pendingMove) return;
+        const currentTouch = this.pendingMove;
+        this.pendingMove = null;
+        this.processDragMove(currentTouch);
+        if (this.pendingMove) {
+          this.scheduleDragMove();
+        }
+      });
+    }
+
+    private processDragMove(currentTouch: { clientX: number; clientY: number }) {
+      if (!this.isDraggable || !this.dragClone || !this.touchStartPoint) return;
+
+      // Check if the minimum drag distance has been reached
+      if (this.calculateDragDistance(currentTouch) >= this.MIN_DRAG_DISTANCE) {
+        this.isDragging = true;
+      }
+
+      if (!this.isDragging) return;
+
+      this.updateDragClonePosition(currentTouch);
+
+      if (this.dropzoneRectsDirty) {
+        this.refreshDropzoneRects();
+      }
+
+      // Find the closest dropzone to the current drag clone position
+      const closestDropzone = this.findClosestDropzone();
+      this.currentDropTarget = closestDropzone;
+
+      // Handle dragenter and dragleave
+      if (closestDropzone !== this.lastTarget) {
+        if (this.lastTarget) {
+          // Simulate dragleave for the previous target
+          this.deactivateDroppable(this.lastTarget);
+          this.dispatchCustomEvent(this.lastTarget, 'dragleave');
+        }
+        if (closestDropzone) {
+          // Simulate dragenter for the new target
+          this.activateDroppable(closestDropzone);
+          this.dispatchCustomEvent(closestDropzone, 'dragenter');
+        }
+        this.lastTarget = closestDropzone;
+      }
+
+      // Simulate dragover for the current dropzone
+      if (this.currentDropTarget) {
+        this.dispatchCustomEvent(this.currentDropTarget, 'dragover');
       }
     }
 
@@ -509,6 +570,12 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
 
     private resetDragState() {
+      if (this.dragMoveRaf) {
+        cancelAnimationFrame(this.dragMoveRaf);
+        this.dragMoveRaf = 0;
+      }
+      this.pendingMove = null;
+
       if (this.dragClone) {
         const isDropped = this.currentDropTarget !== null;
         const droppedInDragContainer = !isDropped || this.dragContainers.includes(this.currentDropTarget);
@@ -533,6 +600,13 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       this.touchStartPoint = null;
       this.currentDropTarget = null;
       this.lastTarget = null;
+      this.dragBounds = null;
+      this.dragCloneRect = null;
+      this.dropzoneRects.clear();
+      this.dropzoneRectsDirty = false;
+      this.dragBoundsDirty = false;
+      window.removeEventListener('scroll', this.onScrollOrResize, true);
+      window.removeEventListener('resize', this.onScrollOrResize);
 
       this.deactivateDroppables();
     }
@@ -701,33 +775,69 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
     private updateDragClonePosition(touch) {
       if (!this.isDragging || !this.dragClone) return;
+      if (this.dragBoundsDirty || !this.dragBounds) {
+        this.refreshDragBounds();
+      }
 
       const newLeft = touch.clientX - this.cloneOffset.x;
       const newTop = touch.clientY - this.cloneOffset.y;
 
       // Apply boundaries specific to the interaction element
-      const { newLeft: boundedLeft, newTop: boundedTop } = this.applyInteractionBoundaries(
-        newLeft,
-        newTop,
-        this.dragClone
-      );
+      const { newLeft: boundedLeft, newTop: boundedTop } = this.applyInteractionBoundaries(newLeft, newTop);
 
       this.dragClone.style.left = `${boundedLeft}px`;
       this.dragClone.style.top = `${boundedTop}px`;
+
+      let width = this.dragBounds?.width ?? this.dragCloneRect?.width;
+      let height = this.dragBounds?.height ?? this.dragCloneRect?.height;
+      if (!width || !height) {
+        const rect = this.dragClone.getBoundingClientRect();
+        width = rect.width;
+        height = rect.height;
+      }
+      this.dragCloneRect = {
+        left: boundedLeft,
+        top: boundedTop,
+        right: boundedLeft + width,
+        bottom: boundedTop + height,
+        width,
+        height
+      };
     }
 
-    private applyInteractionBoundaries(newLeft: number, newTop: number, element: HTMLElement) {
-      // Get the interaction element's boundaries
-      const interactionRect = this.getBoundingClientRect();
-      const elementRect = element.getBoundingClientRect();
-      const elementWidth = elementRect.width;
-      const elementHeight = elementRect.height;
+    private applyInteractionBoundaries(newLeft: number, newTop: number) {
+      if (!this.dragBounds) {
+        return { newLeft, newTop };
+      }
 
       // Constrain the position to the interaction's boundaries
-      const boundedLeft = Math.max(interactionRect.left, Math.min(newLeft, interactionRect.right - elementWidth));
-      const boundedTop = Math.max(interactionRect.top, Math.min(newTop, interactionRect.bottom - elementHeight));
+      const boundedLeft = Math.max(this.dragBounds.minLeft, Math.min(newLeft, this.dragBounds.maxLeft));
+      const boundedTop = Math.max(this.dragBounds.minTop, Math.min(newTop, this.dragBounds.maxTop));
 
       return { newLeft: boundedLeft, newTop: boundedTop };
+    }
+
+    private refreshDragBounds() {
+      if (!this.dragClone) return;
+      const interactionRect = this.getBoundingClientRect();
+      const cloneRect = this.dragClone.getBoundingClientRect();
+      this.dragBounds = {
+        minLeft: interactionRect.left,
+        maxLeft: interactionRect.right - cloneRect.width,
+        minTop: interactionRect.top,
+        maxTop: interactionRect.bottom - cloneRect.height,
+        width: cloneRect.width,
+        height: cloneRect.height
+      };
+      this.dragCloneRect = {
+        left: cloneRect.left,
+        top: cloneRect.top,
+        right: cloneRect.left + cloneRect.width,
+        bottom: cloneRect.top + cloneRect.height,
+        width: cloneRect.width,
+        height: cloneRect.height
+      };
+      this.dragBoundsDirty = false;
     }
 
     private getEventCoordinates(event, page = false) {
@@ -744,6 +854,23 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       return xDist + yDist;
     }
 
+    private refreshDropzoneRects() {
+      this.dropzoneRects.clear();
+      const activeDrops = this.allDropzones.filter(d => !d.hasAttribute('disabled'));
+      for (const dz of activeDrops) {
+        this.dropzoneRects.set(dz, this.getDropzoneRect(dz));
+      }
+      this.dropzoneRectsDirty = false;
+    }
+
+    private getCachedDropzoneRect(el: HTMLElement): DOMRect {
+      const cached = this.dropzoneRects.get(el);
+      if (cached) return cached;
+      const rect = this.getDropzoneRect(el);
+      this.dropzoneRects.set(el, rect);
+      return rect;
+    }
+
     private getDropzoneRect(el: HTMLElement): DOMRect {
       const slot = el.shadowRoot?.querySelector<HTMLElement>('slot[part="dropslot"]');
       return (slot ?? el).getBoundingClientRect();
@@ -753,14 +880,14 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       const activeDrops = this.allDropzones.filter(d => !d.hasAttribute('disabled'));
       if (!this.dragClone || activeDrops.length === 0) return null;
 
-      const dragRect = this.dragClone.getBoundingClientRect();
+      const dragRect = this.dragCloneRect ?? this.dragClone.getBoundingClientRect();
       let closestDropzone: HTMLElement | null = null;
       let maxArea = 0;
 
       // prefer real droppables first
       const prefer = (elements: HTMLElement[]) => {
         for (const dz of elements) {
-          const dzRect = this.getDropzoneRect(dz);
+          const dzRect = this.getCachedDropzoneRect(dz);
           const area = this.calculateOverlapArea(dragRect, dzRect);
           if (area > maxArea) {
             maxArea = area;
@@ -779,7 +906,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       if (!closestDropzone) {
         let minDist = Number.POSITIVE_INFINITY;
         for (const dz of activeDrops) {
-          const dzRect = this.getDropzoneRect(dz);
+          const dzRect = this.getCachedDropzoneRect(dz);
           const dist = Math.hypot(dragRect.left - dzRect.left, dragRect.top - dzRect.top);
           if (dist < minDist) {
             minDist = dist;
@@ -790,10 +917,24 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       return closestDropzone;
     }
 
-    private calculateOverlapArea(rect1: DOMRect, rect2: DOMRect): number {
+    private calculateOverlapArea(rect1: RectLike, rect2: RectLike): number {
       const xOverlap = Math.max(0, Math.min(rect1.right, rect2.right) - Math.max(rect1.left, rect2.left));
       const yOverlap = Math.max(0, Math.min(rect1.bottom, rect2.bottom) - Math.max(rect1.top, rect2.top));
       return xOverlap * yOverlap;
+    }
+
+    private getComputedStyleText(source: HTMLElement): string {
+      const cached = this.dragCloneStyleCache.get(source);
+      if (cached) return cached;
+
+      const computedStyles = window.getComputedStyle(source);
+      let cssText = '';
+      for (let i = 0; i < computedStyles.length; i++) {
+        const key = computedStyles[i];
+        cssText += `${key}:${computedStyles.getPropertyValue(key)};`;
+      }
+      this.dragCloneStyleCache.set(source, cssText);
+      return cssText;
     }
 
     private dispatchCustomEvent(element, eventType, bubble = true) {
@@ -804,7 +945,9 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
 
     private appendClone() {
-      document.body.appendChild(this.dragClone);
+      const fullscreenRoot = document.fullscreenElement as HTMLElement | null;
+      const target = fullscreenRoot ?? document.body;
+      target.appendChild(this.dragClone);
     }
 
     private handleTouchStart(e) {
@@ -848,10 +991,8 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       this.dragClone = draggableInDragContainer.cloneNode(true) as HTMLElement;
 
       // Copy computed styles to the clone
-      const computedStyles = window.getComputedStyle(draggableInDragContainer);
-      for (let i = 0; i < computedStyles.length; i++) {
-        const key = computedStyles[i];
-        this.dragClone.style.setProperty(key, computedStyles.getPropertyValue(key));
+      if (this.configuration.copyStylesDragClone) {
+        this.dragClone.style.cssText = this.getComputedStyleText(draggableInDragContainer);
       }
       const rectOrg = draggableInDragContainer.getBoundingClientRect();
       this.dragClone.style.width = `${rectOrg.width}px`;
@@ -862,6 +1003,10 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       this.dragClone.style.display = 'block';
       this.dragClone.style.opacity = '1';
       this.appendClone();
+      this.refreshDragBounds();
+      this.refreshDropzoneRects();
+      window.addEventListener('scroll', this.onScrollOrResize, true);
+      window.addEventListener('resize', this.onScrollOrResize);
 
       // check if max associations are reached
       const matchMax = this.getMatchMaxValue(this.dragSource);

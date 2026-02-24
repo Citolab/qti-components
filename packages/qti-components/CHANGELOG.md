@@ -1,5 +1,211 @@
 # Changelog
 
+## [7.23.0](https://github.com/Citolab/qti-components/compare/qti-components-v7.22.1...qti-components-v7.23.0) (2026-02-13)
+
+
+### Features
+
+* pci to support stylesheets in iframe mode ([f909403](https://github.com/Citolab/qti-components/commit/f9094030a10613990dd563b35a626af4999c80f5))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @qti-components/interactions bumped to 1.7.0
+    * @qti-components/item bumped to 1.0.11
+    * @qti-components/test bumped to 1.1.10
+
+## [7.22.1](https://github.com/Citolab/qti-components/compare/qti-components-v7.22.0...qti-components-v7.22.1) (2026-02-09)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @qti-components/interactions bumped to 1.6.1
+    * @qti-components/item bumped to 1.0.10
+    * @qti-components/test bumped to 1.1.9
+
+## [7.22.0](https://github.com/Citolab/qti-components/compare/qti-components-v7.21.1...qti-components-v7.22.0) (2026-02-06)
+
+
+### Features
+
+* added all pci-conformance tests ([64ef3c0](https://github.com/Citolab/qti-components/commit/64ef3c07b8456242c6edbcb9072103d0fd953668))
+* added all pci-conformance tests ([f568d38](https://github.com/Citolab/qti-components/commit/f568d38c05c57b639ac880a4094472bd755401b7))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @qti-components/elements bumped to 1.2.1
+    * @qti-components/interactions bumped to 1.6.0
+    * @qti-components/item bumped to 1.0.9
+    * @qti-components/loader bumped to 1.0.4
+    * @qti-components/test bumped to 1.1.8
+    * @qti-components/transformers bumped to 1.3.0
+
+## [7.21.1](https://github.com/Citolab/qti-components/compare/qti-components-v7.21.0...qti-components-v7.21.1) (2026-02-06)
+
+
+### Bug Fixes
+
+* separate cem generation from build to avoid failing actions ([4dbef31](https://github.com/Citolab/qti-components/commit/4dbef31580b0e98c58f053382444090a2913c88a))
+* separate cem generation from build to avoid failing actions ([cd29f71](https://github.com/Citolab/qti-components/commit/cd29f716b1b76b9255a5dd0636b26e33fcbe1539))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @qti-components/elements bumped to 1.2.0
+    * @qti-components/interactions bumped to 1.5.1
+    * @qti-components/item bumped to 1.0.8
+    * @qti-components/loader bumped to 1.0.3
+    * @qti-components/test bumped to 1.1.7
+
+## [7.21.0](https://github.com/Citolab/qti-components/compare/qti-components-v7.20.4...qti-components-v7.21.0) (2026-02-05)
+
+
+### Features
+
+* add qti-context-declaration component with context variable declarations and methods ([bfe1d24](https://github.com/Citolab/qti-components/commit/bfe1d24e8f739d47717091ca19b25714c10fef2b))
+
+
+### Bug Fixes
+
+* change privacy level from private to protected in custom elements configuration ([3f34dc5](https://github.com/Citolab/qti-components/commit/3f34dc54658012cb6447f8e0fa849bd0b7ef8fc3))
+* estimate inline-choice width ([3cf160a](https://github.com/Citolab/qti-components/commit/3cf160a25e293eaea7da57b3b7f2d3dbb4c05f6e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @qti-components/elements bumped to 1.1.0
+    * @qti-components/interactions bumped to 1.5.0
+    * @qti-components/item bumped to 1.0.7
+    * @qti-components/loader bumped to 1.0.2
+    * @qti-components/test bumped to 1.1.6
+
+## [7.20.4](https://github.com/Citolab/qti-components/compare/qti-components-v7.20.3...qti-components-v7.20.4) (2026-02-05)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @qti-components/interactions bumped to 1.4.2
+    * @qti-components/item bumped to 1.0.6
+    * @qti-components/test bumped to 1.1.5
+
+## [7.20.3](https://github.com/Citolab/qti-components/compare/qti-components-v7.20.2...qti-components-v7.20.3) (2026-02-04)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @qti-components/interactions bumped to 1.4.1
+    * @qti-components/item bumped to 1.0.5
+    * @qti-components/test bumped to 1.1.4
+
+## [7.20.2](https://github.com/Citolab/qti-components/compare/qti-components-v7.20.1...qti-components-v7.20.2) (2026-02-04)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @qti-components/interactions bumped to 1.4.0
+    * @qti-components/item bumped to 1.0.4
+    * @qti-components/test bumped to 1.1.3
+
+## [7.20.1](https://github.com/Citolab/qti-components/compare/qti-components-v7.20.0...qti-components-v7.20.1) (2026-02-04)
+
+
+### Bug Fixes
+
+* add private method for positioning custom menu ([0a596de](https://github.com/Citolab/qti-components/commit/0a596de0db4c23be54b4c90592918cf1f5c8c929))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @qti-components/interactions bumped to 1.3.1
+    * @qti-components/item bumped to 1.0.3
+    * @qti-components/test bumped to 1.1.2
+
+## [7.20.0](https://github.com/Citolab/qti-components/compare/qti-components-v7.19.0...qti-components-v7.20.0) (2026-02-03)
+
+
+### Features
+
+* add private methods for response handling and normalization ([a763136](https://github.com/Citolab/qti-components/commit/a7631361a728df10dfd3cbb37114075505ac7b00))
+* add private methods for response handling and normalization ([9a5e165](https://github.com/Citolab/qti-components/commit/9a5e165600c67276cd0108f2de9c581c1e80b404))
+
+## [7.19.0](https://github.com/Citolab/qti-components/compare/qti-components-v7.18.1...qti-components-v7.19.0) (2026-02-03)
+
+
+### Features
+
+* enhance qti-inline-choice-interaction ([5878343](https://github.com/Citolab/qti-components/commit/58783433b0f47dcf31bc75de0b6427c98860c2df))
+
+
+### Bug Fixes
+
+* inline choice dropdown font size and positioning on mobile devices ([52d3216](https://github.com/Citolab/qti-components/commit/52d3216a0661f863b0f8384763bd829d6a41a19a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @qti-components/interactions bumped to 1.3.0
+    * @qti-components/item bumped to 1.0.2
+    * @qti-components/test bumped to 1.1.1
+    * @qti-components/theme bumped to 1.0.1
+
+## [7.18.1](https://github.com/Citolab/qti-components/compare/qti-components-v7.18.0...qti-components-v7.18.1) (2026-02-03)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @qti-components/elements bumped to 1.0.1
+    * @qti-components/interactions bumped to 1.2.0
+    * @qti-components/item bumped to 1.0.1
+    * @qti-components/loader bumped to 1.0.1
+    * @qti-components/test bumped to 1.1.0
+    * @qti-components/transformers bumped to 1.2.0
+
+## [7.18.0](https://github.com/Citolab/qti-components/compare/qti-components-v7.17.1...qti-components-v7.18.0) (2026-02-02)
+
+
+### Features
+
+* enhance QtiCustomInteraction with CES support and improved resource handling ([2a9b41d](https://github.com/Citolab/qti-components/commit/2a9b41d03f8e0cd0451cbd304cabc78bc3c83fc8))
+* refactor portable custom interaction to remove iframe implementation ([6e56686](https://github.com/Citolab/qti-components/commit/6e5668615eafaab90455e4e6a6b527f52bb58c59))
+* remove iframe implementation from QtiPortableCustomInteraction and enhance response validation ([59c4b5e](https://github.com/Citolab/qti-components/commit/59c4b5ecf069e848e55a323fcac4909ec38b1083))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @qti-components/test bumped to 1.0.1
+    * @qti-components/item bumped to 1.0.1
+    * @qti-components/elements bumped to 1.1.0
+    * @qti-components/transformers bumped to 1.1.0
+    * @qti-components/interactions bumped to 1.1.0
+    * @qti-components/processing bumped to 1.0.1
+    * @qti-components/loader bumped to 1.0.1
+    * @qti-components/base bumped to 1.1.0
+
 ## [7.17.1](https://github.com/Citolab/qti-components/compare/qti-components-v7.17.0...qti-components-v7.17.1) (2026-01-06)
 
 

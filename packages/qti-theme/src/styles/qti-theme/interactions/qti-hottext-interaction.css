@@ -1,0 +1,86 @@
+@layer qti-components {
+  qti-hottext-interaction {
+    &::part(message) {
+      @apply validation-message;
+    }
+    qti-hottext {
+      display: inline-flex;
+      align-items: center;
+      @apply check;
+      &:hover {
+        @apply hov;
+      }
+      &:focus {
+        @apply foc;
+      }
+      &::part(cha) {
+        @apply check-size;
+      }
+      &:state(radio)::part(ch) {
+        @apply check-radio;
+      }
+      &:state(radio):state(--checked)::part(cha) {
+        @apply check-radio-checked;
+      }
+      &:state(checkbox)::part(ch) {
+        @apply check-checkbox;
+      }
+      &:state(checkbox):state(--checked)::part(cha) {
+        @apply check-checkbox-checked;
+      }
+      &:state(correct-response),
+      &[data-correct-response='true'] {
+        &::after {
+          content: '\02714';
+          color: #16a34a;
+        }
+      }
+    }
+    &.qti-input-control-hidden {
+      qti-hottext {
+        @apply button;
+        &:hover {
+          @apply hov;
+        }
+        &:focus {
+          @apply foc;
+        }
+        &::part(ch) {
+          display: none;
+        }
+        &:state(--checked) {
+          @apply act;
+        }
+        &[aria-readonly='true'] {
+          @apply rdo;
+        }
+        &[aria-disabled='true'] {
+          @apply dis;
+        }
+      }
+    }
+    &.qti-unselected-hidden {
+      qti-hottext {
+        &:hover {
+          @apply hov;
+        }
+        &:focus {
+          @apply foc;
+        }
+        cursor: pointer;
+        &::part(ch) {
+          display: none;
+        }
+        &:state(--checked) {
+          background-color: var(--qti-bg-active);
+        }
+        &[aria-readonly='true'] {
+          @apply rdo;
+        }
+        &[aria-disabled='true'] {
+          @apply dis;
+        }
+      }
+    }
+  }
+}

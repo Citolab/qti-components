@@ -13,8 +13,7 @@ const xml = String.raw;
 
 const meta: Meta = {
   component: 'shuffle',
-  title: 'Stories/shuffle',
-  tags: ['!dev']
+  title: 'Stories/shuffle'
 };
 export default meta;
 
@@ -44,6 +43,7 @@ export const Choice: StoryObj = {
       const ChoiceA = canvas.getByText<QtiSimpleChoice>('Optie A');
       const ChoiceB = canvas.getByText<QtiSimpleChoice>('Optie B');
       const ChoiceC = canvas.getByText<QtiSimpleChoice>('Optie C');
+      expect(ChoiceA.internals.role).toBe('radio');
       const bUnderA = toBePositionedRelativeTo(ChoiceB, ChoiceA, 'below');
       const cUnderb = toBePositionedRelativeTo(ChoiceC, ChoiceB, 'below');
       const result = bUnderA.pass && cUnderb.pass;

@@ -1,35 +1,26 @@
 @layer qti-base, qti-components, qti-utilities, qti-variants, qti-extended;
 
-@import url('./styles/qti-base.css');
+@import url('./styles/qti-native/index.css');
+@import url('./styles/qti-theme/index.css');
 
-/* base */
-@import url('./styles/qti-base/qti3p0.css');
-@import url('./styles/qti-base/item-layout');
-@import url('./styles/qti-base/item-view');
+[view],
+qti-outcome-declaration,
+qti-response-declaration {
+  display: none;
+}
 
-/* components */
-@import url('./styles/qti-components/qti-interactions');
+[view].show {
+  display: block;
+}
+
+:host {
+  box-sizing: border-box;
+}
 
 qti-test-part:not(:has(qti-assessment-item)),
 qti-assessment-section:not(:has(qti-assessment-item)),
 qti-assessment-item-ref:not(:has(qti-assessment-item)) {
   display: none;
-}
-
-qti-hottext-interaction::part(message),
-qti-choice-interaction::part(message),
-qti-association-interaction::part(message),
-qti-graphic-association-interaction::part(message),
-qti-graphic-gap-match-interaction::part(message),
-qti-graphic-order-interaction::part(message),
-qti-math-interaction::part(message) {
-  display: none;
-  color: var(--qti-validation-text, #000);
-  background-color: var(--qti-validation-error-bg, #fff);
-  padding: 10px;
-  border: 3px solid var(--qti-validation-text, #000);
-  border-radius: 4px;
-  margin-top: 8px;
 }
 
 div.full-correct-response {

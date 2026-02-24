@@ -37,14 +37,23 @@
       "@qti-components/interactions": [
         "./packages/qti-interactions/src/index.ts"
       ],
+      "@qti-components/interactions/*": [
+        "./packages/qti-interactions/src/*"
+      ],
       "@qti-components/processing": [
         "./packages/qti-processing/src/index.ts"
       ],
       "@qti-components/item": [
         "./packages/qti-item/src/index.ts"
       ],
+      "@qti-components/prosemirror": [
+        "./packages/qti-prosemirror/src/index.ts"
+      ],
       "@qti-components/test": [
         "./packages/qti-test/src/index.ts"
+      ],
+      "@qti-components/theme": [
+        "./packages/qti-theme/src/index.ts"
       ],
       "@qti-components/transformers": [
         "./packages/qti-transformers/src/index.ts"

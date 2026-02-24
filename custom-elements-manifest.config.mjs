@@ -2,6 +2,8 @@
 import { jsxTypesPlugin } from '@wc-toolkit/jsx-types';
 import { getTsProgram, typeParserPlugin } from '@wc-toolkit/type-parser';
 import { cemSorterPlugin } from '@wc-toolkit/cem-sorter';
+import { cemInheritancePlugin } from '@wc-toolkit/cem-inheritance';
+import { cemValidatorPlugin } from '@wc-toolkit/cem-validator';
 
 console.log('Building the custom element manifest...');
 
@@ -11,12 +13,13 @@ const outdir = process.env.CEM_OUTDIR || './';
 export default {
   /** Globs to analyze */
   globs: [
+    'packages/qti-base/src/**/*.ts',
     'packages/qti-item/src/components/**/*.ts',
     'packages/qti-test/src/components/**/*.ts',
     'packages/qti-elements/src/components/**/*.ts',
     'packages/qti-interactions/src/components/**/*.ts',
-    'packages/qti-processing/src/components/**/*.ts',
-    'packages/qti-custom/src/components/**/*.ts'
+    'packages/qti-interactions/src/mixins/**/*.ts',
+    'packages/qti-processing/src/components/**/*.ts'
   ],
   /** Globs to exclude */
   exclude: ['packages/**/*.stories.ts', 'packages/**/*.spec.ts', 'packages/**/*.styles.ts'],
@@ -43,6 +46,7 @@ export default {
     typeParserPlugin({
       outdir: outdir + 'dist'
     }),
+    cemInheritancePlugin({}),
     // customElementVsCodePlugin({
     //   outdir: outdir + 'dist'
     // }),
@@ -53,6 +57,31 @@ export default {
     }),
     cemSorterPlugin({
       deprecatedLast: true
+    }),
+    cemValidatorPlugin({
+      logErrors: true, // Log errors without stopping the build
+      // exclude: ['BaseComponent', 'InternalMixin'], // Skip base classes
+
+      rules: {
+        // Override default severity levels for validation
+        packageJson: {
+          packageType: 'off',
+          main: 'off',
+          module: 'off',
+          types: 'off',
+          exports: 'off',
+          customElementsProperty: 'off',
+          publishedCem: 'off'
+        },
+        manifest: {
+          schemaVersion: 'off',
+          modulePath: 'off',
+          definitionPath: 'off',
+          typeDefinitionPath: 'off',
+          exportTypes: 'off',
+          tagName: 'off'
+        }
+      }
     })
   ]
 };

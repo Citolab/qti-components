@@ -4,10 +4,10 @@ import { customElement, property } from 'lit/decorators.js';
 export class QtiTestPart extends LitElement {
   @property({ type: String }) identifier: string = '';
   override get title(): string {
-    return this._title;
+    return this.#title;
   }
   override set title(value: string) {
-    this._title = value;
+    this.#title = value;
     this.removeAttribute('title');
     this.setAttribute('data-title', value);
   }
@@ -19,7 +19,7 @@ export class QtiTestPart extends LitElement {
   @property({ type: String, attribute: 'submission-mode' })
   submissionMode: 'individual' | 'simultaneous' = 'individual';
 
-  private _title = '';
+  #title = '';
 
   override async connectedCallback(): Promise<void> {
     super.connectedCallback();

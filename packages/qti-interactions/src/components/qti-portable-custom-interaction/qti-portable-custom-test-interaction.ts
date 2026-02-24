@@ -1,5 +1,3 @@
-import { customElement } from 'lit/decorators.js';
-
 import { QtiPortableCustomInteraction } from './qti-portable-custom-interaction';
 
 import type { ItemContext } from '@qti-components/base';
@@ -8,15 +6,8 @@ import type { ItemContext } from '@qti-components/base';
  * Test-specific extension of QtiPortableCustomInteraction that adds methods
  * for interacting with the iframe content in tests.
  */
-@customElement('qti-portable-custom-interaction-test')
 export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteraction {
-  private _recreatingIframe = false;
-
-  constructor() {
-    super();
-    // Initialize the iframe and other properties
-    this.useIframe = true;
-  }
+  #recreatingIframe = false;
 
   /**
    * Gets the HTML content of the iframe for testing purposes
@@ -30,6 +21,7 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
         const { data } = event;
         if (
           data?.source === 'qti-pci-iframe' &&
+          (!data?.responseIdentifier || data?.responseIdentifier === this.responseIdentifier) &&
           data?.method === 'getContentResponse' &&
           data?.messageId === messageId
         ) {
@@ -72,7 +64,7 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
    * @returns Promise that resolves when the iframe is loaded
    */
   public async recreateIframe(): Promise<void> {
-    this._recreatingIframe = true;
+    this.#recreatingIframe = true;
 
     try {
       // Remove existing iframe if it exists
@@ -102,7 +94,7 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
         }, 5000);
       });
     } finally {
-      this._recreatingIframe = false;
+      this.#recreatingIframe = false;
     }
   }
 
@@ -112,7 +104,7 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
   override disconnectedCallback(): void {
     // Only call super if we're not in the process of recreating the iframe
     // This prevents removing event listeners that we still need
-    if (!this._recreatingIframe) {
+    if (!this.#recreatingIframe) {
       super.disconnectedCallback();
     }
   }
@@ -129,7 +121,12 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
 
       const messageHandler = (event: MessageEvent) => {
         const { data } = event;
-        if (data?.source === 'qti-pci-iframe' && data?.method === 'clickResponse' && data?.messageId === messageId) {
+        if (
+          data?.source === 'qti-pci-iframe' &&
+          (!data?.responseIdentifier || data?.responseIdentifier === this.responseIdentifier) &&
+          data?.method === 'clickResponse' &&
+          data?.messageId === messageId
+        ) {
           window.removeEventListener('message', messageHandler);
           resolve();
         }
@@ -160,6 +157,7 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
         const { data } = event;
         if (
           data?.source === 'qti-pci-iframe' &&
+          (!data?.responseIdentifier || data?.responseIdentifier === this.responseIdentifier) &&
           data?.method === 'clickSelectorResponse' &&
           data?.messageId === messageId
         ) {
@@ -193,6 +191,7 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
         const { data } = event;
         if (
           data?.source === 'qti-pci-iframe' &&
+          (!data?.responseIdentifier || data?.responseIdentifier === this.responseIdentifier) &&
           data?.method === 'clickTextResponse' &&
           data?.messageId === messageId
         ) {
@@ -225,7 +224,12 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
 
       const messageHandler = (event: MessageEvent) => {
         const { data } = event;
-        if (data?.source === 'qti-pci-iframe' && data?.method === 'setValueResponse' && data?.messageId === messageId) {
+        if (
+          data?.source === 'qti-pci-iframe' &&
+          (!data?.responseIdentifier || data?.responseIdentifier === this.responseIdentifier) &&
+          data?.method === 'setValueResponse' &&
+          data?.messageId === messageId
+        ) {
           window.removeEventListener('message', messageHandler);
           resolve(data.success);
         }
@@ -244,6 +248,41 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
   }
 
   /**
+   * Gets the bounding client rect for an element inside the iframe
+   * @param selector The CSS selector string
+   * @returns Promise that resolves with the rect or null
+   */
+  async iFrameGetBoundingClientRect(
+    selector: string
+  ): Promise<{ left: number; top: number; width: number; height: number } | null> {
+    return new Promise(resolve => {
+      const messageId = `get-bounding-rect-${Date.now()}`;
+
+      const messageHandler = (event: MessageEvent) => {
+        const { data } = event;
+        if (
+          data?.source === 'qti-pci-iframe' &&
+          (!data?.responseIdentifier || data?.responseIdentifier === this.responseIdentifier) &&
+          data?.method === 'getBoundingRectResponse' &&
+          data?.messageId === messageId
+        ) {
+          window.removeEventListener('message', messageHandler);
+          resolve(data.rect ?? null);
+        }
+      };
+
+      window.addEventListener('message', messageHandler);
+
+      this.sendMessageToIframe('getBoundingRect', { selector, messageId });
+
+      setTimeout(() => {
+        window.removeEventListener('message', messageHandler);
+        resolve(null);
+      }, 5000);
+    });
+  }
+
+  /**
    * Sets the value of an input element containing the specified text
    * @param text The text to search for within elements
    * @param value The value to set
@@ -257,6 +296,7 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
         const { data } = event;
         if (
           data?.source === 'qti-pci-iframe' &&
+          (!data?.responseIdentifier || data?.responseIdentifier === this.responseIdentifier) &&
           data?.method === 'setValueByTextResponse' &&
           data?.messageId === messageId
         ) {
@@ -290,6 +330,7 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
         const { data } = event;
         if (
           data?.source === 'qti-pci-iframe' &&
+          (!data?.responseIdentifier || data?.responseIdentifier === this.responseIdentifier) &&
           data?.method === 'mousedownSelectorResponse' &&
           data?.messageId === messageId
         ) {
@@ -321,270 +362,120 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
     // Insert our test message handlers before the closing </script> tag
     const testHandlers = `
     // Test helper functions for QtiPortableCustomInteractionTest
-    PCIManager.getContent = function(params) {
-        // Find the pci-container element
-      const container = document.querySelector('#pci-container');
-      if (!container) {
-        throw new Error('#pci-container not found');
-      }
-      // Try to get the shadow root first, fall back to the container itself
-      const root = container.shadowRoot || container;
-      window.parent.postMessage({
-        source: 'qti-pci-iframe',
-        method: 'getContentResponse',
-        messageId: params.messageId,
-        content: root.innerHTML
-      }, '*');
-    };
+    // Base iframe implementation already provides PCIManager.getContent
     
-    PCIManager.simulateClick = function(params) {
-      try {
-        const clickEvent = new MouseEvent('click', {
-          bubbles: true,
-          cancelable: true,
-          clientX: params.x,
-          clientY: params.y
-        });
-        
-        // Get the element at the specified position
-        const element = document.elementFromPoint(params.x, params.y);
-        if (element) {
-          element.dispatchEvent(clickEvent);
-        }
-        
-        window.parent.postMessage({
-          source: 'qti-pci-iframe',
-          method: 'clickResponse',
-          messageId: params.messageId,
-          success: !!element
-        }, '*');
-      } catch (error) {
-        console.error('Error simulating click:', error);
-        window.parent.postMessage({
-          source: 'qti-pci-iframe',
-          method: 'clickResponse',
-          messageId: params.messageId,
-          success: false,
-          error: error.toString()
-        }, '*');
-      }
-    };
+    // Base iframe implementation already provides PCIManager.simulateClick
     
-    PCIManager.clickOnSelector = function(params) {
-      try {
-        // Find the pci-container element
-        const container = document.querySelector('#pci-container');
-        if (!container) {
-          throw new Error('#pci-container not found');
-        }
-        
-        // Try to get the shadow root first, fall back to the container itself
-        const root = container.shadowRoot || container;
-        let element = root.querySelector(params.selector);
-        
-        let success = false;
-        
-        if (element) {
-          const clickEvent = new MouseEvent('click', {
-            bubbles: true,
-            cancelable: true,
-            view: window
-          });
-          element.dispatchEvent(clickEvent);
-          success = true;
-        }
-        
-        window.parent.postMessage({
-          source: 'qti-pci-iframe',
-          method: 'clickSelectorResponse',
-          messageId: params.messageId,
-          success
-        }, '*');
-      } catch (error) {
-        console.error('Error clicking selector:', error);
-        window.parent.postMessage({
-          source: 'qti-pci-iframe',
-          method: 'clickSelectorResponse',
-          messageId: params.messageId,
-          success: false,
-          error: error.toString()
-        }, '*');
-      }
-    };
+    // Base iframe implementation already provides PCIManager.clickOnSelector
     
-    PCIManager.clickOnElementByText = function(params) {
+    // Base iframe implementation already provides PCIManager.clickOnElementByText
+    
+    // Base iframe implementation already provides PCIManager.setValueElement
+    
+    function deepQuerySelector(root, selector) {
+      if (!root) return null;
       try {
-        // Find the pci-container element
-        const container = document.querySelector('#pci-container');
-        if (!container) {
-          throw new Error('#pci-container not found');
+        const direct = root.querySelector ? root.querySelector(selector) : null;
+        if (direct) return direct;
+      } catch (e) {
+        // ignore invalid selector for this root
+      }
+      if (!root.querySelectorAll) return null;
+      const nodes = root.querySelectorAll('*');
+      for (const node of nodes) {
+        if (node && node.shadowRoot) {
+          const found = deepQuerySelector(node.shadowRoot, selector);
+          if (found) return found;
         }
-        
-        // Try to get the shadow root first, fall back to the container itself
-        const root = container.shadowRoot || container;
-        
-        // Find elements containing the text
-        const textNodes = [];
-        const walk = document.createTreeWalker(
-          root, 
-          NodeFilter.SHOW_TEXT,
-          { acceptNode: function(node) { return node.nodeValue.trim() !== '' ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT; } }
-        );
-        
-        let node;
-        while (node = walk.nextNode()) {
-          if (node.nodeValue.includes(params.text)) {
-            textNodes.push(node);
+      }
+      return null;
+    }
+
+    function deepFindElementByExactText(root, text) {
+      if (!root || !text) return null;
+      if (root.querySelectorAll) {
+        const nodes = root.querySelectorAll('*');
+        for (const node of nodes) {
+          if ((node.textContent || '').trim() === text) return node;
+          if (node.shadowRoot) {
+            const found = deepFindElementByExactText(node.shadowRoot, text);
+            if (found) return found;
           }
         }
-        
-        let success = false;
-        // Click the first element containing the text
-        if (textNodes.length > 0) {
-          const element = textNodes[0].parentElement;
-          const clickEvent = new MouseEvent('click', {
-            bubbles: true,
-            cancelable: true,
-            view: window
-          });
-          element.dispatchEvent(clickEvent);
-          success = true;
-        }
-        
-        window.parent.postMessage({
-          source: 'qti-pci-iframe',
-          method: 'clickTextResponse',
-          messageId: params.messageId,
-          success
-        }, '*');
-      } catch (error) {
-        console.error('Error clicking by text:', error);
-        window.parent.postMessage({
-          source: 'qti-pci-iframe',
-          method: 'clickTextResponse',
-          messageId: params.messageId,
-          success: false,
-          error: error.toString()
-        }, '*');
       }
-    };
-    
-    PCIManager.setValueElement = function(params) {
+      return null;
+    }
+
+    function escapeSelectorId(id) {
       try {
-        // Find the pci-container element
-        const container = document.querySelector('#pci-container');
-        if (!container) {
-          throw new Error('#pci-container not found');
-        }
-        
-        // Try to get the shadow root first, fall back to the container itself
-        const root = container.shadowRoot || container;
-        let element = root.querySelector(params.selector);
-        
-        let success = false;
-        
-        if (element) {
-          success = setValueOnElement(element, params.value);
-        }
-        
-        window.parent.postMessage({
-          source: 'qti-pci-iframe',
-          method: 'setValueResponse',
-          messageId: params.messageId,
-          success
-        }, '*');
-      } catch (error) {
-        console.error('Error setting value:', error);
-        window.parent.postMessage({
-          source: 'qti-pci-iframe',
-          method: 'setValueResponse',
-          messageId: params.messageId,
-          success: false,
-          error: error.toString()
-        }, '*');
+        if (window.CSS && typeof window.CSS.escape === 'function') return window.CSS.escape(id);
+      } catch (e) {
+        // ignore
       }
-    };
-    
+      return String(id).replace(/([ #;?%&,.+*~\\':"!^$[\\]()=>|\\/])/g, '\\\\$1');
+    }
+
     PCIManager.setValueElementByText = function(params) {
+      const messageId = params && params.messageId;
       try {
-        // Find the pci-container element
-        const container = document.querySelector('#pci-container');
-        if (!container) {
-          throw new Error('#pci-container not found');
+        const text = params && params.text;
+        const value = params && params.value;
+
+        const textEl = text ? deepFindElementByExactText(document, text) : null;
+        let target = null;
+
+        if (textEl) {
+          const tag = (textEl.tagName || '').toUpperCase();
+          if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') {
+            target = textEl;
+          } else if (tag === 'LABEL' && textEl.htmlFor) {
+            const id = escapeSelectorId(textEl.htmlFor);
+            target = deepQuerySelector(document, '#' + id);
+          }
+
+          if (!target) {
+            let parent = textEl.parentElement;
+            while (parent) {
+              const candidate = parent.querySelector ? parent.querySelector('input, textarea, select') : null;
+              if (candidate) {
+                target = candidate;
+                break;
+              }
+              parent = parent.parentElement;
+            }
+          }
         }
-        
-        // Try to get the shadow root first, fall back to the container itself
-        const root = container.shadowRoot || container;
-        
-        // Find elements containing the text
-        const textNodes = [];
-        const walk = document.createTreeWalker(
-          root, 
-          NodeFilter.SHOW_TEXT,
-          { acceptNode: function(node) { return node.nodeValue.trim() !== '' ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT; } }
+
+        const success = !!target && setValueOnElement(target, value);
+        window.parent.postMessage(
+          {
+            source: 'qti-pci-iframe',
+            responseIdentifier: PCIManager.responseIdentifier,
+            method: 'setValueByTextResponse',
+            messageId: messageId,
+            success: success
+          },
+          '*'
         );
-        
-        let node;
-        while (node = walk.nextNode()) {
-          if (node.nodeValue.includes(params.text)) {
-            textNodes.push(node);
-          }
-        }
-        
-        let success = false;
-        // Look for input elements near the text node
-        if (textNodes.length > 0) {
-          const textElement = textNodes[0].parentElement;
-          
-          // Try different strategies to find the related input
-          // 1. Check if the text is inside a label with a "for" attribute
-          if (textElement.tagName === 'LABEL' && textElement.htmlFor) {
-            const input = root.getElementById(textElement.htmlFor);
-            if (input) {
-              success = setValueOnElement(input, params.value);
-            }
-          }
-          
-          // 2. Check if there's an input near the text (sibling or parent's child)
-          if (!success) {
-            let parentElement = textElement.parentElement;
-            const inputElements = parentElement.querySelectorAll('input, textarea, select');
-            
-            if (inputElements.length > 0) {
-              success = setValueOnElement(inputElements[0], params.value);
-            }
-          }
-        }
-        
-        window.parent.postMessage({
-          source: 'qti-pci-iframe',
-          method: 'setValueByTextResponse',
-          messageId: params.messageId,
-          success
-        }, '*');
       } catch (error) {
         console.error('Error setting value by text:', error);
-        window.parent.postMessage({
-          source: 'qti-pci-iframe',
-          method: 'setValueByTextResponse',
-          messageId: params.messageId,
-          success: false,
-          error: error.toString()
-        }, '*');
+        window.parent.postMessage(
+          {
+            source: 'qti-pci-iframe',
+            responseIdentifier: PCIManager.responseIdentifier,
+            method: 'setValueByTextResponse',
+            messageId: messageId,
+            success: false,
+            error: error.toString()
+          },
+          '*'
+        );
       }
     };
     
     PCIManager.mousedownOnSelector = function(params) {
       try {
-        // Find the pci-container element
-        const container = document.querySelector('#pci-container');
-        if (!container) {
-          throw new Error('#pci-container not found');
-        }
-        
-        // Try to get the shadow root first, fall back to the container itself
-        const root = container.shadowRoot || container;
-        let element = root.querySelector(params.selector);
+        const element = params && params.selector ? deepQuerySelector(document, params.selector) : null;
         
         let success = false;
         
@@ -603,6 +494,7 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
         
         window.parent.postMessage({
           source: 'qti-pci-iframe',
+          responseIdentifier: PCIManager.responseIdentifier,
           method: 'mousedownSelectorResponse',
           messageId: params.messageId,
           success
@@ -611,6 +503,7 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
         console.error('Error performing mousedown on selector:', error);
         window.parent.postMessage({
           source: 'qti-pci-iframe',
+          responseIdentifier: PCIManager.responseIdentifier,
           method: 'mousedownSelectorResponse',
           messageId: params.messageId,
           success: false,
@@ -638,49 +531,29 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
       return false;
     }
     
-    // Add test-related message handlers to the existing message event listener
-    const originalMessageListener = window.onmessage;
-    window.onmessage = function(event) {
-      const { data } = event;
-      
-      // Handle test-related messages
-      if (data && data.source === 'qti-portable-custom-interaction') {
-        switch(data.method) {
-          case 'getContent':
-            PCIManager.getContent(data.params);
-            return;
-            
-          case 'simulateClick':
-            PCIManager.simulateClick(data.params);
-            return;
-            
-          case 'clickOnSelector':
-            PCIManager.clickOnSelector(data.params);
-            return;
-            
-          case 'clickOnElementByText':
-            PCIManager.clickOnElementByText(data.params);
-            return;
-            
-          case 'setValueElement':
-            PCIManager.setValueElement(data.params);
-            return;
-            
+    // Add test-related message handlers (do not override global handlers)
+    let expectedParentOriginTest = null;
+    window.addEventListener(
+      'message',
+      function(event) {
+        const { data } = event;
+
+        if (event.source !== window.parent || !data || data.source !== 'qti-portable-custom-interaction') return;
+        if (expectedParentOriginTest === null) expectedParentOriginTest = event.origin;
+        else if (event.origin !== expectedParentOriginTest) return;
+        if (data.responseIdentifier && data.responseIdentifier !== PCIManager.responseIdentifier) return;
+
+        switch (data.method) {
           case 'setValueElementByText':
             PCIManager.setValueElementByText(data.params);
             return;
-            
           case 'mousedownOnSelector':
             PCIManager.mousedownOnSelector(data.params);
             return;
         }
-      }
-      
-      // Call the original message handler for non-test messages
-      if (originalMessageListener) {
-        originalMessageListener(event);
-      }
-    };`;
+      },
+      true
+    );`;
 
     // Find the position to insert our test handlers
     const insertPosition = originalContent.lastIndexOf('</script>');

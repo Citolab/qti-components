@@ -23,8 +23,8 @@
     "@qti-components/utilities": "workspace:*"
   },
   "peerDependencies": {
-    "lit": "^3.3.1",
+    "@dnd-kit/dom": "^0.1.21",
     "@lit/context": "^1.1.6",
-    "@dnd-kit/dom": "^0.1.21"
+    "lit": "^3.3.1"
   }
 }

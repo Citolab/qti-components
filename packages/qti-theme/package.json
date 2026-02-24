@@ -1,12 +1,14 @@
 {
   "name": "@qti-components/theme",
-  "version": "1.0.0",
   "description": "QTI theme utilities",
-  "type": "module",
-  "scripts": {
-    "build": "postcss ./src/item.css -d dist -m",
-    "clean": "rm -rf dist",
-    "attw": "attw --profile esm-only --pack"
+  "version": "1.0.1",
+  "author": "",
+  "devDependencies": {
+    "@qti-components/theme": "workspace:^"
+  },
+  "exports": {
+    "./item.css": "./dist/item.css",
+    "./native.css": "./dist/native.css"
   },
   "files": [
     "dist"
@@ -15,6 +17,13 @@
     "qti",
     "theme"
   ],
-  "author": "",
-  "license": "GPL-3.0-only"
+  "license": "GPL-3.0-only",
+  "scripts": {
+    "attw": "attw --profile esm-only --pack",
+    "build": "postcss ./src/item.css -d dist -m && postcss ./src/native.css -d dist -m",
+    "clean": "rm -rf dist",
+    "yalc": "yalc publish",
+    "yalc:push": "yalc push"
+  },
+  "type": "module"
 }

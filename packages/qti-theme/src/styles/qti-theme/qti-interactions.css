@@ -1,0 +1,17 @@
+@import url('./interactions/qti-choice-interaction.css');
+@import url('./interactions/qti-graphic-gap-match-interaction.css');
+@import url('./interactions/qti-text-entry-interaction.css');
+@import url('./interactions/qti-extended-text-interaction.css');
+@import url('./interactions/qti-gap-match-interaction.css');
+@import url('./interactions/qti-hotspot-interaction.css');
+@import url('./interactions/qti-hottext-interaction.css');
+@import url('./interactions/qti-inline-choice-interaction.css');
+@import url('./interactions/qti-match-interaction.css');
+@import url('./interactions/qti-order-interaction.css');
+@import url('./interactions/qti-associate-interaction.css');
+@import url('./interactions/qti-graphic-order-interaction.css');
+@import url('./interactions/qti-graphic-associate-interaction.css');
+@import url('./interactions/qti-slider-interaction.css');
+@import url('./interactions/qti-select-point-interaction.css');
+@import url('./interactions/qti-position-object-interaction.css');
+@import url('./interactions/qti-prompt.css');

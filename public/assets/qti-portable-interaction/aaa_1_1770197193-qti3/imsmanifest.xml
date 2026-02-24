@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<manifest xmlns="http://www.imsglobal.org/xsd/qti/qtiv3p0/imscp_v1p1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM https://purl.imsglobal.org/spec/md/v1p3/schema/xsd/imsmd_loose_v1p3p2.xsd
+                http://www.imsglobal.org/xsd/qti/qtiv3p0/imscp_v1p1 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqtiv3p0_imscpv1p2_v1p0.xsd
+                http://www.imsglobal.org/xsd/imsqti_metadata_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_metadatav3p0_v1p0.xsd" identifier="MANIFEST-tao698310ca659ea8-46458849" xmlns:imsmd="http://ltsc.ieee.org/xsd/LOM" xmlns:imsqti="http://www.imsglobal.org/xsd/imsqti_metadata_v3p0">
+    <metadata>
+        <schema>QTI Package</schema>
+        <schemaversion>3.0.0</schemaversion>
+    <imsmd:lom><imsmd:metaMetadata><extension><customProperties><property><uri>http://www.tao.lu/Ontologies/TAOItem.rdf#ItemContent</uri><label>Item Content</label><domain>http://www.tao.lu/Ontologies/TAOItem.rdf#Item</domain><checksum>da39a3ee5e6b4b0d3255bfef95601890afd80709</checksum></property><property><uri>http://www.tao.lu/Ontologies/TAOItem.rdf#ItemModel</uri><label>Item Model</label><domain>http://www.tao.lu/Ontologies/TAOItem.rdf#Item</domain><widget>http://www.tao.lu/datatypes/WidgetDefinitions.rdf#RadioBox</widget><checksum>99336650bf0c454a35ac0dafa585708284ad57b1</checksum></property><property><uri>http://www.w3.org/1999/02/22-rdf-syntax-ns#type</uri><label>type</label><domain>http://www.w3.org/2000/01/rdf-schema#Resource</domain><multiple>http://www.tao.lu/Ontologies/generis.rdf#True</multiple><widget>http://www.tao.lu/datatypes/WidgetDefinitions.rdf#TreeView</widget></property><property><uri>http://www.w3.org/2000/01/rdf-schema#label</uri><label>Label</label><domain>http://www.w3.org/2000/01/rdf-schema#Resource</domain><widget>http://www.tao.lu/datatypes/WidgetDefinitions.rdf#TextBox</widget></property></customProperties></extension></imsmd:metaMetadata></imsmd:lom></metadata>
+    <organizations/>
+    <resources>
+                <resource identifier="i6983104e4ae9020260204102430a569a934" type="imsqti_item_xmlv3p0" href="i6983104e4ae9020260204102430a569a934/qti.xml">
+            <metadata><imsmd:lom><imsmd:classification><imsmd:taxonPath><imsmd:source><imsmd:string xml:lang="en-US">http://www.w3.org/2000/01/rdf-schema#label</imsmd:string></imsmd:source><imsmd:taxon><imsmd:entry><imsmd:string xml:lang="en-US">AAA 1</imsmd:string></imsmd:entry></imsmd:taxon></imsmd:taxonPath></imsmd:classification></imsmd:lom></metadata><file href="i6983104e4ae9020260204102430a569a934/qti.xml"/>
+                        <file href="runtime/textReaderInteraction.min.js"/>
+                    </resource>
+            </resources>
+</manifest>

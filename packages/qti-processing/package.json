@@ -1,28 +1,32 @@
 {
-    "name": "@qti-components/processing",
-    "version": "1.0.0",
-    "description": "QTI processing utilities",
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
-    "type": "module",
-    "scripts": {
-        "build": "tsc --paths null",
-        "clean": "rm -rf dist",
-        "attw": "attw --profile esm-only --pack"
-    },
-    "sideEffects": true,
-    "keywords": [
-        "qti",
-        "processing"
-    ],
-    "author": "",
-    "license": "GPL-3.0-only",
-    "dependencies": {
-        "@qti-components/base": "workspace:*",
-        "@qti-components/utilities": "workspace:*"
-    },
-    "peerDependencies": {
-        "lit": "^3.3.1",
-        "@lit/context": "^1.1.6"
-    }
+  "name": "@qti-components/processing",
+  "description": "QTI processing utilities",
+  "version": "1.0.0",
+  "author": "",
+  "dependencies": {
+    "@qti-components/base": "workspace:^",
+    "@qti-components/utilities": "workspace:^"
+  },
+  "devDependencies": {
+    "@lit/context": "^1.1.6",
+    "lit": "^3.3.1"
+  },
+  "keywords": [
+    "processing",
+    "qti"
+  ],
+  "license": "GPL-3.0-only",
+  "main": "dist/index.js",
+  "peerDependencies": {
+    "@lit/context": "^1.1.6",
+    "lit": "^3.3.1"
+  },
+  "scripts": {
+    "attw": "attw --profile esm-only --pack",
+    "build": "tsc --paths null",
+    "clean": "rm -rf dist"
+  },
+  "sideEffects": true,
+  "type": "module",
+  "types": "dist/index.d.ts"
 }

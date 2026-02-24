@@ -91,8 +91,8 @@ export class QtiOrderInteractionInPlace extends DragDropSortableMixin(
     return this.choices.length > 0;
   }
 
-  override async firstUpdated(changedProps: any) {
-    super.firstUpdated(changedProps);
+  override async firstUpdated() {
+    super.firstUpdated();
 
     // Wait for drag-drop initialization to complete
     await new Promise(resolve => setTimeout(resolve, 0));

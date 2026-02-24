@@ -1,0 +1,38 @@
+@layer qti-components {
+  qti-associate-interaction {
+    &::part(message) {
+      @apply validation-message;
+    }
+    &:state(--dragzone-active) slot[name='qti-simple-associable-choice'] {
+      @apply act;
+    }
+    &:state(--dragzone-enabled) slot[name='qti-simple-associable-choice'] {
+      @apply dropping;
+    }
+    & qti-simple-associable-choice,
+    &::part(qti-simple-associable-choice) {
+      @apply drag;
+      &:hover {
+        @apply hov;
+      }
+      &:focus {
+        @apply foc;
+      }
+      &[dragging] {
+        @apply dragging;
+      }
+    }
+    &::part(drop-list) {
+      @apply drop;
+      display: grid;
+      height: 3rem;
+      min-width: 10rem;
+    }
+    &::part(drop-list):focus {
+      @apply foc;
+    }
+    &::part(drop-list)[dragging] {
+      @apply act;
+    }
+  }
+}

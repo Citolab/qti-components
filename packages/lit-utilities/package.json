@@ -1,21 +1,29 @@
 {
-    "name": "@qti-components/utilities",
-    "version": "1.0.0",
-    "description": "shared utilities",
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
-    "type": "module",
-    "scripts": {
-        "build": "tsc --paths null",
-        "clean": "rm -rf dist"
-    },
-    "keywords": [
-        "qti",
-        "utilities"
-    ],
-    "author": "",
-    "license": "GPL-3.0-only",
-    "peerDependencies": {
-        "lit": "^3.3.1"
-    }
+  "name": "@qti-components/utilities",
+  "description": "shared utilities",
+  "version": "1.0.0",
+  "author": "",
+  "devDependencies": {
+    "lit": "^3.3.1"
+  },
+  "keywords": [
+    "qti",
+    "utilities"
+  ],
+  "license": "GPL-3.0-only",
+  "main": "dist/index.js",
+  "peerDependencies": {
+    "lit": "^3.3.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc --paths null",
+    "clean": "rm -rf dist",
+    "yalc": "yalc publish",
+    "yalc:push": "yalc push"
+  },
+  "type": "module",
+  "types": "dist/index.d.ts"
 }

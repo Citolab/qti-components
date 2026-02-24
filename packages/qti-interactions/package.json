@@ -1,29 +1,53 @@
 {
   "name": "@qti-components/interactions",
-  "version": "1.0.0",
   "description": "QTI interactions utilities",
+  "version": "1.7.0",
+  "author": "",
+  "dependencies": {
+    "@qti-components/base": "workspace:^",
+    "@qti-components/utilities": "workspace:^"
+  },
+  "devDependencies": {
+    "@lit/context": "^1.1.6",
+    "@qti-components/theme": "workspace:^",
+    "@qti-components/transformers": "workspace:^",
+    "lit": "^3.3.1"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./*": "./dist/*"
+  },
+  "files": [
+    "dist/**/*"
+  ],
+  "keywords": [
+    "interactions",
+    "qti"
+  ],
+  "license": "GPL-3.0-only",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "type": "module",
+  "peerDependencies": {
+    "@lit/context": "^1.1.6",
+    "lit": "^3.3.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
+    "attw": "attw --profile esm-only --pack",
     "build": "tsc --paths null",
+    "build-storybook": "storybook build",
+    "cem": "cem analyze --config ./custom-elements-manifest.config.mjs",
     "clean": "rm -rf dist",
-    "attw": "attw --profile esm-only --pack"
+    "storybook": "storybook dev -p 6008 --no-open",
+    "yalc": "yalc publish",
+    "yalc:push": "yalc push"
   },
   "sideEffects": true,
-  "keywords": [
-    "qti",
-    "interactions"
-  ],
-  "author": "",
-  "license": "GPL-3.0-only",
-  "dependencies": {
-    "@qti-components/base": "workspace:*",
-    "@qti-components/transformers": "workspace:*",
-    "@qti-components/utilities": "workspace:*"
-  },
-  "peerDependencies": {
-    "lit": "^3.3.1",
-    "@lit/context": "^1.1.6"
-  }
+  "type": "module",
+  "types": "dist/index.d.ts",
+  "customElements": "custom-elements.json"
 }

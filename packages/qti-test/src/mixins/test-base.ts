@@ -95,13 +95,18 @@ export const TestBaseMixin = <T extends Constructor<LitElement>>(superClass: T) 
 
       this.addEventListener('qti-item-context-updated', (e: CustomEvent<{ itemContext: ItemContext }>) => {
         // const assessmentitem = e.composedPath()[0] as QtiAssessmentItem;
-        this._updateItemVariablesInTestContext(e.detail.itemContext.identifier, e.detail.itemContext.variables);
+        this._updateItemVariablesInTestContext(
+          e.detail.itemContext.identifier,
+          e.detail.itemContext.variables,
+          e.detail.itemContext.state
+        );
       });
     }
 
     private _updateItemVariablesInTestContext(
       identifier: string,
-      variables: readonly VariableDeclaration<string | string[] | null>[]
+      variables: readonly VariableDeclaration<string | string[] | null>[],
+      state?: ItemContext['state']
     ): void {
       // Update the test context with modified variables for the specified item
       this.testContext = {
@@ -121,7 +126,8 @@ export const TestBaseMixin = <T extends Constructor<LitElement>>(superClass: T) 
 
               // Merge matching variable with the new one, or use the new variable if no match
               return matchingVariable ? { ...matchingVariable, ...variable } : variable;
-            })
+            }),
+            ...(state !== undefined ? { state: state ? { ...state } : undefined } : {})
           };
         })
       };

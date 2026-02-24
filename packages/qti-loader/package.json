@@ -1,23 +1,23 @@
 {
-    "name": "@qti-components/loader",
-    "version": "1.0.0",
-    "description": "QTI loader utilities",
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
-    "type": "module",
-    "scripts": {
-        "build": "tsc --paths null",
-        "clean": "rm -rf dist",
-        "attw": "attw --profile esm-only --pack"
-    },
-    "keywords": [
-        "qti",
-        "loader"
-    ],
-    "author": "",
-    "license": "GPL-3.0-only",
-    "dependencies": {
-        "@qti-components/transformers": "workspace:*",
-        "@qti-components/elements": "workspace:*"
-    }
+  "name": "@qti-components/loader",
+  "description": "QTI loader utilities",
+  "version": "1.0.4",
+  "author": "",
+  "dependencies": {
+    "@qti-components/elements": "workspace:^",
+    "@qti-components/transformers": "workspace:^"
+  },
+  "keywords": [
+    "loader",
+    "qti"
+  ],
+  "license": "GPL-3.0-only",
+  "main": "dist/index.js",
+  "scripts": {
+    "attw": "attw --profile esm-only --pack",
+    "build": "tsc --paths null",
+    "clean": "rm -rf dist"
+  },
+  "type": "module",
+  "types": "dist/index.d.ts"
 }

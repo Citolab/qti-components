@@ -1,45 +1,14 @@
-const xml = String.raw;
-
-/*   <!-- convert CDATA to comments -->
-  <xsl:template match="text()[contains(., 'CDATA')]">
-  <xsl:comment>
-    <xsl:value-of select="."/>
-  </xsl:comment>
-</xsl:template>
-*/
-
-/*
-  <!-- remove xml comments -->
-  <xsl:template match="comment()" />
-  */
-
-const xmlToHTML = xml`<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:output method="html" version="5.0" encoding="UTF-8" indent="yes" />
-  <xsl:template match="@*|node()">
-    <xsl:copy>
-      <xsl:apply-templates select="@*|node()"/>
-    </xsl:copy>
-  </xsl:template>
-
-  <!-- remove existing namespaces -->
-  <xsl:template match="*">
-    <!-- remove element prefix -->
-    <xsl:element name="{local-name()}">
-      <!-- process attributes -->
-      <xsl:for-each select="@*">
-        <!-- remove attribute prefix -->
-        <xsl:attribute name="{local-name()}">
-          <xsl:value-of select="."/>
-        </xsl:attribute>
-      </xsl:for-each>
-    <xsl:apply-templates/>
-  </xsl:element>
-</xsl:template>
-</xsl:stylesheet>`;
-
 // Function to extend elements with a specific tag name by adding an extension suffix
+// Uses localName matching to handle namespaced XML documents where querySelectorAll may not work
 export function extendElementName(xmlFragment: XMLDocument, tagName: string, extension: string) {
-  xmlFragment.querySelectorAll(tagName).forEach(element => {
+  // Use getElementsByTagName with '*' to find all elements, then filter by localName
+  // This works correctly for both namespaced and non-namespaced XML documents
+  const allElements = Array.from(xmlFragment.getElementsByTagName('*'));
+  const matchingElements = allElements.filter(
+    element => element.localName === tagName || element.localName?.toLowerCase() === tagName.toLowerCase()
+  );
+
+  matchingElements.forEach(element => {
     const newTagName = `${tagName}-${extension}`;
     const newElement = createElementWithNewTagName(element, newTagName);
     element.replaceWith(newElement);
@@ -117,36 +86,53 @@ export function parseXML(xmlDocument: string) {
   return xmlFragment;
 }
 
-export function toHTML(xmlFragment: Document): DocumentFragment {
-  const processor = new XSLTProcessor();
-  const xsltDocument = new DOMParser().parseFromString(xmlToHTML, 'text/xml');
-  processor.importStylesheet(xsltDocument);
-  const itemHTMLFragment = processor.transformToFragment(xmlFragment, document);
-  return itemHTMLFragment;
+function stripNamespaces(node: Node, doc: Document): Node {
+  if (node.nodeType === Node.ELEMENT_NODE) {
+    const el = node as Element;
+    const newEl = doc.createElement(el.localName);
+    for (let i = 0; i < el.attributes.length; i++) {
+      const attr = el.attributes[i];
+      newEl.setAttribute(attr.localName, attr.value);
+    }
+    for (let i = 0; i < el.childNodes.length; i++) {
+      newEl.appendChild(stripNamespaces(el.childNodes[i], doc));
+    }
+    return newEl;
+  }
+  return node.cloneNode(false);
 }
 
+export function toHTML(xmlFragment: Document): DocumentFragment {
+  const fragment = document.createDocumentFragment();
+  for (let i = 0; i < xmlFragment.childNodes.length; i++) {
+    fragment.appendChild(stripNamespaces(xmlFragment.childNodes[i], document));
+  }
+  return fragment;
+}
+
+// Updates src and href attributes with the base location
+// Uses querySelectorAll('*') to find all elements, then checks attributes manually
+// This handles namespaced XML documents where attribute selectors like [href] may not work
+// Note: primary-path is NOT processed here because it is resolved separately
+// by the PCI component using data-base-url in the iframe's module resolution
 export function setLocation(xmlFragment: DocumentFragment, location: string) {
   if (!location.endsWith('/')) {
     location += '/';
   }
 
-  xmlFragment.querySelectorAll('[src],[href],[primary-path]').forEach(elWithSrc => {
-    let attr: 'src' | 'href' | 'primary-path' | '' = '';
+  // querySelectorAll('*') finds all descendant elements regardless of namespace
+  const allElements = xmlFragment.querySelectorAll('*');
 
-    if (elWithSrc.getAttribute('src')) {
-      attr = 'src';
-    }
-    if (elWithSrc.getAttribute('href')) {
-      attr = 'href';
-    }
-    if (elWithSrc.getAttribute('primary-path')) {
-      attr = 'primary-path';
-    }
-    const attrValue = elWithSrc.getAttribute(attr)?.trim();
+  allElements.forEach(el => {
+    // Check each attribute we care about
+    // Note: primary-path is excluded - PCI handles module path resolution via data-base-url
+    for (const attr of ['src', 'href'] as const) {
+      const attrValue = el.getAttribute(attr)?.trim();
 
-    if (!/^(data:|https?:|blob:)/.test(attrValue)) {
-      const newSrcValue = location + encodeURI(attrValue);
-      elWithSrc.setAttribute(attr, newSrcValue);
+      if (attrValue && !/^(data:|https?:|blob:)/.test(attrValue)) {
+        const newValue = location + encodeURI(attrValue);
+        el.setAttribute(attr, newValue);
+      }
     }
   });
 }

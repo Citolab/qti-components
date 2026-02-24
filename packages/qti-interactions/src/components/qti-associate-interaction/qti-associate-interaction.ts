@@ -1,5 +1,5 @@
 import { html } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
+import { state } from 'lit/decorators.js';
 
 import { Interaction } from '@qti-components/base';
 
@@ -8,8 +8,6 @@ import styles from './qti-associate-interaction.styles';
 
 import type { QtiSimpleAssociableChoice } from '../../elements/qti-simple-associable-choice';
 import type { CSSResultGroup } from 'lit';
-
-@customElement('qti-associate-interaction')
 export class QtiAssociateInteraction extends DragDropInteractionMixin(
   Interaction,
   'qti-simple-associable-choice',
