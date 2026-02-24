@@ -4,12 +4,12 @@ Repository skill catalog for agents and contributors.
 
 ## Skill Location
 
-- Installable skills are stored in `.codex/skills/`.
+- Installable skills are stored in `.github/skills/`.
 - Each skill has a required `SKILL.md`.
 
 ## Skill: `workspace-start-build-test`
 
-- Path: `.codex/skills/workspace-start-build-test/SKILL.md`
+- Path: `.github/skills/workspace-start-build-test/SKILL.md`
 - Use when: starting local development, running builds, tests, and baseline checks.
 - Typical triggers:
   - "start the project"
@@ -28,7 +28,7 @@ Repository skill catalog for agents and contributors.
 
 ## Skill: `storybook-runner`
 
-- Path: `.codex/skills/storybook-runner/SKILL.md`
+- Path: `.github/skills/storybook-runner/SKILL.md`
 - Use when: running Storybook locally or building static Storybook output.
 - Typical triggers:
   - "run Storybook"
@@ -46,7 +46,7 @@ Repository skill catalog for agents and contributors.
 
 ## Skill: `chrome-devtools-mcp`
 
-- Path: `.codex/skills/chrome-devtools-mcp/SKILL.md`
+- Path: `.github/skills/chrome-devtools-mcp/SKILL.md`
 - Use when: starting, checking, and troubleshooting Chrome DevTools MCP server.
 - Typical triggers:
   - "start chrome devtools mcp"
@@ -63,7 +63,7 @@ Repository skill catalog for agents and contributors.
 
 ## Skill: `qti-interactions-story-authoring`
 
-- Path: `.codex/skills/qti-interactions-story-authoring/SKILL.md`
+- Path: `.github/skills/qti-interactions-story-authoring/SKILL.md`
 - Use when: creating/refactoring stories for `packages/qti-interactions`.
 - Typical triggers:
   - "create stories for qti-interactions"
@@ -82,7 +82,7 @@ Repository skill catalog for agents and contributors.
 
 ## Skill: `feature-branch-workflow`
 
-- Path: `.codex/skills/feature-branch-workflow/SKILL.md`
+- Path: `.github/skills/feature-branch-workflow/SKILL.md`
 - Use when: committing changes to a feature branch with GitHub issue and PR creation.
 - Typical triggers:
   - "commit my changes to a feature branch"
