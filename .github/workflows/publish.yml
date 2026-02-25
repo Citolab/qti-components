@@ -84,16 +84,14 @@ jobs:
               const f=path.join("packages", d, "package.json");
               if (!fs.existsSync(f)) continue;
               const p=JSON.parse(fs.readFileSync(f,"utf8"));
-              if (!p.private) console.log(`${p.name}@${p.version}`);
+              if (!p.private) console.log([p.name, p.version, path.join("packages", d)].join("\t"));
             }
-          ' | while read -r SPEC; do
-            NAME="${SPEC%@*}"
-            VERSION="${SPEC##*@}"
+          ' | while IFS=$'\t' read -r NAME VERSION PKG_DIR; do
             if npm view "${NAME}@${VERSION}" version >/dev/null 2>&1; then
               echo "Skipping ${NAME}@${VERSION} (already published)"
             else
-              echo "Publishing ${NAME}@${VERSION}"
-              pnpm --filter "${NAME}" publish --access public --provenance --no-git-checks --tag "${DIST_TAG}"
+              echo "Publishing ${NAME}@${VERSION} from ${PKG_DIR}"
+              (cd "${PKG_DIR}" && npm publish --access public --provenance --tag "${DIST_TAG}")
             fi
           done
         env:
