@@ -54,7 +54,7 @@ Contributions are welcome! Please follow these guidelines when contributing:
 
 ## Publishing
 
-Release and publish workflow details are documented in [docs/publishing.md](docs/publishing.md).
+Release and publish workflow details are documented in [docs/publishing.md](docs/publishing.md). Automated releases use semantic-release on `main`.
 
 ## Third-Party Components
 

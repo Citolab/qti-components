@@ -2,11 +2,12 @@
 
 This workspace publishes all packages in `packages/*` to npm.
 
-## Recommended Flow (Automated)
+## Recommended Flow (Explicit Manual Release)
 
 1. Merge conventional commits into `main`.
-2. `release-please` updates release PRs and versions.
-3. On release creation, `.github/workflows/publish.yml` publishes all releasable workspace packages.
+2. Manually run `.github/workflows/semantic-release.yml` from GitHub Actions.
+3. semantic-release analyzes commits, bumps package versions/changelogs, and creates component tags (`*-vX.Y.Z`).
+4. Tag push triggers `.github/workflows/publish.yml`, which publishes workspace packages to npm (skipping already-published versions).
 
 ## Manual Fallback Flow
 
@@ -25,23 +26,40 @@ The `:next` variant publishes with npm dist-tag `next`.
 - `tag`: optional Git tag/ref to publish from.
 - `dist_tag`: npm dist-tag (`latest` or `next`).
 
-## Authentication
+## Authentication (Trusted Publishing)
 
-Publishing requires `NPM_TOKEN` with permission to publish all target scopes:
+Publishing is configured for npm Trusted Publishing (GitHub OIDC), not long-lived `NPM_TOKEN`.
 
-- `@citolab/*`
-- `@qti-components/*`
+Required setup in npm:
 
-Recommended token setup:
+1. In npm org/package settings, add GitHub trusted publishers for:
+2. `.github/workflows/semantic-release.yml` (branch `main`)
+3. `.github/workflows/publish.yml` (manual fallback)
+4. Ensure both scopes are configured: `@citolab/*` and `@qti-components/*`.
 
-1. Use an npm automation token in GitHub Actions secret `NPM_TOKEN`.
-2. Ensure the token owner has package publish rights in both npm org scopes.
-3. If npm 2FA is enabled, use an automation-compatible token.
+Required setup in GitHub:
+
+1. Add `RELEASE_GH_TOKEN` (PAT) secret for semantic-release if you want tag pushes to trigger downstream workflows.
+2. Fallback `GITHUB_TOKEN` still works for releases, but workflow-trigger chaining from bot-created tags may be suppressed by GitHub recursion protection.
+
+## Semantic Release Workflow Inputs
+
+`.github/workflows/semantic-release.yml` supports:
+
+- `branch`: branch to release from (default `main`).
+- `dry_run`: run semantic-release in dry-run mode without creating tags/releases.
+
+Implementation details in this repo:
+
+1. Workflows grant `permissions: id-token: write`.
+2. CI upgrades npm (`npm i -g npm@latest`) before publishing.
+3. Publishing uses provenance (`--provenance` / `NPM_CONFIG_PROVENANCE=true`).
 
 ## Notes
 
-- Re-running publish for already-published versions can fail on npm with "version already exists".
 - npm is the canonical registry target for this repository.
+- `.github/workflows/publish.yml` is a manual emergency fallback path; semantic-release is the default release path.
+- All publishable packages in `packages/*` include explicit `repository` metadata pointing to this GitHub repo and package directory.
 
 ## Pull Request StackBlitz Links
 

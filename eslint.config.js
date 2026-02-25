@@ -189,6 +189,8 @@ export default [
       'storybook-static/**', // Storybook build output
       '**/*.d.ts', // TypeScript declaration files
       '**/*.config.*', // Config files (prettier, etc.)
+      '.releaserc.cjs',
+      '**/.releaserc.cjs',
       '**/*.mjs', // Module JavaScript files
       '**/cdn/**', // CDN build files
       'scripts/**' // Utility scripts

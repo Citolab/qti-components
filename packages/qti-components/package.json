@@ -75,7 +75,8 @@
   "license": "GPL-3.0-only",
   "main": "dist/index.js",
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "repository": {
     "type": "git",

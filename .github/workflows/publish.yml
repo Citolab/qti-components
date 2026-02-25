@@ -1,6 +1,9 @@
 name: Publish to NPM
 
 on:
+  push:
+    tags:
+      - '*-v*.*.*'
   workflow_call:
     inputs:
       tag:
@@ -12,9 +15,6 @@ on:
         required: false
         type: string
         default: latest
-    secrets:
-      NPM_TOKEN:
-        required: true
   workflow_dispatch:
     inputs:
       tag:
@@ -41,7 +41,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.tag || github.ref }}
+          ref: ${{ inputs.tag || github.event.inputs.tag || github.ref }}
           fetch-depth: 0
 
       - name: Install pnpm
@@ -54,6 +54,9 @@ jobs:
           cache: 'pnpm'
           registry-url: 'https://registry.npmjs.org/'
 
+      - name: Upgrade npm (required for trusted publishing)
+        run: npm i -g npm@latest
+
       - name: Install dependencies
         run: |
           echo "📦 Installing dependencies..."
@@ -65,7 +68,7 @@ jobs:
       - name: Publish workspace packages to NPM 🚀
         run: |
           set -euo pipefail
-          DIST_TAG="${{ inputs.dist_tag || 'latest' }}"
+          DIST_TAG="${{ inputs.dist_tag || github.event.inputs.dist_tag || 'latest' }}"
           echo "Using npm dist-tag: ${DIST_TAG}"
           node -e '
             const fs=require("fs"), path=require("path");
@@ -82,8 +85,8 @@ jobs:
               echo "Skipping ${NAME}@${VERSION} (already published)"
             else
               echo "Publishing ${NAME}@${VERSION}"
-              pnpm --filter "${NAME}" publish --access public --no-git-checks --tag "${DIST_TAG}"
+              pnpm --filter "${NAME}" publish --access public --provenance --no-git-checks --tag "${DIST_TAG}"
             fi
           done
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: true
