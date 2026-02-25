@@ -21,6 +21,7 @@ on:
 
 permissions:
   contents: read
+  id-token: write
 
 jobs:
   publish:
@@ -40,7 +41,6 @@ jobs:
         with:
           node-version: 24
           cache: 'pnpm'
-          registry-url: 'https://registry.npmjs.org/'
 
       - name: Install dependencies
         run: |
@@ -50,10 +50,14 @@ jobs:
       - name: Build project 🔨
         run: pnpm run build
 
+      - name: Configure npm auth
+        run: |
+          printf "registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=%s\n" "${NPM_TOKEN}" > "${HOME}/.npmrc"
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Publish workspace packages to NPM 🚀
         run: |
           DIST_TAG="${{ github.event.inputs.dist_tag || 'latest' }}"
           echo "Using npm dist-tag: ${DIST_TAG}"
           pnpm -r --filter "./packages/*" publish --access public --no-git-checks --tag "${DIST_TAG}"
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
