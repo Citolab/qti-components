@@ -52,7 +52,6 @@ jobs:
         with:
           node-version: 24
           cache: 'pnpm'
-          registry-url: 'https://registry.npmjs.org/'
 
       - name: Pin npm for trusted publishing
         run: npm i -g npm@11.5.1
