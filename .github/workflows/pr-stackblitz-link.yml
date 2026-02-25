@@ -1,0 +1,71 @@
+name: PR StackBlitz Link
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: pr-stackblitz-link-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  comment-stackblitz-link:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add StackBlitz quick-open comment
+        uses: actions/github-script@v7
+        env:
+          BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const marker = '<!-- qti-pr-stackblitz-link -->';
+            const branch = process.env.BRANCH_NAME;
+            const encodedBranch = encodeURIComponent(branch);
+            const stackblitzUrl = `https://stackblitz.com/github/${context.repo.owner}/${context.repo.repo}/tree/${encodedBranch}?startScript=storybook%3Astackblitz`;
+            const storybookDevUrl = `https://stackblitz.com/github/${context.repo.owner}/${context.repo.repo}/tree/${encodedBranch}?startScript=storybook%3Adev`;
+            const storybookInteractionsUrl = `https://stackblitz.com/github/${context.repo.owner}/${context.repo.repo}/tree/${encodedBranch}?startScript=storybook%3Ainteractions`;
+            const storybookProsemirrorUrl = `https://stackblitz.com/github/${context.repo.owner}/${context.repo.repo}/tree/${encodedBranch}?startScript=storybook%3Aprosemirror`;
+
+            const body = `${marker}
+            ## Branch Storybook Preview (StackBlitz)
+
+            - Quick open (recommended): ${stackblitzUrl}
+            - Root Storybook (storybook:dev): ${storybookDevUrl}
+            - Interactions Storybook: ${storybookInteractionsUrl}
+            - Prosemirror Storybook: ${storybookProsemirrorUrl}`;
+
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              per_page: 100,
+            });
+
+            const existing = comments.find(
+              (comment) =>
+                comment.user?.type === 'Bot' &&
+                comment.body?.includes(marker),
+            );
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }

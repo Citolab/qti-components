@@ -1,7 +1,7 @@
 {
   "name": "@qti-components/utilities",
   "description": "shared utilities",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "",
   "devDependencies": {
     "lit": "^3.3.1"
@@ -16,7 +16,8 @@
     "lit": "^3.3.1"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "scripts": {
     "build": "tsc --paths null",
@@ -25,5 +26,13 @@
     "yalc:push": "yalc push"
   },
   "type": "module",
-  "types": "dist/index.d.ts"
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Citolab/qti-components.git",
+    "directory": "packages/qti-utilities"
+  }
 }

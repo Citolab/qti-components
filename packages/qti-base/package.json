@@ -1,7 +1,7 @@
 {
   "name": "@qti-components/base",
   "description": "QTI shared utilities",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "author": "",
   "dependencies": {
     "@qti-components/utilities": "workspace:^"
@@ -21,7 +21,8 @@
     "lit": "^3.3.1"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "scripts": {
     "attw": "attw --profile esm-only --pack",
@@ -31,5 +32,13 @@
     "yalc:push": "yalc push"
   },
   "type": "module",
-  "types": "dist/index.d.ts"
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Citolab/qti-components.git",
+    "directory": "packages/qti-base"
+  }
 }

@@ -1,3 +1,10 @@
+# [@qti-components/interactions-v1.8.0](https://github.com/Citolab/qti-components/compare/interactions-v1.7.0...interactions-v1.8.0) (2026-02-25)
+
+
+### Features
+
+* **release-test:** add semantic-release markers in all packages ([399874c](https://github.com/Citolab/qti-components/commit/399874c31289f689c2c046472667d756a2f50f2c))
+
 # Changelog
 
 ## [1.7.0](https://github.com/Citolab/qti-components/compare/interactions-v1.6.1...interactions-v1.7.0) (2026-02-13)

@@ -1,16 +1,23 @@
 name: Publish to NPM
 
 on:
-  workflow_call:
-    secrets:
-      NPM_TOKEN:
-        required: true
+  push:
+    tags:
+      - '*-v*.*.*'
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Tag to publish (e.g., v1.2.3). Leave empty for latest commit on selected branch.'
+        description: 'Optional Git ref to publish from (tag, branch, or commit SHA). Leave empty to use selected branch.'
         required: false
         type: string
+      dist_tag:
+        description: 'NPM dist-tag to publish with.'
+        required: false
+        default: latest
+        type: choice
+        options:
+          - latest
+          - next
 
 permissions:
   contents: read
@@ -23,7 +30,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.tag || github.ref }}
+          ref: ${{ github.event.inputs.tag || github.ref }}
           fetch-depth: 0
 
       - name: Install pnpm
@@ -32,9 +39,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           cache: 'pnpm'
-          registry-url: 'https://registry.npmjs.org/'
 
       - name: Install dependencies
         run: |
@@ -44,7 +50,30 @@ jobs:
       - name: Build project 🔨
         run: pnpm run build
 
-      - name: Publish to NPM 🚀
-        run: pnpm --filter @citolab/qti-components publish
+      - name: Configure npm auth
+        run: |
+          printf "registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=%s\n" "${NPM_TOKEN}" > "${HOME}/.npmrc"
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish workspace packages to NPM 🚀
+        run: |
+          set -euo pipefail
+          DIST_TAG="${{ github.event.inputs.dist_tag || 'latest' }}"
+          echo "Using npm dist-tag: ${DIST_TAG}"
+          node -e '
+            const fs=require("fs"), path=require("path");
+            for (const d of fs.readdirSync("packages").sort()) {
+              const f=path.join("packages", d, "package.json");
+              if (!fs.existsSync(f)) continue;
+              const p=JSON.parse(fs.readFileSync(f,"utf8"));
+              if (!p.private) console.log([p.name, p.version].join("\t"));
+            }
+          ' | while IFS=$'\t' read -r NAME VERSION; do
+            if npm view "${NAME}@${VERSION}" version >/dev/null 2>&1; then
+              echo "Skipping ${NAME}@${VERSION} (already published)"
+            else
+              echo "Publishing ${NAME}@${VERSION}"
+              pnpm --filter "${NAME}" publish --access public --no-git-checks --tag "${DIST_TAG}"
+            fi
+          done

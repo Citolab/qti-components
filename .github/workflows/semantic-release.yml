@@ -1,0 +1,63 @@
+name: Semantic Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to release from'
+        required: false
+        default: 'main'
+        type: string
+      dry_run:
+        description: 'Run semantic-release in dry-run mode'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  id-token: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch || 'main' }}
+          fetch-depth: 0
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'pnpm'
+          registry-url: 'https://registry.npmjs.org/'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build workspace
+        run: pnpm run build
+
+      - name: Run semantic-release (dry-run)
+        if: ${{ inputs.dry_run }}
+        run: pnpm run release:semantic:dry-run
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_GH_TOKEN || secrets.GITHUB_TOKEN }}
+          HUSKY: 0
+          NPM_CONFIG_PROVENANCE: true
+
+      - name: Run semantic-release
+        if: ${{ !inputs.dry_run }}
+        run: pnpm run release:semantic
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_GH_TOKEN || secrets.GITHUB_TOKEN }}
+          HUSKY: 0
+          NPM_CONFIG_PROVENANCE: true
