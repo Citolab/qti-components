@@ -54,8 +54,17 @@ jobs:
           cache: 'pnpm'
           registry-url: 'https://registry.npmjs.org/'
 
-      - name: Upgrade npm (required for trusted publishing)
-        run: npm i -g npm@latest
+      - name: Pin npm for trusted publishing
+        run: npm i -g npm@11.5.1
+
+      - name: Print publish environment diagnostics
+        run: |
+          node -v
+          npm -v
+          echo "GITHUB_WORKFLOW=${GITHUB_WORKFLOW}"
+          echo "GITHUB_WORKFLOW_REF=${GITHUB_WORKFLOW_REF}"
+          echo "GITHUB_REF=${GITHUB_REF}"
+          echo "GITHUB_EVENT_NAME=${GITHUB_EVENT_NAME}"
 
       - name: Install dependencies
         run: |
