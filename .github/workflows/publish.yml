@@ -4,25 +4,14 @@ on:
   push:
     tags:
       - '*-v*.*.*'
-  workflow_call:
-    inputs:
-      tag:
-        description: 'Tag to publish (e.g., v1.2.3). Leave empty for latest commit on selected branch.'
-        required: false
-        type: string
-      dist_tag:
-        description: 'NPM dist-tag to publish (latest or next).'
-        required: false
-        type: string
-        default: latest
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Tag to publish (e.g., v1.2.3). Leave empty for latest commit on selected branch.'
+        description: 'Optional Git ref to publish from (tag, branch, or commit SHA). Leave empty to use selected branch.'
         required: false
         type: string
       dist_tag:
-        description: 'NPM dist-tag to publish (latest or next).'
+        description: 'NPM dist-tag to publish with.'
         required: false
         default: latest
         type: choice
@@ -41,7 +30,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.tag || github.event.inputs.tag || github.ref }}
+          ref: ${{ github.event.inputs.tag || github.ref }}
           fetch-depth: 0
 
       - name: Install pnpm
@@ -64,6 +53,25 @@ jobs:
           echo "GITHUB_WORKFLOW_REF=${GITHUB_WORKFLOW_REF}"
           echo "GITHUB_REF=${GITHUB_REF}"
           echo "GITHUB_EVENT_NAME=${GITHUB_EVENT_NAME}"
+          echo "GITHUB_ACTIONS=${GITHUB_ACTIONS}"
+          echo "RUNNER_NAME=${RUNNER_NAME}"
+          echo "RUNNER_OS=${RUNNER_OS}"
+          echo "RUNNER_ENVIRONMENT=${RUNNER_ENVIRONMENT}"
+          echo "ACTIONS_ID_TOKEN_REQUEST_URL is set: $([[ -n \"${ACTIONS_ID_TOKEN_REQUEST_URL:-}\" ]] && echo yes || echo no)"
+          echo "ACTIONS_ID_TOKEN_REQUEST_TOKEN is set: $([[ -n \"${ACTIONS_ID_TOKEN_REQUEST_TOKEN:-}\" ]] && echo yes || echo no)"
+          echo "NODE_AUTH_TOKEN is set: $([[ -n \"${NODE_AUTH_TOKEN:-}\" ]] && echo yes || echo no)"
+          echo "NPM_TOKEN is set: $([[ -n \"${NPM_TOKEN:-}\" ]] && echo yes || echo no)"
+          echo "NPM_CONFIG_USERCONFIG=${NPM_CONFIG_USERCONFIG:-<unset>}"
+          if [[ -n "${NPM_CONFIG_USERCONFIG:-}" && -f "${NPM_CONFIG_USERCONFIG}" ]]; then
+            echo "--- npm user config (redacted) ---"
+            sed -E 's#(//registry\.npmjs\.org/:_authToken=).*#\1<redacted>#' "${NPM_CONFIG_USERCONFIG}" || true
+          fi
+          echo "--- npm config get registry ---"
+          npm config get registry
+          echo "--- npm config list (auth redacted) ---"
+          npm config list -l | sed -E 's#(//registry\.npmjs\.org/:_authToken=).*#\1<redacted>#' || true
+          echo "--- npm whoami (expected to fail under OIDC-only) ---"
+          npm whoami || true
 
       - name: Install dependencies
         run: |
@@ -75,24 +83,8 @@ jobs:
 
       - name: Publish workspace packages to NPM 🚀
         run: |
-          set -euo pipefail
-          DIST_TAG="${{ inputs.dist_tag || github.event.inputs.dist_tag || 'latest' }}"
+          DIST_TAG="${{ github.event.inputs.dist_tag || 'latest' }}"
           echo "Using npm dist-tag: ${DIST_TAG}"
-          node -e '
-            const fs=require("fs"), path=require("path");
-            for (const d of fs.readdirSync("packages").sort()) {
-              const f=path.join("packages", d, "package.json");
-              if (!fs.existsSync(f)) continue;
-              const p=JSON.parse(fs.readFileSync(f,"utf8"));
-              if (!p.private) console.log([p.name, p.version, path.join("packages", d)].join("\t"));
-            }
-          ' | while IFS=$'\t' read -r NAME VERSION PKG_DIR; do
-            if npm view "${NAME}@${VERSION}" version >/dev/null 2>&1; then
-              echo "Skipping ${NAME}@${VERSION} (already published)"
-            else
-              echo "Publishing ${NAME}@${VERSION} from ${PKG_DIR}"
-              (cd "${PKG_DIR}" && npm publish --access public --provenance --tag "${DIST_TAG}")
-            fi
-          done
+          pnpm -r --filter "./packages/*" publish --access public --provenance --no-git-checks --tag "${DIST_TAG}"
         env:
           NPM_CONFIG_PROVENANCE: true
