@@ -1,7 +1,7 @@
 {
   "name": "@citolab/qti-components",
   "description": "QTI component utilities",
-  "version": "7.23.0",
+  "version": "7.24.0",
   "author": "",
   "customElements": "dist/custom-elements.json",
   "dependencies": {
