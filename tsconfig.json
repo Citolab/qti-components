@@ -62,7 +62,7 @@
         "./packages/qti-loader/src/index.ts"
       ],
       "@qti-components/utilities": [
-        "packages/lit-utilities/src/index.ts"
+        "./packages/qti-utilities/src/index.ts"
       ],
       "@qti-components/custom": [
         "packages/qti-custom/src/index.ts"
