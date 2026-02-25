@@ -40,9 +40,6 @@ jobs:
           cache: 'pnpm'
           registry-url: 'https://registry.npmjs.org/'
 
-      - name: Upgrade npm (required for trusted publishing)
-        run: npm i -g npm@latest
-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -54,6 +51,7 @@ jobs:
         run: pnpm run release:semantic:dry-run
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_GH_TOKEN || secrets.GITHUB_TOKEN }}
+          HUSKY: 0
           NPM_CONFIG_PROVENANCE: true
 
       - name: Run semantic-release
@@ -61,4 +59,5 @@ jobs:
         run: pnpm run release:semantic
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_GH_TOKEN || secrets.GITHUB_TOKEN }}
+          HUSKY: 0
           NPM_CONFIG_PROVENANCE: true
