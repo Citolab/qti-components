@@ -58,6 +58,22 @@ jobs:
 
       - name: Publish workspace packages to NPM 🚀
         run: |
+          set -euo pipefail
           DIST_TAG="${{ github.event.inputs.dist_tag || 'latest' }}"
           echo "Using npm dist-tag: ${DIST_TAG}"
-          pnpm -r --filter "./packages/*" publish --access public --no-git-checks --tag "${DIST_TAG}"
+          node -e '
+            const fs=require("fs"), path=require("path");
+            for (const d of fs.readdirSync("packages").sort()) {
+              const f=path.join("packages", d, "package.json");
+              if (!fs.existsSync(f)) continue;
+              const p=JSON.parse(fs.readFileSync(f,"utf8"));
+              if (!p.private) console.log([p.name, p.version].join("\t"));
+            }
+          ' | while IFS=$'\t' read -r NAME VERSION; do
+            if npm view "${NAME}@${VERSION}" version >/dev/null 2>&1; then
+              echo "Skipping ${NAME}@${VERSION} (already published)"
+            else
+              echo "Publishing ${NAME}@${VERSION}"
+              pnpm --filter "${NAME}" publish --access public --no-git-checks --tag "${DIST_TAG}"
+            fi
+          done
