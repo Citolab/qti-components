@@ -90,3 +90,5 @@ jobs:
           done
         env:
           NPM_CONFIG_PROVENANCE: true
+          NPM_TOKEN: ""
+          NODE_AUTH_TOKEN: ""
