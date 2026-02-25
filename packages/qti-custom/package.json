@@ -1,10 +1,15 @@
 {
   "name": "@qti-components/custom",
-  "version": "1.0.0",
   "description": "QTI custom interactions",
+  "version": "1.0.0",
+  "author": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "scripts": {
     "build": "tsc --paths null",
     "clean": "rm -rf dist",
@@ -15,7 +20,6 @@
     "qti",
     "custom"
   ],
-  "author": "",
   "license": "GPL-3.0-only",
   "dependencies": {
     "@qti-components/base": "workspace:*",
@@ -26,5 +30,13 @@
     "@dnd-kit/dom": "^0.1.21",
     "@lit/context": "^1.1.6",
     "lit": "^3.3.1"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Citolab/qti-components.git",
+    "directory": "packages/qti-custom"
   }
 }
