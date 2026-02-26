@@ -1,4 +1,4 @@
-name: Semantic Release
+name: Manual release
 
 on:
   workflow_dispatch:
@@ -53,6 +53,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.RELEASE_GH_TOKEN || secrets.GITHUB_TOKEN }}
           HUSKY: 0
           NPM_CONFIG_PROVENANCE: true
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Run semantic-release
         if: ${{ !inputs.dry_run }}
@@ -61,3 +62,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.RELEASE_GH_TOKEN || secrets.GITHUB_TOKEN }}
           HUSKY: 0
           NPM_CONFIG_PROVENANCE: true
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
