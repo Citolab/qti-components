@@ -13,7 +13,9 @@
   "scripts": {
     "build": "tsc --paths null",
     "clean": "rm -rf dist",
-    "attw": "attw --profile esm-only --pack"
+    "attw": "attw --profile esm-only --pack",
+    "yalc": "yalc publish",
+    "yalc:push": "yalc push"
   },
   "sideEffects": true,
   "keywords": [
