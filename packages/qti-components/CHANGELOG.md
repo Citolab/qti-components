@@ -1,3 +1,10 @@
+# [@citolab/qti-components-v7.24.0](https://github.com/Citolab/qti-components/compare/qti-components-v7.23.0...qti-components-v7.24.0) (2026-02-25)
+
+
+### Features
+
+* **release-test:** add semantic-release markers in all packages ([399874c](https://github.com/Citolab/qti-components/commit/399874c31289f689c2c046472667d756a2f50f2c))
+
 # Changelog
 
 ## [7.23.0](https://github.com/Citolab/qti-components/compare/qti-components-v7.22.1...qti-components-v7.23.0) (2026-02-13)

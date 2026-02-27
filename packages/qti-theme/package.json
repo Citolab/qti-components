@@ -1,11 +1,8 @@
 {
   "name": "@qti-components/theme",
   "description": "QTI theme utilities",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "author": "",
-  "devDependencies": {
-    "@qti-components/theme": "workspace:^"
-  },
   "exports": {
     "./item.css": "./dist/item.css",
     "./native.css": "./dist/native.css"
@@ -25,5 +22,14 @@
     "yalc": "yalc publish",
     "yalc:push": "yalc push"
   },
-  "type": "module"
+  "type": "module",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Citolab/qti-components.git",
+    "directory": "packages/qti-theme"
+  }
 }

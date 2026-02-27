@@ -109,7 +109,7 @@ export class SpreadArgsDirective extends AsyncDirective {
  *
  * @example
  * ```typescript
- * import { spreadArgs } from '@qti-lib/lit-utilities';
+ * import { spreadArgs } from '@qti-components/utilities';
  *
  * const args = {
  *   'max-choices': 0,     // Will be included

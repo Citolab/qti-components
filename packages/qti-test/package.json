@@ -1,7 +1,7 @@
 {
   "name": "@qti-components/test",
   "description": "QTI test utilities",
-  "version": "1.1.10",
+  "version": "1.2.0",
   "author": "",
   "dependencies": {
     "@qti-components/base": "workspace:^",
@@ -35,5 +35,17 @@
   },
   "sideEffects": true,
   "type": "module",
-  "types": "dist/index.d.ts"
+  "types": "dist/index.d.ts",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Citolab/qti-components.git",
+    "directory": "packages/qti-test"
+  }
 }
