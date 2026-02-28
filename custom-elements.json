@@ -37237,15 +37237,6 @@
           "name": "QtiSum",
           "members": [
             {
-              "kind": "field",
-              "name": "#expression",
-              "privacy": "private",
-              "type": {
-                "text": "QtiSumExpression"
-              },
-              "default": "new QtiSumExpression(Array.from(this.children as unknown as QtiExpressionBase<number>[]))"
-            },
-            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
