@@ -22657,6 +22657,16 @@
             },
             {
               "kind": "method",
+              "name": "#hasNonEmptyResponse",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
               "name": "#initializeInteraction",
               "privacy": "private",
               "description": "IFRAME MODE: Initialize the interaction"
@@ -22681,6 +22691,24 @@
             },
             {
               "kind": "field",
+              "name": "#pciCustomValidityMessage",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "kind": "field",
+              "name": "#pciValidity",
+              "privacy": "private",
+              "type": {
+                "text": "boolean | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
               "name": "#previousState",
               "privacy": "private",
               "type": {
@@ -22699,6 +22727,31 @@
               "name": "#sendIframeInitData",
               "privacy": "private",
               "description": "IFRAME MODE: Send initialization data to iframe"
+            },
+            {
+              "kind": "method",
+              "name": "#setInteractionValidity",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "isValid",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "customMessage",
+                  "optional": true,
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
             },
             {
               "kind": "method",
@@ -24059,6 +24112,20 @@
             },
             {
               "kind": "method",
+              "name": "#hasNonEmptyResponse",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "#initializeInteraction",
               "privacy": "private",
               "description": "IFRAME MODE: Initialize the interaction",
@@ -24086,6 +24153,32 @@
               "privacy": "private",
               "type": {
                 "text": "Record<string, any>"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#pciCustomValidityMessage",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#pciValidity",
+              "privacy": "private",
+              "type": {
+                "text": "boolean | null"
               },
               "default": "null",
               "inheritedFrom": {
@@ -24130,6 +24223,35 @@
               "name": "#sendIframeInitData",
               "privacy": "private",
               "description": "IFRAME MODE: Send initialization data to iframe",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setInteractionValidity",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "isValid",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "customMessage",
+                  "optional": true,
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "packages/qti-interactions/src/components/qti-portable-custom-interaction/qti-portable-custom-interaction.ts"
