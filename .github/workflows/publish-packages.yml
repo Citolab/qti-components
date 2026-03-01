@@ -40,6 +40,15 @@ jobs:
           cache: 'pnpm'
           registry-url: 'https://registry.npmjs.org/'
 
+      - name: Upgrade npm for trusted publishing
+        run: npm install -g npm@latest
+
+      - name: Print tool versions
+        run: |
+          node --version
+          npm --version
+          pnpm --version
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -52,7 +61,7 @@ jobs:
           npm config delete //registry.npmjs.org/:_authToken || true
 
       - name: Publish changed workspace packages
-        run: pnpm run publish
+        run: env -u npm_config_recursive -u npm_config_verify_deps_before_run -u npm_config_npm_globalconfig -u npm_config__jsr_registry pnpm run publish
         env:
           NODE_AUTH_TOKEN: ''
           NPM_TOKEN: ''
