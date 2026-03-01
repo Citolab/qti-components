@@ -1,3 +1,10 @@
+# [@qti-components/utilities-v1.1.1](https://github.com/Citolab/qti-components/compare/utilities-v1.1.0...utilities-v1.1.1) (2026-03-01)
+
+
+### Bug Fixes
+
+* **qti-components:** correct customElements manifest path ([f4e33a3](https://github.com/Citolab/qti-components/commit/f4e33a396d7dd72cf65fef160a258cbfb98a1325))
+
 # [@qti-components/utilities-v1.1.0](https://github.com/Citolab/qti-components/compare/utilities-v1.0.0...utilities-v1.1.0) (2026-02-25)
 
 
