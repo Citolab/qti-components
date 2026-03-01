@@ -1,3 +1,16 @@
+# [@qti-components/interactions-v1.9.0](https://github.com/Citolab/qti-components/compare/interactions-v1.8.0...interactions-v1.9.0) (2026-03-01)
+
+
+### Bug Fixes
+
+* **qti-components:** correct customElements manifest path ([f4e33a3](https://github.com/Citolab/qti-components/commit/f4e33a396d7dd72cf65fef160a258cbfb98a1325))
+
+
+### Features
+
+* enhance PCI validation with custom validity messages and response checks. fixes: Q16-PCI-D23 ([675c203](https://github.com/Citolab/qti-components/commit/675c203e90bccf3cb972055727a3ea8ad8688ceb))
+* update release workflow to capture commit creation and add publish job ([11f3d43](https://github.com/Citolab/qti-components/commit/11f3d43c4e2ff2e0860b8bf8f42f8833c6f77db1))
+
 # [@qti-components/interactions-v1.8.0](https://github.com/Citolab/qti-components/compare/interactions-v1.7.0...interactions-v1.8.0) (2026-02-25)
 
 
