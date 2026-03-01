@@ -46,6 +46,11 @@ jobs:
       - name: Build workspace
         run: pnpm run build
 
+      - name: Verify npm auth
+        run: npm whoami --registry=https://registry.npmjs.org/
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Run semantic-release (dry-run)
         if: ${{ inputs.dry_run }}
         run: pnpm run release:semantic:dry-run:ci
