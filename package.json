@@ -75,7 +75,8 @@
     "release:semantic:dry-run": "env -u NPM_TOKEN -u NODE_AUTH_TOKEN HUSKY=0 NPM_CONFIG_PROVENANCE=false pnpm -r --filter \"./packages/*\" --workspace-concurrency=1 exec -- env -u npm_config_manage_package_manager_versions -u npm_config_verify_deps_before_run -u npm_config_npm_globalconfig -u npm_config__jsr_registry semantic-release --dry-run --no-ci",
     "release:semantic:ci": "HUSKY=0 pnpm -r --filter \"./packages/*\" --workspace-concurrency=1 exec -- semantic-release",
     "release:semantic:dry-run:ci": "HUSKY=0 pnpm -r --filter \"./packages/*\" --workspace-concurrency=1 exec -- semantic-release --dry-run --no-ci",
-    "publish": "pnpm -r run publish"
+    "publish": "pnpm -r run publish",
+    "publish:ci": "node tools/publish-workspace.mjs"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.2",
