@@ -21,7 +21,7 @@
     "clean": "rm -rf dist",
     "yalc": "yalc publish",
     "yalc:push": "yalc push",
-    "publish": "npm publish --provenance --access public --ignore-scripts"
+    "publish": "node ../../tools/publish-if-needed.mjs"
   },
   "type": "module",
   "publishConfig": {

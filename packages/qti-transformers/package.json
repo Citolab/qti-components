@@ -12,7 +12,7 @@
   "scripts": {
     "build": "tsc --paths null",
     "clean": "rm -rf dist",
-    "publish": "npm publish --provenance --access public --ignore-scripts"
+    "publish": "node ../../tools/publish-if-needed.mjs"
   },
   "type": "module",
   "types": "dist/index.d.ts",
