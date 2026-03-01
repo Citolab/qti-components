@@ -65,7 +65,7 @@ jobs:
           node -e '(async () => { const url = `${process.env.ACTIONS_ID_TOKEN_REQUEST_URL}&audience=npm:registry.npmjs.org`; const res = await fetch(url, { headers: { Authorization: `bearer ${process.env.ACTIONS_ID_TOKEN_REQUEST_TOKEN}` } }); if (!res.ok) { throw new Error(`OIDC token request failed: ${res.status}`); } const data = await res.json(); const payload = JSON.parse(Buffer.from(data.value.split(".")[1], "base64url").toString("utf8")); const keys = ["aud","iss","sub","repository","repository_owner","ref","ref_type","workflow","workflow_ref","job_workflow_ref","environment"]; const out = Object.fromEntries(keys.filter((k) => k in payload).map((k) => [k, payload[k]])); console.log(JSON.stringify(out, null, 2)); })().catch((err) => { console.error(err); process.exit(1); });'
 
       - name: Publish changed workspace packages
-        run: env -u npm_config_recursive -u npm_config_verify_deps_before_run -u npm_config_npm_globalconfig -u npm_config__jsr_registry pnpm run publish
+        run: env -u npm_config_recursive -u npm_config_verify_deps_before_run -u npm_config_npm_globalconfig -u npm_config__jsr_registry pnpm -r --workspace-concurrency=1 run publish
         env:
           NODE_AUTH_TOKEN: ''
           NPM_TOKEN: ''
