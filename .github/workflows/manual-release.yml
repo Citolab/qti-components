@@ -89,4 +89,3 @@ jobs:
     uses: ./.github/workflows/publish-packages.yml
     with:
       branch: ${{ inputs.branch || 'main' }}
-    secrets: inherit

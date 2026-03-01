@@ -43,7 +43,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Ensure OIDC trusted publishing auth
+        run: |
+          rm -f .npmrc "$HOME/.npmrc"
+          npm config delete //registry.npmjs.org/:_authToken || true
+
       - name: Publish changed workspace packages
         run: pnpm run publish:all
         env:
+          NODE_AUTH_TOKEN: ''
+          NPM_TOKEN: ''
           NPM_CONFIG_PROVENANCE: 'true'
