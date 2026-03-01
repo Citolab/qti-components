@@ -71,8 +71,8 @@
     "pm:check": "sherif",
     "preinstall": "sherif",
     "prepare": "husky",
-    "release:semantic": "env -u NPM_TOKEN -u NODE_AUTH_TOKEN HUSKY=0 pnpm -r --filter \"./packages/*\" --workspace-concurrency=1 exec semantic-release --no-ci",
-    "release:semantic:dry-run": "env -u NPM_TOKEN -u NODE_AUTH_TOKEN HUSKY=0 pnpm -r --filter \"./packages/*\" --workspace-concurrency=1 exec semantic-release --dry-run --no-ci",
+    "release:semantic": "env -u NPM_TOKEN -u NODE_AUTH_TOKEN HUSKY=0 NPM_CONFIG_PROVENANCE=false pnpm -r --filter \"./packages/*\" --workspace-concurrency=1 exec semantic-release --no-ci",
+    "release:semantic:dry-run": "env -u NPM_TOKEN -u NODE_AUTH_TOKEN HUSKY=0 NPM_CONFIG_PROVENANCE=false pnpm -r --filter \"./packages/*\" --workspace-concurrency=1 exec semantic-release --dry-run --no-ci",
     "release:semantic:ci": "HUSKY=0 pnpm -r --filter \"./packages/*\" --workspace-concurrency=1 exec semantic-release",
     "release:semantic:dry-run:ci": "HUSKY=0 pnpm -r --filter \"./packages/*\" --workspace-concurrency=1 exec semantic-release --dry-run --no-ci"
   },

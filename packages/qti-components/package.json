@@ -3,7 +3,7 @@
   "description": "QTI component utilities",
   "version": "7.24.1",
   "author": "",
-  "customElements": "dist/custom-elements.json",
+  "customElements": "custom-elements.json",
   "dependencies": {
     "@heximal/templates": "^0.1.5",
     "@lit/context": "^1.1.6",
@@ -75,8 +75,7 @@
   "license": "GPL-3.0-only",
   "main": "dist/index.js",
   "publishConfig": {
-    "access": "public",
-    "provenance": true
+    "access": "public"
   },
   "repository": {
     "type": "git",

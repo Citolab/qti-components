@@ -57,8 +57,7 @@
   "type": "module",
   "types": "dist/index.d.ts",
   "publishConfig": {
-    "access": "public",
-    "provenance": true
+    "access": "public"
   },
   "repository": {
     "type": "git",
