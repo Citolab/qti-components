@@ -23,12 +23,18 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
+    outputs:
+      release_commit_created: ${{ steps.detect-release.outputs.release_commit_created }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.branch || 'main' }}
           fetch-depth: 0
+
+      - name: Capture starting SHA
+        id: start-sha
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
@@ -45,9 +51,6 @@ jobs:
 
       - name: Build workspace
         run: pnpm run build
-        
-      - name: Create .npmrc for provenance
-        run: echo "provenance=true" > .npmrc
 
       - name: Run semantic-release (dry-run)
         if: ${{ inputs.dry_run }}
@@ -62,3 +65,28 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_GH_TOKEN || secrets.GITHUB_TOKEN }}
           HUSKY: 0
+
+      - name: Detect whether semantic-release created a commit
+        id: detect-release
+        run: |
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            echo "release_commit_created=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          START_SHA="${{ steps.start-sha.outputs.sha }}"
+          END_SHA="$(git rev-parse HEAD)"
+
+          if [ "$START_SHA" = "$END_SHA" ]; then
+            echo "release_commit_created=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "release_commit_created=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  publish:
+    if: ${{ !inputs.dry_run && needs.release.outputs.release_commit_created == 'true' }}
+    needs: release
+    uses: ./.github/workflows/publish-packages.yml
+    with:
+      branch: ${{ inputs.branch || 'main' }}
+    secrets: inherit
