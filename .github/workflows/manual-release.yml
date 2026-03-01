@@ -48,7 +48,7 @@ jobs:
 
       - name: Run semantic-release (dry-run)
         if: ${{ inputs.dry_run }}
-        run: pnpm run release:semantic:dry-run
+        run: pnpm run release:semantic:dry-run:ci
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_GH_TOKEN || secrets.GITHUB_TOKEN }}
           HUSKY: 0
@@ -57,7 +57,7 @@ jobs:
 
       - name: Run semantic-release
         if: ${{ !inputs.dry_run }}
-        run: pnpm run release:semantic
+        run: pnpm run release:semantic:ci
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_GH_TOKEN || secrets.GITHUB_TOKEN }}
           HUSKY: 0

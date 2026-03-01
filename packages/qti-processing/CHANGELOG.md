@@ -1,3 +1,17 @@
+# [@qti-components/processing-v1.1.1](https://github.com/Citolab/qti-components/compare/processing-v1.1.0...processing-v1.1.1) (2026-03-01)
+
+
+### Bug Fixes
+
+* qti-sum; code in QtiSumExpression constructor was not execute, moved to getResult ([5f73e5a](https://github.com/Citolab/qti-components/commit/5f73e5ad795f4285a83167093a2f2685b590db01))
+
+# [@qti-components/processing-v1.1.1](https://github.com/Citolab/qti-components/compare/processing-v1.1.0...processing-v1.1.1) (2026-03-01)
+
+
+### Bug Fixes
+
+* qti-sum; code in QtiSumExpression constructor was not execute, moved to getResult ([5f73e5a](https://github.com/Citolab/qti-components/commit/5f73e5ad795f4285a83167093a2f2685b590db01))
+
 # [@qti-components/processing-v1.1.0](https://github.com/Citolab/qti-components/compare/processing-v1.0.1...processing-v1.1.0) (2026-02-25)
 
 
