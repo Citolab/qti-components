@@ -70,6 +70,8 @@ export class QtiPortableCustomInteraction extends Interaction {
 
   #parsedRequirePaths: Record<string, string | string[]> = null;
   #parsedRequireShim: Record<string, any> = null;
+  #pciValidity: boolean | null = null;
+  #pciCustomValidityMessage = '';
 
   /**
    * Parse the require paths JSON string into an object
@@ -497,13 +499,25 @@ export class QtiPortableCustomInteraction extends Interaction {
     }
   }
 
-  validate(): boolean {
+  #hasNonEmptyResponse(): boolean {
     if (this.response === null || this.response === undefined) return false;
     if (Array.isArray(this.response)) {
       if (this.response.length === 0) return false;
       return this.response.some(v => v !== '' && v !== null && v !== undefined);
     }
     return this.response !== '';
+  }
+
+  #setInteractionValidity(isValid: boolean, customMessage?: string): void {
+    const fallbackMessage = this.dataset.invalidresponsemessage || 'Invalid response.';
+    const message = isValid ? '' : (customMessage && customMessage.trim().length > 0 ? customMessage : fallbackMessage);
+    this._internals.setValidity(isValid ? {} : { customError: true }, message);
+  }
+
+  validate(): boolean {
+    const isValid = typeof this.#pciValidity === 'boolean' ? this.#pciValidity : this.#hasNonEmptyResponse();
+    this.#setInteractionValidity(isValid, this.#pciCustomValidityMessage);
+    return isValid;
   }
 
   override set value(v: string | null) {
@@ -678,6 +692,18 @@ export class QtiPortableCustomInteraction extends Interaction {
       case 'interactionChanged': {
         const raw = data?.params?.value;
         const converted = raw && typeof raw === 'object' ? this.#convertQtiVariableJSON(raw as QtiVariableJSON) : null;
+        const pciValid = typeof data?.params?.valid === 'boolean' ? (data.params.valid as boolean) : null;
+        const pciCustomValidity =
+          typeof data?.params?.customValidity === 'string' ? (data.params.customValidity as string) : null;
+        if (pciValid !== null) {
+          this.#pciValidity = pciValid;
+          if (pciValid && pciCustomValidity === null) {
+            this.#pciCustomValidityMessage = '';
+          }
+        }
+        if (pciCustomValidity !== null) {
+          this.#pciCustomValidityMessage = pciCustomValidity;
+        }
         // PCI state "should" be an opaque string, but a lot of existing PCIs (including the
         // IMS conformance examples) return a structured object from getState().
         //
@@ -855,6 +881,8 @@ export class QtiPortableCustomInteraction extends Interaction {
 
   override connectedCallback(): void {
     super.connectedCallback();
+    this.#pciValidity = null;
+    this.#pciCustomValidityMessage = '';
     // Reflect any pre-existing response (e.g. restored session) for validation/completionStatus.
     this.response = (this.responseVariable?.value as string | string[] | null) ?? null;
     window.addEventListener('message', this.handleIframeMessage);
@@ -1099,11 +1127,37 @@ export class QtiPortableCustomInteraction extends Interaction {
                         self.interactionChangedViaEvent = true;
                         const value = evt && evt.detail ? evt.detail.value : undefined;
                         if (value !== undefined) {
+                          const validFromEvent =
+                            evt && evt.detail && typeof evt.detail.valid === 'boolean' ? evt.detail.valid : undefined;
+                          let valid = validFromEvent;
+                          if (valid === undefined && self.pciInstance && typeof self.pciInstance.checkValidity === 'function') {
+                            try {
+                              valid = self.pciInstance.checkValidity();
+                            } catch (e) {
+                              // Keep undefined on PCI validity read errors.
+                            }
+                          }
+                          const customValidityFromEvent =
+                            evt && evt.detail && typeof evt.detail.customValidity === 'string'
+                              ? evt.detail.customValidity
+                              : undefined;
+                          let customValidity = customValidityFromEvent;
+                          if (
+                            customValidity === undefined &&
+                            self.pciInstance &&
+                            typeof self.pciInstance.getCustomValidity === 'function'
+                          ) {
+                            try {
+                              customValidity = self.pciInstance.getCustomValidity();
+                            } catch (e) {
+                              // Keep undefined on PCI custom validity read errors.
+                            }
+                          }
                           const state =
                             self.pciInstance && typeof self.pciInstance.getState === 'function'
                               ? self.pciInstance.getState()
                               : null;
-                          self.notifyInteractionChanged(value, state);
+                          self.notifyInteractionChanged(value, state, valid, customValidity);
                         }
                       } catch (e) {
                         // ignore bridge errors, polling fallback may still work
@@ -1191,7 +1245,20 @@ export class QtiPortableCustomInteraction extends Interaction {
                           this.notifyReady();
                         },
                         ondone: (pciInstance, response, state, status) => {
-                          this.notifyInteractionChanged(response, typeof state === 'string' ? state : null);
+                          const valid =
+                            this.pciInstance && typeof this.pciInstance.checkValidity === 'function'
+                              ? this.pciInstance.checkValidity()
+                              : undefined;
+                          const customValidity =
+                            this.pciInstance && typeof this.pciInstance.getCustomValidity === 'function'
+                              ? this.pciInstance.getCustomValidity()
+                              : undefined;
+                          this.notifyInteractionChanged(
+                            response,
+                            typeof state === 'string' ? state : null,
+                            valid,
+                            customValidity
+                          );
                         },
                         responseIdentifier: config.responseIdentifier,
                         boundTo: config.boundTo
@@ -1315,13 +1382,18 @@ export class QtiPortableCustomInteraction extends Interaction {
                 );
               },
 
-              notifyInteractionChanged: function (response, state) {
+              notifyInteractionChanged: function (response, state, valid, customValidity) {
                 window.parent.postMessage(
                   {
                     source: 'qti-pci-iframe',
                     responseIdentifier: this.responseIdentifier,
                     method: 'interactionChanged',
-                    params: { value: response, state: state }
+                    params: {
+                      value: response,
+                      state: state,
+                      valid: typeof valid === 'boolean' ? valid : undefined,
+                      customValidity: typeof customValidity === 'string' ? customValidity : undefined
+                    }
                   },
                   '*'
                 );
@@ -1702,6 +1774,14 @@ export class QtiPortableCustomInteraction extends Interaction {
               if (PCIManager.interactionChangedViaEvent) return;
               if (PCIManager.pciInstance && PCIManager.pciInstance.getResponse) {
                 const response = PCIManager.pciInstance.getResponse();
+                const valid =
+                  PCIManager.pciInstance && typeof PCIManager.pciInstance.checkValidity === 'function'
+                    ? PCIManager.pciInstance.checkValidity()
+                    : undefined;
+                const customValidity =
+                  PCIManager.pciInstance && typeof PCIManager.pciInstance.getCustomValidity === 'function'
+                    ? PCIManager.pciInstance.getCustomValidity()
+                    : undefined;
                 if (response === undefined) {
                   // Don't emit an initial empty on load; only emit a clear if we previously had a value
                   if (!PCIManager.hadResponse) return;
@@ -1716,7 +1796,7 @@ export class QtiPortableCustomInteraction extends Interaction {
                       source: 'qti-pci-iframe',
                       responseIdentifier: PCIManager.responseIdentifier,
                       method: 'interactionChanged',
-                      params: { value: null, state: state }
+                      params: { value: null, state: state, valid: valid, customValidity: customValidity }
                     },
                     '*'
                   );
@@ -1737,7 +1817,7 @@ export class QtiPortableCustomInteraction extends Interaction {
                       source: 'qti-pci-iframe',
                       responseIdentifier: PCIManager.responseIdentifier,
                       method: 'interactionChanged',
-                      params: { value: response, state: state }
+                      params: { value: response, state: state, valid: valid, customValidity: customValidity }
                     },
                     '*'
                   );

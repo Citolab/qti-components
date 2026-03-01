@@ -772,7 +772,6 @@ export const Q16_PCI_D23: Story = {
           title="End Attempt"
           style="margin-top: 16px;"
         ></qti-end-attempt-interaction>
-        <div id="validation-message" style="margin-top: 8px; color: red; display: none;"></div>
       </div>
     </qti-item>
   `,
@@ -780,7 +779,6 @@ export const Q16_PCI_D23: Story = {
     await loadPciItem(canvasElement, 'item-2');
     const { assessmentItem, pciElements } = await assertPciLoaded(canvasElement, 1);
 
-    const validationMessage = canvasElement.querySelector('#validation-message') as HTMLElement;
     const pciElement = pciElements[0] as any;
 
     // Mark only ONE point - Item 2 requires TWO points for valid response
@@ -795,24 +793,17 @@ export const Q16_PCI_D23: Story = {
 
     clickEndAttempt(canvasElement);
 
-    // Item 2 requires 2 points - with only 1 point, the PCI considers it invalid
-    // The PCI logs [IsValid:false] when only 1 point is marked
-    // For this test, we check the response has only 1 point (incomplete for Item 2's requirements)
+    // Validation and message should come from the PCI implementation
+    const isValid = assessmentItem.validate(true);
     const response = assessmentItem.variables.find(v => v.identifier === 'RESPONSE');
     const pointCount = Array.isArray(response?.value) ? response.value.length : 0;
-
-    // Show custom validation message since Item 2 requires 2 points
-    if (pointCount < 2) {
-      validationMessage.textContent = 'You must plot two points to answer this question.';
-      validationMessage.style.display = 'block';
-    }
 
     // Verify only 1 point was marked (incomplete for Item 2)
     expect(pointCount).toBe(1);
 
-    // Verify custom validation message is shown
-    expect(validationMessage.style.display).toBe('block');
-    expect(validationMessage.textContent).toBe('You must plot two points to answer this question.');
+    // Verify item is invalid and PCI-provided message is surfaced
+    expect(isValid).toBe(false);
+    expect(pciElement.internals.validationMessage).toBe('You must plot two points to answer this question.');
   },
   parameters: {
     chromatic: { disableSnapshot: true }
