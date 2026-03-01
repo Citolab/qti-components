@@ -31,7 +31,8 @@
   "scripts": {
     "attw": "attw --profile esm-only --pack",
     "build": "tsc --paths null",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "publish": "npm publish --provenance --access public --ignore-scripts"
   },
   "sideEffects": true,
   "type": "module",

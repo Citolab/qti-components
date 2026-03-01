@@ -11,7 +11,8 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc --paths null",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "publish": "npm publish --provenance --access public --ignore-scripts"
   },
   "type": "module",
   "types": "dist/index.d.ts",

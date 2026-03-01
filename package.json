@@ -59,9 +59,9 @@
     "madge": "madge packages/*/src --extensions ts,tsx,js --circular",
     "commitlint": "commitlint --edit",
     "-----------------------npm--": "-",
-    "publish:all": "pnpm -r --filter \"./packages/*\" run build && pnpm -r --filter \"./packages/*\" publish --access public --provenance --no-git-checks",
-    "publish:all:next": "pnpm -r --filter \"./packages/*\" run build && pnpm -r --filter \"./packages/*\" publish --access public --provenance --no-git-checks --tag next",
-    "publish:all:dry-run": "pnpm -r --filter \"./packages/*\" run build && pnpm -r --filter \"./packages/*\" publish --access public --provenance --no-git-checks --dry-run",
+    "publish:all": "pnpm run publish",
+    "publish:all:next": "pnpm -r --filter \"./packages/*\" run publish --tag next",
+    "publish:all:dry-run": "pnpm -r --filter \"./packages/*\" run publish --dry-run",
     "deps:lint": "syncpack lint",
     "deps:fix": "syncpack fix",
     "deps:format": "syncpack format",
@@ -74,7 +74,8 @@
     "release:semantic": "env -u NPM_TOKEN -u NODE_AUTH_TOKEN HUSKY=0 NPM_CONFIG_PROVENANCE=false pnpm -r --filter \"./packages/*\" --workspace-concurrency=1 exec -- env -u npm_config_manage_package_manager_versions -u npm_config_verify_deps_before_run -u npm_config_npm_globalconfig -u npm_config__jsr_registry semantic-release --no-ci",
     "release:semantic:dry-run": "env -u NPM_TOKEN -u NODE_AUTH_TOKEN HUSKY=0 NPM_CONFIG_PROVENANCE=false pnpm -r --filter \"./packages/*\" --workspace-concurrency=1 exec -- env -u npm_config_manage_package_manager_versions -u npm_config_verify_deps_before_run -u npm_config_npm_globalconfig -u npm_config__jsr_registry semantic-release --dry-run --no-ci",
     "release:semantic:ci": "HUSKY=0 pnpm -r --filter \"./packages/*\" --workspace-concurrency=1 exec -- semantic-release",
-    "release:semantic:dry-run:ci": "HUSKY=0 pnpm -r --filter \"./packages/*\" --workspace-concurrency=1 exec -- semantic-release --dry-run --no-ci"
+    "release:semantic:dry-run:ci": "HUSKY=0 pnpm -r --filter \"./packages/*\" --workspace-concurrency=1 exec -- semantic-release --dry-run --no-ci",
+    "publish": "pnpm -r run publish"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.2",

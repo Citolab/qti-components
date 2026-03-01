@@ -28,7 +28,8 @@
     "build": "tsc --paths null",
     "clean": "rm -rf dist",
     "yalc": "yalc publish",
-    "yalc:push": "yalc push"
+    "yalc:push": "yalc push",
+    "publish": "npm publish --provenance --access public --ignore-scripts"
   },
   "type": "module",
   "types": "dist/index.d.ts",

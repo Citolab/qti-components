@@ -20,7 +20,8 @@
     "build": "postcss ./src/item.css -d dist -m && postcss ./src/native.css -d dist -m",
     "clean": "rm -rf dist",
     "yalc": "yalc publish",
-    "yalc:push": "yalc push"
+    "yalc:push": "yalc push",
+    "publish": "npm publish --provenance --access public --ignore-scripts"
   },
   "type": "module",
   "publishConfig": {

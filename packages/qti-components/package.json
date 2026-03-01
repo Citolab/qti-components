@@ -92,7 +92,8 @@
     "publint": "publint",
     "tsup": "tsup",
     "yalc": "yalc publish",
-    "yalc:push": "yalc push"
+    "yalc:push": "yalc push",
+    "publish": "npm publish --provenance --access public --ignore-scripts"
   },
   "sideEffects": true,
   "type": "module"

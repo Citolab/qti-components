@@ -51,7 +51,8 @@
     "clean": "rm -rf dist",
     "storybook": "storybook dev -p 6007 --no-open",
     "yalc": "yalc publish",
-    "yalc:push": "yalc push"
+    "yalc:push": "yalc push",
+    "publish": "npm publish --provenance --access public --ignore-scripts"
   },
   "sideEffects": true,
   "type": "module",
