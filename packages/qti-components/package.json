@@ -18,7 +18,8 @@
     "@qti-components/processing": "workspace:^",
     "@qti-components/test": "workspace:^",
     "@qti-components/theme": "workspace:^",
-    "@qti-components/transformers": "workspace:^"
+    "@qti-components/transformers": "workspace:^",
+    "@qti-components/custom": "workspace:^"
   },
   "exports": {
     ".": {
@@ -56,6 +57,10 @@
     "./qti-transformers": {
       "types": "./dist/transformers.d.ts",
       "import": "./dist/transformers.js"
+    },
+    "./qti-custom": {
+      "types": "./dist/custom.d.ts",
+      "import": "./dist/custom.js"
     },
     "./customElements": "./custom-elements.json",
     "./item.css": "./dist/item.css",
