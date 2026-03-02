@@ -74,7 +74,6 @@ On each PR to `main`, `.github/workflows/pr-stackblitz-link.yml` posts and updat
 - Alternate links:
   - Root Storybook: `...?startScript=storybook%3Adev`
   - Interactions Storybook: `...?startScript=storybook%3Ainteractions`
-  - Prosemirror Storybook: `...?startScript=storybook%3Aprosemirror`
 
 Manual fallback:
 

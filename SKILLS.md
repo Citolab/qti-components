@@ -35,7 +35,7 @@ Repository skill catalog for agents and contributors.
   - "build Storybook"
   - "run interactions Storybook"
 - Inputs:
-  - Target (`root`, `interactions`, `prosemirror`)
+  - Target (`root`, `interactions`)
   - Mode (`dev`, `build`)
 - Expected outputs:
   - Correct command and endpoint/port details

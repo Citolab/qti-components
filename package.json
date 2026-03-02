@@ -42,7 +42,7 @@
     "yalc": "pnpm -r run yalc",
     "yalc:push": "pnpm -r run yalc:push",
     "-----------------------development--": "-",
-    "watch": "pnpm --filter \"./packages/qti-components\" --filter \"./packages/qti-interactions\" --filter \"./packages/qti-prosemirror\" --parallel exec -- nodemon --watch src --ext ts,css --exec \"pnpm run build && pnpm run yalc:push\"",
+    "watch": "pnpm --filter \"./packages/qti-components\" --filter \"./packages/qti-interactions\" --parallel exec -- nodemon --watch src --ext ts,css --exec \"pnpm run build && pnpm run yalc:push\"",
     "-----------------------cmds--": "-",
     "pre-commit": "run-s tsc lint madge",
     "commit-msg": "commitlint --edit",
@@ -50,7 +50,6 @@
     "-----------------------scripts--": "-",
     "storybook:dev": "storybook dev -p 6006 --no-open",
     "storybook:stackblitz": "pnpm run storybook:dev",
-    "storybook:prosemirror": "cd packages/qti-prosemirror && pnpm run storybook",
     "storybook:interactions": "cd packages/qti-interactions && pnpm run storybook",
     "cem:storybook": "cem analyze",
     "cem:storybook:watch": "cem analyze --watch",
@@ -189,5 +188,5 @@
       "public"
     ]
   },
-  "packageManager": "pnpm@10.30.2"
+  "packageManager": "pnpm@10.30.3"
 }
