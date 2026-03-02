@@ -11,6 +11,7 @@
   },
   "devDependencies": {
     "@qti-components/base": "workspace:^",
+    "@qti-components/custom": "workspace:^",
     "@qti-components/elements": "workspace:^",
     "@qti-components/interactions": "workspace:^",
     "@qti-components/item": "workspace:^",
@@ -18,8 +19,7 @@
     "@qti-components/processing": "workspace:^",
     "@qti-components/test": "workspace:^",
     "@qti-components/theme": "workspace:^",
-    "@qti-components/transformers": "workspace:^",
-    "@qti-components/custom": "workspace:^"
+    "@qti-components/transformers": "workspace:^"
   },
   "exports": {
     ".": {

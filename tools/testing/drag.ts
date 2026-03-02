@@ -52,13 +52,15 @@ export default async function drag(
     delta,
     steps = 20,
     duration = 100,
-    offset = { x: 0, y: 0 }
+    offset = { x: 0, y: 0 },
+    pointerType = 'mouse'
   }: {
     to?: Element | Coords;
     delta?: { x: number; y: number };
     steps?: number;
     duration?: number;
     offset?: { x: number; y: number };
+    pointerType?: 'mouse' | 'touch' | 'pen';
   }
 ): Promise<void> {
   const fromCoords = getCoords(element);
@@ -87,14 +89,27 @@ export default async function drag(
 
   const current = {
     clientX: fromCoords.x,
-    clientY: fromCoords.y
+    clientY: fromCoords.y,
+    pointerType,
+    pointerId: 1,
+    isPrimary: true,
+    button: 0,
+    buttons: 1
   };
 
-  // Simulate drag start
+  // Simulate drag start (pointer + mouse fallback)
+  fireEvent.pointerEnter(element, current);
+  fireEvent.pointerOver(element, current);
+  fireEvent.pointerMove(element, current);
+  fireEvent.pointerDown(element, current);
+
   fireEvent.mouseEnter(element, current);
   fireEvent.mouseOver(element, current);
   fireEvent.mouseMove(element, current);
   fireEvent.mouseDown(element, current);
+
+  // Give delayed drag activation logic time to start tracking pointer moves
+  await sleep(30);
 
   // Simulate drag movement in steps
   for (let i = 0; i < steps; i++) {
@@ -108,10 +123,13 @@ export default async function drag(
       current.clientY += step.y;
     }
     await sleep(duration / steps);
-    fireEvent.mouseMove(element, current);
+    fireEvent.pointerMove(document, current);
+    fireEvent.mouseMove(document, current);
   }
 
-  // Simulate drag end
-  fireEvent.mouseUp(element, current);
+  // Simulate drag end (pointer + mouse fallback)
+  const endState = { ...current, buttons: 0 };
+  fireEvent.pointerUp(document, endState);
+  fireEvent.mouseUp(document, endState);
   await sleep(100);
 }
