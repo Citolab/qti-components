@@ -1,7 +1,7 @@
 {
   "name": "@qti-components/loader",
   "description": "QTI loader utilities",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "author": "",
   "dependencies": {
     "@qti-components/elements": "workspace:^",
@@ -16,13 +16,13 @@
   "scripts": {
     "attw": "attw --profile esm-only --pack",
     "build": "tsc --paths null",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "publish": "node ../../tools/publish-if-needed.mjs"
   },
   "type": "module",
   "types": "dist/index.d.ts",
   "publishConfig": {
-    "access": "public",
-    "provenance": true
+    "access": "public"
   },
   "files": [
     "dist"

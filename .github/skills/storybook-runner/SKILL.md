@@ -13,7 +13,6 @@ description: Start or build Storybook for this repository with correct root or p
 - Root dev Storybook + CEM watch: `pnpm storybook`
 - Root static build: `pnpm build-storybook`
 - Interactions-only dev: `pnpm storybook:interactions`
-- Prosemirror-only dev: `pnpm storybook:prosemirror`
 
 ## Quick Checks
 - Confirm active Storybook config: `.storybook/main.ts`

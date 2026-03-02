@@ -1,7 +1,7 @@
 {
   "name": "@qti-components/elements",
   "description": "QTI elements utilities",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "author": "",
   "dependencies": {
     "@qti-components/base": "workspace:^",
@@ -25,14 +25,14 @@
   "scripts": {
     "attw": "attw --profile esm-only --pack",
     "build": "tsc --paths null",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "publish": "node ../../tools/publish-if-needed.mjs"
   },
   "sideEffects": true,
   "type": "module",
   "types": "dist/index.d.ts",
   "publishConfig": {
-    "access": "public",
-    "provenance": true
+    "access": "public"
   },
   "files": [
     "dist"

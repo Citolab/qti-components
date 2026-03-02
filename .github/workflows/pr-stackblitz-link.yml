@@ -31,15 +31,13 @@ jobs:
             const stackblitzUrl = `https://stackblitz.com/github/${context.repo.owner}/${context.repo.repo}/tree/${encodedBranch}?startScript=storybook%3Astackblitz`;
             const storybookDevUrl = `https://stackblitz.com/github/${context.repo.owner}/${context.repo.repo}/tree/${encodedBranch}?startScript=storybook%3Adev`;
             const storybookInteractionsUrl = `https://stackblitz.com/github/${context.repo.owner}/${context.repo.repo}/tree/${encodedBranch}?startScript=storybook%3Ainteractions`;
-            const storybookProsemirrorUrl = `https://stackblitz.com/github/${context.repo.owner}/${context.repo.repo}/tree/${encodedBranch}?startScript=storybook%3Aprosemirror`;
 
             const body = `${marker}
             ## Branch Storybook Preview (StackBlitz)
 
             - Quick open (recommended): ${stackblitzUrl}
             - Root Storybook (storybook:dev): ${storybookDevUrl}
-            - Interactions Storybook: ${storybookInteractionsUrl}
-            - Prosemirror Storybook: ${storybookProsemirrorUrl}`;
+            - Interactions Storybook: ${storybookInteractionsUrl}`;
 
             const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,

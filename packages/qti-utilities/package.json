@@ -1,7 +1,7 @@
 {
   "name": "@qti-components/utilities",
   "description": "shared utilities",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "author": "",
   "devDependencies": {
     "lit": "^3.3.1"
@@ -16,14 +16,14 @@
     "lit": "^3.3.1"
   },
   "publishConfig": {
-    "access": "public",
-    "provenance": true
+    "access": "public"
   },
   "scripts": {
     "build": "tsc --paths null",
     "clean": "rm -rf dist",
     "yalc": "yalc publish",
-    "yalc:push": "yalc push"
+    "yalc:push": "yalc push",
+    "publish": "node ../../tools/publish-if-needed.mjs"
   },
   "type": "module",
   "types": "dist/index.d.ts",

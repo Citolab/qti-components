@@ -47,4 +47,23 @@ describe('QtiComponent qti-sum', () => {
     const qtiSum = document.body.querySelector('qti-sum') as QtiSum;
     expect(qtiSum.calculate()).toEqual(6);
   });
+
+  it('should evaluate children added after qti-sum construction', () => {
+    const qtiSum = document.createElement('qti-sum') as QtiSum;
+    document.body.appendChild(qtiSum);
+
+    const value1 = document.createElement('qti-base-value');
+    value1.textContent = '1';
+    qtiSum.appendChild(value1);
+
+    const value2 = document.createElement('qti-base-value');
+    value2.textContent = '2';
+    qtiSum.appendChild(value2);
+
+    const value3 = document.createElement('qti-base-value');
+    value3.textContent = '3';
+    qtiSum.appendChild(value3);
+
+    expect(qtiSum.calculate()).toEqual(6);
+  });
 });

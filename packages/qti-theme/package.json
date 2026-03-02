@@ -1,7 +1,7 @@
 {
   "name": "@qti-components/theme",
   "description": "QTI theme utilities",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "author": "",
   "exports": {
     "./item.css": "./dist/item.css",
@@ -20,12 +20,12 @@
     "build": "postcss ./src/item.css -d dist -m && postcss ./src/native.css -d dist -m",
     "clean": "rm -rf dist",
     "yalc": "yalc publish",
-    "yalc:push": "yalc push"
+    "yalc:push": "yalc push",
+    "publish": "node ../../tools/publish-if-needed.mjs"
   },
   "type": "module",
   "publishConfig": {
-    "access": "public",
-    "provenance": true
+    "access": "public"
   },
   "repository": {
     "type": "git",

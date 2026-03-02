@@ -1,9 +1,9 @@
 {
   "name": "@citolab/qti-components",
   "description": "QTI component utilities",
-  "version": "7.24.0",
+  "version": "7.25.0",
   "author": "",
-  "customElements": "dist/custom-elements.json",
+  "customElements": "custom-elements.json",
   "dependencies": {
     "@heximal/templates": "^0.1.5",
     "@lit/context": "^1.1.6",
@@ -75,8 +75,7 @@
   "license": "GPL-3.0-only",
   "main": "dist/index.js",
   "publishConfig": {
-    "access": "public",
-    "provenance": true
+    "access": "public"
   },
   "repository": {
     "type": "git",
@@ -93,7 +92,8 @@
     "publint": "publint",
     "tsup": "tsup",
     "yalc": "yalc publish",
-    "yalc:push": "yalc push"
+    "yalc:push": "yalc push",
+    "publish": "node ../../tools/publish-if-needed.mjs"
   },
   "sideEffects": true,
   "type": "module"

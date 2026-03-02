@@ -1,7 +1,7 @@
 {
   "name": "@qti-components/interactions",
   "description": "QTI interactions utilities",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "author": "",
   "dependencies": {
     "@qti-components/base": "workspace:^",
@@ -34,8 +34,7 @@
     "lit": "^3.3.1"
   },
   "publishConfig": {
-    "access": "public",
-    "provenance": true
+    "access": "public"
   },
   "scripts": {
     "attw": "attw --profile esm-only --pack",
@@ -45,7 +44,8 @@
     "clean": "rm -rf dist",
     "storybook": "storybook dev -p 6008 --no-open",
     "yalc": "yalc publish",
-    "yalc:push": "yalc push"
+    "yalc:push": "yalc push",
+    "publish": "node ../../tools/publish-if-needed.mjs"
   },
   "sideEffects": true,
   "type": "module",

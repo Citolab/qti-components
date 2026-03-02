@@ -1,3 +1,17 @@
+# [@qti-components/transformers-v1.5.0](https://github.com/Citolab/qti-components/compare/transformers-v1.4.1...transformers-v1.5.0) (2026-03-01)
+
+
+### Features
+
+* update release workflow to capture commit creation and add publish job ([11f3d43](https://github.com/Citolab/qti-components/commit/11f3d43c4e2ff2e0860b8bf8f42f8833c6f77db1))
+
+# [@qti-components/transformers-v1.4.1](https://github.com/Citolab/qti-components/compare/transformers-v1.4.0...transformers-v1.4.1) (2026-03-01)
+
+
+### Bug Fixes
+
+* **qti-components:** correct customElements manifest path ([f4e33a3](https://github.com/Citolab/qti-components/commit/f4e33a396d7dd72cf65fef160a258cbfb98a1325))
+
 # [@qti-components/transformers-v1.4.0](https://github.com/Citolab/qti-components/compare/transformers-v1.3.0...transformers-v1.4.0) (2026-02-25)
 
 

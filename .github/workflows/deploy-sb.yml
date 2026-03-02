@@ -1,9 +1,9 @@
-name: Deploy Storybook
+name: Deploy SB
 
 on:
   push:
     tags:
-      - '*-v*.*.*'
+      - 'qti-components-v*'
   workflow_call:
   workflow_dispatch:
     inputs:

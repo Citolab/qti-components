@@ -1,3 +1,15 @@
+# [@qti-components/item-v1.2.0](https://github.com/Citolab/qti-components/compare/item-v1.1.0...item-v1.2.0) (2026-03-01)
+
+
+### Bug Fixes
+
+* **qti-components:** correct customElements manifest path ([f4e33a3](https://github.com/Citolab/qti-components/commit/f4e33a396d7dd72cf65fef160a258cbfb98a1325))
+
+
+### Features
+
+* update release workflow to capture commit creation and add publish job ([11f3d43](https://github.com/Citolab/qti-components/commit/11f3d43c4e2ff2e0860b8bf8f42f8833c6f77db1))
+
 # [@qti-components/item-v1.1.0](https://github.com/Citolab/qti-components/compare/item-v1.0.11...item-v1.1.0) (2026-02-25)
 
 

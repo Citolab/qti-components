@@ -1,3 +1,29 @@
+# [@qti-components/processing-v1.2.0](https://github.com/Citolab/qti-components/compare/processing-v1.1.1...processing-v1.2.0) (2026-03-01)
+
+
+### Bug Fixes
+
+* **qti-components:** correct customElements manifest path ([f4e33a3](https://github.com/Citolab/qti-components/commit/f4e33a396d7dd72cf65fef160a258cbfb98a1325))
+
+
+### Features
+
+* update release workflow to capture commit creation and add publish job ([11f3d43](https://github.com/Citolab/qti-components/commit/11f3d43c4e2ff2e0860b8bf8f42f8833c6f77db1))
+
+# [@qti-components/processing-v1.1.1](https://github.com/Citolab/qti-components/compare/processing-v1.1.0...processing-v1.1.1) (2026-03-01)
+
+
+### Bug Fixes
+
+* qti-sum; code in QtiSumExpression constructor was not execute, moved to getResult ([5f73e5a](https://github.com/Citolab/qti-components/commit/5f73e5ad795f4285a83167093a2f2685b590db01))
+
+# [@qti-components/processing-v1.1.1](https://github.com/Citolab/qti-components/compare/processing-v1.1.0...processing-v1.1.1) (2026-03-01)
+
+
+### Bug Fixes
+
+* qti-sum; code in QtiSumExpression constructor was not execute, moved to getResult ([5f73e5a](https://github.com/Citolab/qti-components/commit/5f73e5ad795f4285a83167093a2f2685b590db01))
+
 # [@qti-components/processing-v1.1.0](https://github.com/Citolab/qti-components/compare/processing-v1.0.1...processing-v1.1.0) (2026-02-25)
 
 
