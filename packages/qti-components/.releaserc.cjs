@@ -1,10 +1,15 @@
 const hasGithubToken = Boolean(process.env.GITHUB_TOKEN || process.env.GH_TOKEN);
 
 module.exports = {
-  extends: ['semantic-release-monorepo', '../../.releaserc.cjs'],
+  extends: ['../../.releaserc.cjs'],
   tagFormat: 'qti-components-v${version}',
   plugins: [
-    '@semantic-release/commit-analyzer',
+    [
+      '@semantic-release/commit-analyzer',
+      {
+        releaseRules: [{ type: 'chore', scope: 'release', release: 'patch' }]
+      }
+    ],
     '@semantic-release/release-notes-generator',
     ['@semantic-release/changelog', { changelogFile: 'CHANGELOG.md' }],
     ['@semantic-release/npm', { npmPublish: false }],

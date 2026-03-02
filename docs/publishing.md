@@ -5,9 +5,13 @@ This workspace publishes all packages in `packages/*` to npm.
 ## Recommended Flow (Explicit Manual Release)
 
 1. Merge conventional commits into `main`.
-2. Manually run `.github/workflows/semantic-release.yml` from GitHub Actions.
-3. semantic-release analyzes commits, bumps package versions/changelogs, and creates component tags (`*-vX.Y.Z`).
-4. Tag push triggers `.github/workflows/publish.yml`, which publishes workspace packages to npm (skipping already-published versions).
+2. Manually run `.github/workflows/manual-release.yml` from GitHub Actions.
+3. semantic-release runs in two phases:
+   - all non-umbrella packages first
+   - `@citolab/qti-components` second (umbrella release)
+4. semantic-release analyzes commits, bumps package versions/changelogs, commits release changes, and creates component tags (`*-vX.Y.Z`).
+5. The manual release workflow calls `.github/workflows/publish-packages.yml` when new release tags were created.
+6. Push of the umbrella tag (`qti-components-vX.Y.Z`) triggers `.github/workflows/deploy-sb.yml` to deploy Storybook.
 
 ## Manual Fallback Flow
 
@@ -19,12 +23,11 @@ Use these root scripts when a manual or hotfix publish is needed:
 
 The `:next` variant publishes with npm dist-tag `next`.
 
-## Workflow Inputs
+## Publish Workflow Inputs
 
-`.github/workflows/publish.yml` supports:
+`.github/workflows/publish-packages.yml` supports:
 
-- `tag`: optional Git tag/ref to publish from.
-- `dist_tag`: npm dist-tag (`latest` or `next`).
+- `branch`: branch/ref to publish from (default `main`).
 
 ## Authentication (Trusted Publishing)
 
@@ -33,8 +36,8 @@ Publishing is configured for npm Trusted Publishing (GitHub OIDC), not long-live
 Required setup in npm:
 
 1. In npm org/package settings, add GitHub trusted publishers for:
-2. `.github/workflows/semantic-release.yml` (branch `main`)
-3. `.github/workflows/publish.yml` (manual fallback)
+2. `.github/workflows/manual-release.yml` (branch `main`)
+3. `.github/workflows/publish-packages.yml` (manual fallback)
 4. Ensure both scopes are configured: `@citolab/*` and `@qti-components/*`.
 
 Required setup in GitHub:
@@ -42,9 +45,9 @@ Required setup in GitHub:
 1. Add `RELEASE_GH_TOKEN` (PAT) secret for semantic-release if you want tag pushes to trigger downstream workflows.
 2. Fallback `GITHUB_TOKEN` still works for releases, but workflow-trigger chaining from bot-created tags may be suppressed by GitHub recursion protection.
 
-## Semantic Release Workflow Inputs
+## Manual Release Workflow Inputs
 
-`.github/workflows/semantic-release.yml` supports:
+`.github/workflows/manual-release.yml` supports:
 
 - `branch`: branch to release from (default `main`).
 - `dry_run`: run semantic-release in dry-run mode without creating tags/releases.
@@ -58,7 +61,8 @@ Implementation details in this repo:
 ## Notes
 
 - npm is the canonical registry target for this repository.
-- `.github/workflows/publish.yml` is a manual emergency fallback path; semantic-release is the default release path.
+- `.github/workflows/publish-packages.yml` is the reusable publish workflow used by manual release and as a manual fallback.
+- Storybook auto-deploy is intentionally restricted to umbrella tags (`qti-components-v*`) to avoid redundant deployments on every package tag.
 - All publishable packages in `packages/*` include explicit `repository` metadata pointing to this GitHub repo and package directory.
 
 ## Pull Request StackBlitz Links

@@ -25,6 +25,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       release_commit_created: ${{ steps.detect-release.outputs.release_commit_created }}
+      new_package_tags_created: ${{ steps.detect-release.outputs.new_package_tags_created }}
+      new_umbrella_tag_created: ${{ steps.detect-release.outputs.new_umbrella_tag_created }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -35,6 +37,14 @@ jobs:
       - name: Capture starting SHA
         id: start-sha
         run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Capture starting tags
+        id: start-tags
+        run: |
+          git fetch --force --tags
+          start_tags_file="$RUNNER_TEMP/start-release-tags.txt"
+          git tag --list '*-v*.*.*' | sort > "$start_tags_file"
+          echo "file=$start_tags_file" >> "$GITHUB_OUTPUT"
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
@@ -49,8 +59,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build workspace
-        run: pnpm run build
+      - name: Run full checks
+        run: pnpm run test-all
 
       - name: Run semantic-release (dry-run)
         if: ${{ inputs.dry_run }}
@@ -71,6 +81,8 @@ jobs:
         run: |
           if [ "${{ inputs.dry_run }}" = "true" ]; then
             echo "release_commit_created=false" >> "$GITHUB_OUTPUT"
+            echo "new_package_tags_created=false" >> "$GITHUB_OUTPUT"
+            echo "new_umbrella_tag_created=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
@@ -83,8 +95,29 @@ jobs:
             echo "release_commit_created=true" >> "$GITHUB_OUTPUT"
           fi
 
+          git fetch --force --tags
+          END_TAGS_FILE="$RUNNER_TEMP/end-release-tags.txt"
+          git tag --list '*-v*.*.*' | sort > "$END_TAGS_FILE"
+
+          NEW_TAGS="$(comm -13 "${{ steps.start-tags.outputs.file }}" "$END_TAGS_FILE")"
+
+          if [ -n "$NEW_TAGS" ]; then
+            echo "new_package_tags_created=true" >> "$GITHUB_OUTPUT"
+            echo "New release tags:"
+            echo "$NEW_TAGS"
+          else
+            echo "new_package_tags_created=false" >> "$GITHUB_OUTPUT"
+            echo "No new release tags created."
+          fi
+
+          if echo "$NEW_TAGS" | grep -Eq '^qti-components-v[0-9]+\.[0-9]+\.[0-9]+([.-].+)?$'; then
+            echo "new_umbrella_tag_created=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "new_umbrella_tag_created=false" >> "$GITHUB_OUTPUT"
+          fi
+
   publish:
-    if: ${{ !inputs.dry_run && needs.release.outputs.release_commit_created == 'true' }}
+    if: ${{ !inputs.dry_run && needs.release.outputs.new_package_tags_created == 'true' }}
     needs: release
     uses: ./.github/workflows/publish-packages.yml
     with:
