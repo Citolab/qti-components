@@ -322,6 +322,9 @@ importers:
       '@qti-components/base':
         specifier: workspace:^
         version: link:../qti-base
+      '@qti-components/custom':
+        specifier: workspace:^
+        version: link:../qti-custom
       '@qti-components/elements':
         specifier: workspace:^
         version: link:../qti-elements
