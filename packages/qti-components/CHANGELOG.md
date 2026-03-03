@@ -1,3 +1,10 @@
+# [7.26.0](https://github.com/Citolab/qti-components/compare/qti-components-v7.25.0...qti-components-v7.26.0) (2026-03-03)
+
+
+### Features
+
+* implement outcome variable reset before response processing for non-adaptive items ([3b02baf](https://github.com/Citolab/qti-components/commit/3b02baf1336b53385139cfcf396d8c28ac5ace66))
+
 # [@citolab/qti-components-v7.25.0](https://github.com/Citolab/qti-components/compare/qti-components-v7.24.1...qti-components-v7.25.0) (2026-03-01)
 
 
