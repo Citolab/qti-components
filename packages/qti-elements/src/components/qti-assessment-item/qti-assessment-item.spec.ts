@@ -5,8 +5,15 @@ import type { ItemContext } from '@qti-components/base';
 import type { QtiAssessmentItem } from '@qti-components/elements';
 
 describe('qti-assessment-item', () => {
+  let container: HTMLDivElement;
+
   beforeEach(() => {
-    document.body.innerHTML = '';
+    container = document.createElement('div');
+    document.body.appendChild(container);
+  });
+
+  afterEach(() => {
+    container.remove();
   });
 
   it('dispatches qti-item-context-updated when no responseProcessing is present', async () => {
@@ -20,10 +27,10 @@ describe('qti-assessment-item', () => {
           </qti-choice-interaction>
         </qti-item-body>
       </qti-assessment-item>`,
-      document.body
+      container
     );
 
-    const assessmentItem = document.querySelector('qti-assessment-item') as QtiAssessmentItem;
+    const assessmentItem = container.querySelector('qti-assessment-item') as QtiAssessmentItem;
     await assessmentItem.updateComplete;
 
     const contextUpdated = new Promise<CustomEvent<{ itemContext: ItemContext }>>(resolve =>
@@ -39,5 +46,104 @@ describe('qti-assessment-item', () => {
 
     expect(variables.find(v => v.identifier === 'numAttempts')?.value).toBe('1');
     expect(variables.find(v => v.identifier === 'completionStatus')?.value).toBe('completed');
+  });
+
+  it('resets outcome variables to default before each response processing for non-adaptive items', async () => {
+    render(
+      html`<qti-assessment-item identifier="non-adaptive-reset" adaptive="false">
+        <qti-response-declaration identifier="RESPONSE_1" cardinality="single" base-type="integer">
+          <qti-correct-response>
+            <qti-value>1</qti-value>
+          </qti-correct-response>
+        </qti-response-declaration>
+        <qti-response-declaration identifier="RESPONSE_2" cardinality="single" base-type="integer">
+          <qti-correct-response>
+            <qti-value>2</qti-value>
+          </qti-correct-response>
+        </qti-response-declaration>
+        <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float"></qti-outcome-declaration>
+        <qti-item-body>
+          <qti-text-entry-interaction response-identifier="RESPONSE_1"></qti-text-entry-interaction>
+          <qti-text-entry-interaction response-identifier="RESPONSE_2"></qti-text-entry-interaction>
+        </qti-item-body>
+        <qti-response-processing>
+          <qti-set-outcome-value identifier="SCORE">
+            <qti-sum>
+              <qti-variable identifier="SCORE"></qti-variable>
+              <qti-match>
+                <qti-variable identifier="RESPONSE_1"></qti-variable>
+                <qti-correct identifier="RESPONSE_1"></qti-correct>
+              </qti-match>
+              <qti-match>
+                <qti-variable identifier="RESPONSE_2"></qti-variable>
+                <qti-correct identifier="RESPONSE_2"></qti-correct>
+              </qti-match>
+            </qti-sum>
+          </qti-set-outcome-value>
+        </qti-response-processing>
+      </qti-assessment-item>`,
+      container
+    );
+
+    const assessmentItem = container.querySelector('qti-assessment-item') as QtiAssessmentItem;
+    await assessmentItem.updateComplete;
+
+    assessmentItem.updateResponseVariable('RESPONSE_1', '1');
+    assessmentItem.updateResponseVariable('RESPONSE_2', '0');
+    assessmentItem.processResponse();
+    expect(+assessmentItem.getOutcome('SCORE').value).toBe(1);
+
+    assessmentItem.updateResponseVariable('RESPONSE_1', '0');
+    assessmentItem.updateResponseVariable('RESPONSE_2', '2');
+    assessmentItem.processResponse();
+
+    expect(+assessmentItem.getOutcome('SCORE').value).toBe(1);
+  });
+
+  it('retains outcome variables between response processing attempts for adaptive items', async () => {
+    render(
+      html`<qti-assessment-item identifier="adaptive-retain" adaptive="true">
+        <qti-response-declaration identifier="RESPONSE_1" cardinality="single" base-type="integer">
+          <qti-correct-response>
+            <qti-value>1</qti-value>
+          </qti-correct-response>
+        </qti-response-declaration>
+        <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float">
+          <qti-default-value><qti-value>0</qti-value></qti-default-value>
+        </qti-outcome-declaration>
+        <qti-item-body>
+          <qti-text-entry-interaction response-identifier="RESPONSE_1"></qti-text-entry-interaction>
+        </qti-item-body>
+        <qti-response-processing>
+          <qti-response-condition>
+            <qti-response-if>
+              <qti-match>
+                <qti-variable identifier="RESPONSE_1"></qti-variable>
+                <qti-correct identifier="RESPONSE_1"></qti-correct>
+              </qti-match>
+              <qti-set-outcome-value identifier="SCORE">
+                <qti-sum>
+                  <qti-variable identifier="SCORE"></qti-variable>
+                  <qti-base-value base-type="float">1</qti-base-value>
+                </qti-sum>
+              </qti-set-outcome-value>
+            </qti-response-if>
+          </qti-response-condition>
+        </qti-response-processing>
+      </qti-assessment-item>`,
+      container
+    );
+
+    const assessmentItem = container.querySelector('qti-assessment-item') as QtiAssessmentItem;
+    await assessmentItem.updateComplete;
+
+    assessmentItem.updateResponseVariable('RESPONSE_1', '1');
+    assessmentItem.processResponse();
+    expect(+assessmentItem.getOutcome('SCORE').value).toBe(1);
+
+    assessmentItem.updateResponseVariable('RESPONSE_1', '1');
+    assessmentItem.processResponse();
+
+    expect(+assessmentItem.getOutcome('SCORE').value).toBe(2);
   });
 });

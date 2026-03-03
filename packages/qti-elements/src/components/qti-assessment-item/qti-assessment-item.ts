@@ -312,6 +312,10 @@ export class QtiAssessmentItem extends LitElement {
       );
     }
 
+    if (this.adaptive === 'false') {
+      this.#resetOutcomeVariablesBeforeResponseProcessing();
+    }
+
     const responseProcessor = this.querySelector<QtiResponseProcessing>('qti-response-processing');
     const canProcess = !!(responseProcessor && typeof responseProcessor.process === 'function');
     if (canProcess) {
@@ -467,6 +471,30 @@ export class QtiAssessmentItem extends LitElement {
     if (valid === true) return 'completed';
     if (valid === false) return 'incomplete';
     return 'not_attempted';
+  }
+
+  #resetOutcomeVariablesBeforeResponseProcessing(): void {
+    this._context = {
+      ...this._context,
+      variables: this._context.variables.map(variable => {
+        if (variable.type !== 'outcome') {
+          return variable;
+        }
+
+        const hasDefaultValue = 'defaultValue' in variable;
+        const declaredDefault = hasDefaultValue ? variable.defaultValue : null;
+
+        let value = declaredDefault ?? null;
+        if ((value === null || value === undefined) && (variable.baseType === 'integer' || variable.baseType === 'float')) {
+          value = '0';
+        }
+
+        return {
+          ...variable,
+          value
+        };
+      })
+    };
   }
 }
 
