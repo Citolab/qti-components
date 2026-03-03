@@ -26,8 +26,40 @@ export class QtiAssociateInteraction extends DragDropInteractionMixin(
   }
 
   protected _registerChoice(event: CustomEvent) {
+    // Use composedPath()[0] to get the actual origin — event.target is retargeted to `this`
+    // when a composed event crosses the shadow DOM boundary, making it useless for filtering.
+    const origin = event.composedPath()[0] as HTMLElement;
+    // Ignore clones placed in shadow DOM drop zones — only register light DOM choices
+    if (this.shadowRoot?.contains(origin)) return;
     const choice = event.target as QtiSimpleAssociableChoice;
-    this._childrenMap.push(choice);
+    if (!this._childrenMap.includes(choice)) {
+      this._childrenMap.push(choice);
+    }
+  }
+
+  protected getResponse(): string[] {
+    const pairCount = Math.ceil(this._childrenMap.length / 2);
+    const response: string[] = [];
+    for (let i = 0; i < pairCount; i++) {
+      const leftDrop = this.shadowRoot?.querySelector(`.dl[identifier="droplist${i}_left"]`);
+      const rightDrop = this.shadowRoot?.querySelector(`.dl[identifier="droplist${i}_right"]`);
+      const leftId = leftDrop?.querySelector('[qti-draggable="true"]')?.getAttribute('identifier');
+      const rightId = rightDrop?.querySelector('[qti-draggable="true"]')?.getAttribute('identifier');
+      if (leftId && rightId) {
+        response.push(`${leftId} ${rightId}`);
+      }
+    }
+    return response;
+  }
+
+  getValue(val: string[]) {
+    return (
+      val?.flatMap((pair, i) => {
+        const parts = pair.split(' ');
+        if (parts.length !== 2) return [];
+        return [`${parts[0]} droplist${i}_left`, `${parts[1]} droplist${i}_right`];
+      }) ?? []
+    );
   }
 
   override render() {

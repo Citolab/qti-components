@@ -4880,6 +4880,16 @@
             },
             {
               "kind": "method",
+              "name": "getResponse",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "string[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
               "name": "getValidAssociations",
               "privacy": "private",
               "return": {
@@ -4890,6 +4900,21 @@
               "inheritedFrom": {
                 "name": "DragDropInteractionMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop/drag-drop-interaction-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getValue",
+              "parameters": [
+                {
+                  "name": "val",
+                  "type": {
+                    "text": "string[]"
+                  }
+                }
+              ],
+              "type": {
+                "text": "getValue(val: string[]) => void"
               }
             },
             {
