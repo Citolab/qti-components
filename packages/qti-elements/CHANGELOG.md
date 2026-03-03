@@ -1,3 +1,10 @@
+# [@qti-components/elements-v1.5.0](https://github.com/Citolab/qti-components/compare/elements-v1.4.0...elements-v1.5.0) (2026-03-03)
+
+
+### Features
+
+* implement outcome variable reset before response processing for non-adaptive items ([3b02baf](https://github.com/Citolab/qti-components/commit/3b02baf1336b53385139cfcf396d8c28ac5ace66))
+
 # [@qti-components/elements-v1.4.0](https://github.com/Citolab/qti-components/compare/elements-v1.3.0...elements-v1.4.0) (2026-03-01)
 
 
