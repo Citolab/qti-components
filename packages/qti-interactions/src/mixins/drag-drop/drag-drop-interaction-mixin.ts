@@ -952,6 +952,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
     private handleTouchStart(e) {
       if (this.isMatchTabular()) return;
+      if (this.disabled || this.readonly) return;
       if (e instanceof MouseEvent) {
         // Only allow the left button
         if (e.button !== 0) return;
