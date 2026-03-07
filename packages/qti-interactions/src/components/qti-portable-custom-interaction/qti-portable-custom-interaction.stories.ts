@@ -18,9 +18,64 @@ const { events, args, argTypes, template } = getStorybookHelpers('qti-portable-c
 type Story = StoryObj<QtiPortableCustomInteraction & typeof args>;
 
 /**
+ * ## Portable Custom Interaction (PCI)
  *
- * ### [3.2.23 Portable Custom Interaction (PCI)](https://www.imsglobal.org/spec/qti/v3p0/impl#h.98xaka8g51za)
- * allow the item author to present an interaction with a custom user interface and behavior, supported by, respectively, delivery engine-specific or author-provided code.  Portable Custom Interactions (PCIs) allow the Javascript code implementing the interaction to be made available to delivery systems, with a standard Javascript interface, offering the potential for making PCIs more interoperable and portable between conforming delivery engines.
+ * This component hosts an IMS QTI 3 Portable Custom Interaction (PCI) inside an iframe and bridges
+ * response/state/configuration between item runtime and PCI AMD modules.
+ *
+ * ### Spec References
+ * - PCI overview (3.7.12): https://www.imsglobal.org/spec/qti/v3p0/impl#h.jsncxx6a57ao
+ * - Authoring element overview (3.2.23): https://www.imsglobal.org/spec/qti/v3p0/impl#h.98xaka8g51za
+ * - Module resolution options (3.7.12.1 - 3.7.12.4): https://www.imsglobal.org/spec/qti/v3p0/impl#h.rrz6g7fej3px
+ * - Lifecycle examples (3.7.12.5): https://www.imsglobal.org/spec/qti/v3p0/impl#h.vf2yl2nwwnu
+ * - Communication bridge methods (3.7.7): https://www.imsglobal.org/spec/qti/v3p0/impl#h.ibcksu8902cr
+ * - Factory/instance contract (3.7.12.7.1): https://www.imsglobal.org/spec/qti/v3p0/impl#h.1mc9puik2ft6
+ *
+ * IMS lifecycle figure source images:
+ * - Figure 109: https://www.imsglobal.org/sites/default/files/specs/images/qti/3p0/impl3image39.png
+ * - Figure 110: https://www.imsglobal.org/sites/default/files/specs/images/qti/3p0/impl3image41.png
+ *
+ * ### Required Authoring Inputs
+ * - `response-identifier`: binds this interaction to a response variable.
+ * - `module`: AMD module id to load.
+ * - `custom-interaction-type-identifier`: PCI type identifier (prefer URN form).
+ *
+ * ### Optional Authoring Inputs
+ * - `qti-interaction-modules` / `qti-interaction-module`: per-module path overrides.
+ * - `qti-interaction-markup`: markup passed to PCI for custom UI.
+ * - `qti-template-variable`: pass resolved template values to PCI.
+ * - `qti-context-variable`: pass resolved context values to PCI.
+ * - `<properties>` element: raw properties markup forwarded to PCI.
+ * - `data-*` attributes: forwarded as PCI `properties` values.
+ * - `data-require-paths`, `data-require-shim`, `data-use-default-paths`, `data-use-default-shims`:
+ *   advanced RequireJS configuration controls.
+ *
+ * ### Implementation Guide Coverage (this component)
+ * - Implemented: host element contract, response/state bridge, `data-*` to properties,
+ *   interaction markup forwarding, per-module overrides.
+ * - Partially implemented: IMS default/fallback config-file conventions (`module_resolution.js`,
+ *   `fallback_module_resolution.js`) are represented through explicit path/shim config rather than
+ *   direct filename-based auto-loading.
+ * - Not implemented: some optional lifecycle hooks described by IMS are not fully surfaced as
+ *   dedicated host APIs.
+ *
+ * ### Quick Authoring Recipe
+ * ```xml
+ * <qti-portable-custom-interaction
+ *   response-identifier="RESPONSE"
+ *   module="exampleLikertScale"
+ *   custom-interaction-type-identifier="urn:fdc:example.org:2026:pci:likert"
+ *   data-base-url="/assets/qti-portable-interaction/example"
+ *   data-use-default-paths="true"
+ * >
+ *   <qti-interaction-modules>
+ *     <qti-interaction-module id="exampleLikertScale" primary-path="modules/likert" />
+ *   </qti-interaction-modules>
+ *   <qti-template-variable template-identifier="SCALE_TITLE"></qti-template-variable>
+ *   <qti-context-variable identifier="QTI_CONTEXT"></qti-context-variable>
+ *   <qti-interaction-markup></qti-interaction-markup>
+ * </qti-portable-custom-interaction>
+ * ```
  *
  */
 const meta: Meta<QtiPortableCustomInteraction> = {

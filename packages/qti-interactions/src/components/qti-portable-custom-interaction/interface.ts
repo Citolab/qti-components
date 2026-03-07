@@ -1,15 +1,36 @@
+/**
+ * Shared status values for PCI lifecycle callbacks.
+ *
+ * Matches the status vocabulary used in IMS QTI 3 PCI documentation.
+ */
+export type PciInteractionStatus = 'interacting' | 'suspended' | 'closed' | 'solution' | 'review';
+
+/**
+ * Payload passed to `onready` once a PCI reports it is ready.
+ */
 export interface PciReadyPayload {
   responseIdentifier: string; // The response identifier of the PCI
-  status: 'interacting' | 'suspended' | 'closed' | 'solution' | 'review'; // Current status
+  status: PciInteractionStatus; // Current status
 }
 
+/**
+ * Payload that may be passed to `ondone` when PCI finishes candidate interaction.
+ */
 export interface PciDonePayload {
   responseIdentifier: string; // The response identifier of the PCI
-  status: 'interacting' | 'suspended' | 'closed' | 'solution' | 'review'; // The final status after completion
+  status: PciInteractionStatus; // The final status after completion
   outcome?: unknown; // Optional outcome data (e.g., score, correctness)
 }
 
-// Define the ConfigProperties interface
+/**
+ * Configuration object shape exposed to a PCI instance.
+ *
+ * Notes for authors:
+ * - `properties` contains `data-*` attributes from the host element using dataset rules.
+ * - `templateVariables`, `contextVariables`, and `boundTo` follow QTI Appendix-C style JSON values.
+ * - `onready` must be called by the PCI once it is interactive.
+ * - `ondone` is optional and may be used for explicit completion workflows.
+ */
 export interface ConfigProperties<T> {
   properties: T; // Follows dataset conversion rules (camelCased keys)
   templateVariables: Record<string, unknown>; // Follows structure in Appendix C
@@ -20,10 +41,19 @@ export interface ConfigProperties<T> {
   onready: (payload: PciReadyPayload) => void; // Callback for when PCI is fully constructed and ready
   ondone?: (payload: PciDonePayload) => void; // Optional callback when candidate finishes interaction
 
-  status?: 'interacting' | 'suspended' | 'closed' | 'solution' | 'review'; // Optional, defaults to "interacting"
+  status?: PciInteractionStatus; // Optional, defaults to "interacting"
 }
 
+/**
+ * IMS-style PCI factory and instance contract.
+ *
+ * A PCI module registers an object with a `typeIdentifier` and a `getInstance(...)` factory method.
+ * The returned PCI instance should implement response/state read/write methods.
+ */
 export interface IMSpci<T> {
+  /**
+   * Stable PCI type key, expected to match `custom-interaction-type-identifier`.
+   */
   typeIdentifier: string;
 
   /** @access public
@@ -55,6 +85,8 @@ export interface IMSpci<T> {
    * @method getState
    * @return {String} The current state of this PCI. May be passed to
    * getInstance to later restore this PCI instance.
+   * FIXME: host runtime can round-trip object states via prefixed JSON strings;
+   * this type remains `string` for IMS compatibility.
    */
   getState: () => string;
 
@@ -62,13 +94,30 @@ export interface IMSpci<T> {
    * @method setState
    * @param {String} value - a state previously obtained from getState
    * to restore this PCI instance to a prior state.
+   * FIXME: runtime may deserialize prefixed JSON state before applying it.
    */
   setState(value: string): unknown;
 
+  /**
+   * Optional teardown callback. If present, host may call before unload/cleanup.
+   */
   oncompleted?: () => void;
+
+  /**
+   * Non-standard optional destroy hook; included for compatibility with legacy engines.
+   */
   destroy?: () => void; // Not used in IMS and not in TAO implementation, so not used here (optional)
 }
 
+/**
+ * Bridge callback signature used by this codebase for PCI registration.
+ *
+ * IMPORTANT:
+ * - This type is intentionally minimal for existing call sites.
+ * - Runtime initialization payload in `qti-portable-custom-interaction.ts` contains
+ *   additional fields (`boundTo`, `templateVariables`, `contextVariables`, etc.).
+ * FIXME: align this type with runtime payload to remove ambiguity in generated docs.
+ */
 export declare type Configuration<T> = {
   onready: (pci: IMSpci<ConfigProperties<T>>, state?: string) => void;
   properties: T;
@@ -84,7 +133,9 @@ export declare type Configuration<T> = {
   */
 };
 
-// File type representation
+/**
+ * QTI base-type `file` representation.
+ */
 export type QtiFileData = {
   data: string;
   mime: string;
@@ -104,7 +155,9 @@ export type QtiBaseUri = string;
 export type QtiBaseIntOrIdentifier = number | string;
 export type QtiBaseIdentifier = string;
 
-// Union of all possible response types for base and list
+/**
+ * Convenience union for primitive response values used by this implementation.
+ */
 export type ResponseType =
   | boolean
   | number
@@ -114,14 +167,19 @@ export type ResponseType =
   | QtiFileData
   | Array<boolean | number | string | QtiBasePair | QtiBasePoint | QtiFileData>;
 
-// Record item type
+/**
+ * A QTI record entry for `record` cardinality values.
+ */
 export type QtiRecordItem = {
   name: string;
   base?: QtiBaseTypeJSON | null;
   list?: QtiListTypeJSON | null;
 };
 export type ResponseVariableType = QtiVariableJSON;
-// Base type JSON representation
+
+/**
+ * QTI Appendix-C style JSON representation for base cardinality.
+ */
 export type QtiBaseTypeJSON = {
   boolean?: QtiBaseBoolean;
   integer?: QtiBaseInteger;
@@ -137,7 +195,9 @@ export type QtiBaseTypeJSON = {
   identifier?: QtiBaseIdentifier;
 } | null;
 
-// List type JSON representation
+/**
+ * QTI Appendix-C style JSON representation for list cardinality.
+ */
 export type QtiListTypeJSON = {
   boolean?: QtiBaseBoolean[];
   integer?: QtiBaseInteger[];
@@ -153,13 +213,18 @@ export type QtiListTypeJSON = {
   identifier?: QtiBaseIdentifier[];
 } | null;
 
-// Complete QTI Variable JSON type
+/**
+ * Complete QTI variable JSON envelope used by PCI bridge messaging.
+ */
 export declare type QtiVariableJSON = {
   base?: QtiBaseTypeJSON;
   list?: QtiListTypeJSON;
   record?: QtiRecordItem[] | null;
 };
 
+/**
+ * RequireJS module resolution config accepted by helper utilities and stories.
+ */
 export interface ModuleResolutionConfig {
   waitSeconds?: number;
   context?: string;

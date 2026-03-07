@@ -10,6 +10,101 @@ import type { CSSResultGroup } from 'lit';
 import type { BaseType, Cardinality, ItemContext, QtiContext } from '@qti-components/base';
 import type { QtiRecordItem, QtiVariableJSON, ResponseVariableType } from './interface';
 
+/**
+ * QTI 3 Portable Custom Interaction host component.
+ *
+ * This element renders a PCI inside an iframe, bridges configuration and state to the PCI AMD
+ * module, and proxies lifecycle/response updates back to the QTI item runtime.
+ *
+ * Spec references:
+ * - PCI overview: https://www.imsglobal.org/spec/qti/v3p0/impl#h.jsncxx6a57ao
+ * - Module resolution: https://www.imsglobal.org/spec/qti/v3p0/impl#h.rrz6g7fej3px
+ * - Lifecycle examples: https://www.imsglobal.org/spec/qti/v3p0/impl#h.vf2yl2nwwnu
+ * - Bridge methods/API: https://www.imsglobal.org/spec/qti/v3p0/impl#h.ibcksu8902cr
+ * - PCI factory contract: https://www.imsglobal.org/spec/qti/v3p0/impl#h.1mc9puik2ft6
+ *
+ * Source references for lifecycle figures:
+ * - Figure 109 image: https://www.imsglobal.org/sites/default/files/specs/images/qti/3p0/impl3image39.png
+ * - Figure 110 image: https://www.imsglobal.org/sites/default/files/specs/images/qti/3p0/impl3image41.png
+ *
+ * Normative-vs-implementation note:
+ * - IMS describes delivery-engine requirements.
+ * - This class documents what this repository's delivery implementation currently does.
+ *
+ * ## PCI Lifecycle (Figure 109 reconstruction)
+ * ```mermaid
+ * sequenceDiagram
+ *   participant C as Candidate
+ *   participant DE as Delivery Engine (Host)
+ *   participant B as Communication Bridge (qtiCustomInteractionContext)
+ *   participant PCI as Custom Interaction
+ *
+ *   C->>DE: Open item
+ *   DE->>DE: Render qti-portable-custom-interaction
+ *   DE->>B: Load AMD module(s)
+ *   B->>PCI: register(factory)
+ *   DE->>B: getInstance(typeIdentifier, dom, config, state?)
+ *   B->>PCI: getInstance(dom, config, state?)
+ *   PCI-->>B: onready(...)
+ *   B-->>DE: ready notification
+ *   C->>PCI: Interact
+ *   PCI-->>B: getResponse()/getState() updates
+ *   B-->>DE: interaction changed
+ *   C->>DE: Navigate away
+ *   DE->>DE: Persist response/state
+ *   C->>DE: Return to item
+ *   DE->>B: getInstance(..., savedState)
+ *   B->>PCI: Restore previous state
+ * ```
+ *
+ * ## PCI Lifecycle (Figure 110 reconstruction)
+ * ```mermaid
+ * sequenceDiagram
+ *   participant C as Candidate
+ *   participant DE as Delivery Engine (Adaptive/Composite)
+ *   participant B as Communication Bridge
+ *   participant PCI as Custom Interaction(s)
+ *
+ *   C->>DE: Start attempt
+ *   DE->>PCI: Initialize one or more PCI instances
+ *   loop Attempt cycle
+ *     C->>PCI: Interact with adaptive content
+ *     PCI-->>DE: Response/state updates
+ *     C->>DE: Trigger endAttemptInteraction
+ *     DE->>DE: Process responses/outcomes
+ *     DE->>PCI: Re-render or restore next attempt state
+ *   end
+ *   C->>DE: Submit item
+ *   DE->>DE: Close item
+ * ```
+ *
+ * ## Public Events
+ *
+ * | Event | When emitted | Detail payload |
+ * | --- | --- | --- |
+ * | `qti-portable-custom-interaction-loaded` | After iframe reports ready and host has finished initial handshake. | None |
+ * | `qti-pci-console` | When iframe forwards `console.log`/`console.error` output and `data-forward-console="true"` is configured. | `{ level: 'log' | 'error', args: string[] }` |
+ *
+ * ## Implementation Guide Coverage
+ *
+ * | IMS guide/option | Status in this component | Notes |
+ * | --- | --- | --- |
+ * | `qti-portable-custom-interaction` host + `custom-interaction-type-identifier` + `module` | Implemented | Core attributes are required for normal operation. |
+ * | Pass `data-*` attributes into PCI configuration `properties` | Implemented | Includes camelCase dataset keys and mirrored hyphenated aliases. |
+ * | `qti-template-variable` to `templateVariables` | Implemented | Resolved from item context and converted to QTI variable JSON shape. |
+ * | `qti-context-variable` to `contextVariables` | Implemented | Includes special handling for `QTI_CONTEXT` record defaults + runtime values. |
+ * | `qti-interaction-markup` forwarding | Implemented | Forwarded into iframe via bridge messaging. |
+ * | `<properties>` forwarding | Implemented | Forwarded as raw markup string for PCI consumption. |
+ * | `qti-interaction-modules` overrides (`qti-interaction-module`) | Implemented | Merged into RequireJS path resolution in iframe runtime. |
+ * | Default/fallback AMD locations (`module_resolution.js`, `fallback_module_resolution.js`) | Partially Implemented | Equivalent behavior via `data-require-paths`, `data-require-shim`, module overrides; no direct file loader for those exact filenames. |
+ * | PCI bridge callbacks (`onready`, optional `ondone`) | Partially Implemented | `onready` is wired; `ondone` support is bridged via internal change notifications and host message flow. |
+ * | Status modes (`interacting`, `suspended`, `closed`, `solution`, `review`) | Partially Implemented | `review` and `interacting` are actively used; additional statuses are part of API types and pass-through capabilities. |
+ * | Standard bridge object also assigned to global `window` | Not Implemented (spec option) | This host uses an iframe message bridge with AMD `define('qtiCustomInteractionContext', ...)` inside iframe runtime. |
+ * | `oncompleted` callback before unload | Not Implemented (spec option) | Not currently invoked by host teardown path. |
+ *
+ * TODO: Emit and document all public events in CEM output (`qti-portable-custom-interaction-loaded`, `qti-pci-console`)
+ * when analyzer/event tags are added. Runtime already dispatches both events.
+ */
 export class QtiPortableCustomInteraction extends Interaction {
   #value: string | string[];
 
@@ -31,27 +126,59 @@ export class QtiPortableCustomInteraction extends Interaction {
     `
   ];
 
+  /**
+   * AMD module name for the PCI implementation.
+   *
+   * This must resolve through configured RequireJS paths/module mappings.
+   */
   @property({ type: String, attribute: 'module' })
   module: string;
 
+  /**
+   * PCI type identifier used by the bridge to resolve the registered factory.
+   *
+   * IMS recommends using a federated-content URN to reduce collision risk.
+   */
   @property({ type: String, attribute: 'custom-interaction-type-identifier' })
   customInteractionTypeIdentifier: string;
 
+  /**
+   * JSON string for additional RequireJS `paths` mappings.
+   *
+   * Supported formats:
+   * - Object map: `{"id":"path/to/module"}`
+   * - Array entries: `[{"name":"id","value":"path/to/module"}]`
+   */
   @property({ type: String, attribute: 'data-require-paths' })
   requirePathsJson: string = '';
 
+  /**
+   * JSON string for additional RequireJS `shim` mappings.
+   */
   @property({ type: String, attribute: 'data-require-shim' })
   requireShimJson: string = '';
 
+  /**
+   * URL to the RequireJS runtime injected into the iframe.
+   */
   @property({ type: String, attribute: 'data-require-js-url' })
   requireJsUrl: string = 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js';
 
+  /**
+   * Base URL used to resolve relative PCI module paths.
+   */
   @property({ type: String, attribute: 'data-base-url' })
   baseUrl: string = '';
 
+  /**
+   * Include bundled default shims in addition to author-provided shims.
+   */
   @property({ type: Boolean, attribute: 'data-use-default-shims' })
   useDefaultShims = false;
 
+  /**
+   * Include bundled default path mappings in addition to author-provided paths.
+   */
   @property({ type: Boolean, attribute: 'data-use-default-paths' })
   useDefaultPaths = false;
 
@@ -66,6 +193,14 @@ export class QtiPortableCustomInteraction extends Interaction {
   @state()
   protected qtiContext?: QtiContext;
 
+  /**
+   * Current response value mirrored from PCI messages.
+   *
+   * Compatibility note:
+   * - This is a runtime convenience surface.
+   * - Persisted response flow should still be treated as QTI variable updates
+   *   via `qti-interaction-response`.
+   */
   @state() response: string | string[] | null = null;
 
   #parsedRequirePaths: Record<string, string | string[]> = null;
@@ -514,12 +649,27 @@ export class QtiPortableCustomInteraction extends Interaction {
     this._internals.setValidity(isValid ? {} : { customError: true }, message);
   }
 
+  /**
+   * Validate current response and update form-associated validity state.
+   *
+   * Validation source priority:
+   * 1. Explicit validity received from PCI bridge (`valid` in interactionChanged).
+   * 2. Host fallback validity based on non-empty response.
+   *
+   * @returns `true` when interaction is valid.
+   */
   validate(): boolean {
     const isValid = typeof this.#pciValidity === 'boolean' ? this.#pciValidity : this.#hasNonEmptyResponse();
     this.#setInteractionValidity(isValid, this.#pciCustomValidityMessage);
     return isValid;
   }
 
+  /**
+   * Form-associated value adapter.
+   *
+   * Accepts comma-separated scalar values for compatibility with legacy form usage.
+   * PCI response propagation is driven by bridge updates rather than direct mutation here.
+   */
   override set value(v: string | null) {
     if (v === null) {
       this.#value = [];
@@ -530,11 +680,19 @@ export class QtiPortableCustomInteraction extends Interaction {
     // No need to call setResponse directly
   }
 
+  /**
+   * Serialize internal response value as comma-separated string.
+   */
   override get value(): string | null {
     if (this.#value === null || this.#value === undefined) return null;
     return Array.isArray(this.#value) ? this.#value.join(',') : String(this.#value);
   }
 
+  /**
+   * Set initial bound response object keyed by `responseIdentifier`.
+   *
+   * This is typically supplied by item context restore/init flow.
+   */
   set boundTo(newValue: Record<string, ResponseVariableType>) {
     if (!newValue || !newValue[this.responseIdentifier]) {
       return;
@@ -549,6 +707,9 @@ export class QtiPortableCustomInteraction extends Interaction {
     this.saveResponse(value);
   }
 
+  /**
+   * Get response object keyed by `responseIdentifier` in QTI variable JSON format.
+   */
   get boundTo(): Record<string, QtiVariableJSON> {
     const responseVariable: Record<string, QtiVariableJSON> = {};
     const variable = this.context?.variables?.find(v => v.identifier === this.responseIdentifier);
@@ -664,6 +825,7 @@ export class QtiPortableCustomInteraction extends Interaction {
       case 'iframeReady':
         this.#initializeInteraction();
         this.#processPendingMessages();
+        // FIXME: add explicit event annotations for CEM so this event appears in generated API docs.
         this.dispatchEvent(
           new CustomEvent('qti-portable-custom-interaction-loaded', {
             bubbles: true
@@ -678,6 +840,7 @@ export class QtiPortableCustomInteraction extends Interaction {
         }
         break;
       case 'console':
+        // FIXME: add explicit event annotations for CEM so this event appears in generated API docs.
         this.dispatchEvent(
           new CustomEvent('qti-pci-console', {
             detail: {
@@ -1837,6 +2000,19 @@ export class QtiPortableCustomInteraction extends Interaction {
    * @param responseVariable The response variable containing the correct response
    * @param show Whether to show or hide the correct response
    */
+  /**
+   * Show or hide an additional review-only PCI instance with correct response applied.
+   *
+   * Side effects when `show=true`:
+   * - Disables the live interaction.
+   * - Creates a sibling container with a cloned PCI instance in review mode.
+   *
+   * Side effects when `show=false`:
+   * - Removes review container.
+   * - Re-enables live interaction.
+   *
+   * @param show Set true to display the review/correct-response viewer.
+   */
   public override toggleInternalCorrectResponse(show: boolean) {
     const responseVariable = this.responseVariable;
 
@@ -1967,6 +2143,11 @@ export class QtiPortableCustomInteraction extends Interaction {
    * Method to disable the PCI for review mode
    * This can be used when showing the correct response
    */
+  /**
+   * Put the interaction in non-interactive review mode.
+   *
+   * Sends `setState: disabled` to the PCI iframe and adds an overlay that blocks pointer input.
+   */
   public disable() {
     // First, store the current state of the PCI
     this.#previousState = {
@@ -2002,6 +2183,11 @@ export class QtiPortableCustomInteraction extends Interaction {
 
   /**
    * Method to enable the PCI for interactive mode
+   */
+  /**
+   * Restore interactive mode.
+   *
+   * Removes host overlay and sends `setState: interacting` to the PCI iframe.
    */
   public enable() {
     // Remove any overlays
