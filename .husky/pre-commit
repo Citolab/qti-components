@@ -1,3 +1,3 @@
 #!/bin/bash
-npm run pre-commit
-git add packages/*/custom-elements.json
+set -e
+npx lint-staged

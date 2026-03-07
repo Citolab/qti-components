@@ -85,6 +85,12 @@
     "publish": "pnpm -r run publish",
     "publish:ci": "node tools/publish-workspace.mjs"
   },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,mjs,cjs}": [
+      "eslint --fix",
+      "vitest related --run --passWithNoTests"
+    ]
+  },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.2",
     "@chromatic-com/storybook": "^5.0.0",
@@ -141,6 +147,7 @@
     "globals": "^16.5.0",
     "globby": "^14.1.0",
     "husky": "^9.1.7",
+    "lint-staged": "^16.3.2",
     "madge": "^8.0.0",
     "mdx-mermaid": "^2.0.3",
     "mermaid": "^11.12.2",
