@@ -523,7 +523,7 @@ export const WithImages: Story = {
 };
 
 export const DuplicateDropIsolationRegression: Story = {
-  name: 'Regression: duplicate source remains in other targets after blocked move',
+  name: 'Regression: duplicate source remains in other targets after occupied-target swap',
   render: () => duplicateDropRegressionTemplate,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

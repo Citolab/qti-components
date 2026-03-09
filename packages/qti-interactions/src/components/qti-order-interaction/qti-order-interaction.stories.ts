@@ -367,7 +367,7 @@ export const PartialOrder: Story = {
  * the source slot and the item lands cleanly in the new slot.
  */
 export const MoveToAnotherSlot: Story = {
-  name: 'Drag (compound): pick up from dropzone and move to different slot',
+  name: 'Drag: pick up from dropzone and move to different slot',
   render: () => html`
     <qti-order-interaction data-testid="order-interaction" response-identifier="RESPONSE" orientation="horizontal">
       <qti-simple-choice identifier="A">Choice A</qti-simple-choice>
@@ -412,7 +412,7 @@ export const MoveToAnotherSlot: Story = {
  * Tests that re-dropping in the same zone produces no duplicates and the response is stable.
  */
 export const DropInSameSlot: Story = {
-  name: 'Drag (compound): pick up from slot and drop back in the same slot',
+  name: 'Drag: pick up from slot and drop back in the same slot',
   render: () => html`
     <qti-order-interaction data-testid="order-interaction" response-identifier="RESPONSE" orientation="horizontal">
       <qti-simple-choice identifier="A">Choice A</qti-simple-choice>
@@ -459,7 +459,7 @@ export const DropInSameSlot: Story = {
  * and can be re-placed in any slot.
  */
 export const InventoryRoundTrip: Story = {
-  name: 'Drag (compound): place → return to inventory → place in new slot',
+  name: 'Drag: place → return to inventory → place in new slot',
   render: () => html`
     <qti-order-interaction data-testid="order-interaction" response-identifier="RESPONSE" orientation="horizontal">
       <qti-simple-choice identifier="A">Choice A</qti-simple-choice>
@@ -510,7 +510,7 @@ export const InventoryRoundTrip: Story = {
  * The expected final response is ['B', 'A', 'C'] after swapping A and B.
  */
 export const FullReorderSequence: Story = {
-  name: 'Drag (compound): place all → return two → re-place in swapped positions',
+  name: 'Drag: place all → return two → re-place in swapped positions',
   render: () => html`
     <qti-order-interaction data-testid="order-interaction" response-identifier="RESPONSE" orientation="horizontal">
       <qti-simple-choice identifier="A">Choice A</qti-simple-choice>
@@ -1029,6 +1029,57 @@ export const InSlotReorderingPartial: Story = {
       await step('Response reflects sortable swap with unfilled trailing slot', async () => {
         const lastResponse = callback.mock.calls.at(-1)?.[0].detail.response;
         expect(lastResponse).toEqual(['B', 'A', '']);
+      });
+    } finally {
+      interaction.removeEventListener('qti-interaction-response', callback as EventListener);
+    }
+  }
+};
+
+export const InSlotReorderingDisabled: Story = {
+  name: 'Behavior: allowReorder=false blocks sortable swap for slot-origin drag',
+  render: () => html`
+    <qti-order-interaction data-testid="order-interaction" response-identifier="RESPONSE" orientation="horizontal">
+      <qti-simple-choice identifier="A">Choice A</qti-simple-choice>
+      <qti-simple-choice identifier="B">Choice B</qti-simple-choice>
+      <qti-simple-choice identifier="C">Choice C</qti-simple-choice>
+    </qti-order-interaction>
+  `,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const interaction = canvas.getByTestId<QtiOrderInteraction>('order-interaction') as QtiOrderInteraction & {
+      allowReorder: boolean;
+    };
+    await settleInteraction(interaction);
+
+    const choiceA = canvas.getByText<QtiSimpleChoice>('Choice A');
+    const choiceB = canvas.getByText<QtiSimpleChoice>('Choice B');
+    const choiceC = canvas.getByText<QtiSimpleChoice>('Choice C');
+    const drops = canvas.queryAllByShadowRole('region');
+
+    const callback = fn((e: CustomEvent<{ response: string[] }>) => e.detail.response);
+    interaction.addEventListener('qti-interaction-response', callback as EventListener);
+
+    try {
+      await step('Place all choices in slots first', async () => {
+        await dragAndWait(interaction, choiceA, { to: drops[0] });
+        await dragAndWait(interaction, choiceB, { to: drops[1] });
+        await dragAndWait(interaction, choiceC, { to: drops[2] });
+        expect(callback.mock.calls.at(-1)?.[0].detail.response).toEqual(['A', 'B', 'C']);
+      });
+
+      await step('Disable sortable mode and attempt occupied-slot reorder', async () => {
+        interaction.allowReorder = false;
+        const placedA = getDropZone(interaction, 0).querySelector('[identifier="A"]') as HTMLElement;
+        await drag(placedA, { to: drops[1], steps: 30, duration: 350 });
+        await settleInteraction(interaction);
+      });
+
+      await step('Order remains unchanged when allowReorder is false', async () => {
+        expect(drops[0]).toHaveTextContent('Choice A');
+        expect(drops[1]).toHaveTextContent('Choice B');
+        expect(drops[2]).toHaveTextContent('Choice C');
+        expect(interaction.response).toEqual('A,B,C');
       });
     } finally {
       interaction.removeEventListener('qti-interaction-response', callback as EventListener);

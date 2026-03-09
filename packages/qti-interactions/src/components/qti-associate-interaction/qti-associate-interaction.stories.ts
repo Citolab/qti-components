@@ -140,84 +140,6 @@ export const Test: Story = {
 };
 
 /**
- * Sortable behavior for slotted-associate should support swapping placed items
- * across different pair rows (left column in this case) while preserving valid pairs.
- */
-export const SortableCrossRowSwap: Story = {
-  name: 'Behavior: sortable swap across pair rows',
-  render: () => html`
-    <qti-associate-interaction data-testid="associate-interaction" response-identifier="RESPONSE">
-      <qti-simple-associable-choice identifier="A">Antonio</qti-simple-associable-choice>
-      <qti-simple-associable-choice identifier="B">Brutus</qti-simple-associable-choice>
-      <qti-simple-associable-choice identifier="C">Capulet</qti-simple-associable-choice>
-      <qti-simple-associable-choice identifier="D">Demetrius</qti-simple-associable-choice>
-    </qti-associate-interaction>
-  `,
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const interaction = canvas.getByTestId<QtiAssociateInteraction>('associate-interaction');
-    await settle(interaction);
-
-    const antonio = canvas.getByText('Antonio');
-    const brutus = canvas.getByText('Brutus');
-    const capulet = canvas.getByText('Capulet');
-    const demetrius = canvas.getByText('Demetrius');
-
-    const left0 = getDropZone(interaction, 'droplist0_left');
-    const right0 = getDropZone(interaction, 'droplist0_right');
-    const left1 = getDropZone(interaction, 'droplist1_left');
-    const right1 = getDropZone(interaction, 'droplist1_right');
-
-    const callback = fn((event: CustomEvent<{ response: string[] }>) => event.detail.response);
-    interaction.addEventListener('qti-interaction-response', callback as EventListener);
-
-    try {
-      await step('Build baseline pairs A-B and C-D', async () => {
-        await drag(antonio, { to: left0, duration: 300 });
-        await settle(interaction);
-        await drag(brutus, { to: right0, duration: 300 });
-        await settle(interaction);
-        await drag(capulet, { to: left1, duration: 300 });
-        await settle(interaction);
-        await drag(demetrius, { to: right1, duration: 300 });
-        await settle(interaction);
-
-        const lastResponse = callback.mock.calls.at(-1)?.[0].detail.response;
-        expect(lastResponse).toEqual(['A B', 'C D']);
-      });
-
-      await step('Drag placed A onto occupied left1 to swap with C', async () => {
-        const placedA = getDropZone(interaction, 'droplist0_left').querySelector('[identifier="A"]') as HTMLElement;
-        await drag(placedA, { to: left1, duration: 300 });
-        await settle(interaction);
-
-        expect(left0).toHaveTextContent('Capulet');
-        expect(right0).toHaveTextContent('Brutus');
-        expect(left1).toHaveTextContent('Antonio');
-        expect(right1).toHaveTextContent('Demetrius');
-      });
-
-      await step('Response reflects swapped pairs C-B and A-D', async () => {
-        const lastResponse = callback.mock.calls.at(-1)?.[0].detail.response;
-        expect(lastResponse).toEqual(['C B', 'A D']);
-        expect(interaction.response).toEqual('C B,A D');
-      });
-
-      await step('Associations remain complete after sortable swap', async () => {
-        expect(left0.querySelectorAll('[qti-draggable="true"]').length).toBe(1);
-        expect(right0.querySelectorAll('[qti-draggable="true"]').length).toBe(1);
-        expect(left1.querySelectorAll('[qti-draggable="true"]').length).toBe(1);
-        expect(right1.querySelectorAll('[qti-draggable="true"]').length).toBe(1);
-        const response = Array.isArray(interaction.response) ? interaction.response : interaction.response.split(',');
-        expect(response.length).toBe(2);
-      });
-    } finally {
-      interaction.removeEventListener('qti-interaction-response', callback as EventListener);
-    }
-  }
-};
-
-/**
  * Sortable behavior with partial placement:
  * one complete pair and one incomplete row should still allow cross-row swap,
  * while response only includes complete pairs.
@@ -293,6 +215,210 @@ export const SortableCrossRowSwapPartial: Story = {
         expect(right1.querySelectorAll('[qti-draggable="true"]').length).toBe(0);
         const response = Array.isArray(interaction.response) ? interaction.response : interaction.response.split(',');
         expect(response).toEqual(['C B']);
+      });
+    } finally {
+      interaction.removeEventListener('qti-interaction-response', callback as EventListener);
+    }
+  }
+};
+
+/**
+ * Sortable behavior for slotted-associate should support swapping placed items
+ * across different pair rows (left column in this case) while preserving valid pairs.
+ */
+export const SortableCrossRowSwap: Story = {
+  name: 'Behavior: sortable swap across pair rows (left column)',
+  render: () => html`
+    <qti-associate-interaction data-testid="associate-interaction" response-identifier="RESPONSE">
+      <qti-simple-associable-choice identifier="A">Antonio</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="B">Brutus</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="C">Capulet</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="D">Demetrius</qti-simple-associable-choice>
+    </qti-associate-interaction>
+  `,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const interaction = canvas.getByTestId<QtiAssociateInteraction>('associate-interaction');
+    await settle(interaction);
+
+    const antonio = canvas.getByText('Antonio');
+    const brutus = canvas.getByText('Brutus');
+    const capulet = canvas.getByText('Capulet');
+    const demetrius = canvas.getByText('Demetrius');
+
+    const left0 = getDropZone(interaction, 'droplist0_left');
+    const right0 = getDropZone(interaction, 'droplist0_right');
+    const left1 = getDropZone(interaction, 'droplist1_left');
+    const right1 = getDropZone(interaction, 'droplist1_right');
+
+    const callback = fn((event: CustomEvent<{ response: string[] }>) => event.detail.response);
+    interaction.addEventListener('qti-interaction-response', callback as EventListener);
+
+    try {
+      await step('Build baseline pairs A-B and C-D', async () => {
+        await drag(antonio, { to: left0, duration: 300 });
+        await settle(interaction);
+        await drag(brutus, { to: right0, duration: 300 });
+        await settle(interaction);
+        await drag(capulet, { to: left1, duration: 300 });
+        await settle(interaction);
+        await drag(demetrius, { to: right1, duration: 300 });
+        await settle(interaction);
+
+        const lastResponse = callback.mock.calls.at(-1)?.[0].detail.response;
+        expect(lastResponse).toEqual(['A B', 'C D']);
+      });
+
+      await step('Drag placed A onto occupied left1 to swap with C', async () => {
+        const placedA = getDropZone(interaction, 'droplist0_left').querySelector('[identifier="A"]') as HTMLElement;
+        await drag(placedA, { to: left1, duration: 300 });
+        await settle(interaction);
+
+        expect(left0).toHaveTextContent('Capulet');
+        expect(right0).toHaveTextContent('Brutus');
+        expect(left1).toHaveTextContent('Antonio');
+        expect(right1).toHaveTextContent('Demetrius');
+      });
+
+      await step('Response reflects swapped pairs C-B and A-D', async () => {
+        const lastResponse = callback.mock.calls.at(-1)?.[0].detail.response;
+        expect(lastResponse).toEqual(['C B', 'A D']);
+        expect(interaction.response).toEqual('C B,A D');
+      });
+
+      await step('Associations remain complete after sortable swap', async () => {
+        expect(left0.querySelectorAll('[qti-draggable="true"]').length).toBe(1);
+        expect(right0.querySelectorAll('[qti-draggable="true"]').length).toBe(1);
+        expect(left1.querySelectorAll('[qti-draggable="true"]').length).toBe(1);
+        expect(right1.querySelectorAll('[qti-draggable="true"]').length).toBe(1);
+        const response = Array.isArray(interaction.response) ? interaction.response : interaction.response.split(',');
+        expect(response.length).toBe(2);
+      });
+    } finally {
+      interaction.removeEventListener('qti-interaction-response', callback as EventListener);
+    }
+  }
+};
+
+export const SortableCrossRowSwapRightColumn: Story = {
+  name: 'Behavior: sortable swap across pair rows (right column)',
+  render: () => html`
+    <qti-associate-interaction data-testid="associate-interaction" response-identifier="RESPONSE">
+      <qti-simple-associable-choice identifier="A">Antonio</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="B">Brutus</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="C">Capulet</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="D">Demetrius</qti-simple-associable-choice>
+    </qti-associate-interaction>
+  `,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const interaction = canvas.getByTestId<QtiAssociateInteraction>('associate-interaction');
+    await settle(interaction);
+
+    const antonio = canvas.getByText('Antonio');
+    const brutus = canvas.getByText('Brutus');
+    const capulet = canvas.getByText('Capulet');
+    const demetrius = canvas.getByText('Demetrius');
+
+    const left0 = getDropZone(interaction, 'droplist0_left');
+    const right0 = getDropZone(interaction, 'droplist0_right');
+    const left1 = getDropZone(interaction, 'droplist1_left');
+    const right1 = getDropZone(interaction, 'droplist1_right');
+
+    const callback = fn((event: CustomEvent<{ response: string[] }>) => event.detail.response);
+    interaction.addEventListener('qti-interaction-response', callback as EventListener);
+
+    try {
+      await step('Build baseline pairs A-B and C-D', async () => {
+        await drag(antonio, { to: left0, duration: 300 });
+        await settle(interaction);
+        await drag(brutus, { to: right0, duration: 300 });
+        await settle(interaction);
+        await drag(capulet, { to: left1, duration: 300 });
+        await settle(interaction);
+        await drag(demetrius, { to: right1, duration: 300 });
+        await settle(interaction);
+
+        expect(callback.mock.calls.at(-1)?.[0].detail.response).toEqual(['A B', 'C D']);
+      });
+
+      await step('Drag placed B onto occupied right1 to swap with D', async () => {
+        const placedB = getDropZone(interaction, 'droplist0_right').querySelector('[identifier="B"]') as HTMLElement;
+        await drag(placedB, { to: right1, duration: 300 });
+        await settle(interaction);
+
+        expect(left0).toHaveTextContent('Antonio');
+        expect(right0).toHaveTextContent('Demetrius');
+        expect(left1).toHaveTextContent('Capulet');
+        expect(right1).toHaveTextContent('Brutus');
+      });
+
+      await step('Response reflects right-column sortable swap', async () => {
+        expect(callback.mock.calls.at(-1)?.[0].detail.response).toEqual(['A D', 'C B']);
+        expect(interaction.response).toEqual('A D,C B');
+      });
+    } finally {
+      interaction.removeEventListener('qti-interaction-response', callback as EventListener);
+    }
+  }
+};
+
+export const SortableCrossColumnSwapLeftToRight: Story = {
+  name: 'Behavior: sortable swap between columns (left to right)',
+  render: () => html`
+    <qti-associate-interaction data-testid="associate-interaction" response-identifier="RESPONSE">
+      <qti-simple-associable-choice identifier="A">Antonio</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="B">Brutus</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="C">Capulet</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="D">Demetrius</qti-simple-associable-choice>
+    </qti-associate-interaction>
+  `,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const interaction = canvas.getByTestId<QtiAssociateInteraction>('associate-interaction');
+    await settle(interaction);
+
+    const antonio = canvas.getByText('Antonio');
+    const brutus = canvas.getByText('Brutus');
+    const capulet = canvas.getByText('Capulet');
+    const demetrius = canvas.getByText('Demetrius');
+
+    const left0 = getDropZone(interaction, 'droplist0_left');
+    const right0 = getDropZone(interaction, 'droplist0_right');
+    const left1 = getDropZone(interaction, 'droplist1_left');
+    const right1 = getDropZone(interaction, 'droplist1_right');
+
+    const callback = fn((event: CustomEvent<{ response: string[] }>) => event.detail.response);
+    interaction.addEventListener('qti-interaction-response', callback as EventListener);
+
+    try {
+      await step('Build baseline pairs A-B and C-D', async () => {
+        await drag(antonio, { to: left0, duration: 300 });
+        await settle(interaction);
+        await drag(brutus, { to: right0, duration: 300 });
+        await settle(interaction);
+        await drag(capulet, { to: left1, duration: 300 });
+        await settle(interaction);
+        await drag(demetrius, { to: right1, duration: 300 });
+        await settle(interaction);
+
+        expect(callback.mock.calls.at(-1)?.[0].detail.response).toEqual(['A B', 'C D']);
+      });
+
+      await step('Drag placed A from left0 onto occupied right0 to swap between columns', async () => {
+        const placedA = getDropZone(interaction, 'droplist0_left').querySelector('[identifier="A"]') as HTMLElement;
+        await drag(placedA, { to: right0, duration: 300 });
+        await settle(interaction);
+
+        expect(left0).toHaveTextContent('Brutus');
+        expect(right0).toHaveTextContent('Antonio');
+        expect(left1).toHaveTextContent('Capulet');
+        expect(right1).toHaveTextContent('Demetrius');
+      });
+
+      await step('Response reflects cross-column sortable swap', async () => {
+        expect(callback.mock.calls.at(-1)?.[0].detail.response).toEqual(['B A', 'C D']);
+        expect(interaction.response).toEqual('B A,C D');
       });
     } finally {
       interaction.removeEventListener('qti-interaction-response', callback as EventListener);
