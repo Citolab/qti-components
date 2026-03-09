@@ -26326,7 +26326,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "deprecated": "Legacy drag-drop API. Use `DragDropSlottedMixin` from `mixins/drag-drop-observables`."
         }
       ],
       "exports": [
@@ -27427,7 +27428,8 @@
                 "text": "string"
               }
             }
-          ]
+          ],
+          "deprecated": "Use `DragDropSlottedMixin` (and optionally `DragDropSlottedSortableMixin`)\nfrom `@qti-components/interactions/mixins/drag-drop-observables`."
         }
       ],
       "exports": [
@@ -27473,7 +27475,8 @@
                 "text": "string"
               }
             }
-          ]
+          ],
+          "deprecated": "Use FLIP helpers from `mixins/drag-drop-observables/utils/flip.utils`."
         }
       ],
       "exports": [

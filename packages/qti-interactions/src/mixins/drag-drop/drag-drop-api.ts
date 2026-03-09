@@ -1,3 +1,7 @@
+/**
+ * @deprecated Legacy drag-drop API.
+ * Use `DragDropSlottedMixin` from `mixins/drag-drop-observables`.
+ */
 export class TouchDragAndDrop {
   public draggables: HTMLElement[] = [];
   public droppables: HTMLElement[] = [];

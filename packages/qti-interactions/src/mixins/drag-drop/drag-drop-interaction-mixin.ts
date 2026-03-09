@@ -23,6 +23,10 @@ type RectLike = {
   height: number;
 };
 
+/**
+ * @deprecated Use `DragDropSlottedMixin` (and optionally `DragDropSlottedSortableMixin`)
+ * from `@qti-components/interactions/mixins/drag-drop-observables`.
+ */
 export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
   superClass: T,
   draggablesSelector: string,
