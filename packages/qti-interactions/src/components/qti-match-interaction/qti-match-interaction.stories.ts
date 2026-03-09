@@ -280,6 +280,24 @@ const sortableAppendWhenTargetAllowsMultipleTemplate = html`
   </qti-match-interaction>
 `;
 
+const sortableAppendWhenTargetUnlimitedTemplate = html`
+  <qti-match-interaction
+    data-testid="match-interaction-sortable-unlimited-target"
+    response-identifier="RESPONSE"
+    max-associations="6"
+  >
+    <qti-simple-match-set>
+      <qti-simple-associable-choice identifier="A" match-max="0">Alpha</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="B" match-max="0">Beta</qti-simple-associable-choice>
+    </qti-simple-match-set>
+    <qti-simple-match-set>
+      <qti-simple-associable-choice identifier="T1" match-max="1">Target 1</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="T2" match-max="1">Target 2</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="T3" match-max="0">Target 3</qti-simple-associable-choice>
+    </qti-simple-match-set>
+  </qti-match-interaction>
+`;
+
 export const Test: Story = {
   render: () => testTemplate,
   play: async ({ canvasElement, step }) => {
@@ -644,6 +662,46 @@ export const SortableRespectsPerTargetMatchMax: Story = {
       // Source retains Alpha because move to full multi-capacity target is invalid.
       expect(target1).toHaveTextContent('Alpha');
       expect(target2).not.toHaveTextContent('Alpha');
+    });
+  }
+};
+
+export const SortableAppendWhenTargetIsUnlimited: Story = {
+  name: 'Behavior: sortable move appends when occupied target match-max is unlimited (0)',
+  render: () => sortableAppendWhenTargetUnlimitedTemplate,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const alpha = canvas.getByText('Alpha');
+    const beta = canvas.getByText('Beta');
+    const target1 = canvas.getByText('Target 1');
+    const target2 = canvas.getByText('Target 2');
+    const target3 = canvas.getByText('Target 3');
+
+    await step('Place Alpha in Targets 1 and 2, then fill Target 3 with Alpha and Beta', async () => {
+      await drag(alpha, { to: target1, duration: 350 });
+      await drag(alpha, { to: target2, duration: 350 });
+      await drag(alpha, { to: target3, duration: 350 });
+      await drag(beta, { to: target3, duration: 350 });
+
+      expect(target1).toHaveTextContent('Alpha');
+      expect(target2).toHaveTextContent('Alpha');
+      expect(target3).toHaveTextContent('Alpha');
+      expect(target3).toHaveTextContent('Beta');
+      expect(target3.querySelectorAll('[qti-draggable="true"]').length).toBe(2);
+    });
+
+    await step('Move Alpha from Target 2 onto occupied unlimited Target 3; item should append', async () => {
+      const alphaInTarget2 = await waitFor(() => {
+        const dropped = target2.querySelector('[identifier="A"][qti-draggable="true"]') as HTMLElement | null;
+        expect(dropped).not.toBeNull();
+        return dropped as HTMLElement;
+      });
+      await drag(alphaInTarget2, { to: target3, duration: 350 });
+
+      expect(target2).not.toHaveTextContent('Alpha');
+      expect(target3).toHaveTextContent('Alpha');
+      expect(target3).toHaveTextContent('Beta');
+      expect(target3.querySelectorAll('[qti-draggable="true"]').length).toBe(3);
     });
   }
 };

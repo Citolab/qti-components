@@ -148,6 +148,9 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
               return collectResponseData(this.trackedDroppables, draggablesSelector);
             })();
       } else {
+        // Compatibility note:
+        // legacy drag/drop behavior treats string response assignment as form-state only.
+        // It does not replay placements into dropzones; only array-based input does.
         this._response = typeof value === 'string' && value.length > 0 ? [value] : [];
       }
 
@@ -265,16 +268,18 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
         this.checkAllMaxAssociations();
       }
 
-      // Check if the drop was blocked due to max associations being reached
+      // Only flag "blocked due to max" when the user attempted to drop on
+      // a disabled non-source target while global max is reached.
+      // This avoids showing max-capacity errors for unrelated invalid drops
+      // (e.g. dropping outside any known dropzone).
       const totalAssociations = countTotalAssociations(this.trackedDroppables, draggablesSelector);
       const maxReached = this.maxAssociations > 0 && totalAssociations >= this.maxAssociations;
+      const attemptedDisabledTarget =
+        !!currentTarget && currentTarget.hasAttribute('disabled') && !currentTarget.hasAttribute('data-drag-source');
 
-      if (maxReached) {
-        // Flag that drop was blocked and show validation message
-        this._dropBlockedDueToMax = true;
-        this.validate();
-        this.reportValidity();
-      }
+      this._dropBlockedDueToMax = attemptedDisabledTarget && maxReached;
+      this.validate();
+      this.reportValidity();
     }
 
     private updateMinDimensionsForDropZones(): void {
@@ -352,7 +357,8 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
         return;
       }
 
-      const matchMax = parseInt(droppable.getAttribute('match-max') || '1', 10) || 1;
+      const parsedMatchMax = parseInt(droppable.getAttribute('match-max') || '1', 10);
+      const matchMax = Number.isNaN(parsedMatchMax) ? 1 : parsedMatchMax;
       const allowsMultiple = matchMax === 0 || matchMax > 1;
 
       // FLIP: First - capture positions of existing children in droppable

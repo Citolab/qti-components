@@ -22694,6 +22694,20 @@
                   "type": {
                     "text": "DragEventSource"
                   }
+                },
+                {
+                  "name": "pointerId",
+                  "optional": true,
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "startedFromTrustedEvent",
+                  "optional": true,
+                  "type": {
+                    "text": "boolean"
+                  }
                 }
               ]
             },

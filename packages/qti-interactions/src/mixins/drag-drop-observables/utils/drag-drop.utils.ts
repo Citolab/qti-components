@@ -58,7 +58,8 @@ export function getMatchMaxValue(draggables: HTMLElement[], identifier: string):
 }
 
 export function isDroppableAtCapacity(droppable: HTMLElement, draggablesSelector: string): boolean {
-  const matchMax = parseInt(droppable.getAttribute('match-max') || '1', 10) || 1;
+  const parsedMatchMax = parseInt(droppable.getAttribute('match-max') || '1', 10);
+  const matchMax = Number.isNaN(parsedMatchMax) ? 1 : parsedMatchMax;
   if (matchMax === 0) return false;
 
   const selectorMatches = droppable.querySelectorAll(draggablesSelector);

@@ -112,7 +112,9 @@ export default async function drag(
 
   const current = {
     clientX: fromCoords.x,
-    clientY: fromCoords.y
+    clientY: fromCoords.y,
+    button: 0,
+    buttons: 1
   };
   let currentHoverTarget: Element | Document = element;
 
@@ -147,7 +149,8 @@ export default async function drag(
 
   // Simulate drag end
   const releaseTarget = getTargetAtPoint(current.clientX, current.clientY);
-  fireEvent.mouseUp(releaseTarget, current);
-  fireEvent.mouseUp(document, current);
+  const release = { ...current, buttons: 0 };
+  fireEvent.mouseUp(releaseTarget, release);
+  fireEvent.mouseUp(document, release);
   await sleep(100);
 }

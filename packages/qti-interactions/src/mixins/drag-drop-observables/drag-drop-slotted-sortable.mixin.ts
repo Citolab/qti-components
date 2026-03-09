@@ -116,7 +116,8 @@ export const DragDropSlottedSortableMixin = <T extends Constructor<DragDropSlott
     }
 
     #getSlotMatchMax(slot: HTMLElement): number {
-      return parseInt(slot.getAttribute('match-max') || '1', 10) || 1;
+      const parsedMatchMax = parseInt(slot.getAttribute('match-max') || '1', 10);
+      return Number.isNaN(parsedMatchMax) ? 1 : parsedMatchMax;
     }
 
     #getSlotItemCount(slot: HTMLElement): number {
