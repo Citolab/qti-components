@@ -3917,7 +3917,6 @@
                   }
                 }
               ],
-              "description": "Get the item in a slot (if any)",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -4006,7 +4005,6 @@
                   }
                 }
               ],
-              "description": "Perform visual swap when hovering over an occupied slot\nThe item in the target slot moves to the source slot (swap preview)",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -4021,7 +4019,6 @@
                   "text": "void"
                 }
               },
-              "description": "Reset shift state",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -4036,7 +4033,6 @@
                   "text": "void"
                 }
               },
-              "description": "Revert all visual swaps back to original positions",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -4050,7 +4046,6 @@
                 "text": "ShiftState"
               },
               "default": "{ hoveredSlot: null, originalPositions: new Map() }",
-              "description": "Visual shift state",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -4073,7 +4068,6 @@
                   }
                 }
               ],
-              "description": "Whether a target slot allows multiple items via match-max.\n`0` means unlimited in QTI.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -4086,7 +4080,6 @@
               "type": {
                 "text": "SortableDragContext"
               },
-              "description": "Sortable drag context for placeholder management",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -4100,7 +4093,6 @@
                 "text": "HTMLElement | null"
               },
               "default": "null",
-              "description": "Source slot when dragging from within a slot",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -4111,7 +4103,6 @@
               "name": "#temporarilyEnabledSlots",
               "privacy": "private",
               "default": "new Set<HTMLElement>()",
-              "description": "Tracks slots temporarily re-enabled during reorder drags",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -4140,7 +4131,6 @@
                   }
                 }
               ],
-              "description": "Allow reordering from slot to slot even when slots are marked disabled due to max rules.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -4157,7 +4147,6 @@
               },
               "privacy": "public",
               "default": "true",
-              "description": "Whether reordering within slots is enabled",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -4178,7 +4167,6 @@
                   "default": "true"
                 }
               ],
-              "description": "Clean up sortable-specific state.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -4201,7 +4189,6 @@
                   }
                 }
               ],
-              "description": "Determines if an element is inside a tracked droppable (slot).\nReturns the containing droppable, or null if in inventory.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -4255,7 +4242,6 @@
                   }
                 }
               ],
-              "description": "Extend base drag move with sortable hover/swap behavior for slot-originated drags.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -4284,7 +4270,6 @@
                   }
                 }
               ],
-              "description": "Override handleDrop to clean up sortable state after drop.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -4310,7 +4295,6 @@
                   }
                 }
               ],
-              "description": "Override handleInvalidDrop to clean up sortable state.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -4360,7 +4344,6 @@
                   }
                 }
               ],
-              "description": "Override initiateDrag to set up placeholder for slot-originated drags.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -4375,7 +4358,6 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Whether the current drag originated from a slot",
               "readonly": true,
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
@@ -4405,7 +4387,6 @@
                   }
                 }
               ],
-              "description": "Process drag move for sortable behavior.\nCalled from the drag move observable.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -4422,7 +4403,6 @@
               },
               "privacy": "public",
               "default": "{ duration: 150, easing: 'ease' }",
-              "description": "Animation configuration for sortable operations",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -4436,7 +4416,6 @@
               },
               "privacy": "public",
               "default": "{}",
-              "description": "Placeholder styling configuration",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -7452,7 +7431,6 @@
                   }
                 }
               ],
-              "description": "Get the item in a slot (if any)",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -7559,7 +7537,6 @@
                   }
                 }
               ],
-              "description": "Perform visual swap when hovering over an occupied slot\nThe item in the target slot moves to the source slot (swap preview)",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -7574,7 +7551,6 @@
                   "text": "void"
                 }
               },
-              "description": "Reset shift state",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -7589,7 +7565,6 @@
                   "text": "void"
                 }
               },
-              "description": "Revert all visual swaps back to original positions",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -7603,7 +7578,6 @@
                 "text": "ShiftState"
               },
               "default": "{ hoveredSlot: null, originalPositions: new Map() }",
-              "description": "Visual shift state",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -7626,7 +7600,6 @@
                   }
                 }
               ],
-              "description": "Whether a target slot allows multiple items via match-max.\n`0` means unlimited in QTI.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -7639,7 +7612,6 @@
               "type": {
                 "text": "SortableDragContext"
               },
-              "description": "Sortable drag context for placeholder management",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -7653,7 +7625,6 @@
                 "text": "HTMLElement | null"
               },
               "default": "null",
-              "description": "Source slot when dragging from within a slot",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -7664,7 +7635,6 @@
               "name": "#temporarilyEnabledSlots",
               "privacy": "private",
               "default": "new Set<HTMLElement>()",
-              "description": "Tracks slots temporarily re-enabled during reorder drags",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -7693,7 +7663,6 @@
                   }
                 }
               ],
-              "description": "Allow reordering from slot to slot even when slots are marked disabled due to max rules.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -7710,7 +7679,6 @@
               },
               "privacy": "public",
               "default": "true",
-              "description": "Whether reordering within slots is enabled",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -7731,7 +7699,6 @@
                   "default": "true"
                 }
               ],
-              "description": "Clean up sortable-specific state.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -7754,7 +7721,6 @@
                   }
                 }
               ],
-              "description": "Determines if an element is inside a tracked droppable (slot).\nReturns the containing droppable, or null if in inventory.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -7783,7 +7749,6 @@
                   }
                 }
               ],
-              "description": "Extend base drag move with sortable hover/swap behavior for slot-originated drags.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -7812,7 +7777,6 @@
                   }
                 }
               ],
-              "description": "Override handleDrop to clean up sortable state after drop.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -7838,7 +7802,6 @@
                   }
                 }
               ],
-              "description": "Override handleInvalidDrop to clean up sortable state.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -7888,7 +7851,6 @@
                   }
                 }
               ],
-              "description": "Override initiateDrag to set up placeholder for slot-originated drags.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -7903,7 +7865,6 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Whether the current drag originated from a slot",
               "readonly": true,
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
@@ -7933,7 +7894,6 @@
                   }
                 }
               ],
-              "description": "Process drag move for sortable behavior.\nCalled from the drag move observable.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -7950,7 +7910,6 @@
               },
               "privacy": "public",
               "default": "{ duration: 150, easing: 'ease' }",
-              "description": "Animation configuration for sortable operations",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -7964,7 +7923,6 @@
               },
               "privacy": "public",
               "default": "{}",
-              "description": "Placeholder styling configuration",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -8850,7 +8808,6 @@
                   }
                 }
               ],
-              "description": "Get the item in a slot (if any)",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -8939,7 +8896,6 @@
                   }
                 }
               ],
-              "description": "Perform visual swap when hovering over an occupied slot\nThe item in the target slot moves to the source slot (swap preview)",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -8972,7 +8928,6 @@
                   "text": "void"
                 }
               },
-              "description": "Reset shift state",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -8987,7 +8942,6 @@
                   "text": "void"
                 }
               },
-              "description": "Revert all visual swaps back to original positions",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -9001,7 +8955,6 @@
                 "text": "ShiftState"
               },
               "default": "{ hoveredSlot: null, originalPositions: new Map() }",
-              "description": "Visual shift state",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -9024,7 +8977,6 @@
                   }
                 }
               ],
-              "description": "Whether a target slot allows multiple items via match-max.\n`0` means unlimited in QTI.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -9037,7 +8989,6 @@
               "type": {
                 "text": "SortableDragContext"
               },
-              "description": "Sortable drag context for placeholder management",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -9051,7 +9002,6 @@
                 "text": "HTMLElement | null"
               },
               "default": "null",
-              "description": "Source slot when dragging from within a slot",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -9062,7 +9012,6 @@
               "name": "#temporarilyEnabledSlots",
               "privacy": "private",
               "default": "new Set<HTMLElement>()",
-              "description": "Tracks slots temporarily re-enabled during reorder drags",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -9091,7 +9040,6 @@
                   }
                 }
               ],
-              "description": "Allow reordering from slot to slot even when slots are marked disabled due to max rules.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -9108,7 +9056,6 @@
               },
               "privacy": "public",
               "default": "true",
-              "description": "Whether reordering within slots is enabled",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -9129,7 +9076,6 @@
                   "default": "true"
                 }
               ],
-              "description": "Clean up sortable-specific state.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -9152,7 +9098,6 @@
                   }
                 }
               ],
-              "description": "Determines if an element is inside a tracked droppable (slot).\nReturns the containing droppable, or null if in inventory.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -9181,7 +9126,6 @@
                   }
                 }
               ],
-              "description": "Extend base drag move with sortable hover/swap behavior for slot-originated drags.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -9210,7 +9154,6 @@
                   }
                 }
               ],
-              "description": "Override handleDrop to clean up sortable state after drop.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -9236,7 +9179,6 @@
                   }
                 }
               ],
-              "description": "Override handleInvalidDrop to clean up sortable state.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -9286,7 +9228,6 @@
                   }
                 }
               ],
-              "description": "Override initiateDrag to set up placeholder for slot-originated drags.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -9301,7 +9242,6 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Whether the current drag originated from a slot",
               "readonly": true,
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
@@ -9331,7 +9271,6 @@
                   }
                 }
               ],
-              "description": "Process drag move for sortable behavior.\nCalled from the drag move observable.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -9361,7 +9300,6 @@
               },
               "privacy": "public",
               "default": "{ duration: 150, easing: 'ease' }",
-              "description": "Animation configuration for sortable operations",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -9375,7 +9313,6 @@
               },
               "privacy": "public",
               "default": "{}",
-              "description": "Placeholder styling configuration",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -13339,7 +13276,6 @@
                   }
                 }
               ],
-              "description": "Get the item in a slot (if any)",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -13446,7 +13382,6 @@
                   }
                 }
               ],
-              "description": "Perform visual swap when hovering over an occupied slot\nThe item in the target slot moves to the source slot (swap preview)",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -13461,7 +13396,6 @@
                   "text": "void"
                 }
               },
-              "description": "Reset shift state",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -13476,7 +13410,6 @@
                   "text": "void"
                 }
               },
-              "description": "Revert all visual swaps back to original positions",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -13490,7 +13423,6 @@
                 "text": "ShiftState"
               },
               "default": "{ hoveredSlot: null, originalPositions: new Map() }",
-              "description": "Visual shift state",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -13513,7 +13445,6 @@
                   }
                 }
               ],
-              "description": "Whether a target slot allows multiple items via match-max.\n`0` means unlimited in QTI.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -13526,7 +13457,6 @@
               "type": {
                 "text": "SortableDragContext"
               },
-              "description": "Sortable drag context for placeholder management",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -13540,7 +13470,6 @@
                 "text": "HTMLElement | null"
               },
               "default": "null",
-              "description": "Source slot when dragging from within a slot",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -13551,7 +13480,6 @@
               "name": "#temporarilyEnabledSlots",
               "privacy": "private",
               "default": "new Set<HTMLElement>()",
-              "description": "Tracks slots temporarily re-enabled during reorder drags",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -13580,7 +13508,6 @@
                   }
                 }
               ],
-              "description": "Allow reordering from slot to slot even when slots are marked disabled due to max rules.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -13597,7 +13524,6 @@
               },
               "privacy": "public",
               "default": "true",
-              "description": "Whether reordering within slots is enabled",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -13627,7 +13553,6 @@
                   "default": "true"
                 }
               ],
-              "description": "Clean up sortable-specific state.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -13659,7 +13584,6 @@
                   }
                 }
               ],
-              "description": "Determines if an element is inside a tracked droppable (slot).\nReturns the containing droppable, or null if in inventory.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -13688,7 +13612,6 @@
                   }
                 }
               ],
-              "description": "Extend base drag move with sortable hover/swap behavior for slot-originated drags.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -13717,7 +13640,6 @@
                   }
                 }
               ],
-              "description": "Override handleDrop to clean up sortable state after drop.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -13743,7 +13665,6 @@
                   }
                 }
               ],
-              "description": "Override handleInvalidDrop to clean up sortable state.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -13803,7 +13724,6 @@
                   }
                 }
               ],
-              "description": "Override initiateDrag to set up placeholder for slot-originated drags.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -13818,7 +13738,6 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Whether the current drag originated from a slot",
               "readonly": true,
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
@@ -13857,7 +13776,6 @@
                   }
                 }
               ],
-              "description": "Process drag move for sortable behavior.\nCalled from the drag move observable.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -13890,7 +13808,6 @@
               },
               "privacy": "public",
               "default": "{ duration: 150, easing: 'ease' }",
-              "description": "Animation configuration for sortable operations",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -13904,7 +13821,6 @@
               },
               "privacy": "public",
               "default": "{}",
-              "description": "Placeholder styling configuration",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -14742,7 +14658,6 @@
                   }
                 }
               ],
-              "description": "Get the item in a slot (if any)",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -14831,7 +14746,6 @@
                   }
                 }
               ],
-              "description": "Perform visual swap when hovering over an occupied slot\nThe item in the target slot moves to the source slot (swap preview)",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -14846,7 +14760,6 @@
                   "text": "void"
                 }
               },
-              "description": "Reset shift state",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -14861,7 +14774,6 @@
                   "text": "void"
                 }
               },
-              "description": "Revert all visual swaps back to original positions",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -14875,7 +14787,6 @@
                 "text": "ShiftState"
               },
               "default": "{ hoveredSlot: null, originalPositions: new Map() }",
-              "description": "Visual shift state",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -14898,7 +14809,6 @@
                   }
                 }
               ],
-              "description": "Whether a target slot allows multiple items via match-max.\n`0` means unlimited in QTI.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -14911,7 +14821,6 @@
               "type": {
                 "text": "SortableDragContext"
               },
-              "description": "Sortable drag context for placeholder management",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -14925,7 +14834,6 @@
                 "text": "HTMLElement | null"
               },
               "default": "null",
-              "description": "Source slot when dragging from within a slot",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -14936,7 +14844,6 @@
               "name": "#temporarilyEnabledSlots",
               "privacy": "private",
               "default": "new Set<HTMLElement>()",
-              "description": "Tracks slots temporarily re-enabled during reorder drags",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -14965,7 +14872,6 @@
                   }
                 }
               ],
-              "description": "Allow reordering from slot to slot even when slots are marked disabled due to max rules.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -14982,7 +14888,6 @@
               },
               "privacy": "public",
               "default": "true",
-              "description": "Whether reordering within slots is enabled",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -15011,7 +14916,6 @@
                   "default": "true"
                 }
               ],
-              "description": "Clean up sortable-specific state.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -15042,7 +14946,6 @@
                   }
                 }
               ],
-              "description": "Determines if an element is inside a tracked droppable (slot).\nReturns the containing droppable, or null if in inventory.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -15096,7 +14999,6 @@
                   }
                 }
               ],
-              "description": "Extend base drag move with sortable hover/swap behavior for slot-originated drags.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -15125,7 +15027,6 @@
                   }
                 }
               ],
-              "description": "Override handleDrop to clean up sortable state after drop.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -15151,7 +15052,6 @@
                   }
                 }
               ],
-              "description": "Override handleInvalidDrop to clean up sortable state.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -15201,7 +15101,6 @@
                   }
                 }
               ],
-              "description": "Override initiateDrag to set up placeholder for slot-originated drags.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -15216,7 +15115,6 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Whether the current drag originated from a slot",
               "readonly": true,
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
@@ -15255,7 +15153,6 @@
                   }
                 }
               ],
-              "description": "Process drag move for sortable behavior.\nCalled from the drag move observable.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -15303,7 +15200,6 @@
               },
               "privacy": "public",
               "default": "{ duration: 150, easing: 'ease' }",
-              "description": "Animation configuration for sortable operations",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -15317,7 +15213,6 @@
               },
               "privacy": "public",
               "default": "{}",
-              "description": "Placeholder styling configuration",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -22968,7 +22863,7 @@
       "declarations": [
         {
           "kind": "mixin",
-          "description": "Enhances a DragDropSlotted mixin with visual sortable feedback.\n\nFor QTI Order interaction with match-max=1 per slot:\n- Shows placeholder in source slot during drag\n- Items visually swap when hovering over occupied slots\n- Delegates all drop handling to parent slotted mixin",
+          "description": "",
           "name": "DragDropSlottedSortableMixin",
           "members": [
             {
@@ -22987,8 +22882,7 @@
                     "text": "HTMLElement"
                   }
                 }
-              ],
-              "description": "Get the item in a slot (if any)"
+              ]
             },
             {
               "kind": "method",
@@ -23060,8 +22954,7 @@
                     "text": "HTMLElement"
                   }
                 }
-              ],
-              "description": "Perform visual swap when hovering over an occupied slot\nThe item in the target slot moves to the source slot (swap preview)"
+              ]
             },
             {
               "kind": "method",
@@ -23071,8 +22964,7 @@
                 "type": {
                   "text": "void"
                 }
-              },
-              "description": "Reset shift state"
+              }
             },
             {
               "kind": "method",
@@ -23082,8 +22974,7 @@
                 "type": {
                   "text": "void"
                 }
-              },
-              "description": "Revert all visual swaps back to original positions"
+              }
             },
             {
               "kind": "field",
@@ -23092,8 +22983,7 @@
               "type": {
                 "text": "ShiftState"
               },
-              "default": "{ hoveredSlot: null, originalPositions: new Map() }",
-              "description": "Visual shift state"
+              "default": "{ hoveredSlot: null, originalPositions: new Map() }"
             },
             {
               "kind": "method",
@@ -23111,8 +23001,7 @@
                     "text": "HTMLElement"
                   }
                 }
-              ],
-              "description": "Whether a target slot allows multiple items via match-max.\n`0` means unlimited in QTI."
+              ]
             },
             {
               "kind": "field",
@@ -23120,8 +23009,7 @@
               "privacy": "private",
               "type": {
                 "text": "SortableDragContext"
-              },
-              "description": "Sortable drag context for placeholder management"
+              }
             },
             {
               "kind": "field",
@@ -23130,15 +23018,13 @@
               "type": {
                 "text": "HTMLElement | null"
               },
-              "default": "null",
-              "description": "Source slot when dragging from within a slot"
+              "default": "null"
             },
             {
               "kind": "field",
               "name": "#temporarilyEnabledSlots",
               "privacy": "private",
-              "default": "new Set<HTMLElement>()",
-              "description": "Tracks slots temporarily re-enabled during reorder drags"
+              "default": "new Set<HTMLElement>()"
             },
             {
               "kind": "method",
@@ -23162,8 +23048,7 @@
                     "text": "HTMLElement"
                   }
                 }
-              ],
-              "description": "Allow reordering from slot to slot even when slots are marked disabled due to max rules."
+              ]
             },
             {
               "kind": "field",
@@ -23172,8 +23057,7 @@
                 "text": "boolean"
               },
               "privacy": "public",
-              "default": "true",
-              "description": "Whether reordering within slots is enabled"
+              "default": "true"
             },
             {
               "kind": "method",
@@ -23189,8 +23073,7 @@
                   "name": "revertSwaps",
                   "default": "true"
                 }
-              ],
-              "description": "Clean up sortable-specific state."
+              ]
             },
             {
               "kind": "method",
@@ -23208,8 +23091,7 @@
                     "text": "HTMLElement"
                   }
                 }
-              ],
-              "description": "Determines if an element is inside a tracked droppable (slot).\nReturns the containing droppable, or null if in inventory."
+              ]
             },
             {
               "kind": "method",
@@ -23233,8 +23115,7 @@
                     "text": "number"
                   }
                 }
-              ],
-              "description": "Extend base drag move with sortable hover/swap behavior for slot-originated drags."
+              ]
             },
             {
               "kind": "method",
@@ -23258,8 +23139,7 @@
                     "text": "HTMLElement"
                   }
                 }
-              ],
-              "description": "Override handleDrop to clean up sortable state after drop."
+              ]
             },
             {
               "kind": "method",
@@ -23277,8 +23157,7 @@
                     "text": "HTMLElement | null"
                   }
                 }
-              ],
-              "description": "Override handleInvalidDrop to clean up sortable state."
+              ]
             },
             {
               "kind": "method",
@@ -23320,8 +23199,7 @@
                     "text": "[eventSource?: 'pointer' | 'mouse' | 'touch']"
                   }
                 }
-              ],
-              "description": "Override initiateDrag to set up placeholder for slot-originated drags."
+              ]
             },
             {
               "kind": "field",
@@ -23329,7 +23207,6 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Whether the current drag originated from a slot",
               "readonly": true
             },
             {
@@ -23354,8 +23231,7 @@
                     "text": "number"
                   }
                 }
-              ],
-              "description": "Process drag move for sortable behavior.\nCalled from the drag move observable."
+              ]
             },
             {
               "kind": "field",
@@ -23364,8 +23240,7 @@
                 "text": "FlipAnimationOptions"
               },
               "privacy": "public",
-              "default": "{ duration: 150, easing: 'ease' }",
-              "description": "Animation configuration for sortable operations"
+              "default": "{ duration: 150, easing: 'ease' }"
             },
             {
               "kind": "field",
@@ -23374,8 +23249,7 @@
                 "text": "PlaceholderConfig"
               },
               "privacy": "public",
-              "default": "{}",
-              "description": "Placeholder styling configuration"
+              "default": "{}"
             }
           ],
           "parameters": [
@@ -23383,13 +23257,11 @@
               "name": "superClass",
               "type": {
                 "text": "T"
-              },
-              "description": "A class that has been mixed with DragDropSlottedMixin"
+              }
             },
             {
               "name": "sortableItemSelector",
-              "default": "'[qti-draggable=\"true\"]'",
-              "description": "Selector for sortable items"
+              "default": "'[qti-draggable=\"true\"]'"
             }
           ]
         }
