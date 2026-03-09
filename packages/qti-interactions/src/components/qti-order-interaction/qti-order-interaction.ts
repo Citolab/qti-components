@@ -3,17 +3,20 @@ import { property, state } from 'lit/decorators.js';
 
 import { Interaction } from '@qti-components/base';
 
-import { DragDropInteractionMixin } from '../../mixins/drag-drop';
+import { DragDropSlottedMixin, DragDropSlottedSortableMixin } from '../../mixins/drag-drop-observables';
 import styles from './qti-order-interaction.styles';
 
 import type { PropertyValueMap } from 'lit';
 import type { QtiSimpleChoice } from '../../elements/qti-simple-choice';
-export class QtiOrderInteraction extends DragDropInteractionMixin(
+
+const SlottedBase = DragDropSlottedMixin(
   Interaction,
   `qti-simple-choice`,
   'drop-list',
   `slot[part='drags']`
-) {
+);
+
+export class QtiOrderInteraction extends DragDropSlottedSortableMixin(SlottedBase, '[qti-draggable="true"]') {
   static override styles = styles;
   protected childrenMap: Element[];
 
@@ -111,6 +114,10 @@ export class QtiOrderInteraction extends DragDropInteractionMixin(
       return [...identifiers].join(' ');
     });
     return response;
+  }
+
+  public override shouldTreatBlockedMaxAsInvalid(): boolean {
+    return false;
   }
 
   override async firstUpdated() {

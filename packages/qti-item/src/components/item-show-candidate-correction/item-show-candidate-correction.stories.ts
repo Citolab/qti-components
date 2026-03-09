@@ -622,14 +622,17 @@ export const GapMatch: Story = {
     </qti-item>`,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const interaction = await getAssessmentItemFromItemContainer(canvasElement);
+    const assessmentItem = await getAssessmentItemFromItemContainer(canvasElement);
+    const gapMatchInteraction = assessmentItem.querySelector('qti-gap-match-interaction') as QtiGapMatchInteraction;
+    // Sortable gap-match now supports reordering from placed items; allow the story to place two drags.
+    gapMatchInteraction.setAttribute('max-associations', '2');
 
     const showCorrectButton = await canvas.findByShadowText(/Show candidate correction/i);
 
     const matchItem1 = (await canvas.findByShadowText('winter')) as QtiGapMatchInteraction;
     const matchItem2 = (await canvas.findByShadowText('spring')) as QtiGapMatchInteraction;
 
-    const dropZones = interaction.querySelectorAll(`qti-gap`);
+    const dropZones = assessmentItem.querySelectorAll(`qti-gap`);
 
     const dropZone1 = dropZones[0];
     const dropZone2 = dropZones[1];
@@ -640,10 +643,13 @@ export const GapMatch: Story = {
       await showCorrectButton.click();
 
       await step('Verify candidate correction state is applied', async () => {
-        const matchItem1List = Array.from(await canvas.findAllByShadowText('winter'));
-        const matchItem1CandidateResponse = matchItem1List[1] as QtiGapMatchInteraction;
-        const matchItem2List = Array.from(await canvas.findAllByShadowText('spring'));
-        const matchItem2CandidateResponse = matchItem2List[1] as QtiGapMatchInteraction;
+        const matchItem1CandidateResponse = dropZone1.querySelector('qti-gap-text[identifier="W"]') as QtiGapMatchInteraction;
+        const matchItem2CandidateResponse = dropZone2.querySelector(
+          'qti-gap-text[identifier="Sp"]'
+        ) as QtiGapMatchInteraction;
+
+        expect(matchItem1CandidateResponse).toBeTruthy();
+        expect(matchItem2CandidateResponse).toBeTruthy();
 
         expect(matchItem1CandidateResponse.internals.states.has('candidate-correct')).toBe(true);
         expect(matchItem2CandidateResponse.internals.states.has('candidate-correct')).toBe(false);

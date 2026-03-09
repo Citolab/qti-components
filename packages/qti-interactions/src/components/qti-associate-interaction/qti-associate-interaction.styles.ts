@@ -19,6 +19,15 @@ export default css`
     background-color: var(--qti-bg-active) !important;
   }
 
+  [part='drop-list'] {
+    display: grid;
+    min-height: 3rem;
+    min-width: 10rem;
+    border: 1px solid var(--qti-border-color, #d1d5db);
+    border-radius: 0.25rem;
+    box-sizing: border-box;
+  }
+
   [part='drop-container'] {
     display: flex;
     flex-direction: column;

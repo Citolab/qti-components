@@ -2,18 +2,22 @@ import { html } from 'lit';
 import { state } from 'lit/decorators.js';
 
 import { Interaction } from '@qti-components/base';
+import { DragDropSlottedMixin, DragDropSlottedSortableMixin } from '@qti-components/interactions/mixins/drag-drop-observables';
 
-import { DragDropInteractionMixin } from '../../mixins/drag-drop';
+// import { DragDropInteractionMixin } from '../../mixins/drag-drop';
 import styles from './qti-associate-interaction.styles';
 
 import type { QtiSimpleAssociableChoice } from '../../elements/qti-simple-associable-choice';
 import type { CSSResultGroup } from 'lit';
-export class QtiAssociateInteraction extends DragDropInteractionMixin(
+const SlottedBase = DragDropSlottedMixin(
   Interaction,
   'qti-simple-associable-choice',
   '.dl',
-  `slot[name='qti-simple-associable-choice']`
-) {
+  `slot[name='qti-simple-associable-choice']`,
+  'pointerWithin'
+);
+
+export class QtiAssociateInteraction extends DragDropSlottedSortableMixin(SlottedBase, '[qti-draggable="true"]') {
   static override styles: CSSResultGroup = styles;
   @state() protected _childrenMap: Element[] = [];
 
@@ -31,9 +35,9 @@ export class QtiAssociateInteraction extends DragDropInteractionMixin(
     const origin = event.composedPath()[0] as HTMLElement;
     // Ignore clones placed in shadow DOM drop zones — only register light DOM choices
     if (this.shadowRoot?.contains(origin)) return;
-    const choice = event.target as QtiSimpleAssociableChoice;
+    const choice = origin as QtiSimpleAssociableChoice;
     if (!this._childrenMap.includes(choice)) {
-      this._childrenMap.push(choice);
+      this._childrenMap = [...this._childrenMap, choice];
     }
   }
 
@@ -77,6 +81,13 @@ export class QtiAssociateInteraction extends DragDropInteractionMixin(
 
         <div role="alert" part="message" id="validation-message"></div>
       </div>`;
+  }
+
+  protected override updated(changedProperties: Map<string, unknown>): void {
+    super.updated(changedProperties);
+    if (changedProperties.has('_childrenMap')) {
+      this.cacheInteractiveElements();
+    }
   }
 
   override disconnectedCallback() {

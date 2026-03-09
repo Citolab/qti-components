@@ -148,7 +148,7 @@ export const Q10_L1_D6: Story = {
   loaders: [loader]
 };
 
-// Q10-L1-D7: A->0, B->1, C->2, then move A from 0 to 2 (occupied) => ['A','B','C']
+// Q10-L1-D7: A->0, B->1, C->2, then move A from 0 to 2 (occupied) => ['C','B','A'] via sortable swap
 export const Q10_L1_D7: Story = {
   name: 'Q10-L1-D7',
   render: (_, { loaded: { xml } }) => xml,
@@ -166,7 +166,7 @@ export const Q10_L1_D7: Story = {
     await settle();
 
     assessmentItem.processResponse();
-    expect(getResponse(assessmentItem)).toEqual(['A', 'B', 'C']);
+    expect(getResponse(assessmentItem)).toEqual(['C', 'B', 'A']);
   },
   loaders: [loader]
 };

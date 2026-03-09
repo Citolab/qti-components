@@ -252,6 +252,20 @@ const withImagesTemplate = html`
   </qti-match-interaction>
 `;
 
+const duplicateDropRegressionTemplate = html`
+  <qti-match-interaction data-testid="match-interaction-duplicates" response-identifier="RESPONSE" max-associations="3">
+    <qti-simple-match-set>
+      <qti-simple-associable-choice identifier="A" match-max="0">Alpha</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="B" match-max="0">Beta</qti-simple-associable-choice>
+    </qti-simple-match-set>
+    <qti-simple-match-set>
+      <qti-simple-associable-choice identifier="T1" match-max="1">Target 1</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="T2" match-max="1">Target 2</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="T3" match-max="1">Target 3</qti-simple-associable-choice>
+    </qti-simple-match-set>
+  </qti-match-interaction>
+`;
+
 export const Test: Story = {
   render: () => testTemplate,
   play: async ({ canvasElement, step }) => {
@@ -350,27 +364,191 @@ export const Test2: Story = {
 
 export const DragMultiple: Story = {
   render: () => multipleAssociationsTemplate,
-  play: async () => {}
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const interaction = canvasElement.querySelector('qti-match-interaction') as QtiMatchInteraction;
+    const onResponse = fn((e: CustomEvent<{ response: string[] }>) => e.detail.response);
+    interaction.addEventListener('qti-interaction-response', onResponse as EventListener);
+
+    try {
+      const french = canvas.getByText('French');
+      const dutch = canvas.getByText('Dutch');
+      const paris = canvas.getByText('Paris');
+      const amsterdam = canvas.getByText('Amsterdam');
+
+      await step('Drag French to Paris', async () => {
+        await drag(french, { to: paris, duration: 400 });
+        expect(paris).toHaveTextContent('French');
+      });
+
+      await step('Drag Dutch to Amsterdam and emit directed-pair response', async () => {
+        await drag(dutch, { to: amsterdam, duration: 400 });
+        expect(amsterdam).toHaveTextContent('Dutch');
+        expect(onResponse).toHaveBeenCalled();
+        const lastResponse = onResponse.mock.calls.at(-1)?.[0]?.detail.response || [];
+        expect(lastResponse).toContain('french paris');
+        expect(lastResponse).toContain('dutch amsterdam');
+      });
+    } finally {
+      interaction.removeEventListener('qti-interaction-response', onResponse as EventListener);
+    }
+  }
 };
 
 export const DragMultiple2: Story = {
   render: () => multipleAssociations2Template,
-  play: async () => {}
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const interaction = canvasElement.querySelector('qti-match-interaction') as QtiMatchInteraction;
+    const onResponse = fn((e: CustomEvent<{ response: string[] }>) => e.detail.response);
+    interaction.addEventListener('qti-interaction-response', onResponse as EventListener);
+
+    try {
+      const endothermic = canvas.getByText('Endothermic');
+      const liveYoung = canvas.getByText('Bear Live Young');
+      const birds = canvas.getByText('Birds');
+      const mammals = canvas.getByText('Mammals');
+
+      await step('Drag Endothermic to Birds', async () => {
+        await drag(endothermic, { to: birds, duration: 400 });
+        expect(birds).toHaveTextContent('Endothermic');
+      });
+
+      await step('Drag Bear Live Young to Mammals and verify response pairs', async () => {
+        await drag(liveYoung, { to: mammals, duration: 400 });
+        expect(mammals).toHaveTextContent('Bear Live Young');
+        const lastResponse = onResponse.mock.calls.at(-1)?.[0]?.detail.response || [];
+        expect(lastResponse).toContain('r2 h1');
+        expect(lastResponse).toContain('r4 h3');
+      });
+    } finally {
+      interaction.removeEventListener('qti-interaction-response', onResponse as EventListener);
+    }
+  }
 };
 
 export const OptionsRight: Story = {
   render: () => optionsRightTemplate,
-  play: async () => {}
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const interaction = canvasElement.querySelector('qti-match-interaction') as QtiMatchInteraction;
+    const onResponse = fn((e: CustomEvent<{ response: string[] }>) => e.detail.response);
+    interaction.addEventListener('qti-interaction-response', onResponse as EventListener);
+
+    try {
+      const berlin = canvas.getByText('Berlijn');
+      const amsterdamCity = canvas.getByText('Amsterdam');
+      const germany = canvas.getByText('Duitsland');
+      const netherlands = canvas.getByText('Nederland');
+
+      await step('Drag Berlijn to Duitsland', async () => {
+        await drag(berlin, { to: germany, duration: 400 });
+        expect(germany).toHaveTextContent('Berlijn');
+      });
+
+      await step('Drag Amsterdam to Nederland and verify directional identifiers', async () => {
+        await drag(amsterdamCity, { to: netherlands, duration: 400 });
+        expect(netherlands).toHaveTextContent('Amsterdam');
+        const lastResponse = onResponse.mock.calls.at(-1)?.[0]?.detail.response || [];
+        expect(lastResponse).toContain('A1 B1');
+        expect(lastResponse).toContain('A2 B2');
+      });
+    } finally {
+      interaction.removeEventListener('qti-interaction-response', onResponse as EventListener);
+    }
+  }
 };
 
 export const ManyOptions: Story = {
   render: () => manyOptionsTemplate,
-  play: async () => {}
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const interaction = canvasElement.querySelector('qti-match-interaction') as QtiMatchInteraction;
+    const onResponse = fn((e: CustomEvent<{ response: string[] }>) => e.detail.response);
+    interaction.addEventListener('qti-interaction-response', onResponse as EventListener);
+
+    try {
+      const ribosomes = canvas.getByText('ribosomen');
+      const proteinSynthesis = canvas.getByText('aanmaak van eiwitten');
+
+      await step('Drag ribosomen to aanmaak van eiwitten', async () => {
+        await drag(ribosomes, { to: proteinSynthesis, duration: 400 });
+        expect(proteinSynthesis).toHaveTextContent('ribosomen');
+        const lastResponse = onResponse.mock.calls.at(-1)?.[0]?.detail.response || [];
+        expect(lastResponse).toContain('A2 B2');
+      });
+    } finally {
+      interaction.removeEventListener('qti-interaction-response', onResponse as EventListener);
+    }
+  }
 };
 
 export const WithImages: Story = {
   render: () => withImagesTemplate,
-  play: async () => {}
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const interaction = canvasElement.querySelector('qti-match-interaction') as QtiMatchInteraction;
+    const onResponse = fn((e: CustomEvent<{ response: string[] }>) => e.detail.response);
+    interaction.addEventListener('qti-interaction-response', onResponse as EventListener);
+
+    try {
+      const ernie = canvas.getByText('Ernie');
+      const imageTargets = canvas.getAllByAltText('afbeelding');
+      const firstTarget = imageTargets[0].closest('qti-simple-associable-choice') as HTMLElement;
+
+      await step('Drag Ernie to first image target', async () => {
+        await drag(ernie, { to: firstTarget, duration: 400 });
+        expect(firstTarget).toHaveTextContent('Ernie');
+        const lastResponse = onResponse.mock.calls.at(-1)?.[0]?.detail.response || [];
+        expect(lastResponse).toContain('A1 B1');
+      });
+    } finally {
+      interaction.removeEventListener('qti-interaction-response', onResponse as EventListener);
+    }
+  }
+};
+
+export const DuplicateDropIsolationRegression: Story = {
+  name: 'Regression: duplicate source remains in other targets after blocked move',
+  render: () => duplicateDropRegressionTemplate,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const interaction = canvas.getByTestId<QtiMatchInteraction>('match-interaction-duplicates');
+    await interaction.updateComplete;
+
+    const alpha = canvas.getByText('Alpha');
+    const beta = canvas.getByText('Beta');
+    const target1 = canvas.getByText('Target 1');
+    const target2 = canvas.getByText('Target 2');
+    const target3 = canvas.getByText('Target 3');
+
+    await step('Place Alpha on two different targets (duplicate allowed from inventory)', async () => {
+      await drag(alpha, { to: target1, duration: 350 });
+      await drag(alpha, { to: target2, duration: 350 });
+
+      expect(target1).toHaveTextContent('Alpha');
+      expect(target2).toHaveTextContent('Alpha');
+    });
+
+    await step('Fill third target with Beta while Alpha remains in Targets 1 and 2', async () => {
+      await drag(beta, { to: target3, duration: 350 });
+      expect(target3).toHaveTextContent('Beta');
+    });
+
+    await step('Moving Alpha from Target 2 into occupied Target 3 should not clear other Alpha placements', async () => {
+      const alphaInTarget2 = await waitFor(() => {
+        const dropped = target2.querySelector('[identifier="A"][qti-draggable="true"]') as HTMLElement | null;
+        expect(dropped).not.toBeNull();
+        return dropped as HTMLElement;
+      });
+      await drag(alphaInTarget2, { to: target3, duration: 350 });
+
+      // Expected behavior: duplicate Alpha entries in other targets are preserved.
+      expect(target1).toHaveTextContent('Alpha');
+      expect(target2).toHaveTextContent('Alpha');
+      expect(target3).toHaveTextContent('Beta');
+    });
+  }
 };
 
 export const Tabular = {

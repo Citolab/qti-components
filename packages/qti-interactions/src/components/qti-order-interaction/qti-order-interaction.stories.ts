@@ -1,6 +1,6 @@
 import { html } from 'lit';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
-import { expect, fireEvent, fn } from 'storybook/test';
+import { expect, fn } from 'storybook/test';
 import { within } from 'shadow-dom-testing-library';
 
 import drag from '../../../../../tools/testing/drag';
@@ -19,6 +19,63 @@ type DragOptions = {
   steps?: number;
   duration?: number;
   offset?: { x: number; y: number };
+};
+
+type TouchCoords = {
+  clientX: number;
+  clientY: number;
+  pageX: number;
+  pageY: number;
+};
+
+const dispatchTouchSequence = (
+  target: EventTarget,
+  type: 'touchstart' | 'touchmove' | 'touchend' | 'touchcancel',
+  touches: TouchCoords[],
+  changedTouches: TouchCoords[]
+) => {
+  const supportsNativeTouch = typeof Touch === 'function' && typeof TouchEvent === 'function';
+
+  if (supportsNativeTouch) {
+    const touchTarget = target instanceof Element ? target : document.body;
+    const toTouch = (coords: TouchCoords, index: number) =>
+      new Touch({
+        identifier: index + 1,
+        target: touchTarget,
+        clientX: coords.clientX,
+        clientY: coords.clientY,
+        pageX: coords.pageX,
+        pageY: coords.pageY,
+        radiusX: 1,
+        radiusY: 1,
+        rotationAngle: 0,
+        force: 0.5
+      });
+
+    const nativeTouches = touches.map(toTouch);
+    const nativeChangedTouches = changedTouches.map(toTouch);
+    const event = new TouchEvent(type, {
+      bubbles: true,
+      cancelable: true,
+      composed: true,
+      touches: type === 'touchend' ? [] : nativeTouches,
+      targetTouches: type === 'touchend' ? [] : nativeTouches,
+      changedTouches: nativeChangedTouches
+    });
+    target.dispatchEvent(event);
+    return;
+  }
+
+  // Fallback for runtimes without native Touch constructor support.
+  const event = new Event(type, { bubbles: true, cancelable: true, composed: true }) as Event & {
+    touches: TouchCoords[];
+    targetTouches: TouchCoords[];
+    changedTouches: TouchCoords[];
+  };
+  Object.defineProperty(event, 'touches', { value: type === 'touchend' ? [] : touches });
+  Object.defineProperty(event, 'targetTouches', { value: type === 'touchend' ? [] : touches });
+  Object.defineProperty(event, 'changedTouches', { value: changedTouches });
+  target.dispatchEvent(event);
 };
 
 const waitForNextResponse = (interaction: QtiOrderInteraction, timeoutMs = 1500) =>
@@ -648,42 +705,6 @@ export const MaxAssociationsEnforced: Story = {
 };
 
 /**
- * A filled slot should keep its original choice (default match-max=1).
- * The dragged choice is resolved to another enabled dropzone when available.
- */
-export const OccupiedSlotRejectsSecondChoice: Story = {
-  name: 'Drag: occupied slot keeps first choice; second goes to next available slot',
-  render: () => html`
-    <qti-order-interaction data-testid="order-interaction" response-identifier="RESPONSE" orientation="horizontal">
-      <qti-simple-choice identifier="A">Choice A</qti-simple-choice>
-      <qti-simple-choice identifier="B">Choice B</qti-simple-choice>
-      <qti-simple-choice identifier="C">Choice C</qti-simple-choice>
-    </qti-order-interaction>
-  `,
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const interaction = canvas.getByTestId<QtiOrderInteraction>('order-interaction');
-    await interaction.updateComplete;
-
-    const choiceA = canvas.getByText<QtiSimpleChoice>('Choice A');
-    const choiceB = canvas.getByText<QtiSimpleChoice>('Choice B');
-    const drops = canvas.queryAllByShadowRole('region');
-
-    await step('Fill slot 0 with A', async () => {
-      await drag(choiceA, { to: drops[0], duration: 300 });
-      expect(drops[0]).toHaveTextContent('Choice A');
-    });
-
-    await step('Attempt to drop B in the same slot keeps only A', async () => {
-      await drag(choiceB, { to: drops[0], duration: 300 });
-      expect(drops[0]).toHaveTextContent('Choice A');
-      expect(getDropZone(interaction, 0).querySelectorAll('[qti-draggable="true"]').length).toBe(1);
-      expect(interaction.response).toEqual('A,B,');
-    });
-  }
-};
-
-/**
  * `response` setter supports empty placeholders for unfilled slots.
  */
 export const ResponseSetterWithEmptyPlaceholders: Story = {
@@ -790,11 +811,227 @@ export const TouchDragPath: Story = {
     };
 
     await step('Dispatch touch sequence from choice to slot 0', async () => {
-      fireEvent.touchStart(choiceA, { touches: [start], changedTouches: [start] });
-      fireEvent.touchMove(document, { touches: [end], changedTouches: [end] });
-      fireEvent.touchEnd(document, { touches: [], changedTouches: [end] });
+      dispatchTouchSequence(choiceA, 'touchstart', [start], [start]);
+      dispatchTouchSequence(document, 'touchmove', [end], [end]);
+      dispatchTouchSequence(document, 'touchend', [], [end]);
       expect(drop0).toHaveTextContent('Choice A');
       expect(interaction.response).toEqual('A,,');
     });
+  }
+};
+
+export const VerticalBasicPlacement: Story = {
+  name: 'Behavior: vertical basic placement',
+  render: () => html`
+    <qti-order-interaction data-testid="order-interaction" response-identifier="RESPONSE" orientation="vertical">
+      <qti-simple-choice identifier="A">Choice A</qti-simple-choice>
+      <qti-simple-choice identifier="B">Choice B</qti-simple-choice>
+      <qti-simple-choice identifier="C">Choice C</qti-simple-choice>
+    </qti-order-interaction>
+  `,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const interaction = canvas.getByTestId<QtiOrderInteraction>('order-interaction');
+    await settleInteraction(interaction);
+
+    const choiceA = canvas.getByText<QtiSimpleChoice>('Choice A');
+    const choiceB = canvas.getByText<QtiSimpleChoice>('Choice B');
+    const choiceC = canvas.getByText<QtiSimpleChoice>('Choice C');
+    const drops = canvas.queryAllByShadowRole('region');
+
+    const callback = fn((e: CustomEvent<{ response: string[] }>) => e.detail.response);
+    interaction.addEventListener('qti-interaction-response', callback as EventListener);
+
+    try {
+      await step('Place all choices in vertical mode', async () => {
+        await dragAndWait(interaction, choiceA, { to: drops[0] });
+        await dragAndWait(interaction, choiceB, { to: drops[1] });
+        await dragAndWait(interaction, choiceC, { to: drops[2] });
+        expect(drops[0]).toHaveTextContent('Choice A');
+        expect(drops[1]).toHaveTextContent('Choice B');
+        expect(drops[2]).toHaveTextContent('Choice C');
+      });
+
+      await step('Response reflects vertical placement order', async () => {
+        const lastResponse = callback.mock.calls.at(-1)?.[0].detail.response;
+        expect(lastResponse).toEqual(['A', 'B', 'C']);
+      });
+    } finally {
+      interaction.removeEventListener('qti-interaction-response', callback as EventListener);
+    }
+  }
+};
+
+export const VerticalInSlotReordering: Story = {
+  name: 'Behavior: vertical sortable swap across occupied slots',
+  render: () => html`
+    <qti-order-interaction data-testid="order-interaction" response-identifier="RESPONSE" orientation="vertical">
+      <qti-simple-choice identifier="A">Choice A</qti-simple-choice>
+      <qti-simple-choice identifier="B">Choice B</qti-simple-choice>
+      <qti-simple-choice identifier="C">Choice C</qti-simple-choice>
+    </qti-order-interaction>
+  `,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const interaction = canvas.getByTestId<QtiOrderInteraction>('order-interaction');
+    await settleInteraction(interaction);
+
+    const choiceA = canvas.getByText<QtiSimpleChoice>('Choice A');
+    const choiceB = canvas.getByText<QtiSimpleChoice>('Choice B');
+    const choiceC = canvas.getByText<QtiSimpleChoice>('Choice C');
+    const drops = canvas.queryAllByShadowRole('region');
+
+    const callback = fn((e: CustomEvent<{ response: string[] }>) => e.detail.response);
+    interaction.addEventListener('qti-interaction-response', callback as EventListener);
+
+    try {
+      await step('Place all choices first (vertical baseline)', async () => {
+        await dragAndWait(interaction, choiceA, { to: drops[0] });
+        await dragAndWait(interaction, choiceB, { to: drops[1] });
+        await dragAndWait(interaction, choiceC, { to: drops[2] });
+        expect(callback.mock.calls.at(-1)?.[0].detail.response).toEqual(['A', 'B', 'C']);
+      });
+
+      await step('Drag placed A from slot0 onto occupied slot1 to sortable-swap', async () => {
+        const placedA = getDropZone(interaction, 0).querySelector('[identifier="A"]') as HTMLElement;
+        await dragAndWait(interaction, placedA, { to: drops[1] });
+        expect(drops[0]).toHaveTextContent('Choice B');
+        expect(drops[1]).toHaveTextContent('Choice A');
+        expect(drops[2]).toHaveTextContent('Choice C');
+      });
+
+      await step('Response reflects vertical sortable swap', async () => {
+        const lastResponse = callback.mock.calls.at(-1)?.[0].detail.response;
+        expect(lastResponse).toEqual(['B', 'A', 'C']);
+      });
+    } finally {
+      interaction.removeEventListener('qti-interaction-response', callback as EventListener);
+    }
+  }
+};
+
+/**
+ * Tests the in-slot reordering capability provided by DragDropSlottedSortableMixin.
+ * When an item is dragged from within a drop slot, it uses sortable mode which enables
+ * reordering within that slot (or moving to another slot in sortable mode).
+ *
+ * This story demonstrates:
+ * - Placing items into slots (slotted mode)
+ * - Dragging a placed item triggers sortable mode (currentDragMode = 'sortable')
+ * - The allowReorder property can disable in-slot sorting
+ */
+export const InSlotReordering: Story = {
+  name: 'Behavior: sortable swap across occupied slots',
+  render: () => html`
+    <qti-order-interaction data-testid="order-interaction" response-identifier="RESPONSE" orientation="horizontal">
+      <qti-simple-choice identifier="A">Choice A</qti-simple-choice>
+      <qti-simple-choice identifier="B">Choice B</qti-simple-choice>
+      <qti-simple-choice identifier="C">Choice C</qti-simple-choice>
+    </qti-order-interaction>
+  `,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const interaction = canvas.getByTestId<QtiOrderInteraction>('order-interaction');
+    await interaction.updateComplete;
+    
+    // Additional wait for caching to complete
+    await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+    
+    const choiceA = canvas.getByText<QtiSimpleChoice>('Choice A');
+    const choiceB = canvas.getByText<QtiSimpleChoice>('Choice B');
+    const choiceC = canvas.getByText<QtiSimpleChoice>('Choice C');
+    const drops = canvas.queryAllByShadowRole('region');
+
+    const callback = fn(e => e.detail.response);
+    interaction.addEventListener('qti-interaction-response', callback);
+
+    try {
+      await step('Place all choices in slots (baseline)', async () => {
+        await dragAndWait(interaction, choiceA, { to: drops[0] });
+        await dragAndWait(interaction, choiceB, { to: drops[1] });
+        await dragAndWait(interaction, choiceC, { to: drops[2] });
+        expect(drops[0]).toHaveTextContent('Choice A');
+        expect(drops[1]).toHaveTextContent('Choice B');
+        expect(drops[2]).toHaveTextContent('Choice C');
+      });
+
+      await step('Baseline response reflects positions', async () => {
+        const lastResponse = callback.mock.calls.at(-1)?.[0].detail.response;
+        expect(lastResponse).toEqual(['A', 'B', 'C']);
+      });
+
+      await step('Drag placed A from slot0 onto occupied slot1 to trigger sortable swap', async () => {
+        const placedA = getDropZone(interaction, 0).querySelector('[identifier="A"]') as HTMLElement;
+        await dragAndWait(interaction, placedA, { to: drops[1] });
+        expect(drops[0]).toHaveTextContent('Choice B');
+        expect(drops[1]).toHaveTextContent('Choice A');
+        expect(drops[2]).toHaveTextContent('Choice C');
+      });
+
+      await step('Response updates after sortable swap', async () => {
+        const lastResponse = callback.mock.calls.at(-1)?.[0].detail.response;
+        expect(lastResponse).toEqual(['B', 'A', 'C']);
+      });
+    } finally {
+      interaction.removeEventListener('qti-interaction-response', callback);
+    }
+  }
+};
+
+/**
+ * Sortable behavior should still work when not all slots are filled.
+ * This specifically validates swap/reorder while one choice remains in inventory.
+ */
+export const InSlotReorderingPartial: Story = {
+  name: 'Behavior: sortable swap with one item still in inventory',
+  render: () => html`
+    <qti-order-interaction data-testid="order-interaction" response-identifier="RESPONSE" orientation="horizontal">
+      <qti-simple-choice identifier="A">Choice A</qti-simple-choice>
+      <qti-simple-choice identifier="B">Choice B</qti-simple-choice>
+      <qti-simple-choice identifier="C">Choice C</qti-simple-choice>
+    </qti-order-interaction>
+  `,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const interaction = canvas.getByTestId<QtiOrderInteraction>('order-interaction');
+    await interaction.updateComplete;
+    await settleInteraction(interaction);
+
+    const choiceA = canvas.getByText<QtiSimpleChoice>('Choice A');
+    const choiceB = canvas.getByText<QtiSimpleChoice>('Choice B');
+    const drops = canvas.queryAllByShadowRole('region');
+
+    const callback = fn((e: CustomEvent<{ response: string[] }>) => e.detail.response);
+    interaction.addEventListener('qti-interaction-response', callback as EventListener);
+
+    try {
+      await step('Place only A and B; keep C in inventory', async () => {
+        await dragAndWait(interaction, choiceA, { to: drops[0] });
+        await dragAndWait(interaction, choiceB, { to: drops[1] });
+        expect(drops[0]).toHaveTextContent('Choice A');
+        expect(drops[1]).toHaveTextContent('Choice B');
+        expect(drops[2]).not.toHaveTextContent('Choice C');
+      });
+
+      await step('Partial baseline response contains empty last slot', async () => {
+        const lastResponse = callback.mock.calls.at(-1)?.[0].detail.response;
+        expect(lastResponse).toEqual(['A', 'B', '']);
+      });
+
+      await step('Swap A and B by dragging placed A onto occupied slot1', async () => {
+        const placedA = getDropZone(interaction, 0).querySelector('[identifier="A"]') as HTMLElement;
+        await dragAndWait(interaction, placedA, { to: drops[1] });
+        expect(drops[0]).toHaveTextContent('Choice B');
+        expect(drops[1]).toHaveTextContent('Choice A');
+        expect(drops[2]).not.toHaveTextContent('Choice C');
+      });
+
+      await step('Response reflects sortable swap with unfilled trailing slot', async () => {
+        const lastResponse = callback.mock.calls.at(-1)?.[0].detail.response;
+        expect(lastResponse).toEqual(['B', 'A', '']);
+      });
+    } finally {
+      interaction.removeEventListener('qti-interaction-response', callback as EventListener);
+    }
   }
 };
