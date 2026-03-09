@@ -54,6 +54,17 @@ export default css`
     outline-offset: -2px;
   }
 
+  /* Candidate correction colors for choices placed inside drop-lists. */
+  drop-list [qti-draggable='true']:state(candidate-correct),
+  [part='qti-simple-choice']:state(candidate-correct) {
+    background-color: var(--qti-correct) !important;
+  }
+
+  drop-list [qti-draggable='true']:state(candidate-incorrect),
+  [part='qti-simple-choice']:state(candidate-incorrect) {
+    background-color: var(--qti-incorrect) !important;
+  }
+
   [part='container'] {
     display: flex;
     gap: 0.5rem;

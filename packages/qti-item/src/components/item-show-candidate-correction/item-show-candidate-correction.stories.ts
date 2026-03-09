@@ -659,3 +659,81 @@ export const GapMatch: Story = {
     });
   }
 };
+
+export const Order: Story = {
+  args: {
+    'item-url': 'assets/qti-test-package/items/order.xml'
+  },
+  render: args =>
+    html` <qti-item>
+      <div>
+        <item-container style="display: block;width: 400px; height: 350px;" item-url=${args['item-url'] as string}>
+          <template>
+            <style>
+              qti-assessment-item {
+                padding: 1rem;
+                display: block;
+                aspect-ratio: 4 / 3;
+                width: 800px;
+
+                border: 2px solid blue;
+                transform: scale(0.5);
+                transform-origin: top left;
+              }
+            </style>
+          </template>
+        </item-container>
+        <item-show-candidate-correction></item-show-candidate-correction>
+      </div>
+    </qti-item>`,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const assessmentItem = await getAssessmentItemFromItemContainer(canvasElement);
+    const interaction = assessmentItem.querySelector('qti-order-interaction');
+    const showButton = await canvas.findByShadowText(/Show candidate correction/i);
+
+    const drops = interaction.shadowRoot?.querySelectorAll('drop-list') ?? [];
+
+    await step('Create candidate response with one correct and two incorrect positions', async () => {
+      // Deterministic setup independent of shuffle/drag timing:
+      // Correct order is DriverC, DriverA, DriverB.
+      // We intentionally set DriverC, DriverB, DriverA.
+      interaction.response = ['DriverC', 'DriverB', 'DriverA'];
+      await interaction.updateComplete;
+      await showButton.click();
+    });
+
+    await step('Verify candidate correction states on placed choices', async () => {
+      const drop0Choice = drops[0].querySelector('qti-simple-choice[identifier="DriverC"]') as QtiSimpleChoice;
+      const drop1Choice = drops[1].querySelector('qti-simple-choice[identifier="DriverB"]') as QtiSimpleChoice;
+      const drop2Choice = drops[2].querySelector('qti-simple-choice[identifier="DriverA"]') as QtiSimpleChoice;
+
+      expect(drop0Choice).toBeTruthy();
+      expect(drop1Choice).toBeTruthy();
+      expect(drop2Choice).toBeTruthy();
+
+      expect(drop0Choice.internals.states.has('candidate-correct')).toBe(true);
+      expect(drop1Choice.internals.states.has('candidate-correct')).toBe(false);
+      expect(drop2Choice.internals.states.has('candidate-correct')).toBe(false);
+
+      expect(drop0Choice.internals.states.has('candidate-incorrect')).toBe(false);
+      expect(drop1Choice.internals.states.has('candidate-incorrect')).toBe(true);
+      expect(drop2Choice.internals.states.has('candidate-incorrect')).toBe(true);
+    });
+
+    await step('Hide candidate correction clears states', async () => {
+      await showButton.click();
+
+      const drop0Choice = drops[0].querySelector('qti-simple-choice[identifier="DriverC"]') as QtiSimpleChoice;
+      const drop1Choice = drops[1].querySelector('qti-simple-choice[identifier="DriverB"]') as QtiSimpleChoice;
+      const drop2Choice = drops[2].querySelector('qti-simple-choice[identifier="DriverA"]') as QtiSimpleChoice;
+
+      expect(drop0Choice.internals.states.has('candidate-correct')).toBe(false);
+      expect(drop1Choice.internals.states.has('candidate-correct')).toBe(false);
+      expect(drop2Choice.internals.states.has('candidate-correct')).toBe(false);
+      expect(drop0Choice.internals.states.has('candidate-incorrect')).toBe(false);
+      expect(drop1Choice.internals.states.has('candidate-incorrect')).toBe(false);
+      expect(drop2Choice.internals.states.has('candidate-incorrect')).toBe(false);
+    });
+  }
+};

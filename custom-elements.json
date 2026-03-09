@@ -14717,6 +14717,16 @@
           "members": [
             {
               "kind": "method",
+              "name": "#getCorrectOrderEntries",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Array<{ identifier: string; dropIndex: number }>"
+                }
+              }
+            },
+            {
+              "kind": "method",
               "name": "#getItemInSlot",
               "privacy": "private",
               "return": {
@@ -15311,6 +15321,27 @@
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "toggleCandidateCorrection",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "show",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "type": {
+                "text": "toggleCandidateCorrection(show: boolean) => void"
               }
             },
             {

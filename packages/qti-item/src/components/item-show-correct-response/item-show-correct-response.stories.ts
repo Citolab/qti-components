@@ -804,6 +804,49 @@ export const GraphicOrder: Story = {
   }
 };
 
+export const Order: Story = {
+  args: {
+    'item-url': 'assets/qti-test-package/items/order.xml'
+  },
+  render: args =>
+    html` <qti-item>
+      <div>
+        <item-container style="display: block;width: 400px; height: 350px;" item-url=${args['item-url'] as string}>
+          <template>
+            <style>
+              qti-assessment-item {
+                padding: 1rem;
+                display: block;
+                aspect-ratio: 4 / 3;
+                width: 800px;
+
+                border: 2px solid blue;
+                transform: scale(0.5);
+                transform-origin: top left;
+              }
+            </style>
+          </template>
+        </item-container>
+        <item-show-correct-response></item-show-correct-response>
+      </div>
+    </qti-item>`,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const item = await getAssessmentItemFromItemContainer(canvasElement);
+    const interaction = item.querySelector('qti-order-interaction');
+    const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0];
+
+    await step('Click on the Show Correct button', async () => {
+      await showCorrectButton.click();
+      const correctOptions = interaction.shadowRoot?.querySelectorAll('.correct-option') ?? [];
+      expect(correctOptions.length).toBe(3);
+      expect(correctOptions[0]).toHaveTextContent('Michael Schumacher');
+      expect(correctOptions[1]).toHaveTextContent('Rubens Barrichello');
+      expect(correctOptions[2]).toHaveTextContent('Jenson Button');
+    });
+  }
+};
+
 export const InlineChoiceInternalCorrectResponse: Story = {
   args: {
     'item-url': 'assets/qti-item/example-inline-choice.xml' // Set the new item URL here

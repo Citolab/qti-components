@@ -28,6 +28,26 @@ export class QtiOrderInteraction extends DragDropSlottedSortableMixin(SlottedBas
   @property({ type: String })
   public orientation: 'horizontal' | 'vertical';
 
+  #getCorrectOrderEntries(): Array<{ identifier: string; dropIndex: number }> {
+    const responseVariable = this.responseVariable;
+    if (!responseVariable?.correctResponse) {
+      return [];
+    }
+
+    const response = Array.isArray(responseVariable.correctResponse)
+      ? responseVariable.correctResponse
+      : [responseVariable.correctResponse];
+
+    return response
+      .map((entry, index) => {
+        const [identifier, dropId] = entry.split(' ');
+        const parsedDropIndex = dropId?.startsWith('droplist') ? parseInt(dropId.replace('droplist', ''), 10) : index;
+        const dropIndex = Number.isNaN(parsedDropIndex) ? index : parsedDropIndex;
+        return { identifier, dropIndex };
+      })
+      .filter(entry => Boolean(entry.identifier));
+  }
+
   override render() {
     const choices = Array.from(this.querySelectorAll('qti-simple-choice'));
     if (this.nrChoices < choices.length) {
@@ -46,41 +66,30 @@ export class QtiOrderInteraction extends DragDropSlottedSortableMixin(SlottedBas
   }
 
   public override toggleCorrectResponse(show: boolean): void {
-    const responseVariable = this.responseVariable;
     // Always start by removing old correct answers
     this.shadowRoot.querySelectorAll('.correct-option').forEach(option => option.remove());
 
-    if (show && responseVariable?.correctResponse) {
-      const response = Array.isArray(responseVariable.correctResponse)
-        ? responseVariable.correctResponse
-        : [responseVariable.correctResponse];
+    if (show) {
+      const entries = this.#getCorrectOrderEntries();
+      const labelsByIdentifier = new Map<string, string>();
+      Array.from(this.querySelectorAll('qti-simple-choice')).forEach(choice => {
+        const id = choice.getAttribute('identifier');
+        const label = choice.textContent?.trim();
+        if (id && label) {
+          labelsByIdentifier.set(id, label);
+        }
+      });
 
-      const correctIds = response.map(r => r.split(' ')[0]); // e.g., ['A', 'B', 'C']
+      entries.forEach(({ identifier, dropIndex }) => {
+        const label = labelsByIdentifier.get(identifier);
+        if (!label) return;
 
-      const used = new Set<string>(); // to track already rendered correct-answers
-
-      const gaps = this.querySelectorAll('qti-simple-choice');
-
-      gaps.forEach((gap, i) => {
-        const identifier = gap.getAttribute('identifier');
-        if (!identifier || !correctIds.includes(identifier)) return;
-
-        // Only render once per identifier
-        if (used.has(identifier)) return;
-        used.add(identifier);
-
-        // Get the choice label
-        const text = gap.textContent?.trim();
-        if (!text) return;
-
-        const relativeDrop = this.shadowRoot.querySelector(`drop-list[identifier="droplist${i}"]`);
+        const relativeDrop = this.shadowRoot.querySelector(`drop-list[identifier="droplist${dropIndex}"]`);
         if (!relativeDrop) return;
 
         const span = document.createElement('span');
         span.classList.add('correct-option');
-        span.textContent = text;
-
-        // Style
+        span.textContent = label;
         span.style.border = '1px solid var(--qti-correct)';
         span.style.borderRadius = '4px';
         span.style.padding = '2px 4px';
@@ -90,6 +99,36 @@ export class QtiOrderInteraction extends DragDropSlottedSortableMixin(SlottedBas
         relativeDrop.insertAdjacentElement('afterend', span);
       });
     }
+  }
+
+  public override toggleCandidateCorrection(show: boolean): void {
+    super.toggleCandidateCorrection(show);
+
+    const placedChoices = Array.from(this.shadowRoot.querySelectorAll<QtiSimpleChoice>('drop-list [qti-draggable="true"]'));
+    placedChoices.forEach(choice => {
+      choice.internals.states.delete('candidate-correct');
+      choice.internals.states.delete('candidate-incorrect');
+    });
+
+    if (!show) return;
+
+    const entries = this.#getCorrectOrderEntries();
+    const correctByDrop = new Map<number, string>();
+    entries.forEach(entry => correctByDrop.set(entry.dropIndex, entry.identifier));
+
+    const dropLists = Array.from(this.shadowRoot.querySelectorAll<HTMLElement>('drop-list'));
+    dropLists.forEach((dropList, index) => {
+      const placedChoice = dropList.querySelector<QtiSimpleChoice>('[qti-draggable="true"]');
+      if (!placedChoice) return;
+
+      const expectedIdentifier = correctByDrop.get(index);
+      const actualIdentifier = placedChoice.getAttribute('identifier');
+      if (expectedIdentifier && actualIdentifier === expectedIdentifier) {
+        placedChoice.internals.states.add('candidate-correct');
+      } else {
+        placedChoice.internals.states.add('candidate-incorrect');
+      }
+    });
   }
 
   // some interactions have a different way of getting the response
