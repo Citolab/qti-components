@@ -93,10 +93,8 @@ export const Q8_L2_D107: Story = {
 
     // Test for submitting with zero associations
     await step('Submit item with zero associations', async () => {
-      // Reset all associations
-      await drag(gapChoices[0], { to: qtiGapMatchInteraction, duration: 300 });
-      await drag(gapChoices[1], { to: qtiGapMatchInteraction, duration: 300 });
-      await drag(gapChoices[2], { to: qtiGapMatchInteraction, duration: 300 });
+      // Reset all associations explicitly to guarantee a true zero-association state.
+      qtiGapMatchInteraction.reset();
 
       // Submit the item
       await fireEvent.click(submitButton);

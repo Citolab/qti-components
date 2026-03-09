@@ -3925,6 +3925,72 @@
             },
             {
               "kind": "method",
+              "name": "#getSlotItemCount",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#getSlotMatchMax",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#isSlotAtCapacity",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "#performVisualSwap",
               "privacy": "private",
               "return": {
@@ -3985,6 +4051,29 @@
               },
               "default": "{ hoveredSlot: null, originalPositions: new Map() }",
               "description": "Visual shift state",
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#slotAllowsMultiple",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "description": "Whether a target slot allows multiple items via match-max.\n`0` means unlimited in QTI.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -7389,6 +7478,72 @@
             },
             {
               "kind": "method",
+              "name": "#getSlotItemCount",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#getSlotMatchMax",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#isSlotAtCapacity",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "#performVisualSwap",
               "privacy": "private",
               "return": {
@@ -7449,6 +7604,29 @@
               },
               "default": "{ hoveredSlot: null, originalPositions: new Map() }",
               "description": "Visual shift state",
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#slotAllowsMultiple",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "description": "Whether a target slot allows multiple items via match-max.\n`0` means unlimited in QTI.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -8656,144 +8834,115 @@
           "name": "QtiGraphicGapMatchInteraction",
           "members": [
             {
-              "kind": "field",
-              "name": "_context",
-              "type": {
-                "text": "ItemContext"
-              },
+              "kind": "method",
+              "name": "#getItemInSlot",
               "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "description": "Get the item in a slot (if any)",
               "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
               }
             },
             {
-              "kind": "field",
-              "name": "_correctResponse",
-              "type": {
-                "text": "string | string[] | null"
-              },
-              "privacy": "protected",
-              "default": "null",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_dropBlockedDueToMax",
-              "type": {
-                "text": "boolean"
-              },
+              "kind": "method",
+              "name": "#getSlotItemCount",
               "privacy": "private",
-              "default": "false",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
               "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
               }
             },
             {
-              "kind": "field",
-              "name": "_enableFlipAnimations",
-              "type": {
-                "text": "boolean"
-              },
+              "kind": "method",
+              "name": "#getSlotMatchMax",
               "privacy": "private",
-              "default": "true",
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_handleShowCandidateCorrectionChange",
-              "privacy": "protected",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_handleShowCorrectResponseChange",
-              "privacy": "protected",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_handleShowFullCorrectResponseChange",
-              "privacy": "protected",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_internals",
-              "type": {
-                "text": "ElementInternals"
+              "return": {
+                "type": {
+                  "text": "number"
+                }
               },
-              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
               "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
               }
             },
             {
-              "kind": "field",
-              "name": "_isFullCorrectResponse",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "protected",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_maxAssociations",
-              "type": {
-                "text": "number"
-              },
+              "kind": "method",
+              "name": "#isSlotAtCapacity",
               "privacy": "private",
-              "default": "0",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
               "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
               }
             },
             {
-              "kind": "field",
-              "name": "_maxAssociationsDefaultApplied",
-              "type": {
-                "text": "boolean"
-              },
+              "kind": "method",
+              "name": "#performVisualSwap",
               "privacy": "private",
-              "default": "false",
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_response",
-              "type": {
-                "text": "string[]"
+              "return": {
+                "type": {
+                  "text": "void"
+                }
               },
-              "privacy": "protected",
-              "default": "[]",
+              "parameters": [
+                {
+                  "name": "targetSlot",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "description": "Perform visual swap when hovering over an occupied slot\nThe item in the target slot moves to the source slot (swap preview)",
               "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
               }
             },
             {
@@ -8816,19 +8965,107 @@
             },
             {
               "kind": "method",
-              "name": "afterCache",
-              "privacy": "public",
+              "name": "#resetShiftState",
+              "privacy": "private",
               "return": {
                 "type": {
                   "text": "void"
                 }
               },
+              "description": "Reset shift state",
               "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#revertVisualSwaps",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
               },
+              "description": "Revert all visual swaps back to original positions",
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#shiftState",
+              "privacy": "private",
               "type": {
-                "text": "afterCache() => void"
+                "text": "ShiftState"
+              },
+              "default": "{ hoveredSlot: null, originalPositions: new Map() }",
+              "description": "Visual shift state",
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#slotAllowsMultiple",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "description": "Whether a target slot allows multiple items via match-max.\n`0` means unlimited in QTI.",
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sortableContext",
+              "privacy": "private",
+              "type": {
+                "text": "SortableDragContext"
+              },
+              "description": "Sortable drag context for placeholder management",
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sourceSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null",
+              "description": "Source slot when dragging from within a slot",
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#temporarilyEnabledSlots",
+              "privacy": "private",
+              "default": "new Set<HTMLElement>()",
+              "description": "Tracks slots temporarily re-enabled during reorder drags",
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
               }
             },
             {
@@ -8838,169 +9075,6 @@
               "return": {
                 "type": {
                   "text": "boolean"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "_draggable",
-                  "type": {
-                    "text": "HTMLElement"
-                  }
-                },
-                {
-                  "name": "droppable",
-                  "type": {
-                    "text": "HTMLElement"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              },
-              "type": {
-                "text": "allowDrop(_draggable: HTMLElement, droppable: HTMLElement) => boolean"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "applyConfiguredChoicesContainerWidth",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "autoSizeDropzones",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "attribute": "auto-size-dropzones",
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "checkAllMaxAssociations",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "configContext",
-              "type": {
-                "text": "ConfigContext"
-              },
-              "privacy": "protected",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "configuration",
-              "type": {
-                "text": "InteractionConfiguration"
-              },
-              "privacy": "protected",
-              "default": "{ copyStylesDragClone: true, dragCanBePlacedBack: true, dragOnClick: false }",
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "correctness",
-              "type": {
-                "text": "Readonly<Correctness | null>"
-              },
-              "description": "Returns the correctness of the current response compared to correct response.\nWorks in both standalone mode (using `correct-response` attribute) and\nitem context mode (using responseVariable).",
-              "readonly": true,
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "correctResponse",
-              "type": {
-                "text": "Readonly<string | string[] | null>"
-              },
-              "description": "Get/set correct response programmatically.\nThis property syncs with the `correct-response` attribute.",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "correctResponseAttr",
-              "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
-              "type": {
-                "text": "string | null"
-              },
-              "attribute": "correct-response",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "disableAnimations",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "disable-animations",
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "dropDraggableInDroppable",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
                 }
               },
               "parameters": [
@@ -9015,96 +9089,102 @@
                   "type": {
                     "text": "HTMLElement"
                   }
-                },
-                {
-                  "name": "dragClonePosition",
-                  "optional": true,
-                  "type": {
-                    "text": "DOMRect"
-                  }
                 }
               ],
+              "description": "Allow reordering from slot to slot even when slots are marked disabled due to max rules.",
               "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              },
+              "type": {
+                "text": "allowDrop(draggable: HTMLElement, droppable: HTMLElement) => boolean"
               }
             },
             {
               "kind": "field",
-              "name": "enableFlipAnimations",
+              "name": "allowReorder",
               "type": {
                 "text": "boolean"
-              },
-              "readonly": true,
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "flipAnimationConfig",
-              "type": {
-                "text": "FlipAnimationOptions"
               },
               "privacy": "public",
-              "default": "{ duration: 200, // Slightly faster for slotted interactions easing: 'ease' // Simple, browser-optimized easing }",
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "formAssociated",
-              "type": {
-                "text": "boolean"
-              },
-              "static": true,
               "default": "true",
+              "description": "Whether reordering within slots is enabled",
               "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
               }
             },
             {
               "kind": "method",
-              "name": "formResetCallback",
-              "privacy": "public",
+              "name": "cleanupSortableState",
+              "privacy": "protected",
               "return": {
                 "type": {
                   "text": "void"
                 }
               },
-              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "parameters": [
+                {
+                  "name": "revertSwaps",
+                  "default": "true"
+                }
+              ],
+              "description": "Clean up sortable-specific state.",
               "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              },
-              "type": {
-                "text": "formResetCallback() => void"
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
               }
             },
             {
               "kind": "method",
-              "name": "getFirstMessageAttribute",
-              "privacy": "private",
+              "name": "findContainingDroppable",
+              "privacy": "protected",
               "return": {
                 "type": {
-                  "text": "string | null"
+                  "text": "HTMLElement | null"
                 }
               },
               "parameters": [
                 {
-                  "name": "attributeNames",
+                  "name": "element",
                   "type": {
-                    "text": "string[]"
+                    "text": "HTMLElement"
                   }
                 }
               ],
+              "description": "Determines if an element is inside a tracked droppable (slot).\nReturns the containing droppable, or null if in inventory.",
               "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "handleDragMove",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "clientX",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "clientY",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Extend base drag move with sortable hover/swap behavior for slot-originated drags.",
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
               }
             },
             {
@@ -9130,9 +9210,10 @@
                   }
                 }
               ],
+              "description": "Override handleDrop to clean up sortable state after drop.",
               "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
               },
               "type": {
                 "text": "handleDrop(draggable: HTMLElement, droppable: HTMLElement) => void"
@@ -9155,141 +9236,18 @@
                   }
                 }
               ],
+              "description": "Override handleInvalidDrop to clean up sortable state.",
               "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
               },
               "type": {
                 "text": "handleInvalidDrop(dragSource: HTMLElement | null) => void"
               }
             },
             {
-              "kind": "field",
-              "name": "internals",
-              "type": {
-                "text": "ElementInternals"
-              },
-              "readonly": true,
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "isFullCorrectResponse",
-              "type": {
-                "text": "Readonly<boolean>"
-              },
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "isInline",
-              "type": {
-                "text": "boolean"
-              },
-              "readonly": true,
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "maxAssociations",
-              "type": {
-                "text": "number"
-              },
-              "attribute": "max-associations",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "minAssociations",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "attribute": "min-associations",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "name",
-              "attribute": "name",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
               "kind": "method",
-              "name": "placeResponse",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "response",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "readonly",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "reportValidity",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              },
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              },
-              "type": {
-                "text": "reportValidity() => boolean"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "reset",
+              "name": "initiateDrag",
               "privacy": "public",
               "return": {
                 "type": {
@@ -9298,124 +9256,61 @@
               },
               "parameters": [
                 {
-                  "name": "save",
-                  "type": {
-                    "text": "boolean"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              },
-              "type": {
-                "text": "reset(save: boolean) => void"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "response",
-              "type": {
-                "text": "string | string[] | null"
-              },
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "responseIdentifier",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "response-identifier",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "responseVariable",
-              "type": {
-                "text": "ResponseVariable | undefined"
-              },
-              "readonly": true,
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "restoreInventoryItem",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "dragSource",
+                  "name": "dragElement",
                   "type": {
                     "text": "HTMLElement"
                   }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "restoreOriginalInInventory",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
+                },
                 {
-                  "name": "identifier",
+                  "name": "startX",
                   "type": {
-                    "text": "string"
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "startY",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "inputType",
+                  "type": {
+                    "text": "'mouse' | 'touch'"
+                  }
+                },
+                {
+                  "name": "rest",
+                  "type": {
+                    "text": "[eventSource?: 'pointer' | 'mouse' | 'touch']"
                   }
                 }
               ],
+              "description": "Override initiateDrag to set up placeholder for slot-originated drags.",
               "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "returnToInventory",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
               },
-              "parameters": [
-                {
-                  "name": "element",
-                  "type": {
-                    "text": "HTMLElement"
-                  }
-                }
-              ],
+              "type": {
+                "text": "initiateDrag(dragElement: HTMLElement, startX: number, startY: number, inputType: 'mouse' | 'touch', rest: [eventSource?: 'pointer' | 'mouse' | 'touch']) => void"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "isDraggingFromSlot",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the current drag originated from a slot",
+              "readonly": true,
               "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
               }
             },
             {
               "kind": "method",
-              "name": "saveResponse",
+              "name": "onSortableDragMove",
               "privacy": "public",
               "return": {
                 "type": {
@@ -9424,18 +9319,25 @@
               },
               "parameters": [
                 {
-                  "name": "value",
+                  "name": "clientX",
                   "type": {
-                    "text": "string | string[]"
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "clientY",
+                  "type": {
+                    "text": "number"
                   }
                 }
               ],
+              "description": "Process drag move for sortable behavior.\nCalled from the drag move observable.",
               "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
               },
               "type": {
-                "text": "saveResponse(value: string | string[]) => void"
+                "text": "onSortableDragMove(clientX: number, clientY: number) => void"
               }
             },
             {
@@ -9447,411 +9349,51 @@
                   "text": "boolean"
                 }
               },
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              },
               "type": {
                 "text": "shouldReturnToInventoryOnInventoryDrop() => boolean"
               }
             },
             {
-              "kind": "method",
-              "name": "shouldTreatBlockedMaxAsInvalid",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              },
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              },
+              "kind": "field",
+              "name": "sortableAnimationConfig",
               "type": {
-                "text": "shouldTreatBlockedMaxAsInvalid() => boolean"
+                "text": "FlipAnimationOptions"
+              },
+              "privacy": "public",
+              "default": "{ duration: 150, easing: 'ease' }",
+              "description": "Animation configuration for sortable operations",
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
               }
             },
             {
               "kind": "field",
-              "name": "showCandidateCorrection",
+              "name": "sortablePlaceholderConfig",
               "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Shows feedback on candidate's selections compared to correct response.\nAdds `candidate-correct` / `candidate-incorrect` states to choices.",
-              "attribute": "show-candidate-correction",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "showCorrectResponse",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Shows which choices are correct with inline indicators.\nAdds `correct-response` / `incorrect-response` states to choices.",
-              "attribute": "show-correct-response",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "showFullCorrectResponse",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Shows a cloned interaction with the correct answers filled in.\nCreates a disabled copy positioned after this interaction.",
-              "attribute": "show-full-correct-response",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "toggleCandidateCorrection",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "show",
-                  "type": {
-                    "text": "boolean"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              },
-              "type": {
-                "text": "toggleCandidateCorrection(show: boolean) => void"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "toggleCorrectResponse",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "show",
-                  "type": {
-                    "text": "boolean"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              },
-              "type": {
-                "text": "toggleCorrectResponse(show: boolean) => void"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "toggleFullCorrectResponse",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "Promise<void>"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "show",
-                  "type": {
-                    "text": "boolean"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "toggleInternalCorrectResponse",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "show",
-                  "type": {
-                    "text": "boolean"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "updateInventoryBasedOnMatchMax",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "identifier",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "updateMinDimensionsForDropZones",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "validate",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
+                "text": "PlaceholderConfig"
               },
               "privacy": "public",
+              "default": "{}",
+              "description": "Placeholder styling configuration",
               "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              },
-              "type": {
-                "text": "validate() => boolean"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string | null"
-              },
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
               }
             }
           ],
           "mixins": [
             {
-              "name": "DragDropSlottedMixin",
+              "name": "DragDropSlottedSortableMixin",
               "package": "@qti-components/interactions/mixins/drag-drop-observables"
             }
           ],
           "superclass": {
-            "name": "Interaction",
-            "package": "@qti-components/base"
+            "name": "SlottedBase",
+            "module": "packages/qti-interactions/src/components/qti-graphic-gap-match-interaction/qti-graphic-gap-match-interaction.ts"
           },
           "tagName": "qti-graphic-gap-match-interaction",
           "customElement": true,
-          "attributes": [
-            {
-              "name": "auto-size-dropzones",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "autoSizeDropzones",
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "name": "correct-response",
-              "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
-              "type": {
-                "text": "string | null"
-              },
-              "fieldName": "correctResponseAttr",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "name": "disable-animations",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "disableAnimations",
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "name": "max-associations",
-              "type": {
-                "text": "number"
-              },
-              "fieldName": "maxAssociations",
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "name": "min-associations",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "fieldName": "minAssociations",
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "name": "name",
-              "fieldName": "name",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "readonly",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "name": "response-identifier",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "responseIdentifier",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "name": "show-candidate-correction",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Shows feedback on candidate's selections compared to correct response.\nAdds `candidate-correct` / `candidate-incorrect` states to choices.",
-              "fieldName": "showCandidateCorrection",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "name": "show-correct-response",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Shows which choices are correct with inline indicators.\nAdds `correct-response` / `incorrect-response` states to choices.",
-              "fieldName": "showCorrectResponse",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "name": "show-full-correct-response",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Shows a cloned interaction with the correct answers filled in.\nCreates a disabled copy positioned after this interaction.",
-              "fieldName": "showFullCorrectResponse",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            }
-          ],
-          "events": [
-            {
-              "name": "qti-interaction-response",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "name": "qti-register-interaction",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            }
-          ],
           "modulePath": "packages/qti-interactions/src/components/qti-graphic-gap-match-interaction/qti-graphic-gap-match-interaction.ts",
           "definitionPath": "packages/qti-interactions/src/components/qti-graphic-gap-match-interaction/register.ts"
         }
@@ -13773,143 +13315,34 @@
           "members": [
             {
               "kind": "field",
-              "name": "_context",
-              "type": {
-                "text": "ItemContext"
-              },
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_correctResponse",
-              "type": {
-                "text": "string | string[] | null"
-              },
-              "privacy": "protected",
-              "default": "null",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_dropBlockedDueToMax",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false",
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_enableFlipAnimations",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "true",
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_handleShowCandidateCorrectionChange",
-              "privacy": "protected",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_handleShowCorrectResponseChange",
-              "privacy": "protected",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_handleShowFullCorrectResponseChange",
-              "privacy": "protected",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_internals",
-              "type": {
-                "text": "ElementInternals"
-              },
-              "privacy": "protected",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_isFullCorrectResponse",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "protected",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_maxAssociations",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private",
-              "default": "0",
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_maxAssociationsDefaultApplied",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false",
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
               "name": "_response",
               "type": {
-                "text": "string[]"
+                "text": "string | string[]"
               },
               "privacy": "protected",
-              "default": "[]",
+              "default": "[]"
+            },
+            {
+              "kind": "method",
+              "name": "#getItemInSlot",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "description": "Get the item in a slot (if any)",
               "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
               }
             },
             {
@@ -13932,19 +13365,196 @@
             },
             {
               "kind": "method",
-              "name": "afterCache",
-              "privacy": "public",
+              "name": "#getSlotItemCount",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#getSlotMatchMax",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#isSlotAtCapacity",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#performVisualSwap",
+              "privacy": "private",
               "return": {
                 "type": {
                   "text": "void"
                 }
               },
+              "parameters": [
+                {
+                  "name": "targetSlot",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "description": "Perform visual swap when hovering over an occupied slot\nThe item in the target slot moves to the source slot (swap preview)",
               "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#resetShiftState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
               },
+              "description": "Reset shift state",
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#revertVisualSwaps",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Revert all visual swaps back to original positions",
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#shiftState",
+              "privacy": "private",
               "type": {
-                "text": "afterCache() => void"
+                "text": "ShiftState"
+              },
+              "default": "{ hoveredSlot: null, originalPositions: new Map() }",
+              "description": "Visual shift state",
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#slotAllowsMultiple",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "description": "Whether a target slot allows multiple items via match-max.\n`0` means unlimited in QTI.",
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sortableContext",
+              "privacy": "private",
+              "type": {
+                "text": "SortableDragContext"
+              },
+              "description": "Sortable drag context for placeholder management",
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sourceSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null",
+              "description": "Source slot when dragging from within a slot",
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#temporarilyEnabledSlots",
+              "privacy": "private",
+              "default": "new Set<HTMLElement>()",
+              "description": "Tracks slots temporarily re-enabled during reorder drags",
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
               }
             },
             {
@@ -13954,187 +13564,6 @@
               "return": {
                 "type": {
                   "text": "boolean"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "_draggable",
-                  "type": {
-                    "text": "HTMLElement"
-                  }
-                },
-                {
-                  "name": "droppable",
-                  "type": {
-                    "text": "HTMLElement"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              },
-              "type": {
-                "text": "allowDrop(_draggable: HTMLElement, droppable: HTMLElement) => boolean"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "applyConfiguredChoicesContainerWidth",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "autoSizeDropzones",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false",
-              "attribute": "auto-size-dropzones",
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "checkAllMaxAssociations",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "class",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "class"
-            },
-            {
-              "kind": "field",
-              "name": "configContext",
-              "type": {
-                "text": "ConfigContext"
-              },
-              "privacy": "protected",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "configuration",
-              "type": {
-                "text": "InteractionConfiguration"
-              },
-              "privacy": "protected",
-              "default": "{ copyStylesDragClone: true, dragCanBePlacedBack: true, dragOnClick: false }",
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "correctness",
-              "type": {
-                "text": "Readonly<Correctness | null>"
-              },
-              "description": "Returns the correctness of the current response compared to correct response.\nWorks in both standalone mode (using `correct-response` attribute) and\nitem context mode (using responseVariable).",
-              "readonly": true,
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "correctOptions",
-              "type": {
-                "text": "{ source: string; target: string }[]"
-              },
-              "privacy": "protected",
-              "default": "null"
-            },
-            {
-              "kind": "field",
-              "name": "correctResponse",
-              "type": {
-                "text": "Readonly<string | string[] | null>"
-              },
-              "description": "Get/set correct response programmatically.\nThis property syncs with the `correct-response` attribute.",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "correctResponseAttr",
-              "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
-              "type": {
-                "text": "string | null"
-              },
-              "attribute": "correct-response",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "disableAnimations",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "disable-animations",
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "dropDraggableInDroppable",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
                 }
               },
               "parameters": [
@@ -14149,96 +13578,120 @@
                   "type": {
                     "text": "HTMLElement"
                   }
-                },
-                {
-                  "name": "dragClonePosition",
-                  "optional": true,
-                  "type": {
-                    "text": "DOMRect"
-                  }
                 }
               ],
+              "description": "Allow reordering from slot to slot even when slots are marked disabled due to max rules.",
               "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              },
+              "type": {
+                "text": "allowDrop(draggable: HTMLElement, droppable: HTMLElement) => boolean"
               }
             },
             {
               "kind": "field",
-              "name": "enableFlipAnimations",
+              "name": "allowReorder",
               "type": {
                 "text": "boolean"
-              },
-              "readonly": true,
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "flipAnimationConfig",
-              "type": {
-                "text": "FlipAnimationOptions"
               },
               "privacy": "public",
-              "default": "{ duration: 200, // Slightly faster for slotted interactions easing: 'ease' // Simple, browser-optimized easing }",
+              "default": "true",
+              "description": "Whether reordering within slots is enabled",
               "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
               }
             },
             {
               "kind": "field",
-              "name": "formAssociated",
+              "name": "class",
               "type": {
-                "text": "boolean"
+                "text": "string"
               },
-              "static": true,
-              "default": "true",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
+              "default": "''",
+              "attribute": "class"
             },
             {
               "kind": "method",
-              "name": "formResetCallback",
-              "privacy": "public",
+              "name": "cleanupSortableState",
+              "privacy": "protected",
               "return": {
                 "type": {
                   "text": "void"
                 }
               },
-              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "parameters": [
+                {
+                  "name": "revertSwaps",
+                  "default": "true"
+                }
+              ],
+              "description": "Clean up sortable-specific state.",
               "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              },
-              "type": {
-                "text": "formResetCallback() => void"
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
               }
             },
             {
+              "kind": "field",
+              "name": "correctOptions",
+              "type": {
+                "text": "{ source: string; target: string }[]"
+              },
+              "privacy": "protected",
+              "default": "null"
+            },
+            {
               "kind": "method",
-              "name": "getFirstMessageAttribute",
-              "privacy": "private",
+              "name": "findContainingDroppable",
+              "privacy": "protected",
               "return": {
                 "type": {
-                  "text": "string | null"
+                  "text": "HTMLElement | null"
                 }
               },
               "parameters": [
                 {
-                  "name": "attributeNames",
+                  "name": "element",
                   "type": {
-                    "text": "string[]"
+                    "text": "HTMLElement"
                   }
                 }
               ],
+              "description": "Determines if an element is inside a tracked droppable (slot).\nReturns the containing droppable, or null if in inventory.",
               "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "handleDragMove",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "clientX",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "clientY",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Extend base drag move with sortable hover/swap behavior for slot-originated drags.",
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
               }
             },
             {
@@ -14264,9 +13717,10 @@
                   }
                 }
               ],
+              "description": "Override handleDrop to clean up sortable state after drop.",
               "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
               },
               "type": {
                 "text": "handleDrop(draggable: HTMLElement, droppable: HTMLElement) => void"
@@ -14289,9 +13743,10 @@
                   }
                 }
               ],
+              "description": "Override handleInvalidDrop to clean up sortable state.",
               "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
               },
               "type": {
                 "text": "handleInvalidDrop(dragSource: HTMLElement | null) => void"
@@ -14308,38 +13763,66 @@
               "privacy": "protected"
             },
             {
-              "kind": "field",
-              "name": "internals",
-              "type": {
-                "text": "ElementInternals"
+              "kind": "method",
+              "name": "initiateDrag",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
               },
-              "readonly": true,
+              "parameters": [
+                {
+                  "name": "dragElement",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "startX",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "startY",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "inputType",
+                  "type": {
+                    "text": "'mouse' | 'touch'"
+                  }
+                },
+                {
+                  "name": "rest",
+                  "type": {
+                    "text": "[eventSource?: 'pointer' | 'mouse' | 'touch']"
+                  }
+                }
+              ],
+              "description": "Override initiateDrag to set up placeholder for slot-originated drags.",
               "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              },
+              "type": {
+                "text": "initiateDrag(dragElement: HTMLElement, startX: number, startY: number, inputType: 'mouse' | 'touch', rest: [eventSource?: 'pointer' | 'mouse' | 'touch']) => void"
               }
             },
             {
               "kind": "field",
-              "name": "isFullCorrectResponse",
-              "type": {
-                "text": "Readonly<boolean>"
-              },
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "isInline",
+              "name": "isDraggingFromSlot",
               "type": {
                 "text": "boolean"
               },
+              "description": "Whether the current drag originated from a slot",
               "readonly": true,
               "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
               }
             },
             {
@@ -14352,97 +13835,8 @@
               "default": "null"
             },
             {
-              "kind": "field",
-              "name": "maxAssociations",
-              "type": {
-                "text": "number"
-              },
-              "attribute": "max-associations",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "minAssociations",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "attribute": "min-associations",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "name",
-              "attribute": "name",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
               "kind": "method",
-              "name": "placeResponse",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "response",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "readonly",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "reportValidity",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              },
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              },
-              "type": {
-                "text": "reportValidity() => boolean"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "reset",
+              "name": "onSortableDragMove",
               "privacy": "public",
               "return": {
                 "type": {
@@ -14451,29 +13845,32 @@
               },
               "parameters": [
                 {
-                  "name": "save",
+                  "name": "clientX",
                   "type": {
-                    "text": "boolean"
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "clientY",
+                  "type": {
+                    "text": "number"
                   }
                 }
               ],
+              "description": "Process drag move for sortable behavior.\nCalled from the drag move observable.",
               "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
               },
               "type": {
-                "text": "reset(save: boolean) => void"
+                "text": "onSortableDragMove(clientX: number, clientY: number) => void"
               }
             },
             {
               "kind": "field",
               "name": "response",
               "type": {
-                "text": "string | string[] | null"
-              },
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
+                "text": "string[]"
               }
             },
             {
@@ -14482,193 +13879,35 @@
               "type": {
                 "text": "string"
               },
-              "attribute": "response-identifier",
               "default": "''",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
+              "attribute": "response-identifier"
             },
             {
               "kind": "field",
-              "name": "responseVariable",
+              "name": "sortableAnimationConfig",
               "type": {
-                "text": "ResponseVariable | undefined"
+                "text": "FlipAnimationOptions"
               },
-              "readonly": true,
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "restoreInventoryItem",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "dragSource",
-                  "type": {
-                    "text": "HTMLElement"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "restoreOriginalInInventory",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "identifier",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "returnToInventory",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "element",
-                  "type": {
-                    "text": "HTMLElement"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "saveResponse",
               "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "value",
-                  "type": {
-                    "text": "string | string[]"
-                  }
-                }
-              ],
+              "default": "{ duration: 150, easing: 'ease' }",
+              "description": "Animation configuration for sortable operations",
               "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              },
-              "type": {
-                "text": "saveResponse(value: string | string[]) => void"
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
               }
             },
             {
-              "kind": "method",
-              "name": "shouldReturnToInventoryOnInventoryDrop",
+              "kind": "field",
+              "name": "sortablePlaceholderConfig",
+              "type": {
+                "text": "PlaceholderConfig"
+              },
               "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              },
+              "default": "{}",
+              "description": "Placeholder styling configuration",
               "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              },
-              "type": {
-                "text": "shouldReturnToInventoryOnInventoryDrop() => boolean"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "shouldTreatBlockedMaxAsInvalid",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              },
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              },
-              "type": {
-                "text": "shouldTreatBlockedMaxAsInvalid() => boolean"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "showCandidateCorrection",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Shows feedback on candidate's selections compared to correct response.\nAdds `candidate-correct` / `candidate-incorrect` states to choices.",
-              "attribute": "show-candidate-correction",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "showCorrectResponse",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Shows which choices are correct with inline indicators.\nAdds `correct-response` / `incorrect-response` states to choices.",
-              "attribute": "show-correct-response",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "showFullCorrectResponse",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Shows a cloned interaction with the correct answers filled in.\nCreates a disabled copy positioned after this interaction.",
-              "attribute": "show-full-correct-response",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
               }
             },
             {
@@ -14691,11 +13930,6 @@
               "kind": "method",
               "name": "toggleCandidateCorrection",
               "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
               "parameters": [
                 {
                   "name": "show",
@@ -14704,17 +13938,13 @@
                   }
                 }
               ],
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              },
               "type": {
                 "text": "toggleCandidateCorrection(show: boolean) => void"
               }
             },
             {
               "kind": "method",
-              "name": "toggleCorrectResponse",
+              "name": "toggleInternalCorrectResponse",
               "privacy": "public",
               "return": {
                 "type": {
@@ -14729,92 +13959,8 @@
                   }
                 }
               ],
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              },
               "type": {
-                "text": "toggleCorrectResponse(show: boolean) => void"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "toggleFullCorrectResponse",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "Promise<void>"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "show",
-                  "type": {
-                    "text": "boolean"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "toggleInternalCorrectResponse",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "show",
-                  "type": {
-                    "text": "boolean"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "updateInventoryBasedOnMatchMax",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "identifier",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "updateMinDimensionsForDropZones",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+                "text": "toggleInternalCorrectResponse(show: boolean) => void"
               }
             },
             {
@@ -14825,40 +13971,12 @@
                   "text": "boolean"
                 }
               },
-              "privacy": "public",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              },
               "type": {
                 "text": "validate() => boolean"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string | null"
-              },
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             }
           ],
           "attributes": [
-            {
-              "name": "auto-size-dropzones",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "autoSizeDropzones",
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
             {
               "name": "class",
               "type": {
@@ -14868,169 +13986,26 @@
               "fieldName": "class"
             },
             {
-              "name": "correct-response",
-              "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
-              "type": {
-                "text": "string | null"
-              },
-              "fieldName": "correctResponseAttr",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "name": "disable-animations",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "disableAnimations",
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "name": "max-associations",
-              "type": {
-                "text": "number"
-              },
-              "fieldName": "maxAssociations",
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "name": "min-associations",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "fieldName": "minAssociations",
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "name": "name",
-              "fieldName": "name",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "name": "readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "readonly",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
               "name": "response-identifier",
               "type": {
                 "text": "string"
               },
-              "fieldName": "responseIdentifier",
               "default": "''",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "name": "show-candidate-correction",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Shows feedback on candidate's selections compared to correct response.\nAdds `candidate-correct` / `candidate-incorrect` states to choices.",
-              "fieldName": "showCandidateCorrection",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "name": "show-correct-response",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Shows which choices are correct with inline indicators.\nAdds `correct-response` / `incorrect-response` states to choices.",
-              "fieldName": "showCorrectResponse",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "name": "show-full-correct-response",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Shows a cloned interaction with the correct answers filled in.\nCreates a disabled copy positioned after this interaction.",
-              "fieldName": "showFullCorrectResponse",
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
+              "fieldName": "responseIdentifier"
             }
           ],
           "mixins": [
             {
-              "name": "DragDropSlottedMixin",
+              "name": "DragDropSlottedSortableMixin",
               "package": "@qti-components/interactions/mixins/drag-drop-observables"
             }
           ],
           "superclass": {
-            "name": "Interaction",
-            "package": "@qti-components/base"
+            "name": "SlottedBase",
+            "module": "packages/qti-interactions/src/components/qti-match-interaction/qti-match-interaction.ts"
           },
           "tagName": "qti-match-interaction",
           "customElement": true,
-          "events": [
-            {
-              "name": "qti-interaction-response",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "name": "qti-register-interaction",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "Interaction",
-                "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            }
-          ],
           "modulePath": "packages/qti-interactions/src/components/qti-match-interaction/qti-match-interaction.ts",
           "definitionPath": "packages/qti-interactions/src/components/qti-match-interaction/register.ts"
         }
@@ -15765,6 +14740,72 @@
             },
             {
               "kind": "method",
+              "name": "#getSlotItemCount",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#getSlotMatchMax",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#isSlotAtCapacity",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "#performVisualSwap",
               "privacy": "private",
               "return": {
@@ -15825,6 +14866,29 @@
               },
               "default": "{ hoveredSlot: null, originalPositions: new Map() }",
               "description": "Visual shift state",
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#slotAllowsMultiple",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "description": "Whether a target slot allows multiple items via match-max.\n`0` means unlimited in QTI.",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/qti-interactions/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -23883,6 +22947,60 @@
             },
             {
               "kind": "method",
+              "name": "#getSlotItemCount",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#getSlotMatchMax",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#isSlotAtCapacity",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "#performVisualSwap",
               "privacy": "private",
               "return": {
@@ -23931,6 +23049,25 @@
               },
               "default": "{ hoveredSlot: null, originalPositions: new Map() }",
               "description": "Visual shift state"
+            },
+            {
+              "kind": "method",
+              "name": "#slotAllowsMultiple",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "description": "Whether a target slot allows multiple items via match-max.\n`0` means unlimited in QTI."
             },
             {
               "kind": "field",

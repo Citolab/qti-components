@@ -266,6 +266,20 @@ const duplicateDropRegressionTemplate = html`
   </qti-match-interaction>
 `;
 
+const sortableAppendWhenTargetAllowsMultipleTemplate = html`
+  <qti-match-interaction data-testid="match-interaction-sortable-append" response-identifier="RESPONSE" max-associations="4">
+    <qti-simple-match-set>
+      <qti-simple-associable-choice identifier="A" match-max="0">Alpha</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="B" match-max="0">Beta</qti-simple-associable-choice>
+    </qti-simple-match-set>
+    <qti-simple-match-set>
+      <qti-simple-associable-choice identifier="T1" match-max="1">Target 1</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="T2" match-max="1">Target 2</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="T3" match-max="2">Target 3</qti-simple-associable-choice>
+    </qti-simple-match-set>
+  </qti-match-interaction>
+`;
+
 export const Test: Story = {
   render: () => testTemplate,
   play: async ({ canvasElement, step }) => {
@@ -535,7 +549,7 @@ export const DuplicateDropIsolationRegression: Story = {
       expect(target3).toHaveTextContent('Beta');
     });
 
-    await step('Moving Alpha from Target 2 into occupied Target 3 should not clear other Alpha placements', async () => {
+    await step('Moving Alpha from Target 2 into occupied Target 3 preserves unrelated Alpha and swaps local occupants', async () => {
       const alphaInTarget2 = await waitFor(() => {
         const dropped = target2.querySelector('[identifier="A"][qti-draggable="true"]') as HTMLElement | null;
         expect(dropped).not.toBeNull();
@@ -543,10 +557,93 @@ export const DuplicateDropIsolationRegression: Story = {
       });
       await drag(alphaInTarget2, { to: target3, duration: 350 });
 
-      // Expected behavior: duplicate Alpha entries in other targets are preserved.
+      // Expected sortable behavior:
+      // - Target 1 keeps its Alpha (unrelated placement remains)
+      // - Target 2 receives Beta from the occupied target as part of swap flow
+      // - Target 3 receives the dragged Alpha
+      expect(target1).toHaveTextContent('Alpha');
+      expect(target2).toHaveTextContent('Beta');
+      expect(target3).toHaveTextContent('Alpha');
+    });
+  }
+};
+
+export const SortableAppendWhenTargetAllowsMultiple: Story = {
+  name: 'Behavior: sortable move appends on occupied target when match-max > 1',
+  render: () => sortableAppendWhenTargetAllowsMultipleTemplate,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const alpha = canvas.getByText('Alpha');
+    const beta = canvas.getByText('Beta');
+    const target1 = canvas.getByText('Target 1');
+    const target2 = canvas.getByText('Target 2');
+    const target3 = canvas.getByText('Target 3');
+
+    await step('Place Alpha in Targets 1 and 2, and Beta in Target 3', async () => {
+      await drag(alpha, { to: target1, duration: 350 });
+      await drag(alpha, { to: target2, duration: 350 });
+      await drag(beta, { to: target3, duration: 350 });
       expect(target1).toHaveTextContent('Alpha');
       expect(target2).toHaveTextContent('Alpha');
       expect(target3).toHaveTextContent('Beta');
+    });
+
+    await step('Move Alpha from Target 2 onto occupied Target 3 (match-max=2)', async () => {
+      const alphaInTarget2 = await waitFor(() => {
+        const dropped = target2.querySelector('[identifier="A"][qti-draggable="true"]') as HTMLElement | null;
+        expect(dropped).not.toBeNull();
+        return dropped as HTMLElement;
+      });
+      await drag(alphaInTarget2, { to: target3, duration: 350 });
+
+      // Target 3 allows multiple, so Alpha should be added rather than swapping out Beta.
+      expect(target1).toHaveTextContent('Alpha');
+      expect(target2).not.toHaveTextContent('Alpha');
+      expect(target3).toHaveTextContent('Beta');
+      expect(target3).toHaveTextContent('Alpha');
+      expect(target3.querySelectorAll('[qti-draggable="true"]').length).toBe(2);
+    });
+  }
+};
+
+export const SortableRespectsPerTargetMatchMax: Story = {
+  name: 'Behavior: sortable append blocks when target reached match-max',
+  render: () => sortableAppendWhenTargetAllowsMultipleTemplate,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const alpha = canvas.getByText('Alpha');
+    const beta = canvas.getByText('Beta');
+    const target1 = canvas.getByText('Target 1');
+    const target2 = canvas.getByText('Target 2');
+    const target3 = canvas.getByText('Target 3');
+
+    await step('Fill Target 3 to its match-max=2 capacity', async () => {
+      await drag(alpha, { to: target1, duration: 350 });
+      await drag(alpha, { to: target3, duration: 350 });
+      await drag(beta, { to: target3, duration: 350 });
+
+      expect(target1).toHaveTextContent('Alpha');
+      expect(target3).toHaveTextContent('Alpha');
+      expect(target3).toHaveTextContent('Beta');
+      expect(target3.querySelectorAll('[qti-draggable="true"]').length).toBe(2);
+    });
+
+    await step('Move Alpha from Target 1 onto full Target 3; drop should be blocked by per-target match-max', async () => {
+      const alphaInTarget1 = await waitFor(() => {
+        const dropped = target1.querySelector('[identifier="A"][qti-draggable="true"]') as HTMLElement | null;
+        expect(dropped).not.toBeNull();
+        return dropped as HTMLElement;
+      });
+      await drag(alphaInTarget1, { to: target3, duration: 350 });
+
+      // Target 3 remains at capacity with original two items.
+      expect(target3.querySelectorAll('[qti-draggable="true"]').length).toBe(2);
+      expect(target3).toHaveTextContent('Alpha');
+      expect(target3).toHaveTextContent('Beta');
+
+      // Source retains Alpha because move to full multi-capacity target is invalid.
+      expect(target1).toHaveTextContent('Alpha');
+      expect(target2).not.toHaveTextContent('Alpha');
     });
   }
 };

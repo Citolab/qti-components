@@ -107,6 +107,29 @@ export const DragDropSlottedSortableMixin = <T extends Constructor<DragDropSlott
     }
 
     /**
+     * Whether a target slot allows multiple items via match-max.
+     * `0` means unlimited in QTI.
+     */
+    #slotAllowsMultiple(slot: HTMLElement): boolean {
+      const matchMax = this.#getSlotMatchMax(slot);
+      return matchMax === 0 || matchMax > 1;
+    }
+
+    #getSlotMatchMax(slot: HTMLElement): number {
+      return parseInt(slot.getAttribute('match-max') || '1', 10) || 1;
+    }
+
+    #getSlotItemCount(slot: HTMLElement): number {
+      return slot.querySelectorAll(sortableItemSelector).length;
+    }
+
+    #isSlotAtCapacity(slot: HTMLElement): boolean {
+      const matchMax = this.#getSlotMatchMax(slot);
+      if (matchMax === 0) return false;
+      return this.#getSlotItemCount(slot) >= matchMax;
+    }
+
+    /**
      * Reset shift state
      */
     #resetShiftState(): void {
@@ -138,6 +161,24 @@ export const DragDropSlottedSortableMixin = <T extends Constructor<DragDropSlott
       const targetItem = this.#getItemInSlot(targetSlot);
       if (!targetItem) {
         // Target slot is empty, just move placeholder there
+        if (this.#sortableContext.placeholder) {
+          targetSlot.appendChild(this.#sortableContext.placeholder);
+        }
+        this.#shiftState.hoveredSlot = targetSlot;
+        return;
+      }
+
+      // Exception: if target allows multiple children, do not visually swap-out existing item(s).
+      // Keep current occupants and only move placeholder so drop appends the dragged item.
+      if (this.#slotAllowsMultiple(targetSlot)) {
+        if (this.#isSlotAtCapacity(targetSlot)) {
+          // At capacity: keep placeholder in source slot and do not preview an append.
+          if (this.#sortableContext.placeholder && this.#sourceSlot) {
+            this.#sourceSlot.appendChild(this.#sortableContext.placeholder);
+          }
+          this.#shiftState.hoveredSlot = null;
+          return;
+        }
         if (this.#sortableContext.placeholder) {
           targetSlot.appendChild(this.#sortableContext.placeholder);
         }
@@ -233,6 +274,10 @@ export const DragDropSlottedSortableMixin = <T extends Constructor<DragDropSlott
           rect,
           this.sortablePlaceholderConfig
         );
+        // Slotted sortable interactions already have explicit dropzones.
+        // Keep placeholder logic for bookkeeping, but hide it to avoid
+        // rendering a phantom "extra dropzone" while hovering.
+        this.#sortableContext.placeholder.style.display = 'none';
         
         // Insert placeholder in the source slot immediately
         // The parent's initiateDrag will remove the actual element
@@ -241,6 +286,11 @@ export const DragDropSlottedSortableMixin = <T extends Constructor<DragDropSlott
         // While reordering from a slot, temporarily enable other slots so drag end can drop onto them.
         this.trackedDroppables.forEach(slot => {
           if (slot !== containingDroppable && slot.hasAttribute('disabled')) {
+            // Keep multi-capacity slots disabled when they are full.
+            // These should block append once match-max is reached.
+            if (this.#slotAllowsMultiple(slot) && this.#isSlotAtCapacity(slot)) {
+              return;
+            }
             slot.removeAttribute('disabled');
             this.#temporarilyEnabledSlots.add(slot);
           }
@@ -315,6 +365,15 @@ export const DragDropSlottedSortableMixin = <T extends Constructor<DragDropSlott
      */
     public override allowDrop(draggable: HTMLElement, droppable: HTMLElement): boolean {
       if (this.isDraggingFromSlot && this.trackedDroppables.includes(droppable)) {
+        // Single-capacity targets use swap semantics, so allow slot-origin drops.
+        if (!this.#slotAllowsMultiple(droppable)) {
+          return true;
+        }
+        // Multi-capacity targets append when they have room, and block at capacity.
+        return !this.#isSlotAtCapacity(droppable);
+      }
+      // Keep ability to return to source droppable and inventory via parent rules.
+      if (this.isDraggingFromSlot && this.trackedDragContainers.includes(droppable)) {
         return true;
       }
       return super.allowDrop(draggable, droppable);

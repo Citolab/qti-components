@@ -3,7 +3,7 @@ import { property, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
 import { Interaction } from '@qti-components/base';
-import { DragDropSlottedMixin } from '@qti-components/interactions/mixins/drag-drop-observables';
+import { DragDropSlottedMixin, DragDropSlottedSortableMixin } from '@qti-components/interactions/mixins/drag-drop-observables';
 
 // import { DragDropInteractionMixin } from '../../mixins/drag-drop';
 import styles from './qti-match-interaction.styles';
@@ -12,12 +12,14 @@ import type { ResponseVariable } from '@qti-components/base';
 import type { CSSResultGroup } from 'lit';
 import type { ResponseInteraction } from '@qti-components/base';
 import type { QtiSimpleAssociableChoice } from '../../elements/qti-simple-associable-choice';
-export class QtiMatchInteraction extends DragDropSlottedMixin(
+const SlottedBase = DragDropSlottedMixin(
   Interaction,
   'qti-simple-match-set:first-of-type qti-simple-associable-choice, qti-simple-match-set:last-of-type > qti-simple-associable-choice > qti-simple-associable-choice',
   'qti-simple-match-set:last-of-type > qti-simple-associable-choice',
   'qti-simple-match-set:first-of-type'
-) {
+);
+
+export class QtiMatchInteraction extends DragDropSlottedSortableMixin(SlottedBase, '[qti-draggable="true"]') {
   static override styles: CSSResultGroup = styles;
 
   protected sourceChoices: QtiSimpleAssociableChoice[];
