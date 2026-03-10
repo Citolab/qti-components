@@ -187,10 +187,16 @@ export const DragDropSlottedSortableMixin = <T extends Constructor<DragDropSlott
           rect,
           this.sortablePlaceholderConfig
         );
-        // Slotted sortable interactions already have explicit dropzones.
-        // Keep placeholder logic for bookkeeping, but hide it to avoid
-        // rendering a phantom "extra dropzone" while hovering.
-        this.#sortableContext.placeholder.style.display = 'none';
+        // Copy the slot attribute from the dragged element so the placeholder
+        // renders in the same named slot (e.g. slot="drags" in qti-gap), preserving
+        // the droppable's dimensions when the drag element is removed.
+        // Use visibility:hidden instead of display:none so it occupies space but
+        // remains invisible, preventing inline layout shift of surrounding text.
+        const slotAttr = dragElement.getAttribute('slot');
+        if (slotAttr) {
+          this.#sortableContext.placeholder.setAttribute('slot', slotAttr);
+        }
+        this.#sortableContext.placeholder.style.visibility = 'hidden';
 
         containingDroppable.appendChild(this.#sortableContext.placeholder);
 
