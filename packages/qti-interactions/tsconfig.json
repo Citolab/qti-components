@@ -5,11 +5,12 @@
         "moduleResolution": "bundler"
     },
     "include": [
-        "src/index.ts",
+        "src/**/*.ts",
         "../../tools/storybook/vite-env.d.ts"
     ],
     "exclude": [
         "**/*.spec.ts",
         "**/*.stories.ts",
+        "src/**/*.stories/**"
     ]
 }

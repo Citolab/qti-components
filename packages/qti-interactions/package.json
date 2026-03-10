@@ -18,6 +18,262 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
+    "./register-all": {
+      "types": "./dist/register-all.d.ts",
+      "import": "./dist/register-all.js"
+    },
+    "./qti-associate-interaction": {
+      "types": "./dist/components/qti-associate-interaction/qti-associate-interaction.d.ts",
+      "import": "./dist/components/qti-associate-interaction/qti-associate-interaction.js"
+    },
+    "./qti-associate-interaction/register": {
+      "types": "./dist/components/qti-associate-interaction/register.d.ts",
+      "import": "./dist/components/qti-associate-interaction/register.js"
+    },
+    "./qti-choice-interaction": {
+      "types": "./dist/components/qti-choice-interaction/qti-choice-interaction.d.ts",
+      "import": "./dist/components/qti-choice-interaction/qti-choice-interaction.js"
+    },
+    "./qti-choice-interaction/register": {
+      "types": "./dist/components/qti-choice-interaction/register.d.ts",
+      "import": "./dist/components/qti-choice-interaction/register.js"
+    },
+    "./qti-custom-interaction": {
+      "types": "./dist/components/qti-custom-interaction/qti-custom-interaction.d.ts",
+      "import": "./dist/components/qti-custom-interaction/qti-custom-interaction.js"
+    },
+    "./qti-custom-interaction/register": {
+      "types": "./dist/components/qti-custom-interaction/register.d.ts",
+      "import": "./dist/components/qti-custom-interaction/register.js"
+    },
+    "./qti-end-attempt-interaction": {
+      "types": "./dist/components/qti-end-attempt-interaction/qti-end-attempt-interaction.d.ts",
+      "import": "./dist/components/qti-end-attempt-interaction/qti-end-attempt-interaction.js"
+    },
+    "./qti-end-attempt-interaction/register": {
+      "types": "./dist/components/qti-end-attempt-interaction/register.d.ts",
+      "import": "./dist/components/qti-end-attempt-interaction/register.js"
+    },
+    "./qti-extended-text-interaction": {
+      "types": "./dist/components/qti-extended-text-interaction/qti-extended-text-interaction.d.ts",
+      "import": "./dist/components/qti-extended-text-interaction/qti-extended-text-interaction.js"
+    },
+    "./qti-extended-text-interaction/register": {
+      "types": "./dist/components/qti-extended-text-interaction/register.d.ts",
+      "import": "./dist/components/qti-extended-text-interaction/register.js"
+    },
+    "./qti-gap-match-interaction": {
+      "types": "./dist/components/qti-gap-match-interaction/qti-gap-match-interaction.d.ts",
+      "import": "./dist/components/qti-gap-match-interaction/qti-gap-match-interaction.js"
+    },
+    "./qti-gap-match-interaction/register": {
+      "types": "./dist/components/qti-gap-match-interaction/register.d.ts",
+      "import": "./dist/components/qti-gap-match-interaction/register.js"
+    },
+    "./qti-graphic-associate-interaction": {
+      "types": "./dist/components/qti-graphic-associate-interaction/qti-graphic-associate-interaction.d.ts",
+      "import": "./dist/components/qti-graphic-associate-interaction/qti-graphic-associate-interaction.js"
+    },
+    "./qti-graphic-associate-interaction/register": {
+      "types": "./dist/components/qti-graphic-associate-interaction/register.d.ts",
+      "import": "./dist/components/qti-graphic-associate-interaction/register.js"
+    },
+    "./qti-graphic-gap-match-interaction": {
+      "types": "./dist/components/qti-graphic-gap-match-interaction/qti-graphic-gap-match-interaction.d.ts",
+      "import": "./dist/components/qti-graphic-gap-match-interaction/qti-graphic-gap-match-interaction.js"
+    },
+    "./qti-graphic-gap-match-interaction/register": {
+      "types": "./dist/components/qti-graphic-gap-match-interaction/register.d.ts",
+      "import": "./dist/components/qti-graphic-gap-match-interaction/register.js"
+    },
+    "./qti-graphic-order-interaction": {
+      "types": "./dist/components/qti-graphic-order-interaction/qti-graphic-order-interaction.d.ts",
+      "import": "./dist/components/qti-graphic-order-interaction/qti-graphic-order-interaction.js"
+    },
+    "./qti-graphic-order-interaction/register": {
+      "types": "./dist/components/qti-graphic-order-interaction/register.d.ts",
+      "import": "./dist/components/qti-graphic-order-interaction/register.js"
+    },
+    "./qti-hotspot-interaction": {
+      "types": "./dist/components/qti-hotspot-interaction/qti-hotspot-interaction.d.ts",
+      "import": "./dist/components/qti-hotspot-interaction/qti-hotspot-interaction.js"
+    },
+    "./qti-hotspot-interaction/register": {
+      "types": "./dist/components/qti-hotspot-interaction/register.d.ts",
+      "import": "./dist/components/qti-hotspot-interaction/register.js"
+    },
+    "./qti-hottext-interaction": {
+      "types": "./dist/components/qti-hottext-interaction/qti-hottext-interaction.d.ts",
+      "import": "./dist/components/qti-hottext-interaction/qti-hottext-interaction.js"
+    },
+    "./qti-hottext-interaction/register": {
+      "types": "./dist/components/qti-hottext-interaction/register.d.ts",
+      "import": "./dist/components/qti-hottext-interaction/register.js"
+    },
+    "./qti-inline-choice-interaction": {
+      "types": "./dist/components/qti-inline-choice-interaction/qti-inline-choice-interaction.d.ts",
+      "import": "./dist/components/qti-inline-choice-interaction/qti-inline-choice-interaction.js"
+    },
+    "./qti-inline-choice-interaction/register": {
+      "types": "./dist/components/qti-inline-choice-interaction/register.d.ts",
+      "import": "./dist/components/qti-inline-choice-interaction/register.js"
+    },
+    "./qti-match-interaction": {
+      "types": "./dist/components/qti-match-interaction/qti-match-interaction.d.ts",
+      "import": "./dist/components/qti-match-interaction/qti-match-interaction.js"
+    },
+    "./qti-match-interaction/register": {
+      "types": "./dist/components/qti-match-interaction/register.d.ts",
+      "import": "./dist/components/qti-match-interaction/register.js"
+    },
+    "./qti-media-interaction": {
+      "types": "./dist/components/qti-media-interaction/qti-media-interaction.d.ts",
+      "import": "./dist/components/qti-media-interaction/qti-media-interaction.js"
+    },
+    "./qti-media-interaction/register": {
+      "types": "./dist/components/qti-media-interaction/register.d.ts",
+      "import": "./dist/components/qti-media-interaction/register.js"
+    },
+    "./qti-order-interaction": {
+      "types": "./dist/components/qti-order-interaction/qti-order-interaction.d.ts",
+      "import": "./dist/components/qti-order-interaction/qti-order-interaction.js"
+    },
+    "./qti-order-interaction/register": {
+      "types": "./dist/components/qti-order-interaction/register.d.ts",
+      "import": "./dist/components/qti-order-interaction/register.js"
+    },
+    "./qti-portable-custom-interaction": {
+      "types": "./dist/components/qti-portable-custom-interaction/qti-portable-custom-interaction.d.ts",
+      "import": "./dist/components/qti-portable-custom-interaction/qti-portable-custom-interaction.js"
+    },
+    "./qti-portable-custom-interaction/register": {
+      "types": "./dist/components/qti-portable-custom-interaction/register.d.ts",
+      "import": "./dist/components/qti-portable-custom-interaction/register.js"
+    },
+    "./qti-position-object-interaction": {
+      "types": "./dist/components/qti-position-object-interaction/qti-position-object-interaction.d.ts",
+      "import": "./dist/components/qti-position-object-interaction/qti-position-object-interaction.js"
+    },
+    "./qti-position-object-interaction/register": {
+      "types": "./dist/components/qti-position-object-interaction/register.d.ts",
+      "import": "./dist/components/qti-position-object-interaction/register.js"
+    },
+    "./qti-position-object-stage": {
+      "types": "./dist/components/qti-position-object-interaction/qti-position-object-stage.d.ts",
+      "import": "./dist/components/qti-position-object-interaction/qti-position-object-stage.js"
+    },
+    "./qti-select-point-interaction": {
+      "types": "./dist/components/qti-select-point-interaction/qti-select-point-interaction.d.ts",
+      "import": "./dist/components/qti-select-point-interaction/qti-select-point-interaction.js"
+    },
+    "./qti-select-point-interaction/register": {
+      "types": "./dist/components/qti-select-point-interaction/register.d.ts",
+      "import": "./dist/components/qti-select-point-interaction/register.js"
+    },
+    "./qti-slider-interaction": {
+      "types": "./dist/components/qti-slider-interaction/qti-slider-interaction.d.ts",
+      "import": "./dist/components/qti-slider-interaction/qti-slider-interaction.js"
+    },
+    "./qti-slider-interaction/register": {
+      "types": "./dist/components/qti-slider-interaction/register.d.ts",
+      "import": "./dist/components/qti-slider-interaction/register.js"
+    },
+    "./qti-text-entry-interaction": {
+      "types": "./dist/components/qti-text-entry-interaction/qti-text-entry-interaction.d.ts",
+      "import": "./dist/components/qti-text-entry-interaction/qti-text-entry-interaction.js"
+    },
+    "./qti-text-entry-interaction/register": {
+      "types": "./dist/components/qti-text-entry-interaction/register.d.ts",
+      "import": "./dist/components/qti-text-entry-interaction/register.js"
+    },
+    "./qti-upload-interaction": {
+      "types": "./dist/components/qti-upload-interaction/qti-upload-interaction.d.ts",
+      "import": "./dist/components/qti-upload-interaction/qti-upload-interaction.js"
+    },
+    "./qti-upload-interaction/register": {
+      "types": "./dist/components/qti-upload-interaction/register.d.ts",
+      "import": "./dist/components/qti-upload-interaction/register.js"
+    },
+    "./qti-associable-hotspot": {
+      "types": "./dist/elements/qti-associable-hotspot/index.d.ts",
+      "import": "./dist/elements/qti-associable-hotspot/index.js"
+    },
+    "./qti-associable-hotspot/register": {
+      "types": "./dist/elements/qti-associable-hotspot/register.d.ts",
+      "import": "./dist/elements/qti-associable-hotspot/register.js"
+    },
+    "./qti-gap": {
+      "types": "./dist/elements/qti-gap/index.d.ts",
+      "import": "./dist/elements/qti-gap/index.js"
+    },
+    "./qti-gap/register": {
+      "types": "./dist/elements/qti-gap/register.d.ts",
+      "import": "./dist/elements/qti-gap/register.js"
+    },
+    "./qti-gap-img": {
+      "types": "./dist/elements/qti-gap-img/index.d.ts",
+      "import": "./dist/elements/qti-gap-img/index.js"
+    },
+    "./qti-gap-img/register": {
+      "types": "./dist/elements/qti-gap-img/register.d.ts",
+      "import": "./dist/elements/qti-gap-img/register.js"
+    },
+    "./qti-gap-text": {
+      "types": "./dist/elements/qti-gap-text/index.d.ts",
+      "import": "./dist/elements/qti-gap-text/index.js"
+    },
+    "./qti-gap-text/register": {
+      "types": "./dist/elements/qti-gap-text/register.d.ts",
+      "import": "./dist/elements/qti-gap-text/register.js"
+    },
+    "./qti-hotspot-choice": {
+      "types": "./dist/elements/qti-hotspot-choice/index.d.ts",
+      "import": "./dist/elements/qti-hotspot-choice/index.js"
+    },
+    "./qti-hotspot-choice/register": {
+      "types": "./dist/elements/qti-hotspot-choice/register.d.ts",
+      "import": "./dist/elements/qti-hotspot-choice/register.js"
+    },
+    "./qti-hottext": {
+      "types": "./dist/elements/qti-hottext/index.d.ts",
+      "import": "./dist/elements/qti-hottext/index.js"
+    },
+    "./qti-hottext/register": {
+      "types": "./dist/elements/qti-hottext/register.d.ts",
+      "import": "./dist/elements/qti-hottext/register.js"
+    },
+    "./qti-inline-choice": {
+      "types": "./dist/elements/qti-inline-choice/index.d.ts",
+      "import": "./dist/elements/qti-inline-choice/index.js"
+    },
+    "./qti-inline-choice/register": {
+      "types": "./dist/elements/qti-inline-choice/register.d.ts",
+      "import": "./dist/elements/qti-inline-choice/register.js"
+    },
+    "./qti-prompt": {
+      "types": "./dist/elements/qti-prompt/index.d.ts",
+      "import": "./dist/elements/qti-prompt/index.js"
+    },
+    "./qti-prompt/register": {
+      "types": "./dist/elements/qti-prompt/register.d.ts",
+      "import": "./dist/elements/qti-prompt/register.js"
+    },
+    "./qti-simple-associable-choice": {
+      "types": "./dist/elements/qti-simple-associable-choice/index.d.ts",
+      "import": "./dist/elements/qti-simple-associable-choice/index.js"
+    },
+    "./qti-simple-associable-choice/register": {
+      "types": "./dist/elements/qti-simple-associable-choice/register.d.ts",
+      "import": "./dist/elements/qti-simple-associable-choice/register.js"
+    },
+    "./qti-simple-choice": {
+      "types": "./dist/elements/qti-simple-choice/index.d.ts",
+      "import": "./dist/elements/qti-simple-choice/index.js"
+    },
+    "./qti-simple-choice/register": {
+      "types": "./dist/elements/qti-simple-choice/register.d.ts",
+      "import": "./dist/elements/qti-simple-choice/register.js"
+    },
     "./*": "./dist/*"
   },
   "files": [
