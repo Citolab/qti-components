@@ -436,7 +436,8 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         sourceDroppable: sourceDroppable,
         inputType: inputType,
         pointerId,
-        startedFromTrustedEvent
+        startedFromTrustedEvent,
+        initialCoordinates: { x: startX, y: startY }
       };
 
       if (isCloneInDroppable) {
@@ -641,20 +642,34 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       if (!this.dragState.dragging) return;
 
       const { dragSource, dragClone, currentTarget, sourceDroppable } = this.dragState;
+      let dropTarget = currentTarget;
+      if (!dropTarget && dragClone) {
+        const rect = dragClone.getBoundingClientRect();
+        const probeX = this.dragState.initialCoordinates?.x ?? rect.left + rect.width / 2;
+        const probeY = this.dragState.initialCoordinates?.y ?? rect.top + rect.height / 2;
+        dropTarget = detectCollision(
+          this.allDropzones,
+          probeX,
+          probeY,
+          dragClone,
+          this.collisionDetectionAlgorithm,
+          this.trackedDragContainers
+        );
+      }
 
       // Allow dropping into the source droppable even if it's marked as disabled
       // The data-drag-source marker indicates this droppable should accept the item being returned
       const isDisabledButSource =
-        currentTarget?.hasAttribute('disabled') && currentTarget.hasAttribute('data-drag-source');
+        dropTarget?.hasAttribute('disabled') && dropTarget.hasAttribute('data-drag-source');
 
       const canDrop =
         !!dragSource &&
-        !!currentTarget &&
-        this.allowDrop(dragSource, currentTarget) &&
-        (!currentTarget.hasAttribute('disabled') || isDisabledButSource);
+        !!dropTarget &&
+        this.allowDrop(dragSource, dropTarget) &&
+        (!dropTarget.hasAttribute('disabled') || isDisabledButSource);
 
-      if (canDrop && dragSource && currentTarget) {
-        this.handleDrop(dragSource, currentTarget);
+      if (canDrop && dragSource && dropTarget) {
+        this.handleDrop(dragSource, dropTarget);
       } else {
         this.handleInvalidDrop(dragSource);
       }
