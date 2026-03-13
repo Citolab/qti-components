@@ -2,18 +2,22 @@ import { html } from 'lit';
 import { state } from 'lit/decorators.js';
 
 import { Interaction } from '@qti-components/base';
+import { DragDropSlottedMixin, DragDropSlottedSortableMixin } from '@qti-components/interactions/mixins/drag-drop-observables';
 
-import { DragDropInteractionMixin } from '../../mixins/drag-drop';
+// import { DragDropInteractionMixin } from '../../mixins/drag-drop';
 import styles from './qti-associate-interaction.styles';
 
 import type { QtiSimpleAssociableChoice } from '../../elements/qti-simple-associable-choice';
 import type { CSSResultGroup } from 'lit';
-export class QtiAssociateInteraction extends DragDropInteractionMixin(
+const SlottedBase = DragDropSlottedMixin(
   Interaction,
   'qti-simple-associable-choice',
   '.dl',
-  `slot[name='qti-simple-associable-choice']`
-) {
+  `slot[name='qti-simple-associable-choice']`,
+  'pointerWithin'
+);
+
+export class QtiAssociateInteraction extends DragDropSlottedSortableMixin(SlottedBase, '[qti-draggable="true"]') {
   static override styles: CSSResultGroup = styles;
   @state() protected _childrenMap: Element[] = [];
 
@@ -26,8 +30,40 @@ export class QtiAssociateInteraction extends DragDropInteractionMixin(
   }
 
   protected _registerChoice(event: CustomEvent) {
-    const choice = event.target as QtiSimpleAssociableChoice;
-    this._childrenMap.push(choice);
+    // Use composedPath()[0] to get the actual origin — event.target is retargeted to `this`
+    // when a composed event crosses the shadow DOM boundary, making it useless for filtering.
+    const origin = event.composedPath()[0] as HTMLElement;
+    // Ignore clones placed in shadow DOM drop zones — only register light DOM choices
+    if (this.shadowRoot?.contains(origin)) return;
+    const choice = origin as QtiSimpleAssociableChoice;
+    if (!this._childrenMap.includes(choice)) {
+      this._childrenMap = [...this._childrenMap, choice];
+    }
+  }
+
+  protected getResponse(): string[] {
+    const pairCount = Math.ceil(this._childrenMap.length / 2);
+    const response: string[] = [];
+    for (let i = 0; i < pairCount; i++) {
+      const leftDrop = this.shadowRoot?.querySelector(`.dl[identifier="droplist${i}_left"]`);
+      const rightDrop = this.shadowRoot?.querySelector(`.dl[identifier="droplist${i}_right"]`);
+      const leftId = leftDrop?.querySelector('[qti-draggable="true"]')?.getAttribute('identifier');
+      const rightId = rightDrop?.querySelector('[qti-draggable="true"]')?.getAttribute('identifier');
+      if (leftId && rightId) {
+        response.push(`${leftId} ${rightId}`);
+      }
+    }
+    return response;
+  }
+
+  getValue(val: string[]) {
+    return (
+      val?.flatMap((pair, i) => {
+        const parts = pair.split(' ');
+        if (parts.length !== 2) return [];
+        return [`${parts[0]} droplist${i}_left`, `${parts[1]} droplist${i}_right`];
+      }) ?? []
+    );
   }
 
   override render() {
@@ -45,6 +81,13 @@ export class QtiAssociateInteraction extends DragDropInteractionMixin(
 
         <div role="alert" part="message" id="validation-message"></div>
       </div>`;
+  }
+
+  protected override updated(changedProperties: Map<string, unknown>): void {
+    super.updated(changedProperties);
+    if (changedProperties.has('_childrenMap')) {
+      this.cacheInteractiveElements();
+    }
   }
 
   override disconnectedCallback() {

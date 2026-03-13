@@ -47,6 +47,24 @@ export default css`
     background-color: var(--qti-bg-active) !important;
   }
 
+  [part='drop-list'][data-cross-slot-target] {
+    border-color: var(--qti-border-active, #0066cc) !important;
+    background-color: var(--qti-bg-active, rgba(0, 102, 204, 0.1)) !important;
+    outline: 2px dashed var(--qti-border-active, #0066cc);
+    outline-offset: -2px;
+  }
+
+  /* Candidate correction colors for choices placed inside drop-lists. */
+  drop-list [qti-draggable='true']:state(candidate-correct),
+  [part='qti-simple-choice']:state(candidate-correct) {
+    background-color: var(--qti-correct) !important;
+  }
+
+  drop-list [qti-draggable='true']:state(candidate-incorrect),
+  [part='qti-simple-choice']:state(candidate-incorrect) {
+    background-color: var(--qti-incorrect) !important;
+  }
+
   [part='container'] {
     display: flex;
     gap: 0.5rem;

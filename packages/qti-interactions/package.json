@@ -5,7 +5,8 @@
   "author": "",
   "dependencies": {
     "@qti-components/base": "workspace:^",
-    "@qti-components/utilities": "workspace:^"
+    "@qti-components/utilities": "workspace:^",
+    "observable-polyfill": "^0.0.29"
   },
   "devDependencies": {
     "@lit/context": "^1.1.6",
@@ -38,7 +39,7 @@
   },
   "scripts": {
     "attw": "attw --profile esm-only --pack",
-    "build": "tsc --paths null",
+    "build": "tsc",
     "build-storybook": "storybook build",
     "cem": "cem analyze --config ./custom-elements-manifest.config.mjs",
     "clean": "rm -rf dist",

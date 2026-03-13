@@ -1,18 +1,21 @@
 import { html } from 'lit';
 
 import { Interaction } from '@qti-components/base';
+import { DragDropSlottedMixin, DragDropSlottedSortableMixin } from '@qti-components/interactions/mixins/drag-drop-observables';
 
-import { DragDropInteractionMixin } from '../../mixins/drag-drop';
+// import { DragDropInteractionMixin } from '../../mixins/drag-drop';
 import styles from './qti-graphic-gap-match-interaction.styles';
 
 import type { QtiHotspotChoice } from '../../elements/qti-hotspot-choice';
 import type { CSSResultGroup } from 'lit';
-export class QtiGraphicGapMatchInteraction extends DragDropInteractionMixin(
+const SlottedBase = DragDropSlottedMixin(
   Interaction,
   'qti-gap-img, qti-gap-text',
   'qti-associable-hotspot',
   `slot[part='drags']`
-) {
+);
+
+export class QtiGraphicGapMatchInteraction extends DragDropSlottedSortableMixin(SlottedBase, '[qti-draggable="true"]') {
   static override styles: CSSResultGroup = styles;
 
   override render() {
@@ -20,6 +23,10 @@ export class QtiGraphicGapMatchInteraction extends DragDropInteractionMixin(
       <slot part="image"></slot>
       <slot part="drags" name="drags" class="hover-border"></slot>
       <div role="alert" part="message" id="validation-message"></div>`;
+  }
+
+  public override shouldReturnToInventoryOnInventoryDrop(): boolean {
+    return true;
   }
 
   #positionHotspotOnRegister(e: CustomEvent<null>): void {

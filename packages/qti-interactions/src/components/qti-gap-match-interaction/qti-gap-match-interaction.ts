@@ -1,19 +1,22 @@
 import { html } from 'lit';
 
 import { Interaction } from '@qti-components/base';
+import { DragDropSlottedMixin, DragDropSlottedSortableMixin } from '@qti-components/interactions/mixins/drag-drop-observables';
 
-import { DragDropInteractionMixin } from '../../mixins/drag-drop/drag-drop-interaction-mixin.js';
+// import { DragDropInteractionMixin } from '../../mixins/drag-drop/drag-drop-interaction-mixin.js';
 import styles from './qti-gap-match-interaction.styles.js';
 
 import type { ResponseVariable } from '@qti-components/base';
 import type { QtiGap } from '../../elements/qti-gap';
 import type { CSSResultGroup } from 'lit';
-export class QtiGapMatchInteraction extends DragDropInteractionMixin(
+const SlottedBase = DragDropSlottedMixin(
   Interaction,
   'qti-gap-text',
   'qti-gap',
   `slot[part='drags']`
-) {
+);
+
+export class QtiGapMatchInteraction extends DragDropSlottedSortableMixin(SlottedBase, '[qti-draggable="true"]') {
   static override styles: CSSResultGroup = styles;
 
   override render() {

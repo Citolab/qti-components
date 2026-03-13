@@ -66,6 +66,9 @@
           cursor: default !important;
         }
       }
+      &:not(:empty) {
+        border-color: var(--qti-border) !important;
+      }
       &:empty::after {
         padding: var(--qti-padding-md) var(--qti-padding-lg);
         content: '\0000a0';
@@ -79,6 +82,14 @@
         transform: rotate(0);
         box-shadow: 0 0 0 1px #e5e7eb;
       }
+    }
+    &.qti-selections-light qti-associable-hotspot:not(:empty) {
+      background-color: var(--qti-light-bg-active) !important;
+      border-color: var(--qti-light-border-active) !important;
+    }
+    &.qti-selections-dark qti-associable-hotspot:not(:empty) {
+      background-color: var(--qti-dark-bg-active) !important;
+      border-color: var(--qti-dark-border-active) !important;
     }
     & img {
       margin: 0;

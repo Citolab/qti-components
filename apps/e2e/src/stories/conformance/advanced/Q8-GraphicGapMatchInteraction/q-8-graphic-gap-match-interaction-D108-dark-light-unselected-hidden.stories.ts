@@ -13,7 +13,7 @@ type Story = StoryObj;
 
 // Compare the RGB values
 const rgbIsEqual = (color1: { r: number; g: number; b: number }, color2: { r: number; g: number; b: number }) =>
-  color1 && color2 && color1.r === color2.r && color1.g === color2.g && color1.b === color2.b;
+  Boolean(color1 && color2 && color1.r === color2.r && color1.g === color2.g && color1.b === color2.b);
 
 // Utility function to convert hex color to RGB
 function hexToRgb(hex) {
@@ -31,7 +31,7 @@ function hexToRgb(hex) {
 
 // Utility function to convert RGB string to RGB object
 function rgbStringToRgb(rgbString) {
-  const result = /^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/.exec(rgbString);
+  const result = /^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*[\d.]+)?\s*\)$/.exec(rgbString);
   return result
     ? {
         r: parseInt(result[1], 10),
