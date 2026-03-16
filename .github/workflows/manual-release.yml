@@ -173,7 +173,7 @@ jobs:
 
       - name: Run semantic-release (dry-run)
         if: ${{ inputs.dry_run }}
-        run: pnpm run release:semantic:dry-run:ci:umbrella
+        run: pnpm run ci:release:umbrella:dry
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_GH_TOKEN || secrets.GITHUB_TOKEN }}
           HUSKY: 0
@@ -182,7 +182,7 @@ jobs:
 
       - name: Run semantic-release
         if: ${{ !inputs.dry_run }}
-        run: pnpm run release:semantic:ci:umbrella
+        run: pnpm run ci:release:umbrella
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_GH_TOKEN || secrets.GITHUB_TOKEN }}
           HUSKY: 0
@@ -262,7 +262,7 @@ jobs:
           npm config delete //registry.npmjs.org/:_authToken || true
 
       - name: Publish umbrella package if needed
-        run: pnpm --filter ./packages/qti-components run publish
+        run: pnpm run ci:publish:umbrella
         env:
           NODE_AUTH_TOKEN: ''
           NPM_TOKEN: ''
