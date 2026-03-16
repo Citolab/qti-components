@@ -15,6 +15,11 @@ const config: StorybookConfig = {
       titlePrefix: 'Docs'
     },
     {
+      directory: '../docs',
+      files: '**/*.mdx',
+      titlePrefix: 'Docs'
+    },
+    {
       directory: '../apps/e2e/src',
       files: '**/*.stories.*',
       titlePrefix: 'E2E'

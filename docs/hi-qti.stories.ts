@@ -6,7 +6,7 @@ type Story = StoryObj<QtiTest>;
 const html = String.raw;
 
 const meta: Meta<QtiTest> = {
-  tags: ['!dev']
+  // tags: ['!dev']
 };
 export default meta;
 
