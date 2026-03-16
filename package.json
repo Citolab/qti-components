@@ -40,7 +40,7 @@
     "clean": "pnpm -r run clean",
     "cem": "pnpm -r run cem",
     "build": "pnpm -r run build",
-    "attw": "pnpm -r run attw",
+    "attw": "env NPM_CONFIG_CACHE=/tmp/qti-components-npm-cache pnpm -r run attw",
     "publint": "pnpm -r run publint",
     "yalc": "pnpm -r run yalc",
     "yalc:push": "pnpm -r run yalc:push",
