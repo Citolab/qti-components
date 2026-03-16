@@ -50,7 +50,11 @@
       "types": "./dist/register.d.ts",
       "import": "./dist/register.js"
     },
-    "./*": "./dist/*"
+    "./*": "./dist/*",
+    "./styles": {
+      "types": "./dist/qti-end-attempt-interaction.styles.d.ts",
+      "import": "./dist/qti-end-attempt-interaction.styles.js"
+    }
   },
   "repository": {
     "type": "git",

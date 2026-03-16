@@ -1,7 +1,13 @@
-import { css, html } from 'lit';
+import { html } from 'lit';
 
 import { Interaction } from '@qti-components/base';
+
+import styles from './qti-media-interaction.styles';
+
+import type { CSSResultGroup } from 'lit';
 export class QtiMediaInteraction extends Interaction {
+  static override styles: CSSResultGroup = styles;
+
   #value: number = null;
 
   override reset() {
@@ -38,8 +44,6 @@ export class QtiMediaInteraction extends Interaction {
       }
     };
   }
-
-  static override styles = [css``];
 
   override render() {
     return html` <slot name="prompt"></slot>

@@ -1,4 +1,4 @@
-import { css, html } from 'lit';
+import { html } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { consume } from '@lit/context';
 
@@ -115,16 +115,7 @@ export class QtiPortableCustomInteraction extends Interaction {
   private _iframeObjectUrl: string | null = null;
 
   // This implementation always renders inside an iframe.
-  static override styles: CSSResultGroup = [
-    styles,
-    css`
-      :host {
-        display: block;
-        width: 100%;
-        min-height: 50px;
-      }
-    `
-  ];
+  static override styles: CSSResultGroup = styles;
 
   /**
    * AMD module name for the PCI implementation.

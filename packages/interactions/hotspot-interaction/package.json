@@ -50,7 +50,11 @@
       "types": "./dist/register.d.ts",
       "import": "./dist/register.js"
     },
-    "./*": "./dist/*"
+    "./*": "./dist/*",
+    "./styles": {
+      "types": "./dist/qti-hotspot-interaction.styles.d.ts",
+      "import": "./dist/qti-hotspot-interaction.styles.js"
+    }
   },
   "repository": {
     "type": "git",

@@ -1,22 +1,13 @@
-import { LitElement, css, html } from 'lit';
+import { LitElement, html } from 'lit';
+
+import styles from './qti-position-object-interaction.styles';
+
+import type { CSSResultGroup } from 'lit';
 
 export class QtiPositionObjectInteraction extends LitElement {
+  static override styles: CSSResultGroup = styles;
+
   override render() {
     return html`<slot></slot>`;
   }
-
-  static override styles = [
-    css`
-      :host {
-        display: block;
-      }
-      ::slotted(img) {
-        position: absolute;
-        cursor: move;
-        user-select: none;
-        left: 50%;
-        transform: translateX(-50%);
-      }
-    `
-  ];
 }

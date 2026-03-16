@@ -1,7 +1,13 @@
-import { css, html } from 'lit';
+import { html } from 'lit';
 
 import { Interaction } from '@qti-components/base';
+
+import styles from './qti-upload-interaction.styles';
+
+import type { CSSResultGroup } from 'lit';
 export class QtiUploadInteraction extends Interaction {
+  static override styles: CSSResultGroup = styles;
+
   #file: File | null = null;
   #base64: string | null = null;
 
@@ -35,19 +41,6 @@ export class QtiUploadInteraction extends Interaction {
       ...Interaction.properties
     };
   }
-
-  static override styles = [
-    css`
-      :host {
-        display: block;
-        margin: 1em 0;
-      }
-      input[type='file'] {
-        display: block;
-        margin-top: 0.5em;
-      }
-    `
-  ];
 
   override render() {
     return html`

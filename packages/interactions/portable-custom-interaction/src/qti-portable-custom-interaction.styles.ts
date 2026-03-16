@@ -3,6 +3,12 @@ import { css } from 'lit';
 
 /* ${componentStyles} */
 export default css`
+  :host {
+    display: block;
+    width: 100%;
+    min-height: 50px;
+  }
+
   ::slotted(qti-interaction-markup) {
     display: none;
   }

@@ -3,6 +3,10 @@ import { customElement, property, state } from 'lit/decorators.js';
 
 import { Interaction, removeDoubleSlashes } from '@qti-components/base';
 
+import styles from './qti-custom-interaction.styles';
+
+import type { CSSResultGroup } from 'lit';
+
 /**
  * CES (Custom Element Standard) Custom Interaction Support
  *
@@ -178,6 +182,7 @@ export class QtiCustomInteraction extends Interaction {
   #rawResponse: string | string[] = '';
   #manifestUrl: string = null;
   #resourceBaseUrl: string = null;
+  static override styles: CSSResultGroup = styles;
 
   constructor() {
     super();

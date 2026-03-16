@@ -1,6 +1,12 @@
 import { html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
+
+import styles from './qti-end-attempt-interaction.styles';
+
+import type { CSSResultGroup } from 'lit';
 export class QtiEndAttemptInteraction extends LitElement {
+  static override styles: CSSResultGroup = styles;
+
   @property({ type: String, attribute: 'response-identifier' }) responseIdentifier: string;
 
   @property({ reflect: true, type: Boolean }) disabled = false;

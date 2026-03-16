@@ -1,7 +1,11 @@
-import { LitElement, css, html } from 'lit';
+import { LitElement, html } from 'lit';
 
-import type { PropertyValueMap } from 'lit';
+import styles from './qti-position-object-stage.styles';
+
+import type { CSSResultGroup, PropertyValueMap } from 'lit';
 export class QtiPositionObjectStage extends LitElement {
+  static override styles: CSSResultGroup = styles;
+
   choiceOrdering: boolean;
   startX: any;
   startY: any;
@@ -10,15 +14,6 @@ export class QtiPositionObjectStage extends LitElement {
   override render() {
     return html`<slot></slot>`;
   }
-
-  static override styles = [
-    css`
-      :host {
-        display: inline-block;
-        position: relative;
-      }
-    `
-  ];
 
   constructor() {
     super();

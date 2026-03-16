@@ -1,4 +1,4 @@
-import { css, html } from 'lit';
+import { html } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { styleMap } from 'lit/directives/style-map.js';
@@ -7,26 +7,12 @@ import { Interaction } from '@qti-components/base';
 import { ScoringHelper } from '@qti-components/base';
 import { positionShapes } from '@qti-components/interactions-core/internal/hotspots/hotspot';
 
+import styles from './qti-select-point-interaction.styles';
+
+import type { CSSResultGroup } from 'lit';
 import type { QtiAreaMapEntry, QtiAreaMapping } from '@qti-components/base';
 export class QtiSelectPointInteraction extends Interaction {
-  static override styles = [
-    css`
-      :host {
-        display: block;
-      }
-      point-container {
-        display: block;
-        position: relative;
-        width: fit-content;
-      }
-
-      ::slotted(img) {
-        max-width: 100%;
-        height: auto;
-        display: block;
-      }
-    `
-  ];
+  static override styles: CSSResultGroup = styles;
 
   @property({
     type: Number,

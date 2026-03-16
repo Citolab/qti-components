@@ -50,7 +50,11 @@
       "types": "./dist/register.d.ts",
       "import": "./dist/register.js"
     },
-    "./*": "./dist/*"
+    "./*": "./dist/*",
+    "./styles": {
+      "types": "./dist/qti-position-object-interaction.styles.d.ts",
+      "import": "./dist/qti-position-object-interaction.styles.js"
+    }
   },
   "repository": {
     "type": "git",

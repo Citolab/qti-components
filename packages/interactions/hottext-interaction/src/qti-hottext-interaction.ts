@@ -4,8 +4,12 @@ import { property } from 'lit/decorators.js';
 import { Interaction } from '@qti-components/base';
 import { ChoicesMixin } from '@qti-components/interactions-core/mixins/choices/choices.mixin';
 
-import type { PropertyValues } from 'lit';
+import styles from './qti-hottext-interaction.styles';
+
+import type { CSSResultGroup, PropertyValues } from 'lit';
 export class QtiHottextInteraction extends ChoicesMixin(Interaction, 'qti-hottext') {
+  static override styles: CSSResultGroup = styles;
+
   @property({ type: String, reflect: true })
   class = '';
 
