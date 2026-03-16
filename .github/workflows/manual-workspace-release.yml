@@ -21,7 +21,7 @@ permissions:
   id-token: write
 
 jobs:
-  release-and-publish:
+  release:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -60,18 +60,22 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.RELEASE_GH_TOKEN || secrets.GITHUB_TOKEN }}
           HUSKY: 0
 
-      - name: Ensure OIDC trusted publishing auth
-        if: ${{ !inputs.dry_run }}
-        run: |
-          rm -f .npmrc "$HOME/.npmrc"
-          npm config delete always-auth || true
-          npm config delete //registry.npmjs.org/:_authToken || true
-
-      - name: Publish changed workspace packages if needed
-        if: ${{ !inputs.dry_run }}
-        run: env -u npm_config_recursive -u npm_config_workspace_concurrency -u npm_config_verify_deps_before_run -u npm_config_npm_globalconfig -u npm_config__jsr_registry pnpm run ci:publish:missing
-        env:
-          WORKSPACE_RELEASE_RUNNER_CONTEXT: manual:workspace-release
-          NODE_AUTH_TOKEN: ''
-          NPM_TOKEN: ''
-          NPM_CONFIG_PROVENANCE: 'true'
+  dispatch-publish:
+    if: ${{ !inputs.dry_run }}
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch publish-packages workflow
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.RELEASE_GH_TOKEN || secrets.GITHUB_TOKEN }}
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'publish-packages.yml',
+              ref: '${{ inputs.branch || 'main' }}',
+              inputs: {
+                branch: '${{ inputs.branch || 'main' }}'
+              }
+            });

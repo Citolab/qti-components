@@ -36,20 +36,6 @@ pnpm run local:workspace-release:dry
 pnpm run local:workspace-release
 ```
 
-Compatibility aliases still available:
-
-```bash
-pnpm run release:changed:dry
-pnpm run release:changed
-pnpm run publish:missing
-```
-
-Publish all missing versions including umbrella (fallback only):
-
-```bash
-pnpm run publish:missing:all
-```
-
 ## Umbrella Release (`@citolab/qti-components`)
 
 Use GitHub Actions workflow `Manual: umbrella-release` (`.github/workflows/manual-release.yml`).
@@ -64,7 +50,9 @@ The workflow handles umbrella semantic-release and umbrella publish.
 
 ## Workspace Release (non-umbrella packages)
 
-Use GitHub Actions workflow `Manual: workspace-release` (`.github/workflows/manual-workspace-release.yml`) when you want changed-package release+publish from the Actions UI.
+Use GitHub Actions workflow `Manual: workspace-release` (`.github/workflows/manual-workspace-release.yml`) when you want changed-package release from the Actions UI.
+
+That workflow dispatches `Publish packages` (`.github/workflows/publish-packages.yml`) for the actual npm publish so trusted publishing matches the npm package configuration.
 
 ## Push Quality (CI)
 
