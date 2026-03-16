@@ -1,0 +1,10 @@
+{
+  "name": "@qti-components/interactions-workspace",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "echo \"Use nested interaction packages\"",
+    "clean": "echo \"Use nested interaction packages\""
+  }
+}

@@ -4,9 +4,28 @@
   "version": "1.9.0",
   "author": "",
   "dependencies": {
-    "@qti-components/base": "workspace:^",
-    "@qti-components/utilities": "workspace:^",
-    "observable-polyfill": "^0.0.29"
+    "@qti-components/associate-interaction": "workspace:^",
+    "@qti-components/choice-interaction": "workspace:^",
+    "@qti-components/custom-interaction": "workspace:^",
+    "@qti-components/end-attempt-interaction": "workspace:^",
+    "@qti-components/extended-text-interaction": "workspace:^",
+    "@qti-components/gap-match-interaction": "workspace:^",
+    "@qti-components/graphic-associate-interaction": "workspace:^",
+    "@qti-components/graphic-gap-match-interaction": "workspace:^",
+    "@qti-components/graphic-order-interaction": "workspace:^",
+    "@qti-components/hotspot-interaction": "workspace:^",
+    "@qti-components/hottext-interaction": "workspace:^",
+    "@qti-components/inline-choice-interaction": "workspace:^",
+    "@qti-components/interactions-core": "workspace:^",
+    "@qti-components/match-interaction": "workspace:^",
+    "@qti-components/media-interaction": "workspace:^",
+    "@qti-components/order-interaction": "workspace:^",
+    "@qti-components/portable-custom-interaction": "workspace:^",
+    "@qti-components/position-object-interaction": "workspace:^",
+    "@qti-components/select-point-interaction": "workspace:^",
+    "@qti-components/slider-interaction": "workspace:^",
+    "@qti-components/text-entry-interaction": "workspace:^",
+    "@qti-components/upload-interaction": "workspace:^"
   },
   "devDependencies": {
     "@lit/context": "^1.1.6",
@@ -18,6 +37,14 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./register-all": {
+      "types": "./dist/register-all.d.ts",
+      "import": "./dist/register-all.js"
+    },
+    "./mixins/drag-drop-observables": {
+      "types": "./dist/mixins/drag-drop-observables/index.d.ts",
+      "import": "./dist/mixins/drag-drop-observables/index.js"
     },
     "./*": "./dist/*"
   },
@@ -39,14 +66,17 @@
   },
   "scripts": {
     "attw": "attw --profile esm-only --pack",
-    "build": "tsc",
+    "build": "tsc --paths null",
     "build-storybook": "storybook build",
     "cem": "cem analyze --config ./custom-elements-manifest.config.mjs",
     "clean": "rm -rf dist",
     "storybook": "storybook dev -p 6008 --no-open",
     "yalc": "yalc publish",
     "yalc:push": "yalc push",
-    "publish": "node ../../tools/publish-if-needed.mjs"
+    "publish": "node ../../tools/publish-if-needed.mjs",
+    "release": "semantic-release --no-ci",
+    "release:semantic": "semantic-release --no-ci",
+    "release:semantic:dry-run": "semantic-release --dry-run --no-ci"
   },
   "sideEffects": true,
   "type": "module",

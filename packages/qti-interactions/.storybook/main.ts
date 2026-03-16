@@ -5,7 +5,7 @@ import type { StorybookConfig } from '@storybook/web-components-vite';
 const config: StorybookConfig = {
   stories: [
     {
-      directory: '../src',
+      directory: '../../interactions',
       files: '**/*.stories.*',
       titlePrefix: 'QTI Interactions'
     }

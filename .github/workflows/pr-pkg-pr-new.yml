@@ -37,4 +37,4 @@ jobs:
         run: pnpm run build
 
       - name: Publish PR package previews
-        run: pnpm exec pkg-pr-new publish "./packages/*" --pnpm --packageManager pnpm --comment update
+        run: pnpm exec pkg-pr-new publish "./packages/*" "./packages/interactions/*" --pnpm --packageManager pnpm --comment update

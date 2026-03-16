@@ -30,7 +30,7 @@ const config: StorybookConfig = {
       titlePrefix: 'QTI Elements'
     },
     {
-      directory: '../packages/qti-interactions/src/components',
+      directory: '../packages/interactions',
       files: '**/*.stories.*',
       titlePrefix: 'QTI Interactions'
     },

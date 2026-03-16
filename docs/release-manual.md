@@ -1,0 +1,52 @@
+# Release Manual
+
+## 1) Release One `@qti-components/*` Package Locally
+
+Prerequisites:
+- Clean git working tree.
+- npm publish access for the target package.
+- Conventional commits present for the package changes.
+
+Command:
+
+```bash
+pnpm run release:package -- --pkg @qti-components/<package-name>
+```
+
+Dry-run:
+
+```bash
+pnpm run release:package:dry-run -- --pkg @qti-components/<package-name>
+```
+
+What it does:
+- Builds the package.
+- Runs package tests (`--if-present`).
+- Runs `semantic-release` for that package only.
+- Publishes only that package.
+
+Notes:
+- This flow is only for `@qti-components/*`.
+- The umbrella package is intentionally excluded.
+
+## 2) Release Umbrella `@citolab/qti-components`
+
+Use GitHub Actions workflow:
+- Workflow: `Manual release` (`.github/workflows/manual-release.yml`)
+- Inputs:
+  - `branch` (default `main`)
+  - `dry_run` (`true` or `false`)
+  - `version_mode`: `patch | minor | major | exact`
+  - `exact_version`: required only when `version_mode=exact`
+
+Behavior:
+- Creates a release-driving commit: `chore(release): umbrella <mode-or-version>`.
+- Runs umbrella-only semantic-release.
+- Publishes only `@citolab/qti-components` when a new umbrella tag is created.
+
+Exact version rules:
+- Must be strict `x.y.z`.
+- Must be the immediate next `patch`, `minor`, or `major` from current umbrella version.
+
+Expected umbrella tag format:
+- `qti-components-vX.Y.Z`

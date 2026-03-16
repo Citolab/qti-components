@@ -60,6 +60,138 @@
       ],
       "@qti-components/utilities": [
         "packages/qti-utilities/src/index.ts"
+      ],
+      "@qti-components/interactions-core": [
+        "./packages/interactions/core/src/index.ts"
+      ],
+      "@qti-components/interactions-core/*": [
+        "./packages/interactions/core/src/*"
+      ],
+      "@qti-components/associate-interaction": [
+        "./packages/interactions/associate-interaction/src/index.ts"
+      ],
+      "@qti-components/associate-interaction/*": [
+        "./packages/interactions/associate-interaction/src/*"
+      ],
+      "@qti-components/choice-interaction": [
+        "./packages/interactions/choice-interaction/src/index.ts"
+      ],
+      "@qti-components/choice-interaction/*": [
+        "./packages/interactions/choice-interaction/src/*"
+      ],
+      "@qti-components/custom-interaction": [
+        "./packages/interactions/custom-interaction/src/index.ts"
+      ],
+      "@qti-components/custom-interaction/*": [
+        "./packages/interactions/custom-interaction/src/*"
+      ],
+      "@qti-components/end-attempt-interaction": [
+        "./packages/interactions/end-attempt-interaction/src/index.ts"
+      ],
+      "@qti-components/end-attempt-interaction/*": [
+        "./packages/interactions/end-attempt-interaction/src/*"
+      ],
+      "@qti-components/extended-text-interaction": [
+        "./packages/interactions/extended-text-interaction/src/index.ts"
+      ],
+      "@qti-components/extended-text-interaction/*": [
+        "./packages/interactions/extended-text-interaction/src/*"
+      ],
+      "@qti-components/gap-match-interaction": [
+        "./packages/interactions/gap-match-interaction/src/index.ts"
+      ],
+      "@qti-components/gap-match-interaction/*": [
+        "./packages/interactions/gap-match-interaction/src/*"
+      ],
+      "@qti-components/graphic-associate-interaction": [
+        "./packages/interactions/graphic-associate-interaction/src/index.ts"
+      ],
+      "@qti-components/graphic-associate-interaction/*": [
+        "./packages/interactions/graphic-associate-interaction/src/*"
+      ],
+      "@qti-components/graphic-gap-match-interaction": [
+        "./packages/interactions/graphic-gap-match-interaction/src/index.ts"
+      ],
+      "@qti-components/graphic-gap-match-interaction/*": [
+        "./packages/interactions/graphic-gap-match-interaction/src/*"
+      ],
+      "@qti-components/graphic-order-interaction": [
+        "./packages/interactions/graphic-order-interaction/src/index.ts"
+      ],
+      "@qti-components/graphic-order-interaction/*": [
+        "./packages/interactions/graphic-order-interaction/src/*"
+      ],
+      "@qti-components/hotspot-interaction": [
+        "./packages/interactions/hotspot-interaction/src/index.ts"
+      ],
+      "@qti-components/hotspot-interaction/*": [
+        "./packages/interactions/hotspot-interaction/src/*"
+      ],
+      "@qti-components/hottext-interaction": [
+        "./packages/interactions/hottext-interaction/src/index.ts"
+      ],
+      "@qti-components/hottext-interaction/*": [
+        "./packages/interactions/hottext-interaction/src/*"
+      ],
+      "@qti-components/inline-choice-interaction": [
+        "./packages/interactions/inline-choice-interaction/src/index.ts"
+      ],
+      "@qti-components/inline-choice-interaction/*": [
+        "./packages/interactions/inline-choice-interaction/src/*"
+      ],
+      "@qti-components/match-interaction": [
+        "./packages/interactions/match-interaction/src/index.ts"
+      ],
+      "@qti-components/match-interaction/*": [
+        "./packages/interactions/match-interaction/src/*"
+      ],
+      "@qti-components/media-interaction": [
+        "./packages/interactions/media-interaction/src/index.ts"
+      ],
+      "@qti-components/media-interaction/*": [
+        "./packages/interactions/media-interaction/src/*"
+      ],
+      "@qti-components/order-interaction": [
+        "./packages/interactions/order-interaction/src/index.ts"
+      ],
+      "@qti-components/order-interaction/*": [
+        "./packages/interactions/order-interaction/src/*"
+      ],
+      "@qti-components/portable-custom-interaction": [
+        "./packages/interactions/portable-custom-interaction/src/index.ts"
+      ],
+      "@qti-components/portable-custom-interaction/*": [
+        "./packages/interactions/portable-custom-interaction/src/*"
+      ],
+      "@qti-components/position-object-interaction": [
+        "./packages/interactions/position-object-interaction/src/index.ts"
+      ],
+      "@qti-components/position-object-interaction/*": [
+        "./packages/interactions/position-object-interaction/src/*"
+      ],
+      "@qti-components/select-point-interaction": [
+        "./packages/interactions/select-point-interaction/src/index.ts"
+      ],
+      "@qti-components/select-point-interaction/*": [
+        "./packages/interactions/select-point-interaction/src/*"
+      ],
+      "@qti-components/slider-interaction": [
+        "./packages/interactions/slider-interaction/src/index.ts"
+      ],
+      "@qti-components/slider-interaction/*": [
+        "./packages/interactions/slider-interaction/src/*"
+      ],
+      "@qti-components/text-entry-interaction": [
+        "./packages/interactions/text-entry-interaction/src/index.ts"
+      ],
+      "@qti-components/text-entry-interaction/*": [
+        "./packages/interactions/text-entry-interaction/src/*"
+      ],
+      "@qti-components/upload-interaction": [
+        "./packages/interactions/upload-interaction/src/index.ts"
+      ],
+      "@qti-components/upload-interaction/*": [
+        "./packages/interactions/upload-interaction/src/*"
       ]
     }
   },

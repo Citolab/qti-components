@@ -1,0 +1,19 @@
+{
+  "extends": "../../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "moduleResolution": "bundler"
+  },
+  "include": [
+    "src/index.ts",
+    "src/register.ts",
+    "src/**/*.ts",
+    "../../../tools/storybook/vite-env.d.ts"
+  ],
+  "exclude": [
+    "**/*.spec.ts",
+    "**/*.stories.ts",
+    "**/dist/**/*",
+    "**/node_modules/**/*"
+  ]
+}

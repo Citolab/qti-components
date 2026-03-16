@@ -18,18 +18,34 @@ const rootDir = process.cwd();
 const packagesDir = resolve(rootDir, 'packages');
 const umbrellaPackageName = '@citolab/qti-components';
 
-const packageEntries = readdirSync(packagesDir)
-  .map(name => ({ dir: resolve(packagesDir, name), name }))
-  .filter(entry => statSync(entry.dir).isDirectory())
-  .filter(entry => existsSync(resolve(entry.dir, 'package.json')))
-  .map(entry => {
-    const pkgPath = resolve(entry.dir, 'package.json');
+function collectPackageDirs(dir) {
+  const dirs = [];
+  const entries = readdirSync(dir)
+    .filter(name => !['node_modules', 'dist', '.turbo', '.git'].includes(name))
+    .map(name => resolve(dir, name))
+    .filter(p => statSync(p).isDirectory());
+
+  for (const entry of entries) {
+    if (existsSync(resolve(entry, 'package.json'))) {
+      dirs.push(entry);
+      continue;
+    }
+
+    dirs.push(...collectPackageDirs(entry));
+  }
+
+  return dirs;
+}
+
+const packageEntries = collectPackageDirs(packagesDir)
+  .map(dir => {
+    const pkgPath = resolve(dir, 'package.json');
     const pkg = JSON.parse(readFileSync(pkgPath, 'utf8'));
     return {
-      dir: entry.dir,
-      label: entry.dir.replace(`${rootDir}/`, ''),
+      dir,
+      label: dir.replace(`${rootDir}/`, ''),
       packageName: pkg.name ?? '',
-      folderName: entry.name
+      folderName: dir.replace(`${packagesDir}/`, '')
     };
   })
   .sort((a, b) => {

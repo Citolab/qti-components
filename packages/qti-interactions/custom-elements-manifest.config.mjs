@@ -10,15 +10,15 @@ const outdir = process.env.CEM_OUTDIR || './';
 
 export default {
   /** Globs to analyze */
-  globs: ['src/components/**/*.ts', 'src/elements/**/*.ts'],
+  globs: ['../interactions/*/src/**/*.ts', '../interactions/core/src/elements/**/*.ts'],
   /** Globs to exclude */
   exclude: [
-    'src/components/**/*.stories.ts',
-    'src/components/**/*.spec.ts',
-    'src/components/**/*.styles.ts',
-    'src/components/**/*.commands.ts',
-    'src/components/**/*.keymap.ts',
-    'src/components/**/*.schema.ts'
+    '../interactions/*/src/**/*.stories.ts',
+    '../interactions/*/src/**/*.spec.ts',
+    '../interactions/*/src/**/*.styles.ts',
+    '../interactions/*/src/**/*.commands.ts',
+    '../interactions/*/src/**/*.keymap.ts',
+    '../interactions/*/src/**/*.schema.ts'
   ],
   /** Directory to output CEM to */
   outdir: outdir,

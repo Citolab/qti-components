@@ -294,6 +294,426 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1
 
+  packages/interactions: {}
+
+  packages/interactions/associate-interaction:
+    dependencies:
+      '@qti-components/base':
+        specifier: workspace:^
+        version: link:../../qti-base
+      '@qti-components/interactions-core':
+        specifier: workspace:^
+        version: link:../core
+      '@qti-components/utilities':
+        specifier: workspace:^
+        version: link:../../qti-utilities
+    devDependencies:
+      '@lit/context':
+        specifier: ^1.1.6
+        version: 1.1.6
+      lit:
+        specifier: ^3.3.1
+        version: 3.3.1
+
+  packages/interactions/choice-interaction:
+    dependencies:
+      '@qti-components/base':
+        specifier: workspace:^
+        version: link:../../qti-base
+      '@qti-components/interactions-core':
+        specifier: workspace:^
+        version: link:../core
+      '@qti-components/utilities':
+        specifier: workspace:^
+        version: link:../../qti-utilities
+    devDependencies:
+      '@lit/context':
+        specifier: ^1.1.6
+        version: 1.1.6
+      lit:
+        specifier: ^3.3.1
+        version: 3.3.1
+
+  packages/interactions/core:
+    dependencies:
+      '@qti-components/base':
+        specifier: workspace:^
+        version: link:../../qti-base
+      '@qti-components/utilities':
+        specifier: workspace:^
+        version: link:../../qti-utilities
+      observable-polyfill:
+        specifier: ^0.0.29
+        version: 0.0.29
+    devDependencies:
+      '@lit/context':
+        specifier: ^1.1.6
+        version: 1.1.6
+      lit:
+        specifier: ^3.3.1
+        version: 3.3.1
+
+  packages/interactions/custom-interaction:
+    dependencies:
+      '@qti-components/base':
+        specifier: workspace:^
+        version: link:../../qti-base
+      '@qti-components/interactions-core':
+        specifier: workspace:^
+        version: link:../core
+      '@qti-components/utilities':
+        specifier: workspace:^
+        version: link:../../qti-utilities
+    devDependencies:
+      '@lit/context':
+        specifier: ^1.1.6
+        version: 1.1.6
+      lit:
+        specifier: ^3.3.1
+        version: 3.3.1
+
+  packages/interactions/end-attempt-interaction:
+    dependencies:
+      '@qti-components/base':
+        specifier: workspace:^
+        version: link:../../qti-base
+      '@qti-components/interactions-core':
+        specifier: workspace:^
+        version: link:../core
+      '@qti-components/utilities':
+        specifier: workspace:^
+        version: link:../../qti-utilities
+    devDependencies:
+      '@lit/context':
+        specifier: ^1.1.6
+        version: 1.1.6
+      lit:
+        specifier: ^3.3.1
+        version: 3.3.1
+
+  packages/interactions/extended-text-interaction:
+    dependencies:
+      '@qti-components/base':
+        specifier: workspace:^
+        version: link:../../qti-base
+      '@qti-components/interactions-core':
+        specifier: workspace:^
+        version: link:../core
+      '@qti-components/utilities':
+        specifier: workspace:^
+        version: link:../../qti-utilities
+    devDependencies:
+      '@lit/context':
+        specifier: ^1.1.6
+        version: 1.1.6
+      lit:
+        specifier: ^3.3.1
+        version: 3.3.1
+
+  packages/interactions/gap-match-interaction:
+    dependencies:
+      '@qti-components/base':
+        specifier: workspace:^
+        version: link:../../qti-base
+      '@qti-components/interactions-core':
+        specifier: workspace:^
+        version: link:../core
+      '@qti-components/utilities':
+        specifier: workspace:^
+        version: link:../../qti-utilities
+    devDependencies:
+      '@lit/context':
+        specifier: ^1.1.6
+        version: 1.1.6
+      lit:
+        specifier: ^3.3.1
+        version: 3.3.1
+
+  packages/interactions/graphic-associate-interaction:
+    dependencies:
+      '@qti-components/base':
+        specifier: workspace:^
+        version: link:../../qti-base
+      '@qti-components/interactions-core':
+        specifier: workspace:^
+        version: link:../core
+      '@qti-components/utilities':
+        specifier: workspace:^
+        version: link:../../qti-utilities
+    devDependencies:
+      '@lit/context':
+        specifier: ^1.1.6
+        version: 1.1.6
+      lit:
+        specifier: ^3.3.1
+        version: 3.3.1
+
+  packages/interactions/graphic-gap-match-interaction:
+    dependencies:
+      '@qti-components/base':
+        specifier: workspace:^
+        version: link:../../qti-base
+      '@qti-components/interactions-core':
+        specifier: workspace:^
+        version: link:../core
+      '@qti-components/utilities':
+        specifier: workspace:^
+        version: link:../../qti-utilities
+    devDependencies:
+      '@lit/context':
+        specifier: ^1.1.6
+        version: 1.1.6
+      lit:
+        specifier: ^3.3.1
+        version: 3.3.1
+
+  packages/interactions/graphic-order-interaction:
+    dependencies:
+      '@qti-components/base':
+        specifier: workspace:^
+        version: link:../../qti-base
+      '@qti-components/interactions-core':
+        specifier: workspace:^
+        version: link:../core
+      '@qti-components/utilities':
+        specifier: workspace:^
+        version: link:../../qti-utilities
+    devDependencies:
+      '@lit/context':
+        specifier: ^1.1.6
+        version: 1.1.6
+      lit:
+        specifier: ^3.3.1
+        version: 3.3.1
+
+  packages/interactions/hotspot-interaction:
+    dependencies:
+      '@qti-components/base':
+        specifier: workspace:^
+        version: link:../../qti-base
+      '@qti-components/interactions-core':
+        specifier: workspace:^
+        version: link:../core
+      '@qti-components/utilities':
+        specifier: workspace:^
+        version: link:../../qti-utilities
+    devDependencies:
+      '@lit/context':
+        specifier: ^1.1.6
+        version: 1.1.6
+      lit:
+        specifier: ^3.3.1
+        version: 3.3.1
+
+  packages/interactions/hottext-interaction:
+    dependencies:
+      '@qti-components/base':
+        specifier: workspace:^
+        version: link:../../qti-base
+      '@qti-components/interactions-core':
+        specifier: workspace:^
+        version: link:../core
+      '@qti-components/utilities':
+        specifier: workspace:^
+        version: link:../../qti-utilities
+    devDependencies:
+      '@lit/context':
+        specifier: ^1.1.6
+        version: 1.1.6
+      lit:
+        specifier: ^3.3.1
+        version: 3.3.1
+
+  packages/interactions/inline-choice-interaction:
+    dependencies:
+      '@qti-components/base':
+        specifier: workspace:^
+        version: link:../../qti-base
+      '@qti-components/interactions-core':
+        specifier: workspace:^
+        version: link:../core
+      '@qti-components/utilities':
+        specifier: workspace:^
+        version: link:../../qti-utilities
+    devDependencies:
+      '@lit/context':
+        specifier: ^1.1.6
+        version: 1.1.6
+      lit:
+        specifier: ^3.3.1
+        version: 3.3.1
+
+  packages/interactions/match-interaction:
+    dependencies:
+      '@qti-components/base':
+        specifier: workspace:^
+        version: link:../../qti-base
+      '@qti-components/interactions-core':
+        specifier: workspace:^
+        version: link:../core
+      '@qti-components/utilities':
+        specifier: workspace:^
+        version: link:../../qti-utilities
+    devDependencies:
+      '@lit/context':
+        specifier: ^1.1.6
+        version: 1.1.6
+      lit:
+        specifier: ^3.3.1
+        version: 3.3.1
+
+  packages/interactions/media-interaction:
+    dependencies:
+      '@qti-components/base':
+        specifier: workspace:^
+        version: link:../../qti-base
+      '@qti-components/interactions-core':
+        specifier: workspace:^
+        version: link:../core
+      '@qti-components/utilities':
+        specifier: workspace:^
+        version: link:../../qti-utilities
+    devDependencies:
+      '@lit/context':
+        specifier: ^1.1.6
+        version: 1.1.6
+      lit:
+        specifier: ^3.3.1
+        version: 3.3.1
+
+  packages/interactions/order-interaction:
+    dependencies:
+      '@qti-components/base':
+        specifier: workspace:^
+        version: link:../../qti-base
+      '@qti-components/interactions-core':
+        specifier: workspace:^
+        version: link:../core
+      '@qti-components/utilities':
+        specifier: workspace:^
+        version: link:../../qti-utilities
+    devDependencies:
+      '@lit/context':
+        specifier: ^1.1.6
+        version: 1.1.6
+      lit:
+        specifier: ^3.3.1
+        version: 3.3.1
+
+  packages/interactions/portable-custom-interaction:
+    dependencies:
+      '@qti-components/base':
+        specifier: workspace:^
+        version: link:../../qti-base
+      '@qti-components/interactions-core':
+        specifier: workspace:^
+        version: link:../core
+      '@qti-components/utilities':
+        specifier: workspace:^
+        version: link:../../qti-utilities
+    devDependencies:
+      '@lit/context':
+        specifier: ^1.1.6
+        version: 1.1.6
+      lit:
+        specifier: ^3.3.1
+        version: 3.3.1
+
+  packages/interactions/position-object-interaction:
+    dependencies:
+      '@qti-components/base':
+        specifier: workspace:^
+        version: link:../../qti-base
+      '@qti-components/interactions-core':
+        specifier: workspace:^
+        version: link:../core
+      '@qti-components/utilities':
+        specifier: workspace:^
+        version: link:../../qti-utilities
+    devDependencies:
+      '@lit/context':
+        specifier: ^1.1.6
+        version: 1.1.6
+      lit:
+        specifier: ^3.3.1
+        version: 3.3.1
+
+  packages/interactions/select-point-interaction:
+    dependencies:
+      '@qti-components/base':
+        specifier: workspace:^
+        version: link:../../qti-base
+      '@qti-components/interactions-core':
+        specifier: workspace:^
+        version: link:../core
+      '@qti-components/utilities':
+        specifier: workspace:^
+        version: link:../../qti-utilities
+    devDependencies:
+      '@lit/context':
+        specifier: ^1.1.6
+        version: 1.1.6
+      lit:
+        specifier: ^3.3.1
+        version: 3.3.1
+
+  packages/interactions/slider-interaction:
+    dependencies:
+      '@qti-components/base':
+        specifier: workspace:^
+        version: link:../../qti-base
+      '@qti-components/interactions-core':
+        specifier: workspace:^
+        version: link:../core
+      '@qti-components/utilities':
+        specifier: workspace:^
+        version: link:../../qti-utilities
+    devDependencies:
+      '@lit/context':
+        specifier: ^1.1.6
+        version: 1.1.6
+      lit:
+        specifier: ^3.3.1
+        version: 3.3.1
+
+  packages/interactions/text-entry-interaction:
+    dependencies:
+      '@qti-components/base':
+        specifier: workspace:^
+        version: link:../../qti-base
+      '@qti-components/interactions-core':
+        specifier: workspace:^
+        version: link:../core
+      '@qti-components/utilities':
+        specifier: workspace:^
+        version: link:../../qti-utilities
+    devDependencies:
+      '@lit/context':
+        specifier: ^1.1.6
+        version: 1.1.6
+      lit:
+        specifier: ^3.3.1
+        version: 3.3.1
+
+  packages/interactions/upload-interaction:
+    dependencies:
+      '@qti-components/base':
+        specifier: workspace:^
+        version: link:../../qti-base
+      '@qti-components/interactions-core':
+        specifier: workspace:^
+        version: link:../core
+      '@qti-components/utilities':
+        specifier: workspace:^
+        version: link:../../qti-utilities
+    devDependencies:
+      '@lit/context':
+        specifier: ^1.1.6
+        version: 1.1.6
+      lit:
+        specifier: ^3.3.1
+        version: 3.3.1
+
   packages/qti-base:
     dependencies:
       '@qti-components/utilities':
@@ -368,15 +788,72 @@ importers:
 
   packages/qti-interactions:
     dependencies:
-      '@qti-components/base':
+      '@qti-components/associate-interaction':
         specifier: workspace:^
-        version: link:../qti-base
-      '@qti-components/utilities':
+        version: link:../interactions/associate-interaction
+      '@qti-components/choice-interaction':
         specifier: workspace:^
-        version: link:../qti-utilities
-      observable-polyfill:
-        specifier: ^0.0.29
-        version: 0.0.29
+        version: link:../interactions/choice-interaction
+      '@qti-components/custom-interaction':
+        specifier: workspace:^
+        version: link:../interactions/custom-interaction
+      '@qti-components/end-attempt-interaction':
+        specifier: workspace:^
+        version: link:../interactions/end-attempt-interaction
+      '@qti-components/extended-text-interaction':
+        specifier: workspace:^
+        version: link:../interactions/extended-text-interaction
+      '@qti-components/gap-match-interaction':
+        specifier: workspace:^
+        version: link:../interactions/gap-match-interaction
+      '@qti-components/graphic-associate-interaction':
+        specifier: workspace:^
+        version: link:../interactions/graphic-associate-interaction
+      '@qti-components/graphic-gap-match-interaction':
+        specifier: workspace:^
+        version: link:../interactions/graphic-gap-match-interaction
+      '@qti-components/graphic-order-interaction':
+        specifier: workspace:^
+        version: link:../interactions/graphic-order-interaction
+      '@qti-components/hotspot-interaction':
+        specifier: workspace:^
+        version: link:../interactions/hotspot-interaction
+      '@qti-components/hottext-interaction':
+        specifier: workspace:^
+        version: link:../interactions/hottext-interaction
+      '@qti-components/inline-choice-interaction':
+        specifier: workspace:^
+        version: link:../interactions/inline-choice-interaction
+      '@qti-components/interactions-core':
+        specifier: workspace:^
+        version: link:../interactions/core
+      '@qti-components/match-interaction':
+        specifier: workspace:^
+        version: link:../interactions/match-interaction
+      '@qti-components/media-interaction':
+        specifier: workspace:^
+        version: link:../interactions/media-interaction
+      '@qti-components/order-interaction':
+        specifier: workspace:^
+        version: link:../interactions/order-interaction
+      '@qti-components/portable-custom-interaction':
+        specifier: workspace:^
+        version: link:../interactions/portable-custom-interaction
+      '@qti-components/position-object-interaction':
+        specifier: workspace:^
+        version: link:../interactions/position-object-interaction
+      '@qti-components/select-point-interaction':
+        specifier: workspace:^
+        version: link:../interactions/select-point-interaction
+      '@qti-components/slider-interaction':
+        specifier: workspace:^
+        version: link:../interactions/slider-interaction
+      '@qti-components/text-entry-interaction':
+        specifier: workspace:^
+        version: link:../interactions/text-entry-interaction
+      '@qti-components/upload-interaction':
+        specifier: workspace:^
+        version: link:../interactions/upload-interaction
     devDependencies:
       '@lit/context':
         specifier: ^1.1.6
