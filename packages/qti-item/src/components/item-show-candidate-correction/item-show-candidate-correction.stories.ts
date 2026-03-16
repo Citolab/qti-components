@@ -622,14 +622,17 @@ export const GapMatch: Story = {
     </qti-item>`,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const interaction = await getAssessmentItemFromItemContainer(canvasElement);
+    const assessmentItem = await getAssessmentItemFromItemContainer(canvasElement);
+    const gapMatchInteraction = assessmentItem.querySelector('qti-gap-match-interaction') as QtiGapMatchInteraction;
+    // Sortable gap-match now supports reordering from placed items; allow the story to place two drags.
+    gapMatchInteraction.setAttribute('max-associations', '2');
 
     const showCorrectButton = await canvas.findByShadowText(/Show candidate correction/i);
 
     const matchItem1 = (await canvas.findByShadowText('winter')) as QtiGapMatchInteraction;
     const matchItem2 = (await canvas.findByShadowText('spring')) as QtiGapMatchInteraction;
 
-    const dropZones = interaction.querySelectorAll(`qti-gap`);
+    const dropZones = assessmentItem.querySelectorAll(`qti-gap`);
 
     const dropZone1 = dropZones[0];
     const dropZone2 = dropZones[1];
@@ -640,16 +643,97 @@ export const GapMatch: Story = {
       await showCorrectButton.click();
 
       await step('Verify candidate correction state is applied', async () => {
-        const matchItem1List = Array.from(await canvas.findAllByShadowText('winter'));
-        const matchItem1CandidateResponse = matchItem1List[1] as QtiGapMatchInteraction;
-        const matchItem2List = Array.from(await canvas.findAllByShadowText('spring'));
-        const matchItem2CandidateResponse = matchItem2List[1] as QtiGapMatchInteraction;
+        const matchItem1CandidateResponse = dropZone1.querySelector('qti-gap-text[identifier="W"]') as QtiGapMatchInteraction;
+        const matchItem2CandidateResponse = dropZone2.querySelector(
+          'qti-gap-text[identifier="Sp"]'
+        ) as QtiGapMatchInteraction;
+
+        expect(matchItem1CandidateResponse).toBeTruthy();
+        expect(matchItem2CandidateResponse).toBeTruthy();
 
         expect(matchItem1CandidateResponse.internals.states.has('candidate-correct')).toBe(true);
         expect(matchItem2CandidateResponse.internals.states.has('candidate-correct')).toBe(false);
         expect(matchItem1CandidateResponse.internals.states.has('candidate-incorrect')).toBe(false);
         expect(matchItem2CandidateResponse.internals.states.has('candidate-incorrect')).toBe(true);
       });
+    });
+  }
+};
+
+export const Order: Story = {
+  args: {
+    'item-url': 'assets/qti-test-package/items/order.xml'
+  },
+  render: args =>
+    html` <qti-item>
+      <div>
+        <item-container style="display: block;width: 400px; height: 350px;" item-url=${args['item-url'] as string}>
+          <template>
+            <style>
+              qti-assessment-item {
+                padding: 1rem;
+                display: block;
+                aspect-ratio: 4 / 3;
+                width: 800px;
+
+                border: 2px solid blue;
+                transform: scale(0.5);
+                transform-origin: top left;
+              }
+            </style>
+          </template>
+        </item-container>
+        <item-show-candidate-correction></item-show-candidate-correction>
+      </div>
+    </qti-item>`,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const assessmentItem = await getAssessmentItemFromItemContainer(canvasElement);
+    const interaction = assessmentItem.querySelector('qti-order-interaction');
+    const showButton = await canvas.findByShadowText(/Show candidate correction/i);
+
+    const drops = interaction.shadowRoot?.querySelectorAll('drop-list') ?? [];
+
+    await step('Create candidate response with one correct and two incorrect positions', async () => {
+      // Deterministic setup independent of shuffle/drag timing:
+      // Correct order is DriverC, DriverA, DriverB.
+      // We intentionally set DriverC, DriverB, DriverA.
+      interaction.response = ['DriverC', 'DriverB', 'DriverA'];
+      await interaction.updateComplete;
+      await showButton.click();
+    });
+
+    await step('Verify candidate correction states on placed choices', async () => {
+      const drop0Choice = drops[0].querySelector('qti-simple-choice[identifier="DriverC"]') as QtiSimpleChoice;
+      const drop1Choice = drops[1].querySelector('qti-simple-choice[identifier="DriverB"]') as QtiSimpleChoice;
+      const drop2Choice = drops[2].querySelector('qti-simple-choice[identifier="DriverA"]') as QtiSimpleChoice;
+
+      expect(drop0Choice).toBeTruthy();
+      expect(drop1Choice).toBeTruthy();
+      expect(drop2Choice).toBeTruthy();
+
+      expect(drop0Choice.internals.states.has('candidate-correct')).toBe(true);
+      expect(drop1Choice.internals.states.has('candidate-correct')).toBe(false);
+      expect(drop2Choice.internals.states.has('candidate-correct')).toBe(false);
+
+      expect(drop0Choice.internals.states.has('candidate-incorrect')).toBe(false);
+      expect(drop1Choice.internals.states.has('candidate-incorrect')).toBe(true);
+      expect(drop2Choice.internals.states.has('candidate-incorrect')).toBe(true);
+    });
+
+    await step('Hide candidate correction clears states', async () => {
+      await showButton.click();
+
+      const drop0Choice = drops[0].querySelector('qti-simple-choice[identifier="DriverC"]') as QtiSimpleChoice;
+      const drop1Choice = drops[1].querySelector('qti-simple-choice[identifier="DriverB"]') as QtiSimpleChoice;
+      const drop2Choice = drops[2].querySelector('qti-simple-choice[identifier="DriverA"]') as QtiSimpleChoice;
+
+      expect(drop0Choice.internals.states.has('candidate-correct')).toBe(false);
+      expect(drop1Choice.internals.states.has('candidate-correct')).toBe(false);
+      expect(drop2Choice.internals.states.has('candidate-correct')).toBe(false);
+      expect(drop0Choice.internals.states.has('candidate-incorrect')).toBe(false);
+      expect(drop1Choice.internals.states.has('candidate-incorrect')).toBe(false);
+      expect(drop2Choice.internals.states.has('candidate-incorrect')).toBe(false);
     });
   }
 };

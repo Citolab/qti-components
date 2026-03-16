@@ -1,3 +1,7 @@
+> [!WARNING]
+> This legacy drag-drop mixin package is deprecated.
+> Use `@qti-components/interactions/mixins/drag-drop-observables` for all new work.
+
 qti-match-interaction
 'qti-simple-match-set:first-of-type qti-simple-associable-choice',
 false,

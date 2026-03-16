@@ -35,6 +35,31 @@ const sleep = (ms: number): Promise<void> => {
   return new Promise(resolve => setTimeout(resolve, ms));
 };
 
+const getTargetAtPoint = (x: number, y: number): Element | Document => {
+  if (typeof document.elementFromPoint !== 'function') {
+    return document;
+  }
+  return document.elementFromPoint(x, y) ?? document;
+};
+
+const dispatchMoveTransition = (
+  prevTarget: Element | Document,
+  nextTarget: Element | Document,
+  coords: { clientX: number; clientY: number }
+) => {
+  if (prevTarget === nextTarget) return;
+
+  if (prevTarget instanceof Element) {
+    fireEvent.mouseOut(prevTarget, coords);
+    fireEvent.mouseLeave(prevTarget, coords);
+  }
+
+  if (nextTarget instanceof Element) {
+    fireEvent.mouseEnter(nextTarget, coords);
+    fireEvent.mouseOver(nextTarget, coords);
+  }
+};
+
 /**
  * Drags an element to a specified location or by a specified delta.
  * @param element - The element to be dragged.
@@ -87,14 +112,19 @@ export default async function drag(
 
   const current = {
     clientX: fromCoords.x,
-    clientY: fromCoords.y
+    clientY: fromCoords.y,
+    button: 0,
+    buttons: 1
   };
+  let currentHoverTarget: Element | Document = element;
 
   // Simulate drag start
   fireEvent.mouseEnter(element, current);
   fireEvent.mouseOver(element, current);
   fireEvent.mouseMove(element, current);
+  fireEvent.mouseMove(document, current);
   fireEvent.mouseDown(element, current);
+  fireEvent.mouseDown(document, current);
 
   // Simulate drag movement in steps
   for (let i = 0; i < steps; i++) {
@@ -108,10 +138,19 @@ export default async function drag(
       current.clientY += step.y;
     }
     await sleep(duration / steps);
-    fireEvent.mouseMove(element, current);
+
+    const nextHoverTarget = getTargetAtPoint(current.clientX, current.clientY);
+    dispatchMoveTransition(currentHoverTarget, nextHoverTarget, current);
+    currentHoverTarget = nextHoverTarget;
+
+    fireEvent.mouseMove(nextHoverTarget, current);
+    fireEvent.mouseMove(document, current);
   }
 
   // Simulate drag end
-  fireEvent.mouseUp(element, current);
+  const releaseTarget = getTargetAtPoint(current.clientX, current.clientY);
+  const release = { ...current, buttons: 0 };
+  fireEvent.mouseUp(releaseTarget, release);
+  fireEvent.mouseUp(document, release);
   await sleep(100);
 }

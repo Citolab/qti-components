@@ -1,5 +1,5 @@
 import { action } from 'storybook/actions';
-import { expect } from 'storybook/test';
+import { expect, fn } from 'storybook/test';
 import { html } from 'lit';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 
@@ -35,6 +35,14 @@ const meta: Meta<QtiGapMatchInteraction> = {
   tags: ['autodocs', 'no-tests']
 };
 export default meta;
+
+const settleInteraction = async (interaction: QtiGapMatchInteraction) => {
+  await interaction.updateComplete;
+  await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+};
+
+const getGap = (interaction: QtiGapMatchInteraction, identifier: string) =>
+  interaction.querySelector(`qti-gap[identifier="${identifier}"]`) as HTMLElement;
 
 // Compare the RGB values
 const rgbIsEqual = (color1: { r: number; g: number; b: number }, color2: { r: number; g: number; b: number }) =>
@@ -87,6 +95,288 @@ export const Default: Story = {
           </blockquote>`
       )}
     `;
+  }
+};
+
+export const SortableSwapFilledGaps: Story = {
+  name: 'Behavior: sortable swap across occupied gaps',
+  render: () => html`
+    <qti-gap-match-interaction
+      data-testid="gap-match-interaction"
+      response-identifier="RESPONSE"
+      max-associations="3"
+    >
+      <qti-prompt>Fill and reorder the gaps.</qti-prompt>
+      <qti-gap-text identifier="W" match-max="1">winter</qti-gap-text>
+      <qti-gap-text identifier="Sp" match-max="1">spring</qti-gap-text>
+      <qti-gap-text identifier="Su" match-max="1">summer</qti-gap-text>
+      <blockquote>
+        <p>
+          <qti-gap identifier="G1"></qti-gap>
+          <qti-gap identifier="G2"></qti-gap>
+          <qti-gap identifier="G3"></qti-gap>
+        </p>
+      </blockquote>
+    </qti-gap-match-interaction>
+  `,
+  play: async ({ canvasElement, step }) => {
+    const interaction = canvasElement.querySelector('[data-testid="gap-match-interaction"]') as QtiGapMatchInteraction;
+    await settleInteraction(interaction);
+
+    const winter = interaction.querySelector('qti-gap-text[identifier="W"]') as QtiGapText;
+    const spring = interaction.querySelector('qti-gap-text[identifier="Sp"]') as QtiGapText;
+    const summer = interaction.querySelector('qti-gap-text[identifier="Su"]') as QtiGapText;
+    const gap1 = getGap(interaction, 'G1');
+    const gap2 = getGap(interaction, 'G2');
+    const gap3 = getGap(interaction, 'G3');
+
+    const callback = fn((event: CustomEvent<{ response: string[] }>) => event.detail.response);
+    interaction.addEventListener('qti-interaction-response', callback as EventListener);
+
+    try {
+      await step('Place all choices into gaps', async () => {
+        await drag(winter, { to: gap1, duration: 300 });
+        await settleInteraction(interaction);
+        await drag(spring, { to: gap2, duration: 300 });
+        await settleInteraction(interaction);
+        await drag(summer, { to: gap3, duration: 300 });
+        await settleInteraction(interaction);
+
+        expect(gap1).toHaveTextContent('winter');
+        expect(gap2).toHaveTextContent('spring');
+        expect(gap3).toHaveTextContent('summer');
+        const lastResponse = callback.mock.calls.at(-1)?.[0].detail.response;
+        expect(lastResponse).toEqual(['W G1', 'Sp G2', 'Su G3']);
+      });
+
+      await step('Drag placed winter from G1 onto occupied G2 to trigger sortable swap', async () => {
+        const placedWinter = getGap(interaction, 'G1').querySelector('[identifier="W"]') as HTMLElement;
+        await drag(placedWinter, { to: gap2, duration: 300 });
+        await settleInteraction(interaction);
+
+        expect(gap1).toHaveTextContent('spring');
+        expect(gap2).toHaveTextContent('winter');
+        expect(gap3).toHaveTextContent('summer');
+      });
+
+      await step('Response and associations are updated after swap', async () => {
+        const lastResponse = callback.mock.calls.at(-1)?.[0].detail.response;
+        expect(lastResponse).toEqual(['Sp G1', 'W G2', 'Su G3']);
+        expect(getGap(interaction, 'G1').querySelectorAll('[qti-draggable="true"]').length).toBe(1);
+        expect(getGap(interaction, 'G2').querySelectorAll('[qti-draggable="true"]').length).toBe(1);
+        expect(getGap(interaction, 'G3').querySelectorAll('[qti-draggable="true"]').length).toBe(1);
+      });
+    } finally {
+      interaction.removeEventListener('qti-interaction-response', callback as EventListener);
+    }
+  }
+};
+
+export const SortableSwapPartialGaps: Story = {
+  name: 'Behavior: sortable swap with one gap still empty',
+  render: () => html`
+    <qti-gap-match-interaction
+      data-testid="gap-match-interaction"
+      response-identifier="RESPONSE"
+      max-associations="3"
+    >
+      <qti-prompt>Fill some gaps and reorder.</qti-prompt>
+      <qti-gap-text identifier="W" match-max="1">winter</qti-gap-text>
+      <qti-gap-text identifier="Sp" match-max="1">spring</qti-gap-text>
+      <qti-gap-text identifier="Su" match-max="1">summer</qti-gap-text>
+      <blockquote>
+        <p>
+          <qti-gap identifier="G1"></qti-gap>
+          <qti-gap identifier="G2"></qti-gap>
+          <qti-gap identifier="G3"></qti-gap>
+        </p>
+      </blockquote>
+    </qti-gap-match-interaction>
+  `,
+  play: async ({ canvasElement, step }) => {
+    const interaction = canvasElement.querySelector('[data-testid="gap-match-interaction"]') as QtiGapMatchInteraction;
+    await settleInteraction(interaction);
+
+    const winter = interaction.querySelector('qti-gap-text[identifier="W"]') as QtiGapText;
+    const spring = interaction.querySelector('qti-gap-text[identifier="Sp"]') as QtiGapText;
+    const gap1 = getGap(interaction, 'G1');
+    const gap2 = getGap(interaction, 'G2');
+    const gap3 = getGap(interaction, 'G3');
+
+    const callback = fn((event: CustomEvent<{ response: string[] }>) => event.detail.response);
+    interaction.addEventListener('qti-interaction-response', callback as EventListener);
+
+    try {
+      await step('Place only winter and spring; leave G3 empty', async () => {
+        await drag(winter, { to: gap1, duration: 300 });
+        await settleInteraction(interaction);
+        await drag(spring, { to: gap2, duration: 300 });
+        await settleInteraction(interaction);
+
+        expect(gap1).toHaveTextContent('winter');
+        expect(gap2).toHaveTextContent('spring');
+        expect(gap3).not.toHaveTextContent('summer');
+        const lastResponse = callback.mock.calls.at(-1)?.[0].detail.response;
+        expect(lastResponse).toEqual(['W G1', 'Sp G2']);
+      });
+
+      await step('Drag placed winter onto occupied G2 to swap with spring', async () => {
+        const placedWinter = getGap(interaction, 'G1').querySelector('[identifier="W"]') as HTMLElement;
+        await drag(placedWinter, { to: gap2, duration: 300 });
+        await settleInteraction(interaction);
+
+        expect(gap1).toHaveTextContent('spring');
+        expect(gap2).toHaveTextContent('winter');
+        expect(gap3).not.toHaveTextContent('summer');
+      });
+
+      await step('Response remains partial and reflects swapped assignments', async () => {
+        const lastResponse = callback.mock.calls.at(-1)?.[0].detail.response;
+        expect(lastResponse).toEqual(['Sp G1', 'W G2']);
+        expect(getGap(interaction, 'G1').querySelectorAll('[qti-draggable="true"]').length).toBe(1);
+        expect(getGap(interaction, 'G2').querySelectorAll('[qti-draggable="true"]').length).toBe(1);
+        expect(getGap(interaction, 'G3').querySelectorAll('[qti-draggable="true"]').length).toBe(0);
+      });
+    } finally {
+      interaction.removeEventListener('qti-interaction-response', callback as EventListener);
+    }
+  }
+};
+
+export const SortableAppendWhenGapAllowsMultiple: Story = {
+  name: 'Behavior: sortable move appends on occupied gap when match-max > 1',
+  render: () => html`
+    <qti-gap-match-interaction
+      data-testid="gap-match-interaction"
+      response-identifier="RESPONSE"
+      max-associations="4"
+    >
+      <qti-prompt>Append into an occupied multi-capacity gap.</qti-prompt>
+      <qti-gap-text identifier="W" match-max="1">winter</qti-gap-text>
+      <qti-gap-text identifier="Sp" match-max="1">spring</qti-gap-text>
+      <qti-gap-text identifier="Su" match-max="1">summer</qti-gap-text>
+      <blockquote>
+        <p>
+          <qti-gap identifier="G1" match-max="1"></qti-gap>
+          <qti-gap identifier="G2" match-max="2"></qti-gap>
+          <qti-gap identifier="G3" match-max="1"></qti-gap>
+        </p>
+      </blockquote>
+    </qti-gap-match-interaction>
+  `,
+  play: async ({ canvasElement, step }) => {
+    const interaction = canvasElement.querySelector('[data-testid="gap-match-interaction"]') as QtiGapMatchInteraction;
+    await settleInteraction(interaction);
+
+    const winter = interaction.querySelector('qti-gap-text[identifier="W"]') as QtiGapText;
+    const spring = interaction.querySelector('qti-gap-text[identifier="Sp"]') as QtiGapText;
+    const gap1 = getGap(interaction, 'G1');
+    const gap2 = getGap(interaction, 'G2');
+    const gap3 = getGap(interaction, 'G3');
+
+    const callback = fn((event: CustomEvent<{ response: string[] }>) => event.detail.response);
+    interaction.addEventListener('qti-interaction-response', callback as EventListener);
+
+    try {
+      await step('Place winter in G1 and spring in G2', async () => {
+        await drag(winter, { to: gap1, duration: 300 });
+        await settleInteraction(interaction);
+        await drag(spring, { to: gap2, duration: 300 });
+        await settleInteraction(interaction);
+
+        expect(gap1).toHaveTextContent('winter');
+        expect(gap2).toHaveTextContent('spring');
+        expect(gap2.querySelectorAll('[qti-draggable="true"]').length).toBe(1);
+      });
+
+      await step('Move winter from G1 onto occupied G2 to append (no swap-out)', async () => {
+        const placedWinter = getGap(interaction, 'G1').querySelector('[identifier="W"]') as HTMLElement;
+        await drag(placedWinter, { to: gap2, duration: 300 });
+        await settleInteraction(interaction);
+
+        expect(gap1).not.toHaveTextContent('winter');
+        expect(gap2).toHaveTextContent('winter');
+        expect(gap2).toHaveTextContent('spring');
+        expect(gap2.querySelectorAll('[qti-draggable="true"]').length).toBe(2);
+        expect(gap3.querySelectorAll('[qti-draggable="true"]').length).toBe(0);
+      });
+
+      await step('Response reflects both associations on G2', async () => {
+        const lastResponse = callback.mock.calls.at(-1)?.[0].detail.response ?? [];
+        const sorted = [...lastResponse].sort();
+        expect(sorted).toEqual(['Sp G2', 'W G2']);
+      });
+    } finally {
+      interaction.removeEventListener('qti-interaction-response', callback as EventListener);
+    }
+  }
+};
+
+export const SortableAppendBlockedAtGapMatchMax: Story = {
+  name: 'Behavior: sortable append blocks when occupied gap reached match-max',
+  render: () => html`
+    <qti-gap-match-interaction
+      data-testid="gap-match-interaction"
+      response-identifier="RESPONSE"
+      max-associations="4"
+    >
+      <qti-prompt>Block append into a full multi-capacity gap.</qti-prompt>
+      <qti-gap-text identifier="W" match-max="1">winter</qti-gap-text>
+      <qti-gap-text identifier="Sp" match-max="1">spring</qti-gap-text>
+      <qti-gap-text identifier="Su" match-max="1">summer</qti-gap-text>
+      <blockquote>
+        <p>
+          <qti-gap identifier="G1" match-max="1"></qti-gap>
+          <qti-gap identifier="G2" match-max="2"></qti-gap>
+          <qti-gap identifier="G3" match-max="1"></qti-gap>
+        </p>
+      </blockquote>
+    </qti-gap-match-interaction>
+  `,
+  play: async ({ canvasElement, step }) => {
+    const interaction = canvasElement.querySelector('[data-testid="gap-match-interaction"]') as QtiGapMatchInteraction;
+    await settleInteraction(interaction);
+
+    const winter = interaction.querySelector('qti-gap-text[identifier="W"]') as QtiGapText;
+    const spring = interaction.querySelector('qti-gap-text[identifier="Sp"]') as QtiGapText;
+    const summer = interaction.querySelector('qti-gap-text[identifier="Su"]') as QtiGapText;
+    const gap1 = getGap(interaction, 'G1');
+    const gap2 = getGap(interaction, 'G2');
+
+    const callback = fn((event: CustomEvent<{ response: string[] }>) => event.detail.response);
+    interaction.addEventListener('qti-interaction-response', callback as EventListener);
+
+    try {
+      await step('Fill G2 to capacity and keep winter in G1', async () => {
+        await drag(winter, { to: gap1, duration: 300 });
+        await settleInteraction(interaction);
+        await drag(spring, { to: gap2, duration: 300 });
+        await settleInteraction(interaction);
+        await drag(summer, { to: gap2, duration: 300 });
+        await settleInteraction(interaction);
+
+        expect(gap2.querySelectorAll('[qti-draggable="true"]').length).toBe(2);
+      });
+
+      await step('Move winter from G1 onto full G2; drop should be blocked', async () => {
+        const placedWinter = getGap(interaction, 'G1').querySelector('[identifier="W"]') as HTMLElement;
+        await drag(placedWinter, { to: gap2, duration: 300 });
+        await settleInteraction(interaction);
+
+        expect(gap1).toHaveTextContent('winter');
+        expect(gap2.querySelectorAll('[qti-draggable="true"]').length).toBe(2);
+        expect(gap2).toHaveTextContent('spring');
+        expect(gap2).toHaveTextContent('summer');
+      });
+
+      await step('Response remains unchanged after blocked append attempt', async () => {
+        const lastResponse = callback.mock.calls.at(-1)?.[0].detail.response ?? [];
+        const sorted = [...lastResponse].sort();
+        expect(sorted).toEqual(['Sp G2', 'Su G2', 'W G1']);
+      });
+    } finally {
+      interaction.removeEventListener('qti-interaction-response', callback as EventListener);
+    }
   }
 };
 

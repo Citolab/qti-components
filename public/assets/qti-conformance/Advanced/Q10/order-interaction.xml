@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-item
+    xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+    identifier="q10-order-interaction"
+    title="Q10 - Order Interaction"
+    adaptive="false" time-dependent="false">
+    <qti-response-declaration identifier="RESPONSE" cardinality="ordered" base-type="identifier"></qti-response-declaration>
+    <qti-item-body>
+        <qti-order-interaction response-identifier="RESPONSE" shuffle="false">
+            <qti-prompt></qti-prompt>
+            <qti-simple-choice identifier="A">choice_a</qti-simple-choice>
+            <qti-simple-choice identifier="B">choice_b</qti-simple-choice>
+            <qti-simple-choice identifier="C">choice_c</qti-simple-choice>
+        </qti-order-interaction>
+    </qti-item-body>
+</qti-assessment-item>

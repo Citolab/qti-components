@@ -23,6 +23,10 @@ type RectLike = {
   height: number;
 };
 
+/**
+ * @deprecated Use `DragDropSlottedMixin` (and optionally `DragDropSlottedSortableMixin`)
+ * from `@qti-components/interactions/mixins/drag-drop-observables`.
+ */
 export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
   superClass: T,
   draggablesSelector: string,
@@ -952,6 +956,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
     private handleTouchStart(e) {
       if (this.isMatchTabular()) return;
+      if (this.disabled || this.readonly) return;
       if (e instanceof MouseEvent) {
         // Only allow the left button
         if (e.button !== 0) return;

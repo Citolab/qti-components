@@ -18,6 +18,9 @@ export declare class FlippablesInterface {
 
 // just a conversion of a angular FLIP directive, made as a Mixin
 // https://ng-run.com/edit/9MGr5dYWA20AiJtpy5az?open=app%2Fapp.component.html
+/**
+ * @deprecated Use FLIP helpers from `mixins/drag-drop-observables/utils/flip.utils`.
+ */
 export const FlippablesMixin = <T extends Constructor<Interaction>>(
   superClass: T,
   _droppablesSel: string,
