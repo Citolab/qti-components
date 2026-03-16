@@ -17,6 +17,9 @@ import { spawnSync } from 'node:child_process';
 const rootDir = process.cwd();
 const packagesDir = resolve(rootDir, 'packages');
 const umbrellaPackageName = '@citolab/qti-components';
+const runnerContext =
+  process.env.WORKSPACE_RELEASE_RUNNER_CONTEXT ??
+  (process.env.GITHUB_ACTIONS === 'true' ? 'manual:workspace-release' : 'local:workspace-release');
 
 function collectPackageDirs(dir) {
   const dirs = [];
@@ -63,7 +66,7 @@ const failed = [];
 
 for (const entry of packageEntries) {
   const { dir, label } = entry;
-  console.log(`\n==> Publishing ${label}`);
+  console.log(`\n[${runnerContext}] ==> Publishing ${label}`);
 
   const result = spawnSync('node', ['../../tools/publish-if-needed.mjs'], {
     cwd: dir,
@@ -73,18 +76,18 @@ for (const entry of packageEntries) {
 
   if (result.status !== 0) {
     failed.push(label);
-    console.error(`FAILED: ${label}`);
+    console.error(`[${runnerContext}] FAILED: ${label}`);
   } else {
-    console.log(`DONE: ${label}`);
+    console.log(`[${runnerContext}] DONE: ${label}`);
   }
 }
 
 if (failed.length > 0) {
-  console.error('\nPublish failures:');
+  console.error(`\n[${runnerContext}] Publish failures:`);
   for (const item of failed) {
     console.error(`- ${item}`);
   }
   process.exit(1);
 }
 
-console.log('\nAll package publish tasks completed.');
+console.log(`\n[${runnerContext}] All package publish tasks completed.`);

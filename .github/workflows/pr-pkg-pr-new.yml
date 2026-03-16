@@ -1,4 +1,4 @@
-name: PR pkg.pr.new
+name: "PR: preview (pkg-pr-new)"
 
 on:
   pull_request:
@@ -11,7 +11,7 @@ permissions:
   pull-requests: write
 
 concurrency:
-  group: pr-pkg-pr-new-${{ github.event.pull_request.number }}
+  group: pr-preview-pkg-pr-new-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:

@@ -1,4 +1,4 @@
-name: PR StackBlitz Link
+name: "PR: preview (stackblitz)"
 
 on:
   pull_request:
@@ -11,7 +11,7 @@ permissions:
   pull-requests: write
 
 concurrency:
-  group: pr-stackblitz-link-${{ github.event.pull_request.number }}
+  group: pr-preview-stackblitz-link-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:

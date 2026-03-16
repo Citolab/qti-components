@@ -1,4 +1,4 @@
-name: CI
+name: "CI: push-quality"
 
 on:
   pull_request:
@@ -51,32 +51,5 @@ jobs:
           echo "🎭 Installing Playwright browsers..."
           npx playwright install --with-deps
 
-      - name: Run linting
-        run: |
-          echo "🔍 Running ESLint..."
-          pnpm run lint
-
-      - name: Check circular dependencies
-        run: |
-          echo "🔄 Checking circular dependencies..."
-          pnpm run madge
-
-      - name: Run build
-        run: |
-          echo "🔨 Building project..."
-          pnpm run build
-
-      - name: Run tests
-        run: |
-          echo "🧪 Running tests..."
-          pnpm run test
-
-      - name: Run publint
-        run: |
-          echo "📋 Running publint..."
-          pnpm run publint
-
-      - name: Run attw
-        run: |
-          echo "🔍 Running attw..."
-          pnpm run attw
+      - name: Run ci:push-quality lane
+        run: pnpm run ci:push-quality

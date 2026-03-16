@@ -7,16 +7,17 @@ import { Meta } from '@storybook/addon-docs/blocks';
 ## 1) Release changed `@qti-components/*` packages
 
 ```bash
-pnpm run release:changed:dry
-pnpm run release:changed
-pnpm run publish:missing
+pnpm run local:workspace-release:dry
+pnpm run local:workspace-release
 ```
 
 This releases and publishes all changed non-umbrella packages together.
 
+You can also run this from GitHub Actions with workflow `Manual: workspace-release`.
+
 ## 2) Release umbrella `@citolab/qti-components`
 
-Run GitHub Actions workflow `Manual release` and choose:
+Run GitHub Actions workflow `Manual: umbrella-release` and choose:
 - `branch`
 - `dry_run`
 - `version_mode`

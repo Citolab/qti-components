@@ -27,6 +27,10 @@
     "node": ">=22.0.0"
   },
   "scripts": {
+    "local:dev-preview": "pnpm run storybook",
+    "local:workspace-release:dry": "pnpm run release:changed:dry",
+    "local:workspace-release": "run-s release:changed publish:missing",
+    "ci:push-quality": "run-s lint madge build test publint attw",
     "storybook": "run-p storybook:dev cem:storybook:watch",
     "test-all": "run-s clean build cem publint lint tsc test madge attw",
     "lint": "eslint",

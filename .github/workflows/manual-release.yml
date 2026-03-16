@@ -1,4 +1,4 @@
-name: Manual release
+name: "Manual: umbrella-release"
 
 on:
   workflow_dispatch:

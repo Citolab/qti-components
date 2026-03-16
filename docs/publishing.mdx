@@ -4,18 +4,43 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # Publishing
 
-## Manual Commands (run locally)
+## Context Prefix Legend
+
+- `local:*` = run by hand on your machine
+- `ci:*` = run by CI pipeline
+- `manual:*` = manually dispatched GitHub Action
+- `pr:*` = PR automation workflows
+
+## Canonical Lanes
+
+| Canonical name | Run context | Purpose | Entry point |
+|---|---|---|---|
+| `local:dev-preview` | Local/manual | Run Storybook for development | `pnpm run local:dev-preview` |
+| `manual:umbrella-release` | GitHub manual dispatch | Release/publish umbrella package | `.github/workflows/manual-release.yml` |
+| `local:workspace-release` | Local/manual | Release + publish affected non-umbrella packages | `pnpm run local:workspace-release` |
+| `ci:push-quality` | CI | Push/PR quality checks (current set) | `pnpm run ci:push-quality` + `.github/workflows/ci.yml` |
+| `pr:preview` | PR automation | pkg.pr.new + StackBlitz comment | `.github/workflows/pr-pkg-pr-new.yml` and `.github/workflows/pr-stackblitz-link.yml` |
+
+## Local Commands (run by hand)
+
+Run local Storybook development:
+
+```bash
+pnpm run local:dev-preview
+```
 
 Release all changed non-umbrella packages:
 
 ```bash
-pnpm run release:changed:dry
-pnpm run release:changed
+pnpm run local:workspace-release:dry
+pnpm run local:workspace-release
 ```
 
-Publish all missing non-umbrella package versions:
+Compatibility aliases still available:
 
 ```bash
+pnpm run release:changed:dry
+pnpm run release:changed
 pnpm run publish:missing
 ```
 
@@ -27,7 +52,7 @@ pnpm run publish:missing:all
 
 ## Umbrella Release (`@citolab/qti-components`)
 
-Use GitHub Actions workflow `Manual release` (`.github/workflows/manual-release.yml`).
+Use GitHub Actions workflow `Manual: umbrella-release` (`.github/workflows/manual-release.yml`).
 
 Inputs:
 - `branch`
@@ -37,7 +62,21 @@ Inputs:
 
 The workflow handles umbrella semantic-release and umbrella publish.
 
-## CI/Internal Commands
+## Workspace Release (non-umbrella packages)
+
+Use GitHub Actions workflow `Manual: workspace-release` (`.github/workflows/manual-workspace-release.yml`) when you want changed-package release+publish from the Actions UI.
+
+## Push Quality (CI)
+
+Workflow: `CI: push-quality` (`.github/workflows/ci.yml`).
+
+Lane script:
+
+```bash
+pnpm run ci:push-quality
+```
+
+## CI/Internal Release Commands
 
 Used by workflows:
 
@@ -47,6 +86,15 @@ Used by workflows:
 - `ci:release:umbrella:dry`
 - `ci:publish:missing`
 - `ci:publish:umbrella`
+
+## Pull Request StackBlitz Links
+
+Workflow: `PR: preview (stackblitz)` (`.github/workflows/pr-stackblitz-link.yml`).
+
+The PR bot comment includes quick-open StackBlitz links to start:
+- `storybook:stackblitz` (recommended)
+- `storybook:dev`
+- `storybook:interactions`
 
 ## Policy
 
