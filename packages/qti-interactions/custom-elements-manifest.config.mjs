@@ -35,6 +35,13 @@ export default {
 
   overrideModuleCreation({ ts, globs }) {
     const program = getTsProgram(ts, globs, 'tsconfig.json');
+    // @wc-toolkit/type-parser currently expects `typeChecker.getProgram()`,
+    // but TypeScript 5.4.x does not expose that on the checker instance.
+    // Patch the checker instance so type-parser can resolve cross-file types.
+    const checker = program.getTypeChecker();
+    if (typeof checker.getProgram !== 'function') {
+      checker.getProgram = () => program;
+    }
     return program.getSourceFiles().filter(sf => globs.find(glob => sf.fileName.includes(glob)));
   },
 
