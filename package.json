@@ -28,10 +28,10 @@
   },
   "scripts": {
     "local:dev-preview": "pnpm run storybook",
-    "local:workspace-release:dry": "env -u NPM_TOKEN -u NODE_AUTH_TOKEN HUSKY=0 NPM_CONFIG_PROVENANCE=false pnpm -r --filter \"./packages/*\" --filter \"./packages/interactions/*\" --filter \"!./packages/qti-components\" --workspace-concurrency=1 exec -- env -u npm_config_manage_package_manager_versions -u npm_config_verify_deps_before_run -u npm_config_npm_globalconfig -u npm_config__jsr_registry semantic-release --dry-run --no-ci",
+    "local:workspace-release:dry": "sh -c 'set -a; [ -f ./.env ] && . ./.env; set +a; env -u NPM_TOKEN -u NODE_AUTH_TOKEN HUSKY=0 NPM_CONFIG_PROVENANCE=false pnpm -r --filter \"./packages/*\" --filter \"./packages/interactions/*\" --filter \"!./packages/qti-components\" --workspace-concurrency=1 exec -- env -u npm_config_manage_package_manager_versions -u npm_config_verify_deps_before_run -u npm_config_npm_globalconfig -u npm_config__jsr_registry semantic-release --dry-run --no-ci'",
     "local:workspace-release": "run-s local:workspace-release:run local:workspace-release:publish",
-    "local:workspace-release:run": "env -u NPM_TOKEN -u NODE_AUTH_TOKEN HUSKY=0 NPM_CONFIG_PROVENANCE=false pnpm -r --filter \"./packages/*\" --filter \"./packages/interactions/*\" --filter \"!./packages/qti-components\" --workspace-concurrency=1 exec -- env -u npm_config_manage_package_manager_versions -u npm_config_verify_deps_before_run -u npm_config_npm_globalconfig -u npm_config__jsr_registry semantic-release --no-ci",
-    "local:workspace-release:publish": "pnpm -r --filter \"./packages/*\" --filter \"./packages/interactions/*\" --filter \"!./packages/qti-components\" run publish",
+    "local:workspace-release:run": "sh -c 'set -a; [ -f ./.env ] && . ./.env; set +a; env -u NPM_TOKEN -u NODE_AUTH_TOKEN HUSKY=0 NPM_CONFIG_PROVENANCE=false pnpm -r --filter \"./packages/*\" --filter \"./packages/interactions/*\" --filter \"!./packages/qti-components\" --workspace-concurrency=1 exec -- env -u npm_config_manage_package_manager_versions -u npm_config_verify_deps_before_run -u npm_config_npm_globalconfig -u npm_config__jsr_registry semantic-release --no-ci'",
+    "local:workspace-release:publish": "sh -c 'set -a; [ -f ./.env ] && . ./.env; set +a; pnpm -r --filter \"./packages/*\" --filter \"./packages/interactions/*\" --filter \"!./packages/qti-components\" run publish'",
     "ci:push-quality": "run-s lint madge build test publint attw",
     "storybook": "run-p storybook:dev cem:storybook:watch",
     "test-all": "run-s clean build cem publint lint tsc test madge attw",
