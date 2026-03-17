@@ -1,4 +1,4 @@
-import { html } from 'lit';
+import { css, html } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { consume } from '@lit/context';
 
@@ -10,101 +10,6 @@ import type { CSSResultGroup } from 'lit';
 import type { BaseType, Cardinality, ItemContext, QtiContext } from '@qti-components/base';
 import type { QtiRecordItem, QtiVariableJSON, ResponseVariableType } from './interface';
 
-/**
- * QTI 3 Portable Custom Interaction host component.
- *
- * This element renders a PCI inside an iframe, bridges configuration and state to the PCI AMD
- * module, and proxies lifecycle/response updates back to the QTI item runtime.
- *
- * Spec references:
- * - PCI overview: https://www.imsglobal.org/spec/qti/v3p0/impl#h.jsncxx6a57ao
- * - Module resolution: https://www.imsglobal.org/spec/qti/v3p0/impl#h.rrz6g7fej3px
- * - Lifecycle examples: https://www.imsglobal.org/spec/qti/v3p0/impl#h.vf2yl2nwwnu
- * - Bridge methods/API: https://www.imsglobal.org/spec/qti/v3p0/impl#h.ibcksu8902cr
- * - PCI factory contract: https://www.imsglobal.org/spec/qti/v3p0/impl#h.1mc9puik2ft6
- *
- * Source references for lifecycle figures:
- * - Figure 109 image: https://www.imsglobal.org/sites/default/files/specs/images/qti/3p0/impl3image39.png
- * - Figure 110 image: https://www.imsglobal.org/sites/default/files/specs/images/qti/3p0/impl3image41.png
- *
- * Normative-vs-implementation note:
- * - IMS describes delivery-engine requirements.
- * - This class documents what this repository's delivery implementation currently does.
- *
- * ## PCI Lifecycle (Figure 109 reconstruction)
- * ```mermaid
- * sequenceDiagram
- *   participant C as Candidate
- *   participant DE as Delivery Engine (Host)
- *   participant B as Communication Bridge (qtiCustomInteractionContext)
- *   participant PCI as Custom Interaction
- *
- *   C->>DE: Open item
- *   DE->>DE: Render qti-portable-custom-interaction
- *   DE->>B: Load AMD module(s)
- *   B->>PCI: register(factory)
- *   DE->>B: getInstance(typeIdentifier, dom, config, state?)
- *   B->>PCI: getInstance(dom, config, state?)
- *   PCI-->>B: onready(...)
- *   B-->>DE: ready notification
- *   C->>PCI: Interact
- *   PCI-->>B: getResponse()/getState() updates
- *   B-->>DE: interaction changed
- *   C->>DE: Navigate away
- *   DE->>DE: Persist response/state
- *   C->>DE: Return to item
- *   DE->>B: getInstance(..., savedState)
- *   B->>PCI: Restore previous state
- * ```
- *
- * ## PCI Lifecycle (Figure 110 reconstruction)
- * ```mermaid
- * sequenceDiagram
- *   participant C as Candidate
- *   participant DE as Delivery Engine (Adaptive/Composite)
- *   participant B as Communication Bridge
- *   participant PCI as Custom Interaction(s)
- *
- *   C->>DE: Start attempt
- *   DE->>PCI: Initialize one or more PCI instances
- *   loop Attempt cycle
- *     C->>PCI: Interact with adaptive content
- *     PCI-->>DE: Response/state updates
- *     C->>DE: Trigger endAttemptInteraction
- *     DE->>DE: Process responses/outcomes
- *     DE->>PCI: Re-render or restore next attempt state
- *   end
- *   C->>DE: Submit item
- *   DE->>DE: Close item
- * ```
- *
- * ## Public Events
- *
- * | Event | When emitted | Detail payload |
- * | --- | --- | --- |
- * | `qti-portable-custom-interaction-loaded` | After iframe reports ready and host has finished initial handshake. | None |
- * | `qti-pci-console` | When iframe forwards `console.log`/`console.error` output and `data-forward-console="true"` is configured. | `{ level: 'log' | 'error', args: string[] }` |
- *
- * ## Implementation Guide Coverage
- *
- * | IMS guide/option | Status in this component | Notes |
- * | --- | --- | --- |
- * | `qti-portable-custom-interaction` host + `custom-interaction-type-identifier` + `module` | Implemented | Core attributes are required for normal operation. |
- * | Pass `data-*` attributes into PCI configuration `properties` | Implemented | Includes camelCase dataset keys and mirrored hyphenated aliases. |
- * | `qti-template-variable` to `templateVariables` | Implemented | Resolved from item context and converted to QTI variable JSON shape. |
- * | `qti-context-variable` to `contextVariables` | Implemented | Includes special handling for `QTI_CONTEXT` record defaults + runtime values. |
- * | `qti-interaction-markup` forwarding | Implemented | Forwarded into iframe via bridge messaging. |
- * | `<properties>` forwarding | Implemented | Forwarded as raw markup string for PCI consumption. |
- * | `qti-interaction-modules` overrides (`qti-interaction-module`) | Implemented | Merged into RequireJS path resolution in iframe runtime. |
- * | Default/fallback AMD locations (`module_resolution.js`, `fallback_module_resolution.js`) | Partially Implemented | Equivalent behavior via `data-require-paths`, `data-require-shim`, module overrides; no direct file loader for those exact filenames. |
- * | PCI bridge callbacks (`onready`, optional `ondone`) | Partially Implemented | `onready` is wired; `ondone` support is bridged via internal change notifications and host message flow. |
- * | Status modes (`interacting`, `suspended`, `closed`, `solution`, `review`) | Partially Implemented | `review` and `interacting` are actively used; additional statuses are part of API types and pass-through capabilities. |
- * | Standard bridge object also assigned to global `window` | Not Implemented (spec option) | This host uses an iframe message bridge with AMD `define('qtiCustomInteractionContext', ...)` inside iframe runtime. |
- * | `oncompleted` callback before unload | Not Implemented (spec option) | Not currently invoked by host teardown path. |
- *
- * TODO: Emit and document all public events in CEM output (`qti-portable-custom-interaction-loaded`, `qti-pci-console`)
- * when analyzer/event tags are added. Runtime already dispatches both events.
- */
 export class QtiPortableCustomInteraction extends Interaction {
   #value: string | string[];
 
@@ -115,61 +20,35 @@ export class QtiPortableCustomInteraction extends Interaction {
   private _iframeObjectUrl: string | null = null;
 
   // This implementation always renders inside an iframe.
-  static override styles: CSSResultGroup = styles;
+  static override styles: CSSResultGroup = [
+    styles,
+    css`
+      :host {
+        display: block;
+        width: 100%;
+        min-height: 50px;
+      }
+    `
+  ];
 
-  /**
-   * AMD module name for the PCI implementation.
-   *
-   * This must resolve through configured RequireJS paths/module mappings.
-   */
   @property({ type: String, attribute: 'module' })
   module: string;
 
-  /**
-   * PCI type identifier used by the bridge to resolve the registered factory.
-   *
-   * IMS recommends using a federated-content URN to reduce collision risk.
-   */
   @property({ type: String, attribute: 'custom-interaction-type-identifier' })
   customInteractionTypeIdentifier: string;
 
-  /**
-   * JSON string for additional RequireJS `paths` mappings.
-   *
-   * Supported formats:
-   * - Object map: `{"id":"path/to/module"}`
-   * - Array entries: `[{"name":"id","value":"path/to/module"}]`
-   */
   @property({ type: String, attribute: 'data-require-paths' })
   requirePathsJson: string = '';
 
-  /**
-   * JSON string for additional RequireJS `shim` mappings.
-   */
   @property({ type: String, attribute: 'data-require-shim' })
   requireShimJson: string = '';
 
-  /**
-   * URL to the RequireJS runtime injected into the iframe.
-   */
   @property({ type: String, attribute: 'data-require-js-url' })
   requireJsUrl: string = 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js';
 
-  /**
-   * Base URL used to resolve relative PCI module paths.
-   */
   @property({ type: String, attribute: 'data-base-url' })
   baseUrl: string = '';
 
-  /**
-   * Include bundled default shims in addition to author-provided shims.
-   */
-  @property({ type: Boolean, attribute: 'data-use-default-shims' })
-  useDefaultShims = false;
-
-  /**
-   * Include bundled default path mappings in addition to author-provided paths.
-   */
   @property({ type: Boolean, attribute: 'data-use-default-paths' })
   useDefaultPaths = false;
 
@@ -184,14 +63,6 @@ export class QtiPortableCustomInteraction extends Interaction {
   @state()
   protected qtiContext?: QtiContext;
 
-  /**
-   * Current response value mirrored from PCI messages.
-   *
-   * Compatibility note:
-   * - This is a runtime convenience surface.
-   * - Persisted response flow should still be treated as QTI variable updates
-   *   via `qti-interaction-response`.
-   */
   @state() response: string | string[] | null = null;
 
   #parsedRequirePaths: Record<string, string | string[]> = null;
@@ -205,20 +76,11 @@ export class QtiPortableCustomInteraction extends Interaction {
   #getRequirePaths(): Record<string, string | string[]> {
     if (this.#parsedRequirePaths === null && this.requirePathsJson) {
       try {
-        // Handle the array format [{name: "path/name", value: "path/value"}, ...]
-        // and convert to object format {name: value, ...}
         const parsedJson = JSON.parse(this.requirePathsJson);
-        if (Array.isArray(parsedJson)) {
-          this.#parsedRequirePaths = {};
-          parsedJson.forEach(item => {
-            if (item.name && item.value) {
-              this.#parsedRequirePaths[item.name] = item.value;
-            }
-          });
-        } else {
-          // If it's already in object format, use it directly
-          this.#parsedRequirePaths = parsedJson;
+        if (Array.isArray(parsedJson) || !parsedJson || typeof parsedJson !== 'object') {
+          throw new Error('Require paths must be a JSON object.');
         }
+        this.#parsedRequirePaths = parsedJson;
       } catch (e) {
         console.error('Error parsing require paths JSON:', e);
         this._errorMessage = `Error parsing require paths JSON: ${e.message}`;
@@ -245,98 +107,18 @@ export class QtiPortableCustomInteraction extends Interaction {
   }
 
   /**
-   * Get the default require paths
-   */
-  #getDefaultRequirePaths(): Record<string, string | string[]> {
-    return {
-      'taoQtiItem/portableLib/OAT/util/event': '/assets/pci-scripts/portableLib/OAT/util/event',
-      'taoQtiItem/portableLib/OAT/util/html': '/assets/pci-scripts/portableLib/OAT/util/html',
-      'taoQtiItem/portableLib/OAT/util/EventMgr': '/assets/pci-scripts/portableLib/OAT/util/EventMgr',
-      'taoQtiItem/portableLib/OAT/util/math': '/assets/pci-scripts/portableLib/OAT/util/math',
-      'taoQtiItem/portableLib/OAT/util/xml': '/assets/pci-scripts/portableLib/OAT/util/xml',
-      'taoQtiItem/portableLib/OAT/util/tooltip': '/assets/pci-scripts/portableLib/OAT/util/tooltip',
-      'taoQtiItem/portableLib/OAT/util/tpl': '/assets/pci-scripts/portableLib/OAT/util/tpl',
-      'taoQtiItem/portableLib/OAT/util/asset': '/assets/pci-scripts/portableLib/OAT/util/asset',
-      'taoQtiItem/portableLib/OAT/waitForMedia': '/assets/pci-scripts/portableLib/OAT/waitForMedia',
-      'taoQtiItem/portableLib/OAT/mediaPlayer': '/assets/pci-scripts/portableLib/OAT/mediaPlayer',
-      'taoQtiItem/portableLib/OAT/scale.raphael': '/assets/pci-scripts/portableLib/OAT/scale.raphael',
-      'taoQtiItem/portableLib/OAT/interact-rotate': '/assets/pci-scripts/portableLib/OAT/interact-rotate',
-      'taoQtiItem/portableLib/OAT/promise': '/assets/pci-scripts/portableLib/OAT/promise',
-      'taoQtiItem/portableLib/OAT/sts/common': '/assets/pci-scripts/portableLib/OAT/sts/common',
-      'taoQtiItem/portableLib/OAT/sts/transform-helper': '/assets/pci-scripts/portableLib/OAT/sts/transform-helper',
-      'taoQtiItem/portableLib/OAT/sts/stsEventManager': '/assets/pci-scripts/portableLib/OAT/sts/stsEventManager',
-      'taoQtiItem/portableLib/async': '/assets/pci-scripts/portableLib/async',
-      'taoQtiItem/portableLib/interact': '/assets/pci-scripts/portableLib/interact',
-      'taoQtiItem/portableLib/es6-promise': '/assets/pci-scripts/portableLib/es6-promise',
-      'taoQtiItem/portableLib/jquery_2_1_1': '/assets/pci-scripts/portableLib/jquery_2_1_1',
-      'taoQtiItem/portableLib/jquery.qtip': '/assets/pci-scripts/portableLib/jquery.qtip',
-      'taoQtiItem/portableLib/lodash': '/assets/pci-scripts/portableLib/lodash',
-      'taoQtiItem/portableLib/handlebars': '/assets/pci-scripts/portableLib/handlebars',
-      'taoQtiItem/portableLib/raphael': '/assets/pci-scripts/portableLib/raphael',
-      'taoQtiItem/pci-scripts/portableLib/jquery.qtip': '/assets/pci-scripts/portableLib/jquery.qtip',
-      'taoQtiItem/pci-scripts/portableLib/lodash': '/assets/pci-scripts/portableLib/lodash',
-      'taoQtiItem/pci-scripts/portableLib/raphael': '/assets/pci-scripts/portableLib/raphael',
-      'IMSGlobal/jquery_2_1_1': '/assets/pci-scripts/IMSGlobal/jquery_2_1_1',
-      'OAT/util/event': '/assets/pci-scripts/legacyPortableSharedLib/OAT/util/event',
-      'OAT/util/html': '/assets/pci-scripts/legacyPortableSharedLib/OAT/util/html',
-      'OAT/util/EventMgr': '/assets/pci-scripts/legacyPortableSharedLib/OAT/util/EventMgr',
-      'OAT/util/math': '/assets/pci-scripts/legacyPortableSharedLib/OAT/util/math',
-      'OAT/util/xml': '/assets/pci-scripts/legacyPortableSharedLib/OAT/util/xml',
-      'OAT/util/tooltip': '/assets/pci-scripts/legacyPortableSharedLib/OAT/util/tooltip',
-      'OAT/lodash': '/assets/pci-scripts/legacyPortableSharedLib/lodash',
-      mathJax: '/assets/pci-scripts/mathjax/mathJax',
-      css: '/assets/pci-scripts/css/css'
-    };
-  }
-
-  /**
-   * Get the default require shim
-   */
-  #getDefaultRequireShim(): Record<string, any> {
-    return {
-      mathJax: {
-        exports: 'MathJax',
-        init: function () {
-          const anyWindow = window as any;
-          if (anyWindow.MathJax) {
-            anyWindow.MathJax.Hub.Config({
-              showMathMenu: false,
-              showMathMenuMSIE: false,
-              menuSettings: { inTabOrder: false }
-            });
-            anyWindow.MathJax.Hub.Startup.MenuZoom = function () {
-              /* nothing */
-            };
-            anyWindow.MathJax.Hub.Startup.onload();
-            return anyWindow.MathJax;
-          }
-        }
-      }
-    };
-  }
-
-  /**
    * Get the final require paths by combining defaults with user-provided paths
    */
   #getFinalRequirePaths(): Record<string, string | string[]> {
-    const defaults = this.#getDefaultRequirePaths();
-    const userPaths = this.#getRequirePaths();
-    if (this.useDefaultPaths) {
-      return { ...defaults, ...userPaths };
-    }
-    return userPaths;
+    // Return only user-provided paths to keep PCI completely self-contained
+    return this.#getRequirePaths();
   }
 
   /**
-   * Get the final require shim by combining defaults with user-provided shim
+   * Get the final require shim
    */
   #getFinalRequireShim(): Record<string, any> {
-    const userShim = this.#getRequireShim();
-    const defaults = this.#getDefaultRequireShim();
-    if (this.useDefaultShims) {
-      return { ...defaults, ...userShim };
-    }
-    return userShim;
+    return this.#getRequireShim();
   }
 
   /**
@@ -606,6 +388,39 @@ export class QtiPortableCustomInteraction extends Interaction {
     return updatedProperties;
   }
 
+  #toNestedProperties(properties: Record<string, any>): Record<string, any> {
+    const nestedProperties = { ...properties };
+
+    const setNestedValue = (root: Record<string, any>, path: string[], value: any): void => {
+      let cursor = root;
+
+      for (let i = 0; i < path.length; i += 1) {
+        const segment = path[i];
+        const isLast = i === path.length - 1;
+
+        if (isLast) {
+          cursor[segment] = value;
+          return;
+        }
+
+        if (!cursor[segment] || typeof cursor[segment] !== 'object' || Array.isArray(cursor[segment])) {
+          cursor[segment] = {};
+        }
+
+        cursor = cursor[segment];
+      }
+    };
+
+    for (const [key, value] of Object.entries(properties)) {
+      if (!key.includes('__')) continue;
+      const path = key.split('__').filter(Boolean);
+      if (path.length < 2) continue;
+      setNestedValue(nestedProperties, path, value);
+    }
+
+    return nestedProperties;
+  }
+
   /**
    * Converts response variables to QtiVariableJSON
    */
@@ -636,31 +451,16 @@ export class QtiPortableCustomInteraction extends Interaction {
 
   #setInteractionValidity(isValid: boolean, customMessage?: string): void {
     const fallbackMessage = this.dataset.invalidresponsemessage || 'Invalid response.';
-    const message = isValid ? '' : (customMessage && customMessage.trim().length > 0 ? customMessage : fallbackMessage);
+    const message = isValid ? '' : customMessage && customMessage.trim().length > 0 ? customMessage : fallbackMessage;
     this._internals.setValidity(isValid ? {} : { customError: true }, message);
   }
 
-  /**
-   * Validate current response and update form-associated validity state.
-   *
-   * Validation source priority:
-   * 1. Explicit validity received from PCI bridge (`valid` in interactionChanged).
-   * 2. Host fallback validity based on non-empty response.
-   *
-   * @returns `true` when interaction is valid.
-   */
   validate(): boolean {
     const isValid = typeof this.#pciValidity === 'boolean' ? this.#pciValidity : this.#hasNonEmptyResponse();
     this.#setInteractionValidity(isValid, this.#pciCustomValidityMessage);
     return isValid;
   }
 
-  /**
-   * Form-associated value adapter.
-   *
-   * Accepts comma-separated scalar values for compatibility with legacy form usage.
-   * PCI response propagation is driven by bridge updates rather than direct mutation here.
-   */
   override set value(v: string | null) {
     if (v === null) {
       this.#value = [];
@@ -671,19 +471,11 @@ export class QtiPortableCustomInteraction extends Interaction {
     // No need to call setResponse directly
   }
 
-  /**
-   * Serialize internal response value as comma-separated string.
-   */
   override get value(): string | null {
     if (this.#value === null || this.#value === undefined) return null;
     return Array.isArray(this.#value) ? this.#value.join(',') : String(this.#value);
   }
 
-  /**
-   * Set initial bound response object keyed by `responseIdentifier`.
-   *
-   * This is typically supplied by item context restore/init flow.
-   */
   set boundTo(newValue: Record<string, ResponseVariableType>) {
     if (!newValue || !newValue[this.responseIdentifier]) {
       return;
@@ -698,9 +490,6 @@ export class QtiPortableCustomInteraction extends Interaction {
     this.saveResponse(value);
   }
 
-  /**
-   * Get response object keyed by `responseIdentifier` in QTI variable JSON format.
-   */
   get boundTo(): Record<string, QtiVariableJSON> {
     const responseVariable: Record<string, QtiVariableJSON> = {};
     const variable = this.context?.variables?.find(v => v.identifier === this.responseIdentifier);
@@ -816,7 +605,6 @@ export class QtiPortableCustomInteraction extends Interaction {
       case 'iframeReady':
         this.#initializeInteraction();
         this.#processPendingMessages();
-        // FIXME: add explicit event annotations for CEM so this event appears in generated API docs.
         this.dispatchEvent(
           new CustomEvent('qti-portable-custom-interaction-loaded', {
             bubbles: true
@@ -831,7 +619,6 @@ export class QtiPortableCustomInteraction extends Interaction {
         }
         break;
       case 'console':
-        // FIXME: add explicit event annotations for CEM so this event appears in generated API docs.
         this.dispatchEvent(
           new CustomEvent('qti-pci-console', {
             detail: {
@@ -957,7 +744,9 @@ export class QtiPortableCustomInteraction extends Interaction {
    */
   #sendIframeInitData() {
     // Once iframe is loaded, send initialization data
-    const properties = this.#addHyphenatedKeys(this.#unescapeDataAttributes({ ...this.dataset }));
+    const properties = this.#addHyphenatedKeys(
+      this.#toNestedProperties(this.#unescapeDataAttributes({ ...this.dataset }))
+    );
     const storedStateRaw = this.context?.state?.[this.responseIdentifier];
     const storedState = typeof storedStateRaw === 'string' && storedStateRaw.length > 0 ? storedStateRaw : null;
     const initData = {
@@ -1058,6 +847,15 @@ export class QtiPortableCustomInteraction extends Interaction {
         : this.dataset.baseUrl
       : '';
     const forwardConsole = this.dataset.forwardConsole === 'true';
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    const defaultComponentsCdnUrl = isLocalhost
+      ? `${window.location.origin}/cdn/index.js`
+      : 'https://unpkg.com/@citolab/qti-components/cdn';
+    const defaultComponentsCssUrl = isLocalhost
+      ? `${window.location.origin}/dist/item.css`
+      : 'https://unpkg.com/@citolab/qti-components@latest/dist/item.css';
+    const componentsCdnUrl = this.dataset.componentsCdnUrl || defaultComponentsCdnUrl;
+    const componentsCssUrl = this.dataset.componentsCssUrl || defaultComponentsCssUrl;
 
     // Extract just the font-related properties you want to copy
     const fontStyles = `
@@ -1075,7 +873,7 @@ export class QtiPortableCustomInteraction extends Interaction {
           <title>QTI PCI Container</title>
           <base href="${window.location.origin}" />
           <script type="module">
-            import 'https://unpkg.com/@citolab/qti-components/cdn';
+            import '${componentsCdnUrl}';
           </script>
           <style>
             body, html {
@@ -1100,7 +898,7 @@ export class QtiPortableCustomInteraction extends Interaction {
               min-height: 50px;
             }
           </style>
-          <link href="https://unpkg.com/@citolab/qti-components@latest/dist/item.css" rel="stylesheet" />
+          <link href="${componentsCssUrl}" rel="stylesheet" />
           <script src="${this.requireJsUrl}"></script>
           <script>
             const forwardConsole = ${forwardConsole ? 'true' : 'false'};
@@ -1337,6 +1135,12 @@ export class QtiPortableCustomInteraction extends Interaction {
                     .replace('https:/', 'https://');
                 }
 
+                function ensureDirectoryBasePath(basePath) {
+                  if (!basePath) return basePath;
+                  if (basePath.endsWith('/')) return basePath;
+                  return basePath + '/';
+                }
+
 
 
                 function combineRequireResolvePaths(path1, path2, baseUrl) {
@@ -1361,8 +1165,7 @@ export class QtiPortableCustomInteraction extends Interaction {
                         module.fallbackPath,
                         config.baseUrl
                       );
-                      window.requirePaths[module.id] = currentPaths
-                        .concat(newPath)
+                      window.requirePaths[module.id] = newPath.concat(currentPaths)
                         .filter((value, index, self) => self.indexOf(value) === index);
                     }
                   });
@@ -1433,59 +1236,7 @@ export class QtiPortableCustomInteraction extends Interaction {
                         }
                         pciInstance.getInstance(dom, pciConfig, restoredState || undefined);
                       } else {
-                        // TAO custom interaction initialization
-                        const restoreTAOConfig = dataset => {
-                          const config = {};
-                          const parseDataAttributes = () => {
-                            const result = {};
-
-                            // Separate direct attributes from nested ones
-                            Object.entries(dataset || {}).forEach(([key, value]) => {
-                              if (!key.includes('__')) {
-                                // Direct attributes (like version)
-                                result[key] = value;
-                              }
-                            });
-
-                            // Parse nested attributes
-                            const nestedData = {};
-
-                            Object.entries(dataset || {}).forEach(([key, value]) => {
-                              const parts = key.split('__');
-                              if (parts.length > 1) {
-                                const [group, index, prop] = parts;
-                                nestedData[group] = nestedData[group] || {};
-                                nestedData[group][index] = nestedData[group][index] || {};
-                                nestedData[group][index][prop] = value;
-                              }
-                            });
-
-                            // Convert nested groups to arrays
-                            Object.entries(nestedData).forEach(([key, group]) => {
-                              result[key] = Object.values(group);
-                            });
-                            return result;
-                          };
-                          const data = parseDataAttributes();
-                          for (const key in data) {
-                            if (Object.prototype.hasOwnProperty.call(data, key)) {
-                              const value = data[key];
-                              if (key === 'config') {
-                                config[key] = JSON.parse(value);
-                              } else {
-                                config[key] = value;
-                              }
-                            }
-                          }
-                          return config;
-                        };
-                        const taoConfig = restoreTAOConfig(config.dataAttributes);
-
-                        this.pciInstance.initialize(
-                          this.customInteractionTypeIdentifier,
-                          (this.markupEl || this.container).firstElementChild || this.markupEl || this.container,
-                          Object.keys(taoConfig).length ? taoConfig : null
-                        );
+                        this.notifyError('Loaded PCI module has no getInstance().');
                       }
                     },
                     notifyReady: () => {
@@ -1496,9 +1247,20 @@ export class QtiPortableCustomInteraction extends Interaction {
 
                 function getResolvablePathString(path, basePath) {
                   path = path.replace(/\\.js$/, '');
-                  return path?.toLocaleLowerCase().startsWith('http') || !basePath
-                    ? path
-                    : removeDoubleSlashes(\`\${basePath}/\${path}\`);
+                  if (/^[a-z][a-z0-9+.-]*:/i.test(path) || !basePath) {
+                    return path;
+                  }
+
+                  if (path.startsWith('/') && !path.startsWith('//')) {
+                    path = path.slice(1);
+                  }
+
+                  try {
+                    const resolved = new URL(path, ensureDirectoryBasePath(basePath)).toString();
+                    return resolved.replace(/\\.js$/, '');
+                  } catch (error) {
+                    return removeDoubleSlashes(ensureDirectoryBasePath(basePath) + path);
+                  }
                 }
 
                 // Load the PCI module
@@ -1991,19 +1753,6 @@ export class QtiPortableCustomInteraction extends Interaction {
    * @param responseVariable The response variable containing the correct response
    * @param show Whether to show or hide the correct response
    */
-  /**
-   * Show or hide an additional review-only PCI instance with correct response applied.
-   *
-   * Side effects when `show=true`:
-   * - Disables the live interaction.
-   * - Creates a sibling container with a cloned PCI instance in review mode.
-   *
-   * Side effects when `show=false`:
-   * - Removes review container.
-   * - Re-enables live interaction.
-   *
-   * @param show Set true to display the review/correct-response viewer.
-   */
   public override toggleInternalCorrectResponse(show: boolean) {
     const responseVariable = this.responseVariable;
 
@@ -2090,34 +1839,23 @@ export class QtiPortableCustomInteraction extends Interaction {
     correctResponseViewer.connectedCallback = function () {
       originalConnectedCallback.call(this);
 
-      const checkIframeLoaded = () => {
-        if (!this._iframeLoaded) return false;
+      const applyCorrectResponse = () => {
+        const qtiVariableJSON = this.responseVariablesToQtiVariableJSON(
+          correctResponseValue,
+          responseVariable.cardinality,
+          responseVariable.baseType
+        );
 
-        // Set response after a small delay to ensure PCI is ready
-        setTimeout(() => {
-          const qtiVariableJSON = this.responseVariablesToQtiVariableJSON(
-            correctResponseValue,
-            responseVariable.cardinality,
-            responseVariable.baseType
-          );
-
-          this.sendMessageToIframe('setBoundTo', {
-            [originalResponseId]: qtiVariableJSON
-          });
-          this.sendMessageToIframe('setState', { state: 'review' });
-        }, 1000);
-
-        return true;
+        this.sendMessageToIframe('setBoundTo', {
+          [originalResponseId]: qtiVariableJSON
+        });
+        this.sendMessageToIframe('setState', { state: 'review' });
       };
 
-      if (!checkIframeLoaded()) {
-        const intervalId = setInterval(() => {
-          if (checkIframeLoaded()) clearInterval(intervalId);
-        }, 100);
-
-        setTimeout(() => {
-          clearInterval(intervalId);
-        }, 10000);
+      if (this._iframeLoaded) {
+        applyCorrectResponse();
+      } else {
+        this.addEventListener('qti-portable-custom-interaction-loaded', applyCorrectResponse, { once: true });
       }
     };
 
@@ -2133,11 +1871,6 @@ export class QtiPortableCustomInteraction extends Interaction {
   /**
    * Method to disable the PCI for review mode
    * This can be used when showing the correct response
-   */
-  /**
-   * Put the interaction in non-interactive review mode.
-   *
-   * Sends `setState: disabled` to the PCI iframe and adds an overlay that blocks pointer input.
    */
   public disable() {
     // First, store the current state of the PCI
@@ -2174,11 +1907,6 @@ export class QtiPortableCustomInteraction extends Interaction {
 
   /**
    * Method to enable the PCI for interactive mode
-   */
-  /**
-   * Restore interactive mode.
-   *
-   * Removes host overlay and sends `setState: interacting` to the PCI iframe.
    */
   public enable() {
     // Remove any overlays
