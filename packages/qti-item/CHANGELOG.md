@@ -1,3 +1,11 @@
+# [@qti-components/item-v1.3.0](https://github.com/Citolab/qti-components/compare/item-v1.2.0...item-v1.3.0) (2026-03-17)
+
+
+### Features
+
+* new drag and drop mixin ([#131](https://github.com/Citolab/qti-components/issues/131)) ([45e5d23](https://github.com/Citolab/qti-components/commit/45e5d23c47f9005a368193b9eed5782ca080d7d7))
+* update pnpm workspace to include interactions packages ([1f605c5](https://github.com/Citolab/qti-components/commit/1f605c5575749863e32a9f326d7898726161275a))
+
 # [@qti-components/item-v1.2.0](https://github.com/Citolab/qti-components/compare/item-v1.1.0...item-v1.2.0) (2026-03-01)
 
 
