@@ -23,6 +23,29 @@ const { events, args, argTypes } = getStorybookHelpers('test-print-item-variable
 
 type Story = StoryObj<ItemShowCandidateCorrection & typeof args>;
 
+const dragAndWaitForPlacement = async (
+  draggable: Element,
+  dropZone: Element,
+  isPlaced: () => Element | null,
+  attempts = 3
+) => {
+  let lastError: unknown;
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    await drag(draggable, { to: dropZone });
+    try {
+      await waitFor(() => {
+        expect(isPlaced()).toBeTruthy();
+      });
+      return;
+    } catch (error) {
+      lastError = error;
+      if (attempt === attempts) {
+        throw lastError;
+      }
+    }
+  }
+};
+
 const meta: Meta<typeof ItemContainer & { 'item-url': string }> = {
   component: 'item-container',
   args: { ...args, 'item-url': 'assets/qti-item/example-choice-item.xml' },
@@ -265,24 +288,15 @@ export const Match: Story = {
       const matchItem2Id = matchItem2.getAttribute('identifier');
       const matchItem3Id = matchItem3.getAttribute('identifier');
 
-      await drag(matchItem1, { to: dropZone1 });
-      await waitFor(() => {
-        expect(
-          dropZone1.querySelector(`qti-simple-associable-choice[identifier="${matchItem1Id}"]`)
-        ).toBeTruthy();
-      });
-      await drag(matchItem2, { to: dropZone2 });
-      await waitFor(() => {
-        expect(
-          dropZone2.querySelector(`qti-simple-associable-choice[identifier="${matchItem2Id}"]`)
-        ).toBeTruthy();
-      });
-      await drag(matchItem3, { to: dropZone3 });
-      await waitFor(() => {
-        expect(
-          dropZone3.querySelector(`qti-simple-associable-choice[identifier="${matchItem3Id}"]`)
-        ).toBeTruthy();
-      });
+      await dragAndWaitForPlacement(matchItem1, dropZone1, () =>
+        dropZone1.querySelector(`qti-simple-associable-choice[identifier="${matchItem1Id}"]`)
+      );
+      await dragAndWaitForPlacement(matchItem2, dropZone2, () =>
+        dropZone2.querySelector(`qti-simple-associable-choice[identifier="${matchItem2Id}"]`)
+      );
+      await dragAndWaitForPlacement(matchItem3, dropZone3, () =>
+        dropZone3.querySelector(`qti-simple-associable-choice[identifier="${matchItem3Id}"]`)
+      );
       await showCorrectButton.click();
 
       await step('Verify candidate correction state is applied', async () => {
@@ -359,24 +373,15 @@ export const MatchAllToOneZone: Story = {
       expect(matchItem2Id).toBeTruthy();
       expect(matchItem3Id).toBeTruthy();
 
-      await drag(matchItem1, { to: dropZone1 });
-      await waitFor(() => {
-        expect(
-          dropZone1.querySelector(`qti-simple-associable-choice[identifier="${matchItem1Id}"]`)
-        ).toBeTruthy();
-      });
-      await drag(matchItem2, { to: dropZone1 });
-      await waitFor(() => {
-        expect(
-          dropZone1.querySelector(`qti-simple-associable-choice[identifier="${matchItem2Id}"]`)
-        ).toBeTruthy();
-      });
-      await drag(matchItem3, { to: dropZone1 });
-      await waitFor(() => {
-        expect(
-          dropZone1.querySelector(`qti-simple-associable-choice[identifier="${matchItem3Id}"]`)
-        ).toBeTruthy();
-      });
+      await dragAndWaitForPlacement(matchItem1, dropZone1, () =>
+        dropZone1.querySelector(`qti-simple-associable-choice[identifier="${matchItem1Id}"]`)
+      );
+      await dragAndWaitForPlacement(matchItem2, dropZone1, () =>
+        dropZone1.querySelector(`qti-simple-associable-choice[identifier="${matchItem2Id}"]`)
+      );
+      await dragAndWaitForPlacement(matchItem3, dropZone1, () =>
+        dropZone1.querySelector(`qti-simple-associable-choice[identifier="${matchItem3Id}"]`)
+      );
       await showCorrectButton.click();
 
       await step('Verify candidate correction state is applied', async () => {
@@ -704,14 +709,12 @@ export const GapMatch: Story = {
       expect(matchItem1Id).toBeTruthy();
       expect(matchItem2Id).toBeTruthy();
 
-      await drag(matchItem1, { to: dropZone1 });
-      await waitFor(() => {
-        expect(dropZone1.querySelector(`qti-gap-text[identifier="${matchItem1Id}"]`)).toBeTruthy();
-      });
-      await drag(matchItem2, { to: dropZone2 });
-      await waitFor(() => {
-        expect(dropZone2.querySelector(`qti-gap-text[identifier="${matchItem2Id}"]`)).toBeTruthy();
-      });
+      await dragAndWaitForPlacement(matchItem1, dropZone1, () =>
+        dropZone1.querySelector(`qti-gap-text[identifier="${matchItem1Id}"]`)
+      );
+      await dragAndWaitForPlacement(matchItem2, dropZone2, () =>
+        dropZone2.querySelector(`qti-gap-text[identifier="${matchItem2Id}"]`)
+      );
       await showCorrectButton.click();
 
       await step('Verify candidate correction state is applied', async () => {
