@@ -88,3 +88,13 @@ pnpm run local:workspace-release:dry
 ```
 
 This requires a `.env` file in the repo root with a `GITHUB_TOKEN` that has read access to the repo (needed by semantic-release to fetch tag history).
+
+---
+
+## Local scripts — gotchas
+
+### `local:workspace-publish:force`
+
+This is an emergency escape hatch to force-publish packages directly without going through semantic-release. It intentionally excludes the umbrella package (`@citolab/qti-components`) via `--filter "!./packages/qti-components"`.
+
+**Do not remove that filter.** The umbrella has its own release process (`tools/bump-umbrella.mjs`) and its build depends on the individual packages being built and linked first. Force-publishing it out of order would likely publish a broken or stale build.
