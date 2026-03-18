@@ -250,11 +250,6 @@ export const Match: Story = {
   play: async ({ canvasElement, step }) => {
     // wait for qti-simple-choice to be rendered
     const canvas = within(canvasElement);
-    const assessmentItem = await getAssessmentItemFromItemContainer(canvasElement);
-    const matchInteraction = assessmentItem.querySelector('qti-match-interaction') as {
-      response: string[];
-      updateComplete?: Promise<unknown>;
-    };
     const showCorrectButton = await canvas.findByShadowText(/Show candidate correction/i);
 
     const matchItem1 = (await canvas.findByShadowText('Prospero')) as QtiSimpleAssociableChoice;
@@ -265,27 +260,10 @@ export const Match: Story = {
     const dropZone2 = await canvas.findByShadowText("A Midsummer-Night's Dream");
     const dropZone3 = await canvas.findByShadowText('Romeo and Juliet');
 
-    await step('Create candidate response with one correct and two incorrect matches', async () => {
-      const matchItem1Id = matchItem1.getAttribute('identifier');
-      const matchItem2Id = matchItem2.getAttribute('identifier');
-      const matchItem3Id = matchItem3.getAttribute('identifier');
-      const dropZone1Id = dropZone1.getAttribute('identifier');
-      const dropZone2Id = dropZone2.getAttribute('identifier');
-      const dropZone3Id = dropZone3.getAttribute('identifier');
-
-      expect(matchItem1Id).toBeTruthy();
-      expect(matchItem2Id).toBeTruthy();
-      expect(matchItem3Id).toBeTruthy();
-      expect(dropZone1Id).toBeTruthy();
-      expect(dropZone2Id).toBeTruthy();
-      expect(dropZone3Id).toBeTruthy();
-
-      matchInteraction.response = [
-        `${matchItem1Id} ${dropZone1Id}`,
-        `${matchItem2Id} ${dropZone2Id}`,
-        `${matchItem3Id} ${dropZone3Id}`
-      ];
-      await matchInteraction.updateComplete;
+    await step('Drag and drop match interaction items', async () => {
+      await drag(matchItem1, { to: dropZone1 });
+      await drag(matchItem2, { to: dropZone2 });
+      await drag(matchItem3, { to: dropZone3 });
       await showCorrectButton.click();
 
       await step('Verify candidate correction state is applied', async () => {
@@ -357,6 +335,10 @@ export const MatchAllToOneZone: Story = {
       const matchItem1Id = matchItem1.getAttribute('identifier');
       const matchItem2Id = matchItem2.getAttribute('identifier');
       const matchItem3Id = matchItem3.getAttribute('identifier');
+
+      expect(matchItem1Id).toBeTruthy();
+      expect(matchItem2Id).toBeTruthy();
+      expect(matchItem3Id).toBeTruthy();
 
       await drag(matchItem1, { to: dropZone1 });
       await drag(matchItem2, { to: dropZone1 });
@@ -684,17 +666,12 @@ export const GapMatch: Story = {
     const dropZone1 = dropZones[0];
     const dropZone2 = dropZones[1];
 
-    await step('Create candidate response with one correct and one incorrect gap', async () => {
-      const dropZone1Id = dropZone1.getAttribute('identifier');
-      const dropZone2Id = dropZone2.getAttribute('identifier');
-
+    await step('Drag and drop match interaction items', async () => {
       expect(matchItem1Id).toBeTruthy();
       expect(matchItem2Id).toBeTruthy();
-      expect(dropZone1Id).toBeTruthy();
-      expect(dropZone2Id).toBeTruthy();
 
-      gapMatchInteraction.response = [`${matchItem1Id} ${dropZone1Id}`, `${matchItem2Id} ${dropZone2Id}`];
-      await gapMatchInteraction.updateComplete;
+      await drag(matchItem1, { to: dropZone1 });
+      await drag(matchItem2, { to: dropZone2 });
       await showCorrectButton.click();
 
       await step('Verify candidate correction state is applied', async () => {
