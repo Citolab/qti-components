@@ -261,9 +261,28 @@ export const Match: Story = {
     const dropZone3 = await canvas.findByShadowText('Romeo and Juliet');
 
     await step('Drag and drop match interaction items', async () => {
+      const matchItem1Id = matchItem1.getAttribute('identifier');
+      const matchItem2Id = matchItem2.getAttribute('identifier');
+      const matchItem3Id = matchItem3.getAttribute('identifier');
+
       await drag(matchItem1, { to: dropZone1 });
+      await waitFor(() => {
+        expect(
+          dropZone1.querySelector(`qti-simple-associable-choice[identifier="${matchItem1Id}"]`)
+        ).toBeTruthy();
+      });
       await drag(matchItem2, { to: dropZone2 });
+      await waitFor(() => {
+        expect(
+          dropZone2.querySelector(`qti-simple-associable-choice[identifier="${matchItem2Id}"]`)
+        ).toBeTruthy();
+      });
       await drag(matchItem3, { to: dropZone3 });
+      await waitFor(() => {
+        expect(
+          dropZone3.querySelector(`qti-simple-associable-choice[identifier="${matchItem3Id}"]`)
+        ).toBeTruthy();
+      });
       await showCorrectButton.click();
 
       await step('Verify candidate correction state is applied', async () => {
@@ -341,8 +360,23 @@ export const MatchAllToOneZone: Story = {
       expect(matchItem3Id).toBeTruthy();
 
       await drag(matchItem1, { to: dropZone1 });
+      await waitFor(() => {
+        expect(
+          dropZone1.querySelector(`qti-simple-associable-choice[identifier="${matchItem1Id}"]`)
+        ).toBeTruthy();
+      });
       await drag(matchItem2, { to: dropZone1 });
+      await waitFor(() => {
+        expect(
+          dropZone1.querySelector(`qti-simple-associable-choice[identifier="${matchItem2Id}"]`)
+        ).toBeTruthy();
+      });
       await drag(matchItem3, { to: dropZone1 });
+      await waitFor(() => {
+        expect(
+          dropZone1.querySelector(`qti-simple-associable-choice[identifier="${matchItem3Id}"]`)
+        ).toBeTruthy();
+      });
       await showCorrectButton.click();
 
       await step('Verify candidate correction state is applied', async () => {
@@ -671,7 +705,13 @@ export const GapMatch: Story = {
       expect(matchItem2Id).toBeTruthy();
 
       await drag(matchItem1, { to: dropZone1 });
+      await waitFor(() => {
+        expect(dropZone1.querySelector(`qti-gap-text[identifier="${matchItem1Id}"]`)).toBeTruthy();
+      });
       await drag(matchItem2, { to: dropZone2 });
+      await waitFor(() => {
+        expect(dropZone2.querySelector(`qti-gap-text[identifier="${matchItem2Id}"]`)).toBeTruthy();
+      });
       await showCorrectButton.click();
 
       await step('Verify candidate correction state is applied', async () => {
