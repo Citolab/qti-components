@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: read
+  issues: write
   pull-requests: write
 
 concurrency:
@@ -16,6 +17,7 @@ concurrency:
 
 jobs:
   comment-stackblitz-link:
+    if: ${{ github.event.pull_request.head.repo.fork == false }}
     runs-on: ubuntu-latest
     steps:
       - name: Add StackBlitz quick-open comment
