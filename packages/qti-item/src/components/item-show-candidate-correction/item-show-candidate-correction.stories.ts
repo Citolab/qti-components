@@ -29,19 +29,44 @@ const dragAndWaitForPlacement = async (
   isPlaced: () => Element | null,
   attempts = 3
 ) => {
+  const draggableIdentifier = draggable.getAttribute('identifier');
+  const draggableTag = draggable.tagName.toLowerCase();
+
+  const resolveDraggable = (): Element => {
+    if (draggable.isConnected) {
+      return draggable;
+    }
+
+    if (!draggableIdentifier) {
+      return draggable;
+    }
+
+    const candidates = Array.from(
+      document.querySelectorAll(`${draggableTag}[identifier="${draggableIdentifier}"]`)
+    );
+
+    return (
+      candidates.find(candidate => candidate.getAttribute('qti-draggable') === 'true') ??
+      candidates[0] ??
+      draggable
+    );
+  };
+
   let lastError: unknown;
   for (let attempt = 1; attempt <= attempts; attempt++) {
-    await drag(draggable, { to: dropZone });
+    await drag(resolveDraggable(), { to: dropZone });
     try {
       await waitFor(() => {
         expect(isPlaced()).toBeTruthy();
-      });
+      }, { timeout: 5000 });
       return;
     } catch (error) {
       lastError = error;
       if (attempt === attempts) {
         throw lastError;
       }
+
+      await new Promise(resolve => setTimeout(resolve, 50));
     }
   }
 };
