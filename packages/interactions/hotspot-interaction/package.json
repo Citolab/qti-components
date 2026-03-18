@@ -1,7 +1,7 @@
 {
   "name": "@qti-components/hotspot-interaction",
   "description": "QTI hotspot-interaction interaction",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "",
   "dependencies": {
     "@qti-components/base": "workspace:^",

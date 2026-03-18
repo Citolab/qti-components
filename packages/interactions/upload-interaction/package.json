@@ -1,7 +1,7 @@
 {
   "name": "@qti-components/upload-interaction",
   "description": "QTI upload-interaction interaction",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "",
   "dependencies": {
     "@qti-components/base": "workspace:^",
