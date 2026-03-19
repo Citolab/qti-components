@@ -36880,6 +36880,14 @@
             },
             {
               "kind": "field",
+              "name": "submissionMode",
+              "type": {
+                "text": "'individual' | 'simultaneous' | undefined"
+              },
+              "attribute": "submission-mode"
+            },
+            {
+              "kind": "field",
               "name": "title",
               "type": {
                 "text": "string"
@@ -36937,6 +36945,13 @@
                 "text": "string"
               },
               "fieldName": "required"
+            },
+            {
+              "name": "submission-mode",
+              "type": {
+                "text": "'individual' | 'simultaneous' | undefined"
+              },
+              "fieldName": "submissionMode"
             },
             {
               "name": "visible",
@@ -38215,7 +38230,7 @@
               },
               "privacy": "protected",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; navigationMode: 'linear' | 'nonlinear'; }[]; }[] }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultane... }"
               }
             },
             {
@@ -38400,7 +38415,7 @@
               },
               "privacy": "protected",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; navigationMode: 'linear' | 'nonlinear'; }[]; }[] }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultane... }"
               }
             },
             {
@@ -38506,7 +38521,7 @@
               },
               "privacy": "private",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; navigationMode: 'linear' | 'nonlinear'; }[]; }[] }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultane... }"
               }
             },
             {
@@ -38609,17 +38624,8 @@
             {
               "kind": "method",
               "name": "checkDisabled",
-              "parameters": [
-                {
-                  "name": "navigationMode",
-                  "optional": true,
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ],
               "type": {
-                "text": "checkDisabled(navigationMode?: string) => void"
+                "text": "checkDisabled() => void"
               }
             },
             {
@@ -38630,7 +38636,7 @@
               },
               "privacy": "private",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; navigationMode: 'linear' | 'nonlinear'; }[]; }[] }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultane... }"
               }
             },
             {
@@ -38712,7 +38718,7 @@
               },
               "privacy": "public",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; navigationMode: 'linear' | 'nonlinear'; }[]; }[] } | undefined"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultane... } | undefined"
               }
             }
           ],
@@ -38762,7 +38768,7 @@
               },
               "privacy": "public",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; navigationMode: 'linear' | 'nonlinear'; }[]; }[] } | undefined"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultane... } | undefined"
               }
             }
           ],
@@ -38825,7 +38831,7 @@
               },
               "privacy": "protected",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; navigationMode: 'linear' | 'nonlinear'; }[]; }[] } | undefined"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultane... } | undefined"
               }
             },
             {
@@ -38927,7 +38933,7 @@
               },
               "privacy": "protected",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; navigationMode: 'linear' | 'nonlinear'; }[]; }[] } | undefined"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultane... } | undefined"
               }
             },
             {
@@ -39019,7 +39025,7 @@
               },
               "privacy": "private",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; navigationMode: 'linear' | 'nonlinear'; }[]; }[] }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultane... }"
               }
             },
             {
@@ -39180,7 +39186,7 @@
               },
               "privacy": "public",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; navigationMode: 'linear' | 'nonlinear'; }[]; }[] } | undefined"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultane... } | undefined"
               }
             },
             {
@@ -39328,7 +39334,7 @@
               },
               "privacy": "private",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; navigationMode: 'linear' | 'nonlinear'; }[]; }[] }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultane... }"
               }
             },
             {

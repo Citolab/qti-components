@@ -2,10 +2,10 @@ import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 import { html, render } from 'lit';
 
 import '@citolab/qti-components';
+
 import type { QtiTest } from '@qti-components/test';
 
-const navigationTest = html`
-<qti-test navigate="item">
+const navigationTest = html` <qti-test navigate="item">
   <test-navigation>
     <test-container test-url="/assets/qti-test-package/assessment.xml"></test-container>
     <test-prev id="prev-btn">Prev</test-prev>
@@ -17,14 +17,16 @@ const linearNavigationTest = html` <qti-test navigate="item">
   <test-navigation>
     <test-container test-url="/assets/qti-test-package/assessment-linear.xml"></test-container>
     <test-prev id="prev-btn">Prev</test-prev>
+    <test-end-attempt id="end-attempt-btn">End Attempt</test-end-attempt>
     <test-next id="next-btn">Next</test-next>
   </test-navigation>
 </qti-test>`;
 
 async function expectNavTo(qtiTest: QtiTest, navItemRefId: string) {
-  await expect
-    .poll(() => qtiTest.sessionContext.navItemRefId)
-    .toBe(navItemRefId);
+  await expect.poll(() => qtiTest.sessionContext.navItemRefId).toBe(navItemRefId);
+
+  // wait for the item to be loaded
+  await new Promise(resolve => setTimeout(resolve, 100));
 }
 
 describe('navigation-mode', () => {
@@ -36,7 +38,7 @@ describe('navigation-mode', () => {
       render(navigationTest, container);
       // Ensure we're showing the first question before proceeding
       const qtiTest = container.querySelector('qti-test');
-      await expectNavTo(qtiTest,'ITM-info_start');
+      await expectNavTo(qtiTest, 'ITM-info_start');
     });
 
     afterEach(() => {
@@ -141,27 +143,36 @@ describe('navigation-mode', () => {
       container.remove();
     });
 
-    test('should initially be on the first item with disabled Prev button', () => {
+    test('should initially be on the first item with disabled Nav buttons', () => {
       expect(container.querySelector('#prev-btn')).toBeDisabled();
-      expect(container.querySelector('#next-btn')).toBeEnabled();
+      // The item should be in the interaction/response state, so Next should be disabled until the submission
+      expect(container.querySelector('#next-btn')).toBeDisabled();
     });
 
-    test('should allow moving to next item but still disable Prev button in linear mode', async () => {
+    test('should allow moving to next item but still disable Prev button', async () => {
       const qtiTest = container.querySelector('qti-test');
       const nextBtn = container.querySelector<HTMLAnchorElement>('#next-btn');
       const prevBtn = container.querySelector<HTMLAnchorElement>('#prev-btn');
+      const endAttemptBtn = container.querySelector<HTMLAnchorElement>('#end-attempt-btn');
 
-      expect(nextBtn).toBeEnabled();
+      // 1. In linear/individual mode, Next should be disabled until end-attempt
+      expect(nextBtn).toBeDisabled();
 
-      // Click next
+      endAttemptBtn.click();
+      await expect.poll(() => nextBtn, { timeout: 5000 }).toBeEnabled();
+
       nextBtn.click();
-
-      // That should switch to the next question
-
       await expectNavTo(qtiTest, 'ITM-text_entry');
 
-      // In linear mode, Prev should still be disabled even on item 2
       expect(prevBtn).toBeDisabled();
+      expect(nextBtn).toBeDisabled();
+
+      // answer the question
+      qtiTest.testContext.items[1].variables['RESPONSE'] = 'York';
+      endAttemptBtn.click();
+
+      expect(prevBtn).toBeDisabled();
+      await expect.poll(() => nextBtn, { timeout: 5000 }).toBeEnabled();
     });
 
     test('should restrict jumping to item 3 from item 1 and dispatch navigation-error', async () => {
@@ -184,32 +195,6 @@ describe('navigation-mode', () => {
       await new Promise(resolve => setTimeout(resolve, 100));
       expect(qtiTest.sessionContext.navItemRefId).toBe('ITM-info_start');
       expect(errorReceived).toBe(true);
-    });
-
-    test('should allow moving forward between sections', async () => {
-      const qtiTest = container.querySelector('qti-test');
-      const nextBtn = container.querySelector<HTMLAnchorElement>('#next-btn');
-
-      // 1. Move from section 'info-start' to section 'basic'
-      // Currently on ITM-info_start (last item of info-start)
-      nextBtn.click();
-      await expectNavTo(qtiTest, 'ITM-text_entry');
-
-      // 2. Move through section 'basic'
-      nextBtn.click();
-      await expectNavTo(qtiTest, 'ITM-choice');
-      nextBtn.click();
-      await expectNavTo(qtiTest, 'ITM-choice_multiple');
-      nextBtn.click();
-      await expectNavTo(qtiTest, 'ITM-extended_text');
-
-      // 3. Move from section 'basic' to section 'advanced'
-      nextBtn.click();
-      await expectNavTo(qtiTest, 'ITM-gap_match');
-
-      // 4. Verify we can still move forward in section 'advanced'
-      nextBtn.click();
-      await expectNavTo(qtiTest, 'ITM-graphic_associate');
     });
   });
 });

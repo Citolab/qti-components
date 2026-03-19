@@ -34,7 +34,7 @@ export class TestPrev extends LitElement {
   @watch('computedContext')
   _handleTestElementChange(_oldValue: ComputedContext, newValue: ComputedContext) {
     if (newValue) {
-      this._internalDisabled = false;
+      this.willUpdate(new Map());
     }
   }
 
@@ -62,17 +62,16 @@ export class TestPrev extends LitElement {
     if (!testPart) return;
     this.sectionItems = testPart.sections.flatMap(section => section.items);
     this.itemIndex = this.sectionItems.findIndex(item => item.active);
-    const activeSection = testPart?.sections.find(s => s.active);
-    const navigationMode = activeSection?.navigationMode || testPart?.navigationMode || 'nonlinear';
-    this.checkDisabled(navigationMode);
+    this.checkDisabled();
   }
 
-  checkDisabled(navigationMode?: string) {
+  checkDisabled() {
+    const testPart = this.computedContext?.testParts.find(testPart => testPart.active);
+    const activeSection = testPart?.sections.find(s => s.active);
+    const navigationMode = activeSection?.navigationMode || testPart?.navigationMode || 'nonlinear';
+
     this._internalDisabled =
-      navigationMode === 'linear' ||
-      !this.computedContext ||
-      this.itemIndex === 0 ||
-      this.itemIndex === -1;
+      navigationMode === 'linear' || !this.computedContext || this.itemIndex === 0 || this.itemIndex === -1;
   }
 
   protected _requestItem(identifier: string): void {
