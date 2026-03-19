@@ -146,6 +146,7 @@ const umbrellaPkg = JSON.parse(readFileSync(umbrellaPkgPath, 'utf8'));
 const currentVersion = umbrellaPkg.version;
 const newVersion = applyBump(currentVersion, highestBump);
 const newTag = `qti-components-v${newVersion}`;
+const aliasTag = `v${newVersion}`;
 
 console.log(`Umbrella: ${currentVersion} → ${newVersion} (tag: ${newTag})`);
 
@@ -216,6 +217,7 @@ writeFileSync(notesFile, rollupBody);
 
 // Emit outputs for the workflow
 outputToGitHub('new_tag', newTag);
+outputToGitHub('alias_tag', aliasTag);
 outputToGitHub('new_version', newVersion);
 outputToGitHub('notes_file', notesFile);
 
@@ -223,5 +225,17 @@ outputToGitHub('notes_file', notesFile);
 run(`git add packages/qti-components/package.json packages/qti-components/CHANGELOG.md`);
 run(`git commit -m "chore(release): ${newVersion} [skip ci]"`);
 run(`git tag ${newTag}`);
+const aliasTagExists = execSync(`git tag --list '${aliasTag}'`, { encoding: 'utf8' }).trim().length > 0;
+if (aliasTagExists) {
+  const aliasTagSha = exec(`git rev-list -n 1 ${aliasTag}`);
+  const headSha = exec('git rev-parse HEAD');
+  if (aliasTagSha !== headSha) {
+    console.error(`Error: alias tag ${aliasTag} already exists and points to ${aliasTagSha}, not HEAD ${headSha}.`);
+    process.exit(1);
+  }
+  console.log(`Alias tag ${aliasTag} already exists on HEAD; keeping existing tag.`);
+} else {
+  run(`git tag ${aliasTag}`);
+}
 
-console.log(`\nUmbrella bumped to ${newVersion} and tagged as ${newTag}.`);
+console.log(`\nUmbrella bumped to ${newVersion} and tagged as ${newTag} (alias: ${aliasTag}).`);
