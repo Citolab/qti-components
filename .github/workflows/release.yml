@@ -1,0 +1,117 @@
+name: "Manual: release and publish packages"
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to release from'
+        required: false
+        default: 'main'
+        type: string
+      dry_run:
+        description: 'Dry-run (no commits, tags, or publishes)'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  id-token: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          token: ${{ secrets.RELEASE_BOT_TOKEN || secrets.GITHUB_TOKEN }}
+          ref: ${{ inputs.branch || 'main' }}
+          fetch-depth: 0
+
+      - name: Capture starting SHA
+        id: start
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: 'pnpm'
+          registry-url: 'https://registry.npmjs.org/'
+
+      - name: Upgrade npm for trusted publishing
+        run: npm install -g npm@latest
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run semantic-release on changed packages (dry-run)
+        if: ${{ inputs.dry_run }}
+        run: pnpm run ci:release:changed:dry
+        env:
+          GITHUB_TOKEN: ''
+          HUSKY: 0
+
+      - name: Run semantic-release on changed packages
+        if: ${{ !inputs.dry_run }}
+        run: pnpm run ci:release:changed
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_BOT_TOKEN || secrets.GITHUB_TOKEN }}
+          HUSKY: 0
+
+      - name: Configure git for umbrella bump commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Bump umbrella package (dry-run)
+        if: ${{ inputs.dry_run }}
+        run: node tools/bump-umbrella.mjs --dry-run --since-sha ${{ steps.start.outputs.sha }}
+
+      - name: Bump umbrella package
+        id: bump
+        if: ${{ !inputs.dry_run }}
+        run: node tools/bump-umbrella.mjs --since-sha ${{ steps.start.outputs.sha }}
+        env:
+          HUSKY: 0
+
+      - name: Push umbrella release commit and tag
+        if: ${{ !inputs.dry_run }}
+        run: git push origin HEAD --tags
+
+      - name: Trigger Storybook deployment
+        if: ${{ !inputs.dry_run && steps.bump.outputs.new_tag != '' }}
+        run: gh workflow run deploy-sb.yml --ref main -f tag=${{ steps.bump.outputs.new_tag }}
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_BOT_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: Create GitHub release for umbrella
+        if: ${{ !inputs.dry_run && steps.bump.outputs.new_tag != '' }}
+        run: gh release create ${{ steps.bump.outputs.new_tag }} --title "@citolab/qti-components ${{ steps.bump.outputs.new_version }}" --notes-file ${{ steps.bump.outputs.notes_file }}
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_BOT_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: Build workspace
+        if: ${{ !inputs.dry_run }}
+        run: pnpm run build
+
+      - name: Ensure OIDC trusted publishing auth
+        if: ${{ !inputs.dry_run }}
+        run: |
+          rm -f .npmrc "$HOME/.npmrc"
+          npm config delete always-auth || true
+          npm config delete //registry.npmjs.org/:_authToken || true
+
+      - name: Publish packages
+        if: ${{ !inputs.dry_run }}
+        run: env -u npm_config_recursive -u npm_config_workspace_concurrency -u npm_config_verify_deps_before_run -u npm_config_npm_globalconfig -u npm_config__jsr_registry pnpm run ci:publish:missing
+        env:
+          NODE_AUTH_TOKEN: ''
+          NPM_TOKEN: ''
+          NPM_CONFIG_PROVENANCE: 'true'

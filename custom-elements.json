@@ -19570,7 +19570,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "QTI 3 Portable Custom Interaction host component.\n\nThis element renders a PCI inside an iframe, bridges configuration and state to the PCI AMD\nmodule, and proxies lifecycle/response updates back to the QTI item runtime.\n\nSpec references:\n- PCI overview: https://www.imsglobal.org/spec/qti/v3p0/impl#h.jsncxx6a57ao\n- Module resolution: https://www.imsglobal.org/spec/qti/v3p0/impl#h.rrz6g7fej3px\n- Lifecycle examples: https://www.imsglobal.org/spec/qti/v3p0/impl#h.vf2yl2nwwnu\n- Bridge methods/API: https://www.imsglobal.org/spec/qti/v3p0/impl#h.ibcksu8902cr\n- PCI factory contract: https://www.imsglobal.org/spec/qti/v3p0/impl#h.1mc9puik2ft6\n\nSource references for lifecycle figures:\n- Figure 109 image: https://www.imsglobal.org/sites/default/files/specs/images/qti/3p0/impl3image39.png\n- Figure 110 image: https://www.imsglobal.org/sites/default/files/specs/images/qti/3p0/impl3image41.png\n\nNormative-vs-implementation note:\n- IMS describes delivery-engine requirements.\n- This class documents what this repository's delivery implementation currently does.\n\n## PCI Lifecycle (Figure 109 reconstruction)\n```mermaid\nsequenceDiagram\n  participant C as Candidate\n  participant DE as Delivery Engine (Host)\n  participant B as Communication Bridge (qtiCustomInteractionContext)\n  participant PCI as Custom Interaction\n\n  C->>DE: Open item\n  DE->>DE: Render qti-portable-custom-interaction\n  DE->>B: Load AMD module(s)\n  B->>PCI: register(factory)\n  DE->>B: getInstance(typeIdentifier, dom, config, state?)\n  B->>PCI: getInstance(dom, config, state?)\n  PCI-->>B: onready(...)\n  B-->>DE: ready notification\n  C->>PCI: Interact\n  PCI-->>B: getResponse()/getState() updates\n  B-->>DE: interaction changed\n  C->>DE: Navigate away\n  DE->>DE: Persist response/state\n  C->>DE: Return to item\n  DE->>B: getInstance(..., savedState)\n  B->>PCI: Restore previous state\n```\n\n## PCI Lifecycle (Figure 110 reconstruction)\n```mermaid\nsequenceDiagram\n  participant C as Candidate\n  participant DE as Delivery Engine (Adaptive/Composite)\n  participant B as Communication Bridge\n  participant PCI as Custom Interaction(s)\n\n  C->>DE: Start attempt\n  DE->>PCI: Initialize one or more PCI instances\n  loop Attempt cycle\n    C->>PCI: Interact with adaptive content\n    PCI-->>DE: Response/state updates\n    C->>DE: Trigger endAttemptInteraction\n    DE->>DE: Process responses/outcomes\n    DE->>PCI: Re-render or restore next attempt state\n  end\n  C->>DE: Submit item\n  DE->>DE: Close item\n```\n\n## Public Events\n\n| Event | When emitted | Detail payload |\n| --- | --- | --- |\n| `qti-portable-custom-interaction-loaded` | After iframe reports ready and host has finished initial handshake. | None |\n| `qti-pci-console` | When iframe forwards `console.log`/`console.error` output and `data-forward-console=\"true\"` is configured. | `{ level: 'log' | 'error', args: string[] }` |\n\n## Implementation Guide Coverage\n\n| IMS guide/option | Status in this component | Notes |\n| --- | --- | --- |\n| `qti-portable-custom-interaction` host + `custom-interaction-type-identifier` + `module` | Implemented | Core attributes are required for normal operation. |\n| Pass `data-*` attributes into PCI configuration `properties` | Implemented | Includes camelCase dataset keys and mirrored hyphenated aliases. |\n| `qti-template-variable` to `templateVariables` | Implemented | Resolved from item context and converted to QTI variable JSON shape. |\n| `qti-context-variable` to `contextVariables` | Implemented | Includes special handling for `QTI_CONTEXT` record defaults + runtime values. |\n| `qti-interaction-markup` forwarding | Implemented | Forwarded into iframe via bridge messaging. |\n| `<properties>` forwarding | Implemented | Forwarded as raw markup string for PCI consumption. |\n| `qti-interaction-modules` overrides (`qti-interaction-module`) | Implemented | Merged into RequireJS path resolution in iframe runtime. |\n| Default/fallback AMD locations (`module_resolution.js`, `fallback_module_resolution.js`) | Partially Implemented | Equivalent behavior via `data-require-paths`, `data-require-shim`, module overrides; no direct file loader for those exact filenames. |\n| PCI bridge callbacks (`onready`, optional `ondone`) | Partially Implemented | `onready` is wired; `ondone` support is bridged via internal change notifications and host message flow. |\n| Status modes (`interacting`, `suspended`, `closed`, `solution`, `review`) | Partially Implemented | `review` and `interacting` are actively used; additional statuses are part of API types and pass-through capabilities. |\n| Standard bridge object also assigned to global `window` | Not Implemented (spec option) | This host uses an iframe message bridge with AMD `define('qtiCustomInteractionContext', ...)` inside iframe runtime. |\n| `oncompleted` callback before unload | Not Implemented (spec option) | Not currently invoked by host teardown path. |\n\nTODO: Emit and document all public events in CEM output (`qti-portable-custom-interaction-loaded`, `qti-pci-console`)\nwhen analyzer/event tags are added. Runtime already dispatches both events.",
+          "description": "",
           "name": "QtiPortableCustomInteraction",
           "members": [
             {
@@ -19740,28 +19740,6 @@
             },
             {
               "kind": "method",
-              "name": "#getDefaultRequirePaths",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "Record<string, string | string[]>"
-                }
-              },
-              "description": "Get the default require paths"
-            },
-            {
-              "kind": "method",
-              "name": "#getDefaultRequireShim",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "Record<string, any>"
-                }
-              },
-              "description": "Get the default require shim"
-            },
-            {
-              "kind": "method",
               "name": "#getFinalRequirePaths",
               "privacy": "private",
               "return": {
@@ -19780,7 +19758,7 @@
                   "text": "Record<string, any>"
                 }
               },
-              "description": "Get the final require shim by combining defaults with user-provided shim"
+              "description": "Get the final require shim"
             },
             {
               "kind": "method",
@@ -19910,6 +19888,24 @@
             },
             {
               "kind": "method",
+              "name": "#toNestedProperties",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, any>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "properties",
+                  "type": {
+                    "text": "Record<string, any>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "#unescapeDataAttributes",
               "privacy": "private",
               "return": {
@@ -19961,13 +19957,11 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Base URL used to resolve relative PCI module paths.",
               "attribute": "data-base-url"
             },
             {
               "kind": "field",
               "name": "boundTo",
-              "description": "Get response object keyed by `responseIdentifier` in QTI variable JSON format.",
               "type": {
                 "text": "Record<string, QtiVariableJSON>"
               }
@@ -20068,14 +20062,13 @@
               "type": {
                 "text": "string"
               },
-              "description": "PCI type identifier used by the bridge to resolve the registered factory.\n\nIMS recommends using a federated-content URN to reduce collision risk.",
               "attribute": "custom-interaction-type-identifier"
             },
             {
               "kind": "method",
               "name": "disable",
               "privacy": "public",
-              "description": "Put the interaction in non-interactive review mode.\n\nSends `setState: disabled` to the PCI iframe and adds an overlay that blocks pointer input.",
+              "description": "Method to disable the PCI for review mode\nThis can be used when showing the correct response",
               "type": {
                 "text": "disable() => void"
               }
@@ -20098,7 +20091,7 @@
               "kind": "method",
               "name": "enable",
               "privacy": "public",
-              "description": "Restore interactive mode.\n\nRemoves host overlay and sends `setState: interacting` to the PCI iframe.",
+              "description": "Method to enable the PCI for interactive mode",
               "type": {
                 "text": "enable() => void"
               }
@@ -20263,7 +20256,6 @@
               "type": {
                 "text": "string"
               },
-              "description": "AMD module name for the PCI implementation.\n\nThis must resolve through configured RequireJS paths/module mappings.",
               "attribute": "module"
             },
             {
@@ -20384,7 +20376,6 @@
                 "text": "string"
               },
               "default": "'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js'",
-              "description": "URL to the RequireJS runtime injected into the iframe.",
               "attribute": "data-require-js-url"
             },
             {
@@ -20394,7 +20385,6 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "JSON string for additional RequireJS `paths` mappings.\n\nSupported formats:\n- Object map: `{\"id\":\"path/to/module\"}`\n- Array entries: `[{\"name\":\"id\",\"value\":\"path/to/module\"}]`",
               "attribute": "data-require-paths"
             },
             {
@@ -20404,7 +20394,6 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "JSON string for additional RequireJS `shim` mappings.",
               "attribute": "data-require-shim"
             },
             {
@@ -20431,7 +20420,6 @@
                 "text": "string | string[] | null"
               },
               "default": "null",
-              "description": "Current response value mirrored from PCI messages.\n\nCompatibility note:\n- This is a runtime convenience surface.\n- Persisted response flow should still be treated as QTI variable updates\n  via `qti-interaction-response`.",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -20676,14 +20664,14 @@
                   "type": {
                     "text": "boolean"
                   },
-                  "description": "Set true to display the review/correct-response viewer."
+                  "description": "Whether to show or hide the correct response"
                 },
                 {
                   "description": "The response variable containing the correct response",
                   "name": "responseVariable"
                 }
               ],
-              "description": "Show or hide an additional review-only PCI instance with correct response applied.\n\nSide effects when `show=true`:\n- Disables the live interaction.\n- Creates a sibling container with a cloned PCI instance in review mode.\n\nSide effects when `show=false`:\n- Removes review container.\n- Re-enables live interaction.",
+              "description": "Toggle the display of the correct response",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -20696,34 +20684,22 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Include bundled default path mappings in addition to author-provided paths.",
               "attribute": "data-use-default-paths"
-            },
-            {
-              "kind": "field",
-              "name": "useDefaultShims",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Include bundled default shims in addition to author-provided shims.",
-              "attribute": "data-use-default-shims"
             },
             {
               "kind": "method",
               "name": "validate",
               "return": {
                 "type": {
-                  "text": ""
+                  "text": "boolean"
                 }
               },
-              "description": "Validate current response and update form-associated validity state.\n\nValidation source priority:\n1. Explicit validity received from PCI bridge (`valid` in interactionChanged).\n2. Host fallback validity based on non-empty response.",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               },
               "type": {
-                "text": "validate() => void"
+                "text": "validate() => boolean"
               }
             },
             {
@@ -20732,7 +20708,6 @@
               "type": {
                 "text": "string | null"
               },
-              "description": "Serialize internal response value as comma-separated string.",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -20788,7 +20763,6 @@
               "type": {
                 "text": "string"
               },
-              "description": "PCI type identifier used by the bridge to resolve the registered factory.\n\nIMS recommends using a federated-content URN to reduce collision risk.",
               "fieldName": "customInteractionTypeIdentifier"
             },
             {
@@ -20797,7 +20771,6 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Base URL used to resolve relative PCI module paths.",
               "fieldName": "baseUrl"
             },
             {
@@ -20806,7 +20779,6 @@
                 "text": "string"
               },
               "default": "'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js'",
-              "description": "URL to the RequireJS runtime injected into the iframe.",
               "fieldName": "requireJsUrl"
             },
             {
@@ -20815,7 +20787,6 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "JSON string for additional RequireJS `paths` mappings.\n\nSupported formats:\n- Object map: `{\"id\":\"path/to/module\"}`\n- Array entries: `[{\"name\":\"id\",\"value\":\"path/to/module\"}]`",
               "fieldName": "requirePathsJson"
             },
             {
@@ -20824,7 +20795,6 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "JSON string for additional RequireJS `shim` mappings.",
               "fieldName": "requireShimJson"
             },
             {
@@ -20833,17 +20803,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Include bundled default path mappings in addition to author-provided paths.",
               "fieldName": "useDefaultPaths"
-            },
-            {
-              "name": "data-use-default-shims",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Include bundled default shims in addition to author-provided shims.",
-              "fieldName": "useDefaultShims"
             },
             {
               "name": "disabled",
@@ -20862,7 +20822,6 @@
               "type": {
                 "text": "string"
               },
-              "description": "AMD module name for the PCI implementation.\n\nThis must resolve through configured RequireJS paths/module mappings.",
               "fieldName": "module"
             },
             {
@@ -21187,36 +21146,6 @@
             },
             {
               "kind": "method",
-              "name": "#getDefaultRequirePaths",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "Record<string, string | string[]>"
-                }
-              },
-              "description": "Get the default require paths",
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "packages/interactions/portable-custom-interaction/src/qti-portable-custom-interaction.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "#getDefaultRequireShim",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "Record<string, any>"
-                }
-              },
-              "description": "Get the default require shim",
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "packages/interactions/portable-custom-interaction/src/qti-portable-custom-interaction.ts"
-              }
-            },
-            {
-              "kind": "method",
               "name": "#getFinalRequirePaths",
               "privacy": "private",
               "return": {
@@ -21239,7 +21168,7 @@
                   "text": "Record<string, any>"
                 }
               },
-              "description": "Get the final require shim by combining defaults with user-provided shim",
+              "description": "Get the final require shim",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "packages/interactions/portable-custom-interaction/src/qti-portable-custom-interaction.ts"
@@ -21434,6 +21363,28 @@
             },
             {
               "kind": "method",
+              "name": "#toNestedProperties",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Record<string, any>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "properties",
+                  "type": {
+                    "text": "Record<string, any>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "packages/interactions/portable-custom-interaction/src/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "#unescapeDataAttributes",
               "privacy": "private",
               "return": {
@@ -21497,7 +21448,6 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Base URL used to resolve relative PCI module paths.",
               "attribute": "data-base-url",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
@@ -21507,7 +21457,6 @@
             {
               "kind": "field",
               "name": "boundTo",
-              "description": "Get response object keyed by `responseIdentifier` in QTI variable JSON format.",
               "type": {
                 "text": "Record<string, QtiVariableJSON>"
               },
@@ -21624,7 +21573,6 @@
               "type": {
                 "text": "string"
               },
-              "description": "PCI type identifier used by the bridge to resolve the registered factory.\n\nIMS recommends using a federated-content URN to reduce collision risk.",
               "attribute": "custom-interaction-type-identifier",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
@@ -21635,7 +21583,7 @@
               "kind": "method",
               "name": "disable",
               "privacy": "public",
-              "description": "Put the interaction in non-interactive review mode.\n\nSends `setState: disabled` to the PCI iframe and adds an overlay that blocks pointer input.",
+              "description": "Method to disable the PCI for review mode\nThis can be used when showing the correct response",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "packages/interactions/portable-custom-interaction/src/qti-portable-custom-interaction.ts"
@@ -21662,7 +21610,7 @@
               "kind": "method",
               "name": "enable",
               "privacy": "public",
-              "description": "Restore interactive mode.\n\nRemoves host overlay and sends `setState: interacting` to the PCI iframe.",
+              "description": "Method to enable the PCI for interactive mode",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "packages/interactions/portable-custom-interaction/src/qti-portable-custom-interaction.ts"
@@ -22051,7 +21999,6 @@
               "type": {
                 "text": "string"
               },
-              "description": "AMD module name for the PCI implementation.\n\nThis must resolve through configured RequireJS paths/module mappings.",
               "attribute": "module",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
@@ -22206,7 +22153,6 @@
                 "text": "string"
               },
               "default": "'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js'",
-              "description": "URL to the RequireJS runtime injected into the iframe.",
               "attribute": "data-require-js-url",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
@@ -22220,7 +22166,6 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "JSON string for additional RequireJS `paths` mappings.\n\nSupported formats:\n- Object map: `{\"id\":\"path/to/module\"}`\n- Array entries: `[{\"name\":\"id\",\"value\":\"path/to/module\"}]`",
               "attribute": "data-require-paths",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
@@ -22234,7 +22179,6 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "JSON string for additional RequireJS `shim` mappings.",
               "attribute": "data-require-shim",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
@@ -22265,7 +22209,6 @@
                 "text": "string | string[] | null"
               },
               "default": "null",
-              "description": "Current response value mirrored from PCI messages.\n\nCompatibility note:\n- This is a runtime convenience surface.\n- Persisted response flow should still be treated as QTI variable updates\n  via `qti-interaction-response`.",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -22539,14 +22482,14 @@
                   "type": {
                     "text": "boolean"
                   },
-                  "description": "Set true to display the review/correct-response viewer."
+                  "description": "Whether to show or hide the correct response"
                 },
                 {
                   "description": "The response variable containing the correct response",
                   "name": "responseVariable"
                 }
               ],
-              "description": "Show or hide an additional review-only PCI instance with correct response applied.\n\nSide effects when `show=true`:\n- Disables the live interaction.\n- Creates a sibling container with a cloned PCI instance in review mode.\n\nSide effects when `show=false`:\n- Removes review container.\n- Re-enables live interaction.",
+              "description": "Toggle the display of the correct response",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -22559,22 +22502,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Include bundled default path mappings in addition to author-provided paths.",
               "attribute": "data-use-default-paths",
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "packages/interactions/portable-custom-interaction/src/qti-portable-custom-interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "useDefaultShims",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Include bundled default shims in addition to author-provided shims.",
-              "attribute": "data-use-default-shims",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "packages/interactions/portable-custom-interaction/src/qti-portable-custom-interaction.ts"
@@ -22585,16 +22513,15 @@
               "name": "validate",
               "return": {
                 "type": {
-                  "text": ""
+                  "text": "boolean"
                 }
               },
-              "description": "Validate current response and update form-associated validity state.\n\nValidation source priority:\n1. Explicit validity received from PCI bridge (`valid` in interactionChanged).\n2. Host fallback validity based on non-empty response.",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               },
               "type": {
-                "text": "validate() => void"
+                "text": "validate() => boolean"
               }
             },
             {
@@ -22603,7 +22530,6 @@
               "type": {
                 "text": "string | null"
               },
-              "description": "Serialize internal response value as comma-separated string.",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -22669,7 +22595,6 @@
               "type": {
                 "text": "string"
               },
-              "description": "PCI type identifier used by the bridge to resolve the registered factory.\n\nIMS recommends using a federated-content URN to reduce collision risk.",
               "fieldName": "customInteractionTypeIdentifier",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
@@ -22682,7 +22607,6 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Base URL used to resolve relative PCI module paths.",
               "fieldName": "baseUrl",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
@@ -22695,7 +22619,6 @@
                 "text": "string"
               },
               "default": "'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js'",
-              "description": "URL to the RequireJS runtime injected into the iframe.",
               "fieldName": "requireJsUrl",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
@@ -22708,7 +22631,6 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "JSON string for additional RequireJS `paths` mappings.\n\nSupported formats:\n- Object map: `{\"id\":\"path/to/module\"}`\n- Array entries: `[{\"name\":\"id\",\"value\":\"path/to/module\"}]`",
               "fieldName": "requirePathsJson",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
@@ -22721,7 +22643,6 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "JSON string for additional RequireJS `shim` mappings.",
               "fieldName": "requireShimJson",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
@@ -22734,21 +22655,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Include bundled default path mappings in addition to author-provided paths.",
               "fieldName": "useDefaultPaths",
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "packages/interactions/portable-custom-interaction/src/qti-portable-custom-interaction.ts"
-              }
-            },
-            {
-              "name": "data-use-default-shims",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Include bundled default shims in addition to author-provided shims.",
-              "fieldName": "useDefaultShims",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "packages/interactions/portable-custom-interaction/src/qti-portable-custom-interaction.ts"
@@ -22771,7 +22678,6 @@
               "type": {
                 "text": "string"
               },
-              "description": "AMD module name for the PCI implementation.\n\nThis must resolve through configured RequireJS paths/module mappings.",
               "fieldName": "module",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",

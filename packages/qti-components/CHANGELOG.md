@@ -1,5 +1,10 @@
 # [7.26.0](https://github.com/Citolab/qti-components/compare/qti-components-v7.25.0...qti-components-v7.26.0) (2026-03-03)
 
+## [7.27.0](https://github.com/Citolab/qti-components/compare/qti-components-v7.26.1...qti-components-v7.27.0) (2026-03-19)
+
+Bumped to follow updated interaction packages.
+
+
 
 ### Features
 

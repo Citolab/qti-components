@@ -1,3 +1,10 @@
+# [@qti-components/elements-v1.6.0](https://github.com/Citolab/qti-components/compare/elements-v1.5.0...elements-v1.6.0) (2026-03-17)
+
+
+### Features
+
+* update pnpm workspace to include interactions packages ([1f605c5](https://github.com/Citolab/qti-components/commit/1f605c5575749863e32a9f326d7898726161275a))
+
 # [@qti-components/elements-v1.5.0](https://github.com/Citolab/qti-components/compare/elements-v1.4.0...elements-v1.5.0) (2026-03-03)
 
 

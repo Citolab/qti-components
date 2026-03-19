@@ -55,8 +55,12 @@ const dispatchMoveTransition = (
   }
 
   if (nextTarget instanceof Element) {
+    fireEvent.pointerEnter(nextTarget, { ...coords, pointerId: 1, pointerType: 'mouse', isPrimary: true });
+    fireEvent.pointerOver(nextTarget, { ...coords, pointerId: 1, pointerType: 'mouse', isPrimary: true });
     fireEvent.mouseEnter(nextTarget, coords);
     fireEvent.mouseOver(nextTarget, coords);
+    fireEvent.dragEnter(nextTarget, coords);
+    fireEvent.dragOver(nextTarget, coords);
   }
 };
 
@@ -86,8 +90,12 @@ export default async function drag(
     offset?: { x: number; y: number };
   }
 ): Promise<void> {
+  // Give Storybook canvas/layout a frame to settle before sampling coords.
+  await sleep(16);
+
   const fromCoords = getCoords(element);
   let toCoords = to ? getCoords(to) : null;
+  const explicitTarget = to && isElement(to) ? (to as Element) : null;
   if (delta) {
     // Use delta if provided
     toCoords = {
@@ -117,14 +125,22 @@ export default async function drag(
     buttons: 1
   };
   let currentHoverTarget: Element | Document = element;
+  const pointerMeta = { pointerId: 1, pointerType: 'mouse', isPrimary: true };
 
   // Simulate drag start
+  fireEvent.pointerEnter(element, { ...current, ...pointerMeta });
+  fireEvent.pointerOver(element, { ...current, ...pointerMeta });
   fireEvent.mouseEnter(element, current);
   fireEvent.mouseOver(element, current);
+  fireEvent.pointerMove(element, { ...current, ...pointerMeta });
   fireEvent.mouseMove(element, current);
+  fireEvent.pointerMove(document, { ...current, ...pointerMeta });
   fireEvent.mouseMove(document, current);
+  fireEvent.pointerDown(element, { ...current, ...pointerMeta });
   fireEvent.mouseDown(element, current);
+  fireEvent.pointerDown(document, { ...current, ...pointerMeta });
   fireEvent.mouseDown(document, current);
+  fireEvent.dragStart(element, current);
 
   // Simulate drag movement in steps
   for (let i = 0; i < steps; i++) {
@@ -143,14 +159,27 @@ export default async function drag(
     dispatchMoveTransition(currentHoverTarget, nextHoverTarget, current);
     currentHoverTarget = nextHoverTarget;
 
+    fireEvent.pointerMove(nextHoverTarget, { ...current, ...pointerMeta });
     fireEvent.mouseMove(nextHoverTarget, current);
+    if (nextHoverTarget instanceof Element) {
+      fireEvent.dragOver(nextHoverTarget, current);
+    }
+    fireEvent.pointerMove(document, { ...current, ...pointerMeta });
     fireEvent.mouseMove(document, current);
   }
 
   // Simulate drag end
-  const releaseTarget = getTargetAtPoint(current.clientX, current.clientY);
+  const releaseTarget = explicitTarget ?? getTargetAtPoint(current.clientX, current.clientY);
+  dispatchMoveTransition(currentHoverTarget, releaseTarget, current);
   const release = { ...current, buttons: 0 };
+
+  if (releaseTarget instanceof Element) {
+    fireEvent.drop(releaseTarget, release);
+  }
+  fireEvent.pointerUp(releaseTarget, { ...release, ...pointerMeta });
   fireEvent.mouseUp(releaseTarget, release);
+  fireEvent.pointerUp(document, { ...release, ...pointerMeta });
   fireEvent.mouseUp(document, release);
+  fireEvent.dragEnd(element, release);
   await sleep(100);
 }
