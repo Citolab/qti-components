@@ -1,7 +1,7 @@
 {
   "name": "@qti-components/text-entry-interaction",
   "description": "QTI text-entry-interaction interaction",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "author": "",
   "dependencies": {
     "@qti-components/base": "workspace:^",
