@@ -125,8 +125,9 @@ export function setLocation(xmlFragment: DocumentFragment, location: string) {
 
   allElements.forEach(el => {
     // Check each attribute we care about
+    // src, srcset and poster are URLDType or xs:anyURI everywhere they're used, so we care about them
     // Note: primary-path is excluded - PCI handles module path resolution via data-base-url
-    for (const attr of ['src', 'href'] as const) {
+    for (const attr of ['src', 'href', 'srcset', 'poster'] as const) {
       const attrValue = el.getAttribute(attr)?.trim();
 
       if (attrValue && !/^(data:|https?:|blob:)/.test(attrValue)) {
