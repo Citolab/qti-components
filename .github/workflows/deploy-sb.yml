@@ -1,9 +1,6 @@
 name: Storybook Deployment
 
 on:
-  push:
-    tags:
-      - 'qti-components-v*'
   workflow_dispatch:
     inputs:
       tag:
