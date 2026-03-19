@@ -1,3 +1,13 @@
+# [1.1.0](https://github.com/Citolab/qti-components/compare/select-point-interaction-v1.0.0...select-point-interaction-v1.1.0) (2026-03-19)
+
+
+### Features
+
+* add force publish script and enhance provenance handling in publish-if-needed ([dcf1a8c](https://github.com/Citolab/qti-components/commit/dcf1a8c8e6a7042bc1a23f0a66b57950969ef700))
+* enhance force publish script to include --no-git-checks option ([a415140](https://github.com/Citolab/qti-components/commit/a4151400132256f24fe3606975614a1e77bac458))
+* update force publish script to remove redundant workspace concurrency flag ([37d179e](https://github.com/Citolab/qti-components/commit/37d179e6e889e49f9414d444b1420595c9d3590b))
+* update force publish script to streamline command execution ([14c6d6f](https://github.com/Citolab/qti-components/commit/14c6d6f6d89b99dc71a5ced8207720b08ab211a7))
+
 # @qti-components/select-point-interaction-v1.0.0 (2026-03-17)
 
 

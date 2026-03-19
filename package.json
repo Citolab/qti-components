@@ -27,17 +27,13 @@
     "node": ">=22.0.0"
   },
   "scripts": {
-    "local:dev-preview": "pnpm run storybook",
-    "local:workspace-release:dry": "sh -c 'set -a; [ -f ./.env ] && . ./.env; set +a; env -u NPM_TOKEN -u NODE_AUTH_TOKEN HUSKY=0 NPM_CONFIG_PROVENANCE=false pnpm -r --filter \"./packages/*\" --filter \"./packages/interactions/*\" --filter \"!./packages/qti-components\" --workspace-concurrency=1 exec -- env -u npm_config_manage_package_manager_versions -u npm_config_verify_deps_before_run -u npm_config_npm_globalconfig -u npm_config__jsr_registry semantic-release --dry-run --no-ci'",
-    "local:workspace-release": "run-s local:workspace-release:run local:workspace-release:publish",
-    "local:workspace-release:run": "sh -c 'set -a; [ -f ./.env ] && . ./.env; set +a; env -u NPM_TOKEN -u NODE_AUTH_TOKEN HUSKY=0 NPM_CONFIG_PROVENANCE=false pnpm -r --filter \"./packages/*\" --filter \"./packages/interactions/*\" --filter \"!./packages/qti-components\" --workspace-concurrency=1 exec -- env -u npm_config_manage_package_manager_versions -u npm_config_verify_deps_before_run -u npm_config_npm_globalconfig -u npm_config__jsr_registry semantic-release --no-ci'",
-    "local:workspace-release:publish": "sh -c 'set -a; [ -f ./.env ] && . ./.env; set +a; pnpm -r --filter \"./packages/*\" --filter \"./packages/interactions/*\" --filter \"!./packages/qti-components\" run publish'",
+    "local:workspace-release:dry": "env -u NPM_TOKEN -u NODE_AUTH_TOKEN HUSKY=0 NPM_CONFIG_PROVENANCE=false pnpm -r --filter \"./packages/*\" --filter \"./packages/interactions/*\" --filter \"!./packages/qti-components\" --workspace-concurrency=1 exec -- env -u npm_config_manage_package_manager_versions -u npm_config_verify_deps_before_run -u npm_config_npm_globalconfig -u npm_config__jsr_registry semantic-release --dry-run --no-ci",
+    "local:workspace-release": "env -u NPM_TOKEN -u NODE_AUTH_TOKEN HUSKY=0 NPM_CONFIG_PROVENANCE=false pnpm -r --filter \"./packages/*\" --filter \"./packages/interactions/*\" --filter \"!./packages/qti-components\" --workspace-concurrency=1 exec -- env -u npm_config_manage_package_manager_versions -u npm_config_verify_deps_before_run -u npm_config_npm_globalconfig -u npm_config__jsr_registry semantic-release --no-ci && pnpm -r --filter \"./packages/*\" --filter \"./packages/interactions/*\" --filter \"!./packages/qti-components\" run publish",
+    "local:workspace-publish:force": "pnpm run build && pnpm -r --filter \"./packages/*\" --filter \"./packages/interactions/*\" --filter \"!./packages/qti-components\" --workspace-concurrency=1 publish --access public --ignore-scripts --no-git-checks",
     "ci:push-quality": "run-s lint madge build test publint attw",
     "storybook": "run-p storybook:dev cem:storybook:watch",
-    "test-all": "run-s clean build cem publint lint tsc test madge attw",
     "lint": "eslint",
-    "test": "run-s build vitest-run",
-    "vitest-run": "vitest run",
+    "test": "pnpm run build && vitest run",
     "tsc": "tsc --noEmit",
     "clean": "pnpm -r run clean",
     "cem": "pnpm -r run cem",
@@ -53,12 +49,10 @@
     "storybook:dev": "storybook dev -p 6006 --no-open",
     "storybook:stackblitz": "pnpm run storybook:dev",
     "storybook:interactions": "cd packages/qti-interactions && pnpm run storybook",
-    "cem:storybook": "cem analyze",
     "cem:storybook:watch": "cem analyze --watch",
     "css": "postcss packages/qti-theme/src/item.css -d dist -m",
     "chromatic": "node chromatic-runner.cjs",
     "madge": "madge packages/**/src --extensions ts,tsx,js --circular",
-    "commitlint": "commitlint --edit",
     "deps:lint": "syncpack lint",
     "deps:fix": "syncpack fix",
     "deps:format": "syncpack format",
@@ -72,8 +66,9 @@
     "ci:release:changed:dry": "HUSKY=0 pnpm -r --filter \"./packages/*\" --filter \"./packages/interactions/*\" --filter \"!./packages/qti-components\" --workspace-concurrency=1 exec -- semantic-release --dry-run --no-ci",
     "ci:release:umbrella": "HUSKY=0 pnpm --filter \"./packages/qti-components\" --workspace-concurrency=1 exec -- semantic-release",
     "ci:release:umbrella:dry": "HUSKY=0 pnpm --filter \"./packages/qti-components\" --workspace-concurrency=1 exec -- semantic-release --dry-run --no-ci",
-    "ci:publish:missing": "node tools/publish-workspace.mjs",
-    "ci:publish:umbrella": "pnpm --filter \"./packages/qti-components\" run publish"
+    "ci:publish:workspace": "pnpm -r --filter \"./packages/*\" --filter \"./packages/interactions/*\" --filter \"!./packages/qti-components\" run publish",
+    "ci:publish:umbrella": "pnpm --filter \"./packages/qti-components\" run publish",
+    "ci:publish:missing": "run-s ci:publish:workspace ci:publish:umbrella"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,mjs,cjs}": [

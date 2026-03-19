@@ -25,6 +25,39 @@ if (!name || !version) {
 const packageRef = `${name}@${version}`;
 const registry = 'https://registry.npmjs.org/';
 
+function isTruthy(value) {
+  return /^(1|true|yes|on)$/i.test(`${value ?? ''}`.trim());
+}
+
+function shouldUseProvenance() {
+  const provenanceRequested = isTruthy(
+    process.env.NPM_CONFIG_PROVENANCE ?? process.env.npm_config_provenance
+  );
+
+  if (!provenanceRequested) {
+    return false;
+  }
+
+  const isGitHubActions = process.env.GITHUB_ACTIONS === 'true';
+  const hasOidcTokenRequest =
+    Boolean(process.env.ACTIONS_ID_TOKEN_REQUEST_URL) &&
+    Boolean(process.env.ACTIONS_ID_TOKEN_REQUEST_TOKEN);
+
+  if (!isGitHubActions) {
+    console.warn('Skipping npm provenance: supported trusted publishing provider not detected.');
+    return false;
+  }
+
+  if (!hasOidcTokenRequest) {
+    console.error(
+      'npm provenance was requested in GitHub Actions, but OIDC token request environment variables are missing.'
+    );
+    process.exit(1);
+  }
+
+  return true;
+}
+
 const view = spawnSync('npm', ['view', packageRef, 'version', '--registry', registry], {
   stdio: 'pipe',
   encoding: 'utf8'
@@ -53,13 +86,45 @@ if (!isNotFound) {
 
 console.log(`Version not found in npm registry, publishing ${packageRef}.`);
 
-const publish = spawnSync('npm', ['publish', '--provenance', '--access', 'public', '--ignore-scripts'], {
-  stdio: 'inherit'
+const publishArgs = ['publish', '--access', 'public', '--ignore-scripts'];
+
+if (shouldUseProvenance()) {
+  publishArgs.splice(1, 0, '--provenance');
+}
+
+const publish = spawnSync('npm', publishArgs, {
+  stdio: 'pipe',
+  encoding: 'utf8'
 });
 
 if (publish.error) {
   console.error(`Failed to publish ${packageRef}:`, publish.error.message);
   process.exit(1);
+}
+
+if (publish.stdout) {
+  process.stdout.write(publish.stdout);
+}
+
+if (publish.stderr) {
+  process.stderr.write(publish.stderr);
+}
+
+if (publish.status !== 0) {
+  const publishOutput = `${publish.stdout ?? ''}\n${publish.stderr ?? ''}`.trim();
+  const isRegistryPermission404 =
+    /PUT https:\/\/registry\.npmjs\.org\/.+\s404/i.test(publishOutput) &&
+    /could not be found or you do not have permission to access it/i.test(publishOutput);
+
+  if (isRegistryPermission404) {
+    console.error(
+      `Publish failed for ${packageRef}: npm accepted the registry URL but rejected the publish request for this scope/package.`
+    );
+    console.error(
+      'This usually means the current npm account or token does not have publish rights for the @qti-components scope.'
+    );
+    console.error('Verify with `npm whoami` and confirm that account can publish @qti-components packages.');
+  }
 }
 
 process.exit(publish.status ?? 1);

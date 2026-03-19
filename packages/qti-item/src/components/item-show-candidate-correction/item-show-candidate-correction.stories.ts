@@ -23,6 +23,54 @@ const { events, args, argTypes } = getStorybookHelpers('test-print-item-variable
 
 type Story = StoryObj<ItemShowCandidateCorrection & typeof args>;
 
+const dragAndWaitForPlacement = async (
+  draggable: Element,
+  dropZone: Element,
+  isPlaced: () => Element | null,
+  attempts = 3
+) => {
+  const draggableIdentifier = draggable.getAttribute('identifier');
+  const draggableTag = draggable.tagName.toLowerCase();
+
+  const resolveDraggable = (): Element => {
+    if (draggable.isConnected) {
+      return draggable;
+    }
+
+    if (!draggableIdentifier) {
+      return draggable;
+    }
+
+    const candidates = Array.from(
+      document.querySelectorAll(`${draggableTag}[identifier="${draggableIdentifier}"]`)
+    );
+
+    return (
+      candidates.find(candidate => candidate.getAttribute('qti-draggable') === 'true') ??
+      candidates[0] ??
+      draggable
+    );
+  };
+
+  let lastError: unknown;
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    await drag(resolveDraggable(), { to: dropZone });
+    try {
+      await waitFor(() => {
+        expect(isPlaced()).toBeTruthy();
+      }, { timeout: 5000 });
+      return;
+    } catch (error) {
+      lastError = error;
+      if (attempt === attempts) {
+        throw lastError;
+      }
+
+      await new Promise(resolve => setTimeout(resolve, 50));
+    }
+  }
+};
+
 const meta: Meta<typeof ItemContainer & { 'item-url': string }> = {
   component: 'item-container',
   args: { ...args, 'item-url': 'assets/qti-item/example-choice-item.xml' },
@@ -261,25 +309,44 @@ export const Match: Story = {
     const dropZone3 = await canvas.findByShadowText('Romeo and Juliet');
 
     await step('Drag and drop match interaction items', async () => {
-      await drag(matchItem1, { to: dropZone1 });
-      await drag(matchItem2, { to: dropZone2 });
-      await drag(matchItem3, { to: dropZone3 });
+      const matchItem1Id = matchItem1.getAttribute('identifier');
+      const matchItem2Id = matchItem2.getAttribute('identifier');
+      const matchItem3Id = matchItem3.getAttribute('identifier');
+
+      await dragAndWaitForPlacement(matchItem1, dropZone1, () =>
+        dropZone1.querySelector(`qti-simple-associable-choice[identifier="${matchItem1Id}"]`)
+      );
+      await dragAndWaitForPlacement(matchItem2, dropZone2, () =>
+        dropZone2.querySelector(`qti-simple-associable-choice[identifier="${matchItem2Id}"]`)
+      );
+      await dragAndWaitForPlacement(matchItem3, dropZone3, () =>
+        dropZone3.querySelector(`qti-simple-associable-choice[identifier="${matchItem3Id}"]`)
+      );
       await showCorrectButton.click();
 
       await step('Verify candidate correction state is applied', async () => {
-        const matchItem1List = Array.from(await canvas.findAllByShadowText('Prospero'));
-        const matchItem1CandidateResponse = matchItem1List[1] as QtiSimpleAssociableChoice;
-        const matchItem2List = Array.from(await canvas.findAllByShadowText('Capulet'));
-        const matchItem2CandidateResponse = matchItem2List[1] as QtiSimpleAssociableChoice;
-        const matchItem3List = Array.from(await canvas.findAllByShadowText('Demetrius'));
-        const matchItem3CandidateResponse = matchItem3List[1] as QtiSimpleAssociableChoice;
+        await waitFor(() => {
+          const matchItem1CandidateResponse = dropZone1.querySelector(
+            `qti-simple-associable-choice[identifier="${matchItem1.getAttribute('identifier')}"]`
+          ) as QtiSimpleAssociableChoice;
+          const matchItem2CandidateResponse = dropZone2.querySelector(
+            `qti-simple-associable-choice[identifier="${matchItem2.getAttribute('identifier')}"]`
+          ) as QtiSimpleAssociableChoice;
+          const matchItem3CandidateResponse = dropZone3.querySelector(
+            `qti-simple-associable-choice[identifier="${matchItem3.getAttribute('identifier')}"]`
+          ) as QtiSimpleAssociableChoice;
 
-        expect(matchItem1CandidateResponse.internals.states.has('candidate-correct')).toBe(true);
-        expect(matchItem2CandidateResponse.internals.states.has('candidate-correct')).toBe(false);
-        expect(matchItem3CandidateResponse.internals.states.has('candidate-correct')).toBe(false);
-        expect(matchItem1CandidateResponse.internals.states.has('candidate-incorrect')).toBe(false);
-        expect(matchItem2CandidateResponse.internals.states.has('candidate-incorrect')).toBe(true);
-        expect(matchItem3CandidateResponse.internals.states.has('candidate-incorrect')).toBe(true);
+          expect(matchItem1CandidateResponse).toBeTruthy();
+          expect(matchItem2CandidateResponse).toBeTruthy();
+          expect(matchItem3CandidateResponse).toBeTruthy();
+
+          expect(matchItem1CandidateResponse.internals.states.has('candidate-correct')).toBe(true);
+          expect(matchItem2CandidateResponse.internals.states.has('candidate-correct')).toBe(false);
+          expect(matchItem3CandidateResponse.internals.states.has('candidate-correct')).toBe(false);
+          expect(matchItem1CandidateResponse.internals.states.has('candidate-incorrect')).toBe(false);
+          expect(matchItem2CandidateResponse.internals.states.has('candidate-incorrect')).toBe(true);
+          expect(matchItem3CandidateResponse.internals.states.has('candidate-incorrect')).toBe(true);
+        });
       });
     });
   }
@@ -323,25 +390,48 @@ export const MatchAllToOneZone: Story = {
     const dropZone1 = await canvas.findByShadowText('The Tempest');
 
     await step('Drag and drop all match interaction items to single dropzone', async () => {
-      await drag(matchItem1, { to: dropZone1 });
-      await drag(matchItem2, { to: dropZone1 });
-      await drag(matchItem3, { to: dropZone1 });
+      const matchItem1Id = matchItem1.getAttribute('identifier');
+      const matchItem2Id = matchItem2.getAttribute('identifier');
+      const matchItem3Id = matchItem3.getAttribute('identifier');
+
+      expect(matchItem1Id).toBeTruthy();
+      expect(matchItem2Id).toBeTruthy();
+      expect(matchItem3Id).toBeTruthy();
+
+      await dragAndWaitForPlacement(matchItem1, dropZone1, () =>
+        dropZone1.querySelector(`qti-simple-associable-choice[identifier="${matchItem1Id}"]`)
+      );
+      await dragAndWaitForPlacement(matchItem2, dropZone1, () =>
+        dropZone1.querySelector(`qti-simple-associable-choice[identifier="${matchItem2Id}"]`)
+      );
+      await dragAndWaitForPlacement(matchItem3, dropZone1, () =>
+        dropZone1.querySelector(`qti-simple-associable-choice[identifier="${matchItem3Id}"]`)
+      );
       await showCorrectButton.click();
 
       await step('Verify candidate correction state is applied', async () => {
-        const matchItem1List = Array.from(await canvas.findAllByShadowText('Prospero'));
-        const matchItem1CandidateResponse = matchItem1List[1] as QtiSimpleAssociableChoice;
-        const matchItem2List = Array.from(await canvas.findAllByShadowText('Lysander'));
-        const matchItem2CandidateResponse = matchItem2List[1] as QtiSimpleAssociableChoice;
-        const matchItem3List = Array.from(await canvas.findAllByShadowText('Demetrius'));
-        const matchItem3CandidateResponse = matchItem3List[1] as QtiSimpleAssociableChoice;
+        await waitFor(() => {
+          const matchItem1CandidateResponse = dropZone1.querySelector(
+            `qti-simple-associable-choice[identifier="${matchItem1Id}"]`
+          ) as QtiSimpleAssociableChoice;
+          const matchItem2CandidateResponse = dropZone1.querySelector(
+            `qti-simple-associable-choice[identifier="${matchItem2Id}"]`
+          ) as QtiSimpleAssociableChoice;
+          const matchItem3CandidateResponse = dropZone1.querySelector(
+            `qti-simple-associable-choice[identifier="${matchItem3Id}"]`
+          ) as QtiSimpleAssociableChoice;
 
-        expect(matchItem1CandidateResponse.internals.states.has('candidate-correct')).toBe(true);
-        expect(matchItem2CandidateResponse.internals.states.has('candidate-correct')).toBe(false);
-        expect(matchItem3CandidateResponse.internals.states.has('candidate-correct')).toBe(false);
-        expect(matchItem1CandidateResponse.internals.states.has('candidate-incorrect')).toBe(false);
-        expect(matchItem2CandidateResponse.internals.states.has('candidate-incorrect')).toBe(true);
-        expect(matchItem3CandidateResponse.internals.states.has('candidate-incorrect')).toBe(true);
+          expect(matchItem1CandidateResponse).toBeTruthy();
+          expect(matchItem2CandidateResponse).toBeTruthy();
+          expect(matchItem3CandidateResponse).toBeTruthy();
+
+          expect(matchItem1CandidateResponse.internals.states.has('candidate-correct')).toBe(true);
+          expect(matchItem2CandidateResponse.internals.states.has('candidate-correct')).toBe(false);
+          expect(matchItem3CandidateResponse.internals.states.has('candidate-correct')).toBe(false);
+          expect(matchItem1CandidateResponse.internals.states.has('candidate-incorrect')).toBe(false);
+          expect(matchItem2CandidateResponse.internals.states.has('candidate-incorrect')).toBe(true);
+          expect(matchItem3CandidateResponse.internals.states.has('candidate-incorrect')).toBe(true);
+        });
       });
     });
   }
@@ -626,11 +716,14 @@ export const GapMatch: Story = {
     const gapMatchInteraction = assessmentItem.querySelector('qti-gap-match-interaction') as QtiGapMatchInteraction;
     // Sortable gap-match now supports reordering from placed items; allow the story to place two drags.
     gapMatchInteraction.setAttribute('max-associations', '2');
+    await gapMatchInteraction.updateComplete;
 
     const showCorrectButton = await canvas.findByShadowText(/Show candidate correction/i);
 
     const matchItem1 = (await canvas.findByShadowText('winter')) as QtiGapMatchInteraction;
     const matchItem2 = (await canvas.findByShadowText('spring')) as QtiGapMatchInteraction;
+    const matchItem1Id = matchItem1.getAttribute('identifier');
+    const matchItem2Id = matchItem2.getAttribute('identifier');
 
     const dropZones = assessmentItem.querySelectorAll(`qti-gap`);
 
@@ -638,23 +731,34 @@ export const GapMatch: Story = {
     const dropZone2 = dropZones[1];
 
     await step('Drag and drop match interaction items', async () => {
-      await drag(matchItem1, { to: dropZone1 });
-      await drag(matchItem2, { to: dropZone2 });
+      expect(matchItem1Id).toBeTruthy();
+      expect(matchItem2Id).toBeTruthy();
+
+      await dragAndWaitForPlacement(matchItem1, dropZone1, () =>
+        dropZone1.querySelector(`qti-gap-text[identifier="${matchItem1Id}"]`)
+      );
+      await dragAndWaitForPlacement(matchItem2, dropZone2, () =>
+        dropZone2.querySelector(`qti-gap-text[identifier="${matchItem2Id}"]`)
+      );
       await showCorrectButton.click();
 
       await step('Verify candidate correction state is applied', async () => {
-        const matchItem1CandidateResponse = dropZone1.querySelector('qti-gap-text[identifier="W"]') as QtiGapMatchInteraction;
-        const matchItem2CandidateResponse = dropZone2.querySelector(
-          'qti-gap-text[identifier="Sp"]'
-        ) as QtiGapMatchInteraction;
+        await waitFor(() => {
+          const matchItem1CandidateResponse = dropZone1.querySelector(
+            `qti-gap-text[identifier="${matchItem1Id}"]`
+          ) as QtiGapMatchInteraction;
+          const matchItem2CandidateResponse = dropZone2.querySelector(
+            `qti-gap-text[identifier="${matchItem2Id}"]`
+          ) as QtiGapMatchInteraction;
 
-        expect(matchItem1CandidateResponse).toBeTruthy();
-        expect(matchItem2CandidateResponse).toBeTruthy();
+          expect(matchItem1CandidateResponse).toBeTruthy();
+          expect(matchItem2CandidateResponse).toBeTruthy();
 
-        expect(matchItem1CandidateResponse.internals.states.has('candidate-correct')).toBe(true);
-        expect(matchItem2CandidateResponse.internals.states.has('candidate-correct')).toBe(false);
-        expect(matchItem1CandidateResponse.internals.states.has('candidate-incorrect')).toBe(false);
-        expect(matchItem2CandidateResponse.internals.states.has('candidate-incorrect')).toBe(true);
+          expect(matchItem1CandidateResponse.internals.states.has('candidate-correct')).toBe(true);
+          expect(matchItem2CandidateResponse.internals.states.has('candidate-correct')).toBe(false);
+          expect(matchItem1CandidateResponse.internals.states.has('candidate-incorrect')).toBe(false);
+          expect(matchItem2CandidateResponse.internals.states.has('candidate-incorrect')).toBe(true);
+        });
       });
     });
   }
