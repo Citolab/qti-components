@@ -62,11 +62,17 @@ export class TestPrev extends LitElement {
     if (!testPart) return;
     this.sectionItems = testPart.sections.flatMap(section => section.items);
     this.itemIndex = this.sectionItems.findIndex(item => item.active);
-    this.checkDisabled();
+    const activeSection = testPart?.sections.find(s => s.active);
+    const navigationMode = activeSection?.navigationMode || testPart?.navigationMode || 'nonlinear';
+    this.checkDisabled(navigationMode);
   }
 
-  checkDisabled() {
-    this._internalDisabled = !this.computedContext || this.itemIndex === 0 || this.itemIndex === -1;
+  checkDisabled(navigationMode?: string) {
+    this._internalDisabled =
+      navigationMode === 'linear' ||
+      !this.computedContext ||
+      this.itemIndex === 0 ||
+      this.itemIndex === -1;
   }
 
   protected _requestItem(identifier: string): void {
