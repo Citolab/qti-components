@@ -27,6 +27,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          token: ${{ secrets.RELEASE_BOT_TOKEN || secrets.GITHUB_TOKEN }}
           ref: ${{ inputs.branch || 'main' }}
           fetch-depth: 0
 
@@ -54,14 +55,14 @@ jobs:
         if: ${{ inputs.dry_run }}
         run: pnpm run ci:release:changed:dry
         env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_GH_TOKEN || secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.RELEASE_BOT_TOKEN || secrets.GITHUB_TOKEN }}
           HUSKY: 0
 
       - name: Run semantic-release on changed packages
         if: ${{ !inputs.dry_run }}
         run: pnpm run ci:release:changed
         env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_GH_TOKEN || secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.RELEASE_BOT_TOKEN || secrets.GITHUB_TOKEN }}
           HUSKY: 0
 
       - name: Configure git for umbrella bump commit
@@ -88,7 +89,7 @@ jobs:
         if: ${{ !inputs.dry_run && steps.bump.outputs.new_tag != '' }}
         run: gh release create ${{ steps.bump.outputs.new_tag }} --title "@citolab/qti-components ${{ steps.bump.outputs.new_version }}" --notes-file ${{ steps.bump.outputs.notes_file }}
         env:
-          GH_TOKEN: ${{ secrets.RELEASE_GH_TOKEN || secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.RELEASE_BOT_TOKEN || secrets.GITHUB_TOKEN }}
 
       - name: Build workspace
         if: ${{ !inputs.dry_run }}
