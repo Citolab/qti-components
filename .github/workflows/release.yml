@@ -55,7 +55,7 @@ jobs:
         if: ${{ inputs.dry_run }}
         run: pnpm run ci:release:changed:dry
         env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_BOT_TOKEN || secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ''
           HUSKY: 0
 
       - name: Run semantic-release on changed packages
