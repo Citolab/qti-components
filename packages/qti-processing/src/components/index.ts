@@ -9,6 +9,7 @@ export * from './qti-equal-rounded/qti-equal-rounded';
 export * from './qti-round/qti-round';
 export * from './qti-round-to/qti-round-to';
 export * from './qti-equal/qti-equal';
+export * from './qti-divide/qti-divide';
 
 export * from './qti-gcd/qti.gcd';
 export * from './qti-gt/qti-gt';
@@ -23,7 +24,9 @@ export * from './qti-map-response-point/qti-map-response-point';
 
 export * from './qti-math-operator/qti-math-operator';
 export * from './qti-match/qti-match';
+export * from './qti-max/qti-max';
 export * from './qti-member/qti-member';
+export * from './qti-min/qti-min';
 export * from './qti-multiple/qti-multiple';
 export * from './qti-not/qti-not';
 export * from './qti-or/qti-or';
@@ -31,6 +34,10 @@ export * from './qti-ordered/qti-ordered';
 export * from './qti-power/qti-power';
 export * from './qti-printed-variable/qti-printed-variable';
 export * from './qti-product/qti-product';
+export * from './qti-repeat/qti-repeat';
+export * from './qti-set-correct-response/qti-set-correct-response';
+export * from './qti-set-template-value/qti-set-template-value';
+export * from './qti-stats-operator/qti-stats-operator';
 export * from './qti-subtract';
 export * from './qti-string-match/qti-string-match';
 export * from './qti-sum/qti-sum';
