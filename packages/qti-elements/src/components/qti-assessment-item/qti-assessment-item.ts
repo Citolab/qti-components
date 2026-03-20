@@ -312,7 +312,13 @@ export class QtiAssessmentItem extends LitElement {
     });
   }
 
-  #processTemplates(): void {
+  async #processTemplates(): Promise<void> {
+    const templateDeclarations = Array.from(this.querySelectorAll<LitElement>('qti-template-declaration'));
+    if (templateDeclarations.length > 0) {
+      await Promise.all(templateDeclarations.map(declaration => declaration.updateComplete));
+      await Promise.resolve();
+    }
+
     this.#templateProcessing = this.querySelector<QtiTemplateProcessing>('qti-template-processing');
     if (this.#templateProcessing) {
       // Run template processing before first presentation

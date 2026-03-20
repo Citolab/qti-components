@@ -27700,7 +27700,7 @@
               "privacy": "private",
               "return": {
                 "type": {
-                  "text": "void"
+                  "text": "Promise<void>"
                 }
               }
             },
@@ -28360,7 +28360,44 @@
           "kind": "class",
           "description": "",
           "name": "QtiContentBody",
-          "members": [],
+          "members": [
+            {
+              "kind": "method",
+              "name": "#expandMathVariables",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#stringifyValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string | readonly string[] | number | boolean | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "context",
+              "type": {
+                "text": "ItemContext | undefined"
+              },
+              "privacy": "protected"
+            }
+          ],
           "superclass": {
             "name": "LitElement",
             "package": "lit"
@@ -31470,6 +31507,7 @@
           "superclass": {
             "module": "packages/qti-processing/src/components/qti-and/qti-and.ts"
           },
+          "summary": "The qti-and operator evaluates multiple boolean expressions.",
           "tagName": "qti-and",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-and/qti-and.ts",
@@ -31650,6 +31688,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
+          "summary": "The qti-any-N operator checks if a specific range of expressions are true.",
           "tagName": "qti-any-n",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-any-n/qti-any-n.ts",
@@ -31913,7 +31952,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
-          "summary": "The qti-container-size operator returns the number of values in a container.",
+          "summary": "The qti-container-size operator returns the count of items in a container.",
           "tagName": "qti-container-size",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-container-size/qti-container-size.ts",
@@ -32153,6 +32192,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
+          "summary": "The qti-correct operator retrieves the defined correct response for a variable.",
           "tagName": "qti-correct",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-correct/qti-correct.ts",
@@ -32300,7 +32340,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
-          "summary": "The qti-default expression returns the default value of a declared variable.",
+          "summary": "The qti-default operator retrieves the defined default value for a variable.",
           "tagName": "qti-default",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-default/qti-default.ts",
@@ -32420,6 +32460,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
+          "summary": "The qti-delete operator removes all instances of a value from a container.",
           "tagName": "qti-delete",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-delete/qti-delete.ts",
@@ -32558,7 +32599,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
-          "summary": "The qti-divide operator divides two numerical values.",
+          "summary": "The qti-divide operator performs numerical division.",
           "tagName": "qti-divide",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-divide/qti-divide.ts",
@@ -32855,6 +32896,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
+          "summary": "The qti-duration-lt operator compares two time durations.",
           "tagName": "qti-duration-lt",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-duration-lt/qti-duration-lt.ts",
@@ -32999,6 +33041,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
+          "summary": "The qti-equal-rounded operator compares two values after rounding.",
           "tagName": "qti-equal-rounded",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-equal-rounded/qti-equal-rounded.ts",
@@ -33137,6 +33180,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
+          "summary": "The qti-equal operator checks if two numerical expressions are equal.",
           "tagName": "qti-equal",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-equal/qti-equal.ts",
@@ -33256,6 +33300,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
+          "summary": "The qti-field-value operator retrieves a specific field from a record.",
           "tagName": "qti-field-value",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-field-value/qti-field-value.ts",
@@ -33810,6 +33855,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
+          "summary": "The qti-index operator retrieves a specific item from an ordered container.",
           "tagName": "qti-index",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-index/qti-index.ts",
@@ -34234,6 +34280,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
+          "summary": "The qti-integer-divide operator performs integer division rounded down.",
           "tagName": "qti-integer-divide",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-integer-divide/qti-integer-divide.ts",
@@ -34372,6 +34419,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
+          "summary": "The qti-integer-modulus operator returns the remainder of integer division.",
           "tagName": "qti-integer-modulus",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-integer-modulus/qti-integer-modulus.ts",
@@ -34492,6 +34540,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
+          "summary": "The qti-integer-to-float operator converts an integer to a float.",
           "tagName": "qti-integer-to-float",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-integer-to-float/qti-integer-to-float.ts",
@@ -34612,6 +34661,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
+          "summary": "The qti-is-null operator checks if a variable or expression is missing its value.",
           "tagName": "qti-is-null",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-is-null/qti-is-null.ts",
@@ -35406,6 +35456,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
+          "summary": "The qti-map-response operator applies a mapping to a candidate's response.",
           "tagName": "qti-map-response",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-map-response/qti-map-response.ts",
@@ -35554,6 +35605,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
+          "summary": "The qti-match operator compares two expressions for exact value equality.",
           "tagName": "qti-match",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-match/qti-match.ts",
@@ -35855,7 +35907,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
-          "summary": "The qti-max operator returns the maximum value of numerical arguments.",
+          "summary": "The qti-max operator finds the largest value in a numerical set.",
           "tagName": "qti-max",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-max/qti-max.ts",
@@ -36114,7 +36166,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
-          "summary": "The qti-min operator returns the minimum value of numerical arguments.",
+          "summary": "The qti-min operator finds the smallest value in a numerical set.",
           "tagName": "qti-min",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-min/qti-min.ts",
@@ -36355,6 +36407,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
+          "summary": "The qti-not operator performs logical negation.",
           "tagName": "qti-not",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-not/qti-not.ts",
@@ -36596,6 +36649,7 @@
             "name": "QtiConditionExpression",
             "package": "@qti-components/base"
           },
+          "summary": "The qti-or operator evaluates if any provided boolean expressions are true.",
           "tagName": "qti-or",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-or/qti-or.ts",
@@ -36849,6 +36903,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
+          "summary": "The qti-pattern-match operator checks a string against a regular expression.",
           "tagName": "qti-pattern-match",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-pattern-match/qti-pattern-match.ts",
@@ -37166,6 +37221,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
+          "summary": "The qti-product operator calculates the product of multiple numerical values.",
           "tagName": "qti-product",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-product/qti-product.ts",
@@ -37640,7 +37696,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
-          "summary": "The qti-repeat operator repeats an expression a number of times.",
+          "summary": "The qti-repeat operator generates a container by repeating an expression.",
           "tagName": "qti-repeat",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-repeat/qti-repeat.ts",
@@ -38899,7 +38955,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
-          "summary": "The qti-stats-operator computes statistics over numerical values.",
+          "summary": "The qti-stats-operator performs statistical calculations on a container.",
           "tagName": "qti-stats-operator",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-stats-operator/qti-stats-operator.ts",
@@ -39176,6 +39232,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
+          "summary": "The qti-substring operator checks if one string is contained within another.",
           "tagName": "qti-substring",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-substring/qti-substring.ts",
@@ -39276,6 +39333,7 @@
           "superclass": {
             "module": "packages/qti-processing/src/components/qti-subtract/qti-subtract.ts"
           },
+          "summary": "The qti-subtract operator performs numerical subtraction.",
           "tagName": "qti-subtract",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-subtract/qti-subtract.ts",
@@ -39418,6 +39476,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
+          "summary": "The qti-sum operator calculates the total of multiple numerical values.",
           "tagName": "qti-sum",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-sum/qti-sum.ts",
@@ -39558,6 +39617,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
+          "summary": "The qti-truncate operator removes fractional parts of a number.",
           "tagName": "qti-truncate",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-truncate/qti-truncate.ts",

@@ -6,6 +6,17 @@ import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { QtiEqual } from './qti-equal';
 
 describe('qti-equal', () => {
+  let testContainer: HTMLElement;
+
+  beforeEach(() => {
+    testContainer = document.createElement('div');
+    document.body.appendChild(testContainer);
+  });
+
+  afterEach(() => {
+    testContainer.remove();
+  });
+
   it('response and correct response match', () => {
     const template = () => html`
       <qti-assessment-item>
@@ -20,10 +31,10 @@ describe('qti-equal', () => {
         </qti-equal>
       </qti-assessment-item>
     `;
-    render(template(), document.body);
+    render(template(), testContainer);
 
-    const qtiEqual = document.body.querySelector('qti-equal') as QtiEqual;
-    const assessmentItem = document.body.querySelector('qti-assessment-item') as QtiAssessmentItem;
+    const qtiEqual = testContainer.querySelector('qti-equal') as QtiEqual;
+    const assessmentItem = testContainer.querySelector('qti-assessment-item') as QtiAssessmentItem;
 
     assessmentItem.updateResponseVariable('RESPONSE', 'test');
 
@@ -44,13 +55,39 @@ describe('qti-equal', () => {
         </qti-equal>
       </qti-assessment-item>
     `;
-    render(template(), document.body);
+    render(template(), testContainer);
 
-    const qtiEqual = document.body.querySelector('qti-equal') as QtiEqual;
-    const assessmentItem = document.body.querySelector('qti-assessment-item') as QtiAssessmentItem;
+    const qtiEqual = testContainer.querySelector('qti-equal') as QtiEqual;
+    const assessmentItem = testContainer.querySelector('qti-assessment-item') as QtiAssessmentItem;
 
     assessmentItem.updateResponseVariable('RESPONSE', 'test');
 
     expect(qtiEqual.calculate()).toBeFalsy();
+  });
+
+  it('returns null for unanswered numeric responses without conversion errors', () => {
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+
+    const template = () => html`
+      <qti-assessment-item>
+        <qti-response-declaration identifier="RESPONSE" base-type="integer" cardinality="single">
+          <qti-correct-response>
+            <qti-value>42</qti-value>
+          </qti-correct-response>
+        </qti-response-declaration>
+        <qti-equal tolerance-mode="exact">
+          <qti-variable identifier="RESPONSE"></qti-variable>
+          <qti-correct identifier="RESPONSE"></qti-correct>
+        </qti-equal>
+      </qti-assessment-item>
+    `;
+    render(template(), testContainer);
+
+    const qtiEqual = testContainer.querySelector('qti-equal') as QtiEqual;
+
+    expect(qtiEqual.calculate()).toBeNull();
+    expect(consoleErrorSpy).not.toHaveBeenCalledWith(expect.stringContaining('Cannot convert'));
+
+    consoleErrorSpy.mockRestore();
   });
 });

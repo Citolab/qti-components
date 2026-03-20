@@ -22,6 +22,11 @@ export class QtiEqual extends QtiExpression<boolean> {
       const values = this.getVariables() as ResponseVariable[];
       const value1 = values[0];
       const value2 = values[1];
+
+      if (!value1 || !value2) {
+        return null;
+      }
+
       if (this.toleranceMode !== 'exact') {
         console.error('toleranceMode is not supported yet');
         return false;
@@ -35,6 +40,11 @@ export class QtiEqual extends QtiExpression<boolean> {
         console.error('unexpected cardinality in qti equal');
         return false;
       }
+
+      if (value1.value === null || value2.value === null || value1.value === undefined || value2.value === undefined) {
+        return null;
+      }
+
       return ScoringHelper.compareSingleValues(value1.value as string, value2.value as string, value1.baseType);
     }
     console.error('unexpected number of children in qti-equal');
