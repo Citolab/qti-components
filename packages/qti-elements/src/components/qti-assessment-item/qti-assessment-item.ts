@@ -415,9 +415,9 @@ export class QtiAssessmentItem extends LitElement {
    * Updates the template variable with the specified identifier to the given value.
    */
   public updateTemplateVariable(identifier: string, value: string | string[] | undefined) {
-    const templateVariable = this._context.variables.find(
-      v => v.identifier === identifier && v.type === 'template'
-    ) as TemplateVariable | undefined;
+    const templateVariable = this._context.variables.find(v => v.identifier === identifier && v.type === 'template') as
+      | TemplateVariable
+      | undefined;
 
     if (!templateVariable) {
       console.warn(`Can not set qti-template-identifier: ${identifier}, it is not available`);
@@ -428,7 +428,7 @@ export class QtiAssessmentItem extends LitElement {
       templateVariable.cardinality === 'single'
         ? Array.isArray(value)
           ? value[0]
-          : value ?? null
+          : (value ?? null)
         : value === undefined || value === null
           ? null
           : Array.isArray(value)
@@ -463,7 +463,7 @@ export class QtiAssessmentItem extends LitElement {
       responseVariable.cardinality === 'single'
         ? Array.isArray(value)
           ? value[0]
-          : value ?? null
+          : (value ?? null)
         : value === undefined || value === null
           ? null
           : Array.isArray(value)
@@ -575,7 +575,10 @@ export class QtiAssessmentItem extends LitElement {
         const declaredDefault = hasDefaultValue ? variable.defaultValue : null;
 
         let value = declaredDefault ?? null;
-        if ((value === null || value === undefined) && (variable.baseType === 'integer' || variable.baseType === 'float')) {
+        if (
+          (value === null || value === undefined) &&
+          (variable.baseType === 'integer' || variable.baseType === 'float')
+        ) {
           value = '0';
         }
 
