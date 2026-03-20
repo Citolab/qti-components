@@ -2,6 +2,14 @@ import { QtiExpression } from '@qti-components/base';
 
 import type { ResponseVariable } from '@qti-components/base';
 
+/**
+ * @summary The qti-truncate operator removes fractional parts of a number.
+ * @documentation https://www.imsglobal.org/spec/qti/v3p0/info/index.html#truncate
+ *
+ * Takes 1 numerical sub-expression of single cardinality.
+ * Returns integer formed by truncating value toward zero.
+ * Special cases: Returns NULL if input is NULL or NaN.
+ */
 export class QtiTruncate extends QtiExpression<number | null> {
   public override getResult(): number | null {
     const variables = this.getVariables() as ResponseVariable[];

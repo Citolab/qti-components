@@ -4,6 +4,14 @@ import { QtiExpression } from '@qti-components/base';
 
 import type { ResponseVariable } from '@qti-components/base';
 
+/**
+ * @summary The qti-substring operator checks if one string is contained within another.
+ * @documentation https://www.imsglobal.org/spec/qti/v3p0/info/index.html#substring
+ *
+ * Takes 2 sub-expressions with base-type string and single cardinality.
+ * Returns true if the first string is a substring of the second.
+ * Special cases: Returns NULL if either argument is NULL.
+ */
 export class QtiSubstring extends QtiExpression<boolean | null> {
   @property({ type: String, attribute: 'case-sensitive' }) caseSensitive = 'true';
 

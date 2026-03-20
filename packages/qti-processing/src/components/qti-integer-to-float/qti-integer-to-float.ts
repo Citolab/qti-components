@@ -2,6 +2,14 @@ import { QtiExpression } from '@qti-components/base';
 
 import type { ResponseVariable } from '@qti-components/base';
 
+/**
+ * @summary The qti-integer-to-float operator converts an integer to a float.
+ * @documentation https://www.imsglobal.org/spec/qti/v3p0/info/index.html#integerToFloat
+ *
+ * Takes 1 sub-expression with base-type integer and single cardinality.
+ * Returns a value of base-type float with the same numeric value.
+ * Special cases: Returns NULL if sub-expression is NULL.
+ */
 export class QtiIntegerToFloat extends QtiExpression<number | null> {
   public override getResult(): number | null {
     const variables = this.getVariables() as ResponseVariable[];

@@ -5,8 +5,12 @@ import { QtiExpression } from '@qti-components/base';
 import type { ResponseVariable } from '@qti-components/base';
 
 /**
- * @summary The qti-repeat operator repeats an expression a number of times.
- * @documentation https://www.imsglobal.org/spec/qti/v3p0/impl#h.repeat
+ * @summary The qti-repeat operator generates a container by repeating an expression.
+ * @documentation https://www.imsglobal.org/spec/qti/v3p0/info/index.html#repeat
+ *
+ * Attributes 'number-repeats' determines the count of iterations.
+ * Returns an ordered container filled with results of the evaluated sub-expressions.
+ * Special cases: Returns NULL if number-repeats < 1; ignores evaluated NULL values.
  */
 export class QtiRepeat extends QtiExpression<ResponseVariable[]> {
   @property({ type: String, attribute: 'number-repeats' }) numberRepeats: string = '';

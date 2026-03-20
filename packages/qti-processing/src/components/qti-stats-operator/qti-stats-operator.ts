@@ -5,8 +5,13 @@ import { QtiExpression } from '@qti-components/base';
 import type { ResponseVariable } from '@qti-components/base';
 
 /**
- * @summary The qti-stats-operator computes statistics over numerical values.
- * @documentation https://www.imsglobal.org/spec/qti/v3p0/impl#h.stats-operator
+ * @summary The qti-stats-operator performs statistical calculations on a container.
+ * @documentation https://www.imsglobal.org/spec/qti/v3p0/info/index.html#statsOperator
+ *
+ * Takes 1 container (multiple/ordered) of numerical base-type.
+ * 'name' attribute identifies function (mean, popSD, popVariance, sampleSD, sampleVariance).
+ * Returns result as a single float.
+ * Special cases: Returns NULL if any values in container are NULL or non-numerical.
  */
 export class QtiStatsOperator extends QtiExpression<number | null> {
   @property({ type: String }) name: string = '';

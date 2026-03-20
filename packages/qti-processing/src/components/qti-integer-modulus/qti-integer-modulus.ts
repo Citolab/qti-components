@@ -2,6 +2,14 @@ import { QtiExpression } from '@qti-components/base';
 
 import type { ResponseVariable } from '@qti-components/base';
 
+/**
+ * @summary The qti-integer-modulus operator returns the remainder of integer division.
+ * @documentation https://www.imsglobal.org/spec/qti/v3p0/info/index.html#integerModulus
+ *
+ * Takes 2 sub-expressions with base-type integer and single cardinality.
+ * Returns the remainder (x % y).
+ * Special cases: Returns NULL if any argument is NULL or if divisor is 0.
+ */
 export class QtiIntegerModulus extends QtiExpression<number | null> {
   public override getResult(): number | null {
     const values = this.#collectIntegerValues(this.getVariables() as ResponseVariable[]);

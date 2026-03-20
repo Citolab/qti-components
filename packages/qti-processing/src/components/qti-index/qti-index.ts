@@ -5,6 +5,14 @@ import { QtiExpression } from '@qti-components/base';
 import type { integer } from '@qti-components/base';
 import type { ResponseVariable } from '@qti-components/base';
 
+/**
+ * @summary The qti-index operator retrieves a specific item from an ordered container.
+ * @documentation https://www.imsglobal.org/spec/qti/v3p0/info/index.html#index
+ *
+ * Takes 1 ordered container sub-expression; 'n' attribute specifies 1-based index.
+ * Returns the nth value from the container with original base-type and single cardinality.
+ * Special cases: Returns NULL if container is NULL or n exceeds container size.
+ */
 @customElement('qti-index')
 export class QtiIndex extends QtiExpression<any> {
   @property({ type: String })

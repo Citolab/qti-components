@@ -3,8 +3,12 @@ import { QtiExpression } from '@qti-components/base';
 import type { ResponseVariable } from '@qti-components/base';
 
 /**
- * @summary The qti-divide operator divides two numerical values.
- * @documentation https://www.imsglobal.org/spec/qti/v3p0/impl#h.divide
+ * @summary The qti-divide operator performs numerical division.
+ * @documentation https://www.imsglobal.org/spec/qti/v3p0/info/index.html#divide
+ *
+ * Takes exactly 2 sub-expressions with numerical base-types and single cardinality.
+ * Returns a single float representing (first / second).
+ * Special cases: Returns NULL if either sub-expression is NULL or if divisor is 0.
  */
 export class QtiDivide extends QtiExpression<number | null> {
   public override getResult(): number | null {

@@ -3,8 +3,12 @@ import { QtiExpression } from '@qti-components/base';
 import type { ResponseVariable } from '@qti-components/base';
 
 /**
- * @summary The qti-max operator returns the maximum value of numerical arguments.
- * @documentation https://www.imsglobal.org/spec/qti/v3p0/impl#h.max
+ * @summary The qti-max operator finds the largest value in a numerical set.
+ * @documentation https://www.imsglobal.org/spec/qti/v3p0/info/index.html#max
+ *
+ * Takes 1 or more numerical sub-expressions of any cardinality.
+ * Returns the largest value in the collection.
+ * Special cases: Returns NULL if any argument is NULL or non-numerical.
  */
 export class QtiMax extends QtiExpression<number | null> {
   public override getResult(): number | null {

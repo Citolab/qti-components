@@ -4,6 +4,15 @@ import { QtiExpression } from '@qti-components/base';
 
 import type { ResponseVariable } from '@qti-components/base';
 
+/**
+ * @summary The qti-equal-rounded operator compares two values after rounding.
+ * @documentation https://www.imsglobal.org/spec/qti/v3p0/info/index.html#equalRounded
+ *
+ * Takes 2 sub-expressions with numerical base-types and single cardinality.
+ * Requires 'figures' and 'rounding-mode' (decimalPlaces or significantFigures) attributes.
+ * Returns true if equal after specified rounding, false otherwise.
+ * Special cases: Returns NULL if either sub-expression is NULL.
+ */
 export class QtiEqualRounded extends QtiExpression<boolean> {
   @property({ type: String }) roundingMode: 'decimalPlaces' | 'significantFigures' = 'significantFigures';
 

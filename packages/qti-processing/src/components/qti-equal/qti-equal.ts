@@ -5,6 +5,15 @@ import { ScoringHelper } from '@qti-components/base';
 
 import type { ResponseVariable } from '@qti-components/base';
 
+/**
+ * @summary The qti-equal operator checks if two numerical expressions are equal.
+ * @documentation https://www.imsglobal.org/spec/qti/v3p0/info/index.html#equal
+ *
+ * Takes 2 sub-expressions with numerical base-types and single cardinality.
+ * Supports tolerance-mode (exact, absolute, relative) for floating-point comparisons.
+ * Returns true if numerically equal within specified tolerance, false otherwise.
+ * Special cases: Returns NULL if either sub-expression is NULL.
+ */
 export class QtiEqual extends QtiExpression<boolean> {
   @property({ type: String }) toleranceMode: 'exact' | 'relative' | 'absolute' = 'exact';
 

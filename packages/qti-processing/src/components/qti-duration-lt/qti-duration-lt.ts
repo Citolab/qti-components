@@ -2,6 +2,14 @@ import { QtiExpression } from '@qti-components/base';
 
 import type { ResponseVariable } from '@qti-components/base';
 
+/**
+ * @summary The qti-duration-lt operator compares two time durations.
+ * @documentation https://www.imsglobal.org/spec/qti/v3p0/info/index.html#durationLT
+ *
+ * Takes 2 sub-expressions with base-type duration and single cardinality.
+ * Returns true if the first duration is shorter than the second.
+ * Special cases: Returns NULL if either argument is NULL; handles variable precision.
+ */
 export class QtiDurationLt extends QtiExpression<boolean | null> {
   public override getResult(): boolean | null {
     const values = this.#getDurationValues();

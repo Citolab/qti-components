@@ -9,12 +9,12 @@ import type { ItemContext } from '@qti-components/base';
 import type { TestContext } from '@qti-components/base';
 
 /**
- * @summary The qti-default expression returns the default value of a declared variable.
- * @documentation https://www.imsglobal.org/spec/qti/v3p0/impl#h.default
+ * @summary The qti-default operator retrieves the defined default value for a variable.
+ * @documentation https://www.imsglobal.org/spec/qti/v3p0/info/index.html#default
  *
- * Looks up the declaration of an itemVariable and returns the associated defaultValue
- * or NULL if no default value was declared. Supports item identifier prefixing
- * for obtaining default values from individual items in outcomes processing.
+ * Looks up the declaration for the identified item variable.
+ * Returns the associated defaultValue.
+ * Special cases: Returns NULL if no default value was declared.
  */
 export class QtiDefault extends QtiExpression<any> {
   @property({ type: String }) identifier: string = '';
