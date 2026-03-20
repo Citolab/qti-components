@@ -317,6 +317,7 @@ export class QtiAssessmentItem extends LitElement {
     if (this.#templateProcessing) {
       // Run template processing before first presentation
       this.#templateProcessing.process();
+      this.#initialContext = { ...this._context, variables: this._context.variables };
     }
   }
 
@@ -446,6 +447,14 @@ export class QtiAssessmentItem extends LitElement {
             }
       )
     };
+
+    this.dispatchEvent(
+      new CustomEvent<{ itemContext: ItemContext }>('qti-item-context-updated', {
+        bubbles: true,
+        composed: true,
+        detail: { itemContext: this._context }
+      })
+    );
   }
 
   /**
@@ -481,6 +490,14 @@ export class QtiAssessmentItem extends LitElement {
             }
       )
     };
+
+    this.dispatchEvent(
+      new CustomEvent<{ itemContext: ItemContext }>('qti-item-context-updated', {
+        bubbles: true,
+        composed: true,
+        detail: { itemContext: this._context }
+      })
+    );
   }
 
   public setOutcomeVariable(identifier: string, value: string | string[] | undefined) {
