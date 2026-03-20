@@ -3,12 +3,12 @@ import { QtiExpression } from '@qti-components/base';
 import type { ResponseVariable } from '@qti-components/base';
 
 /**
- * @summary The qti-container-size operator returns the number of values in a container.
- * @documentation https://www.imsglobal.org/spec/qti/v3p0/impl#h.container-size
+ * @summary The qti-container-size operator returns the count of items in a container.
+ * @documentation https://www.imsglobal.org/spec/qti/v3p0/info/index.html#containerSize
  *
- * Takes a sub-expression with any base-type and either multiple or ordered cardinality.
- * Returns an integer giving the number of values in the container.
- * Returns 0 if the sub-expression is NULL.
+ * Takes 1 sub-expression with multiple or ordered cardinality.
+ * Returns a single integer representing the number of items.
+ * Special cases: Returns 0 if the sub-expression is NULL.
  */
 export class QtiContainerSize extends QtiExpression<number> {
   public override getResult(): number {

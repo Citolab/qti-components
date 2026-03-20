@@ -5,6 +5,14 @@ import { ScoringHelper } from '@qti-components/base';
 
 import type { ResponseVariable } from '@qti-components/base';
 
+/**
+ * @summary The qti-map-response operator applies a mapping to a candidate's response.
+ * @documentation https://www.imsglobal.org/spec/qti/v3p0/info/index.html#mapResponse
+ *
+ * Transforms the bound response variable using the declaration's qti-mapping.
+ * Returns a single float representing the mapped score (or sum of mapped values).
+ * Special cases: Returns 0.0 if response is NULL; counts identical values in containers once.
+ */
 export class QtiMapResponse extends QtiExpression<number> {
   @property({ type: String }) identifier: string;
 

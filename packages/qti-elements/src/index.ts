@@ -13,4 +13,6 @@ export * from './components/qti-response-declaration/qti-response-declaration';
 export * from './components/qti-outcome-declaration/qti-outcome-declaration';
 export * from './components/qti-response-processing/qti-response-processing';
 export * from './components/qti-template-declaration/qti-template-declaration';
+export * from './components/qti-template-processing/qti-template-processing';
+export * from './components/qti-template-constraint/qti-template-constraint';
 export * from './components/qti-context-declaration/qti-context-declaration';

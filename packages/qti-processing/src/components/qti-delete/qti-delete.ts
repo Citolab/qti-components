@@ -2,6 +2,14 @@ import { QtiExpression } from '@qti-components/base';
 
 import type { ResponseVariable } from '@qti-components/base';
 
+/**
+ * @summary The qti-delete operator removes all instances of a value from a container.
+ * @documentation https://www.imsglobal.org/spec/qti/v3p0/info/index.html#delete
+ *
+ * Takes a single value (1st) and a container (2nd) of the same base-type.
+ * Returns a new container derived from the 2nd with all instances of 1st removed.
+ * Special cases: Returns NULL if either argument is NULL.
+ */
 export class QtiDelete extends QtiExpression<string[] | null> {
   override getResult(): string[] | null {
     if (this.children.length === 2) {
