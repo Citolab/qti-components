@@ -57,10 +57,10 @@ describe('VocabularyMixin', () => {
     element.class = 'qti-labels-none';
     await element.updateComplete;
 
-    expect(choices[0].marker).toBe(undefined);
-    expect(choices[1].marker).toBe(undefined);
-    expect(choices[2].marker).toBe(undefined);
-    expect(choices[3].marker).toBe(undefined);
+    expect(choices[0].marker).toBe('');
+    expect(choices[1].marker).toBe('');
+    expect(choices[2].marker).toBe('');
+    expect(choices[3].marker).toBe('');
 
     expect(choices[0].shadowRoot.querySelector('#label')).toBe(null);
     expect(choices[1].shadowRoot.querySelector('#label')).toBe(null);
