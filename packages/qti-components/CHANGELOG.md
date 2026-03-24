@@ -1,5 +1,248 @@
 # [7.26.0](https://github.com/Citolab/qti-components/compare/qti-components-v7.25.0...qti-components-v7.26.0) (2026-03-03)
 
+## [7.27.2](https://github.com/Citolab/qti-components/compare/qti-components-v7.27.1...qti-components-v7.27.2) (2026-03-24)
+
+### @qti-components/associate-interaction
+
+### [1.1.2](https://github.com/Citolab/qti-components/compare/associate-interaction-v1.1.1...associate-interaction-v1.1.2) (2026-03-24)
+
+
+#### Bug Fixes
+
+* change package manager from npm to pnpm in publish script ([d9baa8b](https://github.com/Citolab/qti-components/commit/d9baa8be20d6ab5cbfc00fe5ef91bfc47ac02f78))
+
+---
+
+### @qti-components/choice-interaction
+
+### [1.1.2](https://github.com/Citolab/qti-components/compare/choice-interaction-v1.1.1...choice-interaction-v1.1.2) (2026-03-24)
+
+
+#### Bug Fixes
+
+* change package manager from npm to pnpm in publish script ([d9baa8b](https://github.com/Citolab/qti-components/commit/d9baa8be20d6ab5cbfc00fe5ef91bfc47ac02f78))
+
+---
+
+### @qti-components/interactions-core
+
+### [1.1.2](https://github.com/Citolab/qti-components/compare/interactions-core-v1.1.1...interactions-core-v1.1.2) (2026-03-24)
+
+
+#### Bug Fixes
+
+* change package manager from npm to pnpm in publish script ([d9baa8b](https://github.com/Citolab/qti-components/commit/d9baa8be20d6ab5cbfc00fe5ef91bfc47ac02f78))
+
+---
+
+### @qti-components/custom-interaction
+
+### [1.1.2](https://github.com/Citolab/qti-components/compare/custom-interaction-v1.1.1...custom-interaction-v1.1.2) (2026-03-24)
+
+
+#### Bug Fixes
+
+* change package manager from npm to pnpm in publish script ([d9baa8b](https://github.com/Citolab/qti-components/commit/d9baa8be20d6ab5cbfc00fe5ef91bfc47ac02f78))
+
+---
+
+### @qti-components/end-attempt-interaction
+
+### [1.1.2](https://github.com/Citolab/qti-components/compare/end-attempt-interaction-v1.1.1...end-attempt-interaction-v1.1.2) (2026-03-24)
+
+
+#### Bug Fixes
+
+* change package manager from npm to pnpm in publish script ([d9baa8b](https://github.com/Citolab/qti-components/commit/d9baa8be20d6ab5cbfc00fe5ef91bfc47ac02f78))
+
+---
+
+### @qti-components/extended-text-interaction
+
+### [1.1.2](https://github.com/Citolab/qti-components/compare/extended-text-interaction-v1.1.1...extended-text-interaction-v1.1.2) (2026-03-24)
+
+
+#### Bug Fixes
+
+* change package manager from npm to pnpm in publish script ([d9baa8b](https://github.com/Citolab/qti-components/commit/d9baa8be20d6ab5cbfc00fe5ef91bfc47ac02f78))
+
+---
+
+### @qti-components/gap-match-interaction
+
+### [1.1.2](https://github.com/Citolab/qti-components/compare/gap-match-interaction-v1.1.1...gap-match-interaction-v1.1.2) (2026-03-24)
+
+
+#### Bug Fixes
+
+* change package manager from npm to pnpm in publish script ([d9baa8b](https://github.com/Citolab/qti-components/commit/d9baa8be20d6ab5cbfc00fe5ef91bfc47ac02f78))
+
+---
+
+### @qti-components/graphic-associate-interaction
+
+### [1.1.2](https://github.com/Citolab/qti-components/compare/graphic-associate-interaction-v1.1.1...graphic-associate-interaction-v1.1.2) (2026-03-24)
+
+
+#### Bug Fixes
+
+* change package manager from npm to pnpm in publish script ([d9baa8b](https://github.com/Citolab/qti-components/commit/d9baa8be20d6ab5cbfc00fe5ef91bfc47ac02f78))
+
+---
+
+### @qti-components/graphic-gap-match-interaction
+
+### [1.1.2](https://github.com/Citolab/qti-components/compare/graphic-gap-match-interaction-v1.1.1...graphic-gap-match-interaction-v1.1.2) (2026-03-24)
+
+
+#### Bug Fixes
+
+* change package manager from npm to pnpm in publish script ([d9baa8b](https://github.com/Citolab/qti-components/commit/d9baa8be20d6ab5cbfc00fe5ef91bfc47ac02f78))
+
+---
+
+### @qti-components/graphic-order-interaction
+
+### [1.1.2](https://github.com/Citolab/qti-components/compare/graphic-order-interaction-v1.1.1...graphic-order-interaction-v1.1.2) (2026-03-24)
+
+
+#### Bug Fixes
+
+* change package manager from npm to pnpm in publish script ([d9baa8b](https://github.com/Citolab/qti-components/commit/d9baa8be20d6ab5cbfc00fe5ef91bfc47ac02f78))
+
+---
+
+### @qti-components/hotspot-interaction
+
+### [1.1.2](https://github.com/Citolab/qti-components/compare/hotspot-interaction-v1.1.1...hotspot-interaction-v1.1.2) (2026-03-24)
+
+
+#### Bug Fixes
+
+* change package manager from npm to pnpm in publish script ([d9baa8b](https://github.com/Citolab/qti-components/commit/d9baa8be20d6ab5cbfc00fe5ef91bfc47ac02f78))
+
+---
+
+### @qti-components/hottext-interaction
+
+### [1.1.2](https://github.com/Citolab/qti-components/compare/hottext-interaction-v1.1.1...hottext-interaction-v1.1.2) (2026-03-24)
+
+
+#### Bug Fixes
+
+* change package manager from npm to pnpm in publish script ([d9baa8b](https://github.com/Citolab/qti-components/commit/d9baa8be20d6ab5cbfc00fe5ef91bfc47ac02f78))
+
+---
+
+### @qti-components/inline-choice-interaction
+
+### [1.1.2](https://github.com/Citolab/qti-components/compare/inline-choice-interaction-v1.1.1...inline-choice-interaction-v1.1.2) (2026-03-24)
+
+
+#### Bug Fixes
+
+* change package manager from npm to pnpm in publish script ([d9baa8b](https://github.com/Citolab/qti-components/commit/d9baa8be20d6ab5cbfc00fe5ef91bfc47ac02f78))
+
+---
+
+### @qti-components/match-interaction
+
+### [1.1.2](https://github.com/Citolab/qti-components/compare/match-interaction-v1.1.1...match-interaction-v1.1.2) (2026-03-24)
+
+
+#### Bug Fixes
+
+* change package manager from npm to pnpm in publish script ([d9baa8b](https://github.com/Citolab/qti-components/commit/d9baa8be20d6ab5cbfc00fe5ef91bfc47ac02f78))
+
+---
+
+### @qti-components/media-interaction
+
+### [1.1.2](https://github.com/Citolab/qti-components/compare/media-interaction-v1.1.1...media-interaction-v1.1.2) (2026-03-24)
+
+
+#### Bug Fixes
+
+* change package manager from npm to pnpm in publish script ([d9baa8b](https://github.com/Citolab/qti-components/commit/d9baa8be20d6ab5cbfc00fe5ef91bfc47ac02f78))
+
+---
+
+### @qti-components/order-interaction
+
+### [1.1.2](https://github.com/Citolab/qti-components/compare/order-interaction-v1.1.1...order-interaction-v1.1.2) (2026-03-24)
+
+
+#### Bug Fixes
+
+* change package manager from npm to pnpm in publish script ([d9baa8b](https://github.com/Citolab/qti-components/commit/d9baa8be20d6ab5cbfc00fe5ef91bfc47ac02f78))
+
+---
+
+### @qti-components/portable-custom-interaction
+
+### [1.1.2](https://github.com/Citolab/qti-components/compare/portable-custom-interaction-v1.1.1...portable-custom-interaction-v1.1.2) (2026-03-24)
+
+
+#### Bug Fixes
+
+* change package manager from npm to pnpm in publish script ([d9baa8b](https://github.com/Citolab/qti-components/commit/d9baa8be20d6ab5cbfc00fe5ef91bfc47ac02f78))
+
+---
+
+### @qti-components/position-object-interaction
+
+### [1.1.2](https://github.com/Citolab/qti-components/compare/position-object-interaction-v1.1.1...position-object-interaction-v1.1.2) (2026-03-24)
+
+
+#### Bug Fixes
+
+* change package manager from npm to pnpm in publish script ([d9baa8b](https://github.com/Citolab/qti-components/commit/d9baa8be20d6ab5cbfc00fe5ef91bfc47ac02f78))
+
+---
+
+### @qti-components/select-point-interaction
+
+### [1.1.2](https://github.com/Citolab/qti-components/compare/select-point-interaction-v1.1.1...select-point-interaction-v1.1.2) (2026-03-24)
+
+
+#### Bug Fixes
+
+* change package manager from npm to pnpm in publish script ([d9baa8b](https://github.com/Citolab/qti-components/commit/d9baa8be20d6ab5cbfc00fe5ef91bfc47ac02f78))
+
+---
+
+### @qti-components/slider-interaction
+
+### [1.1.2](https://github.com/Citolab/qti-components/compare/slider-interaction-v1.1.1...slider-interaction-v1.1.2) (2026-03-24)
+
+
+#### Bug Fixes
+
+* change package manager from npm to pnpm in publish script ([d9baa8b](https://github.com/Citolab/qti-components/commit/d9baa8be20d6ab5cbfc00fe5ef91bfc47ac02f78))
+
+---
+
+### @qti-components/text-entry-interaction
+
+### [1.1.2](https://github.com/Citolab/qti-components/compare/text-entry-interaction-v1.1.1...text-entry-interaction-v1.1.2) (2026-03-24)
+
+
+#### Bug Fixes
+
+* change package manager from npm to pnpm in publish script ([d9baa8b](https://github.com/Citolab/qti-components/commit/d9baa8be20d6ab5cbfc00fe5ef91bfc47ac02f78))
+
+---
+
+### @qti-components/upload-interaction
+
+### [1.1.2](https://github.com/Citolab/qti-components/compare/upload-interaction-v1.1.1...upload-interaction-v1.1.2) (2026-03-24)
+
+
+#### Bug Fixes
+
+* change package manager from npm to pnpm in publish script ([d9baa8b](https://github.com/Citolab/qti-components/commit/d9baa8be20d6ab5cbfc00fe5ef91bfc47ac02f78))
+
+
 ## [7.27.1](https://github.com/Citolab/qti-components/compare/qti-components-v7.27.0...qti-components-v7.27.1) (2026-03-24)
 
 ### @qti-components/associate-interaction
