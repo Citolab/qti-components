@@ -5,99 +5,173 @@ import type { LitElement, PropertyValues } from 'lit';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 
-type LabelType = 'qti-labels-decimal' | 'qti-labels-lower-alpha' | 'qti-labels-upper-alpha';
-type LabelSuffixType = 'qti-labels-suffix-period' | 'qti-labels-suffix-parenthesis';
+type LabelType =
+  | 'qti-labels-none'
+  | 'qti-labels-decimal'
+  | 'qti-labels-lower-alpha'
+  | 'qti-labels-upper-alpha';
+type LabelSuffixType =
+  | 'qti-labels-suffix-none'
+  | 'qti-labels-suffix-period'
+  | 'qti-labels-suffix-parenthesis';
 
 declare class VocabularyInterface {}
 
 export const VocabularyMixin = <T extends Constructor<LitElement>>(superClass: T, _selector: string) => {
   abstract class VocabularyElement extends superClass {
-    private _classes: string[] = [];
-    private _allLabels = ['qti-labels-decimal', 'qti-labels-lower-alpha', 'qti-labels-upper-alpha'];
-    private _allLabelSuffixes = ['qti-labels-suffix-period', 'qti-labels-suffix-parenthesis'] as LabelSuffixType[];
-    private _mutationObserver: MutationObserver | null = null;
-    // Define the property with the custom converter
+    #classes: string[] = [];
+    #allLabels: LabelType[] = [
+      'qti-labels-none',
+      'qti-labels-decimal',
+      'qti-labels-lower-alpha',
+      'qti-labels-upper-alpha',
+    ];
+    #allLabelSuffixes: LabelSuffixType[] = [
+      'qti-labels-suffix-none',
+      'qti-labels-suffix-period',
+      'qti-labels-suffix-parenthesis',
+    ];
+    #mutationObserver: MutationObserver | null = null;
+
     @property({
-      type: String
+      type: String,
+      attribute: 'class',
     })
     set class(value: string) {
-      if (!value) {
-        return;
-      }
-      // const oldValue = this._classes.join(' ');
-      this._classes = value.split(' ');
-
-      this._addLabels();
-      // this.requestUpdate('class', oldValue);
+      this.#classes = this.#tokenizeClasses(value);
+      this.#syncLabels();
     }
+
     get class(): string {
-      return this._classes?.join(' ') || '';
+      return this.#classes.join(' ');
+    }
+
+    override attributeChangedCallback(name: string, oldValue: string | null, newValue: string | null): void {
+      super.attributeChangedCallback(name, oldValue, newValue);
+
+      if (name === 'class' && oldValue !== newValue) {
+        this.class = newValue ?? '';
+      }
     }
 
     protected override updated(_changedProperties: PropertyValues): void {
       super.updated(_changedProperties);
-      // if (_changedProperties.has('shuffle')) {
-      this._addLabels();
-      // }
+      this.#syncLabels();
     }
 
     override connectedCallback(): void {
       super.connectedCallback();
-      this._mutationObserver = new MutationObserver(() => this._addLabels());
-      this._mutationObserver.observe(this, { childList: true, subtree: true });
+      this.class = this.getAttribute('class') ?? '';
+      this.#mutationObserver = new MutationObserver(mutations => {
+        if (
+          mutations.some(
+            mutation =>
+              mutation.type === 'childList' ||
+              (mutation.type === 'attributes' && mutation.attributeName === 'style')
+          )
+        ) {
+          this.#syncLabels();
+        }
+      });
+      this.#mutationObserver.observe(this, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['style'],
+      });
     }
 
     override disconnectedCallback(): void {
       super.disconnectedCallback();
-      this._mutationObserver?.disconnect();
-      this._mutationObserver = null;
+      this.#mutationObserver?.disconnect();
+      this.#mutationObserver = null;
     }
 
-    private _addLabels() {
-      const classContainsLabel = this._classes.some(
-        cls => this._allLabels.includes(cls) || this._allLabelSuffixes.includes(cls as LabelSuffixType)
-      );
-      const isNumber = value => {
-        return !isNaN(+value);
-      };
-      if (classContainsLabel) {
-        const choiceElements = Array.from(this.querySelectorAll('qti-simple-choice')).map(c => c as QtiSimpleChoice);
-        const choices = choiceElements
-          .map((choice: HTMLElement, index) => {
-            return { el: choice, order: isNumber(choice.style.order) ? +choice.style.order : index + 1 };
-          })
-          .sort((a, b) => a.order - b.order)
-          .map(choice => choice.el);
-        for (let i = 0; i < choices.length; i++) {
-          (choices[i] as QtiSimpleChoice).marker = this._getLabel(i + 1);
-        }
-      }
-    }
-    private _getLabel(index: number) {
-      let lastLabel = this._classes.filter(c => this._allLabels.includes(c)).pop() as LabelType;
-      const lastLabelSuffix = this._classes.filter(c => this._allLabelSuffixes.includes(c as LabelSuffixType)).pop();
+    #tokenizeClasses(value: string | null | undefined): string[] {
+      if (!value) return [];
 
-      if (!lastLabel && lastLabelSuffix) {
-        // a suffix without a label is strange so add qti-labels-upper-alpha
-        lastLabel = 'qti-labels-upper-alpha';
+      return value
+        .split(/\s+/)
+        .map(token => token.trim())
+        .filter(Boolean)
+        .filter((token, index, tokens) => tokens.indexOf(token) === index);
+    }
+
+    #syncLabels() {
+      const choiceElements = Array.from(this.querySelectorAll('qti-simple-choice')).map(c => c as QtiSimpleChoice);
+      const choices = this.#getOrderedChoices(choiceElements);
+      const labelType = this.#getActiveLabelType();
+      const labelSuffixType = this.#getActiveLabelSuffixType();
+
+      choices.forEach((choice, index) => {
+        choice.marker = this.#getLabel(index + 1, labelType, labelSuffixType);
+      });
+    }
+
+    #getOrderedChoices(choiceElements: QtiSimpleChoice[]): QtiSimpleChoice[] {
+      return choiceElements
+        .map((choice, index) => {
+          const order = Number(choice.style.order);
+          return { el: choice, order: Number.isFinite(order) ? order : index + 1, index };
+        })
+        .sort((a, b) => a.order - b.order || a.index - b.index)
+        .map(choice => choice.el);
+    }
+
+    #getActiveLabelType(): LabelType | null {
+      return this.#classes.filter(c => this.#allLabels.includes(c as LabelType)).pop() as LabelType | undefined ?? null;
+    }
+
+    #getActiveLabelSuffixType(): LabelSuffixType | null {
+      return this.#classes.filter(c => this.#allLabelSuffixes.includes(c as LabelSuffixType)).pop() as LabelSuffixType | undefined ?? null;
+    }
+
+    #getLabel(index: number, labelType: LabelType | null, labelSuffixType: LabelSuffixType | null): string {
+      let effectiveLabelType = labelType;
+
+      if (!effectiveLabelType && labelSuffixType && labelSuffixType !== 'qti-labels-suffix-none') {
+        effectiveLabelType = 'qti-labels-upper-alpha';
       }
+
+      if (!effectiveLabelType || effectiveLabelType === 'qti-labels-none') {
+        return '';
+      }
+
       let label = '';
-      switch (lastLabel) {
+      switch (effectiveLabelType) {
         case 'qti-labels-decimal':
           label = `${index}`;
           break;
         case 'qti-labels-lower-alpha':
-          label = `${String.fromCharCode(97 + index - 1)}`;
+          label = this.#toAlphabetic(index, 'lower');
           break;
         case 'qti-labels-upper-alpha':
-          label = `${String.fromCharCode(65 + index - 1)}`;
+          label = this.#toAlphabetic(index, 'upper');
           break;
       }
-      if (lastLabelSuffix === 'qti-labels-suffix-period') {
-        label += '.';
-      } else if (lastLabelSuffix === 'qti-labels-suffix-parenthesis') {
-        label += `)`;
+
+      if (labelSuffixType === 'qti-labels-suffix-period') {
+        return `${label}.`;
       }
+
+      if (labelSuffixType === 'qti-labels-suffix-parenthesis') {
+        return `${label})`;
+      }
+
+      return label;
+    }
+
+    #toAlphabetic(index: number, casing: 'lower' | 'upper'): string {
+      let value = index;
+      let label = '';
+      const charCodeBase = casing === 'lower' ? 97 : 65;
+
+      while (value > 0) {
+        value -= 1;
+        label = String.fromCharCode(charCodeBase + (value % 26)) + label;
+        value = Math.floor(value / 26);
+      }
+
       return label;
     }
   }
