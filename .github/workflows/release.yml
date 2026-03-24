@@ -85,12 +85,6 @@ jobs:
         if: ${{ !inputs.dry_run }}
         run: git push origin HEAD --tags
 
-      # - name: Trigger Storybook deployment
-      #   if: ${{ !inputs.dry_run && steps.bump.outputs.new_tag != '' }}
-      #   run: gh workflow run deploy-sb.yml --ref main -f tag=${{ steps.bump.outputs.new_tag }}
-      #   env:
-      #     GH_TOKEN: ${{ secrets.RELEASE_BOT_TOKEN || secrets.GITHUB_TOKEN }}
-
       - name: Create GitHub release for umbrella
         if: ${{ !inputs.dry_run && steps.bump.outputs.new_tag != '' }}
         run: gh release create ${{ steps.bump.outputs.new_tag }} --title "@citolab/qti-components ${{ steps.bump.outputs.new_version }}" --notes-file ${{ steps.bump.outputs.notes_file }}
@@ -115,3 +109,9 @@ jobs:
           NODE_AUTH_TOKEN: ''
           NPM_TOKEN: ''
           NPM_CONFIG_PROVENANCE: 'true'
+
+      - name: Trigger Storybook deployment
+        if: ${{ !inputs.dry_run && steps.bump.outputs.new_tag != '' }}
+        run: gh workflow run deploy-sb.yml --ref main -f tag=${{ steps.bump.outputs.new_tag }}
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_GH_TOKEN || secrets.GITHUB_TOKEN }}

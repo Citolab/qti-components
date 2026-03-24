@@ -1,0 +1,119 @@
+name: "Manual: release and publish packages (changesets)"
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to release from'
+        required: false
+        default: 'main'
+        type: string
+      dry_run:
+        description: 'Dry-run (no commits, tags, or publishes)'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          token: ${{ secrets.RELEASE_BOT_TOKEN || secrets.GITHUB_TOKEN }}
+          ref: ${{ inputs.branch || 'main' }}
+          fetch-depth: 0
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: 'pnpm'
+          registry-url: 'https://registry.npmjs.org/'
+
+      - name: Upgrade npm for trusted publishing
+        run: npm install -g npm@latest
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Configure git for release commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Dry-run release status
+        if: ${{ inputs.dry_run }}
+        run: |
+          if ls .changeset/*.md >/dev/null 2>&1; then
+            pnpm run changeset:status
+          else
+            echo "No pending changesets."
+          fi
+
+      - name: Dry-run version preview (snapshot)
+        if: ${{ inputs.dry_run }}
+        run: |
+          if ! ls .changeset/*.md >/dev/null 2>&1; then
+            exit 0
+          fi
+
+          pnpm dlx @changesets/cli version --snapshot dryrun
+
+          echo "Preview of version/changelog changes:"
+          git --no-pager diff -- .changeset packages || true
+
+          # Revert preview mutations; dry-run should not leave repository changes behind.
+          git checkout -- .changeset packages
+
+      - name: Apply changeset versions
+        id: version
+        if: ${{ !inputs.dry_run }}
+        run: |
+          pnpm run changeset:version
+
+          if git diff --quiet; then
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+            echo "No pending changesets. Nothing to release."
+            exit 0
+          fi
+
+          echo "has_changes=true" >> "$GITHUB_OUTPUT"
+
+      - name: Commit release version updates
+        if: ${{ !inputs.dry_run && steps.version.outputs.has_changes == 'true' }}
+        run: |
+          git add .changeset packages
+          git commit -m "chore(release): changesets version [skip ci]"
+
+      - name: Build workspace
+        if: ${{ !inputs.dry_run && steps.version.outputs.has_changes == 'true' }}
+        run: pnpm run build
+
+      - name: Ensure OIDC trusted publishing auth
+        if: ${{ !inputs.dry_run && steps.version.outputs.has_changes == 'true' }}
+        run: |
+          rm -f .npmrc "$HOME/.npmrc"
+          npm config delete always-auth || true
+          npm config delete //registry.npmjs.org/:_authToken || true
+
+      - name: Publish changesets
+        if: ${{ !inputs.dry_run && steps.version.outputs.has_changes == 'true' }}
+        run: pnpm run changeset:publish
+        env:
+          NODE_AUTH_TOKEN: ''
+          NPM_TOKEN: ''
+          NPM_CONFIG_PROVENANCE: 'true'
+
+      - name: Push release commit and tags
+        if: ${{ !inputs.dry_run && steps.version.outputs.has_changes == 'true' }}
+        run: git push origin HEAD --follow-tags
