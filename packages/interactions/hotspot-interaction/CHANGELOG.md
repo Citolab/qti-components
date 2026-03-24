@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/Citolab/qti-components/compare/hotspot-interaction-v1.1.1...hotspot-interaction-v1.1.2) (2026-03-24)
+
+
+### Bug Fixes
+
+* change package manager from npm to pnpm in publish script ([d9baa8b](https://github.com/Citolab/qti-components/commit/d9baa8be20d6ab5cbfc00fe5ef91bfc47ac02f78))
+
 ## [1.1.1](https://github.com/Citolab/qti-components/compare/hotspot-interaction-v1.1.0...hotspot-interaction-v1.1.1) (2026-03-24)
 
 
