@@ -72,8 +72,8 @@
     "ci:release:changesets": "pnpm run changeset:version && pnpm run build && pnpm run changeset:publish",
     "ci:release:umbrella": "HUSKY=0 pnpm --filter \"./packages/qti-components\" --workspace-concurrency=1 exec -- semantic-release",
     "ci:release:umbrella:dry": "HUSKY=0 pnpm --filter \"./packages/qti-components\" --workspace-concurrency=1 exec -- semantic-release --dry-run --no-ci",
-    "ci:publish:workspace": "pnpm -r --filter \"./packages/*\" --filter \"./packages/interactions/*\" --filter \"!./packages/qti-components\" run publish",
-    "ci:publish:umbrella": "pnpm --filter \"./packages/qti-components\" run publish",
+    "ci:publish:workspace": "pnpm -r --filter \"./packages/*\" --filter \"./packages/interactions/*\" --filter \"!./packages/qti-components\" --no-git-checks run publish",
+    "ci:publish:umbrella": "pnpm --filter \"./packages/qti-components\" --no-git-checks run publish",
     "ci:publish:missing": "run-s ci:publish:workspace ci:publish:umbrella"
   },
   "lint-staged": {
