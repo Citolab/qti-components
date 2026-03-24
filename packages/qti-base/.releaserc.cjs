@@ -15,6 +15,6 @@ module.exports = {
         message: 'chore(release): ${nextRelease.version} [skip ci]'
       }
     ],
-    ...(hasGithubToken ? ['@semantic-release/github'] : [])
+    ...(hasGithubToken ? [['@semantic-release/github', { successComment: false, releasedLabels: false }]] : [])
   ]
 };
