@@ -1,17 +1,14 @@
-import { css, LitElement } from 'lit';
+import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 
 import { ActiveElementMixin } from '../../mixins/active-element/active-element.mixin';
+import styles from './qti-hotspot-choice.styles';
+
+import type { CSSResultGroup } from 'lit';
 
 // type shape = { shape: 'rect' | 'circle' | 'poly'; coords: number[] };
 export class QtiHotspotChoice extends ActiveElementMixin(LitElement, 'qti-hotspot-choice') {
-  static override styles = css`
-    :host {
-      display: flex;
-      user-select: none;
-      position: absolute;
-    }
-  `;
+  static override styles: CSSResultGroup = styles;
   @property({ attribute: 'aria-ordervalue', type: Number, reflect: true }) order: number;
   @property({ attribute: 'aria-ordercorrectvalue', type: Number, reflect: true }) orderCorrect: number;
 }

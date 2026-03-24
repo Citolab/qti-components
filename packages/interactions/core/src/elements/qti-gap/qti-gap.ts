@@ -1,12 +1,12 @@
-import { css, html, LitElement } from 'lit';
+import { html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
+
+import styles from './qti-gap.styles';
+
+import type { CSSResultGroup } from 'lit';
+
 export class QtiGap extends LitElement {
-  static override styles = css`
-    :host {
-      display: flex;
-      user-select: none;
-    }
-  `;
+  static override styles: CSSResultGroup = styles;
 
   @property({ type: Number, reflect: true }) tabindex: number | undefined = 0;
 
