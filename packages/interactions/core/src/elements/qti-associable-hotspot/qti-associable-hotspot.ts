@@ -1,12 +1,11 @@
-import { LitElement, css, html } from 'lit';
+import { LitElement, html } from 'lit';
+
+import styles from './qti-associable-hotspot.styles';
+
+import type { CSSResultGroup } from 'lit';
+
 export class QtiAssociableHotspot extends LitElement {
-  static override styles = css`
-    :host {
-      display: flex;
-      user-select: none;
-      position: absolute;
-    }
-  `;
+  static override styles: CSSResultGroup = styles;
 
   override connectedCallback() {
     super.connectedCallback();

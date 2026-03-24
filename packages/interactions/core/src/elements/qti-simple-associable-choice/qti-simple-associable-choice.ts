@@ -1,7 +1,10 @@
-import { css, html, LitElement } from 'lit';
+import { html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 
 import { ActiveElementMixin } from '../../mixins/active-element/active-element.mixin';
+import styles from './qti-simple-associable-choice.styles';
+
+import type { CSSResultGroup } from 'lit';
 
 /*
 qti-match-interaction
@@ -9,19 +12,7 @@ qti-associate-interaction
 */
 // tslint:disable: indent
 export class QtiSimpleAssociableChoice extends ActiveElementMixin(LitElement, 'qti-simple-associable-choice') {
-  static override styles = css`
-    :host {
-      display: flex;
-      user-select: none;
-    }
-    slot {
-      width: 100%;
-      display: block;
-    }
-    slot[name='qti-simple-associable-choice'] {
-      width: auto;
-    }
-  `;
+  static override styles: CSSResultGroup = styles;
 
   /** the minimal number of selections a candidate must make */
   @property({

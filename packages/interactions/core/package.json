@@ -55,6 +55,10 @@
       "types": "./dist/elements/*/index.d.ts",
       "import": "./dist/elements/*/index.js"
     },
+    "./elements/*/*": {
+      "types": "./dist/elements/*/*.d.ts",
+      "import": "./dist/elements/*/*.js"
+    },
     "./mixins/*": {
       "types": "./dist/mixins/*.d.ts",
       "import": "./dist/mixins/*.js"
