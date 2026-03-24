@@ -485,7 +485,10 @@ export class QtiAssessmentItem extends LitElement {
         const declaredDefault = hasDefaultValue ? variable.defaultValue : null;
 
         let value = declaredDefault ?? null;
-        if ((value === null || value === undefined) && (variable.baseType === 'integer' || variable.baseType === 'float')) {
+        if (
+          (value === null || value === undefined) &&
+          (variable.baseType === 'integer' || variable.baseType === 'float')
+        ) {
           value = '0';
         }
 

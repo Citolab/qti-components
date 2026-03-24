@@ -101,11 +101,7 @@ export const Default: Story = {
 export const SortableSwapFilledGaps: Story = {
   name: 'Behavior: sortable swap across occupied gaps',
   render: () => html`
-    <qti-gap-match-interaction
-      data-testid="gap-match-interaction"
-      response-identifier="RESPONSE"
-      max-associations="3"
-    >
+    <qti-gap-match-interaction data-testid="gap-match-interaction" response-identifier="RESPONSE" max-associations="3">
       <qti-prompt>Fill and reorder the gaps.</qti-prompt>
       <qti-gap-text identifier="W" match-max="1">winter</qti-gap-text>
       <qti-gap-text identifier="Sp" match-max="1">spring</qti-gap-text>
@@ -175,11 +171,7 @@ export const SortableSwapFilledGaps: Story = {
 export const SortableSwapPartialGaps: Story = {
   name: 'Behavior: sortable swap with one gap still empty',
   render: () => html`
-    <qti-gap-match-interaction
-      data-testid="gap-match-interaction"
-      response-identifier="RESPONSE"
-      max-associations="3"
-    >
+    <qti-gap-match-interaction data-testid="gap-match-interaction" response-identifier="RESPONSE" max-associations="3">
       <qti-prompt>Fill some gaps and reorder.</qti-prompt>
       <qti-gap-text identifier="W" match-max="1">winter</qti-gap-text>
       <qti-gap-text identifier="Sp" match-max="1">spring</qti-gap-text>
@@ -246,11 +238,7 @@ export const SortableSwapPartialGaps: Story = {
 export const SortableAppendWhenGapAllowsMultiple: Story = {
   name: 'Behavior: sortable move appends on occupied gap when match-max > 1',
   render: () => html`
-    <qti-gap-match-interaction
-      data-testid="gap-match-interaction"
-      response-identifier="RESPONSE"
-      max-associations="4"
-    >
+    <qti-gap-match-interaction data-testid="gap-match-interaction" response-identifier="RESPONSE" max-associations="4">
       <qti-prompt>Append into an occupied multi-capacity gap.</qti-prompt>
       <qti-gap-text identifier="W" match-max="1">winter</qti-gap-text>
       <qti-gap-text identifier="Sp" match-max="1">spring</qti-gap-text>
@@ -315,11 +303,7 @@ export const SortableAppendWhenGapAllowsMultiple: Story = {
 export const SortableAppendBlockedAtGapMatchMax: Story = {
   name: 'Behavior: sortable append blocks when occupied gap reached match-max',
   render: () => html`
-    <qti-gap-match-interaction
-      data-testid="gap-match-interaction"
-      response-identifier="RESPONSE"
-      max-associations="4"
-    >
+    <qti-gap-match-interaction data-testid="gap-match-interaction" response-identifier="RESPONSE" max-associations="4">
       <qti-prompt>Block append into a full multi-capacity gap.</qti-prompt>
       <qti-gap-text identifier="W" match-max="1">winter</qti-gap-text>
       <qti-gap-text identifier="Sp" match-max="1">spring</qti-gap-text>

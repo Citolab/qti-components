@@ -25,18 +25,23 @@ DragDropCoreMixin (base)
 Extends a `DragDropSlotted` interaction to allow reordering of items **within** slots after they've been placed, and swapping items **between** slots.
 
 **Behavior:**
+
 - Dragging from inventory → uses slotted behavior (drag to slot)
 - Dragging an item already in a slot → uses sortable behavior:
   - Reorder within the same slot (if multiple items)
   - Swap with an item in another slot (cross-slot swapping)
 
 **Usage:**
+
 ```typescript
-import { DragDropSlottedMixin, DragDropSlottedSortableMixin } from '@qti-components/interactions-core/mixins/drag-drop-observables';
+import {
+  DragDropSlottedMixin,
+  DragDropSlottedSortableMixin
+} from '@qti-components/interactions-core/mixins/drag-drop-observables';
 
 class MyInteraction extends DragDropSlottedSortableMixin(
   DragDropSlottedMixin(Interaction, 'qti-simple-choice', 'qti-gap', 'slot[part="drags"]'),
-  '[qti-draggable="true"]'  // selector for sortable items within slots
+  '[qti-draggable="true"]' // selector for sortable items within slots
 ) {
   // Items can be dragged from inventory to slots (slotted behavior)
   // Once placed, items can be reordered within their slot (sortable behavior)
@@ -45,6 +50,7 @@ class MyInteraction extends DragDropSlottedSortableMixin(
 ```
 
 **Configuration:**
+
 ```typescript
 // Disable in-slot reordering
 this.allowReorder = false;
@@ -79,6 +85,7 @@ this.sortableAnimationConfig = {
 | `currentDragMode` | `'slotted' \| 'sortable' \| null` | - | Read-only: current drag mode |
 
 **Events:**
+
 - `qti-interaction-changed` with `detail.type: 'cross-slot-swap'` - Fired when items are swapped between slots
 
 ## Interaction Types

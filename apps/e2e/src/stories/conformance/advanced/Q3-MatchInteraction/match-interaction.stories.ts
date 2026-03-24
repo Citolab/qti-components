@@ -144,7 +144,8 @@ export const Q3_L1_D7: Story = {
   name: 'Q3-L1-D7',
   render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
-    const { assessmentItem, matchInteraction, sourceA, sourceB, sourceC, targetT, targetU } = getElements(canvasElement);
+    const { assessmentItem, matchInteraction, sourceA, sourceB, sourceC, targetT, targetU } =
+      getElements(canvasElement);
     await matchInteraction.updateComplete;
 
     await drag(sourceA, { to: targetT, duration: 300 });

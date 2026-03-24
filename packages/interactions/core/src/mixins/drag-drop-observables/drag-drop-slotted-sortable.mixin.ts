@@ -182,11 +182,7 @@ export const DragDropSlottedSortableMixin = <T extends Constructor<DragDropSlott
         this.#sortableContext.sortContainer = containingDroppable;
 
         const rect = dragElement.getBoundingClientRect();
-        this.#sortableContext.placeholder = createDropPlaceholder(
-          dragElement,
-          rect,
-          this.sortablePlaceholderConfig
-        );
+        this.#sortableContext.placeholder = createDropPlaceholder(dragElement, rect, this.sortablePlaceholderConfig);
         // Copy the slot attribute from the dragged element so the placeholder
         // renders in the same named slot (e.g. slot="drags" in qti-gap), preserving
         // the droppable's dimensions when the drag element is removed.
