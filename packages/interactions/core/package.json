@@ -30,9 +30,6 @@
     "attw": "attw --profile esm-only --pack",
     "build": "tsc --paths null",
     "clean": "rm -rf dist",
-    "release": "semantic-release --no-ci",
-    "release:semantic": "semantic-release --no-ci",
-    "release:semantic:dry-run": "semantic-release --dry-run --no-ci",
     "publish": "node ../../../tools/publish-if-needed.mjs"
   },
   "sideEffects": true,

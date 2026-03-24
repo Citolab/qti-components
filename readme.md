@@ -54,7 +54,7 @@ Contributions are welcome! Please follow these guidelines when contributing:
 
 ## Publishing
 
-Release and publish workflow details are documented in [docs/publishing.mdx](docs/publishing.mdx). Automated releases use semantic-release on `main`.
+Release and publish workflow details are documented in [docs/publishing.mdx](docs/publishing.mdx). Automated releases use Changesets on `main`.
 
 ## Third-Party Components
 
