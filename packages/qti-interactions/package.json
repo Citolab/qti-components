@@ -73,10 +73,7 @@
     "storybook": "storybook dev -p 6008 --no-open",
     "yalc": "yalc publish",
     "yalc:push": "yalc push",
-    "publish": "node ../../tools/publish-if-needed.mjs",
-    "release": "semantic-release --no-ci",
-    "release:semantic": "semantic-release --no-ci",
-    "release:semantic:dry-run": "semantic-release --dry-run --no-ci"
+    "publish": "node ../../tools/publish-if-needed.mjs"
   },
   "sideEffects": true,
   "type": "module",
