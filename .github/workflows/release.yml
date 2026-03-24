@@ -109,3 +109,5 @@ jobs:
           NODE_AUTH_TOKEN: ''
           NPM_TOKEN: ''
           NPM_CONFIG_PROVENANCE: 'true'
+          npm_config_git_checks: 'false'
+          PNPM_GIT_CHECKS: 'false'

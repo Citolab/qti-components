@@ -30,6 +30,10 @@ jobs:
           ref: ${{ inputs.branch || 'main' }}
           fetch-depth: 0
 
+      - name: Capture starting SHA
+        id: start
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
       - name: Install pnpm
         uses: pnpm/action-setup@v4
 
@@ -113,6 +117,8 @@ jobs:
           NODE_AUTH_TOKEN: ''
           NPM_TOKEN: ''
           NPM_CONFIG_PROVENANCE: 'true'
+          npm_config_git_checks: 'false'
+          PNPM_GIT_CHECKS: 'false'
 
       - name: Reconcile missing npm publishes
         if: ${{ !inputs.dry_run }}
@@ -121,6 +127,12 @@ jobs:
           NODE_AUTH_TOKEN: ''
           NPM_TOKEN: ''
           NPM_CONFIG_PROVENANCE: 'true'
+          npm_config_git_checks: 'false'
+          PNPM_GIT_CHECKS: 'false'
+
+      - name: Create legacy package tags
+        if: ${{ !inputs.dry_run && steps.version.outputs.has_changes == 'true' }}
+        run: node tools/tag-changesets-release.mjs --since-sha ${{ steps.start.outputs.sha }}
 
       - name: Push release commit and tags
         if: ${{ !inputs.dry_run && steps.version.outputs.has_changes == 'true' }}
