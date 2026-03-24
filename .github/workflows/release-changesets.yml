@@ -100,7 +100,7 @@ jobs:
         run: pnpm run build
 
       - name: Ensure OIDC trusted publishing auth
-        if: ${{ !inputs.dry_run && steps.version.outputs.has_changes == 'true' }}
+        if: ${{ !inputs.dry_run }}
         run: |
           rm -f .npmrc "$HOME/.npmrc"
           npm config delete always-auth || true
@@ -109,6 +109,14 @@ jobs:
       - name: Publish changesets
         if: ${{ !inputs.dry_run && steps.version.outputs.has_changes == 'true' }}
         run: pnpm run changeset:publish
+        env:
+          NODE_AUTH_TOKEN: ''
+          NPM_TOKEN: ''
+          NPM_CONFIG_PROVENANCE: 'true'
+
+      - name: Reconcile missing npm publishes
+        if: ${{ !inputs.dry_run }}
+        run: env -u npm_config_recursive -u npm_config_workspace_concurrency -u npm_config_verify_deps_before_run -u npm_config_npm_globalconfig -u npm_config__jsr_registry pnpm run ci:publish:missing
         env:
           NODE_AUTH_TOKEN: ''
           NPM_TOKEN: ''

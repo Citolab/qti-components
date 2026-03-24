@@ -109,9 +109,3 @@ jobs:
           NODE_AUTH_TOKEN: ''
           NPM_TOKEN: ''
           NPM_CONFIG_PROVENANCE: 'true'
-
-      - name: Trigger Storybook deployment
-        if: ${{ !inputs.dry_run && steps.bump.outputs.new_tag != '' }}
-        run: gh workflow run deploy-sb.yml --ref main -f tag=${{ steps.bump.outputs.new_tag }}
-        env:
-          GH_TOKEN: ${{ secrets.RELEASE_GH_TOKEN || secrets.GITHUB_TOKEN }}
