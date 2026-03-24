@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/Citolab/qti-components/compare/associate-interaction-v1.1.0...associate-interaction-v1.1.1) (2026-03-24)
+
+
+### Bug Fixes
+
+* update vocabulary mixin to support additional label types and suffixes ([#141](https://github.com/Citolab/qti-components/issues/141)) ([4da03a4](https://github.com/Citolab/qti-components/commit/4da03a41e84969ea6c9397011478773d5e0de095))
+
 # [1.1.0](https://github.com/Citolab/qti-components/compare/associate-interaction-v1.0.0...associate-interaction-v1.1.0) (2026-03-19)
 
 
