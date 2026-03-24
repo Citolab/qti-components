@@ -1,14 +1,13 @@
-import { css, html, LitElement } from 'lit';
+import { html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 
 import { ActiveElementMixin } from '../../mixins/active-element/active-element.mixin';
+import styles from './qti-gap-text.styles';
+
+import type { CSSResultGroup } from 'lit';
+
 export class QtiGapText extends ActiveElementMixin(LitElement, 'qti-gap-text') {
-  static override styles = css`
-    :host {
-      display: inline-flex;
-      user-select: none;
-    }
-  `;
+  static override styles: CSSResultGroup = styles;
 
   @property({ type: Number, reflect: true }) tabindex: number | undefined = 0;
 
