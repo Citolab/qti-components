@@ -92,7 +92,7 @@ if (shouldUseProvenance()) {
   publishArgs.splice(1, 0, '--provenance');
 }
 
-const publish = spawnSync('npm', publishArgs, {
+const publish = spawnSync('pnpm', publishArgs, {
   stdio: 'pipe',
   encoding: 'utf8'
 });
