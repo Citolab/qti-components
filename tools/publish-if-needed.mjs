@@ -86,7 +86,7 @@ if (!isNotFound) {
 
 console.log(`Version not found in npm registry, publishing ${packageRef}.`);
 
-const publishArgs = ['publish', '--access', 'public', '--ignore-scripts'];
+const publishArgs = ['publish', '--access', 'public', '--ignore-scripts', '--no-git-checks'];
 
 if (shouldUseProvenance()) {
   publishArgs.splice(1, 0, '--provenance');
