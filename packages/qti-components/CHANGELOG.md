@@ -1,5 +1,709 @@
 # [7.26.0](https://github.com/Citolab/qti-components/compare/qti-components-v7.25.0...qti-components-v7.26.0) (2026-03-03)
 
+## [7.27.1](https://github.com/Citolab/qti-components/compare/qti-components-v7.27.0...qti-components-v7.27.1) (2026-03-24)
+
+### @qti-components/associate-interaction
+
+### [1.1.1](https://github.com/Citolab/qti-components/compare/associate-interaction-v1.1.0...associate-interaction-v1.1.1) (2026-03-24)
+
+
+#### Bug Fixes
+
+* update vocabulary mixin to support additional label types and suffixes ([#141](https://github.com/Citolab/qti-components/issues/141)) ([4da03a4](https://github.com/Citolab/qti-components/commit/4da03a41e84969ea6c9397011478773d5e0de095))
+
+## [1.1.0](https://github.com/Citolab/qti-components/compare/associate-interaction-v1.0.0...associate-interaction-v1.1.0) (2026-03-19)
+
+
+#### Features
+
+* add force publish script and enhance provenance handling in publish-if-needed ([dcf1a8c](https://github.com/Citolab/qti-components/commit/dcf1a8c8e6a7042bc1a23f0a66b57950969ef700))
+* enhance force publish script to include --no-git-checks option ([a415140](https://github.com/Citolab/qti-components/commit/a4151400132256f24fe3606975614a1e77bac458))
+* update force publish script to remove redundant workspace concurrency flag ([37d179e](https://github.com/Citolab/qti-components/commit/37d179e6e889e49f9414d444b1420595c9d3590b))
+* update force publish script to streamline command execution ([14c6d6f](https://github.com/Citolab/qti-components/commit/14c6d6f6d89b99dc71a5ced8207720b08ab211a7))
+
+## @qti-components/associate-interaction-v1.0.0 (2026-03-17)
+
+
+#### Features
+
+* add styles support for multiple interaction components ([9332e09](https://github.com/Citolab/qti-components/commit/9332e095893945fbf0fb7262c8cc6e1ca7a76a89))
+* update interaction configurations with ignore rules and formatting ([ec07374](https://github.com/Citolab/qti-components/commit/ec0737453a933abe2479a374da2c60b297d17883))
+* update pnpm workspace to include interactions packages ([1f605c5](https://github.com/Citolab/qti-components/commit/1f605c5575749863e32a9f326d7898726161275a))
+
+## Changelog
+
+---
+
+### @qti-components/choice-interaction
+
+### [1.1.1](https://github.com/Citolab/qti-components/compare/choice-interaction-v1.1.0...choice-interaction-v1.1.1) (2026-03-24)
+
+
+#### Bug Fixes
+
+* update vocabulary mixin to support additional label types and suffixes ([#141](https://github.com/Citolab/qti-components/issues/141)) ([4da03a4](https://github.com/Citolab/qti-components/commit/4da03a41e84969ea6c9397011478773d5e0de095))
+
+## [1.1.0](https://github.com/Citolab/qti-components/compare/choice-interaction-v1.0.0...choice-interaction-v1.1.0) (2026-03-19)
+
+
+#### Features
+
+* add force publish script and enhance provenance handling in publish-if-needed ([dcf1a8c](https://github.com/Citolab/qti-components/commit/dcf1a8c8e6a7042bc1a23f0a66b57950969ef700))
+* enhance force publish script to include --no-git-checks option ([a415140](https://github.com/Citolab/qti-components/commit/a4151400132256f24fe3606975614a1e77bac458))
+* update force publish script to remove redundant workspace concurrency flag ([37d179e](https://github.com/Citolab/qti-components/commit/37d179e6e889e49f9414d444b1420595c9d3590b))
+* update force publish script to streamline command execution ([14c6d6f](https://github.com/Citolab/qti-components/commit/14c6d6f6d89b99dc71a5ced8207720b08ab211a7))
+
+## @qti-components/choice-interaction-v1.0.0 (2026-03-17)
+
+
+#### Features
+
+* add styles support for multiple interaction components ([9332e09](https://github.com/Citolab/qti-components/commit/9332e095893945fbf0fb7262c8cc6e1ca7a76a89))
+* update interaction configurations with ignore rules and formatting ([ec07374](https://github.com/Citolab/qti-components/commit/ec0737453a933abe2479a374da2c60b297d17883))
+* update pnpm workspace to include interactions packages ([1f605c5](https://github.com/Citolab/qti-components/commit/1f605c5575749863e32a9f326d7898726161275a))
+
+## Changelog
+
+---
+
+### @qti-components/interactions-core
+
+### [1.1.1](https://github.com/Citolab/qti-components/compare/interactions-core-v1.1.0...interactions-core-v1.1.1) (2026-03-24)
+
+
+#### Bug Fixes
+
+* update vocabulary mixin to support additional label types and suffixes ([#141](https://github.com/Citolab/qti-components/issues/141)) ([4da03a4](https://github.com/Citolab/qti-components/commit/4da03a41e84969ea6c9397011478773d5e0de095))
+
+## [1.1.0](https://github.com/Citolab/qti-components/compare/interactions-core-v1.0.0...interactions-core-v1.1.0) (2026-03-19)
+
+
+#### Features
+
+* add force publish script and enhance provenance handling in publish-if-needed ([dcf1a8c](https://github.com/Citolab/qti-components/commit/dcf1a8c8e6a7042bc1a23f0a66b57950969ef700))
+* enhance force publish script to include --no-git-checks option ([a415140](https://github.com/Citolab/qti-components/commit/a4151400132256f24fe3606975614a1e77bac458))
+* update force publish script to remove redundant workspace concurrency flag ([37d179e](https://github.com/Citolab/qti-components/commit/37d179e6e889e49f9414d444b1420595c9d3590b))
+* update force publish script to streamline command execution ([14c6d6f](https://github.com/Citolab/qti-components/commit/14c6d6f6d89b99dc71a5ced8207720b08ab211a7))
+
+## @qti-components/interactions-core-v1.0.0 (2026-03-17)
+
+
+#### Features
+
+* update interaction configurations with ignore rules and formatting ([ec07374](https://github.com/Citolab/qti-components/commit/ec0737453a933abe2479a374da2c60b297d17883))
+* update pnpm workspace to include interactions packages ([1f605c5](https://github.com/Citolab/qti-components/commit/1f605c5575749863e32a9f326d7898726161275a))
+
+## Changelog
+
+---
+
+### @qti-components/custom-interaction
+
+### [1.1.1](https://github.com/Citolab/qti-components/compare/custom-interaction-v1.1.0...custom-interaction-v1.1.1) (2026-03-24)
+
+
+#### Bug Fixes
+
+* update vocabulary mixin to support additional label types and suffixes ([#141](https://github.com/Citolab/qti-components/issues/141)) ([4da03a4](https://github.com/Citolab/qti-components/commit/4da03a41e84969ea6c9397011478773d5e0de095))
+
+## [1.1.0](https://github.com/Citolab/qti-components/compare/custom-interaction-v1.0.0...custom-interaction-v1.1.0) (2026-03-19)
+
+
+#### Features
+
+* add force publish script and enhance provenance handling in publish-if-needed ([dcf1a8c](https://github.com/Citolab/qti-components/commit/dcf1a8c8e6a7042bc1a23f0a66b57950969ef700))
+* enhance force publish script to include --no-git-checks option ([a415140](https://github.com/Citolab/qti-components/commit/a4151400132256f24fe3606975614a1e77bac458))
+* update force publish script to remove redundant workspace concurrency flag ([37d179e](https://github.com/Citolab/qti-components/commit/37d179e6e889e49f9414d444b1420595c9d3590b))
+* update force publish script to streamline command execution ([14c6d6f](https://github.com/Citolab/qti-components/commit/14c6d6f6d89b99dc71a5ced8207720b08ab211a7))
+
+## @qti-components/custom-interaction-v1.0.0 (2026-03-17)
+
+
+#### Features
+
+* add styles support for multiple interaction components ([9332e09](https://github.com/Citolab/qti-components/commit/9332e095893945fbf0fb7262c8cc6e1ca7a76a89))
+* update interaction configurations with ignore rules and formatting ([ec07374](https://github.com/Citolab/qti-components/commit/ec0737453a933abe2479a374da2c60b297d17883))
+* update pnpm workspace to include interactions packages ([1f605c5](https://github.com/Citolab/qti-components/commit/1f605c5575749863e32a9f326d7898726161275a))
+
+## Changelog
+
+---
+
+### @qti-components/end-attempt-interaction
+
+### [1.1.1](https://github.com/Citolab/qti-components/compare/end-attempt-interaction-v1.1.0...end-attempt-interaction-v1.1.1) (2026-03-24)
+
+
+#### Bug Fixes
+
+* update vocabulary mixin to support additional label types and suffixes ([#141](https://github.com/Citolab/qti-components/issues/141)) ([4da03a4](https://github.com/Citolab/qti-components/commit/4da03a41e84969ea6c9397011478773d5e0de095))
+
+## [1.1.0](https://github.com/Citolab/qti-components/compare/end-attempt-interaction-v1.0.0...end-attempt-interaction-v1.1.0) (2026-03-19)
+
+
+#### Features
+
+* add force publish script and enhance provenance handling in publish-if-needed ([dcf1a8c](https://github.com/Citolab/qti-components/commit/dcf1a8c8e6a7042bc1a23f0a66b57950969ef700))
+* enhance force publish script to include --no-git-checks option ([a415140](https://github.com/Citolab/qti-components/commit/a4151400132256f24fe3606975614a1e77bac458))
+* update force publish script to remove redundant workspace concurrency flag ([37d179e](https://github.com/Citolab/qti-components/commit/37d179e6e889e49f9414d444b1420595c9d3590b))
+* update force publish script to streamline command execution ([14c6d6f](https://github.com/Citolab/qti-components/commit/14c6d6f6d89b99dc71a5ced8207720b08ab211a7))
+
+## @qti-components/end-attempt-interaction-v1.0.0 (2026-03-17)
+
+
+#### Features
+
+* add styles support for multiple interaction components ([9332e09](https://github.com/Citolab/qti-components/commit/9332e095893945fbf0fb7262c8cc6e1ca7a76a89))
+* update interaction configurations with ignore rules and formatting ([ec07374](https://github.com/Citolab/qti-components/commit/ec0737453a933abe2479a374da2c60b297d17883))
+* update pnpm workspace to include interactions packages ([1f605c5](https://github.com/Citolab/qti-components/commit/1f605c5575749863e32a9f326d7898726161275a))
+
+## Changelog
+
+---
+
+### @qti-components/extended-text-interaction
+
+### [1.1.1](https://github.com/Citolab/qti-components/compare/extended-text-interaction-v1.1.0...extended-text-interaction-v1.1.1) (2026-03-24)
+
+
+#### Bug Fixes
+
+* update vocabulary mixin to support additional label types and suffixes ([#141](https://github.com/Citolab/qti-components/issues/141)) ([4da03a4](https://github.com/Citolab/qti-components/commit/4da03a41e84969ea6c9397011478773d5e0de095))
+
+## [1.1.0](https://github.com/Citolab/qti-components/compare/extended-text-interaction-v1.0.0...extended-text-interaction-v1.1.0) (2026-03-19)
+
+
+#### Features
+
+* add force publish script and enhance provenance handling in publish-if-needed ([dcf1a8c](https://github.com/Citolab/qti-components/commit/dcf1a8c8e6a7042bc1a23f0a66b57950969ef700))
+* enhance force publish script to include --no-git-checks option ([a415140](https://github.com/Citolab/qti-components/commit/a4151400132256f24fe3606975614a1e77bac458))
+* update force publish script to remove redundant workspace concurrency flag ([37d179e](https://github.com/Citolab/qti-components/commit/37d179e6e889e49f9414d444b1420595c9d3590b))
+* update force publish script to streamline command execution ([14c6d6f](https://github.com/Citolab/qti-components/commit/14c6d6f6d89b99dc71a5ced8207720b08ab211a7))
+
+## @qti-components/extended-text-interaction-v1.0.0 (2026-03-17)
+
+
+#### Features
+
+* add styles support for multiple interaction components ([9332e09](https://github.com/Citolab/qti-components/commit/9332e095893945fbf0fb7262c8cc6e1ca7a76a89))
+* update interaction configurations with ignore rules and formatting ([ec07374](https://github.com/Citolab/qti-components/commit/ec0737453a933abe2479a374da2c60b297d17883))
+* update pnpm workspace to include interactions packages ([1f605c5](https://github.com/Citolab/qti-components/commit/1f605c5575749863e32a9f326d7898726161275a))
+
+## Changelog
+
+---
+
+### @qti-components/gap-match-interaction
+
+### [1.1.1](https://github.com/Citolab/qti-components/compare/gap-match-interaction-v1.1.0...gap-match-interaction-v1.1.1) (2026-03-24)
+
+
+#### Bug Fixes
+
+* update vocabulary mixin to support additional label types and suffixes ([#141](https://github.com/Citolab/qti-components/issues/141)) ([4da03a4](https://github.com/Citolab/qti-components/commit/4da03a41e84969ea6c9397011478773d5e0de095))
+
+## [1.1.0](https://github.com/Citolab/qti-components/compare/gap-match-interaction-v1.0.0...gap-match-interaction-v1.1.0) (2026-03-19)
+
+
+#### Features
+
+* add force publish script and enhance provenance handling in publish-if-needed ([dcf1a8c](https://github.com/Citolab/qti-components/commit/dcf1a8c8e6a7042bc1a23f0a66b57950969ef700))
+* enhance force publish script to include --no-git-checks option ([a415140](https://github.com/Citolab/qti-components/commit/a4151400132256f24fe3606975614a1e77bac458))
+* update force publish script to remove redundant workspace concurrency flag ([37d179e](https://github.com/Citolab/qti-components/commit/37d179e6e889e49f9414d444b1420595c9d3590b))
+* update force publish script to streamline command execution ([14c6d6f](https://github.com/Citolab/qti-components/commit/14c6d6f6d89b99dc71a5ced8207720b08ab211a7))
+
+## @qti-components/gap-match-interaction-v1.0.0 (2026-03-17)
+
+
+#### Features
+
+* add styles support for multiple interaction components ([9332e09](https://github.com/Citolab/qti-components/commit/9332e095893945fbf0fb7262c8cc6e1ca7a76a89))
+* update interaction configurations with ignore rules and formatting ([ec07374](https://github.com/Citolab/qti-components/commit/ec0737453a933abe2479a374da2c60b297d17883))
+* update pnpm workspace to include interactions packages ([1f605c5](https://github.com/Citolab/qti-components/commit/1f605c5575749863e32a9f326d7898726161275a))
+
+## Changelog
+
+---
+
+### @qti-components/graphic-associate-interaction
+
+### [1.1.1](https://github.com/Citolab/qti-components/compare/graphic-associate-interaction-v1.1.0...graphic-associate-interaction-v1.1.1) (2026-03-24)
+
+
+#### Bug Fixes
+
+* update vocabulary mixin to support additional label types and suffixes ([#141](https://github.com/Citolab/qti-components/issues/141)) ([4da03a4](https://github.com/Citolab/qti-components/commit/4da03a41e84969ea6c9397011478773d5e0de095))
+
+## [1.1.0](https://github.com/Citolab/qti-components/compare/graphic-associate-interaction-v1.0.0...graphic-associate-interaction-v1.1.0) (2026-03-19)
+
+
+#### Features
+
+* add force publish script and enhance provenance handling in publish-if-needed ([dcf1a8c](https://github.com/Citolab/qti-components/commit/dcf1a8c8e6a7042bc1a23f0a66b57950969ef700))
+* enhance force publish script to include --no-git-checks option ([a415140](https://github.com/Citolab/qti-components/commit/a4151400132256f24fe3606975614a1e77bac458))
+* update force publish script to remove redundant workspace concurrency flag ([37d179e](https://github.com/Citolab/qti-components/commit/37d179e6e889e49f9414d444b1420595c9d3590b))
+* update force publish script to streamline command execution ([14c6d6f](https://github.com/Citolab/qti-components/commit/14c6d6f6d89b99dc71a5ced8207720b08ab211a7))
+
+## @qti-components/graphic-associate-interaction-v1.0.0 (2026-03-17)
+
+
+#### Features
+
+* add styles support for multiple interaction components ([9332e09](https://github.com/Citolab/qti-components/commit/9332e095893945fbf0fb7262c8cc6e1ca7a76a89))
+* update interaction configurations with ignore rules and formatting ([ec07374](https://github.com/Citolab/qti-components/commit/ec0737453a933abe2479a374da2c60b297d17883))
+* update pnpm workspace to include interactions packages ([1f605c5](https://github.com/Citolab/qti-components/commit/1f605c5575749863e32a9f326d7898726161275a))
+
+## Changelog
+
+---
+
+### @qti-components/graphic-gap-match-interaction
+
+### [1.1.1](https://github.com/Citolab/qti-components/compare/graphic-gap-match-interaction-v1.1.0...graphic-gap-match-interaction-v1.1.1) (2026-03-24)
+
+
+#### Bug Fixes
+
+* update vocabulary mixin to support additional label types and suffixes ([#141](https://github.com/Citolab/qti-components/issues/141)) ([4da03a4](https://github.com/Citolab/qti-components/commit/4da03a41e84969ea6c9397011478773d5e0de095))
+
+## [1.1.0](https://github.com/Citolab/qti-components/compare/graphic-gap-match-interaction-v1.0.0...graphic-gap-match-interaction-v1.1.0) (2026-03-19)
+
+
+#### Features
+
+* add force publish script and enhance provenance handling in publish-if-needed ([dcf1a8c](https://github.com/Citolab/qti-components/commit/dcf1a8c8e6a7042bc1a23f0a66b57950969ef700))
+* enhance force publish script to include --no-git-checks option ([a415140](https://github.com/Citolab/qti-components/commit/a4151400132256f24fe3606975614a1e77bac458))
+* update force publish script to remove redundant workspace concurrency flag ([37d179e](https://github.com/Citolab/qti-components/commit/37d179e6e889e49f9414d444b1420595c9d3590b))
+* update force publish script to streamline command execution ([14c6d6f](https://github.com/Citolab/qti-components/commit/14c6d6f6d89b99dc71a5ced8207720b08ab211a7))
+
+## @qti-components/graphic-gap-match-interaction-v1.0.0 (2026-03-17)
+
+
+#### Features
+
+* add styles support for multiple interaction components ([9332e09](https://github.com/Citolab/qti-components/commit/9332e095893945fbf0fb7262c8cc6e1ca7a76a89))
+* update interaction configurations with ignore rules and formatting ([ec07374](https://github.com/Citolab/qti-components/commit/ec0737453a933abe2479a374da2c60b297d17883))
+* update pnpm workspace to include interactions packages ([1f605c5](https://github.com/Citolab/qti-components/commit/1f605c5575749863e32a9f326d7898726161275a))
+
+## Changelog
+
+---
+
+### @qti-components/graphic-order-interaction
+
+### [1.1.1](https://github.com/Citolab/qti-components/compare/graphic-order-interaction-v1.1.0...graphic-order-interaction-v1.1.1) (2026-03-24)
+
+
+#### Bug Fixes
+
+* update vocabulary mixin to support additional label types and suffixes ([#141](https://github.com/Citolab/qti-components/issues/141)) ([4da03a4](https://github.com/Citolab/qti-components/commit/4da03a41e84969ea6c9397011478773d5e0de095))
+
+## [1.1.0](https://github.com/Citolab/qti-components/compare/graphic-order-interaction-v1.0.0...graphic-order-interaction-v1.1.0) (2026-03-19)
+
+
+#### Features
+
+* add force publish script and enhance provenance handling in publish-if-needed ([dcf1a8c](https://github.com/Citolab/qti-components/commit/dcf1a8c8e6a7042bc1a23f0a66b57950969ef700))
+* enhance force publish script to include --no-git-checks option ([a415140](https://github.com/Citolab/qti-components/commit/a4151400132256f24fe3606975614a1e77bac458))
+* update force publish script to remove redundant workspace concurrency flag ([37d179e](https://github.com/Citolab/qti-components/commit/37d179e6e889e49f9414d444b1420595c9d3590b))
+* update force publish script to streamline command execution ([14c6d6f](https://github.com/Citolab/qti-components/commit/14c6d6f6d89b99dc71a5ced8207720b08ab211a7))
+
+## @qti-components/graphic-order-interaction-v1.0.0 (2026-03-17)
+
+
+#### Features
+
+* add styles support for multiple interaction components ([9332e09](https://github.com/Citolab/qti-components/commit/9332e095893945fbf0fb7262c8cc6e1ca7a76a89))
+* update interaction configurations with ignore rules and formatting ([ec07374](https://github.com/Citolab/qti-components/commit/ec0737453a933abe2479a374da2c60b297d17883))
+* update pnpm workspace to include interactions packages ([1f605c5](https://github.com/Citolab/qti-components/commit/1f605c5575749863e32a9f326d7898726161275a))
+
+## Changelog
+
+---
+
+### @qti-components/hotspot-interaction
+
+### [1.1.1](https://github.com/Citolab/qti-components/compare/hotspot-interaction-v1.1.0...hotspot-interaction-v1.1.1) (2026-03-24)
+
+
+#### Bug Fixes
+
+* update vocabulary mixin to support additional label types and suffixes ([#141](https://github.com/Citolab/qti-components/issues/141)) ([4da03a4](https://github.com/Citolab/qti-components/commit/4da03a41e84969ea6c9397011478773d5e0de095))
+
+## [1.1.0](https://github.com/Citolab/qti-components/compare/hotspot-interaction-v1.0.0...hotspot-interaction-v1.1.0) (2026-03-19)
+
+
+#### Features
+
+* add force publish script and enhance provenance handling in publish-if-needed ([dcf1a8c](https://github.com/Citolab/qti-components/commit/dcf1a8c8e6a7042bc1a23f0a66b57950969ef700))
+* enhance force publish script to include --no-git-checks option ([a415140](https://github.com/Citolab/qti-components/commit/a4151400132256f24fe3606975614a1e77bac458))
+* update force publish script to remove redundant workspace concurrency flag ([37d179e](https://github.com/Citolab/qti-components/commit/37d179e6e889e49f9414d444b1420595c9d3590b))
+* update force publish script to streamline command execution ([14c6d6f](https://github.com/Citolab/qti-components/commit/14c6d6f6d89b99dc71a5ced8207720b08ab211a7))
+
+## @qti-components/hotspot-interaction-v1.0.0 (2026-03-17)
+
+
+#### Features
+
+* add styles support for multiple interaction components ([9332e09](https://github.com/Citolab/qti-components/commit/9332e095893945fbf0fb7262c8cc6e1ca7a76a89))
+* update interaction configurations with ignore rules and formatting ([ec07374](https://github.com/Citolab/qti-components/commit/ec0737453a933abe2479a374da2c60b297d17883))
+* update pnpm workspace to include interactions packages ([1f605c5](https://github.com/Citolab/qti-components/commit/1f605c5575749863e32a9f326d7898726161275a))
+
+## Changelog
+
+---
+
+### @qti-components/hottext-interaction
+
+### [1.1.1](https://github.com/Citolab/qti-components/compare/hottext-interaction-v1.1.0...hottext-interaction-v1.1.1) (2026-03-24)
+
+
+#### Bug Fixes
+
+* update vocabulary mixin to support additional label types and suffixes ([#141](https://github.com/Citolab/qti-components/issues/141)) ([4da03a4](https://github.com/Citolab/qti-components/commit/4da03a41e84969ea6c9397011478773d5e0de095))
+
+## [1.1.0](https://github.com/Citolab/qti-components/compare/hottext-interaction-v1.0.0...hottext-interaction-v1.1.0) (2026-03-19)
+
+
+#### Features
+
+* add force publish script and enhance provenance handling in publish-if-needed ([dcf1a8c](https://github.com/Citolab/qti-components/commit/dcf1a8c8e6a7042bc1a23f0a66b57950969ef700))
+* enhance force publish script to include --no-git-checks option ([a415140](https://github.com/Citolab/qti-components/commit/a4151400132256f24fe3606975614a1e77bac458))
+* update force publish script to remove redundant workspace concurrency flag ([37d179e](https://github.com/Citolab/qti-components/commit/37d179e6e889e49f9414d444b1420595c9d3590b))
+* update force publish script to streamline command execution ([14c6d6f](https://github.com/Citolab/qti-components/commit/14c6d6f6d89b99dc71a5ced8207720b08ab211a7))
+
+## @qti-components/hottext-interaction-v1.0.0 (2026-03-17)
+
+
+#### Features
+
+* add styles support for multiple interaction components ([9332e09](https://github.com/Citolab/qti-components/commit/9332e095893945fbf0fb7262c8cc6e1ca7a76a89))
+* update interaction configurations with ignore rules and formatting ([ec07374](https://github.com/Citolab/qti-components/commit/ec0737453a933abe2479a374da2c60b297d17883))
+* update pnpm workspace to include interactions packages ([1f605c5](https://github.com/Citolab/qti-components/commit/1f605c5575749863e32a9f326d7898726161275a))
+
+## Changelog
+
+---
+
+### @qti-components/inline-choice-interaction
+
+### [1.1.1](https://github.com/Citolab/qti-components/compare/inline-choice-interaction-v1.1.0...inline-choice-interaction-v1.1.1) (2026-03-24)
+
+
+#### Bug Fixes
+
+* update vocabulary mixin to support additional label types and suffixes ([#141](https://github.com/Citolab/qti-components/issues/141)) ([4da03a4](https://github.com/Citolab/qti-components/commit/4da03a41e84969ea6c9397011478773d5e0de095))
+
+## [1.1.0](https://github.com/Citolab/qti-components/compare/inline-choice-interaction-v1.0.0...inline-choice-interaction-v1.1.0) (2026-03-19)
+
+
+#### Features
+
+* add force publish script and enhance provenance handling in publish-if-needed ([dcf1a8c](https://github.com/Citolab/qti-components/commit/dcf1a8c8e6a7042bc1a23f0a66b57950969ef700))
+* enhance force publish script to include --no-git-checks option ([a415140](https://github.com/Citolab/qti-components/commit/a4151400132256f24fe3606975614a1e77bac458))
+* update force publish script to remove redundant workspace concurrency flag ([37d179e](https://github.com/Citolab/qti-components/commit/37d179e6e889e49f9414d444b1420595c9d3590b))
+* update force publish script to streamline command execution ([14c6d6f](https://github.com/Citolab/qti-components/commit/14c6d6f6d89b99dc71a5ced8207720b08ab211a7))
+
+## @qti-components/inline-choice-interaction-v1.0.0 (2026-03-17)
+
+
+#### Features
+
+* add styles support for multiple interaction components ([9332e09](https://github.com/Citolab/qti-components/commit/9332e095893945fbf0fb7262c8cc6e1ca7a76a89))
+* update interaction configurations with ignore rules and formatting ([ec07374](https://github.com/Citolab/qti-components/commit/ec0737453a933abe2479a374da2c60b297d17883))
+* update pnpm workspace to include interactions packages ([1f605c5](https://github.com/Citolab/qti-components/commit/1f605c5575749863e32a9f326d7898726161275a))
+
+## Changelog
+
+---
+
+### @qti-components/match-interaction
+
+### [1.1.1](https://github.com/Citolab/qti-components/compare/match-interaction-v1.1.0...match-interaction-v1.1.1) (2026-03-24)
+
+
+#### Bug Fixes
+
+* update vocabulary mixin to support additional label types and suffixes ([#141](https://github.com/Citolab/qti-components/issues/141)) ([4da03a4](https://github.com/Citolab/qti-components/commit/4da03a41e84969ea6c9397011478773d5e0de095))
+
+## [1.1.0](https://github.com/Citolab/qti-components/compare/match-interaction-v1.0.0...match-interaction-v1.1.0) (2026-03-19)
+
+
+#### Features
+
+* add force publish script and enhance provenance handling in publish-if-needed ([dcf1a8c](https://github.com/Citolab/qti-components/commit/dcf1a8c8e6a7042bc1a23f0a66b57950969ef700))
+* enhance force publish script to include --no-git-checks option ([a415140](https://github.com/Citolab/qti-components/commit/a4151400132256f24fe3606975614a1e77bac458))
+* update force publish script to remove redundant workspace concurrency flag ([37d179e](https://github.com/Citolab/qti-components/commit/37d179e6e889e49f9414d444b1420595c9d3590b))
+* update force publish script to streamline command execution ([14c6d6f](https://github.com/Citolab/qti-components/commit/14c6d6f6d89b99dc71a5ced8207720b08ab211a7))
+
+## @qti-components/match-interaction-v1.0.0 (2026-03-17)
+
+
+#### Features
+
+* add styles support for multiple interaction components ([9332e09](https://github.com/Citolab/qti-components/commit/9332e095893945fbf0fb7262c8cc6e1ca7a76a89))
+* update interaction configurations with ignore rules and formatting ([ec07374](https://github.com/Citolab/qti-components/commit/ec0737453a933abe2479a374da2c60b297d17883))
+* update pnpm workspace to include interactions packages ([1f605c5](https://github.com/Citolab/qti-components/commit/1f605c5575749863e32a9f326d7898726161275a))
+
+## Changelog
+
+---
+
+### @qti-components/media-interaction
+
+### [1.1.1](https://github.com/Citolab/qti-components/compare/media-interaction-v1.1.0...media-interaction-v1.1.1) (2026-03-24)
+
+
+#### Bug Fixes
+
+* update vocabulary mixin to support additional label types and suffixes ([#141](https://github.com/Citolab/qti-components/issues/141)) ([4da03a4](https://github.com/Citolab/qti-components/commit/4da03a41e84969ea6c9397011478773d5e0de095))
+
+## [1.1.0](https://github.com/Citolab/qti-components/compare/media-interaction-v1.0.0...media-interaction-v1.1.0) (2026-03-19)
+
+
+#### Features
+
+* add force publish script and enhance provenance handling in publish-if-needed ([dcf1a8c](https://github.com/Citolab/qti-components/commit/dcf1a8c8e6a7042bc1a23f0a66b57950969ef700))
+* enhance force publish script to include --no-git-checks option ([a415140](https://github.com/Citolab/qti-components/commit/a4151400132256f24fe3606975614a1e77bac458))
+* update force publish script to remove redundant workspace concurrency flag ([37d179e](https://github.com/Citolab/qti-components/commit/37d179e6e889e49f9414d444b1420595c9d3590b))
+* update force publish script to streamline command execution ([14c6d6f](https://github.com/Citolab/qti-components/commit/14c6d6f6d89b99dc71a5ced8207720b08ab211a7))
+
+## @qti-components/media-interaction-v1.0.0 (2026-03-17)
+
+
+#### Features
+
+* add styles support for multiple interaction components ([9332e09](https://github.com/Citolab/qti-components/commit/9332e095893945fbf0fb7262c8cc6e1ca7a76a89))
+* update interaction configurations with ignore rules and formatting ([ec07374](https://github.com/Citolab/qti-components/commit/ec0737453a933abe2479a374da2c60b297d17883))
+* update pnpm workspace to include interactions packages ([1f605c5](https://github.com/Citolab/qti-components/commit/1f605c5575749863e32a9f326d7898726161275a))
+
+## Changelog
+
+---
+
+### @qti-components/order-interaction
+
+### [1.1.1](https://github.com/Citolab/qti-components/compare/order-interaction-v1.1.0...order-interaction-v1.1.1) (2026-03-24)
+
+
+#### Bug Fixes
+
+* update vocabulary mixin to support additional label types and suffixes ([#141](https://github.com/Citolab/qti-components/issues/141)) ([4da03a4](https://github.com/Citolab/qti-components/commit/4da03a41e84969ea6c9397011478773d5e0de095))
+
+## [1.1.0](https://github.com/Citolab/qti-components/compare/order-interaction-v1.0.0...order-interaction-v1.1.0) (2026-03-19)
+
+
+#### Features
+
+* add force publish script and enhance provenance handling in publish-if-needed ([dcf1a8c](https://github.com/Citolab/qti-components/commit/dcf1a8c8e6a7042bc1a23f0a66b57950969ef700))
+* enhance force publish script to include --no-git-checks option ([a415140](https://github.com/Citolab/qti-components/commit/a4151400132256f24fe3606975614a1e77bac458))
+* update force publish script to remove redundant workspace concurrency flag ([37d179e](https://github.com/Citolab/qti-components/commit/37d179e6e889e49f9414d444b1420595c9d3590b))
+* update force publish script to streamline command execution ([14c6d6f](https://github.com/Citolab/qti-components/commit/14c6d6f6d89b99dc71a5ced8207720b08ab211a7))
+
+## @qti-components/order-interaction-v1.0.0 (2026-03-17)
+
+
+#### Features
+
+* add styles support for multiple interaction components ([9332e09](https://github.com/Citolab/qti-components/commit/9332e095893945fbf0fb7262c8cc6e1ca7a76a89))
+* update interaction configurations with ignore rules and formatting ([ec07374](https://github.com/Citolab/qti-components/commit/ec0737453a933abe2479a374da2c60b297d17883))
+* update pnpm workspace to include interactions packages ([1f605c5](https://github.com/Citolab/qti-components/commit/1f605c5575749863e32a9f326d7898726161275a))
+
+## Changelog
+
+---
+
+### @qti-components/portable-custom-interaction
+
+### [1.1.1](https://github.com/Citolab/qti-components/compare/portable-custom-interaction-v1.1.0...portable-custom-interaction-v1.1.1) (2026-03-24)
+
+
+#### Bug Fixes
+
+* update vocabulary mixin to support additional label types and suffixes ([#141](https://github.com/Citolab/qti-components/issues/141)) ([4da03a4](https://github.com/Citolab/qti-components/commit/4da03a41e84969ea6c9397011478773d5e0de095))
+
+## [1.1.0](https://github.com/Citolab/qti-components/compare/portable-custom-interaction-v1.0.0...portable-custom-interaction-v1.1.0) (2026-03-19)
+
+
+#### Features
+
+* add force publish script and enhance provenance handling in publish-if-needed ([dcf1a8c](https://github.com/Citolab/qti-components/commit/dcf1a8c8e6a7042bc1a23f0a66b57950969ef700))
+* enhance force publish script to include --no-git-checks option ([a415140](https://github.com/Citolab/qti-components/commit/a4151400132256f24fe3606975614a1e77bac458))
+* update force publish script to remove redundant workspace concurrency flag ([37d179e](https://github.com/Citolab/qti-components/commit/37d179e6e889e49f9414d444b1420595c9d3590b))
+* update force publish script to streamline command execution ([14c6d6f](https://github.com/Citolab/qti-components/commit/14c6d6f6d89b99dc71a5ced8207720b08ab211a7))
+
+## @qti-components/portable-custom-interaction-v1.0.0 (2026-03-17)
+
+
+#### Features
+
+* add styles support for multiple interaction components ([9332e09](https://github.com/Citolab/qti-components/commit/9332e095893945fbf0fb7262c8cc6e1ca7a76a89))
+* update interaction configurations with ignore rules and formatting ([ec07374](https://github.com/Citolab/qti-components/commit/ec0737453a933abe2479a374da2c60b297d17883))
+* update pnpm workspace to include interactions packages ([1f605c5](https://github.com/Citolab/qti-components/commit/1f605c5575749863e32a9f326d7898726161275a))
+
+## Changelog
+
+---
+
+### @qti-components/position-object-interaction
+
+### [1.1.1](https://github.com/Citolab/qti-components/compare/position-object-interaction-v1.1.0...position-object-interaction-v1.1.1) (2026-03-24)
+
+
+#### Bug Fixes
+
+* update vocabulary mixin to support additional label types and suffixes ([#141](https://github.com/Citolab/qti-components/issues/141)) ([4da03a4](https://github.com/Citolab/qti-components/commit/4da03a41e84969ea6c9397011478773d5e0de095))
+
+## [1.1.0](https://github.com/Citolab/qti-components/compare/position-object-interaction-v1.0.0...position-object-interaction-v1.1.0) (2026-03-19)
+
+
+#### Features
+
+* add force publish script and enhance provenance handling in publish-if-needed ([dcf1a8c](https://github.com/Citolab/qti-components/commit/dcf1a8c8e6a7042bc1a23f0a66b57950969ef700))
+* enhance force publish script to include --no-git-checks option ([a415140](https://github.com/Citolab/qti-components/commit/a4151400132256f24fe3606975614a1e77bac458))
+* update force publish script to remove redundant workspace concurrency flag ([37d179e](https://github.com/Citolab/qti-components/commit/37d179e6e889e49f9414d444b1420595c9d3590b))
+* update force publish script to streamline command execution ([14c6d6f](https://github.com/Citolab/qti-components/commit/14c6d6f6d89b99dc71a5ced8207720b08ab211a7))
+
+## @qti-components/position-object-interaction-v1.0.0 (2026-03-17)
+
+
+#### Features
+
+* add styles support for multiple interaction components ([9332e09](https://github.com/Citolab/qti-components/commit/9332e095893945fbf0fb7262c8cc6e1ca7a76a89))
+* update interaction configurations with ignore rules and formatting ([ec07374](https://github.com/Citolab/qti-components/commit/ec0737453a933abe2479a374da2c60b297d17883))
+* update pnpm workspace to include interactions packages ([1f605c5](https://github.com/Citolab/qti-components/commit/1f605c5575749863e32a9f326d7898726161275a))
+
+## Changelog
+
+---
+
+### @qti-components/select-point-interaction
+
+### [1.1.1](https://github.com/Citolab/qti-components/compare/select-point-interaction-v1.1.0...select-point-interaction-v1.1.1) (2026-03-24)
+
+
+#### Bug Fixes
+
+* update vocabulary mixin to support additional label types and suffixes ([#141](https://github.com/Citolab/qti-components/issues/141)) ([4da03a4](https://github.com/Citolab/qti-components/commit/4da03a41e84969ea6c9397011478773d5e0de095))
+
+## [1.1.0](https://github.com/Citolab/qti-components/compare/select-point-interaction-v1.0.0...select-point-interaction-v1.1.0) (2026-03-19)
+
+
+#### Features
+
+* add force publish script and enhance provenance handling in publish-if-needed ([dcf1a8c](https://github.com/Citolab/qti-components/commit/dcf1a8c8e6a7042bc1a23f0a66b57950969ef700))
+* enhance force publish script to include --no-git-checks option ([a415140](https://github.com/Citolab/qti-components/commit/a4151400132256f24fe3606975614a1e77bac458))
+* update force publish script to remove redundant workspace concurrency flag ([37d179e](https://github.com/Citolab/qti-components/commit/37d179e6e889e49f9414d444b1420595c9d3590b))
+* update force publish script to streamline command execution ([14c6d6f](https://github.com/Citolab/qti-components/commit/14c6d6f6d89b99dc71a5ced8207720b08ab211a7))
+
+## @qti-components/select-point-interaction-v1.0.0 (2026-03-17)
+
+
+#### Features
+
+* add styles support for multiple interaction components ([9332e09](https://github.com/Citolab/qti-components/commit/9332e095893945fbf0fb7262c8cc6e1ca7a76a89))
+* update interaction configurations with ignore rules and formatting ([ec07374](https://github.com/Citolab/qti-components/commit/ec0737453a933abe2479a374da2c60b297d17883))
+* update pnpm workspace to include interactions packages ([1f605c5](https://github.com/Citolab/qti-components/commit/1f605c5575749863e32a9f326d7898726161275a))
+
+## Changelog
+
+---
+
+### @qti-components/slider-interaction
+
+### [1.1.1](https://github.com/Citolab/qti-components/compare/slider-interaction-v1.1.0...slider-interaction-v1.1.1) (2026-03-24)
+
+
+#### Bug Fixes
+
+* update vocabulary mixin to support additional label types and suffixes ([#141](https://github.com/Citolab/qti-components/issues/141)) ([4da03a4](https://github.com/Citolab/qti-components/commit/4da03a41e84969ea6c9397011478773d5e0de095))
+
+## [1.1.0](https://github.com/Citolab/qti-components/compare/slider-interaction-v1.0.0...slider-interaction-v1.1.0) (2026-03-19)
+
+
+#### Features
+
+* add force publish script and enhance provenance handling in publish-if-needed ([dcf1a8c](https://github.com/Citolab/qti-components/commit/dcf1a8c8e6a7042bc1a23f0a66b57950969ef700))
+* enhance force publish script to include --no-git-checks option ([a415140](https://github.com/Citolab/qti-components/commit/a4151400132256f24fe3606975614a1e77bac458))
+* update force publish script to remove redundant workspace concurrency flag ([37d179e](https://github.com/Citolab/qti-components/commit/37d179e6e889e49f9414d444b1420595c9d3590b))
+* update force publish script to streamline command execution ([14c6d6f](https://github.com/Citolab/qti-components/commit/14c6d6f6d89b99dc71a5ced8207720b08ab211a7))
+
+## @qti-components/slider-interaction-v1.0.0 (2026-03-17)
+
+
+#### Features
+
+* add styles support for multiple interaction components ([9332e09](https://github.com/Citolab/qti-components/commit/9332e095893945fbf0fb7262c8cc6e1ca7a76a89))
+* update interaction configurations with ignore rules and formatting ([ec07374](https://github.com/Citolab/qti-components/commit/ec0737453a933abe2479a374da2c60b297d17883))
+* update pnpm workspace to include interactions packages ([1f605c5](https://github.com/Citolab/qti-components/commit/1f605c5575749863e32a9f326d7898726161275a))
+
+## Changelog
+
+---
+
+### @qti-components/text-entry-interaction
+
+### [1.1.1](https://github.com/Citolab/qti-components/compare/text-entry-interaction-v1.1.0...text-entry-interaction-v1.1.1) (2026-03-24)
+
+
+#### Bug Fixes
+
+* update vocabulary mixin to support additional label types and suffixes ([#141](https://github.com/Citolab/qti-components/issues/141)) ([4da03a4](https://github.com/Citolab/qti-components/commit/4da03a41e84969ea6c9397011478773d5e0de095))
+
+## [1.1.0](https://github.com/Citolab/qti-components/compare/text-entry-interaction-v1.0.0...text-entry-interaction-v1.1.0) (2026-03-19)
+
+
+#### Features
+
+* add force publish script and enhance provenance handling in publish-if-needed ([dcf1a8c](https://github.com/Citolab/qti-components/commit/dcf1a8c8e6a7042bc1a23f0a66b57950969ef700))
+* enhance force publish script to include --no-git-checks option ([a415140](https://github.com/Citolab/qti-components/commit/a4151400132256f24fe3606975614a1e77bac458))
+* update force publish script to remove redundant workspace concurrency flag ([37d179e](https://github.com/Citolab/qti-components/commit/37d179e6e889e49f9414d444b1420595c9d3590b))
+* update force publish script to streamline command execution ([14c6d6f](https://github.com/Citolab/qti-components/commit/14c6d6f6d89b99dc71a5ced8207720b08ab211a7))
+
+## @qti-components/text-entry-interaction-v1.0.0 (2026-03-17)
+
+
+#### Features
+
+* add styles support for multiple interaction components ([9332e09](https://github.com/Citolab/qti-components/commit/9332e095893945fbf0fb7262c8cc6e1ca7a76a89))
+* update interaction configurations with ignore rules and formatting ([ec07374](https://github.com/Citolab/qti-components/commit/ec0737453a933abe2479a374da2c60b297d17883))
+* update pnpm workspace to include interactions packages ([1f605c5](https://github.com/Citolab/qti-components/commit/1f605c5575749863e32a9f326d7898726161275a))
+
+## Changelog
+
+---
+
+### @qti-components/upload-interaction
+
+### [1.1.1](https://github.com/Citolab/qti-components/compare/upload-interaction-v1.1.0...upload-interaction-v1.1.1) (2026-03-24)
+
+
+#### Bug Fixes
+
+* update vocabulary mixin to support additional label types and suffixes ([#141](https://github.com/Citolab/qti-components/issues/141)) ([4da03a4](https://github.com/Citolab/qti-components/commit/4da03a41e84969ea6c9397011478773d5e0de095))
+
+## [1.1.0](https://github.com/Citolab/qti-components/compare/upload-interaction-v1.0.0...upload-interaction-v1.1.0) (2026-03-19)
+
+
+#### Features
+
+* add force publish script and enhance provenance handling in publish-if-needed ([dcf1a8c](https://github.com/Citolab/qti-components/commit/dcf1a8c8e6a7042bc1a23f0a66b57950969ef700))
+* enhance force publish script to include --no-git-checks option ([a415140](https://github.com/Citolab/qti-components/commit/a4151400132256f24fe3606975614a1e77bac458))
+* update force publish script to remove redundant workspace concurrency flag ([37d179e](https://github.com/Citolab/qti-components/commit/37d179e6e889e49f9414d444b1420595c9d3590b))
+* update force publish script to streamline command execution ([14c6d6f](https://github.com/Citolab/qti-components/commit/14c6d6f6d89b99dc71a5ced8207720b08ab211a7))
+
+## @qti-components/upload-interaction-v1.0.0 (2026-03-17)
+
+
+#### Features
+
+* add styles support for multiple interaction components ([9332e09](https://github.com/Citolab/qti-components/commit/9332e095893945fbf0fb7262c8cc6e1ca7a76a89))
+* update interaction configurations with ignore rules and formatting ([ec07374](https://github.com/Citolab/qti-components/commit/ec0737453a933abe2479a374da2c60b297d17883))
+* update pnpm workspace to include interactions packages ([1f605c5](https://github.com/Citolab/qti-components/commit/1f605c5575749863e32a9f326d7898726161275a))
+
+## Changelog
+
+
 ## [7.27.0](https://github.com/Citolab/qti-components/compare/qti-components-v7.26.1...qti-components-v7.27.0) (2026-03-19)
 
 Bumped to follow updated interaction packages.
