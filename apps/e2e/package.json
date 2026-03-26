@@ -8,6 +8,6 @@
     "@citolab/qti-components": "workspace:^",
     "@heximal/templates": "^0.1.5",
     "@lit/context": "^1.1.6",
-    "lit": "^3.3.1"
+    "lit": "^3.3.2"
   }
 }
