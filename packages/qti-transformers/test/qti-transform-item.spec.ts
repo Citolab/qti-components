@@ -256,6 +256,21 @@ describe('qtiTransformItem API Methods', () => {
       html` <qti-assessment-item xmlns="http://www.w3.org/1999/xhtml">
         <qti-item-body>
           <img src="/assets/qti-path-conversion//assets/qti-path-conversion//path/to/image.jpg" />
+          <picture>
+            <source
+              media="(min-width: 768px)"
+              srcset="/assets/qti-path-conversion//assets/qti-path-conversion/assets/desktop.png"
+            />
+            <img
+              src="/assets/qti-path-conversion//assets/qti-path-conversion/assets/mobile.png"
+              alt="An optimized image that displays nice on mobile, and with more detail on desktop"
+            />
+          </picture>
+          <video poster="/assets/qti-path-conversion//assets/qti-path-conversion/assets/poster.jpg">
+            <source src="/assets/qti-path-conversion//assets/qti-path-conversion/movie.mp4" type="video/mp4" />
+            <source src="/assets/qti-path-conversion//assets/qti-path-conversion/movie.ogg" type="video/ogg" />
+            Your browser does not support the video tag.
+          </video>
         </qti-item-body>
       </qti-assessment-item>`
     );
