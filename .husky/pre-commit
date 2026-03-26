@@ -1,3 +1,3 @@
 #!/bin/bash
 set -e
-npx lint-staged
+npx lint-staged --allow-empty --quiet
