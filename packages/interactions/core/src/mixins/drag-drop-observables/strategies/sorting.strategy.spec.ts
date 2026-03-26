@@ -1,10 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import {
-  HorizontalListSortingStrategy,
-  VerticalListSortingStrategy,
-  defaultSortingStrategy
-} from './sorting.strategy';
+import { HorizontalListSortingStrategy, VerticalListSortingStrategy, defaultSortingStrategy } from './sorting.strategy';
 
 type Rect = { left: number; top: number; width: number; height: number };
 
@@ -96,4 +92,3 @@ describe('sorting.strategy', () => {
     expect(defaultSortingStrategy).toBeInstanceOf(VerticalListSortingStrategy);
   });
 });
-

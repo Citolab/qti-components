@@ -1,14 +1,10 @@
 {
   "$schema": "./node_modules/syncpack/schema.json",
-  "source": [
-    "packages/*/package.json"
-  ],
+  "source": ["packages/*/package.json"],
   "versionGroups": [
     {
       "label": "Workspace internal packages",
-      "dependencies": [
-        "@qti-components/*"
-      ],
+      "dependencies": ["@qti-components/*"],
       "packages": [
         "@qti-components/base",
         "@qti-components/elements",

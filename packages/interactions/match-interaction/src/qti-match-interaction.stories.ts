@@ -267,7 +267,11 @@ const duplicateDropRegressionTemplate = html`
 `;
 
 const sortableAppendWhenTargetAllowsMultipleTemplate = html`
-  <qti-match-interaction data-testid="match-interaction-sortable-append" response-identifier="RESPONSE" max-associations="4">
+  <qti-match-interaction
+    data-testid="match-interaction-sortable-append"
+    response-identifier="RESPONSE"
+    max-associations="4"
+  >
     <qti-simple-match-set>
       <qti-simple-associable-choice identifier="A" match-max="0">Alpha</qti-simple-associable-choice>
       <qti-simple-associable-choice identifier="B" match-max="0">Beta</qti-simple-associable-choice>
@@ -567,22 +571,25 @@ export const DuplicateDropIsolationRegression: Story = {
       expect(target3).toHaveTextContent('Beta');
     });
 
-    await step('Moving Alpha from Target 2 into occupied Target 3 preserves unrelated Alpha and swaps local occupants', async () => {
-      const alphaInTarget2 = await waitFor(() => {
-        const dropped = target2.querySelector('[identifier="A"][qti-draggable="true"]') as HTMLElement | null;
-        expect(dropped).not.toBeNull();
-        return dropped as HTMLElement;
-      });
-      await drag(alphaInTarget2, { to: target3, duration: 350 });
+    await step(
+      'Moving Alpha from Target 2 into occupied Target 3 preserves unrelated Alpha and swaps local occupants',
+      async () => {
+        const alphaInTarget2 = await waitFor(() => {
+          const dropped = target2.querySelector('[identifier="A"][qti-draggable="true"]') as HTMLElement | null;
+          expect(dropped).not.toBeNull();
+          return dropped as HTMLElement;
+        });
+        await drag(alphaInTarget2, { to: target3, duration: 350 });
 
-      // Expected sortable behavior:
-      // - Target 1 keeps its Alpha (unrelated placement remains)
-      // - Target 2 receives Beta from the occupied target as part of swap flow
-      // - Target 3 receives the dragged Alpha
-      expect(target1).toHaveTextContent('Alpha');
-      expect(target2).toHaveTextContent('Beta');
-      expect(target3).toHaveTextContent('Alpha');
-    });
+        // Expected sortable behavior:
+        // - Target 1 keeps its Alpha (unrelated placement remains)
+        // - Target 2 receives Beta from the occupied target as part of swap flow
+        // - Target 3 receives the dragged Alpha
+        expect(target1).toHaveTextContent('Alpha');
+        expect(target2).toHaveTextContent('Beta');
+        expect(target3).toHaveTextContent('Alpha');
+      }
+    );
   }
 };
 
@@ -646,23 +653,26 @@ export const SortableRespectsPerTargetMatchMax: Story = {
       expect(target3.querySelectorAll('[qti-draggable="true"]').length).toBe(2);
     });
 
-    await step('Move Alpha from Target 1 onto full Target 3; drop should be blocked by per-target match-max', async () => {
-      const alphaInTarget1 = await waitFor(() => {
-        const dropped = target1.querySelector('[identifier="A"][qti-draggable="true"]') as HTMLElement | null;
-        expect(dropped).not.toBeNull();
-        return dropped as HTMLElement;
-      });
-      await drag(alphaInTarget1, { to: target3, duration: 350 });
+    await step(
+      'Move Alpha from Target 1 onto full Target 3; drop should be blocked by per-target match-max',
+      async () => {
+        const alphaInTarget1 = await waitFor(() => {
+          const dropped = target1.querySelector('[identifier="A"][qti-draggable="true"]') as HTMLElement | null;
+          expect(dropped).not.toBeNull();
+          return dropped as HTMLElement;
+        });
+        await drag(alphaInTarget1, { to: target3, duration: 350 });
 
-      // Target 3 remains at capacity with original two items.
-      expect(target3.querySelectorAll('[qti-draggable="true"]').length).toBe(2);
-      expect(target3).toHaveTextContent('Alpha');
-      expect(target3).toHaveTextContent('Beta');
+        // Target 3 remains at capacity with original two items.
+        expect(target3.querySelectorAll('[qti-draggable="true"]').length).toBe(2);
+        expect(target3).toHaveTextContent('Alpha');
+        expect(target3).toHaveTextContent('Beta');
 
-      // Source retains Alpha because move to full multi-capacity target is invalid.
-      expect(target1).toHaveTextContent('Alpha');
-      expect(target2).not.toHaveTextContent('Alpha');
-    });
+        // Source retains Alpha because move to full multi-capacity target is invalid.
+        expect(target1).toHaveTextContent('Alpha');
+        expect(target2).not.toHaveTextContent('Alpha');
+      }
+    );
   }
 };
 

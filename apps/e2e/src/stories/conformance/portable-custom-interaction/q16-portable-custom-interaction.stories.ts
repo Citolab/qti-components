@@ -225,32 +225,33 @@ const waitForAssessmentItemInTest = async (
   identifier: string,
   timeout = 30000
 ): Promise<QtiAssessmentItem> => {
-  return waitFor(() => {
-    const root = testContainer.shadowRoot ?? testContainer;
-    const itemRefs = Array.from(root.querySelectorAll('qti-assessment-item-ref')) as any[];
-    for (const itemRef of itemRefs) {
-      const refId = itemRef?.getAttribute?.('identifier') ?? itemRef?.identifier ?? null;
-      const assessmentItem =
-        itemRef?.assessmentItem ?? (itemRef?.querySelector?.('qti-assessment-item') as QtiAssessmentItem | null);
-      const itemId = assessmentItem?.getAttribute?.('identifier') ?? assessmentItem?.identifier ?? null;
-      if ((refId && refId === identifier) || (itemId && itemId === identifier)) {
-        if (assessmentItem) return assessmentItem;
+  return waitFor(
+    () => {
+      const root = testContainer.shadowRoot ?? testContainer;
+      const itemRefs = Array.from(root.querySelectorAll('qti-assessment-item-ref')) as any[];
+      for (const itemRef of itemRefs) {
+        const refId = itemRef?.getAttribute?.('identifier') ?? itemRef?.identifier ?? null;
+        const assessmentItem =
+          itemRef?.assessmentItem ?? (itemRef?.querySelector?.('qti-assessment-item') as QtiAssessmentItem | null);
+        const itemId = assessmentItem?.getAttribute?.('identifier') ?? assessmentItem?.identifier ?? null;
+        if ((refId && refId === identifier) || (itemId && itemId === identifier)) {
+          if (assessmentItem) return assessmentItem;
+        }
       }
-    }
 
-    const direct = root.querySelector(
-      `qti-assessment-item[identifier="${identifier}"]`
-    ) as QtiAssessmentItem | null;
-    if (direct) return direct;
+      const direct = root.querySelector(`qti-assessment-item[identifier="${identifier}"]`) as QtiAssessmentItem | null;
+      if (direct) return direct;
 
-    const items = Array.from(root.querySelectorAll('qti-assessment-item')) as QtiAssessmentItem[];
-    const assessmentItem =
-      items.find(item => item.getAttribute('identifier') === identifier || item.identifier === identifier) ?? null;
-    if (!assessmentItem) {
-      throw new Error(`Assessment item ${identifier} not available yet.`);
-    }
-    return assessmentItem;
-  }, { timeout });
+      const items = Array.from(root.querySelectorAll('qti-assessment-item')) as QtiAssessmentItem[];
+      const assessmentItem =
+        items.find(item => item.getAttribute('identifier') === identifier || item.identifier === identifier) ?? null;
+      if (!assessmentItem) {
+        throw new Error(`Assessment item ${identifier} not available yet.`);
+      }
+      return assessmentItem;
+    },
+    { timeout }
+  );
 };
 
 const waitForPcisInItem = async (assessmentItem: QtiAssessmentItem) => {
@@ -412,9 +413,7 @@ const createPciStory = ({
   endAttemptCheck
 }: PciStoryOptions): Story => ({
   render: () =>
-    endAttemptCheck
-      ? renderPciItemWithEndAttempt(endAttemptCheck.message || 'Invalid response.')
-      : renderPciItem(),
+    endAttemptCheck ? renderPciItemWithEndAttempt(endAttemptCheck.message || 'Invalid response.') : renderPciItem(),
   play: async ({ canvasElement }) => {
     await loadPciItem(canvasElement, itemName);
     let consoleCapture: ReturnType<typeof createConsoleCapture> | null = null;
@@ -528,13 +527,16 @@ const createRestoreStory = ({
     );
 
     const resolvedStartIndex = typeof startItemIndex === 'number' ? startItemIndex : 0;
-    const itemRefIds = await waitFor(() => {
-      const ids = getItemRefIds(testContainer);
-      if (ids.length <= resolvedStartIndex) {
-        throw new Error('Item refs not available yet.');
-      }
-      return ids;
-    }, { timeout: 30000 });
+    const itemRefIds = await waitFor(
+      () => {
+        const ids = getItemRefIds(testContainer);
+        if (ids.length <= resolvedStartIndex) {
+          throw new Error('Item refs not available yet.');
+        }
+        return ids;
+      },
+      { timeout: 30000 }
+    );
 
     const startItemRefId = resolveItemRefId(itemRefIds, itemIdentifier, resolvedStartIndex);
     if (!startItemRefId) {
