@@ -243,6 +243,8 @@ export class TestNavigation extends LitElement {
               active: false,
               identifier: section.identifier,
               title: section.title,
+              navigationMode: section.navigationMode,
+              submissionMode: section.submissionMode,
               items: itemElements.map(item => ({
                 ...this.initContext?.find(i => i.identifier === item.identifier),
                 active: false,
