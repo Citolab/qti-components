@@ -1,10 +1,10 @@
 {
   "name": "@qti-components/utilities",
   "description": "shared utilities",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "author": "",
   "devDependencies": {
-    "lit": "^3.3.1"
+    "lit": "^3.3.2"
   },
   "keywords": [
     "qti",
