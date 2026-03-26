@@ -1,4 +1,12 @@
 packages:
-  - 'apps/*'
-  - 'packages/*'
-  - 'packages/interactions/*'
+  - apps/*
+  - packages/*
+  - packages/interactions/*
+
+onlyBuiltDependencies:
+  - '@swc/core'
+  - esbuild
+  - msw
+  - puppeteer
+  - rs-module-lexer
+  - unrs-resolver
