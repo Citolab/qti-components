@@ -1,7 +1,7 @@
 {
   "name": "@qti-components/elements",
   "description": "QTI elements utilities",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "author": "",
   "dependencies": {
     "@qti-components/base": "workspace:^",
@@ -10,7 +10,7 @@
   },
   "devDependencies": {
     "@lit/context": "^1.1.6",
-    "lit": "^3.3.1"
+    "lit": "^3.3.2"
   },
   "keywords": [
     "elements",
