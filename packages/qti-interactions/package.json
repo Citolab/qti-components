@@ -1,7 +1,7 @@
 {
   "name": "@qti-components/interactions",
   "description": "QTI interactions utilities",
-  "version": "1.10.1",
+  "version": "1.10.2",
   "author": "",
   "dependencies": {
     "@qti-components/associate-interaction": "workspace:^",
@@ -31,7 +31,7 @@
     "@lit/context": "^1.1.6",
     "@qti-components/theme": "workspace:^",
     "@qti-components/transformers": "workspace:^",
-    "lit": "^3.3.1"
+    "lit": "^3.3.2"
   },
   "exports": {
     ".": {
@@ -73,10 +73,7 @@
     "storybook": "storybook dev -p 6008 --no-open",
     "yalc": "yalc publish",
     "yalc:push": "yalc push",
-    "publish": "node ../../tools/publish-if-needed.mjs",
-    "release": "semantic-release --no-ci",
-    "release:semantic": "semantic-release --no-ci",
-    "release:semantic:dry-run": "semantic-release --dry-run --no-ci"
+    "publish": "node ../../tools/publish-if-needed.mjs"
   },
   "sideEffects": true,
   "type": "module",
