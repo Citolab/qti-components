@@ -2,6 +2,14 @@ import { QtiExpression } from '@qti-components/base';
 
 import type { ResponseVariable } from '@qti-components/base';
 
+/**
+ * @summary The qti-field-value operator retrieves a specific field from a record.
+ * @documentation https://www.imsglobal.org/spec/qti/v3p0/info/index.html#fieldValue
+ *
+ * Takes a sub-expression with record cardinality. 'field-identifier' identifies the field.
+ * Returns the value of the specified field.
+ * Special cases: Returns NULL if sub-expression is NULL or field does not exist.
+ */
 export class QtiFieldValue extends QtiExpression<string | string[]> {
   public override getResult() {
     const fieldIdentifier = this.getAttribute('field-identifier');

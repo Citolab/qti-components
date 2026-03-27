@@ -1,6 +1,15 @@
 import { QtiExpression } from '@qti-components/base';
 
 type Constructor<T> = new (...args: any[]) => T;
+
+/**
+ * @summary The qti-subtract operator performs numerical subtraction.
+ * @documentation https://www.imsglobal.org/spec/qti/v3p0/info/index.html#subtract
+ *
+ * Takes exactly 2 sub-expressions with numerical base-types and single cardinality.
+ * Returns (first - second) as a float, or integer if both inputs are integers.
+ * Special cases: Returns NULL if either sub-expression is NULL.
+ */
 export class QtiSubtract extends qtiSubtractMixin(QtiExpression<any> as unknown as Constructor<QtiExpression<number>>) {
   public override getResult() {
     // children can be a mix of qti-expression and qti-condition-expression

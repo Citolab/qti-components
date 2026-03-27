@@ -3,6 +3,14 @@ import { QtiExpression } from '@qti-components/base';
 
 import type { ResponseVariable } from '@qti-components/base';
 
+/**
+ * @summary The qti-match operator compares two expressions for exact value equality.
+ * @documentation https://www.imsglobal.org/spec/qti/v3p0/info/index.html#match
+ *
+ * Takes 2 sub-expressions which must have the same base-type and cardinality.
+ * Returns true if they represent the same value, false otherwise.
+ * Special cases: Must not be used for float or duration types; returns NULL if any argument is NULL.
+ */
 export class QtiMatch extends QtiExpression<boolean> {
   //PK : FIXME.
   // This was a little experiment if we could call the match function as a static function,
