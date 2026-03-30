@@ -76,4 +76,10 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Check for changesets
-        run: pnpm dlx @changesets/cli status --since=origin/main
+        run: |
+          if pnpm dlx @changesets/cli status --since=origin/main; then
+            echo "✅ Changeset found."
+          else
+            echo "⚠️ No changeset found. If this PR changes published package behavior, a maintainer will add one before merging."
+            echo "You can optionally add one yourself with: pnpm run changeset"
+          fi
