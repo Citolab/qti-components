@@ -64,11 +64,7 @@ export function resetSortableDragContext(context: SortableDragContext): void {
 /**
  * Creates a placeholder element that matches the dimensions of the dragged element
  */
-export function createDropPlaceholder(
-  source: HTMLElement,
-  rect: DOMRect,
-  config: PlaceholderConfig = {}
-): HTMLElement {
+export function createDropPlaceholder(source: HTMLElement, rect: DOMRect, config: PlaceholderConfig = {}): HTMLElement {
   const mergedConfig = { ...defaultPlaceholderConfig, ...config };
   const placeholder = document.createElement('div');
 
@@ -246,9 +242,7 @@ export function reorderDOMByIdentifiers(
   if (!container) return;
 
   const byId = new Map(
-    draggables
-      .map(el => [el.getAttribute('identifier') ?? '', el] as const)
-      .filter(([id]) => Boolean(id))
+    draggables.map(el => [el.getAttribute('identifier') ?? '', el] as const).filter(([id]) => Boolean(id))
   );
 
   // FLIP: First - capture initial positions before DOM changes

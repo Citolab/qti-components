@@ -162,7 +162,12 @@ export const SortableSwapFilledHotspots: Story = {
           width="78"
         />
       </qti-gap-img>
-      <qti-associable-hotspot coords="55,256,133,319" identifier="A" match-max="1" shape="rect"></qti-associable-hotspot>
+      <qti-associable-hotspot
+        coords="55,256,133,319"
+        identifier="A"
+        match-max="1"
+        shape="rect"
+      ></qti-associable-hotspot>
       <qti-associable-hotspot
         coords="190,256,268,319"
         identifier="B"
@@ -184,7 +189,9 @@ export const SortableSwapFilledHotspots: Story = {
     </qti-graphic-gap-match-interaction>
   `,
   play: async ({ canvasElement, step }) => {
-    const interaction = canvasElement.querySelector('[data-testid="graphic-gap-match-interaction"]') as QtiGraphicGapMatchInteraction;
+    const interaction = canvasElement.querySelector(
+      '[data-testid="graphic-gap-match-interaction"]'
+    ) as QtiGraphicGapMatchInteraction;
     await settleInteraction(interaction);
 
     const draggerA = interaction.querySelector('qti-gap-img[identifier="DraggerA"]') as HTMLElement;
@@ -293,7 +300,12 @@ export const SortableSwapPartialHotspots: Story = {
           width="78"
         />
       </qti-gap-img>
-      <qti-associable-hotspot coords="55,256,133,319" identifier="A" match-max="1" shape="rect"></qti-associable-hotspot>
+      <qti-associable-hotspot
+        coords="55,256,133,319"
+        identifier="A"
+        match-max="1"
+        shape="rect"
+      ></qti-associable-hotspot>
       <qti-associable-hotspot
         coords="190,256,268,319"
         identifier="B"
@@ -315,7 +327,9 @@ export const SortableSwapPartialHotspots: Story = {
     </qti-graphic-gap-match-interaction>
   `,
   play: async ({ canvasElement, step }) => {
-    const interaction = canvasElement.querySelector('[data-testid="graphic-gap-match-interaction"]') as QtiGraphicGapMatchInteraction;
+    const interaction = canvasElement.querySelector(
+      '[data-testid="graphic-gap-match-interaction"]'
+    ) as QtiGraphicGapMatchInteraction;
     await settleInteraction(interaction);
 
     const draggerA = interaction.querySelector('qti-gap-img[identifier="DraggerA"]') as HTMLElement;
@@ -412,7 +426,12 @@ export const BasicPlacementAndResponse: Story = {
           width="78"
         />
       </qti-gap-img>
-      <qti-associable-hotspot coords="55,256,133,319" identifier="A" match-max="1" shape="rect"></qti-associable-hotspot>
+      <qti-associable-hotspot
+        coords="55,256,133,319"
+        identifier="A"
+        match-max="1"
+        shape="rect"
+      ></qti-associable-hotspot>
       <qti-associable-hotspot
         coords="190,256,268,319"
         identifier="B"
@@ -434,7 +453,9 @@ export const BasicPlacementAndResponse: Story = {
     </qti-graphic-gap-match-interaction>
   `,
   play: async ({ canvasElement, step }) => {
-    const interaction = canvasElement.querySelector('[data-testid="graphic-gap-match-interaction"]') as QtiGraphicGapMatchInteraction;
+    const interaction = canvasElement.querySelector(
+      '[data-testid="graphic-gap-match-interaction"]'
+    ) as QtiGraphicGapMatchInteraction;
     await settleInteraction(interaction);
 
     const draggerA = interaction.querySelector('qti-gap-img[identifier="DraggerA"]') as HTMLElement;
@@ -480,7 +501,9 @@ export const ResetAndProgrammaticResponse: Story = {
   name: 'Behavior: reset clears placements and response setter restores them',
   render: BasicPlacementAndResponse.render,
   play: async ({ canvasElement, step }) => {
-    const interaction = canvasElement.querySelector('[data-testid="graphic-gap-match-interaction"]') as QtiGraphicGapMatchInteraction;
+    const interaction = canvasElement.querySelector(
+      '[data-testid="graphic-gap-match-interaction"]'
+    ) as QtiGraphicGapMatchInteraction;
     await settleInteraction(interaction);
 
     const draggerA = interaction.querySelector('qti-gap-img[identifier="DraggerA"]') as HTMLElement;

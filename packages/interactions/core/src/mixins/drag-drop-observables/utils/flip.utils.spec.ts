@@ -22,7 +22,7 @@ function mockRect(el: HTMLElement, rect: Partial<DOMRect>) {
       right: (rect.left ?? 0) + (rect.width ?? 0),
       bottom: (rect.top ?? 0) + (rect.height ?? 0),
       toJSON: () => ({})
-    } as DOMRect);
+    }) as DOMRect;
 }
 
 describe('flip.utils', () => {
