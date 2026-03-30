@@ -73,8 +73,7 @@
   "lint-staged": {
     "*.{js,jsx,ts,tsx,mjs,cjs}": [
       "eslint --fix",
-      "vitest related --run --passWithNoTests",
-      "pnpm run build"
+      "vitest related --run --passWithNoTests"
     ]
   },
   "devDependencies": {
