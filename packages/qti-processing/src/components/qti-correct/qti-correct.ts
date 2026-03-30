@@ -2,6 +2,14 @@ import { QtiExpression } from '@qti-components/base';
 
 import type { ResponseVariable } from '@qti-components/base';
 
+/**
+ * @summary The qti-correct operator retrieves the defined correct response for a variable.
+ * @documentation https://www.imsglobal.org/spec/qti/v3p0/info/index.html#correct
+ *
+ * Looks up the declaration for the identified response variable.
+ * Returns the associated correctResponse value(s).
+ * Special cases: Returns NULL if no correct response was declared.
+ */
 export class QtiCorrect extends QtiExpression<string | string[]> {
   get interpretation() {
     return this.getAttribute('interpretation') || '';
