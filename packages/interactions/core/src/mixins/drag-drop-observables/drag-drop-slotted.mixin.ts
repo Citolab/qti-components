@@ -492,7 +492,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
     private updateInventoryBasedOnMatchMax(identifier: string): void {
       const inventoryItems = findInventoryItems(this.trackedDragContainers, identifier);
       const matchMax = getMatchMaxValue(this.trackedDraggables, identifier);
-      
+
       // Count only items placed in dropzones, not in inventory/drag containers
       const placedInDropzones = this.trackedDroppables.reduce((count, droppable) => {
         const items = droppable.querySelectorAll(`[identifier="${identifier}"]`);

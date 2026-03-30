@@ -19,7 +19,11 @@ describe('qti-assessment-item', () => {
   it('dispatches qti-item-context-updated when no responseProcessing is present', async () => {
     render(
       html`<qti-assessment-item identifier="no-processing">
-        <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="identifier"></qti-response-declaration>
+        <qti-response-declaration
+          identifier="RESPONSE"
+          cardinality="single"
+          base-type="identifier"
+        ></qti-response-declaration>
         <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="integer"></qti-outcome-declaration>
         <qti-item-body>
           <qti-choice-interaction response-identifier="RESPONSE" max-choices="1">

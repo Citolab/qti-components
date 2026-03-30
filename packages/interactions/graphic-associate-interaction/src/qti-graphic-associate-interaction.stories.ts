@@ -60,7 +60,9 @@ export const ConnectAndRemoveAssociation: Story = {
     }
   },
   play: async ({ canvasElement, step }) => {
-    const interaction = canvasElement.querySelector<QtiGraphicAssociateInteraction>('qti-graphic-associate-interaction');
+    const interaction = canvasElement.querySelector<QtiGraphicAssociateInteraction>(
+      'qti-graphic-associate-interaction'
+    );
     if (!interaction) return;
 
     const image = interaction.querySelector('img');
@@ -70,9 +72,7 @@ export const ConnectAndRemoveAssociation: Story = {
       expect(image?.naturalWidth).toBeGreaterThan(0);
     });
 
-    const hotspots = Array.from(
-      interaction.querySelectorAll<HTMLElement>('qti-associable-hotspot')
-    );
+    const hotspots = Array.from(interaction.querySelectorAll<HTMLElement>('qti-associable-hotspot'));
     expect(hotspots.length).toBeGreaterThanOrEqual(2);
 
     await step('Create an association', async () => {
@@ -86,9 +86,7 @@ export const ConnectAndRemoveAssociation: Story = {
     });
 
     await step('Remove the association by clicking the line', async () => {
-      const line = await waitFor(() =>
-        interaction.shadowRoot?.querySelector<SVGLineElement>('line[part="line"]')
-      );
+      const line = await waitFor(() => interaction.shadowRoot?.querySelector<SVGLineElement>('line[part="line"]'));
       line.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
 
       await waitFor(() => {
