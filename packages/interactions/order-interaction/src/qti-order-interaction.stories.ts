@@ -304,17 +304,17 @@ export const DragAndReturn: Story = {
     const choiceA = canvas.getByText<QtiSimpleChoice>('Choice A');
     const drops = canvas.queryAllByShadowRole('region');
 
-      await step('Drag Choice A to dropzone 0', async () => {
-        await dragAndWait(interaction, choiceA, { to: drops[0] });
-        expect(drops[0]).toHaveTextContent('Choice A');
-      });
+    await step('Drag Choice A to dropzone 0', async () => {
+      await dragAndWait(interaction, choiceA, { to: drops[0] });
+      expect(drops[0]).toHaveTextContent('Choice A');
+    });
 
-      await step('Drag Choice A back from dropzone 0 to source area', async () => {
-        const placedA = getDropZone(interaction, 0).querySelector('[identifier="A"]') as HTMLElement;
-        // Drag the placed clone back toward choiceA's position in the source slot
-        await dragAndWait(interaction, placedA, { to: choiceA });
-        expect(drops[0]).not.toHaveTextContent('Choice A');
-      });
+    await step('Drag Choice A back from dropzone 0 to source area', async () => {
+      const placedA = getDropZone(interaction, 0).querySelector('[identifier="A"]') as HTMLElement;
+      // Drag the placed clone back toward choiceA's position in the source slot
+      await dragAndWait(interaction, placedA, { to: choiceA });
+      expect(drops[0]).not.toHaveTextContent('Choice A');
+    });
   }
 };
 
@@ -608,7 +608,12 @@ export const MinAssociationsValidation: Story = {
 export const DisabledBlocksDrag: Story = {
   name: 'State: disabled blocks dragging',
   render: () => html`
-    <qti-order-interaction data-testid="order-interaction" response-identifier="RESPONSE" orientation="horizontal" disabled>
+    <qti-order-interaction
+      data-testid="order-interaction"
+      response-identifier="RESPONSE"
+      orientation="horizontal"
+      disabled
+    >
       <qti-simple-choice identifier="A">Choice A</qti-simple-choice>
       <qti-simple-choice identifier="B">Choice B</qti-simple-choice>
       <qti-simple-choice identifier="C">Choice C</qti-simple-choice>
@@ -636,7 +641,12 @@ export const DisabledBlocksDrag: Story = {
 export const ReadonlyBlocksDrag: Story = {
   name: 'State: readonly blocks dragging',
   render: () => html`
-    <qti-order-interaction data-testid="order-interaction" response-identifier="RESPONSE" orientation="horizontal" readonly>
+    <qti-order-interaction
+      data-testid="order-interaction"
+      response-identifier="RESPONSE"
+      orientation="horizontal"
+      readonly
+    >
       <qti-simple-choice identifier="A">Choice A</qti-simple-choice>
       <qti-simple-choice identifier="B">Choice B</qti-simple-choice>
       <qti-simple-choice identifier="C">Choice C</qti-simple-choice>
@@ -933,10 +943,10 @@ export const InSlotReordering: Story = {
     const canvas = within(canvasElement);
     const interaction = canvas.getByTestId<QtiOrderInteraction>('order-interaction');
     await interaction.updateComplete;
-    
+
     // Additional wait for caching to complete
     await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
-    
+
     const choiceA = canvas.getByText<QtiSimpleChoice>('Choice A');
     const choiceB = canvas.getByText<QtiSimpleChoice>('Choice B');
     const choiceC = canvas.getByText<QtiSimpleChoice>('Choice C');

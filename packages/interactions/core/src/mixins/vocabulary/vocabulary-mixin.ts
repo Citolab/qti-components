@@ -5,15 +5,8 @@ import type { LitElement, PropertyValues } from 'lit';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 
-type LabelType =
-  | 'qti-labels-none'
-  | 'qti-labels-decimal'
-  | 'qti-labels-lower-alpha'
-  | 'qti-labels-upper-alpha';
-type LabelSuffixType =
-  | 'qti-labels-suffix-none'
-  | 'qti-labels-suffix-period'
-  | 'qti-labels-suffix-parenthesis';
+type LabelType = 'qti-labels-none' | 'qti-labels-decimal' | 'qti-labels-lower-alpha' | 'qti-labels-upper-alpha';
+type LabelSuffixType = 'qti-labels-suffix-none' | 'qti-labels-suffix-period' | 'qti-labels-suffix-parenthesis';
 
 declare class VocabularyInterface {}
 
@@ -24,18 +17,18 @@ export const VocabularyMixin = <T extends Constructor<LitElement>>(superClass: T
       'qti-labels-none',
       'qti-labels-decimal',
       'qti-labels-lower-alpha',
-      'qti-labels-upper-alpha',
+      'qti-labels-upper-alpha'
     ];
     #allLabelSuffixes: LabelSuffixType[] = [
       'qti-labels-suffix-none',
       'qti-labels-suffix-period',
-      'qti-labels-suffix-parenthesis',
+      'qti-labels-suffix-parenthesis'
     ];
     #mutationObserver: MutationObserver | null = null;
 
     @property({
       type: String,
-      attribute: 'class',
+      attribute: 'class'
     })
     set class(value: string) {
       this.#classes = this.#tokenizeClasses(value);
@@ -66,8 +59,7 @@ export const VocabularyMixin = <T extends Constructor<LitElement>>(superClass: T
         if (
           mutations.some(
             mutation =>
-              mutation.type === 'childList' ||
-              (mutation.type === 'attributes' && mutation.attributeName === 'style')
+              mutation.type === 'childList' || (mutation.type === 'attributes' && mutation.attributeName === 'style')
           )
         ) {
           this.#syncLabels();
@@ -77,7 +69,7 @@ export const VocabularyMixin = <T extends Constructor<LitElement>>(superClass: T
         childList: true,
         subtree: true,
         attributes: true,
-        attributeFilter: ['style'],
+        attributeFilter: ['style']
       });
     }
 
@@ -119,11 +111,17 @@ export const VocabularyMixin = <T extends Constructor<LitElement>>(superClass: T
     }
 
     #getActiveLabelType(): LabelType | null {
-      return this.#classes.filter(c => this.#allLabels.includes(c as LabelType)).pop() as LabelType | undefined ?? null;
+      return (
+        (this.#classes.filter(c => this.#allLabels.includes(c as LabelType)).pop() as LabelType | undefined) ?? null
+      );
     }
 
     #getActiveLabelSuffixType(): LabelSuffixType | null {
-      return this.#classes.filter(c => this.#allLabelSuffixes.includes(c as LabelSuffixType)).pop() as LabelSuffixType | undefined ?? null;
+      return (
+        (this.#classes.filter(c => this.#allLabelSuffixes.includes(c as LabelSuffixType)).pop() as
+          | LabelSuffixType
+          | undefined) ?? null
+      );
     }
 
     #getLabel(index: number, labelType: LabelType | null, labelSuffixType: LabelSuffixType | null): string {

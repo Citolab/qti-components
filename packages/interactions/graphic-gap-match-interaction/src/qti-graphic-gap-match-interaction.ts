@@ -1,7 +1,10 @@
 import { html } from 'lit';
 
 import { Interaction } from '@qti-components/base';
-import { DragDropSlottedMixin, DragDropSlottedSortableMixin } from '@qti-components/interactions-core/mixins/drag-drop-observables';
+import {
+  DragDropSlottedMixin,
+  DragDropSlottedSortableMixin
+} from '@qti-components/interactions-core/mixins/drag-drop-observables';
 
 // import { DragDropInteractionMixin } from '@qti-components/interactions-core/mixins/drag-drop';
 import styles from './qti-graphic-gap-match-interaction.styles';

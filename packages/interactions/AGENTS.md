@@ -72,11 +72,11 @@
 
 ## Legacy Exception Table (Phase 1)
 
-| Rule                                      | Path                                                                                                                   | Reason                                                  | Expiry     |
-| ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- | ---------- |
+| Rule                                      | Path                                                                                                | Reason                                                  | Expiry     |
+| ----------------------------------------- | --------------------------------------------------------------------------------------------------- | ------------------------------------------------------- | ---------- |
 | No `autodocs` in split stories            | `packages/interactions/choice-interaction/src/stories/qti-choice-interaction.vocabulary.stories.ts` | Existing legacy setup; keep during migration            | 2026-06-30 |
-| No direct DOM probing                     | `packages/interactions/*/src/stories/*.stories.ts`                                                | Legacy stories still use direct selectors in assertions | 2026-06-30 |
-| No `getStorybookHelpers` in split stories | `packages/interactions/choice-interaction/src/stories/*.stories.ts`                                | Legacy controls wiring in split stories                 | 2026-06-30 |
+| No direct DOM probing                     | `packages/interactions/*/src/stories/*.stories.ts`                                                  | Legacy stories still use direct selectors in assertions | 2026-06-30 |
+| No `getStorybookHelpers` in split stories | `packages/interactions/choice-interaction/src/stories/*.stories.ts`                                 | Legacy controls wiring in split stories                 | 2026-06-30 |
 
 ## Migration Tracker
 

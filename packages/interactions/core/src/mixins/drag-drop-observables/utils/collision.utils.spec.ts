@@ -12,16 +12,17 @@ type Rect = { left: number; top: number; width: number; height: number };
 
 function createZone(rect: Rect, options?: { disabled?: boolean; tag?: string }) {
   const el = document.createElement(options?.tag ?? 'div');
-  el.getBoundingClientRect = () => ({
-    x: rect.left,
-    y: rect.top,
-    width: rect.width,
-    height: rect.height,
-    ...rect,
-    right: rect.left + rect.width,
-    bottom: rect.top + rect.height,
-    toJSON: () => ({})
-  } as DOMRect);
+  el.getBoundingClientRect = () =>
+    ({
+      x: rect.left,
+      y: rect.top,
+      width: rect.width,
+      height: rect.height,
+      ...rect,
+      right: rect.left + rect.width,
+      bottom: rect.top + rect.height,
+      toJSON: () => ({})
+    }) as DOMRect;
   if (options?.disabled) {
     el.setAttribute('disabled', '');
   }
@@ -30,16 +31,17 @@ function createZone(rect: Rect, options?: { disabled?: boolean; tag?: string }) 
 
 function createDrag(rect: Rect) {
   const el = document.createElement('div');
-  el.getBoundingClientRect = () => ({
-    x: rect.left,
-    y: rect.top,
-    width: rect.width,
-    height: rect.height,
-    ...rect,
-    right: rect.left + rect.width,
-    bottom: rect.top + rect.height,
-    toJSON: () => ({})
-  } as DOMRect);
+  el.getBoundingClientRect = () =>
+    ({
+      x: rect.left,
+      y: rect.top,
+      width: rect.width,
+      height: rect.height,
+      ...rect,
+      right: rect.left + rect.width,
+      bottom: rect.top + rect.height,
+      toJSON: () => ({})
+    }) as DOMRect;
   return el;
 }
 
@@ -90,13 +92,9 @@ describe('collision detection utils', () => {
       const droppable = createZone({ left: 10, top: 10, width: 20, height: 20 });
       const dragEl = createDrag({ left: 20, top: 20, width: 10, height: 10 });
 
-      const result = closestCornersWithInventoryPriorityCollision(
-        [dragContainer, droppable],
-        0,
-        0,
-        dragEl,
-        [dragContainer]
-      );
+      const result = closestCornersWithInventoryPriorityCollision([dragContainer, droppable], 0, 0, dragEl, [
+        dragContainer
+      ]);
 
       expect(result).toBe(dragContainer);
     });
@@ -106,13 +104,9 @@ describe('collision detection utils', () => {
       const droppable = createZone({ left: 40, top: 0, width: 10, height: 10 });
       const dragEl = createDrag({ left: 5, top: 5, width: 10, height: 10 });
 
-      const result = closestCornersWithInventoryPriorityCollision(
-        [dragContainer, droppable],
-        0,
-        0,
-        dragEl,
-        [dragContainer]
-      );
+      const result = closestCornersWithInventoryPriorityCollision([dragContainer, droppable], 0, 0, dragEl, [
+        dragContainer
+      ]);
 
       expect(result).toBe(dragContainer);
     });
@@ -122,13 +116,9 @@ describe('collision detection utils', () => {
       const droppable = createZone({ left: 0, top: 0, width: 10, height: 10 });
       const dragEl = createDrag({ left: 5, top: 5, width: 10, height: 10 });
 
-      const result = closestCornersWithInventoryPriorityCollision(
-        [dragContainer, droppable],
-        0,
-        0,
-        dragEl,
-        [dragContainer]
-      );
+      const result = closestCornersWithInventoryPriorityCollision([dragContainer, droppable], 0, 0, dragEl, [
+        dragContainer
+      ]);
 
       expect(result).toBe(droppable);
     });

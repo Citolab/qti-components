@@ -30,9 +30,7 @@ function isTruthy(value) {
 }
 
 function shouldUseProvenance() {
-  const provenanceRequested = isTruthy(
-    process.env.NPM_CONFIG_PROVENANCE ?? process.env.npm_config_provenance
-  );
+  const provenanceRequested = isTruthy(process.env.NPM_CONFIG_PROVENANCE ?? process.env.npm_config_provenance);
 
   if (!provenanceRequested) {
     return false;
@@ -40,8 +38,7 @@ function shouldUseProvenance() {
 
   const isGitHubActions = process.env.GITHUB_ACTIONS === 'true';
   const hasOidcTokenRequest =
-    Boolean(process.env.ACTIONS_ID_TOKEN_REQUEST_URL) &&
-    Boolean(process.env.ACTIONS_ID_TOKEN_REQUEST_TOKEN);
+    Boolean(process.env.ACTIONS_ID_TOKEN_REQUEST_URL) && Boolean(process.env.ACTIONS_ID_TOKEN_REQUEST_TOKEN);
 
   if (!isGitHubActions) {
     console.warn('Skipping npm provenance: supported trusted publishing provider not detected.');

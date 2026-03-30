@@ -189,7 +189,14 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
           const hostDisabled = (this as any).disabled || (this as any).readonly;
           const targetDisabled = target?.hasAttribute('disabled') || target?.getAttribute('aria-disabled') === 'true';
           const touchHandledRecently = Date.now() - this.lastTouchStartAt < 50;
-          return target && e.isPrimary !== false && e.button === 0 && !hostDisabled && !targetDisabled && !touchHandledRecently;
+          return (
+            target &&
+            e.isPrimary !== false &&
+            e.button === 0 &&
+            !hostDisabled &&
+            !targetDisabled &&
+            !touchHandledRecently
+          );
         })
         .subscribe((downEvent: PointerEvent) => {
           this.lastPointerDownAt = Date.now();
@@ -274,7 +281,15 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
 
           downEvent.preventDefault();
 
-          this.initiateDrag(dragTarget, downEvent.clientX, downEvent.clientY, 'mouse', 'mouse', undefined, downEvent.isTrusted);
+          this.initiateDrag(
+            dragTarget,
+            downEvent.clientX,
+            downEvent.clientY,
+            'mouse',
+            'mouse',
+            undefined,
+            downEvent.isTrusted
+          );
         });
 
       const touchDragSub = (shadowRoot as any)
@@ -297,7 +312,15 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
           this.lastTouchStartAt = Date.now();
           startEvent.preventDefault();
           startEvent.stopPropagation();
-          this.initiateDrag(dragTarget, touch.clientX, touch.clientY, 'touch', 'touch', undefined, startEvent.isTrusted);
+          this.initiateDrag(
+            dragTarget,
+            touch.clientX,
+            touch.clientY,
+            'touch',
+            'touch',
+            undefined,
+            startEvent.isTrusted
+          );
         });
 
       let keyboardState = {
@@ -515,7 +538,8 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         this.dragState.touchCleanup = cleanup;
       }
 
-      const moveEventName = eventSource === 'mouse' ? 'mousemove' : eventSource === 'touch' ? 'touchmove' : 'pointermove';
+      const moveEventName =
+        eventSource === 'mouse' ? 'mousemove' : eventSource === 'touch' ? 'touchmove' : 'pointermove';
       const upEventName = eventSource === 'mouse' ? 'mouseup' : eventSource === 'touch' ? 'touchend' : 'pointerup';
       const trustMatchesCurrentDrag = (evt: Event) => {
         const expected = this.dragState.startedFromTrustedEvent;
@@ -659,8 +683,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
 
       // Allow dropping into the source droppable even if it's marked as disabled
       // The data-drag-source marker indicates this droppable should accept the item being returned
-      const isDisabledButSource =
-        dropTarget?.hasAttribute('disabled') && dropTarget.hasAttribute('data-drag-source');
+      const isDisabledButSource = dropTarget?.hasAttribute('disabled') && dropTarget.hasAttribute('data-drag-source');
 
       const canDrop =
         !!dragSource &&
