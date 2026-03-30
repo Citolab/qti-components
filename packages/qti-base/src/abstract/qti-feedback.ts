@@ -9,7 +9,7 @@ import type { ItemContext } from '../context/item.context';
 
 export abstract class QtiFeedback extends LitElement {
   @property({ type: String, attribute: 'show-hide' })
-  protected showHide: string;
+  protected showHide: 'show' | 'hide' = 'show';
 
   @property({ type: String, attribute: 'outcome-identifier' })
   public outcomeIdentifier: string;

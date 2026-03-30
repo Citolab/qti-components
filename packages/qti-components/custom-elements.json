@@ -27099,9 +27099,10 @@
               "kind": "field",
               "name": "showHide",
               "type": {
-                "text": "string"
+                "text": "'show' | 'hide'"
               },
               "privacy": "protected",
+              "default": "'show'",
               "attribute": "show-hide"
             },
             {
@@ -27139,8 +27140,9 @@
             {
               "name": "show-hide",
               "type": {
-                "text": "string"
+                "text": "'show' | 'hide'"
               },
+              "default": "'show'",
               "fieldName": "showHide"
             }
           ],
@@ -28908,9 +28910,10 @@
               "kind": "field",
               "name": "showHide",
               "type": {
-                "text": "string"
+                "text": "'show' | 'hide'"
               },
               "privacy": "protected",
+              "default": "'show'",
               "attribute": "show-hide",
               "inheritedFrom": {
                 "name": "QtiFeedback",
@@ -28962,8 +28965,9 @@
             {
               "name": "show-hide",
               "type": {
-                "text": "string"
+                "text": "'show' | 'hide'"
               },
+              "default": "'show'",
               "fieldName": "showHide",
               "inheritedFrom": {
                 "name": "QtiFeedback",
@@ -29098,9 +29102,10 @@
               "kind": "field",
               "name": "showHide",
               "type": {
-                "text": "string"
+                "text": "'show' | 'hide'"
               },
               "privacy": "protected",
+              "default": "'show'",
               "attribute": "show-hide",
               "inheritedFrom": {
                 "name": "QtiFeedback",
@@ -29152,8 +29157,9 @@
             {
               "name": "show-hide",
               "type": {
-                "text": "string"
+                "text": "'show' | 'hide'"
               },
+              "default": "'show'",
               "fieldName": "showHide",
               "inheritedFrom": {
                 "name": "QtiFeedback",
@@ -29357,9 +29363,10 @@
               "kind": "field",
               "name": "showHide",
               "type": {
-                "text": "string"
+                "text": "'show' | 'hide'"
               },
               "privacy": "protected",
+              "default": "'show'",
               "attribute": "show-hide",
               "inheritedFrom": {
                 "name": "QtiFeedback",
@@ -29411,8 +29418,9 @@
             {
               "name": "show-hide",
               "type": {
-                "text": "string"
+                "text": "'show' | 'hide'"
               },
+              "default": "'show'",
               "fieldName": "showHide",
               "inheritedFrom": {
                 "name": "QtiFeedback",
@@ -40814,9 +40822,10 @@
               "kind": "field",
               "name": "showHide",
               "type": {
-                "text": "string"
+                "text": "'show' | 'hide'"
               },
               "privacy": "protected",
+              "default": "'show'",
               "attribute": "show-hide",
               "inheritedFrom": {
                 "name": "QtiFeedback",
@@ -40868,8 +40877,9 @@
             {
               "name": "show-hide",
               "type": {
-                "text": "string"
+                "text": "'show' | 'hide'"
               },
+              "default": "'show'",
               "fieldName": "showHide",
               "inheritedFrom": {
                 "name": "QtiFeedback",
