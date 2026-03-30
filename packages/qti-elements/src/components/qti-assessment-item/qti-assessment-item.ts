@@ -9,7 +9,7 @@ import type { QtiTemplateProcessing } from '../qti-template-processing/qti-templ
 import type { InteractionChangedDetails, OutcomeChangedDetails } from '../../internal/event-types.ts';
 import type { QtiFeedback, ResponseInteraction } from '@qti-components/base';
 import type { VariableDeclaration, VariableValue } from '@qti-components/base';
-import type { OutcomeVariable, ResponseVariable } from '@qti-components/base';
+import type { OutcomeVariable, ResponseVariable, TemplateVariable } from '@qti-components/base';
 import type { QtiResponseProcessing } from '../qti-response-processing/qti-response-processing.ts';
 import type QtiRegisterVariable from '../../internal/events/qti-register-variable.ts';
 import type { ItemContext } from '@qti-components/base';
@@ -189,6 +189,8 @@ export class QtiAssessmentItem extends LitElement {
     this.addEventListener('qti-register-interaction', this.#handleRegisterInteraction);
     this.addEventListener('end-attempt', this.#handleEndAttempt);
     this.addEventListener('qti-set-outcome-value', this.#handleSetOutcomeValue);
+    this.addEventListener('qti-set-template-value', this.#handleSetTemplateValue);
+    this.addEventListener('qti-set-correct-response', this.#handleSetCorrectResponse);
     this.addEventListener('qti-interaction-response', this.#handleUpdateResponseVariable);
   }
 
@@ -198,6 +200,8 @@ export class QtiAssessmentItem extends LitElement {
     this.removeEventListener('qti-register-interaction', this.#handleRegisterInteraction);
     this.removeEventListener('end-attempt', this.#handleEndAttempt);
     this.removeEventListener('qti-set-outcome-value', this.#handleSetOutcomeValue);
+    this.removeEventListener('qti-set-template-value', this.#handleSetTemplateValue);
+    this.removeEventListener('qti-set-correct-response', this.#handleSetCorrectResponse);
     this.removeEventListener('qti-interaction-response', this.#handleUpdateResponseVariable);
   }
 
@@ -235,6 +239,20 @@ export class QtiAssessmentItem extends LitElement {
     e.stopImmediatePropagation();
     const { outcomeIdentifier, value } = e.detail;
     this.updateOutcomeVariable(outcomeIdentifier, value);
+    e.stopPropagation();
+  };
+
+  #handleSetTemplateValue = (e: CustomEvent<{ templateIdentifier: string; value: string | string[] | null }>) => {
+    e.stopImmediatePropagation();
+    const { templateIdentifier, value } = e.detail;
+    this.updateTemplateVariable(templateIdentifier, value ?? undefined);
+    e.stopPropagation();
+  };
+
+  #handleSetCorrectResponse = (e: CustomEvent<{ responseIdentifier: string; value: string | string[] | null }>) => {
+    e.stopImmediatePropagation();
+    const { responseIdentifier, value } = e.detail;
+    this.updateCorrectResponse(responseIdentifier, value ?? undefined);
     e.stopPropagation();
   };
 
@@ -294,11 +312,18 @@ export class QtiAssessmentItem extends LitElement {
     });
   }
 
-  #processTemplates(): void {
+  async #processTemplates(): Promise<void> {
+    const templateDeclarations = Array.from(this.querySelectorAll<LitElement>('qti-template-declaration'));
+    if (templateDeclarations.length > 0) {
+      await Promise.all(templateDeclarations.map(declaration => declaration.updateComplete));
+      await Promise.resolve();
+    }
+
     this.#templateProcessing = this.querySelector<QtiTemplateProcessing>('qti-template-processing');
     if (this.#templateProcessing) {
       // Run template processing before first presentation
       this.#templateProcessing.process();
+      this.#initialContext = { ...this._context, variables: this._context.variables };
     }
   }
 
@@ -391,6 +416,94 @@ export class QtiAssessmentItem extends LitElement {
       // if adaptive, completionStatus is set by the processing template
       this.updateOutcomeVariable('completionStatus', this.#getCompletionStatus());
     }
+  }
+
+  /**
+   * Updates the template variable with the specified identifier to the given value.
+   */
+  public updateTemplateVariable(identifier: string, value: string | string[] | undefined) {
+    const templateVariable = this._context.variables.find(v => v.identifier === identifier && v.type === 'template') as
+      | TemplateVariable
+      | undefined;
+
+    if (!templateVariable) {
+      console.warn(`Can not set qti-template-identifier: ${identifier}, it is not available`);
+      return;
+    }
+
+    const normalizedValue =
+      templateVariable.cardinality === 'single'
+        ? Array.isArray(value)
+          ? value[0]
+          : (value ?? null)
+        : value === undefined || value === null
+          ? null
+          : Array.isArray(value)
+            ? value
+            : [value];
+
+    this._context = {
+      ...this._context,
+      variables: this._context.variables.map(v =>
+        v.identifier !== identifier
+          ? v
+          : {
+              ...v,
+              value: normalizedValue
+            }
+      )
+    };
+
+    this.dispatchEvent(
+      new CustomEvent<{ itemContext: ItemContext }>('qti-item-context-updated', {
+        bubbles: true,
+        composed: true,
+        detail: { itemContext: this._context }
+      })
+    );
+  }
+
+  /**
+   * Updates the correct response for the specified response variable.
+   */
+  public updateCorrectResponse(identifier: string, value: string | string[] | undefined) {
+    const responseVariable = this.getResponse(identifier);
+
+    if (!responseVariable) {
+      console.warn(`Can not set correct response for identifier: ${identifier}, it is not available`);
+      return;
+    }
+
+    const normalizedValue =
+      responseVariable.cardinality === 'single'
+        ? Array.isArray(value)
+          ? value[0]
+          : (value ?? null)
+        : value === undefined || value === null
+          ? null
+          : Array.isArray(value)
+            ? value
+            : [value];
+
+    this._context = {
+      ...this._context,
+      variables: this._context.variables.map(v =>
+        v.identifier !== identifier
+          ? v
+          : {
+              ...v,
+              correctResponse: normalizedValue
+            }
+      )
+    };
+
+    this.dispatchEvent(
+      new CustomEvent<{ itemContext: ItemContext }>('qti-item-context-updated', {
+        bubbles: true,
+        composed: true,
+        detail: { itemContext: this._context }
+      })
+    );
   }
 
   public setOutcomeVariable(identifier: string, value: string | string[] | undefined) {

@@ -6,6 +6,14 @@ import type { QtiExpression } from '@qti-components/base';
 
 type Constructor<T> = new (...args: any[]) => T;
 
+/**
+ * @summary The qti-and operator evaluates multiple boolean expressions.
+ * @documentation https://www.imsglobal.org/spec/qti/v3p0/info/index.html#and
+ *
+ * Takes 1 or more sub-expressions with base-type boolean and single cardinality.
+ * Returns true if all sub-expressions are true, false if any are false.
+ * Special cases: Returns NULL if any sub-expression is NULL and all others are true.
+ */
 @customElement('qti-and')
 export class QtiAnd extends qtiAndMixin(QtiConditionExpression as unknown as Constructor<QtiConditionExpression>) {
   public override calculate() {

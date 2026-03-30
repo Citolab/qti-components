@@ -150,4 +150,48 @@ describe('qti-assessment-item', () => {
 
     expect(+assessmentItem.getOutcome('SCORE').value).toBe(2);
   });
+
+  it('waits for template declarations before automatic template processing', async () => {
+    render(
+      html`<qti-assessment-item identifier="template-ordering">
+        <qti-response-declaration identifier="RESPONSE0" cardinality="single" base-type="integer"></qti-response-declaration>
+        <qti-template-declaration identifier="n" base-type="integer" cardinality="single">
+          <qti-default-value>3</qti-default-value>
+        </qti-template-declaration>
+        <qti-template-declaration identifier="t" base-type="integer" cardinality="ordered"></qti-template-declaration>
+        <qti-template-declaration identifier="SOLUTION0_0" base-type="integer" cardinality="single"></qti-template-declaration>
+        <qti-template-processing>
+          <qti-set-template-value identifier="t">
+            <qti-ordered>
+              <qti-repeat number-repeats="n">
+                <qti-base-value base-type="integer">7</qti-base-value>
+              </qti-repeat>
+            </qti-ordered>
+          </qti-set-template-value>
+          <qti-set-template-value identifier="SOLUTION0_0">
+            <qti-min>
+              <qti-variable identifier="t"></qti-variable>
+            </qti-min>
+          </qti-set-template-value>
+          <qti-set-correct-response identifier="RESPONSE0">
+            <qti-variable identifier="SOLUTION0_0"></qti-variable>
+          </qti-set-correct-response>
+        </qti-template-processing>
+      </qti-assessment-item>`,
+      container
+    );
+
+    const assessmentItem = container.querySelector('qti-assessment-item') as QtiAssessmentItem;
+    const templateProcessingComplete = new Promise<void>(resolve =>
+      assessmentItem.addEventListener('qti-template-processing-complete', () => resolve(), { once: true })
+    );
+    await assessmentItem.updateComplete;
+    await templateProcessingComplete;
+
+    const templateVariables = assessmentItem.variables.filter(variable => variable.type === 'template');
+    expect(templateVariables.find(variable => variable.identifier === 'n')?.value).toBe('3');
+    expect(templateVariables.find(variable => variable.identifier === 't')?.value).toEqual(['7', '7', '7']);
+    expect(templateVariables.find(variable => variable.identifier === 'SOLUTION0_0')?.value).toBe('7');
+    expect(assessmentItem.variables.find(variable => variable.identifier === 'RESPONSE0')?.value).toBeNull();
+  });
 });
