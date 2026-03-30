@@ -1,5 +1,14 @@
 <qti-assessment-item xmlns="http://www.w3.org/1999/xhtml">
     <qti-item-body>
         <img src="/path/to/image.jpg" />
+        <picture>
+            <source media="(min-width: 768px)" srcset="assets/desktop.png"/>
+            <img src="assets/mobile.png" alt="An optimized image that displays nice on mobile, and with more detail on desktop"/>
+        </picture>
+        <video poster="assets/poster.jpg">
+            <source src="movie.mp4" type="video/mp4"/>
+            <source src="movie.ogg" type="video/ogg"/>
+            Your browser does not support the video tag.
+        </video>
     </qti-item-body>
 </qti-assessment-item>
