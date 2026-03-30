@@ -121,6 +121,14 @@ export abstract class QtiExpression<T> extends LitElement implements QtiExpressi
             }
             return null;
           }
+          case 'qti-repeat': {
+            const repeat = e as QtiExpression<ResponseVariable[]>;
+            const values = repeat.getResult();
+            if (values?.length > 0) {
+              return values;
+            }
+            return null;
+          }
           case 'qti-correct': {
             const identifier = e.getAttribute('identifier') || '';
             const responseVariable: ResponseVariable =
@@ -148,5 +156,6 @@ export abstract class QtiExpression<T> extends LitElement implements QtiExpressi
           }
         }
       })
+      .flatMap(v => (Array.isArray(v) ? v : [v]))
       .filter(v => v !== null);
 }

@@ -4,12 +4,11 @@ import type { ResponseVariable } from '@qti-components/base';
 
 /**
  * @summary The qti-round operator rounds a numerical value to the nearest integer.
- * @documentation https://www.imsglobal.org/spec/qti/v3p0/impl#h.round
+ * @documentation https://www.imsglobal.org/spec/qti/v3p0/info/index.html#round
  *
- * Takes a single sub-expression with single cardinality and numerical base-type.
- * Returns an integer formed by rounding the value using the rule: n for all input
- * values in the range [n-0.5, n+0.5). For example, 6.8 and 6.5 both round to 7,
- * 6.49 rounds to 6, and -6.5 rounds to -6.
+ * Takes 1 numerical sub-expression of single cardinality.
+ * Returns integer n for input in range [n-0.5, n+0.5).
+ * Special cases: Returns NULL if input is NULL or NaN.
  */
 export class QtiRound extends QtiExpression<number | null> {
   public override getResult(): number | null {
