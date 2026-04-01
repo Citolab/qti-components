@@ -32,7 +32,7 @@
     </qti-default-value>
   </qti-outcome-declaration>
   <qti-outcome-declaration identifier="CATEGORY_1_FEEDBACK" base-type="identifier" cardinality="single"/>
-  <qti-test-part identifier="TEST-PART" navigation-mode="linear" submission-mode="individual">
+  <qti-test-part identifier="TEST-PART" navigation-mode="nonlinear" submission-mode="individual">
     <qti-assessment-section identifier="SECTION" title="Section" visible="true">
       <qti-assessment-item-ref identifier="INTRODUCTION" href="INTRODUCTION.xml"/>
       <qti-assessment-item-ref identifier="ITEM001-TEST" href="ITEM001.xml" category="CATEGORY_0"/>
