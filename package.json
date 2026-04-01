@@ -123,7 +123,7 @@
     "eslint-plugin-sort-imports-es6-autofix": "^0.6.0",
     "eslint-plugin-storybook": "^10.3.3",
     "eslint-plugin-wc": "^3.0.2",
-    "fast-xml-parser": "^5.3.4",
+    "fast-xml-parser": "^5.5.7",
     "globals": "^16.5.0",
     "globby": "^14.1.0",
     "husky": "^9.1.7",
@@ -166,7 +166,13 @@
   },
   "homepage": "https://github.com/Citolab/qti-components#readme",
   "overrides": {
-    "storybook": "$storybook"
+    "storybook": "$storybook",
+    "basic-ftp": "^5.2.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "basic-ftp": "^5.2.0"
+    }
   },
   "msw": {
     "workerDirectory": [
