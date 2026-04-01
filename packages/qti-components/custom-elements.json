@@ -974,7 +974,7 @@
               "type": {
                 "text": "LabelType[]"
               },
-              "default": "[ 'qti-labels-none', 'qti-labels-decimal', 'qti-labels-lower-alpha', 'qti-labels-upper-alpha', ]",
+              "default": "[ 'qti-labels-none', 'qti-labels-decimal', 'qti-labels-lower-alpha', 'qti-labels-upper-alpha' ]",
               "inheritedFrom": {
                 "name": "VocabularyMixin",
                 "module": "packages/interactions/core/src/mixins/vocabulary/vocabulary-mixin.ts"
@@ -987,7 +987,7 @@
               "type": {
                 "text": "LabelSuffixType[]"
               },
-              "default": "[ 'qti-labels-suffix-none', 'qti-labels-suffix-period', 'qti-labels-suffix-parenthesis', ]",
+              "default": "[ 'qti-labels-suffix-none', 'qti-labels-suffix-period', 'qti-labels-suffix-parenthesis' ]",
               "inheritedFrom": {
                 "name": "VocabularyMixin",
                 "module": "packages/interactions/core/src/mixins/vocabulary/vocabulary-mixin.ts"
@@ -9629,7 +9629,7 @@
               "type": {
                 "text": "LabelType[]"
               },
-              "default": "[ 'qti-labels-none', 'qti-labels-decimal', 'qti-labels-lower-alpha', 'qti-labels-upper-alpha', ]"
+              "default": "[ 'qti-labels-none', 'qti-labels-decimal', 'qti-labels-lower-alpha', 'qti-labels-upper-alpha' ]"
             },
             {
               "kind": "field",
@@ -9638,7 +9638,7 @@
               "type": {
                 "text": "LabelSuffixType[]"
               },
-              "default": "[ 'qti-labels-suffix-none', 'qti-labels-suffix-period', 'qti-labels-suffix-parenthesis', ]"
+              "default": "[ 'qti-labels-suffix-none', 'qti-labels-suffix-period', 'qti-labels-suffix-parenthesis' ]"
             },
             {
               "kind": "field",
