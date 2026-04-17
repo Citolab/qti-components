@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qti-assessment-item
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+  title="32hbhr"
+  identifier="ITM-32hbhr"
+  time-dependent="false"
+  label="32hbhr"
+  xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+>
+  <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="identifier">
+    <qti-correct-response interpretation="C">
+      <qti-value>C</qti-value>
+    </qti-correct-response>
+  </qti-response-declaration>
+  <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float">
+    <qti-default-value>
+      <qti-value>0</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-outcome-declaration identifier="MAXSCORE" cardinality="single" base-type="float">
+    <qti-default-value>
+      <qti-value>1</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-assessment-stimulus-ref
+    identifier="RES-Brontekst_KB-2020-A1-Traumberuf_Astronaut_xml"
+    href="qb-stimulusref-stimulus.xml"
+  />
+  <qti-item-body class="defaultBody" xml:lang="de-DE">
+    <div class="content">
+      <div class="qti-layout-row">
+        <div class="qti-layout-col6">
+          <div
+            class="qti-shared-stimulus"
+            data-stimulus-idref="RES-Brontekst_KB-2020-A1-Traumberuf_Astronaut_xml"
+            data-dep-dialog-height="600"
+          >
+            Placeholder stimulus target
+          </div>
+        </div>
+        <div class="qti-layout-col6">
+          <div id="question">
+            <p><strong>Placeholder question text</strong></p>
+          </div>
+          <div id="mc">
+            <qti-choice-interaction
+              id="choiceInteraction1"
+              class="qti-labels-none"
+              max-choices="1"
+              shuffle="false"
+              response-identifier="RESPONSE"
+            >
+              <qti-simple-choice identifier="A">
+                <p>Placeholder answer A</p>
+              </qti-simple-choice>
+              <qti-simple-choice identifier="B">
+                <p>Placeholder answer B</p>
+              </qti-simple-choice>
+              <qti-simple-choice identifier="C">
+                <p>Placeholder answer C</p>
+              </qti-simple-choice>
+            </qti-choice-interaction>
+          </div>
+        </div>
+      </div>
+    </div>
+  </qti-item-body>
+  <qti-response-processing
+    template="https://purl.imsglobal.org/spec/qti/v3p0/rptemplates/match_correct.xml"
+  />
+</qti-assessment-item>

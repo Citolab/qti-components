@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qti-assessment-stimulus
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_stimulusv3p0_v1p0.xsd"
+  identifier="RES-Brontekst_KB-2020-A1-Traumberuf_Astronaut_xml"
+  title="Brontekst_KB-2020-A1-Traumberuf_Astronaut"
+  xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+>
+  <qti-stimulus-body>
+    <p id="placeholder-start" lang="de">Placeholder stimulus content start</p>
+    <p id="c1-id-10" lang="de"><strong id="c1-id-33">Placeholder stimulus heading</strong></p>
+    <p id="c1-id-12" lang="de">
+      <strong id="c1-id-34">
+        Placeholder stimulus paragraph one.
+      </strong>
+    </p>
+    <p id="c1-id-18" lang="de">
+      <strong id="c1-id-35">(1)</strong> Placeholder stimulus paragraph two.
+    </p>
+    <p id="placeholder-end" lang="de">Placeholder stimulus content end</p>
+  </qti-stimulus-body>
+</qti-assessment-stimulus>
