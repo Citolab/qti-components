@@ -1,5 +1,5 @@
 import { html } from 'lit';
-import { expect } from 'storybook/test';
+import { expect, waitFor } from 'storybook/test';
 import { within } from 'shadow-dom-testing-library';
 import { http, HttpResponse, delay } from 'msw';
 import { mswLoader } from 'msw-storybook-addon';
@@ -196,6 +196,48 @@ export const ItemAndStimulusSlowLoadedTestByWithoutPlacement: Story = {
       const stimulus = await canvas.findByText('An Unbelievable Night', {}, { timeout: 5000 });
       const stimulusContainer = canvasElement.querySelector('[data-stimulus-idref]');
       expect(stimulusContainer).toContainElement(stimulus);
+    });
+  }
+};
+
+export const QbStimulusref: Story = {
+  render: _args =>
+    html`<qti-test navigate="item">
+      <test-navigation>
+        <test-container test-url="assets/qti-assessment-stimulus-ref/qb-stimulusref-test.xml"> </test-container>
+      </test-navigation>
+    </qti-test>`,
+  play: async ({ canvasElement, step }) => {
+    await step('Check if the qb stimulus is loaded into the placement target', async () => {
+      await waitFor(() => {
+        const testContainer = canvasElement.querySelector('test-container');
+        const stimulusContainer = testContainer?.shadowRoot?.querySelector(
+          '[data-stimulus-idref="RES-Brontekst_KB-2020-A1-Traumberuf_Astronaut_xml"]'
+        );
+
+        expect(stimulusContainer).toBeTruthy();
+        expect(stimulusContainer?.textContent).toContain('Placeholder stimulus heading');
+      });
+    });
+  }
+};
+
+export const QbStimulusrefInItem: Story = {
+  render: _args =>
+    html`<qti-item>
+      <item-container item-url="assets/qti-assessment-stimulus-ref/qb-stimulusref.xml"></item-container>
+    </qti-item>`,
+  play: async ({ canvasElement, step }) => {
+    await step('Check if the qb stimulus is loaded inside item-container', async () => {
+      await waitFor(() => {
+        const itemContainer = canvasElement.querySelector('item-container');
+        const stimulusContainer = itemContainer?.shadowRoot?.querySelector(
+          '[data-stimulus-idref="RES-Brontekst_KB-2020-A1-Traumberuf_Astronaut_xml"]'
+        );
+
+        expect(stimulusContainer).toBeTruthy();
+        expect(stimulusContainer?.textContent).toContain('Placeholder stimulus heading');
+      });
     });
   }
 };
