@@ -1,6 +1,5 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import { property, state } from 'lit/decorators.js';
-import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { consume } from '@lit/context';
 
 import { Interaction } from '@qti-components/base';
@@ -13,7 +12,7 @@ import type { ConfigContext } from '@qti-components/base';
 import type { ActiveElementMixinInterface } from '@qti-components/interactions-core/mixins/active-element/active-element.mixin';
 
 interface OptionType {
-  textContent: string;
+  content: string | Node[];
   value: string;
   selected: boolean;
 }
@@ -40,7 +39,7 @@ export class QtiInlineChoiceInteraction extends Interaction {
   protected options: OptionType[] = [];
 
   @state()
-  protected correctOption: string = '';
+  protected correctOption: any = nothing;
 
   @state()
   protected _dropdownOpen = false;
@@ -69,7 +68,7 @@ export class QtiInlineChoiceInteraction extends Interaction {
         ?disabled="${this.disabled}"
         data-readonly="${this.readonly ? 'true' : 'false'}"
       >
-        <span part="value">${unsafeHTML(selected?.textContent ?? '')}</span>
+        <span part="value">${selected?.content}</span>
         <span part="${this._dropdownOpen ? 'dropdown-icon dropdown-icon-open' : 'dropdown-icon'}" aria-hidden="true"
           >▾</span
         >
@@ -89,11 +88,11 @@ export class QtiInlineChoiceInteraction extends Interaction {
           aria-selected="${this.options[0]?.selected ? 'true' : 'false'}"
           @click=${() => this.#selectValue('')}
         >
-          <span part="option-content">${unsafeHTML(this.options[0]?.textContent ?? '')}</span>
+          <span part="option-content">${this.options[0]?.content}</span>
         </button>
         <slot @slotchange=${this.#onChoicesSlotChange}></slot>
       </div>
-      ${unsafeHTML(this.correctOption)}
+      ${this.correctOption}
     `;
   }
 
@@ -146,14 +145,14 @@ export class QtiInlineChoiceInteraction extends Interaction {
     const currentlySelectedValue = this.options.find(o => o.selected)?.value ?? '';
     const nextOptions: OptionType[] = [
       {
-        textContent: prompt,
+        content: prompt,
         value: '',
         selected: currentlySelectedValue === ''
       },
       ...choices.map(choice => {
         const value = choice.getAttribute('identifier') ?? '';
         return {
-          textContent: choice.innerHTML,
+          content: Array.from(choice.childNodes).map(node => node.cloneNode(true)),
           value,
           selected: value !== '' && value === currentlySelectedValue
         };
@@ -233,17 +232,21 @@ export class QtiInlineChoiceInteraction extends Interaction {
     const correctResponseValue = this.correctResponse;
 
     if (!show || !correctResponseValue) {
-      this.correctOption = '';
+      this.correctOption = nothing;
       return;
     }
 
     const correctOptionData = this.options.find(option => correctResponseValue === option.value);
     if (!correctOptionData) {
-      this.correctOption = '';
+      this.correctOption = nothing;
       return;
     }
 
-    this.correctOption = `<span part="correct-option" style="border:1px solid var(--qti-correct); border-radius:4px; padding: 2px 4px; margin: 4px; display:inline-block">${correctOptionData.textContent}</span>`;
+    this.correctOption = html`<span
+      part="correct-option"
+      style="border:1px solid var(--qti-correct); border-radius:4px; padding: 2px 4px; margin: 4px; display:inline-block"
+      >${correctOptionData.content}</span
+    >`;
   }
 
   #selectValue(value: string) {

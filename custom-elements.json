@@ -17084,10 +17084,10 @@
               "kind": "field",
               "name": "correctOption",
               "type": {
-                "text": "string"
+                "text": "any"
               },
               "privacy": "protected",
-              "default": "''"
+              "default": "nothing"
             },
             {
               "kind": "field",
