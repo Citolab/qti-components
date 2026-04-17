@@ -16,7 +16,7 @@
 	</qti-response-declaration>
 	<qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float" />
 	<qti-item-body>
-		<qti-gap-match-interaction response-identifier="RESPONSE" shuffle="false">
+		<qti-gap-match-interaction response-identifier="RESPONSE" shuffle="false" max-associations="2">
 			<qti-prompt>Identify the missing words in this famous quote from Shakespeare's Richard
 				III.</qti-prompt>
 			<qti-gap-text identifier="W" match-max="1">winter</qti-gap-text>

@@ -7,6 +7,7 @@ import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { transformItemApi, transformTestApi } from '@qti-components/transformers';
 import type { QtiAssessmentItemRef } from '../components/qti-assessment-item-ref/qti-assessment-item-ref';
 import type { QtiAssessmentSection } from '../components/qti-assessment-section/qti-assessment-section';
+import type { QtiTestPart } from '../components/qti-test-part/qti-test-part';
 import type { QtiAssessmentTest } from '../components/qti-assessment-test/qti-assessment-test';
 import type { TestBaseInterface } from './test-base';
 
@@ -202,11 +203,53 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
       }
     }
 
+    private _isLinearNavigationRestricted(type: 'item' | 'section', targetId: string): boolean {
+      const currentItemId = this.sessionContext?.navItemRefId;
+      if (!currentItemId) return false;
+
+      // Never restrict navigating to the same item
+      if (type === 'item' && targetId === currentItemId) return false;
+
+      const currentItemRef = this._testElement?.querySelector(`qti-assessment-item-ref[identifier="${currentItemId}"]`);
+      if (!currentItemRef) return false;
+
+      const section = currentItemRef.closest('qti-assessment-section') as QtiAssessmentSection;
+      const testPart = currentItemRef.closest('qti-test-part') as QtiTestPart;
+
+      const navigationMode =
+        (section?.navigationMode ||
+          section?.getAttribute('navigation-mode') ||
+          testPart?.navigationMode ||
+          testPart?.getAttribute('navigation-mode') ||
+          'nonlinear') as string;
+
+      if (navigationMode !== 'linear') return false;
+
+      const allItemRefs = Array.from(this._testElement?.querySelectorAll('qti-assessment-item-ref') || []) as QtiAssessmentItemRef[];
+      const currentIndex = allItemRefs.findIndex(ref => ref.identifier === currentItemId);
+
+      if (type === 'item') {
+        const targetIndex = allItemRefs.findIndex(ref => ref.identifier === targetId);
+        if (targetIndex === -1 || currentIndex === -1) return false;
+
+        // Only allow moving to the next item in linear mode
+        return targetIndex !== currentIndex + 1;
+      }
+
+      // Sections are generally restricted in linear mode unless we are moving to the next one
+      return true;
+    }
+
     /**
      * Main navigation request handler with proper lifecycle management
      */
     private async _handleNavigationRequest({ detail }: CustomEvent<{ type: 'item' | 'section'; id: string }>) {
       if (!detail?.id) return;
+
+      if (this._isLinearNavigationRestricted(detail.type, detail.id)) {
+        this._handleNavigationError(new Error('Navigation restricted in linear mode'), detail.type, detail.id);
+        return;
+      }
 
       this._cancelPreviousNavigation();
       const navigationId = ++this._navigationId;
