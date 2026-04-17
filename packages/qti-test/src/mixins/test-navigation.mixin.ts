@@ -391,7 +391,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
      */
     private async _loadStimulusRef(
       element: { identifier: string; href: string },
-      item: { identifier: string }
+      item: QtiAssessmentItem
     ): Promise<void> {
       console.info('Loading stimulus:', element.href);
       const stimulus = await this._loadStimulus(element.href);
@@ -402,7 +402,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
     private _applyStimulusContent(
       stimulus: DocumentFragment | null,
       element: { identifier: string },
-      item: { identifier: string }
+      item: QtiAssessmentItem
     ): void {
       if (!stimulus) {
         console.warn('No stimulus content to apply');
@@ -420,10 +420,9 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
       // Try multiple target selection strategies
       let targets: Element[] = [];
 
-      // Strategy 1: Specific item and identifier
-      const specificTarget = document.querySelector(
-        `qti-assessment-item[identifier="${item.identifier}"] [data-stimulus-idref="${element.identifier}"]`
-      );
+      // Strategy 1: Search inside the actual item element first.
+      // This keeps stimulus placement working when items are rendered in a shadow root.
+      const specificTarget = item.querySelector(`[data-stimulus-idref="${element.identifier}"]`);
 
       if (specificTarget) {
         targets.push(specificTarget);
