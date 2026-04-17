@@ -86,10 +86,22 @@ export function parseXML(xmlDocument: string) {
   return xmlFragment;
 }
 
+// Function to strip unsupported namespaces (qti) from the nodes sent to the browser
 function stripNamespaces(node: Node, doc: Document): Node {
   if (node.nodeType === Node.ELEMENT_NODE) {
     const el = node as Element;
-    const newEl = doc.createElement(el.localName);
+    let newEl: Element;
+
+    if (
+      !el.namespaceURI ||
+      el.namespaceURI.startsWith('http://www.imsglobal.org/xsd/qti/') ||
+      el.namespaceURI.startsWith('http://www.imsglobal.org/xsd/imsqti')
+    ) {
+      newEl = doc.createElement(el.localName);
+    } else {
+      newEl = doc.createElementNS(el.namespaceURI, el.tagName);
+    }
+
     for (let i = 0; i < el.attributes.length; i++) {
       const attr = el.attributes[i];
       newEl.setAttribute(attr.localName, attr.value);

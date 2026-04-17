@@ -974,7 +974,7 @@
               "type": {
                 "text": "LabelType[]"
               },
-              "default": "[ 'qti-labels-none', 'qti-labels-decimal', 'qti-labels-lower-alpha', 'qti-labels-upper-alpha', ]",
+              "default": "[ 'qti-labels-none', 'qti-labels-decimal', 'qti-labels-lower-alpha', 'qti-labels-upper-alpha' ]",
               "inheritedFrom": {
                 "name": "VocabularyMixin",
                 "module": "packages/interactions/core/src/mixins/vocabulary/vocabulary-mixin.ts"
@@ -987,7 +987,7 @@
               "type": {
                 "text": "LabelSuffixType[]"
               },
-              "default": "[ 'qti-labels-suffix-none', 'qti-labels-suffix-period', 'qti-labels-suffix-parenthesis', ]",
+              "default": "[ 'qti-labels-suffix-none', 'qti-labels-suffix-period', 'qti-labels-suffix-parenthesis' ]",
               "inheritedFrom": {
                 "name": "VocabularyMixin",
                 "module": "packages/interactions/core/src/mixins/vocabulary/vocabulary-mixin.ts"
@@ -9625,7 +9625,7 @@
               "type": {
                 "text": "LabelType[]"
               },
-              "default": "[ 'qti-labels-none', 'qti-labels-decimal', 'qti-labels-lower-alpha', 'qti-labels-upper-alpha', ]"
+              "default": "[ 'qti-labels-none', 'qti-labels-decimal', 'qti-labels-lower-alpha', 'qti-labels-upper-alpha' ]"
             },
             {
               "kind": "field",
@@ -9634,7 +9634,7 @@
               "type": {
                 "text": "LabelSuffixType[]"
               },
-              "default": "[ 'qti-labels-suffix-none', 'qti-labels-suffix-period', 'qti-labels-suffix-parenthesis', ]"
+              "default": "[ 'qti-labels-suffix-none', 'qti-labels-suffix-period', 'qti-labels-suffix-parenthesis' ]"
             },
             {
               "kind": "field",
@@ -17084,10 +17084,10 @@
               "kind": "field",
               "name": "correctOption",
               "type": {
-                "text": "string"
+                "text": "any"
               },
               "privacy": "protected",
-              "default": "''"
+              "default": "nothing"
             },
             {
               "kind": "field",
@@ -27825,7 +27825,17 @@
             },
             {
               "kind": "field",
+              "name": "#handleSetCorrectResponse",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
               "name": "#handleSetOutcomeValue",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleSetTemplateValue",
               "privacy": "private"
             },
             {
@@ -27865,7 +27875,7 @@
               "privacy": "private",
               "return": {
                 "type": {
-                  "text": "void"
+                  "text": "Promise<void>"
                 }
               }
             },
@@ -28133,6 +28143,29 @@
             },
             {
               "kind": "method",
+              "name": "updateCorrectResponse",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string | string[] | undefined"
+                  }
+                }
+              ],
+              "description": "Updates the correct response for the specified response variable.",
+              "type": {
+                "text": "updateCorrectResponse(identifier: string, value: string | string[] | undefined) => void"
+              }
+            },
+            {
+              "kind": "method",
               "name": "updateOutcomeVariable",
               "privacy": "protected",
               "parameters": [
@@ -28174,6 +28207,29 @@
                 }
               ],
               "description": "Updates the response variable with the specified identifier to the given value."
+            },
+            {
+              "kind": "method",
+              "name": "updateTemplateVariable",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string | string[] | undefined"
+                  }
+                }
+              ],
+              "description": "Updates the template variable with the specified identifier to the given value.",
+              "type": {
+                "text": "updateTemplateVariable(identifier: string, value: string | string[] | undefined) => void"
+              }
             },
             {
               "kind": "method",
@@ -28479,7 +28535,44 @@
           "kind": "class",
           "description": "",
           "name": "QtiContentBody",
-          "members": [],
+          "members": [
+            {
+              "kind": "method",
+              "name": "#expandMathVariables",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#stringifyValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string | readonly string[] | number | boolean | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "context",
+              "type": {
+                "text": "ItemContext | undefined"
+              },
+              "privacy": "protected"
+            }
+          ],
           "superclass": {
             "name": "LitElement",
             "package": "lit"
@@ -31091,6 +31184,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "packages/qti-processing/src/components/qti-any-n/qti-any-n"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "packages/qti-processing/src/components/qti-basevalue/qti-basevalue"
           }
         },
@@ -31163,6 +31264,30 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "packages/qti-processing/src/components/qti-divide/qti-divide"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/qti-processing/src/components/qti-duration-gte/qti-duration-gte"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/qti-processing/src/components/qti-duration-lt/qti-duration-lt"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "packages/qti-processing/src/components/qti-gcd/qti.gcd"
           }
         },
@@ -31180,6 +31305,46 @@
           "declaration": {
             "name": "*",
             "module": "packages/qti-processing/src/components/qti-gte/qti-gte"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/qti-processing/src/components/qti-inside/qti-inside"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/qti-processing/src/components/qti-integer-divide/qti-integer-divide"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/qti-processing/src/components/qti-integer-modulus/qti-integer-modulus"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/qti-processing/src/components/qti-integer-to-float/qti-integer-to-float"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/qti-processing/src/components/qti-lcm/qti-lcm"
           }
         },
         {
@@ -31259,7 +31424,23 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "packages/qti-processing/src/components/qti-max/qti-max"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "packages/qti-processing/src/components/qti-member/qti-member"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/qti-processing/src/components/qti-min/qti-min"
           }
         },
         {
@@ -31307,6 +31488,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "packages/qti-processing/src/components/qti-pattern-match/qti-pattern-match"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "packages/qti-processing/src/components/qti-printed-variable/qti-printed-variable"
           }
         },
@@ -31323,7 +31512,47 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "packages/qti-processing/src/components/qti-repeat/qti-repeat"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/qti-processing/src/components/qti-set-correct-response/qti-set-correct-response"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/qti-processing/src/components/qti-set-template-value/qti-set-template-value"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/qti-processing/src/components/qti-stats-operator/qti-stats-operator"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "packages/qti-processing/src/components/qti-subtract"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/qti-processing/src/components/qti-substring/qti-substring"
           }
         },
         {
@@ -31340,6 +31569,14 @@
           "declaration": {
             "name": "*",
             "module": "packages/qti-processing/src/components/qti-sum/qti-sum"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/qti-processing/src/components/qti-truncate/qti-truncate"
           }
         },
         {
@@ -31431,6 +31668,7 @@
           "superclass": {
             "module": "packages/qti-processing/src/components/qti-and/qti-and.ts"
           },
+          "summary": "The qti-and operator evaluates multiple boolean expressions.",
           "tagName": "qti-and",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-and/qti-and.ts",
@@ -31488,6 +31726,151 @@
           "declaration": {
             "name": "qtiAndMixin",
             "module": "packages/qti-processing/src/components/qti-and/qti-and.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-processing/src/components/qti-any-n/qti-any-n.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiAnyN",
+          "members": [
+            {
+              "kind": "method",
+              "name": "calculate",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "Readonly<T>"
+                }
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              },
+              "type": {
+                "text": "calculate() => Readonly<T>"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "context",
+              "type": {
+                "text": "ItemContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getResult",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "getVariables",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "max",
+              "default": "Infinity",
+              "attribute": "max"
+            },
+            {
+              "kind": "field",
+              "name": "min",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "attribute": "min"
+            },
+            {
+              "kind": "field",
+              "name": "qtiContext",
+              "type": {
+                "text": "QtiContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "result",
+              "type": {
+                "text": "any"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "max",
+              "default": "Infinity",
+              "fieldName": "max"
+            },
+            {
+              "name": "min",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "fieldName": "min"
+            }
+          ],
+          "superclass": {
+            "name": "QtiExpression",
+            "package": "@qti-components/base"
+          },
+          "summary": "The qti-any-N operator checks if a specific range of expressions are true.",
+          "tagName": "qti-any-n",
+          "customElement": true,
+          "modulePath": "packages/qti-processing/src/components/qti-any-n/qti-any-n.ts",
+          "definitionPath": "packages/qti-processing/src/components/qti-any-n/qti-any-n.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-any-n",
+          "declaration": {
+            "name": "QtiAnyN",
+            "module": "packages/qti-processing/src/components/qti-any-n/qti-any-n.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiAnyN",
+          "declaration": {
+            "name": "QtiAnyN",
+            "module": "packages/qti-processing/src/components/qti-any-n/qti-any-n.ts"
           }
         }
       ]
@@ -31720,7 +32103,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
-          "summary": "The qti-container-size operator returns the number of values in a container.",
+          "summary": "The qti-container-size operator returns the count of items in a container.",
           "tagName": "qti-container-size",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-container-size/qti-container-size.ts",
@@ -31954,6 +32337,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
+          "summary": "The qti-correct operator retrieves the defined correct response for a variable.",
           "tagName": "qti-correct",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-correct/qti-correct.ts",
@@ -32095,7 +32479,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
-          "summary": "The qti-default expression returns the default value of a declared variable.",
+          "summary": "The qti-default operator retrieves the defined default value for a variable.",
           "tagName": "qti-default",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-default/qti-default.ts",
@@ -32210,6 +32594,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
+          "summary": "The qti-delete operator removes all instances of a value from a container.",
           "tagName": "qti-delete",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-delete/qti-delete.ts",
@@ -32231,6 +32616,424 @@
           "declaration": {
             "name": "QtiDelete",
             "module": "packages/qti-processing/src/components/qti-delete/qti-delete.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-processing/src/components/qti-divide/qti-divide.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiDivide",
+          "members": [
+            {
+              "kind": "method",
+              "name": "#collectNumericValues",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "variables",
+                  "type": {
+                    "text": "ResponseVariable[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "calculate",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "Readonly<T>"
+                }
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              },
+              "type": {
+                "text": "calculate() => Readonly<T>"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "context",
+              "type": {
+                "text": "ItemContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getResult",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "number | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "getVariables",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "qtiContext",
+              "type": {
+                "text": "QtiContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "result",
+              "type": {
+                "text": "any"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "QtiExpression",
+            "package": "@qti-components/base"
+          },
+          "summary": "The qti-divide operator performs numerical division.",
+          "tagName": "qti-divide",
+          "customElement": true,
+          "modulePath": "packages/qti-processing/src/components/qti-divide/qti-divide.ts",
+          "definitionPath": "packages/qti-processing/src/components/qti-divide/qti-divide.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-divide",
+          "declaration": {
+            "name": "QtiDivide",
+            "module": "packages/qti-processing/src/components/qti-divide/qti-divide.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiDivide",
+          "declaration": {
+            "name": "QtiDivide",
+            "module": "packages/qti-processing/src/components/qti-divide/qti-divide.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-processing/src/components/qti-duration-gte/qti-duration-gte.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiDurationGte",
+          "members": [
+            {
+              "kind": "method",
+              "name": "#getDurationValues",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "[number, number] | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#parseDuration",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "variable",
+                  "type": {
+                    "text": "ResponseVariable"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "calculate",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "Readonly<T>"
+                }
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              },
+              "type": {
+                "text": "calculate() => Readonly<T>"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "context",
+              "type": {
+                "text": "ItemContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getResult",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "getVariables",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "qtiContext",
+              "type": {
+                "text": "QtiContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "result",
+              "type": {
+                "text": "any"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "QtiExpression",
+            "package": "@qti-components/base"
+          },
+          "tagName": "qti-duration-gte",
+          "customElement": true,
+          "modulePath": "packages/qti-processing/src/components/qti-duration-gte/qti-duration-gte.ts",
+          "definitionPath": "packages/qti-processing/src/components/qti-duration-gte/qti-duration-gte.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-duration-gte",
+          "declaration": {
+            "name": "QtiDurationGte",
+            "module": "packages/qti-processing/src/components/qti-duration-gte/qti-duration-gte.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiDurationGte",
+          "declaration": {
+            "name": "QtiDurationGte",
+            "module": "packages/qti-processing/src/components/qti-duration-gte/qti-duration-gte.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-processing/src/components/qti-duration-lt/qti-duration-lt.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiDurationLt",
+          "members": [
+            {
+              "kind": "method",
+              "name": "#getDurationValues",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "[number, number] | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#parseDuration",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "variable",
+                  "type": {
+                    "text": "ResponseVariable"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "calculate",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "Readonly<T>"
+                }
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              },
+              "type": {
+                "text": "calculate() => Readonly<T>"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "context",
+              "type": {
+                "text": "ItemContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getResult",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "getVariables",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "qtiContext",
+              "type": {
+                "text": "QtiContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "result",
+              "type": {
+                "text": "any"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "QtiExpression",
+            "package": "@qti-components/base"
+          },
+          "summary": "The qti-duration-lt operator compares two time durations.",
+          "tagName": "qti-duration-lt",
+          "customElement": true,
+          "modulePath": "packages/qti-processing/src/components/qti-duration-lt/qti-duration-lt.ts",
+          "definitionPath": "packages/qti-processing/src/components/qti-duration-lt/qti-duration-lt.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-duration-lt",
+          "declaration": {
+            "name": "QtiDurationLt",
+            "module": "packages/qti-processing/src/components/qti-duration-lt/qti-duration-lt.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiDurationLt",
+          "declaration": {
+            "name": "QtiDurationLt",
+            "module": "packages/qti-processing/src/components/qti-duration-lt/qti-duration-lt.ts"
           }
         }
       ]
@@ -32348,6 +33151,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
+          "summary": "The qti-equal-rounded operator compares two values after rounding.",
           "tagName": "qti-equal-rounded",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-equal-rounded/qti-equal-rounded.ts",
@@ -32481,6 +33285,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
+          "summary": "The qti-equal operator checks if two numerical expressions are equal.",
           "tagName": "qti-equal",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-equal/qti-equal.ts",
@@ -32595,6 +33400,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
+          "summary": "The qti-field-value operator retrieves a specific field from a record.",
           "tagName": "qti-field-value",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-field-value/qti-field-value.ts",
@@ -33131,6 +33937,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
+          "summary": "The qti-index operator retrieves a specific item from an ordered container.",
           "tagName": "qti-index",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-index/qti-index.ts",
@@ -33152,6 +33959,669 @@
           "declaration": {
             "name": "QtiIndex",
             "module": "packages/qti-processing/src/components/qti-index/qti-index.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-processing/src/components/qti-inside/qti-inside.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiInside",
+          "members": [
+            {
+              "kind": "method",
+              "name": "#isInsideCircle",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "point",
+                  "type": {
+                    "text": "Point"
+                  }
+                },
+                {
+                  "name": "coords",
+                  "type": {
+                    "text": "number[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#isInsideEllipse",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "point",
+                  "type": {
+                    "text": "Point"
+                  }
+                },
+                {
+                  "name": "coords",
+                  "type": {
+                    "text": "number[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#isInsidePolygon",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "point",
+                  "type": {
+                    "text": "Point"
+                  }
+                },
+                {
+                  "name": "coords",
+                  "type": {
+                    "text": "number[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#isInsideRect",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "point",
+                  "type": {
+                    "text": "Point"
+                  }
+                },
+                {
+                  "name": "coords",
+                  "type": {
+                    "text": "number[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#parseCoords",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#parsePoint",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Point | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "calculate",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "Readonly<T>"
+                }
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              },
+              "type": {
+                "text": "calculate() => Readonly<T>"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "context",
+              "type": {
+                "text": "ItemContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "coords",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "coords"
+            },
+            {
+              "kind": "method",
+              "name": "getResult",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "getVariables",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "qtiContext",
+              "type": {
+                "text": "QtiContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "result",
+              "type": {
+                "text": "any"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shape",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "shape"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "coords",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "coords"
+            },
+            {
+              "name": "shape",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "shape"
+            }
+          ],
+          "superclass": {
+            "name": "QtiExpression",
+            "package": "@qti-components/base"
+          },
+          "tagName": "qti-inside",
+          "customElement": true,
+          "modulePath": "packages/qti-processing/src/components/qti-inside/qti-inside.ts",
+          "definitionPath": "packages/qti-processing/src/components/qti-inside/qti-inside.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-inside",
+          "declaration": {
+            "name": "QtiInside",
+            "module": "packages/qti-processing/src/components/qti-inside/qti-inside.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiInside",
+          "declaration": {
+            "name": "QtiInside",
+            "module": "packages/qti-processing/src/components/qti-inside/qti-inside.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-processing/src/components/qti-integer-divide/qti-integer-divide.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiIntegerDivide",
+          "members": [
+            {
+              "kind": "method",
+              "name": "#collectIntegerValues",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "variables",
+                  "type": {
+                    "text": "ResponseVariable[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "calculate",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "Readonly<T>"
+                }
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              },
+              "type": {
+                "text": "calculate() => Readonly<T>"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "context",
+              "type": {
+                "text": "ItemContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getResult",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "number | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "getVariables",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "qtiContext",
+              "type": {
+                "text": "QtiContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "result",
+              "type": {
+                "text": "any"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "QtiExpression",
+            "package": "@qti-components/base"
+          },
+          "summary": "The qti-integer-divide operator performs integer division rounded down.",
+          "tagName": "qti-integer-divide",
+          "customElement": true,
+          "modulePath": "packages/qti-processing/src/components/qti-integer-divide/qti-integer-divide.ts",
+          "definitionPath": "packages/qti-processing/src/components/qti-integer-divide/qti-integer-divide.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-integer-divide",
+          "declaration": {
+            "name": "QtiIntegerDivide",
+            "module": "packages/qti-processing/src/components/qti-integer-divide/qti-integer-divide.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiIntegerDivide",
+          "declaration": {
+            "name": "QtiIntegerDivide",
+            "module": "packages/qti-processing/src/components/qti-integer-divide/qti-integer-divide.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-processing/src/components/qti-integer-modulus/qti-integer-modulus.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiIntegerModulus",
+          "members": [
+            {
+              "kind": "method",
+              "name": "#collectIntegerValues",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "variables",
+                  "type": {
+                    "text": "ResponseVariable[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "calculate",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "Readonly<T>"
+                }
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              },
+              "type": {
+                "text": "calculate() => Readonly<T>"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "context",
+              "type": {
+                "text": "ItemContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getResult",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "number | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "getVariables",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "qtiContext",
+              "type": {
+                "text": "QtiContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "result",
+              "type": {
+                "text": "any"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "QtiExpression",
+            "package": "@qti-components/base"
+          },
+          "summary": "The qti-integer-modulus operator returns the remainder of integer division.",
+          "tagName": "qti-integer-modulus",
+          "customElement": true,
+          "modulePath": "packages/qti-processing/src/components/qti-integer-modulus/qti-integer-modulus.ts",
+          "definitionPath": "packages/qti-processing/src/components/qti-integer-modulus/qti-integer-modulus.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-integer-modulus",
+          "declaration": {
+            "name": "QtiIntegerModulus",
+            "module": "packages/qti-processing/src/components/qti-integer-modulus/qti-integer-modulus.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiIntegerModulus",
+          "declaration": {
+            "name": "QtiIntegerModulus",
+            "module": "packages/qti-processing/src/components/qti-integer-modulus/qti-integer-modulus.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-processing/src/components/qti-integer-to-float/qti-integer-to-float.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiIntegerToFloat",
+          "members": [
+            {
+              "kind": "method",
+              "name": "calculate",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "Readonly<T>"
+                }
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              },
+              "type": {
+                "text": "calculate() => Readonly<T>"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "context",
+              "type": {
+                "text": "ItemContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getResult",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "number | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "getVariables",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "qtiContext",
+              "type": {
+                "text": "QtiContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "result",
+              "type": {
+                "text": "any"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "QtiExpression",
+            "package": "@qti-components/base"
+          },
+          "summary": "The qti-integer-to-float operator converts an integer to a float.",
+          "tagName": "qti-integer-to-float",
+          "customElement": true,
+          "modulePath": "packages/qti-processing/src/components/qti-integer-to-float/qti-integer-to-float.ts",
+          "definitionPath": "packages/qti-processing/src/components/qti-integer-to-float/qti-integer-to-float.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-integer-to-float",
+          "declaration": {
+            "name": "QtiIntegerToFloat",
+            "module": "packages/qti-processing/src/components/qti-integer-to-float/qti-integer-to-float.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiIntegerToFloat",
+          "declaration": {
+            "name": "QtiIntegerToFloat",
+            "module": "packages/qti-processing/src/components/qti-integer-to-float/qti-integer-to-float.ts"
           }
         }
       ]
@@ -33245,6 +34715,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
+          "summary": "The qti-is-null operator checks if a variable or expression is missing its value.",
           "tagName": "qti-is-null",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-is-null/qti-is-null.ts",
@@ -33266,6 +34737,186 @@
           "declaration": {
             "name": "QtiIsNull",
             "module": "packages/qti-processing/src/components/qti-is-null/qti-is-null.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-processing/src/components/qti-lcm/qti-lcm.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiLcm",
+          "members": [
+            {
+              "kind": "method",
+              "name": "#collectIntegerValues",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "variables",
+                  "type": {
+                    "text": "ResponseVariable[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#gcd",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "a",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "b",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#lcm",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "a",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "b",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "calculate",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "Readonly<T>"
+                }
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              },
+              "type": {
+                "text": "calculate() => Readonly<T>"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "context",
+              "type": {
+                "text": "ItemContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getResult",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "number | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "getVariables",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "qtiContext",
+              "type": {
+                "text": "QtiContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "result",
+              "type": {
+                "text": "any"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "QtiExpression",
+            "package": "@qti-components/base"
+          },
+          "tagName": "qti-lcm",
+          "customElement": true,
+          "modulePath": "packages/qti-processing/src/components/qti-lcm/qti-lcm.ts",
+          "definitionPath": "packages/qti-processing/src/components/qti-lcm/qti-lcm.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-lcm",
+          "declaration": {
+            "name": "QtiLcm",
+            "module": "packages/qti-processing/src/components/qti-lcm/qti-lcm.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiLcm",
+          "declaration": {
+            "name": "QtiLcm",
+            "module": "packages/qti-processing/src/components/qti-lcm/qti-lcm.ts"
           }
         }
       ]
@@ -33832,6 +35483,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
+          "summary": "The qti-map-response operator applies a mapping to a candidate's response.",
           "tagName": "qti-map-response",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-map-response/qti-map-response.ts",
@@ -33975,6 +35627,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
+          "summary": "The qti-match operator compares two expressions for exact value equality.",
           "tagName": "qti-match",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-match/qti-match.ts",
@@ -34160,6 +35813,139 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/qti-processing/src/components/qti-max/qti-max.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiMax",
+          "members": [
+            {
+              "kind": "method",
+              "name": "#collectNumericValues",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "variables",
+                  "type": {
+                    "text": "ResponseVariable[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "calculate",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "Readonly<T>"
+                }
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              },
+              "type": {
+                "text": "calculate() => Readonly<T>"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "context",
+              "type": {
+                "text": "ItemContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getResult",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "number | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "getVariables",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "qtiContext",
+              "type": {
+                "text": "QtiContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "result",
+              "type": {
+                "text": "any"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "QtiExpression",
+            "package": "@qti-components/base"
+          },
+          "summary": "The qti-max operator finds the largest value in a numerical set.",
+          "tagName": "qti-max",
+          "customElement": true,
+          "modulePath": "packages/qti-processing/src/components/qti-max/qti-max.ts",
+          "definitionPath": "packages/qti-processing/src/components/qti-max/qti-max.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-max",
+          "declaration": {
+            "name": "QtiMax",
+            "module": "packages/qti-processing/src/components/qti-max/qti-max.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiMax",
+          "declaration": {
+            "name": "QtiMax",
+            "module": "packages/qti-processing/src/components/qti-max/qti-max.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/qti-processing/src/components/qti-member/qti-member.ts",
       "declarations": [
         {
@@ -34268,6 +36054,139 @@
           "declaration": {
             "name": "QtiMember",
             "module": "packages/qti-processing/src/components/qti-member/qti-member.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-processing/src/components/qti-min/qti-min.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiMin",
+          "members": [
+            {
+              "kind": "method",
+              "name": "#collectNumericValues",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "variables",
+                  "type": {
+                    "text": "ResponseVariable[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "calculate",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "Readonly<T>"
+                }
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              },
+              "type": {
+                "text": "calculate() => Readonly<T>"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "context",
+              "type": {
+                "text": "ItemContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getResult",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "number | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "getVariables",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "qtiContext",
+              "type": {
+                "text": "QtiContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "result",
+              "type": {
+                "text": "any"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "QtiExpression",
+            "package": "@qti-components/base"
+          },
+          "summary": "The qti-min operator finds the smallest value in a numerical set.",
+          "tagName": "qti-min",
+          "customElement": true,
+          "modulePath": "packages/qti-processing/src/components/qti-min/qti-min.ts",
+          "definitionPath": "packages/qti-processing/src/components/qti-min/qti-min.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-min",
+          "declaration": {
+            "name": "QtiMin",
+            "module": "packages/qti-processing/src/components/qti-min/qti-min.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiMin",
+          "declaration": {
+            "name": "QtiMin",
+            "module": "packages/qti-processing/src/components/qti-min/qti-min.ts"
           }
         }
       ]
@@ -34475,6 +36394,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
+          "summary": "The qti-not operator performs logical negation.",
           "tagName": "qti-not",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-not/qti-not.ts",
@@ -34704,6 +36624,7 @@
             "name": "QtiConditionExpression",
             "package": "@qti-components/base"
           },
+          "summary": "The qti-or operator evaluates if any provided boolean expressions are true.",
           "tagName": "qti-or",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-or/qti-or.ts",
@@ -34839,6 +36760,140 @@
           "declaration": {
             "name": "QtiOrdered",
             "module": "packages/qti-processing/src/components/qti-ordered/qti-ordered.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-processing/src/components/qti-pattern-match/qti-pattern-match.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiPatternMatch",
+          "members": [
+            {
+              "kind": "method",
+              "name": "calculate",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "Readonly<T>"
+                }
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              },
+              "type": {
+                "text": "calculate() => Readonly<T>"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "context",
+              "type": {
+                "text": "ItemContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getResult",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "getVariables",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "pattern",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "pattern"
+            },
+            {
+              "kind": "field",
+              "name": "qtiContext",
+              "type": {
+                "text": "QtiContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "result",
+              "type": {
+                "text": "any"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "pattern",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "pattern"
+            }
+          ],
+          "superclass": {
+            "name": "QtiExpression",
+            "package": "@qti-components/base"
+          },
+          "summary": "The qti-pattern-match operator checks a string against a regular expression.",
+          "tagName": "qti-pattern-match",
+          "customElement": true,
+          "modulePath": "packages/qti-processing/src/components/qti-pattern-match/qti-pattern-match.ts",
+          "definitionPath": "packages/qti-processing/src/components/qti-pattern-match/qti-pattern-match.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-pattern-match",
+          "declaration": {
+            "name": "QtiPatternMatch",
+            "module": "packages/qti-processing/src/components/qti-pattern-match/qti-pattern-match.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiPatternMatch",
+          "declaration": {
+            "name": "QtiPatternMatch",
+            "module": "packages/qti-processing/src/components/qti-pattern-match/qti-pattern-match.ts"
           }
         }
       ]
@@ -35124,6 +37179,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
+          "summary": "The qti-product operator calculates the product of multiple numerical values.",
           "tagName": "qti-product",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-product/qti-product.ts",
@@ -35441,6 +37497,168 @@
           "declaration": {
             "name": "QtiRandom",
             "module": "packages/qti-processing/src/components/qti-random/qti-random.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-processing/src/components/qti-repeat/qti-repeat.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiRepeat",
+          "members": [
+            {
+              "kind": "method",
+              "name": "#resolveRepeatCount",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#toResponseVariable",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ResponseVariable | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "unknown"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "calculate",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "Readonly<T>"
+                }
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              },
+              "type": {
+                "text": "calculate() => Readonly<T>"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "context",
+              "type": {
+                "text": "ItemContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getResult",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "ResponseVariable[]"
+                }
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "getVariables",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "numberRepeats",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "number-repeats"
+            },
+            {
+              "kind": "field",
+              "name": "qtiContext",
+              "type": {
+                "text": "QtiContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "result",
+              "type": {
+                "text": "any"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "number-repeats",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "numberRepeats"
+            }
+          ],
+          "superclass": {
+            "name": "QtiExpression",
+            "package": "@qti-components/base"
+          },
+          "summary": "The qti-repeat operator generates a container by repeating an expression.",
+          "tagName": "qti-repeat",
+          "customElement": true,
+          "modulePath": "packages/qti-processing/src/components/qti-repeat/qti-repeat.ts",
+          "definitionPath": "packages/qti-processing/src/components/qti-repeat/qti-repeat.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-repeat",
+          "declaration": {
+            "name": "QtiRepeat",
+            "module": "packages/qti-processing/src/components/qti-repeat/qti-repeat.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiRepeat",
+          "declaration": {
+            "name": "QtiRepeat",
+            "module": "packages/qti-processing/src/components/qti-repeat/qti-repeat.ts"
           }
         }
       ]
@@ -36089,6 +38307,150 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/qti-processing/src/components/qti-set-correct-response/qti-set-correct-response.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Web component that processes `setCorrectResponse` in QTI.",
+          "name": "QtiSetCorrectResponse",
+          "members": [
+            {
+              "kind": "method",
+              "name": "#formatValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | string[] | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "unknown"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#unwrapValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "unknown"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "process",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Processes the QTI rule and dispatches a custom event with the computed correct response value.",
+              "inheritedFrom": {
+                "name": "QtiRule",
+                "module": "packages/qti-processing/src/components/qti-rule/qti-rule.ts"
+              },
+              "type": {
+                "text": "process() => void"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "qti-set-correct-response",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "QtiRule",
+            "module": "/packages/qti-processing/src/components/qti-rule/qti-rule"
+          },
+          "tagName": "qti-set-correct-response",
+          "customElement": true,
+          "modulePath": "packages/qti-processing/src/components/qti-set-correct-response/qti-set-correct-response.ts",
+          "definitionPath": "packages/qti-processing/src/components/qti-set-correct-response/qti-set-correct-response.ts"
+        },
+        {
+          "kind": "class",
+          "description": "Encapsulates the logic for processing QTI setCorrectResponse expressions.",
+          "name": "QtiSetCorrectResponseRule",
+          "members": [
+            {
+              "kind": "method",
+              "name": "#unwrapResult",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "unknown"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "process",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "description": "Evaluates the expression and returns its value."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-set-correct-response",
+          "declaration": {
+            "name": "QtiSetCorrectResponse",
+            "module": "packages/qti-processing/src/components/qti-set-correct-response/qti-set-correct-response.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiSetCorrectResponse",
+          "declaration": {
+            "name": "QtiSetCorrectResponse",
+            "module": "packages/qti-processing/src/components/qti-set-correct-response/qti-set-correct-response.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiSetCorrectResponseRule",
+          "declaration": {
+            "name": "QtiSetCorrectResponseRule",
+            "module": "packages/qti-processing/src/components/qti-set-correct-response/qti-set-correct-response.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/qti-processing/src/components/qti-set-outcome-value/qti-set-outcome-value.ts",
       "declarations": [
         {
@@ -36192,6 +38554,321 @@
           "declaration": {
             "name": "QtiSetOutcomeValueRule",
             "module": "packages/qti-processing/src/components/qti-set-outcome-value/qti-set-outcome-value.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-processing/src/components/qti-set-template-value/qti-set-template-value.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Web component that processes `setTemplateValue` in QTI.",
+          "name": "QtiSetTemplateValue",
+          "members": [
+            {
+              "kind": "method",
+              "name": "#formatValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | string[] | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "unknown"
+                  }
+                }
+              ],
+              "description": "Formats the computed value before dispatching.\nEnsures numbers are converted to a universal format."
+            },
+            {
+              "kind": "method",
+              "name": "#unwrapValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "unknown"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "process",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Processes the QTI rule and dispatches a custom event with the computed template value.",
+              "inheritedFrom": {
+                "name": "QtiRule",
+                "module": "packages/qti-processing/src/components/qti-rule/qti-rule.ts"
+              },
+              "type": {
+                "text": "process() => void"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "qti-set-template-value",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "QtiRule",
+            "module": "/packages/qti-processing/src/components/qti-rule/qti-rule"
+          },
+          "tagName": "qti-set-template-value",
+          "customElement": true,
+          "modulePath": "packages/qti-processing/src/components/qti-set-template-value/qti-set-template-value.ts",
+          "definitionPath": "packages/qti-processing/src/components/qti-set-template-value/qti-set-template-value.ts"
+        },
+        {
+          "kind": "class",
+          "description": "Encapsulates the logic for processing QTI setTemplateValue expressions.",
+          "name": "QtiSetTemplateValueRule",
+          "members": [
+            {
+              "kind": "method",
+              "name": "#unwrapResult",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "unknown"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "process",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "description": "Evaluates the expression and returns its value."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-set-template-value",
+          "declaration": {
+            "name": "QtiSetTemplateValue",
+            "module": "packages/qti-processing/src/components/qti-set-template-value/qti-set-template-value.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiSetTemplateValue",
+          "declaration": {
+            "name": "QtiSetTemplateValue",
+            "module": "packages/qti-processing/src/components/qti-set-template-value/qti-set-template-value.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiSetTemplateValueRule",
+          "declaration": {
+            "name": "QtiSetTemplateValueRule",
+            "module": "packages/qti-processing/src/components/qti-set-template-value/qti-set-template-value.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-processing/src/components/qti-stats-operator/qti-stats-operator.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiStatsOperator",
+          "members": [
+            {
+              "kind": "method",
+              "name": "#collectNumericValues",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "variables",
+                  "type": {
+                    "text": "ResponseVariable[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#populationStandardDeviation",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "values",
+                  "type": {
+                    "text": "number[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "calculate",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "Readonly<T>"
+                }
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              },
+              "type": {
+                "text": "calculate() => Readonly<T>"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "context",
+              "type": {
+                "text": "ItemContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getResult",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "number | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "getVariables",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "qtiContext",
+              "type": {
+                "text": "QtiContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "result",
+              "type": {
+                "text": "any"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "name"
+            }
+          ],
+          "superclass": {
+            "name": "QtiExpression",
+            "package": "@qti-components/base"
+          },
+          "summary": "The qti-stats-operator performs statistical calculations on a container.",
+          "tagName": "qti-stats-operator",
+          "customElement": true,
+          "modulePath": "packages/qti-processing/src/components/qti-stats-operator/qti-stats-operator.ts",
+          "definitionPath": "packages/qti-processing/src/components/qti-stats-operator/qti-stats-operator.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-stats-operator",
+          "declaration": {
+            "name": "QtiStatsOperator",
+            "module": "packages/qti-processing/src/components/qti-stats-operator/qti-stats-operator.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiStatsOperator",
+          "declaration": {
+            "name": "QtiStatsOperator",
+            "module": "packages/qti-processing/src/components/qti-stats-operator/qti-stats-operator.ts"
           }
         }
       ]
@@ -36331,6 +39008,140 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/qti-processing/src/components/qti-substring/qti-substring.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiSubstring",
+          "members": [
+            {
+              "kind": "method",
+              "name": "calculate",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "Readonly<T>"
+                }
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              },
+              "type": {
+                "text": "calculate() => Readonly<T>"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "caseSensitive",
+              "type": {
+                "text": "string"
+              },
+              "default": "'true'",
+              "attribute": "case-sensitive"
+            },
+            {
+              "kind": "field",
+              "name": "context",
+              "type": {
+                "text": "ItemContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getResult",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "getVariables",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "qtiContext",
+              "type": {
+                "text": "QtiContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "result",
+              "type": {
+                "text": "any"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "case-sensitive",
+              "type": {
+                "text": "string"
+              },
+              "default": "'true'",
+              "fieldName": "caseSensitive"
+            }
+          ],
+          "superclass": {
+            "name": "QtiExpression",
+            "package": "@qti-components/base"
+          },
+          "summary": "The qti-substring operator checks if one string is contained within another.",
+          "tagName": "qti-substring",
+          "customElement": true,
+          "modulePath": "packages/qti-processing/src/components/qti-substring/qti-substring.ts",
+          "definitionPath": "packages/qti-processing/src/components/qti-substring/qti-substring.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-substring",
+          "declaration": {
+            "name": "QtiSubstring",
+            "module": "packages/qti-processing/src/components/qti-substring/qti-substring.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiSubstring",
+          "declaration": {
+            "name": "QtiSubstring",
+            "module": "packages/qti-processing/src/components/qti-substring/qti-substring.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/qti-processing/src/components/qti-subtract/index.ts",
       "declarations": [],
       "exports": [
@@ -36399,6 +39210,7 @@
           "superclass": {
             "module": "packages/qti-processing/src/components/qti-subtract/qti-subtract.ts"
           },
+          "summary": "The qti-subtract operator performs numerical subtraction.",
           "tagName": "qti-subtract",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-subtract/qti-subtract.ts",
@@ -36541,6 +39353,7 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
+          "summary": "The qti-sum operator calculates the total of multiple numerical values.",
           "tagName": "qti-sum",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-sum/qti-sum.ts",
@@ -36582,6 +39395,121 @@
           "declaration": {
             "name": "QtiSumExpression",
             "module": "packages/qti-processing/src/components/qti-sum/qti-sum.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-processing/src/components/qti-truncate/qti-truncate.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiTruncate",
+          "members": [
+            {
+              "kind": "method",
+              "name": "calculate",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "Readonly<T>"
+                }
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              },
+              "type": {
+                "text": "calculate() => Readonly<T>"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "context",
+              "type": {
+                "text": "ItemContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getResult",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "number | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "getVariables",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "qtiContext",
+              "type": {
+                "text": "QtiContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "result",
+              "type": {
+                "text": "any"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "QtiExpression",
+            "package": "@qti-components/base"
+          },
+          "summary": "The qti-truncate operator removes fractional parts of a number.",
+          "tagName": "qti-truncate",
+          "customElement": true,
+          "modulePath": "packages/qti-processing/src/components/qti-truncate/qti-truncate.ts",
+          "definitionPath": "packages/qti-processing/src/components/qti-truncate/qti-truncate.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-truncate",
+          "declaration": {
+            "name": "QtiTruncate",
+            "module": "packages/qti-processing/src/components/qti-truncate/qti-truncate.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiTruncate",
+          "declaration": {
+            "name": "QtiTruncate",
+            "module": "packages/qti-processing/src/components/qti-truncate/qti-truncate.ts"
           }
         }
       ]
