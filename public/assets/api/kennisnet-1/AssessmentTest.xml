@@ -13,7 +13,7 @@
       <qti-value>0</qti-value>
     </qti-default-value>
   </qti-outcome-declaration>
-  <qti-test-part identifier="TEST-PART" navigation-mode="linear" submission-mode="individual">
+  <qti-test-part identifier="TEST-PART" navigation-mode="nonlinear" submission-mode="individual">
     <qti-assessment-section identifier="SECTION" title="Section" visible="true">
       <qti-assessment-item-ref identifier="INTRODUCTION" href="INTRODUCTION.xml"
         category="info" />

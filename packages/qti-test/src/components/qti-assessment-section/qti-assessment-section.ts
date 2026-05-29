@@ -32,6 +32,8 @@ export class QtiAssessmentSection extends LitElement {
   }
   @property({ type: Boolean, converter: stringToBooleanConverter }) visible: boolean;
   @property({ type: Boolean, converter: stringToBooleanConverter, attribute: 'keep-together' }) keepTogether: boolean;
+  @property({ type: String, attribute: 'navigation-mode' }) navigationMode?: 'linear' | 'nonlinear';
+  @property({ type: String, attribute: 'submission-mode' }) submissionMode?: 'individual' | 'simultaneous';
 
   @consume({ context: testContext, subscribe: true })
   public _testContext?: TestContext;

@@ -4,7 +4,7 @@
     identifier="p16-pci-conformance-test"
     title="Q16 - Portable Custom Interaction"
     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd">
-    <qti-test-part identifier="testPart-1" navigation-mode="linear" submission-mode="individual">
+    <qti-test-part identifier="testPart-1" navigation-mode="nonlinear" submission-mode="individual">
         <qti-assessment-section identifier="section-1" title="PCI Conformance" visible="true">
             <qti-assessment-item-ref identifier="q16-pci-item1" href="item-1/qti.xml" />
             <qti-assessment-item-ref identifier="q16-pci-item2" href="item-2/qti.xml" />

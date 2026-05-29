@@ -25,6 +25,8 @@ export type ComputedContext = {
       title: string;
       completed?: boolean;
       items: ComputedItem[];
+      navigationMode: 'linear' | 'nonlinear';
+      submissionMode: 'individual' | 'simultaneous';
     }[];
   }[];
 };
