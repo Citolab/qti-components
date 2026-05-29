@@ -89,6 +89,43 @@ describe('qtiTransformItem API Methods', () => {
     );
   });
 
+  it('should preserve MathML namespaces when converting to HTML', async () => {
+    const htmlDoc = qtiTransformItem()
+      .parse(
+        xml`
+        <qti-assessment-item xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" xmlns:m="http://www.w3.org/1998/Math/MathML">
+          <qti-item-body>
+            <qti-prompt>
+              mathml:
+              <m:math display="inline">
+                <m:semantics>
+                  <m:mfrac>
+                    <m:mn>1</m:mn>
+                    <m:msqrt>
+                      <m:mn>2</m:mn>
+                    </m:msqrt>
+                  </m:mfrac>
+                </m:semantics>
+              </m:math>
+            </qti-prompt>
+          </qti-item-body>
+        </qti-assessment-item>`
+      )
+      .htmlDoc();
+
+    const elements = Array.from(htmlDoc.querySelectorAll('*'));
+    const qtiItem = elements.find(element => element.localName === 'qti-assessment-item');
+    const math = elements.find(element => element.localName === 'math');
+    const fraction = elements.find(element => element.localName === 'mfrac');
+    const squareRoot = elements.find(element => element.localName === 'msqrt');
+
+    expect(qtiItem?.namespaceURI).toBe('http://www.w3.org/1999/xhtml');
+    expect(math?.namespaceURI).toBe('http://www.w3.org/1998/Math/MathML');
+    expect(math?.getAttribute('display')).toBe('inline');
+    expect(fraction?.namespaceURI).toBe('http://www.w3.org/1998/Math/MathML');
+    expect(squareRoot?.namespaceURI).toBe('http://www.w3.org/1998/Math/MathML');
+  });
+
   it('should update elements with pciHooks correctly', async () => {
     const parsedXML = qtiTransformItem()
       .parse(
