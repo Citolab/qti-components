@@ -42,8 +42,14 @@ export interface ModuleResolutionConfig {
   };
 }
 
+export type LoadOptions = {
+  signal?: AbortSignal;
+  /** Whether to auto-run `shuffleInteractions()` after loading. Defaults to `true` for backwards compatibility. */
+  shuffle?: boolean;
+};
+
 export type transformItemApi = {
-  load: (uri: string, signal?: AbortSignal) => Promise<transformItemApi>;
+  load: (uri: string, opts?: AbortSignal | LoadOptions) => Promise<transformItemApi>;
   parse: (xmlString: string) => transformItemApi;
   path: (location: string) => transformItemApi;
   fn: (fn: (xmlFragment: XMLDocument) => void) => transformItemApi;
@@ -70,7 +76,8 @@ export const qtiTransformItem = (cache: boolean = false) => {
   let xmlUri = '';
 
   const api: transformItemApi = {
-    load(uri: string, signal?: AbortSignal) {
+    load(uri: string, opts?: AbortSignal | LoadOptions) {
+      const { signal, shuffle = true } = opts instanceof AbortSignal ? { signal: opts, shuffle: true } : (opts ?? {});
       xmlUri = uri;
       const fullKey = encodeURI(uri);
       if (cache) {
@@ -80,7 +87,7 @@ export const qtiTransformItem = (cache: boolean = false) => {
       }
       return loadXML(uri, signal).then(xml => {
         xmlFragment = xml;
-        api.shuffleInteractions();
+        if (shuffle) api.shuffleInteractions();
         if (cache) sessionStorage.setItem(fullKey, new XMLSerializer().serializeToString(xmlFragment));
         return api;
       });
@@ -346,22 +353,12 @@ export const qtiTransformItem = (cache: boolean = false) => {
             return api;
           }
 
-          const originalOrder = [...nonFixedChoices];
-          let shuffled = false;
-          let attempts = 0;
-
-          while (!shuffled && attempts < 20) {
-            attempts++;
-            for (let i = nonFixedChoices.length - 1; i > 0; i--) {
-              const j = Math.floor(Math.random() * (i + 1));
-              [nonFixedChoices[i], nonFixedChoices[j]] = [nonFixedChoices[j], nonFixedChoices[i]];
-            }
-            shuffled = !nonFixedChoices.every((choice, index) => choice === originalOrder[index]);
-          }
-
-          if (!shuffled) {
-            console.warn('Failed to shuffle the choices after multiple attempts.');
-            return null;
+          // Sattolo's algorithm: produces a uniform random cyclic permutation,
+          // guaranteeing every element ends up in a different position (so the
+          // resulting order is never equal to the original) in a single O(n) pass.
+          for (let i = nonFixedChoices.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * i);
+            [nonFixedChoices[i], nonFixedChoices[j]] = [nonFixedChoices[j], nonFixedChoices[i]];
           }
 
           // Remove the shuffle attribute
