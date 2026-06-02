@@ -38,9 +38,15 @@ export default css`
     flex: 1;
   }
 
+  [part='drop-list'][active],
+  [part='drop-list'][enabled],
+  [part='drops']:has(drop-list > qti-simple-choice) {
+    background-color: var(--qti-background-color-active-droplist);
+  }
+
   [part='drop-list'][active] {
-    border-color: var(--qti-border-active) !important;
-    background-color: var(--qti-bg-active) !important;
+    border-color: var(--qti-border-active);
+    background-color: var(--qti-bg-active);
   }
 
   [part='drop-list'][enabled] {
