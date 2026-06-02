@@ -133,10 +133,10 @@ describe('drag-drop.utils', () => {
 
     applyDropzoneAutoSizing([draggableA, draggableB], [droppable], [dragContainer], hostWindow);
 
-    expect(droppable.style.minHeight).toBe('40px');
+    expect(droppable.style.minHeight).toBe('var(--qti-dropzone-min-height, 40px)');
     expect(droppable.style.minWidth).toBe('50px');
-    expect(slot.style.minHeight).toBe('40px');
-    expect(dragContainer.style.minHeight).toBe('40px');
+    expect(slot.style.minHeight).toBe('var(--qti-dropzone-min-height, 40px)');
+    expect(dragContainer.style.minHeight).toBe('var(--qti-drag-container-min-height, 40px)');
     expect(dropContainer.style.gridTemplateColumns).toContain('minmax');
   });
 });

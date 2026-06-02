@@ -128,7 +128,7 @@ export function applyDropzoneAutoSizing(
   }
 
   droppables.forEach(droppable => {
-    droppable.style.minHeight = `${maxDraggableHeight}px`;
+    droppable.style.minHeight = `var(--qti-dropzone-min-height, ${maxDraggableHeight}px)`;
 
     if (isGridLayout || isGapElement) {
       droppable.style.minWidth = `${maxDraggableWidth}px`;
@@ -136,11 +136,11 @@ export function applyDropzoneAutoSizing(
 
     const dropSlot: HTMLElement | null = droppable.shadowRoot?.querySelector('slot[part="dropslot"]');
     if (dropSlot) {
-      dropSlot.style.minHeight = `${maxDraggableHeight}px`;
+      dropSlot.style.minHeight = `var(--qti-dropzone-min-height, ${maxDraggableHeight}px)`;
     }
   });
 
   dragContainers.forEach(dragContainer => {
-    dragContainer.style.minHeight = `${maxDraggableHeight}px`;
+    dragContainer.style.minHeight = `var(--qti-drag-container-min-height, ${maxDraggableHeight}px)`;
   });
 }

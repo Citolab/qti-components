@@ -62,7 +62,7 @@ export default css`
 
   drop-list [qti-draggable='true']:state(candidate-incorrect),
   [part='qti-simple-choice']:state(candidate-incorrect) {
-    background-color: var(--qti-incorrect) !important;
+    background-color: var(--qti-incorrect);
   }
 
   [part='container'] {
