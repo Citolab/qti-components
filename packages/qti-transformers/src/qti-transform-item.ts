@@ -25,6 +25,7 @@ import {
   toHTML
 } from './qti-transformers';
 import { createSeededRandom } from './qti-prng';
+import { shuffleKeepingFixed } from './qti-shuffle';
 
 // Type definition for module resolution config
 export interface ModuleResolutionConfig {
@@ -88,17 +89,22 @@ export const qtiTransformItem = (cache: boolean = false) => {
         shuffleSeed = null
       } = opts instanceof AbortSignal ? { signal: opts, shuffle: true, shuffleSeed: null } : (opts ?? {});
       xmlUri = uri;
-      const fullKey = encodeURI(uri);
+      const fullKey = `${encodeURI(uri)}::qtiTransformItem:v2`;
+      const applyLoadOptions = () => {
+        if (shuffle) api.shuffleInteractions(shuffleSeed);
+        return api;
+      };
       if (cache) {
-        if (sessionStorage.getItem(fullKey)) {
-          return Promise.resolve(api.parse(sessionStorage.getItem(fullKey)!));
+        const cachedXml = sessionStorage.getItem(fullKey);
+        if (cachedXml) {
+          api.parse(cachedXml);
+          return Promise.resolve(applyLoadOptions());
         }
       }
       return loadXML(uri, signal).then(xml => {
         xmlFragment = xml;
-        if (shuffle) api.shuffleInteractions(shuffleSeed);
         if (cache) sessionStorage.setItem(fullKey, new XMLSerializer().serializeToString(xmlFragment));
-        return api;
+        return applyLoadOptions();
       });
     },
     parse(xmlString: string): typeof api {
@@ -350,53 +356,49 @@ export const qtiTransformItem = (cache: boolean = false) => {
         interactionIndex++;
         const query = getShuffleQuerySelectorByTagName(shuffleInteraction.tagName.toLowerCase());
         const queries = Array.isArray(query) ? query : [query];
+        let shuffledAny = false;
 
         let queryIndex = 0;
         for (const q of queries) {
+          if (!q) continue;
           const random = seeded ? createSeededRandom(`${seed}:${itemId}:${responseId}:${queryIndex}`) : Math.random;
           queryIndex++;
-          const choices = Array.from(shuffleInteraction.querySelectorAll(q)) as HTMLElement[];
-
-          const fixedChoices = choices
-            .map((choice, originalOrder) => ({
-              element: choice,
-              fixed: choice.hasAttribute('fixed') && choice.getAttribute('fixed') === 'true',
-              originalOrder
-            }))
-            .filter(choice => choice.fixed);
-
-          const nonFixedChoices = choices.filter(
-            choice => !choice.hasAttribute('fixed') || choice.getAttribute('fixed') !== 'true'
+          const choices = (Array.from(shuffleInteraction.querySelectorAll(q)) as HTMLElement[]).filter(
+            choice => choice.parentElement !== null
           );
 
-          if (nonFixedChoices.length <= 1) {
+          if (choices.filter(choice => choice.getAttribute('fixed') !== 'true').length <= 1) {
             console.warn('Shuffling is not possible with fewer than 2 non-fixed elements.');
-            return api;
+            continue;
           }
 
-          // Sattolo's algorithm: produces a uniform random cyclic permutation,
-          // guaranteeing every element ends up in a different position (so the
-          // resulting order is never equal to the original) in a single O(n) pass.
-          for (let i = nonFixedChoices.length - 1; i > 0; i--) {
-            const j = Math.floor(random() * i);
-            [nonFixedChoices[i], nonFixedChoices[j]] = [nonFixedChoices[j], nonFixedChoices[i]];
+          const parent = choices[0].parentElement;
+          if (!parent || choices.some(choice => choice.parentElement !== parent)) {
+            console.warn('Shuffling is not possible when choices do not share the same parent element.');
+            continue;
           }
 
-          // Remove the shuffle attribute
+          const anchor = choices[choices.length - 1].nextSibling;
+          const orderedChoices = shuffleKeepingFixed(
+            choices.map(choice => ({
+              element: choice,
+              fixed: choice.getAttribute('fixed') === 'true'
+            })),
+            random
+          );
+
+          for (const choice of choices) {
+            choice.remove();
+          }
+          for (const { element } of orderedChoices) {
+            parent.insertBefore(element, anchor);
+          }
+
+          shuffledAny = true;
+        }
+
+        if (shuffledAny) {
           shuffleInteraction.removeAttribute('shuffle');
-
-          // Reorder the elements in the DOM
-          let nonFixedIndex = 0;
-          for (const nonFixedChoice of nonFixedChoices) {
-            nonFixedChoice.parentElement.insertBefore(nonFixedChoice, fixedChoices[nonFixedIndex]?.element);
-            nonFixedIndex++;
-          }
-          for (const fixedChoice of fixedChoices) {
-            fixedChoice.element.parentElement.insertBefore(
-              fixedChoice.element,
-              nonFixedChoices[fixedChoice.originalOrder]
-            );
-          }
         }
       }
 

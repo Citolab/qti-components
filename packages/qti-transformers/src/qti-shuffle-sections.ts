@@ -20,6 +20,7 @@
  */
 
 import { createSeededRandom } from './qti-prng';
+import { shuffleKeepingFixed } from './qti-shuffle';
 
 const isLocal = (el: Element, ...names: string[]): boolean =>
   names.includes(el.localName) || names.includes(el.localName?.toLowerCase?.());
@@ -39,28 +40,10 @@ const sectionShuffles = (section: Element): boolean =>
     child => isLocal(child, 'qti-ordering', 'ordering') && attrIsTrue(child, 'shuffle')
   );
 
-const rngFor = (seed: string | number, key: string): (() => number) => createSeededRandom(`${seed}:${key}`);
+const rngFor = (seed: string | number, key: string) => createSeededRandom(`${seed}:${key}`);
 
 /** A movable unit in a section: one or more sibling nodes that move together. */
 type Unit = { nodes: Element[]; fixed: boolean };
-
-/** Fisher–Yates on the non-fixed units; fixed units keep their slot index. */
-function shuffleKeepingFixed(units: Unit[], rng: () => number): Unit[] {
-  const movable = units.filter(u => !u.fixed);
-  for (let i = movable.length - 1; i > 0; i--) {
-    const j = Math.floor(rng() * (i + 1));
-    [movable[i], movable[j]] = [movable[j], movable[i]];
-  }
-  const result = new Array<Unit>(units.length);
-  units.forEach((u, i) => {
-    if (u.fixed) result[i] = u;
-  });
-  let m = 0;
-  for (let i = 0; i < result.length; i++) {
-    if (!result[i]) result[i] = movable[m++];
-  }
-  return result;
-}
 
 function orderSection(section: Element, seed: string | number): void {
   // Depth-first: let every child section order itself first.
