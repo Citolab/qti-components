@@ -10,12 +10,19 @@
  */
 
 import { itemsFromTest, loadXML, parseXML, setLocation, toHTML } from './qti-transformers';
+import { shuffleSectionsOrdering } from './qti-shuffle-sections';
 
 export type transformTestApi = {
   load: (uri: string, signal?: AbortSignal) => Promise<transformTestApi>;
   parse: (xmlString: string) => transformTestApi;
   path: (location: string) => transformTestApi;
   fn: (fn: (xmlFragment: XMLDocument) => void) => transformTestApi;
+  /**
+   * Deterministically shuffle the children of every section that carries a
+   * <qti-ordering shuffle="true">, honoring fixed items and nested
+   * keep-together / visible rules. The same seed reproduces the same order.
+   */
+  shuffleOrdering: (seed: string | number) => transformTestApi;
   items: () => { identifier: string; href: string; category: string }[];
   html: () => string;
   xml: () => string;
@@ -47,6 +54,10 @@ export const qtiTransformTest = (): transformTestApi => {
     },
     fn(fn: (xmlFragment: XMLDocument) => void) {
       fn(xmlFragment);
+      return api;
+    },
+    shuffleOrdering(seed: string | number) {
+      shuffleSectionsOrdering(xmlFragment, seed);
       return api;
     },
     items() {

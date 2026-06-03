@@ -24,6 +24,7 @@ import {
   stripStyleSheets,
   toHTML
 } from './qti-transformers';
+import { createSeededRandom } from './qti-prng';
 
 // Type definition for module resolution config
 export interface ModuleResolutionConfig {
@@ -46,6 +47,10 @@ export type LoadOptions = {
   signal?: AbortSignal;
   /** Whether to auto-run `shuffleInteractions()` after loading. Defaults to `true` for backwards compatibility. */
   shuffle?: boolean;
+  /** Optional seed for deterministic interaction shuffling. When set, the same
+   * seed reproduces the same choice order across reloads (e.g. session restart).
+   * When omitted, shuffling falls back to Math.random (non-deterministic). */
+  shuffleSeed?: string | number | null;
 };
 
 export type transformItemApi = {
@@ -63,7 +68,7 @@ export type transformItemApi = {
   extendElementsWithClass: (param?: string) => transformItemApi;
   customInteraction: (baseRef: string, baseItem: string) => transformItemApi;
   convertCDATAtoComment: () => transformItemApi;
-  shuffleInteractions: () => transformItemApi;
+  shuffleInteractions: (seed?: string | number | null) => transformItemApi;
   stripStyleSheets: () => transformItemApi;
   html: () => string;
   xml: () => string;
@@ -77,7 +82,11 @@ export const qtiTransformItem = (cache: boolean = false) => {
 
   const api: transformItemApi = {
     load(uri: string, opts?: AbortSignal | LoadOptions) {
-      const { signal, shuffle = true } = opts instanceof AbortSignal ? { signal: opts, shuffle: true } : (opts ?? {});
+      const {
+        signal,
+        shuffle = true,
+        shuffleSeed = null
+      } = opts instanceof AbortSignal ? { signal: opts, shuffle: true, shuffleSeed: null } : (opts ?? {});
       xmlUri = uri;
       const fullKey = encodeURI(uri);
       if (cache) {
@@ -87,7 +96,7 @@ export const qtiTransformItem = (cache: boolean = false) => {
       }
       return loadXML(uri, signal).then(xml => {
         xmlFragment = xml;
-        if (shuffle) api.shuffleInteractions();
+        if (shuffle) api.shuffleInteractions(shuffleSeed);
         if (cache) sessionStorage.setItem(fullKey, new XMLSerializer().serializeToString(xmlFragment));
         return api;
       });
@@ -323,17 +332,29 @@ export const qtiTransformItem = (cache: boolean = false) => {
 
       return api;
     },
-    shuffleInteractions(): typeof api {
+    shuffleInteractions(seed?: string | number | null): typeof api {
       const shuffleElements = xmlFragment.querySelectorAll(`[shuffle="true"]`);
       const shuffleInteractions = Array.from(shuffleElements).filter(e =>
         e.tagName?.toLowerCase().endsWith('-interaction')
       );
 
+      // When a seed is supplied, shuffling is deterministic and reproducible
+      // across reloads; each interaction/group draws its own stream so they are
+      // independent and stable even if siblings change.
+      const seeded = seed != null && `${seed}`.length > 0;
+      const itemId = xmlFragment.querySelector?.('qti-assessment-item')?.getAttribute('identifier') ?? '';
+
+      let interactionIndex = 0;
       for (const shuffleInteraction of shuffleInteractions) {
+        const responseId = shuffleInteraction.getAttribute('response-identifier') ?? `${interactionIndex}`;
+        interactionIndex++;
         const query = getShuffleQuerySelectorByTagName(shuffleInteraction.tagName.toLowerCase());
         const queries = Array.isArray(query) ? query : [query];
 
+        let queryIndex = 0;
         for (const q of queries) {
+          const random = seeded ? createSeededRandom(`${seed}:${itemId}:${responseId}:${queryIndex}`) : Math.random;
+          queryIndex++;
           const choices = Array.from(shuffleInteraction.querySelectorAll(q)) as HTMLElement[];
 
           const fixedChoices = choices
@@ -357,7 +378,7 @@ export const qtiTransformItem = (cache: boolean = false) => {
           // guaranteeing every element ends up in a different position (so the
           // resulting order is never equal to the original) in a single O(n) pass.
           for (let i = nonFixedChoices.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * i);
+            const j = Math.floor(random() * i);
             [nonFixedChoices[i], nonFixedChoices[j]] = [nonFixedChoices[j], nonFixedChoices[i]];
           }
 
