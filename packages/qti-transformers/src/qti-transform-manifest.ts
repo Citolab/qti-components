@@ -1,4 +1,4 @@
-import { loadXML, parseXML } from './qti-transformers';
+import { loadXML, parseXML } from './shared/xml';
 
 export const qtiTransformManifest = (): {
   load: (uri: string, signal?: AbortSignal) => Promise<typeof api>;

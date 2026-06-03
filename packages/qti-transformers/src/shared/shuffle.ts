@@ -1,4 +1,4 @@
-import type { SeededRandomSource } from './qti-prng';
+import type { SeededRandomSource } from './prng';
 
 export type RandomSource = SeededRandomSource | (() => number);
 

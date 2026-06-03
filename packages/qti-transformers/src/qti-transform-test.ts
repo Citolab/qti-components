@@ -9,8 +9,9 @@
  * const xml = qtiTransformer.xml();
  */
 
-import { itemsFromTest, loadXML, parseXML, setLocation, toHTML } from './qti-transformers';
-import { shuffleSectionsOrdering } from './qti-shuffle-sections';
+import { loadXML, parseXML, setLocation, toHTML } from './shared/xml';
+import { itemsFromTest } from './test/items';
+import { shuffleSectionsOrdering } from './test/shuffle-sections';
 
 export type transformTestApi = {
   load: (uri: string, signal?: AbortSignal) => Promise<transformTestApi>;

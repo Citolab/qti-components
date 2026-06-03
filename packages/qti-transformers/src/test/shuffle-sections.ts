@@ -1,26 +1,5 @@
-/**
- * Seed-deterministic QTI section shuffling.
- *
- * Reorders the children of every <qti-assessment-section> that carries a
- * <qti-ordering shuffle="true">, following QTI 3.0 selection/ordering rules:
- *
- *  - Depth-first: a child section orders its own children before the parent
- *    reorders it.
- *  - Item refs with fixed="true" stay in their authored position; the other
- *    units shuffle around them.
- *  - A child section with keep-together="true" OR visible="true" moves as a
- *    single block (its items stay grouped and internally ordered).
- *  - A child section with keep-together="false" AND visible="false" is
- *    dissolved: its (already internally ordered) item refs are poured into the
- *    parent pool and interleaved with the parent's own units.
- *
- * The same `seed` always produces the same order, so a restarted session keeps
- * its sequence. Each section draws from its own PRNG stream (seed + section id)
- * so sibling sections are independent and stable.
- */
-
-import { createSeededRandom } from './qti-prng';
-import { shuffleKeepingFixed } from './qti-shuffle';
+import { createSeededRandom } from '../shared/prng';
+import { shuffleKeepingFixed } from '../shared/shuffle';
 
 const isLocal = (el: Element, ...names: string[]): boolean =>
   names.includes(el.localName) || names.includes(el.localName?.toLowerCase?.());
@@ -45,6 +24,26 @@ const rngFor = (seed: string | number, key: string) => createSeededRandom(`${see
 /** A movable unit in a section: one or more sibling nodes that move together. */
 type Unit = { nodes: Element[]; fixed: boolean };
 
+/**
+ * Seed-deterministic QTI section shuffling.
+ *
+ * Reorders the children of every <qti-assessment-section> that carries a
+ * <qti-ordering shuffle="true">, following QTI 3.0 selection/ordering rules:
+ *
+ *  - Depth-first: a child section orders its own children before the parent
+ *    reorders it.
+ *  - Item refs with fixed="true" stay in their authored position; the other
+ *    units shuffle around them.
+ *  - A child section with keep-together="true" OR visible="true" moves as a
+ *    single block (its items stay grouped and internally ordered).
+ *  - A child section with keep-together="false" AND visible="false" is
+ *    dissolved: its (already internally ordered) item refs are poured into the
+ *    parent pool and interleaved with the parent's own units.
+ *
+ * The same `seed` always produces the same order, so a restarted session keeps
+ * its sequence. Each section draws from its own PRNG stream (seed + section id)
+ * so sibling sections are independent and stable.
+ */
 function orderSection(section: Element, seed: string | number): void {
   // Depth-first: let every child section order itself first.
   for (const child of Array.from(section.children)) {
