@@ -17,7 +17,6 @@ export interface IMyQtiTest {
 
 export interface ITestNavigationMixin {
   navigate: 'item' | 'section' | null;
-  cacheTransform: boolean;
   requestTimeout: number;
   showLoadingIndicators: boolean;
 

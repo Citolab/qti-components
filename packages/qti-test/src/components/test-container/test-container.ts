@@ -1,12 +1,16 @@
+import { consume } from '@lit/context';
 import { LitElement, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { until } from 'lit/directives/until.js';
 
+import { configContext } from '@qti-components/base';
 import { watch } from '@qti-components/utilities';
 import { qtiTransformTest } from '@qti-components/transformers';
 
 // eslint-disable-next-line import/no-relative-packages
 import itemCss from '../../../../qti-theme/src/item.css?inline';
+
+import type { ConfigContext } from '@qti-components/base';
 
 /**
  * `<test-container>` is a custom element designed for hosting the qti-assessment-item.
@@ -35,6 +39,10 @@ export class TestContainer extends LitElement {
   @state()
   testXML: string = null;
 
+  @state()
+  @consume({ context: configContext, subscribe: true })
+  protected configContext: ConfigContext = {};
+
   /** Template content if provided */
   #templateContent: unknown = null;
 
@@ -45,7 +53,8 @@ export class TestContainer extends LitElement {
   protected async handleTestURLChange() {
     if (!this.testURL) return;
     try {
-      let api = await qtiTransformTest().load(this.testURL);
+      const explicitSeed = this.configContext?.shuffleSeed;
+      let api = (await qtiTransformTest().load(this.testURL)).shuffleOrdering(explicitSeed);
       // Apply external transformation if provided
       const qtiTest = this.closest('qti-test') as any; // Type assertion to access mixin properties
       if (qtiTest?.postLoadTestTransformCallback) {

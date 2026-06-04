@@ -23,18 +23,8 @@ import { loadXML, parseXML, setLocation, toHTML } from './shared/xml';
 
 export type { ModuleResolutionConfig };
 
-export type LoadOptions = {
-  signal?: AbortSignal;
-  /** Whether to auto-run `shuffleInteractions()` after loading. Defaults to `true` for backwards compatibility. */
-  shuffle?: boolean;
-  /** Optional seed for deterministic interaction shuffling. When set, the same
-   * seed reproduces the same choice order across reloads (e.g. session restart).
-   * When omitted, shuffling falls back to Math.random (non-deterministic). */
-  shuffleSeed?: string | number | null;
-};
-
 export type transformItemApi = {
-  load: (uri: string, opts?: AbortSignal | LoadOptions) => Promise<transformItemApi>;
+  load: (uri: string, signal?: AbortSignal) => Promise<transformItemApi>;
   parse: (xmlString: string) => transformItemApi;
   path: (location: string) => transformItemApi;
   fn: (fn: (xmlFragment: XMLDocument) => void) => transformItemApi;
@@ -56,38 +46,21 @@ export type transformItemApi = {
   xmlDoc: () => XMLDocument;
 };
 
-export const qtiTransformItem = (cache: boolean = false) => {
+export const qtiTransformItem = () => {
   let xmlFragment: XMLDocument;
   let xmlUri = '';
 
   const api: transformItemApi = {
-    load(uri: string, opts?: AbortSignal | LoadOptions) {
-      const {
-        signal,
-        shuffle = true,
-        shuffleSeed = null
-      } = opts instanceof AbortSignal ? { signal: opts, shuffle: true, shuffleSeed: null } : (opts ?? {});
+    load(uri: string, signal?: AbortSignal) {
       xmlUri = uri;
-      const fullKey = `${encodeURI(uri)}::qtiTransformItem:v2`;
-      const applyLoadOptions = () => {
-        if (shuffle) api.shuffleInteractions(shuffleSeed);
-        return api;
-      };
-      if (cache) {
-        const cachedXml = sessionStorage.getItem(fullKey);
-        if (cachedXml) {
-          api.parse(cachedXml);
-          return Promise.resolve(applyLoadOptions());
-        }
-      }
       return loadXML(uri, signal).then(xml => {
         xmlFragment = xml;
-        if (cache) sessionStorage.setItem(fullKey, new XMLSerializer().serializeToString(xmlFragment));
-        return applyLoadOptions();
+        return api;
       });
     },
     parse(xmlString: string): typeof api {
       xmlFragment = parseXML(xmlString);
+      xmlUri = '';
       return api;
     },
     path: (location: string): typeof api => {
@@ -112,7 +85,18 @@ export const qtiTransformItem = (cache: boolean = false) => {
       return api;
     },
     shuffleInteractions(seed?: string | number | null): typeof api {
-      shuffleInteractions(xmlFragment, seed);
+      const normalizedSeed = typeof seed === 'string' ? seed.trim() : seed;
+
+      if (normalizedSeed === null || normalizedSeed === undefined || normalizedSeed === '') {
+        const fallbackSeed = xmlUri || 'default-item-seed';
+        console.warn(
+          `[qtiTransformItem] No configContext.shuffleSeed provided; using "${fallbackSeed}" as deterministic fallback seed.`
+        );
+        shuffleInteractions(xmlFragment, fallbackSeed);
+        return api;
+      }
+
+      shuffleInteractions(xmlFragment, normalizedSeed);
       return api;
     },
     extendElementName: (tagName: string, extension: string): typeof api => {

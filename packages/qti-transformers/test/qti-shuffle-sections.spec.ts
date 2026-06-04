@@ -16,6 +16,9 @@ const flatSectionIds = (xmlStr: string, seed: string | number): string[] => {
     .map(e => e.getAttribute('identifier') ?? '');
 };
 
+const countOrderingElements = (xmlStr: string, seed: string | number): number =>
+  qtiTransformTest().parse(xmlStr).shuffleOrdering(seed).xmlDoc().getElementsByTagName('qti-ordering').length;
+
 const wrap = (sectionInner: string) => xml`
   <qti-assessment-test>
     <qti-test-part identifier="P1">
@@ -71,6 +74,10 @@ describe('shuffleOrdering', () => {
         </qti-test-part>
       </qti-assessment-test>`;
     expect(order(doc, 'seed')).toEqual(['I1', 'I2', 'I3', 'I4']);
+  });
+
+  it('removes consumed qti-ordering elements after shuffle', () => {
+    expect(countOrderingElements(EIGHT, 'seed-abc')).toBe(0);
   });
 
   it('moves a keep-together child section as a grouped block', () => {

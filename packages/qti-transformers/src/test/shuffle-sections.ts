@@ -14,8 +14,8 @@ const attrIsTrue = (el: Element, ...names: string[]): boolean =>
     return v === 'true' || v === '1';
   });
 
-const sectionShuffles = (section: Element): boolean =>
-  Array.from(section.children).some(
+const shuffleOrderingElements = (section: Element): Element[] =>
+  Array.from(section.children).filter(
     child => isLocal(child, 'qti-ordering', 'ordering') && attrIsTrue(child, 'shuffle')
   );
 
@@ -52,7 +52,8 @@ function orderSection(section: Element, seed: string | number): void {
     }
   }
 
-  if (!sectionShuffles(section)) {
+  const orderingEls = shuffleOrderingElements(section);
+  if (orderingEls.length === 0) {
     return;
   }
 
@@ -84,6 +85,9 @@ function orderSection(section: Element, seed: string | number): void {
   }
 
   if (units.length <= 1) {
+    for (const orderingEl of orderingEls) {
+      orderingEl.remove();
+    }
     return;
   }
 
@@ -99,6 +103,11 @@ function orderSection(section: Element, seed: string | number): void {
     for (const node of unit.nodes) {
       section.appendChild(node);
     }
+  }
+
+  // Ordering directives are consumed by this transform step.
+  for (const orderingEl of orderingEls) {
+    orderingEl.remove();
   }
 }
 

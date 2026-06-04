@@ -23,7 +23,7 @@ export type transformTestApi = {
    * <qti-ordering shuffle="true">, honoring fixed items and nested
    * keep-together / visible rules. The same seed reproduces the same order.
    */
-  shuffleOrdering: (seed: string | number) => transformTestApi;
+  shuffleOrdering: (seed?: string | number | null) => transformTestApi;
   items: () => { identifier: string; href: string; category: string }[];
   html: () => string;
   xml: () => string;
@@ -33,12 +33,14 @@ export type transformTestApi = {
 
 export const qtiTransformTest = (): transformTestApi => {
   let xmlFragment: XMLDocument;
+  let xmlUri = '';
 
   const api: transformTestApi = {
     async load(uri, signal) {
       return new Promise<transformTestApi>((resolve, _) => {
         loadXML(uri, signal).then(xml => {
           xmlFragment = xml;
+          xmlUri = uri;
 
           api.path(uri.substring(0, uri.lastIndexOf('/')));
           return resolve(api);
@@ -47,6 +49,7 @@ export const qtiTransformTest = (): transformTestApi => {
     },
     parse(xmlString: string) {
       xmlFragment = parseXML(xmlString);
+      xmlUri = '';
       return api;
     },
     path: (location: string): typeof api => {
@@ -57,8 +60,19 @@ export const qtiTransformTest = (): transformTestApi => {
       fn(xmlFragment);
       return api;
     },
-    shuffleOrdering(seed: string | number) {
-      shuffleSectionsOrdering(xmlFragment, seed);
+    shuffleOrdering(seed?: string | number | null) {
+      const normalizedSeed = typeof seed === 'string' ? seed.trim() : seed;
+
+      if (normalizedSeed === null || normalizedSeed === undefined || normalizedSeed === '') {
+        const fallbackSeed = xmlUri || 'default-test-seed';
+        console.warn(
+          `[qtiTransformTest] No configContext.shuffleSeed provided; using "${fallbackSeed}" as deterministic fallback seed.`
+        );
+        shuffleSectionsOrdering(xmlFragment, fallbackSeed);
+        return api;
+      }
+
+      shuffleSectionsOrdering(xmlFragment, normalizedSeed);
       return api;
     },
     items() {

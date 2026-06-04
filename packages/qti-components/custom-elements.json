@@ -30421,6 +30421,15 @@
               "description": "Template content if provided"
             },
             {
+              "kind": "field",
+              "name": "configContext",
+              "type": {
+                "text": "ConfigContext"
+              },
+              "privacy": "protected",
+              "default": "{}"
+            },
+            {
               "kind": "method",
               "name": "handleItemURLChange",
               "privacy": "protected"
@@ -41205,7 +41214,17 @@
           "kind": "class",
           "description": "`<qti-test>` is a custom element designed for rendering and interacting with QTI (Question and Test Interoperability) tests.\n\nThis component leverages several mixins to provide functionality for loading, navigating, processing, and displaying QTI test assessments.\n\n### Example Usage\n\nMinimal example including navigation:\n\n```html\n<qti-test>\n <test-navigation>\n   <test-container test-url=\"./path/to/assessment.xml\"></test-container>\n   <nav class=\"flex\">\n     <test-prev></test-prev>\n     <test-next></test-next>\n   </nav>\n </test-navigation>\n</qti-test>\n```\n\nUse the following file structure\nA qti-test loads a QTI3.0 assessmenttest.xml file from a package folder.\n\n```plaintext\nRoot/\n├── index.html\n└── /assets/api/examples/\n    ├── assessmenttest.xml\n    └── imsmanifest.xml\n\n```\n\n### Test components\n\nUse test components inside the qti-test component for added functionality.\n### Test next\n`<test-next> | TestNext`\n\n### Test prev\n\n`<test-prev> | TestPrev`\n### Test components\n\nYou can use normal class names to style the elements.\nAnd you can use the `test-prev` and `test-next` elements to navigate through the test.",
           "name": "QtiTest",
-          "members": [],
+          "members": [
+            {
+              "kind": "field",
+              "name": "configContext",
+              "type": {
+                "text": "ConfigContext"
+              },
+              "privacy": "public",
+              "default": "{}"
+            }
+          ],
           "events": [
             {
               "name": "qti-test-connected",
@@ -41387,6 +41406,15 @@
               },
               "default": "null",
               "description": "Template content if provided"
+            },
+            {
+              "kind": "field",
+              "name": "configContext",
+              "type": {
+                "text": "ConfigContext"
+              },
+              "privacy": "protected",
+              "default": "{}"
             },
             {
               "kind": "method",

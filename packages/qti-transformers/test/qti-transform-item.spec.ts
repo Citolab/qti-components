@@ -199,28 +199,25 @@ describe('qtiTransformItem API Methods', () => {
     expect(shuffledOrders.some(order => JSON.stringify(order) !== JSON.stringify(original))).toBe(true);
   });
 
-  it('does not shuffle interactions on load when shuffle is false', async () => {
+  it('does not shuffle interactions on load by default', async () => {
     mockXmlFetch(shuffledLoadItem);
 
-    const transformer = await qtiTransformItem().load('/item.xml', { shuffle: false });
+    const transformer = await qtiTransformItem().load('/item.xml');
     const interaction = transformer.xmlDoc().querySelector('qti-choice-interaction');
 
     expect(choiceIdentifiers(transformer.xmlDoc())).toEqual(['A', 'B', 'C', 'D']);
     expect(interaction?.getAttribute('shuffle')).toBe('true');
   });
 
-  it('applies the load shuffle option after reading from cache', async () => {
+  it('applies deterministic shuffle when explicitly chained after load', async () => {
     const fetchMock = mockXmlFetch(shuffledLoadItem);
 
-    const unshuffled = await qtiTransformItem(true).load('/cached-item.xml', { shuffle: false });
-    const shuffled = await qtiTransformItem(true).load('/cached-item.xml', { shuffleSeed: 'cached-seed' });
-    const unshuffledAgain = await qtiTransformItem(true).load('/cached-item.xml', { shuffle: false });
+    const first = (await qtiTransformItem().load('/item.xml')).shuffleInteractions('seeded-load');
+    const second = (await qtiTransformItem().load('/item.xml')).shuffleInteractions('seeded-load');
 
-    expect(fetchMock).toHaveBeenCalledTimes(1);
-    expect(choiceIdentifiers(unshuffled.xmlDoc())).toEqual(['A', 'B', 'C', 'D']);
-    expect(unshuffled.xmlDoc().querySelector('qti-choice-interaction')?.getAttribute('shuffle')).toBe('true');
-    expect(shuffled.xmlDoc().querySelector('qti-choice-interaction')?.hasAttribute('shuffle')).toBe(false);
-    expect(unshuffledAgain.xmlDoc().querySelector('qti-choice-interaction')?.getAttribute('shuffle')).toBe('true');
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(first.xmlDoc().querySelector('qti-choice-interaction')?.hasAttribute('shuffle')).toBe(false);
+    expect(choiceIdentifiers(first.xmlDoc())).toEqual(choiceIdentifiers(second.xmlDoc()));
   });
 
   it('shuffle fixed p1', async () => {
