@@ -110,7 +110,9 @@ jobs:
           printf '%s\n' 'registry=https://registry.npmjs.org/' 'provenance=true' > "$HOME/.npmrc"
 
       - name: Publish changesets
+        id: publish
         if: ${{ !inputs.dry_run && steps.version.outputs.has_changes == 'true' }}
+        continue-on-error: true
         shell: bash
         run: |
           # Unset pnpm-injected npm_config_* vars that npm doesn't understand
@@ -123,7 +125,7 @@ jobs:
           PNPM_GIT_CHECKS: 'false'
 
       - name: Reconcile missing npm publishes
-        if: ${{ !inputs.dry_run }}
+        if: ${{ always() && !inputs.dry_run && steps.version.outputs.has_changes == 'true' }}
         shell: bash
         run: |
           for var in $(env | grep -oP '^npm_config_\w+' | grep -vE '^npm_config_(registry|provenance|cache|userconfig)$'); do
