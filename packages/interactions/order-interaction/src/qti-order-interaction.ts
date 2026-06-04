@@ -63,42 +63,6 @@ export class QtiOrderInteraction extends DragDropSlottedSortableMixin(SlottedBas
       </div>`;
   }
 
-  public override toggleCorrectResponse(show: boolean): void {
-    // Always start by removing old correct answers
-    this.shadowRoot.querySelectorAll('.correct-option').forEach(option => option.remove());
-
-    if (show) {
-      const entries = this.#getCorrectOrderEntries();
-      const labelsByIdentifier = new Map<string, string>();
-      Array.from(this.querySelectorAll('qti-simple-choice')).forEach(choice => {
-        const id = choice.getAttribute('identifier');
-        const label = choice.textContent?.trim();
-        if (id && label) {
-          labelsByIdentifier.set(id, label);
-        }
-      });
-
-      entries.forEach(({ identifier, dropIndex }) => {
-        const label = labelsByIdentifier.get(identifier);
-        if (!label) return;
-
-        const relativeDrop = this.shadowRoot.querySelector(`drop-list[identifier="droplist${dropIndex}"]`);
-        if (!relativeDrop) return;
-
-        const span = document.createElement('span');
-        span.classList.add('correct-option');
-        span.textContent = label;
-        span.style.border = '1px solid var(--qti-correct)';
-        span.style.borderRadius = '4px';
-        span.style.padding = '2px 4px';
-        span.style.display = 'inline-block';
-        span.style.marginTop = '4px';
-
-        relativeDrop.insertAdjacentElement('afterend', span);
-      });
-    }
-  }
-
   public override toggleCandidateCorrection(show: boolean): void {
     super.toggleCandidateCorrection(show);
 

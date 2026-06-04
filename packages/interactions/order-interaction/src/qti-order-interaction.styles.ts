@@ -16,8 +16,9 @@ export default css`
   [part='drops'] {
     flex: 1;
     display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: 1fr;
+    grid-auto-flow: row;
+    grid-template-columns: repeat(auto-fit, minmax(var(--qti-drop-min-width, 120px), 1fr));
+    gap: 0.5rem;
   }
 
   :host([orientation='horizontal']) [part='drags'] {
@@ -30,7 +31,7 @@ export default css`
     flex-direction: column;
   }
   :host([orientation='vertical']) [part='drops'] {
-    grid-auto-flow: row;
+    grid-template-columns: 1fr;
   }
 
   [part='drop-list'] {
@@ -58,6 +59,10 @@ export default css`
     background-color: var(--qti-bg-active, rgba(0, 102, 204, 0.1)) !important;
     outline: 2px dashed var(--qti-border-active, #0066cc);
     outline-offset: -2px;
+  }
+
+  [part='drop-list']:has([part='qti-simple-choice']) {
+    --qti-drop-list-border: none;
   }
 
   /* Candidate correction colors for choices placed inside drop-lists. */
