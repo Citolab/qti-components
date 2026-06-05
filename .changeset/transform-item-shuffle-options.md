@@ -15,10 +15,11 @@ Shuffling is now deterministic when a seed is provided:
 
 Omitting the seed is also deterministic (no longer `Math.random`): both methods emit a `console.warn` and fall back to a deterministic seed derived from the loaded URI (`load()`), or the constant `default-item-seed` / `default-test-seed` when no URI is available (e.g. after `parse()`).
 
-Deterministic delivery now uses `configContext.shuffleSeed`:
+Deterministic delivery now uses `QTI_CONTEXT.seed` (a validated, branded `Seed`):
 
-- Item delivery: provide `configContext.shuffleSeed` on `<qti-item>` for seeded interaction shuffling in `item-container`.
-- Test delivery: provide `configContext.shuffleSeed` on `<qti-test>` for seeded test ordering in `test-container` and seeded item shuffling in test navigation. When set, all navigated items share this single seed; when omitted, each item falls back to its own URI-derived deterministic seed.
+- The seed moved off `configContext.shuffleSeed` onto the QTI runtime context `QTI_CONTEXT.seed`. It is typed as a branded `Seed` (non-empty letters/digits/hyphens); use the exported `isSeed` / `asSeed` guards at boundaries.
+- Item delivery: provide `QTI_CONTEXT.seed` via the `qtiContext` provided by `<qti-item>` for seeded interaction shuffling in `item-container`.
+- Test delivery: provide `QTI_CONTEXT.seed` via the `qtiContext` on `<test-navigation>` for seeded test ordering in `test-container` and seeded item shuffling during navigation. When set, all navigated items share this single seed; when omitted, each item falls back to its own URI-derived deterministic seed.
 
 Config context ownership in test delivery was also lifted to the top-level test host:
 

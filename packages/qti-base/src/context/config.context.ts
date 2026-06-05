@@ -7,11 +7,6 @@ export type CorrectResponseMode = 'internal' | 'full';
  */
 export interface ConfigContext {
   /**
-   * Optional deterministic seed used for test/item shuffling in container components.
-   */
-  shuffleSeed?: string | null;
-
-  /**
    * Optional category label for info items, used for reporting or display purposes.
    * Example: "General Information", "Instructions".
    */

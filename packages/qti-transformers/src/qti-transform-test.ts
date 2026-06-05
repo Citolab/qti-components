@@ -66,7 +66,7 @@ export const qtiTransformTest = (): transformTestApi => {
       if (normalizedSeed === null || normalizedSeed === undefined || normalizedSeed === '') {
         const fallbackSeed = xmlUri || 'default-test-seed';
         console.warn(
-          `[qtiTransformTest] No configContext.shuffleSeed provided; using "${fallbackSeed}" as deterministic fallback seed.`
+          `[qtiTransformTest] No QTI_CONTEXT.seed provided; using "${fallbackSeed}" as deterministic fallback seed.`
         );
         shuffleSectionsOrdering(xmlFragment, fallbackSeed);
         return api;

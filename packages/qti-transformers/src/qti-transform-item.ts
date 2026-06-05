@@ -90,7 +90,7 @@ export const qtiTransformItem = () => {
       if (normalizedSeed === null || normalizedSeed === undefined || normalizedSeed === '') {
         const fallbackSeed = xmlUri || 'default-item-seed';
         console.warn(
-          `[qtiTransformItem] No configContext.shuffleSeed provided; using "${fallbackSeed}" as deterministic fallback seed.`
+          `[qtiTransformItem] No QTI_CONTEXT.seed provided; using "${fallbackSeed}" as deterministic fallback seed.`
         );
         shuffleInteractions(xmlFragment, fallbackSeed);
         return api;

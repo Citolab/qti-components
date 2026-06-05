@@ -3,14 +3,14 @@ import { LitElement, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { until } from 'lit/directives/until.js';
 
-import { configContext } from '@qti-components/base';
+import { qtiContext } from '@qti-components/base';
 import { watch } from '@qti-components/utilities';
 import { qtiTransformItem } from '@qti-components/transformers';
 
 // eslint-disable-next-line import/no-relative-packages
 import itemCss from '../../../../qti-theme/src/item.css?inline';
 
-import type { ConfigContext } from '@qti-components/base';
+import type { QtiContext } from '@qti-components/base';
 
 /**
  * `<item-container>` is a custom element designed for hosting the qti-assessment-item.
@@ -41,8 +41,10 @@ export class ItemContainer extends LitElement {
   itemXML: string = null;
 
   @state()
-  @consume({ context: configContext, subscribe: true })
-  protected configContext: ConfigContext = {};
+  @consume({ context: qtiContext, subscribe: true })
+  protected qtiContext: QtiContext = {
+    QTI_CONTEXT: { testIdentifier: '', candidateIdentifier: '', environmentIdentifier: 'default' }
+  };
 
   /** Template content if provided */
   #templateContent: unknown = null;
@@ -51,7 +53,7 @@ export class ItemContainer extends LitElement {
   protected async handleItemURLChange() {
     if (!this.itemURL) return;
     try {
-      const explicitSeed = this.configContext?.shuffleSeed;
+      const explicitSeed = this.qtiContext?.QTI_CONTEXT?.seed;
       const api = (await qtiTransformItem().load(this.itemURL)).shuffleInteractions(explicitSeed);
       this.itemDoc = api.htmlDoc();
     } catch (error) {

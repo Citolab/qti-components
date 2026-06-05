@@ -8,6 +8,7 @@ import type { transformItemApi, transformTestApi } from '@qti-components/transfo
 import type { QtiAssessmentItemRef } from '../components/qti-assessment-item-ref/qti-assessment-item-ref';
 import type { QtiAssessmentSection } from '../components/qti-assessment-section/qti-assessment-section';
 import type { QtiAssessmentTest } from '../components/qti-assessment-test/qti-assessment-test';
+import type { TestNavigation } from '../components/test-navigation/test-navigation';
 import type { TestBaseInterface } from './test-base';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
@@ -473,7 +474,10 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
 
     private async _loadSingleItem(itemRef: QtiAssessmentItemRef, navigationId: number, controller: AbortController) {
       try {
-        const seed = this.configContext?.shuffleSeed;
+        // The shuffle seed lives on QTI_CONTEXT, which is provided by the descendant
+        // `<test-navigation>`. Since context flows downward, read it from that element
+        // so seeded item shuffling during navigation matches `test-container`.
+        const seed = (this.querySelector('test-navigation') as TestNavigation | null)?.qtiContext?.QTI_CONTEXT?.seed;
         let transformer = (await qtiTransformItem().load(itemRef.href, controller.signal)).shuffleInteractions(seed);
 
         if (this.postLoadTransformCallback) {
