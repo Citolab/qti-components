@@ -41,7 +41,12 @@ export const Default: Story = {
 
 export const Title: Story = {
   render: () => html`
-    <qti-test auto-score-items>
+    <qti-test
+      auto-score-items
+      .configContext=${{
+        infoItemCategory: 'info'
+      }}
+    >
       <test-navigation
         .initContext=${[
           {
@@ -55,9 +60,6 @@ export const Title: Story = {
             volgnummer: 2
           }
         ]}
-        .configContext=${{
-          infoItemCategory: 'info'
-        }}
         .sessionContext=${{
           navItemRefId: 'ITEM001'
         }}

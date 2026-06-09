@@ -1,10 +1,14 @@
+import { provide } from '@lit/context';
 import { html, LitElement } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { customElement, state } from 'lit/decorators.js';
+
+import { configContext } from '@qti-components/base';
 
 import { TestNavigationMixin, TestViewMixin } from '../../mixins';
 import { TestBaseMixin } from '../../mixins/test-base';
 import { TestProcessingMixin } from '../../mixins/test-processing.mixin';
 
+import type { ConfigContext } from '@qti-components/base';
 import type { IQtiTest } from '../../types/iqti-test';
 
 /**
@@ -59,6 +63,10 @@ import type { IQtiTest } from '../../types/iqti-test';
 export class QtiTest extends TestNavigationMixin(TestViewMixin(TestProcessingMixin(TestBaseMixin(LitElement)))) {
   // TODO: Properly implement IQtiTest interface
   // export class QtiTest extends TestLoaderMixin(TestNavigationMixin(TestViewMixin(TestBase))) {
+
+  @state()
+  @provide({ context: configContext })
+  public configContext: ConfigContext = {};
 
   /**
    * Renders the component's template.

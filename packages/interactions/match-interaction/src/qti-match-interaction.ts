@@ -1,6 +1,5 @@
 import { html, nothing } from 'lit';
 import { property, state } from 'lit/decorators.js';
-import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
 import { Interaction } from '@qti-components/base';
 import {
@@ -150,12 +149,12 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(SlottedBas
 
           if (match?.source) {
             const sourceChoice = this.querySelector(`qti-simple-associable-choice[identifier="${match.source}"]`);
-            const text = sourceChoice?.textContent?.trim();
+            const nodes = Array.from(sourceChoice?.childNodes || []).map(n => n.cloneNode(true));
 
-            if (text && !targetChoice.previousElementSibling?.classList.contains('correct-option')) {
+            if (nodes.length > 0 && !targetChoice.previousElementSibling?.classList.contains('correct-option')) {
               const textSpan = document.createElement('span');
               textSpan.classList.add('correct-option');
-              textSpan.textContent = text;
+              nodes.forEach(node => textSpan.appendChild(node));
 
               // Style the span
               textSpan.style.border = '1px solid var(--qti-correct)';
@@ -224,13 +223,15 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(SlottedBas
             <table part="table">
               <tr part="r-header">
                 <td></td>
-                ${this.targetChoices.map(col => html`<th part="r-header">${unsafeHTML(col.innerHTML)}</th>`)}
+                ${this.targetChoices.map(
+                  col => html`<th part="r-header">${Array.from(col.childNodes).map(n => n.cloneNode(true))}</th>`
+                )}
               </tr>
 
               ${this.sourceChoices.map(
                 row =>
                   html`<tr part="row">
-                    <td part="c-header">${unsafeHTML(row.innerHTML)}</td>
+                    <td part="c-header">${Array.from(row.childNodes).map(n => n.cloneNode(true))}</td>
                     ${this.targetChoices.map(col => {
                       const rowId = row.getAttribute('identifier');
                       const colId = col.getAttribute('identifier');

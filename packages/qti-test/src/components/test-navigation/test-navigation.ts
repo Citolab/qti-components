@@ -48,7 +48,7 @@ export class TestNavigation extends LitElement {
   };
 
   @state()
-  @provide({ context: configContext })
+  @consume({ context: configContext, subscribe: true })
   public configContext: ConfigContext = {};
 
   @state()
@@ -64,26 +64,6 @@ export class TestNavigation extends LitElement {
   protected computedContext: ComputedContext;
 
   @property({ type: Boolean, attribute: 'auto-score-items' }) autoScoreItems = false;
-
-  // @state()
-  // private stampContext: {
-  //   view?: View;
-  //   test?: unknown;
-  //   activeTestpart?: unknown;
-  //   activeSection?: unknown;
-  //   activeItem?: unknown;
-  // } = {
-  //   view: 'candidate',
-  //   activeItem: {},
-  //   activeSection: {
-  //     items: []
-  //   },
-  //   activeTestpart: {
-  //     items: []
-  //   },
-  //   test: {}
-  // };
-  // @property({ type: Boolean, reflect: true }) public debug = false;
 
   #testElement: QtiAssessmentTest;
 
@@ -114,22 +94,6 @@ export class TestNavigation extends LitElement {
     const reportValidityAfterScoring = this.configContext?.reportValidityAfterScoring === true ? true : false;
     qtiAssessmentItemEl.processResponse(true, reportValidityAfterScoring);
   }
-
-  // protected createRenderRoot(): HTMLElement | DocumentFragment {
-  //   return this;
-  // }
-
-  // myTemplate: TemplateFunction;
-
-  // connectedCallback(): void {
-  //   super.connectedCallback();
-  //   const templateElement = this.querySelector<HTMLTemplateElement>('template');
-  //   if (!templateElement) {
-  //     this.myTemplate = null;
-  //     return;
-  //   }
-  //   this.myTemplate = prepareTemplate(templateElement);
-  // }
 
   /**
    * Handles the 'test-show-correct-response' event.
@@ -421,10 +385,10 @@ export class TestNavigation extends LitElement {
                   score,
                   response,
                   index,
-                  // type,
                   active,
-                  // correct,
                   maxScore
+                  // type,
+                  // correct,
                   // incorrect,
                   // completed
                 };
@@ -434,36 +398,6 @@ export class TestNavigation extends LitElement {
         };
       })
     };
-
-    // const activeTestPart = this.computedContext.testParts.find(testPart => testPart.active);
-    // const activeSection = activeTestPart?.sections.find(section => section.active);
-    // const activeItem = activeSection?.items.find(item => item.active);
-    // const { variables, ...augmentedItem } = activeItem || {};
-
-    // if (!activeTestPart || !activeSection || !activeItem) {
-    //   this.stampContext = null;
-    //   return;
-    // }
-
-    // const augmentedTestPart = {
-    //   ...activeTestPart,
-    //   items: activeTestPart.sections.flatMap(section => section.items.map(({ variables, ...rest }) => rest)),
-    //   sections: activeTestPart.sections.map(section => ({
-    //     ...section,
-    //     items: section.items.map(({ variables, ...rest }) => rest)
-    //   }))
-    // };
-
-    // const augmentedSection = { ...activeSection, items: activeSection.items.map(({ variables, ...rest }) => rest) };
-    // const { testParts, ...activeTest } = this.computedContext;
-
-    // this.stampContext = {
-    //   view: this.computedContext.view,
-    //   activeItem: augmentedItem,
-    //   activeSection: augmentedSection,
-    //   activeTestpart: augmentedTestPart,
-    //   test: activeTest
-    // };
 
     this.dispatchEvent(
       new CustomEvent('qti-computed-context-updated', {

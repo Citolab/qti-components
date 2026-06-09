@@ -4,9 +4,11 @@ import { customElement, state } from 'lit/decorators.js';
 
 import { computedItemContext } from '@qti-components/base';
 import { configContext } from '@qti-components/base';
+import { qtiContext } from '@qti-components/base';
 
 import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { ConfigContext, CorrectResponseMode } from '@qti-components/base';
+import type { QtiContext } from '@qti-components/base';
 import type { ItemContext } from '@qti-components/base';
 import type { VariableDeclaration } from '@qti-components/base';
 import type { ComputedItemContext } from '@qti-components/base';
@@ -33,6 +35,20 @@ export class QtiItem extends LitElement {
   @state()
   @provide({ context: configContext })
   public configContext: ConfigContext = {};
+
+  /**
+   * Provided so that descendants (e.g. `<item-container>`) can read the QTI runtime
+   * context for standalone item delivery, including the optional shuffle `seed`.
+   */
+  @state()
+  @provide({ context: qtiContext })
+  public qtiContext: QtiContext = {
+    QTI_CONTEXT: {
+      testIdentifier: '',
+      candidateIdentifier: '',
+      environmentIdentifier: 'default'
+    }
+  };
 
   // Store event handlers as instance properties
   #onItemContextChanged = this.#handleItemContextChanged.bind(this);
