@@ -104,6 +104,8 @@ export class QtiInlineChoiceInteraction extends Interaction {
     // Simple width estimation - no recalculation needed
     await this.updateComplete;
 
+    if (!this.isConnected) return;
+
     this.#estimateOptimalWidth();
   }
 
@@ -171,7 +173,7 @@ export class QtiInlineChoiceInteraction extends Interaction {
     const menu = this.#menuElement();
     const trigger = this.renderRoot.querySelector<HTMLElement>('button[part="trigger"]');
 
-    if (!menu || !trigger) return;
+    if (!menu || !trigger || !this.isConnected) return;
 
     // Find dropdown icon element inside the trigger
     const dropdownIcon = trigger.querySelector<HTMLElement>('span[part~="dropdown-icon"]');

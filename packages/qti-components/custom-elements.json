@@ -19737,27 +19737,6 @@
               "type": {
                 "text": "toggleCandidateCorrection(show: boolean) => void"
               }
-            },
-            {
-              "kind": "method",
-              "name": "toggleCorrectResponse",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "show",
-                  "type": {
-                    "text": "boolean"
-                  }
-                }
-              ],
-              "type": {
-                "text": "toggleCorrectResponse(show: boolean) => void"
-              }
             }
           ],
           "attributes": [
