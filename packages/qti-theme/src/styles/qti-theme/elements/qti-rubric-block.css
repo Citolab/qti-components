@@ -1,0 +1,13 @@
+/* Apply .rubric-block for styling qti-rubric-block content */
+.rubric-block {
+  display: block;
+  border-left: 4px solid var(--qti-correct);
+  background-color: var(--qti-correct-light);
+  color: var(--qti-correct);
+  padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
+  border-radius: var(--qti-border-radius);
+}
+
+qti-rubric-block {
+  @apply rubric-block;
+}
