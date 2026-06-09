@@ -313,15 +313,15 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       }
 
       if (dragContainer) {
-        dragContainer.style.minHeight = `${maxDraggableHeight}px`;
+        dragContainer.style.minHeight = `var(--qti-drag-container-min-height, ${maxDraggableHeight}px)`;
       }
       for (const droppable of droppables) {
-        droppable.style.minHeight = `${maxDraggableHeight}px`;
+        droppable.style.minHeight = `var(--qti-dropzone-min-height, ${maxDraggableHeight}px)`;
         droppable.style.minWidth = `${maxDraggableWidth}px`;
 
         const dropSlot: HTMLElement = droppable.shadowRoot?.querySelector('slot[part="dropslot"]');
         if (dropSlot) {
-          dropSlot.style.minHeight = `${maxDraggableHeight}px`;
+          dropSlot.style.minHeight = `var(--qti-dropzone-min-height, ${maxDraggableHeight}px)`;
         }
       }
     }

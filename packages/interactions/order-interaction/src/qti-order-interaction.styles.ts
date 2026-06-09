@@ -16,8 +16,9 @@ export default css`
   [part='drops'] {
     flex: 1;
     display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: 1fr;
+    grid-auto-flow: row;
+    grid-template-columns: repeat(auto-fit, minmax(var(--qti-drop-min-width, 120px), 1fr));
+    gap: 0.5rem;
   }
 
   :host([orientation='horizontal']) [part='drags'] {
@@ -30,7 +31,7 @@ export default css`
     flex-direction: column;
   }
   :host([orientation='vertical']) [part='drops'] {
-    grid-auto-flow: row;
+    grid-template-columns: 1fr;
   }
 
   [part='drop-list'] {
@@ -38,9 +39,15 @@ export default css`
     flex: 1;
   }
 
+  [part='drop-list'][active],
+  [part='drop-list'][enabled],
+  [part='drops']:has(drop-list > qti-simple-choice) {
+    background-color: var(--qti-background-color-active-droplist);
+  }
+
   [part='drop-list'][active] {
-    border-color: var(--qti-border-active) !important;
-    background-color: var(--qti-bg-active) !important;
+    border-color: var(--qti-border-active);
+    background-color: var(--qti-bg-active);
   }
 
   [part='drop-list'][enabled] {
@@ -54,6 +61,10 @@ export default css`
     outline-offset: -2px;
   }
 
+  [part='drop-list']:has([part='qti-simple-choice']) {
+    --qti-drop-list-border: none;
+  }
+
   /* Candidate correction colors for choices placed inside drop-lists. */
   drop-list [qti-draggable='true']:state(candidate-correct),
   [part='qti-simple-choice']:state(candidate-correct) {
@@ -62,7 +73,7 @@ export default css`
 
   drop-list [qti-draggable='true']:state(candidate-incorrect),
   [part='qti-simple-choice']:state(candidate-incorrect) {
-    background-color: var(--qti-incorrect) !important;
+    background-color: var(--qti-incorrect);
   }
 
   [part='container'] {
