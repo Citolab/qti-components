@@ -27253,11 +27253,63 @@
       "path": "packages/qti-base/src/context/qti.context.ts",
       "declarations": [
         {
+          "kind": "function",
+          "name": "asSeed",
+          "return": {
+            "type": {
+              "text": "Seed | undefined"
+            }
+          },
+          "parameters": [
+            {
+              "name": "value",
+              "type": {
+                "text": "unknown"
+              }
+            }
+          ],
+          "description": "Validates and brands a value as a Seed, returning `undefined` when the\nvalue is missing or not in a usable seed format."
+        },
+        {
+          "kind": "function",
+          "name": "isSeed",
+          "return": {
+            "type": {
+              "text": "value is Seed"
+            }
+          },
+          "parameters": [
+            {
+              "name": "value",
+              "type": {
+                "text": "unknown"
+              }
+            }
+          ],
+          "description": "Runtime type guard that narrows an unknown value to a Seed.\nUse this at boundaries (e.g. values coming from XML, a host application or a\nbackend) before treating a string as a seed."
+        },
+        {
           "kind": "variable",
           "name": "qtiContext"
         }
       ],
       "exports": [
+        {
+          "kind": "js",
+          "name": "asSeed",
+          "declaration": {
+            "name": "asSeed",
+            "module": "packages/qti-base/src/context/qti.context.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "isSeed",
+          "declaration": {
+            "name": "isSeed",
+            "module": "packages/qti-base/src/context/qti.context.ts"
+          }
+        },
         {
           "kind": "js",
           "name": "qtiContext",
@@ -30341,15 +30393,6 @@
               "description": "Template content if provided"
             },
             {
-              "kind": "field",
-              "name": "configContext",
-              "type": {
-                "text": "ConfigContext"
-              },
-              "privacy": "protected",
-              "default": "{}"
-            },
-            {
               "kind": "method",
               "name": "handleItemURLChange",
               "privacy": "protected"
@@ -30386,6 +30429,15 @@
               },
               "default": "null",
               "description": "The raw XML string"
+            },
+            {
+              "kind": "field",
+              "name": "qtiContext",
+              "type": {
+                "text": "QtiContext"
+              },
+              "privacy": "protected",
+              "default": "{ QTI_CONTEXT: { testIdentifier: '', candidateIdentifier: '', environmentIdentifier: 'default' } }"
             }
           ],
           "attributes": [
@@ -31084,6 +31136,16 @@
               },
               "privacy": "public",
               "default": "{}"
+            },
+            {
+              "kind": "field",
+              "name": "qtiContext",
+              "type": {
+                "text": "QtiContext"
+              },
+              "privacy": "public",
+              "default": "{ QTI_CONTEXT: { testIdentifier: '', candidateIdentifier: '', environmentIdentifier: 'default' } }",
+              "description": "Provided so that descendants (e.g. `<item-container>`) can read the QTI runtime\ncontext for standalone item delivery, including the optional shuffle `seed`."
             }
           ],
           "superclass": {
@@ -41016,15 +41078,6 @@
               "description": "Template content if provided"
             },
             {
-              "kind": "field",
-              "name": "configContext",
-              "type": {
-                "text": "ConfigContext"
-              },
-              "privacy": "protected",
-              "default": "{}"
-            },
-            {
               "kind": "method",
               "name": "handleTestURLChange",
               "privacy": "protected",
@@ -41034,6 +41087,15 @@
               "kind": "method",
               "name": "handleTestXMLChange",
               "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "qtiContext",
+              "type": {
+                "text": "QtiContext"
+              },
+              "privacy": "protected",
+              "default": "{ QTI_CONTEXT: { testIdentifier: '', candidateIdentifier: '', environmentIdentifier: 'default' } }"
             },
             {
               "kind": "field",
