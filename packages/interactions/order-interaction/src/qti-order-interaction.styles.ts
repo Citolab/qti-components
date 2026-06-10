@@ -63,12 +63,13 @@ export default css`
 
   [part='drop-list']:has([part='qti-simple-choice']) {
     --qti-drop-list-border: none;
+    --qti-drop-list-bg-img: none;
   }
 
   /* Candidate correction colors for choices placed inside drop-lists. */
   drop-list [qti-draggable='true']:state(candidate-correct),
   [part='qti-simple-choice']:state(candidate-correct) {
-    background-color: var(--qti-correct) !important;
+    background-color: var(--qti-correct-response, --qti-correct);
   }
 
   drop-list [qti-draggable='true']:state(candidate-incorrect),

@@ -1,6 +1,6 @@
 import type { PostLoadTransformCallback, PostLoadTestTransformCallback } from '../mixins/test-navigation.mixin';
 import type { LitElement } from 'lit';
-import type { TestContext } from '@qti-components/base';
+import type { ConfigContext, TestContext } from '@qti-components/base';
 import type { SessionContext } from '@qti-components/base';
 import type { OutcomeVariable, VariableDeclaration, VariableValue } from '@qti-components/base';
 
@@ -10,6 +10,7 @@ export interface IMyQtiTest {
   // Properties from TestBase
   testContext: Readonly<TestContext>;
   sessionContext: Readonly<SessionContext>;
+  configContext: ConfigContext;
 
   // Methods from TestBase
   updateItemVariables(itemRefID: string, variables: VariableValue<string | string[] | null>[]): void;
