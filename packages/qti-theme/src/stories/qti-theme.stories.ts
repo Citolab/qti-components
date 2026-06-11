@@ -46,7 +46,8 @@ window.customElements.define('button-component', ButtonComponent);
 
 // grid grid-cols-6 gap-4
 export const Theme = (_mod: string) => html`
-  <css-variable-editor></css-variable-editor>
+  <div class="rubric-block">Rubric block — this is the scoring guidance shown to candidates or markers.</div>
+
   <div style="display:grid;grid-template-columns: repeat(7, minmax(0, 1fr));gap:2rem;">
     <style>
       button-component {

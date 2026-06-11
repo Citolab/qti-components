@@ -5,8 +5,8 @@
   --qti-border-active: #f86d70;
 
   /* Correct colors */
-  --qti-correct-light: #c8e6c9;
-  --qti-correct: #66bb6a;
+  --qti-correct-light: #e8f5e9;
+  --qti-correct: #2e7d32;
 
   /** Partially correct colors */
   --qti-partially-correct-light: #fff3e0;

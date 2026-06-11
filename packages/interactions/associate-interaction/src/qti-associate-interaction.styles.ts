@@ -4,7 +4,7 @@ export default css`
   :host {
     display: block; /* necessary to calculate scaling position */
   }
-  slot[name='qti-simple-associable-choice'] {
+  slot[part='associable-choices'] {
     display: flex;
     align-items: flex-start;
     flex: 1;

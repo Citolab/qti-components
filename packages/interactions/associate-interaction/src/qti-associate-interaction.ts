@@ -71,7 +71,7 @@ export class QtiAssociateInteraction extends DragDropSlottedSortableMixin(Slotte
 
   override render() {
     return html` <slot name="prompt"></slot>
-      <slot name="qti-simple-associable-choice"></slot>
+      <slot part="associable-choices" name="qti-simple-associable-choice"></slot>
       <div part="drop-container">
         ${this._childrenMap.length > 0 &&
         Array.from(Array(Math.ceil(this._childrenMap.length / 2)).keys()).map(
