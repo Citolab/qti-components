@@ -9,9 +9,10 @@ import {
 
 // import { DragDropInteractionMixin } from '@qti-components/interactions-core/mixins/drag-drop';
 import styles from './qti-match-interaction.styles';
+import tabularStyles from './qti-match-interaction-tabular.styles';
 
 import type { ResponseVariable } from '@qti-components/base';
-import type { CSSResultGroup } from 'lit';
+import type { CSSResultGroup, PropertyValues } from 'lit';
 import type { ResponseInteraction } from '@qti-components/base';
 import type { QtiSimpleAssociableChoice } from '@qti-components/interactions-core/elements/qti-simple-associable-choice';
 const SlottedBase = DragDropSlottedMixin(
@@ -22,7 +23,7 @@ const SlottedBase = DragDropSlottedMixin(
 );
 
 export class QtiMatchInteraction extends DragDropSlottedSortableMixin(SlottedBase, '[qti-draggable="true"]') {
-  static override styles: CSSResultGroup = styles;
+  static override styles: CSSResultGroup = [styles, tabularStyles];
 
   protected sourceChoices: QtiSimpleAssociableChoice[];
   protected targetChoices: QtiSimpleAssociableChoice[];
@@ -41,6 +42,22 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(SlottedBas
     else this._response = val;
   }
 
+  // Tabular mode is a pure radio/checkbox grid — drag-drop has no role there.
+  // Short-circuit drag initiation so no clone is created and no shadow/lightdom
+  // state can diverge from this._response.
+  public override initiateDrag(...args: any[]): void {
+    if (this.classList.contains('qti-match-tabular')) return;
+    (super.initiateDrag as (...a: any[]) => void)(...args);
+  }
+
+  // Skip the drag-drop auto-sizing pass in tabular mode — it would write
+  // inline min-width/min-height onto each choice that forces the grid columns
+  // to the draggable's natural width.
+  public override afterCache(): void {
+    if (this.classList.contains('qti-match-tabular')) return;
+    super.afterCache();
+  }
+
   @property({ type: String, attribute: 'response-identifier' }) override responseIdentifier: string = '';
 
   @state() protected correctOptions: { source: string; target: string }[] = null;
@@ -55,6 +72,38 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(SlottedBas
     );
 
     this.response = [];
+    this.syncTabularSlotting();
+  }
+
+  protected override willUpdate(changed: PropertyValues): void {
+    super.willUpdate?.(changed);
+    if (changed.has('class')) this.syncTabularSlotting();
+  }
+
+  private syncTabularSlotting(): void {
+    const isTabular = this.classList.contains('qti-match-tabular');
+    const sets = this.querySelectorAll(':scope > qti-simple-match-set');
+    const sourceSet = sets[0] as HTMLElement | undefined;
+    const targetSet = sets[1] as HTMLElement | undefined;
+
+    const stripSizing = (c: QtiSimpleAssociableChoice) => {
+      c.style.removeProperty('min-width');
+      c.style.removeProperty('min-height');
+      c.style.removeProperty('--qti-dropzone-min-height');
+    };
+    if (isTabular) {
+      sourceSet?.setAttribute('slot', 'match-rows');
+      targetSet?.setAttribute('slot', 'match-cols');
+      // Choices flow into the subgrid wrappers via DOM order — no per-choice
+      // grid-row/grid-column writes required. --qti-match-rows/-cols are set
+      // inline on [part='grid'] from render() so the editor (which can't write
+      // to host style under ProseMirror) shares the same mechanism.
+      this.sourceChoices?.forEach(stripSizing);
+      this.targetChoices?.forEach(stripSizing);
+    } else {
+      sourceSet?.removeAttribute('slot');
+      targetSet?.removeAttribute('slot');
+    }
   }
 
   protected handleRadioClick = (e: { target: HTMLInputElement }) => {
@@ -220,73 +269,68 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(SlottedBas
 
       ${isTabular
         ? html`
-            <table part="table">
-              <tr part="r-header">
-                <td></td>
-                ${this.targetChoices.map(
-                  col => html`<th part="r-header">${Array.from(col.childNodes).map(n => n.cloneNode(true))}</th>`
+            <div
+              part="grid"
+              style="--qti-match-rows: ${this.sourceChoices.length}; --qti-match-cols: ${this.targetChoices.length};"
+            >
+              <div part="corner"></div>
+              <div part="cols-wrap"><slot name="match-cols" part="c-header"></slot></div>
+              <div part="rows-wrap"><slot name="match-rows" part="r-header"></slot></div>
+              <div part="checkbox-grid">
+                ${this.sourceChoices.flatMap((row, r) =>
+                  this.targetChoices.map((col, c) => {
+                    const rowId = row.getAttribute('identifier');
+                    const colId = col.getAttribute('identifier');
+                    const value = `${rowId} ${colId}`;
+                    const selectedInRowCount = (this.response || []).filter(v => v.split(' ')[0] === rowId).length || 0;
+                    const checked = this.response?.includes(value) || false;
+                    const type = row.matchMax === 1 ? 'radio' : 'checkbox';
+                    const typeBase = type === 'radio' ? 'rb' : 'cb';
+                    const isCorrect = !!this.correctOptions?.find(
+                      option => option.source === rowId && option.target === colId
+                    );
+                    const correctVariant = hasCorrectResponse
+                      ? isCorrect
+                        ? `${typeBase}-correct`
+                        : `${typeBase}-incorrect`
+                      : '';
+                    const chPart = `ch ${typeBase} ${correctVariant}`.trim();
+                    const checkedPart = checked
+                      ? `${typeBase}-checked ${correctVariant ? `${typeBase}-checked ${correctVariant}` : ''}`.trim()
+                      : '';
+                    const chaPart = `cha ${checkedPart}`.trim();
+                    const disable =
+                      this.correctOptions?.length > 0
+                        ? true
+                        : row.matchMax === 1
+                          ? false
+                          : row.matchMax !== 0 && selectedInRowCount >= row.matchMax && !checked;
+                    return html`
+                      <label
+                        part="input-cell"
+                        style="grid-row: ${r + 1}; grid-column: ${c +
+                        1}; display: flex; align-items: center; justify-content: center; cursor: pointer;"
+                      >
+                        <input
+                          type=${type}
+                          hidden
+                          name=${rowId}
+                          value=${value}
+                          .checked=${checked}
+                          .disabled=${disable}
+                          @change=${(e: { target: any }) => this.handleRadioChange(e)}
+                          @click=${(e: { target: HTMLInputElement }) =>
+                            row.matchMax === 1 ? this.handleRadioClick(e) : null}
+                        />
+                        <span part=${chPart}>
+                          <span part=${chaPart}></span>
+                        </span>
+                      </label>
+                    `;
+                  })
                 )}
-              </tr>
-
-              ${this.sourceChoices.map(
-                row =>
-                  html`<tr part="row">
-                    <td part="c-header">${Array.from(row.childNodes).map(n => n.cloneNode(true))}</td>
-                    ${this.targetChoices.map(col => {
-                      const rowId = row.getAttribute('identifier');
-                      const colId = col.getAttribute('identifier');
-                      const value = `${rowId} ${colId}`;
-                      const selectedInRowCount =
-                        (this.response || []).filter(v => v.split(' ')[0] === rowId).length || 0;
-                      const checked = this.response?.includes(value) || false;
-                      const type = row.matchMax === 1 ? 'radio' : 'checkbox';
-                      const isCorrect = !!this.correctOptions?.find(
-                        option => option.source === rowId && option.target === colId
-                      );
-                      const part =
-                        type === 'radio'
-                          ? `rb ${checked ? 'rb-checked' : ''} ${hasCorrectResponse ? (isCorrect ? 'rb-correct' : 'rb-incorrect') : ''}`
-                          : `cb ${checked ? 'cb-checked' : ''} ${hasCorrectResponse ? (isCorrect ? 'cb-correct' : 'cb-incorrect') : ''}`;
-
-                      // disable if match max is greater than 1 and max is reached
-                      const disable =
-                        this.correctOptions?.length > 0
-                          ? true
-                          : row.matchMax === 1
-                            ? false
-                            : row.matchMax !== 0 && selectedInRowCount >= row.matchMax && !checked;
-                      return html`<td part="input-cell">
-                        <div
-                          class="input-container"
-                          style="position: relative; width: 24px; height: 24px; margin: 0 auto;"
-                        >
-                          <input
-                            type=${type}
-                            part=${part}
-                            name=${rowId}
-                            value=${value}
-                            .disabled=${disable}
-                            @change=${(e: { target: any }) => this.handleRadioChange(e)}
-                            @click=${(e: { target: HTMLInputElement }) =>
-                              row.matchMax === 1 ? this.handleRadioClick(e) : null}
-                          />
-                          ${type === 'checkbox' && checked
-                            ? html`
-                                <svg
-                                  part="checkmark"
-                                  viewBox="0 0 24 24"
-                                  style="position: absolute; width: 20px; height: 20px; top: 2px; left: 2px; pointer-events: none;"
-                                >
-                                  <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" fill="white" />
-                                </svg>
-                              `
-                            : ''}
-                        </div>
-                      </td>`;
-                    })}
-                  </tr>`
-              )}
-            </table>
+              </div>
+            </div>
           `
         : nothing}
 

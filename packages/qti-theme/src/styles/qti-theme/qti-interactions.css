@@ -7,6 +7,7 @@
 @import url('./interactions/qti-hottext-interaction.css');
 @import url('./interactions/qti-inline-choice-interaction.css');
 @import url('./interactions/qti-match-interaction.css');
+@import url('./interactions/qti-match-interaction-tabular.css');
 @import url('./interactions/qti-order-interaction.css');
 @import url('./interactions/qti-associate-interaction.css');
 @import url('./interactions/qti-graphic-order-interaction.css');

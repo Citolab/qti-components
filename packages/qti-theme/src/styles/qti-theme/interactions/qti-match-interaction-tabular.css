@@ -1,0 +1,80 @@
+@layer qti-components {
+  qti-match-interaction.qti-match-tabular {
+    &::part(message) {
+      @apply validation-message;
+    }
+
+    /* The two match-sets are slotted into the grid via display:contents,
+       so their child choices act as the row/column header cells. Drag is
+       disabled in tabular mode (see initiateDrag override in the component);
+       override the mixin's inline cursor:grab so headers don't suggest it. */
+    & qti-simple-match-set[slot='match-rows'] qti-simple-associable-choice,
+    & qti-simple-match-set[slot='match-cols'] qti-simple-associable-choice {
+      background-color: var(--qti-bg-active);
+      font-weight: 500;
+      padding: 0.5rem 0.75rem;
+      border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color);
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      cursor: default !important;
+    }
+    & qti-simple-match-set[slot='match-cols'] qti-simple-associable-choice {
+      justify-content: center;
+      text-align: center;
+    }
+
+    &::part(corner) {
+      border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color);
+      background-color: var(--qti-bg-active);
+    }
+
+    &::part(input-cell) {
+      border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color);
+      padding: 0.5rem 0.75rem;
+      transition: background-color 0.1s ease;
+    }
+    &::part(input-cell):hover {
+      background-color: var(--qti-bg-active);
+    }
+
+    /* Indicator parts mirror qti-choice-interaction / qti-hottext-interaction:
+       ch is the outer ring, cha is the inner indicator. The design-system
+       classes (check-radio / check-checkbox / check-radio-checked /
+       check-checkbox-checked) are applied directly. */
+    &::part(rb) {
+      @apply check-radio;
+    }
+    &::part(cb) {
+      @apply check-checkbox;
+    }
+    &::part(cha) {
+      @apply check-size;
+    }
+    &::part(rb-checked) {
+      @apply check-radio-checked;
+    }
+    &::part(cb-checked) {
+      @apply check-checkbox-checked;
+    }
+
+    /* Correct / incorrect overlays — border on the outer ring (ch), and
+       a matching fill on the inner indicator (cha) when checked. */
+    &::part(rb-correct),
+    &::part(cb-correct) {
+      border-color: var(--qti-correct);
+    }
+    &::part(rb-incorrect),
+    &::part(cb-incorrect) {
+      border-color: var(--qti-incorrect);
+    }
+    &::part(rb-checked rb-correct),
+    &::part(cb-checked cb-correct) {
+      background-color: var(--qti-correct);
+    }
+    &::part(rb-checked rb-incorrect),
+    &::part(cb-checked cb-incorrect) {
+      background-color: var(--qti-incorrect);
+    }
+  }
+}

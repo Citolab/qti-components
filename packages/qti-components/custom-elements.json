@@ -17952,6 +17952,19 @@
             },
             {
               "kind": "method",
+              "name": "afterCache",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "type": {
+                "text": "afterCache() => void"
+              }
+            },
+            {
+              "kind": "method",
               "name": "allowDrop",
               "privacy": "public",
               "return": {
@@ -18159,33 +18172,9 @@
               },
               "parameters": [
                 {
-                  "name": "dragElement",
+                  "name": "args",
                   "type": {
-                    "text": "HTMLElement"
-                  }
-                },
-                {
-                  "name": "startX",
-                  "type": {
-                    "text": "number"
-                  }
-                },
-                {
-                  "name": "startY",
-                  "type": {
-                    "text": "number"
-                  }
-                },
-                {
-                  "name": "inputType",
-                  "type": {
-                    "text": "'mouse' | 'touch'"
-                  }
-                },
-                {
-                  "name": "rest",
-                  "type": {
-                    "text": "[eventSource?: 'pointer' | 'mouse' | 'touch']"
+                    "text": "any[]"
                   }
                 }
               ],
@@ -18194,7 +18183,7 @@
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
               },
               "type": {
-                "text": "initiateDrag(dragElement: HTMLElement, startX: number, startY: number, inputType: 'mouse' | 'touch', rest: [eventSource?: 'pointer' | 'mouse' | 'touch']) => void"
+                "text": "initiateDrag(args: any[]) => void"
               }
             },
             {
@@ -18298,6 +18287,16 @@
                 "text": "QtiSimpleAssociableChoice[]"
               },
               "privacy": "protected"
+            },
+            {
+              "kind": "method",
+              "name": "syncTabularSlotting",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
             },
             {
               "kind": "field",
