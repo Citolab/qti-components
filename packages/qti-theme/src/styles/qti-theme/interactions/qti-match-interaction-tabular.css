@@ -4,26 +4,6 @@
       @apply validation-message;
     }
 
-    /* The two match-sets are slotted into the grid via display:contents,
-       so their child choices act as the row/column header cells. Drag is
-       disabled in tabular mode (see initiateDrag override in the component);
-       override the mixin's inline cursor:grab so headers don't suggest it. */
-    & qti-simple-match-set[slot='match-rows'] qti-simple-associable-choice,
-    & qti-simple-match-set[slot='match-cols'] qti-simple-associable-choice {
-      background-color: var(--qti-bg-active);
-      font-weight: 500;
-      padding: 0.5rem 0.75rem;
-      border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color);
-      box-sizing: border-box;
-      display: flex;
-      align-items: center;
-      cursor: default !important;
-    }
-    & qti-simple-match-set[slot='match-cols'] qti-simple-associable-choice {
-      justify-content: center;
-      text-align: center;
-    }
-
     &::part(corner) {
       border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color);
       background-color: var(--qti-bg-active);
@@ -76,5 +56,28 @@
     &::part(cb-checked cb-incorrect) {
       background-color: var(--qti-incorrect);
     }
+  }
+
+  /* Header cells — the two slotted <qti-simple-match-set>s have display:contents
+     so their child choices act as row/column header cells. Written as a fully-
+     qualified descendant selector (not nested under qti-match-tabular's `&`)
+     because native CSS nesting parses `& <ident>` as compound, not descendant,
+     and the rule wouldn't match. :first-of-type / :last-of-type drive the
+     row vs col differentiation in both runtime (slot attribute set
+     declaratively) and the editor (manual slot assignment, no slot attribute).
+     Drag is disabled in tabular mode; override the mixin's inline cursor:grab. */
+  qti-match-interaction.qti-match-tabular qti-simple-match-set qti-simple-associable-choice {
+    background-color: var(--qti-bg-active);
+    font-weight: 500;
+    padding: 0.5rem 0.75rem;
+    border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color);
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    cursor: default !important;
+  }
+  qti-match-interaction.qti-match-tabular qti-simple-match-set:last-of-type qti-simple-associable-choice {
+    justify-content: center;
+    text-align: center;
   }
 }

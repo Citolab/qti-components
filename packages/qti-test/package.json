@@ -32,7 +32,9 @@
     "attw": "attw --profile esm-only --pack",
     "build": "tsc --paths null",
     "clean": "rm -rf dist",
-    "publish": "node ../../tools/publish-if-needed.mjs"
+    "publish": "node ../../tools/publish-if-needed.mjs",
+    "yalc": "yalc publish",
+    "yalc:push": "yalc push"
   },
   "sideEffects": true,
   "type": "module",

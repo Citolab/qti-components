@@ -40,8 +40,7 @@ export default css`
     grid-template-columns: subgrid;
     grid-template-rows: subgrid;
   }
-  :host(.qti-match-tabular) ::slotted(qti-simple-match-set[slot='match-rows']),
-  :host(.qti-match-tabular) ::slotted(qti-simple-match-set[slot='match-cols']) {
+  :host(.qti-match-tabular) ::slotted(qti-simple-match-set) {
     display: contents;
   }
 `;
