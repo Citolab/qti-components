@@ -646,25 +646,19 @@ export const MatchTabular: Story = {
     await step('Click on the Show Correct button', async () => {
       await showCorrectButton.click();
 
-      // Find all elements with rb-correct or cb-correct parts
-      // This uses the shadow DOM API to find elements with specific part attributes
-      const correctRadioButtons = interaction.shadowRoot.querySelectorAll('[part~="rb-correct"]');
-      const correctCheckboxes = interaction.shadowRoot.querySelectorAll('[part~="cb-correct"]');
-
-      // Combine both types of correct elements
-      const allCorrectElements = [...correctRadioButtons, ...correctCheckboxes] as HTMLInputElement[];
+      // The rb-correct / cb-correct parts now live on the visual <span>
+      // indicator; the actual <input> carrying name/value is its sibling
+      // inside the wrapping <label part="input-cell">.
+      const correctIndicators = interaction.shadowRoot.querySelectorAll('[part~="rb-correct"], [part~="cb-correct"]');
+      const allCorrectElements = Array.from(correctIndicators)
+        .map(span => span.closest('label')?.querySelector('input') ?? null)
+        .filter((el): el is HTMLInputElement => el !== null);
 
       // Verify we have the expected number of correct answers
       expect(allCorrectElements.length).toBe(4);
 
-      // Get the associated row identifiers for the correct options
-      const correctRowIds = Array.from(allCorrectElements).map(el => el.name);
-
-      // Get the values of the correct inputs (which contain the row and column IDs)
-      const correctValues = Array.from(allCorrectElements).map(el => el.value);
-
       // Parse the values to extract row IDs
-      const rowIds = correctValues.map(value => value.split(' ')[0]);
+      const rowIds = allCorrectElements.map(el => el.value.split(' ')[0]);
 
       // Verify the correct row IDs exist
       const expectedRowIds = ['C', 'P', 'L', 'D'];
