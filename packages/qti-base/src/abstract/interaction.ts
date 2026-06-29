@@ -6,6 +6,7 @@ import { watch } from '@qti-components/utilities';
 
 import { configContext } from '../context/config.context';
 import { itemContext } from '../context/qti-assessment-item.context';
+import { parseCorrectResponseAttribute, serializeCorrectResponseAttribute } from '../lib/correct-response';
 
 import type { ConfigContext } from '../context/config.context';
 import type { ResponseVariable } from '../lib/variables';
@@ -55,20 +56,11 @@ export abstract class Interaction extends LitElement implements IInteraction {
    */
   @property({ type: String, attribute: 'correct-response', reflect: true })
   set correctResponseAttr(val: string | null) {
-    if (val === null) {
-      this._correctResponse = null;
-    } else if (val.includes(',')) {
-      this._correctResponse = val.split(',').map(v => v.trim());
-    } else {
-      this._correctResponse = val;
-    }
+    this._correctResponse = parseCorrectResponseAttribute(val);
   }
 
   get correctResponseAttr(): string | null {
-    if (this._correctResponse === null || this._correctResponse === undefined) {
-      return null;
-    }
-    return Array.isArray(this._correctResponse) ? this._correctResponse.join(',') : this._correctResponse;
+    return serializeCorrectResponseAttribute(this._correctResponse ?? null);
   }
 
   /**
