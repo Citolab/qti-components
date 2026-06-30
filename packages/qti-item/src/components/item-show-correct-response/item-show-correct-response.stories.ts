@@ -523,7 +523,7 @@ export const GapMatch: Story = {
 export const Match: Story = {
   args: {
     'item-url': 'assets/qti-test-package/items/match.xml' // Set the new item URL here
-    // 'item-url': 'api/kennisnet-1/ITEM002.xml' // Set the new item URL here
+    // 'item-url': 'api/kennisnet/ITEM002.xml' // Set the new item URL here
   },
   render: args =>
     html` <qti-item>
@@ -566,7 +566,7 @@ export const Match: Story = {
 export const MatchFullCorrectResponse: Story = {
   args: {
     'item-url': 'assets/qti-test-package/items/match.xml' // Set the new item URL here
-    // 'item-url': 'api/kennisnet-1/ITEM002.xml' // Set the new item URL here
+    // 'item-url': 'api/kennisnet/ITEM002.xml' // Set the new item URL here
   },
   render: args =>
     html` <qti-item>
@@ -613,7 +613,7 @@ export const MatchFullCorrectResponse: Story = {
 export const MatchTabular: Story = {
   args: {
     'item-url': 'assets/qti-test-package/items/match-tabular.xml' // Set the new item URL here
-    // 'item-url': 'api/kennisnet-1/ITEM002.xml' // Set the new item URL here
+    // 'item-url': 'api/kennisnet/ITEM002.xml' // Set the new item URL here
   },
   render: args =>
     html` <qti-item>

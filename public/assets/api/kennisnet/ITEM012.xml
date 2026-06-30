@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+                     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+                     identifier="ITEM012"
+                     title="Woorden selecteren (woorden niet herkenbaar)"
+                     time-dependent="false">
+    <qti-response-declaration identifier="RESPONSE" base-type="identifier" cardinality="multiple">
+        <qti-correct-response>
+            <qti-value>ht_onderzocht</qti-value>
+            <qti-value>ht_verving</qti-value>
+        </qti-correct-response>
+        <qti-mapping default-value="0" lower-bound="0">
+            <qti-map-entry map-key="ht_onderzocht" mapped-value="1"/>
+            <qti-map-entry map-key="ht_verving" mapped-value="1"/>
+        </qti-mapping>
+    </qti-response-declaration>
+
+    <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single" normal-minimum="0" normal-maximum="1">
+        <qti-default-value>
+            <qti-value>0</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
+        <qti-default-value>
+            <qti-value>2</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+
+    <qti-item-body>
+        <p>Selecteer alle werkwoorden in de volgende zin (de woorden zijn niet herkenbaar gemarkeerd):</p>
+        <div class="qti-bordered qti-padding-3 qti-margin-x-2 qti-margin-y-4">
+            <qti-hottext-interaction max-choices="0" response-identifier="RESPONSE" class="qti-unselected-hidden">
+                <div>
+                    “De
+                    <qti-hottext identifier="ht_technicus">technicus</qti-hottext>
+                    <qti-hottext identifier="ht_onderzocht">onderzocht</qti-hottext>
+                    het
+                    <qti-hottext identifier="ht_apparaat">apparaat</qti-hottext>
+                    en
+                    <qti-hottext identifier="ht_verving">verving</qti-hottext>
+                    uiteindelijk
+                    de
+                    <qti-hottext identifier="ht_defecte">defecte</qti-hottext>
+                    <qti-hottext identifier="ht_sensor">sensor</qti-hottext>
+                    .”
+                </div>
+            </qti-hottext-interaction>
+        </div>
+    </qti-item-body>
+
+    <qti-response-processing>
+        <qti-set-outcome-value identifier="SCORE">
+            <qti-map-response identifier="RESPONSE"/>
+        </qti-set-outcome-value>
+    </qti-response-processing>
+</qti-assessment-item>

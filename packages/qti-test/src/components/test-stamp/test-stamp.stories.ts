@@ -80,7 +80,7 @@ export const Default: Story = {
         )}
         ${template(args, html`<template>{{ item.identifier }}</template>`)}
 
-        <test-container test-url="/assets/api/kennisnet-1/AssessmentTest.xml"></test-container>
+        <test-container test-url="/assets/api/kennisnet/AssessmentTest.xml"></test-container>
         <test-next>Volgende</test-next>
       </test-navigation>
     </qti-test>`

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qti-assessment-test xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" identifier="test"
+                     title="Kennisnet Demonstratietoets"
+                     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd">
+    <qti-rubric-block use="instructions" view="candidate" class="qti-rubric-discretionary-placement">
+        <qti-content-body>
+            <p class="qti-align-center">Welkom bij de Kennisnet Demonstratietoets</p>
+            <p class="qti-align-center">
+                Deze toets laat alle vraagtypen zien die in Wikiwijs Toetsen beschikbaar zijn.<br/>
+                Zo krijg je een helder beeld van de mogelijkheden binnen het platform.
+            </p>
+        </qti-content-body>
+    </qti-rubric-block>
+
+    <qti-test-part identifier="PART001" navigation-mode="linear" submission-mode="individual">
+        <qti-assessment-section identifier="SECTION001" title="Section" visible="true">
+            <qti-assessment-item-ref identifier="ITEM001" href="ITEM001.xml"/>
+            <qti-assessment-item-ref identifier="ITEM002" href="ITEM002.xml"/>
+            <qti-assessment-item-ref identifier="ITEM003" href="ITEM003.xml"/>
+            <qti-assessment-item-ref identifier="ITEM004" href="ITEM004.xml"/>
+            <qti-assessment-item-ref identifier="ITEM005" href="ITEM005.xml"/>
+            <qti-assessment-item-ref identifier="ITEM006" href="ITEM006.xml"/>
+            <qti-assessment-item-ref identifier="ITEM007" href="ITEM007.xml"/>
+            <qti-assessment-item-ref identifier="ITEM008" href="ITEM008.xml"/>
+            <qti-assessment-item-ref identifier="ITEM009" href="ITEM009.xml"/>
+            <qti-assessment-item-ref identifier="ITEM010" href="ITEM010.xml"/>
+            <qti-assessment-item-ref identifier="ITEM011" href="ITEM011.xml"/>
+            <qti-assessment-item-ref identifier="ITEM012" href="ITEM012.xml"/>
+<!--            <qti-assessment-item-ref identifier="ITEM013" href="ITEM013.xml"/>-->
+<!--            <qti-assessment-item-ref identifier="ITEM014" href="ITEM014.xml"/>-->
+            <qti-assessment-item-ref identifier="ITEM015" href="ITEM015.xml"/>
+            <qti-assessment-item-ref identifier="ITEM016" href="ITEM016.xml"/>
+        </qti-assessment-section>
+    </qti-test-part>
+</qti-assessment-test>

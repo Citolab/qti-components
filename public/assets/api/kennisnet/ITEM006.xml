@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+                     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+                     identifier="ITEM006"
+                     title="Dropdownvraag"
+                     time-dependent="false">
+    <qti-response-declaration identifier="RESPONSE" base-type="identifier" cardinality="single">
+        <qti-correct-response>
+            <qti-value>choice_hoger</qti-value>
+        </qti-correct-response>
+        <qti-mapping default-value="0" lower-bound="0">
+            <qti-map-entry map-key="choice_hoger" mapped-value="1"/>
+        </qti-mapping>
+    </qti-response-declaration>
+
+    <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single" normal-minimum="0" normal-maximum="1">
+        <qti-default-value>
+            <qti-value>0</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
+        <qti-default-value>
+            <qti-value>1</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+
+    <qti-item-body>
+        <div class="qti-layout-row">
+            <div class="qti-layout-col4">
+                <img src="resources/doppler.png" alt="Doppler" width="250" />
+            </div>
+            <div class="qti-layout-col8">
+                <p>De Doppler-verschuiving treedt op wanneer een geluidsbron en een waarnemer zich ten opzichte van elkaar bewegen.</p>
+                Het waargenomen geluid wordt dan
+                <qti-inline-choice-interaction response-identifier="RESPONSE" shuffle="false" data-prompt="kies het juiste antwoord…">
+                    <qti-inline-choice identifier="choice_lager">lager</qti-inline-choice>
+                    <qti-inline-choice identifier="choice_hoger">hoger</qti-inline-choice>
+                    <qti-inline-choice identifier="choice_onveranderd">onveranderd</qti-inline-choice>
+                </qti-inline-choice-interaction>
+                wanneer de bron dichterbij komt.
+            </div>
+        </div>
+    </qti-item-body>
+
+    <qti-response-processing>
+        <qti-set-outcome-value identifier="SCORE">
+            <qti-map-response identifier="RESPONSE"/>
+        </qti-set-outcome-value>
+    </qti-response-processing>
+</qti-assessment-item>

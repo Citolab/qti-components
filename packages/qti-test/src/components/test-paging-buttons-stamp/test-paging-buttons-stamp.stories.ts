@@ -64,7 +64,7 @@ export const Title: Story = {
           navItemRefId: 'ITEM001'
         }}
       >
-        <test-container test-url="/assets/api/kennisnet-1/AssessmentTest.xml"></test-container>
+        <test-container test-url="/assets/api/kennisnet/AssessmentTest.xml"></test-container>
         <test-paging-buttons-stamp data-testid="paging-buttons">
           <style>
             dl {

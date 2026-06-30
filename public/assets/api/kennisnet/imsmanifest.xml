@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<manifest xmlns="http://www.imsglobal.org/xsd/qti/qtiv3p0/imscp_v1p1"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0p1_v1p0.xsd https://purl.imsglobal.org/spec/md/v1p3/schema/xsd/imsmd_loose_v1p3p2.xsd http://www.imsglobal.org/xsd/qti/qtiv3p0/imscp_v1p1 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqtiv3p0_imscpv1p2_v1p0.xsd"
+          identifier="Demotoets-Kennisnet">
+    <metadata>
+        <schema>QTI Package</schema>
+        <schemaversion>3.0.1</schemaversion>
+    </metadata>
+    <organizations/>
+    <resources>
+        <resource identifier="test" type="imsqti_test_xmlv3p0" href="AssessmentTest.xml">
+            <file href="AssessmentTest.xml"/>
+            <dependency identifierref="ITEM001"/>
+            <dependency identifierref="ITEM002"/>
+            <dependency identifierref="ITEM003"/>
+            <dependency identifierref="ITEM004"/>
+            <dependency identifierref="ITEM005"/>
+            <dependency identifierref="ITEM006"/>
+            <dependency identifierref="ITEM007"/>
+            <dependency identifierref="ITEM008"/>
+            <dependency identifierref="ITEM009"/>
+            <dependency identifierref="ITEM010"/>
+            <dependency identifierref="ITEM011"/>
+            <dependency identifierref="ITEM012"/>
+            <dependency identifierref="ITEM013"/>
+            <dependency identifierref="ITEM014"/>
+            <dependency identifierref="ITEM015"/>
+            <dependency identifierref="ITEM016"/>
+            <dependency identifierref="METADATA001"/>
+        </resource>
+        <resource identifier="ITEM001" type="imsqti_item_xmlv3p0" href="ITEM001.xml">
+            <file href="ITEM001.xml"/>
+            <file href="resources/atom.png"/>
+        </resource>
+        <resource identifier="ITEM002" type="imsqti_item_xmlv3p0" href="ITEM002.xml">
+            <file href="ITEM002.xml"/>
+            <file href="resources/world-map.jpg"/>
+        </resource>
+        <resource identifier="ITEM003" type="imsqti_item_xmlv3p0" href="ITEM003.xml">
+            <file href="ITEM003.xml"/>
+            <file href="resources/refraction.jpeg"/>
+        </resource>
+        <resource identifier="ITEM004" type="imsqti_item_xmlv3p0" href="ITEM004.xml">
+            <file href="ITEM004.xml"/>
+            <file href="resources/ancient-rome.jpeg"/>
+        </resource>
+        <resource identifier="ITEM005" type="imsqti_item_xmlv3p0" href="ITEM005.xml">
+            <file href="ITEM005.xml"/>
+            <file href="resources/solarpark-wind-park.jpg"/>
+        </resource>
+        <resource identifier="ITEM006" type="imsqti_item_xmlv3p0" href="ITEM006.xml">
+            <file href="ITEM006.xml"/>
+            <file href="resources/doppler.png"/>
+        </resource>
+        <resource identifier="ITEM007" type="imsqti_item_xmlv3p0" href="ITEM007.xml">
+            <file href="ITEM007.xml"/>
+            <file href="resources/icons-physics.png"/>
+        </resource>
+        <resource identifier="ITEM008" type="imsqti_item_xmlv3p0" href="ITEM008.xml">
+            <file href="ITEM008.xml"/>
+            <file href="resources/books.png"/>
+        </resource>
+        <resource identifier="ITEM009" type="imsqti_item_xmlv3p0" href="ITEM009.xml">
+            <file href="ITEM009.xml"/>
+            <file href="resources/physics-chemistry.png"/>
+        </resource>
+        <resource identifier="ITEM010" type="imsqti_item_xmlv3p0" href="ITEM010.xml">
+            <file href="ITEM010.xml"/>
+            <file href="resources/question-marks.png"/>
+        </resource>
+        <resource identifier="ITEM011" type="imsqti_item_xmlv3p0" href="ITEM011.xml">
+            <file href="ITEM011.xml"/>
+        </resource>
+        <resource identifier="ITEM012" type="imsqti_item_xmlv3p0" href="ITEM012.xml">
+            <file href="ITEM012.xml"/>
+        </resource>
+        <resource identifier="ITEM013" type="imsqti_item_xmlv3p0" href="ITEM013.xml">
+            <file href="ITEM013.xml"/>
+        </resource>
+        <resource identifier="ITEM014" type="imsqti_item_xmlv3p0" href="ITEM014.xml">
+            <file href="ITEM014.xml"/>
+        </resource>
+        <resource identifier="ITEM015" type="imsqti_item_xmlv3p0" href="ITEM015.xml">
+            <file href="ITEM015.xml"/>
+            <file href="resources/chemistry.png"/>
+        </resource>
+        <resource identifier="ITEM016" type="imsqti_item_xmlv3p0" href="ITEM016.xml">
+            <file href="ITEM016.xml"/>
+            <file href="resources/europe.svg"/>
+        </resource>
+        <resource identifier="METADATA001" type="resourcemetadata/xml" href="METADATA001.xml">
+            <file href="METADATA001.xml"/>
+        </resource>
+    </resources>
+</manifest>

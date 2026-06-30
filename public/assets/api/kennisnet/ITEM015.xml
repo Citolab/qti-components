@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+                     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+                     identifier="ITEM015"
+                     title="Gatentekst"
+                     time-dependent="false">
+    <qti-response-declaration identifier="RESPONSE" base-type="directedPair" cardinality="multiple">
+        <qti-correct-response>
+            <qti-value>ht_zuur gap_low</qti-value>
+            <qti-value>ht_basisch gap_high</qti-value>
+        </qti-correct-response>
+        <qti-mapping default-value="0">
+            <qti-map-entry map-key="ht_zuur gap_low" mapped-value="1"/>
+            <qti-map-entry map-key="ht_basisch gap_high" mapped-value="1"/>
+        </qti-mapping>
+    </qti-response-declaration>
+
+    <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single" normal-minimum="0" normal-maximum="1">
+        <qti-default-value>
+            <qti-value>0</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
+        <qti-default-value>
+            <qti-value>2</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+
+    <qti-item-body>
+        <div class="qti-layout-row">
+            <div class="qti-layout-col4">
+                <img src="resources/chemistry.png" alt="Vragen" width="300" class="qti-margin-3" />
+            </div>
+            <div class="qti-layout-col8">
+                <p>Vul de juiste termen in:</p>
+                <qti-gap-match-interaction response-identifier="RESPONSE">
+                    <qti-gap-text identifier="ht_basisch" match-max="1">basisch</qti-gap-text>
+                    <qti-gap-text identifier="ht_zuur" match-max="1">zuur</qti-gap-text>
+                    <p>
+                        “Een oplossing met een pH lager dan 7 noemen we
+                        <qti-gap identifier="gap_low"/>
+                        , terwijl een oplossing met een pH hoger dan 7
+                        <qti-gap identifier="gap_high"/>
+                        is.”
+                    </p>
+                </qti-gap-match-interaction>
+            </div>
+        </div>
+
+        <qti-rubric-block view="scorer" use="scoring">
+            <qti-content-body>
+                <ul>
+                    <li>pH &lt; 7 → zuur</li>
+                    <li>pH &gt; 7 → basisch</li>
+                </ul>
+            </qti-content-body>
+        </qti-rubric-block>
+    </qti-item-body>
+
+    <qti-response-processing>
+        <qti-set-outcome-value identifier="SCORE">
+            <qti-map-response identifier="RESPONSE"/>
+        </qti-set-outcome-value>
+    </qti-response-processing>
+</qti-assessment-item>

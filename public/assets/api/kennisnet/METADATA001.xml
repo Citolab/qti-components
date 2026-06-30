@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM https://purl.imsglobal.org/spec/md/v1p3/schema/xsd/imsmd_loose_v1p3p2.xsd">
+    <general>
+        <identifier>
+            <catalog>URI</catalog>
+            <entry>Kennisnet Demonstratietoets</entry>
+        </identifier>
+        <title>
+            <string language="nl">Kennisnet Demonstratietoets</string>
+        </title>
+        <language>nl</language>
+        <description>
+            <string language="nl">Deze demonstratietoets bevat alle ondersteunde interacties in hun meest voorkomende
+                vormen.
+            </string>
+        </description>
+        <keyword>
+            <string language="nl">demo</string>
+        </keyword>
+        <keyword>
+            <string language="nl">demotoets</string>
+        </keyword>
+        <keyword>
+            <string language="nl">demonstratietoets</string>
+        </keyword>
+        <keyword>
+            <string language="nl">kennisnet</string>
+        </keyword>
+    </general>
+    <lifeCycle>
+        <status>
+            <source>LOMv1.0</source>
+            <value>Final</value>
+        </status>
+        <contribute>
+            <role>
+                <source>http://download.edustandaard.nl/vdex/vdex_lifecycle_contribute_role_lomv1p0_20060628.xml
+                </source>
+                <value>publisher</value>
+            </role>
+            <entity>Kennisnet</entity>
+            <date>
+                <dateTime>2025-11-24T20:48:34+02:00</dateTime>
+                <description>
+                    <string language="nl">Publicatiedatum</string>
+                </description>
+            </date>
+        </contribute>
+        <contribute>
+            <role>
+                <source>http://download.edustandaard.nl/vdex/vdex_lifecycle_contribute_role_lomv1p0_20060628.xml
+                </source>
+                <value>author</value>
+            </role>
+            <entity>Kennisnet</entity>
+            <date>
+                <dateTime>2025-11-24T20:48:34+02:00</dateTime>
+                <description>
+                    <string language="nl">Publicatiedatum</string>
+                </description>
+            </date>
+        </contribute>
+    </lifeCycle>
+    <metaMetadata>
+        <metadataschema>LOMv1.0</metadataschema>
+        <metadataschema>QTIv3.0</metadataschema>
+    </metaMetadata>
+    <rights>
+        <cost>
+            <source>LOMv1.0</source>
+            <value>no</value>
+        </cost>
+        <copyrightAndOtherRestrictions>
+            <source>https://purl.edustandaard.nl/copyrightsandotherrestrictions_nllom_20180530</source>
+            <value>cc-by-sa-40</value>
+        </copyrightAndOtherRestrictions>
+    </rights>
+    <classification>
+        <purpose>
+            <source>LOMv1.0</source>
+            <value>discipline</value>
+        </purpose>
+        <taxonPath>
+            <source>
+                <string language="x-none">http://purl.edustandaard.nl/begrippenkader</string>
+            </source>
+            <taxon>
+                <id>9cfa38c4-6bb1-4c4b-84e0-285cf918f0c0</id>
+                <entry>
+                    <string language="nl">Overig</string>
+                </entry>
+            </taxon>
+        </taxonPath>
+    </classification>
+    <classification>
+        <purpose>
+            <source>LOMv1.0</source>
+            <value>educational level</value>
+        </purpose>
+        <taxonPath>
+            <source>
+                <string language="x-none">http://purl.edustandaard.nl/begrippenkader</string>
+            </source>
+            <taxon>
+                <id>d1b6a3dc-4424-4d46-8f63-8c4b7c5d1f6e</id>
+                <entry>
+                    <string language="nl">Volwasseneneducatie</string>
+                </entry>
+            </taxon>
+        </taxonPath>
+    </classification>
+    <classification>
+        <purpose>
+            <source>http://purl.edustandaard.nl/classification_purpose_nllom_20180530</source>
+            <value>access rights</value>
+        </purpose>
+        <taxonPath>
+            <source>
+                <string language="x-none">http://purl.edustandaard.nl/classification_accessrights_nllom_20180530
+                </string>
+            </source>
+            <taxon>
+                <id>OpenAccess</id>
+                <entry>
+                    <string language="nl">open toegang</string>
+                </entry>
+            </taxon>
+        </taxonPath>
+    </classification>
+</lom>

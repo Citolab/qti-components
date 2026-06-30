@@ -27505,6 +27505,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "packages/qti-base/src/lib/correct-response"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "packages/qti-base/src/lib/expression-result"
           }
         },
@@ -27546,6 +27554,208 @@
           "declaration": {
             "name": "*",
             "module": "packages/qti-base/src/utils/utils"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-base/src/lib/correct-response.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "iterCorrectResponseValues",
+          "return": {
+            "type": {
+              "text": "Generator<string>"
+            }
+          },
+          "parameters": [
+            {
+              "name": "raw",
+              "type": {
+                "text": "CorrectResponseValue"
+              }
+            }
+          ],
+          "description": "Iterate over the comma-separated entries in a correct-response value,\nregardless of whether the caller has the raw string, the parsed string, or\na string[]. Yields trimmed non-empty entries."
+        },
+        {
+          "kind": "function",
+          "name": "parseCorrectResponseAttribute",
+          "return": {
+            "type": {
+              "text": "CorrectResponseValue"
+            }
+          },
+          "parameters": [
+            {
+              "name": "raw",
+              "type": {
+                "text": "string | null | undefined"
+              }
+            }
+          ],
+          "description": "Parse a raw `correct-response` attribute string into the canonical value.\n\n - `null` / `undefined` / empty → `null`\n - no comma                     → trimmed string\n - one or more commas           → trimmed array (single-element collapses to a string)"
+        },
+        {
+          "kind": "function",
+          "name": "parsePair",
+          "return": {
+            "type": {
+              "text": "{ source: string; target: string }"
+            }
+          },
+          "parameters": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "Parse a directed-pair value into `{ source, target }`. Throws on malformed input."
+        },
+        {
+          "kind": "function",
+          "name": "parsePoint",
+          "return": {
+            "type": {
+              "text": "{ x: number; y: number }"
+            }
+          },
+          "parameters": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "Parse a point value into `{ x, y }`. Throws on malformed input."
+        },
+        {
+          "kind": "function",
+          "name": "serializeCorrectResponseAttribute",
+          "return": {
+            "type": {
+              "text": "string | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "value",
+              "type": {
+                "text": "CorrectResponseValue"
+              }
+            }
+          ],
+          "description": "Serialize a canonical value back to the attribute string. Returns `null` for\nempty inputs so a Lit `@property({ reflect: true })` drops the attribute."
+        },
+        {
+          "kind": "function",
+          "name": "serializePair",
+          "return": {
+            "type": {
+              "text": "DirectedPair"
+            }
+          },
+          "parameters": [
+            {
+              "name": "source",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "target",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "Serialize a directed pair to canonical `\"source target\"` form."
+        },
+        {
+          "kind": "function",
+          "name": "serializePoint",
+          "return": {
+            "type": {
+              "text": "Point"
+            }
+          },
+          "parameters": [
+            {
+              "name": "x",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "y",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "Serialize a point to canonical `\"x y\"` form."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "iterCorrectResponseValues",
+          "declaration": {
+            "name": "iterCorrectResponseValues",
+            "module": "packages/qti-base/src/lib/correct-response.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "parseCorrectResponseAttribute",
+          "declaration": {
+            "name": "parseCorrectResponseAttribute",
+            "module": "packages/qti-base/src/lib/correct-response.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "parsePair",
+          "declaration": {
+            "name": "parsePair",
+            "module": "packages/qti-base/src/lib/correct-response.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "parsePoint",
+          "declaration": {
+            "name": "parsePoint",
+            "module": "packages/qti-base/src/lib/correct-response.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "serializeCorrectResponseAttribute",
+          "declaration": {
+            "name": "serializeCorrectResponseAttribute",
+            "module": "packages/qti-base/src/lib/correct-response.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "serializePair",
+          "declaration": {
+            "name": "serializePair",
+            "module": "packages/qti-base/src/lib/correct-response.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "serializePoint",
+          "declaration": {
+            "name": "serializePoint",
+            "module": "packages/qti-base/src/lib/correct-response.ts"
           }
         }
       ]
