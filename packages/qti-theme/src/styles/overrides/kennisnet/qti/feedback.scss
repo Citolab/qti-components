@@ -1,0 +1,13 @@
+qti-feedback-inline {
+  &::part(feedback) {
+    margin: 0 1rem;
+    font-weight: bold;
+  }
+}
+
+qti-feedback-block {
+  &::part(feedback) {
+    margin: 1rem 0;
+    font-weight: bold;
+  }
+}

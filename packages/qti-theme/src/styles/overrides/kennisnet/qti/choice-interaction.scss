@@ -1,0 +1,108 @@
+qti-choice-interaction {
+  qti-simple-choice {
+    &::part(slot) {
+      display: inline !important;
+    }
+
+    &::part(ch) {
+      border-width: thin;
+      background-color: white;
+    }
+
+    &:state(radio):state(--checked)::part(ch) {
+      border-color: var(--bs-primary);
+      background-color: var(--bs-primary);
+    }
+    &:state(radio):state(--checked)::part(cha) {
+      background-color: white;
+      width: calc(var(--qti-form-size) - 8px);
+      height: calc(var(--qti-form-size) - 8px);
+    }
+
+    &:state(checkbox):state(--checked)::part(ch) {
+      background-color: var(--bs-primary);
+    }
+    &:state(checkbox):state(--checked)::part(cha) {
+      background-color: white;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    &:state(candidate-correct) {
+      &:state(radio):state(--checked)::part(ch) {
+        border-color: var(--qti-correct);
+        background-color: var(--qti-correct);
+      }
+
+      &:state(checkbox):state(--checked)::part(ch) {
+        border-color: var(--qti-correct);
+        background-color: var(--qti-correct);
+      }
+
+      background-color: transparent;
+    }
+
+    &:state(candidate-incorrect) {
+      &:state(radio):state(--checked)::part(ch) {
+        border-color: var(--qti-incorrect);
+        background-color: var(--qti-incorrect);
+      }
+
+      &:state(checkbox):state(--checked)::part(ch) {
+        border-color: var(--qti-incorrect);
+        background-color: var(--qti-incorrect);
+      }
+
+      background-color: transparent;
+    }
+  }
+
+  &.qti-input-control-hidden {
+    & qti-simple-choice {
+      &:state(--checked),
+      &[aria-checked='true'] {
+        color: var(--qti-selected-color);
+        background-color: var(--qti-selected-bg);
+      }
+
+      &:state(candidate-correct) {
+        border-color: var(--qti-correct);
+        background-color: var(--qti-correct-light);
+        color: var(--qti-correct);
+      }
+
+      &:state(candidate-incorrect) {
+        border-color: var(--qti-incorrect);
+        background-color: var(--qti-incorrect-light);
+        color: var(--qti-incorrect);
+      }
+    }
+  }
+}
+
+.full-correct-response {
+  qti-choice-interaction {
+    qti-simple-choice {
+      &:state(radio):state(--checked)::part(ch) {
+        border-color: var(--info-color);
+        background-color: var(--info-color);
+      }
+
+      &:state(checkbox):state(--checked)::part(ch) {
+        background-color: var(--info-color);
+      }
+    }
+
+    &.qti-input-control-hidden {
+      & qti-simple-choice {
+        &:state(--checked),
+        &[aria-checked='true'] {
+          border-color: var(--info-color);
+          background-color: var(--info-color);
+        }
+      }
+    }
+  }
+}

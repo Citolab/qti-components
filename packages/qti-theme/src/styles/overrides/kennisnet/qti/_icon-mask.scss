@@ -1,0 +1,12 @@
+// Renders a FontAwesome glyph as an SVG mask tinted with $color. The mask url() comes from a CSS
+// custom property set at runtime from the already-bundled FA icon (see applyQtiIconMaskVars), so the
+// SVG path data is not duplicated into this stylesheet. The spike ships no FA webfont — hence masks
+// instead of the old FE's `font-family: 'Font Awesome'; content: '\fXXX'`, which renders tofu here.
+//
+// Callers provide the box geometry (size/position) on the same pseudo-element.
+@mixin status-icon($mask, $color) {
+  content: '';
+  background-color: $color;
+  mask: $mask no-repeat center / contain;
+  -webkit-mask: $mask no-repeat center / contain;
+}

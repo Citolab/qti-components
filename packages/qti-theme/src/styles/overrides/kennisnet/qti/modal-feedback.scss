@@ -1,0 +1,12 @@
+qti-modal-feedback-custom {
+  display: none;
+}
+.custom-modal-feedback {
+  display: flex;
+  width: 100%;
+  border: var(--qti-border-thickness) solid var(--info-color);
+  background-color: var(--qti-bg);
+  border-radius: var(--qti-border-radius);
+  padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
+  margin-top: 1rem;
+}

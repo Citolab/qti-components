@@ -1,0 +1,39 @@
+qti-inline-choice-interaction {
+  color: var(--bs-body-color);
+  cursor: pointer;
+  margin: 0.2rem 0.2rem 0.2rem 0;
+  border: var(--qti-border-thickness) solid var(--qti-border-color);
+  border-radius: var(--bs-border-radius);
+  display: inline-block;
+
+  // Correct/incorrect are conveyed with colour only. qti-components already renders a dropdown
+  // chevron (part="dropdown-icon"), so we deliberately don't add a status glyph here (that would sit
+  // next to the chevron and clutter the small control). The text colour inherits from `color` below,
+  // also into the shadow-DOM trigger.
+  &:state(candidate-correct) {
+    background-color: var(--bs-success-bg-subtle);
+    border-color: var(--bs-success-border-subtle);
+    color: var(--bs-success-text-emphasis);
+  }
+
+  &:state(candidate-incorrect) {
+    background-color: var(--bs-danger-bg-subtle);
+    border-color: var(--bs-danger-border-subtle);
+    color: var(--bs-danger-text-emphasis);
+  }
+}
+
+.full-correct-response {
+  qti-inline-choice-interaction {
+    background-color: var(--info-color);
+    border-color: var(--info-color);
+    color: var(--qti-selected-color);
+
+    // qti-components sets an explicit colour on the value part, so it doesn't inherit the host
+    // colour above — set it directly so the label is readable (white) on the blue box, like
+    // text-entry's full-correct input.
+    &::part(value) {
+      color: var(--qti-selected-color);
+    }
+  }
+}

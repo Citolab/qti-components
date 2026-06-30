@@ -1,0 +1,229 @@
+@use 'sass:map';
+
+// Button styles for QTI content. This bundle is injected into the test-container
+// shadow root (and the player document head), where palet's own .btn class rules
+// don't reach — so the Bootstrap button classes that QTI/player markup (and author
+// HTML inside item bodies) may use are (re)defined here. Colors are driven entirely
+// by the palet --bs-* theme variables, which inherit across the shadow boundary;
+// hover/active shades are derived from the base colour with color-mix so there are
+// no hardcoded hexes to keep in sync with the theme.
+
+$button-colors: (
+  'primary': (
+    'bg': var(--bs-primary),
+    'text': #fff,
+  ),
+  // Palet's secondary *button* is the neutral lavender (--bs-light / --bs-dark),
+  // not the orange --bs-secondary accent colour. Match palet so this rule stays
+  // consistent with ng-palet-button variant="secondary" when injected into the
+  // light DOM, and looks right for the same class inside the shadow root.
+  'secondary': (
+      'bg': var(--bs-light),
+      'text': var(--bs-dark),
+    ),
+  'success': (
+    'bg': var(--bs-success),
+    'text': #fff,
+  ),
+  'danger': (
+    'bg': var(--bs-danger),
+    'text': #fff,
+  ),
+  'warning': (
+    'bg': var(--bs-warning),
+    'text': #000,
+  ),
+  'info': (
+    'bg': var(--bs-info),
+    'text': #fff,
+  ),
+  'light': (
+    'bg': var(--bs-light),
+    'text': var(--bs-dark),
+  ),
+  'dark': (
+    'bg': var(--bs-dark),
+    'text': #fff,
+  ),
+);
+
+$button-sizes: (
+  'sm': (
+    'padding': 0.25rem 0.5rem,
+    'font-size': 0.875rem,
+    'border-radius': 0.2rem,
+  ),
+  'md': (
+    'padding': 0.5rem 1rem,
+    'font-size': 1rem,
+    'border-radius': var(--bs-border-radius),
+  ),
+  'lg': (
+    'padding': 0.75rem 1.5rem,
+    'font-size': 1.25rem,
+    'border-radius': 0.3rem,
+  ),
+);
+
+// Mixins
+@mixin button-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  text-decoration: none;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
+
+  &:focus {
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--bs-primary) 25%, transparent);
+  }
+
+  &:disabled,
+  &.disabled {
+    opacity: 0.65;
+    pointer-events: none;
+  }
+}
+
+@mixin button-variant($bg, $text) {
+  background-color: $bg;
+  color: $text;
+  border-color: $bg;
+
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: color-mix(in srgb, #{$bg} 85%, black);
+    border-color: color-mix(in srgb, #{$bg} 80%, black);
+  }
+}
+
+@mixin button-size($padding, $font-size, $border-radius) {
+  padding: $padding;
+  font-size: $font-size;
+  border-radius: $border-radius;
+}
+
+// Base button class.
+//
+// Scoped under :host so it ONLY applies inside the test-container shadow root (where
+// this bundle is injected and palet's button rules can't reach — e.g. draggable chips).
+// In the document head — where the same bundle is also injected so light-DOM QTI
+// fragments get the --qti-*/.btn-qti-* styling below — `:host` matches nothing, so these
+// generic .btn rules no longer override palet's own button styling on app chrome
+// (scoring/nav/header buttons), which would otherwise strip palet's shadow/definition and
+// make the lavender secondary buttons blend into the lavender body background.
+:host .btn {
+  @include button-base;
+  @include button-size(
+    map.get(map.get($button-sizes, 'md'), 'padding'),
+    map.get(map.get($button-sizes, 'md'), 'font-size'),
+    map.get(map.get($button-sizes, 'md'), 'border-radius')
+  );
+
+  // Generate color variants
+  @each $name, $colors in $button-colors {
+    &-#{$name} {
+      @include button-variant(map.get($colors, 'bg'), map.get($colors, 'text'));
+    }
+  }
+
+  // Generate size variants
+  @each $name, $sizes in $button-sizes {
+    &-#{$name} {
+      @include button-size(map.get($sizes, 'padding'), map.get($sizes, 'font-size'), map.get($sizes, 'border-radius'));
+    }
+  }
+
+  // Outline variants
+  &-outline {
+    @each $name, $colors in $button-colors {
+      &-#{$name} {
+        background-color: transparent;
+        color: map.get($colors, 'bg');
+        border-color: map.get($colors, 'bg');
+
+        &:hover,
+        &:focus {
+          background-color: map.get($colors, 'bg');
+          color: map.get($colors, 'text');
+        }
+      }
+    }
+  }
+
+  // Icon button modifier
+  &--icon {
+    gap: 0.5rem;
+
+    .icon {
+      width: 1em;
+      height: 1em;
+    }
+  }
+
+  // Block button
+  &--block {
+    display: flex;
+    width: 100%;
+  }
+}
+
+// Grading states for draggable choices (match / gap-match / order interactions).
+// These must live in this bundle (qti-styles) because it is the stylesheet injected
+// into the test-container shadow root — the global shell buttons.scss does not pierce
+// the shadow boundary, so the chips would otherwise only get their class names without
+// any color. The CSS custom properties are inherited from the document :root.
+.btn-qti-correct {
+  background-color: color-mix(in srgb, var(--qti-correct) 5%, white);
+  color: var(--qti-correct);
+  border: var(--qti-border-thickness) solid var(--qti-correct);
+}
+
+.btn-qti-incorrect {
+  background-color: color-mix(in srgb, var(--qti-incorrect) 5%, white);
+  color: var(--qti-incorrect);
+  border: var(--qti-border-thickness) solid var(--qti-incorrect);
+}
+
+.btn-qti-full-correct-response {
+  background-color: var(--info-color);
+  color: white;
+  border: var(--qti-border-thickness) solid var(--info-color);
+}
+
+// Grading state icon on draggable chips. stateNode() (see item/state-node.ts) appends an
+// <i class="state-icon fa-check|fa-times|fa-minus"> inside the chip. The spike ships no FA
+// webfont in the shadow root (the webfont glyph renders as tofu there), so draw the glyph as an
+// SVG mask via the --fa-*-mask custom properties — set on documentElement at app init and
+// inherited through the shadow boundary — tinted with the icon's own (inherited) text color.
+.state-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
+  background-color: currentColor;
+  mask: no-repeat center / contain;
+  -webkit-mask: no-repeat center / contain;
+
+  &.fa-check {
+    mask-image: var(--fa-check-mask);
+    -webkit-mask-image: var(--fa-check-mask);
+  }
+
+  &.fa-times {
+    mask-image: var(--fa-times-mask);
+    -webkit-mask-image: var(--fa-times-mask);
+  }
+
+  &.fa-minus {
+    mask-image: var(--fa-minus-mask);
+    -webkit-mask-image: var(--fa-minus-mask);
+  }
+}

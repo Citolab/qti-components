@@ -1,0 +1,33 @@
+qti-gap-match-interaction:disabled {
+  .draggable {
+    cursor: not-allowed;
+    pointer-events: none;
+
+    .drag-handle {
+      display: none;
+    }
+  }
+}
+
+qti-gap-match-interaction {
+  qti-gap-text {
+    box-sizing: border-box;
+    display: block;
+  }
+
+  qti-gap-text {
+    &::part(slots) {
+      display: inline !important;
+    }
+  }
+
+  qti-gap {
+    box-sizing: border-box;
+  }
+
+  .correct-option {
+    background-color: var(--info-color);
+    color: white;
+    border: var(--qti-border-thickness) solid var(--info-color) !important;
+  }
+}
