@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "declaration": true,
     "experimentalDecorators": true,
     "importHelpers": false,
@@ -59,7 +58,7 @@
         "./packages/qti-loader/src/index.ts"
       ],
       "@qti-components/utilities": [
-        "packages/qti-utilities/src/index.ts"
+        "./packages/qti-utilities/src/index.ts"
       ],
       "@qti-components/interactions-core": [
         "./packages/interactions/core/src/index.ts"
@@ -195,11 +194,6 @@
       ]
     }
   },
-  "types": [
-    "@types/dom-view-transitions",
-    "./tools/storybook/vite-env.d.ts",
-    "vitest/globals"
-  ],
   "exclude": [
     "**/dist/**/*",
     "**/node_modules/**/*"
