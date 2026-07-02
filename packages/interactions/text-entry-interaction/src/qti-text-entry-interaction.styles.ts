@@ -82,30 +82,23 @@ export default css`
 
   :host {
     position: relative;
-  }
-  input {
-    anchor-name: --text-entry-input;
-    z-index: 100;
-    position: relative;
+    anchor-name: --text-entry-host;
   }
 
+  /*
+   * Correct-response overlay sits ABOVE the host's border, anchored to the
+   * host via CSS anchor positioning (position-area: top). Visually
+   * decoupled from the host's bordered/colored candidate-correction state —
+   * even when both modes are on, the "paris" tag doesn't get the red/green
+   * border.
+   */
   [part='correct'] {
+    position: absolute;
+    position-anchor: --text-entry-host;
+    position-area: top span-right;
+    margin-bottom: 0.25rem;
     padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
     background-color: var(--qti-bg);
-    z-index: 0;
-    position: absolute;
-    left: 0;
-    right: 0;
-    position-anchor: --text-entry-input;
-    bottom: anchor(top);
-    left: anchor(left);
-    /* opacity: 1; */
-    transition: all 1s;
-
-    @starting-style {
-      display: grid;
-      /* opacity: 0; */
-      bottom: 0;
-    }
+    white-space: nowrap;
   }
 `;

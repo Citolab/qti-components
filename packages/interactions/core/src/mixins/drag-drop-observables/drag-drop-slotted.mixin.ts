@@ -1,5 +1,7 @@
 import { property } from 'lit/decorators.js';
 
+import { responseAttributeConverter } from '@qti-components/base';
+
 import {
   collectResponseData,
   countTotalAssociations,
@@ -11,6 +13,7 @@ import {
 import { DragDropCoreMixin } from './drag-drop-core.mixin';
 import { captureMultipleFlipStates, animateMultipleFlips, type FlipAnimationOptions } from './utils/flip.utils';
 
+import type { ComplexAttributeConverter } from 'lit';
 import type { CollisionDetectionAlgorithm } from './utils/drag-drop.utils';
 import type { Interaction, IInteraction } from '@qti-components/base';
 import type { DragDropCore } from './drag-drop-core.mixin';
@@ -114,6 +117,19 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
     @property({ type: Boolean, attribute: 'auto-size-dropzones' })
     public autoSizeDropzones = false;
 
+    /**
+     * Set via the `response="…"` attribute before the drag/drop machinery has
+     * cached its dropzones (`setupDragDrop` awaits the first render). The
+     * `afterCache` extension hook in this mixin applies it once dropzones exist.
+     */
+    private _pendingResponse: string[] | undefined = undefined;
+
+    @property({
+      attribute: 'response',
+      reflect: false,
+      noAccessor: true,
+      converter: responseAttributeConverter({ emptyAs: [] }) as ComplexAttributeConverter<unknown, unknown>
+    })
     get response(): string {
       const getResponse = (this as unknown as { getResponse?: () => unknown }).getResponse;
       const candidate = typeof getResponse === 'function' ? getResponse.call(this) : undefined;
@@ -128,6 +144,12 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
 
     set response(value: string | string[]) {
       if (Array.isArray(value)) {
+        // Dropzones haven't been cached yet — defer to `afterCache`.
+        if (!this.trackedDroppables || this.trackedDroppables.length === 0) {
+          this._pendingResponse = value;
+          this._internals.setFormValue(JSON.stringify(value));
+          return;
+        }
         const getValue = (this as unknown as { getValue?: (v: string[]) => unknown }).getValue;
         const normalized = typeof getValue === 'function' ? getValue.call(this, value) : value;
         const responseEntries = Array.isArray(normalized)
@@ -160,6 +182,22 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
     public override afterCache(): void {
       this.applyConfiguredChoicesContainerWidth();
       this.updateMinDimensionsForDropZones();
+      if (this._pendingResponse !== undefined) {
+        const pending = this._pendingResponse;
+        this._pendingResponse = undefined;
+        this.response = pending;
+      }
+      const interaction = this as unknown as {
+        showCorrectResponse?: boolean;
+        showCandidateCorrection?: boolean;
+        showFullCorrectResponse?: boolean;
+        toggleInternalCorrectResponse?: (show: boolean) => void;
+        toggleCandidateCorrection?: (show: boolean) => void;
+        toggleFullCorrectResponse?: (show: boolean) => void;
+      };
+      if (interaction.showCorrectResponse) interaction.toggleInternalCorrectResponse?.(true);
+      if (interaction.showCandidateCorrection) interaction.toggleCandidateCorrection?.(true);
+      if (interaction.showFullCorrectResponse) interaction.toggleFullCorrectResponse?.(true);
     }
 
     private applyConfiguredChoicesContainerWidth(): void {

@@ -34,7 +34,7 @@ const meta: Meta<
       handles: events
     }
   },
-  tags: ['autodocs']
+  tags: ['autodocs', 'iol']
 };
 export default meta;
 

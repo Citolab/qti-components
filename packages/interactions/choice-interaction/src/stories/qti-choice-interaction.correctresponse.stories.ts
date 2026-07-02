@@ -23,7 +23,7 @@ type Story = StoryObj<QtiChoiceInteraction>;
 const meta: Meta<QtiChoiceInteraction> = {
   component: 'qti-choice-interaction',
   title: '02 Choice Interaction/Correct Response',
-  tags: ['correct-response', 'standalone']
+  tags: ['correct-response', 'standalone', 'iol']
 };
 export default meta;
 
@@ -419,4 +419,227 @@ export const CombinedModes: Story = {
     expect(choiceB.internals.states.has('incorrect-response')).toBe(true);
     expect(choiceB.internals.states.has('candidate-incorrect')).toBe(true);
   }
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// OVERVIEW: ALL VIEW MODES
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/**
+ * ## Overview: All View Modes Side-by-Side
+ *
+ * One story showing the same `qti-choice-interaction` with a pre-filled response
+ * across every correction view mode, driven purely by attributes:
+ *
+ * 1. **`show-candidate-correction`** — feedback on the candidate's own selection
+ *    (rendered once with a correct pick and once with an incorrect pick).
+ * 2. **`show-correct-response`** — inline indicators on every choice marking
+ *    which one(s) are correct/incorrect.
+ * 3. **`show-full-correct-response`** — a cloned, disabled interaction is
+ *    appended with the correct answer filled in.
+ *
+ * Correct answer for every instance is `A`. The interactions are otherwise
+ * identical — only the view attribute(s) differ.
+ */
+export const AllViewModesOverview: Story = {
+  name: 'Overview: All View Modes',
+  render: () => html`
+    <style>
+      .overview-grid {
+        display: grid;
+        gap: 1.5rem;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      }
+      .overview-grid section {
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        padding: 1rem;
+      }
+      .overview-grid h3 {
+        margin: 0 0 0.5rem;
+        font:
+          600 0.85rem/1.2 system-ui,
+          sans-serif;
+        color: #444;
+      }
+      .overview-grid code {
+        font-size: 0.75rem;
+        background: #f3f3f3;
+        padding: 0.05rem 0.3rem;
+        border-radius: 3px;
+      }
+    </style>
+
+    <div class="overview-grid">
+      <section>
+        <h3>show-candidate-correction (correct pick)</h3>
+        <p><code>response="A" · correct-response="A"</code></p>
+        <qti-choice-interaction
+          response-identifier="RESPONSE"
+          max-choices="1"
+          data-testid="cc-correct"
+          correct-response="A"
+          response="A"
+          show-candidate-correction
+        >
+          <qti-prompt>Which letter comes first in the alphabet?</qti-prompt>
+          <qti-simple-choice identifier="A">Option A</qti-simple-choice>
+          <qti-simple-choice identifier="B">Option B</qti-simple-choice>
+          <qti-simple-choice identifier="C">Option C</qti-simple-choice>
+        </qti-choice-interaction>
+      </section>
+
+      <section>
+        <h3>show-candidate-correction (incorrect pick)</h3>
+        <p><code>response="B" · correct-response="A"</code></p>
+        <qti-choice-interaction
+          response-identifier="RESPONSE"
+          max-choices="1"
+          data-testid="cc-incorrect"
+          correct-response="A"
+          response="B"
+          show-candidate-correction
+        >
+          <qti-prompt>Which letter comes first in the alphabet?</qti-prompt>
+          <qti-simple-choice identifier="A">Option A</qti-simple-choice>
+          <qti-simple-choice identifier="B">Option B</qti-simple-choice>
+          <qti-simple-choice identifier="C">Option C</qti-simple-choice>
+        </qti-choice-interaction>
+      </section>
+
+      <section>
+        <h3>show-correct-response (inline)</h3>
+        <p><code>response="B" · correct-response="A"</code></p>
+        <qti-choice-interaction
+          response-identifier="RESPONSE"
+          max-choices="1"
+          data-testid="inline"
+          correct-response="A"
+          response="B"
+          show-correct-response
+        >
+          <qti-prompt>Which letter comes first in the alphabet?</qti-prompt>
+          <qti-simple-choice identifier="A">Option A</qti-simple-choice>
+          <qti-simple-choice identifier="B">Option B</qti-simple-choice>
+          <qti-simple-choice identifier="C">Option C</qti-simple-choice>
+        </qti-choice-interaction>
+      </section>
+
+      <section>
+        <h3>show-full-correct-response (clone)</h3>
+        <p><code>response="B" · correct-response="A"</code></p>
+        <qti-choice-interaction
+          response-identifier="RESPONSE"
+          max-choices="1"
+          data-testid="full"
+          correct-response="A"
+          response="B"
+          show-full-correct-response
+        >
+          <qti-prompt>Which letter comes first in the alphabet?</qti-prompt>
+          <qti-simple-choice identifier="A">Option A</qti-simple-choice>
+          <qti-simple-choice identifier="B">Option B</qti-simple-choice>
+          <qti-simple-choice identifier="C">Option C</qti-simple-choice>
+        </qti-choice-interaction>
+      </section>
+
+      <section>
+        <h3>candidate-correction + inline</h3>
+        <p><code>show-candidate-correction + show-correct-response</code></p>
+        <qti-choice-interaction
+          response-identifier="RESPONSE"
+          max-choices="1"
+          data-testid="cc-inline"
+          correct-response="A"
+          response="B"
+          show-candidate-correction
+          show-correct-response
+        >
+          <qti-prompt>Which letter comes first in the alphabet?</qti-prompt>
+          <qti-simple-choice identifier="A">Option A</qti-simple-choice>
+          <qti-simple-choice identifier="B">Option B</qti-simple-choice>
+          <qti-simple-choice identifier="C">Option C</qti-simple-choice>
+        </qti-choice-interaction>
+      </section>
+
+      <section>
+        <h3>candidate-correction + full</h3>
+        <p><code>show-candidate-correction + show-full-correct-response</code></p>
+        <qti-choice-interaction
+          response-identifier="RESPONSE"
+          max-choices="1"
+          data-testid="cc-full"
+          correct-response="A"
+          response="B"
+          show-candidate-correction
+          show-full-correct-response
+        >
+          <qti-prompt>Which letter comes first in the alphabet?</qti-prompt>
+          <qti-simple-choice identifier="A">Option A</qti-simple-choice>
+          <qti-simple-choice identifier="B">Option B</qti-simple-choice>
+          <qti-simple-choice identifier="C">Option C</qti-simple-choice>
+        </qti-choice-interaction>
+      </section>
+
+      <section>
+        <h3>inline + full</h3>
+        <p><code>show-correct-response + show-full-correct-response</code></p>
+        <qti-choice-interaction
+          response-identifier="RESPONSE"
+          max-choices="1"
+          data-testid="inline-full"
+          correct-response="A"
+          response="B"
+          show-correct-response
+          show-full-correct-response
+        >
+          <qti-prompt>Which letter comes first in the alphabet?</qti-prompt>
+          <qti-simple-choice identifier="A">Option A</qti-simple-choice>
+          <qti-simple-choice identifier="B">Option B</qti-simple-choice>
+          <qti-simple-choice identifier="C">Option C</qti-simple-choice>
+        </qti-choice-interaction>
+      </section>
+
+      <section>
+        <h3>all three view modes combined</h3>
+        <p><code>candidate + inline + full</code></p>
+        <qti-choice-interaction
+          response-identifier="RESPONSE"
+          max-choices="1"
+          data-testid="all-three"
+          correct-response="A"
+          response="B"
+          show-candidate-correction
+          show-correct-response
+          show-full-correct-response
+        >
+          <qti-prompt>Which letter comes first in the alphabet?</qti-prompt>
+          <qti-simple-choice identifier="A">Option A</qti-simple-choice>
+          <qti-simple-choice identifier="B">Option B</qti-simple-choice>
+          <qti-simple-choice identifier="C">Option C</qti-simple-choice>
+        </qti-choice-interaction>
+      </section>
+
+      <section>
+        <h3>multi-select · all three combined (partial)</h3>
+        <p><code>max-choices="0" · correct="A,E" · response="A,B"</code></p>
+        <qti-choice-interaction
+          response-identifier="RESPONSE"
+          max-choices="0"
+          data-testid="multi-all-three"
+          correct-response="A,E"
+          response="A,B"
+          show-candidate-correction
+          show-correct-response
+          show-full-correct-response
+        >
+          <qti-prompt>Select all vowels:</qti-prompt>
+          <qti-simple-choice identifier="A">A</qti-simple-choice>
+          <qti-simple-choice identifier="B">B</qti-simple-choice>
+          <qti-simple-choice identifier="C">C</qti-simple-choice>
+          <qti-simple-choice identifier="E">E</qti-simple-choice>
+        </qti-choice-interaction>
+      </section>
+    </div>
+  `
 };

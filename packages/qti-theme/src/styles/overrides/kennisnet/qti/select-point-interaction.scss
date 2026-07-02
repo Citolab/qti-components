@@ -1,13 +1,13 @@
-qti-select-point-interaction {
-  // The marker pin is an SVG injected into the button by adjustSelectPointInteractions
-  // (shared/lib/qti/item/select-point-interaction.ts); the button itself stays invisible.
-  &::part(point) {
-    background-color: transparent !important;
-    opacity: 1;
-    border: none;
-    border-radius: 0;
-  }
-}
+// qti-select-point-interaction {
+//   // The marker pin is an SVG injected into the button by adjustSelectPointInteractions
+//   // (shared/lib/qti/item/select-point-interaction.ts); the button itself stays invisible.
+//   &::part(point) {
+//     background-color: transparent !important;
+//     opacity: 1;
+//     border: none;
+//     border-radius: 0;
+//   }
+// }
 
 .select-point-info {
   margin-top: 0.5rem;

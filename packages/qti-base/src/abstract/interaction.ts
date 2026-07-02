@@ -6,7 +6,7 @@ import { watch } from '@qti-components/utilities';
 
 import { configContext } from '../context/config.context';
 import { itemContext } from '../context/qti-assessment-item.context';
-import { parseCorrectResponseAttribute, serializeCorrectResponseAttribute } from '../lib/correct-response';
+import { responseAttributeConverter, type ResponseValue } from '../lib/response';
 
 import type { ConfigContext } from '../context/config.context';
 import type { ResponseVariable } from '../lib/variables';
@@ -54,13 +54,13 @@ export abstract class Interaction extends LitElement implements IInteraction {
    * <qti-choice-interaction correct-response="A,B">
    * ```
    */
-  @property({ type: String, attribute: 'correct-response', reflect: true })
-  set correctResponseAttr(val: string | null) {
-    this._correctResponse = parseCorrectResponseAttribute(val);
+  @property({ attribute: 'correct-response', reflect: true, converter: responseAttributeConverter({ emptyAs: null }) })
+  set correctResponseAttr(val: ResponseValue) {
+    this._correctResponse = val;
   }
 
-  get correctResponseAttr(): string | null {
-    return serializeCorrectResponseAttribute(this._correctResponse ?? null);
+  get correctResponseAttr(): ResponseValue {
+    return this._correctResponse;
   }
 
   /**

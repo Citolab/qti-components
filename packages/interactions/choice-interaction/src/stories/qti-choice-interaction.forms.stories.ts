@@ -22,7 +22,7 @@ const meta: Meta<QtiChoiceInteraction> = {
       handles: events
     }
   },
-  tags: ['form-associated']
+  tags: ['form-associated', 'iol']
 };
 export default meta;
 

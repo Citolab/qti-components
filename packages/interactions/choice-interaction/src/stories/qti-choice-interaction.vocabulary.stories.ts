@@ -26,7 +26,7 @@ const meta: Meta<QtiChoiceInteraction> = {
       handles: events
     }
   },
-  tags: ['autodocs']
+  tags: ['autodocs', 'iol']
 };
 export default meta;
 

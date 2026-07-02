@@ -23,7 +23,7 @@ const xml = String.raw;
 const meta: Meta<QtiChoiceInteraction> = {
   component: 'qti-choice-interaction',
   title: '02 Choice Interaction/Behavior',
-  tags: ['behavior', 'specific']
+  tags: ['behavior', 'specific', 'iol']
 };
 export default meta;
 

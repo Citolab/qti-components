@@ -2,7 +2,13 @@ import { css, html } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { consume } from '@lit/context';
 
-import { Interaction, itemContext, qtiContext, removeDoubleSlashes } from '@qti-components/base';
+import {
+  Interaction,
+  itemContext,
+  qtiContext,
+  removeDoubleSlashes,
+  responseAttributeConverter
+} from '@qti-components/base';
 
 import styles from './qti-portable-custom-interaction.styles';
 
@@ -63,7 +69,8 @@ export class QtiPortableCustomInteraction extends Interaction {
   @state()
   protected qtiContext?: QtiContext;
 
-  @state() response: string | string[] | null = null;
+  @property({ attribute: 'response', reflect: false, converter: responseAttributeConverter({ emptyAs: null }) })
+  response: string | string[] | null = null;
 
   #parsedRequirePaths: Record<string, string | string[]> = null;
   #parsedRequireShim: Record<string, any> = null;
@@ -827,7 +834,12 @@ export class QtiPortableCustomInteraction extends Interaction {
     this.#pciValidity = null;
     this.#pciCustomValidityMessage = '';
     // Reflect any pre-existing response (e.g. restored session) for validation/completionStatus.
-    this.response = (this.responseVariable?.value as string | string[] | null) ?? null;
+    // Don't clobber a value already set via the `response="..."` attribute.
+    const currentResponse = this.response;
+    const hasResponse = Array.isArray(currentResponse) ? currentResponse.length > 0 : !!currentResponse;
+    if (!hasResponse) {
+      this.response = (this.responseVariable?.value as string | string[] | null) ?? null;
+    }
     window.addEventListener('message', this.handleIframeMessage);
     this.createIframe();
   }
@@ -1784,8 +1796,9 @@ export class QtiPortableCustomInteraction extends Interaction {
       return; // Exit early, nothing else to do
     }
 
-    // If there's no correct response to show, exit
-    if (!show || !responseVariable?.correctResponse) {
+    // If there's no correct response to show, exit. Read from
+    // `this.correctResponse` (works in both standalone and item-context modes).
+    if (!show || !this.correctResponse) {
       return;
     }
 
@@ -1831,8 +1844,11 @@ export class QtiPortableCustomInteraction extends Interaction {
       correctResponseViewer.appendChild(clonedChild);
     });
 
-    // Store the correct response value
-    const correctResponseValue = responseVariable.correctResponse;
+    // Store the correct response value (works in both standalone and item-context modes).
+    const correctResponseValue = this.correctResponse as string | string[];
+    // Default cardinality/baseType for standalone mode where there's no responseVariable.
+    const cardinality = responseVariable?.cardinality ?? (Array.isArray(correctResponseValue) ? 'multiple' : 'single');
+    const baseType = responseVariable?.baseType ?? 'string';
 
     // Ensure the correct-response viewer is initialized and then configured in the iframe
     const originalConnectedCallback = correctResponseViewer.connectedCallback;
@@ -1840,11 +1856,7 @@ export class QtiPortableCustomInteraction extends Interaction {
       originalConnectedCallback.call(this);
 
       const applyCorrectResponse = () => {
-        const qtiVariableJSON = this.responseVariablesToQtiVariableJSON(
-          correctResponseValue,
-          responseVariable.cardinality,
-          responseVariable.baseType
-        );
+        const qtiVariableJSON = this.responseVariablesToQtiVariableJSON(correctResponseValue, cardinality, baseType);
 
         this.sendMessageToIframe('setBoundTo', {
           [originalResponseId]: qtiVariableJSON

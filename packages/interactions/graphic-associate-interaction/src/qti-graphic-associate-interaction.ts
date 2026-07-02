@@ -1,9 +1,10 @@
 import { html, svg } from 'lit';
-import { queryAssignedElements, state } from 'lit/decorators.js';
+import { property, queryAssignedElements, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { repeat } from 'lit/directives/repeat.js';
 
-import { Interaction } from '@qti-components/base';
+import { watch } from '@qti-components/utilities';
+import { Interaction, responseAttributeConverter } from '@qti-components/base';
 import { positionShapes } from '@qti-components/interactions-core/internal/hotspots/hotspot';
 
 import styles from './qti-graphic-associate-interaction.styles';
@@ -40,13 +41,26 @@ export class QtiGraphicAssociateInteraction extends Interaction {
     return this.#getResponseArray().length > 0;
   }
 
-  set response(val) {
+  @property({
+    attribute: 'response',
+    reflect: false,
+    noAccessor: true,
+    converter: responseAttributeConverter({ emptyAs: [] })
+  })
+  set response(val: string | string[] | null) {
     this._response = this.#normalizeResponse(val);
   }
 
-  get response() {
+  get response(): string[] | null {
     return this._response;
   }
+
+  @watch('_response' as never, { waitUntilFirstUpdate: true })
+  protected _handleResponseChange = () => {
+    if (this.showCandidateCorrection) {
+      this.toggleCandidateCorrection(true);
+    }
+  };
 
   #normalizeResponse(value: string | string[] | null | undefined): string[] {
     if (value === null || value === undefined || value === '') return [];
@@ -58,19 +72,12 @@ export class QtiGraphicAssociateInteraction extends Interaction {
   }
 
   public override toggleInternalCorrectResponse(show: boolean) {
-    const responseVariable = this.responseVariable;
-    if (!show || !responseVariable) {
+    const correctResponseValue = this.correctResponse;
+    if (!show || !correctResponseValue) {
       this._correctLines = [];
       return;
     }
-    if (!responseVariable.correctResponse) {
-      console.error('No correct response found for this interaction.');
-      return;
-    }
-    const correctResponses = Array.isArray(responseVariable.correctResponse)
-      ? responseVariable.correctResponse
-      : [responseVariable.correctResponse];
-    this._correctLines = correctResponses;
+    this._correctLines = Array.isArray(correctResponseValue) ? correctResponseValue : [correctResponseValue];
   }
 
   override render() {
@@ -143,6 +150,7 @@ export class QtiGraphicAssociateInteraction extends Interaction {
   }
 
   override firstUpdated(): void {
+    super.firstUpdated();
     this.#hotspots = this.querySelectorAll('qti-associable-hotspot');
 
     this.addEventListener('mousemove', event => {

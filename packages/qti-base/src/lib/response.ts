@@ -1,11 +1,14 @@
 /**
- * Canonical `correct-response="..."` attribute codec.
+ * Canonical `response="..."` / `correct-response="..."` attribute codec.
  *
  * Authors put a single string on an interaction element. This module is the
  * single source of truth for how that string parses into the runtime's
  * internal value AND how an editor serializes the internal value back to the
  * attribute. Both `@qti-components/*` interactions and `@citolab/prose-qti`
  * (the editor) import from here — no per-codebase parsers, no drift.
+ *
+ * The two attributes share the same grammar; the codec is agnostic about
+ * which of them is being parsed.
  *
  * ---
  *
@@ -37,8 +40,8 @@
 
 // ─── parsed shape ────────────────────────────────────────────────────────────
 
-/** Canonical parsed value of `correct-response`. */
-export type CorrectResponseValue = string | string[] | null;
+/** Canonical parsed value of a `response` / `correct-response` attribute. */
+export type ResponseValue = string | string[] | null;
 
 // ─── per-shape branded types (advisory at compile time) ──────────────────────
 
@@ -54,13 +57,14 @@ export type Point = `${number} ${number}`;
 // ─── attribute-level parser / serializer ─────────────────────────────────────
 
 /**
- * Parse a raw `correct-response` attribute string into the canonical value.
+ * Parse a raw `response` / `correct-response` attribute string into the
+ * canonical value.
  *
  *  - `null` / `undefined` / empty → `null`
  *  - no comma                     → trimmed string
  *  - one or more commas           → trimmed array (single-element collapses to a string)
  */
-export function parseCorrectResponseAttribute(raw: string | null | undefined): CorrectResponseValue {
+export function parseResponseAttribute(raw: string | null | undefined): ResponseValue {
   if (raw == null) return null;
   if (!raw.includes(',')) {
     const trimmed = raw.trim();
@@ -79,7 +83,7 @@ export function parseCorrectResponseAttribute(raw: string | null | undefined): C
  * Serialize a canonical value back to the attribute string. Returns `null` for
  * empty inputs so a Lit `@property({ reflect: true })` drops the attribute.
  */
-export function serializeCorrectResponseAttribute(value: CorrectResponseValue): string | null {
+export function serializeResponseAttribute(value: ResponseValue): string | null {
   if (value == null) return null;
   if (Array.isArray(value)) {
     const tokens = value.map(token => token.trim()).filter(token => token.length > 0);
@@ -92,11 +96,11 @@ export function serializeCorrectResponseAttribute(value: CorrectResponseValue): 
 // ─── value-shape helpers (per interaction type) ──────────────────────────────
 
 /**
- * Iterate over the comma-separated entries in a correct-response value,
- * regardless of whether the caller has the raw string, the parsed string, or
- * a string[]. Yields trimmed non-empty entries.
+ * Iterate over the comma-separated entries in a response value, regardless of
+ * whether the caller has the raw string, the parsed string, or a string[].
+ * Yields trimmed non-empty entries.
  */
-export function* iterCorrectResponseValues(raw: CorrectResponseValue): Generator<string> {
+export function* iterResponseValues(raw: ResponseValue): Generator<string> {
   if (raw == null) return;
   if (Array.isArray(raw)) {
     for (const v of raw) {
@@ -144,4 +148,45 @@ export function parsePoint(value: string): { x: number; y: number } {
 /** Serialize a point to canonical `"x y"` form. */
 export function serializePoint(x: number, y: number): Point {
   return `${x} ${y}`;
+}
+
+// ─── Lit converter factory ───────────────────────────────────────────────────
+
+/**
+ * Ready-to-use Lit `converter` for `response` / `correct-response` attributes.
+ * Assign to the `converter` option:
+ *
+ *   @property({ attribute: 'response', converter: responseAttributeConverter({ emptyAs: [] }) })
+ *
+ * `emptyAs` picks the sentinel returned when the attribute is absent / blank.
+ * Three sentinels exist across the codebase — match the one your call site
+ * already uses. Future work may normalize to a single sentinel.
+ *
+ *   - '' (empty string)   — ChoicesMixin convention
+ *   - []                  — DragDropSlottedMixin / graphic-associate convention
+ *   - null                — base interaction / select-point convention
+ *
+ * On the serialize side, the `emptyAs` value roundtrips back to `null` so a
+ * `reflect: true` property drops the attribute rather than emitting `""`.
+ */
+export function responseAttributeConverter<E extends '' | null | readonly unknown[]>(opts: {
+  emptyAs: E;
+}): {
+  fromAttribute: (value: string | null) => ResponseValue | E;
+  toAttribute: (value: ResponseValue | E) => string | null;
+} {
+  const { emptyAs } = opts;
+  const isEmptySentinel = (value: unknown): boolean =>
+    value === emptyAs || value == null || value === '' || (Array.isArray(value) && value.length === 0);
+
+  return {
+    fromAttribute: (value: string | null): ResponseValue | E => {
+      const parsed = parseResponseAttribute(value);
+      return parsed === null ? emptyAs : parsed;
+    },
+    toAttribute: (value: ResponseValue | E): string | null => {
+      if (isEmptySentinel(value)) return null;
+      return serializeResponseAttribute(value as ResponseValue);
+    }
+  };
 }

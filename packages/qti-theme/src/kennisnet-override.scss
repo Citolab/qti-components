@@ -1,1 +1,209 @@
+/*
+ * Single-file Kennisnet vendor substrate.
+ *
+ * Bundles everything the Kennisnet override needs to render on a host page:
+ *  1. Bootstrap 5.3 via CDN (Kennisnet's SCSS uses --bs-* tokens as if the
+ *     host page loads Bootstrap).
+ *  2. Wikiwijs-shaped bridge variables so the --bs-* references resolve to
+ *     Wikiwijs purples instead of Bootstrap blue.
+ *  3. FontAwesome glyph CDN URLs declared as --fa-*-mask custom properties,
+ *     used as `mask-image` targets in kennisnet/qti/*.scss.
+ *  4. The compiled Kennisnet QTI overrides on top.
+ *
+ * Consumers load this single file (`?url`) — no other vendor stylesheets needed.
+ */
+
 @use 'styles/overrides/kennisnet/qti-styles' as *;
+
+/* External vendor CSS — emitted at top of compiled output by Sass. */
+@import url('https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css');
+
+/*
+ * Wikiwijs-shaped bridge.
+ *
+ * Extracted from the Wikiwijs production stylesheet at
+ * https://toetsen.wikiwijs.nl. Sandwiched between vendor Bootstrap and the
+ * Kennisnet QTI rules so Kennisnet's --bs-* references resolve to
+ * Wikiwijs-flavored values instead of Bootstrap's blue defaults.
+ *
+ * Stays deliberately small — only the variables Kennisnet uses but does not
+ * itself declare.
+ */
+:root,
+test-container {
+  /*
+   * Wikiwijs palette extension.
+   * --primary-color and --body-background-color aren't declared in Kennisnet's
+   * _variables_wikiwijs.scss but the --bs-* mappings below reference them.
+   */
+  --primary-color: #581d70;
+  --body-background-color: #edecf6;
+
+  /* Bootstrap base palette — referenced by Kennisnet but never declared there. */
+  --bs-primary: var(--primary-color);
+  --bs-success: var(--success-color);
+  --bs-info: var(--info-color);
+  --bs-warning: var(--warning-color);
+  --bs-danger: var(--danger-color);
+  --bs-light: var(--body-background-color);
+  --bs-dark: var(--base-font-color);
+
+  /* Bootstrap structural overrides Kennisnet uses as theme knobs. */
+  --bs-border-color: #9b77a9;
+  --bs-border-radius: 0.25rem;
+  --bs-body-color: var(--base-font-color);
+  --bs-secondary-bg-subtle: var(--body-background-color);
+
+  /*
+   * FontAwesome icons via CDN, declared as CSS custom properties so the
+   * kennisnet/qti/*.scss `mask-image: var(--fa-*-mask)` rules resolve to
+   * actual SVG glyphs. In production these are typically set on
+   * documentElement at app init; here we point them at the public SVG CDN.
+   */
+  --fa-check-mask: url('https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/check.svg');
+  --fa-times-mask: url('https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/xmark.svg');
+  --fa-minus-mask: url('https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/minus.svg');
+  --fa-grip-vertical-mask: url('https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/grip-vertical.svg');
+}
+
+/*
+ * Draggable / button-primary look for QTI elements that act like buttons.
+ * Wikiwijs production applies .btn-primary + .draggable here; we don't put
+ * classes on the elements, so target them by element name.
+ */
+qti-order-interaction qti-simple-choice,
+qti-gap-match-interaction qti-gap-text,
+qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:first-of-type qti-simple-associable-choice,
+qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:last-of-type > qti-simple-associable-choice > qti-simple-associable-choice,
+qti-associate-interaction qti-simple-associable-choice,
+[data-drag-clone] {
+  color: #fff;
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  box-shadow: 0 3px color-mix(in srgb, var(--primary-color) 50%, transparent);
+  padding-left: 0.8em;
+  padding-right: 0.8em;
+}
+
+/*
+ * FontAwesome `grip-vertical` glyph as the drag handle, painted via
+ * `mask-image` so it inherits `currentColor`. Sits BEFORE the chip text.
+ */
+qti-order-interaction qti-simple-choice::before,
+qti-gap-match-interaction qti-gap-text::before,
+qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:first-of-type qti-simple-associable-choice::before,
+qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:last-of-type > qti-simple-associable-choice > qti-simple-associable-choice::before,
+qti-associate-interaction qti-simple-associable-choice::before,
+[data-drag-clone]::before {
+  content: '';
+  display: inline-block;
+  vertical-align: middle;
+  width: 0.75em;
+  height: 1em;
+  margin-right: 0.5em;
+  background-color: currentColor;
+  mask: var(--fa-grip-vertical-mask) no-repeat center / contain;
+  -webkit-mask: var(--fa-grip-vertical-mask) no-repeat center / contain;
+}
+
+/*
+ * Candidate-correction states on draggable chips
+ * (`qti-gap-text` inside gap-match, `qti-simple-associable-choice` inside
+ * match / associate). Overrides the purple base rule above when the
+ * interaction has tagged the chip with `:state(candidate-correct)` or
+ * `:state(candidate-incorrect)`.
+ *
+ * Replaces the old runtime mutation (Renderer2.adjustDraggables in the
+ * editor) that applied `.btn-qti-correct` / `.btn-qti-incorrect` classes
+ * and inserted state-icon nodes by hand. Pure CSS now.
+ */
+qti-order-interaction qti-simple-choice:state(candidate-correct),
+qti-gap-match-interaction qti-gap-text:state(candidate-correct),
+qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:first-of-type qti-simple-associable-choice:state(candidate-correct),
+qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:last-of-type > qti-simple-associable-choice > qti-simple-associable-choice:state(candidate-correct),
+qti-associate-interaction qti-simple-associable-choice:state(candidate-correct),
+[data-drag-clone]:state(candidate-correct) {
+  background-color: color-mix(in srgb, var(--qti-correct) 5%, white);
+  color: var(--qti-correct);
+  border: var(--qti-border-thickness) solid var(--qti-correct);
+  box-shadow: none;
+}
+
+qti-order-interaction qti-simple-choice:state(candidate-correct)::after,
+qti-gap-match-interaction qti-gap-text:state(candidate-correct)::after,
+qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:first-of-type qti-simple-associable-choice:state(candidate-correct)::after,
+qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:last-of-type > qti-simple-associable-choice > qti-simple-associable-choice:state(candidate-correct)::after,
+qti-associate-interaction qti-simple-associable-choice:state(candidate-correct)::after,
+[data-drag-clone]:state(candidate-correct)::after {
+  content: '';
+  display: inline-block;
+  vertical-align: middle;
+  width: 1em;
+  height: 1em;
+  margin-left: 0.4em;
+  background-color: var(--qti-correct);
+  mask: var(--fa-check-mask) no-repeat center / contain;
+  -webkit-mask: var(--fa-check-mask) no-repeat center / contain;
+}
+
+qti-order-interaction qti-simple-choice:state(candidate-incorrect),
+qti-gap-match-interaction qti-gap-text:state(candidate-incorrect),
+qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:first-of-type qti-simple-associable-choice:state(candidate-incorrect),
+qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:last-of-type > qti-simple-associable-choice > qti-simple-associable-choice:state(candidate-incorrect),
+qti-associate-interaction qti-simple-associable-choice:state(candidate-incorrect),
+[data-drag-clone]:state(candidate-incorrect) {
+  background-color: color-mix(in srgb, var(--qti-incorrect) 5%, white);
+  color: var(--qti-incorrect);
+  border: var(--qti-border-thickness) solid var(--qti-incorrect);
+  box-shadow: none;
+}
+
+qti-order-interaction qti-simple-choice:state(candidate-incorrect)::after,
+qti-gap-match-interaction qti-gap-text:state(candidate-incorrect)::after,
+qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:first-of-type qti-simple-associable-choice:state(candidate-incorrect)::after,
+qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:last-of-type > qti-simple-associable-choice > qti-simple-associable-choice:state(candidate-incorrect)::after,
+qti-associate-interaction qti-simple-associable-choice:state(candidate-incorrect)::after,
+[data-drag-clone]:state(candidate-incorrect)::after {
+  content: '';
+  display: inline-block;
+  vertical-align: middle;
+  width: 1em;
+  height: 1em;
+  margin-left: 0.4em;
+  background-color: var(--qti-incorrect);
+  mask: var(--fa-times-mask) no-repeat center / contain;
+  -webkit-mask: var(--fa-times-mask) no-repeat center / contain;
+}
+
+/*
+ * Full-correct-response styling — the cloned interaction (toggled by
+ * `show-full-correct-response`) and the `.correct-option` spans that
+ * gap-match injects when `show-correct-response` is set.
+ */
+.full-correct-response qti-order-interaction qti-simple-choice,
+.full-correct-response qti-gap-match-interaction qti-gap-text,
+.full-correct-response qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:first-of-type qti-simple-associable-choice,
+.full-correct-response qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:last-of-type > qti-simple-associable-choice > qti-simple-associable-choice,
+.full-correct-response qti-associate-interaction qti-simple-associable-choice,
+span.correct-option {
+  background-color: var(--info-color);
+  color: white;
+  border: var(--qti-border-thickness) solid var(--info-color);
+}
+
+.full-correct-response qti-order-interaction qti-simple-choice::after,
+.full-correct-response qti-gap-match-interaction qti-gap-text::after,
+.full-correct-response qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:first-of-type qti-simple-associable-choice::after,
+.full-correct-response qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:last-of-type > qti-simple-associable-choice > qti-simple-associable-choice::after,
+.full-correct-response qti-associate-interaction qti-simple-associable-choice::after,
+span.correct-option::after {
+  content: '';
+  display: inline-block;
+  vertical-align: middle;
+  width: 1em;
+  height: 1em;
+  margin-left: 0.4em;
+  background-color: white;
+  mask: var(--fa-check-mask) no-repeat center / contain;
+  -webkit-mask: var(--fa-check-mask) no-repeat center / contain;
+}

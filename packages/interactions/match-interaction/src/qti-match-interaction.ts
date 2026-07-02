@@ -71,7 +71,6 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(SlottedBas
       this.querySelectorAll('qti-simple-match-set:last-of-type qti-simple-associable-choice')
     );
 
-    this.response = [];
     this.syncTabularSlotting();
   }
 
@@ -98,11 +97,19 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(SlottedBas
       // grid-row/grid-column writes required. --qti-match-rows/-cols are set
       // inline on [part='grid'] from render() so the editor (which can't write
       // to host style under ProseMirror) shares the same mechanism.
-      this.sourceChoices?.forEach(stripSizing);
-      this.targetChoices?.forEach(stripSizing);
+      this.sourceChoices?.forEach(c => {
+        stripSizing(c);
+        c.setAttribute('role', 'rowheader');
+      });
+      this.targetChoices?.forEach(c => {
+        stripSizing(c);
+        c.setAttribute('role', 'columnheader');
+      });
     } else {
       sourceSet?.removeAttribute('slot');
       targetSet?.removeAttribute('slot');
+      this.sourceChoices?.forEach(c => c.removeAttribute('role'));
+      this.targetChoices?.forEach(c => c.removeAttribute('role'));
     }
   }
 
@@ -159,33 +166,28 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(SlottedBas
     }
   }
 
-  #getMatches(responseVariable: ResponseVariable): { source: string; target: string }[] {
-    if (!responseVariable.correctResponse) {
+  #getMatches(): { source: string; target: string }[] {
+    const correctResponseValue = this.correctResponse;
+    if (!correctResponseValue) {
       return [];
     }
-    const correctResponse = Array.isArray(responseVariable.correctResponse)
-      ? responseVariable.correctResponse
-      : [responseVariable.correctResponse];
+    const correctResponse = Array.isArray(correctResponseValue) ? correctResponseValue : [correctResponseValue];
 
     const matches: { source: string; target: string }[] = [];
-    if (correctResponse) {
-      correctResponse.forEach(x => {
-        const split = x.split(' ');
-        matches.push({ source: split[0], target: split[1] });
-      });
-    }
+    correctResponse.forEach(x => {
+      const split = x.split(' ');
+      matches.push({ source: split[0], target: split[1] });
+    });
     return matches;
   }
 
   public override toggleInternalCorrectResponse(show: boolean): void {
-    const responseVariable = this.responseVariable;
-
-    if (!responseVariable?.correctResponse) {
+    if (!this.correctResponse) {
       // Remove all previously added correct responses
       this.querySelectorAll('.correct-option').forEach(el => el.remove());
       return;
     }
-    const matches = this.#getMatches(responseVariable);
+    const matches = this.#getMatches();
 
     if (!this.class.split(' ').includes('qti-match-tabular')) {
       if (show) {
@@ -229,12 +231,10 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(SlottedBas
   }
 
   public override toggleCandidateCorrection(show: boolean) {
-    const responseVariable = this.responseVariable;
-
-    if (!responseVariable?.correctResponse) {
+    if (!this.correctResponse) {
       return;
     }
-    const matches = this.#getMatches(responseVariable);
+    const matches = this.#getMatches();
 
     this.targetChoices.forEach(targetChoice => {
       const targetId = targetChoice.getAttribute('identifier');
@@ -271,63 +271,70 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(SlottedBas
         ? html`
             <div
               part="grid"
+              role="grid"
               style="--qti-match-rows: ${this.sourceChoices.length}; --qti-match-cols: ${this.targetChoices.length};"
             >
               <div part="corner"></div>
-              <div part="cols-wrap"><slot name="match-cols" part="c-header"></slot></div>
+              <div part="cols-wrap" role="row"><slot name="match-cols" part="c-header"></slot></div>
               <div part="rows-wrap"><slot name="match-rows" part="r-header"></slot></div>
               <div part="checkbox-grid">
-                ${this.sourceChoices.flatMap((row, r) =>
-                  this.targetChoices.map((col, c) => {
-                    const rowId = row.getAttribute('identifier');
-                    const colId = col.getAttribute('identifier');
-                    const value = `${rowId} ${colId}`;
-                    const selectedInRowCount = (this.response || []).filter(v => v.split(' ')[0] === rowId).length || 0;
-                    const checked = this.response?.includes(value) || false;
-                    const type = row.matchMax === 1 ? 'radio' : 'checkbox';
-                    const typeBase = type === 'radio' ? 'rb' : 'cb';
-                    const isCorrect = !!this.correctOptions?.find(
-                      option => option.source === rowId && option.target === colId
-                    );
-                    const correctVariant = hasCorrectResponse
-                      ? isCorrect
-                        ? `${typeBase}-correct`
-                        : `${typeBase}-incorrect`
-                      : '';
-                    const chPart = `ch ${typeBase} ${correctVariant}`.trim();
-                    const checkedPart = checked
-                      ? `${typeBase}-checked ${correctVariant ? `${typeBase}-checked ${correctVariant}` : ''}`.trim()
-                      : '';
-                    const chaPart = `cha ${checkedPart}`.trim();
-                    const disable =
-                      this.correctOptions?.length > 0
-                        ? true
-                        : row.matchMax === 1
-                          ? false
-                          : row.matchMax !== 0 && selectedInRowCount >= row.matchMax && !checked;
-                    return html`
-                      <label
-                        part="input-cell"
-                        style="grid-row: ${r + 1}; grid-column: ${c +
-                        1}; display: flex; align-items: center; justify-content: center; cursor: pointer;"
-                      >
-                        <input
-                          type=${type}
-                          hidden
-                          name=${rowId}
-                          value=${value}
-                          .checked=${checked}
-                          .disabled=${disable}
-                          @change=${(e: { target: any }) => this.handleRadioChange(e)}
-                          @click=${(e: { target: HTMLInputElement }) =>
-                            row.matchMax === 1 ? this.handleRadioClick(e) : null}
-                        />
-                        <span part=${chPart}>
-                          <span part=${chaPart}></span>
-                        </span>
-                      </label>
-                    `;
-                  })
+                ${this.sourceChoices.map(
+                  (row, r) => html`
+                    <div role="row" style="display: contents;">
+                      ${this.targetChoices.map((col, c) => {
+                        const rowId = row.getAttribute('identifier');
+                        const colId = col.getAttribute('identifier');
+                        const value = `${rowId} ${colId}`;
+                        const selectedInRowCount =
+                          (this.response || []).filter(v => v.split(' ')[0] === rowId).length || 0;
+                        const checked = this.response?.includes(value) || false;
+                        const type = row.matchMax === 1 ? 'radio' : 'checkbox';
+                        const typeBase = type === 'radio' ? 'rb' : 'cb';
+                        const isCorrect = !!this.correctOptions?.find(
+                          option => option.source === rowId && option.target === colId
+                        );
+                        const correctVariant = hasCorrectResponse
+                          ? isCorrect
+                            ? `${typeBase}-correct`
+                            : `${typeBase}-incorrect`
+                          : '';
+                        const chPart = `ch ${typeBase} ${correctVariant}`.trim();
+                        const checkedPart = checked
+                          ? `${typeBase}-checked ${correctVariant ? `${typeBase}-checked ${correctVariant}` : ''}`.trim()
+                          : '';
+                        const chaPart = `cha ${checkedPart}`.trim();
+                        const disable =
+                          this.correctOptions?.length > 0
+                            ? true
+                            : row.matchMax === 1
+                              ? false
+                              : row.matchMax !== 0 && selectedInRowCount >= row.matchMax && !checked;
+                        return html`
+                          <label
+                            part="input-cell"
+                            role="gridcell"
+                            style="grid-row: ${r + 1}; grid-column: ${c +
+                            1}; display: flex; align-items: center; justify-content: center; cursor: pointer;"
+                          >
+                            <input
+                              type=${type}
+                              hidden
+                              name=${rowId}
+                              value=${value}
+                              .checked=${checked}
+                              .disabled=${disable}
+                              @change=${(e: { target: any }) => this.handleRadioChange(e)}
+                              @click=${(e: { target: HTMLInputElement }) =>
+                                row.matchMax === 1 ? this.handleRadioClick(e) : null}
+                            />
+                            <span part=${chPart}>
+                              <span part=${chaPart}></span>
+                            </span>
+                          </label>
+                        `;
+                      })}
+                    </div>
+                  `
                 )}
               </div>
             </div>

@@ -144,7 +144,12 @@ export class QtiInlineChoiceInteraction extends Interaction {
     const choices = Array.from(this.querySelectorAll('qti-inline-choice'));
     const prompt = this.dataset.prompt || this.configContext?.inlineChoicePrompt || 'select';
 
-    const currentlySelectedValue = this.options.find(o => o.selected)?.value ?? '';
+    // Pending value from `response="…"` attribute set before slotted options existed
+    // takes precedence over any current selection.
+    const pendingValue = this._pendingResponse;
+    const currentlySelectedValue =
+      pendingValue !== undefined ? (pendingValue ?? '') : (this.options.find(o => o.selected)?.value ?? '');
+
     const nextOptions: OptionType[] = [
       {
         content: prompt,
@@ -163,6 +168,7 @@ export class QtiInlineChoiceInteraction extends Interaction {
 
     const hasSelected = nextOptions.some(o => o.selected);
     this.options = hasSelected ? nextOptions : nextOptions.map((o, i) => ({ ...o, selected: i === 0 }));
+    this._pendingResponse = undefined;
     this.#syncSlottedChoices();
 
     // Simple width estimation based on content length
@@ -216,10 +222,25 @@ export class QtiInlineChoiceInteraction extends Interaction {
     this.#syncSlottedChoices();
   }
 
+  /**
+   * Captures an attribute-set response before slotted options have been
+   * gathered. `#updateOptions` consumes it once the options exist.
+   * `undefined` = no pending value.
+   */
+  private _pendingResponse: string | null | undefined = undefined;
+
+  @property({ attribute: 'response', reflect: false, noAccessor: true })
   public set response(value: string | null) {
     const nextValue = value ?? '';
+    if (this.options.length === 0) {
+      this._pendingResponse = value;
+      return;
+    }
     this.options = this.options.map(option => ({ ...option, selected: option.value === nextValue }));
     this.#syncSlottedChoices();
+    if (this.showCandidateCorrection) {
+      this.toggleCandidateCorrection(true);
+    }
   }
   get response(): string | null {
     const value = this.options.find(option => option.selected)?.value ?? '';

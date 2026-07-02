@@ -25,14 +25,12 @@ export class QtiGapMatchInteraction extends DragDropSlottedSortableMixin(Slotted
       <div role="alert" part="message" id="validation-message"></div>`;
   }
 
-  public override toggleCorrectResponse(show: boolean): void {
-    const responseVariable = this.responseVariable;
+  public override toggleInternalCorrectResponse(show: boolean): void {
+    const correctResponseValue = this.correctResponse;
 
-    if (show && responseVariable?.correctResponse) {
+    if (show && correctResponseValue) {
       let matches: { text: string; gap: string }[] = [];
-      const response = Array.isArray(responseVariable.correctResponse)
-        ? responseVariable.correctResponse
-        : [responseVariable.correctResponse];
+      const response = Array.isArray(correctResponseValue) ? correctResponseValue : [correctResponseValue];
 
       if (response) {
         matches = response.map(x => {
@@ -72,31 +70,26 @@ export class QtiGapMatchInteraction extends DragDropSlottedSortableMixin(Slotted
     }
   }
 
-  #getMatches(responseVariable: ResponseVariable): { source: string; target: string }[] {
-    if (!responseVariable.correctResponse) {
+  #getMatches(): { source: string; target: string }[] {
+    const correctResponseValue = this.correctResponse;
+    if (!correctResponseValue) {
       return [];
     }
-    const correctResponse = Array.isArray(responseVariable.correctResponse)
-      ? responseVariable.correctResponse
-      : [responseVariable.correctResponse];
+    const correctResponse = Array.isArray(correctResponseValue) ? correctResponseValue : [correctResponseValue];
 
     const matches: { source: string; target: string }[] = [];
-    if (correctResponse) {
-      correctResponse.forEach(x => {
-        const split = x.split(' ');
-        matches.push({ source: split[0], target: split[1] });
-      });
-    }
+    correctResponse.forEach(x => {
+      const split = x.split(' ');
+      matches.push({ source: split[0], target: split[1] });
+    });
     return matches;
   }
 
   public override toggleCandidateCorrection(show: boolean) {
-    const responseVariable = this.responseVariable;
-
-    if (!responseVariable?.correctResponse) {
+    if (!this.correctResponse) {
       return;
     }
-    const matches = this.#getMatches(responseVariable);
+    const matches = this.#getMatches();
 
     const targetChoices = Array.from<QtiGap>(this.querySelectorAll('qti-gap'));
     targetChoices.forEach(targetChoice => {

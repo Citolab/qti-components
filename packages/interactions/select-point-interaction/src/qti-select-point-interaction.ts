@@ -3,8 +3,9 @@ import { property, state } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
+import { watch } from '@qti-components/utilities';
 import { Interaction } from '@qti-components/base';
-import { ScoringHelper } from '@qti-components/base';
+import { parseResponseAttribute, ScoringHelper, serializeResponseAttribute } from '@qti-components/base';
 import { positionShapes } from '@qti-components/interactions-core/internal/hotspots/hotspot';
 
 import styles from './qti-select-point-interaction.styles';
@@ -26,7 +27,28 @@ export class QtiSelectPointInteraction extends Interaction {
   })
   public minChoices: number = 0;
 
-  @state() response: string[] | null = null;
+  @property({
+    attribute: 'response',
+    reflect: false,
+    converter: {
+      // Each entry is `"x y"`; the codec splits on commas. Point cardinality
+      // needs an array locally, so wrap a single-string codec output.
+      fromAttribute: (value: string | null) => {
+        const parsed = parseResponseAttribute(value);
+        if (parsed === null) return null;
+        return Array.isArray(parsed) ? parsed : [parsed];
+      },
+      toAttribute: (value: string[] | null) => serializeResponseAttribute(value)
+    }
+  })
+  response: string[] | null = null;
+
+  @watch('response' as never, { waitUntilFirstUpdate: true })
+  protected _handleResponseChange = () => {
+    if (this.showCandidateCorrection) {
+      this.toggleCandidateCorrection(true);
+    }
+  };
 
   @state()
   private _correctAreas: { shape: string; coords: string }[] = [];
@@ -88,7 +110,11 @@ export class QtiSelectPointInteraction extends Interaction {
   };
 
   get responsePoints() {
-    return (this.response || [])
+    // Normalize: the base toggleFullCorrectResponse may set `clone.response`
+    // to a string when `correctResponse` is a single point — handle both.
+    const raw = this.response;
+    const list = Array.isArray(raw) ? raw : raw ? [raw] : [];
+    return list
       .filter(point => point)
       .map(point => {
         const [x, y] = point.split(' ').map(Number);
@@ -101,51 +127,57 @@ export class QtiSelectPointInteraction extends Interaction {
     if (!show) {
       return;
     }
+    const areaMapping = this.responseVariable?.areaMapping as QtiAreaMapping | undefined;
+    const baseType = this.responseVariable?.baseType;
+    const correctResponseValue = this.correctResponse;
+
     this.responsePoints.forEach(point => {
-      const correct = (this.responseVariable.areaMapping as QtiAreaMapping).areaMapEntries.some(correctArea =>
-        ScoringHelper.isPointInArea(
-          `${point.x} ${point.y}`,
-          `${correctArea.shape},${correctArea.coords}`,
-          this.responseVariable.baseType
-        )
-      );
+      let correct = false;
+      if (areaMapping?.areaMapEntries?.length) {
+        correct = areaMapping.areaMapEntries.some(area =>
+          ScoringHelper.isPointInArea(`${point.x} ${point.y}`, `${area.shape},${area.coords}`, baseType)
+        );
+      } else if (correctResponseValue) {
+        // Standalone mode — compare against `correct-response` points with a
+        // 10px radius (matches the fallback used by toggleInternalCorrectResponse).
+        const correctList = Array.isArray(correctResponseValue) ? correctResponseValue : [correctResponseValue];
+        correct = correctList.some(r => {
+          const [cx, cy] = r.split(' ').map(Number);
+          if (!Number.isFinite(cx) || !Number.isFinite(cy)) return false;
+          return Math.hypot(point.x - cx, point.y - cy) <= 10;
+        });
+      }
       this._responseCorrection.push(correct);
     });
   }
 
-  public override toggleCorrectResponse(show: boolean) {
-    const responseVariable = this.responseVariable;
-    if (!show || !responseVariable) {
+  public override toggleInternalCorrectResponse(show: boolean) {
+    if (!show) {
       this._correctAreas = [];
       return;
     }
-    // Find the area mapping element from the response variable
-    const areaMapping = responseVariable.areaMapping as QtiAreaMapping;
+    const responseVariable = this.responseVariable;
+    const areaMapping = responseVariable?.areaMapping as QtiAreaMapping | undefined;
     let areaMapEntries: QtiAreaMapEntry[] = [];
-    if (!areaMapping || areaMapping.areaMapEntries.length === 0) {
-      if (responseVariable.correctResponse) {
-        const correctResponses = Array.isArray(responseVariable.correctResponse)
-          ? responseVariable.correctResponse
-          : [responseVariable.correctResponse];
-        if (correctResponses.length === 0 || correctResponses.find(r => r.split(' ').length < 2)) {
-          console.error('No valid correct responses found for the response variable.');
-          return null;
-        }
-        console.warn(
-          `No area mapping found for the response variable. Using the correct responses to display the correct response but it probably won't score correct.`
-        );
-        // Create a new area mapping object with the correct responses
-        areaMapEntries = correctResponses.map(r => {
-          const coords = r.split(' ').join(',').concat(',10'); // Add a radius of 10 pixels to the coordinates
-          return { shape: 'circle', coords, defaultValue: 1, mappedValue: 1 };
-        });
-      } else {
-        console.error('No area mapping found for the response variable.');
+    if (areaMapping?.areaMapEntries?.length) {
+      areaMapEntries = areaMapping.areaMapEntries;
+    } else {
+      // Standalone / no area mapping — render circles at the correct-response
+      // point coordinates with a 10px radius.
+      const correctResponseValue = this.correctResponse;
+      if (!correctResponseValue) {
+        this._correctAreas = [];
         return;
       }
-    } else {
-      // Get all map entries from the area mapping
-      areaMapEntries = areaMapping.areaMapEntries;
+      const correctResponses = Array.isArray(correctResponseValue) ? correctResponseValue : [correctResponseValue];
+      if (correctResponses.find(r => r.split(' ').length < 2)) {
+        console.error('No valid correct responses found.');
+        return;
+      }
+      areaMapEntries = correctResponses.map(r => {
+        const coords = r.split(' ').join(',').concat(',10');
+        return { shape: 'circle', coords, defaultValue: 1, mappedValue: 1 };
+      });
     }
     this._correctAreas = areaMapEntries.map(e => ({ coords: e.coords, shape: e.shape }));
   }
@@ -171,10 +203,14 @@ export class QtiSelectPointInteraction extends Interaction {
   }
 
   override render() {
+    // Normalize: when set via the full-correct-response clone path the
+    // response may be a single string rather than an array.
+    const rawResponse = this.response;
+    const responseList = Array.isArray(rawResponse) ? rawResponse : rawResponse ? [rawResponse] : [];
     return html` <slot name="prompt"></slot>
       <point-container>
         ${repeat(
-          (this.response || []).filter(point => point),
+          responseList.filter(point => point),
           point => point,
           (point, index) => {
             const [x, y] = point.split(' ').map(Number);
@@ -261,6 +297,7 @@ export class QtiSelectPointInteraction extends Interaction {
   }
 
   override firstUpdated(): void {
+    super.firstUpdated();
     this.#imgElement = this.querySelector('img');
 
     if (this.#imgElement) {

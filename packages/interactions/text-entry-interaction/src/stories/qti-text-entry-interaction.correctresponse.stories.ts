@@ -22,7 +22,7 @@ type Story = StoryObj<QtiTextEntryInteraction>;
 const meta: Meta<QtiTextEntryInteraction> = {
   component: 'qti-text-entry-interaction',
   title: '03 Text Entry Interaction/Correct Response',
-  tags: ['correct-response', 'standalone']
+  tags: ['correct-response', 'standalone', 'iol']
 };
 export default meta;
 
@@ -596,4 +596,115 @@ export const NumericCorrectResponse: Story = {
     await interaction.updateComplete;
     expect(interaction.correctness).toBe('correct');
   }
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// OVERVIEW: ALL VIEW MODES
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/**
+ * One story showing every correction view mode driven purely by attributes.
+ * No `play()` step — `response="…"` and `correct-response="…"` set candidate
+ * state from markup alone.
+ */
+export const AllViewModesOverview: Story = {
+  name: 'Overview: All View Modes',
+  render: () => html`
+    <style>
+      .overview-grid {
+        display: grid;
+        gap: 1.5rem;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      }
+      .overview-grid section {
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        padding: 1rem;
+      }
+      .overview-grid h3 {
+        margin: 0 0 0.5rem;
+        font:
+          600 0.85rem/1.2 system-ui,
+          sans-serif;
+        color: #444;
+      }
+      .overview-grid code {
+        font-size: 0.75rem;
+        background: #f3f3f3;
+        padding: 0.05rem 0.3rem;
+        border-radius: 3px;
+      }
+    </style>
+
+    <div class="overview-grid">
+      <section>
+        <h3>show-candidate-correction (correct)</h3>
+        <p><code>response="paris" · correct-response="paris"</code></p>
+        <qti-text-entry-interaction
+          response-identifier="RESPONSE"
+          correct-response="paris"
+          response="paris"
+          show-candidate-correction
+        ></qti-text-entry-interaction>
+      </section>
+
+      <section>
+        <h3>show-candidate-correction (incorrect)</h3>
+        <p><code>response="london" · correct-response="paris"</code></p>
+        <qti-text-entry-interaction
+          response-identifier="RESPONSE"
+          correct-response="paris"
+          response="london"
+          show-candidate-correction
+        ></qti-text-entry-interaction>
+      </section>
+
+      <section>
+        <h3>show-correct-response (inline)</h3>
+        <p><code>response="london" · correct-response="paris"</code></p>
+        <qti-text-entry-interaction
+          response-identifier="RESPONSE"
+          correct-response="paris"
+          response="london"
+          show-correct-response
+        ></qti-text-entry-interaction>
+      </section>
+
+      <section>
+        <h3>show-full-correct-response (clone)</h3>
+        <p><code>response="london" · correct-response="paris"</code></p>
+        <qti-text-entry-interaction
+          response-identifier="RESPONSE"
+          correct-response="paris"
+          response="london"
+          show-full-correct-response
+        ></qti-text-entry-interaction>
+      </section>
+
+      <section>
+        <h3>candidate + inline</h3>
+        <p><code>show-candidate-correction + show-correct-response</code></p>
+        <qti-text-entry-interaction
+          response-identifier="RESPONSE"
+          correct-response="paris"
+          response="london"
+          show-candidate-correction
+          show-correct-response
+        ></qti-text-entry-interaction>
+      </section>
+
+      <section>
+        <h3>all three combined</h3>
+        <p><code>candidate + inline + full</code></p>
+        <qti-text-entry-interaction
+          response-identifier="RESPONSE"
+          correct-response="paris"
+          response="london"
+          show-candidate-correction
+          show-correct-response
+          show-full-correct-response
+        ></qti-text-entry-interaction>
+      </section>
+    </div>
+  `
 };

@@ -90,7 +90,8 @@ const meta: Meta<QtiInlineChoiceInteraction> = {
     actions: {
       handles: events
     }
-  }
+  },
+  tags: ['iol']
 };
 export default meta;
 

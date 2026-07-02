@@ -65,17 +65,18 @@ export class QtiGraphicOrderInteraction extends ChoicesMixin(Interaction, 'qti-h
     }
   }
 
-  public override toggleCorrectResponse(show: boolean) {
-    const responseVariable = this.responseVariable;
+  public override toggleInternalCorrectResponse(show: boolean) {
+    const correctResponseValue = this.correctResponse;
+    const correctArr = Array.isArray(correctResponseValue)
+      ? correctResponseValue
+      : correctResponseValue
+        ? [correctResponseValue]
+        : [];
     const hotspots = this._choiceElements as HotspotChoice[];
     for (const hotspot of hotspots) {
-      if (show && responseVariable?.correctResponse?.length > 0 && Array.isArray(responseVariable.correctResponse)) {
-        const index = responseVariable.correctResponse.findIndex(identifier => identifier === hotspot.identifier);
-        if (index >= 0) {
-          hotspot.orderCorrect = index + 1;
-        } else {
-          hotspot.orderCorrect = null;
-        }
+      if (show && correctArr.length > 0) {
+        const index = correctArr.findIndex(identifier => identifier === hotspot.identifier);
+        hotspot.orderCorrect = index >= 0 ? index + 1 : null;
       } else {
         hotspot.orderCorrect = null;
       }

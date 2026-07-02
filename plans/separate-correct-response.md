@@ -222,7 +222,24 @@ the lean class and the with-correct-response class.
 
 ---
 
-## Phase 4 — Dual registration entrypoints
+## Phase 4 — Dual registration entrypoints (DEFERRED)
+
+**Status:** Postponed. The structural split (Phases 1–3) is enough on its own:
+the `CorrectResponseMixin`, `ChoiceCorrectResponseMixin`, and per-interaction
+override mixins exist as separable composables, and authors that want a lean
+class can import the classes + mixin and call `customElements.define`
+themselves.
+
+For now every package keeps exactly **one** `register.ts`, which registers
+the full (with-correct-response) class — no behavior change for existing
+consumers. Re-open this phase if/when there's a concrete consumer that wants
+the lean default at the registration level.
+
+The original spec below is kept for reference.
+
+---
+
+### Original Phase 4 spec (DEFERRED)
 
 **Goal:** every interaction package exposes two registration modules.
 
@@ -266,7 +283,19 @@ For each interaction package under `packages/interactions/<pkg>/`:
 
 ---
 
-## Phase 5 — Migrate dead-weight interactions to the lean base
+## Phase 5 — Migrate dead-weight interactions to the lean base (DEFERRED)
+
+**Status:** Postponed alongside Phase 4. While `LeanInteraction` exists and
+some interactions (e.g. `extended-text`) genuinely have no correct-response
+concept, switching them to `LeanInteraction` is only useful in tandem with
+the dual-registration split. For now they keep extending `Interaction` (with
+the mixin baked in, no-op overrides intact).
+
+The original spec below is kept for reference.
+
+---
+
+### Original Phase 5 spec (DEFERRED)
 
 **Goal:** interactions that have no correct-response concept stop extending
 the with-correct-response chain.
@@ -290,7 +319,17 @@ For each: only ship `register.ts` (no `register-with-correct-response.ts`).
 
 ---
 
-## Phase 6 — Update existing stories and conformance tests
+## Phase 6 — Update existing stories and conformance tests (DEFERRED)
+
+**Status:** Postponed alongside Phase 4. With one `register.ts` per package
+and the default class still composing the mixin, existing stories work
+unchanged — no import swaps needed.
+
+The original spec below is kept for reference.
+
+---
+
+### Original Phase 6 spec (DEFERRED)
 
 **Goal:** the regression net keeps proving correct-response works for the
 mixed variants.

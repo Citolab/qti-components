@@ -27,14 +27,12 @@ export class QtiOrderInteraction extends DragDropSlottedSortableMixin(SlottedBas
   public orientation: 'horizontal' | 'vertical';
 
   #getCorrectOrderEntries(): Array<{ identifier: string; dropIndex: number }> {
-    const responseVariable = this.responseVariable;
-    if (!responseVariable?.correctResponse) {
+    const correctResponseValue = this.correctResponse;
+    if (!correctResponseValue) {
       return [];
     }
 
-    const response = Array.isArray(responseVariable.correctResponse)
-      ? responseVariable.correctResponse
-      : [responseVariable.correctResponse];
+    const response = Array.isArray(correctResponseValue) ? correctResponseValue : [correctResponseValue];
 
     return response
       .map((entry, index) => {

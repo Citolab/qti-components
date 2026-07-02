@@ -1221,10 +1221,13 @@
               "name": "correctResponseAttr",
               "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
               "type": {
-                "text": "string | null"
+                "text": "ResponseValue"
               },
               "attribute": "correct-response",
               "reflects": true,
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -1402,6 +1405,7 @@
                 "text": "string | string[] | null"
               },
               "default": "''",
+              "attribute": "response",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -1661,9 +1665,12 @@
               "name": "correct-response",
               "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
               "type": {
-                "text": "string | null"
+                "text": "ResponseValue"
               },
               "fieldName": "correctResponseAttr",
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -1723,6 +1730,18 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "name": "response",
+              "type": {
+                "text": "string | string[] | null"
+              },
+              "default": "''",
+              "fieldName": "response",
+              "inheritedFrom": {
+                "name": "ChoicesMixin",
+                "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
               }
             },
             {
@@ -4432,7 +4451,8 @@
               "type": {
                 "text": "string | string[] | null"
               },
-              "default": "''"
+              "default": "''",
+              "attribute": "response"
             },
             {
               "kind": "method",
@@ -4494,6 +4514,14 @@
               },
               "default": "0",
               "fieldName": "minChoices"
+            },
+            {
+              "name": "response",
+              "type": {
+                "text": "string | string[] | null"
+              },
+              "default": "''",
+              "fieldName": "response"
             }
           ],
           "parameters": [
@@ -5495,6 +5523,16 @@
             },
             {
               "kind": "field",
+              "name": "_pendingResponse",
+              "type": {
+                "text": "string[] | undefined"
+              },
+              "privacy": "private",
+              "default": "undefined",
+              "description": "Set via the `response=\"…\"` attribute before the drag/drop machinery has\ncached its dropzones (`setupDragDrop` awaits the first render). The\n`afterCache` extension hook in this mixin applies it once dropzones exist."
+            },
+            {
+              "kind": "field",
               "name": "_response",
               "type": {
                 "text": "string[]"
@@ -5784,7 +5822,8 @@
               "name": "response",
               "type": {
                 "text": "string"
-              }
+              },
+              "attribute": "response"
             },
             {
               "kind": "method",
@@ -5984,6 +6023,13 @@
               },
               "default": "1",
               "fieldName": "minAssociations"
+            },
+            {
+              "name": "response",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "response"
             }
           ],
           "parameters": [
@@ -10134,10 +10180,13 @@
               "name": "correctResponseAttr",
               "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
               "type": {
-                "text": "string | null"
+                "text": "ResponseValue"
               },
               "attribute": "correct-response",
               "reflects": true,
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -10565,9 +10614,12 @@
               "name": "correct-response",
               "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
               "type": {
-                "text": "string | null"
+                "text": "ResponseValue"
               },
               "fieldName": "correctResponseAttr",
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -11064,10 +11116,13 @@
               "name": "correctResponseAttr",
               "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
               "type": {
-                "text": "string | null"
+                "text": "ResponseValue"
               },
               "attribute": "correct-response",
               "reflects": true,
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -11539,9 +11594,12 @@
               "name": "correct-response",
               "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
               "type": {
-                "text": "string | null"
+                "text": "ResponseValue"
               },
               "fieldName": "correctResponseAttr",
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -11772,15 +11830,7 @@
                 "type": {
                   "text": "{ source: string; target: string }[]"
                 }
-              },
-              "parameters": [
-                {
-                  "name": "responseVariable",
-                  "type": {
-                    "text": "ResponseVariable"
-                  }
-                }
-              ]
+              }
             },
             {
               "kind": "method",
@@ -12274,7 +12324,7 @@
             },
             {
               "kind": "method",
-              "name": "toggleCorrectResponse",
+              "name": "toggleInternalCorrectResponse",
               "privacy": "public",
               "return": {
                 "type": {
@@ -12290,7 +12340,7 @@
                 }
               ],
               "type": {
-                "text": "toggleCorrectResponse(show: boolean) => void"
+                "text": "toggleInternalCorrectResponse(show: boolean) => void"
               }
             }
           ],
@@ -12393,6 +12443,11 @@
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "_handleResponseChange",
+              "privacy": "protected"
             },
             {
               "kind": "field",
@@ -12568,10 +12623,13 @@
               "name": "correctResponseAttr",
               "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
               "type": {
-                "text": "string | null"
+                "text": "ResponseValue"
               },
               "attribute": "correct-response",
               "reflects": true,
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -12735,6 +12793,7 @@
               "type": {
                 "text": "string | string[] | null"
               },
+              "attribute": "response",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -12971,20 +13030,17 @@
               }
             }
           ],
-          "superclass": {
-            "name": "Interaction",
-            "package": "@qti-components/base"
-          },
-          "tagName": "qti-graphic-associate-interaction",
-          "customElement": true,
           "attributes": [
             {
               "name": "correct-response",
               "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
               "type": {
-                "text": "string | null"
+                "text": "ResponseValue"
               },
               "fieldName": "correctResponseAttr",
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -13021,6 +13077,13 @@
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               }
+            },
+            {
+              "name": "response",
+              "type": {
+                "text": "string[] | null"
+              },
+              "fieldName": "response"
             },
             {
               "name": "response-identifier",
@@ -13073,6 +13136,12 @@
               }
             }
           ],
+          "superclass": {
+            "name": "Interaction",
+            "package": "@qti-components/base"
+          },
+          "tagName": "qti-graphic-associate-interaction",
+          "customElement": true,
           "events": [
             {
               "name": "qti-interaction-response",
@@ -14152,10 +14221,13 @@
               "name": "correctResponseAttr",
               "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
               "type": {
-                "text": "string | null"
+                "text": "ResponseValue"
               },
               "attribute": "correct-response",
               "reflects": true,
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -14333,6 +14405,7 @@
                 "text": "string | string[] | null"
               },
               "default": "''",
+              "attribute": "response",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -14579,9 +14652,12 @@
               "name": "correct-response",
               "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
               "type": {
-                "text": "string | null"
+                "text": "ResponseValue"
               },
               "fieldName": "correctResponseAttr",
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -14641,6 +14717,18 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "name": "response",
+              "type": {
+                "text": "string | string[] | null"
+              },
+              "default": "''",
+              "fieldName": "response",
+              "inheritedFrom": {
+                "name": "ChoicesMixin",
+                "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
               }
             },
             {
@@ -15180,10 +15268,13 @@
               "name": "correctResponseAttr",
               "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
               "type": {
-                "text": "string | null"
+                "text": "ResponseValue"
               },
               "attribute": "correct-response",
               "reflects": true,
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -15361,6 +15452,7 @@
                 "text": "string | string[] | null"
               },
               "default": "''",
+              "attribute": "response",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -15607,9 +15699,12 @@
               "name": "correct-response",
               "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
               "type": {
-                "text": "string | null"
+                "text": "ResponseValue"
               },
               "fieldName": "correctResponseAttr",
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -15669,6 +15764,18 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "name": "response",
+              "type": {
+                "text": "string | string[] | null"
+              },
+              "default": "''",
+              "fieldName": "response",
+              "inheritedFrom": {
+                "name": "ChoicesMixin",
+                "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
               }
             },
             {
@@ -16184,10 +16291,13 @@
               "name": "correctResponseAttr",
               "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
               "type": {
-                "text": "string | null"
+                "text": "ResponseValue"
               },
               "attribute": "correct-response",
               "reflects": true,
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -16365,6 +16475,7 @@
                 "text": "string | string[] | null"
               },
               "default": "''",
+              "attribute": "response",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -16607,9 +16718,12 @@
               "name": "correct-response",
               "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
               "type": {
-                "text": "string | null"
+                "text": "ResponseValue"
               },
               "fieldName": "correctResponseAttr",
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -16669,6 +16783,18 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "name": "response",
+              "type": {
+                "text": "string | string[] | null"
+              },
+              "default": "''",
+              "fieldName": "response",
+              "inheritedFrom": {
+                "name": "ChoicesMixin",
+                "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
               }
             },
             {
@@ -16904,6 +17030,16 @@
             },
             {
               "kind": "field",
+              "name": "_pendingResponse",
+              "type": {
+                "text": "string | null | undefined"
+              },
+              "privacy": "private",
+              "default": "undefined",
+              "description": "Captures an attribute-set response before slotted options have been\ngathered. `#updateOptions` consumes it once the options exist.\n`undefined` = no pending value."
+            },
+            {
+              "kind": "field",
               "name": "_slotObserver",
               "type": {
                 "text": "MutationObserver | null"
@@ -17106,10 +17242,13 @@
               "name": "correctResponseAttr",
               "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
               "type": {
-                "text": "string | null"
+                "text": "ResponseValue"
               },
               "attribute": "correct-response",
               "reflects": true,
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -17268,6 +17407,7 @@
                 "text": "string | string[] | null"
               },
               "privacy": "public",
+              "attribute": "response",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -17505,20 +17645,17 @@
               }
             }
           ],
-          "superclass": {
-            "name": "Interaction",
-            "package": "@qti-components/base"
-          },
-          "tagName": "qti-inline-choice-interaction",
-          "customElement": true,
           "attributes": [
             {
               "name": "correct-response",
               "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
               "type": {
-                "text": "string | null"
+                "text": "ResponseValue"
               },
               "fieldName": "correctResponseAttr",
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -17555,6 +17692,13 @@
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               }
+            },
+            {
+              "name": "response",
+              "type": {
+                "text": "string | null"
+              },
+              "fieldName": "response"
             },
             {
               "name": "response-identifier",
@@ -17607,6 +17751,12 @@
               }
             }
           ],
+          "superclass": {
+            "name": "Interaction",
+            "package": "@qti-components/base"
+          },
+          "tagName": "qti-inline-choice-interaction",
+          "customElement": true,
           "events": [
             {
               "name": "qti-interaction-response",
@@ -17722,15 +17872,7 @@
                 "type": {
                   "text": "{ source: string; target: string }[]"
                 }
-              },
-              "parameters": [
-                {
-                  "name": "responseVariable",
-                  "type": {
-                    "text": "ResponseVariable"
-                  }
-                }
-              ]
+              }
             },
             {
               "kind": "method",
@@ -18535,10 +18677,13 @@
               "name": "correctResponseAttr",
               "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
               "type": {
-                "text": "string | null"
+                "text": "ResponseValue"
               },
               "attribute": "correct-response",
               "reflects": true,
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -18926,9 +19071,12 @@
               "name": "correct-response",
               "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
               "type": {
-                "text": "string | null"
+                "text": "ResponseValue"
               },
               "fieldName": "correctResponseAttr",
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -20273,10 +20421,13 @@
               "name": "correctResponseAttr",
               "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
               "type": {
-                "text": "string | null"
+                "text": "ResponseValue"
               },
               "attribute": "correct-response",
               "reflects": true,
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -20652,6 +20803,7 @@
                 "text": "string | string[] | null"
               },
               "default": "null",
+              "attribute": "response",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -20982,9 +21134,12 @@
               "name": "correct-response",
               "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
               "type": {
-                "text": "string | null"
+                "text": "ResponseValue"
               },
               "fieldName": "correctResponseAttr",
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -21075,6 +21230,14 @@
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               }
+            },
+            {
+              "name": "response",
+              "type": {
+                "text": "string | string[] | null"
+              },
+              "default": "null",
+              "fieldName": "response"
             },
             {
               "name": "response-identifier",
@@ -21780,10 +21943,13 @@
               "name": "correctResponseAttr",
               "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
               "type": {
-                "text": "string | null"
+                "text": "ResponseValue"
               },
               "attribute": "correct-response",
               "reflects": true,
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -22441,6 +22607,7 @@
                 "text": "string | string[] | null"
               },
               "default": "null",
+              "attribute": "response",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -22814,9 +22981,12 @@
               "name": "correct-response",
               "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
               "type": {
-                "text": "string | null"
+                "text": "ResponseValue"
               },
               "fieldName": "correctResponseAttr",
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -22934,6 +23104,18 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "name": "response",
+              "type": {
+                "text": "string | string[] | null"
+              },
+              "default": "null",
+              "fieldName": "response",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "packages/interactions/portable-custom-interaction/src/qti-portable-custom-interaction.ts"
               }
             },
             {
@@ -23269,6 +23451,11 @@
             },
             {
               "kind": "field",
+              "name": "_handleResponseChange",
+              "privacy": "protected"
+            },
+            {
+              "kind": "field",
               "name": "_handleShowCandidateCorrectionChange",
               "privacy": "protected",
               "inheritedFrom": {
@@ -23429,10 +23616,13 @@
               "name": "correctResponseAttr",
               "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
               "type": {
-                "text": "string | null"
+                "text": "ResponseValue"
               },
               "attribute": "correct-response",
               "reflects": true,
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -23602,6 +23792,7 @@
                 "text": "string | string[] | null"
               },
               "default": "null",
+              "attribute": "response",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -23840,9 +24031,12 @@
               "name": "correct-response",
               "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
               "type": {
-                "text": "string | null"
+                "text": "ResponseValue"
               },
               "fieldName": "correctResponseAttr",
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -23895,6 +24089,14 @@
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               }
+            },
+            {
+              "name": "response",
+              "type": {
+                "text": "string[] | null"
+              },
+              "default": "null",
+              "fieldName": "response"
             },
             {
               "name": "response-identifier",
@@ -24053,6 +24255,11 @@
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "_handleResponseChange",
+              "privacy": "protected"
             },
             {
               "kind": "field",
@@ -24243,10 +24450,13 @@
               "name": "correctResponseAttr",
               "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
               "type": {
-                "text": "string | null"
+                "text": "ResponseValue"
               },
               "attribute": "correct-response",
               "reflects": true,
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -24413,6 +24623,7 @@
               "type": {
                 "text": "string | string[] | null"
               },
+              "attribute": "response",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -24683,9 +24894,12 @@
               "name": "correct-response",
               "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
               "type": {
-                "text": "string | null"
+                "text": "ResponseValue"
               },
               "fieldName": "correctResponseAttr",
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -24730,6 +24944,13 @@
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               }
+            },
+            {
+              "name": "response",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "response"
             },
             {
               "name": "response-identifier",
@@ -24948,6 +25169,16 @@
               }
             },
             {
+              "kind": "field",
+              "name": "_showCorrectOverlay",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "description": "Display flag for the `[part='correct']` overlay. Separate from\n`_correctResponse` (the base's storage for the `correct-response`\nattribute value) — toggling this does NOT clobber the correct response."
+            },
+            {
               "kind": "method",
               "name": "#setEmptyAttribute",
               "privacy": "private",
@@ -25007,10 +25238,13 @@
               "name": "correctResponseAttr",
               "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
               "type": {
-                "text": "string | null"
+                "text": "ResponseValue"
               },
               "attribute": "correct-response",
               "reflects": true,
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -25196,6 +25430,7 @@
                 "text": "string | string[] | null"
               },
               "default": "null",
+              "attribute": "response",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -25448,9 +25683,12 @@
               "name": "correct-response",
               "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
               "type": {
-                "text": "string | null"
+                "text": "ResponseValue"
               },
               "fieldName": "correctResponseAttr",
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -25515,6 +25753,14 @@
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               }
+            },
+            {
+              "name": "response",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "fieldName": "response"
             },
             {
               "name": "response-identifier",
@@ -25816,10 +26062,13 @@
               "name": "correctResponseAttr",
               "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
               "type": {
-                "text": "string | null"
+                "text": "ResponseValue"
               },
               "attribute": "correct-response",
               "reflects": true,
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -26229,9 +26478,12 @@
               "name": "correct-response",
               "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
               "type": {
-                "text": "string | null"
+                "text": "ResponseValue"
               },
               "fieldName": "correctResponseAttr",
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -26437,10 +26689,13 @@
               "name": "correctResponseAttr",
               "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
               "type": {
-                "text": "string | null"
+                "text": "ResponseValue"
               },
               "attribute": "correct-response",
-              "reflects": true
+              "reflects": true,
+              "parsedType": {
+                "text": "string | string[]"
+              }
             },
             {
               "kind": "field",
@@ -26719,9 +26974,12 @@
               "name": "correct-response",
               "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
               "type": {
-                "text": "string | null"
+                "text": "ResponseValue"
               },
-              "fieldName": "correctResponseAttr"
+              "fieldName": "correctResponseAttr",
+              "parsedType": {
+                "text": "string | string[]"
+              }
             },
             {
               "name": "disabled",
@@ -27505,7 +27763,7 @@
           "name": "*",
           "declaration": {
             "name": "*",
-            "module": "packages/qti-base/src/lib/correct-response"
+            "module": "packages/qti-base/src/lib/response"
           }
         },
         {
@@ -27560,11 +27818,61 @@
     },
     {
       "kind": "javascript-module",
-      "path": "packages/qti-base/src/lib/correct-response.ts",
+      "path": "packages/qti-base/src/lib/expression-result.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-base/src/lib/interaction.interface.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-base/src/lib/qti-rule-base.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Abstract base class for QTI rule DOM elements",
+          "name": "QtiRuleElement",
+          "members": [
+            {
+              "kind": "method",
+              "name": "process",
+              "return": {
+                "type": {
+                  "text": "any"
+                }
+              }
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "customElement": true,
+          "modulePath": "packages/qti-base/src/lib/qti-rule-base.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiRuleElement",
+          "declaration": {
+            "name": "QtiRuleElement",
+            "module": "packages/qti-base/src/lib/qti-rule-base.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-base/src/lib/response.ts",
       "declarations": [
         {
           "kind": "function",
-          "name": "iterCorrectResponseValues",
+          "name": "iterResponseValues",
           "return": {
             "type": {
               "text": "Generator<string>"
@@ -27574,29 +27882,11 @@
             {
               "name": "raw",
               "type": {
-                "text": "CorrectResponseValue"
+                "text": "ResponseValue"
               }
             }
           ],
-          "description": "Iterate over the comma-separated entries in a correct-response value,\nregardless of whether the caller has the raw string, the parsed string, or\na string[]. Yields trimmed non-empty entries."
-        },
-        {
-          "kind": "function",
-          "name": "parseCorrectResponseAttribute",
-          "return": {
-            "type": {
-              "text": "CorrectResponseValue"
-            }
-          },
-          "parameters": [
-            {
-              "name": "raw",
-              "type": {
-                "text": "string | null | undefined"
-              }
-            }
-          ],
-          "description": "Parse a raw `correct-response` attribute string into the canonical value.\n\n - `null` / `undefined` / empty → `null`\n - no comma                     → trimmed string\n - one or more commas           → trimmed array (single-element collapses to a string)"
+          "description": "Iterate over the comma-separated entries in a response value, regardless of\nwhether the caller has the raw string, the parsed string, or a string[].\nYields trimmed non-empty entries."
         },
         {
           "kind": "function",
@@ -27636,21 +27926,39 @@
         },
         {
           "kind": "function",
-          "name": "serializeCorrectResponseAttribute",
+          "name": "parseResponseAttribute",
           "return": {
             "type": {
-              "text": "string | null"
+              "text": "ResponseValue"
             }
           },
           "parameters": [
             {
-              "name": "value",
+              "name": "raw",
               "type": {
-                "text": "CorrectResponseValue"
+                "text": "string | null | undefined"
               }
             }
           ],
-          "description": "Serialize a canonical value back to the attribute string. Returns `null` for\nempty inputs so a Lit `@property({ reflect: true })` drops the attribute."
+          "description": "Parse a raw `response` / `correct-response` attribute string into the\ncanonical value.\n\n - `null` / `undefined` / empty → `null`\n - no comma                     → trimmed string\n - one or more commas           → trimmed array (single-element collapses to a string)"
+        },
+        {
+          "kind": "function",
+          "name": "responseAttributeConverter",
+          "return": {
+            "type": {
+              "text": "{\n  fromAttribute: (value: string | null) => ResponseValue | E;\n  toAttribute: (value: ResponseValue | E) => string | null;\n}"
+            }
+          },
+          "parameters": [
+            {
+              "name": "opts",
+              "type": {
+                "text": "{\n  emptyAs: E;\n}"
+              }
+            }
+          ],
+          "description": "Ready-to-use Lit `converter` for `response` / `correct-response` attributes.\nAssign to the `converter` option:"
         },
         {
           "kind": "function",
@@ -27699,23 +28007,33 @@
             }
           ],
           "description": "Serialize a point to canonical `\"x y\"` form."
+        },
+        {
+          "kind": "function",
+          "name": "serializeResponseAttribute",
+          "return": {
+            "type": {
+              "text": "string | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "value",
+              "type": {
+                "text": "ResponseValue"
+              }
+            }
+          ],
+          "description": "Serialize a canonical value back to the attribute string. Returns `null` for\nempty inputs so a Lit `@property({ reflect: true })` drops the attribute."
         }
       ],
       "exports": [
         {
           "kind": "js",
-          "name": "iterCorrectResponseValues",
+          "name": "iterResponseValues",
           "declaration": {
-            "name": "iterCorrectResponseValues",
-            "module": "packages/qti-base/src/lib/correct-response.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "parseCorrectResponseAttribute",
-          "declaration": {
-            "name": "parseCorrectResponseAttribute",
-            "module": "packages/qti-base/src/lib/correct-response.ts"
+            "name": "iterResponseValues",
+            "module": "packages/qti-base/src/lib/response.ts"
           }
         },
         {
@@ -27723,7 +28041,7 @@
           "name": "parsePair",
           "declaration": {
             "name": "parsePair",
-            "module": "packages/qti-base/src/lib/correct-response.ts"
+            "module": "packages/qti-base/src/lib/response.ts"
           }
         },
         {
@@ -27731,15 +28049,23 @@
           "name": "parsePoint",
           "declaration": {
             "name": "parsePoint",
-            "module": "packages/qti-base/src/lib/correct-response.ts"
+            "module": "packages/qti-base/src/lib/response.ts"
           }
         },
         {
           "kind": "js",
-          "name": "serializeCorrectResponseAttribute",
+          "name": "parseResponseAttribute",
           "declaration": {
-            "name": "serializeCorrectResponseAttribute",
-            "module": "packages/qti-base/src/lib/correct-response.ts"
+            "name": "parseResponseAttribute",
+            "module": "packages/qti-base/src/lib/response.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "responseAttributeConverter",
+          "declaration": {
+            "name": "responseAttributeConverter",
+            "module": "packages/qti-base/src/lib/response.ts"
           }
         },
         {
@@ -27747,7 +28073,7 @@
           "name": "serializePair",
           "declaration": {
             "name": "serializePair",
-            "module": "packages/qti-base/src/lib/correct-response.ts"
+            "module": "packages/qti-base/src/lib/response.ts"
           }
         },
         {
@@ -27755,57 +28081,15 @@
           "name": "serializePoint",
           "declaration": {
             "name": "serializePoint",
-            "module": "packages/qti-base/src/lib/correct-response.ts"
+            "module": "packages/qti-base/src/lib/response.ts"
           }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "packages/qti-base/src/lib/expression-result.ts",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
-      "path": "packages/qti-base/src/lib/interaction.interface.ts",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
-      "path": "packages/qti-base/src/lib/qti-rule-base.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Abstract base class for QTI rule DOM elements",
-          "name": "QtiRuleElement",
-          "members": [
-            {
-              "kind": "method",
-              "name": "process",
-              "return": {
-                "type": {
-                  "text": "any"
-                }
-              }
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "customElement": true,
-          "modulePath": "packages/qti-base/src/lib/qti-rule-base.ts"
-        }
-      ],
-      "exports": [
+        },
         {
           "kind": "js",
-          "name": "QtiRuleElement",
+          "name": "serializeResponseAttribute",
           "declaration": {
-            "name": "QtiRuleElement",
-            "module": "packages/qti-base/src/lib/qti-rule-base.ts"
+            "name": "serializeResponseAttribute",
+            "module": "packages/qti-base/src/lib/response.ts"
           }
         }
       ]
@@ -29671,10 +29955,7 @@
               "type": {
                 "text": "BaseType"
               },
-              "attribute": "base-type",
-              "parsedType": {
-                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
-              }
+              "attribute": "base-type"
             },
             {
               "kind": "field",
@@ -29682,10 +29963,7 @@
               "type": {
                 "text": "Cardinality"
               },
-              "attribute": "cardinality",
-              "parsedType": {
-                "text": "'record' | 'multiple' | 'ordered' | 'single'"
-              }
+              "attribute": "cardinality"
             },
             {
               "kind": "method",
@@ -29752,20 +30030,14 @@
               "type": {
                 "text": "BaseType"
               },
-              "fieldName": "baseType",
-              "parsedType": {
-                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
-              }
+              "fieldName": "baseType"
             },
             {
               "name": "cardinality",
               "type": {
                 "text": "Cardinality"
               },
-              "fieldName": "cardinality",
-              "parsedType": {
-                "text": "'record' | 'multiple' | 'ordered' | 'single'"
-              }
+              "fieldName": "cardinality"
             },
             {
               "name": "external-scored",
@@ -29832,10 +30104,7 @@
               "type": {
                 "text": "QtiAreaMapping"
               },
-              "readonly": true,
-              "parsedType": {
-                "text": "{ defaultValue: number, lowerBound: number, upperBound: number, areaMapEntries: QtiAreaMapEntry[] }"
-              }
+              "readonly": true
             },
             {
               "kind": "field",
@@ -29853,10 +30122,7 @@
               "type": {
                 "text": "QtiMapping"
               },
-              "readonly": true,
-              "parsedType": {
-                "text": "{ defaultValue: number, lowerBound: number, upperBound: number, mapEntries: QtiMapEntry[] }"
-              }
+              "readonly": true
             },
             {
               "kind": "field",
@@ -29864,10 +30130,7 @@
               "type": {
                 "text": "BaseType"
               },
-              "attribute": "base-type",
-              "parsedType": {
-                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
-              }
+              "attribute": "base-type"
             },
             {
               "kind": "field",
@@ -29875,10 +30138,7 @@
               "type": {
                 "text": "Cardinality"
               },
-              "attribute": "cardinality",
-              "parsedType": {
-                "text": "'record' | 'multiple' | 'ordered' | 'single'"
-              }
+              "attribute": "cardinality"
             },
             {
               "kind": "method",
@@ -29928,20 +30188,14 @@
               "type": {
                 "text": "BaseType"
               },
-              "fieldName": "baseType",
-              "parsedType": {
-                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
-              }
+              "fieldName": "baseType"
             },
             {
               "name": "cardinality",
               "type": {
                 "text": "Cardinality"
               },
-              "fieldName": "cardinality",
-              "parsedType": {
-                "text": "'record' | 'multiple' | 'ordered' | 'single'"
-              }
+              "fieldName": "cardinality"
             },
             {
               "name": "identifier",
@@ -30362,10 +30616,7 @@
                 "text": "BaseType"
               },
               "default": "'string'",
-              "attribute": "base-type",
-              "parsedType": {
-                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
-              }
+              "attribute": "base-type"
             },
             {
               "kind": "field",
@@ -30433,10 +30684,7 @@
                 "text": "BaseType"
               },
               "default": "'string'",
-              "fieldName": "baseType",
-              "parsedType": {
-                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
-              }
+              "fieldName": "baseType"
             },
             {
               "name": "cardinality",
@@ -30800,10 +31048,7 @@
               "type": {
                 "text": "ComputedItemContext | undefined"
               },
-              "privacy": "protected",
-              "parsedType": {
-                "text": "{ identifier: string, href: string, correct: false | true, incorrect: false | true, completed: false | true, adaptive: false | true, timeDependent: false | true, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: readonly VariableDeclaration<string | string[]>[] } | undefined"
-              }
+              "privacy": "protected"
             }
           ],
           "superclass": {
@@ -30883,10 +31128,7 @@
               "type": {
                 "text": "ComputedItemContext | undefined"
               },
-              "privacy": "public",
-              "parsedType": {
-                "text": "{ identifier: string, href: string, correct: false | true, incorrect: false | true, completed: false | true, adaptive: false | true, timeDependent: false | true, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: readonly VariableDeclaration<string | string[]>[] } | undefined"
-              }
+              "privacy": "public"
             },
             {
               "kind": "field",
@@ -31063,10 +31305,7 @@
               "type": {
                 "text": "ComputedItemContext | undefined"
               },
-              "privacy": "public",
-              "parsedType": {
-                "text": "{ identifier: string, href: string, correct: false | true, incorrect: false | true, completed: false | true, adaptive: false | true, timeDependent: false | true, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: readonly VariableDeclaration<string | string[]>[] } | undefined"
-              }
+              "privacy": "public"
             },
             {
               "kind": "field",
@@ -31332,10 +31571,7 @@
               "type": {
                 "text": "ComputedItemContext"
               },
-              "privacy": "public",
-              "parsedType": {
-                "text": "{ identifier: string, href: string, correct: false | true, incorrect: false | true, completed: false | true, adaptive: false | true, timeDependent: false | true, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: readonly VariableDeclaration<string | string[]>[] }"
-              }
+              "privacy": "public"
             },
             {
               "kind": "field",
@@ -32171,10 +32407,7 @@
                 "text": "BaseType"
               },
               "default": "'string'",
-              "attribute": "base-type",
-              "parsedType": {
-                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
-              }
+              "attribute": "base-type"
             },
             {
               "kind": "method",
@@ -32259,10 +32492,7 @@
                 "text": "BaseType"
               },
               "default": "'string'",
-              "fieldName": "baseType",
-              "parsedType": {
-                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
-              }
+              "fieldName": "baseType"
             }
           ],
           "superclass": {
@@ -41668,10 +41898,7 @@
               "type": {
                 "text": "ComputedContext"
               },
-              "privacy": "protected",
-              "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; }[]; }[] }"
-              }
+              "privacy": "protected"
             },
             {
               "kind": "field",
@@ -41853,10 +42080,7 @@
               "type": {
                 "text": "ComputedContext"
               },
-              "privacy": "protected",
-              "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; }[]; }[] }"
-              }
+              "privacy": "protected"
             },
             {
               "kind": "field",
@@ -41959,10 +42183,7 @@
               "type": {
                 "text": "ComputedContext"
               },
-              "privacy": "private",
-              "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; }[]; }[] }"
-              }
+              "privacy": "private"
             },
             {
               "kind": "field",
@@ -42074,10 +42295,7 @@
               "type": {
                 "text": "ComputedContext"
               },
-              "privacy": "private",
-              "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; }[]; }[] }"
-              }
+              "privacy": "private"
             },
             {
               "kind": "field",
@@ -42156,10 +42374,7 @@
               "type": {
                 "text": "ComputedContext | undefined"
               },
-              "privacy": "public",
-              "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; }[]; }[] } | undefined"
-              }
+              "privacy": "public"
             }
           ],
           "superclass": {
@@ -42206,10 +42421,7 @@
               "type": {
                 "text": "ComputedContext | undefined"
               },
-              "privacy": "public",
-              "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; }[]; }[] } | undefined"
-              }
+              "privacy": "public"
             }
           ],
           "superclass": {
@@ -42269,10 +42481,7 @@
               "type": {
                 "text": "ComputedContext | undefined"
               },
-              "privacy": "protected",
-              "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; }[]; }[] } | undefined"
-              }
+              "privacy": "protected"
             },
             {
               "kind": "field",
@@ -42371,10 +42580,7 @@
               "type": {
                 "text": "ComputedContext | undefined"
               },
-              "privacy": "protected",
-              "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; }[]; }[] } | undefined"
-              }
+              "privacy": "protected"
             },
             {
               "kind": "field",
@@ -42384,10 +42590,7 @@
               },
               "privacy": "public",
               "default": "null",
-              "attribute": "view",
-              "parsedType": {
-                "text": "'' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor'"
-              }
+              "attribute": "view"
             }
           ],
           "attributes": [
@@ -42397,10 +42600,7 @@
                 "text": "View"
               },
               "default": "null",
-              "fieldName": "view",
-              "parsedType": {
-                "text": "'' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor'"
-              }
+              "fieldName": "view"
             }
           ],
           "superclass": {
@@ -42463,10 +42663,7 @@
               "type": {
                 "text": "ComputedContext"
               },
-              "privacy": "private",
-              "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; }[]; }[] }"
-              }
+              "privacy": "private"
             },
             {
               "kind": "field",
@@ -42624,10 +42821,7 @@
               "type": {
                 "text": "ComputedContext | undefined"
               },
-              "privacy": "public",
-              "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; }[]; }[] } | undefined"
-              }
+              "privacy": "public"
             },
             {
               "kind": "field",
@@ -42772,10 +42966,7 @@
               "type": {
                 "text": "ComputedContext"
               },
-              "privacy": "private",
-              "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; }[]; }[] }"
-              }
+              "privacy": "private"
             },
             {
               "kind": "field",

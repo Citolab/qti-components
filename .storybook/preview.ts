@@ -18,7 +18,6 @@ import customElements from '../custom-elements.json';
 import { toBePositionedRelativeTo } from '../tools/testing/setup/toBePositionedRelativeTo';
 import '../packages/qti-theme/src/item.css';
 import kennisnetOverrideHref from '../packages/qti-theme/src/kennisnet-override.scss?url';
-import fakeBootstrapHref from '../packages/qti-theme/src/styles/overrides/fake-bootstrap-overrides.css?url';
 import '../packages/qti-components/src';
 
 import type { Preview } from '@storybook/web-components-vite';
@@ -73,19 +72,12 @@ const OVERRIDE_LINK_CLASS = 'qti-vendor-override';
  * item in the `globalTypes.override.toolbar.items` array below.
  *
  * - citolab: minimal normalize, no opinionated reset.
- * - kennisnet: Bootstrap 5.3 (Kennisnet's SCSS uses --bs-primary, --bs-border-color,
- *   etc. as if the host page loads Bootstrap), then fake-bootstrap-overrides.css
- *   to shape Bootstrap's blue defaults into Wikiwijs purples and the missing
- *   --bs-* base palette, then the kennisnet-override.css built from our SCSS
- *   source on top.
+ * - kennisnet: single self-contained file — pulls Bootstrap + Wikiwijs bridge +
+ *   FontAwesome glyph CDN URLs internally (see kennisnet-override.scss).
  */
 const OVERRIDE_STYLESHEETS: Record<string, string[]> = {
   citolab: ['https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.css'],
-  kennisnet: [
-    'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css',
-    fakeBootstrapHref,
-    kennisnetOverrideHref
-  ]
+  kennisnet: [kennisnetOverrideHref]
 };
 
 const preview: Preview = {

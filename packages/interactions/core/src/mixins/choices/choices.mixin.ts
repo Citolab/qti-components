@@ -2,8 +2,9 @@ import { property, query, state } from 'lit/decorators.js';
 import { consume } from '@lit/context';
 
 import { watch } from '@qti-components/utilities';
-import { configContext, type ConfigContext } from '@qti-components/base';
+import { configContext, responseAttributeConverter, type ConfigContext } from '@qti-components/base';
 
+import type { ComplexAttributeConverter } from 'lit';
 import type { Interaction, IInteraction } from '@qti-components/base';
 import type { ChoiceInterface } from '../active-element/active-element.mixin';
 
@@ -53,7 +54,12 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       this._choiceElements.forEach(choice => (choice.readonly = readonly));
     };
 
-    @state() response: string | string[] | null = '';
+    @property({
+      attribute: 'response',
+      reflect: false,
+      converter: responseAttributeConverter({ emptyAs: '' }) as ComplexAttributeConverter<unknown, unknown>
+    })
+    response: string | string[] | null = '';
 
     @watch('response', { waitUntilFirstUpdate: true })
     protected _handleValueChange = () => {
@@ -137,6 +143,20 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
 
       // Also update interaction-level states
       super.toggleCandidateCorrection(show);
+    }
+
+    protected override firstUpdated() {
+      super.firstUpdated();
+      // The `response` watcher has waitUntilFirstUpdate:true, so an initial
+      // value set via the `response` attribute never fires it — sync the
+      // radios/checkboxes explicitly here.
+      this._updateChoiceSelection();
+      // Re-apply candidate correction now that response is known. The base
+      // class's firstUpdated already called toggleCandidateCorrection(true)
+      // earlier, but at that point response was still empty.
+      if (this.showCandidateCorrection) {
+        this.toggleCandidateCorrection(true);
+      }
     }
 
     override connectedCallback() {

@@ -1,6 +1,7 @@
 import { html } from 'lit';
 import { property, query } from 'lit/decorators.js';
 
+import { watch } from '@qti-components/utilities';
 import { Interaction } from '@qti-components/base';
 
 import styles from './qti-slider-interaction.styles';
@@ -24,29 +25,47 @@ export class QtiSliderInteraction extends Interaction {
 
   override connectedCallback() {
     super.connectedCallback();
-    this.#updateValue(this.min); // Set initial value
+    // Only seed with `min` if no explicit response was set via attribute/property.
+    if (!this.hasAttribute('response')) {
+      this.#updateValue(this.min);
+    }
     this.setAttribute('tabindex', '0');
     this.setAttribute('role', 'slider');
   }
 
+  @property({ attribute: 'response', reflect: false, noAccessor: true })
   get response(): string {
     return this.#value.toString();
   }
 
-  set response(val: string) {
-    const newValue = parseInt(val, 10);
+  set response(val: string | null) {
+    if (val === null || val === '') return;
+    const newValue = parseFloat(val);
     if (!isNaN(newValue)) {
       this.#updateValue(newValue);
     }
   }
 
-  public override toggleCorrectResponse(show: boolean) {
-    const responseVariable = this.responseVariable;
-    if (!responseVariable?.correctResponse) return;
+  @watch('response' as never, { waitUntilFirstUpdate: true })
+  protected _handleResponseChange = () => {
+    if (this.showCandidateCorrection) {
+      this.toggleCandidateCorrection(true);
+    }
+  };
+
+  public override toggleInternalCorrectResponse(show: boolean) {
+    // Use `this.correctResponse` so both standalone (`correct-response="…"`
+    // attribute) and item-context (response-variable) modes work.
+    const correctResponse = this.correctResponse;
+    if (!correctResponse) {
+      this.#correctResponseNumber = null;
+      this.requestUpdate();
+      return;
+    }
 
     if (show) {
-      this._correctResponse = responseVariable.correctResponse.toString();
-      const nr = parseFloat(responseVariable.correctResponse.toString());
+      const raw = Array.isArray(correctResponse) ? correctResponse[0] : correctResponse;
+      const nr = parseFloat(raw);
       if (!isNaN(nr)) {
         this.#correctResponseNumber = nr;
         const valuePercentage = ((this.#correctResponseNumber - this.min) / (this.max - this.min)) * 100;

@@ -21,17 +21,18 @@ export class QtiTextEntryInteraction extends Interaction {
 
   @property({ type: String, attribute: 'data-patternmask-message' }) dataPatternmaskMessage: string;
 
-  @state()
+  @property({ type: String, attribute: 'response', reflect: false })
   response: string | null = null;
 
   @query('input') private _input!: HTMLInputElement;
 
   @watch('response', { waitUntilFirstUpdate: true })
   protected _handleValueChange = () => {
-    // const formData = new FormData();
-    // formData.append(this.responseIdentifier, this.response);
     this._internals.setFormValue(this.value);
     this.validate();
+    if (this.showCandidateCorrection) {
+      this.toggleCandidateCorrection(true);
+    }
   };
 
   override get value(): string | null {
@@ -45,7 +46,9 @@ export class QtiTextEntryInteraction extends Interaction {
     const responseVariable = this.responseVariable;
 
     if (!responseVariable) {
-      return null;
+      // Standalone mode (no item context): fall through to the base correctness
+      // getter, which compares `this.response` to `this.correctResponse`.
+      return super.correctness;
     }
 
     if (responseVariable.value === null) {
@@ -104,34 +107,17 @@ export class QtiTextEntryInteraction extends Interaction {
     return this.response !== '' && this._input.checkValidity();
   }
 
+  /**
+   * Display flag for the `[part='correct']` overlay. Separate from
+   * `_correctResponse` (the base's storage for the `correct-response`
+   * attribute value) — toggling this does NOT clobber the correct response.
+   */
+  @state() private _showCorrectOverlay: boolean = false;
+
   public override toggleInternalCorrectResponse(show: boolean): void {
-    const responseVariable = this.responseVariable;
-
-    if (show && responseVariable?.correctResponse) {
-      const text = responseVariable.correctResponse.toString();
-      this._correctResponse = text;
-      //   if (text) {
-      //     if (!this._input.nextElementSibling?.classList.contains('correct-option')) {
-      //       const textSpan = document.createElement('span');
-      //       textSpan.classList.add('correct-option');
-      //       textSpan.textContent = text;
-
-      //       // Apply styles
-      //       textSpan.style.border = '1px solid var(--qti-correct)';
-      //       textSpan.style.borderRadius = '4px';
-      //       textSpan.style.padding = '2px 4px';
-      //       textSpan.style.margin = '4px';
-      //       textSpan.style.display = 'inline-block';
-
-      //       this._input.insertAdjacentElement('afterend', textSpan);
-      //     }
-      //   } else if (this._input.nextElementSibling?.classList.contains('correct-option')) {
-      //     this._input.nextElementSibling?.remove();
-      //   }
-    } else {
-      // this._input.nextElementSibling?.remove();
-      this._correctResponse = null;
-    }
+    // Drive only the overlay flag; read the actual correct-response value at
+    // render time via `this.correctResponse` (works in standalone + item-context).
+    this._showCorrectOverlay = show && !!this.correctResponse;
   }
 
   override render() {
@@ -155,7 +141,9 @@ export class QtiTextEntryInteraction extends Interaction {
         ?disabled="${this.disabled}"
         ?readonly="${this.readonly}"
       />
-      ${this._correctResponse ? html`<div part="correct">${this._correctResponse}</div>` : nothing}
+      ${this._showCorrectOverlay && this.correctResponse
+        ? html`<div part="correct">${this.correctResponse}</div>`
+        : nothing}
     `;
   }
   // ${this._correctResponse ? html`<div popover part="correct">${this._correctResponse}</div>` : nothing}

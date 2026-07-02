@@ -13,7 +13,7 @@ export * from './abstract/qti-condition-expression';
 export * from './abstract/qti-feedback';
 export * from './abstract/qti-expression';
 
-export * from './lib/correct-response';
+export * from './lib/response';
 export * from './lib/expression-result';
 export * from './lib/interaction.interface';
 export * from './lib/variables';

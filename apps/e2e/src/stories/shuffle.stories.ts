@@ -205,18 +205,11 @@ export const MatchInteractionTabular: StoryObj = {
     await step('Verify options are shuffled', async () => {
       const canvas = within(canvasElement);
 
-      const rows = canvas.getAllByShadowRole('row');
+      const columnHeaderTexts = canvas.getAllByShadowRole('columnheader').map(header => header.textContent.trim());
+      const rowHeaderTexts = canvas.getAllByShadowRole('rowheader').map(header => header.textContent.trim());
 
-      const columnHeaders = canvas.getAllByShadowRole('columnheader');
-      const columnHeadersTextValues = columnHeaders.map(header => header.textContent);
-
-      expect(columnHeadersTextValues).not.toBe(['Capulet', 'Demetrius', 'Lysander', 'Prospero']);
-
-      const firstColumnCells = rows.slice(1).map(row => row.querySelector('td:first-child'));
-
-      const firstColumnTextValues = firstColumnCells.map(cell => cell.textContent);
-      expect(firstColumnTextValues.includes("A Midsummer-Night's Dream"));
-      expect(firstColumnTextValues).not.toBe(["A Midsummer-Night's Dream", 'Romeo and Juliet', 'The Tempest']);
+      expect(rowHeaderTexts).not.toEqual(['Capulet', 'Demetrius', 'Lysander', 'Prospero']);
+      expect(columnHeaderTexts).not.toEqual(["A Midsummer-Night's Dream", 'Romeo and Juliet', 'The Tempest']);
     });
   }
 };

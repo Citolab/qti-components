@@ -40,7 +40,7 @@ const meta: Meta<QtiMatchInteraction & { class: InputType; 'response-identifier'
       handles: events
     }
   },
-  tags: ['autodocs', 'no-tests']
+  tags: ['autodocs', 'no-tests', 'iol']
 };
 export default meta;
 
