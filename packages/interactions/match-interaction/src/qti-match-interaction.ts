@@ -15,14 +15,15 @@ import type { ResponseVariable } from '@qti-components/base';
 import type { CSSResultGroup, PropertyValues } from 'lit';
 import type { ResponseInteraction } from '@qti-components/base';
 import type { QtiSimpleAssociableChoice } from '@qti-components/interactions-core/elements/qti-simple-associable-choice';
-const SlottedBase = DragDropSlottedMixin(
-  Interaction,
-  'qti-simple-match-set:first-of-type qti-simple-associable-choice, qti-simple-match-set:last-of-type > qti-simple-associable-choice > qti-simple-associable-choice',
-  'qti-simple-match-set:last-of-type > qti-simple-associable-choice',
-  'qti-simple-match-set:first-of-type'
-);
-
-export class QtiMatchInteraction extends DragDropSlottedSortableMixin(SlottedBase, '[qti-draggable="true"]') {
+export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
+  DragDropSlottedMixin(
+    Interaction,
+    'qti-simple-match-set:first-of-type qti-simple-associable-choice, qti-simple-match-set:last-of-type > qti-simple-associable-choice > qti-simple-associable-choice',
+    'qti-simple-match-set:last-of-type > qti-simple-associable-choice',
+    'qti-simple-match-set:first-of-type'
+  ),
+  '[qti-draggable="true"]'
+) {
   static override styles: CSSResultGroup = [styles, tabularStyles];
 
   protected sourceChoices: QtiSimpleAssociableChoice[];

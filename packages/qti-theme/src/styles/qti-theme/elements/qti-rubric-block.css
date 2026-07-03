@@ -1,5 +1,5 @@
 /* Apply .rubric-block for styling qti-rubric-block content */
-.rubric-block {
+/* .rubric-block {
   display: block;
   border-left: 4px solid var(--qti-correct);
   background-color: var(--qti-correct-light);
@@ -10,4 +10,4 @@
 
 qti-rubric-block {
   @apply rubric-block;
-}
+} */

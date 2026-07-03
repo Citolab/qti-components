@@ -89,11 +89,11 @@ qti-associate-interaction qti-simple-associable-choice,
  * FontAwesome `grip-vertical` glyph as the drag handle, painted via
  * `mask-image` so it inherits `currentColor`. Sits BEFORE the chip text.
  */
-qti-order-interaction qti-simple-choice::before,
-qti-gap-match-interaction qti-gap-text::before,
-qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:first-of-type qti-simple-associable-choice::before,
-qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:last-of-type > qti-simple-associable-choice > qti-simple-associable-choice::before,
-qti-associate-interaction qti-simple-associable-choice::before,
+qti-order-interaction qti-simple-choice::part(ch)::before,
+qti-gap-match-interaction qti-gap-text::part(ch)::before,
+qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:first-of-type qti-simple-associable-choice::part(ch)::before,
+qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:last-of-type > qti-simple-associable-choice > qti-simple-associable-choice::part(ch)::before,
+qti-associate-interaction qti-simple-associable-choice::part(ch)::before,
 [data-drag-clone]::before {
   content: '';
   display: inline-block;
@@ -206,4 +206,9 @@ span.correct-option::after {
   background-color: white;
   mask: var(--fa-check-mask) no-repeat center / contain;
   -webkit-mask: var(--fa-check-mask) no-repeat center / contain;
+}
+
+qti-gap-text {
+  display: flex !important;
+  align-items: center !important;
 }

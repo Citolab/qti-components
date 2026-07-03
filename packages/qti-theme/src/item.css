@@ -31,7 +31,6 @@ div.full-correct-response {
 div.full-correct-response-block {
   display: block;
   margin-top: var(--qti-padding-vertical);
-  padding: 0.5rem;
 }
 
 div.full-correct-response-inline {

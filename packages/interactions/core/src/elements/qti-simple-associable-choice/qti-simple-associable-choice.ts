@@ -53,6 +53,7 @@ export class QtiSimpleAssociableChoice extends ActiveElementMixin(LitElement, 'q
   // And we have slot for content like in this associate interaction
   override render() {
     return html`
+      <div part="ch"></div>
       <slot part="slot"></slot>
       <slot part="dropslot" name="qti-simple-associable-choice"></slot>
     `;

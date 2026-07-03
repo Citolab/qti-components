@@ -43,6 +43,58 @@ export class QtiSelectPointInteraction extends Interaction {
   })
   response: string[] | null = null;
 
+  /**
+   * Standalone area mapping as a JSON string. Mirrors the editor's
+   * `#syncAreaEntriesFromAttribute` codec — each entry has `{shape, coords, mappedValue?, defaultValue?}`
+   * and `shape` must be `'circle'` or `'rect'`. Used when no
+   * `qti-response-declaration` provides `areaMapping`.
+   *
+   * @example
+   * ```html
+   * <qti-select-point-interaction area-mappings='[{"shape":"circle","coords":"191,393,10","mappedValue":1}]'>
+   * ```
+   */
+  @property({ attribute: 'area-mappings' })
+  areaMappings: string | null = null;
+
+  @state()
+  private _areaEntries: QtiAreaMapEntry[] = [];
+
+  @watch('areaMappings' as never)
+  protected _handleAreaMappingsChange = () => {
+    this.#syncAreaEntriesFromAttribute();
+    if (this.showCorrectResponse) this.toggleInternalCorrectResponse(true);
+    if (this.showCandidateCorrection) this.toggleCandidateCorrection(true);
+  };
+
+  #syncAreaEntriesFromAttribute() {
+    try {
+      const raw = JSON.parse(this.areaMappings || '[]');
+      if (!Array.isArray(raw)) {
+        this._areaEntries = [];
+        return;
+      }
+      this._areaEntries = raw
+        .filter(
+          entry => entry && (entry.shape === 'circle' || entry.shape === 'rect') && typeof entry.coords === 'string'
+        )
+        .map(entry => ({
+          shape: entry.shape,
+          coords: String(entry.coords),
+          mappedValue: Number(entry.mappedValue ?? 1),
+          defaultValue: Number(entry.defaultValue ?? 0)
+        }));
+    } catch {
+      this._areaEntries = [];
+    }
+  }
+
+  private get _effectiveAreaEntries(): QtiAreaMapEntry[] {
+    const fromResponseVariable = (this.responseVariable?.areaMapping as QtiAreaMapping | undefined)?.areaMapEntries;
+    if (fromResponseVariable?.length) return fromResponseVariable;
+    return this._areaEntries;
+  }
+
   @watch('response' as never, { waitUntilFirstUpdate: true })
   protected _handleResponseChange = () => {
     if (this.showCandidateCorrection) {
@@ -127,14 +179,14 @@ export class QtiSelectPointInteraction extends Interaction {
     if (!show) {
       return;
     }
-    const areaMapping = this.responseVariable?.areaMapping as QtiAreaMapping | undefined;
+    const areaEntries = this._effectiveAreaEntries;
     const baseType = this.responseVariable?.baseType;
     const correctResponseValue = this.correctResponse;
 
     this.responsePoints.forEach(point => {
       let correct = false;
-      if (areaMapping?.areaMapEntries?.length) {
-        correct = areaMapping.areaMapEntries.some(area =>
+      if (areaEntries.length) {
+        correct = areaEntries.some(area =>
           ScoringHelper.isPointInArea(`${point.x} ${point.y}`, `${area.shape},${area.coords}`, baseType)
         );
       } else if (correctResponseValue) {
@@ -156,12 +208,8 @@ export class QtiSelectPointInteraction extends Interaction {
       this._correctAreas = [];
       return;
     }
-    const responseVariable = this.responseVariable;
-    const areaMapping = responseVariable?.areaMapping as QtiAreaMapping | undefined;
-    let areaMapEntries: QtiAreaMapEntry[] = [];
-    if (areaMapping?.areaMapEntries?.length) {
-      areaMapEntries = areaMapping.areaMapEntries;
-    } else {
+    let areaMapEntries: QtiAreaMapEntry[] = this._effectiveAreaEntries;
+    if (!areaMapEntries.length) {
       // Standalone / no area mapping — render circles at the correct-response
       // point coordinates with a 10px radius.
       const correctResponseValue = this.correctResponse;

@@ -11801,6 +11801,161 @@
           "name": "QtiGapMatchInteraction",
           "members": [
             {
+              "kind": "field",
+              "name": "_context",
+              "type": {
+                "text": "ItemContext"
+              },
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_correctResponse",
+              "type": {
+                "text": "string | string[] | null"
+              },
+              "privacy": "protected",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_dropBlockedDueToMax",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_enableFlipAnimations",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "true",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_handleShowCandidateCorrectionChange",
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_handleShowCorrectResponseChange",
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_handleShowFullCorrectResponseChange",
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_internals",
+              "type": {
+                "text": "ElementInternals"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_isFullCorrectResponse",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_maxAssociations",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_maxAssociationsDefaultApplied",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_pendingResponse",
+              "type": {
+                "text": "string[] | undefined"
+              },
+              "privacy": "private",
+              "default": "undefined",
+              "description": "Set via the `response=\"…\"` attribute before the drag/drop machinery has\ncached its dropzones (`setupDragDrop` awaits the first render). The\n`afterCache` extension hook in this mixin applies it once dropzones exist.",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_response",
+              "type": {
+                "text": "string[]"
+              },
+              "privacy": "protected",
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "#getItemInSlot",
               "privacy": "private",
@@ -12020,6 +12175,23 @@
             },
             {
               "kind": "method",
+              "name": "afterCache",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              },
+              "type": {
+                "text": "afterCache() => void"
+              }
+            },
+            {
+              "kind": "method",
               "name": "allowDrop",
               "privacy": "public",
               "return": {
@@ -12042,8 +12214,8 @@
                 }
               ],
               "inheritedFrom": {
-                "name": "DragDropSlottedSortableMixin",
-                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
               },
               "type": {
                 "text": "allowDrop(draggable: HTMLElement, droppable: HTMLElement) => boolean"
@@ -12060,6 +12232,48 @@
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "applyConfiguredChoicesContainerWidth",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "autoSizeDropzones",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "auto-size-dropzones",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "checkAllMaxAssociations",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
               }
             },
             {
@@ -12083,6 +12297,146 @@
               }
             },
             {
+              "kind": "field",
+              "name": "configContext",
+              "type": {
+                "text": "ConfigContext"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "configuration",
+              "type": {
+                "text": "InteractionConfiguration"
+              },
+              "privacy": "protected",
+              "default": "{ copyStylesDragClone: true, dragCanBePlacedBack: true, dragOnClick: false }",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "correctness",
+              "type": {
+                "text": "Readonly<Correctness | null>"
+              },
+              "description": "Returns the correctness of the current response compared to correct response.\nWorks in both standalone mode (using `correct-response` attribute) and\nitem context mode (using responseVariable).",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "correctResponse",
+              "type": {
+                "text": "Readonly<string | string[] | null>"
+              },
+              "description": "Get/set correct response programmatically.\nThis property syncs with the `correct-response` attribute.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "correctResponseAttr",
+              "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
+              "type": {
+                "text": "ResponseValue"
+              },
+              "attribute": "correct-response",
+              "reflects": true,
+              "parsedType": {
+                "text": "string | string[]"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "disableAnimations",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "disable-animations",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "dropDraggableInDroppable",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "draggable",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "droppable",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "dragClonePosition",
+                  "optional": true,
+                  "type": {
+                    "text": "DOMRect"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "enableFlipAnimations",
+              "type": {
+                "text": "boolean"
+              },
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "findContainingDroppable",
               "privacy": "protected",
@@ -12102,6 +12456,72 @@
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "flipAnimationConfig",
+              "type": {
+                "text": "FlipAnimationOptions"
+              },
+              "privacy": "public",
+              "default": "{ duration: 200, // Slightly faster for slotted interactions easing: 'ease' // Simple, browser-optimized easing }",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getFirstMessageAttribute",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "attributeNames",
+                  "type": {
+                    "text": "string[]"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
               }
             },
             {
@@ -12156,8 +12576,8 @@
                 }
               ],
               "inheritedFrom": {
-                "name": "DragDropSlottedSortableMixin",
-                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
               },
               "type": {
                 "text": "handleDrop(draggable: HTMLElement, droppable: HTMLElement) => void"
@@ -12181,8 +12601,8 @@
                 }
               ],
               "inheritedFrom": {
-                "name": "DragDropSlottedSortableMixin",
-                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
               },
               "type": {
                 "text": "handleInvalidDrop(dragSource: HTMLElement | null) => void"
@@ -12239,6 +12659,18 @@
             },
             {
               "kind": "field",
+              "name": "internals",
+              "type": {
+                "text": "ElementInternals"
+              },
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "isDraggingFromSlot",
               "type": {
                 "text": "boolean"
@@ -12247,6 +12679,65 @@
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "isFullCorrectResponse",
+              "type": {
+                "text": "Readonly<boolean>"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "isInline",
+              "type": {
+                "text": "boolean"
+              },
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "maxAssociations",
+              "type": {
+                "text": "number"
+              },
+              "attribute": "max-associations",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "minAssociations",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "attribute": "min-associations",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "attribute": "name",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -12281,6 +12772,290 @@
               }
             },
             {
+              "kind": "method",
+              "name": "placeResponse",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "response",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "readonly",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "reportValidity() => boolean"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "reset",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "save",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "reset(save: boolean) => void"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "response",
+              "type": {
+                "text": "string | string[] | null"
+              },
+              "attribute": "response",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "responseIdentifier",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "response-identifier",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "responseVariable",
+              "type": {
+                "text": "ResponseVariable | undefined"
+              },
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "restoreInventoryItem",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "dragSource",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "restoreOriginalInInventory",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "returnToInventory",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "saveResponse",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string | string[]"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "saveResponse(value: string | string[]) => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "shouldReturnToInventoryOnInventoryDrop",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              },
+              "type": {
+                "text": "shouldReturnToInventoryOnInventoryDrop() => boolean"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "shouldTreatBlockedMaxAsInvalid",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              },
+              "type": {
+                "text": "shouldTreatBlockedMaxAsInvalid() => boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "showCandidateCorrection",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows feedback on candidate's selections compared to correct response.\nAdds `candidate-correct` / `candidate-incorrect` states to choices.",
+              "attribute": "show-candidate-correction",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "showCorrectResponse",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows which choices are correct with inline indicators.\nAdds `correct-response` / `incorrect-response` states to choices.",
+              "attribute": "show-correct-response",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "showFullCorrectResponse",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows a cloned interaction with the correct answers filled in.\nCreates a disabled copy positioned after this interaction.",
+              "attribute": "show-full-correct-response",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "sortableAnimationConfig",
               "type": {
@@ -12310,6 +13085,11 @@
               "kind": "method",
               "name": "toggleCandidateCorrection",
               "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
               "parameters": [
                 {
                   "name": "show",
@@ -12318,13 +13098,17 @@
                   }
                 }
               ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
               "type": {
                 "text": "toggleCandidateCorrection(show: boolean) => void"
               }
             },
             {
               "kind": "method",
-              "name": "toggleInternalCorrectResponse",
+              "name": "toggleCorrectResponse",
               "privacy": "public",
               "return": {
                 "type": {
@@ -12339,8 +13123,120 @@
                   }
                 }
               ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
               "type": {
-                "text": "toggleInternalCorrectResponse(show: boolean) => void"
+                "text": "toggleCorrectResponse(show: boolean) => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "toggleFullCorrectResponse",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "show",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "toggleInternalCorrectResponse",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "show",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "updateInventoryBasedOnMatchMax",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "updateMinDimensionsForDropZones",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "validate",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "validate() => boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string | null"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             }
           ],
@@ -12348,14 +13244,196 @@
             {
               "name": "DragDropSlottedSortableMixin",
               "package": "@qti-components/interactions-core/mixins/drag-drop-observables"
+            },
+            {
+              "name": "DragDropSlottedMixin",
+              "package": "@qti-components/interactions-core/mixins/drag-drop-observables"
             }
           ],
           "superclass": {
-            "name": "SlottedBase",
-            "module": "packages/interactions/gap-match-interaction/src/qti-gap-match-interaction.ts"
+            "name": "Interaction",
+            "package": "@qti-components/base"
           },
           "tagName": "qti-gap-match-interaction",
           "customElement": true,
+          "attributes": [
+            {
+              "name": "auto-size-dropzones",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "autoSizeDropzones",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "name": "correct-response",
+              "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
+              "type": {
+                "text": "ResponseValue"
+              },
+              "fieldName": "correctResponseAttr",
+              "parsedType": {
+                "text": "string | string[]"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "name": "disable-animations",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "disableAnimations",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "name": "max-associations",
+              "type": {
+                "text": "number"
+              },
+              "fieldName": "maxAssociations",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "name": "min-associations",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "fieldName": "minAssociations",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "name": "name",
+              "fieldName": "name",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readonly",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "name": "response",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "response",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "name": "response-identifier",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "responseIdentifier",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "name": "show-candidate-correction",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows feedback on candidate's selections compared to correct response.\nAdds `candidate-correct` / `candidate-incorrect` states to choices.",
+              "fieldName": "showCandidateCorrection",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "name": "show-correct-response",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows which choices are correct with inline indicators.\nAdds `correct-response` / `incorrect-response` states to choices.",
+              "fieldName": "showCorrectResponse",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "name": "show-full-correct-response",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows a cloned interaction with the correct answers filled in.\nCreates a disabled copy positioned after this interaction.",
+              "fieldName": "showFullCorrectResponse",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "qti-interaction-response",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "name": "qti-register-interaction",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            }
+          ],
           "modulePath": "packages/interactions/gap-match-interaction/src/qti-gap-match-interaction.ts",
           "definitionPath": "packages/interactions/gap-match-interaction/src/register.ts"
         }
@@ -17835,12 +18913,158 @@
           "members": [
             {
               "kind": "field",
-              "name": "_response",
+              "name": "_context",
               "type": {
-                "text": "string | string[]"
+                "text": "ItemContext"
+              },
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_correctResponse",
+              "type": {
+                "text": "string | string[] | null"
               },
               "privacy": "protected",
-              "default": "[]"
+              "default": "null",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_dropBlockedDueToMax",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_enableFlipAnimations",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "true",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_handleShowCandidateCorrectionChange",
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_handleShowCorrectResponseChange",
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_handleShowFullCorrectResponseChange",
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_internals",
+              "type": {
+                "text": "ElementInternals"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_isFullCorrectResponse",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_maxAssociations",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_maxAssociationsDefaultApplied",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_pendingResponse",
+              "type": {
+                "text": "string[] | undefined"
+              },
+              "privacy": "private",
+              "default": "undefined",
+              "description": "Set via the `response=\"…\"` attribute before the drag/drop machinery has\ncached its dropzones (`setupDragDrop` awaits the first render). The\n`afterCache` extension hook in this mixin applies it once dropzones exist.",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_response",
+              "type": {
+                "text": "string[]"
+              },
+              "privacy": "protected",
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
             },
             {
               "kind": "method",
@@ -18069,6 +19293,10 @@
                   "text": "void"
                 }
               },
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              },
               "type": {
                 "text": "afterCache() => void"
               }
@@ -18097,8 +19325,8 @@
                 }
               ],
               "inheritedFrom": {
-                "name": "DragDropSlottedSortableMixin",
-                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
               },
               "type": {
                 "text": "allowDrop(draggable: HTMLElement, droppable: HTMLElement) => boolean"
@@ -18115,6 +19343,48 @@
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "applyConfiguredChoicesContainerWidth",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "autoSizeDropzones",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "auto-size-dropzones",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "checkAllMaxAssociations",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
               }
             },
             {
@@ -18148,12 +19418,152 @@
             },
             {
               "kind": "field",
+              "name": "configContext",
+              "type": {
+                "text": "ConfigContext"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "configuration",
+              "type": {
+                "text": "InteractionConfiguration"
+              },
+              "privacy": "protected",
+              "default": "{ copyStylesDragClone: true, dragCanBePlacedBack: true, dragOnClick: false }",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "correctness",
+              "type": {
+                "text": "Readonly<Correctness | null>"
+              },
+              "description": "Returns the correctness of the current response compared to correct response.\nWorks in both standalone mode (using `correct-response` attribute) and\nitem context mode (using responseVariable).",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "correctOptions",
               "type": {
                 "text": "{ source: string; target: string }[]"
               },
               "privacy": "protected",
               "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "correctResponse",
+              "type": {
+                "text": "Readonly<string | string[] | null>"
+              },
+              "description": "Get/set correct response programmatically.\nThis property syncs with the `correct-response` attribute.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "correctResponseAttr",
+              "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
+              "type": {
+                "text": "ResponseValue"
+              },
+              "attribute": "correct-response",
+              "reflects": true,
+              "parsedType": {
+                "text": "string | string[]"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "disableAnimations",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "disable-animations",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "dropDraggableInDroppable",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "draggable",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "droppable",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "dragClonePosition",
+                  "optional": true,
+                  "type": {
+                    "text": "DOMRect"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "enableFlipAnimations",
+              "type": {
+                "text": "boolean"
+              },
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
             },
             {
               "kind": "method",
@@ -18175,6 +19585,72 @@
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "flipAnimationConfig",
+              "type": {
+                "text": "FlipAnimationOptions"
+              },
+              "privacy": "public",
+              "default": "{ duration: 200, // Slightly faster for slotted interactions easing: 'ease' // Simple, browser-optimized easing }",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "formResetCallback() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getFirstMessageAttribute",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "attributeNames",
+                  "type": {
+                    "text": "string[]"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
               }
             },
             {
@@ -18229,8 +19705,8 @@
                 }
               ],
               "inheritedFrom": {
-                "name": "DragDropSlottedSortableMixin",
-                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
               },
               "type": {
                 "text": "handleDrop(draggable: HTMLElement, droppable: HTMLElement) => void"
@@ -18254,8 +19730,8 @@
                 }
               ],
               "inheritedFrom": {
-                "name": "DragDropSlottedSortableMixin",
-                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
               },
               "type": {
                 "text": "handleInvalidDrop(dragSource: HTMLElement | null) => void"
@@ -18298,6 +19774,18 @@
             },
             {
               "kind": "field",
+              "name": "internals",
+              "type": {
+                "text": "ElementInternals"
+              },
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "isDraggingFromSlot",
               "type": {
                 "text": "boolean"
@@ -18310,12 +19798,71 @@
             },
             {
               "kind": "field",
+              "name": "isFullCorrectResponse",
+              "type": {
+                "text": "Readonly<boolean>"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "isInline",
+              "type": {
+                "text": "boolean"
+              },
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "lastCheckedRadio",
               "type": {
                 "text": "HTMLInputElement | null"
               },
               "privacy": "protected",
               "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "maxAssociations",
+              "type": {
+                "text": "number"
+              },
+              "attribute": "max-associations",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "minAssociations",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "attribute": "min-associations",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "attribute": "name",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
             },
             {
               "kind": "method",
@@ -18349,10 +19896,93 @@
               }
             },
             {
+              "kind": "method",
+              "name": "placeResponse",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "response",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "readonly",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "reportValidity() => boolean"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "reset",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "save",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "reset(save: boolean) => void"
+              }
+            },
+            {
               "kind": "field",
               "name": "response",
               "type": {
-                "text": "string[]"
+                "text": "string | string[] | null"
+              },
+              "attribute": "response",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -18361,8 +19991,194 @@
               "type": {
                 "text": "string"
               },
+              "attribute": "response-identifier",
               "default": "''",
-              "attribute": "response-identifier"
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "responseVariable",
+              "type": {
+                "text": "ResponseVariable | undefined"
+              },
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "restoreInventoryItem",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "dragSource",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "restoreOriginalInInventory",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "returnToInventory",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "saveResponse",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string | string[]"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
+              "type": {
+                "text": "saveResponse(value: string | string[]) => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "shouldReturnToInventoryOnInventoryDrop",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              },
+              "type": {
+                "text": "shouldReturnToInventoryOnInventoryDrop() => boolean"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "shouldTreatBlockedMaxAsInvalid",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              },
+              "type": {
+                "text": "shouldTreatBlockedMaxAsInvalid() => boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "showCandidateCorrection",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows feedback on candidate's selections compared to correct response.\nAdds `candidate-correct` / `candidate-incorrect` states to choices.",
+              "attribute": "show-candidate-correction",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "showCorrectResponse",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows which choices are correct with inline indicators.\nAdds `correct-response` / `incorrect-response` states to choices.",
+              "attribute": "show-correct-response",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "showFullCorrectResponse",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows a cloned interaction with the correct answers filled in.\nCreates a disabled copy positioned after this interaction.",
+              "attribute": "show-full-correct-response",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
             },
             {
               "kind": "field",
@@ -18420,6 +20236,11 @@
               "kind": "method",
               "name": "toggleCandidateCorrection",
               "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
               "parameters": [
                 {
                   "name": "show",
@@ -18428,13 +20249,17 @@
                   }
                 }
               ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
               "type": {
                 "text": "toggleCandidateCorrection(show: boolean) => void"
               }
             },
             {
               "kind": "method",
-              "name": "toggleInternalCorrectResponse",
+              "name": "toggleCorrectResponse",
               "privacy": "public",
               "return": {
                 "type": {
@@ -18449,8 +20274,92 @@
                   }
                 }
               ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
               "type": {
-                "text": "toggleInternalCorrectResponse(show: boolean) => void"
+                "text": "toggleCorrectResponse(show: boolean) => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "toggleFullCorrectResponse",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "show",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "toggleInternalCorrectResponse",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "show",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "updateInventoryBasedOnMatchMax",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "updateMinDimensionsForDropZones",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
               }
             },
             {
@@ -18461,12 +20370,40 @@
                   "text": "boolean"
                 }
               },
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              },
               "type": {
                 "text": "validate() => boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string | null"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             }
           ],
           "attributes": [
+            {
+              "name": "auto-size-dropzones",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "autoSizeDropzones",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
             {
               "name": "class",
               "type": {
@@ -18476,26 +20413,187 @@
               "fieldName": "class"
             },
             {
+              "name": "correct-response",
+              "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
+              "type": {
+                "text": "ResponseValue"
+              },
+              "fieldName": "correctResponseAttr",
+              "parsedType": {
+                "text": "string | string[]"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "name": "disable-animations",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "disableAnimations",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "name": "max-associations",
+              "type": {
+                "text": "number"
+              },
+              "fieldName": "maxAssociations",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "name": "min-associations",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "fieldName": "minAssociations",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "name": "name",
+              "fieldName": "name",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readonly",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "name": "response",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "response",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
               "name": "response-identifier",
               "type": {
                 "text": "string"
               },
+              "fieldName": "responseIdentifier",
               "default": "''",
-              "fieldName": "responseIdentifier"
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "name": "show-candidate-correction",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows feedback on candidate's selections compared to correct response.\nAdds `candidate-correct` / `candidate-incorrect` states to choices.",
+              "fieldName": "showCandidateCorrection",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "name": "show-correct-response",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows which choices are correct with inline indicators.\nAdds `correct-response` / `incorrect-response` states to choices.",
+              "fieldName": "showCorrectResponse",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "name": "show-full-correct-response",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows a cloned interaction with the correct answers filled in.\nCreates a disabled copy positioned after this interaction.",
+              "fieldName": "showFullCorrectResponse",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
             }
           ],
           "mixins": [
             {
               "name": "DragDropSlottedSortableMixin",
               "package": "@qti-components/interactions-core/mixins/drag-drop-observables"
+            },
+            {
+              "name": "DragDropSlottedMixin",
+              "package": "@qti-components/interactions-core/mixins/drag-drop-observables"
             }
           ],
           "superclass": {
-            "name": "SlottedBase",
-            "module": "packages/interactions/match-interaction/src/qti-match-interaction.ts"
+            "name": "Interaction",
+            "package": "@qti-components/base"
           },
           "tagName": "qti-match-interaction",
           "customElement": true,
+          "events": [
+            {
+              "name": "qti-interaction-response",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "name": "qti-register-interaction",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            }
+          ],
           "modulePath": "packages/interactions/match-interaction/src/qti-match-interaction.ts",
           "definitionPath": "packages/interactions/match-interaction/src/register.ts"
         }
@@ -23417,6 +25515,15 @@
           "members": [
             {
               "kind": "field",
+              "name": "_areaEntries",
+              "type": {
+                "text": "QtiAreaMapEntry[]"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
               "name": "_context",
               "type": {
                 "text": "ItemContext"
@@ -23448,6 +25555,20 @@
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "_effectiveAreaEntries",
+              "type": {
+                "text": "QtiAreaMapEntry[]"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_handleAreaMappingsChange",
+              "privacy": "protected"
             },
             {
               "kind": "field",
@@ -23573,6 +25694,21 @@
                 "text": "number"
               },
               "default": "1"
+            },
+            {
+              "kind": "method",
+              "name": "#syncAreaEntriesFromAttribute",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "areaMappings",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Standalone area mapping as a JSON string. Mirrors the editor's\n`#syncAreaEntriesFromAttribute` codec — each entry has `{shape, coords, mappedValue?, defaultValue?}`\nand `shape` must be `'circle'` or `'rect'`. Used when no\n`qti-response-declaration` provides `areaMapping`.",
+              "attribute": "area-mappings"
             },
             {
               "kind": "field",
@@ -24027,6 +26163,15 @@
             }
           ],
           "attributes": [
+            {
+              "name": "area-mappings",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Standalone area mapping as a JSON string. Mirrors the editor's\n`#syncAreaEntriesFromAttribute` codec — each entry has `{shape, coords, mappedValue?, defaultValue?}`\nand `shape` must be `'circle'` or `'rect'`. Used when no\n`qti-response-declaration` provides `areaMapping`.",
+              "fieldName": "areaMappings"
+            },
             {
               "name": "correct-response",
               "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",

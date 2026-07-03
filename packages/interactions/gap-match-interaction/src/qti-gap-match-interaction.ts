@@ -13,9 +13,10 @@ import type { ResponseVariable } from '@qti-components/base';
 import type { QtiGap } from '@qti-components/interactions-core/elements/qti-gap';
 import type { QtiGapText } from '@qti-components/interactions-core/elements/qti-gap-text';
 import type { CSSResultGroup } from 'lit';
-const SlottedBase = DragDropSlottedMixin(Interaction, 'qti-gap-text', 'qti-gap', `slot[part='drags']`);
-
-export class QtiGapMatchInteraction extends DragDropSlottedSortableMixin(SlottedBase, '[qti-draggable="true"]') {
+export class QtiGapMatchInteraction extends DragDropSlottedSortableMixin(
+  DragDropSlottedMixin(Interaction, 'qti-gap-text', 'qti-gap', `slot[part='drags']`),
+  '[qti-draggable="true"]'
+) {
   static override styles: CSSResultGroup = styles;
 
   override render() {
