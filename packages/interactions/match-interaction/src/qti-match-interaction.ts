@@ -264,6 +264,12 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
   override render() {
     const isTabular = this.class.split(' ').includes('qti-match-tabular');
     const hasCorrectResponse = this.correctOptions !== null;
+    // Candidate correction paints correct/incorrect on the user's own picks
+    // (checked cells only), independent of show-correct-response which paints
+    // every cell. Compute the correct-match lookup once per render from
+    // correctResponse so it's available even when correctOptions is null.
+    const showCandidateCorrection = isTabular && this.showCandidateCorrection && !!this.correctResponse;
+    const correctSet = showCandidateCorrection ? new Set(this.#getMatches().map(m => `${m.source} ${m.target}`)) : null;
     return html`
       <slot name="prompt"></slot>
       <slot ?hidden=${isTabular}></slot>
@@ -291,19 +297,20 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
                         const checked = this.response?.includes(value) || false;
                         const type = row.matchMax === 1 ? 'radio' : 'checkbox';
                         const typeBase = type === 'radio' ? 'rb' : 'cb';
-                        const isCorrect = !!this.correctOptions?.find(
-                          option => option.source === rowId && option.target === colId
-                        );
-                        const correctVariant = hasCorrectResponse
-                          ? isCorrect
-                            ? `${typeBase}-correct`
-                            : `${typeBase}-incorrect`
-                          : '';
-                        const chPart = `ch ${typeBase} ${correctVariant}`.trim();
-                        const checkedPart = checked
-                          ? `${typeBase}-checked ${correctVariant ? `${typeBase}-checked ${correctVariant}` : ''}`.trim()
-                          : '';
-                        const chaPart = `cha ${checkedPart}`.trim();
+                        const isCorrect = hasCorrectResponse
+                          ? !!this.correctOptions?.find(option => option.source === rowId && option.target === colId)
+                          : correctSet?.has(value) || false;
+                        // show-correct-response paints every cell; candidate-correction
+                        // paints only the user's picks (checked cells).
+                        const correctVariant =
+                          hasCorrectResponse || (showCandidateCorrection && checked)
+                            ? isCorrect
+                              ? `${typeBase}-correct`
+                              : `${typeBase}-incorrect`
+                            : '';
+                        const checkedMarker = checked ? `${typeBase}-checked` : '';
+                        const chPart = `ch ${typeBase} ${checkedMarker} ${correctVariant}`.trim();
+                        const chaPart = `cha ${checkedMarker} ${correctVariant}`.trim();
                         const disable =
                           this.correctOptions?.length > 0
                             ? true
@@ -328,7 +335,7 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
                               @click=${(e: { target: HTMLInputElement }) =>
                                 row.matchMax === 1 ? this.handleRadioClick(e) : null}
                             />
-                            <span part=${chPart}>
+                            <span part=${chPart} role=${type} aria-checked=${checked ? 'true' : 'false'}>
                               <span part=${chaPart}></span>
                             </span>
                           </label>

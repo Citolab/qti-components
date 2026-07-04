@@ -441,6 +441,29 @@ export const Matrixvraag: Story = {
               <qti-simple-associable-choice identifier="onjuist" match-max="3">Onjuist</qti-simple-associable-choice>
             </qti-simple-match-set>
           </qti-match-interaction>
+
+          <p>Vink per continent aan welke landen erop liggen (meerdere antwoorden mogelijk).</p>
+          <qti-match-interaction
+            response-identifier="RESPONSE_CHECK"
+            class="qti-match-tabular"
+            .response=${['egypte afrika', 'brazilie zuidamerika', 'japan azie', 'japan afrika']}
+            correct-response="egypte afrika,brazilie zuidamerika,japan azie"
+            show-candidate-correction
+            show-full-correct-response
+          >
+            <qti-simple-match-set>
+              <qti-simple-associable-choice identifier="egypte" match-max="0">Egypte</qti-simple-associable-choice>
+              <qti-simple-associable-choice identifier="brazilie" match-max="0">Brazilië</qti-simple-associable-choice>
+              <qti-simple-associable-choice identifier="japan" match-max="0">Japan</qti-simple-associable-choice>
+            </qti-simple-match-set>
+            <qti-simple-match-set>
+              <qti-simple-associable-choice identifier="afrika" match-max="0">Afrika</qti-simple-associable-choice>
+              <qti-simple-associable-choice identifier="zuidamerika" match-max="0"
+                >Zuid-Amerika</qti-simple-associable-choice
+              >
+              <qti-simple-associable-choice identifier="azie" match-max="0">Azië</qti-simple-associable-choice>
+            </qti-simple-match-set>
+          </qti-match-interaction>
         </div>
         <div class="qti-layout-col2">
           <img src="/assets/api/kennisnet/resources/question-marks.png" alt="Vragen" width="130" />
