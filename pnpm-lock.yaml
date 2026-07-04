@@ -7,11 +7,6 @@ settings:
 overrides:
   basic-ftp: ^5.2.0
 
-patchedDependencies:
-  '@wc-toolkit/storybook-helpers@10.2.1':
-    hash: d7e25861091b1575a525784c700836355ac0c12245a3850c2ad9a6fe26e9a380
-    path: patches/@wc-toolkit__storybook-helpers@10.2.1.patch
-
 importers:
 
   .:
@@ -101,8 +96,8 @@ importers:
         specifier: ^1.5.2
         version: 1.5.2(prettier@3.5.3)
       '@wc-toolkit/storybook-helpers':
-        specifier: ^10.2.1
-        version: 10.2.1(patch_hash=d7e25861091b1575a525784c700836355ac0c12245a3850c2ad9a6fe26e9a380)(lit@3.3.2)(storybook@10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.2)(prettier@3.5.3)(react@19.2.4))
+        specifier: ^10.5.1
+        version: 10.5.1(lit@3.3.2)(storybook@10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.2)(prettier@3.5.3)(react@19.2.4))
       '@wc-toolkit/type-parser':
         specifier: ^1.2.0
         version: 1.2.0
@@ -2918,8 +2913,8 @@ packages:
   '@wc-toolkit/jsx-types@1.5.2':
     resolution: {integrity: sha512-nqxhS9dwOx/+4GbAiFs4wdRzcVTDm1QP2DH7IYWlGpmB7gcc4YW/fkNmjbfHxj9Pv/0ym+CJKtw3fFoNlieFPw==}
 
-  '@wc-toolkit/storybook-helpers@10.2.1':
-    resolution: {integrity: sha512-JA8vhvL00YNvYQSOAIzKl+XJ26FrnXLHY3Lil2zVe1IiLQwO7he/WG6rTeIY5o2VRxHGvdVz+2VcbbCMmO3h2A==}
+  '@wc-toolkit/storybook-helpers@10.5.1':
+    resolution: {integrity: sha512-deS3LagKQVksbrXJZEQK8lgp+vTNUt8qiNFMAyLxzwTRa2sstQ7llNGLfeBTzx8c8GkWmSzYfoMMsc3ROfYiJQ==}
     peerDependencies:
       lit: ^2.0.0 || ^3.0.0
       storybook: '>=10.1.11-0 <11.0.0-0'
@@ -8873,7 +8868,7 @@ snapshots:
     transitivePeerDependencies:
       - prettier
 
-  '@wc-toolkit/storybook-helpers@10.2.1(patch_hash=d7e25861091b1575a525784c700836355ac0c12245a3850c2ad9a6fe26e9a380)(lit@3.3.2)(storybook@10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.2)(prettier@3.5.3)(react@19.2.4))':
+  '@wc-toolkit/storybook-helpers@10.5.1(lit@3.3.2)(storybook@10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.2)(prettier@3.5.3)(react@19.2.4))':
     dependencies:
       lit: 3.3.2
       storybook: 10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.2)(prettier@3.5.3)(react@19.2.4)

@@ -11,6 +11,17 @@ import type { ChoicesInterface } from '@qti-components/interactions-core/mixins/
 import type { CSSResultGroup } from 'lit';
 
 export type Orientation = 'horizontal' | 'vertical' | undefined;
+
+/**
+ * A single-response or multiple-response choice interaction.
+ *
+ * @slot prompt - The prompt shown above the choices.
+ * @slot - Default slot for `qti-simple-choice` elements.
+ *
+ * @csspart prompt - Wrapper around the prompt slot.
+ * @csspart slot - Wrapper around the default slot containing the choices.
+ * @csspart message - Live validation message region (role="alert").
+ */
 export class QtiChoiceInteraction
   extends VocabularyMixin(ChoicesMixin(Interaction, 'qti-simple-choice'), 'qti-simple-choice')
   implements ChoicesInterface

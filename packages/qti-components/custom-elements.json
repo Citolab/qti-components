@@ -641,8 +641,32 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "",
+          "description": "A single-response or multiple-response choice interaction.",
           "name": "QtiChoiceInteraction",
+          "cssParts": [
+            {
+              "description": "Live validation message region (role=\"alert\").",
+              "name": "message"
+            },
+            {
+              "description": "Wrapper around the prompt slot.",
+              "name": "prompt"
+            },
+            {
+              "description": "Wrapper around the default slot containing the choices.",
+              "name": "slot"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Default slot for `qti-simple-choice` elements.",
+              "name": ""
+            },
+            {
+              "description": "The prompt shown above the choices.",
+              "name": "prompt"
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -853,19 +877,6 @@
               }
             },
             {
-              "kind": "field",
-              "name": "_mutationObserver",
-              "type": {
-                "text": "MutationObserver | null"
-              },
-              "privacy": "private",
-              "default": "null",
-              "inheritedFrom": {
-                "name": "ChoicesMixin",
-                "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
-              }
-            },
-            {
               "kind": "method",
               "name": "_setChoiceChecked",
               "privacy": "protected",
@@ -949,19 +960,6 @@
                 "text": "HTMLElement"
               },
               "privacy": "protected",
-              "inheritedFrom": {
-                "name": "ChoicesMixin",
-                "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_validationMessageShown",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false",
               "inheritedFrom": {
                 "name": "ChoicesMixin",
                 "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
@@ -1104,8 +1102,8 @@
               },
               "default": "null",
               "inheritedFrom": {
-                "name": "VocabularyMixin",
-                "module": "packages/interactions/core/src/mixins/vocabulary/vocabulary-mixin.ts"
+                "name": "ChoicesMixin",
+                "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
               }
             },
             {
@@ -1165,6 +1163,19 @@
               "inheritedFrom": {
                 "name": "VocabularyMixin",
                 "module": "packages/interactions/core/src/mixins/vocabulary/vocabulary-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#validationMessageShown",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "ChoicesMixin",
+                "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
               }
             },
             {
@@ -1848,9 +1859,7 @@
           "modulePath": "packages/interactions/choice-interaction/src/qti-choice-interaction.ts",
           "definitionPath": "packages/interactions/choice-interaction/src/register.ts",
           "cssProperties": [],
-          "cssParts": [],
-          "cssStates": [],
-          "slots": []
+          "cssStates": []
         }
       ],
       "exports": [
@@ -4343,15 +4352,6 @@
               "privacy": "protected"
             },
             {
-              "kind": "field",
-              "name": "_mutationObserver",
-              "type": {
-                "text": "MutationObserver | null"
-              },
-              "privacy": "private",
-              "default": "null"
-            },
-            {
               "kind": "method",
               "name": "_setChoiceChecked",
               "privacy": "protected",
@@ -4418,11 +4418,20 @@
             },
             {
               "kind": "field",
-              "name": "_validationMessageShown",
+              "name": "#mutationObserver",
+              "privacy": "private",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#validationMessageShown",
+              "privacy": "private",
               "type": {
                 "text": "boolean"
               },
-              "privacy": "private",
               "default": "false"
             },
             {
@@ -15119,19 +15128,6 @@
               }
             },
             {
-              "kind": "field",
-              "name": "_mutationObserver",
-              "type": {
-                "text": "MutationObserver | null"
-              },
-              "privacy": "private",
-              "default": "null",
-              "inheritedFrom": {
-                "name": "ChoicesMixin",
-                "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
-              }
-            },
-            {
               "kind": "method",
               "name": "_setChoiceChecked",
               "privacy": "protected",
@@ -15222,12 +15218,12 @@
             },
             {
               "kind": "field",
-              "name": "_validationMessageShown",
-              "type": {
-                "text": "boolean"
-              },
+              "name": "#mutationObserver",
               "privacy": "private",
-              "default": "false",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "default": "null",
               "inheritedFrom": {
                 "name": "ChoicesMixin",
                 "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
@@ -15268,6 +15264,19 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "field",
+              "name": "#validationMessageShown",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "ChoicesMixin",
+                "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
+              }
             },
             {
               "kind": "field",
@@ -16169,19 +16178,6 @@
               }
             },
             {
-              "kind": "field",
-              "name": "_mutationObserver",
-              "type": {
-                "text": "MutationObserver | null"
-              },
-              "privacy": "private",
-              "default": "null",
-              "inheritedFrom": {
-                "name": "ChoicesMixin",
-                "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
-              }
-            },
-            {
               "kind": "method",
               "name": "_setChoiceChecked",
               "privacy": "protected",
@@ -16271,19 +16267,6 @@
               }
             },
             {
-              "kind": "field",
-              "name": "_validationMessageShown",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false",
-              "inheritedFrom": {
-                "name": "ChoicesMixin",
-                "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
-              }
-            },
-            {
               "kind": "method",
               "name": "#getImageLoadPromise",
               "privacy": "private",
@@ -16311,6 +16294,19 @@
               "default": "null"
             },
             {
+              "kind": "field",
+              "name": "#mutationObserver",
+              "privacy": "private",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "ChoicesMixin",
+                "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "#positionHotspotOnRegister",
               "privacy": "private",
@@ -16327,6 +16323,19 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "field",
+              "name": "#validationMessageShown",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "ChoicesMixin",
+                "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
+              }
             },
             {
               "kind": "field",
@@ -17220,19 +17229,6 @@
               }
             },
             {
-              "kind": "field",
-              "name": "_mutationObserver",
-              "type": {
-                "text": "MutationObserver | null"
-              },
-              "privacy": "private",
-              "default": "null",
-              "inheritedFrom": {
-                "name": "ChoicesMixin",
-                "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
-              }
-            },
-            {
               "kind": "method",
               "name": "_setChoiceChecked",
               "privacy": "protected",
@@ -17323,27 +17319,40 @@
             },
             {
               "kind": "field",
-              "name": "_validationMessageShown",
-              "type": {
-                "text": "boolean"
-              },
+              "name": "#classObject",
               "privacy": "private",
-              "default": "false",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#mutationObserver",
+              "privacy": "private",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "default": "null",
               "inheritedFrom": {
                 "name": "ChoicesMixin",
                 "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
               }
             },
             {
-              "kind": "field",
-              "name": "#classObject",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
               "kind": "method",
               "name": "#updateHostClasses",
               "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#validationMessageShown",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "ChoicesMixin",
+                "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
+              }
             },
             {
               "kind": "field",

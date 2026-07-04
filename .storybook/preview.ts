@@ -1,5 +1,5 @@
 import { setCustomElementsManifest } from '@storybook/web-components-vite';
-import { setStorybookHelpersConfig, type Options } from '@wc-toolkit/storybook-helpers';
+import { setStorybookHelpersConfig, type StorybookHelpersOptions } from '@wc-toolkit/storybook-helpers';
 import prettier from 'prettier-v2'; /* https://github.com/storybookjs/storybook/issues/8078#issuecomment-2325332120 */
 import HTMLParser from 'prettier-v2/parser-html'; /* https://github.com/storybookjs/storybook/issues/8078#issuecomment-2325332120 */
 import { expect } from 'storybook/test';
@@ -48,7 +48,7 @@ export const customViewports = {
   }
 };
 
-const options: Options = {
+const options: StorybookHelpersOptions = {
   /** hides the `arg ref` label on each control */
   hideArgRef: true,
   /** sets the custom type reference in the Custom Elements Manifest */
@@ -56,7 +56,8 @@ const options: Options = {
   /** Adds a <script> tag where a `component` variable will reference the story's component */
   setComponentVariable: false,
   /** renders default values for attributes and CSS properties */
-  renderDefaultValues: false
+  renderDefaultValues: false,
+  categoryOrder: ['attributes', 'properties', 'slots', 'cssParts', 'cssStates', 'cssProps', 'events', 'methods']
 };
 
 setStorybookHelpersConfig(options);

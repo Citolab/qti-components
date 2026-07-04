@@ -11,7 +11,7 @@ import type { QtiSimpleChoice } from '@qti-components/interactions-core/elements
 import type { QtiChoiceInteraction } from './qti-choice-interaction';
 
 const { events, args, argTypes, template } = getStorybookHelpers('qti-choice-interaction', {
-  // excludeCategories: ['cssParts', 'cssProps', 'cssStates', 'events', 'properties', 'slots', 'methods']
+  excludeCategories: ['methods', 'events', 'properties']
 });
 
 type Story = StoryObj<QtiChoiceInteraction & typeof args>;

@@ -25,12 +25,12 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
   abstract class ChoicesMixinElement extends superClass implements ChoicesInterface {
     protected _choiceElements: Choice[] = [];
 
-    private _mutationObserver: MutationObserver | null = null;
+    #mutationObserver: MutationObserver | null = null;
 
     @query('#validation-message')
     protected _validationMessageElement!: HTMLElement;
 
-    private _validationMessageShown = false;
+    #validationMessageShown = false;
 
     @property({ type: Number, attribute: 'min-choices' })
     public minChoices = 0;
@@ -164,8 +164,8 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       this.addEventListener(`activate-${selector}`, this._choiceElementSelectedHandler);
 
       // Use MutationObserver to track choice elements (handles both direct children and nested descendants)
-      this._mutationObserver = new MutationObserver(() => this._syncChoicesFromDOM());
-      this._mutationObserver.observe(this, { childList: true, subtree: true });
+      this.#mutationObserver = new MutationObserver(() => this._syncChoicesFromDOM());
+      this.#mutationObserver.observe(this, { childList: true, subtree: true });
 
       // Initial sync after DOM is ready
       this._syncChoicesFromDOM();
@@ -176,9 +176,9 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       this.removeEventListener(`activate-${selector}`, this._choiceElementSelectedHandler);
 
       // Disconnect the observer
-      if (this._mutationObserver) {
-        this._mutationObserver.disconnect();
-        this._mutationObserver = null;
+      if (this.#mutationObserver) {
+        this.#mutationObserver.disconnect();
+        this.#mutationObserver = null;
       }
     }
 
@@ -253,7 +253,7 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
           this._validationMessageElement.textContent = this._internals.validationMessage;
           // Set the display to block to show the message, add important to override any styles
           this._validationMessageElement.style.setProperty('display', 'block', 'important');
-          this._validationMessageShown = true; // Track that validation message was shown
+          this.#validationMessageShown = true; // Track that validation message was shown
         } else {
           this._validationMessageElement.textContent = '';
           this._validationMessageElement.style.display = 'none';
@@ -338,11 +338,11 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       this.validate();
 
       // Auto-update validation message if it was previously shown (FACE behavior)
-      if (this._validationMessageShown) {
+      if (this.#validationMessageShown) {
         this.reportValidity();
         // Reset flag if now valid to prevent unnecessary future auto-updates
         if (this._internals.validity.valid) {
-          this._validationMessageShown = false;
+          this.#validationMessageShown = false;
         }
       }
 
