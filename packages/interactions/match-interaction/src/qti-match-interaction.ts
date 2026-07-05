@@ -15,6 +15,26 @@ import type { ResponseVariable } from '@qti-components/base';
 import type { CSSResultGroup, PropertyValues } from 'lit';
 import type { ResponseInteraction } from '@qti-components/base';
 import type { QtiSimpleAssociableChoice } from '@qti-components/interactions-core/elements/qti-simple-associable-choice';
+/**
+ * Match interaction: candidates pair items from two sets, either as drag-and-drop or as a tabular grid.
+ *
+ * @slot prompt - The prompt shown above the interaction.
+ * @slot match-cols - Column headers (tabular mode).
+ * @slot match-rows - Row headers (tabular mode).
+ * @slot - Default slot for the two match sets (drag-and-drop mode).
+ *
+ * @csspart grid - The tabular grid container.
+ * @csspart corner - The top-left corner cell of the grid.
+ * @csspart cols-wrap - Wrapper row for the column headers.
+ * @csspart c-header - The column header slot wrapper.
+ * @csspart rows-wrap - Wrapper column for the row headers.
+ * @csspart r-header - The row header slot wrapper.
+ * @csspart checkbox-grid - The interactive cell grid area.
+ * @csspart input-cell - Each cell's label element.
+ * @csspart ch - The visible checkbox/radio marker; also carries `rb`/`cb`, `-checked`, `-correct`, `-incorrect` variants.
+ * @csspart cha - The inner marker element; carries the same variants as `ch`.
+ * @csspart message - Live validation message region (role="alert").
+ */
 export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
   DragDropSlottedMixin(
     Interaction,

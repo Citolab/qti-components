@@ -14,6 +14,17 @@ import type { QtiSimpleChoice } from '@qti-components/interactions-core/elements
 
 const SlottedBase = DragDropSlottedMixin(Interaction, `qti-simple-choice`, 'drop-list', `slot[part='drags']`);
 
+/**
+ * Order interaction: candidates arrange choices into a target sequence.
+ *
+ * @slot prompt - The prompt shown above the interaction.
+ * @slot drags - The draggable choice sources.
+ *
+ * @csspart container - The outer container wrapping drags and drops.
+ * @csspart drags - Wrapper around the drag sources slot.
+ * @csspart drops - The drop-target region.
+ * @csspart drop-list - Each individual drop-list region.
+ */
 export class QtiOrderInteraction extends DragDropSlottedSortableMixin(SlottedBase, '[qti-draggable="true"]') {
   static override styles = styles;
   protected childrenMap: Element[];

@@ -8,7 +8,9 @@ import { spread } from '@open-wc/lit-helpers';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { QtiExtendedTextInteraction } from './qti-extended-text-interaction';
 
-const { events, args, argTypes, template } = getStorybookHelpers('qti-extended-text-interaction');
+const { events, args, argTypes, template } = getStorybookHelpers('qti-extended-text-interaction', {
+  excludeCategories: ['methods', 'events', 'properties', 'cssParts']
+});
 
 type Story = StoryObj<QtiExtendedTextInteraction & typeof args>;
 

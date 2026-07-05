@@ -13,6 +13,17 @@ import type { ResponseVariable } from '@qti-components/base';
 import type { QtiGap } from '@qti-components/interactions-core/elements/qti-gap';
 import type { QtiGapText } from '@qti-components/interactions-core/elements/qti-gap-text';
 import type { CSSResultGroup } from 'lit';
+/**
+ * Drag-and-drop gap-match interaction: candidates drag choices into gap targets.
+ *
+ * @slot prompt - The prompt shown above the interaction.
+ * @slot drags - The draggable choice sources.
+ * @slot - Default slot for the drop targets (gaps).
+ *
+ * @csspart drags - Wrapper around the drag sources slot.
+ * @csspart drops - Wrapper around the drop targets slot.
+ * @csspart message - Live validation message region (role="alert").
+ */
 export class QtiGapMatchInteraction extends DragDropSlottedSortableMixin(
   DragDropSlottedMixin(Interaction, 'qti-gap-text', 'qti-gap', `slot[part='drags']`),
   '[qti-draggable="true"]'

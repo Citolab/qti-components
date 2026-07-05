@@ -6,7 +6,9 @@ import { within } from 'shadow-dom-testing-library';
 import type { QtiEndAttemptInteraction } from './qti-end-attempt-interaction';
 import type { StoryObj, Meta } from '@storybook/web-components-vite';
 
-const { events, args, argTypes, template } = getStorybookHelpers('qti-modal-feedback');
+const { events, args, argTypes, template } = getStorybookHelpers('qti-modal-feedback', {
+  excludeCategories: ['methods', 'events', 'properties']
+});
 
 type Story = StoryObj<QtiEndAttemptInteraction & typeof args>;
 

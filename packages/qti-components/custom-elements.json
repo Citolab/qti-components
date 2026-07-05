@@ -23,8 +23,40 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "",
+          "description": "Drag-and-drop associate interaction: candidates pair associable choices.",
           "name": "QtiAssociateInteraction",
+          "cssParts": [
+            {
+              "description": "Wrapper around the associable choice slot.",
+              "name": "associable-choices"
+            },
+            {
+              "description": "Container inside a drop pair.",
+              "name": "associables-container"
+            },
+            {
+              "description": "The container holding all drop targets.",
+              "name": "drop-container"
+            },
+            {
+              "description": "Each individual drop list.",
+              "name": "drop-list"
+            },
+            {
+              "description": "Live validation message region (role=\"alert\").",
+              "name": "message"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The prompt shown above the choices.",
+              "name": "prompt"
+            },
+            {
+              "description": "The associable choice sources.",
+              "name": "qti-simple-associable-choice"
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -10832,8 +10864,14 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "",
+          "description": "A button that ends the current attempt.",
           "name": "QtiEndAttemptInteraction",
+          "cssParts": [
+            {
+              "description": "The end-attempt button element.",
+              "name": "button"
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -10990,8 +11028,20 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "",
+          "description": "A multi-line text-entry interaction.",
           "name": "QtiExtendedTextInteraction",
+          "cssParts": [
+            {
+              "description": "The textarea input element.",
+              "name": "textarea"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The prompt shown above the textarea.",
+              "name": "prompt"
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -11766,9 +11816,7 @@
           "modulePath": "packages/interactions/extended-text-interaction/src/qti-extended-text-interaction.ts",
           "definitionPath": "packages/interactions/extended-text-interaction/src/register.ts",
           "cssProperties": [],
-          "cssParts": [],
-          "cssStates": [],
-          "slots": []
+          "cssStates": []
         }
       ],
       "exports": [
@@ -11818,8 +11866,36 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "",
+          "description": "Drag-and-drop gap-match interaction: candidates drag choices into gap targets.",
           "name": "QtiGapMatchInteraction",
+          "cssParts": [
+            {
+              "description": "Wrapper around the drag sources slot.",
+              "name": "drags"
+            },
+            {
+              "description": "Wrapper around the drop targets slot.",
+              "name": "drops"
+            },
+            {
+              "description": "Live validation message region (role=\"alert\").",
+              "name": "message"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Default slot for the drop targets (gaps).",
+              "name": ""
+            },
+            {
+              "description": "The draggable choice sources.",
+              "name": "drags"
+            },
+            {
+              "description": "The prompt shown above the interaction.",
+              "name": "prompt"
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -13458,9 +13534,7 @@
           "modulePath": "packages/interactions/gap-match-interaction/src/qti-gap-match-interaction.ts",
           "definitionPath": "packages/interactions/gap-match-interaction/src/register.ts",
           "cssProperties": [],
-          "cssParts": [],
-          "cssStates": [],
-          "slots": []
+          "cssStates": []
         }
       ],
       "exports": [
@@ -13510,8 +13584,36 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "",
+          "description": "Graphic associate interaction: candidates connect points/hotspots on an image with lines.",
           "name": "QtiGraphicAssociateInteraction",
+          "cssParts": [
+            {
+              "description": "Each line displayed as part of the correct response.",
+              "name": "correct-line"
+            },
+            {
+              "description": "Each line drawn by the candidate.",
+              "name": "line"
+            },
+            {
+              "description": "Live validation message region (role=\"alert\").",
+              "name": "message"
+            },
+            {
+              "description": "Each in-progress endpoint indicator.",
+              "name": "point"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Default slot for hotspot choices layered over the image.",
+              "name": ""
+            },
+            {
+              "description": "The prompt shown above the image.",
+              "name": "prompt"
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -14270,9 +14372,7 @@
           "modulePath": "packages/interactions/graphic-associate-interaction/src/qti-graphic-associate-interaction.ts",
           "definitionPath": "packages/interactions/graphic-associate-interaction/src/register.ts",
           "cssProperties": [],
-          "cssParts": [],
-          "cssStates": [],
-          "slots": []
+          "cssStates": []
         }
       ],
       "exports": [
@@ -14322,8 +14422,36 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "",
+          "description": "Graphic gap-match interaction: candidates drag choices onto image hotspots.",
           "name": "QtiGraphicGapMatchInteraction",
+          "cssParts": [
+            {
+              "description": "Wrapper around the drag sources slot.",
+              "name": "drags"
+            },
+            {
+              "description": "Wrapper around the image slot.",
+              "name": "image"
+            },
+            {
+              "description": "Live validation message region (role=\"alert\").",
+              "name": "message"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Default slot for the base image and hotspots.",
+              "name": ""
+            },
+            {
+              "description": "The draggable choice sources.",
+              "name": "drags"
+            },
+            {
+              "description": "The prompt shown above the image.",
+              "name": "prompt"
+            }
+          ],
           "members": [
             {
               "kind": "method",
@@ -14916,8 +15044,24 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "",
+          "description": "Graphic order interaction: candidates order hotspots on an image.",
           "name": "QtiGraphicOrderInteraction",
+          "cssParts": [
+            {
+              "description": "Live validation message region (role=\"alert\").",
+              "name": "message"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Default slot for the image and hotspot choices.",
+              "name": ""
+            },
+            {
+              "description": "The prompt shown above the image.",
+              "name": "prompt"
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -15914,9 +16058,7 @@
           "modulePath": "packages/interactions/graphic-order-interaction/src/qti-graphic-order-interaction.ts",
           "definitionPath": "packages/interactions/graphic-order-interaction/src/register.ts",
           "cssProperties": [],
-          "cssParts": [],
-          "cssStates": [],
-          "slots": []
+          "cssStates": []
         }
       ],
       "exports": [
@@ -15966,8 +16108,18 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "",
+          "description": "Hotspot interaction: candidates select one or more hotspots on an image.",
           "name": "QtiHotspotInteraction",
+          "slots": [
+            {
+              "description": "Default slot for the image and hotspot choices.",
+              "name": ""
+            },
+            {
+              "description": "The prompt shown above the image.",
+              "name": "prompt"
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -16966,8 +17118,7 @@
           "definitionPath": "packages/interactions/hotspot-interaction/src/register.ts",
           "cssProperties": [],
           "cssParts": [],
-          "cssStates": [],
-          "slots": []
+          "cssStates": []
         }
       ],
       "exports": [
@@ -17017,8 +17168,20 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "",
+          "description": "Hottext interaction: candidates select highlighted words within a text block.",
           "name": "QtiHottextInteraction",
+          "cssParts": [
+            {
+              "description": "Live validation message region (role=\"alert\").",
+              "name": "message"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Default slot for the mixed content and `qti-hottext` choices.",
+              "name": ""
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -18000,9 +18163,7 @@
           "modulePath": "packages/interactions/hottext-interaction/src/qti-hottext-interaction.ts",
           "definitionPath": "packages/interactions/hottext-interaction/src/register.ts",
           "cssProperties": [],
-          "cssParts": [],
-          "cssStates": [],
-          "slots": []
+          "cssStates": []
         }
       ],
       "exports": [
@@ -18052,8 +18213,44 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "",
+          "description": "Inline choice interaction: dropdown selector rendered inline with surrounding text.",
           "name": "QtiInlineChoiceInteraction",
+          "cssParts": [
+            {
+              "description": "Overlay shown when displaying the correct response.",
+              "name": "correct-option"
+            },
+            {
+              "description": "The chevron icon inside the trigger; also carries `dropdown-icon-open` when open.",
+              "name": "dropdown-icon"
+            },
+            {
+              "description": "The popover element containing the option list.",
+              "name": "menu"
+            },
+            {
+              "description": "Each option button; also carries `option-prompt` and `option-selected` variants.",
+              "name": "option"
+            },
+            {
+              "description": "The content wrapper inside each option.",
+              "name": "option-content"
+            },
+            {
+              "description": "The dropdown trigger button.",
+              "name": "trigger"
+            },
+            {
+              "description": "The currently displayed value inside the trigger.",
+              "name": "value"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Default slot for `qti-inline-choice` options.",
+              "name": ""
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -18901,9 +19098,7 @@
           "modulePath": "packages/interactions/inline-choice-interaction/src/qti-inline-choice-interaction.ts",
           "definitionPath": "packages/interactions/inline-choice-interaction/src/register.ts",
           "cssProperties": [],
-          "cssParts": [],
-          "cssStates": [],
-          "slots": []
+          "cssStates": []
         }
       ],
       "exports": [
@@ -18953,8 +19148,72 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "",
+          "description": "Match interaction: candidates pair items from two sets, either as drag-and-drop or as a tabular grid.",
           "name": "QtiMatchInteraction",
+          "cssParts": [
+            {
+              "description": "The column header slot wrapper.",
+              "name": "c-header"
+            },
+            {
+              "description": "The visible checkbox/radio marker; also carries `rb`/`cb`, `-checked`, `-correct`, `-incorrect` variants.",
+              "name": "ch"
+            },
+            {
+              "description": "The inner marker element; carries the same variants as `ch`.",
+              "name": "cha"
+            },
+            {
+              "description": "The interactive cell grid area.",
+              "name": "checkbox-grid"
+            },
+            {
+              "description": "Wrapper row for the column headers.",
+              "name": "cols-wrap"
+            },
+            {
+              "description": "The top-left corner cell of the grid.",
+              "name": "corner"
+            },
+            {
+              "description": "The tabular grid container.",
+              "name": "grid"
+            },
+            {
+              "description": "Each cell's label element.",
+              "name": "input-cell"
+            },
+            {
+              "description": "Live validation message region (role=\"alert\").",
+              "name": "message"
+            },
+            {
+              "description": "The row header slot wrapper.",
+              "name": "r-header"
+            },
+            {
+              "description": "Wrapper column for the row headers.",
+              "name": "rows-wrap"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Default slot for the two match sets (drag-and-drop mode).",
+              "name": ""
+            },
+            {
+              "description": "Column headers (tabular mode).",
+              "name": "match-cols"
+            },
+            {
+              "description": "Row headers (tabular mode).",
+              "name": "match-rows"
+            },
+            {
+              "description": "The prompt shown above the interaction.",
+              "name": "prompt"
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -20642,9 +20901,7 @@
           "modulePath": "packages/interactions/match-interaction/src/qti-match-interaction.ts",
           "definitionPath": "packages/interactions/match-interaction/src/register.ts",
           "cssProperties": [],
-          "cssParts": [],
-          "cssStates": [],
-          "slots": []
+          "cssStates": []
         }
       ],
       "exports": [
@@ -20694,8 +20951,18 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "",
+          "description": "Media interaction: wraps an embedded media object (audio/video) and tracks play events.",
           "name": "QtiMediaInteraction",
+          "slots": [
+            {
+              "description": "Default slot for the embedded media element.",
+              "name": ""
+            },
+            {
+              "description": "The prompt shown above the media element.",
+              "name": "prompt"
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -21338,8 +21605,7 @@
           "definitionPath": "packages/interactions/media-interaction/src/register.ts",
           "cssProperties": [],
           "cssParts": [],
-          "cssStates": [],
-          "slots": []
+          "cssStates": []
         }
       ],
       "exports": [
@@ -21389,8 +21655,36 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "",
+          "description": "Order interaction: candidates arrange choices into a target sequence.",
           "name": "QtiOrderInteraction",
+          "cssParts": [
+            {
+              "description": "The outer container wrapping drags and drops.",
+              "name": "container"
+            },
+            {
+              "description": "Wrapper around the drag sources slot.",
+              "name": "drags"
+            },
+            {
+              "description": "Each individual drop-list region.",
+              "name": "drop-list"
+            },
+            {
+              "description": "The drop-target region.",
+              "name": "drops"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The draggable choice sources.",
+              "name": "drags"
+            },
+            {
+              "description": "The prompt shown above the interaction.",
+              "name": "prompt"
+            }
+          ],
           "members": [
             {
               "kind": "method",
@@ -25417,8 +25711,14 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "",
+          "description": "Position-object interaction: candidates place draggable objects onto a stage image.",
           "name": "QtiPositionObjectInteraction",
+          "slots": [
+            {
+              "description": "Default slot for the object choices and stage.",
+              "name": ""
+            }
+          ],
           "members": [],
           "superclass": {
             "name": "LitElement",
@@ -25571,8 +25871,24 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "",
+          "description": "Select-point interaction: candidates place points onto a background image.",
           "name": "QtiSelectPointInteraction",
+          "cssParts": [
+            {
+              "description": "Each selected point; carries `correct` or `incorrect` variants when candidate correction is shown.",
+              "name": "point"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Default slot for the base image.",
+              "name": ""
+            },
+            {
+              "description": "The prompt shown above the image.",
+              "name": "prompt"
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -26386,9 +26702,7 @@
           "modulePath": "packages/interactions/select-point-interaction/src/qti-select-point-interaction.ts",
           "definitionPath": "packages/interactions/select-point-interaction/src/register.ts",
           "cssProperties": [],
-          "cssParts": [],
-          "cssStates": [],
-          "slots": []
+          "cssStates": []
         }
       ],
       "exports": [
@@ -26438,8 +26752,44 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "",
+          "description": "Slider interaction: candidates pick a numeric value along a rail.",
           "name": "QtiSliderInteraction",
+          "cssParts": [
+            {
+              "description": "The min/max bounds label wrapper.",
+              "name": "bounds"
+            },
+            {
+              "description": "The draggable knob.",
+              "name": "knob"
+            },
+            {
+              "description": "Ghost knob shown at the correct response position.",
+              "name": "knob-correct"
+            },
+            {
+              "description": "The rail element the knob slides along.",
+              "name": "rail"
+            },
+            {
+              "description": "The slider root element.",
+              "name": "slider"
+            },
+            {
+              "description": "The tick marks along the rail.",
+              "name": "ticks"
+            },
+            {
+              "description": "The current value display (used twice in the layout).",
+              "name": "value"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The prompt shown above the slider.",
+              "name": "prompt"
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -27238,9 +27588,7 @@
           "modulePath": "packages/interactions/slider-interaction/src/qti-slider-interaction.ts",
           "definitionPath": "packages/interactions/slider-interaction/src/register.ts",
           "cssProperties": [],
-          "cssParts": [],
-          "cssStates": [],
-          "slots": []
+          "cssStates": []
         }
       ],
       "exports": [
@@ -27290,8 +27638,18 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "",
+          "description": "Text-entry interaction: single-line inline text input.",
           "name": "QtiTextEntryInteraction",
+          "cssParts": [
+            {
+              "description": "Overlay shown when displaying the correct response.",
+              "name": "correct"
+            },
+            {
+              "description": "The text input element.",
+              "name": "input"
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -28058,7 +28416,6 @@
           "modulePath": "packages/interactions/text-entry-interaction/src/qti-text-entry-interaction.ts",
           "definitionPath": "packages/interactions/text-entry-interaction/src/register.ts",
           "cssProperties": [],
-          "cssParts": [],
           "cssStates": [],
           "slots": []
         }
@@ -28110,8 +28467,14 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "",
+          "description": "Upload interaction: candidates attach a file as their response.",
           "name": "QtiUploadInteraction",
+          "slots": [
+            {
+              "description": "The prompt shown above the file input.",
+              "name": "prompt"
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -28794,8 +29157,7 @@
           "definitionPath": "packages/interactions/upload-interaction/src/register.ts",
           "cssProperties": [],
           "cssParts": [],
-          "cssStates": [],
-          "slots": []
+          "cssStates": []
         }
       ],
       "exports": [

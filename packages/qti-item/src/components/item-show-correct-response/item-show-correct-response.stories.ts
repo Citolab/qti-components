@@ -646,10 +646,13 @@ export const MatchTabular: Story = {
     await step('Click on the Show Correct button', async () => {
       await showCorrectButton.click();
 
-      // The rb-correct / cb-correct parts now live on the visual <span>
-      // indicator; the actual <input> carrying name/value is its sibling
-      // inside the wrapping <label part="input-cell">.
-      const correctIndicators = interaction.shadowRoot.querySelectorAll('[part~="rb-correct"], [part~="cb-correct"]');
+      // The rb-correct / cb-correct parts live on the outer visual <span part="ch ...">
+      // indicator; the inner <span part="cha ..."> also carries the same variant token,
+      // so we must anchor on [part~="ch"] to select only the outer span and avoid
+      // counting each correct cell twice.
+      const correctIndicators = interaction.shadowRoot.querySelectorAll(
+        '[part~="ch"][part~="rb-correct"], [part~="ch"][part~="cb-correct"]'
+      );
       const allCorrectElements = Array.from(correctIndicators)
         .map(span => span.closest('label')?.querySelector('input') ?? null)
         .filter((el): el is HTMLInputElement => el !== null);

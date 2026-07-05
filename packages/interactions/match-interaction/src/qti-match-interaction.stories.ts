@@ -11,7 +11,9 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { InputType } from 'storybook/internal/types';
 import type { QtiAssessmentItem } from '@qti-components/elements';
 
-const { events, args, argTypes, template } = getStorybookHelpers('qti-match-interaction');
+const { events, args, argTypes, template } = getStorybookHelpers('qti-match-interaction', {
+  excludeCategories: ['methods', 'events', 'properties']
+});
 
 type Story = StoryObj<QtiMatchInteraction & typeof args>;
 

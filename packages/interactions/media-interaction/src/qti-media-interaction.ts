@@ -5,6 +5,12 @@ import { Interaction } from '@qti-components/base';
 import styles from './qti-media-interaction.styles';
 
 import type { CSSResultGroup } from 'lit';
+/**
+ * Media interaction: wraps an embedded media object (audio/video) and tracks play events.
+ *
+ * @slot prompt - The prompt shown above the media element.
+ * @slot - Default slot for the embedded media element.
+ */
 export class QtiMediaInteraction extends Interaction {
   static override styles: CSSResultGroup = styles;
 

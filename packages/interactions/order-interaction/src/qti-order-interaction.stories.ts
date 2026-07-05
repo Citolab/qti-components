@@ -109,7 +109,9 @@ const dragAndWait = async (
   await settleInteraction(interaction);
 };
 
-const { events, args, argTypes, template } = getStorybookHelpers('qti-order-interaction');
+const { events, args, argTypes, template } = getStorybookHelpers('qti-order-interaction', {
+  excludeCategories: ['methods', 'events', 'properties']
+});
 
 type Story = StoryObj<QtiOrderInteraction & typeof args>;
 

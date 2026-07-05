@@ -11,6 +11,14 @@ import type { Choice } from '@qti-components/interactions-core/mixins/choices/ch
 import type { CSSResultGroup } from 'lit';
 
 type HotspotChoice = Choice & { order: number; orderCorrect?: number };
+/**
+ * Graphic order interaction: candidates order hotspots on an image.
+ *
+ * @slot prompt - The prompt shown above the image.
+ * @slot - Default slot for the image and hotspot choices.
+ *
+ * @csspart message - Live validation message region (role="alert").
+ */
 export class QtiGraphicOrderInteraction extends ChoicesMixin(Interaction, 'qti-hotspot-choice') {
   static override styles: CSSResultGroup = styles;
 

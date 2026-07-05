@@ -4,7 +4,9 @@ import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import type { QtiMediaInteraction } from './qti-media-interaction';
 import type { StoryObj, Meta } from '@storybook/web-components-vite';
 
-const { events, args, argTypes, template } = getStorybookHelpers('qti-media-interaction');
+const { events, args, argTypes, template } = getStorybookHelpers('qti-media-interaction', {
+  excludeCategories: ['methods', 'events', 'properties']
+});
 
 type Story = StoryObj<QtiMediaInteraction & typeof args>;
 

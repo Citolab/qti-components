@@ -13,7 +13,9 @@ import type { StoryObj, Meta } from '@storybook/web-components-vite';
 
 import './qti-portable-custom-test-interaction';
 
-const { events, args, argTypes, template } = getStorybookHelpers('qti-portable-custom-interaction');
+const { events, args, argTypes, template } = getStorybookHelpers('qti-portable-custom-interaction', {
+  excludeCategories: ['methods', 'events', 'properties']
+});
 
 type Story = StoryObj<QtiPortableCustomInteraction & typeof args>;
 

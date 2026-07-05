@@ -21,6 +21,19 @@ type InlineChoiceOptionElement = HTMLElement & ActiveElementMixinInterface;
 
 let inlineChoiceMenuCounter = 0;
 
+/**
+ * Inline choice interaction: dropdown selector rendered inline with surrounding text.
+ *
+ * @slot - Default slot for `qti-inline-choice` options.
+ *
+ * @csspart trigger - The dropdown trigger button.
+ * @csspart value - The currently displayed value inside the trigger.
+ * @csspart dropdown-icon - The chevron icon inside the trigger; also carries `dropdown-icon-open` when open.
+ * @csspart menu - The popover element containing the option list.
+ * @csspart option - Each option button; also carries `option-prompt` and `option-selected` variants.
+ * @csspart option-content - The content wrapper inside each option.
+ * @csspart correct-option - Overlay shown when displaying the correct response.
+ */
 export class QtiInlineChoiceInteraction extends Interaction {
   constructor() {
     super();

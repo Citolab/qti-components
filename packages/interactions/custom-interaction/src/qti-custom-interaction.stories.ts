@@ -8,7 +8,9 @@ import itemXML from './qti-custom-interaction.xml?raw';
 import type { QtiCustomInteraction } from './qti-custom-interaction';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
-const { events, args, argTypes } = getStorybookHelpers('qti-custom-interaction');
+const { events, args, argTypes } = getStorybookHelpers('qti-custom-interaction', {
+  excludeCategories: ['methods', 'events', 'properties']
+});
 
 type Story = StoryObj<QtiCustomInteraction & typeof args>;
 

@@ -7,7 +7,9 @@ import drag from '../../../../tools/testing/drag';
 import type { QtiGraphicGapMatchInteraction } from './qti-graphic-gap-match-interaction';
 import type { StoryObj, Meta } from '@storybook/web-components-vite';
 
-const { events, args, argTypes, template } = getStorybookHelpers('qti-graphic-gap-match-interaction');
+const { events, args, argTypes, template } = getStorybookHelpers('qti-graphic-gap-match-interaction', {
+  excludeCategories: ['methods', 'events', 'properties']
+});
 
 type Story = StoryObj<QtiGraphicGapMatchInteraction & typeof args>;
 

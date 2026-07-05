@@ -155,11 +155,16 @@ export const CorrectResponse: Story = {
     orientation: 'vertical',
     class: ['qti-input-control-hidden', 'qti-choices-stacking-2'].join(' '),
     'min-choices': 1,
-    'max-choices': 2
+    'max-choices': 2,
+    disabled: false,
+    readonly: false,
+    'correct-response': 'A,B',
+    'show-candidate-correction': false,
+    'show-full-correct-response': true
   },
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const choiceInteraction = canvas.getByTestId<QtiChoiceInteraction>('interaction');
+    const [choiceInteraction] = canvas.getAllByTestId<QtiChoiceInteraction>('interaction');
     choiceInteraction.correctResponse = ['A', 'B'];
     // choiceInteraction.toggleCorrectResponse();
   }

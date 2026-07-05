@@ -8,7 +8,9 @@ import drag from '../../../../tools/testing/drag';
 import type { QtiAssociateInteraction } from './qti-associate-interaction';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
-const { events, args, argTypes, template } = getStorybookHelpers('qti-associate-interaction');
+const { events, args, argTypes, template } = getStorybookHelpers('qti-associate-interaction', {
+  excludeCategories: ['methods', 'events', 'properties']
+});
 
 type Story = StoryObj<QtiAssociateInteraction & typeof args>;
 

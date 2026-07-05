@@ -4,7 +4,9 @@ import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import type { StoryObj, Meta } from '@storybook/web-components-vite';
 import type { QtiHottextInteraction } from './qti-hottext-interaction';
 
-const { events, args, argTypes, template } = getStorybookHelpers('qti-hottext-interaction');
+const { events, args, argTypes, template } = getStorybookHelpers('qti-hottext-interaction', {
+  excludeCategories: ['methods', 'events', 'properties']
+});
 
 type Story = StoryObj<QtiHottextInteraction & typeof args>;
 

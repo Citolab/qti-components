@@ -9,6 +9,12 @@ import { Correctness, Interaction } from '@qti-components/base';
 import styles from './qti-text-entry-interaction.styles';
 
 import type { CSSResultGroup } from 'lit';
+/**
+ * Text-entry interaction: single-line inline text input.
+ *
+ * @csspart input - The text input element.
+ * @csspart correct - Overlay shown when displaying the correct response.
+ */
 export class QtiTextEntryInteraction extends Interaction {
   static override styles: CSSResultGroup = styles;
   inputRef = createRef<HTMLInputElement>();

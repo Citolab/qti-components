@@ -9,7 +9,9 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { QtiSimpleChoice } from '@qti-components/interactions-core/elements/qti-simple-choice';
 import type { QtiChoiceInteraction } from '../qti-choice-interaction';
 
-const { events, args, argTypes } = getStorybookHelpers('qti-choice-interaction');
+const { events, args, argTypes } = getStorybookHelpers('qti-choice-interaction', {
+  excludeCategories: ['methods', 'events', 'properties']
+});
 
 type Story = StoryObj<QtiChoiceInteraction & typeof args>;
 

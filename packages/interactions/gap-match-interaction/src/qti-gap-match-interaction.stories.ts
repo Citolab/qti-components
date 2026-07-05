@@ -12,7 +12,9 @@ import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { QtiGapText } from '@qti-components/interactions-core/elements/qti-gap-text';
 import type { QtiGapMatchInteraction } from './qti-gap-match-interaction';
 
-const { events, args, argTypes, template } = getStorybookHelpers('qti-gap-match-interaction');
+const { events, args, argTypes, template } = getStorybookHelpers('qti-gap-match-interaction', {
+  excludeCategories: ['methods', 'events', 'properties']
+});
 
 type Story = StoryObj<QtiGapMatchInteraction & typeof args>;
 

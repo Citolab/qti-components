@@ -6,7 +6,9 @@ import { spread } from '@open-wc/lit-helpers';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { QtiTextEntryInteraction } from './qti-text-entry-interaction';
 
-const { events, args, argTypes, template } = getStorybookHelpers('qti-text-entry-interaction');
+const { events, args, argTypes, template } = getStorybookHelpers('qti-text-entry-interaction', {
+  excludeCategories: ['methods', 'events', 'properties']
+});
 
 type Story = StoryObj<QtiTextEntryInteraction & typeof args>;
 

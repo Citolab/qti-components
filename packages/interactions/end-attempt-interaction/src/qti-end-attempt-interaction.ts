@@ -4,6 +4,11 @@ import { property } from 'lit/decorators.js';
 import styles from './qti-end-attempt-interaction.styles';
 
 import type { CSSResultGroup } from 'lit';
+/**
+ * A button that ends the current attempt.
+ *
+ * @csspart button - The end-attempt button element.
+ */
 export class QtiEndAttemptInteraction extends LitElement {
   static override styles: CSSResultGroup = styles;
 

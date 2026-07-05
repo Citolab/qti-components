@@ -7,6 +7,19 @@ import { Interaction } from '@qti-components/base';
 import styles from './qti-slider-interaction.styles';
 
 import type { CSSResultGroup } from 'lit';
+/**
+ * Slider interaction: candidates pick a numeric value along a rail.
+ *
+ * @slot prompt - The prompt shown above the slider.
+ *
+ * @csspart slider - The slider root element.
+ * @csspart bounds - The min/max bounds label wrapper.
+ * @csspart ticks - The tick marks along the rail.
+ * @csspart rail - The rail element the knob slides along.
+ * @csspart knob - The draggable knob.
+ * @csspart value - The current value display (used twice in the layout).
+ * @csspart knob-correct - Ghost knob shown at the correct response position.
+ */
 export class QtiSliderInteraction extends Interaction {
   static override styles: CSSResultGroup = styles;
 

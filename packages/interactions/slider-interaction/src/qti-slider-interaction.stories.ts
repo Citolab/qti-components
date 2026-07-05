@@ -7,7 +7,9 @@ import drag from '../../../../tools/testing/drag';
 import type { QtiSliderInteraction } from './qti-slider-interaction';
 import type { StoryObj, Meta } from '@storybook/web-components-vite';
 
-const { events, args, argTypes, template } = getStorybookHelpers('qti-slider-interaction');
+const { events, args, argTypes, template } = getStorybookHelpers('qti-slider-interaction', {
+  excludeCategories: ['methods', 'events', 'properties']
+});
 
 type Story = StoryObj<QtiSliderInteraction & typeof args>;
 

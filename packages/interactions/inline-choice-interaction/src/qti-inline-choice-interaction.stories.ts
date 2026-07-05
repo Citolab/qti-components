@@ -6,7 +6,9 @@ import { within } from 'shadow-dom-testing-library';
 import type { QtiInlineChoiceInteraction } from './qti-inline-choice-interaction';
 import type { StoryObj, Meta } from '@storybook/web-components-vite';
 
-const { events, args, argTypes, template } = getStorybookHelpers('qti-inline-choice-interaction');
+const { events, args, argTypes, template } = getStorybookHelpers('qti-inline-choice-interaction', {
+  excludeCategories: ['methods', 'events', 'properties']
+});
 
 type Story = StoryObj<QtiInlineChoiceInteraction & typeof args>;
 type InlineChoiceWithInternals = HTMLElement & { internals: ElementInternals };

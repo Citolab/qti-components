@@ -4,7 +4,9 @@ import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { QtiEndAttemptInteraction } from './qti-end-attempt-interaction';
 
-const { events, args, argTypes, template } = getStorybookHelpers('qti-end-attempt-interaction');
+const { events, args, argTypes, template } = getStorybookHelpers('qti-end-attempt-interaction', {
+  excludeCategories: ['methods', 'events', 'properties']
+});
 
 type Story = StoryObj<QtiEndAttemptInteraction & typeof args>;
 

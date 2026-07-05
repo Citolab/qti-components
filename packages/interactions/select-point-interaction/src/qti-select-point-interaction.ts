@@ -12,6 +12,14 @@ import styles from './qti-select-point-interaction.styles';
 
 import type { CSSResultGroup } from 'lit';
 import type { QtiAreaMapEntry, QtiAreaMapping } from '@qti-components/base';
+/**
+ * Select-point interaction: candidates place points onto a background image.
+ *
+ * @slot prompt - The prompt shown above the image.
+ * @slot - Default slot for the base image.
+ *
+ * @csspart point - Each selected point; carries `correct` or `incorrect` variants when candidate correction is shown.
+ */
 export class QtiSelectPointInteraction extends Interaction {
   static override styles: CSSResultGroup = styles;
 

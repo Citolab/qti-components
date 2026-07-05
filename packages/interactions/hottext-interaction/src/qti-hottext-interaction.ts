@@ -7,6 +7,13 @@ import { ChoicesMixin } from '@qti-components/interactions-core/mixins/choices/c
 import styles from './qti-hottext-interaction.styles';
 
 import type { CSSResultGroup, PropertyValues } from 'lit';
+/**
+ * Hottext interaction: candidates select highlighted words within a text block.
+ *
+ * @slot - Default slot for the mixed content and `qti-hottext` choices.
+ *
+ * @csspart message - Live validation message region (role="alert").
+ */
 export class QtiHottextInteraction extends ChoicesMixin(Interaction, 'qti-hottext') {
   static override styles: CSSResultGroup = styles;
 

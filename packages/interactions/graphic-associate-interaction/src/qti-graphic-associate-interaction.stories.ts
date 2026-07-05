@@ -5,7 +5,9 @@ import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import type { QtiGraphicAssociateInteraction } from './qti-graphic-associate-interaction';
 import type { StoryObj, Meta } from '@storybook/web-components-vite';
 
-const { events, args, argTypes, template } = getStorybookHelpers('qti-graphic-associate-interaction');
+const { events, args, argTypes, template } = getStorybookHelpers('qti-graphic-associate-interaction', {
+  excludeCategories: ['methods', 'events', 'properties']
+});
 
 type Story = StoryObj<QtiGraphicAssociateInteraction & typeof args>;
 

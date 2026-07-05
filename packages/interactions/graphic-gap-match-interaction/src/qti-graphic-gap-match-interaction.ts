@@ -18,6 +18,17 @@ const SlottedBase = DragDropSlottedMixin(
   `slot[part='drags']`
 );
 
+/**
+ * Graphic gap-match interaction: candidates drag choices onto image hotspots.
+ *
+ * @slot prompt - The prompt shown above the image.
+ * @slot drags - The draggable choice sources.
+ * @slot - Default slot for the base image and hotspots.
+ *
+ * @csspart image - Wrapper around the image slot.
+ * @csspart drags - Wrapper around the drag sources slot.
+ * @csspart message - Live validation message region (role="alert").
+ */
 export class QtiGraphicGapMatchInteraction extends DragDropSlottedSortableMixin(SlottedBase, '[qti-draggable="true"]') {
   static override styles: CSSResultGroup = styles;
 

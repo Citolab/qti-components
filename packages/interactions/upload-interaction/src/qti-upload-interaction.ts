@@ -5,6 +5,11 @@ import { Interaction } from '@qti-components/base';
 import styles from './qti-upload-interaction.styles';
 
 import type { CSSResultGroup } from 'lit';
+/**
+ * Upload interaction: candidates attach a file as their response.
+ *
+ * @slot prompt - The prompt shown above the file input.
+ */
 export class QtiUploadInteraction extends Interaction {
   static override styles: CSSResultGroup = styles;
 

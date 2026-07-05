@@ -20,6 +20,18 @@ const SlottedBase = DragDropSlottedMixin(
   'pointerWithin'
 );
 
+/**
+ * Drag-and-drop associate interaction: candidates pair associable choices.
+ *
+ * @slot prompt - The prompt shown above the choices.
+ * @slot qti-simple-associable-choice - The associable choice sources.
+ *
+ * @csspart associable-choices - Wrapper around the associable choice slot.
+ * @csspart drop-container - The container holding all drop targets.
+ * @csspart associables-container - Container inside a drop pair.
+ * @csspart drop-list - Each individual drop list.
+ * @csspart message - Live validation message region (role="alert").
+ */
 export class QtiAssociateInteraction extends DragDropSlottedSortableMixin(SlottedBase, '[qti-draggable="true"]') {
   static override styles: CSSResultGroup = styles;
   @state() protected _childrenMap: Element[] = [];

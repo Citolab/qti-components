@@ -12,6 +12,17 @@ import styles from './qti-graphic-associate-interaction.styles';
 import type { QtiAssociableHotspot } from '@qti-components/interactions-core/elements/qti-associable-hotspot';
 import type { QtiHotspotChoice } from '@qti-components/interactions-core/elements/qti-hotspot-choice';
 import type { CSSResultGroup } from 'lit';
+/**
+ * Graphic associate interaction: candidates connect points/hotspots on an image with lines.
+ *
+ * @slot prompt - The prompt shown above the image.
+ * @slot - Default slot for hotspot choices layered over the image.
+ *
+ * @csspart line - Each line drawn by the candidate.
+ * @csspart correct-line - Each line displayed as part of the correct response.
+ * @csspart point - Each in-progress endpoint indicator.
+ * @csspart message - Live validation message region (role="alert").
+ */
 export class QtiGraphicAssociateInteraction extends Interaction {
   static override styles: CSSResultGroup = styles;
 

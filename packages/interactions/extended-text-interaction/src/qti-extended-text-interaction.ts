@@ -8,6 +8,13 @@ import { Interaction } from '@qti-components/base';
 import styles from './qti-extended-text-interaction.styles';
 
 import type { CSSResultGroup } from 'lit';
+/**
+ * A multi-line text-entry interaction.
+ *
+ * @slot prompt - The prompt shown above the textarea.
+ *
+ * @csspart textarea - The textarea input element.
+ */
 export class QtiExtendedTextInteraction extends Interaction {
   static override styles: CSSResultGroup = styles;
 
