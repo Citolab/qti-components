@@ -1,0 +1,57 @@
+name: "Prerelease: pkg.pr.new (refactor channel)"
+
+# Publishes ephemeral prerelease builds of every workspace package to pkg.pr.new
+# on each push to the refactor branch. The editor can then depend on the floating
+# branch URL, e.g.:
+#   https://pkg.pr.new/citolab/qti-components/@citolab/qti-components@breaking-changes-for-editor-release
+#
+# Requirements (one-time):
+#   - Install the pkg.pr.new GitHub App on Citolab/qti-components:
+#       https://github.com/apps/pkg-pr-new
+#   - No secrets/tokens needed — pkg.pr.new authenticates via the workflow run itself.
+#
+# pkg.pr.new does NOT run locally; it only works inside a CI workflow.
+
+on:
+  push:
+    branches:
+      - breaking-changes-for-editor-release
+  workflow_dispatch:
+
+# One publish at a time per branch; cancel superseded runs so rapid pushes
+# don't produce duplicate publishes.
+concurrency:
+  group: pkgr-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write   # lets pkg.pr.new post install-URL comments
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build workspace
+        run: pnpm run build
+
+      # Use the installed binary (pnpm exec), NOT pnpm dlx / npx — required in CI.
+      - name: Publish prereleases to pkg.pr.new
+        run: pnpm exec pkg-pr-new publish './packages/*' './packages/interactions/*'
