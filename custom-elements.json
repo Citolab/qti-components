@@ -1827,7 +1827,11 @@
             }
           ],
           "modulePath": "packages/interactions/choice-interaction/src/qti-choice-interaction.ts",
-          "definitionPath": "packages/interactions/choice-interaction/src/register.ts"
+          "definitionPath": "packages/interactions/choice-interaction/src/register.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -10713,7 +10717,11 @@
             }
           ],
           "modulePath": "packages/interactions/custom-interaction/src/qti-custom-interaction.ts",
-          "definitionPath": "packages/interactions/custom-interaction/src/register.ts"
+          "definitionPath": "packages/interactions/custom-interaction/src/register.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -11689,7 +11697,11 @@
             }
           ],
           "modulePath": "packages/interactions/extended-text-interaction/src/qti-extended-text-interaction.ts",
-          "definitionPath": "packages/interactions/extended-text-interaction/src/register.ts"
+          "definitionPath": "packages/interactions/extended-text-interaction/src/register.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -13096,7 +13108,11 @@
             }
           ],
           "modulePath": "packages/interactions/graphic-associate-interaction/src/qti-graphic-associate-interaction.ts",
-          "definitionPath": "packages/interactions/graphic-associate-interaction/src/register.ts"
+          "definitionPath": "packages/interactions/graphic-associate-interaction/src/register.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -14717,7 +14733,11 @@
             }
           ],
           "modulePath": "packages/interactions/graphic-order-interaction/src/qti-graphic-order-interaction.ts",
-          "definitionPath": "packages/interactions/graphic-order-interaction/src/register.ts"
+          "definitionPath": "packages/interactions/graphic-order-interaction/src/register.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -15745,7 +15765,11 @@
             }
           ],
           "modulePath": "packages/interactions/hotspot-interaction/src/qti-hotspot-interaction.ts",
-          "definitionPath": "packages/interactions/hotspot-interaction/src/register.ts"
+          "definitionPath": "packages/interactions/hotspot-interaction/src/register.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -16757,7 +16781,11 @@
             }
           ],
           "modulePath": "packages/interactions/hottext-interaction/src/qti-hottext-interaction.ts",
-          "definitionPath": "packages/interactions/hottext-interaction/src/register.ts"
+          "definitionPath": "packages/interactions/hottext-interaction/src/register.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -17630,7 +17658,11 @@
             }
           ],
           "modulePath": "packages/interactions/inline-choice-interaction/src/qti-inline-choice-interaction.ts",
-          "definitionPath": "packages/interactions/inline-choice-interaction/src/register.ts"
+          "definitionPath": "packages/interactions/inline-choice-interaction/src/register.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -19041,7 +19073,11 @@
             }
           ],
           "modulePath": "packages/interactions/media-interaction/src/qti-media-interaction.ts",
-          "definitionPath": "packages/interactions/media-interaction/src/register.ts"
+          "definitionPath": "packages/interactions/media-interaction/src/register.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -19704,7 +19740,7 @@
             },
             {
               "kind": "method",
-              "name": "toggleCorrectResponse",
+              "name": "toggleInternalCorrectResponse",
               "privacy": "public",
               "return": {
                 "type": {
@@ -19720,7 +19756,7 @@
                 }
               ],
               "type": {
-                "text": "toggleCorrectResponse(show: boolean) => void"
+                "text": "toggleInternalCorrectResponse(show: boolean) => void"
               }
             }
           ],
@@ -21157,7 +21193,11 @@
             }
           ],
           "modulePath": "packages/interactions/portable-custom-interaction/src/qti-portable-custom-interaction.ts",
-          "definitionPath": "packages/interactions/portable-custom-interaction/src/register.ts"
+          "definitionPath": "packages/interactions/portable-custom-interaction/src/register.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -23011,7 +23051,11 @@
             }
           ],
           "modulePath": "packages/interactions/portable-custom-interaction/src/qti-portable-custom-test-interaction.ts",
-          "definitionPath": "packages/interactions/portable-custom-interaction/src/register.ts"
+          "definitionPath": "packages/interactions/portable-custom-interaction/src/register.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -23977,7 +24021,11 @@
             }
           ],
           "modulePath": "packages/interactions/select-point-interaction/src/qti-select-point-interaction.ts",
-          "definitionPath": "packages/interactions/select-point-interaction/src/register.ts"
+          "definitionPath": "packages/interactions/select-point-interaction/src/register.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -24806,7 +24854,11 @@
           "tagName": "qti-slider-interaction",
           "customElement": true,
           "modulePath": "packages/interactions/slider-interaction/src/qti-slider-interaction.ts",
-          "definitionPath": "packages/interactions/slider-interaction/src/register.ts"
+          "definitionPath": "packages/interactions/slider-interaction/src/register.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -25597,7 +25649,11 @@
             }
           ],
           "modulePath": "packages/interactions/text-entry-interaction/src/qti-text-entry-interaction.ts",
-          "definitionPath": "packages/interactions/text-entry-interaction/src/register.ts"
+          "definitionPath": "packages/interactions/text-entry-interaction/src/register.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -26322,7 +26378,11 @@
             }
           ],
           "modulePath": "packages/interactions/upload-interaction/src/qti-upload-interaction.ts",
-          "definitionPath": "packages/interactions/upload-interaction/src/register.ts"
+          "definitionPath": "packages/interactions/upload-interaction/src/register.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -28980,7 +29040,11 @@
             }
           ],
           "modulePath": "packages/qti-elements/src/components/qti-feedback-block/qti-feedback-block.ts",
-          "definitionPath": "packages/qti-elements/src/components/qti-feedback-block/qti-feedback-block.ts"
+          "definitionPath": "packages/qti-elements/src/components/qti-feedback-block/qti-feedback-block.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -29168,7 +29232,11 @@
             }
           ],
           "modulePath": "packages/qti-elements/src/components/qti-feedback-inline/qti-feedback-inline.ts",
-          "definitionPath": "packages/qti-elements/src/components/qti-feedback-inline/qti-feedback-inline.ts"
+          "definitionPath": "packages/qti-elements/src/components/qti-feedback-inline/qti-feedback-inline.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -29425,7 +29493,11 @@
             }
           ],
           "modulePath": "packages/qti-elements/src/components/qti-modal-feedback/qti-modal-feedback.ts",
-          "definitionPath": "packages/qti-elements/src/components/qti-modal-feedback/qti-modal-feedback.ts"
+          "definitionPath": "packages/qti-elements/src/components/qti-modal-feedback/qti-modal-feedback.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -29581,7 +29653,11 @@
           "tagName": "qti-outcome-declaration",
           "customElement": true,
           "modulePath": "packages/qti-elements/src/components/qti-outcome-declaration/qti-outcome-declaration.ts",
-          "definitionPath": "packages/qti-elements/src/components/qti-outcome-declaration/qti-outcome-declaration.ts"
+          "definitionPath": "packages/qti-elements/src/components/qti-outcome-declaration/qti-outcome-declaration.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -29749,7 +29825,11 @@
           "tagName": "qti-response-declaration",
           "customElement": true,
           "modulePath": "packages/qti-elements/src/components/qti-response-declaration/qti-response-declaration.ts",
-          "definitionPath": "packages/qti-elements/src/components/qti-response-declaration/qti-response-declaration.ts"
+          "definitionPath": "packages/qti-elements/src/components/qti-response-declaration/qti-response-declaration.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -31924,7 +32004,12 @@
           "tagName": "qti-any-n",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-any-n/qti-any-n.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-any-n/qti-any-n.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-any-n/qti-any-n.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -32063,7 +32148,12 @@
           "tagName": "qti-base-value",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-basevalue/qti-basevalue.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-basevalue/qti-basevalue.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-basevalue/qti-basevalue.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -32178,7 +32268,13 @@
           "tagName": "qti-container-size",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-container-size/qti-container-size.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-container-size/qti-container-size.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-container-size/qti-container-size.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "attributes": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -32412,7 +32508,13 @@
           "tagName": "qti-correct",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-correct/qti-correct.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-correct/qti-correct.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-correct/qti-correct.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "attributes": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -32554,7 +32656,12 @@
           "tagName": "qti-default",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-default/qti-default.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-default/qti-default.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-default/qti-default.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -32669,7 +32776,13 @@
           "tagName": "qti-delete",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-delete/qti-delete.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-delete/qti-delete.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-delete/qti-delete.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "attributes": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -32802,7 +32915,13 @@
           "tagName": "qti-divide",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-divide/qti-divide.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-divide/qti-divide.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-divide/qti-divide.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "attributes": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -32944,7 +33063,13 @@
           "tagName": "qti-duration-gte",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-duration-gte/qti-duration-gte.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-duration-gte/qti-duration-gte.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-duration-gte/qti-duration-gte.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "attributes": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -33087,7 +33212,13 @@
           "tagName": "qti-duration-lt",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-duration-lt/qti-duration-lt.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-duration-lt/qti-duration-lt.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-duration-lt/qti-duration-lt.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "attributes": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -33226,7 +33357,12 @@
           "tagName": "qti-equal-rounded",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-equal-rounded/qti-equal-rounded.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-equal-rounded/qti-equal-rounded.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-equal-rounded/qti-equal-rounded.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -33360,7 +33496,12 @@
           "tagName": "qti-equal",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-equal/qti-equal.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-equal/qti-equal.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-equal/qti-equal.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -33475,7 +33616,13 @@
           "tagName": "qti-field-value",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-field-value/qti-field-value.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-field-value/qti-field-value.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-field-value/qti-field-value.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "attributes": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -33634,7 +33781,13 @@
           "tagName": "qti-gcd",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-gcd/qti.gcd.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-gcd/qti.gcd.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-gcd/qti.gcd.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "attributes": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -33748,7 +33901,13 @@
           "tagName": "qti-gt",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-gt/qti-gt.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-gt/qti-gt.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-gt/qti-gt.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "attributes": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -34012,7 +34171,12 @@
           "tagName": "qti-index",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-index/qti-index.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-index/qti-index.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-index/qti-index.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -34294,7 +34458,12 @@
           "tagName": "qti-inside",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-inside/qti-inside.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-inside/qti-inside.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-inside/qti-inside.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -34427,7 +34596,13 @@
           "tagName": "qti-integer-divide",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-integer-divide/qti-integer-divide.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-integer-divide/qti-integer-divide.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-integer-divide/qti-integer-divide.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "attributes": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -34560,7 +34735,13 @@
           "tagName": "qti-integer-modulus",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-integer-modulus/qti-integer-modulus.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-integer-modulus/qti-integer-modulus.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-integer-modulus/qti-integer-modulus.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "attributes": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -34675,7 +34856,13 @@
           "tagName": "qti-integer-to-float",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-integer-to-float/qti-integer-to-float.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-integer-to-float/qti-integer-to-float.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-integer-to-float/qti-integer-to-float.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "attributes": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -34790,7 +34977,13 @@
           "tagName": "qti-is-null",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-is-null/qti-is-null.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-is-null/qti-is-null.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-is-null/qti-is-null.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "attributes": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -34970,7 +35163,13 @@
           "tagName": "qti-lcm",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-lcm/qti-lcm.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-lcm/qti-lcm.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-lcm/qti-lcm.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "attributes": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -35067,7 +35266,11 @@
           "tagName": "qti-lookup-outcome-value",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-lookup-outcome-value/qti-lookup-outcome-value.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-lookup-outcome-value/qti-lookup-outcome-value.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-lookup-outcome-value/qti-lookup-outcome-value.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -35181,7 +35384,13 @@
           "tagName": "qti-lt",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-lt/qti-lt.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-lt/qti-lt.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-lt/qti-lt.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "attributes": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -35426,7 +35635,12 @@
           "tagName": "qti-map-response-point",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-map-response-point/qti-map-response-point.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-map-response-point/qti-map-response-point.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-map-response-point/qti-map-response-point.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -35558,7 +35772,12 @@
           "tagName": "qti-map-response",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-map-response/qti-map-response.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-map-response/qti-map-response.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-map-response/qti-map-response.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -35702,7 +35921,13 @@
           "tagName": "qti-match",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-match/qti-match.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-match/qti-match.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-match/qti-match.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "attributes": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -35860,7 +36085,12 @@
           "tagName": "qti-math-operator",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-math-operator/qti-math-operator.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-math-operator/qti-math-operator.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-math-operator/qti-math-operator.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -35993,7 +36223,13 @@
           "tagName": "qti-max",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-max/qti-max.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-max/qti-max.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-max/qti-max.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "attributes": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -36107,7 +36343,13 @@
           "tagName": "qti-member",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-member/qti-member.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-member/qti-member.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-member/qti-member.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "attributes": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -36240,7 +36482,13 @@
           "tagName": "qti-min",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-min/qti-min.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-min/qti-min.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-min/qti-min.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "attributes": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -36354,7 +36602,13 @@
           "tagName": "qti-multiple",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-multiple/qti-multiple.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-multiple/qti-multiple.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-multiple/qti-multiple.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "attributes": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -36469,7 +36723,13 @@
           "tagName": "qti-not",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-not/qti-not.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-not/qti-not.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-not/qti-not.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "attributes": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -36584,7 +36844,13 @@
           "tagName": "qti-null",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-null/qti-null.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-null/qti-null.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-null/qti-null.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "attributes": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -36813,7 +37079,13 @@
           "tagName": "qti-ordered",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-ordered/qti-ordered.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-ordered/qti-ordered.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-ordered/qti-ordered.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "attributes": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -36947,7 +37219,12 @@
           "tagName": "qti-pattern-match",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-pattern-match/qti-pattern-match.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-pattern-match/qti-pattern-match.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-pattern-match/qti-pattern-match.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -37062,7 +37339,13 @@
           "tagName": "qti-power",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-power/qti-power.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-power/qti-power.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-power/qti-power.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "attributes": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -37254,7 +37537,13 @@
           "tagName": "qti-product",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-product/qti-product.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-product/qti-product.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-product/qti-product.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "attributes": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -37436,7 +37725,12 @@
           "tagName": "qti-random-integer",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-random-integer/qti-random-integer.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-random-integer/qti-random-integer.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-random-integer/qti-random-integer.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -37550,7 +37844,13 @@
           "tagName": "qti-random",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-random/qti-random.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-random/qti-random.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-random/qti-random.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "attributes": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -37712,7 +38012,12 @@
           "tagName": "qti-repeat",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-repeat/qti-repeat.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-repeat/qti-repeat.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-repeat/qti-repeat.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -37763,7 +38068,13 @@
           "tagName": "qti-response-condition",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-response-condition/qti-response-condition.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-response-condition/qti-response-condition.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-response-condition/qti-response-condition.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "attributes": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -37843,7 +38154,13 @@
           "tagName": "qti-response-else-if",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-response-else-if/qti-response-else-if.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-response-else-if/qti-response-else-if.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-response-else-if/qti-response-else-if.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "attributes": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -37991,7 +38308,13 @@
           "tagName": "qti-response-if",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-response-if/qti-response-if.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-response-if/qti-response-if.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-response-if/qti-response-if.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "attributes": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -38192,7 +38515,12 @@
           "tagName": "qti-round-to",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-round-to/qti-round-to.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-round-to/qti-round-to.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-round-to/qti-round-to.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -38307,7 +38635,13 @@
           "tagName": "qti-round",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-round/qti-round.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-round/qti-round.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-round/qti-round.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "attributes": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -38455,7 +38789,12 @@
           "tagName": "qti-set-correct-response",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-set-correct-response/qti-set-correct-response.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-set-correct-response/qti-set-correct-response.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-set-correct-response/qti-set-correct-response.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "attributes": [],
+          "slots": []
         },
         {
           "kind": "class",
@@ -38582,7 +38921,12 @@
           "tagName": "qti-set-outcome-value",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-set-outcome-value/qti-set-outcome-value.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-set-outcome-value/qti-set-outcome-value.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-set-outcome-value/qti-set-outcome-value.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "attributes": [],
+          "slots": []
         },
         {
           "kind": "class",
@@ -38709,7 +39053,12 @@
           "tagName": "qti-set-template-value",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-set-template-value/qti-set-template-value.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-set-template-value/qti-set-template-value.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-set-template-value/qti-set-template-value.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "attributes": [],
+          "slots": []
         },
         {
           "kind": "class",
@@ -38922,7 +39271,12 @@
           "tagName": "qti-stats-operator",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-stats-operator/qti-stats-operator.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-stats-operator/qti-stats-operator.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-stats-operator/qti-stats-operator.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -39055,7 +39409,12 @@
           "tagName": "qti-string-match",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-string-match/qti-string-match.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-string-match/qti-string-match.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-string-match/qti-string-match.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -39189,7 +39548,12 @@
           "tagName": "qti-substring",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-substring/qti-substring.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-substring/qti-substring.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-substring/qti-substring.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -39428,7 +39792,13 @@
           "tagName": "qti-sum",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-sum/qti-sum.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-sum/qti-sum.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-sum/qti-sum.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "attributes": [],
+          "events": [],
+          "slots": []
         },
         {
           "kind": "class",
@@ -39563,7 +39933,13 @@
           "tagName": "qti-truncate",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-truncate/qti-truncate.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-truncate/qti-truncate.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-truncate/qti-truncate.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "attributes": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -39677,7 +40053,13 @@
           "tagName": "qti-variable",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-variable/qti-variable.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-variable/qti-variable.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-variable/qti-variable.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "attributes": [],
+          "events": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -40559,7 +40941,11 @@
             }
           ],
           "modulePath": "packages/qti-test/src/components/qti-test-feedback/qti-test-feedback.ts",
-          "definitionPath": "packages/qti-test/src/components/qti-test-feedback/qti-test-feedback.ts"
+          "definitionPath": "packages/qti-test/src/components/qti-test-feedback/qti-test-feedback.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "slots": []
         }
       ],
       "exports": [
@@ -40830,7 +41216,13 @@
           "tagName": "qti-test-variables",
           "customElement": true,
           "modulePath": "packages/qti-test/src/components/qti-test-variables/qti-test-variables.ts",
-          "definitionPath": "packages/qti-test/src/components/qti-test-variables/qti-test-variables.ts"
+          "definitionPath": "packages/qti-test/src/components/qti-test-variables/qti-test-variables.ts",
+          "cssProperties": [],
+          "cssParts": [],
+          "cssStates": [],
+          "attributes": [],
+          "events": [],
+          "slots": []
         },
         {
           "kind": "class",
