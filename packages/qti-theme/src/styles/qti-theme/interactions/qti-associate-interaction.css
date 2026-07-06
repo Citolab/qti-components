@@ -10,7 +10,10 @@
       @apply dropping;
     }
     & qti-simple-associable-choice,
-    &::part(qti-simple-associable-choice) {
+    &::part(qti-simple-associable-choice),
+    /* Editor fake-drag projected into the interaction's drop-list shadow.
+       Same `drag` styling so editor previews match runtime visuals. */
+    &::part(drag) {
       @apply drag;
       &:hover {
         @apply hov;

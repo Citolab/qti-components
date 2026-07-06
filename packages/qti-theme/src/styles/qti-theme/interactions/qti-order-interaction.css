@@ -7,7 +7,10 @@
       @apply dropping;
     }
     &::part(qti-simple-choice),
-    & qti-simple-choice {
+    & qti-simple-choice,
+    /* Editor fake-drag projected into the interaction's drop-list shadow.
+       Same `drag` styling so editor previews match runtime visuals. */
+    &::part(drag) {
       @apply drag;
       &[dragging] {
         @apply dragging;

@@ -41,7 +41,6 @@
     "yalc": "pnpm -r run yalc",
     "yalc:push": "pnpm -r run yalc:push",
     "watch": "pnpm --filter \"./packages/qti-components\" --filter \"./packages/qti-interactions\" --filter \"./packages/qti-theme\" --filter \"./packages/interactions/*\" --parallel exec -- nodemon --watch src --ext ts,css --exec \"pnpm run build && pnpm run yalc:push\"",
-    "pre-commit": "run-s tsc lint madge",
     "commit-msg": "commitlint --edit",
     "build-storybook": "pnpm run cem && storybook build",
     "storybook:dev": "storybook dev -p 6006 --no-open",
