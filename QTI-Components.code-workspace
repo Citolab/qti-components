@@ -2,7 +2,10 @@
   "folders": [
     {
       "path": "."
-    }
+    },
+    // {
+    //   "path": "../../../editor/QTI-Editor"
+    // }
   ],
   "settings": {
     "workbench.colorCustomizations": {
