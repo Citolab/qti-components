@@ -18,6 +18,7 @@ import customElements from '../custom-elements.json';
 import { toBePositionedRelativeTo } from '../tools/testing/setup/toBePositionedRelativeTo';
 import { baselineOverlayDecorator, baselineOverlayGlobalTypes } from './extensions/baseline-overlay';
 import { styleSubstrateDecorator, styleSubstrateGlobalTypes } from './extensions/style-substrate';
+import { webComponentInspectDecorator, webComponentInspectGlobalTypes } from './extensions/webcomponent-inspect';
 import '../packages/qti-components/src';
 
 import type { Preview } from '@storybook/web-components-vite';
@@ -83,7 +84,8 @@ const preview: Preview = {
       defaultTheme: 'light'
     }),
     styleSubstrateDecorator,
-    baselineOverlayDecorator
+    baselineOverlayDecorator,
+    webComponentInspectDecorator
   ],
 
   parameters: {
@@ -124,7 +126,8 @@ const preview: Preview = {
 
   globalTypes: {
     ...styleSubstrateGlobalTypes,
-    ...baselineOverlayGlobalTypes
+    ...baselineOverlayGlobalTypes,
+    ...webComponentInspectGlobalTypes
   },
 
   tags: ['!autodocs']

@@ -1,4 +1,5 @@
 import itemCss from '../../packages/qti-theme/src/item.css?inline';
+import minimalCss from '../../packages/qti-theme/src/minimal.css?inline';
 import nativeCss from '../../packages/qti-theme/src/native.css?inline';
 import kennisnetOverrideHref from '../../packages/qti-theme/src/kennisnet-override.scss?url';
 
@@ -17,8 +18,7 @@ import type { Decorator, Preview } from '@storybook/web-components-vite';
  * vendor by adding (a) an entry here and (b) an item in
  * `styleSubstrateGlobalTypes.override.toolbar.items`.
  *
- * - vanilla:   only `native.css` — the mandatory QTI3 structural layout, no visual theme.
- *   The structural design-system baseline.
+ * - vanilla:   `native.css` + the minimal variable theme. The lightest styled baseline.
  * - citolab:   full qti-theme (`item.css`, which includes native) + minimal normalize reset.
  * - kennisnet: full qti-theme + single self-contained override file — pulls Bootstrap +
  *   Wikiwijs bridge + FontAwesome glyph CDN URLs internally (see kennisnet-override.scss).
@@ -26,9 +26,10 @@ import type { Decorator, Preview } from '@storybook/web-components-vite';
  */
 const OVERRIDE_LINK_CLASS = 'qti-vendor-override';
 const THEME_STYLE_ID = 'qti-theme-style';
+const vanillaMinimalCss = `${nativeCss}\n${minimalCss}`;
 
 const SUBSTRATES: Record<string, { baseCss: string; overrides: string[] }> = {
-  vanilla: { baseCss: nativeCss, overrides: [] },
+  vanilla: { baseCss: vanillaMinimalCss, overrides: [] },
   citolab: { baseCss: itemCss, overrides: ['https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.css'] },
   kennisnet: { baseCss: itemCss, overrides: [kennisnetOverrideHref] }
 };
@@ -74,12 +75,12 @@ export const styleSubstrateDecorator: Decorator = (story, context) => {
 export const styleSubstrateGlobalTypes: Preview['globalTypes'] = {
   override: {
     name: 'Style',
-    description: 'Choose the style substrate: Vanilla (native.css only), Citolab, or Kennisnet',
+    description: 'Choose the style substrate: Vanilla minimal, Citolab, or Kennisnet',
     defaultValue: 'kennisnet',
     toolbar: {
       icon: 'paintbrush',
       items: [
-        { value: 'vanilla', title: 'Vanilla (native only)' },
+        { value: 'vanilla', title: 'Vanilla minimal' },
         { value: 'citolab', title: 'Citolab' },
         { value: 'kennisnet', title: 'Kennisnet' }
       ],
