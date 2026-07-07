@@ -15,8 +15,26 @@ const meta: Meta<QtiAssessmentItem> = {
 };
 export default meta;
 
-const getInputString = (charCount: number) => {
-  return 'W'.repeat(charCount);
+/**
+ * Measure how many characters an input can hold in its *own* currently-rendered
+ * font, independent of theme styling.
+ *
+ * The old approach typed N 'W' glyphs and compared `scrollWidth <= clientWidth`.
+ * That is flaky: it measures rendered pixels (so font-family, font-size,
+ * letter-spacing and padding all shift the result across themes) and 'W' is the
+ * widest glyph, ~1.5x the reference character. The width of "one character" is
+ * defined against the `0` glyph — the same metric the HTML `size` attribute and
+ * the CSS `ch` unit use — so we measure that in the input's live computed font
+ * and divide the content-box width by it.
+ */
+const inputCharCapacity = (input: HTMLInputElement): number => {
+  const cs = getComputedStyle(input);
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d')!;
+  ctx.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+  const charWidth = ctx.measureText('0').width;
+  const contentWidth = input.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+  return contentWidth / charWidth;
 };
 
 export const Q20_L1_D101: Story = {
@@ -65,12 +83,8 @@ export const Q20_L1_D102: Story = {
     const textEntryInteraction = assessmentItem.querySelector('qti-text-entry-interaction');
     const input = textEntryInteraction.shadowRoot.querySelector('input');
 
-    // type a character into the input field
-    await userEvent.type(input, getInputString(1));
-    const width = input.clientWidth;
-    const contentWidth = input.scrollWidth;
-    // Check if input has a width of at least 1 character
-    expect(contentWidth).toBeLessThanOrEqual(width);
+    // Check the input is wide enough for at least 1 character (theme-independent)
+    expect(inputCharCapacity(input)).toBeGreaterThanOrEqual(1);
   }
 };
 
@@ -93,12 +107,9 @@ export const Q20_L1_D103: Story = {
     const assessmentItem = canvasElement.querySelector('qti-assessment-item');
     const textEntryInteraction = assessmentItem.querySelector('qti-text-entry-interaction');
     const input = textEntryInteraction.shadowRoot.querySelector('input');
-    // type a character into the input field
-    await userEvent.type(input, getInputString(2));
-    const width = input.clientWidth;
-    const contentWidth = input.scrollWidth;
-    // Check if input has a width of at least 1 character
-    expect(contentWidth).toBeLessThanOrEqual(width);
+
+    // Check the input is wide enough for at least 2 characters (theme-independent)
+    expect(inputCharCapacity(input)).toBeGreaterThanOrEqual(2);
   }
 };
 
@@ -125,11 +136,8 @@ export const Q20_L1_D104: Story = {
     // Check if input has a width of at least 3 characters
     expect(textEntryInteraction.classList.contains('qti-input-width-3')).toBeTruthy();
 
-    const chars = getInputString(3);
-    await userEvent.type(input, chars);
-    const width = input.clientWidth;
-    const contentWidth = input.scrollWidth;
-    expect(contentWidth).toBeLessThanOrEqual(width);
+    // Check the input is wide enough for at least 3 characters (theme-independent)
+    expect(inputCharCapacity(input)).toBeGreaterThanOrEqual(3);
   }
 };
 
@@ -155,11 +163,8 @@ export const Q20_L1_D105: Story = {
 
     // Check if input has a width of at least 4 characters
     expect(textEntryInteraction.classList.contains('qti-input-width-4')).toBeTruthy();
-    const chars = getInputString(4);
-    await userEvent.type(input, chars);
-    const width = input.clientWidth;
-    const contentWidth = input.scrollWidth;
-    expect(contentWidth).toBeLessThanOrEqual(width);
+    // Check the input is wide enough for at least 4 characters (theme-independent)
+    expect(inputCharCapacity(input)).toBeGreaterThanOrEqual(4);
   }
 };
 
@@ -217,11 +222,8 @@ export const Q20_L1_D106: Story = {
 
     // Check if input has a width of at least 6 characters
     expect(textEntryInteraction.classList.contains('qti-input-width-6')).toBeTruthy();
-    const chars = getInputString(6);
-    await userEvent.type(input, chars);
-    const width = input.clientWidth;
-    const contentWidth = input.scrollWidth;
-    expect(contentWidth).toBeLessThanOrEqual(width);
+    // Check the input is wide enough for at least 6 characters (theme-independent)
+    expect(inputCharCapacity(input)).toBeGreaterThanOrEqual(6);
   }
 };
 
@@ -247,11 +249,8 @@ export const Q20_L1_D107: Story = {
 
     // Check if input has a width of at least 10 characters
     expect(textEntryInteraction.classList.contains('qti-input-width-10')).toBeTruthy();
-    const chars = getInputString(10);
-    await userEvent.type(input, chars);
-    const width = input.clientWidth;
-    const contentWidth = input.scrollWidth;
-    expect(contentWidth).toBeLessThanOrEqual(width);
+    // Check the input is wide enough for at least 10 characters (theme-independent)
+    expect(inputCharCapacity(input)).toBeGreaterThanOrEqual(10);
   }
 };
 
@@ -277,11 +276,8 @@ export const Q20_L1_D108: Story = {
 
     // Check if input has a width of at least 15 characters
     expect(textEntryInteraction.classList.contains('qti-input-width-15')).toBeTruthy();
-    const chars = getInputString(15);
-    await userEvent.type(input, chars);
-    const width = input.clientWidth;
-    const contentWidth = input.scrollWidth;
-    expect(contentWidth).toBeLessThanOrEqual(width);
+    // Check the input is wide enough for at least 15 characters (theme-independent)
+    expect(inputCharCapacity(input)).toBeGreaterThanOrEqual(15);
   }
 };
 
@@ -307,11 +303,8 @@ export const Q20_L1_D109: Story = {
 
     // Check if input has a width of at least 20 characters
     expect(textEntryInteraction.classList.contains('qti-input-width-20')).toBeTruthy();
-    const chars = getInputString(20);
-    await userEvent.type(input, chars);
-    const width = input.clientWidth;
-    const contentWidth = input.scrollWidth;
-    expect(contentWidth).toBeLessThanOrEqual(width);
+    // Check the input is wide enough for at least 20 characters (theme-independent)
+    expect(inputCharCapacity(input)).toBeGreaterThanOrEqual(20);
   }
 };
 
@@ -337,11 +330,8 @@ export const Q20_L1_D113: Story = {
 
     // Check if input has a width of at least 25 characters
     expect(textEntryInteraction.classList.contains('qti-input-width-25')).toBeTruthy();
-    const chars = getInputString(25);
-    await userEvent.type(input, chars);
-    const width = input.clientWidth;
-    const contentWidth = input.scrollWidth;
-    expect(contentWidth).toBeLessThanOrEqual(width);
+    // Check the input is wide enough for at least 25 characters (theme-independent)
+    expect(inputCharCapacity(input)).toBeGreaterThanOrEqual(25);
   }
 };
 
@@ -367,11 +357,8 @@ export const Q20_L1_D114: Story = {
 
     // Check if input has a width of at least 30 characters
     expect(textEntryInteraction.classList.contains('qti-input-width-30')).toBeTruthy();
-    const chars = getInputString(30);
-    await userEvent.type(input, chars);
-    const width = input.clientWidth;
-    const contentWidth = input.scrollWidth;
-    expect(contentWidth).toBeLessThanOrEqual(width);
+    // Check the input is wide enough for at least 30 characters (theme-independent)
+    expect(inputCharCapacity(input)).toBeGreaterThanOrEqual(30);
   }
 };
 
@@ -396,11 +383,8 @@ export const Q20_L1_D115: Story = {
     const input = textEntryInteraction.shadowRoot.querySelector('input');
 
     expect(textEntryInteraction.classList.contains('qti-input-width-35')).toBeTruthy();
-    const chars = getInputString(35);
-    await userEvent.type(input, chars);
-    const width = input.clientWidth;
-    const contentWidth = input.scrollWidth;
-    expect(contentWidth).toBeLessThanOrEqual(width);
+    // Check the input is wide enough for at least 35 characters (theme-independent)
+    expect(inputCharCapacity(input)).toBeGreaterThanOrEqual(35);
   }
 };
 
@@ -425,11 +409,8 @@ export const Q20_L1_D116: Story = {
     const input = textEntryInteraction.shadowRoot.querySelector('input');
 
     expect(textEntryInteraction.classList.contains('qti-input-width-40')).toBeTruthy();
-    const chars = getInputString(40);
-    await userEvent.type(input, chars);
-    const width = input.clientWidth;
-    const contentWidth = input.scrollWidth;
-    expect(contentWidth).toBeLessThanOrEqual(width);
+    // Check the input is wide enough for at least 40 characters (theme-independent)
+    expect(inputCharCapacity(input)).toBeGreaterThanOrEqual(40);
   }
 };
 
@@ -454,11 +435,8 @@ export const Q20_L1_D117: Story = {
     const input = textEntryInteraction.shadowRoot.querySelector('input');
 
     expect(textEntryInteraction.classList.contains('qti-input-width-45')).toBeTruthy();
-    const chars = getInputString(45);
-    await userEvent.type(input, chars);
-    const width = input.clientWidth;
-    const contentWidth = input.scrollWidth;
-    expect(contentWidth).toBeLessThanOrEqual(width);
+    // Check the input is wide enough for at least 45 characters (theme-independent)
+    expect(inputCharCapacity(input)).toBeGreaterThanOrEqual(45);
   }
 };
 
@@ -483,11 +461,8 @@ export const Q20_L1_D118: Story = {
     const input = textEntryInteraction.shadowRoot.querySelector('input');
 
     expect(textEntryInteraction.classList.contains('qti-input-width-50')).toBeTruthy();
-    const chars = getInputString(50);
-    await userEvent.type(input, chars);
-    const width = input.clientWidth;
-    const contentWidth = input.scrollWidth;
-    expect(contentWidth).toBeLessThanOrEqual(width);
+    // Check the input is wide enough for at least 50 characters (theme-independent)
+    expect(inputCharCapacity(input)).toBeGreaterThanOrEqual(50);
   }
 };
 
@@ -512,11 +487,8 @@ export const Q20_L1_D110: Story = {
     const input = textEntryInteraction.shadowRoot.querySelector('input');
 
     expect(textEntryInteraction.classList.contains('qti-input-width-72')).toBeTruthy();
-    const chars = getInputString(72);
-    await userEvent.type(input, chars);
-    const width = input.clientWidth;
-    const contentWidth = input.scrollWidth;
-    expect(contentWidth).toBeLessThanOrEqual(width);
+    // Check the input is wide enough for at least 72 characters (theme-independent)
+    expect(inputCharCapacity(input)).toBeGreaterThanOrEqual(72);
   }
 };
 

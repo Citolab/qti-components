@@ -1267,6 +1267,7 @@
                 "text": "ResponseValue"
               },
               "attribute": "correct-response",
+              "reflects": true,
               "parsedType": {
                 "text": "string | string[]"
               },
@@ -1283,6 +1284,7 @@
               },
               "default": "false",
               "attribute": "disabled",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -1399,6 +1401,7 @@
               },
               "default": "false",
               "attribute": "readonly",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -1516,6 +1519,7 @@
               "default": "false",
               "description": "Shows feedback on candidate's selections compared to correct response.\nAdds `candidate-correct` / `candidate-incorrect` states to choices.",
               "attribute": "show-candidate-correction",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -1530,6 +1534,7 @@
               "default": "false",
               "description": "Shows which choices are correct with inline indicators.\nAdds `correct-response` / `incorrect-response` states to choices.",
               "attribute": "show-correct-response",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -1544,6 +1549,7 @@
               "default": "false",
               "description": "Shows a cloned interaction with the correct answers filled in.\nCreates a disabled copy positioned after this interaction.",
               "attribute": "show-full-correct-response",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -2131,6 +2137,7 @@
               "privacy": "public",
               "default": "false",
               "attribute": "aria-disabled",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -2221,6 +2228,7 @@
               "privacy": "public",
               "default": "false",
               "attribute": "aria-readonly",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -2235,6 +2243,21 @@
               "default": "0",
               "attribute": "tabindex",
               "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "tabIndex",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "public",
+              "default": "0",
+              "attribute": "tabindex",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
             }
           ],
           "attributes": [
@@ -2277,10 +2300,14 @@
             {
               "name": "tabindex",
               "type": {
-                "text": "number | undefined"
+                "text": "number"
               },
               "default": "0",
-              "fieldName": "tabindex"
+              "fieldName": "tabindex",
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
             }
           ],
           "mixins": [
@@ -2486,6 +2513,7 @@
               "privacy": "public",
               "default": "false",
               "attribute": "aria-disabled",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -2594,6 +2622,22 @@
               "privacy": "public",
               "default": "false",
               "attribute": "aria-readonly",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "tabIndex",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "public",
+              "default": "0",
+              "attribute": "tabindex",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -2646,6 +2690,18 @@
               },
               "default": "''",
               "fieldName": "identifier",
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
+              "name": "tabindex",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "fieldName": "tabIndex",
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -2774,6 +2830,7 @@
               "privacy": "public",
               "default": "false",
               "attribute": "aria-disabled",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -2864,6 +2921,22 @@
               "privacy": "public",
               "default": "false",
               "attribute": "aria-readonly",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "tabIndex",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "public",
+              "default": "0",
+              "attribute": "tabindex",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -2914,6 +2987,18 @@
               },
               "default": "''",
               "fieldName": "identifier",
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
+              "name": "tabindex",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "fieldName": "tabIndex",
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -3035,6 +3120,7 @@
               "privacy": "public",
               "default": "false",
               "attribute": "aria-disabled",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -3125,6 +3211,22 @@
               "privacy": "public",
               "default": "false",
               "attribute": "aria-readonly",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "tabIndex",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "public",
+              "default": "0",
+              "attribute": "tabindex",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -3187,6 +3289,18 @@
               },
               "default": "''",
               "fieldName": "identifier",
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
+              "name": "tabindex",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "fieldName": "tabIndex",
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -3363,6 +3477,7 @@
               "privacy": "public",
               "default": "false",
               "attribute": "aria-disabled",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -3485,6 +3600,22 @@
               "privacy": "public",
               "default": "false",
               "attribute": "aria-readonly",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "tabIndex",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "public",
+              "default": "0",
+              "attribute": "tabindex",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -3553,6 +3684,18 @@
               "default": "0",
               "description": "the minimal number of selections a candidate must make",
               "fieldName": "matchMin"
+            },
+            {
+              "name": "tabindex",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "fieldName": "tabIndex",
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
             }
           ],
           "mixins": [
@@ -3682,6 +3825,7 @@
               "privacy": "public",
               "default": "false",
               "attribute": "aria-disabled",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -3790,19 +3934,11 @@
               "privacy": "public",
               "default": "false",
               "attribute": "aria-readonly",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
               }
-            },
-            {
-              "kind": "field",
-              "name": "shadowRootOptions",
-              "type": {
-                "text": "ShadowRootInit"
-              },
-              "static": true,
-              "default": "{ ...LitElement.shadowRootOptions, delegatesFocus: true }"
             },
             {
               "kind": "field",
@@ -3813,6 +3949,21 @@
               "privacy": "public",
               "default": "'show'",
               "attribute": "show-hide"
+            },
+            {
+              "kind": "field",
+              "name": "tabIndex",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "public",
+              "default": "0",
+              "attribute": "tabindex",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
             },
             {
               "kind": "field",
@@ -3877,6 +4028,18 @@
               },
               "default": "'show'",
               "fieldName": "showHide"
+            },
+            {
+              "name": "tabindex",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "fieldName": "tabIndex",
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
             },
             {
               "name": "template-identifier",
@@ -4138,7 +4301,8 @@
               },
               "privacy": "public",
               "default": "false",
-              "attribute": "aria-disabled"
+              "attribute": "aria-disabled",
+              "reflects": true
             },
             {
               "kind": "method",
@@ -4202,7 +4366,19 @@
               },
               "privacy": "public",
               "default": "false",
-              "attribute": "aria-readonly"
+              "attribute": "aria-readonly",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "tabIndex",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "public",
+              "default": "0",
+              "attribute": "tabindex",
+              "reflects": true
             }
           ],
           "events": [
@@ -4237,6 +4413,14 @@
               },
               "default": "''",
               "fieldName": "identifier"
+            },
+            {
+              "name": "tabindex",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "fieldName": "tabIndex"
             }
           ],
           "parameters": [
@@ -10212,6 +10396,7 @@
                 "text": "ResponseValue"
               },
               "attribute": "correct-response",
+              "reflects": true,
               "parsedType": {
                 "text": "string | string[]"
               },
@@ -10236,6 +10421,7 @@
               },
               "default": "false",
               "attribute": "disabled",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -10354,6 +10540,7 @@
               },
               "default": "false",
               "attribute": "readonly",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -10477,6 +10664,7 @@
               "default": "false",
               "description": "Shows feedback on candidate's selections compared to correct response.\nAdds `candidate-correct` / `candidate-incorrect` states to choices.",
               "attribute": "show-candidate-correction",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -10491,6 +10679,7 @@
               "default": "false",
               "description": "Shows which choices are correct with inline indicators.\nAdds `correct-response` / `incorrect-response` states to choices.",
               "attribute": "show-correct-response",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -10505,6 +10694,7 @@
               "default": "false",
               "description": "Shows a cloned interaction with the correct answers filled in.\nCreates a disabled copy positioned after this interaction.",
               "attribute": "show-full-correct-response",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -11164,6 +11354,7 @@
                 "text": "ResponseValue"
               },
               "attribute": "correct-response",
+              "reflects": true,
               "parsedType": {
                 "text": "string | string[]"
               },
@@ -11188,6 +11379,7 @@
               },
               "default": "false",
               "attribute": "disabled",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -11323,6 +11515,7 @@
               },
               "default": "false",
               "attribute": "readonly",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -11452,6 +11645,7 @@
               "default": "false",
               "description": "Shows feedback on candidate's selections compared to correct response.\nAdds `candidate-correct` / `candidate-incorrect` states to choices.",
               "attribute": "show-candidate-correction",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -11466,6 +11660,7 @@
               "default": "false",
               "description": "Shows which choices are correct with inline indicators.\nAdds `correct-response` / `incorrect-response` states to choices.",
               "attribute": "show-correct-response",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -11480,6 +11675,7 @@
               "default": "false",
               "description": "Shows a cloned interaction with the correct answers filled in.\nCreates a disabled copy positioned after this interaction.",
               "attribute": "show-full-correct-response",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -12423,6 +12619,7 @@
                 "text": "ResponseValue"
               },
               "attribute": "correct-response",
+              "reflects": true,
               "parsedType": {
                 "text": "string | string[]"
               },
@@ -12451,6 +12648,7 @@
               },
               "default": "false",
               "attribute": "disabled",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -12868,6 +13066,7 @@
               },
               "default": "false",
               "attribute": "readonly",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -13085,6 +13284,7 @@
               "default": "false",
               "description": "Shows feedback on candidate's selections compared to correct response.\nAdds `candidate-correct` / `candidate-incorrect` states to choices.",
               "attribute": "show-candidate-correction",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -13099,6 +13299,7 @@
               "default": "false",
               "description": "Shows which choices are correct with inline indicators.\nAdds `correct-response` / `incorrect-response` states to choices.",
               "attribute": "show-correct-response",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -13113,6 +13314,7 @@
               "default": "false",
               "description": "Shows a cloned interaction with the correct answers filled in.\nCreates a disabled copy positioned after this interaction.",
               "attribute": "show-full-correct-response",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -13797,6 +13999,7 @@
                 "text": "ResponseValue"
               },
               "attribute": "correct-response",
+              "reflects": true,
               "parsedType": {
                 "text": "string | string[]"
               },
@@ -13813,6 +14016,7 @@
               },
               "default": "false",
               "attribute": "disabled",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -13916,6 +14120,7 @@
               },
               "default": "false",
               "attribute": "readonly",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -14032,6 +14237,7 @@
               "default": "false",
               "description": "Shows feedback on candidate's selections compared to correct response.\nAdds `candidate-correct` / `candidate-incorrect` states to choices.",
               "attribute": "show-candidate-correction",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -14046,6 +14252,7 @@
               "default": "false",
               "description": "Shows which choices are correct with inline indicators.\nAdds `correct-response` / `incorrect-response` states to choices.",
               "attribute": "show-correct-response",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -14060,6 +14267,7 @@
               "default": "false",
               "description": "Shows a cloned interaction with the correct answers filled in.\nCreates a disabled copy positioned after this interaction.",
               "attribute": "show-full-correct-response",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -15435,6 +15643,7 @@
                 "text": "ResponseValue"
               },
               "attribute": "correct-response",
+              "reflects": true,
               "parsedType": {
                 "text": "string | string[]"
               },
@@ -15451,6 +15660,7 @@
               },
               "default": "false",
               "attribute": "disabled",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -15567,6 +15777,7 @@
               },
               "default": "false",
               "attribute": "readonly",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -15684,6 +15895,7 @@
               "default": "false",
               "description": "Shows feedback on candidate's selections compared to correct response.\nAdds `candidate-correct` / `candidate-incorrect` states to choices.",
               "attribute": "show-candidate-correction",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -15698,6 +15910,7 @@
               "default": "false",
               "description": "Shows which choices are correct with inline indicators.\nAdds `correct-response` / `incorrect-response` states to choices.",
               "attribute": "show-correct-response",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -15712,6 +15925,7 @@
               "default": "false",
               "description": "Shows a cloned interaction with the correct answers filled in.\nCreates a disabled copy positioned after this interaction.",
               "attribute": "show-full-correct-response",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -16488,6 +16702,7 @@
                 "text": "ResponseValue"
               },
               "attribute": "correct-response",
+              "reflects": true,
               "parsedType": {
                 "text": "string | string[]"
               },
@@ -16504,6 +16719,7 @@
               },
               "default": "false",
               "attribute": "disabled",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -16620,6 +16836,7 @@
               },
               "default": "false",
               "attribute": "readonly",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -16737,6 +16954,7 @@
               "default": "false",
               "description": "Shows feedback on candidate's selections compared to correct response.\nAdds `candidate-correct` / `candidate-incorrect` states to choices.",
               "attribute": "show-candidate-correction",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -16751,6 +16969,7 @@
               "default": "false",
               "description": "Shows which choices are correct with inline indicators.\nAdds `correct-response` / `incorrect-response` states to choices.",
               "attribute": "show-correct-response",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -16765,6 +16984,7 @@
               "default": "false",
               "description": "Shows a cloned interaction with the correct answers filled in.\nCreates a disabled copy positioned after this interaction.",
               "attribute": "show-full-correct-response",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -17520,6 +17740,7 @@
                 "text": "ResponseValue"
               },
               "attribute": "correct-response",
+              "reflects": true,
               "parsedType": {
                 "text": "string | string[]"
               },
@@ -17536,6 +17757,7 @@
               },
               "default": "false",
               "attribute": "disabled",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -17652,6 +17874,7 @@
               },
               "default": "false",
               "attribute": "readonly",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -17769,6 +17992,7 @@
               "default": "false",
               "description": "Shows feedback on candidate's selections compared to correct response.\nAdds `candidate-correct` / `candidate-incorrect` states to choices.",
               "attribute": "show-candidate-correction",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -17783,6 +18007,7 @@
               "default": "false",
               "description": "Shows which choices are correct with inline indicators.\nAdds `correct-response` / `incorrect-response` states to choices.",
               "attribute": "show-correct-response",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -17797,6 +18022,7 @@
               "default": "false",
               "description": "Shows a cloned interaction with the correct answers filled in.\nCreates a disabled copy positioned after this interaction.",
               "attribute": "show-full-correct-response",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -18318,7 +18544,8 @@
             {
               "kind": "method",
               "name": "#estimateOptimalWidth",
-              "privacy": "private"
+              "privacy": "private",
+              "description": "Size the trigger to the widest option using character-based (`ch`) width\nrather than a JS pixel measurement.\n\nThe previous approach opened the menu invisibly and read\n`getBoundingClientRect()` / `scrollWidth`, freezing a pixel width in\n`connectedCallback`. That measurement raced against asynchronously-loading\ntheme CSS (e.g. the kennisnet Bootstrap `@import`) and web fonts, so the frozen\nwidth depended on load timing and drifted between environments/runs — the root\ncause of the inline-choice VRT flakiness.\n\n`ch` resolves against the trigger's own font at paint time, so the width tracks\nwhatever theme font ultimately applies — no reflow read, no timing race. The\nicon, inner gap and horizontal padding are covered by\n`--qti-inline-choice-width-allowance`, which themes can tune. Options rendered\nas non-text content (e.g. images) only contribute their text length; such\ndropdowns may need a larger allowance."
             },
             {
               "kind": "method",
@@ -18392,6 +18619,24 @@
               "kind": "field",
               "name": "#onTriggerClick",
               "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#optionTextLength",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "content",
+                  "type": {
+                    "text": "string | Node[]"
+                  }
+                }
+              ]
             },
             {
               "kind": "method",
@@ -18503,6 +18748,7 @@
                 "text": "ResponseValue"
               },
               "attribute": "correct-response",
+              "reflects": true,
               "parsedType": {
                 "text": "string | string[]"
               },
@@ -18519,6 +18765,7 @@
               },
               "default": "false",
               "attribute": "disabled",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -18616,6 +18863,7 @@
               },
               "default": "false",
               "attribute": "readonly",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -18741,6 +18989,7 @@
               "default": "false",
               "description": "Shows feedback on candidate's selections compared to correct response.\nAdds `candidate-correct` / `candidate-incorrect` states to choices.",
               "attribute": "show-candidate-correction",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -18755,6 +19004,7 @@
               "default": "false",
               "description": "Shows which choices are correct with inline indicators.\nAdds `correct-response` / `incorrect-response` states to choices.",
               "attribute": "show-correct-response",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -18769,6 +19019,7 @@
               "default": "false",
               "description": "Shows a cloned interaction with the correct answers filled in.\nCreates a disabled copy positioned after this interaction.",
               "attribute": "show-full-correct-response",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -19723,6 +19974,7 @@
                 "text": "ResponseValue"
               },
               "attribute": "correct-response",
+              "reflects": true,
               "parsedType": {
                 "text": "string | string[]"
               },
@@ -19751,6 +20003,7 @@
               },
               "default": "false",
               "attribute": "disabled",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -20163,6 +20416,7 @@
               },
               "default": "false",
               "attribute": "readonly",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -20381,6 +20635,7 @@
               "default": "false",
               "description": "Shows feedback on candidate's selections compared to correct response.\nAdds `candidate-correct` / `candidate-incorrect` states to choices.",
               "attribute": "show-candidate-correction",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -20395,6 +20650,7 @@
               "default": "false",
               "description": "Shows which choices are correct with inline indicators.\nAdds `correct-response` / `incorrect-response` states to choices.",
               "attribute": "show-correct-response",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -20409,6 +20665,7 @@
               "default": "false",
               "description": "Shows a cloned interaction with the correct answers filled in.\nCreates a disabled copy positioned after this interaction.",
               "attribute": "show-full-correct-response",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -21024,6 +21281,7 @@
                 "text": "ResponseValue"
               },
               "attribute": "correct-response",
+              "reflects": true,
               "parsedType": {
                 "text": "string | string[]"
               },
@@ -21040,6 +21298,7 @@
               },
               "default": "false",
               "attribute": "disabled",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -21128,6 +21387,7 @@
               },
               "default": "false",
               "attribute": "readonly",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -21243,6 +21503,7 @@
               "default": "false",
               "description": "Shows feedback on candidate's selections compared to correct response.\nAdds `candidate-correct` / `candidate-incorrect` states to choices.",
               "attribute": "show-candidate-correction",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -21257,6 +21518,7 @@
               "default": "false",
               "description": "Shows which choices are correct with inline indicators.\nAdds `correct-response` / `incorrect-response` states to choices.",
               "attribute": "show-correct-response",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -21271,6 +21533,7 @@
               "default": "false",
               "description": "Shows a cloned interaction with the correct answers filled in.\nCreates a disabled copy positioned after this interaction.",
               "attribute": "show-full-correct-response",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -22793,6 +23056,7 @@
                 "text": "ResponseValue"
               },
               "attribute": "correct-response",
+              "reflects": true,
               "parsedType": {
                 "text": "string | string[]"
               },
@@ -22832,6 +23096,7 @@
               },
               "default": "false",
               "attribute": "disabled",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -23052,6 +23317,7 @@
               },
               "default": "false",
               "attribute": "readonly",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -23291,6 +23557,7 @@
               "default": "false",
               "description": "Shows feedback on candidate's selections compared to correct response.\nAdds `candidate-correct` / `candidate-incorrect` states to choices.",
               "attribute": "show-candidate-correction",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -23305,6 +23572,7 @@
               "default": "false",
               "description": "Shows which choices are correct with inline indicators.\nAdds `correct-response` / `incorrect-response` states to choices.",
               "attribute": "show-correct-response",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -23319,6 +23587,7 @@
               "default": "false",
               "description": "Shows a cloned interaction with the correct answers filled in.\nCreates a disabled copy positioned after this interaction.",
               "attribute": "show-full-correct-response",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -24313,6 +24582,7 @@
                 "text": "ResponseValue"
               },
               "attribute": "correct-response",
+              "reflects": true,
               "parsedType": {
                 "text": "string | string[]"
               },
@@ -24364,6 +24634,7 @@
               },
               "default": "false",
               "attribute": "disabled",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -24820,6 +25091,7 @@
               },
               "default": "false",
               "attribute": "readonly",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -25122,6 +25394,7 @@
               "default": "false",
               "description": "Shows feedback on candidate's selections compared to correct response.\nAdds `candidate-correct` / `candidate-incorrect` states to choices.",
               "attribute": "show-candidate-correction",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -25136,6 +25409,7 @@
               "default": "false",
               "description": "Shows which choices are correct with inline indicators.\nAdds `correct-response` / `incorrect-response` states to choices.",
               "attribute": "show-correct-response",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -25150,6 +25424,7 @@
               "default": "false",
               "description": "Shows a cloned interaction with the correct answers filled in.\nCreates a disabled copy positioned after this interaction.",
               "attribute": "show-full-correct-response",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -26044,6 +26319,7 @@
                 "text": "ResponseValue"
               },
               "attribute": "correct-response",
+              "reflects": true,
               "parsedType": {
                 "text": "string | string[]"
               },
@@ -26060,6 +26336,7 @@
               },
               "default": "false",
               "attribute": "disabled",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -26168,6 +26445,7 @@
               },
               "default": "false",
               "attribute": "readonly",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -26290,6 +26568,7 @@
               "default": "false",
               "description": "Shows feedback on candidate's selections compared to correct response.\nAdds `candidate-correct` / `candidate-incorrect` states to choices.",
               "attribute": "show-candidate-correction",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -26304,6 +26583,7 @@
               "default": "false",
               "description": "Shows which choices are correct with inline indicators.\nAdds `correct-response` / `incorrect-response` states to choices.",
               "attribute": "show-correct-response",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -26318,6 +26598,7 @@
               "default": "false",
               "description": "Shows a cloned interaction with the correct answers filled in.\nCreates a disabled copy positioned after this interaction.",
               "attribute": "show-full-correct-response",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -26919,6 +27200,7 @@
                 "text": "ResponseValue"
               },
               "attribute": "correct-response",
+              "reflects": true,
               "parsedType": {
                 "text": "string | string[]"
               },
@@ -26935,6 +27217,7 @@
               },
               "default": "false",
               "attribute": "disabled",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -27041,6 +27324,7 @@
               },
               "default": "false",
               "attribute": "readonly",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -27157,6 +27441,7 @@
               "default": "false",
               "description": "Shows feedback on candidate's selections compared to correct response.\nAdds `candidate-correct` / `candidate-incorrect` states to choices.",
               "attribute": "show-candidate-correction",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -27171,6 +27456,7 @@
               "default": "false",
               "description": "Shows which choices are correct with inline indicators.\nAdds `correct-response` / `incorrect-response` states to choices.",
               "attribute": "show-correct-response",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -27185,6 +27471,7 @@
               "default": "false",
               "description": "Shows a cloned interaction with the correct answers filled in.\nCreates a disabled copy positioned after this interaction.",
               "attribute": "show-full-correct-response",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -27713,6 +28000,7 @@
                 "text": "ResponseValue"
               },
               "attribute": "correct-response",
+              "reflects": true,
               "parsedType": {
                 "text": "string | string[]"
               },
@@ -27737,6 +28025,7 @@
               },
               "default": "false",
               "attribute": "disabled",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -27853,6 +28142,7 @@
               },
               "default": "false",
               "attribute": "readonly",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -27970,6 +28260,7 @@
               "default": "false",
               "description": "Shows feedback on candidate's selections compared to correct response.\nAdds `candidate-correct` / `candidate-incorrect` states to choices.",
               "attribute": "show-candidate-correction",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -27984,6 +28275,7 @@
               "default": "false",
               "description": "Shows which choices are correct with inline indicators.\nAdds `correct-response` / `incorrect-response` states to choices.",
               "attribute": "show-correct-response",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -27998,6 +28290,7 @@
               "default": "false",
               "description": "Shows a cloned interaction with the correct answers filled in.\nCreates a disabled copy positioned after this interaction.",
               "attribute": "show-full-correct-response",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -28540,6 +28833,7 @@
                 "text": "ResponseValue"
               },
               "attribute": "correct-response",
+              "reflects": true,
               "parsedType": {
                 "text": "string | string[]"
               },
@@ -28556,6 +28850,7 @@
               },
               "default": "false",
               "attribute": "disabled",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -28644,6 +28939,7 @@
               },
               "default": "false",
               "attribute": "readonly",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -28759,6 +29055,7 @@
               "default": "false",
               "description": "Shows feedback on candidate's selections compared to correct response.\nAdds `candidate-correct` / `candidate-incorrect` states to choices.",
               "attribute": "show-candidate-correction",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -28773,6 +29070,7 @@
               "default": "false",
               "description": "Shows which choices are correct with inline indicators.\nAdds `correct-response` / `incorrect-response` states to choices.",
               "attribute": "show-correct-response",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -28787,6 +29085,7 @@
               "default": "false",
               "description": "Shows a cloned interaction with the correct answers filled in.\nCreates a disabled copy positioned after this interaction.",
               "attribute": "show-full-correct-response",
+              "reflects": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -29164,6 +29463,7 @@
                 "text": "ResponseValue"
               },
               "attribute": "correct-response",
+              "reflects": true,
               "parsedType": {
                 "text": "string | string[]"
               }
@@ -29175,7 +29475,8 @@
                 "text": "boolean"
               },
               "default": "false",
-              "attribute": "disabled"
+              "attribute": "disabled",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -29232,7 +29533,8 @@
                 "text": "boolean"
               },
               "default": "false",
-              "attribute": "readonly"
+              "attribute": "readonly",
+              "reflects": true
             },
             {
               "kind": "method",
@@ -29310,7 +29612,8 @@
               },
               "default": "false",
               "description": "Shows feedback on candidate's selections compared to correct response.\nAdds `candidate-correct` / `candidate-incorrect` states to choices.",
-              "attribute": "show-candidate-correction"
+              "attribute": "show-candidate-correction",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -29320,7 +29623,8 @@
               },
               "default": "false",
               "description": "Shows which choices are correct with inline indicators.\nAdds `correct-response` / `incorrect-response` states to choices.",
-              "attribute": "show-correct-response"
+              "attribute": "show-correct-response",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -29330,7 +29634,8 @@
               },
               "default": "false",
               "description": "Shows a cloned interaction with the correct answers filled in.\nCreates a disabled copy positioned after this interaction.",
-              "attribute": "show-full-correct-response"
+              "attribute": "show-full-correct-response",
+              "reflects": true
             },
             {
               "kind": "method",
