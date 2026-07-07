@@ -8,58 +8,65 @@ const config: StorybookConfig = {
   //   '../apps/*/!(node_modules)/**/*.@(mdx|stories.@(js|jsx|ts|tsx))',
   //   '../packages/*/!(node_modules)/**/*.@(mdx|stories.@(js|jsx|ts|tsx))'
   // ],
-  stories: [
-    {
-      directory: '../docs',
-      files: '**/*.stories.*',
-      titlePrefix: 'Docs'
-    },
-    {
-      directory: '../docs',
-      files: '**/*.mdx',
-      titlePrefix: 'Docs'
-    },
-    {
-      directory: '../apps/e2e/src',
-      files: '**/*.stories.*',
-      titlePrefix: 'E2E'
-    },
-    {
-      directory: '../docs',
-      files: '**/*.stories.*',
-      titlePrefix: 'Docs'
-    },
-    {
-      directory: '../packages/qti-elements/src/components',
-      files: '**/*.stories.*',
-      titlePrefix: 'QTI Elements'
-    },
-    {
-      directory: '../packages/interactions',
-      files: '**/*.stories.*',
-      titlePrefix: 'QTI Interactions'
-    },
-    {
-      directory: '../packages/qti-processing/src/components',
-      files: '**/*.stories.*',
-      titlePrefix: 'QTI Processing'
-    },
-    {
-      directory: '../packages/qti-item/src/components',
-      files: '**/*.stories.*',
-      titlePrefix: 'Item'
-    },
-    {
-      directory: '../packages/qti-test/src/components',
-      files: '**/*.stories.*',
-      titlePrefix: 'Test'
-    },
-    {
-      directory: '../packages/qti-theme/src',
-      files: '**/*.stories.*',
-      titlePrefix: 'Theme'
-    }
-  ],
+  // VRT screenshot runs set VRT=1 (see the test:vrt scripts) to narrow the story set to
+  // just the opted-in visual-regression file. Otherwise the Storybook plugin builds and
+  // indexes all ~113 story files on every `test:vrt`, which is slow. Dev and other test
+  // projects (no VRT env) keep the full story set below.
+  stories:
+    process.env.VRT === '1'
+      ? [{ directory: '../apps/e2e/src', files: '**/kennisnet-all-items.stories.ts', titlePrefix: 'E2E' }]
+      : [
+          {
+            directory: '../docs',
+            files: '**/*.stories.*',
+            titlePrefix: 'Docs'
+          },
+          {
+            directory: '../docs',
+            files: '**/*.mdx',
+            titlePrefix: 'Docs'
+          },
+          {
+            directory: '../apps/e2e/src',
+            files: '**/*.stories.*',
+            titlePrefix: 'E2E'
+          },
+          {
+            directory: '../docs',
+            files: '**/*.stories.*',
+            titlePrefix: 'Docs'
+          },
+          {
+            directory: '../packages/qti-elements/src/components',
+            files: '**/*.stories.*',
+            titlePrefix: 'QTI Elements'
+          },
+          {
+            directory: '../packages/interactions',
+            files: '**/*.stories.*',
+            titlePrefix: 'QTI Interactions'
+          },
+          {
+            directory: '../packages/qti-processing/src/components',
+            files: '**/*.stories.*',
+            titlePrefix: 'QTI Processing'
+          },
+          {
+            directory: '../packages/qti-item/src/components',
+            files: '**/*.stories.*',
+            titlePrefix: 'Item'
+          },
+          {
+            directory: '../packages/qti-test/src/components',
+            files: '**/*.stories.*',
+            titlePrefix: 'Test'
+          },
+          {
+            directory: '../packages/qti-theme/src',
+            files: '**/*.stories.*',
+            titlePrefix: 'Theme'
+          }
+        ],
   addons: [
     '@storybook/addon-a11y',
     'storybook-addon-tag-badges',
@@ -72,7 +79,12 @@ const config: StorybookConfig = {
     name: '@storybook/web-components-vite',
     options: {}
   },
-  staticDirs: ['../public'],
+  staticDirs: [
+    '../public',
+    // Serve committed VRT baseline screenshots so the in-canvas overlay decorator
+    // (see preview.ts) can lay them over the live story for onion-skin review.
+    { from: '../apps/e2e/src/stories/__screenshots__', to: '/baselines' }
+  ],
   async viteFinal(config: any, { configType }: { configType?: string }) {
     return {
       ...config,

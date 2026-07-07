@@ -16,8 +16,8 @@ initialize({
 });
 import customElements from '../custom-elements.json';
 import { toBePositionedRelativeTo } from '../tools/testing/setup/toBePositionedRelativeTo';
-import '../packages/qti-theme/src/item.css';
-import kennisnetOverrideHref from '../packages/qti-theme/src/kennisnet-override.scss?url';
+import { baselineOverlayDecorator, baselineOverlayGlobalTypes } from './extensions/baseline-overlay';
+import { styleSubstrateDecorator, styleSubstrateGlobalTypes } from './extensions/style-substrate';
 import '../packages/qti-components/src';
 
 import type { Preview } from '@storybook/web-components-vite';
@@ -45,6 +45,13 @@ export const customViewports = {
       width: '1257px',
       height: '598px'
     }
+  },
+  vrtBaseline: {
+    name: 'VRT baseline',
+    styles: {
+      width: '960px',
+      height: '900px'
+    }
   }
 };
 
@@ -66,21 +73,6 @@ expect.extend({ toBePositionedRelativeTo });
 
 setCustomElementsManifest(customElements);
 
-const OVERRIDE_LINK_CLASS = 'qti-vendor-override';
-/*
- * Each substrate maps to an ordered list of stylesheet URLs the iframe loads
- * for that choice. Add a new vendor by adding (a) an entry here and (b) an
- * item in the `globalTypes.override.toolbar.items` array below.
- *
- * - citolab: minimal normalize, no opinionated reset.
- * - kennisnet: single self-contained file — pulls Bootstrap + Wikiwijs bridge +
- *   FontAwesome glyph CDN URLs internally (see kennisnet-override.scss).
- */
-const OVERRIDE_STYLESHEETS: Record<string, string[]> = {
-  citolab: ['https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.css'],
-  kennisnet: [kennisnetOverrideHref]
-};
-
 const preview: Preview = {
   decorators: [
     withThemeByClassName({
@@ -90,27 +82,8 @@ const preview: Preview = {
       },
       defaultTheme: 'light'
     }),
-    (story, context) => {
-      const choice = context.globals.override as string | undefined;
-      const wantHrefs = (choice && OVERRIDE_STYLESHEETS[choice]) || [];
-      const existing = Array.from(document.getElementsByClassName(OVERRIDE_LINK_CLASS)) as HTMLLinkElement[];
-      const existingHrefs = existing.map(l => l.getAttribute('href'));
-      const wantSet = new Set(wantHrefs);
-      // Drop links no longer wanted.
-      for (const link of existing) {
-        if (!wantSet.has(link.getAttribute('href') || '')) link.remove();
-      }
-      // Add links not yet present, preserving order so the cascade stays predictable.
-      for (const href of wantHrefs) {
-        if (existingHrefs.includes(href)) continue;
-        const link = document.createElement('link');
-        link.className = OVERRIDE_LINK_CLASS;
-        link.rel = 'stylesheet';
-        link.href = href;
-        document.head.appendChild(link);
-      }
-      return story();
-    }
+    styleSubstrateDecorator,
+    baselineOverlayDecorator
   ],
 
   parameters: {
@@ -150,19 +123,8 @@ const preview: Preview = {
   },
 
   globalTypes: {
-    override: {
-      name: 'Override',
-      description: 'Choose which vendor substrate (reset + overrides) layers under the qti-theme baseline',
-      defaultValue: 'citolab',
-      toolbar: {
-        icon: 'paintbrush',
-        items: [
-          { value: 'citolab', title: 'Citolab' },
-          { value: 'kennisnet', title: 'Kennisnet' }
-        ],
-        dynamicTitle: true
-      }
-    }
+    ...styleSubstrateGlobalTypes,
+    ...baselineOverlayGlobalTypes
   },
 
   tags: ['!autodocs']

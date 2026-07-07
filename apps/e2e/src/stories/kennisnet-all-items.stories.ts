@@ -2,6 +2,8 @@ import { html } from 'lit';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
+const KENNISNET_ITEM_WIDTH = 906;
+
 /**
  * Kennisnet themed QTI items. Each story renders a single `<qti-item-body>` with
  * hard-coded incorrect responses and correct-responses so `show-candidate-correction`
@@ -9,23 +11,44 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
  */
 const meta: Meta = {
   title: 'Kennisnet All Items',
-  tags: ['autodocs', 'no-tests'],
+  tags: ['autodocs', 'no-tests', 'vrt'],
+  // Fullscreen removes Storybook's default padded-canvas padding, so the story renders
+  // from the same origin in the dev canvas and the addon-vitest capture — keeping the VRT
+  // baseline overlay aligned.
+  parameters: {
+    layout: 'fullscreen',
+    viewport: {
+      defaultViewport: 'vrtBaseline',
+      options: {
+        vrtBaseline: {
+          name: 'VRT baseline',
+          styles: {
+            width: '960px',
+            height: '900px'
+          }
+        }
+      }
+    }
+  },
   decorators: [
     story => html`
       <style>
-        body {
-          background-color: #edecf6;
+        /* Plain descendant selectors rather than @scope, which is dropped in the
+           addon-vitest portable-story render. The fixed width keeps the Kennisnet
+           layout identical between Storybook review and VRT capture. */
+        .kennisnet-item qti-rubric-block {
+          display: block !important;
         }
-        @scope (.kennisnet-item) {
-          qti-rubric-block {
-            display: block !important;
-          }
-          qti-item-body {
-            display: block;
-            background: white;
-            padding: 1.5rem;
-            max-width: 906px;
-          }
+        .kennisnet-item {
+          width: ${KENNISNET_ITEM_WIDTH}px;
+          min-width: ${KENNISNET_ITEM_WIDTH}px;
+        }
+        .kennisnet-item qti-item-body {
+          display: block;
+          width: ${KENNISNET_ITEM_WIDTH}px;
+          min-width: ${KENNISNET_ITEM_WIDTH}px;
+          max-width: ${KENNISNET_ITEM_WIDTH}px;
+          box-sizing: border-box;
         }
       </style>
       <div class="kennisnet-item">${story()}</div>
@@ -38,6 +61,7 @@ type Story = StoryObj;
 
 /** ITEM001 — Meerkeuzevraag één antwoord (single-choice). */
 export const MeerkeuzevraagEenAntwoord: Story = {
+  name: 'ITEM001 — Meerkeuzevraag één antwoord',
   render: () => html`
     <qti-item-body>
       <div class="qti-layout-row">
@@ -72,6 +96,7 @@ export const MeerkeuzevraagEenAntwoord: Story = {
 
 /** ITEM002 — Meerkeuzevraag meerdere antwoorden (multi-choice). */
 export const MeerkeuzevraagMeerdereAntwoorden: Story = {
+  name: 'ITEM002 — Meerkeuzevraag meerdere antwoorden',
   render: () => html`
     <qti-item-body>
       <div class="qti-layout-row">
@@ -113,6 +138,7 @@ export const MeerkeuzevraagMeerdereAntwoorden: Story = {
 
 /** ITEM003 — Tekstvraag – hoofdletterongevoelig (text entry, case-insensitive). */
 export const TekstvraagHoofdletterongevoelig: Story = {
+  name: 'ITEM003 — Tekstvraag – hoofdletterongevoelig',
   render: () => html`
     <qti-item-body>
       <div class="qti-layout-row">
@@ -149,6 +175,7 @@ export const TekstvraagHoofdletterongevoelig: Story = {
 
 /** ITEM004 — Tekstvraag – exacte match (text entry, exact match). */
 export const TekstvraagExacteMatch: Story = {
+  name: 'ITEM004 — Tekstvraag – exacte match',
   render: () => html`
     <qti-item-body>
       <div class="qti-layout-row">
@@ -182,6 +209,7 @@ export const TekstvraagExacteMatch: Story = {
 
 /** ITEM005 — Open tekstvraag (extended text, manual scoring). */
 export const OpenTekstvraag: Story = {
+  name: 'ITEM005 — Open tekstvraag',
   render: () => html`
     <qti-item-body>
       <div>
@@ -219,6 +247,7 @@ export const OpenTekstvraag: Story = {
 
 /** ITEM006 — Dropdownvraag (inline choice). */
 export const Dropdownvraag: Story = {
+  name: 'ITEM006 — Dropdownvraag',
   render: () => html`
     <qti-item-body>
       <div class="qti-layout-row">
@@ -253,6 +282,7 @@ export const Dropdownvraag: Story = {
 
 /** ITEM007 — Sleepvraag - opties boven (drag-drop match, options above). */
 export const SleepvraagOptiesBoven: Story = {
+  name: 'ITEM007 — Sleepvraag - opties boven',
   render: () => html`
     <qti-item-body>
       <div>
@@ -302,6 +332,7 @@ export const SleepvraagOptiesBoven: Story = {
 
 /** ITEM008 — Sleepvraag - opties rechts (drag-drop match, options right). */
 export const SleepvraagOptiesRechts: Story = {
+  name: 'ITEM008 — Sleepvraag - opties rechts',
   render: () => html`
     <qti-item-body>
       <div class="qti-layout-row">
@@ -359,6 +390,7 @@ export const SleepvraagOptiesRechts: Story = {
 
 /** ITEM009 — Sleepvraag – meerdere antwoorden per categorie (drag-drop match, multiple per bucket). */
 export const SleepvraagMeerdereAntwoordenPerCategorie: Story = {
+  name: 'ITEM009 — Sleepvraag – meerdere antwoorden per categorie',
   render: () => html`
     <qti-item-body>
       <div>
@@ -412,6 +444,7 @@ export const SleepvraagMeerdereAntwoordenPerCategorie: Story = {
 
 /** ITEM010 — Matrixvraag (tabular match). */
 export const Matrixvraag: Story = {
+  name: 'ITEM010 — Matrixvraag',
   render: () => html`
     <qti-item-body>
       <div class="qti-layout-row">
@@ -506,6 +539,7 @@ export const Matrixvraag: Story = {
 
 /** ITEM011 — Woorden selecteren (hottext selection). */
 export const WoordenSelecteren: Story = {
+  name: 'ITEM011 — Woorden selecteren',
   render: () => html`
     <qti-item-body>
       <div>
@@ -591,6 +625,7 @@ export const WoordenSelecteren: Story = {
 
 /** ITEM012 — Woorden selecteren (woorden niet herkenbaar) (hottext, hidden choices). */
 export const WoordenSelecterenNietHerkenbaar: Story = {
+  name: 'ITEM012 — Woorden selecteren (niet herkenbaar)',
   render: () => html`
     <qti-item-body>
       <p>Selecteer alle werkwoorden in de volgende zin (de woorden zijn niet herkenbaar gemarkeerd):</p>
@@ -625,8 +660,71 @@ export const WoordenSelecterenNietHerkenbaar: Story = {
   `
 };
 
+/** ITEM013 — Volgordevraag (horizontaal) (order interaction, horizontal). */
+export const VolgordevraagHorizontaal: Story = {
+  name: 'ITEM013 — Volgordevraag (horizontaal)',
+  render: () => html`
+    <qti-item-body>
+      <p>Zet de volgende stappen van het wetenschappelijke proces in de juiste volgorde (van links naar rechts):</p>
+      <qti-order-interaction
+        response-identifier="RESPONSE"
+        shuffle="false"
+        orientation="horizontal"
+        response="step_hypothese,step_conclusies,step_data"
+        correct-response="step_hypothese,step_data,step_conclusies"
+        show-candidate-correction
+        show-full-correct-response
+      >
+        <qti-simple-choice identifier="step_hypothese">Hypothese formuleren</qti-simple-choice>
+        <qti-simple-choice identifier="step_conclusies">Conclusies trekken</qti-simple-choice>
+        <qti-simple-choice identifier="step_data">Data verzamelen</qti-simple-choice>
+      </qti-order-interaction>
+
+      <qti-rubric-block view="scorer" use="scoring">
+        <qti-content-body>
+          <ul>
+            <li>Correcte volgorde: Hypothese formuleren → Data verzamelen → Conclusies trekken</li>
+          </ul>
+        </qti-content-body>
+      </qti-rubric-block>
+    </qti-item-body>
+  `
+};
+
+/** ITEM014 — Volgordevraag (verticaal) (order interaction, vertical). */
+export const VolgordevraagVerticaal: Story = {
+  name: 'ITEM014 — Volgordevraag (verticaal)',
+  render: () => html`
+    <qti-item-body>
+      <p>Sorteer de volgende getallen van klein naar groot:</p>
+      <qti-order-interaction
+        response-identifier="RESPONSE"
+        shuffle="false"
+        orientation="vertical"
+        response="num_sqrt2,num_1,num_pi"
+        correct-response="num_1,num_sqrt2,num_pi"
+        show-candidate-correction
+        show-full-correct-response
+      >
+        <qti-simple-choice identifier="num_sqrt2">√2 (≈ 1,414)</qti-simple-choice>
+        <qti-simple-choice identifier="num_1">1</qti-simple-choice>
+        <qti-simple-choice identifier="num_pi">π (≈ 3,14159)</qti-simple-choice>
+      </qti-order-interaction>
+
+      <qti-rubric-block view="scorer" use="scoring">
+        <qti-content-body>
+          <ul>
+            <li>Correcte volgorde: 1 → √2 → π</li>
+          </ul>
+        </qti-content-body>
+      </qti-rubric-block>
+    </qti-item-body>
+  `
+};
+
 /** ITEM015 — Gatentekst (gap-match). */
 export const Gatentekst: Story = {
+  name: 'ITEM015 — Gatentekst',
   render: () => html`
     <qti-item-body>
       <div class="qti-layout-row">
@@ -669,6 +767,7 @@ export const Gatentekst: Story = {
 
 /** ITEM016 — Punt selecteren (select-point). */
 export const PuntSelecteren: Story = {
+  name: 'ITEM016 — Punt selecteren',
   render: () => html`
     <qti-item-body>
       <div>

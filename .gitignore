@@ -31,6 +31,10 @@ storybook-static/
 public/assets/api/test
 .env
 *__screenshots__/
+# VRT baselines are the regression contract — they MUST be committed (override above).
+!apps/e2e/src/stories/__screenshots__/
+# Vitest writes actual/diff images here on failure; never commit these.
+.vitest-attachments/
 .eslintcache
 cdn
 dev
