@@ -18544,8 +18544,7 @@
             {
               "kind": "method",
               "name": "#estimateOptimalWidth",
-              "privacy": "private",
-              "description": "Size the trigger to the widest option using character-based (`ch`) width\nrather than a JS pixel measurement.\n\nThe previous approach opened the menu invisibly and read\n`getBoundingClientRect()` / `scrollWidth`, freezing a pixel width in\n`connectedCallback`. That measurement raced against asynchronously-loading\ntheme CSS (e.g. the kennisnet Bootstrap `@import`) and web fonts, so the frozen\nwidth depended on load timing and drifted between environments/runs — the root\ncause of the inline-choice VRT flakiness.\n\n`ch` resolves against the trigger's own font at paint time, so the width tracks\nwhatever theme font ultimately applies — no reflow read, no timing race. The\nicon, inner gap and horizontal padding are covered by\n`--qti-inline-choice-width-allowance`, which themes can tune. Options rendered\nas non-text content (e.g. images) only contribute their text length; such\ndropdowns may need a larger allowance."
+              "privacy": "private"
             },
             {
               "kind": "method",
@@ -18619,24 +18618,6 @@
               "kind": "field",
               "name": "#onTriggerClick",
               "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "#optionTextLength",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "number"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "content",
-                  "type": {
-                    "text": "string | Node[]"
-                  }
-                }
-              ]
             },
             {
               "kind": "method",
