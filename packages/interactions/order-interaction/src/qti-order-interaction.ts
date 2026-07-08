@@ -8,9 +8,10 @@ import {
 } from '@qti-components/interactions-core/mixins/drag-drop-observables';
 
 import styles from './qti-order-interaction.styles';
+import { findCorrectlyPlacedIdentifiers } from './utils/longest-increasing-subsequence';
 
-import type { PropertyValueMap } from 'lit';
 import type { QtiSimpleChoice } from '@qti-components/interactions-core/elements/qti-simple-choice';
+import type { PropertyValueMap } from 'lit';
 
 const SlottedBase = DragDropSlottedMixin(Interaction, `qti-simple-choice`, 'drop-list', `slot[part='drags']`);
 
@@ -112,18 +113,27 @@ export class QtiOrderInteraction extends DragDropSlottedSortableMixin(SlottedBas
 
     if (!show) return;
 
-    const entries = this.#getCorrectOrderEntries();
-    const correctByDrop = new Map<number, string>();
-    entries.forEach(entry => correctByDrop.set(entry.dropIndex, entry.identifier));
+    const correctOrder = this.#getCorrectOrderEntries()
+      .sort((entryA, entryB) => entryA.dropIndex - entryB.dropIndex)
+      .map(entry => entry.identifier);
+    if (correctOrder.length === 0) return;
 
     const dropLists = Array.from(this.shadowRoot.querySelectorAll<HTMLElement>('drop-list'));
-    dropLists.forEach((dropList, index) => {
-      const placedChoice = dropList.querySelector<QtiSimpleChoice>('[qti-draggable="true"]');
-      if (!placedChoice) return;
+    const placedEntries = dropLists
+      .map(dropList => {
+        const placedChoice = dropList.querySelector<QtiSimpleChoice>('[qti-draggable="true"]');
+        if (!placedChoice) return null;
+        return { placedChoice, identifier: placedChoice.getAttribute('identifier') };
+      })
+      .filter((entry): entry is { placedChoice: QtiSimpleChoice; identifier: string } => entry !== null);
 
-      const expectedIdentifier = correctByDrop.get(index);
-      const actualIdentifier = placedChoice.getAttribute('identifier');
-      if (expectedIdentifier && actualIdentifier === expectedIdentifier) {
+    const correctlyPlacedIdentifiers = findCorrectlyPlacedIdentifiers(
+      placedEntries.map(entry => entry.identifier),
+      correctOrder
+    );
+
+    placedEntries.forEach(({ placedChoice, identifier }) => {
+      if (correctlyPlacedIdentifiers.has(identifier)) {
         placedChoice.internals.states.add('candidate-correct');
       } else {
         placedChoice.internals.states.add('candidate-incorrect');
