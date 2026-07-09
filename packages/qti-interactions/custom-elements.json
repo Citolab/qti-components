@@ -467,6 +467,17 @@
               ]
             },
             {
+              "kind": "method",
+              "name": "isDragDropEnabled",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Whether drag-and-drop is live for this interaction. `qti-match-interaction` turns it off\nin tabular mode, where the choices are a radio/checkbox grid rather than chips."
+            },
+            {
               "kind": "field",
               "name": "lastPointerDownAt",
               "type": {
@@ -483,6 +494,17 @@
               },
               "privacy": "private",
               "default": "0"
+            },
+            {
+              "kind": "method",
+              "name": "publishDraggablesSelector",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Publish how a chip recognises itself. Draggability is positional in match-interaction —\nthe same tag is a source in one match-set and a drop target in the other — so each element\ntests itself against this selector rather than being told."
             },
             {
               "kind": "method",

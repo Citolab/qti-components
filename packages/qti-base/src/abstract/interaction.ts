@@ -1,13 +1,15 @@
 import { property, state } from 'lit/decorators.js';
 import { LitElement } from 'lit';
-import { consume } from '@lit/context';
+import { consume, provide } from '@lit/context';
 
 import { watch } from '@qti-components/utilities';
 
 import { configContext } from '../context/config.context';
+import { interactionContext } from '../context/interaction.context';
 import { itemContext } from '../context/qti-assessment-item.context';
 import { responseAttributeConverter, type ResponseValue } from '../lib/response';
 
+import type { InteractionContext } from '../context/interaction.context';
 import type { ConfigContext } from '../context/config.context';
 import type { ResponseVariable } from '../lib/variables';
 import type { IInteraction } from '../lib/interaction.interface';
@@ -25,6 +27,17 @@ export abstract class Interaction extends LitElement implements IInteraction {
 
   @consume({ context: configContext, subscribe: true })
   protected configContext: ConfigContext;
+
+  /*
+   * Published to the choice elements inside this interaction — their role, and how to tell
+   * whether they are draggable. Provided here on the base rather than in a mixin so that
+   * ChoicesMixin and the drag-drop mixins can each contribute without two providers of the same
+   * context competing on one element.
+   *
+   * Reassign, never mutate: an in-place change does not notify consumers.
+   */
+  @provide({ context: interactionContext })
+  protected _interactionContext: Readonly<InteractionContext> = { choiceRole: null, draggablesSelector: null };
 
   static formAssociated = true;
   protected _internals: ElementInternals;

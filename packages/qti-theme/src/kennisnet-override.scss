@@ -89,11 +89,7 @@ qti-associate-interaction qti-simple-associable-choice,
  * FontAwesome `grip-vertical` glyph as the drag handle, painted via
  * `mask-image` so it inherits `currentColor`. Sits BEFORE the chip text.
  */
-qti-order-interaction qti-simple-choice::part(control)::before,
-qti-gap-match-interaction qti-gap-text::part(control)::before,
-qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:first-of-type qti-simple-associable-choice::part(control)::before,
-qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:last-of-type > qti-simple-associable-choice > qti-simple-associable-choice::part(control)::before,
-qti-associate-interaction qti-simple-associable-choice::part(control)::before,
+:state(drag)::part(control)::before,
 [data-drag-clone]::before {
   content: '';
   display: inline-block;

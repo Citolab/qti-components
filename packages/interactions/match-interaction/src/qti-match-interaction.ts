@@ -63,6 +63,12 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
     else this._response = val;
   }
 
+  // Tabular mode is a pure radio/checkbox grid — drag-drop has no role there, so the choices
+  // must not advertise themselves as draggable either. Suppresses `:state(drag)` on them.
+  public override isDragDropEnabled(): boolean {
+    return !this.classList.contains('qti-match-tabular');
+  }
+
   // Tabular mode is a pure radio/checkbox grid — drag-drop has no role there.
   // Short-circuit drag initiation so no clone is created and no shadow/lightdom
   // state can diverge from this._response.

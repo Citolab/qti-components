@@ -1,14 +1,8 @@
 import { property, query, state } from 'lit/decorators.js';
-import { consume, provide } from '@lit/context';
+import { consume } from '@lit/context';
 
 import { watch } from '@qti-components/utilities';
-import {
-  configContext,
-  interactionContext,
-  responseAttributeConverter,
-  type ConfigContext,
-  type InteractionContext
-} from '@qti-components/base';
+import { configContext, responseAttributeConverter, type ConfigContext } from '@qti-components/base';
 
 import type { ComplexAttributeConverter } from 'lit';
 import type { Interaction, IInteraction } from '@qti-components/base';
@@ -43,13 +37,6 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
 
     @property({ type: Number, attribute: 'max-choices' })
     public maxChoices = 1;
-
-    /*
-     * Provided to the choices inside this interaction. Reassigned, never mutated — an in-place
-     * change does not notify consumers.
-     */
-    @provide({ context: interactionContext })
-    protected _interactionContext: Readonly<InteractionContext> = { choiceRole: null };
 
     /* removed waitUntilFirstUpdate to fix issues with stories and tests */
     @watch('maxChoices')

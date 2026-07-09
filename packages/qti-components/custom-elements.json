@@ -892,10 +892,10 @@
                 "text": "Readonly<InteractionContext>"
               },
               "privacy": "protected",
-              "default": "{ choiceRole: null }",
+              "default": "{ choiceRole: null, draggablesSelector: null }",
               "inheritedFrom": {
-                "name": "ChoicesMixin",
-                "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -2154,7 +2154,7 @@
               "kind": "method",
               "name": "#syncChoiceRole",
               "privacy": "private",
-              "description": "Apply the role the interaction published. No provider (standalone) means no role.",
+              "description": "Apply what the interaction published. No provider (standalone) means no role.\n\n`radio` / `checkbox` are both ARIA roles and custom states. `drag` is only a custom\nstate — it is not a valid ARIA role — and it is derived positionally, by testing this\nelement against the interaction's `draggablesSelector`. In match-interaction the same tag\nis a drag in one match-set and a drop target in the other.",
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -2563,7 +2563,7 @@
               "kind": "method",
               "name": "#syncChoiceRole",
               "privacy": "private",
-              "description": "Apply the role the interaction published. No provider (standalone) means no role.",
+              "description": "Apply what the interaction published. No provider (standalone) means no role.\n\n`radio` / `checkbox` are both ARIA roles and custom states. `drag` is only a custom\nstate — it is not a valid ARIA role — and it is derived positionally, by testing this\nelement against the interaction's `draggablesSelector`. In match-interaction the same tag\nis a drag in one match-set and a drop target in the other.",
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -2913,7 +2913,7 @@
               "kind": "method",
               "name": "#syncChoiceRole",
               "privacy": "private",
-              "description": "Apply the role the interaction published. No provider (standalone) means no role.",
+              "description": "Apply what the interaction published. No provider (standalone) means no role.\n\n`radio` / `checkbox` are both ARIA roles and custom states. `drag` is only a custom\nstate — it is not a valid ARIA role — and it is derived positionally, by testing this\nelement against the interaction's `draggablesSelector`. In match-interaction the same tag\nis a drag in one match-set and a drop target in the other.",
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -3236,7 +3236,7 @@
               "kind": "method",
               "name": "#syncChoiceRole",
               "privacy": "private",
-              "description": "Apply the role the interaction published. No provider (standalone) means no role.",
+              "description": "Apply what the interaction published. No provider (standalone) means no role.\n\n`radio` / `checkbox` are both ARIA roles and custom states. `drag` is only a custom\nstate — it is not a valid ARIA role — and it is derived positionally, by testing this\nelement against the interaction's `draggablesSelector`. In match-interaction the same tag\nis a drag in one match-set and a drop target in the other.",
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -3626,7 +3626,7 @@
               "kind": "method",
               "name": "#syncChoiceRole",
               "privacy": "private",
-              "description": "Apply the role the interaction published. No provider (standalone) means no role.",
+              "description": "Apply what the interaction published. No provider (standalone) means no role.\n\n`radio` / `checkbox` are both ARIA roles and custom states. `drag` is only a custom\nstate — it is not a valid ARIA role — and it is derived positionally, by testing this\nelement against the interaction's `draggablesSelector`. In match-interaction the same tag\nis a drag in one match-set and a drop target in the other.",
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -4020,7 +4020,7 @@
               "kind": "method",
               "name": "#syncChoiceRole",
               "privacy": "private",
-              "description": "Apply the role the interaction published. No provider (standalone) means no role.",
+              "description": "Apply what the interaction published. No provider (standalone) means no role.\n\n`radio` / `checkbox` are both ARIA roles and custom states. `drag` is only a custom\nstate — it is not a valid ARIA role — and it is derived positionally, by testing this\nelement against the interaction's `draggablesSelector`. In match-interaction the same tag\nis a drag in one match-set and a drop target in the other.",
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -4536,7 +4536,7 @@
               "kind": "method",
               "name": "#syncChoiceRole",
               "privacy": "private",
-              "description": "Apply the role the interaction published. No provider (standalone) means no role."
+              "description": "Apply what the interaction published. No provider (standalone) means no role.\n\n`radio` / `checkbox` are both ARIA roles and custom states. `drag` is only a custom\nstate — it is not a valid ARIA role — and it is derived positionally, by testing this\nelement against the interaction's `draggablesSelector`. In match-interaction the same tag\nis a drag in one match-set and a drop target in the other."
             },
             {
               "kind": "field",
@@ -4794,15 +4794,6 @@
               "kind": "field",
               "name": "_handleValueChange",
               "privacy": "protected"
-            },
-            {
-              "kind": "field",
-              "name": "_interactionContext",
-              "type": {
-                "text": "Readonly<InteractionContext>"
-              },
-              "privacy": "protected",
-              "default": "{ choiceRole: null }"
             },
             {
               "kind": "method",
@@ -5282,6 +5273,17 @@
               ]
             },
             {
+              "kind": "method",
+              "name": "isDragDropEnabled",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Whether drag-and-drop is live for this interaction. `qti-match-interaction` turns it off\nin tabular mode, where the choices are a radio/checkbox grid rather than chips."
+            },
+            {
               "kind": "field",
               "name": "lastPointerDownAt",
               "type": {
@@ -5298,6 +5300,17 @@
               },
               "privacy": "private",
               "default": "0"
+            },
+            {
+              "kind": "method",
+              "name": "publishDraggablesSelector",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Publish how a chip recognises itself. Draggability is positional in match-interaction —\nthe same tag is a source in one match-set and a drop target in the other — so each element\ntests itself against this selector rather than being told."
             },
             {
               "kind": "method",
@@ -10438,6 +10451,19 @@
             },
             {
               "kind": "field",
+              "name": "_interactionContext",
+              "type": {
+                "text": "Readonly<InteractionContext>"
+              },
+              "privacy": "protected",
+              "default": "{ choiceRole: null, draggablesSelector: null }",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_internals",
               "type": {
                 "text": "ElementInternals"
@@ -11536,6 +11562,19 @@
             },
             {
               "kind": "field",
+              "name": "_interactionContext",
+              "type": {
+                "text": "Readonly<InteractionContext>"
+              },
+              "privacy": "protected",
+              "default": "{ choiceRole: null, draggablesSelector: null }",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_internals",
               "type": {
                 "text": "ElementInternals"
@@ -12404,6 +12443,19 @@
               "kind": "field",
               "name": "_handleShowFullCorrectResponseChange",
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_interactionContext",
+              "type": {
+                "text": "Readonly<InteractionContext>"
+              },
+              "privacy": "protected",
+              "default": "{ choiceRole: null, draggablesSelector: null }",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -14117,6 +14169,19 @@
             },
             {
               "kind": "field",
+              "name": "_interactionContext",
+              "type": {
+                "text": "Readonly<InteractionContext>"
+              },
+              "privacy": "protected",
+              "default": "{ choiceRole: null, draggablesSelector: null }",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_internals",
               "type": {
                 "text": "ElementInternals"
@@ -15689,10 +15754,10 @@
                 "text": "Readonly<InteractionContext>"
               },
               "privacy": "protected",
-              "default": "{ choiceRole: null }",
+              "default": "{ choiceRole: null, draggablesSelector: null }",
               "inheritedFrom": {
-                "name": "ChoicesMixin",
-                "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -16744,10 +16809,10 @@
                 "text": "Readonly<InteractionContext>"
               },
               "privacy": "protected",
-              "default": "{ choiceRole: null }",
+              "default": "{ choiceRole: null, draggablesSelector: null }",
               "inheritedFrom": {
-                "name": "ChoicesMixin",
-                "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -17803,10 +17868,10 @@
                 "text": "Readonly<InteractionContext>"
               },
               "privacy": "protected",
-              "default": "{ choiceRole: null }",
+              "default": "{ choiceRole: null, draggablesSelector: null }",
               "inheritedFrom": {
-                "name": "ChoicesMixin",
-                "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -18733,6 +18798,19 @@
               "kind": "field",
               "name": "_handleShowFullCorrectResponseChange",
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_interactionContext",
+              "type": {
+                "text": "Readonly<InteractionContext>"
+              },
+              "privacy": "protected",
+              "default": "{ choiceRole: null, draggablesSelector: null }",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -19720,6 +19798,19 @@
             },
             {
               "kind": "field",
+              "name": "_interactionContext",
+              "type": {
+                "text": "Readonly<InteractionContext>"
+              },
+              "privacy": "protected",
+              "default": "{ choiceRole: null, draggablesSelector: null }",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_internals",
               "type": {
                 "text": "ElementInternals"
@@ -20511,6 +20602,19 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "isDragDropEnabled",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "type": {
+                "text": "isDragDropEnabled() => boolean"
               }
             },
             {
@@ -21436,6 +21540,19 @@
               "kind": "field",
               "name": "_handleShowFullCorrectResponseChange",
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_interactionContext",
+              "type": {
+                "text": "Readonly<InteractionContext>"
+              },
+              "privacy": "protected",
+              "default": "{ choiceRole: null, draggablesSelector: null }",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -22913,6 +23030,19 @@
             },
             {
               "kind": "field",
+              "name": "_interactionContext",
+              "type": {
+                "text": "Readonly<InteractionContext>"
+              },
+              "privacy": "protected",
+              "default": "{ choiceRole: null, draggablesSelector: null }",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_internals",
               "type": {
                 "text": "ElementInternals"
@@ -24318,6 +24448,19 @@
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "packages/interactions/portable-custom-interaction/src/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_interactionContext",
+              "type": {
+                "text": "Readonly<InteractionContext>"
+              },
+              "privacy": "protected",
+              "default": "{ choiceRole: null, draggablesSelector: null }",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -26406,6 +26549,19 @@
             },
             {
               "kind": "field",
+              "name": "_interactionContext",
+              "type": {
+                "text": "Readonly<InteractionContext>"
+              },
+              "privacy": "protected",
+              "default": "{ choiceRole: null, draggablesSelector: null }",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_internals",
               "type": {
                 "text": "ElementInternals"
@@ -27268,6 +27424,19 @@
               "kind": "field",
               "name": "_handleShowFullCorrectResponseChange",
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_interactionContext",
+              "type": {
+                "text": "Readonly<InteractionContext>"
+              },
+              "privacy": "protected",
+              "default": "{ choiceRole: null, draggablesSelector: null }",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -28143,6 +28312,19 @@
             },
             {
               "kind": "field",
+              "name": "_interactionContext",
+              "type": {
+                "text": "Readonly<InteractionContext>"
+              },
+              "privacy": "protected",
+              "default": "{ choiceRole: null, draggablesSelector: null }",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_internals",
               "type": {
                 "text": "ElementInternals"
@@ -28955,6 +29137,19 @@
             },
             {
               "kind": "field",
+              "name": "_interactionContext",
+              "type": {
+                "text": "Readonly<InteractionContext>"
+              },
+              "privacy": "protected",
+              "default": "{ choiceRole: null, draggablesSelector: null }",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_internals",
               "type": {
                 "text": "ElementInternals"
@@ -29651,6 +29846,15 @@
               "kind": "field",
               "name": "_handleShowFullCorrectResponseChange",
               "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "_interactionContext",
+              "type": {
+                "text": "Readonly<InteractionContext>"
+              },
+              "privacy": "protected",
+              "default": "{ choiceRole: null, draggablesSelector: null }"
             },
             {
               "kind": "field",

@@ -23,6 +23,7 @@ function patchWindow(window?: Window | null) {
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 
 export type DragDropCore = Interaction & {
+  isDragDropEnabled(): boolean;
   trackedDraggables: HTMLElement[];
   trackedDroppables: HTMLElement[];
   trackedDragContainers: HTMLElement[];
@@ -109,9 +110,30 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
 
     abstract saveResponse(value?: string | string[]): void;
 
+    /**
+     * Whether drag-and-drop is live for this interaction. `qti-match-interaction` turns it off
+     * in tabular mode, where the choices are a radio/checkbox grid rather than chips.
+     */
+    public isDragDropEnabled(): boolean {
+      return true;
+    }
+
+    /**
+     * Publish how a chip recognises itself. Draggability is positional in match-interaction —
+     * the same tag is a source in one match-set and a drop target in the other — so each element
+     * tests itself against this selector rather than being told.
+     */
+    protected publishDraggablesSelector(): void {
+      const selector = this.isDragDropEnabled() ? draggablesSelector : null;
+      if (this._interactionContext.draggablesSelector !== selector) {
+        this._interactionContext = { ...this._interactionContext, draggablesSelector: selector };
+      }
+    }
+
     override connectedCallback(): void {
       super.connectedCallback();
       patchWindow(this.ownerDocument?.defaultView);
+      this.publishDraggablesSelector();
       this.setupDragDrop();
     }
 
