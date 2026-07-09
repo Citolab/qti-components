@@ -12,21 +12,32 @@ what should be a part at all" document.
 | Where do dropped chips live? | **Inside the drop target's own shadow root**, rendered there declaratively (§8c). Not slotted, not appended. The target — authored (`qti-gap`, `qti-associable-hotspot`, `qti-simple-associable-choice`) or generated (a `<div part="drop">` in order/associate's shadow) — owns them. Supersedes the earlier "Option C" slotting plan. |
 | `ch` / `cha` | → **`control` / `control-mark`**. The role (radio / checkbox / grip) stays a `:state()`. |
 | Drop rendering | **Declarative, context-driven** (§8c, §8d). The interaction provides a reactive `dragDropContext`; each drop target subscribes and renders its own clones into its own shadow root via Lit. No `cloneNode`+`appendChild`, no `querySelectorAll` to recover state. **No `<qti-drop-slot>`.** |
-| Styling a dropped chip | **`part="drag"`** on the clone — it lives in the target's shadow root, so `qti-gap::part(drag)` works. Plus `exportparts="control, control-mark, label"` for its internals. `:state(dropped)` is unnecessary. |
+| Styling a dropped chip | **`part="drag"`** on the clone. A **bare `::part(drag)`** reaches it in *any* target's shadow root (§7 #5), and composes with states (§7 #3). `:state(dropped)` is unnecessary. |
+| Styling the chip's internals | Keep the contract **one level deep**. The grip glyph moves from `::part(control)::before` to the chip host's own `::before`, because parts do not chain (§7 #7). `exportparts` then becomes optional. |
+| Token vocabulary | **Not a precondition for Stage B.** A chip reads no tokens of its own, but `::part(drag)` reaches it regardless. Stays on `css-contract-audit.md` step 2, off the critical path. |
 | Drag/drop states | **`dragging`** and **`placeholder`** on the *source* chip in the light-DOM bank (§9). "Dropped" is structural, not a state. |
 | Who provides context | **The `qti-*-interaction`**, never `qti-assessment-item` — interactions must work standalone, in a plain form or on their own (§8e). Consumers read `this.ctx?.x ?? default`. |
 | How a choice learns its role | `qti-simple-choice` **subscribes** to `interactionContext` for `radio` / `checkbox` / `drag`, instead of the parent querying and pushing `states.add(role)` (§8e). |
 
-Consequences of Option C, to hold onto while implementing:
+Consequences to hold onto while implementing:
 
-- Chips never cross a shadow boundary, so `qti-simple-choice::part(control)` and
-  `[qti-draggable="true"]` work identically for a chip in the bank and a chip in a dropzone.
-- **No `exportparts` is needed.** It stays documented in §3 because `::part(drag)` — the
-  QTI-Editor contract — still refers to an element the editor projects into the shadow.
-- `part="qti-simple-choice"` (`qti-order-interaction.ts:174`) is deleted. It only existed to
-  reach chips that had fallen into the shadow.
-- Kennisnet's six-way draggable selector list collapses to `[qti-draggable="true"]`, and its
-  four `::part(qti-simple-choice)` rules collapse into the normal tag selector.
+- A chip has **three homes** — the light-DOM bank, the floating clone, and a drop target's shadow
+  root. The theme addresses the first with `:state(drag)` and the other two with `::part(drag)`.
+  Two selectors, exactly as many as kennisnet already carries. `[data-drag-clone]` is retired by
+  rendering the floating clone inside the interaction's shadow with `part="drag"`.
+- `part="qti-simple-choice"` (`qti-order-interaction.ts:174`, assigned imperatively at runtime) is
+  deleted. It is `part="drag"` under a name that leaks the tag it was standing in for.
+- `<drop-list>` is **not a defined custom element** — zero `customElements.define` calls. It is a
+  `<div>` with a hyphen, which is why it needs `role="region"` bolted on. It becomes
+  `<div part="drop">`.
+- `drag-drop.invariance.spec.ts` is the acceptance test for Stage B: after the move, a chip's three
+  homes are three different tree scopes, and "same border-box in bank, clone, and drop" is exactly
+  the property that catches a theme rule reaching only two of them.
+
+> **Superseded:** an earlier revision recorded "Option C" (chips stay slotted, never cross a shadow
+> boundary, no `exportparts` needed). §8c replaced it with declarative rendering into the target's
+> shadow. The `[qti-draggable="true"]` unification it promised does **not** survive that change —
+> attributes cannot cross a shadow boundary (§7 #1). `::part(drag)` replaces it.
 
 ---
 
@@ -231,11 +242,19 @@ the clone is what lands in the shadow.
 
 | Interaction | Container part | Individual drop target | Kind |
 |---|---|---|---|
-| order | `drops` (div) | `drop-list` (`<drop-list>` element) | shadow |
-| associate | `drop-container` (div) + `associables-container` (row div) | `drop-list` (div) | shadow |
+| order | `drops` (div) | `drop-list` (`<drop-list>` — **an undefined element**) | shadow |
+| associate | `drop-container` (div) + `associables-container` (row div) | `drop-list` (div.dl) | shadow |
 | gap-match | `drops` (slot) | *(none — `qti-gap`, light DOM)* | light |
 | match | — | *(none — `qti-simple-associable-choice`'s `dropslot` slot)* | light |
 | graphic-gap-match | — | *(none — `qti-associable-hotspot`, light DOM)* | light |
+
+Two findings from re-reading this (2026-07-09):
+
+- **`<drop-list>` is never defined.** `grep -c customElements.define … drop-list` → `0`. It is a
+  `<div>` whose name happens to contain a hyphen, hence the hand-added `role="region"`.
+- **`data-has-drop` is asymmetric.** It is *set* only inside the `QTI-SIMPLE-ASSOCIABLE-CHOICE`
+  branch of `dropDraggableInDroppable` (`drag-drop-slotted.mixin.ts:516`) but *removed* generically
+  in two other places. It should be a state on every drop target: `:state(filled)`.
 
 Three of five have **no part for the drop target at all**, because it's a light-DOM element.
 So no part vocabulary can unify them. The unifying hook has to be an attribute, mirroring
@@ -387,7 +406,8 @@ New tokens: `--qti-placeholder-bg`, `--qti-placeholder-shadow`.
 
 ## 7. Verified: what CSS can and cannot do here
 
-Probed in Chromium (temporary spec, 4/4 passed). These results decide §8.
+Probed in Chromium. Rows 1–4 from the original spec; rows 5–7 added 2026-07-09 after the question
+"why custom properties — can't we just use exportParts?" turned out to be correct.
 
 | # | Question | Result |
 |---|---|---|
@@ -395,13 +415,58 @@ Probed in Chromium (temporary spec, 4/4 passed). These results decide §8.
 | 2 | Does `host::part(drag)` reach it? | ✅ Yes. |
 | 3 | Does `host::part(drag):state(checked)` work? | ✅ Yes — parts compose with custom states. |
 | 4 | Does `exportparts` forward a nested component's part up one level? | ✅ Yes — `host::part(control)` matches the chip's inner `part="control"`. |
+| 5 | Does a **bare** `::part(drag)`, no element on the left, match? | ✅ **Yes.** One selector reaches a chip in *any* drop target's shadow root. |
+| 6 | Does `exportparts` support **renaming** (`control: drag-control`)? | ✅ Yes — `::part(drag-control)` matches the chip's inner control. |
+| 7 | Do parts **chain** (`::part(drag)::part(control)`)? | ❌ **No.** Inert. `exportparts` is the only route inward. |
 
 **The load-bearing consequence of #1:** the moment a chip lives in the interaction's shadow,
 `[qti-draggable="true"]` (Fact 3) and every tag selector stop working on it. Attributes are
 *not* a substitute for parts across a shadow boundary — they only unify light-DOM chips.
 
-Result #3 is the good news: `::part(drag):state(candidate-correct)` is a complete styling
-contract, needing no attributes at all.
+Results #3 and #5 together are stronger than this document originally assumed. `::part(drag)`
+alone — no `qti-gap`, no `qti-associable-hotspot`, no per-target selector list — is a complete
+styling contract for a dropped chip, and it composes with custom states. Kennisnet's six
+tag-scoped chip lists collapse to **two** selectors covering all three homes a chip has:
+
+```css
+:state(drag),   /* the bank chip: slotted, light DOM, so `part=` is unreachable (§8b) */
+::part(drag)    /* the floating clone and every dropped chip, in whatever shadow root */
+{ … }
+```
+
+That is the same count kennisnet carries today (`:state(drag), [data-drag-clone]`), so declarative
+rendering costs the theme nothing. `[data-drag-clone]` disappears once the floating clone is
+rendered inside the interaction's shadow carrying `part="drag"` as well.
+
+### Custom properties are *not* required — a correction
+
+It was briefly argued that a chip moved into a shadow root goes dark for the theme — it carries no
+styling of its own (verified: **0** `var(--qti-*)` reads in `qti-gap-text.styles.ts` and
+`qti-simple-choice.styles.ts`) — and therefore that the token vocabulary had to be frozen *before*
+Stage B.
+
+Wrong. Result #5 means the theme reaches the chip perfectly well through `::part(drag)`. Order and
+associate already prove it: their dropped chips live in the interaction's shadow and *are* themed,
+via the `part="qti-simple-choice"` hack, which is `part="drag"` with a bad name. Tokenising the
+chip's appearance stays worthwhile on its own merits (`css-contract-audit.md` step 2) but it **does
+not gate Stage B** and is off the critical path.
+
+### The one genuine cost: result #7
+
+Today the grip glyph is drawn by reaching *through* the chip into its shadow:
+
+```css
+:state(drag)::part(control)::before { /* grip */ }
+```
+
+which works only because a bank chip is itself a light-DOM host. Once the chip is rendered inside
+`qti-gap`'s shadow, `::part(drag)::part(control)` is inert (#7), so the inner part must be forwarded
+and renamed (#6) — giving the theme two spellings of one glyph.
+
+**Decision: draw the grip on the chip host, not on its control** — `:state(drag)::before` and
+`::part(drag)::before`. The grip is decoration on the chip, not on the control it happens to sit
+beside. Nothing needs forwarding, the part vocabulary stays one level deep everywhere, and
+`exportparts` on the clone becomes optional rather than load-bearing.
 
 ---
 
@@ -971,7 +1036,7 @@ qti-simple-choice:state(placeholder) {
   color: transparent;                       /* keep the box size, hide the text */
   background: var(--qti-placeholder-bg);
   box-shadow: inset var(--qti-placeholder-shadow);
-  border: none;
+  border-color: transparent;                /* NOT `border: none` — see below */
   pointer-events: none;
 }
 ```
@@ -981,3 +1046,59 @@ Kennisnet's `[style*='opacity: 0']` rule then collapses to `:state(placeholder)`
 theme's `--qti-placeholder-*` tokens.
 
 `pointer-events` stays in CSS so a theme can re-enable interaction if it wants.
+
+> An earlier draft of this snippet said `border: none`, and so did kennisnet. It costs the
+> placeholder 2px per axis, the drag bank rewraps, and the gap the user is aiming at slides a line
+> up mid-drag. That was the root of `Q6-L2-D1`. **A transient state may repaint an element; it may
+> never resize or move it** — now enforced by `tools/stylelint/no-layout-in-transient-state.mjs` and
+> measured by `drag-drop.invariance.spec.ts`.
+
+---
+
+## 10. Sequencing (revised 2026-07-09)
+
+The token vocabulary was previously believed to gate Stage B. It does not (§7). The order is:
+
+### Step 1 — the naming pass (mechanical, independently verifiable)
+
+No behaviour change, no data-flow change. Every drop target gets one vocabulary:
+
+| Today | Becomes |
+|---|---|
+| `<drop-list part="drop-list" role="region">` (order) | `<div part="drop">` |
+| `<div class="dl" part="drop-list">` (associate) | `<div part="drop">` |
+| `part="dropslot"` (match) | `part="drop"` |
+| `part="drop-container"` (associate) | `part="drops"` |
+| `part="associables-container"` (associate) | `part="drop-row"`, or delete the wrapper |
+| `part="associable-choices"` (associate) | `part="drags"` |
+| `part="qti-simple-choice"` (order, set at runtime) | **deleted** — it is `part="drag"` |
+| `[data-has-drop]` (match only) | `:state(filled)`, on every drop target |
+| *(nothing)* | `qti-droppable="true"` — the light-DOM counterpart of `qti-draggable` |
+
+`qti-droppable` exists because three of the five targets are light-DOM elements that no part can
+reach (§7 #1). It is the drop-side twin of Fact 3's `qti-draggable`.
+
+### Step 2 — Stage B: declarative drop rendering (§8c, §8d)
+
+`dragDropContext` becomes the source of truth; each target renders `${repeat(this.drags, …)}` into
+its own shadow root; the clone carries `part="drag"`; the grip moves to the chip host.
+
+**Size this first:** a chip one shadow root deeper is invisible to `querySelectorAll`. Known reads
+to convert to context lookups:
+
+- `toggleCandidateCorrection` in gap-match — `targetChoice.querySelectorAll('qti-gap-text')`
+- `cacheInteractiveElements()` — will no longer collect dropped chips
+- `DragDropSlottedSortableMixin:132` — `#sourceSlot.appendChild(targetItem)` reorders placed chips
+  by moving DOM nodes; must become a reorder of the context array
+- `collectResponseData`, `countTotalAssociations`, `isDroppableAtCapacity` — `@deprecated`, and no
+  longer called by `drag-drop-slotted.mixin.ts` (which references them only in a comment). They do
+  still have **three live call sites in the legacy `drag-drop/drag-drop-interaction-mixin.ts`**, the
+  deprecated parallel implementation. Stage B does not have to touch that file, but it cannot delete
+  the helpers until it goes.
+
+Pointer hit-testing is unaffected: `findDraggableTarget` (`utils/drag-drop.utils.ts:2`) walks
+`event.composedPath()`, which pierces shadow roots.
+
+### Step 3 — token vocabulary (`css-contract-audit.md` step 2)
+
+Independent. Worth doing; gates nothing.
