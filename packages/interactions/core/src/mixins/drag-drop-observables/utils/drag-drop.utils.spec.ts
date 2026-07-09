@@ -131,11 +131,17 @@ describe('drag-drop.utils', () => {
       getComputedStyle: () => ({ paddingLeft: '10', paddingRight: '10' })
     } as unknown as Window;
 
-    applyDropzoneAutoSizing([draggableA, draggableB], [droppable], [dragContainer], hostWindow);
+    const host = document.createElement('div');
 
-    expect(droppable.style.minHeight).toBe('var(--qti-dropzone-min-height, 40px)');
-    expect(droppable.style.minWidth).toBe('50px');
-    expect(slot.style.minHeight).toBe('var(--qti-dropzone-min-height, 40px)');
+    applyDropzoneAutoSizing(host, [draggableA, draggableB], [droppable], [dragContainer], hostWindow);
+
+    // Measurements are published as custom properties on the interaction host; each droppable's
+    // own stylesheet reads them. Nothing is written to a droppable's style attribute any more.
+    expect(host.style.getPropertyValue('--qti-dropzone-min-height')).toBe('40px');
+    expect(host.style.getPropertyValue('--qti-dropzone-min-width')).toBe('50px');
+    expect(droppable.getAttribute('style')).toBeNull();
+    expect(slot.getAttribute('style')).toBeNull();
+
     expect(dragContainer.style.minHeight).toBe('var(--qti-drag-container-min-height, 40px)');
     expect(dropContainer.style.gridTemplateColumns).toContain('minmax');
   });

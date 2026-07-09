@@ -245,8 +245,12 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
     }
 
     public override afterCache(): void {
-      this.applyConfiguredChoicesContainerWidth();
+      // Order matters: auto-sizing writes `min-width` from the widest chip, and `min-width`
+      // beats `width`. The author's configured width must therefore be applied last, and clear
+      // that min-width. Otherwise `data-choices-container-width` is silently discarded whenever
+      // a theme makes chips wider than the authored gap.
       this.updateMinDimensionsForDropZones();
+      this.applyConfiguredChoicesContainerWidth();
       if (this._pendingResponse !== undefined) {
         const pending = this._pendingResponse;
         this._pendingResponse = undefined;
@@ -265,10 +269,26 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       if (interaction.showFullCorrectResponse) interaction.toggleFullCorrectResponse?.(true);
     }
 
+    /**
+     * `data-choices-container-width` is an explicit authoring instruction, so it wins over the
+     * auto-sizing pass. Zeroing `--qti-dropzone-min-width` is the point: auto-sizing derives it
+     * from the widest chip and `min-width` takes precedence over `width`, so a theme with roomy
+     * chips would otherwise silently widen the gap past the authored value.
+     *
+     * Published as custom properties on the host rather than written to each droppable's
+     * `style` attribute — the droppables' stylesheets own the actual properties.
+     */
     private applyConfiguredChoicesContainerWidth(): void {
       const configuredWidth = this.dataset.choicesContainerWidth;
       if (!configuredWidth) return;
 
+      // Zeroing the measured min-width is the fix: min-width beats width, so the auto-sizing
+      // measurement would otherwise silently widen the dropzone past the authored value.
+      this.style.setProperty('--qti-dropzone-min-width', '0');
+
+      // `width` stays an inline style, deliberately. `qti-associable-hotspot` already carries an
+      // inline width derived from its `coords`, and an authored container width must override
+      // that — a custom property read from the element's own `:host` rule never could.
       this.trackedDroppables.forEach(droppable => {
         droppable.style.width = `${configuredWidth}px`;
         droppable.style.boxSizing = 'border-box';
@@ -388,7 +408,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
     private updateMinDimensionsForDropZones(): void {
       if (this.trackedDraggables.length === 0) return;
 
-      applyDropzoneAutoSizing(this.trackedDraggables, this.trackedDroppables, this.trackedDragContainers);
+      applyDropzoneAutoSizing(this, this.trackedDraggables, this.trackedDroppables, this.trackedDragContainers);
     }
 
     private restoreInventoryItem(dragSource: HTMLElement): void {

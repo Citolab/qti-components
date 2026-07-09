@@ -6067,7 +6067,8 @@
                 "type": {
                   "text": "void"
                 }
-              }
+              },
+              "description": "`data-choices-container-width` is an explicit authoring instruction, so it wins over the\nauto-sizing pass. Zeroing `--qti-dropzone-min-width` is the point: auto-sizing derives it\nfrom the widest chip and `min-width` takes precedence over `width`, so a theme with roomy\nchips would otherwise silently widen the gap past the authored value.\n\nPublished as custom properties on the host rather than written to each droppable's\n`style` attribute — the droppables' stylesheets own the actual properties."
             },
             {
               "kind": "field",
@@ -7801,6 +7802,12 @@
           },
           "parameters": [
             {
+              "name": "host",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
               "name": "draggables",
               "type": {
                 "text": "HTMLElement[]"
@@ -7825,7 +7832,8 @@
                 "text": "Window | null"
               }
             }
-          ]
+          ],
+          "description": "Measure the chips and publish the result as custom properties on the interaction host.\n\nJavaScript owns the *measurement*; CSS owns the *properties*. Each droppable's stylesheet\nreads `min-height: var(--qti-dropzone-min-height, 0)` etc., so nothing is written to\n`element.style` and a theme can override any of them by setting the variable.\n\nThis also removes a precedence trap: when both `min-width` and `width` were written inline,\n`min-width` silently won, discarding an authored `data-choices-container-width`."
         },
         {
           "kind": "function",
@@ -13032,6 +13040,7 @@
                   "text": "void"
                 }
               },
+              "description": "`data-choices-container-width` is an explicit authoring instruction, so it wins over the\nauto-sizing pass. Zeroing `--qti-dropzone-min-width` is the point: auto-sizing derives it\nfrom the widest chip and `min-width` takes precedence over `width`, so a theme with roomy\nchips would otherwise silently widen the gap past the authored value.\n\nPublished as custom properties on the host rather than written to each droppable's\n`style` attribute — the droppables' stylesheets own the actual properties.",
               "inheritedFrom": {
                 "name": "DragDropSlottedMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
@@ -20460,6 +20469,7 @@
                   "text": "void"
                 }
               },
+              "description": "`data-choices-container-width` is an explicit authoring instruction, so it wins over the\nauto-sizing pass. Zeroing `--qti-dropzone-min-width` is the point: auto-sizing derives it\nfrom the widest chip and `min-width` takes precedence over `width`, so a theme with roomy\nchips would otherwise silently widen the gap past the authored value.\n\nPublished as custom properties on the host rather than written to each droppable's\n`style` attribute — the droppables' stylesheets own the actual properties.",
               "inheritedFrom": {
                 "name": "DragDropSlottedMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"

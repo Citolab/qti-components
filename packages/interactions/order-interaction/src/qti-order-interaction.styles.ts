@@ -34,9 +34,12 @@ export default css`
     grid-template-columns: 1fr;
   }
 
+  /* Drop target. The interaction measures its chips and publishes the result as a custom
+     property on its host; the property itself lives here, not in a style attribute. */
   [part='drop-list'] {
     display: block;
     flex: 1;
+    min-height: var(--qti-dropzone-min-height, 0);
   }
 
   [part='drop-list'][active],

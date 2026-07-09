@@ -19,9 +19,11 @@ export default css`
     background-color: var(--qti-bg-active) !important;
   }
 
+  /* Drop target. --qti-dropzone-min-height is published by the interaction from the measured
+     chip height; 3rem is the fallback when there is nothing to measure. Was an inline style. */
   [part='drop-list'] {
     display: grid;
-    min-height: 3rem;
+    min-height: var(--qti-dropzone-min-height, 3rem);
     min-width: 10rem;
     border: 1px solid var(--qti-border-color, #d1d5db);
     border-radius: 0.25rem;

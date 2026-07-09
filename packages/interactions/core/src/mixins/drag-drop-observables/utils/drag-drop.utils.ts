@@ -163,7 +163,18 @@ export function collectResponseData(droppables: HTMLElement[], draggablesSelecto
     .flat();
 }
 
+/**
+ * Measure the chips and publish the result as custom properties on the interaction host.
+ *
+ * JavaScript owns the *measurement*; CSS owns the *properties*. Each droppable's stylesheet
+ * reads `min-height: var(--qti-dropzone-min-height, 0)` etc., so nothing is written to
+ * `element.style` and a theme can override any of them by setting the variable.
+ *
+ * This also removes a precedence trap: when both `min-width` and `width` were written inline,
+ * `min-width` silently won, discarding an authored `data-choices-container-width`.
+ */
 export function applyDropzoneAutoSizing(
+  host: HTMLElement,
   draggables: HTMLElement[],
   droppables: HTMLElement[],
   dragContainers: HTMLElement[],
@@ -200,18 +211,13 @@ export function applyDropzoneAutoSizing(
     dropContainer.style.gridTemplateColumns = `repeat(auto-fit, minmax(calc(min(${maxWidth}px, ${maxDraggableWidth}px + 2 * var(--qti-dropzone-padding, 0.5rem))), 1fr))`;
   }
 
-  droppables.forEach(droppable => {
-    droppable.style.minHeight = `var(--qti-dropzone-min-height, ${maxDraggableHeight}px)`;
-
-    if (isGridLayout || isGapElement) {
-      droppable.style.minWidth = `${maxDraggableWidth}px`;
-    }
-
-    const dropSlot: HTMLElement | null = droppable.shadowRoot?.querySelector('slot[part="dropslot"]');
-    if (dropSlot) {
-      dropSlot.style.minHeight = `var(--qti-dropzone-min-height, ${maxDraggableHeight}px)`;
-    }
-  });
+  // Measured values go on the host as custom properties; each droppable's own stylesheet reads
+  // them. A theme overrides by setting the same variable on the droppable, which is closer.
+  // --qti-dropzone-min-width is only set where it applied before: grid layouts and gaps.
+  host.style.setProperty('--qti-dropzone-min-height', `${maxDraggableHeight}px`);
+  if (isGridLayout || isGapElement) {
+    host.style.setProperty('--qti-dropzone-min-width', `${maxDraggableWidth}px`);
+  }
 
   dragContainers.forEach(dragContainer => {
     dragContainer.style.minHeight = `var(--qti-drag-container-min-height, ${maxDraggableHeight}px)`;
