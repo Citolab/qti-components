@@ -771,6 +771,7 @@
               "kind": "method",
               "name": "_determineInputType",
               "privacy": "protected",
+              "description": "Publish the role the choices should take. Each choice subscribes to\n`interactionContext` and applies its own ARIA role and `:state(radio|checkbox)`.\n\nThe interaction no longer reaches into its children to do this. That also removes the\nupgrade-order hazard the old code worked around: a choice that had not yet upgraded had\nno `internals`, so the push silently did nothing. A subscriber applies the role whenever\nit is ready.",
               "inheritedFrom": {
                 "name": "ChoicesMixin",
                 "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
@@ -886,6 +887,19 @@
             },
             {
               "kind": "field",
+              "name": "_interactionContext",
+              "type": {
+                "text": "Readonly<InteractionContext>"
+              },
+              "privacy": "protected",
+              "default": "{ choiceRole: null }",
+              "inheritedFrom": {
+                "name": "ChoicesMixin",
+                "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_internals",
               "type": {
                 "text": "ElementInternals"
@@ -923,23 +937,6 @@
                   "name": "checked",
                   "type": {
                     "text": "boolean"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ChoicesMixin",
-                "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "_setInputType",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "choiceElement",
-                  "type": {
-                    "text": "Choice"
                   }
                 }
               ],
@@ -2103,6 +2100,18 @@
               }
             },
             {
+              "kind": "field",
+              "name": "_interactionContext",
+              "type": {
+                "text": "Readonly<InteractionContext> | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "_onClick",
               "privacy": "private",
@@ -2123,6 +2132,29 @@
                   }
                 }
               ],
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#appliedChoiceRole",
+              "privacy": "private",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncChoiceRole",
+              "privacy": "private",
+              "description": "Apply the role the interaction published. No provider (standalone) means no role.",
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -2477,6 +2509,18 @@
               }
             },
             {
+              "kind": "field",
+              "name": "_interactionContext",
+              "type": {
+                "text": "Readonly<InteractionContext> | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "_onClick",
               "privacy": "private",
@@ -2497,6 +2541,29 @@
                   }
                 }
               ],
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#appliedChoiceRole",
+              "privacy": "private",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncChoiceRole",
+              "privacy": "private",
+              "description": "Apply the role the interaction published. No provider (standalone) means no role.",
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -2792,6 +2859,18 @@
               }
             },
             {
+              "kind": "field",
+              "name": "_interactionContext",
+              "type": {
+                "text": "Readonly<InteractionContext> | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "_onClick",
               "privacy": "private",
@@ -2812,6 +2891,29 @@
                   }
                 }
               ],
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#appliedChoiceRole",
+              "privacy": "private",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncChoiceRole",
+              "privacy": "private",
+              "description": "Apply the role the interaction published. No provider (standalone) means no role.",
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -3075,6 +3177,18 @@
               }
             },
             {
+              "kind": "field",
+              "name": "_interactionContext",
+              "type": {
+                "text": "Readonly<InteractionContext> | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "_onClick",
               "privacy": "private",
@@ -3101,9 +3215,32 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#appliedChoiceRole",
+              "privacy": "private",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "#onSelectInlineChoice",
               "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#syncChoiceRole",
+              "privacy": "private",
+              "description": "Apply the role the interaction published. No provider (standalone) means no role.",
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
             },
             {
               "kind": "field",
@@ -3435,6 +3572,18 @@
               }
             },
             {
+              "kind": "field",
+              "name": "_interactionContext",
+              "type": {
+                "text": "Readonly<InteractionContext> | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "_onClick",
               "privacy": "private",
@@ -3455,6 +3604,29 @@
                   }
                 }
               ],
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#appliedChoiceRole",
+              "privacy": "private",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncChoiceRole",
+              "privacy": "private",
+              "description": "Apply the role the interaction published. No provider (standalone) means no role.",
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -3794,6 +3966,18 @@
               }
             },
             {
+              "kind": "field",
+              "name": "_interactionContext",
+              "type": {
+                "text": "Readonly<InteractionContext> | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "_onClick",
               "privacy": "private",
@@ -3814,6 +3998,29 @@
                   }
                 }
               ],
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#appliedChoiceRole",
+              "privacy": "private",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncChoiceRole",
+              "privacy": "private",
+              "description": "Apply the role the interaction published. No provider (standalone) means no role.",
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -4291,6 +4498,14 @@
               "privacy": "private"
             },
             {
+              "kind": "field",
+              "name": "_interactionContext",
+              "type": {
+                "text": "Readonly<InteractionContext> | undefined"
+              },
+              "privacy": "protected"
+            },
+            {
               "kind": "method",
               "name": "_onClick",
               "privacy": "private"
@@ -4307,6 +4522,21 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "field",
+              "name": "#appliedChoiceRole",
+              "privacy": "private",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#syncChoiceRole",
+              "privacy": "private",
+              "description": "Apply the role the interaction published. No provider (standalone) means no role."
             },
             {
               "kind": "field",
@@ -4505,7 +4735,8 @@
             {
               "kind": "method",
               "name": "_determineInputType",
-              "privacy": "protected"
+              "privacy": "protected",
+              "description": "Publish the role the choices should take. Each choice subscribes to\n`interactionContext` and applies its own ARIA role and `:state(radio|checkbox)`.\n\nThe interaction no longer reaches into its children to do this. That also removes the\nupgrade-order hazard the old code worked around: a choice that had not yet upgraded had\nno `internals`, so the push silently did nothing. A subscriber applies the role whenever\nit is ready."
             },
             {
               "kind": "method",
@@ -4565,6 +4796,15 @@
               "privacy": "protected"
             },
             {
+              "kind": "field",
+              "name": "_interactionContext",
+              "type": {
+                "text": "Readonly<InteractionContext>"
+              },
+              "privacy": "protected",
+              "default": "{ choiceRole: null }"
+            },
+            {
               "kind": "method",
               "name": "_setChoiceChecked",
               "privacy": "protected",
@@ -4579,19 +4819,6 @@
                   "name": "checked",
                   "type": {
                     "text": "boolean"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_setInputType",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "choiceElement",
-                  "type": {
-                    "text": "Choice"
                   }
                 }
               ]
@@ -15341,6 +15568,7 @@
               "kind": "method",
               "name": "_determineInputType",
               "privacy": "protected",
+              "description": "Publish the role the choices should take. Each choice subscribes to\n`interactionContext` and applies its own ARIA role and `:state(radio|checkbox)`.\n\nThe interaction no longer reaches into its children to do this. That also removes the\nupgrade-order hazard the old code worked around: a choice that had not yet upgraded had\nno `internals`, so the push silently did nothing. A subscriber applies the role whenever\nit is ready.",
               "inheritedFrom": {
                 "name": "ChoicesMixin",
                 "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
@@ -15456,6 +15684,19 @@
             },
             {
               "kind": "field",
+              "name": "_interactionContext",
+              "type": {
+                "text": "Readonly<InteractionContext>"
+              },
+              "privacy": "protected",
+              "default": "{ choiceRole: null }",
+              "inheritedFrom": {
+                "name": "ChoicesMixin",
+                "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_internals",
               "type": {
                 "text": "ElementInternals"
@@ -15493,23 +15734,6 @@
                   "name": "checked",
                   "type": {
                     "text": "boolean"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ChoicesMixin",
-                "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "_setInputType",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "choiceElement",
-                  "type": {
-                    "text": "Choice"
                   }
                 }
               ],
@@ -16399,6 +16623,7 @@
               "kind": "method",
               "name": "_determineInputType",
               "privacy": "protected",
+              "description": "Publish the role the choices should take. Each choice subscribes to\n`interactionContext` and applies its own ARIA role and `:state(radio|checkbox)`.\n\nThe interaction no longer reaches into its children to do this. That also removes the\nupgrade-order hazard the old code worked around: a choice that had not yet upgraded had\nno `internals`, so the push silently did nothing. A subscriber applies the role whenever\nit is ready.",
               "inheritedFrom": {
                 "name": "ChoicesMixin",
                 "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
@@ -16514,6 +16739,19 @@
             },
             {
               "kind": "field",
+              "name": "_interactionContext",
+              "type": {
+                "text": "Readonly<InteractionContext>"
+              },
+              "privacy": "protected",
+              "default": "{ choiceRole: null }",
+              "inheritedFrom": {
+                "name": "ChoicesMixin",
+                "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_internals",
               "type": {
                 "text": "ElementInternals"
@@ -16551,23 +16789,6 @@
                   "name": "checked",
                   "type": {
                     "text": "boolean"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ChoicesMixin",
-                "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "_setInputType",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "choiceElement",
-                  "type": {
-                    "text": "Choice"
                   }
                 }
               ],
@@ -17461,6 +17682,7 @@
               "kind": "method",
               "name": "_determineInputType",
               "privacy": "protected",
+              "description": "Publish the role the choices should take. Each choice subscribes to\n`interactionContext` and applies its own ARIA role and `:state(radio|checkbox)`.\n\nThe interaction no longer reaches into its children to do this. That also removes the\nupgrade-order hazard the old code worked around: a choice that had not yet upgraded had\nno `internals`, so the push silently did nothing. A subscriber applies the role whenever\nit is ready.",
               "inheritedFrom": {
                 "name": "ChoicesMixin",
                 "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
@@ -17576,6 +17798,19 @@
             },
             {
               "kind": "field",
+              "name": "_interactionContext",
+              "type": {
+                "text": "Readonly<InteractionContext>"
+              },
+              "privacy": "protected",
+              "default": "{ choiceRole: null }",
+              "inheritedFrom": {
+                "name": "ChoicesMixin",
+                "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_internals",
               "type": {
                 "text": "ElementInternals"
@@ -17613,23 +17848,6 @@
                   "name": "checked",
                   "type": {
                     "text": "boolean"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ChoicesMixin",
-                "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "_setInputType",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "choiceElement",
-                  "type": {
-                    "text": "Choice"
                   }
                 }
               ],
@@ -30257,6 +30475,26 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/qti-base/src/context/interaction.context.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "interactionContext"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "interactionContext",
+          "declaration": {
+            "name": "interactionContext",
+            "module": "packages/qti-base/src/context/interaction.context.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/qti-base/src/context/item.context.ts",
       "declarations": [
         {
@@ -30467,6 +30705,14 @@
           "declaration": {
             "name": "*",
             "module": "packages/qti-base/src/context/config.context"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/qti-base/src/context/interaction.context"
           }
         },
         {

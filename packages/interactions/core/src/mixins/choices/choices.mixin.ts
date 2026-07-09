@@ -1,8 +1,14 @@
 import { property, query, state } from 'lit/decorators.js';
-import { consume } from '@lit/context';
+import { consume, provide } from '@lit/context';
 
 import { watch } from '@qti-components/utilities';
-import { configContext, responseAttributeConverter, type ConfigContext } from '@qti-components/base';
+import {
+  configContext,
+  interactionContext,
+  responseAttributeConverter,
+  type ConfigContext,
+  type InteractionContext
+} from '@qti-components/base';
 
 import type { ComplexAttributeConverter } from 'lit';
 import type { Interaction, IInteraction } from '@qti-components/base';
@@ -37,6 +43,13 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
 
     @property({ type: Number, attribute: 'max-choices' })
     public maxChoices = 1;
+
+    /*
+     * Provided to the choices inside this interaction. Reassigned, never mutated — an in-place
+     * change does not notify consumers.
+     */
+    @provide({ context: interactionContext })
+    protected _interactionContext: Readonly<InteractionContext> = { choiceRole: null };
 
     /* removed waitUntilFirstUpdate to fix issues with stories and tests */
     @watch('maxChoices')
@@ -202,10 +215,11 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
           if (choiceElement.internals && !choiceElement.internals.ariaChecked) {
             choiceElement.internals.ariaChecked = 'false';
           }
-
-          this._setInputType(choiceElement);
         }
       });
+
+      // Choices pull their own role from `interactionContext`; nothing to push here.
+      this._determineInputType();
 
       // Filter response to only include valid identifiers (handles removal)
       const validIdentifiers = new Set(this._choiceElements.map(c => c.identifier));
@@ -263,24 +277,20 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       return this._internals.validity.valid;
     }
 
+    /**
+     * Publish the role the choices should take. Each choice subscribes to
+     * `interactionContext` and applies its own ARIA role and `:state(radio|checkbox)`.
+     *
+     * The interaction no longer reaches into its children to do this. That also removes the
+     * upgrade-order hazard the old code worked around: a choice that had not yet upgraded had
+     * no `internals`, so the push silently did nothing. A subscriber applies the role whenever
+     * it is ready.
+     */
     protected _determineInputType() {
-      this._choiceElements.forEach(choice => {
-        this._setInputType(choice);
-      });
-    }
-
-    protected async _setInputType(choiceElement: Choice) {
       this._internals.role = this.maxChoices === 1 ? 'radiogroup' : null;
-
-      // Wait for the next update cycle to ensure DOM is ready before setting input type
-      // There was a weird bug in the shuffle stories only where radiobuttons were not shown
-      // This was because the choices were not upgraded to custom elements yet when this code ran, so internals was not available and role was not set
-
-      if (choiceElement.internals) {
-        const role = this.maxChoices === 1 ? 'radio' : 'checkbox';
-        choiceElement.internals.role = role;
-        choiceElement.internals.states.delete(role === 'radio' ? 'checkbox' : 'radio');
-        choiceElement.internals.states.add(role);
+      const choiceRole = this.maxChoices === 1 ? 'radio' : 'checkbox';
+      if (this._interactionContext.choiceRole !== choiceRole) {
+        this._interactionContext = { ...this._interactionContext, choiceRole };
       }
     }
 

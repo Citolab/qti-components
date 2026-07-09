@@ -1,9 +1,12 @@
 import { html } from 'lit';
-import { property } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { consume } from '@lit/context';
 
 import { watch } from '@qti-components/utilities';
+import { interactionContext } from '@qti-components/base';
 
-import type { ComplexAttributeConverter, LitElement } from 'lit';
+import type { ComplexAttributeConverter, LitElement, PropertyValues } from 'lit';
+import type { InteractionContext } from '@qti-components/base';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 
@@ -72,6 +75,33 @@ export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, t
 
     public internals: ElementInternals;
 
+    /*
+     * The role this element should take — radio, checkbox, or drag chip — is a property of the
+     * interaction it sits in, not of the element. It subscribes rather than being told, so it
+     * behaves correctly wherever it is placed, and works standalone with no provider above it.
+     */
+    @consume({ context: interactionContext, subscribe: true })
+    @state()
+    protected _interactionContext?: Readonly<InteractionContext>;
+
+    #appliedChoiceRole: string | null = null;
+
+    /** Apply the role the interaction published. No provider (standalone) means no role. */
+    #syncChoiceRole() {
+      const role = this._interactionContext?.choiceRole ?? null;
+      if (role === this.#appliedChoiceRole) return;
+
+      if (this.#appliedChoiceRole) this.internals.states.delete(this.#appliedChoiceRole);
+      this.#appliedChoiceRole = role;
+
+      if (role) {
+        this.internals.role = role;
+        this.internals.states.add(role);
+      } else {
+        this.internals.role = null;
+      }
+    }
+
     @watch('disabled', { waitUntilFirstUpdate: true })
     handleDisabledChange(_oldValue: boolean, disabled: boolean) {
       // Mirror the semantic onto ElementInternals: the ARIA property feeds the accessibility
@@ -102,6 +132,11 @@ export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, t
     constructor(...args: any[]) {
       super(...args);
       this.internals = this.attachInternals();
+    }
+
+    override willUpdate(changed: PropertyValues<this>) {
+      super.willUpdate(changed);
+      this.#syncChoiceRole();
     }
 
     override connectedCallback() {
