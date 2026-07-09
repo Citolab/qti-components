@@ -838,6 +838,65 @@ must fall back to a sensible default role. That fallback is part of the contract
 
 ---
 
+## 8f. Dropzone auto-sizing — measured once, applied to almost nothing
+
+Verified by probe, not inspection:
+
+| | `--qti-dropzone-min-width` |
+|---|---|
+| initial | `32px` |
+| after the chips get wider (late CSS / font load) | `32px` |
+| after a new chip is added to the bank | `32px` |
+| after a drop | `32px` |
+
+Three defects:
+
+1. **`min-width` reaches only two of five interactions.** `applyDropzoneAutoSizing` sets it when
+   `droppables[0]` is a `QTI-GAP` or a `QTI-SIMPLE-ASSOCIABLE-CHOICE`. Order's `drop-list`,
+   associate's `.dl` and graphic-gap-match's hotspots get `min-height` only. Order's drop-lists
+   merely *look* sized because they are `flex: 1`.
+2. **It is not reactive.** `updateMinDimensionsForDropZones()` runs once from `afterCache()`. It
+   survives neither a late-loading font, nor a chip added to the bank, nor a drop. Same failure
+   mode as the inline-choice trigger width: measure once, before the CSS lands, freeze the wrong
+   number.
+3. **`autoSizeDropzones` is decorative.** A public property with an `auto-size-dropzones`
+   attribute, default `false`, read by nothing. The feature it names is unconditionally on.
+
+### Decisions (agreed)
+
+- **Extend `min-width` to every dropzone type.** A dropzone that cannot fit its chip is a bug.
+  This moves VRT baselines and wants its own pass.
+- **`autoSizeDropzones` defaults to `true`** — it is an opt-out, and the current `false` default
+  is simply wrong. When switched off, the dropzone falls back to vendor-settable variables
+  rather than to `0`:
+
+  ```css
+  min-height: var(--qti-dropzone-min-height, var(--qti-drop-min-height, 0));
+  min-width:  var(--qti-dropzone-min-width,  var(--qti-drop-min-width, 0));
+  ```
+
+  `--qti-dropzone-*` is the measurement the interaction publishes; `--qti-drop-*` is the theme's
+  floor. With auto-sizing off, the interaction publishes nothing and the theme's value applies.
+
+- **Make it reactive**, folded into Stage B rather than done twice. The variable indirection
+  makes this cheap: a `ResizeObserver` over the chips (they are in layout, unlike a closed
+  popover) updating two custom properties on the host — no DOM writes to droppables, no
+  re-render. Measure after `document.fonts.ready` for the first pass.
+
+### Also noted while doing this
+
+- `width` cannot move to a custom property. `qti-associable-hotspot` carries an inline `width`
+  from its `coords`, and an authored `data-choices-container-width` must override it; a `:host`
+  variable never beats an inline style. Confirmed by making D105/D106 fail at 80px.
+- `min-width` beats `width`. Auto-sizing therefore silently discarded
+  `data-choices-container-width` whenever the theme's chips were wider than the authored gap.
+  This, not Bootstrap layout, was the cause of the Kennisnet `Q6-L2-D1` drop failure.
+- `qti-simple-associable-choice` is both chip and drop target, so dropzone sizing must be scoped
+  `:host(:not(:state(drag)))`. Its `dropslot` slot exists on source chips too, and sizing it
+  there inflated them.
+
+---
+
 ## 9. The drag placeholder — presentation hard-coded in JS
 
 The drag-drop mixins paint directly onto `element.style`:
