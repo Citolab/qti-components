@@ -83,18 +83,30 @@
       }
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       vertical-align: middle;
-      &:empty::after {
-        padding: var(--qti-padding-md) var(--qti-padding-lg);
-        content: '\0000a0';
-      }
-      &:not(:empty) {
-        display: inline-flex;
-        padding: 0;
-        width: auto;
-      }
+
+      /*
+       * A gap is the same size empty or filled.
+       *
+       * It used to be sized two different ways: empty, by a padded non-breaking space; filled,
+       * by `padding: 0` and whatever the chip happened to be. So a gap resized the moment a chip
+       * landed in it, and — worse — every *other* gap on the line reflowed with it. Now the
+       * interaction publishes the widest and tallest chip as --qti-dropzone-min-*, and the gap
+       * reserves exactly that on its slot (see qti-gap.styles.ts).
+       *
+       * The `&:empty::after { content: '\0000a0' }` that used to hold an empty gap open is gone
+       * with it: it sat *beside* the slot, so an empty gap was one non-breaking space wider than
+       * the same gap once filled.
+       */
+
+      /*
+       * No `flex: 1`. A chip is the same size wherever it lives — in the bank, mid-drag as a
+       * clone, or dropped. Stretching it to its container's width made the drop the one place
+       * where that stopped being true.
+       */
       &:not(:empty) > * {
-        flex: 1;
+        flex: 0 0 auto;
         transform: rotate(0);
         box-shadow: 0 0 0 1px #e5e7eb;
       }

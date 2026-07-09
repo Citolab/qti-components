@@ -11,7 +11,6 @@ qti-gap-match-interaction:disabled {
 
 qti-gap-match-interaction {
   qti-gap-text {
-    box-sizing: border-box;
     display: block;
   }
 
@@ -21,9 +20,12 @@ qti-gap-match-interaction {
     }
   }
 
-  qti-gap {
-    box-sizing: border-box;
-  }
+  /*
+   * `box-sizing: border-box` was declared here for both qti-gap-text and qti-gap. The components
+   * carry the reset themselves now (qti-base/styles/box-sizing.styles), and a light-DOM element
+   * rule outranks a component's own `:host` — so re-stating it here silently overrode qti-gap's
+   * deliberate `content-box`, and the gap grew the moment a chip was dropped into it.
+   */
 
   .correct-option {
     background-color: var(--info-color);

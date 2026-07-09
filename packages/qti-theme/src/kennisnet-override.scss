@@ -106,7 +106,13 @@ test-container {
   background-color: var(--bs-placeholder-bg);
   opacity: 1;
   box-shadow: inset var(--bs-placeholder-box-shadow);
-  border: none;
+  /*
+   * `border-color: transparent`, never `border: none`. A state may repaint a chip; it may never
+   * resize one. Removing the border cost the placeholder 2px in each axis, so lifting a chip
+   * rewrapped the drag bank, reflowed the sentence below it, and slid the gaps sideways while
+   * the user was still dragging towards one. See drag-drop.invariance.spec.ts.
+   */
+  border-color: transparent;
   color: transparent;
 }
 
