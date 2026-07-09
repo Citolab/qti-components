@@ -1,3 +1,3 @@
-import { css } from 'lit';
+import { boxSizing } from '@qti-components/base';
 
-export default css``;
+export default [boxSizing];

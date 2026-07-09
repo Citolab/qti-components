@@ -1,18 +1,23 @@
 import { css } from 'lit';
 
-export default css`
-  :host {
-    display: block;
-  }
-  point-container {
-    display: block;
-    position: relative;
-    width: fit-content;
-  }
+import { boxSizing } from '@qti-components/base';
 
-  ::slotted(img) {
-    max-width: 100%;
-    height: auto;
-    display: block;
-  }
-`;
+export default [
+  boxSizing,
+  css`
+    :host {
+      display: block;
+    }
+    point-container {
+      display: block;
+      position: relative;
+      width: fit-content;
+    }
+
+    ::slotted(img) {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+  `
+];

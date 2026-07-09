@@ -1,8 +1,13 @@
 import { css } from 'lit';
 
-export default css`
-  :host {
-    display: inline-block;
-    position: relative;
-  }
-`;
+import { boxSizing } from '@qti-components/base';
+
+export default [
+  boxSizing,
+  css`
+    :host {
+      display: inline-block;
+      position: relative;
+    }
+  `
+];
