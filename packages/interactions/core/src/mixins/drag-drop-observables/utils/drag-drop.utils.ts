@@ -109,6 +109,13 @@ export function getMatchMaxValue(draggables: HTMLElement[], identifier: string):
   return matchMax ? parseInt(matchMax, 10) || 0 : 1;
 }
 
+/**
+ * @deprecated No longer used in production. DragDropSlottedMixin now derives placement once,
+ * in `syncDragDropState()`, and publishes it on `dragDropContext`. Kept only because its spec
+ * documents the exact counting semantics that method reproduces:
+ * response uses the structural selector, capacity uses max(selector, [qti-draggable]).
+ * Delete once drop targets render from the context.
+ */
 export function isDroppableAtCapacity(droppable: HTMLElement, draggablesSelector: string): boolean {
   const parsedMatchMax = parseInt(droppable.getAttribute('match-max') || '1', 10);
   const matchMax = Number.isNaN(parsedMatchMax) ? 1 : parsedMatchMax;
@@ -121,6 +128,13 @@ export function isDroppableAtCapacity(droppable: HTMLElement, draggablesSelector
   return current >= matchMax;
 }
 
+/**
+ * @deprecated No longer used in production. DragDropSlottedMixin now derives placement once,
+ * in `syncDragDropState()`, and publishes it on `dragDropContext`. Kept only because its spec
+ * documents the exact counting semantics that method reproduces:
+ * response uses the structural selector, capacity uses max(selector, [qti-draggable]).
+ * Delete once drop targets render from the context.
+ */
 export function countTotalAssociations(droppables: HTMLElement[], draggablesSelector: string): number {
   return droppables.reduce((total, droppable) => {
     const selectorMatches = droppable.querySelectorAll(draggablesSelector).length;
@@ -129,6 +143,13 @@ export function countTotalAssociations(droppables: HTMLElement[], draggablesSele
   }, 0);
 }
 
+/**
+ * @deprecated No longer used in production. DragDropSlottedMixin now derives placement once,
+ * in `syncDragDropState()`, and publishes it on `dragDropContext`. Kept only because its spec
+ * documents the exact counting semantics that method reproduces:
+ * response uses the structural selector, capacity uses max(selector, [qti-draggable]).
+ * Delete once drop targets render from the context.
+ */
 export function collectResponseData(droppables: HTMLElement[], draggablesSelector: string): string[] {
   return droppables
     .map(droppable => {

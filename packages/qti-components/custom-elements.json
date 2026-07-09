@@ -5962,6 +5962,16 @@
           "members": [
             {
               "kind": "field",
+              "name": "_dragDrop",
+              "type": {
+                "text": "Readonly<DragDropState>"
+              },
+              "privacy": "protected",
+              "default": "{ dragsByTarget: {}, countByTarget: {} }",
+              "description": "What each drop target holds. Published to the drop targets, which will render themselves\nfrom it once the DOM stops being the source of truth.\n\nReassign, never mutate — an in-place change does not notify consumers."
+            },
+            {
+              "kind": "field",
               "name": "_dropBlockedDueToMax",
               "type": {
                 "text": "boolean"
@@ -6123,6 +6133,24 @@
                   "optional": true,
                   "type": {
                     "text": "DOMRect"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "droppableAtCapacityFromState",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "droppable",
+                  "type": {
+                    "text": "HTMLElement"
                   }
                 }
               ]
@@ -6302,6 +6330,17 @@
             },
             {
               "kind": "method",
+              "name": "responseFromState",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "string[]"
+                }
+              },
+              "description": "The response, derived from placement: `\"<dragId> <targetId>\"` per placed chip."
+            },
+            {
+              "kind": "method",
               "name": "restoreInventoryItem",
               "privacy": "private",
               "return": {
@@ -6418,6 +6457,27 @@
               "return": {
                 "type": {
                   "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "syncDragDropState",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "The one place that reads placement out of the DOM.\n\nReplaces nine scattered `querySelectorAll` readbacks (`collectResponseData`,\n`countTotalAssociations`, `isDroppableAtCapacity`). The DOM is still authoritative here;\ncentralising it is what makes inverting that possible without touching nine call sites."
+            },
+            {
+              "kind": "method",
+              "name": "totalAssociationsFromState",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "number"
                 }
               }
             },
@@ -7787,52 +7847,6 @@
         },
         {
           "kind": "function",
-          "name": "collectResponseData",
-          "return": {
-            "type": {
-              "text": "string[]"
-            }
-          },
-          "parameters": [
-            {
-              "name": "droppables",
-              "type": {
-                "text": "HTMLElement[]"
-              }
-            },
-            {
-              "name": "draggablesSelector",
-              "type": {
-                "text": "string"
-              }
-            }
-          ]
-        },
-        {
-          "kind": "function",
-          "name": "countTotalAssociations",
-          "return": {
-            "type": {
-              "text": "number"
-            }
-          },
-          "parameters": [
-            {
-              "name": "droppables",
-              "type": {
-                "text": "HTMLElement[]"
-              }
-            },
-            {
-              "name": "draggablesSelector",
-              "type": {
-                "text": "string"
-              }
-            }
-          ]
-        },
-        {
-          "kind": "function",
           "name": "findDraggableTarget",
           "return": {
             "type": {
@@ -7961,29 +7975,6 @@
         },
         {
           "kind": "function",
-          "name": "isDroppableAtCapacity",
-          "return": {
-            "type": {
-              "text": "boolean"
-            }
-          },
-          "parameters": [
-            {
-              "name": "droppable",
-              "type": {
-                "text": "HTMLElement"
-              }
-            },
-            {
-              "name": "draggablesSelector",
-              "type": {
-                "text": "string"
-              }
-            }
-          ]
-        },
-        {
-          "kind": "function",
           "name": "setDragChipState",
           "return": {
             "type": {
@@ -8010,6 +8001,78 @@
               }
             }
           ]
+        },
+        {
+          "kind": "function",
+          "name": "collectResponseData",
+          "return": {
+            "type": {
+              "text": "string[]"
+            }
+          },
+          "parameters": [
+            {
+              "name": "droppables",
+              "type": {
+                "text": "HTMLElement[]"
+              }
+            },
+            {
+              "name": "draggablesSelector",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "deprecated": "No longer used in production. DragDropSlottedMixin now derives placement once,\nin `syncDragDropState()`, and publishes it on `dragDropContext`. Kept only because its spec\ndocuments the exact counting semantics that method reproduces:\nresponse uses the structural selector, capacity uses max(selector, [qti-draggable]).\nDelete once drop targets render from the context."
+        },
+        {
+          "kind": "function",
+          "name": "countTotalAssociations",
+          "return": {
+            "type": {
+              "text": "number"
+            }
+          },
+          "parameters": [
+            {
+              "name": "droppables",
+              "type": {
+                "text": "HTMLElement[]"
+              }
+            },
+            {
+              "name": "draggablesSelector",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "deprecated": "No longer used in production. DragDropSlottedMixin now derives placement once,\nin `syncDragDropState()`, and publishes it on `dragDropContext`. Kept only because its spec\ndocuments the exact counting semantics that method reproduces:\nresponse uses the structural selector, capacity uses max(selector, [qti-draggable]).\nDelete once drop targets render from the context."
+        },
+        {
+          "kind": "function",
+          "name": "isDroppableAtCapacity",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "droppable",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "name": "draggablesSelector",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "deprecated": "No longer used in production. DragDropSlottedMixin now derives placement once,\nin `syncDragDropState()`, and publishes it on `dragDropContext`. Kept only because its spec\ndocuments the exact counting semantics that method reproduces:\nresponse uses the structural selector, capacity uses max(selector, [qti-draggable]).\nDelete once drop targets render from the context."
         }
       ],
       "exports": [
@@ -12526,6 +12589,20 @@
             },
             {
               "kind": "field",
+              "name": "_dragDrop",
+              "type": {
+                "text": "Readonly<DragDropState>"
+              },
+              "privacy": "protected",
+              "default": "{ dragsByTarget: {}, countByTarget: {} }",
+              "description": "What each drop target holds. Published to the drop targets, which will render themselves\nfrom it once the DOM stops being the source of truth.\n\nReassign, never mutate — an in-place change does not notify consumers.",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_dropBlockedDueToMax",
               "type": {
                 "text": "boolean"
@@ -13137,6 +13214,28 @@
               }
             },
             {
+              "kind": "method",
+              "name": "droppableAtCapacityFromState",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "droppable",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "enableFlipAnimations",
               "type": {
@@ -13574,6 +13673,21 @@
               }
             },
             {
+              "kind": "method",
+              "name": "responseFromState",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "string[]"
+                }
+              },
+              "description": "The response, derived from placement: `\"<dragId> <targetId>\"` per placed chip.",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "responseIdentifier",
               "type": {
@@ -13795,6 +13909,21 @@
             },
             {
               "kind": "method",
+              "name": "syncDragDropState",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "The one place that reads placement out of the DOM.\n\nReplaces nine scattered `querySelectorAll` readbacks (`collectResponseData`,\n`countTotalAssociations`, `isDroppableAtCapacity`). The DOM is still authoritative here;\ncentralising it is what makes inverting that possible without touching nine call sites.",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "toggleCandidateCorrection",
               "privacy": "public",
               "return": {
@@ -13885,6 +14014,20 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "totalAssociationsFromState",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
               }
             },
             {
@@ -19874,6 +20017,20 @@
             },
             {
               "kind": "field",
+              "name": "_dragDrop",
+              "type": {
+                "text": "Readonly<DragDropState>"
+              },
+              "privacy": "protected",
+              "default": "{ dragsByTarget: {}, countByTarget: {} }",
+              "description": "What each drop target holds. Published to the drop targets, which will render themselves\nfrom it once the DOM stops being the source of truth.\n\nReassign, never mutate — an in-place change does not notify consumers.",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_dropBlockedDueToMax",
               "type": {
                 "text": "boolean"
@@ -20503,6 +20660,28 @@
               }
             },
             {
+              "kind": "method",
+              "name": "droppableAtCapacityFromState",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "droppable",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "enableFlipAnimations",
               "type": {
@@ -20948,6 +21127,21 @@
               }
             },
             {
+              "kind": "method",
+              "name": "responseFromState",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "string[]"
+                }
+              },
+              "description": "The response, derived from placement: `\"<dragId> <targetId>\"` per placed chip.",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "responseIdentifier",
               "type": {
@@ -21178,6 +21372,21 @@
             },
             {
               "kind": "method",
+              "name": "syncDragDropState",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "The one place that reads placement out of the DOM.\n\nReplaces nine scattered `querySelectorAll` readbacks (`collectResponseData`,\n`countTotalAssociations`, `isDroppableAtCapacity`). The DOM is still authoritative here;\ncentralising it is what makes inverting that possible without touching nine call sites.",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "syncTabularSlotting",
               "privacy": "private",
               "return": {
@@ -21286,6 +21495,20 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "totalAssociationsFromState",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
               }
             },
             {
@@ -30808,6 +31031,26 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/qti-base/src/context/drag-drop.context.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "dragDropContext"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "dragDropContext",
+          "declaration": {
+            "name": "dragDropContext",
+            "module": "packages/qti-base/src/context/drag-drop.context.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/qti-base/src/context/interaction.context.ts",
       "declarations": [
         {
@@ -31038,6 +31281,14 @@
           "declaration": {
             "name": "*",
             "module": "packages/qti-base/src/context/config.context"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/qti-base/src/context/drag-drop.context"
           }
         },
         {

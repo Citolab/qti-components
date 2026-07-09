@@ -1,15 +1,13 @@
 import { property } from 'lit/decorators.js';
+import { provide } from '@lit/context';
 
-import { responseAttributeConverter } from '@qti-components/base';
+import { dragDropContext, responseAttributeConverter } from '@qti-components/base';
 
 import {
   clearDragChipStates,
-  collectResponseData,
-  countTotalAssociations,
   findInventoryItems,
   getMatchMaxValue,
   hasDragChipState,
-  isDroppableAtCapacity,
   applyDropzoneAutoSizing,
   setDragChipState
 } from './utils/drag-drop.utils';
@@ -18,7 +16,7 @@ import { captureMultipleFlipStates, animateMultipleFlips, type FlipAnimationOpti
 
 import type { ComplexAttributeConverter } from 'lit';
 import type { CollisionDetectionAlgorithm } from './utils/drag-drop.utils';
-import type { Interaction, IInteraction } from '@qti-components/base';
+import type { DragDropState, Interaction, IInteraction } from '@qti-components/base';
 import type { DragDropCore } from './drag-drop-core.mixin';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
@@ -94,6 +92,70 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
 
     protected _response: string[] = [];
 
+    /**
+     * What each drop target holds. Published to the drop targets, which will render themselves
+     * from it once the DOM stops being the source of truth.
+     *
+     * Reassign, never mutate — an in-place change does not notify consumers.
+     */
+    @provide({ context: dragDropContext })
+    protected _dragDrop: Readonly<DragDropState> = { dragsByTarget: {}, countByTarget: {} };
+
+    /**
+     * The one place that reads placement out of the DOM.
+     *
+     * Replaces nine scattered `querySelectorAll` readbacks (`collectResponseData`,
+     * `countTotalAssociations`, `isDroppableAtCapacity`). The DOM is still authoritative here;
+     * centralising it is what makes inverting that possible without touching nine call sites.
+     */
+    protected syncDragDropState(): void {
+      const dragsByTarget: Record<string, string[]> = {};
+      const countByTarget: Record<string, number> = {};
+
+      for (const droppable of this.trackedDroppables) {
+        const targetId = droppable.getAttribute('identifier');
+        if (!targetId) continue;
+
+        const bySelector = Array.from(droppable.querySelectorAll<HTMLElement>(draggablesSelector));
+        const byAttribute = Array.from(droppable.querySelectorAll<HTMLElement>('[qti-draggable="true"]'));
+
+        // Response uses the structural selector only; capacity uses whichever finds more.
+        // These differ, and collapsing them would silently change matchMax behaviour.
+        dragsByTarget[targetId] = bySelector
+          .map(chip => chip.getAttribute('identifier'))
+          .filter((id): id is string => Boolean(id));
+        countByTarget[targetId] = Math.max(bySelector.length, byAttribute.length);
+      }
+
+      this._dragDrop = { dragsByTarget, countByTarget };
+    }
+
+    /** The response, derived from placement: `"<dragId> <targetId>"` per placed chip. */
+    protected responseFromState(): string[] {
+      this.syncDragDropState();
+      const { dragsByTarget } = this._dragDrop;
+      return this.trackedDroppables.flatMap(droppable => {
+        const targetId = droppable.getAttribute('identifier');
+        if (!targetId) return [];
+        return (dragsByTarget[targetId] ?? []).map(dragId => `${dragId} ${targetId}`);
+      });
+    }
+
+    protected totalAssociationsFromState(): number {
+      this.syncDragDropState();
+      return Object.values(this._dragDrop.countByTarget).reduce((total, count) => total + count, 0);
+    }
+
+    protected droppableAtCapacityFromState(droppable: HTMLElement): boolean {
+      const parsed = parseInt(droppable.getAttribute('match-max') || '1', 10);
+      const matchMax = Number.isNaN(parsed) ? 1 : parsed;
+      if (matchMax === 0) return false;
+
+      const targetId = droppable.getAttribute('identifier');
+      const current = targetId ? (this._dragDrop.countByTarget[targetId] ?? 0) : 0;
+      return current >= matchMax;
+    }
+
     // Track when a drop was blocked due to max capacity
     private _dropBlockedDueToMax = false;
 
@@ -140,7 +202,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
         ? candidate
         : (() => {
             this.cacheInteractiveElements();
-            return collectResponseData(this.trackedDroppables, draggablesSelector);
+            return this.responseFromState();
           })();
       return computedResponse.join(',');
     }
@@ -170,7 +232,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
           ? candidate
           : (() => {
               this.cacheInteractiveElements();
-              return collectResponseData(this.trackedDroppables, draggablesSelector);
+              return this.responseFromState();
             })();
       } else {
         // Compatibility note:
@@ -266,7 +328,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       }
 
       // After drop, check if we've exceeded max and auto-validate if so
-      const totalAssociations = countTotalAssociations(this.trackedDroppables, draggablesSelector);
+      const totalAssociations = this.totalAssociationsFromState();
       const exceedsMax = this.maxAssociations > 0 && totalAssociations > this.maxAssociations;
 
       if (exceedsMax) {
@@ -313,7 +375,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       // a disabled non-source target while global max is reached.
       // This avoids showing max-capacity errors for unrelated invalid drops
       // (e.g. dropping outside any known dropzone).
-      const totalAssociations = countTotalAssociations(this.trackedDroppables, draggablesSelector);
+      const totalAssociations = this.totalAssociationsFromState();
       const maxReached = this.maxAssociations > 0 && totalAssociations >= this.maxAssociations;
       const attemptedDisabledTarget =
         !!currentTarget && currentTarget.hasAttribute('disabled') && !currentTarget.hasAttribute('data-drag-source');
@@ -542,14 +604,14 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
     }
 
     private checkAllMaxAssociations(): void {
-      const totalAssociations = countTotalAssociations(this.trackedDroppables, draggablesSelector);
+      const totalAssociations = this.totalAssociationsFromState();
 
       const maxReached = this.maxAssociations > 0 && totalAssociations >= this.maxAssociations;
 
       this.trackedDroppables.forEach(droppable => {
         // Don't disable the source droppable during an active drag
         const isDragSource = droppable.hasAttribute('data-drag-source');
-        const isAtCapacity = isDroppableAtCapacity(droppable, draggablesSelector);
+        const isAtCapacity = this.droppableAtCapacityFromState(droppable);
 
         if ((maxReached || isAtCapacity) && !isDragSource) {
           droppable.setAttribute('disabled', '');
@@ -570,7 +632,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
           ? [candidate]
           : (() => {
               this.cacheInteractiveElements();
-              return collectResponseData(this.trackedDroppables, draggablesSelector);
+              return this.responseFromState();
             })();
 
       // Persist response state without mutating the DOM tree.
@@ -623,7 +685,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
     }
 
     public override validate(): boolean {
-      const totalAssociations = countTotalAssociations(this.trackedDroppables, draggablesSelector);
+      const totalAssociations = this.totalAssociationsFromState();
 
       const atMaxCapacity = this.maxAssociations > 0 && totalAssociations >= this.maxAssociations;
       const exceedsMax = this.maxAssociations > 0 && totalAssociations > this.maxAssociations;

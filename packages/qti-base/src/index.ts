@@ -1,6 +1,7 @@
 export * from './context/computed-item.context';
 export * from './context/computed.context';
 export * from './context/config.context';
+export * from './context/drag-drop.context';
 export * from './context/interaction.context';
 export * from './context/item.context';
 export * from './context/qti-assessment-item.context';
