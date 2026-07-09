@@ -2137,7 +2137,6 @@
               "privacy": "public",
               "default": "false",
               "attribute": "aria-disabled",
-              "reflects": true,
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -2228,7 +2227,6 @@
               "privacy": "public",
               "default": "false",
               "attribute": "aria-readonly",
-              "reflects": true,
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -2513,7 +2511,6 @@
               "privacy": "public",
               "default": "false",
               "attribute": "aria-disabled",
-              "reflects": true,
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -2622,7 +2619,6 @@
               "privacy": "public",
               "default": "false",
               "attribute": "aria-readonly",
-              "reflects": true,
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -2830,7 +2826,6 @@
               "privacy": "public",
               "default": "false",
               "attribute": "aria-disabled",
-              "reflects": true,
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -2921,7 +2916,6 @@
               "privacy": "public",
               "default": "false",
               "attribute": "aria-readonly",
-              "reflects": true,
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -3120,7 +3114,6 @@
               "privacy": "public",
               "default": "false",
               "attribute": "aria-disabled",
-              "reflects": true,
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -3211,7 +3204,6 @@
               "privacy": "public",
               "default": "false",
               "attribute": "aria-readonly",
-              "reflects": true,
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -3477,7 +3469,6 @@
               "privacy": "public",
               "default": "false",
               "attribute": "aria-disabled",
-              "reflects": true,
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -3600,7 +3591,6 @@
               "privacy": "public",
               "default": "false",
               "attribute": "aria-readonly",
-              "reflects": true,
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -3773,8 +3763,26 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "qti-order-interaction\nqti-choice-interaction",
+          "description": "A choice, used by `qti-choice-interaction` and `qti-order-interaction`.\n\nThe `control` part is one box whose *role* is carried by state, not by its name: a radio\ncircle under `:state(radio)`, a checkbox square under `:state(checkbox)`, and a drag grip\nwhen the choice is draggable. Style it as `qti-simple-choice::part(control)`.",
           "name": "QtiSimpleChoice",
+          "cssParts": [
+            {
+              "description": "The box before the label (radio / checkbox / drag grip).",
+              "name": "control"
+            },
+            {
+              "description": "The mark inside the box (inner dot / checkmark).",
+              "name": "control-mark"
+            },
+            {
+              "description": "The default slot holding the choice content.",
+              "name": "label"
+            },
+            {
+              "description": "The order-number badge, when `marker` is set.",
+              "name": "marker"
+            }
+          ],
           "members": [
             {
               "kind": "method",
@@ -3825,7 +3833,6 @@
               "privacy": "public",
               "default": "false",
               "attribute": "aria-disabled",
-              "reflects": true,
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -3934,11 +3941,19 @@
               "privacy": "public",
               "default": "false",
               "attribute": "aria-readonly",
-              "reflects": true,
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "ShadowRootInit"
+              },
+              "static": true,
+              "default": "{ ...LitElement.shadowRootOptions, delegatesFocus: true }"
             },
             {
               "kind": "field",
@@ -4301,8 +4316,7 @@
               },
               "privacy": "public",
               "default": "false",
-              "attribute": "aria-disabled",
-              "reflects": true
+              "attribute": "aria-disabled"
             },
             {
               "kind": "method",
@@ -4366,8 +4380,7 @@
               },
               "privacy": "public",
               "default": "false",
-              "attribute": "aria-readonly",
-              "reflects": true
+              "attribute": "aria-readonly"
             },
             {
               "kind": "field",
@@ -7622,6 +7635,24 @@
         },
         {
           "kind": "function",
+          "name": "isDraggableDisabled",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "target",
+              "type": {
+                "text": "HTMLElement | null | undefined"
+              }
+            }
+          ],
+          "description": "Draggable chips express `disabled` through ElementInternals — the ARIA property feeds the\naccessibility tree and the custom state feeds CSS. The `aria-disabled` attribute is not\nreflected, so it cannot be read back off the element.\n\nA bare `disabled` attribute is still honoured as an authoring escape hatch."
+        },
+        {
+          "kind": "function",
           "name": "isDroppableAtCapacity",
           "return": {
             "type": {
@@ -7730,6 +7761,14 @@
           "name": "getMatchMaxValue",
           "declaration": {
             "name": "getMatchMaxValue",
+            "module": "packages/interactions/core/src/mixins/drag-drop-observables/utils/drag-drop.utils.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "isDraggableDisabled",
+          "declaration": {
+            "name": "isDraggableDisabled",
             "module": "packages/interactions/core/src/mixins/drag-drop-observables/utils/drag-drop.utils.ts"
           }
         },
@@ -19324,20 +19363,20 @@
               "name": "c-header"
             },
             {
-              "description": "The visible checkbox/radio marker; also carries `rb`/`cb`, `-checked`, `-correct`, `-incorrect` variants.",
-              "name": "ch"
-            },
-            {
-              "description": "The inner marker element; carries the same variants as `ch`.",
-              "name": "cha"
-            },
-            {
               "description": "The interactive cell grid area.",
               "name": "checkbox-grid"
             },
             {
               "description": "Wrapper row for the column headers.",
               "name": "cols-wrap"
+            },
+            {
+              "description": "The visible checkbox/radio box; also carries `rb`/`cb`, `-checked`, `-correct`, `-incorrect` variants.",
+              "name": "control"
+            },
+            {
+              "description": "The inner mark element; carries the same variants as `control`.",
+              "name": "control-mark"
             },
             {
               "description": "The top-left corner cell of the grid.",

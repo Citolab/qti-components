@@ -16,6 +16,10 @@ const meta: Meta = {
   // from the same origin in the dev canvas and the addon-vitest capture — keeping the VRT
   // baseline overlay aligned.
   parameters: {
+    // These stories exist to lock in the Kennisnet look, so prefer that substrate rather than
+    // inheriting the toolbar default (`citolab`). A parameter, not meta-level `globals`: the
+    // latter would disable the Style picker in the toolbar for these stories.
+    styleSubstrate: 'kennisnet',
     layout: 'fullscreen',
     viewport: {
       defaultViewport: 'vrtBaseline',

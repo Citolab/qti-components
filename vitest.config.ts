@@ -3,10 +3,25 @@ import { fileURLToPath } from 'node:url';
 
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { defineConfig } from 'vitest/config';
+
+import type { TestProjectConfiguration } from 'vitest/config';
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 import { playwright } from '@vitest/browser-playwright';
 
 const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
+
+/*
+ * True when Vitest is launched from the Storybook UI rather than the CLI.
+ *
+ * In that mode `@storybook/addon-vitest` force-renames every project that uses its plugin to
+ * `storybook:<configDir>`, and its runner then selects exactly that one project by name. Our
+ * `stories` and `vrt` projects share a configDir, so both would be renamed identically and
+ * Vitest would fail with "Project name … is not unique".
+ *
+ * Only one storybook-plugin project can exist in this mode, so drop `vrt`. Visual regression
+ * is a CLI/CI concern and still runs via `npm run test:vrt`.
+ */
+const isVitestStorybook = process.env.VITEST_STORYBOOK === 'true';
 
 export default defineConfig({
   base: process.env.VITEST ? undefined : './',
@@ -60,7 +75,9 @@ export default defineConfig({
         ],
         test: {
           name: 'stories',
-          setupFiles: ['./.storybook/vitest.setup.ts'],
+          // No setupFiles: since Storybook 10.3 `@storybook/addon-vitest` provisions the
+          // preview annotations (including addon-a11y) automatically. Declaring them by hand
+          // makes it skip that provisioning.
           globals: true,
           browser: {
             enabled: true,
@@ -77,53 +94,62 @@ export default defineConfig({
           }
         }
       },
-      /* visual-regression project: only stories tagged `vrt`, screenshots each */
-      {
-        plugins: [
-          storybookTest({
-            tags: {
-              include: ['vrt']
-            },
-            configDir: path.join(dirname, '.storybook'),
-            storybookScript: 'pnpm run storybook -- --ci'
-          }),
-          tsconfigPaths()
-        ],
-        test: {
-          name: 'vrt',
-          setupFiles: ['./.storybook/vitest.vrt.setup.ts'],
-          // The `vrt` project loads all story files to tag-filter (the Storybook plugin
-          // ignores test.include), and an unrelated flaky story can throw "iframe reloaded
-          // during a test". Only `vrt`-tagged stories actually run and assert, so don't let
-          // that unrelated unhandled error abort the whole run.
-          dangerouslyIgnoreUnhandledErrors: true,
-          globals: true,
-          // Large-dimension item images make the screenshot-stability loop slow;
-          // give each capture room beyond the matcher's own timeout below.
-          testTimeout: 40000,
-          browser: {
-            enabled: true,
-            // deviceScaleFactor: 2 matches a retina dev canvas for layout/text metrics.
-            // Playwright locator screenshots still report their own physical PNG size,
-            // so the Storybook overlay fits the bitmap back onto the captured CSS box.
-            provider: playwright(),
-            headless: true,
-            // Wide viewport so the capture container is >= the item's fixed 906px width.
-            viewport: { width: 2560, height: 1440 },
-            screenshotFailures: false,
-            instances: [{ browser: 'chromium', provider: playwright({ contextOptions: { deviceScaleFactor: 2 } }) }],
-            expect: {
-              toMatchScreenshot: {
-                comparatorName: 'pixelmatch',
-                comparatorOptions: {
-                  threshold: 0.2,
-                  allowedMismatchedPixelRatio: 0.01
+      /* visual-regression project: only stories tagged `vrt`, screenshots each.
+         Omitted when launched from the Storybook UI — see `isVitestStorybook` above.
+         Annotated so the conditional spread doesn't widen the projects array and strip
+         contextual typing from the sibling project literals. */
+      ...((isVitestStorybook
+        ? []
+        : [
+            {
+              plugins: [
+                storybookTest({
+                  tags: {
+                    include: ['vrt']
+                  },
+                  configDir: path.join(dirname, '.storybook'),
+                  storybookScript: 'pnpm run storybook -- --ci'
+                }),
+                tsconfigPaths()
+              ],
+              test: {
+                name: 'vrt',
+                setupFiles: ['./.storybook/vitest.vrt.setup.ts'],
+                // The `vrt` project loads all story files to tag-filter (the Storybook plugin
+                // ignores test.include), and an unrelated flaky story can throw "iframe reloaded
+                // during a test". Only `vrt`-tagged stories actually run and assert, so don't let
+                // that unrelated unhandled error abort the whole run.
+                dangerouslyIgnoreUnhandledErrors: true,
+                globals: true,
+                // Large-dimension item images make the screenshot-stability loop slow;
+                // give each capture room beyond the matcher's own timeout below.
+                testTimeout: 40000,
+                browser: {
+                  enabled: true,
+                  // deviceScaleFactor: 2 matches a retina dev canvas for layout/text metrics.
+                  // Playwright locator screenshots still report their own physical PNG size,
+                  // so the Storybook overlay fits the bitmap back onto the captured CSS box.
+                  provider: playwright(),
+                  headless: true,
+                  // Wide viewport so the capture container is >= the item's fixed 906px width.
+                  viewport: { width: 2560, height: 1440 },
+                  screenshotFailures: false,
+                  instances: [
+                    { browser: 'chromium', provider: playwright({ contextOptions: { deviceScaleFactor: 2 } }) }
+                  ],
+                  expect: {
+                    toMatchScreenshot: {
+                      comparatorName: 'pixelmatch',
+                      comparatorOptions: {
+                        threshold: 0.2,
+                        allowedMismatchedPixelRatio: 0.01
+                      }
+                    }
+                  }
                 }
               }
             }
-          }
-        }
-      },
+          ]) as TestProjectConfiguration[]),
       /* this is for the normal spec files, which do not need storybook */
       {
         plugins: [tsconfigPaths()],

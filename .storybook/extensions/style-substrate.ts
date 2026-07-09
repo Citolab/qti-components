@@ -20,9 +20,12 @@ import type { Decorator, Preview } from '@storybook/web-components-vite';
  *
  * - vanilla:   `native.css` + the minimal variable theme. The lightest styled baseline.
  * - citolab:   full qti-theme (`item.css`, which includes native) + minimal normalize reset.
+ *   Default: the theme's own look, with no vendor stylesheet in the cascade.
  * - kennisnet: full qti-theme + single self-contained override file — pulls Bootstrap +
  *   Wikiwijs bridge + FontAwesome glyph CDN URLs internally (see kennisnet-override.scss).
- *   Default: the intended production look; it also scales oversized item images to fit.
+ *   Not the default: its Bootstrap import restyles the item body and shifts layout, which
+ *   perturbs layout-sensitive stories. Removing that dependency is tracked in
+ *   `plans/css-contract-audit.md`.
  */
 const OVERRIDE_LINK_CLASS = 'qti-vendor-override';
 const THEME_STYLE_ID = 'qti-theme-style';
@@ -34,9 +37,18 @@ const SUBSTRATES: Record<string, { baseCss: string; overrides: string[] }> = {
   kennisnet: { baseCss: itemCss, overrides: [kennisnetOverrideHref] }
 };
 
+/*
+ * Resolution order:
+ *   1. `globals.override` — the toolbar picker, whenever the user has made a choice.
+ *   2. `parameters.styleSubstrate` — a story's preferred substrate (e.g. the Kennisnet VRT
+ *      baselines). Use this rather than meta-level `globals`, which since Storybook 8.3
+ *      *locks* the toolbar control for that story and stops you switching themes.
+ *   3. `citolab` — the theme's own look, no vendor stylesheet in the cascade.
+ */
 export const styleSubstrateDecorator: Decorator = (story, context) => {
-  const choice = (context.globals.override as string) || 'kennisnet';
-  const substrate = SUBSTRATES[choice] ?? SUBSTRATES.kennisnet;
+  const preferred = context.parameters.styleSubstrate as string | undefined;
+  const choice = (context.globals.override as string) || preferred || 'citolab';
+  const substrate = SUBSTRATES[choice] ?? SUBSTRATES.citolab;
 
   // Base stylesheet as an updatable <style> (processed CSS via Vite `?inline`): native.css
   // for vanilla, the full qti-theme for the others.
@@ -76,7 +88,12 @@ export const styleSubstrateGlobalTypes: Preview['globalTypes'] = {
   override: {
     name: 'Style',
     description: 'Choose the style substrate: Vanilla minimal, Citolab, or Kennisnet',
-    defaultValue: 'kennisnet',
+    /*
+     * Deliberately no `defaultValue`. It would seed `globals.override` for every story, which
+     * always outranks `parameters.styleSubstrate` and would render the Kennisnet VRT stories
+     * with the wrong theme. Unset means "use the story's preferred substrate, else citolab" —
+     * see the decorator above.
+     */
     toolbar: {
       icon: 'paintbrush',
       items: [
