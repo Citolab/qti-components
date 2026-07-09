@@ -40,47 +40,47 @@ export default [
 
     /* Drop target. The interaction measures its chips and publishes the result as a custom
      property on its host; the property itself lives here, not in a style attribute. */
-    [part='drop-list'] {
+    [part='drop'] {
       display: block;
       flex: 1;
       min-height: var(--qti-dropzone-min-height, 0);
     }
 
-    [part='drop-list'][active],
-    [part='drop-list'][enabled],
-    [part='drops']:has(drop-list > qti-simple-choice) {
+    [part='drop'][active],
+    [part='drop'][enabled],
+    [part='drops']:has([part='drop'] > [part='drag']) {
       background-color: var(--qti-background-color-active-droplist);
     }
 
-    [part='drop-list'][active] {
+    [part='drop'][active] {
       border-color: var(--qti-border-active);
       background-color: var(--qti-bg-active);
     }
 
-    [part='drop-list'][enabled] {
+    [part='drop'][enabled] {
       background-color: var(--qti-bg-active) !important;
     }
 
-    [part='drop-list'][data-cross-slot-target] {
+    [part='drop'][data-cross-slot-target] {
       border-color: var(--qti-border-active, #0066cc) !important;
       background-color: var(--qti-bg-active, rgba(0, 102, 204, 0.1)) !important;
       outline: 2px dashed var(--qti-border-active, #0066cc);
       outline-offset: -2px;
     }
 
-    [part='drop-list']:has([part='qti-simple-choice']) {
-      --qti-drop-list-border: none;
-      --qti-drop-list-bg-img: none;
+    [part='drop']:has([part='drag']) {
+      --qti-drop-border: none;
+      --qti-drop-bg-img: none;
     }
 
-    /* Candidate correction colors for choices placed inside drop-lists. */
-    drop-list [qti-draggable='true']:state(candidate-correct),
-    [part='qti-simple-choice']:state(candidate-correct) {
+    /* Candidate correction colors for choices placed inside drop targets. */
+    [part='drop'] [qti-draggable='true']:state(candidate-correct),
+    [part='drag']:state(candidate-correct) {
       background-color: var(--qti-correct-response, --qti-correct);
     }
 
-    drop-list [qti-draggable='true']:state(candidate-incorrect),
-    [part='qti-simple-choice']:state(candidate-incorrect) {
+    [part='drop'] [qti-draggable='true']:state(candidate-incorrect),
+    [part='drag']:state(candidate-incorrect) {
       background-color: var(--qti-incorrect);
     }
 

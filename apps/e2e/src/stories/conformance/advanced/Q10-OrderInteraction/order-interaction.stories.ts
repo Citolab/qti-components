@@ -26,7 +26,7 @@ const getElements = (canvasElement: HTMLElement) => {
 };
 
 const getDropZone = (orderInteraction: QtiOrderInteraction, index: number) =>
-  orderInteraction.shadowRoot?.querySelector(`drop-list[identifier="droplist${index}"]`) as HTMLElement;
+  orderInteraction.shadowRoot?.querySelector(`[part='drop'][identifier="droplist${index}"]`) as HTMLElement;
 
 const getResponse = (assessmentItem: QtiAssessmentItem) =>
   assessmentItem.variables.find(v => v.identifier === 'RESPONSE')?.value;

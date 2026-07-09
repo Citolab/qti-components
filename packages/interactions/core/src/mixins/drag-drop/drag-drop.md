@@ -120,7 +120,7 @@ false,
 false,
 'qti-simple-match-set:last-of-type qti-simple-associable-choice' ->
 <slot part="slot"></slot>
-<slot part="dropslot" name="qti-simple-associable-choice"></slot>
+<slot part="drop" name="qti-simple-associable-choice"></slot>
 
 `qti-simple-choice`,
 true,

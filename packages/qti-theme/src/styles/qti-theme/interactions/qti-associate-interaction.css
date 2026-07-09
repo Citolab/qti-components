@@ -11,7 +11,7 @@
     }
     & qti-simple-associable-choice,
     &::part(qti-simple-associable-choice),
-    /* Editor fake-drag projected into the interaction's drop-list shadow.
+    /* Editor fake-drag projected into the interaction's drop-target shadow.
        Same `drag` styling so editor previews match runtime visuals. */
     &::part(drag) {
       @apply drag;
@@ -25,7 +25,7 @@
         @apply dragging;
       }
     }
-    /* Editor fake-drag projected into the interaction's drop-list shadow.
+    /* Editor fake-drag projected into the interaction's drop-target shadow.
        Kept as a separate block (not merged into the comma list above)
        because a CSS comment between commas in a nested selector list is
        silently dropped by Chrome's nesting parser. */
@@ -38,16 +38,16 @@
         @apply foc;
       }
     }
-    &::part(drop-list) {
+    &::part(drop) {
       @apply drop;
       display: grid;
       height: 3rem;
       min-width: 10rem;
     }
-    &::part(drop-list):focus {
+    &::part(drop):focus {
       @apply foc;
     }
-    &::part(drop-list)[dragging] {
+    &::part(drop)[dragging] {
       @apply act;
     }
   }

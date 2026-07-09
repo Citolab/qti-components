@@ -19,7 +19,7 @@ export class QtiAssociableHotspot extends LitElement {
   }
 
   override render() {
-    return html` <slot name="drags"></slot> `;
+    return html` <slot part="drop" name="drags"></slot> `;
   }
 }
 

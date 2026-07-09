@@ -28,19 +28,19 @@
           "cssParts": [
             {
               "description": "Wrapper around the associable choice slot.",
-              "name": "associable-choices"
+              "name": "drags"
             },
             {
-              "description": "Container inside a drop pair.",
-              "name": "associables-container"
+              "description": "Each individual drop target.",
+              "name": "drop"
+            },
+            {
+              "description": "Container for one left/right drop pair.",
+              "name": "drop-row"
             },
             {
               "description": "The container holding all drop targets.",
-              "name": "drop-container"
-            },
-            {
-              "description": "Each individual drop list.",
-              "name": "drop-list"
+              "name": "drops"
             },
             {
               "description": "Live validation message region (role=\"alert\").",
@@ -22567,12 +22567,16 @@
               "name": "container"
             },
             {
+              "description": "A choice that has been placed into a drop target.",
+              "name": "drag"
+            },
+            {
               "description": "Wrapper around the drag sources slot.",
               "name": "drags"
             },
             {
-              "description": "Each individual drop-list region.",
-              "name": "drop-list"
+              "description": "Each individual drop target.",
+              "name": "drop"
             },
             {
               "description": "The drop-target region.",

@@ -55,7 +55,7 @@ export class QtiSimpleAssociableChoice extends ActiveElementMixin(LitElement, 'q
     return html`
       <div part="control"></div>
       <slot part="label"></slot>
-      <slot part="dropslot" name="qti-simple-associable-choice"></slot>
+      <slot part="drop" name="qti-simple-associable-choice"></slot>
     `;
   }
 }

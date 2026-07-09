@@ -15,7 +15,7 @@ import type { CSSResultGroup } from 'lit';
 const SlottedBase = DragDropSlottedMixin(
   Interaction,
   'qti-simple-associable-choice',
-  '.dl',
+  `[part='drop']`,
   `slot[name='qti-simple-associable-choice']`,
   'pointerWithin'
 );
@@ -26,10 +26,10 @@ const SlottedBase = DragDropSlottedMixin(
  * @slot prompt - The prompt shown above the choices.
  * @slot qti-simple-associable-choice - The associable choice sources.
  *
- * @csspart associable-choices - Wrapper around the associable choice slot.
- * @csspart drop-container - The container holding all drop targets.
- * @csspart associables-container - Container inside a drop pair.
- * @csspart drop-list - Each individual drop list.
+ * @csspart drags - Wrapper around the associable choice slot.
+ * @csspart drops - The container holding all drop targets.
+ * @csspart drop-row - Container for one left/right drop pair.
+ * @csspart drop - Each individual drop target.
  * @csspart message - Live validation message region (role="alert").
  */
 export class QtiAssociateInteraction extends DragDropSlottedSortableMixin(SlottedBase, '[qti-draggable="true"]') {
@@ -60,8 +60,8 @@ export class QtiAssociateInteraction extends DragDropSlottedSortableMixin(Slotte
     const pairCount = Math.ceil(this._childrenMap.length / 2);
     const response: string[] = [];
     for (let i = 0; i < pairCount; i++) {
-      const leftDrop = this.shadowRoot?.querySelector(`.dl[identifier="droplist${i}_left"]`);
-      const rightDrop = this.shadowRoot?.querySelector(`.dl[identifier="droplist${i}_right"]`);
+      const leftDrop = this.shadowRoot?.querySelector(`[part='drop'][identifier="droplist${i}_left"]`);
+      const rightDrop = this.shadowRoot?.querySelector(`[part='drop'][identifier="droplist${i}_right"]`);
       const leftId = leftDrop?.querySelector('[qti-draggable="true"]')?.getAttribute('identifier');
       const rightId = rightDrop?.querySelector('[qti-draggable="true"]')?.getAttribute('identifier');
       if (leftId && rightId) {
@@ -83,14 +83,14 @@ export class QtiAssociateInteraction extends DragDropSlottedSortableMixin(Slotte
 
   override render() {
     return html` <slot name="prompt"></slot>
-      <slot part="associable-choices" name="qti-simple-associable-choice"></slot>
-      <div part="drop-container">
+      <slot part="drags" name="qti-simple-associable-choice"></slot>
+      <div part="drops">
         ${this._childrenMap.length > 0 &&
         Array.from(Array(Math.ceil(this._childrenMap.length / 2)).keys()).map(
           (_, index) =>
-            html`<div part="associables-container">
-              <div name="left${index}" part="drop-list" class="dl" identifier="droplist${index}_left"></div>
-              <div name="right${index}" part="drop-list" class="dl" identifier="droplist${index}_right"></div>
+            html`<div part="drop-row">
+              <div name="left${index}" part="drop" identifier="droplist${index}_left"></div>
+              <div name="right${index}" part="drop" identifier="droplist${index}_right"></div>
             </div>`
         )}
 

@@ -59,7 +59,7 @@ qti-match-interaction:not(.qti-match-tabular) {
         padding: 0.5rem;
       }
 
-      &::part(dropslot) {
+      &::part(drop) {
         flex-grow: 1;
         margin-top: 0;
         box-sizing: content-box;

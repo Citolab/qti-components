@@ -27,7 +27,7 @@ const getElements = (canvasElement: HTMLElement) => {
 };
 
 const getDropZone = (associateInteraction: QtiAssociateInteraction, slot: string) =>
-  associateInteraction.shadowRoot?.querySelector(`.dl[identifier="${slot}"]`) as HTMLElement;
+  associateInteraction.shadowRoot?.querySelector(`[part='drop'][identifier="${slot}"]`) as HTMLElement;
 
 const getResponse = (assessmentItem: QtiAssessmentItem) =>
   assessmentItem.variables.find(v => v.identifier === 'RESPONSE')?.value;

@@ -12,7 +12,7 @@ import styles from './qti-order-interaction.styles';
 import type { PropertyValueMap } from 'lit';
 import type { QtiSimpleChoice } from '@qti-components/interactions-core/elements/qti-simple-choice';
 
-const SlottedBase = DragDropSlottedMixin(Interaction, `qti-simple-choice`, 'drop-list', `slot[part='drags']`);
+const SlottedBase = DragDropSlottedMixin(Interaction, `qti-simple-choice`, `[part='drop']`, `slot[part='drags']`);
 
 /**
  * Order interaction: candidates arrange choices into a target sequence.
@@ -23,7 +23,8 @@ const SlottedBase = DragDropSlottedMixin(Interaction, `qti-simple-choice`, 'drop
  * @csspart container - The outer container wrapping drags and drops.
  * @csspart drags - Wrapper around the drag sources slot.
  * @csspart drops - The drop-target region.
- * @csspart drop-list - Each individual drop-list region.
+ * @csspart drop - Each individual drop target.
+ * @csspart drag - A choice that has been placed into a drop target.
  */
 export class QtiOrderInteraction extends DragDropSlottedSortableMixin(SlottedBase, '[qti-draggable="true"]') {
   static override styles = styles;
@@ -66,7 +67,7 @@ export class QtiOrderInteraction extends DragDropSlottedSortableMixin(SlottedBas
         <slot part="drags"> </slot>
         <div part="drops">
           ${[...Array(this.nrChoices)].map(
-            (_, i) => html`<drop-list role="region" part="drop-list" identifier="droplist${i}"></drop-list>`
+            (_, i) => html`<div role="region" part="drop" identifier="droplist${i}"></div>`
           )}
         </div>
       </div>`;
@@ -91,7 +92,7 @@ export class QtiOrderInteraction extends DragDropSlottedSortableMixin(SlottedBas
         const label = labelsByIdentifier.get(identifier);
         if (!label) return;
 
-        const relativeDrop = this.shadowRoot.querySelector(`drop-list[identifier="droplist${dropIndex}"]`);
+        const relativeDrop = this.shadowRoot.querySelector(`[part='drop'][identifier="droplist${dropIndex}"]`);
         if (!relativeDrop) return;
 
         const span = document.createElement('span');
@@ -112,7 +113,7 @@ export class QtiOrderInteraction extends DragDropSlottedSortableMixin(SlottedBas
     super.toggleCandidateCorrection(show);
 
     const placedChoices = Array.from(
-      this.shadowRoot.querySelectorAll<QtiSimpleChoice>('drop-list [qti-draggable="true"]')
+      this.shadowRoot.querySelectorAll<QtiSimpleChoice>(`[part='drop'] [qti-draggable="true"]`)
     );
     placedChoices.forEach(choice => {
       choice.internals.states.delete('candidate-correct');
@@ -125,7 +126,7 @@ export class QtiOrderInteraction extends DragDropSlottedSortableMixin(SlottedBas
     const correctByDrop = new Map<number, string>();
     entries.forEach(entry => correctByDrop.set(entry.dropIndex, entry.identifier));
 
-    const dropLists = Array.from(this.shadowRoot.querySelectorAll<HTMLElement>('drop-list'));
+    const dropLists = Array.from(this.shadowRoot.querySelectorAll<HTMLElement>(`[part='drop']`));
     dropLists.forEach((dropList, index) => {
       const placedChoice = dropList.querySelector<QtiSimpleChoice>('[qti-draggable="true"]');
       if (!placedChoice) return;
@@ -154,7 +155,7 @@ export class QtiOrderInteraction extends DragDropSlottedSortableMixin(SlottedBas
   // cause they are different for some interactions.
   // MH: is this function called? Shouldn't we use getValue?
   protected getResponse(): string[] {
-    const droppables = Array.from<QtiSimpleChoice>(this.shadowRoot.querySelectorAll('drop-list'));
+    const droppables = Array.from<QtiSimpleChoice>(this.shadowRoot.querySelectorAll(`[part='drop']`));
 
     const response = droppables.map(droppable => {
       const dragsInDroppable = droppable.querySelectorAll('[qti-draggable="true"]');
@@ -171,7 +172,9 @@ export class QtiOrderInteraction extends DragDropSlottedSortableMixin(SlottedBas
   override async firstUpdated() {
     super.firstUpdated();
     this.childrenMap = Array.from(this.querySelectorAll('qti-simple-choice'));
-    this.childrenMap.forEach(el => el.setAttribute('part', 'qti-simple-choice'));
+    // The clone made on drop inherits this part, and only the clone is inside a shadow root where
+    // `::part()` can reach it. A slotted chip in the bank is styled with `:state(drag)` instead.
+    this.childrenMap.forEach(el => el.setAttribute('part', 'drag'));
   }
 }
 

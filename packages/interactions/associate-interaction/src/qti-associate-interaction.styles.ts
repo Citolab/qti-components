@@ -8,7 +8,7 @@ export default [
     :host {
       display: block; /* necessary to calculate scaling position */
     }
-    slot[part='associable-choices'] {
+    slot[part='drags'] {
       display: flex;
       align-items: flex-start;
       flex: 1;
@@ -18,14 +18,14 @@ export default [
       gap: 0.5rem;
     }
 
-    [part='drop-list'][active] {
+    [part='drop'][active] {
       border-color: var(--qti-border-active) !important;
       background-color: var(--qti-bg-active) !important;
     }
 
     /* Drop target. --qti-dropzone-min-height is published by the interaction from the measured
      chip height; 3rem is the fallback when there is nothing to measure. Was an inline style. */
-    [part='drop-list'] {
+    [part='drop'] {
       display: grid;
       min-height: var(--qti-dropzone-min-height, 3rem);
       min-width: 10rem;
@@ -34,17 +34,17 @@ export default [
       box-sizing: border-box;
     }
 
-    [part='drop-container'] {
+    [part='drops'] {
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
     }
 
-    [part='drop-list'][enabled] {
+    [part='drop'][enabled] {
       background-color: var(--qti-bg-active) !important;
     }
 
-    :host::part(associables-container) {
+    :host::part(drop-row) {
       display: flex;
       justify-content: space-between;
       background: linear-gradient(

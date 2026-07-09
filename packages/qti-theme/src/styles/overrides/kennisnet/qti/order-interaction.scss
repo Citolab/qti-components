@@ -9,21 +9,21 @@ qti-order-interaction {
     overflow: visible;
   }
 
-  &::part(drop-list) {
+  &::part(drop) {
     overflow: visible;
     height: 100%;
-    border: var(--qti-drop-list-border, var(--qti-border-thickness) dashed var(--qti-border-color));
+    border: var(--qti-drop-border, var(--qti-border-thickness) dashed var(--qti-border-color));
     border-radius: var(--qti-border-radius);
     background-color: transparent;
-    background-image: var(--qti-drop-list-bg-img, revert-layer);
+    background-image: var(--qti-drop-bg-img, revert-layer);
   }
 
-  &:has(qti-simple-choice)::part(drop-list) {
+  &:has(qti-simple-choice)::part(drop) {
     align-self: flex-start;
   }
 
   qti-simple-choice,
-  &::part(qti-simple-choice) {
+  &::part(drag) {
     box-shadow: var(--bs-secondary-box-shadow);
     color: var(--bs-body-color);
     position: relative;
@@ -38,7 +38,7 @@ qti-order-interaction {
        so it applies to every drag interaction rather than only this one. */
   }
 
-  &::part(qti-simple-choice) {
+  &::part(drag) {
     background-color: white;
     border: 1px solid var(--bs-border-color);
     overflow: visible;
@@ -115,7 +115,7 @@ qti-order-interaction {
     }
 
     qti-simple-choice,
-    &::part(qti-simple-choice) {
+    &::part(drag) {
       width: auto;
     }
   }
@@ -130,7 +130,7 @@ qti-order-interaction {
     display: none !important;
   }
 
-  qti-order-interaction::part(qti-simple-choice) {
+  qti-order-interaction::part(drag) {
     background-color: var(--bs-info-bg-subtle);
     border: 1px solid var(--bs-info-border-subtle);
   }

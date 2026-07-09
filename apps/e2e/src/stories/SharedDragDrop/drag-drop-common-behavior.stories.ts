@@ -60,7 +60,7 @@ export const PressReleaseKeepsOrderPlacement: Story = {
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
     const orderInteraction = assessmentItem.querySelector('qti-order-interaction') as HTMLElement;
     const choiceA = orderInteraction.querySelector('qti-simple-choice[identifier="A"]') as HTMLElement;
-    const slot0 = orderInteraction.shadowRoot?.querySelector('drop-list[identifier="droplist0"]') as HTMLElement;
+    const slot0 = orderInteraction.shadowRoot?.querySelector(`[part='drop'][identifier="droplist0"]`) as HTMLElement;
 
     await step('Place choice A in slot 0', async () => {
       await drag(choiceA, { to: slot0, duration: 200 });

@@ -1,5 +1,5 @@
 @layer qti-components {
-  /* Editor fake-drag projected into the target choice's `dropslot` shadow.
+  /* Editor fake-drag projected into the target choice's `drop` shadow.
      Reuses the same `drag` styling so the editor preview matches what students
      see when an answer is dropped onto a target at runtime. */
   qti-simple-associable-choice::part(drag) {
@@ -55,21 +55,21 @@
           height: auto;
         }
         &[enabled] {
-          &::part(dropslot) {
+          &::part(drop) {
             @apply dropping;
           }
         }
         &[disabled] {
-          &::part(dropslot) {
+          &::part(drop) {
             @apply dis;
           }
         }
         &[active] {
-          &::part(dropslot) {
+          &::part(drop) {
             @apply act;
           }
         }
-        &::part(dropslot) {
+        &::part(drop) {
           @apply drop;
           &[dragging] {
             @apply dragging;
@@ -96,7 +96,7 @@
           &:state(candidate-incorrect) {
             background-color: var(--qti-incorrect);
           }
-          &::part(dropslot) {
+          &::part(drop) {
             display: none;
           }
           &:hover {

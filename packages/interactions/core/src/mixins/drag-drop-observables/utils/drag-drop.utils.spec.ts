@@ -120,7 +120,7 @@ describe('drag-drop.utils', () => {
     const droppable = makeElement(undefined, 'qti-simple-associable-choice');
     droppable.attachShadow({ mode: 'open' });
     const slot = document.createElement('slot');
-    slot.setAttribute('part', 'dropslot');
+    slot.setAttribute('part', 'drop');
     droppable.shadowRoot?.appendChild(slot);
     dropContainer.appendChild(droppable);
 

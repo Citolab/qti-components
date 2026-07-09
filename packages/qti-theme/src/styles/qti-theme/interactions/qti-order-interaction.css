@@ -6,9 +6,9 @@
     &:state(dragzone-enabled)::part(drags) {
       @apply dropping;
     }
-    &::part(qti-simple-choice),
+    &::part(drag),
     & qti-simple-choice,
-    /* Editor fake-drag projected into the interaction's drop-list shadow.
+    /* Editor fake-drag projected into the interaction's drop-target shadow.
        Same `drag` styling so editor previews match runtime visuals. */
     &::part(drag) {
       @apply drag;
@@ -22,7 +22,7 @@
         @apply foc;
       }
     }
-    /* Editor fake-drag projected into the interaction's drop-list shadow.
+    /* Editor fake-drag projected into the interaction's drop-target shadow.
        Same `drag` styling so editor previews match runtime visuals.
        Kept as its own block (separate from the runtime-drag selector list
        above) because a CSS comment between commas inside a nested selector
@@ -36,7 +36,7 @@
         @apply foc;
       }
     }
-    &::part(qti-simple-choice) {
+    &::part(drag) {
       display: flex;
       overflow: hidden;
       align-items: center;
@@ -49,7 +49,7 @@
     &::part(drags) {
       gap: 0.5rem;
     }
-    &::part(drop-list) {
+    &::part(drop) {
       @apply drop;
       &[enabled] {
         @apply dropping;

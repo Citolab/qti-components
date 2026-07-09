@@ -31,7 +31,7 @@ export default [
     }
     /* The slot a dropped chip lands in — only on a drop target, never on a source chip, which has
      the same slot but leaves it empty. Was an inline min-height written from JS. */
-    :host(:not(:state(drag))) slot[part='dropslot'] {
+    :host(:not(:state(drag))) slot[part='drop'] {
       min-height: var(--qti-dropzone-min-height, 0);
     }
   `

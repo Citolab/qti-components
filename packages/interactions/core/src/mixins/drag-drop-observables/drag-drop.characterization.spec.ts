@@ -36,7 +36,7 @@ describe('drag-drop characterization — response is currently derived from the 
     await settle();
 
     const interaction = el<any>('qti-order-interaction');
-    const drops = Array.from(interaction.shadowRoot.querySelectorAll('drop-list')) as HTMLElement[];
+    const drops = Array.from(interaction.shadowRoot.querySelectorAll(`[part='drop']`)) as HTMLElement[];
     expect(drops.map(d => d.getAttribute('identifier'))).toEqual(['droplist0', 'droplist1']);
 
     interaction.handleDrop(byId('B'), drops[0]);
@@ -51,7 +51,7 @@ describe('drag-drop characterization — response is currently derived from the 
     expect(byId('A').internals.states.has('placeholder')).toBe(true);
     expect(byId('B').internals.states.has('placeholder')).toBe(true);
 
-    // the clone lands inside the shadow drop-list
+    // the clone lands inside the shadow drop target
     expect(drops[0].querySelectorAll('qti-simple-choice')).toHaveLength(1);
   });
 
@@ -90,7 +90,7 @@ describe('drag-drop characterization — response is currently derived from the 
     await settle();
 
     const interaction = el<any>('qti-associate-interaction');
-    const drops = Array.from(interaction.shadowRoot.querySelectorAll('.dl')) as HTMLElement[];
+    const drops = Array.from(interaction.shadowRoot.querySelectorAll(`[part='drop']`)) as HTMLElement[];
     expect(drops.map(d => d.getAttribute('identifier'))).toEqual(['droplist0_left', 'droplist0_right']);
 
     interaction.handleDrop(byId('A'), drops[0]);

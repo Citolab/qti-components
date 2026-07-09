@@ -11,7 +11,7 @@ import type { QtiOrderInteraction } from './qti-order-interaction';
 import type { QtiSimpleChoice } from '@qti-components/interactions-core/elements/qti-simple-choice';
 
 const getDropZone = (interaction: QtiOrderInteraction, index: number) =>
-  interaction.shadowRoot?.querySelector(`drop-list[identifier="droplist${index}"]`) as HTMLElement;
+  interaction.shadowRoot?.querySelector(`[part='drop'][identifier="droplist${index}"]`) as HTMLElement;
 
 type DragOptions = {
   to?: Element | { x: number; y: number };
