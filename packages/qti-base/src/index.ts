@@ -9,6 +9,8 @@ export * from './context/qti.context';
 export * from './context/session.context';
 export * from './context/test.context';
 
+export * from './styles/box-sizing.styles';
+
 export * from './abstract/interaction';
 export * from './abstract/qti-variable-declaration';
 export * from './abstract/qti-condition-expression';

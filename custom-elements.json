@@ -31354,6 +31354,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "packages/qti-base/src/styles/box-sizing.styles"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "packages/qti-base/src/abstract/interaction"
           }
         },
