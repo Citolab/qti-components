@@ -17,7 +17,6 @@ const meta: Meta<QtiAssessmentItem> = {
 export default meta;
 
 export const Q8_L2_D107: Story = {
-  tags: ['skip-test'],
   name: 'Q8-L2-D107',
   render: (_args, { loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
     let item: QtiAssessmentItem;
@@ -116,7 +115,6 @@ export const Q8_L2_D107: Story = {
 };
 
 export const Q8_L2_D110: Story = {
-  tags: ['skip-test'],
   name: 'Q8-L2-D110',
   render: (_args, { loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
     let item: QtiAssessmentItem;

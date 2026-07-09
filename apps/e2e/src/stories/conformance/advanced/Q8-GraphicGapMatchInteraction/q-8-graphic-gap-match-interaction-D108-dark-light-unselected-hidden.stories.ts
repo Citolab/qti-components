@@ -49,7 +49,6 @@ const meta: Meta<QtiAssessmentItem> = {
 export default meta;
 
 export const Q8_L2_D108: Story = {
-  tags: ['skip-test'],
   name: 'Q8-L2-D108',
   render: (_args, { loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
     let item: QtiAssessmentItem;

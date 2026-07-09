@@ -48,6 +48,28 @@ describe('drag chip states', () => {
     expect(a.internals.states.has('drag')).toBe(true);
   });
 
+  test('a successful drop clears `dragging` from the source — it must not stay mid-drag', async () => {
+    document.body.innerHTML = `
+      <qti-order-interaction response-identifier="R">
+        <qti-simple-choice identifier="A">A</qti-simple-choice>
+        <qti-simple-choice identifier="B">B</qti-simple-choice>
+      </qti-order-interaction>`;
+    await settle();
+
+    const interaction = document.querySelector('qti-order-interaction') as any;
+    const drops = Array.from(interaction.shadowRoot.querySelectorAll('drop-list')) as HTMLElement[];
+    const a = chip('A');
+
+    // simulate the source being hidden while its clone is in flight, then a successful landing
+    a.internals.states.add('dragging');
+    interaction.dragState = { ...interaction.dragState, dragging: true, dragSource: a, currentTarget: drops[0] };
+    interaction.handleDragEnd();
+    await settle();
+
+    expect(a.internals.states.has('dragging'), 'transient state is cleared on a successful drop').toBe(false);
+    // it may still be a placeholder — that is handleDrop's decision, not handleDragEnd's
+  });
+
   test('qti-gap-img has ElementInternals, so it can carry the drag states too', async () => {
     document.body.innerHTML = `<qti-gap-img identifier="A"><img alt="" /></qti-gap-img>`;
     await settle();

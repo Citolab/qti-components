@@ -4,6 +4,7 @@ import {
   clearDragChipStates,
   detectCollision,
   findDraggableTarget,
+  hasDragChipState,
   isDragChipHidden,
   isDraggableDisabled,
   setDragChipState
@@ -216,7 +217,11 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
           }
           const target = findDraggableTarget(e, draggablesSelector);
           const hostDisabled = (this as any).disabled || (this as any).readonly;
-          const targetDisabled = isDraggableDisabled(target) || isDragChipHidden(target);
+          // Refuse a second drag from a chip whose clone is already in flight. A `placeholder` chip
+          // is deliberately NOT refused: it is invisible and `pointer-events: none`, so a real
+          // pointer cannot reach it, while blocking it in code would also forbid the programmatic
+          // drags conformance tests use to return a placed chip to the bank.
+          const targetDisabled = isDraggableDisabled(target) || hasDragChipState(target, 'dragging');
           const touchHandledRecently = Date.now() - this.lastTouchStartAt < 50;
           return (
             target &&
@@ -297,7 +302,11 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         .filter((e: MouseEvent) => {
           const target = findDraggableTarget(e, draggablesSelector);
           const hostDisabled = (this as any).disabled || (this as any).readonly;
-          const targetDisabled = isDraggableDisabled(target) || isDragChipHidden(target);
+          // Refuse a second drag from a chip whose clone is already in flight. A `placeholder` chip
+          // is deliberately NOT refused: it is invisible and `pointer-events: none`, so a real
+          // pointer cannot reach it, while blocking it in code would also forbid the programmatic
+          // drags conformance tests use to return a placed chip to the bank.
+          const targetDisabled = isDraggableDisabled(target) || hasDragChipState(target, 'dragging');
           const isLeftButton = e.button === 0;
           const pointerHandledRecently = Date.now() - this.lastPointerDownAt < 50;
           return target && isLeftButton && !hostDisabled && !targetDisabled && !pointerHandledRecently;
@@ -326,7 +335,11 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         .filter((e: TouchEvent) => {
           const target = findDraggableTarget(e, draggablesSelector);
           const hostDisabled = (this as any).disabled || (this as any).readonly;
-          const targetDisabled = isDraggableDisabled(target) || isDragChipHidden(target);
+          // Refuse a second drag from a chip whose clone is already in flight. A `placeholder` chip
+          // is deliberately NOT refused: it is invisible and `pointer-events: none`, so a real
+          // pointer cannot reach it, while blocking it in code would also forbid the programmatic
+          // drags conformance tests use to return a placed chip to the bank.
+          const targetDisabled = isDraggableDisabled(target) || hasDragChipState(target, 'dragging');
           const hasTouchPoint = Boolean(e.touches?.[0] || e.changedTouches?.[0]);
           const pointerHandledRecently = Date.now() - this.lastPointerDownAt < 50;
           return target && hasTouchPoint && !hostDisabled && !targetDisabled && !pointerHandledRecently;
@@ -369,7 +382,11 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         if (!keyboardState.dragging) {
           const target = findDraggableTarget(e, draggablesSelector);
           const hostDisabled = (this as any).disabled || (this as any).readonly;
-          const targetDisabled = isDraggableDisabled(target) || isDragChipHidden(target);
+          // Refuse a second drag from a chip whose clone is already in flight. A `placeholder` chip
+          // is deliberately NOT refused: it is invisible and `pointer-events: none`, so a real
+          // pointer cannot reach it, while blocking it in code would also forbid the programmatic
+          // drags conformance tests use to return a placed chip to the bank.
+          const targetDisabled = isDraggableDisabled(target) || hasDragChipState(target, 'dragging');
 
           if (target && ['Space', 'Enter'].includes(e.code) && !hostDisabled && !targetDisabled) {
             e.preventDefault();
@@ -723,6 +740,11 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
 
       if (canDrop && dragSource && dropTarget) {
         this.handleDrop(dragSource, dropTarget);
+        // The clone has landed, so the source is no longer mid-drag. `handleDrop` has already
+        // decided whether it becomes a `placeholder`; only the transient state is cleared here.
+        // (`handleInvalidDrop` clears both.) This used to be implicit: the inventory refresh
+        // reset `style.opacity = '1.0'`, undoing the mid-drag hiding as a side effect.
+        setDragChipState(dragSource, 'dragging', false);
       } else {
         this.handleInvalidDrop(dragSource);
       }

@@ -41,7 +41,6 @@ const render = (_args, { loaded: { xml } }: { argTypes: ArgTypes; loaded: Record
 // ═══════════════════════════════════════════════════════════════════════════════
 
 export const D108: Story = {
-  tags: ['skip-test'],
   name: 'Q6-L2-D108',
   render,
   play: async ({ canvasElement, step }) => {
