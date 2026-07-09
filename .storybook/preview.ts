@@ -14,6 +14,16 @@ import { initialize, mswLoader } from 'msw-storybook-addon';
 initialize({
   onUnhandledRequest: 'bypass'
 });
+/*
+ * Shared CSS reset for every style substrate. modern-normalize = normalize + the universal
+ * `box-sizing: border-box` rule that Bootstrap Reboot, Tailwind Preflight and every modern reset
+ * agree on. Imported from the local dependency, not a CDN.
+ *
+ * It resets browser inconsistencies only. The *opinions* — paragraph/heading/list margins, body
+ * typography — belong to whichever theme wants them (see kennisnet/_reboot.scss).
+ */
+import 'modern-normalize/modern-normalize.css';
+
 import customElements from '../custom-elements.json';
 import { toBePositionedRelativeTo } from '../tools/testing/setup/toBePositionedRelativeTo';
 import { baselineOverlayDecorator, baselineOverlayGlobalTypes } from './extensions/baseline-overlay';

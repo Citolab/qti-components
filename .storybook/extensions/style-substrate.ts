@@ -18,14 +18,14 @@ import type { Decorator, Preview } from '@storybook/web-components-vite';
  * vendor by adding (a) an entry here and (b) an item in
  * `styleSubstrateGlobalTypes.override.toolbar.items`.
  *
+ * Every substrate sits on the shared `modern-normalize` reset imported in preview.ts.
+ *
  * - vanilla:   `native.css` + the minimal variable theme. The lightest styled baseline.
- * - citolab:   full qti-theme (`item.css`, which includes native) + minimal normalize reset.
- *   Default: the theme's own look, with no vendor stylesheet in the cascade.
- * - kennisnet: full qti-theme + single self-contained override file — pulls Bootstrap +
- *   Wikiwijs bridge + FontAwesome glyph CDN URLs internally (see kennisnet-override.scss).
- *   Not the default: its Bootstrap import restyles the item body and shifts layout, which
- *   perturbs layout-sensitive stories. Removing that dependency is tracked in
- *   `plans/css-contract-audit.md`.
+ * - citolab:   full qti-theme (`item.css`, which includes native). Default: the theme's own
+ *   look, with no vendor stylesheet in the cascade.
+ * - kennisnet: full qti-theme + a single self-contained override file. No CDN, no Bootstrap —
+ *   it carries its own reboot (the opinionated margins/typography Bootstrap used to supply)
+ *   and inlines its FontAwesome glyphs as data URIs. See kennisnet-override.scss.
  */
 const OVERRIDE_LINK_CLASS = 'qti-vendor-override';
 const THEME_STYLE_ID = 'qti-theme-style';
@@ -33,7 +33,7 @@ const vanillaMinimalCss = `${nativeCss}\n${minimalCss}`;
 
 const SUBSTRATES: Record<string, { baseCss: string; overrides: string[] }> = {
   vanilla: { baseCss: vanillaMinimalCss, overrides: [] },
-  citolab: { baseCss: itemCss, overrides: ['https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.css'] },
+  citolab: { baseCss: itemCss, overrides: [] },
   kennisnet: { baseCss: itemCss, overrides: [kennisnetOverrideHref] }
 };
 

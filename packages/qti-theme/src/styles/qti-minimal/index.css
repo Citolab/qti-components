@@ -30,10 +30,12 @@
   --qti-gap: 0.5rem;
 }
 
-:root {
-  --fa-check-mask: url('https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/check.svg');
-  --fa-circle-mask: url('https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/circle.svg');
-}
+/*
+ * (Removed: --fa-check-mask / --fa-circle-mask pointed at a FontAwesome CDN and were only
+ * referenced from commented-out `mask:` rules below. The theme layer now has no network
+ * dependency at all. If those rules are ever enabled, inline the glyphs as data URIs — see
+ * kennisnet-override.scss, or the .check-mask pattern in qti-theme/qti-base.css.)
+ */
 
 /*
  * A source chip that currently leaves a hole in the drag bank — mid-drag, or already placed.
