@@ -263,7 +263,7 @@ export class TouchDragAndDrop {
   }
 
   #getDropzoneRect(el: HTMLElement): DOMRect {
-    const slot = el.shadowRoot?.querySelector<HTMLElement>('slot[part="drop"]');
+    const slot = el.shadowRoot?.querySelector<HTMLElement>('slot[part~="drop"]');
     return (slot ?? el).getBoundingClientRect();
   }
 

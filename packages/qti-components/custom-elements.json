@@ -1940,7 +1940,17 @@
           "kind": "class",
           "description": "",
           "name": "QtiAssociableHotspot",
-          "members": [],
+          "members": [
+            {
+              "kind": "field",
+              "name": "internals",
+              "type": {
+                "text": "ElementInternals"
+              },
+              "privacy": "public",
+              "description": "Carries `:state(filled)` while the hotspot holds a chip."
+            }
+          ],
           "events": [
             {
               "name": "qti-register-hotspot",
@@ -2427,6 +2437,15 @@
           "description": "",
           "name": "QtiGap",
           "members": [
+            {
+              "kind": "field",
+              "name": "internals",
+              "type": {
+                "text": "ElementInternals"
+              },
+              "privacy": "public",
+              "description": "Carries `:state(filled)` while the gap holds a chip."
+            },
             {
               "kind": "field",
               "name": "tabindex",
@@ -7983,6 +8002,24 @@
         },
         {
           "kind": "function",
+          "name": "isDropFilled",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "el",
+              "type": {
+                "text": "HTMLElement | null | undefined"
+              }
+            }
+          ],
+          "description": "Does this drop target currently hold a chip? Reads whichever spelling the target uses."
+        },
+        {
+          "kind": "function",
           "name": "setDragChipState",
           "return": {
             "type": {
@@ -8009,6 +8046,30 @@
               }
             }
           ]
+        },
+        {
+          "kind": "function",
+          "name": "setDropFilled",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "el",
+              "type": {
+                "text": "HTMLElement | null | undefined"
+              }
+            },
+            {
+              "name": "filled",
+              "type": {
+                "text": "boolean"
+              }
+            }
+          ],
+          "description": "Mark a drop target as holding at least one chip.\n\nTwo spellings, because the five drop targets are not the same kind of thing and cannot be made\nso. `qti-gap`, `qti-associable-hotspot` and `qti-simple-associable-choice` are custom elements\nwith an `ElementInternals`, so they take a real custom state. Order's and associate's targets are\nplain `<div part=\"drop\">` in the interaction's shadow root, and **a div cannot carry\n`:state()`** — there is no `attachInternals` for it. They take an extra part token instead.\n\nBoth are reachable, and a theme addresses them the same way it addresses a chip's three homes:\n\n  :state(filled)    the light-DOM custom-element targets\n  ::part(filled)    the shadow-resident divs — and `::part(drop)` still matches them\n\nVerified in Chromium: an extra part token does not stop `::part(drop)` matching, and an unfilled\ntarget matches neither.\n\nReplaces `data-has-drop`, which was set in exactly one of the branches that could set it and\nremoved in two that could not."
         },
         {
           "kind": "function",
@@ -8206,6 +8267,14 @@
         },
         {
           "kind": "js",
+          "name": "isDropFilled",
+          "declaration": {
+            "name": "isDropFilled",
+            "module": "packages/interactions/core/src/mixins/drag-drop-observables/utils/drag-drop.utils.ts"
+          }
+        },
+        {
+          "kind": "js",
           "name": "isDroppableAtCapacity",
           "declaration": {
             "name": "isDroppableAtCapacity",
@@ -8233,6 +8302,14 @@
           "name": "setDragChipState",
           "declaration": {
             "name": "setDragChipState",
+            "module": "packages/interactions/core/src/mixins/drag-drop-observables/utils/drag-drop.utils.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "setDropFilled",
+          "declaration": {
+            "name": "setDropFilled",
             "module": "packages/interactions/core/src/mixins/drag-drop-observables/utils/drag-drop.utils.ts"
           }
         }

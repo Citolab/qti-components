@@ -9,6 +9,7 @@ import {
   getMatchMaxValue,
   hasDragChipState,
   applyDropzoneAutoSizing,
+  setDropFilled,
   setDragChipState
 } from './utils/drag-drop.utils';
 import { DragDropCoreMixin } from './drag-drop-core.mixin';
@@ -513,10 +514,12 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       } else if (droppable.tagName === 'QTI-SIMPLE-ASSOCIABLE-CHOICE') {
         cleanClone.setAttribute('slot', 'qti-simple-associable-choice');
         droppable.appendChild(cleanClone);
-        droppable.setAttribute('data-has-drop', 'true');
       } else {
         droppable.appendChild(cleanClone);
       }
+
+      // Every drop target says it is occupied, not just the one branch that used to.
+      setDropFilled(droppable, true);
 
       if (flipStates && this.enableFlipAnimations) {
         animateMultipleFlips(flipStates, this.flipAnimationConfig);
@@ -568,12 +571,10 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
         // Remove all clones of this item from drop zones
         this.trackedDroppables.forEach(droppable => {
           const clones = Array.from(droppable.querySelectorAll(`[identifier="${identifier}"][qti-draggable="true"]`));
-          clones.forEach(clone => {
-            clone.remove();
-            if (droppable.tagName === 'QTI-SIMPLE-ASSOCIABLE-CHOICE') {
-              droppable.removeAttribute('data-has-drop');
-            }
-          });
+          clones.forEach(clone => clone.remove());
+          if (clones.length > 0 && droppable.querySelectorAll(draggablesSelector).length === 0) {
+            setDropFilled(droppable, false);
+          }
         });
 
         this.restoreOriginalInInventory(identifier);
@@ -681,9 +682,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       this.trackedDroppables.forEach(droppable => {
         const items = Array.from(droppable.querySelectorAll(draggablesSelector));
         items.forEach(item => item.remove());
-        if (droppable.tagName === 'QTI-SIMPLE-ASSOCIABLE-CHOICE') {
-          droppable.removeAttribute('data-has-drop');
-        }
+        setDropFilled(droppable, false);
       });
 
       this.trackedDraggables.forEach(draggable => {

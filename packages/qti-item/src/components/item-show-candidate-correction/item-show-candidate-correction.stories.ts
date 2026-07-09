@@ -795,7 +795,7 @@ export const Order: Story = {
     const interaction = assessmentItem.querySelector('qti-order-interaction');
     const showButton = await canvas.findByShadowText(/Show candidate correction/i);
 
-    const drops = interaction.shadowRoot?.querySelectorAll(`[part='drop']`) ?? [];
+    const drops = interaction.shadowRoot?.querySelectorAll(`[part~='drop']`) ?? [];
 
     await step('Create candidate response with one correct and two incorrect positions', async () => {
       // Deterministic setup independent of shuffle/drag timing:

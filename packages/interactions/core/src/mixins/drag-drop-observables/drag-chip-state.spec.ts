@@ -57,7 +57,7 @@ describe('drag chip states', () => {
     await settle();
 
     const interaction = document.querySelector('qti-order-interaction') as any;
-    const drops = Array.from(interaction.shadowRoot.querySelectorAll(`[part='drop']`)) as HTMLElement[];
+    const drops = Array.from(interaction.shadowRoot.querySelectorAll(`[part~='drop']`)) as HTMLElement[];
     const a = chip('A');
 
     // simulate the source being hidden while its clone is in flight, then a successful landing

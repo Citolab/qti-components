@@ -69,6 +69,50 @@ export function isDragChipHidden(el: HTMLElement | null | undefined): boolean {
   return hasDragChipState(el, 'dragging') || hasDragChipState(el, 'placeholder');
 }
 
+/**
+ * Mark a drop target as holding at least one chip.
+ *
+ * Two spellings, because the five drop targets are not the same kind of thing and cannot be made
+ * so. `qti-gap`, `qti-associable-hotspot` and `qti-simple-associable-choice` are custom elements
+ * with an `ElementInternals`, so they take a real custom state. Order's and associate's targets are
+ * plain `<div part="drop">` in the interaction's shadow root, and **a div cannot carry
+ * `:state()`** — there is no `attachInternals` for it. They take an extra part token instead.
+ *
+ * Both are reachable, and a theme addresses them the same way it addresses a chip's three homes:
+ *
+ *   :state(filled)    the light-DOM custom-element targets
+ *   ::part(filled)    the shadow-resident divs — and `::part(drop)` still matches them
+ *
+ * Verified in Chromium: an extra part token does not stop `::part(drop)` matching, and an unfilled
+ * target matches neither.
+ *
+ * Replaces `data-has-drop`, which was set in exactly one of the branches that could set it and
+ * removed in two that could not.
+ */
+export function setDropFilled(el: HTMLElement | null | undefined, filled: boolean): void {
+  if (!el) return;
+
+  const states = internalsOf(el)?.states;
+  if (states) {
+    if (filled) states.add('filled');
+    else states.delete('filled');
+    return;
+  }
+
+  const tokens = new Set((el.getAttribute('part') ?? '').split(/\s+/).filter(Boolean));
+  if (filled) tokens.add('filled');
+  else tokens.delete('filled');
+  el.setAttribute('part', [...tokens].join(' '));
+}
+
+/** Does this drop target currently hold a chip? Reads whichever spelling the target uses. */
+export function isDropFilled(el: HTMLElement | null | undefined): boolean {
+  if (!el) return false;
+  const states = internalsOf(el)?.states;
+  if (states) return states.has('filled');
+  return (el.getAttribute('part') ?? '').split(/\s+/).includes('filled');
+}
+
 // Re-export collision detection types and functions for convenience
 export type { CollisionDetectionAlgorithm } from './collision.utils';
 export {

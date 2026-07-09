@@ -7,6 +7,9 @@ import type { CSSResultGroup } from 'lit';
 export class QtiAssociableHotspot extends LitElement {
   static override styles: CSSResultGroup = styles;
 
+  /** Carries `:state(filled)` while the hotspot holds a chip. */
+  public internals: ElementInternals = this.attachInternals();
+
   override connectedCallback() {
     super.connectedCallback();
     this.dispatchEvent(

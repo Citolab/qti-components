@@ -15,7 +15,7 @@ import type { CSSResultGroup } from 'lit';
 const SlottedBase = DragDropSlottedMixin(
   Interaction,
   'qti-simple-associable-choice',
-  `[part='drop']`,
+  `[part~='drop']`,
   `slot[name='qti-simple-associable-choice']`,
   'pointerWithin'
 );
@@ -60,8 +60,8 @@ export class QtiAssociateInteraction extends DragDropSlottedSortableMixin(Slotte
     const pairCount = Math.ceil(this._childrenMap.length / 2);
     const response: string[] = [];
     for (let i = 0; i < pairCount; i++) {
-      const leftDrop = this.shadowRoot?.querySelector(`[part='drop'][identifier="droplist${i}_left"]`);
-      const rightDrop = this.shadowRoot?.querySelector(`[part='drop'][identifier="droplist${i}_right"]`);
+      const leftDrop = this.shadowRoot?.querySelector(`[part~='drop'][identifier="droplist${i}_left"]`);
+      const rightDrop = this.shadowRoot?.querySelector(`[part~='drop'][identifier="droplist${i}_right"]`);
       const leftId = leftDrop?.querySelector('[qti-draggable="true"]')?.getAttribute('identifier');
       const rightId = rightDrop?.querySelector('[qti-draggable="true"]')?.getAttribute('identifier');
       if (leftId && rightId) {

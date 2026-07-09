@@ -319,7 +319,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
         droppable.style.minHeight = `var(--qti-dropzone-min-height, ${maxDraggableHeight}px)`;
         droppable.style.minWidth = `${maxDraggableWidth}px`;
 
-        const dropSlot: HTMLElement = droppable.shadowRoot?.querySelector('slot[part="drop"]');
+        const dropSlot: HTMLElement = droppable.shadowRoot?.querySelector('slot[part~="drop"]');
         if (dropSlot) {
           dropSlot.style.minHeight = `var(--qti-dropzone-min-height, ${maxDraggableHeight}px)`;
         }
@@ -876,7 +876,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
 
     private getDropzoneRect(el: HTMLElement): DOMRect {
-      const slot = el.shadowRoot?.querySelector<HTMLElement>('slot[part="drop"]');
+      const slot = el.shadowRoot?.querySelector<HTMLElement>('slot[part~="drop"]');
       return (slot ?? el).getBoundingClientRect();
     }
 

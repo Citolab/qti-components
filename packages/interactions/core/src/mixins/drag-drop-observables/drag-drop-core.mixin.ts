@@ -196,6 +196,13 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         draggable.setAttribute('qti-draggable', 'true');
         draggable.setAttribute('tabindex', '0');
       });
+
+      // The drop-side twin of `qti-draggable`. Three of the five drop targets are light-DOM
+      // elements authored in the item body (`qti-gap`, `qti-associable-hotspot`,
+      // `qti-simple-associable-choice`), so no part can name them — a part only exists inside the
+      // shadow tree that declares it. An attribute is the only hook a theme can use to say "every
+      // drop target, whichever interaction this is".
+      this.trackedDroppables.forEach(droppable => droppable.setAttribute('qti-droppable', 'true'));
     }
 
     protected setupDragObservables(): void {

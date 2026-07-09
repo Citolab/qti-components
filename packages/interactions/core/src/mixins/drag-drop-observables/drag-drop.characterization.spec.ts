@@ -36,7 +36,7 @@ describe('drag-drop characterization — response is currently derived from the 
     await settle();
 
     const interaction = el<any>('qti-order-interaction');
-    const drops = Array.from(interaction.shadowRoot.querySelectorAll(`[part='drop']`)) as HTMLElement[];
+    const drops = Array.from(interaction.shadowRoot.querySelectorAll(`[part~='drop']`)) as HTMLElement[];
     expect(drops.map(d => d.getAttribute('identifier'))).toEqual(['droplist0', 'droplist1']);
 
     interaction.handleDrop(byId('B'), drops[0]);
@@ -90,7 +90,7 @@ describe('drag-drop characterization — response is currently derived from the 
     await settle();
 
     const interaction = el<any>('qti-associate-interaction');
-    const drops = Array.from(interaction.shadowRoot.querySelectorAll(`[part='drop']`)) as HTMLElement[];
+    const drops = Array.from(interaction.shadowRoot.querySelectorAll(`[part~='drop']`)) as HTMLElement[];
     expect(drops.map(d => d.getAttribute('identifier'))).toEqual(['droplist0_left', 'droplist0_right']);
 
     interaction.handleDrop(byId('A'), drops[0]);
@@ -120,7 +120,9 @@ describe('drag-drop characterization — response is currently derived from the 
     await settle();
 
     expect(interaction.response).toBe('S1 T1');
-    expect(target.getAttribute('data-has-drop'), 'occupied target is flagged').toBe('true');
+    // `data-has-drop` was set here and nowhere else. An occupied target now carries `:state(filled)`
+    // when it is a custom element, and a `filled` part token when it is a plain shadow div.
+    expect(target.internals.states.has('filled'), 'occupied target is flagged').toBe(true);
     expect(byId('S1').internals.states.has('placeholder')).toBe(true);
   });
 
