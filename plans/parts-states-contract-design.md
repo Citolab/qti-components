@@ -272,16 +272,51 @@ Naming for the parts that *do* stay (shadow containers):
 (inline-choice), `correct-line` (graphic-associate), `knob-correct` (slider). All mean "the
 overlay showing the right answer". → `correct` everywhere.
 
-**`qti-match-interaction` encodes state inside part names** (`qti-match-interaction.ts:332`):
+### `::part(control checked)` vs `:state(checked)::part(control)`
+
+Not interchangeable. A **part names what something is**; a **state names the condition it is in**.
+`::part(control radio checked)` is a *different name for the same part*, matched by subset — not
+a more specific selector.
+
+Verified in Chromium (2/2). In both pairs the "more specific looking" rule is written **first**:
+
+| First rule | Second rule | Winner |
+|---|---|---|
+| `::part(control checked)` | `::part(control)` | `::part(control)` — extra part tokens add **no specificity** |
+| `:state(checked)::part(control)` | `::part(control)` | `:state(checked)::part(control)` — `:state()` adds pseudo-class specificity |
+
+Prefer `:state()` + `::part()` wherever the element can hold state:
+
+1. **Cascade.** With part tokens every variant rule ties, so a vendor override beats the base
+   theme only by loading later. With states it wins on specificity. (Kennisnet does load later,
+   so this is fragile rather than broken.)
+2. **Composition.** `:state()` combines with `:not()`, `:has()`, `:hover`. Part tokens cannot be
+   negated — `::part(control):not(...)` negates pseudo-classes on the part element, not tokens.
+3. **Reactivity.** A state toggles through `internals.states`: no re-render, no markup change. A
+   part token is an attribute string, so flipping `checked` re-renders `part="…"`.
+4. **Meaning.** `checked` is a condition. `radio` is a role — modelled as `:state(radio)`
+   everywhere else. Neither belongs in a name.
+
+**Why match-interaction is the exception.** `::part(x):state(y)` requires the state to live on
+the part's *own* element. Match's cells are plain `<span>`s in the interaction's shadow root:
+no `ElementInternals`, no states. Multi-token parts are the only mechanism available, and they
+exist for exactly this.
+
+The escape hatch, if uniformity is ever wanted: make the cell a custom element whose **host**
+carries `part="control"` plus the states — then `qti-match-interaction::part(control):state(checked)`
+works. Cost: the inner mark cannot be conditioned on the host's state from outside (parts don't
+chain), so its checked appearance moves into the cell's shadow behind CSS variables, and
+Kennisnet's four mark rules are rewritten. Not worth it to buy specificity nothing depends on.
+
+✅ **`qti-match-interaction`'s part tokens now reuse the state vocabulary.** Was:
 
 ```ts
-const chPart  = `ch ${typeBase} ${checkedMarker} ${correctVariant}`; // "ch rb rb-checked rb-correct"
+const chPart = `ch ${typeBase} ${checkedMarker} ${correctVariant}`; // "ch rb rb-checked rb-correct"
 ```
 
-giving `::part(cha rb-checked rb-correct)`. Every other interaction uses `:state()`. Match's
-cells are rendered in its own shadow, so they can carry real states only if they become
-custom elements — otherwise the parts must stay, but should at least be renamed to match
-(`control`, `control-mark`) with the variants as separate part tokens.
+Now `control radio checked correct` / `control-mark radio checked correct`, so
+`::part(control checked)` reads the same as `:state(checked)::part(control)` elsewhere. The
+mechanism stays token-based for the reason above; only the words changed.
 
 **Universal parts are missing on several interactions:** `message` is absent from order and
 slider; `prompt` exists only on `qti-choice-interaction` (others use `<slot name="prompt">`
