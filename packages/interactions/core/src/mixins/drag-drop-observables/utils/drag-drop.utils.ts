@@ -32,6 +32,43 @@ export function isDraggableDisabled(target: HTMLElement | null | undefined): boo
   return internals?.states?.has('disabled') ?? false;
 }
 
+/**
+ * Presentation states on a source chip in the drag bank. Both leave a hole where the chip was,
+ * and both are styled by CSS rather than by writing `element.style.opacity` from here.
+ *
+ * - `dragging`    — this chip's clone is currently following the cursor.
+ * - `placeholder` — this chip's copy sits in a dropzone (`matchMax` reached).
+ *
+ * They are distinct: a theme may want a dashed outline while dragging and a solid inset box
+ * once placed.
+ */
+export type DragChipState = 'dragging' | 'placeholder';
+
+const internalsOf = (el: HTMLElement | null | undefined): ElementInternals | undefined =>
+  (el as { internals?: ElementInternals } | null | undefined)?.internals;
+
+export function setDragChipState(el: HTMLElement | null | undefined, state: DragChipState, on: boolean): void {
+  const states = internalsOf(el)?.states;
+  if (!states) return;
+  if (on) states.add(state);
+  else states.delete(state);
+}
+
+export function hasDragChipState(el: HTMLElement | null | undefined, state: DragChipState): boolean {
+  return internalsOf(el)?.states?.has(state) ?? false;
+}
+
+/** Clear both hole-leaving states — the chip is back in the bank and interactive again. */
+export function clearDragChipStates(el: HTMLElement | null | undefined): void {
+  setDragChipState(el, 'dragging', false);
+  setDragChipState(el, 'placeholder', false);
+}
+
+/** A chip that currently leaves a hole: not draggable, and skipped by keyboard navigation. */
+export function isDragChipHidden(el: HTMLElement | null | undefined): boolean {
+  return hasDragChipState(el, 'dragging') || hasDragChipState(el, 'placeholder');
+}
+
 // Re-export collision detection types and functions for convenience
 export type { CollisionDetectionAlgorithm } from './collision.utils';
 export {

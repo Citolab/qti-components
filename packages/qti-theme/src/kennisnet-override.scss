@@ -87,6 +87,25 @@ test-container {
 }
 
 /*
+ * The hole a source chip leaves behind — its copy sits in a dropzone (`placeholder`), or its
+ * clone is currently following the cursor (`dragging`). An empty inset box, keeping the chip's
+ * footprint, rather than an invisible element.
+ *
+ * Was scoped to qti-order-interaction and written as `&[style*='opacity: 0'] { opacity: 1
+ * !important; }` — a selector on the inline style string the drag-drop mixins used to write,
+ * then undone with !important. Now a state, so it applies to every drag interaction, and the
+ * !important is unnecessary: kennisnet is unlayered and beats qti-theme's `@layer` default.
+ */
+:state(drag):state(placeholder),
+:state(drag):state(dragging) {
+  background-color: var(--bs-placeholder-bg);
+  opacity: 1;
+  box-shadow: inset var(--bs-placeholder-box-shadow);
+  border: none;
+  color: transparent;
+}
+
+/*
  * FontAwesome `grip-vertical` glyph as the drag handle, painted via
  * `mask-image` so it inherits `currentColor`. Sits BEFORE the chip text.
  */

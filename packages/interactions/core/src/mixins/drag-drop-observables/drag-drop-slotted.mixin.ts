@@ -3,12 +3,15 @@ import { property } from 'lit/decorators.js';
 import { responseAttributeConverter } from '@qti-components/base';
 
 import {
+  clearDragChipStates,
   collectResponseData,
   countTotalAssociations,
   findInventoryItems,
   getMatchMaxValue,
+  hasDragChipState,
   isDroppableAtCapacity,
-  applyDropzoneAutoSizing
+  applyDropzoneAutoSizing,
+  setDragChipState
 } from './utils/drag-drop.utils';
 import { DragDropCoreMixin } from './drag-drop-core.mixin';
 import { captureMultipleFlipStates, animateMultipleFlips, type FlipAnimationOptions } from './utils/flip.utils';
@@ -299,7 +302,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       // dragged instance back to its source droppable.
       else if (sourceDroppable && this.trackedDroppables.includes(sourceDroppable)) {
         this.dropDraggableInDroppable(dragSource, sourceDroppable);
-      } else if (dragSource.style.opacity === '0') {
+      } else if (hasDragChipState(dragSource, 'dragging')) {
         // Drag started from inventory: simply restore inventory visual state.
         this.restoreInventoryItem(dragSource);
         this.cacheInteractiveElements();
@@ -327,10 +330,9 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
     }
 
     private restoreInventoryItem(dragSource: HTMLElement): void {
-      dragSource.style.opacity = '1.0';
+      clearDragChipStates(dragSource);
       dragSource.style.display = '';
       dragSource.style.position = '';
-      dragSource.style.pointerEvents = 'auto';
     }
 
     private placeResponse(response: string): void {
@@ -512,13 +514,9 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
 
       // FLIP: Last - restore the inventory items (may cause reflow)
       inventoryItems.forEach(item => {
-        item.style.opacity = '1.0';
-        item.style.pointerEvents = 'auto';
+        clearDragChipStates(item);
         item.style.display = '';
         item.style.visibility = 'visible';
-
-        item.style.setProperty('opacity', '1.0', 'important');
-        item.style.setProperty('pointer-events', 'auto', 'important');
       });
 
       // FLIP: Invert & Play - animate items that may have shifted
@@ -537,14 +535,9 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
         return count + items.length;
       }, 0);
 
+      // This source chip's copies are all placed — it becomes the hole they left behind.
       inventoryItems.forEach(item => {
-        if (matchMax !== 0 && placedInDropzones >= matchMax) {
-          item.style.opacity = '0.0';
-          item.style.pointerEvents = 'none';
-        } else {
-          item.style.opacity = '1.0';
-          item.style.pointerEvents = 'auto';
-        }
+        setDragChipState(item, 'placeholder', matchMax !== 0 && placedInDropzones >= matchMax);
       });
     }
 

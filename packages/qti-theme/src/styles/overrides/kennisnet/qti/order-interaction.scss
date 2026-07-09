@@ -34,13 +34,8 @@ qti-order-interaction {
     border: none;
     font-weight: 600;
 
-    &[style*='opacity: 0'] {
-      background-color: var(--bs-placeholder-bg);
-      opacity: 1 !important;
-      box-shadow: inset var(--bs-placeholder-box-shadow);
-      border: none;
-      color: transparent;
-    }
+    /* The placeholder look now lives in kennisnet-override.scss, keyed on `:state(placeholder)`
+       so it applies to every drag interaction rather than only this one. */
   }
 
   &::part(qti-simple-choice) {

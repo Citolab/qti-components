@@ -64,6 +64,10 @@
 
   /* Dropzones */
   --qti-dropzone-padding: 0rem;
+
+  /* The hole a dragged / placed chip leaves behind in the bank — see qti-states.css */
+  --qti-placeholder-bg: color-mix(in srgb, var(--qti-border-active) 15%, white);
+  --qti-placeholder-shadow: 0 3px color-mix(in srgb, var(--qti-border-active) 30%, white);
 }
 
 /* SVG masks and backgrounds */

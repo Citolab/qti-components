@@ -21,4 +21,28 @@
     outline: var(--qti-border-thickness) dashed var(--qti-correct);
     outline-offset: 0.25rem;
   }
+
+  /*
+   * A source chip in the drag bank that currently leaves a hole:
+   *   `dragging`    — its clone is following the cursor
+   *   `placeholder` — its copy sits in a dropzone (matchMax reached)
+   *
+   * These replace four `element.style.opacity` writes in the drag-drop mixins, which no theme
+   * could override without matching on the inline style string.
+   *
+   * Rendered as an empty inset box that keeps the chip's footprint, rather than an invisible
+   * element — the hole should read as "something was here", not as a layout gap. `color:
+   * transparent` hides the label while preserving the chip's intrinsic width.
+   *
+   * `pointer-events` here is belt-and-braces: the mixins also refuse to start a drag from a
+   * chip in these states, so behaviour never depends on a stylesheet being present.
+   */
+  :state(dragging),
+  :state(placeholder) {
+    background: var(--qti-placeholder-bg);
+    box-shadow: inset var(--qti-placeholder-shadow);
+    border-color: transparent;
+    color: transparent;
+    pointer-events: none;
+  }
 }

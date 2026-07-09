@@ -2011,6 +2011,15 @@
           "members": [
             {
               "kind": "field",
+              "name": "internals",
+              "type": {
+                "text": "ElementInternals"
+              },
+              "privacy": "public",
+              "description": "`qti-gap-img` is a draggable chip, so it needs ElementInternals to carry the drag states\n(`dragging`, `placeholder`). It works without a shadow root.\n\nNOTE: this element never calls `super.connectedCallback()`, so Lit never enables updating\nand it has no shadow root — which makes `qti-gap-img.styles.ts` dead code. Fixing that means\nadding a `<slot>` to a `render()` first, otherwise the authored `<img>` child disappears."
+            },
+            {
+              "kind": "field",
               "name": "tabindex",
               "type": {
                 "text": "number | undefined"
@@ -7760,6 +7769,24 @@
         },
         {
           "kind": "function",
+          "name": "clearDragChipStates",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "el",
+              "type": {
+                "text": "HTMLElement | null | undefined"
+              }
+            }
+          ],
+          "description": "Clear both hole-leaving states — the chip is back in the bank and interactive again."
+        },
+        {
+          "kind": "function",
           "name": "collectResponseData",
           "return": {
             "type": {
@@ -7875,6 +7902,47 @@
         },
         {
           "kind": "function",
+          "name": "hasDragChipState",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "el",
+              "type": {
+                "text": "HTMLElement | null | undefined"
+              }
+            },
+            {
+              "name": "state",
+              "type": {
+                "text": "DragChipState"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "isDragChipHidden",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "el",
+              "type": {
+                "text": "HTMLElement | null | undefined"
+              }
+            }
+          ],
+          "description": "A chip that currently leaves a hole: not draggable, and skipped by keyboard navigation."
+        },
+        {
+          "kind": "function",
           "name": "isDraggableDisabled",
           "return": {
             "type": {
@@ -7913,6 +7981,35 @@
               }
             }
           ]
+        },
+        {
+          "kind": "function",
+          "name": "setDragChipState",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "el",
+              "type": {
+                "text": "HTMLElement | null | undefined"
+              }
+            },
+            {
+              "name": "state",
+              "type": {
+                "text": "DragChipState"
+              }
+            },
+            {
+              "name": "on",
+              "type": {
+                "text": "boolean"
+              }
+            }
+          ]
         }
       ],
       "exports": [
@@ -7921,6 +8018,14 @@
           "name": "applyDropzoneAutoSizing",
           "declaration": {
             "name": "applyDropzoneAutoSizing",
+            "module": "packages/interactions/core/src/mixins/drag-drop-observables/utils/drag-drop.utils.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "clearDragChipStates",
+          "declaration": {
+            "name": "clearDragChipStates",
             "module": "packages/interactions/core/src/mixins/drag-drop-observables/utils/drag-drop.utils.ts"
           }
         },
@@ -8006,6 +8111,22 @@
         },
         {
           "kind": "js",
+          "name": "hasDragChipState",
+          "declaration": {
+            "name": "hasDragChipState",
+            "module": "packages/interactions/core/src/mixins/drag-drop-observables/utils/drag-drop.utils.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "isDragChipHidden",
+          "declaration": {
+            "name": "isDragChipHidden",
+            "module": "packages/interactions/core/src/mixins/drag-drop-observables/utils/drag-drop.utils.ts"
+          }
+        },
+        {
+          "kind": "js",
           "name": "isDraggableDisabled",
           "declaration": {
             "name": "isDraggableDisabled",
@@ -8034,6 +8155,14 @@
           "declaration": {
             "name": "rectangleIntersectionCollision",
             "module": "./collision.utils"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "setDragChipState",
+          "declaration": {
+            "name": "setDragChipState",
+            "module": "packages/interactions/core/src/mixins/drag-drop-observables/utils/drag-drop.utils.ts"
           }
         }
       ]

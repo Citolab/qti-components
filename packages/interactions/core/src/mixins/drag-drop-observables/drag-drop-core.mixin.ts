@@ -1,6 +1,13 @@
 import { isSupported, apply } from 'observable-polyfill/fn';
 
-import { detectCollision, findDraggableTarget, isDraggableDisabled } from './utils/drag-drop.utils';
+import {
+  clearDragChipStates,
+  detectCollision,
+  findDraggableTarget,
+  isDragChipHidden,
+  isDraggableDisabled,
+  setDragChipState
+} from './utils/drag-drop.utils';
 
 import type { Interaction } from '@qti-components/base';
 import type { CollisionDetectionAlgorithm } from './utils/drag-drop.utils';
@@ -209,7 +216,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
           }
           const target = findDraggableTarget(e, draggablesSelector);
           const hostDisabled = (this as any).disabled || (this as any).readonly;
-          const targetDisabled = isDraggableDisabled(target);
+          const targetDisabled = isDraggableDisabled(target) || isDragChipHidden(target);
           const touchHandledRecently = Date.now() - this.lastTouchStartAt < 50;
           return (
             target &&
@@ -290,7 +297,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         .filter((e: MouseEvent) => {
           const target = findDraggableTarget(e, draggablesSelector);
           const hostDisabled = (this as any).disabled || (this as any).readonly;
-          const targetDisabled = isDraggableDisabled(target);
+          const targetDisabled = isDraggableDisabled(target) || isDragChipHidden(target);
           const isLeftButton = e.button === 0;
           const pointerHandledRecently = Date.now() - this.lastPointerDownAt < 50;
           return target && isLeftButton && !hostDisabled && !targetDisabled && !pointerHandledRecently;
@@ -319,7 +326,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         .filter((e: TouchEvent) => {
           const target = findDraggableTarget(e, draggablesSelector);
           const hostDisabled = (this as any).disabled || (this as any).readonly;
-          const targetDisabled = isDraggableDisabled(target);
+          const targetDisabled = isDraggableDisabled(target) || isDragChipHidden(target);
           const hasTouchPoint = Boolean(e.touches?.[0] || e.changedTouches?.[0]);
           const pointerHandledRecently = Date.now() - this.lastPointerDownAt < 50;
           return target && hasTouchPoint && !hostDisabled && !targetDisabled && !pointerHandledRecently;
@@ -354,14 +361,15 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       };
 
       const keyboardStream = (shadowRoot as any).when('keydown').subscribe((e: KeyboardEvent) => {
-        const draggables = this.trackedDraggables.filter(d => d.style.opacity !== '0');
+        // Skip chips that currently leave a hole in the bank — dragging, or already placed.
+        const draggables = this.trackedDraggables.filter(d => !isDragChipHidden(d));
         const dropTargets = [...this.trackedDroppables, ...this.trackedDragContainers];
 
         // Start drag
         if (!keyboardState.dragging) {
           const target = findDraggableTarget(e, draggablesSelector);
           const hostDisabled = (this as any).disabled || (this as any).readonly;
-          const targetDisabled = isDraggableDisabled(target);
+          const targetDisabled = isDraggableDisabled(target) || isDragChipHidden(target);
 
           if (target && ['Space', 'Enter'].includes(e.code) && !hostDisabled && !targetDisabled) {
             e.preventDefault();
@@ -496,8 +504,8 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         }
       } else {
         this.dragState.dragClone?.setAttribute('data-drag-origin', 'inventory');
-        dragElement.style.opacity = '0';
-        dragElement.style.pointerEvents = 'none';
+        // The clone is already made, so it does not inherit this state. CSS hides the source.
+        setDragChipState(dragElement, 'dragging', true);
       }
 
       this.updateClonePosition(startX, startY);
@@ -752,10 +760,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
     public abstract handleDrop(draggable: HTMLElement, droppable: HTMLElement): void;
 
     public handleInvalidDrop(dragSource: HTMLElement | null): void {
-      if (dragSource) {
-        dragSource.style.opacity = '1.0';
-        dragSource.style.pointerEvents = 'auto';
-      }
+      clearDragChipStates(dragSource);
     }
 
     protected createDragClone(element: HTMLElement, rect: DOMRect): HTMLElement {
