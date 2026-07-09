@@ -30,7 +30,7 @@
     "local:workspace-publish:force": "pnpm run build && pnpm -r --filter \"./packages/*\" --filter \"./packages/interactions/*\" --filter \"!./packages/qti-components\" --workspace-concurrency=1 publish --access public --ignore-scripts --no-git-checks",
     "ci:push-quality": "run-s lint madge build test publint attw",
     "storybook": "run-p storybook:dev cem:storybook:watch",
-    "lint": "eslint",
+    "lint": "eslint && pnpm run lint:css",
     "test": "pnpm run build && vitest run",
     "test:vrt": "VRT=1 vitest run --project vrt",
     "test:vrt:update": "VRT=1 vitest run --project vrt --update",
@@ -70,7 +70,8 @@
     "ci:release:changesets": "pnpm run changeset:version && pnpm run build && pnpm run changeset:publish",
     "ci:publish:workspace": "PNPM_GIT_CHECKS=false pnpm -r --filter \"./packages/*\" --filter \"./packages/interactions/*\" --filter \"!./packages/qti-components\" run publish",
     "ci:publish:umbrella": "PNPM_GIT_CHECKS=false pnpm --filter \"./packages/qti-components\" run publish",
-    "ci:publish:missing": "run-s ci:publish:workspace ci:publish:umbrella"
+    "ci:publish:missing": "run-s ci:publish:workspace ci:publish:umbrella",
+    "lint:css": "stylelint \"packages/**/src/**/*.{css,scss}\""
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,mjs,cjs}": [
@@ -146,6 +147,7 @@
     "postcss-cli": "^11.0.1",
     "postcss-import": "^16.1.1",
     "postcss-nesting": "^13.0.2",
+    "postcss-scss": "^4.0.9",
     "prettier": "3.5.3",
     "prettier-v2": "npm:prettier@2.8.8",
     "publint": "^0.3.17",
@@ -154,6 +156,7 @@
     "sherif": "^1.10.0",
     "storybook": "^10.4.6",
     "storybook-addon-tag-badges": "^3.1.0",
+    "stylelint": "^17.14.0",
     "syncpack": "14.0.0-alpha.40",
     "ts-morph": "^27.0.2",
     "tsup": "^8.5.1",
