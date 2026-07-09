@@ -68,14 +68,15 @@ test-container {
 
 /*
  * Draggable / button-primary look for QTI elements that act like buttons.
- * Wikiwijs production applies .btn-primary + .draggable here; we don't put
- * classes on the elements, so target them by element name.
+ * Wikiwijs production applies .btn-primary + .draggable here. `:state(drag)` is that missing
+ * class: every draggable chip carries it, derived from the interaction's `draggablesSelector`.
+ * It covers match-interaction's source and target chips but not its tabular grid (where
+ * drag-drop is off), which is what the old `:not(.qti-match-tabular)` clauses hand-encoded.
+ *
+ * The floating clone lives on document.body, outside any interaction, so it receives no
+ * context and no state. It keeps its own selector.
  */
-qti-order-interaction qti-simple-choice,
-qti-gap-match-interaction qti-gap-text,
-qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:first-of-type qti-simple-associable-choice,
-qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:last-of-type > qti-simple-associable-choice > qti-simple-associable-choice,
-qti-associate-interaction qti-simple-associable-choice,
+:state(drag),
 [data-drag-clone] {
   color: #fff;
   background-color: var(--primary-color);
@@ -113,11 +114,7 @@ qti-associate-interaction qti-simple-associable-choice,
  * editor) that applied `.btn-qti-correct` / `.btn-qti-incorrect` classes
  * and inserted state-icon nodes by hand. Pure CSS now.
  */
-qti-order-interaction qti-simple-choice:state(candidate-correct),
-qti-gap-match-interaction qti-gap-text:state(candidate-correct),
-qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:first-of-type qti-simple-associable-choice:state(candidate-correct),
-qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:last-of-type > qti-simple-associable-choice > qti-simple-associable-choice:state(candidate-correct),
-qti-associate-interaction qti-simple-associable-choice:state(candidate-correct),
+:state(drag):state(candidate-correct),
 [data-drag-clone]:state(candidate-correct) {
   background-color: color-mix(in srgb, var(--qti-correct) 5%, white);
   color: var(--qti-correct);
@@ -125,11 +122,7 @@ qti-associate-interaction qti-simple-associable-choice:state(candidate-correct),
   box-shadow: none;
 }
 
-qti-order-interaction qti-simple-choice:state(candidate-correct)::after,
-qti-gap-match-interaction qti-gap-text:state(candidate-correct)::after,
-qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:first-of-type qti-simple-associable-choice:state(candidate-correct)::after,
-qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:last-of-type > qti-simple-associable-choice > qti-simple-associable-choice:state(candidate-correct)::after,
-qti-associate-interaction qti-simple-associable-choice:state(candidate-correct)::after,
+:state(drag):state(candidate-correct)::after,
 [data-drag-clone]:state(candidate-correct)::after {
   content: '';
   display: inline-block;
@@ -142,11 +135,7 @@ qti-associate-interaction qti-simple-associable-choice:state(candidate-correct):
   -webkit-mask: var(--fa-check-mask) no-repeat center / contain;
 }
 
-qti-order-interaction qti-simple-choice:state(candidate-incorrect),
-qti-gap-match-interaction qti-gap-text:state(candidate-incorrect),
-qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:first-of-type qti-simple-associable-choice:state(candidate-incorrect),
-qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:last-of-type > qti-simple-associable-choice > qti-simple-associable-choice:state(candidate-incorrect),
-qti-associate-interaction qti-simple-associable-choice:state(candidate-incorrect),
+:state(drag):state(candidate-incorrect),
 [data-drag-clone]:state(candidate-incorrect) {
   background-color: color-mix(in srgb, var(--qti-incorrect) 5%, white);
   color: var(--qti-incorrect);
@@ -154,11 +143,7 @@ qti-associate-interaction qti-simple-associable-choice:state(candidate-incorrect
   box-shadow: none;
 }
 
-qti-order-interaction qti-simple-choice:state(candidate-incorrect)::after,
-qti-gap-match-interaction qti-gap-text:state(candidate-incorrect)::after,
-qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:first-of-type qti-simple-associable-choice:state(candidate-incorrect)::after,
-qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:last-of-type > qti-simple-associable-choice > qti-simple-associable-choice:state(candidate-incorrect)::after,
-qti-associate-interaction qti-simple-associable-choice:state(candidate-incorrect)::after,
+:state(drag):state(candidate-incorrect)::after,
 [data-drag-clone]:state(candidate-incorrect)::after {
   content: '';
   display: inline-block;
@@ -176,22 +161,14 @@ qti-associate-interaction qti-simple-associable-choice:state(candidate-incorrect
  * `show-full-correct-response`) and the `.correct-option` spans that
  * gap-match injects when `show-correct-response` is set.
  */
-.full-correct-response qti-order-interaction qti-simple-choice,
-.full-correct-response qti-gap-match-interaction qti-gap-text,
-.full-correct-response qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:first-of-type qti-simple-associable-choice,
-.full-correct-response qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:last-of-type > qti-simple-associable-choice > qti-simple-associable-choice,
-.full-correct-response qti-associate-interaction qti-simple-associable-choice,
+.full-correct-response :state(drag),
 span.correct-option {
   background-color: var(--info-color);
   color: white;
   border: var(--qti-border-thickness) solid var(--info-color);
 }
 
-.full-correct-response qti-order-interaction qti-simple-choice::after,
-.full-correct-response qti-gap-match-interaction qti-gap-text::after,
-.full-correct-response qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:first-of-type qti-simple-associable-choice::after,
-.full-correct-response qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:last-of-type > qti-simple-associable-choice > qti-simple-associable-choice::after,
-.full-correct-response qti-associate-interaction qti-simple-associable-choice::after,
+.full-correct-response :state(drag)::after,
 span.correct-option::after {
   content: '';
   display: inline-block;
