@@ -34,7 +34,7 @@ qti-simple-associable-choice {
 
 qti-match-interaction:not(.qti-match-tabular) {
   qti-simple-associable-choice {
-    &::part(slot) {
+    &::part(label) {
       display: inline !important;
     }
   }
@@ -50,7 +50,7 @@ qti-match-interaction:not(.qti-match-tabular) {
 
   qti-simple-match-set:last-of-type {
     > qti-simple-associable-choice {
-      &::part(slot) {
+      &::part(label) {
         border: var(--qti-border-thickness) solid var(--qti-border-color);
         border-top-left-radius: var(--qti-border-radius);
         border-top-right-radius: var(--qti-border-radius);
@@ -104,34 +104,34 @@ qti-match-interaction.qti-match-tabular {
 
   /* Radio / checkbox indicators — mirror qti-choice-interaction. When the
      input is checked, the outer `ch` span carries the `rb-checked`/`cb-checked`
-     compound part (analogous to :state(--checked)::part(ch) on qti-simple-choice).
+     compound part (analogous to :state(checked)::part(control) on qti-simple-choice).
      Outer fills with --bs-primary; inner shrinks to a smaller white circle.
      Correction rules swap the primary colour for correct/incorrect via the
      compound `rb-correct`/`rb-incorrect` part on the same element. */
-  &::part(ch rb-checked),
-  &::part(ch cb-checked) {
+  &::part(control rb-checked),
+  &::part(control cb-checked) {
     border-color: var(--bs-primary);
     background-color: var(--bs-primary);
   }
 
-  &::part(cha rb-checked) {
+  &::part(control-mark rb-checked) {
     background-color: white;
     width: calc(var(--qti-form-size) - 8px);
     height: calc(var(--qti-form-size) - 8px);
   }
 
-  &::part(cha cb-checked) {
+  &::part(control-mark cb-checked) {
     background-color: white;
   }
 
-  &::part(ch rb-checked rb-correct),
-  &::part(ch cb-checked cb-correct) {
+  &::part(control rb-checked rb-correct),
+  &::part(control cb-checked cb-correct) {
     border-color: var(--qti-correct);
     background-color: var(--qti-correct);
   }
 
-  &::part(ch rb-checked rb-incorrect),
-  &::part(ch cb-checked cb-incorrect) {
+  &::part(control rb-checked rb-incorrect),
+  &::part(control cb-checked cb-incorrect) {
     border-color: var(--qti-incorrect);
     background-color: var(--qti-incorrect);
   }

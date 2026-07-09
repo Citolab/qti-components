@@ -1,28 +1,28 @@
 qti-choice-interaction {
   qti-simple-choice {
-    &::part(slot) {
+    &::part(label) {
       display: inline !important;
     }
 
-    &::part(ch) {
+    &::part(control) {
       border-width: thin;
       background-color: white;
     }
 
-    &:state(radio):state(--checked)::part(ch) {
+    &:state(radio):state(checked)::part(control) {
       border-color: var(--bs-primary);
       background-color: var(--bs-primary);
     }
-    &:state(radio):state(--checked)::part(cha) {
+    &:state(radio):state(checked)::part(control-mark) {
       background-color: white;
       width: calc(var(--qti-form-size) - 8px);
       height: calc(var(--qti-form-size) - 8px);
     }
 
-    &:state(checkbox):state(--checked)::part(ch) {
+    &:state(checkbox):state(checked)::part(control) {
       background-color: var(--bs-primary);
     }
-    &:state(checkbox):state(--checked)::part(cha) {
+    &:state(checkbox):state(checked)::part(control-mark) {
       background-color: white;
     }
 
@@ -31,12 +31,12 @@ qti-choice-interaction {
     }
 
     &:state(candidate-correct) {
-      &:state(radio):state(--checked)::part(ch) {
+      &:state(radio):state(checked)::part(control) {
         border-color: var(--qti-correct);
         background-color: var(--qti-correct);
       }
 
-      &:state(checkbox):state(--checked)::part(ch) {
+      &:state(checkbox):state(checked)::part(control) {
         border-color: var(--qti-correct);
         background-color: var(--qti-correct);
       }
@@ -45,12 +45,12 @@ qti-choice-interaction {
     }
 
     &:state(candidate-incorrect) {
-      &:state(radio):state(--checked)::part(ch) {
+      &:state(radio):state(checked)::part(control) {
         border-color: var(--qti-incorrect);
         background-color: var(--qti-incorrect);
       }
 
-      &:state(checkbox):state(--checked)::part(ch) {
+      &:state(checkbox):state(checked)::part(control) {
         border-color: var(--qti-incorrect);
         background-color: var(--qti-incorrect);
       }
@@ -61,8 +61,7 @@ qti-choice-interaction {
 
   &.qti-input-control-hidden {
     & qti-simple-choice {
-      &:state(--checked),
-      &[aria-checked='true'] {
+      &:state(checked) {
         color: var(--qti-selected-color);
         background-color: var(--qti-selected-bg);
       }
@@ -85,20 +84,19 @@ qti-choice-interaction {
 .full-correct-response {
   qti-choice-interaction {
     qti-simple-choice {
-      &:state(radio):state(--checked)::part(ch) {
+      &:state(radio):state(checked)::part(control) {
         border-color: var(--info-color);
         background-color: var(--info-color);
       }
 
-      &:state(checkbox):state(--checked)::part(ch) {
+      &:state(checkbox):state(checked)::part(control) {
         background-color: var(--info-color);
       }
     }
 
     &.qti-input-control-hidden {
       & qti-simple-choice {
-        &:state(--checked),
-        &[aria-checked='true'] {
+        &:state(checked) {
           border-color: var(--info-color);
           background-color: var(--info-color);
         }

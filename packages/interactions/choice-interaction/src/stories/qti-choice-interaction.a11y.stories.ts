@@ -195,7 +195,7 @@ export const KeyboardSpace: Story = {
     await new Promise(r => setTimeout(r, 50));
 
     expect(interaction.response).toContain('A');
-    expect(choices.A.internals.states.has('--checked')).toBe(true);
+    expect(choices.A.internals.states.has('checked')).toBe(true);
   }
 };
 

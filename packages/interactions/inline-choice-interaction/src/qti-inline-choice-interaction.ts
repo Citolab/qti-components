@@ -415,7 +415,7 @@ export class QtiInlineChoiceInteraction extends Interaction {
       choice.internals.role = null;
       choice.internals.ariaSelected = null;
       choice.internals.ariaChecked = 'false';
-      choice.internals.states.delete('--checked');
+      choice.internals.states.delete('checked');
     }
   }
 
@@ -435,12 +435,10 @@ export class QtiInlineChoiceInteraction extends Interaction {
       choice.internals.ariaChecked = isSelected ? 'true' : 'false';
       choice.internals.ariaDisabled = this.disabled ? 'true' : 'false';
       choice.internals.ariaReadOnly = this.readonly ? 'true' : 'false';
-      choice.removeAttribute('aria-disabled');
-      choice.removeAttribute('aria-readonly');
       if (isSelected) {
-        choice.internals.states.add('--checked');
+        choice.internals.states.add('checked');
       } else {
-        choice.internals.states.delete('--checked');
+        choice.internals.states.delete('checked');
       }
       choice.tabIndex = -1;
     }

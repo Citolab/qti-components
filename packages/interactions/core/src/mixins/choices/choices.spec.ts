@@ -73,7 +73,7 @@ describe('ChoicesMixin', () => {
 
       expect(choiceA.readonly).toBe(true);
       await userEvent.click(choiceA);
-      expect(choiceA.internals.states.has('--checked')).toBe(false);
+      expect(choiceA.internals.states.has('checked')).toBe(false);
     });
   });
 
@@ -102,11 +102,11 @@ describe('ChoicesMixin', () => {
 
       await userEvent.click(choiceA);
 
-      expect(choiceA.internals.states.has('--checked')).toBe(true);
+      expect(choiceA.internals.states.has('checked')).toBe(true);
       expect(choiceA.internals.ariaChecked).toBe('true');
 
       await userEvent.click(choiceB);
-      expect(choiceB.internals.states.has('--checked')).toBe(true);
+      expect(choiceB.internals.states.has('checked')).toBe(true);
       expect(choiceB.internals.ariaChecked).toBe('true');
     });
   });
@@ -136,10 +136,10 @@ describe('ChoicesMixin', () => {
       // expect(element.children[0].getAttribute('role')).toBe('checkbox');
       expect(element.validate()).toBeFalsy();
       await userEvent.click(element.children[0]);
-      expect(choiceA.internals.states.has('--checked')).toBe(true);
+      expect(choiceA.internals.states.has('checked')).toBe(true);
       expect(choiceA.internals.ariaChecked).toBe('true');
       await userEvent.click(element.children[1]);
-      expect(choiceB.internals.states.has('--checked')).toBe(true);
+      expect(choiceB.internals.states.has('checked')).toBe(true);
       expect(choiceB.internals.ariaChecked).toBe('true');
     });
   });

@@ -13,26 +13,26 @@
       &:focus {
         @apply foc;
       }
-      &::part(cha) {
+      &::part(control-mark) {
         @apply check-size;
       }
-      &:state(radio)::part(ch) {
+      &:state(radio)::part(control) {
         @apply check-radio;
       }
-      &:state(radio):state(--checked)::part(cha) {
+      &:state(radio):state(checked)::part(control-mark) {
         @apply check-radio-checked;
       }
-      &:state(checkbox)::part(ch) {
+      &:state(checkbox)::part(control) {
         @apply check-checkbox;
       }
-      &:state(checkbox):state(--checked)::part(cha) {
+      &:state(checkbox):state(checked)::part(control-mark) {
         @apply check-checkbox-checked;
       }
       &:state(correct-response),
       &[data-correct-response='true'] {
         &::after {
           content: '\02714';
-          color: #16a34a;
+          color: var(--qti-correct);
         }
       }
     }
@@ -45,16 +45,16 @@
         &:focus {
           @apply foc;
         }
-        &::part(ch) {
+        &::part(control) {
           display: none;
         }
-        &:state(--checked) {
+        &:state(checked) {
           @apply act;
         }
-        &[aria-readonly='true'] {
+        &:state(readonly) {
           @apply rdo;
         }
-        &[aria-disabled='true'] {
+        &:state(disabled) {
           @apply dis;
         }
       }
@@ -68,16 +68,16 @@
           @apply foc;
         }
         cursor: pointer;
-        &::part(ch) {
+        &::part(control) {
           display: none;
         }
-        &:state(--checked) {
+        &:state(checked) {
           background-color: var(--qti-bg-active);
         }
-        &[aria-readonly='true'] {
+        &:state(readonly) {
           @apply rdo;
         }
-        &[aria-disabled='true'] {
+        &:state(disabled) {
           @apply dis;
         }
       }

@@ -17,8 +17,8 @@ export class QtiGapText extends ActiveElementMixin(LitElement, 'qti-gap-text') {
   }
 
   override render() {
-    return html`<div part="ch"></div>
-      <slot></slot>`;
+    return html`<div part="control"></div>
+      <slot part="label"></slot>`;
   }
 }
 

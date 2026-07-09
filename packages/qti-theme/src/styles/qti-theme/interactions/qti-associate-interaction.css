@@ -3,10 +3,10 @@
     &::part(message) {
       @apply validation-message;
     }
-    &:state(--dragzone-active) slot[name='qti-simple-associable-choice'] {
+    &:state(dragzone-active) slot[name='qti-simple-associable-choice'] {
       @apply act;
     }
-    &:state(--dragzone-enabled) slot[name='qti-simple-associable-choice'] {
+    &:state(dragzone-enabled) slot[name='qti-simple-associable-choice'] {
       @apply dropping;
     }
     & qti-simple-associable-choice,

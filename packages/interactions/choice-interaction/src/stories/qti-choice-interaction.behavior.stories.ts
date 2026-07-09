@@ -81,21 +81,21 @@ export const SingleSelection: Story = {
     await step('Select first option', async () => {
       await fireEvent.click(choices.A);
       expect(interaction.response).toBe('A');
-      expect(choices.A.internals.states.has('--checked')).toBe(true);
+      expect(choices.A.internals.states.has('checked')).toBe(true);
     });
 
     await step('Select second option - replaces first', async () => {
       await fireEvent.click(choices.B);
       expect(interaction.response).toBe('B');
-      expect(choices.A.internals.states.has('--checked')).toBe(false);
-      expect(choices.B.internals.states.has('--checked')).toBe(true);
+      expect(choices.A.internals.states.has('checked')).toBe(false);
+      expect(choices.B.internals.states.has('checked')).toBe(true);
     });
 
     await step('Select third option - replaces second', async () => {
       await fireEvent.click(choices.C);
       expect(interaction.response).toBe('C');
-      expect(choices.B.internals.states.has('--checked')).toBe(false);
-      expect(choices.C.internals.states.has('--checked')).toBe(true);
+      expect(choices.B.internals.states.has('checked')).toBe(false);
+      expect(choices.C.internals.states.has('checked')).toBe(true);
     });
   }
 };
@@ -345,10 +345,10 @@ export const ProgrammaticSelection: Story = {
     await interaction.updateComplete;
 
     // Check visual state
-    expect(choices.A.internals.states.has('--checked')).toBe(true);
-    expect(choices.B.internals.states.has('--checked')).toBe(false);
-    expect(choices.C.internals.states.has('--checked')).toBe(true);
-    expect(choices.D.internals.states.has('--checked')).toBe(false);
+    expect(choices.A.internals.states.has('checked')).toBe(true);
+    expect(choices.B.internals.states.has('checked')).toBe(false);
+    expect(choices.C.internals.states.has('checked')).toBe(true);
+    expect(choices.D.internals.states.has('checked')).toBe(false);
   }
 };
 
@@ -363,10 +363,10 @@ export const ProgrammaticSelectionViaValue: Story = {
     await interaction.updateComplete;
 
     // Check visual state
-    expect(choices.A.internals.states.has('--checked')).toBe(false);
-    expect(choices.B.internals.states.has('--checked')).toBe(true);
-    expect(choices.C.internals.states.has('--checked')).toBe(false);
-    expect(choices.D.internals.states.has('--checked')).toBe(true);
+    expect(choices.A.internals.states.has('checked')).toBe(false);
+    expect(choices.B.internals.states.has('checked')).toBe(true);
+    expect(choices.C.internals.states.has('checked')).toBe(false);
+    expect(choices.D.internals.states.has('checked')).toBe(true);
   }
 };
 

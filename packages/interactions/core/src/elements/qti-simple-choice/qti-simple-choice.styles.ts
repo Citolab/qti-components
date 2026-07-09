@@ -11,7 +11,7 @@ export default css`
     display: flex;
     align-items: center;
   }
-  [part='ch'] {
+  [part='control'] {
     display: flex;
     flex-shrink: 0;
     align-items: center;

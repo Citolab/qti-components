@@ -31,8 +31,8 @@ import type { QtiSimpleAssociableChoice } from '@qti-components/interactions-cor
  * @csspart r-header - The row header slot wrapper.
  * @csspart checkbox-grid - The interactive cell grid area.
  * @csspart input-cell - Each cell's label element.
- * @csspart ch - The visible checkbox/radio marker; also carries `rb`/`cb`, `-checked`, `-correct`, `-incorrect` variants.
- * @csspart cha - The inner marker element; carries the same variants as `ch`.
+ * @csspart control - The visible checkbox/radio box; also carries `rb`/`cb`, `-checked`, `-correct`, `-incorrect` variants.
+ * @csspart control-mark - The inner mark element; carries the same variants as `control`.
  * @csspart message - Live validation message region (role="alert").
  */
 export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
@@ -329,8 +329,8 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
                               : `${typeBase}-incorrect`
                             : '';
                         const checkedMarker = checked ? `${typeBase}-checked` : '';
-                        const chPart = `ch ${typeBase} ${checkedMarker} ${correctVariant}`.trim();
-                        const chaPart = `cha ${checkedMarker} ${correctVariant}`.trim();
+                        const controlPart = `control ${typeBase} ${checkedMarker} ${correctVariant}`.trim();
+                        const controlMarkPart = `control-mark ${checkedMarker} ${correctVariant}`.trim();
                         const disable =
                           this.correctOptions?.length > 0
                             ? true
@@ -355,8 +355,8 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
                               @click=${(e: { target: HTMLInputElement }) =>
                                 row.matchMax === 1 ? this.handleRadioClick(e) : null}
                             />
-                            <span part=${chPart} role=${type} aria-checked=${checked ? 'true' : 'false'}>
-                              <span part=${chaPart}></span>
+                            <span part=${controlPart} role=${type} aria-checked=${checked ? 'true' : 'false'}>
+                              <span part=${controlMarkPart}></span>
                             </span>
                           </label>
                         `;

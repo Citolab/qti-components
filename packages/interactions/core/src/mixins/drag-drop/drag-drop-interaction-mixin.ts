@@ -261,17 +261,17 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
     private activateDroppable(droppable: HTMLElement): void {
       if (this.dragContainers.includes(droppable)) {
-        this._internals.states.add('--dragzone-active');
+        this._internals.states.add('dragzone-active');
         droppable.setAttribute('active', '');
       } else {
-        this._internals.states.delete('--dragzone-active');
+        this._internals.states.delete('dragzone-active');
         droppable.setAttribute('active', '');
       }
     }
 
     private deactivateDroppable(droppable: HTMLElement, makeDragzoneActive = true): void {
       if (makeDragzoneActive) {
-        this._internals.states.add('--dragzone-active');
+        this._internals.states.add('dragzone-active');
       }
       droppable.removeAttribute('active');
     }
@@ -371,11 +371,11 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
 
     private activateDragLocation(): void {
-      this._internals.states.add('--dragzone-enabled');
+      this._internals.states.add('dragzone-enabled');
     }
 
     private deactivateDragLocation(): void {
-      this._internals.states.delete('--dragzone-enabled');
+      this._internals.states.delete('dragzone-enabled');
     }
 
     private deactivateDroppables(): void {
@@ -489,11 +489,11 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       if (this.isDragging || this.isDraggable || this.dragClone) {
         this.resetDragState();
       }
-      this._internals.states.delete('--dragzone-active');
+      this._internals.states.delete('dragzone-active');
       this.checkAllMaxAssociations();
 
-      this._internals.states.delete('--dragzone-enabled');
-      this._internals.states.delete('--dragzone-active');
+      this._internals.states.delete('dragzone-enabled');
+      this._internals.states.delete('dragzone-active');
       this.deactivateDragLocation();
       this.deactivateDroppables();
       this.draggables.forEach(d => {
@@ -969,8 +969,8 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       this.dragSource = e.currentTarget;
       this.isDraggable = true;
 
-      this._internals.states.add('--dragzone-enabled');
-      this._internals.states.add('--dragzone-active');
+      this._internals.states.add('dragzone-enabled');
+      this._internals.states.add('dragzone-active');
 
       this.activateDragLocation();
       this.activateDroppables(this.dragSource);

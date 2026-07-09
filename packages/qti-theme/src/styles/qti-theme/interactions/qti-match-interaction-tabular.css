@@ -28,37 +28,37 @@
     &::part(cb) {
       @apply check-checkbox;
     }
-    &::part(cha) {
+    &::part(control-mark) {
       @apply check-size;
     }
     /* Both `ch` and `cha` carry the `-checked` marker so themes can repaint
        the outer ring and the inner indicator independently. Scope the base
        inner-fill rules to `cha` so the classic dot-in-ring look stays intact;
        themes wanting the inverted look (outer filled, e.g. Kennisnet) add
-       their own `::part(ch <type>-checked)` rules. */
-    &::part(cha rb-checked) {
+       their own `::part(control <type>-checked)` rules. */
+    &::part(control-mark rb-checked) {
       @apply check-radio-checked;
     }
-    &::part(cha cb-checked) {
+    &::part(control-mark cb-checked) {
       @apply check-checkbox-checked;
     }
 
     /* Correct / incorrect overlays — border on the outer ring (ch), and
        a matching fill on the inner indicator (cha) when checked. */
-    &::part(ch rb-correct),
-    &::part(ch cb-correct) {
+    &::part(control rb-correct),
+    &::part(control cb-correct) {
       border-color: var(--qti-correct);
     }
-    &::part(ch rb-incorrect),
-    &::part(ch cb-incorrect) {
+    &::part(control rb-incorrect),
+    &::part(control cb-incorrect) {
       border-color: var(--qti-incorrect);
     }
-    &::part(cha rb-checked rb-correct),
-    &::part(cha cb-checked cb-correct) {
+    &::part(control-mark rb-checked rb-correct),
+    &::part(control-mark cb-checked cb-correct) {
       background-color: var(--qti-correct);
     }
-    &::part(cha rb-checked rb-incorrect),
-    &::part(cha cb-checked cb-incorrect) {
+    &::part(control-mark rb-checked rb-incorrect),
+    &::part(control-mark cb-checked cb-incorrect) {
       background-color: var(--qti-incorrect);
     }
   }

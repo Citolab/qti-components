@@ -13,10 +13,10 @@
   }
 
   qti-match-interaction:not(.qti-match-tabular) {
-    &:state(--dragzone-enabled) qti-simple-match-set:first-of-type {
+    &:state(dragzone-enabled) qti-simple-match-set:first-of-type {
       @apply dropping;
     }
-    &:state(--dragzone-active) qti-simple-match-set:first-of-type {
+    &:state(dragzone-active) qti-simple-match-set:first-of-type {
       @apply act;
     }
     & qti-simple-match-set:first-of-type {

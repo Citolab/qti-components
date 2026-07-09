@@ -73,11 +73,11 @@ export const Test2: Story = {
 
     // now the same item as item1 is show, check if no alternatives are selected
     const choiceA = await canvas.findByShadowText('Richting het noorden');
-    expect((choiceA.closest('qti-simple-choice') as QtiSimpleChoice).internals.states.has('--checked')).toBe(false);
+    expect((choiceA.closest('qti-simple-choice') as QtiSimpleChoice).internals.states.has('checked')).toBe(false);
 
     const choiceC = await canvas.findByShadowText('Richting het zuiden');
     await fireEvent.click(choiceC);
-    expect((choiceC.closest('qti-simple-choice') as QtiSimpleChoice).internals.states.has('--checked')).toBe(true);
+    expect((choiceC.closest('qti-simple-choice') as QtiSimpleChoice).internals.states.has('checked')).toBe(true);
 
     const prevButton = await canvas.findByShadowText('Vorige');
     await fireEvent.click(prevButton);
@@ -85,7 +85,7 @@ export const Test2: Story = {
     await fireEvent.click(prevButton);
     // check if A is selected again
     const choiceA2 = await canvas.findByShadowText('Richting het noorden');
-    expect((choiceA2.closest('qti-simple-choice') as QtiSimpleChoice).internals.states.has('--checked')).toBe(true);
+    expect((choiceA2.closest('qti-simple-choice') as QtiSimpleChoice).internals.states.has('checked')).toBe(true);
   }
 };
 

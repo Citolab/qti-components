@@ -241,10 +241,10 @@ export const CSSParts: Story = {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 export const CSSStatesChecked: Story = {
-  name: 'CSS States: --checked',
+  name: 'CSS States: checked',
   render: () => html`
     <style>
-      qti-simple-choice:state(--checked) {
+      qti-simple-choice:state(checked) {
         background: lightgreen;
         border: 2px solid green;
       }
@@ -263,7 +263,7 @@ export const CSSStatesChecked: Story = {
     await new Promise(r => setTimeout(r, 50));
 
     // Verify state is set
-    expect((choiceA as any).internals.states.has('--checked')).toBe(true);
+    expect((choiceA as any).internals.states.has('checked')).toBe(true);
   }
 };
 
@@ -277,10 +277,10 @@ export const CSSStatesRadioCheckbox: Story = {
       qti-simple-choice:state(checkbox)::before {
         content: '☐ ';
       }
-      qti-simple-choice:state(--checked):state(radio)::before {
+      qti-simple-choice:state(checked):state(radio)::before {
         content: '● ';
       }
-      qti-simple-choice:state(--checked):state(checkbox)::before {
+      qti-simple-choice:state(checked):state(checkbox)::before {
         content: '☑ ';
       }
     </style>

@@ -5,25 +5,14 @@
     }
     position: relative;
     display: block;
+    /*
+     * qti-associable-hotspot does not use ActiveElementMixin, so it carries no
+     * checked/disabled/readonly custom states. Selection and correction are drawn as
+     * ::part(line) / ::part(point) instead. Give it a `part="drag"` and the
+     * ActiveElementMixin states before adding state-dependent rules here.
+     */
     & qti-associable-hotspot {
-      &[shape='circle'] {
-        @apply spot;
-        &:hover {
-          @apply hov;
-        }
-        &:focus {
-          @apply foc;
-        }
-        &[aria-checked='true'] {
-          @apply act;
-        }
-        &[aria-readonly='true'] {
-          @apply rdo;
-        }
-        &[aria-disabled='true'] {
-          @apply dis;
-        }
-      }
+      &[shape='circle'],
       &[shape='square'] {
         @apply spot;
         &:hover {
@@ -32,39 +21,30 @@
         &:focus {
           @apply foc;
         }
-        &[aria-checked='true'] {
-          @apply act;
-        }
-        &[aria-readonly='true'] {
-          @apply rdo;
-        }
-        &[aria-disabled='true'] {
-          @apply dis;
-        }
       }
     }
     &.qti-selections-light {
-      &:state(--dragzone-active)::part(drags) {
+      &:state(dragzone-active)::part(drags) {
         background-color: var(--qti-light-bg-active);
         border-color: var(--qti-light-border-active);
       }
-      &:state(--dragzone-enabled)::part(drags) {
+      &:state(dragzone-enabled)::part(drags) {
         background-color: var(--qti-light-bg-active);
       }
     }
     &.qti-selections-dark {
-      &:state(--dragzone-active)::part(drags) {
+      &:state(dragzone-active)::part(drags) {
         background-color: var(--qti-dark-bg-active);
         border-color: var(--qti-dark-border-active);
       }
-      &:state(--dragzone-enabled)::part(drags) {
+      &:state(dragzone-enabled)::part(drags) {
         background-color: var(--qti-dark-bg-active);
       }
     }
-    &:state(--dragzone-active)::part(drags) {
+    &:state(dragzone-active)::part(drags) {
       @apply act;
     }
-    &:state(--dragzone-enabled)::part(drags) {
+    &:state(dragzone-enabled)::part(drags) {
       @apply dropping;
     }
   }

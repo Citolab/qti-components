@@ -6,7 +6,7 @@ qti-hottext-interaction {
     padding: 0.2rem 0.5rem;
     margin: 0.1rem 0;
 
-    &:state(--checked) {
+    &:state(checked) {
       background-color: var(--qti-selected-bg);
       color: var(--qti-selected-color);
     }
@@ -44,7 +44,7 @@ qti-hottext-interaction {
 
 qti-hottext-interaction.qti-unselected-hidden {
   qti-hottext {
-    &:not(:state(--checked)) {
+    &:not(:state(checked)) {
       border: none;
       padding: 0.2rem 0;
       margin-top: calc(0.1rem + var(--qti-border-thickness));
@@ -57,7 +57,7 @@ qti-hottext-interaction.qti-unselected-hidden {
 div.full-correct-response {
   qti-hottext-interaction {
     qti-hottext {
-      &:state(--checked) {
+      &:state(checked) {
         background-color: var(--info-color);
         border-color: var(--info-color);
 

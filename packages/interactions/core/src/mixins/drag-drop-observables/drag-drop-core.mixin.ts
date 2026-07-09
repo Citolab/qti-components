@@ -1,6 +1,6 @@
 import { isSupported, apply } from 'observable-polyfill/fn';
 
-import { detectCollision, findDraggableTarget } from './utils/drag-drop.utils';
+import { detectCollision, findDraggableTarget, isDraggableDisabled } from './utils/drag-drop.utils';
 
 import type { Interaction } from '@qti-components/base';
 import type { CollisionDetectionAlgorithm } from './utils/drag-drop.utils';
@@ -187,7 +187,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
           }
           const target = findDraggableTarget(e, draggablesSelector);
           const hostDisabled = (this as any).disabled || (this as any).readonly;
-          const targetDisabled = target?.hasAttribute('disabled') || target?.getAttribute('aria-disabled') === 'true';
+          const targetDisabled = isDraggableDisabled(target);
           const touchHandledRecently = Date.now() - this.lastTouchStartAt < 50;
           return (
             target &&
@@ -268,7 +268,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         .filter((e: MouseEvent) => {
           const target = findDraggableTarget(e, draggablesSelector);
           const hostDisabled = (this as any).disabled || (this as any).readonly;
-          const targetDisabled = target?.hasAttribute('disabled') || target?.getAttribute('aria-disabled') === 'true';
+          const targetDisabled = isDraggableDisabled(target);
           const isLeftButton = e.button === 0;
           const pointerHandledRecently = Date.now() - this.lastPointerDownAt < 50;
           return target && isLeftButton && !hostDisabled && !targetDisabled && !pointerHandledRecently;
@@ -297,7 +297,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         .filter((e: TouchEvent) => {
           const target = findDraggableTarget(e, draggablesSelector);
           const hostDisabled = (this as any).disabled || (this as any).readonly;
-          const targetDisabled = target?.hasAttribute('disabled') || target?.getAttribute('aria-disabled') === 'true';
+          const targetDisabled = isDraggableDisabled(target);
           const hasTouchPoint = Boolean(e.touches?.[0] || e.changedTouches?.[0]);
           const pointerHandledRecently = Date.now() - this.lastPointerDownAt < 50;
           return target && hasTouchPoint && !hostDisabled && !targetDisabled && !pointerHandledRecently;
@@ -339,7 +339,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         if (!keyboardState.dragging) {
           const target = findDraggableTarget(e, draggablesSelector);
           const hostDisabled = (this as any).disabled || (this as any).readonly;
-          const targetDisabled = target?.hasAttribute('disabled') || target?.getAttribute('aria-disabled') === 'true';
+          const targetDisabled = isDraggableDisabled(target);
 
           if (target && ['Space', 'Enter'].includes(e.code) && !hostDisabled && !targetDisabled) {
             e.preventDefault();
@@ -774,8 +774,8 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
     }
 
     protected activateAllDroppables(): void {
-      this.setInternalsState('--dragzone-enabled', true);
-      this.setInternalsState('--dragzone-active', true);
+      this.setInternalsState('dragzone-enabled', true);
+      this.setInternalsState('dragzone-active', true);
 
       this.allDropzones.forEach(zone => {
         zone.setAttribute('enabled', '');
@@ -784,8 +784,8 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
     }
 
     protected deactivateAllDroppables(): void {
-      this.setInternalsState('--dragzone-enabled', false);
-      this.setInternalsState('--dragzone-active', false);
+      this.setInternalsState('dragzone-enabled', false);
+      this.setInternalsState('dragzone-active', false);
 
       this.allDropzones.forEach(zone => {
         zone.removeAttribute('enabled');

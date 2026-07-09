@@ -17,6 +17,21 @@ export function findDraggableTarget(event: Event, draggablesSelector: string): H
   return null;
 }
 
+/**
+ * Draggable chips express `disabled` through ElementInternals — the ARIA property feeds the
+ * accessibility tree and the custom state feeds CSS. The `aria-disabled` attribute is not
+ * reflected, so it cannot be read back off the element.
+ *
+ * A bare `disabled` attribute is still honoured as an authoring escape hatch.
+ */
+export function isDraggableDisabled(target: HTMLElement | null | undefined): boolean {
+  if (!target) return false;
+  if (target.hasAttribute('disabled')) return true;
+
+  const internals = (target as { internals?: ElementInternals }).internals;
+  return internals?.states?.has('disabled') ?? false;
+}
+
 // Re-export collision detection types and functions for convenience
 export type { CollisionDetectionAlgorithm } from './collision.utils';
 export {

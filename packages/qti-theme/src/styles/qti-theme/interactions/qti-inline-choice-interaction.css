@@ -62,7 +62,7 @@
     & qti-inline-choice:focus-visible {
       @apply foc;
     }
-    & qti-inline-choice:state(--checked) {
+    & qti-inline-choice:state(checked) {
       @apply act-bg;
     }
   }

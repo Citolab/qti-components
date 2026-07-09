@@ -51,7 +51,7 @@ const assertInlineChoiceInternals = (interaction: QtiInlineChoiceInteraction, ex
     const isSelected = identifier === expectedSelectedIdentifier;
     expect(choice.internals.role).toBe('option');
     expect(choice.internals.ariaSelected).toBe(isSelected ? 'true' : 'false');
-    expect(choice.internals.states.has('--checked')).toBe(isSelected);
+    expect(choice.internals.states.has('checked')).toBe(isSelected);
   }
 };
 

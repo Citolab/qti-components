@@ -311,17 +311,17 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
     protected _setChoiceChecked(choice: Choice, checked: boolean) {
       if (choice.internals?.states) {
         if (checked) {
-          choice.internals.states.add('--checked');
+          choice.internals.states.add('checked');
           choice.internals.ariaChecked = 'true';
         } else {
-          choice.internals.states.delete('--checked');
+          choice.internals.states.delete('checked');
           choice.internals.ariaChecked = 'false';
         }
       }
     }
 
     protected _getChoiceChecked(choice: Choice): boolean {
-      return choice.internals.states.has('--checked');
+      return choice.internals.states.has('checked');
     }
 
     protected _toggleChoiceChecked(choice: Choice) {

@@ -1,9 +1,9 @@
 @layer qti-components {
   qti-order-interaction {
-    &:state(--dragzone-active)::part(drags) {
+    &:state(dragzone-active)::part(drags) {
       @apply act;
     }
-    &:state(--dragzone-enabled)::part(drags) {
+    &:state(dragzone-enabled)::part(drags) {
       @apply dropping;
     }
     &::part(qti-simple-choice),
@@ -71,44 +71,6 @@
     }
     &::part(active) {
       @apply act;
-    }
-    & drop-list {
-      &[shape='circle'] {
-        @apply spot;
-        &:hover {
-          @apply hov;
-        }
-        &:focus {
-          @apply foc;
-        }
-        &[aria-checked='true'] {
-          @apply act;
-        }
-        &[aria-readonly='true'] {
-          @apply rdo;
-        }
-        &[aria-disabled='true'] {
-          @apply dis;
-        }
-      }
-      &[shape='square'] {
-        @apply spot;
-        &:hover {
-          @apply hov;
-        }
-        &:focus {
-          @apply foc;
-        }
-        &[aria-checked='true'] {
-          @apply act;
-        }
-        &[aria-readonly='true'] {
-          @apply rdo;
-        }
-        &[aria-disabled='true'] {
-          @apply dis;
-        }
-      }
     }
   }
 }

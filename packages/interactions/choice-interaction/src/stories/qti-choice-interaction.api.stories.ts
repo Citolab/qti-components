@@ -440,12 +440,12 @@ export const InternalsStates: Story = {
     await fireEvent.click(choices.A);
 
     // Check states on choice
-    expect(choices.A.internals.states.has('--checked')).toBe(true);
-    expect(choices.B.internals.states.has('--checked')).toBe(false);
+    expect(choices.A.internals.states.has('checked')).toBe(true);
+    expect(choices.B.internals.states.has('checked')).toBe(false);
 
     // Deselect A
     await fireEvent.click(choices.A);
-    expect(choices.A.internals.states.has('--checked')).toBe(false);
+    expect(choices.A.internals.states.has('checked')).toBe(false);
   }
 };
 

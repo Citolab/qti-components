@@ -14,19 +14,16 @@
         &:focus {
           @apply foc;
         }
-        &::part(ch) {
+        &::part(control) {
           display: none;
         }
-        &:state(--checked),
-        &[aria-checked='true'] {
+        &:state(checked) {
           @apply act;
         }
-        &:state(readonly),
-        &[aria-readonly='true'] {
+        &:state(readonly) {
           @apply rdo;
         }
-        &:state(disabled),
-        &[aria-disabled='true'] {
+        &:state(disabled) {
           @apply dis;
         }
         &:state(correct-response),
@@ -49,14 +46,13 @@
     &:not(.qti-input-control-hidden) {
       & qti-simple-choice {
         @apply check;
-        &:not([aria-disabled='true'], [aria-readonly='true'], :state(--checked)):hover {
+        &:not(:state(disabled), :state(readonly), :state(checked)):hover {
           @apply hov;
         }
         &:focus {
           @apply foc;
         }
-        &:state(--checked),
-        &[aria-checked='true'] {
+        &:state(checked) {
           @apply act;
         }
         &:state(candidate-correct) {
@@ -65,27 +61,25 @@
         &:state(candidate-incorrect) {
           background-color: var(--qti-incorrect);
         }
-        &:state(readonly),
-        &[aria-readonly='true'] {
+        &:state(readonly) {
           @apply rdo;
         }
-        &:state(disabled),
-        &[aria-disabled='true'] {
+        &:state(disabled) {
           @apply dis;
         }
-        &::part(cha) {
+        &::part(control-mark) {
           @apply check-size;
         }
-        &:state(radio)::part(ch) {
+        &:state(radio)::part(control) {
           @apply check-radio;
         }
-        &:state(radio):state(--checked)::part(cha) {
+        &:state(radio):state(checked)::part(control-mark) {
           @apply check-radio-checked;
         }
-        &:state(checkbox)::part(ch) {
+        &:state(checkbox)::part(control) {
           @apply check-checkbox;
         }
-        &:state(checkbox):state(--checked)::part(cha) {
+        &:state(checkbox):state(checked)::part(control-mark) {
           @apply check-checkbox-checked;
         }
       }

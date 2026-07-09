@@ -230,9 +230,9 @@ export const ChoiceFullCorrectResponse: Story = {
 
         await interaction.updateComplete;
 
-        expect(choices[0].internals.states.has('--checked')).toBe(true);
-        expect(choices[1].internals.states.has('--checked')).toBe(false);
-        expect(choices[2].internals.states.has('--checked')).toBe(false);
+        expect(choices[0].internals.states.has('checked')).toBe(true);
+        expect(choices[1].internals.states.has('checked')).toBe(false);
+        expect(choices[2].internals.states.has('checked')).toBe(false);
       });
     });
   }
@@ -384,9 +384,9 @@ export const MultipleResponseFullCorrectResponse: Story = {
 
         await interaction.updateComplete;
 
-        expect(choices[0].internals.states.has('--checked')).toBe(true);
-        expect(choices[1].internals.states.has('--checked')).toBe(true);
-        expect(choices[2].internals.states.has('--checked')).toBe(false);
+        expect(choices[0].internals.states.has('checked')).toBe(true);
+        expect(choices[1].internals.states.has('checked')).toBe(true);
+        expect(choices[2].internals.states.has('checked')).toBe(false);
       });
     });
   }
@@ -646,12 +646,12 @@ export const MatchTabular: Story = {
     await step('Click on the Show Correct button', async () => {
       await showCorrectButton.click();
 
-      // The rb-correct / cb-correct parts live on the outer visual <span part="ch ...">
-      // indicator; the inner <span part="cha ..."> also carries the same variant token,
-      // so we must anchor on [part~="ch"] to select only the outer span and avoid
-      // counting each correct cell twice.
+      // The rb-correct / cb-correct parts live on the outer visual <span part="control ...">
+      // indicator; the inner <span part="control-mark ..."> also carries the same variant
+      // token, so we must anchor on [part~="control"] to select only the outer span and
+      // avoid counting each correct cell twice.
       const correctIndicators = interaction.shadowRoot.querySelectorAll(
-        '[part~="ch"][part~="rb-correct"], [part~="ch"][part~="cb-correct"]'
+        '[part~="control"][part~="rb-correct"], [part~="control"][part~="cb-correct"]'
       );
       const allCorrectElements = Array.from(correctIndicators)
         .map(span => span.closest('label')?.querySelector('input') ?? null)

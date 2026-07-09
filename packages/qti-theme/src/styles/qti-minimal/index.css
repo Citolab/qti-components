@@ -1,0 +1,70 @@
+/*
+ * Minimal theme — an in-progress sketch of a neutral, brand-free default.
+ *
+ * `--qti-border`, `--qti-padding` and `--qti-gap` are composite shorthands, proposed as the
+ * token vocabulary a theme would implement. They currently have NO consumer: the shadow-DOM
+ * styles were briefly changed to read them, but that made `qti-simple-choice` render
+ * unstyled under the cito and kennisnet themes (which define only the longhand
+ * `--qti-border-thickness` / `--qti-padding-vertical` / `--qti-gap-size` tokens), so the
+ * shadow styles were reverted.
+ *
+ * Picking one vocabulary — composite or longhand — and requiring every theme to implement it
+ * in full is step 2 of `plans/css-contract-audit.md`. Until then these stay declared here as
+ * the proposal, not as a live dependency.
+ */
+:root,
+:host {
+  --qti-base: #dddddd;
+  --qti-primary: #0969da;
+  --qti-active: var(--qti-primary);
+  --qti-incorrect: #cf222e;
+  --qti-correct: #1a7f37;
+
+  --qti-border-thickness: 1px;
+  --qti-border-style: solid;
+  --qti-border-color: var(--qti-base);
+  --qti-border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color);
+  --qti-padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+  --qti-background: inherit;
+
+  --qti-gap: 0.5rem;
+}
+
+:root {
+  --fa-check-mask: url('https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/check.svg');
+  --fa-circle-mask: url('https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/circle.svg');
+}
+
+qti-choice-interaction.qti-input-control-hidden {
+  & qti-simple-choice::part(control) {
+    display: none;
+  }
+  & qti-simple-choice:state(checked) {
+    background-color: var(--qti-primary);
+  }
+}
+
+qti-simple-choice:focus-within {
+  outline: 2px solid var(--qti-primary);
+}
+
+qti-simple-choice::part(control) {
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: transparent;
+  padding: 5px;
+  /* outline: 2px solid var(--qti-base); */
+}
+
+qti-simple-choice:state(radio)::part(control) {
+  border-radius: 50%;
+}
+
+qti-simple-choice:state(checked)::part(control) {
+  background-color: var(--qti-primary);
+  /* mask: var(--fa-check-mask) no-repeat center / contain; */
+}
+
+qti-simple-choice:state(radio):state(checked)::part(control) {
+  /* mask: var(--fa-circle-mask) no-repeat center / contain; */
+}

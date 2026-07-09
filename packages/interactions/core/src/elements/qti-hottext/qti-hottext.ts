@@ -9,8 +9,8 @@ export class QtiHottext extends ActiveElementMixin(LitElement, 'qti-hottext') {
   static override styles: CSSResultGroup = styles;
 
   override render() {
-    return html`<div part="ch"><div part="cha"></div></div>
-      <slot></slot> `;
+    return html`<div part="control"><div part="control-mark"></div></div>
+      <slot part="label"></slot> `;
   }
 }
 
