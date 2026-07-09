@@ -691,7 +691,9 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         this.trackedDragContainers
       );
 
-      // Add hysteresis: only switch targets if enough time has passed (reduces flickering)
+      // Hysteresis, so the `hover` outline does not flicker between adjacent zones. It governs
+      // only what is highlighted; `handleDragEnd` resolves the drop from where the chip actually
+      // comes to rest, never from this latched value.
       const now = Date.now();
       const timeSinceLastChange = now - (this.dragState.lastTargetChangeTime || 0);
       const MIN_TARGET_SWITCH_INTERVAL = 50; // milliseconds
@@ -713,19 +715,31 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       if (!this.dragState.dragging) return;
 
       const { dragSource, dragClone, currentTarget, sourceDroppable } = this.dragState;
+
+      // Resolve the drop from where the chip came to rest.
+      //
+      // `currentTarget` is the hover highlight, and handleDragMove latches it for
+      // MIN_TARGET_SWITCH_INTERVAL to keep that highlight from flickering. Dropping into it made
+      // the latch decide the outcome: a flick whose every move falls inside one 50ms window keeps
+      // the first zone its path happened to cross, however far away the chip was released.
+      //
+      // The fallback it replaces was worse in a quieter way — it probed from
+      // `initialCoordinates`, which is where the drag *started*, so a drag that never produced a
+      // move event resolved against the chip's original position in the bank.
       let dropTarget = currentTarget;
-      if (!dropTarget && dragClone) {
+      if (dragClone) {
         const rect = dragClone.getBoundingClientRect();
-        const probeX = this.dragState.initialCoordinates?.x ?? rect.left + rect.width / 2;
-        const probeY = this.dragState.initialCoordinates?.y ?? rect.top + rect.height / 2;
-        dropTarget = detectCollision(
+        const resolved = detectCollision(
           this.allDropzones,
-          probeX,
-          probeY,
+          rect.left + rect.width / 2,
+          rect.top + rect.height / 2,
           dragClone,
           this.collisionDetectionAlgorithm,
           this.trackedDragContainers
         );
+        // Null means the chip rests over nothing. Keep the hovered zone then, so releasing a hair
+        // outside a zone still drops into it.
+        dropTarget = resolved ?? currentTarget;
       }
 
       // Allow dropping into the source droppable even if it's marked as disabled
