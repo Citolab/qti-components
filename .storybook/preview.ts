@@ -27,13 +27,13 @@ import 'modern-normalize/modern-normalize.css';
 import customElements from '../custom-elements.json';
 import { toBePositionedRelativeTo } from '../tools/testing/setup/toBePositionedRelativeTo';
 import { baselineOverlayDecorator, baselineOverlayGlobalTypes } from './extensions/baseline-overlay';
-import { styleSubstrateDecorator, styleSubstrateGlobalTypes } from './extensions/style-substrate';
+import { styleSubstrateGlobalTypes, styleSubstrateLoader } from './extensions/style-substrate';
 import { webComponentInspectDecorator, webComponentInspectGlobalTypes } from './extensions/webcomponent-inspect';
 import '../packages/qti-components/src';
 
 import type { Preview } from '@storybook/web-components-vite';
 
-export const loaders = [mswLoader];
+export const loaders = [styleSubstrateLoader, mswLoader];
 
 export const customViewports = {
   default: {
@@ -93,7 +93,6 @@ const preview: Preview = {
       },
       defaultTheme: 'light'
     }),
-    styleSubstrateDecorator,
     baselineOverlayDecorator,
     webComponentInspectDecorator
   ],

@@ -45,7 +45,21 @@ const SUBSTRATES: Record<string, { baseCss: string; overrides: string[] }> = {
  *      *locks* the toolbar control for that story and stops you switching themes.
  *   3. `citolab` — the theme's own look, no vendor stylesheet in the cascade.
  */
-export const styleSubstrateDecorator: Decorator = (story, context) => {
+/**
+ * Applies the substrate and resolves only once its stylesheets are actually in the cascade.
+ *
+ * This is a loader rather than a decorator because a decorator cannot be awaited, and a vendor
+ * override arrives as a `<link>` — asynchronously. A story that renders before its link lands
+ * lays out against a half-styled tree, then reflows when the CSS applies. For a `play()` that
+ * drags, the reflow happens *mid-drag*: the chip grows by its theme's padding, the drag bank
+ * rewraps, and the gap the pointer was aimed at moves a line up, so the drop lands in the
+ * neighbouring gap. That was Q6-L2-D1, and only under Kennisnet — the only substrate with a
+ * `<link>` to lose the race. Citolab inlines its CSS and never showed it.
+ */
+const applySubstrate = async (context: {
+  parameters: Record<string, unknown>;
+  globals: Record<string, unknown>;
+}): Promise<void> => {
   const preferred = context.parameters.styleSubstrate as string | undefined;
   const choice = (context.globals.override as string) || preferred || 'citolab';
   const substrate = SUBSTRATES[choice] ?? SUBSTRATES.citolab;
@@ -73,16 +87,37 @@ export const styleSubstrateDecorator: Decorator = (story, context) => {
     if (!wantSet.has(link.getAttribute('href') || '')) link.remove();
   }
   // Add links not yet present, preserving order so the cascade stays predictable.
+  const loading: Promise<void>[] = [];
   for (const href of wantHrefs) {
     if (existingHrefs.includes(href)) continue;
     const link = document.createElement('link');
     link.className = OVERRIDE_LINK_CLASS;
     link.rel = 'stylesheet';
     link.href = href;
+    loading.push(
+      new Promise<void>(resolve => {
+        link.addEventListener('load', () => resolve(), { once: true });
+        // A stylesheet that 404s must not hang the story forever; it will simply look wrong.
+        link.addEventListener('error', () => resolve(), { once: true });
+      })
+    );
     document.head.appendChild(link);
   }
-  return story();
+
+  await Promise.all(loading);
+  // The <link> has applied, but the layout it implies has not been computed yet. One frame, and
+  // a font pass, and the tree the story sees is the tree the user would see.
+  await document.fonts.ready;
+  await new Promise(requestAnimationFrame);
 };
+
+/** Runs before decorators, and Storybook awaits it. */
+export const styleSubstrateLoader = (context: {
+  parameters: Record<string, unknown>;
+  globals: Record<string, unknown>;
+}): Promise<void> => applySubstrate(context);
+
+export const styleSubstrateDecorator: Decorator = story => story();
 
 export const styleSubstrateGlobalTypes: Preview['globalTypes'] = {
   override: {
