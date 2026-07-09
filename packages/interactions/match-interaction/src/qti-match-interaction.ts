@@ -31,8 +31,11 @@ import type { QtiSimpleAssociableChoice } from '@qti-components/interactions-cor
  * @csspart r-header - The row header slot wrapper.
  * @csspart checkbox-grid - The interactive cell grid area.
  * @csspart input-cell - Each cell's label element.
- * @csspart control - The visible checkbox/radio box; also carries `rb`/`cb`, `-checked`, `-correct`, `-incorrect` variants.
- * @csspart control-mark - The inner mark element; carries the same variants as `control`.
+ * @csspart control - The visible checkbox/radio box (tabular mode). Also carries the variant
+ *   tokens `radio` | `checkbox`, `checked`, and `correct` | `incorrect` — e.g.
+ *   `::part(control radio checked correct)`. These mirror the custom-state vocabulary; the cells
+ *   are plain spans in the shadow root, so they cannot carry real `:state()`.
+ * @csspart control-mark - The inner mark element; carries the same variant tokens as `control`.
  * @csspart message - Live validation message region (role="alert").
  */
 export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
@@ -322,21 +325,30 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
                           (this.response || []).filter(v => v.split(' ')[0] === rowId).length || 0;
                         const checked = this.response?.includes(value) || false;
                         const type = row.matchMax === 1 ? 'radio' : 'checkbox';
-                        const typeBase = type === 'radio' ? 'rb' : 'cb';
                         const isCorrect = hasCorrectResponse
                           ? !!this.correctOptions?.find(option => option.source === rowId && option.target === colId)
                           : correctSet?.has(value) || false;
-                        // show-correct-response paints every cell; candidate-correction
-                        // paints only the user's picks (checked cells).
+                        /*
+                         * The cells are plain spans in this interaction's shadow root, so they
+                         * have no ElementInternals and cannot carry `:state()` — and
+                         * `::part(x):state(y)` requires the state to live on the part's own
+                         * element. Multi-token parts are the correct mechanism here. The tokens
+                         * deliberately reuse the state vocabulary (`radio`, `checkbox`,
+                         * `checked`, `correct`, `incorrect`) so a themer reads the same words
+                         * everywhere.
+                         *
+                         * show-correct-response paints every cell; candidate-correction paints
+                         * only the user's picks (checked cells).
+                         */
                         const correctVariant =
                           hasCorrectResponse || (showCandidateCorrection && checked)
                             ? isCorrect
-                              ? `${typeBase}-correct`
-                              : `${typeBase}-incorrect`
+                              ? 'correct'
+                              : 'incorrect'
                             : '';
-                        const checkedMarker = checked ? `${typeBase}-checked` : '';
-                        const controlPart = `control ${typeBase} ${checkedMarker} ${correctVariant}`.trim();
-                        const controlMarkPart = `control-mark ${checkedMarker} ${correctVariant}`.trim();
+                        const checkedMarker = checked ? 'checked' : '';
+                        const controlPart = `control ${type} ${checkedMarker} ${correctVariant}`.trim();
+                        const controlMarkPart = `control-mark ${type} ${checkedMarker} ${correctVariant}`.trim();
                         const disable =
                           this.correctOptions?.length > 0
                             ? true

@@ -18,47 +18,45 @@
       background-color: var(--qti-bg-active);
     }
 
-    /* Indicator parts mirror qti-choice-interaction / qti-hottext-interaction:
-       ch is the outer ring, cha is the inner indicator. The design-system
-       classes (check-radio / check-checkbox / check-radio-checked /
-       check-checkbox-checked) are applied directly. */
-    &::part(rb) {
+    /* Indicator parts mirror qti-choice-interaction / qti-hottext-interaction: `control` is the
+       outer box, `control-mark` the inner indicator.
+
+       The cells are plain spans in this interaction's shadow root, so they have no
+       ElementInternals and cannot carry `:state()` — and `::part(x):state(y)` needs the state on
+       the part's own element. They therefore carry variant *part tokens*, which deliberately
+       reuse the state vocabulary: radio | checkbox, checked, correct | incorrect. */
+    &::part(control radio) {
       @apply check-radio;
     }
-    &::part(cb) {
+    &::part(control checkbox) {
       @apply check-checkbox;
     }
     &::part(control-mark) {
       @apply check-size;
     }
-    /* Both `ch` and `cha` carry the `-checked` marker so themes can repaint
-       the outer ring and the inner indicator independently. Scope the base
-       inner-fill rules to `cha` so the classic dot-in-ring look stays intact;
-       themes wanting the inverted look (outer filled, e.g. Kennisnet) add
-       their own `::part(control <type>-checked)` rules. */
-    &::part(control-mark rb-checked) {
+    /* Both `control` and `control-mark` carry the variant tokens, so themes can repaint the
+       outer box and the inner indicator independently. Scope the base inner-fill rules to
+       `control-mark` so the classic dot-in-ring look stays intact; themes wanting the inverted
+       look (outer filled, e.g. Kennisnet) add their own `::part(control checked)` rules. */
+    &::part(control-mark radio checked) {
       @apply check-radio-checked;
     }
-    &::part(control-mark cb-checked) {
+    &::part(control-mark checkbox checked) {
       @apply check-checkbox-checked;
     }
 
-    /* Correct / incorrect overlays — border on the outer ring (ch), and
-       a matching fill on the inner indicator (cha) when checked. */
-    &::part(control rb-correct),
-    &::part(control cb-correct) {
+    /* Correct / incorrect overlays — border on the outer box, and a matching fill on the inner
+       indicator when checked. */
+    &::part(control correct) {
       border-color: var(--qti-correct);
     }
-    &::part(control rb-incorrect),
-    &::part(control cb-incorrect) {
+    &::part(control incorrect) {
       border-color: var(--qti-incorrect);
     }
-    &::part(control-mark rb-checked rb-correct),
-    &::part(control-mark cb-checked cb-correct) {
+    &::part(control-mark checked correct) {
       background-color: var(--qti-correct);
     }
-    &::part(control-mark rb-checked rb-incorrect),
-    &::part(control-mark cb-checked cb-incorrect) {
+    &::part(control-mark checked incorrect) {
       background-color: var(--qti-incorrect);
     }
   }

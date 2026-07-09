@@ -19667,11 +19667,11 @@
               "name": "cols-wrap"
             },
             {
-              "description": "The visible checkbox/radio box; also carries `rb`/`cb`, `-checked`, `-correct`, `-incorrect` variants.",
+              "description": "The visible checkbox/radio box (tabular mode). Also carries the variant tokens `radio` | `checkbox`, `checked`, and `correct` | `incorrect` — e.g. `::part(control radio checked correct)`. These mirror the custom-state vocabulary; the cells are plain spans in the shadow root, so they cannot carry real `:state()`.",
               "name": "control"
             },
             {
-              "description": "The inner mark element; carries the same variants as `control`.",
+              "description": "The inner mark element; carries the same variant tokens as `control`.",
               "name": "control-mark"
             },
             {

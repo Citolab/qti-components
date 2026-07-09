@@ -102,36 +102,33 @@ qti-match-interaction.qti-match-tabular {
     background-color: var(--qti-hover-bg);
   }
 
-  /* Radio / checkbox indicators — mirror qti-choice-interaction. When the
-     input is checked, the outer `ch` span carries the `rb-checked`/`cb-checked`
-     compound part (analogous to :state(checked)::part(control) on qti-simple-choice).
-     Outer fills with --bs-primary; inner shrinks to a smaller white circle.
-     Correction rules swap the primary colour for correct/incorrect via the
-     compound `rb-correct`/`rb-incorrect` part on the same element. */
-  &::part(control rb-checked),
-  &::part(control cb-checked) {
+  /* Radio / checkbox indicators — mirror qti-choice-interaction. The cells are plain spans in
+     the interaction's shadow root, so they carry variant *part tokens* rather than `:state()`.
+     The tokens reuse the state vocabulary, so `::part(control checked)` here reads the same as
+     `:state(checked)::part(control)` on qti-simple-choice.
+     Outer fills with --bs-primary; inner shrinks to a smaller white circle. Correction rules
+     swap the primary colour via the `correct` / `incorrect` token on the same element. */
+  &::part(control checked) {
     border-color: var(--bs-primary);
     background-color: var(--bs-primary);
   }
 
-  &::part(control-mark rb-checked) {
+  &::part(control-mark radio checked) {
     background-color: white;
     width: calc(var(--qti-form-size) - 8px);
     height: calc(var(--qti-form-size) - 8px);
   }
 
-  &::part(control-mark cb-checked) {
+  &::part(control-mark checkbox checked) {
     background-color: white;
   }
 
-  &::part(control rb-checked rb-correct),
-  &::part(control cb-checked cb-correct) {
+  &::part(control checked correct) {
     border-color: var(--qti-correct);
     background-color: var(--qti-correct);
   }
 
-  &::part(control rb-checked rb-incorrect),
-  &::part(control cb-checked cb-incorrect) {
+  &::part(control checked incorrect) {
     border-color: var(--qti-incorrect);
     background-color: var(--qti-incorrect);
   }
