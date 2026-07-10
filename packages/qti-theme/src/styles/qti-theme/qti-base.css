@@ -80,6 +80,76 @@
   --qti-placeholder-shadow: 0 3px color-mix(in srgb, var(--qti-border-active) 30%, white);
 }
 
+/* ============================================================================
+ * Semantic mixins — the shared interaction vocabulary (the merged theme).
+ *
+ * These carry the kennisnet look, verbatim from kennisnet-override.scss, and are
+ * the home for any style ≥2 interactions share (theme-merge plan, Refined
+ * architecture). Defined here; each interaction @includes them on its own
+ * parts/states so the interaction files stay thin wiring.
+ *
+ * Tokens are still a mix of namespaces (--primary-color, --bs-placeholder-*)
+ * pending the token merge; they resolve under the kennisnet substrate today
+ * because custom properties cascade cross-file. Reconciled toward semantic
+ * --qti-* tokens as each mixin is wired and checked against VRT.
+ * ========================================================================== */
+
+/* The card chip: order / associate / match / gap-match — NOT graphic-gap-match. */
+@define-mixin drag {
+  color: #fff;
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  box-shadow: 0 3px color-mix(in srgb, var(--primary-color) 50%, transparent);
+  padding-left: 0.8em;
+  padding-right: 0.8em;
+}
+
+/* The drag handle glyph, on ::before. Its own mixin so the answer key swaps it for `check`. */
+@define-mixin grip {
+  content: '';
+  display: inline-block;
+  vertical-align: middle;
+  width: 0.75em;
+  height: 1em;
+  margin-right: 0.5em;
+  background-color: currentColor;
+  mask: var(--fa-grip-vertical-mask) no-repeat center / contain;
+  -webkit-mask: var(--fa-grip-vertical-mask) no-repeat center / contain;
+}
+
+/* The hole a lifted/placed source chip leaves behind. Every drag-drop interaction, incl graphic. */
+@define-mixin placeholder {
+  background-color: var(--bs-placeholder-bg);
+  opacity: 1;
+  box-shadow: inset var(--bs-placeholder-box-shadow);
+  /* border-color, never `border`: a state repaints, it never resizes (drag-drop.invariance.spec). */
+  border-color: transparent;
+  color: transparent;
+}
+
+/* Candidate correction: tint an element with $color. correct→--qti-correct, incorrect→--qti-incorrect;
+ * hotspot passes a stronger $strength. */
+@define-mixin candidate-tint $color, $strength: 5% {
+  background-color: color-mix(in srgb, $color $strength, white);
+  color: $color;
+  border-color: $color;
+  box-shadow: none;
+}
+
+/* The answer key: "here is the right answer", one look across every interaction. */
+@define-mixin answer {
+  background-color: var(--qti-answer-bg);
+  color: var(--qti-answer-fg);
+  border-color: var(--qti-answer-border);
+}
+
+/* The answer-key check glyph — the grip's place in the answer key, and the correct-option ::after. */
+@define-mixin check {
+  background-color: var(--qti-answer-fg);
+  mask: var(--fa-check-mask) no-repeat center / contain;
+  -webkit-mask: var(--fa-check-mask) no-repeat center / contain;
+}
+
 /* SVG masks and backgrounds */
 .chevron {
   background: url("data:image/svg+xml,%3Csvg fill='currentColor' width='22' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg' aria-hidden='true'%3E%3Cpath clip-rule='evenodd' fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z'%3E%3C/path%3E%3C/svg%3E")
