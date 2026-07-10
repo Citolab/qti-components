@@ -152,8 +152,8 @@ describe.each(Object.keys(SUBSTRATES))('drag-drop layout invariance — %s', sub
     interaction.handleDrop(byId('winter'), el<HTMLElement>('[identifier="G1"]'));
     await settle();
 
-    const placed = el<HTMLElement>('[identifier="G1"] qti-gap-text');
-    expect(placed, 'the clone landed in the gap').toBeTruthy();
+    const placed = el<HTMLElement>('[identifier="G1"]').shadowRoot!.querySelector('qti-gap-text') as HTMLElement;
+    expect(placed, 'the gap renders the clone in its own shadow root').toBeTruthy();
     expect(boxOf(placed), 'a chip is the same chip wherever it lives').toEqual(inBank);
   });
 });

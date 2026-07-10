@@ -539,6 +539,31 @@
             },
             {
               "kind": "method",
+              "name": "removeChipFromDroppable",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "_droppable",
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                },
+                {
+                  "name": "chip",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "description": "Detach a chip from the target holding it.\n\nDefault: the chip is a DOM child of the target, so removing the node is enough. A target that\nrenders its own chips from `dragDropContext` overrides this — see `DragDropSlottedMixin`."
+            },
+            {
+              "kind": "method",
               "name": "resetDragState",
               "privacy": "public",
               "return": {

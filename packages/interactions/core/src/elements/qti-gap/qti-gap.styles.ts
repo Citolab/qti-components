@@ -29,10 +29,10 @@ export default [
    *
    * It cannot live on :host. A theme's universal reset matches the host element from the
    * document, and document rules outrank :host — so the host is border-box no matter what this
-   * file says. The slot is inside the shadow tree, out of the document's reach, and inherits
+   * file says. This div is inside the shadow tree, out of the document's reach, and inherits
    * border-box harmlessly since it has no border or padding of its own.
    */
-    slot[name='drags'] {
+    [part~='drop'] {
       display: flex;
       align-items: center;
       justify-content: center;

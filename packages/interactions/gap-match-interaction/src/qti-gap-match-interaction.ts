@@ -108,7 +108,9 @@ export class QtiGapMatchInteraction extends DragDropSlottedSortableMixin(
       const targetId = targetChoice.getAttribute('identifier');
       const targetMatches = matches.filter(m => m.target === targetId);
 
-      const selectedChoices = targetChoice.querySelectorAll<QtiGapText>(`qti-gap-text`);
+      // The chips are in the gap's own shadow root now, one boundary deeper than a query can see.
+      // The gap knows what it holds; ask it.
+      const selectedChoices = targetChoice.drags as readonly QtiGapText[];
 
       selectedChoices.forEach(selectedChoice => {
         selectedChoice.internals.states.delete('candidate-correct');

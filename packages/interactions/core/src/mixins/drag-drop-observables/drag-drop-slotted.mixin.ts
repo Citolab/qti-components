@@ -109,6 +109,62 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
      * `countTotalAssociations`, `isDroppableAtCapacity`). The DOM is still authoritative here;
      * centralising it is what makes inverting that possible without touching nine call sites.
      */
+    /**
+     * What each declarative drop target holds. The DOM is derived from this, not the other way.
+     *
+     * A target opts in with `acceptsDeclarativeDrops`, consumes `dragDropContext`, and renders
+     * `repeat(nodesByTarget[id])` into its own shadow root. The interaction never appends into it.
+     * Everything else still takes an `appendChild` and is read back by query — the two live side by
+     * side, and `chipsIn` hides which is which.
+     *
+     * Keyed by element, not identifier: the map is short-lived and element identity is exact.
+     */
+    #placement = new WeakMap<HTMLElement, HTMLElement[]>();
+
+    protected isDeclarativeTarget(el: HTMLElement | null | undefined): boolean {
+      return !!el && (el as unknown as { acceptsDeclarativeDrops?: boolean }).acceptsDeclarativeDrops === true;
+    }
+
+    /** The chips a target holds, whichever way it holds them. */
+    protected chipsIn(droppable: HTMLElement): HTMLElement[] {
+      if (this.isDeclarativeTarget(droppable)) return [...(this.#placement.get(droppable) ?? [])];
+      return Array.from(droppable.querySelectorAll<HTMLElement>(draggablesSelector));
+    }
+
+    /** The target currently holding this chip, across shadow boundaries. */
+    protected droppableHolding(chip: HTMLElement): HTMLElement | null {
+      return (
+        this.trackedDroppables.find(
+          d => this.chipsIn(d).includes(chip) || d.contains(chip) || !!d.shadowRoot?.contains(chip)
+        ) ?? null
+      );
+    }
+
+    private placeChip(droppable: HTMLElement, chip: HTMLElement): void {
+      this.#placement.set(droppable, [...(this.#placement.get(droppable) ?? []), chip]);
+    }
+
+    public override removeChipFromDroppable(droppable: HTMLElement | null, chip: HTMLElement): void {
+      const target = droppable ?? this.droppableHolding(chip);
+      if (target && this.isDeclarativeTarget(target)) {
+        const remaining = (this.#placement.get(target) ?? []).filter(node => node !== chip);
+        this.#placement.set(target, remaining);
+        if (remaining.length === 0) setDropFilled(target, false);
+        this.syncDragDropState();
+        return;
+      }
+      chip.remove();
+    }
+
+    private clearChips(droppable: HTMLElement): void {
+      if (this.isDeclarativeTarget(droppable)) {
+        this.#placement.set(droppable, []);
+      } else {
+        this.chipsIn(droppable).forEach(chip => chip.remove());
+      }
+      setDropFilled(droppable, false);
+    }
+
     protected syncDragDropState(): void {
       const dragsByTarget: Record<string, string[]> = {};
       const countByTarget: Record<string, number> = {};
@@ -118,8 +174,10 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
         const targetId = droppable.getAttribute('identifier');
         if (!targetId) continue;
 
-        const bySelector = Array.from(droppable.querySelectorAll<HTMLElement>(draggablesSelector));
-        const byAttribute = Array.from(droppable.querySelectorAll<HTMLElement>('[qti-draggable="true"]'));
+        const bySelector = this.chipsIn(droppable);
+        const byAttribute = this.isDeclarativeTarget(droppable)
+          ? bySelector
+          : Array.from(droppable.querySelectorAll<HTMLElement>('[qti-draggable="true"]'));
 
         // Response uses the structural selector only; capacity uses whichever finds more.
         // These differ, and collapsing them would silently change matchMax behaviour.
@@ -466,7 +524,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
         }
 
         const identifier = draggable.getAttribute('identifier');
-        draggable.remove();
+        this.removeChipFromDroppable(this.droppableHolding(draggable), draggable);
 
         if (identifier) {
           this.restoreOriginalInInventory(identifier);
@@ -493,10 +551,11 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
 
       if (!allowsMultiple) {
         const existing =
-          droppable.querySelector(draggablesSelector) || droppable.querySelector('[qti-draggable="true"]');
+          this.chipsIn(droppable)[0] ??
+          (this.isDeclarativeTarget(droppable) ? null : droppable.querySelector('[qti-draggable="true"]'));
         if (existing) {
           const existingId = existing.getAttribute('identifier');
-          existing.remove();
+          this.removeChipFromDroppable(droppable, existing as HTMLElement);
 
           if (existingId) {
             this.restoreOriginalInInventory(existingId);
@@ -511,7 +570,21 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       cleanClone.setAttribute('tabindex', '0');
 
       // FLIP: Last - add the new element (this may cause siblings to shift)
-      if (droppable.tagName === 'SLOT') {
+      if (this.isDeclarativeTarget(droppable)) {
+        // A chip inside the target's shadow root is unreachable by tag, attribute or `:state()`
+        // from the document — `::part()` is the only way in, and a bare `::part(drag)` matches in
+        // any shadow root. Without this the chip renders unstyled, which the invariance spec
+        // catches as "a chip is not the same size wherever it lives".
+        cleanClone.setAttribute('part', 'drag');
+        // Parts do not chain: `::part(drag)::part(control)` is inert. The chip forwards its own
+        // inner part up one level, renamed, so a theme can still reach the drag handle as
+        // `::part(drag-control)`. Drawing the grip on the chip host instead would have worked too,
+        // but it moves the glyph for every *other* interaction's chips as well.
+        cleanClone.setAttribute('exportparts', 'control: drag-control, label: drag-label');
+        // Cloned once, here — never inside `render()`, which would mint a new node per update and
+        // lose focus, transitions and the chip's own shadow root.
+        this.placeChip(droppable, cleanClone);
+      } else if (droppable.tagName === 'SLOT') {
         cleanClone.setAttribute('slot', droppable.getAttribute('name') || '');
       } else if (droppable.tagName === 'QTI-SIMPLE-ASSOCIABLE-CHOICE') {
         cleanClone.setAttribute('slot', 'qti-simple-associable-choice');
@@ -522,6 +595,8 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
 
       // Every drop target says it is occupied, not just the one branch that used to.
       setDropFilled(droppable, true);
+      // Publish placement so a declarative target re-renders before anything measures it.
+      this.syncDragDropState();
 
       if (flipStates && this.enableFlipAnimations) {
         animateMultipleFlips(flipStates, this.flipAnimationConfig);
@@ -572,9 +647,9 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       if (identifier) {
         // Remove all clones of this item from drop zones
         this.trackedDroppables.forEach(droppable => {
-          const clones = Array.from(droppable.querySelectorAll(`[identifier="${identifier}"][qti-draggable="true"]`));
-          clones.forEach(clone => clone.remove());
-          if (clones.length > 0 && droppable.querySelectorAll(draggablesSelector).length === 0) {
+          const clones = this.chipsIn(droppable).filter(chip => chip.getAttribute('identifier') === identifier);
+          clones.forEach(clone => this.removeChipFromDroppable(droppable, clone));
+          if (clones.length > 0 && this.chipsIn(droppable).length === 0) {
             setDropFilled(droppable, false);
           }
         });
@@ -616,8 +691,10 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
 
       // Count only items placed in dropzones, not in inventory/drag containers
       const placedInDropzones = this.trackedDroppables.reduce((count, droppable) => {
-        const items = droppable.querySelectorAll(`[identifier="${identifier}"]`);
-        return count + items.length;
+        if (this.isDeclarativeTarget(droppable)) {
+          return count + this.chipsIn(droppable).filter(c => c.getAttribute('identifier') === identifier).length;
+        }
+        return count + droppable.querySelectorAll(`[identifier="${identifier}"]`).length;
       }, 0);
 
       // This source chip's copies are all placed — it becomes the hole they left behind.
@@ -682,9 +759,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
     override reset(save: boolean): void;
     override reset(save = true): void {
       this.trackedDroppables.forEach(droppable => {
-        const items = Array.from(droppable.querySelectorAll(draggablesSelector));
-        items.forEach(item => item.remove());
-        setDropFilled(droppable, false);
+        this.clearChips(droppable);
       });
 
       this.trackedDraggables.forEach(draggable => {

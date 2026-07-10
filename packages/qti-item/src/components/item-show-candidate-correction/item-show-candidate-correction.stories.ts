@@ -733,20 +733,21 @@ export const GapMatch: Story = {
       expect(matchItem1Id).toBeTruthy();
       expect(matchItem2Id).toBeTruthy();
 
+      // qti-gap renders its chips into its own shadow root, so look for them there.
       await dragAndWaitForPlacement(matchItem1, dropZone1, () =>
-        dropZone1.querySelector(`qti-gap-text[identifier="${matchItem1Id}"]`)
+        dropZone1.shadowRoot?.querySelector(`qti-gap-text[identifier="${matchItem1Id}"]`)
       );
       await dragAndWaitForPlacement(matchItem2, dropZone2, () =>
-        dropZone2.querySelector(`qti-gap-text[identifier="${matchItem2Id}"]`)
+        dropZone2.shadowRoot?.querySelector(`qti-gap-text[identifier="${matchItem2Id}"]`)
       );
       await showCorrectButton.click();
 
       await step('Verify candidate correction state is applied', async () => {
         await waitFor(() => {
-          const matchItem1CandidateResponse = dropZone1.querySelector(
+          const matchItem1CandidateResponse = dropZone1.shadowRoot?.querySelector(
             `qti-gap-text[identifier="${matchItem1Id}"]`
           ) as QtiGapMatchInteraction;
-          const matchItem2CandidateResponse = dropZone2.querySelector(
+          const matchItem2CandidateResponse = dropZone2.shadowRoot?.querySelector(
             `qti-gap-text[identifier="${matchItem2Id}"]`
           ) as QtiGapMatchInteraction;
 

@@ -32,11 +32,12 @@ export const PressReleaseKeepsGapPlacement: Story = {
     await step('Place winter into G1', async () => {
       await drag(winter, { to: gapG1, duration: 200 });
       await settle();
-      expect(gapG1).toHaveTextContent('winter');
+      // qti-gap renders its chips into its own shadow root now.
+      expect(gapG1.shadowRoot?.textContent).toContain('winter');
     });
 
     await step('Press and release slotted winter without moving', async () => {
-      const placedWinter = gapG1.querySelector('[identifier="W"]') as HTMLElement;
+      const placedWinter = gapG1.shadowRoot?.querySelector('[identifier="W"]') as HTMLElement;
       const rect = placedWinter.getBoundingClientRect();
       const down = { button: 0, buttons: 1, clientX: rect.left + 5, clientY: rect.top + 5 };
       fireEvent.mouseDown(placedWinter, down);
@@ -46,7 +47,7 @@ export const PressReleaseKeepsGapPlacement: Story = {
 
     await step('Item remains in the same gap and response is unchanged', () => {
       assessmentItem.processResponse();
-      expect(gapG1).toHaveTextContent('winter');
+      expect(gapG1.shadowRoot?.textContent).toContain('winter');
       expect(getResponse(assessmentItem)).toEqual(['W G1']);
     });
   },

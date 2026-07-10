@@ -2434,9 +2434,53 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "",
+          "description": "A gap in the prose, and the first drop target to render its own chips.\n\nThe interaction owns placement and publishes it on `dragDropContext`; this element subscribes and\nrenders what it holds. Nothing appends into it. That inverts the old flow, where `handleDrop` did\n`cloneNode` + `appendChild` and the response was recovered afterwards by reading the DOM back\nout — which is why placement and the response could ever disagree at all.\n\nThe chips land in this shadow root rather than in the light DOM, so a theme reaches them as\n`::part(drag)` — a bare `::part()` matches in any shadow root — instead of by tag. The gap's own\n`:state(filled)` says whether it holds anything.",
           "name": "QtiGap",
+          "cssParts": [
+            {
+              "description": "The region a chip lands in. Reserves the widest chip's box; see qti-gap.styles.",
+              "name": "drop"
+            }
+          ],
           "members": [
+            {
+              "kind": "field",
+              "name": "_dragDrop",
+              "type": {
+                "text": "Readonly<DragDropState> | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "acceptsDeclarativeDrops",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "readonly": true,
+              "default": "true",
+              "description": "Opt-in marker, read by `DragDropSlottedMixin`. While this is true the interaction keeps this\ntarget's chips in its placement map and never touches this element's children."
+            },
+            {
+              "kind": "field",
+              "name": "drags",
+              "type": {
+                "text": "readonly HTMLElement[]"
+              },
+              "privacy": "public",
+              "description": "The chips this gap holds. Stable node references, cloned once at drop time by the interaction.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "identifier",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "identifier",
+              "reflects": true
+            },
             {
               "kind": "field",
               "name": "internals",
@@ -2458,6 +2502,13 @@
             }
           ],
           "attributes": [
+            {
+              "name": "identifier",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "identifier"
+            },
             {
               "name": "tabindex",
               "type": {
@@ -5373,6 +5424,31 @@
             },
             {
               "kind": "method",
+              "name": "removeChipFromDroppable",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "_droppable",
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                },
+                {
+                  "name": "chip",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "description": "Detach a chip from the target holding it.\n\nDefault: the chip is a DOM child of the target, so removing the node is enough. A target that\nrenders its own chips from `dragDropContext` overrides this — see `DragDropSlottedMixin`."
+            },
+            {
+              "kind": "method",
               "name": "resetDragState",
               "privacy": "public",
               "return": {
@@ -6076,6 +6152,13 @@
               "default": "[]"
             },
             {
+              "kind": "field",
+              "name": "#placement",
+              "privacy": "private",
+              "default": "new WeakMap<HTMLElement, HTMLElement[]>()",
+              "description": "What each declarative drop target holds. The DOM is derived from this, not the other way.\n\nA target opts in with `acceptsDeclarativeDrops`, consumes `dragDropContext`, and renders\n`repeat(nodesByTarget[id])` into its own shadow root. The interaction never appends into it.\nEverything else still takes an `appendChild` and is read back by query — the two live side by\nside, and `chipsIn` hides which is which.\n\nKeyed by element, not identifier: the map is short-lived and element identity is exact."
+            },
+            {
               "kind": "method",
               "name": "afterCache",
               "privacy": "public",
@@ -6139,6 +6222,43 @@
                   "text": "void"
                 }
               }
+            },
+            {
+              "kind": "method",
+              "name": "chipsIn",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "HTMLElement[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "droppable",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "description": "The chips a target holds, whichever way it holds them."
+            },
+            {
+              "kind": "method",
+              "name": "clearChips",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "droppable",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
             },
             {
               "kind": "field",
@@ -6205,6 +6325,25 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "droppableHolding",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "chip",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "description": "The target currently holding this chip, across shadow boundaries."
             },
             {
               "kind": "field",
@@ -6284,6 +6423,24 @@
               ]
             },
             {
+              "kind": "method",
+              "name": "isDeclarativeTarget",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "el",
+                  "type": {
+                    "text": "HTMLElement | null | undefined"
+                  }
+                }
+              ]
+            },
+            {
               "kind": "field",
               "name": "maxAssociations",
               "type": {
@@ -6304,6 +6461,30 @@
             },
             {
               "kind": "method",
+              "name": "placeChip",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "droppable",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "chip",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "placeResponse",
               "privacy": "private",
               "return": {
@@ -6316,6 +6497,30 @@
                   "name": "response",
                   "type": {
                     "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "removeChipFromDroppable",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "droppable",
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                },
+                {
+                  "name": "chip",
+                  "type": {
+                    "text": "HTMLElement"
                   }
                 }
               ]
@@ -6519,8 +6724,7 @@
                 "type": {
                   "text": "void"
                 }
-              },
-              "description": "The one place that reads placement out of the DOM.\n\nReplaces nine scattered `querySelectorAll` readbacks (`collectResponseData`,\n`countTotalAssociations`, `isDroppableAtCapacity`). The DOM is still authoritative here;\ncentralising it is what makes inverting that possible without touching nine call sites."
+              }
             },
             {
               "kind": "method",
@@ -12981,6 +13185,17 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#placement",
+              "privacy": "private",
+              "default": "new WeakMap<HTMLElement, HTMLElement[]>()",
+              "description": "What each declarative drop target holds. The DOM is derived from this, not the other way.\n\nA target opts in with `acceptsDeclarativeDrops`, consumes `dragDropContext`, and renders\n`repeat(nodesByTarget[id])` into its own shadow root. The interaction never appends into it.\nEverything else still takes an `appendChild` and is read back by query — the two live side by\nside, and `chipsIn` hides which is which.\n\nKeyed by element, not identifier: the map is short-lived and element identity is exact.",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "#resetShiftState",
               "privacy": "private",
@@ -13184,6 +13399,29 @@
             },
             {
               "kind": "method",
+              "name": "chipsIn",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "HTMLElement[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "droppable",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "description": "The chips a target holds, whichever way it holds them.",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "cleanupSortableState",
               "privacy": "protected",
               "return": {
@@ -13200,6 +13438,28 @@
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "clearChips",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "droppable",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
               }
             },
             {
@@ -13347,6 +13607,29 @@
                   }
                 }
               ],
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "droppableHolding",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "chip",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "description": "The target currently holding this chip, across shadow boundaries.",
               "inheritedFrom": {
                 "name": "DragDropSlottedMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
@@ -13598,6 +13881,28 @@
               }
             },
             {
+              "kind": "method",
+              "name": "isDeclarativeTarget",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "el",
+                  "type": {
+                    "text": "HTMLElement | null | undefined"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "isDraggingFromSlot",
               "type": {
@@ -13701,6 +14006,34 @@
             },
             {
               "kind": "method",
+              "name": "placeChip",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "droppable",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "chip",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "placeResponse",
               "privacy": "private",
               "return": {
@@ -13733,6 +14066,37 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "removeChipFromDroppable",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "droppable",
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                },
+                {
+                  "name": "chip",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              },
+              "type": {
+                "text": "removeChipFromDroppable(droppable: HTMLElement | null, chip: HTMLElement) => void"
               }
             },
             {
@@ -14033,7 +14397,6 @@
                   "text": "void"
                 }
               },
-              "description": "The one place that reads placement out of the DOM.\n\nReplaces nine scattered `querySelectorAll` readbacks (`collectResponseData`,\n`countTotalAssociations`, `isDroppableAtCapacity`). The DOM is still authoritative here;\ncentralising it is what makes inverting that possible without touching nine call sites.",
               "inheritedFrom": {
                 "name": "DragDropSlottedMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
@@ -20410,6 +20773,17 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#placement",
+              "privacy": "private",
+              "default": "new WeakMap<HTMLElement, HTMLElement[]>()",
+              "description": "What each declarative drop target holds. The DOM is derived from this, not the other way.\n\nA target opts in with `acceptsDeclarativeDrops`, consumes `dragDropContext`, and renders\n`repeat(nodesByTarget[id])` into its own shadow root. The interaction never appends into it.\nEverything else still takes an `appendChild` and is read back by query — the two live side by\nside, and `chipsIn` hides which is which.\n\nKeyed by element, not identifier: the map is short-lived and element identity is exact.",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "#resetShiftState",
               "privacy": "private",
@@ -20612,6 +20986,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "chipsIn",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "HTMLElement[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "droppable",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "description": "The chips a target holds, whichever way it holds them.",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "class",
               "type": {
@@ -20638,6 +21035,28 @@
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "clearChips",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "droppable",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
               }
             },
             {
@@ -20794,6 +21213,29 @@
                   }
                 }
               ],
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "droppableHolding",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "chip",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "description": "The target currently holding this chip, across shadow boundaries.",
               "inheritedFrom": {
                 "name": "DragDropSlottedMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
@@ -21032,6 +21474,28 @@
             },
             {
               "kind": "method",
+              "name": "isDeclarativeTarget",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "el",
+                  "type": {
+                    "text": "HTMLElement | null | undefined"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "isDragDropEnabled",
               "privacy": "public",
               "return": {
@@ -21156,6 +21620,34 @@
             },
             {
               "kind": "method",
+              "name": "placeChip",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "droppable",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "chip",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "placeResponse",
               "privacy": "private",
               "return": {
@@ -21188,6 +21680,37 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "removeChipFromDroppable",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "droppable",
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                },
+                {
+                  "name": "chip",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              },
+              "type": {
+                "text": "removeChipFromDroppable(droppable: HTMLElement | null, chip: HTMLElement) => void"
               }
             },
             {
@@ -21497,7 +22020,6 @@
                   "text": "void"
                 }
               },
-              "description": "The one place that reads placement out of the DOM.\n\nReplaces nine scattered `querySelectorAll` readbacks (`collectResponseData`,\n`countTotalAssociations`, `isDroppableAtCapacity`). The DOM is still authoritative here;\ncentralising it is what makes inverting that possible without touching nine call sites.",
               "inheritedFrom": {
                 "name": "DragDropSlottedMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"

@@ -12,7 +12,6 @@ import {
   setDragChipState
 } from './utils/drag-drop.utils';
 
-
 import type { Interaction } from '@qti-components/base';
 import type { CollisionDetectionAlgorithm } from './utils/drag-drop.utils';
 
@@ -49,6 +48,7 @@ export type DragDropCore = Interaction & {
   cacheInteractiveElements(): void;
   resetDragState(): void;
   afterCache(): void;
+  removeChipFromDroppable(droppable: HTMLElement | null, chip: HTMLElement): void;
   allowDrop(draggable: HTMLElement, droppable: HTMLElement): boolean;
   handleDrop(draggable: HTMLElement, droppable: HTMLElement): void;
   handleInvalidDrop(dragSource: HTMLElement | null): void;
@@ -167,6 +167,16 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
 
     public afterCache(): void {
       // Extension hook
+    }
+
+    /**
+     * Detach a chip from the target holding it.
+     *
+     * Default: the chip is a DOM child of the target, so removing the node is enough. A target that
+     * renders its own chips from `dragDropContext` overrides this — see `DragDropSlottedMixin`.
+     */
+    public removeChipFromDroppable(_droppable: HTMLElement | null, chip: HTMLElement): void {
+      chip.remove();
     }
 
     /**
@@ -545,8 +555,11 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         return;
       }
 
-      const isCloneInDroppable = this.trackedDroppables.some(d => d.contains(dragElement));
-      const sourceDroppable = this.trackedDroppables.find(d => d.contains(dragElement)) || null;
+      // `Node.contains` does not cross a shadow boundary, and a chip rendered by a drop target
+      // lives in that target's shadow root. Ask both trees.
+      const holds = (d: HTMLElement) => d.contains(dragElement) || !!d.shadowRoot?.contains(dragElement);
+      const isCloneInDroppable = this.trackedDroppables.some(holds);
+      const sourceDroppable = this.trackedDroppables.find(holds) || null;
       const rect = dragElement.getBoundingClientRect();
 
       this.dragState = {
@@ -567,7 +580,9 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
 
       if (isCloneInDroppable) {
         this.dragState.dragClone?.setAttribute('data-drag-origin', 'droppable');
-        dragElement.remove();
+        // A chip a target renders from data cannot be `remove()`d — the node would come straight
+        // back on the next render. The target has to be told to stop holding it.
+        this.removeChipFromDroppable(sourceDroppable, dragElement);
         this.cacheInteractiveElements();
 
         // Mark the source droppable so it won't be disabled during drag

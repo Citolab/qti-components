@@ -73,12 +73,14 @@ describe('drag-drop characterization — response is currently derived from the 
     expect(interaction.response).toBe('ht_zuur gap_low');
     expect(byId('ht_zuur').internals.states.has('placeholder'), 'matchMax=1 exhausted').toBe(true);
     expect(byId('ht_bas').internals.states.has('placeholder'), 'untouched chip unaffected').toBe(false);
-    expect(gapLow.querySelectorAll('qti-gap-text'), 'a clone is appended into the gap').toHaveLength(1);
+    // qti-gap renders its own chips now: the clone is in the gap's shadow root, not its light DOM.
+    expect(gapLow.shadowRoot!.querySelectorAll('qti-gap-text'), 'the gap renders the clone').toHaveLength(1);
+    expect((gapLow as any).drags, 'and knows what it holds').toHaveLength(1);
 
     interaction.reset();
     await settle();
     expect(interaction.response).toBe('');
-    expect(gapLow.querySelectorAll('qti-gap-text')).toHaveLength(0);
+    expect(gapLow.shadowRoot!.querySelectorAll('qti-gap-text')).toHaveLength(0);
   });
 
   test('associate: a filled left/right pair becomes one "<a> <b>" association', async () => {
