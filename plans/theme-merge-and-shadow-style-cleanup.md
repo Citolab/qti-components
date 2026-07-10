@@ -552,6 +552,39 @@ kennisnet override) starts rendering the kennisnet appearance. That is the inten
 (kennisnet leading, citolab deleted), but it changes citolab visibly and VRT only covers kennisnet —
 so cito output must be checked by compiled-CSS diff, not screenshots.
 
+### Granular classification of `kennisnet-override.scss` (decided 2026-07-10)
+
+The user drove this block by block. Three destinations: **mixin** (shared vocabulary in item.css),
+**interaction** (a specific interaction's section in item.css), or **stays kennisnet `.scss`**.
+
+| kennisnet block | decision |
+|---|---|
+| drag chip card (116-126) | **mixin** `drag` — one mixin, all of it |
+| placeholder / dragging hole (138-151) | **mixin** `placeholder` |
+| grip glyph ::before (163-175) | **mixin** `grip` — its own, so the answer key swaps it for `check` |
+| candidate-correct / -incorrect (188-212) | **mixin** `candidate-tint($color, $strength)` — parameterised |
+| answer key --qti-answer-* (226-242) | **mixin** `answer`, wired per-interaction (not the `.full-correct-response` descendant block) |
+| answer-key grip→check (263-269) | **mixin** `check` (the answer-key variant of grip) |
+| `::part(correction-correct/incorrect)` (309-318) | **shared selector block** in item.css — global via the bare part token, not a mixin |
+| `span.correct-option` (+ ::after) (249-282) | **interaction** — match + gap-match sections (dies at correct-response-unification Phase 5) |
+| `qti-gap-text { display:flex }` (284-287) | **interaction** — gap-match section |
+| `test-container` (36) | **stays kennisnet .scss** (non-interaction) |
+
+**Tokens: move into item.css now** (kennisnet leading at the token level). But the chain runs deep —
+`--primary-color` → `--bs-primary`, `--qti-correct` → `--success-color`, `--bs-placeholder-bg` →
+`color-mix(--bs-primary …)` — so it reaches the whole bootstrap-bridge colour layer, not one file.
+
+**Key decoupling.** Custom properties resolve cross-file at use time. The kennisnet substrate loads
+`item.css` then `kennisnet-override.scss`, so a `@mixin drag` in item.css using `var(--primary-color)`
+still resolves under kennisnet even before the token merge. So the **mixin migration is verifiable by
+kennisnet VRT green on its own**; the deep token merge is only needed for citolab (deprecated) and is
+its own step. Migrate mixins first, prove the look is preserved, merge tokens second.
+
+**Per-interaction wiring removes the exclusion hack.** Today the drag look is one global
+`:state(drag):where(:not(qti-graphic-gap-match-interaction *))` selector. Wiring each card
+interaction to `@mixin drag` on its own chip means graphic-gap-match simply isn't wired — the
+`:where(:not(...))` exclusion disappears, replaced by explicit opt-in.
+
 ---
 
 ## Phase 3 — `@apply` becomes Sass mixins, in place  *(mechanics only; see Refined architecture above for the engine & shape)*
