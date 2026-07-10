@@ -1,172 +1,35 @@
-:root,
-:host {
-  /* Active colors */
-  --qti-bg-active: #ffecec;
-  --qti-border-active: #f86d70;
-
-  /* Correct colors */
-  /*
-   * The answer key — "here is the right answer" — is not the same claim as `--qti-correct`, which
-   * means "the candidate got this right". Conflating them is what forced the clone to re-point
-   * `--qti-correct` at a different hue, so a border written from JavaScript changed colour
-   * depending on which parent it landed in.
-   */
-  --qti-answer-fg: var(--qti-correct);
-  --qti-answer-bg: var(--qti-correct-light);
-  --qti-answer-border: var(--qti-correct);
-
-  --qti-correct-light: #e8f5e9;
-  --qti-correct: #2e7d32;
-
-  /** Partially correct colors */
-  --qti-partially-correct-light: #fff3e0;
-  --qti-partially-correct: #ffeb3b;
-
-  /* Incorrect colors */
-  --qti-incorrect-light: #ef9a9a;
-  --qti-incorrect: #ef5350;
-
-  /* Validation colors */
-  --qti-validation-error-bg: #fffbeb;
-  --qti-validation-text: #92400e;
-
-  /* Gap size */
-  --qti-gap-size: 1rem;
-
-  /* Background colors */
-  --qti-bg: white;
-  --qti-hover-bg: #f9fafb;
-
-  /* Light theme colors */
-  --qti-light-bg-active: #f0f0f0; /* Light gray */
-  --qti-light-border-active: #d0d0d0; /* Medium gray */
-
-  /* Dark theme colors */
-  --qti-dark-bg-active: #1f2937; /* Dark gray */
-  --qti-dark-border-active: #64748b; /* Medium gray */
-
-  /* Disabled colors */
-  --qti-disabled-bg: #f3f4f6;
-  --qti-disabled-color: #45484f;
-
-  /* Border properties */
-  --qti-border-thickness: 2px;
-  --qti-border-style: solid;
-  --qti-border-color: #c6cad0;
-  --qti-border-radius: 0.3rem;
-  --qti-drop-border-radius: calc(var(--qti-border-radius) + var(--qti-border-thickness));
-
-  /* Focus & active states */
-  --qti-focus-border-width: 5px;
-  --qti-focus-color: #bddcff7e;
-
-  /* Class-specific variables */
-
-  /* Form elements */
-  --qti-form-size: 1rem;
-
-  /* Order buttons */
-  --qti-order-size: 2rem;
-
-  /* Generic padding for all elements */
-  --qti-padding-vertical: 0.5rem; /* py-2 */
-  --qti-padding-horizontal: 0.5rem; /* px-2 */
-
-  /* Dropzones */
-  --qti-dropzone-padding: 0rem;
-
-  /* The hole a dragged / placed chip leaves behind in the bank — see qti-states.css */
-  --qti-placeholder-bg: color-mix(in srgb, var(--qti-border-active) 15%, white);
-  --qti-placeholder-shadow: 0 3px color-mix(in srgb, var(--qti-border-active) 30%, white);
-}
+/* QTI base — utility classes, applied with @apply. Only styles >=2 interactions share. They
+ * read the variables in qti-variables.css; a substrate re-colours by overriding those, not
+ * by editing these. Split from qti-base.css. */
 
 /* ============================================================================
- * Semantic mixins — the shared interaction vocabulary (the merged theme).
- *
- * These carry the kennisnet look, verbatim from kennisnet-override.scss, and are
- * the home for any style ≥2 interactions share (theme-merge plan, Refined
- * architecture). Defined here; each interaction @includes them on its own
- * parts/states so the interaction files stay thin wiring.
- *
- * Tokens are still a mix of namespaces (--primary-color, --bs-placeholder-*)
- * pending the token merge; they resolve under the kennisnet substrate today
- * because custom properties cascade cross-file. Reconciled toward semantic
- * --qti-* tokens as each mixin is wired and checked against VRT.
+ * Shared utility classes, applied with @apply. Only styles ≥2 interactions share
+ * belong here. A substrate expresses its look by overriding the --qti-* variables
+ * above (value first), not by editing these.
  * ========================================================================== */
 
-/* The card chip: order / associate / match / gap-match — NOT graphic-gap-match. */
-@define-mixin drag {
-  color: #fff;
-  background-color: var(--primary-color);
-  border-color: var(--primary-color);
-  box-shadow: 0 3px color-mix(in srgb, var(--primary-color) 50%, transparent);
-  padding-left: 0.8em;
-  padding-right: 0.8em;
-}
-
-/* The drag handle glyph, on ::before. Its own mixin so the answer key swaps it for `check`. */
-@define-mixin grip {
-  content: '';
-  display: inline-block;
-  vertical-align: middle;
-  width: 0.75em;
-  height: 1em;
-  margin-right: 0.5em;
-  background-color: currentColor;
-  mask: var(--fa-grip-vertical-mask) no-repeat center / contain;
-  -webkit-mask: var(--fa-grip-vertical-mask) no-repeat center / contain;
-}
-
-/* The hole a lifted/placed source chip leaves behind. Every drag-drop interaction, incl graphic. */
-@define-mixin placeholder {
-  background-color: var(--bs-placeholder-bg);
+/* The hole a lifted / placed source chip leaves behind. @apply'd on the chip's
+ * dragging / placeholder state. */
+.placeholder {
+  background-color: var(--qti-placeholder-bg);
   opacity: 1;
-  box-shadow: inset var(--bs-placeholder-box-shadow);
+  box-shadow: inset var(--qti-placeholder-shadow);
   /* border-color, never `border`: a state repaints, it never resizes (drag-drop.invariance.spec). */
   border-color: transparent;
   color: transparent;
 }
 
-/* Candidate correction: tint an element with $color. correct→--qti-correct, incorrect→--qti-incorrect;
- * hotspot passes a stronger $strength. */
-@define-mixin candidate-tint $color, $strength: 5% {
-  background-color: color-mix(in srgb, $color $strength, white);
-  color: $color;
-  border-color: $color;
-  box-shadow: none;
-}
-
 /* The answer key: "here is the right answer", one look across every interaction. */
-@define-mixin answer {
+.answer {
   background-color: var(--qti-answer-bg);
   color: var(--qti-answer-fg);
   border-color: var(--qti-answer-border);
-}
-
-/* The answer-key check glyph — the grip's place in the answer key, and the correct-option ::after. */
-@define-mixin check {
-  background-color: var(--qti-answer-fg);
-  mask: var(--fa-check-mask) no-repeat center / contain;
-  -webkit-mask: var(--fa-check-mask) no-repeat center / contain;
 }
 
 /* SVG masks and backgrounds */
 .chevron {
   background: url("data:image/svg+xml,%3Csvg fill='currentColor' width='22' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg' aria-hidden='true'%3E%3Cpath clip-rule='evenodd' fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z'%3E%3C/path%3E%3C/svg%3E")
     no-repeat center right 6px;
-}
-
-.handle {
-  background-image: radial-gradient(
-    circle at center,
-    rgb(0 0 0 / 10%) 0,
-    rgb(0 0 0 / 20%) 2px,
-    rgb(255 255 255 / 0%) 2px,
-    rgb(255 255 255 / 0%) 100%
-  );
-  background-repeat: repeat-y;
-  background-position: left center;
-  background-size: 14px 8px;
 }
 
 .check-mask {
@@ -178,10 +41,32 @@
   The @apply directive is used to apply these classes to elements
 */
 
-/* Apply .bordered to an element */
+/* A visible border. Used as a primitive by other classes. */
 .bordered {
-  border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color);
-  outline: none;
+  border: var(--qti-border);
+}
+
+/* A FILLED element — primary background, contrast text, matching border, roomy padding. This is the
+ * kennisnet chip/button look; the drag chip is a filled element. A substrate recolours the whole
+ * thing by overriding --qti-primary alone. (box-sizing kept: the light-DOM clone has no shadow to
+ * inherit it from.) */
+.filled {
+  box-sizing: border-box;
+  color: var(--qti-primary-fg);
+  background-color: var(--qti-primary);
+  border: var(--qti-border-thickness) solid var(--qti-primary);
+  border-radius: var(--qti-border-radius);
+  padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
+}
+
+/* An OUTLINED element — same shape as filled, but a border instead of a fill. */
+.outlined {
+  box-sizing: border-box;
+  color: var(--qti-primary);
+  background-color: transparent;
+  border: var(--qti-border-thickness) solid var(--qti-primary);
+  border-radius: var(--qti-border-radius);
+  padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
 }
 
 /* Apply .form rules for checkbox and radiobutton */
@@ -308,22 +193,10 @@
 }
 
 /* Apply .drag for draggable elements */
+/* The drag chip is a filled element. */
 .drag {
-  @apply bordered /* handle*/;
-
-  box-sizing: border-box;
-  transition:
-    transform 200ms ease-out,
-    box-shadow 200ms ease-out,
-    rotate 200ms ease-out;
+  @apply filled;
   cursor: grab;
-  background-color: var(--qti-bg);
-  padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
-  border-radius: var(--qti-border-radius);
-
-  /* padding-left: calc(var(--qti-padding-horizontal) + 0.5rem) !important; */
-
-  /* 1.5rem for the drag */
 }
 
 /* Apply .dragging for the dragging state of a draggable element */
@@ -443,19 +316,13 @@
   border-color: var(--qti-border-active);
 }
 
-/* Apply .rdo for readonly state */
-.rdo {
+/* Readonly — leave it looking normal; just the pointer cursor. */
+.readonly {
   cursor: pointer;
-  background-color: var(--qti-bg);
-  outline: 0;
-  border: none;
 }
 
-/* Apply .dis for disabled state */
+/* Disabled — just dim it. No colour variables. */
 .dis {
   cursor: not-allowed;
-  background-color: var(--qti-disabled-bg);
-  color: var(--qti-disabled-color);
-  border-color: var(--qti-border-color);
-  outline: 4px solid var(--qti-disabled-bg);
+  opacity: 0.5;
 }

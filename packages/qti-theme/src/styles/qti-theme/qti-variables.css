@@ -1,0 +1,69 @@
+/* QTI base — design variables. The theme's tokens; a substrate overrides their VALUES to
+ * express its look (value first). Split from qti-base.css. See also qti-mixins.css. */
+:root,
+:host {
+  /* ── Base palette — six concrete brand colours. A theme replaces just these. ── */
+  --qti-primary: #581d70; /* purple — chips, selection, active border */
+  --qti-success: #2b830e; /* green */
+  --qti-warning: #ffa700; /* amber */
+  --qti-error: #df0000; /* red */
+  --qti-info: #007ac3; /* blue — the answer key */
+
+  /* Foreground on a primary fill — a light tint of primary, so it tracks the brand. */
+  --qti-primary-fg: color-mix(in srgb, var(--qti-primary) 6%, white);
+
+  /* ── Correction — derived from the semantic colours, never set directly. ── */
+  --qti-correct: var(--qti-success);
+  --qti-incorrect: var(--qti-error);
+  --qti-partially-correct: var(--qti-warning);
+  --qti-correct-light: color-mix(in srgb, var(--qti-correct) 5%, white);
+  --qti-incorrect-light: color-mix(in srgb, var(--qti-incorrect) 5%, white);
+  --qti-partially-correct-light: color-mix(in srgb, var(--qti-partially-correct) 5%, white);
+
+  /* The answer key — the info blue, deliberately NOT the correct green. */
+  --qti-answer-fg: var(--qti-info);
+  --qti-answer-bg: color-mix(in srgb, var(--qti-info) 5%, white);
+  --qti-answer-border: var(--qti-info);
+
+  /* Validation — the amber warning. */
+  --qti-validation-error-bg: color-mix(in srgb, var(--qti-warning) 5%, white);
+  --qti-validation-text: var(--qti-warning);
+
+  /* The hole a lifted / placed chip leaves — derived from primary. */
+  --qti-placeholder-bg: color-mix(in srgb, var(--qti-primary) 15%, white);
+  --qti-placeholder-shadow: 0 3px color-mix(in srgb, var(--qti-primary) 30%, white);
+
+  /* ── Surfaces & border ── */
+  --qti-bg: white;
+  --qti-hover-bg: #f9fafb;
+  --qti-border-thickness: 1px; /* kept: some places need the width alone (invariance, calcs) */
+  --qti-border-radius: 0.3rem;
+  --qti-border: var(--qti-border-thickness) solid #9b77a9; /* the one border shorthand */
+
+  /* ── Sizing ── */
+  --qti-gap-size: 1rem; /* THE flex/grid gap, used everywhere incl .styles.ts */
+  --qti-form-size: 1rem; /* radio / checkbox */
+  --qti-order-size: calc(var(--qti-form-size) * 2); /* order number button */
+  --qti-padding-vertical: 0.5rem; /* the base spacing unit */
+  --qti-padding-horizontal: 1rem;
+  --qti-dropzone-padding: 0.5rem; /* read by the drag-drop autosize JS (drag-drop.utils.ts) */
+
+  /* ── Slated for removal — still referenced across mixins/interactions; migrating next: ──
+   *   focus  → a single :focus-visible outline (no vars)
+   *   disabled → an opacity change (no vars)
+   *   light/dark → the qti-selections-light/dark feature is being dropped
+   *   border-active / border-style / border-color / bg-active → fold into --qti-primary / --qti-border
+   */
+  --qti-bg-active: var(--qti-bg);
+  --qti-border-active: var(--qti-primary);
+  --qti-border-style: solid;
+  --qti-border-color: #9b77a9;
+  --qti-focus-border-width: 5px;
+  --qti-focus-color: #bddcff7e;
+  --qti-disabled-bg: #f3f4f6;
+  --qti-disabled-color: #45484f;
+  --qti-light-bg-active: #f0f0f0;
+  --qti-light-border-active: #d0d0d0;
+  --qti-dark-bg-active: #1f2937;
+  --qti-dark-border-active: #64748b;
+}

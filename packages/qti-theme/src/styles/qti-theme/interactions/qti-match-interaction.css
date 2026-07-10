@@ -78,8 +78,8 @@
           &:focus {
             @apply foc;
           }
-          margin-top: 0.5rem;
-          gap: 0.5rem;
+          margin-top: var(--qti-padding-vertical);
+          gap: var(--qti-padding-vertical);
           display: flex;
           flex-wrap: wrap;
           justify-content: center;

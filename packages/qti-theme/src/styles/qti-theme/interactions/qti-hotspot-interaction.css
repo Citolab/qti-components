@@ -13,7 +13,7 @@
           @apply act-bor;
         }
         &:state(readonly) {
-          @apply rdo;
+          @apply readonly;
         }
         &:state(disabled) {
           @apply dis;
@@ -28,7 +28,7 @@
           @apply act-bor;
         }
         &:state(readonly) {
-          @apply rdo;
+          @apply readonly;
         }
         &:state(disabled) {
           @apply dis;
@@ -62,7 +62,7 @@
           display: block;
         }
         &:state(readonly) {
-          @apply rdo;
+          @apply readonly;
         }
         &:state(disabled) {
           @apply dis;

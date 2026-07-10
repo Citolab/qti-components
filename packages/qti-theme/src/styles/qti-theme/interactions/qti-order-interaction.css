@@ -74,10 +74,10 @@
     }
 
     &::part(drops) {
-      gap: 0.5rem;
+      gap: var(--qti-padding-vertical);
     }
     &::part(drags) {
-      gap: 0.5rem;
+      gap: var(--qti-padding-vertical);
     }
     &::part(drop) {
       @apply drop;

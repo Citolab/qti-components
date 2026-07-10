@@ -59,4 +59,7 @@ test-container {
   /* Selected zones */
   --qti-selected-bg: var(--bs-primary);
   --qti-selected-color: #fff;
+
+  /* Primary — kennisnet's accent (purple). The shared `.drag` chip fills with it. */
+  --qti-primary: var(--primary-color);
 }

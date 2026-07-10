@@ -52,7 +52,7 @@
           @apply act;
         }
         &:state(readonly) {
-          @apply rdo;
+          @apply readonly;
         }
         &:state(disabled) {
           @apply dis;
@@ -75,7 +75,7 @@
           background-color: var(--qti-bg-active);
         }
         &:state(readonly) {
-          @apply rdo;
+          @apply readonly;
         }
         &:state(disabled) {
           @apply dis;

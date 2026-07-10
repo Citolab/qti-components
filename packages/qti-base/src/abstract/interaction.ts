@@ -124,7 +124,9 @@ export abstract class Interaction extends LitElement implements IInteraction {
   set isFullCorrectResponse(val: Readonly<boolean>) {
     this._isFullCorrectResponse = val as boolean;
     if (val) {
-      this.disabled = true;
+      // `inert` already makes the answer-key clone non-interactive. Do NOT also set `disabled`:
+      // it would mark every choice `:state(disabled)`, which the theme dims (opacity), fading the
+      // answer key that is meant to be crisp. inert is enough.
       this.setAttribute('inert', '');
       this.setAttribute('response-identifier', this.responseIdentifier + '_cr');
     }

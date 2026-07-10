@@ -28,7 +28,7 @@
     }
     &:state(readonly)::part(trigger),
     &[readonly]::part(trigger) {
-      @apply rdo;
+      @apply readonly;
       @apply dis;
     }
     &::part(dropdown-icon) {

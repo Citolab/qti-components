@@ -1,6 +1,6 @@
 @layer qti-components {
   qti-prompt {
-    margin: 0.5rem 0;
+    margin: var(--qti-padding-vertical) 0;
     display: block;
     width: 100%;
   }

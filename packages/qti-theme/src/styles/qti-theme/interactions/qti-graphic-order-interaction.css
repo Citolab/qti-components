@@ -18,7 +18,7 @@
         background-color: rgb(128 128 128 / 70%);
       }
       &:state(readonly) {
-        @apply rdo;
+        @apply readonly;
       }
       &:state(disabled) {
         @apply dis;

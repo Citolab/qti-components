@@ -11,7 +11,7 @@
 
     &::part(input-cell) {
       border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color);
-      padding: 0.5rem 0.75rem;
+      padding: var(--qti-padding-vertical) 0.75rem;
       transition: background-color 0.1s ease;
     }
     &::part(input-cell):hover {
@@ -72,7 +72,7 @@
   qti-match-interaction.qti-match-tabular qti-simple-match-set qti-simple-associable-choice {
     background-color: var(--qti-bg-active);
     font-weight: 500;
-    padding: 0.5rem 0.75rem;
+    padding: var(--qti-padding-vertical) 0.75rem;
     border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color);
     box-sizing: border-box;
     display: flex;
