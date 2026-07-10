@@ -73,10 +73,27 @@ export class QtiAssociateInteraction extends DragDropSlottedSortableMixin(Slotte
     </div>`;
   }
 
+  /**
+   * How many association rows to render.
+   *
+   * `max-associations` is how many associations the candidate may *make*, so it is exactly the
+   * number of rows. This used to be `ceil(choices / 2)` — the number of pairs the choices could
+   * possibly form — which made the limit unenforceable: with six choices the interaction always
+   * drew three rows, so `max-associations="3"` could never be exceeded and its validation always
+   * passed. Worse, the number read as a cap on *drags placed* rather than on associations formed.
+   *
+   * `0` is QTI's "no limit". With no limit there is still a natural ceiling: every choice paired
+   * with one other.
+   */
+  get #rowCount(): number {
+    return this.maxAssociations > 0 ? this.maxAssociations : Math.ceil(this._childrenMap.length / 2);
+  }
+
   protected getResponse(): string[] {
-    const pairCount = Math.ceil(this._childrenMap.length / 2);
     const response: string[] = [];
-    for (let i = 0; i < pairCount; i++) {
+    // Same count as `render()`. Read fewer rows than were drawn and the pairs in the last rows
+    // vanish from the response without a trace.
+    for (let i = 0; i < this.#rowCount; i++) {
       const leftDrop = this.shadowRoot?.querySelector(`[part~='drop'][identifier="droplist${i}_left"]`);
       const rightDrop = this.shadowRoot?.querySelector(`[part~='drop'][identifier="droplist${i}_right"]`);
       // Read placement, not the DOM: the DOM is rendered from placement now.
@@ -104,7 +121,8 @@ export class QtiAssociateInteraction extends DragDropSlottedSortableMixin(Slotte
       <slot part="drags" name="qti-simple-associable-choice"></slot>
       <div part="drops">
         ${this._childrenMap.length > 0 &&
-        Array.from(Array(Math.ceil(this._childrenMap.length / 2)).keys()).map(
+        Array.from(
+          { length: this.#rowCount },
           (_, index) =>
             html`<div part="drop-row">
               ${this.#renderDrop(`droplist${index}_left`, `left${index}`)}

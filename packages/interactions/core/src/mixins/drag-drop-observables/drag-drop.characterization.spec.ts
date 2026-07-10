@@ -93,13 +93,23 @@ describe('drag-drop characterization — response is currently derived from the 
 
     const interaction = el<any>('qti-associate-interaction');
     const drops = Array.from(interaction.shadowRoot.querySelectorAll(`[part~='drop']`)) as HTMLElement[];
-    expect(drops.map(d => d.getAttribute('identifier'))).toEqual(['droplist0_left', 'droplist0_right']);
+    // Two rows, because `max-associations="2"` allows two associations. This used to expect one:
+    // the interaction drew `ceil(choices / 2)` rows, so two choices meant one row and the limit was
+    // decorative. The row count is the fix, not this assertion — see
+    // qti-associate-interaction.spec.ts.
+    expect(drops.map(d => d.getAttribute('identifier'))).toEqual([
+      'droplist0_left',
+      'droplist0_right',
+      'droplist1_left',
+      'droplist1_right'
+    ]);
 
     interaction.handleDrop(byId('A'), drops[0]);
     await settle();
     interaction.handleDrop(byId('B'), drops[1]);
     await settle();
 
+    // One filled row, one empty. An empty row contributes nothing to the response.
     expect(interaction.response).toBe('A B');
   });
 
