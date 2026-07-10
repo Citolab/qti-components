@@ -494,7 +494,67 @@ was already inert (no element carries the class), so removal changed nothing and
 
 ---
 
-## Phase 3 — `@apply` becomes Sass mixins, in place
+## Refined architecture (decided 2026-07-10, supersedes the Phase 3/4 detail below)
+
+A series of decisions reshaped the merge from "fold kennisnet into the interaction files" to
+"**mixins are the design vocabulary; interaction files are thin wiring.**" This section governs;
+the original Phase 3 and Phase 4 bodies below are kept for their build-mechanics notes only.
+
+**1. Mixin engine: `postcss-mixins`, not Sass.**
+A drop-in swap for `postcss-class-apply` in the same PostCSS slot (after `postcss-import`, before
+`autoprefixer`). Entry files stay `.css`; `inline-css-plugin.js` and the published packages are
+untouched — the reason this beat Sass, whose route needs an `item.css → item.scss` + plugin change.
+Verified `@mixin` resolves inside native `&` nesting and `@layer`. During the transition run
+**both** plugins so `@apply` and `@mixin` coexist and files convert one at a time; drop
+`postcss-class-apply` only when `grep @apply` is 0.
+
+**2. What becomes a mixin: only a style ≥2 interactions share.**
+A concept used across interactions (a drag chip, the answer key, a correction tint) is a mixin.
+Interaction-specific styling is NOT — e.g.
+`qti-match-interaction.qti-match-tabular qti-simple-match-set qti-simple-associable-choice { … }`
+stays a plain selector in the match file. Mixins are for the shared vocabulary, not for everything.
+
+**3. The semantic mixins (they hold the kennisnet look):**
+
+| mixin | holds | included by |
+|---|---|---|
+| `drag` | card chip: border, padding, background, radius, grip | order / associate / match / gap-match — **not** graphic-gap-match |
+| `placeholder` (and `dragging`) | the drag-bank hole: inset box, transparent border + text | **all** drag-drop, graphic-gap-match included |
+| `candidate-tint($color, $strength)` | `color-mix` tint + `color` + `border-color` of `$color` | any corrected element; correct→`--qti-correct`, incorrect→`--qti-incorrect`, hotspot passes a stronger `$strength` |
+| `answer` | the answer key: light-blue bg, dark-blue text/border | the `.full-correct-response` clone, every interaction |
+
+Plus the existing low-level utility mixins (`foc`, `hov`, `act`, `dis`, `rdo`, `spot`, `check`,
+`dropdown-*`, …) that already come from `qti-base.css`'s `@apply` classes.
+
+**4. Interaction `.css` files become thin wiring.** A part/state selector that `@include`s a mixin,
+plus whatever interaction-specific styling that one interaction genuinely needs. Example:
+```css
+qti-choice-interaction {
+  &::part(control):state(candidate-correct)  { @mixin candidate-tint var(--qti-correct); }
+  &.full-correct-response::part(control)       { @mixin answer; }
+}
+```
+
+**5. kennisnet splits by interaction-ness.**
+- kennisnet's **interaction** styling (chip look, correction, answer key) → the mixins above. Its
+  per-interaction `.scss` files shrink to the interaction-specific remainder.
+- kennisnet's **non-interaction** styling (`.qti-well`, buttons, feedback, modal-feedback, progress,
+  `item-correct/-incorrect`) → stays in `.scss`. It is not vocabulary; it is components.
+
+**6. Fewer colour tokens.** Derive light/dark variants from a small base set with `color-mix()` and
+relative colour syntax (`hsl(from var(--base) h s calc(l + …))`) instead of a separate
+`--qti-*-light` / `-dark` variable per shade. `candidate-tint`'s `color-mix` already does this; extend
+the pattern to `--qti-answer-*` and the correction colours.
+
+**7. Substrate impact — open, confirm before wiring cito.** The mixins hold kennisnet's look. Once
+the shared interaction `.css` files `@include` them, the **citolab** substrate (item.css with no
+kennisnet override) starts rendering the kennisnet appearance. That is the intended end state
+(kennisnet leading, citolab deleted), but it changes citolab visibly and VRT only covers kennisnet —
+so cito output must be checked by compiled-CSS diff, not screenshots.
+
+---
+
+## Phase 3 — `@apply` becomes Sass mixins, in place  *(mechanics only; see Refined architecture above for the engine & shape)*
 
 Do **not** rename the entry points. Change how the theme is authored, not what it emits.
 
