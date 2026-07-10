@@ -12,7 +12,8 @@ Four goals, stated in the order they were raised:
 4. Kennisnet stops re-declaring things `qti-native` already defines.
 
 5. A layer stack that makes precedence a property of *what a rule does*, not of where it happens to
-   sit in a file: `@layer reset, layout, paint, state, correction, editor` (§0.5).
+   sit in a file: `@layer reset, layout, paint, state, cursor, correction, editor` (§0.5).
+6. **Every cursor in one file**, so a host that wants none — the editor — simply does not load it (§0.6).
 
 **Layering lands with the merge, not before.** The stack is decided (§0.5) but Phases 1–3 may not add,
 remove or reorder a `@layer`. Kennisnet is entirely unlayered today, and unlayered beats every layer —
@@ -213,16 +214,20 @@ and the badges silently stopped appearing. It reads `chipsIn(drop)` now. **Every
 Deferred by instruction, but decided. Recorded here so Phase 4 does not re-derive it.
 
 ```css
-@layer reset, layout, paint, state, correction, editor;
+@layer reset, layout, paint, state, cursor, correction, editor;
 ```
 
-Low to high. Two departures from the first sketch, both deliberate:
+Low to high. One departure from the first sketch:
 
-- **`cursor` folded into `state`.** A cursor is only ever set by a state (`grab` while draggable,
-  `not-allowed` when disabled, `text` on an input). A layer earns its keep by resolving a conflict,
-  not by grouping a property.
 - **`correction` above `state`.** A correct/incorrect verdict must outrank `:hover` and
   `:state(checked)`. A candidate should not lose the red border by hovering the answer they got wrong.
+
+`cursor` stays its own layer, and — more importantly — its own **file**. It was briefly folded into
+`state` on the reasoning that a cursor is only ever set by a state, and that a layer earns its keep
+by resolving conflicts. That reasoning was about precedence, and precedence is not the point. The
+point is **composability**: an editor loading these styles wants no `grab`, no `pointer`, no `text`
+cursor — only the default. A layer does not let you decline a rule; not importing a file does.
+`cursor` sits above `state` so a disabled cursor still beats a hover cursor within the file.
 
 `editor` stays on top: it is decoration over a finished document.
 
@@ -272,6 +277,43 @@ overrode the shadow's `display: none` and painted an empty ring on every uncorre
 So `box-sizing.styles.ts`, `drop-region.styles.ts` and `correction.styles.ts` sit outside this system
 entirely. They are the component's floor, always beaten by the theme. That is exactly why Phase 1
 moves paint out of the shadow *first*: layering fixes theme-versus-theme, never shadow-versus-theme.
+
+### 0.6 The cursor file, and the inline style that defeats it
+
+A single `styles/qti-theme/cursors.scss`, wrapped in `@layer cursor`. A host that wants default
+cursors everywhere omits that one import. That is the whole feature — and it does not work today,
+for three reasons, all of which must be fixed for the file to mean anything.
+
+**1. One cursor is an inline style.** `drag-drop-core.mixin.ts:250`:
+
+```ts
+draggable.style.cursor = 'grab';
+```
+
+An inline style beats every layer, every file, and every `!important` except another `!important`.
+This is not a theory: three theme rules already carry `cursor: default !important`, and
+`qti-match-interaction-tabular.css:71` says why — *"Drag is disabled in tabular mode; override the
+mixin's inline cursor:grab."* Delete the assignment; `[qti-draggable='true'] { cursor: grab }` belongs
+in the cursor file, and the three `!important`s go with it.
+
+**2. Five cursors are trapped in shadow styles**, where a host cannot omit them:
+`qti-slider-interaction.styles.ts:45,59,71,81` (`pointer`) and
+`qti-position-object-interaction.styles.ts:13` (`move`). They move to the theme with the rest of
+Phase 1's paint. This is the concrete reason `cursor` is not "layout" — it is not that it paints,
+it is that a consumer must be able to refuse it.
+
+**3. Seventeen theme cursors are scattered across eleven files.** Inventory:
+
+| cursor | count | notable |
+|---|---|---|
+| `pointer` | 7 | `qti-base.css:172,301,368`, buttons, choice, hottext |
+| `not-allowed` | 3 | `.dis:376`, kennisnet gap-match + match |
+| `default !important` | 3 | all three fight the inline `grab` above |
+| `grab` | 2 | `.drag:239`, graphic-gap-match |
+| `text` | 1 | `.text:200` |
+
+Gathering them is mechanical once (1) and (2) are done. Doing it before (1) produces a file that
+looks like it controls the cursors and does not.
 
 #### Mechanism
 
