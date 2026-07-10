@@ -1,4 +1,5 @@
 import { html } from 'lit';
+import { repeat } from 'lit/directives/repeat.js';
 import { property, state } from 'lit/decorators.js';
 
 import { Interaction } from '@qti-components/base';
@@ -66,9 +67,20 @@ export class QtiOrderInteraction extends DragDropSlottedSortableMixin(SlottedBas
       <div part="container">
         <slot part="drags"> </slot>
         <div part="drops">
-          ${[...Array(this.nrChoices)].map(
-            (_, i) => html`<div role="region" part="drop" identifier="droplist${i}"></div>`
-          )}
+          ${[...Array(this.nrChoices)].map((_, i) => {
+            const identifier = `droplist${i}`;
+            // The chips are rendered here, from the interaction's placement map, rather than being
+            // appended into this div by handleDrop. `data-declarative-drops` is what tells the
+            // mixin to keep them in the map and leave this element's children alone.
+            const drags = this._dragDrop?.nodesByTarget?.[identifier] ?? [];
+            return html`<div role="region" part="drop" data-declarative-drops identifier=${identifier}>
+              ${repeat(
+                drags,
+                node => node.getAttribute('identifier'),
+                node => node
+              )}
+            </div>`;
+          })}
         </div>
       </div>`;
   }
@@ -112,9 +124,12 @@ export class QtiOrderInteraction extends DragDropSlottedSortableMixin(SlottedBas
   public override toggleCandidateCorrection(show: boolean): void {
     super.toggleCandidateCorrection(show);
 
-    const placedChoices = Array.from(
-      this.shadowRoot.querySelectorAll<QtiSimpleChoice>(`[part~='drop'] [qti-draggable="true"]`)
-    );
+    // Read placement, not the DOM. The drop targets render their chips from the placement map, and
+    // Lit renders on a microtask — a query here runs before the chip is in the tree, so no state was
+    // ever set and the correction badges silently stopped appearing. The nodes in the map are the
+    // same nodes that get rendered, so marking them now survives the render.
+    const dropTargets = Array.from(this.shadowRoot.querySelectorAll<HTMLElement>(`[part~='drop']`));
+    const placedChoices = dropTargets.flatMap(drop => this.chipsIn(drop) as QtiSimpleChoice[]);
     placedChoices.forEach(choice => {
       choice.internals.states.delete('candidate-correct');
       choice.internals.states.delete('candidate-incorrect');
@@ -126,9 +141,8 @@ export class QtiOrderInteraction extends DragDropSlottedSortableMixin(SlottedBas
     const correctByDrop = new Map<number, string>();
     entries.forEach(entry => correctByDrop.set(entry.dropIndex, entry.identifier));
 
-    const dropLists = Array.from(this.shadowRoot.querySelectorAll<HTMLElement>(`[part~='drop']`));
-    dropLists.forEach((dropList, index) => {
-      const placedChoice = dropList.querySelector<QtiSimpleChoice>('[qti-draggable="true"]');
+    dropTargets.forEach((dropList, index) => {
+      const placedChoice = this.chipsIn(dropList)[0] as QtiSimpleChoice | undefined;
       if (!placedChoice) return;
 
       const expectedIdentifier = correctByDrop.get(index);
@@ -155,14 +169,15 @@ export class QtiOrderInteraction extends DragDropSlottedSortableMixin(SlottedBas
   // cause they are different for some interactions.
   // MH: is this function called? Shouldn't we use getValue?
   protected getResponse(): string[] {
-    const droppables = Array.from<QtiSimpleChoice>(this.shadowRoot.querySelectorAll(`[part~='drop']`));
+    const droppables = Array.from<HTMLElement>(this.shadowRoot.querySelectorAll(`[part~='drop']`));
 
-    const response = droppables.map(droppable => {
-      const dragsInDroppable = droppable.querySelectorAll('[qti-draggable="true"]');
-      const identifiers = Array.from(dragsInDroppable).map(d => d.getAttribute('identifier'));
-      return [...identifiers].join(' ');
-    });
-    return response;
+    // Read placement, not the DOM. The DOM is rendered *from* placement now, so querying it back
+    // out would be asking the same question twice and hoping for the same answer.
+    return droppables.map(droppable =>
+      this.chipsIn(droppable)
+        .map(chip => chip.getAttribute('identifier'))
+        .join(' ')
+    );
   }
 
   public override shouldTreatBlockedMaxAsInvalid(): boolean {
@@ -172,9 +187,9 @@ export class QtiOrderInteraction extends DragDropSlottedSortableMixin(SlottedBas
   override async firstUpdated() {
     super.firstUpdated();
     this.childrenMap = Array.from(this.querySelectorAll('qti-simple-choice'));
-    // The clone made on drop inherits this part, and only the clone is inside a shadow root where
-    // `::part()` can reach it. A slotted chip in the bank is styled with `:state(drag)` instead.
-    this.childrenMap.forEach(el => el.setAttribute('part', 'drag'));
+    // `part="drag"` used to be stamped on the light-DOM originals here, purely so the clone would
+    // inherit it — a slotted chip's own `part` is unreachable. The mixin stamps the clone directly
+    // now, at the moment it makes it.
   }
 }
 

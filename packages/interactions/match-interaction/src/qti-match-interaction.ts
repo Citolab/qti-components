@@ -49,6 +49,12 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
 ) {
   static override styles: CSSResultGroup = [styles, tabularStyles];
 
+  /**
+   * Match targets are categories, not slots. They should look able to hold several answers, so they
+   * take the vendor floor (`--qti-drop-min-height`) rather than the size of the widest chip.
+   */
+  public override autoSizeDropzones = false;
+
   protected sourceChoices: QtiSimpleAssociableChoice[];
   protected targetChoices: QtiSimpleAssociableChoice[];
   protected lastCheckedRadio: HTMLInputElement | null = null;
@@ -270,7 +276,9 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
       const targetId = targetChoice.getAttribute('identifier');
       const targetMatches = matches.filter(m => m.target === targetId);
 
-      const selectedChoices = targetChoice.querySelectorAll(`qti-simple-associable-choice`);
+      // The placed chips are in the target choice's own shadow root now, one boundary deeper than
+      // a query reaches. The target knows what it holds; ask it.
+      const selectedChoices = (targetChoice as unknown as { drags: readonly QtiSimpleAssociableChoice[] }).drags;
 
       selectedChoices.forEach(selectedChoice => {
         selectedChoice.internals.states.delete('candidate-correct');

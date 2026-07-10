@@ -71,6 +71,18 @@ const SUBSTRATES: Record<string, string[]> = {
   kennisnet: [normalizeCss, itemCss, kennisnetCss]
 };
 
+/**
+ * Kennisnet is the leading substrate; citolab is deprecated and on its way out.
+ *
+ * The invariants are asserted against kennisnet only. Citolab styles a bank chip with tag
+ * selectors and a placed chip with `::part(drag)`, and the two blocks never agreed — in
+ * graphic-gap-match its bank chips carry no chip styling at all. Holding a deprecated theme to a
+ * contract it predates would mean fixing CSS nobody will ship.
+ *
+ * Add `minimal` here once it is a real substrate rather than a sketch.
+ */
+const CONTRACT_SUBSTRATES = ['kennisnet'];
+
 const applySubstrate = (name: string) => {
   document.querySelectorAll('style[data-substrate]').forEach(s => s.remove());
   for (const css of SUBSTRATES[name]) {
@@ -81,7 +93,7 @@ const applySubstrate = (name: string) => {
   }
 };
 
-describe.each(Object.keys(SUBSTRATES))('drag-drop layout invariance — %s', substrate => {
+describe.each(CONTRACT_SUBSTRATES)('drag-drop layout invariance — %s', substrate => {
   beforeEach(() => applySubstrate(substrate));
 
   test('a chip keeps its border-box when it is lifted', async () => {
@@ -156,4 +168,159 @@ describe.each(Object.keys(SUBSTRATES))('drag-drop layout invariance — %s', sub
     expect(placed, 'the gap renders the clone in its own shadow root').toBeTruthy();
     expect(boxOf(placed), 'a chip is the same chip wherever it lives').toEqual(inBank);
   });
+});
+
+/**
+ * The same two invariants, for every drag-drop interaction rather than just gap-match.
+ *
+ * `chipsIn(target)` is how the interaction itself answers "what do you hold" — placement map or
+ * DOM, depending on the target — so the fixtures do not have to know where a chip lives.
+ *
+ * Written after `qti-order-interaction` turned out to grow its chips by 2px on drop, and to have
+ * done so long before any of this work: a chip is one size in the bank and another in a drop, and
+ * nothing anywhere asserted otherwise.
+ */
+const INTERACTIONS: Array<{ name: string; html: string; chip: string; target: () => HTMLElement }> = [
+  {
+    name: 'gap-match',
+    html: GAP_MATCH,
+    chip: 'winter',
+    target: () => el('[identifier="G1"]')
+  },
+  {
+    name: 'order',
+    html: `
+      <qti-order-interaction response-identifier="R" style="width: 480px">
+        <qti-simple-choice identifier="A">Hypothese formuleren</qti-simple-choice>
+        <qti-simple-choice identifier="B">Data verzamelen</qti-simple-choice>
+      </qti-order-interaction>`,
+    chip: 'A',
+    target: () => el<any>('qti-order-interaction').shadowRoot!.querySelector(`[part~='drop']`) as HTMLElement
+  },
+  {
+    name: 'associate',
+    html: `
+      <qti-associate-interaction response-identifier="R" max-associations="2" style="width: 480px">
+        <qti-simple-associable-choice identifier="A" match-max="1">Antonio</qti-simple-associable-choice>
+        <qti-simple-associable-choice identifier="B" match-max="1">Brutus</qti-simple-associable-choice>
+      </qti-associate-interaction>`,
+    chip: 'A',
+    target: () => el<any>('qti-associate-interaction').shadowRoot!.querySelector(`[part~='drop']`) as HTMLElement
+  },
+  {
+    name: 'match',
+    html: `
+      <qti-match-interaction response-identifier="R" style="width: 480px">
+        <qti-simple-match-set>
+          <qti-simple-associable-choice identifier="S1" match-max="1">Source one</qti-simple-associable-choice>
+        </qti-simple-match-set>
+        <qti-simple-match-set>
+          <qti-simple-associable-choice identifier="T1" match-max="1">Target one</qti-simple-associable-choice>
+        </qti-simple-match-set>
+      </qti-match-interaction>`,
+    chip: 'S1',
+    target: () => el('[identifier="T1"]')
+  },
+  {
+    name: 'graphic-gap-match',
+    html: `
+      <qti-graphic-gap-match-interaction response-identifier="R">
+        <img slot="image" alt="" width="200" height="120" />
+        <qti-gap-text identifier="G1" match-max="1">winter</qti-gap-text>
+        <qti-associable-hotspot coords="0,0,60,40" identifier="H1" match-max="1" shape="rect"></qti-associable-hotspot>
+      </qti-graphic-gap-match-interaction>`,
+    chip: 'G1',
+    target: () => el('[identifier="H1"]')
+  }
+];
+
+/**
+ * Known violations, recorded rather than deleted. `test.fails` inverts the assertion: these must
+ * keep failing, and the day one starts passing the suite goes red and tells you to remove it here.
+ *
+ *   order      a bank chip and a placed chip are styled by different blocks — kennisnet gives the
+ *              bank card `border: none` and the placed card `border: 1px` — so the chip grows 2px
+ *              on drop and the drop grows with it. Present at HEAD, long before this work.
+ *   associate  the same disease: the placed chip's horizontal padding comes from a different rule
+ *              than the bank chip's.
+ *
+ * The cure is Phase 1 of plans/theme-merge-and-shadow-style-cleanup.md — one selector list per
+ * theme, covering a chip's three homes. Not a CSS nudge here.
+ */
+const CHIP_BOX_KNOWN_BAD = new Set(['order', 'associate']);
+const DROPZONE_KNOWN_BAD = new Set(['order']);
+
+const chipCases = INTERACTIONS.map(i => [i.name, i] as const);
+
+describe.each(CONTRACT_SUBSTRATES)('every interaction, layout invariance — %s', substrate => {
+  beforeEach(() => applySubstrate(substrate));
+
+  // The real measurement, expected to fail. `test.fails` goes red the day it starts passing.
+  test.fails.each(chipCases.filter(([n]) => CHIP_BOX_KNOWN_BAD.has(n)))(
+    '%s: KNOWN VIOLATION — a chip does not keep its box when dropped',
+    async (_n, spec) => {
+      document.body.innerHTML = spec.html;
+      await settle();
+
+      const interaction = document.body.firstElementChild as any;
+      const chip = byId(spec.chip);
+      const inBank = boxOf(chip);
+
+      interaction.handleDrop(chip, spec.target());
+      await settle();
+
+      expect(boxOf(interaction.chipsIn(spec.target())[0] as HTMLElement)).toEqual(inBank);
+    }
+  );
+
+  test.fails.each(chipCases.filter(([n]) => DROPZONE_KNOWN_BAD.has(n)))(
+    '%s: KNOWN VIOLATION — filling a dropzone resizes it',
+    async (_n, spec) => {
+      document.body.innerHTML = spec.html;
+      await settle();
+
+      const interaction = document.body.firstElementChild as any;
+      const empty = boxOf(spec.target());
+
+      interaction.handleDrop(byId(spec.chip), spec.target());
+      await settle();
+
+      expect(boxOf(spec.target())).toEqual(empty);
+    }
+  );
+
+  test.each(chipCases.filter(([n]) => !CHIP_BOX_KNOWN_BAD.has(n)))(
+    '%s: a chip keeps its box when dropped',
+    async (_n, spec) => {
+      document.body.innerHTML = spec.html;
+      await settle();
+
+      const interaction = document.body.firstElementChild as any;
+      const chip = byId(spec.chip);
+      const inBank = boxOf(chip);
+
+      interaction.handleDrop(chip, spec.target());
+      await settle();
+
+      const placed = interaction.chipsIn(spec.target())[0] as HTMLElement;
+      expect(placed, 'the chip landed').toBeTruthy();
+      expect(boxOf(placed), 'a chip is the same chip wherever it lives').toEqual(inBank);
+    }
+  );
+
+  test.each(chipCases.filter(([n]) => !DROPZONE_KNOWN_BAD.has(n)))(
+    '%s: filling a dropzone does not resize it',
+    async (_n, spec) => {
+      document.body.innerHTML = spec.html;
+      await settle();
+
+      const interaction = document.body.firstElementChild as any;
+      const empty = boxOf(spec.target());
+
+      interaction.handleDrop(byId(spec.chip), spec.target());
+      await settle();
+
+      expect(boxOf(spec.target()), 'an empty drop is already the size of the chip it will hold').toEqual(empty);
+    }
+  );
 });

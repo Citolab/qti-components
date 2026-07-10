@@ -34,6 +34,13 @@ export type DragDropSlotted = DragDropCore & {
   saveResponse(value?: string | string[]): void;
   shouldTreatBlockedMaxAsInvalid(): boolean;
   shouldReturnToInventoryOnInventoryDrop(): boolean;
+
+  /** Placement, published on `dragDropContext`. An interaction that renders its own drop targets
+   *  reads `nodesByTarget` straight out of it. */
+  _dragDrop: Readonly<DragDropState>;
+  /** The chips a target holds — from the placement map, or the DOM, depending on the target. */
+  chipsIn(droppable: HTMLElement): HTMLElement[];
+  isDeclarativeTarget(el: HTMLElement | null | undefined): boolean;
 };
 
 interface InteractionConfiguration {
@@ -100,7 +107,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
      * Reassign, never mutate — an in-place change does not notify consumers.
      */
     @provide({ context: dragDropContext })
-    protected _dragDrop: Readonly<DragDropState> = { dragsByTarget: {}, countByTarget: {}, nodesByTarget: {} };
+    public _dragDrop: Readonly<DragDropState> = { dragsByTarget: {}, countByTarget: {}, nodesByTarget: {} };
 
     /**
      * The one place that reads placement out of the DOM.
@@ -132,12 +139,22 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       );
     }
 
-    protected isDeclarativeTarget(el: HTMLElement | null | undefined): boolean {
-      return !!el && (el as unknown as { acceptsDeclarativeDrops?: boolean }).acceptsDeclarativeDrops === true;
+    /**
+     * Does this target render its own chips?
+     *
+     * A custom element says so with a property (`qti-gap`, `qti-associable-hotspot`). Order's and
+     * associate's targets are plain `<div part="drop">` in the interaction's own shadow root, and a
+     * div cannot carry a property that survives a Lit re-render — it says so with an attribute, and
+     * the *interaction* renders the chips into it. Same placement map either way.
+     */
+    public isDeclarativeTarget(el: HTMLElement | null | undefined): boolean {
+      if (!el) return false;
+      if ((el as unknown as { acceptsDeclarativeDrops?: boolean }).acceptsDeclarativeDrops === true) return true;
+      return el.hasAttribute('data-declarative-drops');
     }
 
     /** The chips a target holds, whichever way it holds them. */
-    protected chipsIn(droppable: HTMLElement): HTMLElement[] {
+    public chipsIn(droppable: HTMLElement): HTMLElement[] {
       if (this.isDeclarativeTarget(droppable)) return [...(this.#placement.get(droppable) ?? [])];
       return Array.from(droppable.querySelectorAll<HTMLElement>(draggablesSelector));
     }
@@ -170,6 +187,8 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
     private clearChips(droppable: HTMLElement): void {
       if (this.isDeclarativeTarget(droppable)) {
         this.#placement.set(droppable, []);
+        // Emptying the map is not enough: nothing re-renders until placement is published.
+        this.syncDragDropState();
       } else {
         this.chipsIn(droppable).forEach(chip => chip.remove());
       }
@@ -200,6 +219,9 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       }
 
       this._dragDrop = { dragsByTarget, countByTarget, nodesByTarget };
+      // Consumers of the context re-render on reassignment. An interaction that renders its own
+      // drop targets is not a consumer of its own context, so it has to be told.
+      this.requestUpdate();
     }
 
     /** The response, derived from placement: `"<dragId> <targetId>"` per placed chip. */
@@ -252,7 +274,15 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
     }
 
     @property({ type: Boolean, attribute: 'auto-size-dropzones' })
-    public autoSizeDropzones = false;
+    /**
+     * Size the dropzones from the chips they will hold.
+     *
+     * On by default: a drop that is already as big as the largest chip does not resize when one
+     * lands in it. `qti-match-interaction` turns it off — a match target is a category, and should
+     * look like it can hold several answers rather than hugging the widest one. With it off, a
+     * dropzone falls back to the vendor floor, `--qti-drop-min-height` / `--qti-drop-min-width`.
+     */
+    public autoSizeDropzones = true;
 
     /**
      * Set via the `response="…"` attribute before the drag/drop machinery has
@@ -486,6 +516,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
     }
 
     private updateMinDimensionsForDropZones(): void {
+      if (!this.autoSizeDropzones) return;
       if (this.trackedDraggables.length === 0) return;
 
       applyDropzoneAutoSizing(this, this.trackedDraggables, this.trackedDroppables, this.trackedDragContainers);

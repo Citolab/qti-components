@@ -257,11 +257,12 @@ export function applyDropzoneAutoSizing(
 
   // Measured values go on the host as custom properties; each droppable's own stylesheet reads
   // them. A theme overrides by setting the same variable on the droppable, which is closer.
-  // --qti-dropzone-min-width is only set where it applied before: grid layouts and gaps.
+  //
+  // Both axes, for every dropzone. `--qti-dropzone-min-width` used to reach only gaps and the
+  // match grid, so order's and associate's drops were tall enough for the largest chip but not
+  // wide enough for it, and a drop grew sideways the moment one landed.
   host.style.setProperty('--qti-dropzone-min-height', `${maxDraggableHeight}px`);
-  if (isGridLayout || isGapElement) {
-    host.style.setProperty('--qti-dropzone-min-width', `${maxDraggableWidth}px`);
-  }
+  host.style.setProperty('--qti-dropzone-min-width', `${maxDraggableWidth}px`);
 
   dragContainers.forEach(dragContainer => {
     dragContainer.style.minHeight = `var(--qti-drag-container-min-height, ${maxDraggableHeight}px)`;

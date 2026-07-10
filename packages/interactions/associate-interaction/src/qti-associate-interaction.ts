@@ -1,4 +1,5 @@
 import { html } from 'lit';
+import { repeat } from 'lit/directives/repeat.js';
 import { state } from 'lit/decorators.js';
 
 import { Interaction } from '@qti-components/base';
@@ -56,14 +57,31 @@ export class QtiAssociateInteraction extends DragDropSlottedSortableMixin(Slotte
     }
   }
 
+  /**
+   * A drop target, holding whatever the interaction's placement map says it holds.
+   * `data-declarative-drops` tells the mixin to keep the chips in that map rather than appending
+   * them into this div.
+   */
+  #renderDrop(identifier: string, name: string) {
+    const drags = this._dragDrop?.nodesByTarget?.[identifier] ?? [];
+    return html`<div name=${name} part="drop" data-declarative-drops identifier=${identifier}>
+      ${repeat(
+        drags,
+        node => node.getAttribute('identifier'),
+        node => node
+      )}
+    </div>`;
+  }
+
   protected getResponse(): string[] {
     const pairCount = Math.ceil(this._childrenMap.length / 2);
     const response: string[] = [];
     for (let i = 0; i < pairCount; i++) {
       const leftDrop = this.shadowRoot?.querySelector(`[part~='drop'][identifier="droplist${i}_left"]`);
       const rightDrop = this.shadowRoot?.querySelector(`[part~='drop'][identifier="droplist${i}_right"]`);
-      const leftId = leftDrop?.querySelector('[qti-draggable="true"]')?.getAttribute('identifier');
-      const rightId = rightDrop?.querySelector('[qti-draggable="true"]')?.getAttribute('identifier');
+      // Read placement, not the DOM: the DOM is rendered from placement now.
+      const leftId = leftDrop && this.chipsIn(leftDrop as HTMLElement)[0]?.getAttribute('identifier');
+      const rightId = rightDrop && this.chipsIn(rightDrop as HTMLElement)[0]?.getAttribute('identifier');
       if (leftId && rightId) {
         response.push(`${leftId} ${rightId}`);
       }
@@ -89,8 +107,8 @@ export class QtiAssociateInteraction extends DragDropSlottedSortableMixin(Slotte
         Array.from(Array(Math.ceil(this._childrenMap.length / 2)).keys()).map(
           (_, index) =>
             html`<div part="drop-row">
-              <div name="left${index}" part="drop" identifier="droplist${index}_left"></div>
-              <div name="right${index}" part="drop" identifier="droplist${index}_right"></div>
+              ${this.#renderDrop(`droplist${index}_left`, `left${index}`)}
+              ${this.#renderDrop(`droplist${index}_right`, `right${index}`)}
             </div>`
         )}
 

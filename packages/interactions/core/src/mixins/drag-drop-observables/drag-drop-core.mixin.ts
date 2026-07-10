@@ -260,7 +260,15 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       // `qti-simple-associable-choice`), so no part can name them — a part only exists inside the
       // shadow tree that declares it. An attribute is the only hook a theme can use to say "every
       // drop target, whichever interaction this is".
-      this.trackedDroppables.forEach(droppable => droppable.setAttribute('qti-droppable', 'true'));
+      //
+      // Gated on `isDragDropEnabled()`: match-interaction's tabular mode is a radio grid, and its
+      // `qti-simple-associable-choice` elements are row and column headers, not drop targets. They
+      // must not reserve a dropzone's worth of space.
+      const droppableAttribute = this.isDragDropEnabled();
+      this.trackedDroppables.forEach(droppable => {
+        if (droppableAttribute) droppable.setAttribute('qti-droppable', 'true');
+        else droppable.removeAttribute('qti-droppable');
+      });
     }
 
     protected setupDragObservables(): void {

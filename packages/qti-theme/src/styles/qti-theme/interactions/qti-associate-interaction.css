@@ -10,9 +10,8 @@
       @apply dropping;
     }
     & qti-simple-associable-choice,
-    &::part(qti-simple-associable-choice),
-    /* Editor fake-drag projected into the interaction's drop-target shadow.
-       Same `drag` styling so editor previews match runtime visuals. */
+    /* A placed chip lives in a shadow root; `::part(drag)` is the only way in. This used to be
+       `::part(qti-simple-associable-choice)`, a part named after the tag. */
     &::part(drag) {
       @apply drag;
       &:hover {

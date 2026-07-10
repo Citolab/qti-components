@@ -313,25 +313,25 @@ export const Match: Story = {
       const matchItem3Id = matchItem3.getAttribute('identifier');
 
       await dragAndWaitForPlacement(matchItem1, dropZone1, () =>
-        dropZone1.querySelector(`qti-simple-associable-choice[identifier="${matchItem1Id}"]`)
+        dropZone1.shadowRoot!.querySelector(`qti-simple-associable-choice[identifier="${matchItem1Id}"]`)
       );
       await dragAndWaitForPlacement(matchItem2, dropZone2, () =>
-        dropZone2.querySelector(`qti-simple-associable-choice[identifier="${matchItem2Id}"]`)
+        dropZone2.shadowRoot!.querySelector(`qti-simple-associable-choice[identifier="${matchItem2Id}"]`)
       );
       await dragAndWaitForPlacement(matchItem3, dropZone3, () =>
-        dropZone3.querySelector(`qti-simple-associable-choice[identifier="${matchItem3Id}"]`)
+        dropZone3.shadowRoot!.querySelector(`qti-simple-associable-choice[identifier="${matchItem3Id}"]`)
       );
       await showCorrectButton.click();
 
       await step('Verify candidate correction state is applied', async () => {
         await waitFor(() => {
-          const matchItem1CandidateResponse = dropZone1.querySelector(
+          const matchItem1CandidateResponse = dropZone1.shadowRoot!.querySelector(
             `qti-simple-associable-choice[identifier="${matchItem1.getAttribute('identifier')}"]`
           ) as QtiSimpleAssociableChoice;
-          const matchItem2CandidateResponse = dropZone2.querySelector(
+          const matchItem2CandidateResponse = dropZone2.shadowRoot!.querySelector(
             `qti-simple-associable-choice[identifier="${matchItem2.getAttribute('identifier')}"]`
           ) as QtiSimpleAssociableChoice;
-          const matchItem3CandidateResponse = dropZone3.querySelector(
+          const matchItem3CandidateResponse = dropZone3.shadowRoot!.querySelector(
             `qti-simple-associable-choice[identifier="${matchItem3.getAttribute('identifier')}"]`
           ) as QtiSimpleAssociableChoice;
 
@@ -398,25 +398,25 @@ export const MatchAllToOneZone: Story = {
       expect(matchItem3Id).toBeTruthy();
 
       await dragAndWaitForPlacement(matchItem1, dropZone1, () =>
-        dropZone1.querySelector(`qti-simple-associable-choice[identifier="${matchItem1Id}"]`)
+        dropZone1.shadowRoot!.querySelector(`qti-simple-associable-choice[identifier="${matchItem1Id}"]`)
       );
       await dragAndWaitForPlacement(matchItem2, dropZone1, () =>
-        dropZone1.querySelector(`qti-simple-associable-choice[identifier="${matchItem2Id}"]`)
+        dropZone1.shadowRoot!.querySelector(`qti-simple-associable-choice[identifier="${matchItem2Id}"]`)
       );
       await dragAndWaitForPlacement(matchItem3, dropZone1, () =>
-        dropZone1.querySelector(`qti-simple-associable-choice[identifier="${matchItem3Id}"]`)
+        dropZone1.shadowRoot!.querySelector(`qti-simple-associable-choice[identifier="${matchItem3Id}"]`)
       );
       await showCorrectButton.click();
 
       await step('Verify candidate correction state is applied', async () => {
         await waitFor(() => {
-          const matchItem1CandidateResponse = dropZone1.querySelector(
+          const matchItem1CandidateResponse = dropZone1.shadowRoot!.querySelector(
             `qti-simple-associable-choice[identifier="${matchItem1Id}"]`
           ) as QtiSimpleAssociableChoice;
-          const matchItem2CandidateResponse = dropZone1.querySelector(
+          const matchItem2CandidateResponse = dropZone1.shadowRoot!.querySelector(
             `qti-simple-associable-choice[identifier="${matchItem2Id}"]`
           ) as QtiSimpleAssociableChoice;
-          const matchItem3CandidateResponse = dropZone1.querySelector(
+          const matchItem3CandidateResponse = dropZone1.shadowRoot!.querySelector(
             `qti-simple-associable-choice[identifier="${matchItem3Id}"]`
           ) as QtiSimpleAssociableChoice;
 
