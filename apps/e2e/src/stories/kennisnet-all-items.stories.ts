@@ -813,12 +813,16 @@ export const PuntSelecteren: Story = {
  * input renders per-OS), and the two custom-interaction packages (they execute author-supplied
  * script).
  *
- * ITEM018 and ITEM019 are weaker than they look. `qti-hotspot-interaction` and
- * `qti-graphic-order-interaction` ignore a preset `response`: their `qti-hotspot-choice` children
- * come up carrying only `radio` — no `checked`, no `candidate-*`, no `correct-response` — so both
- * baselines capture an untouched question and neither shows a selection, a correction or an answer
- * key. Their baselines still lock the layout, and they will move the day that bug is fixed. Do not
- * read a green ITEM018 as "hotspot selection still renders correctly"; nothing there renders it.
+ * ITEM019 is weaker than it looks: `qti-graphic-order-interaction` renders no order numbers for a
+ * preset response, and its answer-key copy comes up empty. The baseline locks the layout and will
+ * move the day that is fixed.
+ *
+ * And none of these are as strong as a passing run suggests. The vrt project allows
+ * `allowedMismatchedPixelRatio: 0.01` — about 60k pixels of a retina capture. A hotspot circle, a
+ * radio button, a checkmark or a correction badge is far smaller than that, so a change to one can
+ * repaint it a completely different colour without failing a single assertion. Verified: painting
+ * every hotspot magenta leaves VRT at 22/22. Treat VRT as a guard against layout moves, not against
+ * small-element paint.
  */
 
 /** ITEM017 — Combineervraag (associate). */

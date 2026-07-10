@@ -1,0 +1,132 @@
+/*
+ * qti-hotspot-interaction — a shape drawn over a picture.
+ *
+ * The hotspot has no shadow content, so there are no parts to reach: `qti-hotspot-choice` is an
+ * empty element that `positionShapes()` gives `left/top/width/height` and, for a circle, a
+ * `border-radius: 50%`, all inline. Everything below is painted on the element itself and on its
+ * `::after`, and keyed on the same custom states every other choice uses:
+ *
+ *   :state(checked)              the candidate picked this one
+ *   :state(candidate-correct)    ...and it was right
+ *   :state(candidate-incorrect)  ...and it was wrong
+ *   :state(correct-response)     this is the answer, shown by `show-correct-response`
+ *   :state(disabled) / :state(readonly)
+ *
+ * Same vocabulary as qti-simple-choice, so a reader who knows the choice interaction already knows
+ * this one.
+ *
+ * `border: …` needs `!important` here, and only here. The base theme's `.spot` sets
+ * `border: 0 !important` inside `@layer qti-components`, and an important declaration wins over a
+ * normal one no matter which layer it comes from — unlayered kennisnet cannot outrank it. Layers
+ * reorder normal declarations, not important ones.
+ *
+ * A shape sits on top of an image, so paint may never move it: the border is always the same width
+ * and `box-sizing: border-box` is already forced by `.spot`. States change colour, never geometry.
+ * See [[layout-invariance-contract]].
+ */
+
+qti-hotspot-interaction {
+  qti-hotspot-choice {
+    /* The idle shape: a visible outline, nothing filled, so the picture stays readable. */
+    border: var(--qti-hotspot-border-width, 3px) solid var(--qti-border-color) !important;
+    background-color: transparent;
+    cursor: pointer;
+    transition:
+      background-color 0.15s ease,
+      border-color 0.15s ease;
+
+    &:hover {
+      border-color: var(--qti-border-active);
+      background-color: color-mix(in srgb, var(--qti-border-active) 12%, transparent);
+    }
+
+    &:focus-visible {
+      outline: var(--qti-focus-border-width) solid var(--qti-focus-color);
+      outline-offset: 2px;
+    }
+
+    /*
+     * `show-correct-response` marks the right shape `correct-response` and every other shape
+     * `incorrect-response`. The second is not worth drawing; the first gets the answer-key blue,
+     * the same --qti-answer-* trio the other interactions use, so "this is the answer" looks the
+     * same wherever the candidate meets it.
+     *
+     * Declared FIRST, on purpose. Everything below is about the candidate's own pick, and at equal
+     * specificity the last rule wins — so a shape the candidate selected always shows what the
+     * selection means, and this only ever speaks for the correct shape they *missed*. Written after
+     * `candidate-correct` it painted the shape they got right blue, hiding the green.
+     */
+    &:state(correct-response) {
+      border-color: var(--qti-answer-border) !important;
+      background-color: color-mix(in srgb, var(--qti-answer-bg) 75%, transparent);
+    }
+
+    /* Chosen. Filled, not merely outlined — an outline alone is hard to see against a busy image. */
+    &:state(checked) {
+      border-color: var(--qti-selected-bg) !important;
+      background-color: color-mix(in srgb, var(--qti-selected-bg) 35%, transparent);
+    }
+
+    /*
+     * Candidate correction. The candidate's own pick, judged. Only a checked shape can carry these
+     * states, so they always land on a filled shape and only ever restate its colour.
+     */
+    &:state(candidate-correct) {
+      border-color: var(--qti-correct) !important;
+      background-color: color-mix(in srgb, var(--qti-correct) 35%, transparent);
+    }
+
+    &:state(candidate-incorrect) {
+      border-color: var(--qti-incorrect) !important;
+      background-color: color-mix(in srgb, var(--qti-incorrect) 35%, transparent);
+    }
+
+    &:state(disabled),
+    &:state(readonly) {
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+  }
+
+  /*
+   * A `poly` shape cannot take a border — it is clipped to an arbitrary path — so it says the same
+   * things with a fill. `clip-path` already trims whatever we paint to the polygon.
+   */
+  qti-hotspot-choice[shape='poly'] {
+    border: 0 !important;
+
+    /* Same order, same reason: the answer key first, the candidate's own pick last. */
+    &:state(correct-response) {
+      background-color: color-mix(in srgb, var(--qti-answer-bg) 80%, transparent);
+    }
+
+    &:state(checked) {
+      background-color: color-mix(in srgb, var(--qti-selected-bg) 40%, transparent);
+    }
+
+    &:state(candidate-correct) {
+      background-color: color-mix(in srgb, var(--qti-correct) 40%, transparent);
+    }
+
+    &:state(candidate-incorrect) {
+      background-color: color-mix(in srgb, var(--qti-incorrect) 40%, transparent);
+    }
+  }
+}
+
+/*
+ * The full correct response is a *clone* of the whole interaction, wrapped in
+ * `.full-correct-response`, with the correct identifiers as its response. So inside that wrapper a
+ * shape is `checked`, not `correct-response`, and without this block the answer key would be drawn
+ * in the candidate's selection colour.
+ */
+.full-correct-response qti-hotspot-interaction qti-hotspot-choice {
+  &:state(checked) {
+    border-color: var(--qti-answer-border) !important;
+    background-color: color-mix(in srgb, var(--qti-answer-bg) 75%, transparent);
+  }
+
+  &[shape='poly']:state(checked) {
+    background-color: color-mix(in srgb, var(--qti-answer-bg) 80%, transparent);
+  }
+}

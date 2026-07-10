@@ -209,6 +209,73 @@ and the badges silently stopped appearing. It reads `chipsIn(drop)` now. **Every
 
 ---
 
+### 0.46 Four more, found while writing `kennisnet/qti/hotspot-interaction.scss`
+
+**`!important` inside `@layer` cannot be beaten by an unlayered normal declaration.**
+`.spot` in `qti-base.css` sets `border: 0 !important` inside `@layer qti-components`. The whole
+premise that "kennisnet is unlayered and therefore wins" holds only for *normal* declarations —
+layers reorder normal declarations, and reverse themselves for important ones, but an important
+declaration always beats a normal one whatever the layer. So `hotspot-interaction.scss` has to write
+`border: … !important` to draw a hotspot outline at all.
+
+This is the single strongest argument for Phase 3/4. Every `!important` in `qti-base.css` forces an
+`!important` in kennisnet, and each one is invisible until someone tries to override it. **Grep
+`qti-base.css` for `!important` before Phase 4 and treat each as a layering decision, not a
+formatting detail.** Verified in Chromium against the compiled `dist/item.css` +
+`dist/kennisnet-override.css`, in that order.
+
+**Not every choice element has parts.**
+`qti-hotspot-choice` has no `render()` and no shadow content — it is an empty element that
+`positionShapes()` gives `left/top/width/height` and, for a circle, an inline `border-radius: 50%`.
+There is nothing to reach with `::part()`. It carries the full state vocabulary all the same
+(`checked`, `candidate-correct`, `candidate-incorrect`, `correct-response`, `incorrect-response`,
+`disabled`, `readonly`) because those come from `ChoicesMixin` and `ActiveElementMixin`. **States are
+the portable contract; parts are not universal.** A `correction` part here would mean giving the
+element a shadow root and a badge box, on top of an image — not obviously wanted.
+
+**Kennisnet paints no `:state(correct-response)` anywhere.**
+Grep confirms it: the answer key in kennisnet is *always* the cloned interaction inside
+`.full-correct-response`, never a state on the live one. Only the base theme paints
+`:state(correct-response)`. Any interaction styled during the merge needs **both** paths, and they
+must agree:
+
+- a state rule for `show-correct-response` (the live interaction), and
+- a `.full-correct-response …:state(checked)` rule for the clone, where the correct answer arrives
+  as the candidate's *selection*, not as `correct-response`.
+
+**Ordering rule, now that both exist.** Within one element, at equal specificity, declare
+`:state(correct-response)` **first** and the candidate's own states (`checked`, then
+`candidate-*`) after it. Written the other way round, a shape the candidate got *right* paints
+answer-key blue and hides the green. The answer key should only ever speak for the correct answer
+the candidate **missed**. Verified by computed style across all eight state combinations.
+
+**VRT tolerates ~60,000 changed pixels, so it cannot see small elements.**
+The `vrt` project sets `allowedMismatchedPixelRatio: 0.01` (`vitest.config.ts`). One percent of a
+retina capture of a 906px item is on the order of 60k pixels. A hotspot circle, a radio button, a
+checkmark, a drag handle or a correction badge is far below that. **Painting every hotspot in
+`ITEM018` 6px solid magenta leaves VRT at 22/22** — confirmed by regenerating the baseline and
+looking at it.
+
+This is the explanation for the earlier "the tabular answer key changed in Storybook but VRT never
+noticed" episode: the radios were simply too small to trip the ratio. Consequences for the merge:
+
+- VRT guards **layout**, not small-element paint. Do not read a green run as "the states still
+  paint correctly".
+- Phases 2–4 move paint between files. Verify state colours with a computed-style probe against the
+  compiled `dist/item.css` + `dist/kennisnet-override.css`, not with screenshots.
+- Consider dropping the ratio to ~0.0005 as part of Phase 5, once the baselines are stable. That is
+  its own change with its own churn; do not fold it into a paint phase.
+
+**A preset `response` does work in a story, but not when mounted via `innerHTML`.**
+Worth knowing because it makes specs lie. `ITEM018` renders its hotspot `checked` and
+`candidate-incorrect` exactly as authored. The same markup assigned to `document.body.innerHTML` in
+a spec leaves every choice unchecked and the interaction's `response` reading back `''`:
+`@watch('response', { waitUntilFirstUpdate: true })` never fires for the initial value, and by the
+time `ChoicesMixin.firstUpdated()` compensates, `_syncChoicesFromDOM` has filtered the response to
+`''` because `validIdentifiers` was empty before the choices upgraded. Applies to
+`qti-choice-interaction` too. **Do not conclude "the state is never set" from an `innerHTML`
+fixture** — mount through Lit, or assign `el.response` after the first update.
+
 ### 0.5 Layering — agreed stack, to be applied during the merge (Phase 4)
 
 Deferred by instruction, but decided. Recorded here so Phase 4 does not re-derive it.

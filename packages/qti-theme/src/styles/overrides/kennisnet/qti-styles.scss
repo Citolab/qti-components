@@ -13,6 +13,7 @@
 @use './qti/inline-choice-interaction';
 @use './qti/select-point-interaction';
 @use './qti/hottext-interaction';
+@use './qti/hotspot-interaction';
 
 qti-item-body {
   img {
