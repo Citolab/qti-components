@@ -94,11 +94,29 @@ test-container {
  * they must agree on the box by hand. They do — see the `border: 1px solid transparent` in
  * kennisnet/qti/order-interaction.scss, and drag-drop.invariance.spec.ts which measures it.
  */
-:state(drag),
+/*
+ * ...and not graphic-gap-match. Its chips are dropped onto an image, where a filled purple card
+ * with a grip covers the very thing the candidate is looking at. They keep the base theme's plain
+ * chip. That rules out `qti-associable-hotspot::part(drag)` (only graphic-gap-match and
+ * graphic-associate own a hotspot), and takes a `:not()` for the other two homes — the bank chip,
+ * which is any `:state(drag)` inside the interaction, and the clone, which lives on document.body
+ * and so is identified by the interaction name it was stamped with.
+ *
+ * The clone needs BOTH exclusions, not just the `[data-drag-clone]` one. It is reparented to
+ * document.body, so `:not(qti-graphic-gap-match-interaction *)` is trivially true for it, and it
+ * would take the purple through the `:state(drag)` selector instead. A probe caught that; nothing
+ * in the suite would have.
+ *
+ * `:where(:not(...))`, never a bare `:not(...)`. `:not()` takes the specificity of its argument, so
+ * the bare form scored (0,2,1) here and started beating `:state(drag):state(placeholder)` at
+ * (0,2,0) — the purple chip painted straight over the hole a lifted chip leaves behind, in order
+ * and gap-match. `:where()` contributes nothing, so an exclusion stays an exclusion and does not
+ * quietly promote the rule it is attached to. Caught by the ITEM013 baseline.
+ */
+:state(drag):where(:not(qti-graphic-gap-match-interaction *, [data-drag-interaction='qti-graphic-gap-match-interaction'])),
 qti-gap::part(drag),
-qti-associable-hotspot::part(drag),
 qti-simple-associable-choice::part(drag),
-[data-drag-clone] {
+[data-drag-clone]:where(:not([data-drag-interaction='qti-graphic-gap-match-interaction'])) {
   color: #fff;
   background-color: var(--primary-color);
   border-color: var(--primary-color);
@@ -142,9 +160,9 @@ qti-simple-associable-choice::part(drag),
  * to `part="correction"`, so the scoping can go — and order's and associate's placed chips get the
  * grip they never had.
  */
-:state(drag)::part(control)::before,
-::part(drag-control)::before,
-[data-drag-clone]::before {
+:state(drag):where(:not(qti-graphic-gap-match-interaction *, [data-drag-interaction='qti-graphic-gap-match-interaction']))::part(control)::before,
+:where(:not(qti-associable-hotspot))::part(drag-control)::before,
+[data-drag-clone]:where(:not([data-drag-interaction='qti-graphic-gap-match-interaction']))::before {
   content: '';
   display: inline-block;
   vertical-align: middle;
