@@ -10,6 +10,7 @@ export * from './context/session.context';
 export * from './context/test.context';
 
 export * from './styles/box-sizing.styles';
+export * from './styles/correction.styles';
 export * from './styles/drop-region.styles';
 
 export * from './abstract/interaction';

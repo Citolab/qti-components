@@ -1,8 +1,10 @@
 import { css } from 'lit';
 
+import { correctionPart } from '@qti-components/base';
+
 import type { CSSResultGroup } from 'lit';
 
-const styles: CSSResultGroup = css`
+const own = css`
   :host {
     display: inline-block;
     vertical-align: baseline;
@@ -59,5 +61,7 @@ const styles: CSSResultGroup = css`
     vertical-align: middle;
   }
 `;
+
+const styles: CSSResultGroup = [correctionPart, own];
 
 export default styles;

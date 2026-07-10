@@ -147,6 +147,7 @@ export class QtiTextEntryInteraction extends Interaction {
         ?disabled="${this.disabled}"
         ?readonly="${this.readonly}"
       />
+      <span part=${this.correctionPart} aria-hidden="true"></span>
       ${this._showCorrectOverlay && this.correctResponse
         ? html`<div part="correct">${this.correctResponse}</div>`
         : nothing}

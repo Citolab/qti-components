@@ -131,8 +131,7 @@ export class QtiOrderInteraction extends DragDropSlottedSortableMixin(SlottedBas
     const dropTargets = Array.from(this.shadowRoot.querySelectorAll<HTMLElement>(`[part~='drop']`));
     const placedChoices = dropTargets.flatMap(drop => this.chipsIn(drop) as QtiSimpleChoice[]);
     placedChoices.forEach(choice => {
-      choice.internals.states.delete('candidate-correct');
-      choice.internals.states.delete('candidate-incorrect');
+      choice.candidateCorrection = null;
     });
 
     if (!show) return;
@@ -148,9 +147,9 @@ export class QtiOrderInteraction extends DragDropSlottedSortableMixin(SlottedBas
       const expectedIdentifier = correctByDrop.get(index);
       const actualIdentifier = placedChoice.getAttribute('identifier');
       if (expectedIdentifier && actualIdentifier === expectedIdentifier) {
-        placedChoice.internals.states.add('candidate-correct');
+        placedChoice.candidateCorrection = 'correct';
       } else {
-        placedChoice.internals.states.add('candidate-incorrect');
+        placedChoice.candidateCorrection = 'incorrect';
       }
     });
   }

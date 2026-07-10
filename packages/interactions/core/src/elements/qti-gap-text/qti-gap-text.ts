@@ -18,7 +18,8 @@ export class QtiGapText extends ActiveElementMixin(LitElement, 'qti-gap-text') {
 
   override render() {
     return html`<div part="control"></div>
-      <slot part="label"></slot>`;
+      <slot part="label"></slot>
+      <span part=${this.correctionPart} aria-hidden="true"></span>`;
   }
 }
 

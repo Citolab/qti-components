@@ -52,7 +52,8 @@ export class QtiSimpleChoice extends ActiveElementMixin(LitElement, 'qti-simple-
   override render() {
     return html`<div part="control" tabindex="0"><div part="control-mark"></div></div>
       ${this.marker ? html`<div id="label" part="marker">${this.marker}</div>` : nothing}
-      <slot part="label"></slot>`;
+      <slot part="label"></slot>
+      <span part=${this.correctionPart} aria-hidden="true"></span>`;
   }
 }
 

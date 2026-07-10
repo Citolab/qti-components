@@ -5,15 +5,8 @@ qti-text-entry-interaction {
   border-radius: var(--bs-border-radius);
   margin: 0.2rem 0.2rem 0.2rem 0;
 
-  // Status icon box; the glyph is drawn as an SVG mask by the state rules below (only renders once a
-  // state sets `content` via the status-icon mixin).
-  &::before {
-    position: absolute;
-    top: 0.35rem;
-    left: 0.5rem;
-    width: 1rem;
-    height: 1rem;
-  }
+  // The status glyph is `part="correction"` on this element now — an out-of-flow badge anchored to
+  // the top-right corner, styled once in kennisnet-override.scss for every corrected element.
 
   &::part(input) {
     border: none;
@@ -27,20 +20,11 @@ qti-text-entry-interaction {
 
   &:state(candidate-correct),
   &:state(candidate-partially-correct),
-  &:state(candidate-incorrect) {
-    &::part(input) {
-      margin-left: 1.5rem;
-    }
-  }
-
   &:state(candidate-correct) {
     background-color: var(--bs-success-bg-subtle);
     border-color: var(--bs-success-border-subtle);
     color: var(--bs-success-text-emphasis);
 
-    &::before {
-      @include status-icon(var(--fa-check-mask), var(--bs-success-text-emphasis));
-    }
   }
 
   &:state(candidate-partially-correct) {
@@ -48,9 +32,6 @@ qti-text-entry-interaction {
     border-color: var(--bs-warning-border-subtle);
     color: var(--bs-warning-text-emphasis);
 
-    &::before {
-      @include status-icon(var(--fa-minus-mask), var(--bs-warning-border-subtle));
-    }
   }
 
   &:state(candidate-incorrect) {
@@ -58,9 +39,6 @@ qti-text-entry-interaction {
     border-color: var(--bs-danger-border-subtle);
     color: var(--bs-danger-text-emphasis);
 
-    &::before {
-      @include status-icon(var(--fa-times-mask), var(--bs-danger-text-emphasis));
-    }
   }
 }
 

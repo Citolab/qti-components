@@ -74,43 +74,9 @@ qti-order-interaction {
       background-color: var(--qti-correct-light);
     }
 
-    // Correct/incorrect badge in the top-right of every placed card after "Nakijken". The web component
-    // only sets the :state() on the card and renders no badge element, so we draw the round background
-    // (::before) and the ✓/✗ glyph (::after) as pseudo-elements on the exposed part. The glyph arrives —
-    // as with the other interactions — as an SVG mask; the spike ships no FA webfont.
-    &:state(candidate-correct)::before,
-    &:state(candidate-correct)::after,
-    &:state(candidate-incorrect)::before,
-    &:state(candidate-incorrect)::after {
-      content: '';
-      position: absolute;
-      top: -8px;
-      right: -8px;
-      width: 25px;
-      height: 25px;
-      border-radius: 50%;
-      z-index: 10;
-    }
-
-    &:state(candidate-correct)::before {
-      background-color: var(--qti-correct);
-    }
-
-    &:state(candidate-incorrect)::before {
-      background-color: var(--qti-incorrect);
-    }
-
-    &:state(candidate-correct)::after {
-      @include status-icon(var(--fa-check-mask), white);
-      mask-size: 14px;
-      -webkit-mask-size: 14px;
-    }
-
-    &:state(candidate-incorrect)::after {
-      @include status-icon(var(--fa-times-mask), white);
-      mask-size: 14px;
-      -webkit-mask-size: 14px;
-    }
+    /* The badge is `part="correction"` on the choice itself now — one implementation, in
+       kennisnet-override.scss, for every corrected element. The comment that used to live here
+       said "the web component renders no badge element". It does. */
   }
 
   &::part(container) {

@@ -25,9 +25,6 @@ qti-hottext-interaction {
       border-color: var(--bs-success-border-subtle);
       color: var(--bs-success-text-emphasis);
 
-      &::before {
-        @include status-icon(var(--fa-check-mask), var(--bs-success-text-emphasis));
-      }
     }
 
     &:state(candidate-incorrect) {
@@ -35,9 +32,6 @@ qti-hottext-interaction {
       border-color: var(--bs-danger-border-subtle);
       color: var(--bs-danger-text-emphasis);
 
-      &::before {
-        @include status-icon(var(--fa-times-mask), var(--bs-danger-text-emphasis));
-      }
     }
   }
 }

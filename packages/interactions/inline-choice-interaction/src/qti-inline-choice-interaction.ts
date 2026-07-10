@@ -105,6 +105,7 @@ export class QtiInlineChoiceInteraction extends Interaction {
         </button>
         <slot @slotchange=${this.#onChoicesSlotChange}></slot>
       </div>
+      <span part=${this.correctionPart} aria-hidden="true"></span>
       ${this.correctOption}
     `;
   }

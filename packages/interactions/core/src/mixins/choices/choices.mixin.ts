@@ -126,8 +126,7 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
           : [];
 
       this._choiceElements.forEach(choice => {
-        choice.internals.states.delete('candidate-correct');
-        choice.internals.states.delete('candidate-incorrect');
+        choice.candidateCorrection = null;
         if (!show) {
           return;
         }
@@ -135,9 +134,9 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
           return; // Not checked, so no feedback
         }
         if (correctResponseArray.includes(choice.identifier)) {
-          choice.internals.states.add('candidate-correct');
+          choice.candidateCorrection = 'correct';
         } else {
-          choice.internals.states.add('candidate-incorrect');
+          choice.candidateCorrection = 'incorrect';
         }
       });
 

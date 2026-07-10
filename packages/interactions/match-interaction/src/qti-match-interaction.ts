@@ -281,8 +281,7 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
       const selectedChoices = (targetChoice as unknown as { drags: readonly QtiSimpleAssociableChoice[] }).drags;
 
       selectedChoices.forEach(selectedChoice => {
-        selectedChoice.internals.states.delete('candidate-correct');
-        selectedChoice.internals.states.delete('candidate-incorrect');
+        selectedChoice.candidateCorrection = null;
 
         if (!show) {
           return;
@@ -290,9 +289,9 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
 
         const isCorrect = targetMatches.find(m => m.source === selectedChoice.identifier)?.source !== undefined;
         if (isCorrect) {
-          selectedChoice.internals.states.add('candidate-correct');
+          selectedChoice.candidateCorrection = 'correct';
         } else {
-          selectedChoice.internals.states.add('candidate-incorrect');
+          selectedChoice.candidateCorrection = 'incorrect';
         }
       });
     });

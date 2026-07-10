@@ -1,9 +1,10 @@
 import { css } from 'lit';
 
-import { boxSizing, dropRegion } from '@qti-components/base';
+import { boxSizing, correctionPart, dropRegion } from '@qti-components/base';
 
 export default [
   boxSizing,
+  correctionPart,
   dropRegion,
   css`
     :host {

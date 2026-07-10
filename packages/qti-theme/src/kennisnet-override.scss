@@ -174,22 +174,6 @@ qti-simple-associable-choice::part(drag):state(candidate-correct),
   box-shadow: none;
 }
 
-:state(drag):state(candidate-correct)::after,
-qti-gap::part(drag):state(candidate-correct)::after,
-qti-associable-hotspot::part(drag):state(candidate-correct)::after,
-qti-simple-associable-choice::part(drag):state(candidate-correct)::after,
-[data-drag-clone]:state(candidate-correct)::after {
-  content: '';
-  display: inline-block;
-  vertical-align: middle;
-  width: 1em;
-  height: 1em;
-  margin-left: 0.4em;
-  background-color: var(--qti-correct);
-  mask: var(--fa-check-mask) no-repeat center / contain;
-  -webkit-mask: var(--fa-check-mask) no-repeat center / contain;
-}
-
 :state(drag):state(candidate-incorrect),
 qti-gap::part(drag):state(candidate-incorrect),
 qti-associable-hotspot::part(drag):state(candidate-incorrect),
@@ -199,22 +183,6 @@ qti-simple-associable-choice::part(drag):state(candidate-incorrect),
   color: var(--qti-incorrect);
   border: var(--qti-border-thickness) solid var(--qti-incorrect);
   box-shadow: none;
-}
-
-:state(drag):state(candidate-incorrect)::after,
-qti-gap::part(drag):state(candidate-incorrect)::after,
-qti-associable-hotspot::part(drag):state(candidate-incorrect)::after,
-qti-simple-associable-choice::part(drag):state(candidate-incorrect)::after,
-[data-drag-clone]:state(candidate-incorrect)::after {
-  content: '';
-  display: inline-block;
-  vertical-align: middle;
-  width: 1em;
-  height: 1em;
-  margin-left: 0.4em;
-  background-color: var(--qti-incorrect);
-  mask: var(--fa-times-mask) no-repeat center / contain;
-  -webkit-mask: var(--fa-times-mask) no-repeat center / contain;
 }
 
 /*
@@ -247,4 +215,36 @@ span.correct-option::after {
 qti-gap-text {
   display: flex !important;
   align-items: center !important;
+}
+
+
+/*
+ * The candidate-correction badge.
+ *
+ * One rule for every corrected element — a choice, a hottext, a gap-text chip in the bank, that
+ * same chip inside a gap. `part="correction correction-correct"` is a token list, and a token
+ * survives `exportparts`, so a bare `::part()` reaches the badge through a drop target's shadow
+ * root. Parts do not chain; tokens do.
+ *
+ * It replaces six implementations of one idea: four `::after` glyph blocks here, an
+ * `::before`/`::after` pair in order-interaction.scss, and a `.correct-option` <span> that
+ * gap-match and match built in JavaScript with inline styles.
+ *
+ * Out of flow, anchored to the host's corner — so showing it moves nothing. See correction.styles.
+ */
+/*
+ * `display` stays out of this rule. A document `::part()` rule beats the element's own shadow
+ * styles, so `display: grid` here would override the shadow's `display: none` and paint an empty
+ * white ring on every uncorrected element. Only the two state rules below turn the badge on.
+ */
+::part(correction-correct) {
+  background-color: var(--qti-correct);
+  mask: var(--fa-check-mask) no-repeat center / contain;
+  -webkit-mask: var(--fa-check-mask) no-repeat center / contain;
+}
+
+::part(correction-incorrect) {
+  background-color: var(--qti-incorrect);
+  mask: var(--fa-times-mask) no-repeat center / contain;
+  -webkit-mask: var(--fa-times-mask) no-repeat center / contain;
 }

@@ -1,9 +1,10 @@
 import { css } from 'lit';
 
-import { boxSizing } from '@qti-components/base';
+import { boxSizing, correctionPart } from '@qti-components/base';
 
 export default [
   boxSizing,
+  correctionPart,
   css`
     :host {
       display: inline-block;
@@ -90,7 +91,10 @@ export default [
 
     :host {
       position: relative;
-      anchor-name: --text-entry-host;
+      /* Both names, one declaration: anchor-name is not additive, and this rule comes after the
+         shared correctionPart fragment, so declaring only --text-entry-host would silently drop the
+         correction badge's anchor. */
+      anchor-name: --text-entry-host, --qti-correction-anchor;
     }
 
     /*

@@ -645,7 +645,12 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
         // inner part up one level, renamed, so a theme can still reach the drag handle as
         // `::part(drag-control)`. Drawing the grip on the chip host instead would have worked too,
         // but it moves the glyph for every *other* interaction's chips as well.
-        cleanClone.setAttribute('exportparts', 'control: drag-control, label: drag-label');
+        // `correction*` forwarded under its own name: the theme reaches the badge with a bare
+        // `::part(correction-correct)` whether the chip is in the bank or inside this target.
+        cleanClone.setAttribute(
+          'exportparts',
+          'control: drag-control, label: drag-label, correction, correction-correct, correction-incorrect'
+        );
         // Cloned once, here — never inside `render()`, which would mint a new node per update and
         // lose focus, transitions and the chip's own shadow root.
         this.placeChip(droppable, cleanClone);

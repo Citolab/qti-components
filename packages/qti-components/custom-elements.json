@@ -722,6 +722,20 @@
           "members": [
             {
               "kind": "field",
+              "name": "_candidateCorrection",
+              "type": {
+                "text": "'correct' | 'incorrect' | 'partially-correct' | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "How this interaction was judged. Reactive, so an interaction that renders a `part=\"correction\"`\nbadge (text-entry, extended-text) re-renders its part list when the verdict changes; a\nCustomStateSet is not observable. The states are written too, so every existing\n`:state(candidate-*)` selector keeps working.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_choiceElements",
               "type": {
                 "text": "Choice[]"
@@ -1246,6 +1260,20 @@
                 "text": "ConfigContext"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "correctionPart",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "description": "The badge's part list. `correction` always; `correction-correct` etc. only when judged.",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -2193,6 +2221,20 @@
             },
             {
               "kind": "field",
+              "name": "_candidateCorrection",
+              "type": {
+                "text": "CandidateCorrection"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "The correction badge lives in this element's shadow root, as `part=\"correction\"`.\n\nIt is *reactive* rather than derived from `internals.states`, because a CustomStateSet is not\nobservable and the badge's part list has to change with it. The states are still written, so\nevery existing `:state(candidate-correct)` selector keeps working.\n\nWhy a part token and not a shadow rule: a chip lives in three places, and in one of them —\nrendered inside a drop target's shadow root — the document cannot reach its badge at all.\nParts do not chain, so `::part(drag)::part(correction)` is inert. But a token *does* survive\n`exportparts`, so `::part(correction-correct)` reaches the badge in the bank, on the floating\nclone, and inside a gap. Verified in Chromium.",
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_interactionContext",
               "type": {
                 "text": "Readonly<InteractionContext> | undefined"
@@ -2247,6 +2289,32 @@
               "name": "#syncChoiceRole",
               "privacy": "private",
               "description": "Apply what the interaction published. No provider (standalone) means no role.\n\n`radio` / `checkbox` are both ARIA roles and custom states. `drag` is only a custom\nstate — it is not a valid ARIA role — and it is derived positionally, by testing this\nelement against the interaction's `draggablesSelector`. In match-interaction the same tag\nis a drag in one match-set and a drop target in the other.",
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "candidateCorrection",
+              "type": {
+                "text": "CandidateCorrection"
+              },
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "correctionPart",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "description": "The badge's part list. `correction` always; `correction-correct` etc. only when judged.",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -2662,6 +2730,20 @@
             },
             {
               "kind": "field",
+              "name": "_candidateCorrection",
+              "type": {
+                "text": "CandidateCorrection"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "The correction badge lives in this element's shadow root, as `part=\"correction\"`.\n\nIt is *reactive* rather than derived from `internals.states`, because a CustomStateSet is not\nobservable and the badge's part list has to change with it. The states are still written, so\nevery existing `:state(candidate-correct)` selector keeps working.\n\nWhy a part token and not a shadow rule: a chip lives in three places, and in one of them —\nrendered inside a drop target's shadow root — the document cannot reach its badge at all.\nParts do not chain, so `::part(drag)::part(correction)` is inert. But a token *does* survive\n`exportparts`, so `::part(correction-correct)` reaches the badge in the bank, on the floating\nclone, and inside a gap. Verified in Chromium.",
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_interactionContext",
               "type": {
                 "text": "Readonly<InteractionContext> | undefined"
@@ -2716,6 +2798,32 @@
               "name": "#syncChoiceRole",
               "privacy": "private",
               "description": "Apply what the interaction published. No provider (standalone) means no role.\n\n`radio` / `checkbox` are both ARIA roles and custom states. `drag` is only a custom\nstate — it is not a valid ARIA role — and it is derived positionally, by testing this\nelement against the interaction's `draggablesSelector`. In match-interaction the same tag\nis a drag in one match-set and a drop target in the other.",
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "candidateCorrection",
+              "type": {
+                "text": "CandidateCorrection"
+              },
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "correctionPart",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "description": "The badge's part list. `correction` always; `correction-correct` etc. only when judged.",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -3012,6 +3120,20 @@
             },
             {
               "kind": "field",
+              "name": "_candidateCorrection",
+              "type": {
+                "text": "CandidateCorrection"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "The correction badge lives in this element's shadow root, as `part=\"correction\"`.\n\nIt is *reactive* rather than derived from `internals.states`, because a CustomStateSet is not\nobservable and the badge's part list has to change with it. The states are still written, so\nevery existing `:state(candidate-correct)` selector keeps working.\n\nWhy a part token and not a shadow rule: a chip lives in three places, and in one of them —\nrendered inside a drop target's shadow root — the document cannot reach its badge at all.\nParts do not chain, so `::part(drag)::part(correction)` is inert. But a token *does* survive\n`exportparts`, so `::part(correction-correct)` reaches the badge in the bank, on the floating\nclone, and inside a gap. Verified in Chromium.",
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_interactionContext",
               "type": {
                 "text": "Readonly<InteractionContext> | undefined"
@@ -3066,6 +3188,32 @@
               "name": "#syncChoiceRole",
               "privacy": "private",
               "description": "Apply what the interaction published. No provider (standalone) means no role.\n\n`radio` / `checkbox` are both ARIA roles and custom states. `drag` is only a custom\nstate — it is not a valid ARIA role — and it is derived positionally, by testing this\nelement against the interaction's `draggablesSelector`. In match-interaction the same tag\nis a drag in one match-set and a drop target in the other.",
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "candidateCorrection",
+              "type": {
+                "text": "CandidateCorrection"
+              },
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "correctionPart",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "description": "The badge's part list. `correction` always; `correction-correct` etc. only when judged.",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -3330,6 +3478,20 @@
             },
             {
               "kind": "field",
+              "name": "_candidateCorrection",
+              "type": {
+                "text": "CandidateCorrection"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "The correction badge lives in this element's shadow root, as `part=\"correction\"`.\n\nIt is *reactive* rather than derived from `internals.states`, because a CustomStateSet is not\nobservable and the badge's part list has to change with it. The states are still written, so\nevery existing `:state(candidate-correct)` selector keeps working.\n\nWhy a part token and not a shadow rule: a chip lives in three places, and in one of them —\nrendered inside a drop target's shadow root — the document cannot reach its badge at all.\nParts do not chain, so `::part(drag)::part(correction)` is inert. But a token *does* survive\n`exportparts`, so `::part(correction-correct)` reaches the badge in the bank, on the floating\nclone, and inside a gap. Verified in Chromium.",
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_interactionContext",
               "type": {
                 "text": "Readonly<InteractionContext> | undefined"
@@ -3389,6 +3551,32 @@
               "name": "#syncChoiceRole",
               "privacy": "private",
               "description": "Apply what the interaction published. No provider (standalone) means no role.\n\n`radio` / `checkbox` are both ARIA roles and custom states. `drag` is only a custom\nstate — it is not a valid ARIA role — and it is derived positionally, by testing this\nelement against the interaction's `draggablesSelector`. In match-interaction the same tag\nis a drag in one match-set and a drop target in the other.",
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "candidateCorrection",
+              "type": {
+                "text": "CandidateCorrection"
+              },
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "correctionPart",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "description": "The badge's part list. `correction` always; `correction-correct` etc. only when judged.",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -3725,6 +3913,20 @@
             },
             {
               "kind": "field",
+              "name": "_candidateCorrection",
+              "type": {
+                "text": "CandidateCorrection"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "The correction badge lives in this element's shadow root, as `part=\"correction\"`.\n\nIt is *reactive* rather than derived from `internals.states`, because a CustomStateSet is not\nobservable and the badge's part list has to change with it. The states are still written, so\nevery existing `:state(candidate-correct)` selector keeps working.\n\nWhy a part token and not a shadow rule: a chip lives in three places, and in one of them —\nrendered inside a drop target's shadow root — the document cannot reach its badge at all.\nParts do not chain, so `::part(drag)::part(correction)` is inert. But a token *does* survive\n`exportparts`, so `::part(correction-correct)` reaches the badge in the bank, on the floating\nclone, and inside a gap. Verified in Chromium.",
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_dragDrop",
               "type": {
                 "text": "Readonly<DragDropState> | undefined"
@@ -3802,6 +4004,32 @@
               "readonly": true,
               "default": "true",
               "description": "Opt-in marker read by `DragDropSlottedMixin`; see qti-gap."
+            },
+            {
+              "kind": "field",
+              "name": "candidateCorrection",
+              "type": {
+                "text": "CandidateCorrection"
+              },
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "correctionPart",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "description": "The badge's part list. `correction` always; `correction-correct` etc. only when judged.",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
             },
             {
               "kind": "field",
@@ -4148,6 +4376,20 @@
             },
             {
               "kind": "field",
+              "name": "_candidateCorrection",
+              "type": {
+                "text": "CandidateCorrection"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "The correction badge lives in this element's shadow root, as `part=\"correction\"`.\n\nIt is *reactive* rather than derived from `internals.states`, because a CustomStateSet is not\nobservable and the badge's part list has to change with it. The states are still written, so\nevery existing `:state(candidate-correct)` selector keeps working.\n\nWhy a part token and not a shadow rule: a chip lives in three places, and in one of them —\nrendered inside a drop target's shadow root — the document cannot reach its badge at all.\nParts do not chain, so `::part(drag)::part(correction)` is inert. But a token *does* survive\n`exportparts`, so `::part(correction-correct)` reaches the badge in the bank, on the floating\nclone, and inside a gap. Verified in Chromium.",
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_interactionContext",
               "type": {
                 "text": "Readonly<InteractionContext> | undefined"
@@ -4209,8 +4451,34 @@
             },
             {
               "kind": "field",
+              "name": "candidateCorrection",
+              "type": {
+                "text": "CandidateCorrection"
+              },
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "checked",
               "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "correctionPart",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "description": "The badge's part list. `correction` always; `correction-correct` etc. only when judged.",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "ActiveElementMixin",
+                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
+              }
             },
             {
               "kind": "field",
@@ -4680,6 +4948,16 @@
             },
             {
               "kind": "field",
+              "name": "_candidateCorrection",
+              "type": {
+                "text": "CandidateCorrection"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "The correction badge lives in this element's shadow root, as `part=\"correction\"`.\n\nIt is *reactive* rather than derived from `internals.states`, because a CustomStateSet is not\nobservable and the badge's part list has to change with it. The states are still written, so\nevery existing `:state(candidate-correct)` selector keeps working.\n\nWhy a part token and not a shadow rule: a chip lives in three places, and in one of them —\nrendered inside a drop target's shadow root — the document cannot reach its badge at all.\nParts do not chain, so `::part(drag)::part(correction)` is inert. But a token *does* survive\n`exportparts`, so `::part(correction-correct)` reaches the badge in the bank, on the floating\nclone, and inside a gap. Verified in Chromium."
+            },
+            {
+              "kind": "field",
               "name": "_interactionContext",
               "type": {
                 "text": "Readonly<InteractionContext> | undefined"
@@ -4718,6 +4996,24 @@
               "name": "#syncChoiceRole",
               "privacy": "private",
               "description": "Apply what the interaction published. No provider (standalone) means no role.\n\n`radio` / `checkbox` are both ARIA roles and custom states. `drag` is only a custom\nstate — it is not a valid ARIA role — and it is derived positionally, by testing this\nelement against the interaction's `draggablesSelector`. In match-interaction the same tag\nis a drag in one match-set and a drop target in the other."
+            },
+            {
+              "kind": "field",
+              "name": "candidateCorrection",
+              "type": {
+                "text": "CandidateCorrection"
+              },
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "correctionPart",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "description": "The badge's part list. `correction` always; `correction-correct` etc. only when judged.",
+              "readonly": true
             },
             {
               "kind": "field",
@@ -11061,6 +11357,20 @@
           "members": [
             {
               "kind": "field",
+              "name": "_candidateCorrection",
+              "type": {
+                "text": "'correct' | 'incorrect' | 'partially-correct' | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "How this interaction was judged. Reactive, so an interaction that renders a `part=\"correction\"`\nbadge (text-entry, extended-text) re-renders its part list when the verdict changes; a\nCustomStateSet is not observable. The states are written too, so every existing\n`:state(candidate-*)` selector keeps working.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_context",
               "type": {
                 "text": "ItemContext"
@@ -11321,6 +11631,20 @@
                 "text": "ConfigContext"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "correctionPart",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "description": "The badge's part list. `correction` always; `correction-correct` etc. only when judged.",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -12176,6 +12500,20 @@
           "members": [
             {
               "kind": "field",
+              "name": "_candidateCorrection",
+              "type": {
+                "text": "'correct' | 'incorrect' | 'partially-correct' | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "How this interaction was judged. Reactive, so an interaction that renders a `part=\"correction\"`\nbadge (text-entry, extended-text) re-renders its part list when the verdict changes; a\nCustomStateSet is not observable. The states are written too, so every existing\n`:state(candidate-*)` selector keeps working.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_context",
               "type": {
                 "text": "ItemContext"
@@ -12292,6 +12630,20 @@
                 "text": "ConfigContext"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "correctionPart",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "description": "The badge's part list. `correction` always; `correction-correct` etc. only when judged.",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -13043,6 +13395,20 @@
           "members": [
             {
               "kind": "field",
+              "name": "_candidateCorrection",
+              "type": {
+                "text": "'correct' | 'incorrect' | 'partially-correct' | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "How this interaction was judged. Reactive, so an interaction that renders a `part=\"correction\"`\nbadge (text-entry, extended-text) re-renders its part list when the verdict changes; a\nCustomStateSet is not observable. The states are written too, so every existing\n`:state(candidate-*)` selector keeps working.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_context",
               "type": {
                 "text": "ItemContext"
@@ -13647,6 +14013,20 @@
               "inheritedFrom": {
                 "name": "DragDropSlottedMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "correctionPart",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "description": "The badge's part list. `correction` always; `correction-correct` etc. only when judged.",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -15044,6 +15424,20 @@
           "members": [
             {
               "kind": "field",
+              "name": "_candidateCorrection",
+              "type": {
+                "text": "'correct' | 'incorrect' | 'partially-correct' | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "How this interaction was judged. Reactive, so an interaction that renders a `part=\"correction\"`\nbadge (text-entry, extended-text) re-renders its part list when the verdict changes; a\nCustomStateSet is not observable. The states are written too, so every existing\n`:state(candidate-*)` selector keeps working.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_context",
               "type": {
                 "text": "ItemContext"
@@ -15233,6 +15627,20 @@
                 "text": "ConfigContext"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "correctionPart",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "description": "The badge's part list. `correction` always; `correction-correct` etc. only when judged.",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -16505,6 +16913,20 @@
           "members": [
             {
               "kind": "field",
+              "name": "_candidateCorrection",
+              "type": {
+                "text": "'correct' | 'incorrect' | 'partially-correct' | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "How this interaction was judged. Reactive, so an interaction that renders a `part=\"correction\"`\nbadge (text-entry, extended-text) re-renders its part list when the verdict changes; a\nCustomStateSet is not observable. The states are written too, so every existing\n`:state(candidate-*)` selector keeps working.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_choiceElements",
               "type": {
                 "text": "Choice[]"
@@ -16874,6 +17296,20 @@
                 "text": "ConfigContext"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "correctionPart",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "description": "The badge's part list. `correction` always; `correction-correct` etc. only when judged.",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -17560,6 +17996,20 @@
           "members": [
             {
               "kind": "field",
+              "name": "_candidateCorrection",
+              "type": {
+                "text": "'correct' | 'incorrect' | 'partially-correct' | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "How this interaction was judged. Reactive, so an interaction that renders a `part=\"correction\"`\nbadge (text-entry, extended-text) re-renders its part list when the verdict changes; a\nCustomStateSet is not observable. The states are written too, so every existing\n`:state(candidate-*)` selector keeps working.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_choiceElements",
               "type": {
                 "text": "Choice[]"
@@ -17930,6 +18380,20 @@
                 "text": "ConfigContext"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "correctionPart",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "description": "The badge's part list. `correction` always; `correction-correct` etc. only when judged.",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -18619,6 +19083,20 @@
           "members": [
             {
               "kind": "field",
+              "name": "_candidateCorrection",
+              "type": {
+                "text": "'correct' | 'incorrect' | 'partially-correct' | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "How this interaction was judged. Reactive, so an interaction that renders a `part=\"correction\"`\nbadge (text-entry, extended-text) re-renders its part list when the verdict changes; a\nCustomStateSet is not observable. The states are written too, so every existing\n`:state(candidate-*)` selector keeps working.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_choiceElements",
               "type": {
                 "text": "Choice[]"
@@ -18965,6 +19443,20 @@
                 "text": "ConfigContext"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "correctionPart",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "description": "The badge's part list. `correction` always; `correction-correct` etc. only when judged.",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -19685,6 +20177,20 @@
           "members": [
             {
               "kind": "field",
+              "name": "_candidateCorrection",
+              "type": {
+                "text": "'correct' | 'incorrect' | 'partially-correct' | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "How this interaction was judged. Reactive, so an interaction that renders a `part=\"correction\"`\nbadge (text-entry, extended-text) re-renders its part list when the verdict changes; a\nCustomStateSet is not observable. The states are written too, so every existing\n`:state(candidate-*)` selector keeps working.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_context",
               "type": {
                 "text": "ItemContext"
@@ -19958,6 +20464,20 @@
                 "text": "ConfigContext"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "correctionPart",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "description": "The badge's part list. `correction` always; `correction-correct` etc. only when judged.",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -20661,6 +21181,20 @@
           "members": [
             {
               "kind": "field",
+              "name": "_candidateCorrection",
+              "type": {
+                "text": "'correct' | 'incorrect' | 'partially-correct' | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "How this interaction was judged. Reactive, so an interaction that renders a `part=\"correction\"`\nbadge (text-entry, extended-text) re-renders its part list when the verdict changes; a\nCustomStateSet is not observable. The states are written too, so every existing\n`:state(candidate-*)` selector keeps working.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_context",
               "type": {
                 "text": "ItemContext"
@@ -21275,6 +21809,20 @@
               "inheritedFrom": {
                 "name": "DragDropSlottedMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "correctionPart",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "description": "The badge's part list. `correction` always; `correction-correct` etc. only when judged.",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -22707,6 +23255,20 @@
           "members": [
             {
               "kind": "field",
+              "name": "_candidateCorrection",
+              "type": {
+                "text": "'correct' | 'incorrect' | 'partially-correct' | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "How this interaction was judged. Reactive, so an interaction that renders a `part=\"correction\"`\nbadge (text-entry, extended-text) re-renders its part list when the verdict changes; a\nCustomStateSet is not observable. The states are written too, so every existing\n`:state(candidate-*)` selector keeps working.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_context",
               "type": {
                 "text": "ItemContext"
@@ -22810,6 +23372,20 @@
                 "text": "ConfigContext"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "correctionPart",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "description": "The badge's part list. `correction` always; `correction-correct` etc. only when judged.",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -24158,6 +24734,20 @@
           "members": [
             {
               "kind": "field",
+              "name": "_candidateCorrection",
+              "type": {
+                "text": "'correct' | 'incorrect' | 'partially-correct' | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "How this interaction was judged. Reactive, so an interaction that renders a `part=\"correction\"`\nbadge (text-entry, extended-text) re-renders its part list when the verdict changes; a\nCustomStateSet is not observable. The states are written too, so every existing\n`:state(candidate-*)` selector keeps working.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_context",
               "type": {
                 "text": "ItemContext"
@@ -24606,6 +25196,20 @@
                 "text": "ItemContext | undefined"
               },
               "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "correctionPart",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "description": "The badge's part list. `correction` always; `correction-correct` etc. only when judged.",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
             },
             {
               "kind": "field",
@@ -25564,6 +26168,20 @@
           "members": [
             {
               "kind": "field",
+              "name": "_candidateCorrection",
+              "type": {
+                "text": "'correct' | 'incorrect' | 'partially-correct' | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "How this interaction was judged. Reactive, so an interaction that renders a `part=\"correction\"`\nbadge (text-entry, extended-text) re-renders its part list when the verdict changes; a\nCustomStateSet is not observable. The states are written too, so every existing\n`:state(candidate-*)` selector keeps working.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_context",
               "type": {
                 "text": "ItemContext"
@@ -26144,6 +26762,20 @@
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "packages/interactions/portable-custom-interaction/src/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "correctionPart",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "description": "The badge's part list. `correction` always; `correction-correct` etc. only when judged.",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -27685,6 +28317,20 @@
             },
             {
               "kind": "field",
+              "name": "_candidateCorrection",
+              "type": {
+                "text": "'correct' | 'incorrect' | 'partially-correct' | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "How this interaction was judged. Reactive, so an interaction that renders a `part=\"correction\"`\nbadge (text-entry, extended-text) re-renders its part list when the verdict changes; a\nCustomStateSet is not observable. The states are written too, so every existing\n`:state(candidate-*)` selector keeps working.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_context",
               "type": {
                 "text": "ItemContext"
@@ -27891,6 +28537,20 @@
                 "text": "ConfigContext"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "correctionPart",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "description": "The badge's part list. `correction` always; `correction-correct` etc. only when judged.",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -28590,6 +29250,20 @@
           "members": [
             {
               "kind": "field",
+              "name": "_candidateCorrection",
+              "type": {
+                "text": "'correct' | 'incorrect' | 'partially-correct' | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "How this interaction was judged. Reactive, so an interaction that renders a `part=\"correction\"`\nbadge (text-entry, extended-text) re-renders its part list when the verdict changes; a\nCustomStateSet is not observable. The states are written too, so every existing\n`:state(candidate-*)` selector keeps working.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_context",
               "type": {
                 "text": "ItemContext"
@@ -28785,6 +29459,20 @@
                 "text": "ConfigContext"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "correctionPart",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "description": "The badge's part list. `correction` always; `correction-correct` etc. only when judged.",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -29463,6 +30151,20 @@
           "members": [
             {
               "kind": "field",
+              "name": "_candidateCorrection",
+              "type": {
+                "text": "'correct' | 'incorrect' | 'partially-correct' | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "How this interaction was judged. Reactive, so an interaction that renders a `part=\"correction\"`\nbadge (text-entry, extended-text) re-renders its part list when the verdict changes; a\nCustomStateSet is not observable. The states are written too, so every existing\n`:state(candidate-*)` selector keeps working.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_context",
               "type": {
                 "text": "ItemContext"
@@ -29598,6 +30300,20 @@
                 "text": "ConfigContext"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "correctionPart",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "description": "The badge's part list. `correction` always; `correction-correct` etc. only when judged.",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -30301,6 +31017,20 @@
           "members": [
             {
               "kind": "field",
+              "name": "_candidateCorrection",
+              "type": {
+                "text": "'correct' | 'incorrect' | 'partially-correct' | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "How this interaction was judged. Reactive, so an interaction that renders a `part=\"correction\"`\nbadge (text-entry, extended-text) re-renders its part list when the verdict changes; a\nCustomStateSet is not observable. The states are written too, so every existing\n`:state(candidate-*)` selector keeps working.",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_context",
               "type": {
                 "text": "ItemContext"
@@ -30444,6 +31174,20 @@
                 "text": "ConfigContext"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "correctionPart",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "description": "The badge's part list. `correction` always; `correction-correct` etc. only when judged.",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -31033,6 +31777,16 @@
           "members": [
             {
               "kind": "field",
+              "name": "_candidateCorrection",
+              "type": {
+                "text": "'correct' | 'incorrect' | 'partially-correct' | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "description": "How this interaction was judged. Reactive, so an interaction that renders a `part=\"correction\"`\nbadge (text-entry, extended-text) re-renders its part list when the verdict changes; a\nCustomStateSet is not observable. The states are written too, so every existing\n`:state(candidate-*)` selector keeps working."
+            },
+            {
+              "kind": "field",
               "name": "_context",
               "type": {
                 "text": "ItemContext"
@@ -31095,6 +31849,16 @@
                 "text": "ConfigContext"
               },
               "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "correctionPart",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "public",
+              "description": "The badge's part list. `correction` always; `correction-correct` etc. only when judged.",
+              "readonly": true
             },
             {
               "kind": "field",
@@ -32209,6 +32973,14 @@
           "declaration": {
             "name": "*",
             "module": "packages/qti-base/src/styles/box-sizing.styles"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/qti-base/src/styles/correction.styles"
           }
         },
         {

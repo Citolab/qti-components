@@ -1,9 +1,10 @@
 import { css } from 'lit';
 
-import { boxSizing } from '@qti-components/base';
+import { boxSizing, correctionPart } from '@qti-components/base';
 
 export default [
   boxSizing,
+  correctionPart,
   css`
     :host {
       display: flex;

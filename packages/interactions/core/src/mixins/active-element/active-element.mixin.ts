@@ -10,10 +10,15 @@ import type { InteractionContext } from '@qti-components/base';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 
+/** How this element was judged, when the item shows candidate correction. */
+export type CandidateCorrection = 'correct' | 'incorrect' | 'partially-correct' | null;
+
 export interface ChoiceInterface {
   identifier: string;
   disabled: boolean;
   readonly: boolean;
+  /** How this element was judged; drives `part="correction correction-*"` on its badge. */
+  candidateCorrection: CandidateCorrection;
 }
 
 /**
@@ -39,6 +44,8 @@ export interface ActiveElementMixinInterface {
   disabled: boolean;
   readonly: boolean;
   internals: ElementInternals;
+  candidateCorrection: CandidateCorrection;
+  readonly correctionPart: string;
 }
 
 export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, type: string) {
@@ -83,6 +90,44 @@ export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, t
     @consume({ context: interactionContext, subscribe: true })
     @state()
     protected _interactionContext?: Readonly<InteractionContext>;
+
+    /**
+     * The correction badge lives in this element's shadow root, as `part="correction"`.
+     *
+     * It is *reactive* rather than derived from `internals.states`, because a CustomStateSet is not
+     * observable and the badge's part list has to change with it. The states are still written, so
+     * every existing `:state(candidate-correct)` selector keeps working.
+     *
+     * Why a part token and not a shadow rule: a chip lives in three places, and in one of them —
+     * rendered inside a drop target's shadow root — the document cannot reach its badge at all.
+     * Parts do not chain, so `::part(drag)::part(correction)` is inert. But a token *does* survive
+     * `exportparts`, so `::part(correction-correct)` reaches the badge in the bank, on the floating
+     * clone, and inside a gap. Verified in Chromium.
+     */
+    @state()
+    private _candidateCorrection: CandidateCorrection = null;
+
+    public get candidateCorrection(): CandidateCorrection {
+      return this._candidateCorrection;
+    }
+
+    public set candidateCorrection(value: CandidateCorrection) {
+      // Guard on change. This is a `@state`, so assigning it schedules an update; an interaction
+      // that re-applies correction on every render would otherwise never settle.
+      if (this._candidateCorrection === value) return;
+      this._candidateCorrection = value;
+
+      const states = this.internals.states;
+      states.delete('candidate-correct');
+      states.delete('candidate-incorrect');
+      states.delete('candidate-partially-correct');
+      if (value) states.add(`candidate-${value}`);
+    }
+
+    /** The badge's part list. `correction` always; `correction-correct` etc. only when judged. */
+    public get correctionPart(): string {
+      return this._candidateCorrection ? `correction correction-${this._candidateCorrection}` : 'correction';
+    }
 
     #appliedChoiceRole: string | null = null;
 

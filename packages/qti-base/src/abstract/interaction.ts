@@ -303,24 +303,47 @@ export abstract class Interaction extends LitElement implements IInteraction {
     }
   }
 
+  /**
+   * How this interaction was judged. Reactive, so an interaction that renders a `part="correction"`
+   * badge (text-entry, extended-text) re-renders its part list when the verdict changes; a
+   * CustomStateSet is not observable. The states are written too, so every existing
+   * `:state(candidate-*)` selector keeps working.
+   */
+  @state() private _candidateCorrection: 'correct' | 'incorrect' | 'partially-correct' | null = null;
+
+  /** The badge's part list. `correction` always; `correction-correct` etc. only when judged. */
+  public get correctionPart(): string {
+    return this._candidateCorrection ? `correction correction-${this._candidateCorrection}` : 'correction';
+  }
+
   public toggleCandidateCorrection(show: boolean): void {
     this._internals.states.delete('candidate-correct');
     this._internals.states.delete('candidate-partially-correct');
     this._internals.states.delete('candidate-incorrect');
 
-    if (!show) {
-      return;
+    let verdict: 'correct' | 'incorrect' | 'partially-correct' | null = null;
+
+    if (show) {
+      // correctness getter now works in both standalone and item context modes
+      if (this.correctness === Correctness.Correct) {
+        this._internals.states.add('candidate-correct');
+        verdict = 'correct';
+      }
+      if (this.correctness === Correctness.PartiallyCorrect) {
+        this._internals.states.add('candidate-partially-correct');
+        verdict = 'partially-correct';
+      }
+      if (this.correctness === Correctness.Incorrect) {
+        this._internals.states.add('candidate-incorrect');
+        verdict = 'incorrect';
+      }
     }
 
-    // correctness getter now works in both standalone and item context modes
-    if (this.correctness === Correctness.Correct) {
-      this._internals.states.add('candidate-correct');
-    }
-    if (this.correctness === Correctness.PartiallyCorrect) {
-      this._internals.states.add('candidate-partially-correct');
-    }
-    if (this.correctness === Correctness.Incorrect) {
-      this._internals.states.add('candidate-incorrect');
+    // Guard on change: `_candidateCorrection` is a `@state`, and this runs from `firstUpdated`.
+    // Assigning it unconditionally schedules an update on every render, and the page never settles —
+    // which is exactly what the VRT stability detector was timing out on.
+    if (this._candidateCorrection !== verdict) {
+      this._candidateCorrection = verdict;
     }
   }
 
