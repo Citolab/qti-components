@@ -2,6 +2,16 @@ import { css } from 'lit';
 
 import { boxSizing, dropRegion } from '@qti-components/base';
 
+/**
+ * Layout and sizing only. Paint and state live in the theme.
+ *
+ * `[part~='drop'][active]` and `[part~='drop'][enabled]` moved to
+ * `styles/qti-theme/interactions/qti-associate-interaction.css` as `::part(active)` /
+ * `::part(enabled)`, since an attribute selector cannot follow `::part()` and a <div> cannot carry
+ * a custom state. Both carried `!important`, which only existed to beat the shadow's own rules from
+ * the shadow. Neither needs it from the theme.
+ */
+
 export default [
   boxSizing,
   dropRegion,
@@ -19,11 +29,6 @@ export default [
       gap: 0.5rem;
     }
 
-    [part~='drop'][active] {
-      border-color: var(--qti-border-active) !important;
-      background-color: var(--qti-bg-active) !important;
-    }
-
     /* Drop target. --qti-dropzone-min-height is published by the interaction from the measured
      chip height; 3rem is the fallback when there is nothing to measure. Was an inline style. */
     [part~='drop'] {
@@ -39,10 +44,6 @@ export default [
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
-    }
-
-    [part~='drop'][enabled] {
-      background-color: var(--qti-bg-active) !important;
     }
 
     :host::part(drop-row) {

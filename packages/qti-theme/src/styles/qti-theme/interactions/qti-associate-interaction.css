@@ -46,8 +46,25 @@
     &::part(drop):focus {
       @apply foc;
     }
-    &::part(drop)[dragging] {
-      @apply act;
+
+    /*
+     * Moved out of qti-associate-interaction.styles.ts, which is layout-only now. The drop's flags
+     * are part tokens, not attributes: an attribute selector cannot follow ::part(), and a <div>
+     * cannot carry a custom state (attachInternals throws). See setDropFlag.
+     *
+     * These come *after* ::part(drop). They tie it on specificity, so source order decides — put
+     * them first and the idle drop repaints over its own active highlight.
+     *
+     * Deleted here: `&::part(drop)[dragging] { @apply act }`. An attribute selector after ::part()
+     * never matches; that rule has never applied.
+     */
+    &::part(active) {
+      border-color: var(--qti-border-active);
+      background-color: var(--qti-bg-active);
+    }
+
+    &::part(enabled) {
+      background-color: var(--qti-bg-active);
     }
   }
 }

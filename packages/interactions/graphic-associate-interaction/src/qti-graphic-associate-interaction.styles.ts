@@ -6,7 +6,6 @@ export default [
   boxSizing,
   css`
     slot:not([name='prompt']) {
-      // position: relative; /* qti-hotspot-choice relative to the slot */
       display: block;
       width: fit-content; /* hotspots not stretching further if image is at max size */
     }
