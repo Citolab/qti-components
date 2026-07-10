@@ -141,6 +141,12 @@ export default defineConfig({
                     toMatchScreenshot: {
                       comparatorName: 'pixelmatch',
                       comparatorOptions: {
+                        // INERT for the kennisnet VRT suite. Those stories do NOT use
+                        // toMatchScreenshot — they compare in a hand-rolled afterEach in
+                        // .storybook/vitest.vrt.setup.ts, and the effective tolerance is
+                        // ALLOWED_MISMATCHED_PIXEL_RATIO there. Changing the number here does
+                        // nothing to them (verified: magenta hotspots stayed green). Left in place
+                        // for any future test that genuinely calls toMatchScreenshot.
                         threshold: 0.2,
                         allowedMismatchedPixelRatio: 0.01
                       }

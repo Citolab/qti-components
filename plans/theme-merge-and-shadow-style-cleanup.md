@@ -15,6 +15,18 @@ Four goals, stated in the order they were raised:
    sit in a file: `@layer reset, layout, paint, state, cursor, correction, editor` (§0.5).
 6. **Every cursor in one file**, so a host that wants none — the editor — simply does not load it (§0.6).
 
+**Execution order** (revised 2026-07-10 — the user's ordering, plus two decisions taken then):
+
+1. **Tighten the VRT guard** — before anything, or the refactors have no working safety net (§0.46).
+2. **Clean up kennisnet** — delete redundant native vocabulary *and* the classes we already replaced.
+3. **`@apply` → Sass mixins, `.css` → `.scss`.**
+4. **Merge kennisnet into the per-interaction theme files**, kennisnet leading.
+5. **Strip `.styles.ts` to layout**, folding its paint into the files Phase 4 just made.
+6. **Hold the line** with stylelint.
+
+Steps 2–4 are the user's own three-step framing; 1 and 5 are the two decisions added on top — guard
+first, shadow-strip last.
+
 **Layering lands with the merge, not before.** The stack is decided (§0.5) but Phases 1–3 may not add,
 remove or reorder a `@layer`. Kennisnet is entirely unlayered today, and unlayered beats every layer —
 so a layer stack introduced before the merge changes nothing except the amount of ceremony.
@@ -189,8 +201,9 @@ So the chip block stays scoped to `qti-gap`, `qti-associable-hotspot` and
 wore that block. Order and associate keep styling their own. The price is that their bank chip and
 placed chip are styled by different blocks and must agree on the box by hand; that is the
 `border: 1px solid transparent` in `kennisnet/qti/order-interaction.scss`, and it is exactly what
-Phase 1 removes the need for. **Do not re-introduce the bare selector before Phase 1 unifies the
-badge into the `correction` part** (see `plans/parts-states-contract-design.md`).
+**Phase 5** removes the need for. (The badge half of this is already done — the `correction` part
+landed earlier on this branch — so the bare selector is safe now; the box-agreement chore is what
+Phase 5 clears.) See `plans/parts-states-contract-design.md`.
 
 **A `:not(:state(drag))` selector is not the same as "is a drop target".**
 `qti-simple-associable-choice` gave every element that was *not* a chip a `4rem` minimum — which
@@ -261,10 +274,10 @@ noticed" episode: the radios were simply too small to trip the ratio. Consequenc
 
 - VRT guards **layout**, not small-element paint. Do not read a green run as "the states still
   paint correctly".
-- Phases 2–4 move paint between files. Verify state colours with a computed-style probe against the
-  compiled `dist/item.css` + `dist/kennisnet-override.css`, not with screenshots.
-- Consider dropping the ratio to ~0.0005 as part of Phase 5, once the baselines are stable. That is
-  its own change with its own churn; do not fold it into a paint phase.
+- Phases 2–5 move paint between files. Verify state colours with a computed-style probe against the
+  compiled `dist/item.css` + `dist/kennisnet-override.css`, not with screenshots alone.
+- Dropping the ratio is now **Phase 1** — done up front, not deferred, so the later phases inherit a
+  guard that actually bites (see the two decisions recorded 2026-07-10).
 
 **A preset `response` does work in a story, but not when mounted via `innerHTML`.**
 Worth knowing because it makes specs lie. `ITEM018` renders its hotspot `checked` and
@@ -300,8 +313,8 @@ cursor — only the default. A layer does not let you decline a rule; not import
 
 #### What this fixes
 
-Both ordering bugs hit while doing Phase 1 were *source-order* bugs between rules of equal
-specificity:
+Both ordering bugs hit while moving paint out of the shadow styles were *source-order* bugs between
+rules of equal specificity:
 
 - `::part(active)` painted over by `::part(drop)`, because `::part(drop)` came later in the file.
   Under the stack, `active` is in `state` and `drop` is in `paint`. Layer beats source order, and
@@ -342,8 +355,8 @@ whatever layer either is in — verified twice this week, once when `::part(corr
 overrode the shadow's `display: none` and painted an empty ring on every uncorrected element.
 
 So `box-sizing.styles.ts`, `drop-region.styles.ts` and `correction.styles.ts` sit outside this system
-entirely. They are the component's floor, always beaten by the theme. That is exactly why Phase 1
-moves paint out of the shadow *first*: layering fixes theme-versus-theme, never shadow-versus-theme.
+entirely. They are the component's floor, always beaten by the theme. That is why the paint must
+leave the shadow at all (Phase 5): layering fixes theme-versus-theme, never shadow-versus-theme.
 
 ### 0.6 The cursor file, and the inline style that defeats it
 
@@ -366,7 +379,7 @@ in the cursor file, and the three `!important`s go with it.
 **2. Five cursors are trapped in shadow styles**, where a host cannot omit them:
 `qti-slider-interaction.styles.ts:45,59,71,81` (`pointer`) and
 `qti-position-object-interaction.styles.ts:13` (`move`). They move to the theme with the rest of
-Phase 1's paint. This is the concrete reason `cursor` is not "layout" — it is not that it paints,
+Phase 5's paint. This is the concrete reason `cursor` is not "layout" — it is not that it paints,
 it is that a consumer must be able to refuse it.
 
 **3. Seventeen theme cursors are scattered across eleven files.** Inventory:
@@ -390,71 +403,89 @@ own contents get wrapped instead. Budget for touching all 17.
 
 ---
 
-## Phase 1 — Strip `.styles.ts` to layout (no theme changes yet)
+## Phase 1 — Tighten the VRT guard (do this first) — DONE 2026-07-10
 
-Do this first. It is the user's actual complaint, it needs no build changes, and the invariance
-spec already guards the geometry.
+Every phase below is a refactor whose one safety net is "VRT does not move". That net had a hole,
+and a second one hid behind the first:
 
-**What to implement**
+1. **The tolerance was too loose.** ~1% of a 1450px capture (~14k px) hid any small element — a
+   radio, checkmark, badge, hotspot, drag handle. Painting every hotspot 6px magenta left VRT green.
+2. **The knob was not where it looked.** The `vrt` stories do **not** use `toMatchScreenshot`, so the
+   `comparatorOptions` in `vitest.config.ts` are inert. The real comparison is hand-rolled in
+   `.storybook/vitest.vrt.setup.ts` (`countMismatchedPixels` + `ALLOWED_MISMATCHED_PIXEL_RATIO`).
+   Editing the config number changed nothing — the first attempt did exactly that and magenta still
+   passed. **The effective knob is `ALLOWED_MISMATCHED_PIXEL_RATIO`, line 23 of the setup file.**
 
-1. For each of the ten files in §0.2, delete every rule whose selector matches
-   `:state(…)`, `[active]`, `[enabled]`, `[disabled]`, `[dragging]`, `[data-*]`, `:hover`, `:focus`,
-   `:has([part='drag'])`, and every declaration of colour / background / box-shadow / outline.
-2. **Move each deleted rule verbatim into the theme**, into the file that already styles that
-   interaction — e.g. order's L50–91 go to
-   `styles/qti-theme/interactions/qti-order-interaction.css`, translating `[part~='drop']` into
-   `qti-order-interaction::part(drop)`. The selectors are already `::part()`-addressable; that was the
-   point of the parts contract.
-3. Delete the dead blocks: `qti-order-interaction.styles.ts:4-9`,
-   `qti-choice-interaction.styles.ts:80-127`, `qti-graphic-associate-interaction.styles.ts:9`.
-4. Fix `qti-order-interaction.styles.ts:85` — `var(--qti-correct-response, --qti-correct)` →
-   `var(--qti-correct-response, var(--qti-correct))` — before moving the rule out.
-5. Leave the layout-ish custom properties from §0.2 exactly where they are. They size; they do not paint.
+**What was done**
+
+1. `ALLOWED_MISMATCHED_PIXEL_RATIO`: `0.01` → `0.0005` in `.storybook/vitest.vrt.setup.ts`. The
+   companion `PIXEL_CHANNEL_THRESHOLD = 51` is what actually discards antialiasing — only pixels
+   whose max channel delta exceeds 51 are counted — so the ratio can be low without flaking on AA.
+2. Left the `vitest.config.ts` `comparatorOptions` at `0.01` with a comment marking them inert, for
+   any future test that does call `toMatchScreenshot`.
+3. **No baselines regenerated.** The existing captures already pass at `0.0005` with margin (clean
+   run: 22/22, two runs identical), so they were pixel-accurate all along — only the tolerance was
+   loose. Regenerating would have been churn for nothing.
+
+**What it catches, and what it does not**
+
+- Magenta hotspots (6 rings, 3,337 px, 0.223%) now **fail** — was 22/22, now 1 fail. Verified.
+- A **systematic** repaint — a broken mixin recolouring every radio/checkmark/hotspot at once — is
+  caught easily; that is the actual failure mode of a bad merge.
+- A **single isolated** small element (~0.03%) can still slip under 0.05%. Acceptable: the merge
+  moves paint wholesale, not one element. If per-element fidelity is ever needed, the channel
+  threshold means the ratio could likely go to ~0.0001 — but prove CI cross-machine stability first.
 
 **Do NOT**
 
-- Do not touch `:host([orientation])`, `:host(.qti-choices-*)`, `:host(.qti-input-width-N)`. These are
-  QTI presentation classes and they are layout.
-- Do not remove `border: …px solid transparent` or `line-height: 0` without checking the invariance
-  spec first — they reserve space. `drag-drop.invariance.spec.ts` will tell you.
-- Do not add a `@layer`.
-
-**Verification**
-
-- `drag-drop.invariance.spec.ts` currently reports **12 passed, 3 expected fail**. The three
-  `test.fails` cases are order's chip box, order's dropzone, and associate's chip box — the exact
-  defect Phase 1 exists to fix. **When they start passing, the suite goes red.** That is the signal
-  that Phase 1 has landed: delete them from `CHIP_BOX_KNOWN_BAD` / `DROPZONE_KNOWN_BAD`.
-- `npx vitest run --project=vrt` — expect **zero** baseline movement. A rule moved from shadow to
-  theme should render identically; if a baseline moves, the selector translation is wrong.
-- `grep -nE ":state\(|\[active\]|\[enabled\]|\[data-|box-shadow|background-color" packages/interactions/**/*.styles.ts` → only the flagged load-bearing exceptions remain.
-- Then, and only then, the bare `::part(drag)` from §0.45 becomes safe, because the badge will live
-  in the `correction` part instead of on `::before`/`::after`.
+- Do not tune `vitest.config.ts:145` expecting an effect on the kennisnet VRT suite. It is inert.
+- Do not `--update` baselines after this until a phase legitimately changes rendering.
 
 ---
 
-## Phase 2 — Delete kennisnet's copies of the native vocabulary
+## Phase 2 — Clean up kennisnet: delete what we already replaced
 
-Small, isolated, and it shrinks the merge surface before the merge.
+This is the user's "remove everything kennisnet overrides which we already implemented". Two kinds
+of dead weight, both isolated, and both shrink Phase 4's surface before the merge.
 
-**What to implement**
+**2a — Redundant copies of the native QTI vocabulary (§0.3)**
 
-1. Delete the **11 redundant** selectors in §0.3 from `styles/overrides/kennisnet/qti-styles.scss`
-   outright. `qti3p0.css` already declares them, identically.
+1. Delete the **11 redundant** selectors from `styles/overrides/kennisnet/qti-styles.scss` outright.
+   `qti3p0.css` already declares them, identically (all 11 confirmed still present, 2026-07-10).
 2. For `.qti-bordered`, delete the rule and instead set `--table-border-color` (and, if the widths
    really differ, `--qti-border-thickness`) in `styles/overrides/kennisnet/qti/qti-vars.scss`. Keep
-   only the one declaration that is a genuine geometry difference: `padding: 2px`.
+   only the one genuine geometry difference: `padding: 2px`.
 3. `.qti-well` is a complete restyle. Leave it, but move it next to the other kennisnet-only rules
    so the file stops looking like an override of the spec.
 
+**2b — Dead class blocks whose feature moved to a part or state**
+
+Work done earlier on this branch replaced three legacy class hooks with parts/states, but left
+kennisnet still styling the old class names. **No component emits any of them any more** (grep,
+2026-07-10):
+
+| dead class | replaced by | kennisnet files still styling it |
+|---|---|---|
+| `.status-icon` | the `correction` part (`correction.styles.ts`) | `kennisnet-override.scss`, `qti/text-entry-interaction.scss`, `qti/hottext-interaction.scss` |
+| `.drag-handle` | the `drag-control` part (grip glyph) | `kennisnet-override.scss` |
+| `.draggable` | `:state(drag)` / `::part(drag)` | `qti/gap-match-interaction.scss`, `qti/match-interaction.scss` |
+
+1. Verify dead before deleting each: `grep -rn "class=\"[^\"]*status-icon\|'status-icon'"
+   packages/interactions --include=*.ts | grep -v spec | grep -v dist` → 0. Same for `drag-handle`,
+   `draggable`. (If a stories file still uses one for a fixture, that is fine — stories are not the
+   shipped component; note it and proceed.)
+2. Delete the matching rule blocks from the kennisnet files above.
+3. `.correct-option` is **not** dead — gap-match, match and `correction.styles.ts` still emit it.
+   Leave it; it is killed in `plans/correct-response-unification.md`, not here.
+
 **Verification**
 
-- VRT: **one baseline is expected to move** — anything using `.qti-underline` gains
-  `text-decoration-color` from the native rule. Look at it; it should look better. Everything else
-  must be pixel-identical.
 - `grep -cE '\.qti-(align|valign|hidden|visually-hidden|fullwidth|underline)' styles/overrides/kennisnet/qti-styles.scss` → 0.
-- If `.qti-bordered` moves a baseline, the token you set does not carry the value the rule did.
-  Reconcile it; do not `--update`.
+- `grep -rn 'status-icon\|drag-handle\|\.draggable' packages/qti-theme/src` → 0.
+- VRT (now tightened): **only `.qti-underline` is expected to move** — it gains
+  `text-decoration-color` from the native rule, a fix. Look at it. Deleting dead classes moves
+  nothing, because nothing emitted them; if a baseline moves, the class was not dead — find the
+  emitter. Do not `--update` to paper over it.
 
 ---
 
@@ -536,7 +567,51 @@ specs. **Nothing needs to be introduced — only extended.**
 
 ---
 
-## Phase 5 — Hold the line
+## Phase 5 — Strip `.styles.ts` to layout, into the merged files
+
+This is the original complaint — paint living in shadow styles — and it now runs **last**, so the
+paint moves straight into its permanent home: the per-interaction `.scss` files that Phase 4 just
+created. One move, not two. Independent of the theme work in every other respect, and it is what
+turns the three `test.fails` green.
+
+Down to five files with ~15 paint lines total (was ten files; the rest went earlier on this branch):
+`order`, `associate`, `slider`, `text-entry`, and `qti-simple-associable-choice` (§0.2, re-counted
+2026-07-10).
+
+**What to implement**
+
+1. In each of the five files, delete every rule whose selector matches `:state(…)`, `[active]`,
+   `[enabled]`, `[dragging]`, `[data-*]`, `:hover`, `:focus`, and every declaration of colour /
+   background / box-shadow / outline / border-color.
+2. **Move each deleted rule into the merged theme file for that interaction**
+   (`styles/qti-theme/interactions/qti-<name>.scss`), translating `[part~='drop']` into
+   `qti-<name>::part(drop)`. `kennisnet/qti/hotspot-interaction.scss` is the shape to match — a
+   per-interaction file keyed on parts and states.
+3. Fix `qti-order-interaction.styles.ts:85` before moving it —
+   `var(--qti-correct-response, --qti-correct)` → `var(--qti-correct-response, var(--qti-correct))`.
+4. Leave the layout custom properties where they are. They size; they do not paint.
+
+**Do NOT**
+
+- Do not touch `:host([orientation])`, `:host(.qti-choices-*)`, `:host(.qti-input-width-N)` — QTI
+  presentation classes, and they are layout.
+- Do not remove `border: …px solid transparent` or `line-height: 0` without checking
+  `drag-drop.invariance.spec.ts` first — they reserve space.
+
+**Verification**
+
+- `drag-drop.invariance.spec.ts` is **12 passed, 3 expected fail** today. The three `test.fails` are
+  order's chip box, order's dropzone, associate's chip box — the exact defect this phase fixes.
+  **When they pass, the suite goes red**; that is the signal it landed. Delete them from
+  `CHIP_BOX_KNOWN_BAD` / `DROPZONE_KNOWN_BAD`.
+- `grep -nE ":state\(|\[active\]|\[enabled\]|\[data-|box-shadow|background-color|border-color" packages/interactions/**/*.styles.ts` → only the flagged load-bearing exceptions remain.
+- VRT (tightened in Phase 1) green. A rule moved shadow→theme renders identically; a moved baseline
+  means the selector translation is wrong. Because the guard is now tight, this check finally means
+  what it says.
+
+---
+
+## Phase 6 — Hold the line
 
 **What to implement**
 
@@ -573,6 +648,21 @@ Then shrink the existing `ignoreStates` debt list in `.stylelintrc.mjs` (`checke
 
 ## Sequencing rationale
 
-Phase 1 is independent of everything and fixes the stated complaint. Phase 2 shrinks Phase 4's
-surface. Phase 3 must precede Phase 4 or the merge is performed twice — once in CSS, once in Sass.
-Phase 5 only makes sense once 1 has landed, or it fails on day one.
+Order reflects the two decisions taken 2026-07-10: **tighten VRT first**, and **strip `.styles.ts`
+last** so its paint lands directly in the merged files.
+
+- **Phase 1 (VRT)** must be first. Phases 2–5 are refactors whose only proof of correctness is "VRT
+  didn't move", and at the current 0.01 ratio that proof is worthless for small elements (§0.46,
+  proven with magenta hotspots). Tighten the instrument before trusting its readings.
+- **Phase 2 (clean kennisnet)** shrinks Phase 4's surface: fewer rules to fold, and none of them
+  dead. Independent of 3.
+- **Phase 3 (`.scss` + mixins)** must precede **Phase 4 (merge)**, or the merge is performed twice —
+  once in CSS, once in Sass.
+- **Phase 5 (strip `.styles.ts`)** runs after the merge so the shadow paint moves once, into the
+  per-interaction `.scss` file that now exists — rather than into a cito `.css` that Phase 4 would
+  then relocate again. It is otherwise independent, and it is what turns the three invariance
+  `test.fails` green.
+- **Phase 6 (stylelint)** must come after 5, or the new `no-paint-in-shadow-styles` rule fails on
+  day one against paint that is still there.
+
+Only Phase 5→6 and 3→4 are hard orderings; 2 may run any time before 4. 1 gates all of them.

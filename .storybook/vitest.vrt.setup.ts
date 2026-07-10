@@ -20,7 +20,15 @@ import * as previewAnnotations from './preview';
 const CAPTURE_TARGET = 'qti-item-body';
 const SCREENSHOT_DIR = 'apps/e2e/src/stories/__screenshots__/kennisnet-all-items.stories.ts';
 const PIXEL_CHANNEL_THRESHOLD = 51; // roughly pixelmatch threshold 0.2 on an 8-bit channel
-const ALLOWED_MISMATCHED_PIXEL_RATIO = 0.01;
+// The fraction of pixels allowed to differ (above the channel threshold) before a capture fails.
+// This is the ONE effective VRT tolerance — the comparatorOptions in vitest.config.ts are inert
+// because this suite compares by hand below, not via toMatchScreenshot.
+//
+// Was 0.01 — ~14k px on a 1450px capture, large enough to hide a fully-recoloured radio, checkmark,
+// hotspot or badge. Proven: painting every hotspot 6px magenta left all 22 captures green. 0.0005
+// (~725 px) still absorbs sub-pixel antialiasing drift (the channel threshold does the real AA
+// work) but fails on a single repainted small element. See the theme-merge plan, Phase 1.
+const ALLOWED_MISMATCHED_PIXEL_RATIO = 0.0005;
 
 const sanitizeStoryId = (id: string) => id.replace(/[^a-z0-9]+/gi, '-');
 
