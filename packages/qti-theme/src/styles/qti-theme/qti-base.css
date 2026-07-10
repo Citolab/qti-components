@@ -5,6 +5,16 @@
   --qti-border-active: #f86d70;
 
   /* Correct colors */
+  /*
+   * The answer key — "here is the right answer" — is not the same claim as `--qti-correct`, which
+   * means "the candidate got this right". Conflating them is what forced the clone to re-point
+   * `--qti-correct` at a different hue, so a border written from JavaScript changed colour
+   * depending on which parent it landed in.
+   */
+  --qti-answer-fg: var(--qti-correct);
+  --qti-answer-bg: var(--qti-correct-light);
+  --qti-answer-border: var(--qti-correct);
+
   --qti-correct-light: #e8f5e9;
   --qti-correct: #2e7d32;
 

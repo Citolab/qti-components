@@ -25,17 +25,4 @@
 //   }
 // }
 
-.full-correct-response {
-  qti-inline-choice-interaction {
-    background-color: var(--info-color);
-    border-color: var(--info-color);
-    color: var(--qti-selected-color);
-
-    // qti-components sets an explicit colour on the value part, so it doesn't inherit the host
-    // colour above — set it directly so the label is readable (white) on the blue box, like
-    // text-entry's full-correct input.
-    &::part(value) {
-      color: var(--qti-selected-color);
-    }
-  }
-}
+/* The answer key's colours come from the shared block in kennisnet-override.scss. */

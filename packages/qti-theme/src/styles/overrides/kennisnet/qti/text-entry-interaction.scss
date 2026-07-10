@@ -42,19 +42,19 @@ qti-text-entry-interaction {
   }
 }
 
+/*
+ * Colour and the ::part(input) colour now come from the shared answer-key block in
+ * kennisnet-override.scss. Only the check glyph and the room it needs stay here, until Phase 2 of
+ * plans/correct-response-unification.md moves them onto the `correction` part.
+ */
 .full-correct-response {
   qti-text-entry-interaction {
-    background-color: var(--info-color);
-    border-color: var(--info-color);
-    color: var(--qti-selected-color);
-
     &::before {
-      @include status-icon(var(--fa-check-mask), var(--qti-selected-color));
+      @include status-icon(var(--fa-check-mask), var(--qti-answer-fg));
     }
 
     &::part(input) {
       margin-left: 1.5rem;
-      color: var(--qti-selected-color);
     }
   }
 }

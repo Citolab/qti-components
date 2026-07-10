@@ -48,17 +48,9 @@ qti-hottext-interaction.qti-unselected-hidden {
   }
 }
 
+/* Colours come from the shared answer-key block; only the glyph stays, until Phase 2. */
 div.full-correct-response {
-  qti-hottext-interaction {
-    qti-hottext {
-      &:state(checked) {
-        background-color: var(--info-color);
-        border-color: var(--info-color);
-
-        &::before {
-          @include status-icon(var(--fa-check-mask), var(--qti-selected-color));
-        }
-      }
-    }
+  qti-hottext-interaction qti-hottext:state(checked)::before {
+    @include status-icon(var(--fa-check-mask), var(--qti-answer-fg));
   }
 }

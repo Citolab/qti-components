@@ -108,17 +108,13 @@ qti-order-interaction {
   }
 }
 
-// "Toon antwoorden" / correct-response view: hide the draggable bank and give the
-// "Juiste antwoord" cards the filled info-coloured background with accent like the legacy FE.
-.full-correct-response {
-  qti-order-interaction::part(drags) {
-    // !important: the component's own shadow style sets `[part='drags'] { display: flex }`,
-    // which otherwise wins over this ::part() rule and keeps the drag bank visible.
-    display: none !important;
-  }
-
-  qti-order-interaction::part(drag) {
-    background-color: var(--bs-info-bg-subtle);
-    border: 1px solid var(--bs-info-border-subtle);
-  }
+// "Toon antwoorden": hide the draggable bank. The cards' colours come from the shared answer-key
+// block in kennisnet-override.scss — order was the only interaction already showing them, and only
+// because its own `::part(drag)` rule used the subtle tint while its comment claimed the filled one.
+//
+// No `!important`. The comment that used to sit here claimed a shadow `[part='drags']` rule beats a
+// document `::part(drags)` rule. Probed in Chromium: it does not. A document ::part() rule always
+// beats the element's own shadow styles.
+.full-correct-response qti-order-interaction::part(drags) {
+  display: none;
 }

@@ -25,9 +25,11 @@ qti-item-body {
   }
 }
 
-div.full-correct-response {
-  --qti-correct: var(--info-color);
-}
+/*
+ * `--qti-correct: var(--info-color)` used to live here, re-pointing "the candidate got this right"
+ * at the answer key's blue for everything inside the clone. A border written from JavaScript then
+ * changed colour depending on which parent it landed in. `--qti-answer-*` says what it means.
+ */
 
 div.full-correct-response-inline {
   background-color: transparent !important;

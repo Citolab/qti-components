@@ -190,20 +190,48 @@ qti-simple-associable-choice::part(drag):state(candidate-incorrect),
 }
 
 /*
- * Full-correct-response styling — the cloned interaction (toggled by
- * `show-full-correct-response`) and the `.correct-option` spans that
- * gap-match injects when `show-correct-response` is set.
+ * The answer key: one appearance, every interaction.
+ *
+ * `.full-correct-response` is a clone of the interaction, inert, whose answer comes from nothing
+ * more than `clone.response = correctResponse`. So a placed chip in it is an *ordinary* chip, and
+ * without this block it wears the ordinary chip's purple. `::part(drag)` is bare on purpose: it
+ * reaches a placed chip in any drop target's shadow root, in any interaction.
+ *
+ * `span.correct-option` used to share this selector list. It does not belong here — it is the
+ * *inline* correct-response indicator, injected beside the candidate's own answer and stripped from
+ * the clone. Styling the two together meant a change to either silently changed the other.
  */
-.full-correct-response :state(drag),
-.full-correct-response qti-gap::part(drag),
+.full-correct-response {
+  :state(drag),
+  ::part(drag),
+  qti-text-entry-interaction,
+  qti-inline-choice-interaction,
+  qti-hottext:state(checked) {
+    background-color: var(--qti-answer-bg);
+    color: var(--qti-answer-fg);
+    border-color: var(--qti-answer-border);
+  }
+
+  /* Both parts read a colour of their own, so neither inherits the rule above. */
+  qti-text-entry-interaction::part(input),
+  qti-inline-choice-interaction::part(value) {
+    color: var(--qti-answer-fg);
+  }
+}
+
+/*
+ * The inline correct-response indicator, shown next to the candidate's own answer. Its own feature,
+ * its own rule. Phase 5 of plans/correct-response-unification.md replaces the four spellings of it
+ * with one `part="correct-option"`.
+ */
 span.correct-option {
-  background-color: var(--info-color);
-  color: white;
-  border: var(--qti-border-thickness) solid var(--info-color);
+  background-color: var(--qti-answer-bg);
+  color: var(--qti-answer-fg);
+  border: var(--qti-border-thickness) solid var(--qti-answer-border);
 }
 
 .full-correct-response :state(drag)::after,
-.full-correct-response qti-gap::part(drag)::after,
+.full-correct-response ::part(drag)::after,
 span.correct-option::after {
   content: '';
   display: inline-block;
@@ -211,7 +239,7 @@ span.correct-option::after {
   width: 1em;
   height: 1em;
   margin-left: 0.4em;
-  background-color: white;
+  background-color: var(--qti-answer-fg);
   mask: var(--fa-check-mask) no-repeat center / contain;
   -webkit-mask: var(--fa-check-mask) no-repeat center / contain;
 }
