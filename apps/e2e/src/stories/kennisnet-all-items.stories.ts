@@ -800,3 +800,186 @@ export const PuntSelecteren: Story = {
     </qti-item-body>
   `
 };
+
+/*
+ * ITEM017 onwards cover the interactions the sixteen Kennisnet items never reached.
+ *
+ * Every drag-and-drop interaction except gap-match and match was invisible to VRT, which is how a
+ * change to the chip styling of graphic-gap-match could land with a green suite. They carry a
+ * pre-filled `response` and a `correct-response` for the same reason the items above do: it puts a
+ * placed chip, a candidate correction and the answer key into the frame without a drag.
+ *
+ * Not covered, deliberately: media (a <video> frame is not reproducible), upload (a native file
+ * input renders per-OS), and the two custom-interaction packages (they execute author-supplied
+ * script).
+ *
+ * ITEM018 and ITEM019 are weaker than they look. `qti-hotspot-interaction` and
+ * `qti-graphic-order-interaction` ignore a preset `response`: their `qti-hotspot-choice` children
+ * come up carrying only `radio` — no `checked`, no `candidate-*`, no `correct-response` — so both
+ * baselines capture an untouched question and neither shows a selection, a correction or an answer
+ * key. Their baselines still lock the layout, and they will move the day that bug is fixed. Do not
+ * read a green ITEM018 as "hotspot selection still renders correctly"; nothing there renders it.
+ */
+
+/** ITEM017 — Combineervraag (associate). */
+export const Combineervraag: Story = {
+  name: 'ITEM017 — Combineervraag',
+  render: () => html`
+    <qti-item-body>
+      <qti-associate-interaction
+        response-identifier="RESPONSE"
+        max-associations="3"
+        response="A M,C P,D L"
+        correct-response="A P,C M,D L"
+        show-candidate-correction
+        show-full-correct-response
+      >
+        <qti-prompt>Combineer elke tegenspeler met zijn rivaal.</qti-prompt>
+        <qti-simple-associable-choice identifier="A" match-max="1">Antonio</qti-simple-associable-choice>
+        <qti-simple-associable-choice identifier="C" match-max="1">Capulet</qti-simple-associable-choice>
+        <qti-simple-associable-choice identifier="D" match-max="1">Demetrius</qti-simple-associable-choice>
+        <qti-simple-associable-choice identifier="L" match-max="1">Lysander</qti-simple-associable-choice>
+        <qti-simple-associable-choice identifier="M" match-max="1">Montague</qti-simple-associable-choice>
+        <qti-simple-associable-choice identifier="P" match-max="1">Prospero</qti-simple-associable-choice>
+      </qti-associate-interaction>
+    </qti-item-body>
+  `
+};
+
+/** ITEM018 — Hotspotvraag (hotspot). */
+export const Hotspotvraag: Story = {
+  name: 'ITEM018 — Hotspotvraag',
+  render: () => html`
+    <qti-item-body>
+      <qti-hotspot-interaction
+        response-identifier="RESPONSE"
+        max-choices="1"
+        response="A"
+        correct-response="C"
+        show-candidate-correction
+        show-full-correct-response
+      >
+        <qti-prompt>Klik op de meest zuidelijke luchthaven.</qti-prompt>
+        <img src="/assets/qti-hotspot-interaction/uk.png" height="280" width="206" alt="Kaart van het VK" />
+        <qti-hotspot-choice coords="77,115,10" identifier="A" shape="circle"></qti-hotspot-choice>
+        <qti-hotspot-choice coords="118,184,10" identifier="B" shape="circle"></qti-hotspot-choice>
+        <qti-hotspot-choice coords="150,235,10" identifier="C" shape="circle"></qti-hotspot-choice>
+      </qti-hotspot-interaction>
+    </qti-item-body>
+  `
+};
+
+/** ITEM019 — Volgorde op afbeelding (graphic-order). */
+export const VolgordeOpAfbeelding: Story = {
+  name: 'ITEM019 — Volgorde op afbeelding',
+  render: () => html`
+    <qti-item-body>
+      <qti-graphic-order-interaction
+        response-identifier="RESPONSE"
+        response="A B C"
+        correct-response="C B A"
+        show-candidate-correction
+        show-full-correct-response
+      >
+        <qti-prompt>Zet de luchthavens op volgorde van noord naar zuid.</qti-prompt>
+        <img src="/assets/qti-graphic-order-interaction/uk.png" height="280" width="206" alt="Kaart van het VK" />
+        <qti-hotspot-choice coords="78,102,8" identifier="A" shape="circle"></qti-hotspot-choice>
+        <qti-hotspot-choice coords="117,171,8" identifier="B" shape="circle"></qti-hotspot-choice>
+        <qti-hotspot-choice coords="166,227,8" identifier="C" shape="circle"></qti-hotspot-choice>
+      </qti-graphic-order-interaction>
+    </qti-item-body>
+  `
+};
+
+/** ITEM020 — Sleepvraag op afbeelding (graphic-gap-match). */
+export const SleepvraagOpAfbeelding: Story = {
+  name: 'ITEM020 — Sleepvraag op afbeelding',
+  render: () => html`
+    <qti-item-body>
+      <qti-graphic-gap-match-interaction
+        response-identifier="RESPONSE"
+        response="DraggerB A,DraggerC B"
+        correct-response="DraggerB B,DraggerC C"
+        show-candidate-correction
+        show-full-correct-response
+      >
+        <qti-prompt>Sleep elke gebeurtenis naar het juiste vak op de tijdlijn.</qti-prompt>
+        <img
+          alt="Tijdlijn van 1939 tot 1991"
+          src="/assets/qti-graphic-gap-match-interaction/timeline-558.png"
+          height="326"
+          width="558"
+        />
+        <qti-gap-img identifier="DraggerB" match-max="1">
+          <img src="/assets/qti-graphic-gap-match-interaction/b-ww2.png" alt="Einde WO2" height="63" width="78" />
+        </qti-gap-img>
+        <qti-gap-img identifier="DraggerC" match-max="1">
+          <img
+            src="/assets/qti-graphic-gap-match-interaction/c-vietnam.png"
+            alt="Einde Vietnam"
+            height="63"
+            width="78"
+          />
+        </qti-gap-img>
+        <qti-associable-hotspot
+          coords="55,256,133,319"
+          identifier="A"
+          match-max="1"
+          shape="rect"
+        ></qti-associable-hotspot>
+        <qti-associable-hotspot
+          coords="190,256,268,319"
+          identifier="B"
+          match-max="1"
+          shape="rect"
+        ></qti-associable-hotspot>
+        <qti-associable-hotspot
+          coords="325,256,403,319"
+          identifier="C"
+          match-max="1"
+          shape="rect"
+        ></qti-associable-hotspot>
+      </qti-graphic-gap-match-interaction>
+    </qti-item-body>
+  `
+};
+
+/** ITEM021 — Verbind de punten (graphic-associate). */
+export const VerbindDePunten: Story = {
+  name: 'ITEM021 — Verbind de punten',
+  render: () => html`
+    <qti-item-body>
+      <qti-graphic-associate-interaction
+        response-identifier="RESPONSE"
+        max-associations="2"
+        response="A B"
+        correct-response="A B,B C"
+        show-candidate-correction
+        show-full-correct-response
+      >
+        <qti-prompt>Teken de nieuwe routes van de luchtvaartmaatschappij.</qti-prompt>
+        <img
+          src="/assets/qti-graphic-associate-interaction/uk.png"
+          alt="Kaart van luchthavens in het VK"
+          width="206"
+          height="280"
+        />
+        <qti-associable-hotspot shape="circle" coords="78,102,8" identifier="A" match-max="2"></qti-associable-hotspot>
+        <qti-associable-hotspot shape="circle" coords="117,171,8" identifier="B" match-max="2"></qti-associable-hotspot>
+        <qti-associable-hotspot shape="circle" coords="166,227,8" identifier="C" match-max="2"></qti-associable-hotspot>
+      </qti-graphic-associate-interaction>
+    </qti-item-body>
+  `
+};
+
+/** ITEM022 — Schuifbalk (slider). */
+export const Schuifbalk: Story = {
+  name: 'ITEM022 — Schuifbalk',
+  render: () => html`
+    <qti-item-body>
+      <qti-slider-interaction response-identifier="RESPONSE" lower-bound="0" upper-bound="100" step="5" response="35">
+        <qti-prompt>Hoeveel procent van het aardoppervlak is bedekt met water?</qti-prompt>
+      </qti-slider-interaction>
+    </qti-item-body>
+  `
+};
