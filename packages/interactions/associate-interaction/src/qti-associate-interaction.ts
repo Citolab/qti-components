@@ -106,6 +106,25 @@ export class QtiAssociateInteraction extends DragDropSlottedSortableMixin(Slotte
     return response;
   }
 
+  /**
+   * How many associations the candidate has made.
+   *
+   * The mixin counts placed chips, which is right for gap-match — one chip in one gap is one
+   * association — and wrong here. An association is a *pair*, so three associations are six chips,
+   * and `max-associations="3"` compared 6 against 3 and declared the item invalid the moment it was
+   * correctly filled in.
+   *
+   * A half-filled row is not an association yet, and `getResponse()` already knows that: it emits a
+   * pair only when both sides hold a chip. Counting its entries counts associations by definition,
+   * and keeps the number validation sees equal to the number the response reports.
+   */
+  public override totalAssociationsFromState(): number {
+    // The mixin's version syncs first, and callers depend on that: `getResponse` reads the
+    // placement map, which is stale until the sync runs.
+    this.syncDragDropState();
+    return this.getResponse().length;
+  }
+
   getValue(val: string[]) {
     return (
       val?.flatMap((pair, i) => {

@@ -47,6 +47,18 @@ export type DragDropSlotted = DragDropCore & {
   /** The chips a target holds — from the placement map, or the DOM, depending on the target. */
   chipsIn(droppable: HTMLElement): HTMLElement[];
   isDeclarativeTarget(el: HTMLElement | null | undefined): boolean;
+
+  /** Republish placement on `dragDropContext` and re-render the targets that read it. */
+  syncDragDropState(): void;
+
+  /**
+   * How many associations exist, for `min-associations` / `max-associations`.
+   *
+   * The default counts placed chips, which is one-to-one with associations only when a chip *is*
+   * an association — a gap holding one chip, a match target holding one chip. Associate pairs two
+   * chips per association and overrides this. Declared here so it can be.
+   */
+  totalAssociationsFromState(): number;
 };
 
 interface InteractionConfiguration {
@@ -201,7 +213,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       setDropFilled(droppable, false);
     }
 
-    protected syncDragDropState(): void {
+    public syncDragDropState(): void {
       const dragsByTarget: Record<string, string[]> = {};
       const countByTarget: Record<string, number> = {};
       const nodesByTarget: Record<string, HTMLElement[]> = {};
@@ -241,7 +253,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       });
     }
 
-    protected totalAssociationsFromState(): number {
+    public totalAssociationsFromState(): number {
       this.syncDragDropState();
       return Object.values(this._dragDrop.countByTarget).reduce((total, count) => total + count, 0);
     }

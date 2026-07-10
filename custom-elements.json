@@ -638,6 +638,20 @@
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
               }
+            },
+            {
+              "kind": "method",
+              "name": "totalAssociationsFromState",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "description": "How many associations the candidate has made.\n\nThe mixin counts placed chips, which is right for gap-match — one chip in one gap is one\nassociation — and wrong here. An association is a *pair*, so three associations are six chips,\nand `max-associations=\"3\"` compared 6 against 3 and declared the item invalid the moment it was\ncorrectly filled in.\n\nA half-filled row is not an association yet, and `getResponse()` already knows that: it emits a\npair only when both sides hold a chip. Counting its entries counts associations by definition,\nand keeps the number validation sees equal to the number the response reports.",
+              "type": {
+                "text": "totalAssociationsFromState() => number"
+              }
             }
           ],
           "mixins": [
@@ -7194,7 +7208,7 @@
             {
               "kind": "method",
               "name": "syncDragDropState",
-              "privacy": "protected",
+              "privacy": "public",
               "return": {
                 "type": {
                   "text": "void"
@@ -7204,7 +7218,7 @@
             {
               "kind": "method",
               "name": "totalAssociationsFromState",
-              "privacy": "protected",
+              "privacy": "public",
               "return": {
                 "type": {
                   "text": "number"
@@ -15094,7 +15108,7 @@
             {
               "kind": "method",
               "name": "syncDragDropState",
-              "privacy": "protected",
+              "privacy": "public",
               "return": {
                 "type": {
                   "text": "void"
@@ -15103,6 +15117,9 @@
               "inheritedFrom": {
                 "name": "DragDropSlottedMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              },
+              "type": {
+                "text": "syncDragDropState() => void"
               }
             },
             {
@@ -15202,7 +15219,7 @@
             {
               "kind": "method",
               "name": "totalAssociationsFromState",
-              "privacy": "protected",
+              "privacy": "public",
               "return": {
                 "type": {
                   "text": "number"
@@ -15211,6 +15228,9 @@
               "inheritedFrom": {
                 "name": "DragDropSlottedMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              },
+              "type": {
+                "text": "totalAssociationsFromState() => number"
               }
             },
             {
@@ -22967,7 +22987,7 @@
             {
               "kind": "method",
               "name": "syncDragDropState",
-              "privacy": "protected",
+              "privacy": "public",
               "return": {
                 "type": {
                   "text": "void"
@@ -22976,6 +22996,9 @@
               "inheritedFrom": {
                 "name": "DragDropSlottedMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              },
+              "type": {
+                "text": "syncDragDropState() => void"
               }
             },
             {
@@ -23093,7 +23116,7 @@
             {
               "kind": "method",
               "name": "totalAssociationsFromState",
-              "privacy": "protected",
+              "privacy": "public",
               "return": {
                 "type": {
                   "text": "number"
@@ -23102,6 +23125,9 @@
               "inheritedFrom": {
                 "name": "DragDropSlottedMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              },
+              "type": {
+                "text": "totalAssociationsFromState() => number"
               }
             },
             {
