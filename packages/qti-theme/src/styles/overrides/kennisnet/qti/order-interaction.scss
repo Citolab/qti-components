@@ -65,12 +65,12 @@ qti-order-interaction {
     overflow: visible;
 
     &:state(candidate-incorrect) {
-      border: 1px solid var(--qti-incorrect);
+      border-color: var(--qti-incorrect);
       background-color: var(--qti-incorrect-light);
     }
 
     &:state(candidate-correct) {
-      border: 1px solid var(--qti-correct);
+      border-color: var(--qti-correct);
       background-color: var(--qti-correct-light);
     }
 

@@ -170,7 +170,9 @@ qti-simple-associable-choice::part(drag):state(candidate-correct),
 [data-drag-clone]:state(candidate-correct) {
   background-color: color-mix(in srgb, var(--qti-correct) 5%, white);
   color: var(--qti-correct);
-  border: var(--qti-border-thickness) solid var(--qti-correct);
+  /* border-color, not border: the chip already has a border of that width, and a state must
+     repaint, never resize. */
+  border-color: var(--qti-correct);
   box-shadow: none;
 }
 
@@ -181,7 +183,9 @@ qti-simple-associable-choice::part(drag):state(candidate-incorrect),
 [data-drag-clone]:state(candidate-incorrect) {
   background-color: color-mix(in srgb, var(--qti-incorrect) 5%, white);
   color: var(--qti-incorrect);
-  border: var(--qti-border-thickness) solid var(--qti-incorrect);
+  /* border-color, not border: the chip already has a border of that width, and a state must
+     repaint, never resize. */
+  border-color: var(--qti-incorrect);
   box-shadow: none;
 }
 

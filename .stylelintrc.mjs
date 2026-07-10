@@ -17,8 +17,14 @@ export default {
       true,
       {
         /*
-         * Known debt, not exemptions. Enabling the rule across the whole state vocabulary
-         * surfaces 23 existing violations in four states, and several look real:
+         * Known debt, not exemptions.
+         *
+         * `candidate-correct` and `candidate-incorrect` came OFF this list once the correction
+         * badge moved into its own `part="correction"`. What kept them here was the badge: four
+         * `::after` blocks setting `margin-left` and `width`, plus a `border` shorthand where a
+         * `border-color` was meant. Both are gone; the rule now polices them.
+         *
+         * What remains:
          *
          *   checked             kennisnet gives a selected hottext padding and margin, so choosing
          *                       a word reflows the sentence around it; it also resizes the radio
@@ -30,7 +36,7 @@ export default {
          * Each needs checking against VRT before it moves, so they are named here rather than
          * silently disabled at 23 call sites. Deleting a name from this list is the unit of work.
          */
-        ignoreStates: ['checked', 'candidate-correct', 'candidate-incorrect', 'correct-response']
+        ignoreStates: ['checked', 'correct-response']
       }
     ]
   },
