@@ -200,6 +200,26 @@
             },
             {
               "kind": "method",
+              "name": "#renderDrop",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "A drop target, holding whatever the interaction's placement map says it holds.\n`data-declarative-drops` tells the mixin to keep the chips in that map rather than appending\nthem into this div."
+            },
+            {
+              "kind": "method",
               "name": "#resetShiftState",
               "privacy": "private",
               "return": {
@@ -3705,6 +3725,14 @@
             },
             {
               "kind": "field",
+              "name": "_dragDrop",
+              "type": {
+                "text": "Readonly<DragDropState> | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
               "name": "_interactionContext",
               "type": {
                 "text": "Readonly<InteractionContext> | undefined"
@@ -3766,6 +3794,17 @@
             },
             {
               "kind": "field",
+              "name": "acceptsDeclarativeDrops",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "readonly": true,
+              "default": "true",
+              "description": "Opt-in marker read by `DragDropSlottedMixin`; see qti-gap."
+            },
+            {
+              "kind": "field",
               "name": "disabled",
               "type": {
                 "text": "boolean"
@@ -3777,6 +3816,16 @@
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "drags",
+              "type": {
+                "text": "readonly HTMLElement[]"
+              },
+              "privacy": "public",
+              "description": "The chips this choice holds when it acts as a drop target (match-interaction's second set).",
+              "readonly": true
             },
             {
               "kind": "field",
@@ -6145,7 +6194,7 @@
               "type": {
                 "text": "Readonly<DragDropState>"
               },
-              "privacy": "protected",
+              "privacy": "public",
               "default": "{ dragsByTarget: {}, countByTarget: {}, nodesByTarget: {} }",
               "description": "What each drop target holds. Published to the drop targets, which will render themselves\nfrom it once the DOM stops being the source of truth.\n\nReassign, never mutate — an in-place change does not notify consumers."
             },
@@ -6263,7 +6312,7 @@
                 "text": "boolean"
               },
               "privacy": "public",
-              "default": "false",
+              "default": "true",
               "attribute": "auto-size-dropzones"
             },
             {
@@ -6279,7 +6328,7 @@
             {
               "kind": "method",
               "name": "chipsIn",
-              "privacy": "protected",
+              "privacy": "public",
               "return": {
                 "type": {
                   "text": "HTMLElement[]"
@@ -6478,7 +6527,7 @@
             {
               "kind": "method",
               "name": "isDeclarativeTarget",
-              "privacy": "protected",
+              "privacy": "public",
               "return": {
                 "type": {
                   "text": "boolean"
@@ -6491,7 +6540,8 @@
                     "text": "HTMLElement | null | undefined"
                   }
                 }
-              ]
+              ],
+              "description": "Does this target render its own chips?\n\nA custom element says so with a property (`qti-gap`, `qti-associable-hotspot`). Order's and\nassociate's targets are plain `<div part=\"drop\">` in the interaction's own shadow root, and a\ndiv cannot carry a property that survives a Lit re-render — it says so with an attribute, and\nthe *interaction* renders the chips into it. Same placement map either way."
             },
             {
               "kind": "method",
@@ -6861,7 +6911,7 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false",
+              "default": "true",
               "fieldName": "autoSizeDropzones"
             },
             {
@@ -12985,7 +13035,7 @@
               "type": {
                 "text": "Readonly<DragDropState>"
               },
-              "privacy": "protected",
+              "privacy": "public",
               "default": "{ dragsByTarget: {}, countByTarget: {}, nodesByTarget: {} }",
               "description": "What each drop target holds. Published to the drop targets, which will render themselves\nfrom it once the DOM stops being the source of truth.\n\nReassign, never mutate — an in-place change does not notify consumers.",
               "inheritedFrom": {
@@ -13448,7 +13498,7 @@
                 "text": "boolean"
               },
               "privacy": "public",
-              "default": "false",
+              "default": "true",
               "attribute": "auto-size-dropzones",
               "inheritedFrom": {
                 "name": "DragDropSlottedMixin",
@@ -13472,7 +13522,7 @@
             {
               "kind": "method",
               "name": "chipsIn",
-              "privacy": "protected",
+              "privacy": "public",
               "return": {
                 "type": {
                   "text": "HTMLElement[]"
@@ -13490,6 +13540,9 @@
               "inheritedFrom": {
                 "name": "DragDropSlottedMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              },
+              "type": {
+                "text": "chipsIn(droppable: HTMLElement) => HTMLElement[]"
               }
             },
             {
@@ -13955,7 +14008,7 @@
             {
               "kind": "method",
               "name": "isDeclarativeTarget",
-              "privacy": "protected",
+              "privacy": "public",
               "return": {
                 "type": {
                   "text": "boolean"
@@ -13969,9 +14022,13 @@
                   }
                 }
               ],
+              "description": "Does this target render its own chips?\n\nA custom element says so with a property (`qti-gap`, `qti-associable-hotspot`). Order's and\nassociate's targets are plain `<div part=\"drop\">` in the interaction's own shadow root, and a\ndiv cannot carry a property that survives a Lit re-render — it says so with an attribute, and\nthe *interaction* renders the chips into it. Same placement map either way.",
               "inheritedFrom": {
                 "name": "DragDropSlottedMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              },
+              "type": {
+                "text": "isDeclarativeTarget(el: HTMLElement | null | undefined) => boolean"
               }
             },
             {
@@ -14692,7 +14749,7 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false",
+              "default": "true",
               "fieldName": "autoSizeDropzones",
               "inheritedFrom": {
                 "name": "DragDropSlottedMixin",
@@ -20596,7 +20653,7 @@
               "type": {
                 "text": "Readonly<DragDropState>"
               },
-              "privacy": "protected",
+              "privacy": "public",
               "default": "{ dragsByTarget: {}, countByTarget: {}, nodesByTarget: {} }",
               "description": "What each drop target holds. Published to the drop targets, which will render themselves\nfrom it once the DOM stops being the source of truth.\n\nReassign, never mutate — an in-place change does not notify consumers.",
               "inheritedFrom": {
@@ -21061,6 +21118,7 @@
               "privacy": "public",
               "default": "false",
               "attribute": "auto-size-dropzones",
+              "description": "Match targets are categories, not slots. They should look able to hold several answers, so they\ntake the vendor floor (`--qti-drop-min-height`) rather than the size of the widest chip.",
               "inheritedFrom": {
                 "name": "DragDropSlottedMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
@@ -21083,7 +21141,7 @@
             {
               "kind": "method",
               "name": "chipsIn",
-              "privacy": "protected",
+              "privacy": "public",
               "return": {
                 "type": {
                   "text": "HTMLElement[]"
@@ -21101,6 +21159,9 @@
               "inheritedFrom": {
                 "name": "DragDropSlottedMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              },
+              "type": {
+                "text": "chipsIn(droppable: HTMLElement) => HTMLElement[]"
               }
             },
             {
@@ -21570,7 +21631,7 @@
             {
               "kind": "method",
               "name": "isDeclarativeTarget",
-              "privacy": "protected",
+              "privacy": "public",
               "return": {
                 "type": {
                   "text": "boolean"
@@ -21584,9 +21645,13 @@
                   }
                 }
               ],
+              "description": "Does this target render its own chips?\n\nA custom element says so with a property (`qti-gap`, `qti-associable-hotspot`). Order's and\nassociate's targets are plain `<div part=\"drop\">` in the interaction's own shadow root, and a\ndiv cannot carry a property that survives a Lit re-render — it says so with an attribute, and\nthe *interaction* renders the chips into it. Same placement map either way.",
               "inheritedFrom": {
                 "name": "DragDropSlottedMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              },
+              "type": {
+                "text": "isDeclarativeTarget(el: HTMLElement | null | undefined) => boolean"
               }
             },
             {
@@ -22340,7 +22405,7 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false",
+              "default": "true",
               "fieldName": "autoSizeDropzones",
               "inheritedFrom": {
                 "name": "DragDropSlottedMixin",
@@ -32107,6 +32172,14 @@
           "declaration": {
             "name": "*",
             "module": "packages/qti-base/src/styles/box-sizing.styles"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/qti-base/src/styles/drop-region.styles"
           }
         },
         {
