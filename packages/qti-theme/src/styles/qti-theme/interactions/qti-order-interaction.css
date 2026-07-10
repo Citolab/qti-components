@@ -43,6 +43,36 @@
       width: 100%;
       text-overflow: ellipsis;
     }
+    /*
+     * Moved out of qti-order-interaction.styles.ts, which is layout-only now.
+     *
+     * The drop's flags are part tokens rather than attributes: an attribute selector cannot follow
+     * `::part()`, and a <div> cannot carry a custom state (attachInternals throws). See setDropFlag.
+     */
+    &::part(active) {
+      border-color: var(--qti-border-active);
+      background-color: var(--qti-bg-active);
+    }
+
+    &::part(enabled) {
+      background-color: var(--qti-bg-active);
+    }
+
+    /* A filled drop hides its dashed outline and drop-here glyph. Hides — the border keeps its
+       width, or the column shifts 2px the instant a chip lands. */
+    &::part(filled) {
+      --qti-drop-border: var(--qti-border-thickness, 1px) solid transparent;
+      --qti-drop-bg-img: none;
+    }
+
+    &::part(drag):state(candidate-correct) {
+      background-color: var(--qti-correct-response, var(--qti-correct));
+    }
+
+    &::part(drag):state(candidate-incorrect) {
+      background-color: var(--qti-incorrect);
+    }
+
     &::part(drops) {
       gap: 0.5rem;
     }

@@ -9,7 +9,7 @@ export default [
     :host {
       display: block; /* necessary to calculate scaling position */
     }
-    slot[part='drags'] {
+    slot[part~='drags'] {
       display: flex;
       align-items: flex-start;
       flex: 1;

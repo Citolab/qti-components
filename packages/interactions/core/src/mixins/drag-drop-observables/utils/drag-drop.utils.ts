@@ -89,20 +89,57 @@ export function isDragChipHidden(el: HTMLElement | null | undefined): boolean {
  * Replaces `data-has-drop`, which was set in exactly one of the branches that could set it and
  * removed in two that could not.
  */
-export function setDropFilled(el: HTMLElement | null | undefined, filled: boolean): void {
+/**
+ * Flags a drop target carries, readable from a theme.
+ *
+ * `filled`   — holds at least one chip
+ * `active`   — a drag is in progress and this target could receive it
+ * `enabled`  — same, kept distinct because the themes distinguish them
+ * `hover`    — the chip is currently over this target
+ */
+export type DropFlag = 'filled' | 'active' | 'enabled' | 'hover';
+
+/**
+ * Set a flag on a drop target, in the only spelling that element can carry.
+ *
+ * Verified in Chromium, and it is the whole reason there are two spellings:
+ *
+ *   ::part(x):state(y)   MATCHES  — but only when x is a custom element
+ *   ::part(x)[attr]      never matches
+ *   ::part(x):has(…)     never matches
+ *   ::part(y)  (token)   MATCHES  — on anything
+ *
+ * A plain `<div>` cannot carry a custom state: `attachInternals()` throws NotSupportedError. So
+ * order's and associate's `<div part="drop">` take an extra part token, and a theme reaches them as
+ * `::part(active)`. The custom-element targets take a real state.
+ *
+ * The plain attribute is written too, because shadow-internal styles and existing vendor rules
+ * still select on it. Nothing reads it from the document — nothing can.
+ */
+export function setDropFlag(el: HTMLElement | null | undefined, flag: DropFlag, on: boolean): void {
   if (!el) return;
+
+  if (on) el.setAttribute(flag, '');
+  else el.removeAttribute(flag);
 
   const states = internalsOf(el)?.states;
   if (states) {
-    if (filled) states.add('filled');
-    else states.delete('filled');
+    if (on) states.add(flag);
+    else states.delete(flag);
     return;
   }
 
   const tokens = new Set((el.getAttribute('part') ?? '').split(/\s+/).filter(Boolean));
-  if (filled) tokens.add('filled');
-  else tokens.delete('filled');
+  // Only a drop target takes the token. `allDropzones` also holds the drag container — a
+  // `<slot part="drags">` — and stamping it would rewrite a part list that other selectors read.
+  if (!tokens.has('drop')) return;
+  if (on) tokens.add(flag);
+  else tokens.delete(flag);
   el.setAttribute('part', [...tokens].join(' '));
+}
+
+export function setDropFilled(el: HTMLElement | null | undefined, filled: boolean): void {
+  setDropFlag(el, 'filled', filled);
 }
 
 /** Does this drop target currently hold a chip? Reads whichever spelling the target uses. */

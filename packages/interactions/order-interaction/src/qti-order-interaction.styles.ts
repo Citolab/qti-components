@@ -1,12 +1,25 @@
 import { css } from 'lit';
 
 import { boxSizing, dropRegion } from '@qti-components/base';
-// import componentStyles from '../../utilities/styles/component.styles';
-// :host {
-//   display: inline-block;
-//   position: relative;
-// }
-/* ${componentStyles} */
+
+/**
+ * Layout and sizing only. Paint and state live in the theme.
+ *
+ * What left, and where it went — `styles/qti-theme/interactions/qti-order-interaction.css` and
+ * `styles/overrides/kennisnet/qti/order-interaction.scss`:
+ *
+ *   [part~='drop'][active] / [enabled]     -> ::part(active) / ::part(enabled)
+ *   [part~='drop']:has([part='drag'])      -> ::part(filled)
+ *   [part='drag']:state(candidate-*)       -> ::part(drag):state(candidate-*)
+ *
+ * They had to be rewritten, not relocated: an attribute selector and `:has()` cannot follow
+ * `::part()`, so the drop's flags became part tokens (verified in Chromium, see setDropFlag).
+ *
+ * Two rules were deleted rather than moved, because neither did anything:
+ *   - `background-color: var(--qti-background-color-active-droplist)` — that property is never
+ *     defined anywhere in the repo, so the declaration was invalid at computed-value time.
+ *   - `[part~='drop'][data-cross-slot-target]` — nothing has ever set that attribute.
+ */
 export default [
   boxSizing,
   dropRegion,
@@ -45,49 +58,6 @@ export default [
       display: block;
       flex: 1;
       min-height: var(--qti-dropzone-min-height, 0);
-    }
-
-    [part~='drop'][active],
-    [part~='drop'][enabled],
-    [part='drops']:has([part~='drop'] > [part='drag']) {
-      background-color: var(--qti-background-color-active-droplist);
-    }
-
-    [part~='drop'][active] {
-      border-color: var(--qti-border-active);
-      background-color: var(--qti-bg-active);
-    }
-
-    [part~='drop'][enabled] {
-      background-color: var(--qti-bg-active) !important;
-    }
-
-    [part~='drop'][data-cross-slot-target] {
-      border-color: var(--qti-border-active, #0066cc) !important;
-      background-color: var(--qti-bg-active, rgba(0, 102, 204, 0.1)) !important;
-      outline: 2px dashed var(--qti-border-active, #0066cc);
-      outline-offset: -2px;
-    }
-
-    /*
-     * A filled drop hides its dashed outline and its drop-here glyph. Hides — it must not remove
-     * them: setting the border to none took 2px out of the box the instant a chip landed, and the
-     * whole column shifted. Transparent keeps the border's width and drops its ink.
-     */
-    [part~='drop']:has([part='drag']) {
-      --qti-drop-border: var(--qti-border-thickness, 1px) solid transparent;
-      --qti-drop-bg-img: none;
-    }
-
-    /* Candidate correction colors for choices placed inside drop targets. */
-    [part~='drop'] [qti-draggable='true']:state(candidate-correct),
-    [part='drag']:state(candidate-correct) {
-      background-color: var(--qti-correct-response, --qti-correct);
-    }
-
-    [part~='drop'] [qti-draggable='true']:state(candidate-incorrect),
-    [part='drag']:state(candidate-incorrect) {
-      background-color: var(--qti-incorrect);
     }
 
     [part='container'] {

@@ -25,7 +25,7 @@ import type { CSSResultGroup } from 'lit';
  * @csspart message - Live validation message region (role="alert").
  */
 export class QtiGapMatchInteraction extends DragDropSlottedSortableMixin(
-  DragDropSlottedMixin(Interaction, 'qti-gap-text', 'qti-gap', `slot[part='drags']`),
+  DragDropSlottedMixin(Interaction, 'qti-gap-text', 'qti-gap', `slot[part~='drags']`),
   '[qti-draggable="true"]'
 ) {
   static override styles: CSSResultGroup = styles;

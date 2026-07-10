@@ -8425,8 +8425,37 @@
                 "text": "boolean"
               }
             }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "setDropFlag",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "el",
+              "type": {
+                "text": "HTMLElement | null | undefined"
+              }
+            },
+            {
+              "name": "flag",
+              "type": {
+                "text": "DropFlag"
+              }
+            },
+            {
+              "name": "on",
+              "type": {
+                "text": "boolean"
+              }
+            }
           ],
-          "description": "Mark a drop target as holding at least one chip.\n\nTwo spellings, because the five drop targets are not the same kind of thing and cannot be made\nso. `qti-gap`, `qti-associable-hotspot` and `qti-simple-associable-choice` are custom elements\nwith an `ElementInternals`, so they take a real custom state. Order's and associate's targets are\nplain `<div part=\"drop\">` in the interaction's shadow root, and **a div cannot carry\n`:state()`** — there is no `attachInternals` for it. They take an extra part token instead.\n\nBoth are reachable, and a theme addresses them the same way it addresses a chip's three homes:\n\n  :state(filled)    the light-DOM custom-element targets\n  ::part(filled)    the shadow-resident divs — and `::part(drop)` still matches them\n\nVerified in Chromium: an extra part token does not stop `::part(drop)` matching, and an unfilled\ntarget matches neither.\n\nReplaces `data-has-drop`, which was set in exactly one of the branches that could set it and\nremoved in two that could not."
+          "description": "Set a flag on a drop target, in the only spelling that element can carry.\n\nVerified in Chromium, and it is the whole reason there are two spellings:\n\n  ::part(x):state(y)   MATCHES  — but only when x is a custom element\n  ::part(x)[attr]      never matches\n  ::part(x):has(…)     never matches\n  ::part(y)  (token)   MATCHES  — on anything\n\nA plain `<div>` cannot carry a custom state: `attachInternals()` throws NotSupportedError. So\norder's and associate's `<div part=\"drop\">` take an extra part token, and a theme reaches them as\n`::part(active)`. The custom-element targets take a real state.\n\nThe plain attribute is written too, because shadow-internal styles and existing vendor rules\nstill select on it. Nothing reads it from the document — nothing can."
         },
         {
           "kind": "function",
@@ -8667,6 +8696,14 @@
           "name": "setDropFilled",
           "declaration": {
             "name": "setDropFilled",
+            "module": "packages/interactions/core/src/mixins/drag-drop-observables/utils/drag-drop.utils.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "setDropFlag",
+          "declaration": {
+            "name": "setDropFlag",
             "module": "packages/interactions/core/src/mixins/drag-drop-observables/utils/drag-drop.utils.ts"
           }
         }

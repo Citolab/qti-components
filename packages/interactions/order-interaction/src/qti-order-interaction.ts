@@ -13,7 +13,7 @@ import styles from './qti-order-interaction.styles';
 import type { PropertyValueMap } from 'lit';
 import type { QtiSimpleChoice } from '@qti-components/interactions-core/elements/qti-simple-choice';
 
-const SlottedBase = DragDropSlottedMixin(Interaction, `qti-simple-choice`, `[part~='drop']`, `slot[part='drags']`);
+const SlottedBase = DragDropSlottedMixin(Interaction, `qti-simple-choice`, `[part~='drop']`, `slot[part~='drags']`);
 
 /**
  * Order interaction: candidates arrange choices into a target sequence.

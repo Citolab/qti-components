@@ -9,7 +9,8 @@ import {
   hasDragChipState,
   isDragChipHidden,
   isDraggableDisabled,
-  setDragChipState
+  setDragChipState,
+  setDropFlag
 } from './utils/drag-drop.utils';
 
 import type { Interaction } from '@qti-components/base';
@@ -779,9 +780,9 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       if (dropTarget !== this.dragState.currentTarget) {
         // Allow immediate switch to null (leaving a zone) or if enough time has passed
         if (dropTarget === null || timeSinceLastChange >= MIN_TARGET_SWITCH_INTERVAL) {
-          this.allDropzones.forEach(zone => zone.removeAttribute('hover'));
+          this.allDropzones.forEach(zone => setDropFlag(zone, 'hover', false));
           if (dropTarget) {
-            dropTarget.setAttribute('hover', '');
+            setDropFlag(dropTarget, 'hover', true);
           }
           this.dragState.currentTarget = dropTarget;
           this.dragState.lastTargetChangeTime = now;
@@ -914,8 +915,8 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       this.setInternalsState('dragzone-active', true);
 
       this.allDropzones.forEach(zone => {
-        zone.setAttribute('enabled', '');
-        zone.setAttribute('active', '');
+        setDropFlag(zone, 'enabled', true);
+        setDropFlag(zone, 'active', true);
       });
     }
 
@@ -924,9 +925,9 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       this.setInternalsState('dragzone-active', false);
 
       this.allDropzones.forEach(zone => {
-        zone.removeAttribute('enabled');
-        zone.removeAttribute('active');
-        zone.removeAttribute('hover');
+        setDropFlag(zone, 'enabled', false);
+        setDropFlag(zone, 'active', false);
+        setDropFlag(zone, 'hover', false);
       });
     }
 

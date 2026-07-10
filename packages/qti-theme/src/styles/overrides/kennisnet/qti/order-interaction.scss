@@ -18,6 +18,21 @@ qti-order-interaction {
     background-image: var(--qti-drop-bg-img, revert-layer);
   }
 
+  /*
+   * Kennisnet is unlayered, so its `::part(drop) { background-color: transparent }` above beats the
+   * base theme's `@layer qti-components` rules. The active/enabled highlight has to be restated
+   * here or it never shows. Phase 4 of plans/theme-merge-and-shadow-style-cleanup.md collapses the
+   * two files and this duplication with it.
+   */
+  &::part(active) {
+    border-color: var(--qti-border-active);
+    background-color: var(--qti-bg-active);
+  }
+
+  &::part(enabled) {
+    background-color: var(--qti-bg-active);
+  }
+
   &:has(qti-simple-choice)::part(drop) {
     align-self: flex-start;
   }
