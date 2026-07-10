@@ -1,9 +1,10 @@
 import { css } from 'lit';
 
-import { boxSizing } from '@qti-components/base';
+import { boxSizing, dropRegion } from '@qti-components/base';
 
 export default [
   boxSizing,
+  dropRegion,
   css`
     /* A drop target — see qti-gap.styles.ts. The interaction publishes the chip measurements as
      custom properties on its host; the properties themselves live here. */
@@ -17,9 +18,6 @@ export default [
 
     /* The hotspot's own box comes from its authored coords; the drop region simply fills it. */
     [part~='drop'] {
-      display: flex;
-      align-items: center;
-      justify-content: center;
       width: 100%;
       height: 100%;
     }

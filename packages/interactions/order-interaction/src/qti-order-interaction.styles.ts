@@ -1,6 +1,6 @@
 import { css } from 'lit';
 
-import { boxSizing } from '@qti-components/base';
+import { boxSizing, dropRegion } from '@qti-components/base';
 // import componentStyles from '../../utilities/styles/component.styles';
 // :host {
 //   display: inline-block;
@@ -9,6 +9,7 @@ import { boxSizing } from '@qti-components/base';
 /* ${componentStyles} */
 export default [
   boxSizing,
+  dropRegion,
   css`
     [part='drags'] {
       display: flex;
@@ -68,8 +69,13 @@ export default [
       outline-offset: -2px;
     }
 
+    /*
+     * A filled drop hides its dashed outline and its drop-here glyph. Hides — it must not remove
+     * them: setting the border to none took 2px out of the box the instant a chip landed, and the
+     * whole column shifted. Transparent keeps the border's width and drops its ink.
+     */
     [part~='drop']:has([part='drag']) {
-      --qti-drop-border: none;
+      --qti-drop-border: var(--qti-border-thickness, 1px) solid transparent;
       --qti-drop-bg-img: none;
     }
 

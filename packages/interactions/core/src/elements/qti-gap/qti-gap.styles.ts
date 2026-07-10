@@ -1,9 +1,10 @@
 import { css } from 'lit';
 
-import { boxSizing } from '@qti-components/base';
+import { boxSizing, dropRegion } from '@qti-components/base';
 
 export default [
   boxSizing,
+  dropRegion,
   css`
     /*
    * A drop target. The interaction measures its chips and publishes the result as custom
