@@ -146,6 +146,7 @@
     "postcss-class-apply": "^4.0.1",
     "postcss-cli": "^11.0.1",
     "postcss-import": "^16.1.1",
+    "postcss-mixins": "^12.1.2",
     "postcss-nesting": "^13.0.2",
     "postcss-scss": "^4.0.9",
     "prettier": "3.5.3",
