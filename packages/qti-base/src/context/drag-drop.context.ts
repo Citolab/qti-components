@@ -30,6 +30,21 @@ export interface DragDropState {
    * only. Collapsing the two would silently change `matchMax` behaviour.
    */
   readonly countByTarget: Readonly<Record<string, number>>;
+
+  /**
+   * Target identifier -> the chip nodes it holds, for targets that render their own chips.
+   *
+   * This is the authoritative half. A target that opts in (`acceptsDeclarativeDrops`) renders
+   * `repeat(nodesByTarget[id])` into its own shadow root, and the interaction never appends into
+   * it. The nodes are cloned **once, when the drop happens**, and the same node reference is
+   * passed on every render -- Lit renders a `Node` by reference, so a stable node is moved, never
+   * recreated. Cloning inside `render()` would mint a new element per update: focus loss,
+   * restarted transitions, a half-built shadow root.
+   *
+   * Today it is still *derived* from the DOM alongside `dragsByTarget`. It becomes authoritative
+   * when the first target opts in to rendering its own chips.
+   */
+  readonly nodesByTarget: Readonly<Record<string, readonly HTMLElement[]>>;
 }
 
 export const dragDropContext = createContext<Readonly<DragDropState>>(Symbol('dragDropContext'));

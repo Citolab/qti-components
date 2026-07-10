@@ -100,7 +100,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
      * Reassign, never mutate — an in-place change does not notify consumers.
      */
     @provide({ context: dragDropContext })
-    protected _dragDrop: Readonly<DragDropState> = { dragsByTarget: {}, countByTarget: {} };
+    protected _dragDrop: Readonly<DragDropState> = { dragsByTarget: {}, countByTarget: {}, nodesByTarget: {} };
 
     /**
      * The one place that reads placement out of the DOM.
@@ -112,6 +112,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
     protected syncDragDropState(): void {
       const dragsByTarget: Record<string, string[]> = {};
       const countByTarget: Record<string, number> = {};
+      const nodesByTarget: Record<string, HTMLElement[]> = {};
 
       for (const droppable of this.trackedDroppables) {
         const targetId = droppable.getAttribute('identifier');
@@ -126,9 +127,10 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
           .map(chip => chip.getAttribute('identifier'))
           .filter((id): id is string => Boolean(id));
         countByTarget[targetId] = Math.max(bySelector.length, byAttribute.length);
+        nodesByTarget[targetId] = bySelector;
       }
 
-      this._dragDrop = { dragsByTarget, countByTarget };
+      this._dragDrop = { dragsByTarget, countByTarget, nodesByTarget };
     }
 
     /** The response, derived from placement: `"<dragId> <targetId>"` per placed chip. */

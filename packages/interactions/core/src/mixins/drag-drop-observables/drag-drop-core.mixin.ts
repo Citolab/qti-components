@@ -1,5 +1,7 @@
 import { isSupported, apply } from 'observable-polyfill/fn';
 
+import { interactionContext } from '@qti-components/base';
+
 import {
   clearDragChipStates,
   detectCollision,
@@ -9,6 +11,7 @@ import {
   isDraggableDisabled,
   setDragChipState
 } from './utils/drag-drop.utils';
+
 
 import type { Interaction } from '@qti-components/base';
 import type { CollisionDetectionAlgorithm } from './utils/drag-drop.utils';
@@ -140,6 +143,8 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
 
     override connectedCallback(): void {
       super.connectedCallback();
+      // Capture phase: @lit/context's provider stops the event in the bubble phase.
+      this.addEventListener('context-request', this.#onContextRequest, { capture: true });
       patchWindow(this.ownerDocument?.defaultView);
       this.publishDraggablesSelector();
       this.setupDragDrop();
@@ -147,6 +152,8 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
 
     override disconnectedCallback(): void {
       super.disconnectedCallback();
+      this.removeEventListener('context-request', this.#onContextRequest, { capture: true });
+      this.#contextConsumers.clear();
       this.cleanup();
     }
 
@@ -162,6 +169,42 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       // Extension hook
     }
 
+    /**
+     * Every element that has asked this interaction for `interactionContext`.
+     *
+     * A chip announces itself: `ContextConsumer` dispatches `context-request` with
+     * `bubbles: true, composed: true`, so the event crosses shadow boundaries that
+     * `querySelectorAll` cannot. That is what makes a chip rendered *inside a drop target's shadow
+     * root* discoverable at all — `this.querySelectorAll(draggablesSelector)` stops at the
+     * boundary, and so does `droppable.contains(chip)`.
+     *
+     * Two details of @lit/context decide the shape of this:
+     *
+     *   - the provider calls `stopPropagation()` once it satisfies a request, so this listener has
+     *     to run in the **capture** phase to see the event at all;
+     *   - `event.target` is retargeted to the shadow host and is useless here. The event carries
+     *     `contextTarget`, the real requester, which is what the provider itself reads.
+     *
+     * There is no counterpart "consumer disconnected" event — @lit/context unsubscribes through a
+     * closure — so entries are pruned lazily by `isConnected`.
+     */
+    #contextConsumers = new Set<HTMLElement>();
+
+    #onContextRequest = (event: Event): void => {
+      const request = event as Event & { context?: unknown; contextTarget?: Element };
+      if (request.context !== interactionContext) return;
+      const consumer = request.contextTarget;
+      if (consumer instanceof HTMLElement) this.#contextConsumers.add(consumer);
+    };
+
+    /** Registered consumers matching `selector`, minus the ones that have since left the DOM. */
+    protected registeredMatching(selector: string): HTMLElement[] {
+      for (const el of this.#contextConsumers) {
+        if (!el.isConnected) this.#contextConsumers.delete(el);
+      }
+      return [...this.#contextConsumers].filter(el => el.matches(selector));
+    }
+
     public cacheInteractiveElements(): void {
       const collect = (selector: string, scope: ParentNode | ShadowRoot | null | undefined) =>
         Array.from(scope?.querySelectorAll<HTMLElement>(selector) ?? []);
@@ -172,8 +215,13 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       const lightClones = collect('[qti-draggable="true"]:not([data-drag-clone])', this);
       const shadowClones = collect('[qti-draggable="true"]:not([data-drag-clone])', this.shadowRoot);
 
+      // The registry finds chips a query cannot reach — one shadow root deeper, inside a drop
+      // target that renders its own contents. It is a union, not a replacement: an element that
+      // never consumed the context (qti-gap-img has no ActiveElementMixin) is still found by query.
+      const registeredDraggables = this.registeredMatching(draggablesSelector);
+
       this.trackedDraggables = Array.from(
-        new Set([...lightDraggables, ...shadowDraggables, ...lightClones, ...shadowClones])
+        new Set([...lightDraggables, ...shadowDraggables, ...lightClones, ...shadowClones, ...registeredDraggables])
       );
 
       const lightDroppables = collect(droppablesSelector, this);

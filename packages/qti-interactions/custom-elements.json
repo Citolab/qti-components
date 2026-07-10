@@ -199,6 +199,18 @@
           "name": "DragDropCoreMixin",
           "members": [
             {
+              "kind": "field",
+              "name": "#contextConsumers",
+              "privacy": "private",
+              "default": "new Set<HTMLElement>()",
+              "description": "Every element that has asked this interaction for `interactionContext`.\n\nA chip announces itself: `ContextConsumer` dispatches `context-request` with\n`bubbles: true, composed: true`, so the event crosses shadow boundaries that\n`querySelectorAll` cannot. That is what makes a chip rendered *inside a drop target's shadow\nroot* discoverable at all — `this.querySelectorAll(draggablesSelector)` stops at the\nboundary, and so does `droppable.contains(chip)`.\n\nTwo details of"
+            },
+            {
+              "kind": "field",
+              "name": "#onContextRequest",
+              "privacy": "private"
+            },
+            {
               "kind": "method",
               "name": "activateAllDroppables",
               "privacy": "protected",
@@ -505,6 +517,25 @@
                 }
               },
               "description": "Publish how a chip recognises itself. Draggability is positional in match-interaction —\nthe same tag is a source in one match-set and a drop target in the other — so each element\ntests itself against this selector rather than being told."
+            },
+            {
+              "kind": "method",
+              "name": "registeredMatching",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "HTMLElement[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "selector",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Registered consumers matching `selector`, minus the ones that have since left the DOM."
             },
             {
               "kind": "method",
