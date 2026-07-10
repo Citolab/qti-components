@@ -1,13 +1,10 @@
-qti-gap-match-interaction:disabled {
-  .draggable {
-    cursor: not-allowed;
-    pointer-events: none;
-
-    .drag-handle {
-      display: none;
-    }
-  }
-}
+/*
+ * The `:disabled` block that used to sit here styled `.draggable` and `.drag-handle` — classes no
+ * component emits any more. The chip is a `qti-gap-text` carrying `:state(drag)`, its grip is
+ * `::part(drag-control)`, and a disabled chip carries `:state(disabled)`. The old block was inert,
+ * so removing it changes nothing. If disabled chips need a not-allowed cursor, key it on
+ * `:state(disabled)`, in the cursor file (theme-merge plan §0.6) — not on a dead class.
+ */
 
 qti-gap-match-interaction {
   qti-gap-text {

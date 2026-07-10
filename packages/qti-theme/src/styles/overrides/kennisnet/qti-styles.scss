@@ -49,55 +49,17 @@ div.full-correct-response-block {
   }
 }
 
-.qti-underline {
-  text-decoration: underline;
-}
-
-.qti-align-left {
-  text-align: left;
-}
-
-.qti-align-center {
-  text-align: center;
-}
-
-.qti-align-right {
-  text-align: right;
-}
-
-.qti-valign-top {
-  vertical-align: top;
-}
-
-.qti-valign-middle {
-  vertical-align: middle;
-}
-
-.qti-valign-baseline {
-  vertical-align: baseline;
-}
-
-.qti-valign-bottom {
-  vertical-align: bottom;
-}
-
-.qti-fullwidth {
-  width: 100%;
-}
-
-.qti-hidden {
-  display: none;
-}
-
-.qti-visually-hidden {
-  position: fixed !important;
-  overflow: hidden;
-  width: 1px;
-  height: 1px;
-  border: 0;
-  margin: -1px;
-  clip: rect(1px 1px 1px 1px);
-}
+/*
+ * The QTI 3.0 presentation vocabulary — .qti-align-*, .qti-valign-*, .qti-fullwidth, .qti-hidden,
+ * .qti-visually-hidden, .qti-underline — used to be re-declared here, identically to
+ * qti-native/qti3p0.css. `item.css` already imports that file, so these copies only ever won on
+ * source order. Deleted; the spec definitions stand.
+ *
+ * `.qti-underline` is the one intentional change: native's is a superset that also sets
+ * `text-decoration-color: var(--foreground)`. Kennisnet's copy dropped that colour; removing it
+ * lets the fuller rule through, so underlines gain their decoration colour — a fix, and the one
+ * baseline this phase is allowed to move.
+ */
 
 .qti-bordered {
   padding: 2px;

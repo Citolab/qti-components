@@ -464,11 +464,16 @@ Work done earlier on this branch replaced three legacy class hooks with parts/st
 kennisnet still styling the old class names. **No component emits any of them any more** (grep,
 2026-07-10):
 
-| dead class | replaced by | kennisnet files still styling it |
+| dead class | replaced by | kennisnet files styling it |
 |---|---|---|
-| `.status-icon` | the `correction` part (`correction.styles.ts`) | `kennisnet-override.scss`, `qti/text-entry-interaction.scss`, `qti/hottext-interaction.scss` |
-| `.drag-handle` | the `drag-control` part (grip glyph) | `kennisnet-override.scss` |
 | `.draggable` | `:state(drag)` / `::part(drag)` | `qti/gap-match-interaction.scss`, `qti/match-interaction.scss` |
+| `.drag-handle` | the `drag-control` part (grip glyph) | same two files, nested in `.draggable` |
+
+**Correction (verified 2026-07-10):** `.status-icon` is **not** a dead class — it is a live Sass
+*mixin* (`@mixin status-icon` in `qti/_icon-mask.scss`), `@include`d by text-entry and hottext to
+paint the answer-key checkmark on a real `::before`. Leave it. The only dead class hooks are
+`.draggable` and `.drag-handle`, both removed 2026-07-10; the disabled-cursor behavior they encoded
+was already inert (no element carries the class), so removal changed nothing and VRT stayed green.
 
 1. Verify dead before deleting each: `grep -rn "class=\"[^\"]*status-icon\|'status-icon'"
    packages/interactions --include=*.ts | grep -v spec | grep -v dist` → 0. Same for `drag-handle`,

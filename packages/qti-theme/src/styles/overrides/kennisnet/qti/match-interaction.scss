@@ -6,22 +6,17 @@
   margin: 0 0.5rem;
 }
 
-.draggable {
-  padding-left: 0.8em !important;
-  padding-right: 0.8em !important;
-}
+/*
+ * `.draggable` and `.drag-handle` are gone — no component emits either. The chip is a
+ * `qti-simple-associable-choice` with `:state(drag)`; its horizontal padding now comes from the
+ * shared chip block in kennisnet-override.scss (`padding-left/right: 0.8em`), and its grip from
+ * `::part(drag-control)`. The `.draggable` rules here were inert duplicates.
+ */
 
 qti-match-interaction:not(.qti-match-tabular):disabled {
+  /* A disabled match hides its drag bank. This keys on the real element, so it still works. */
   qti-simple-match-set:first-of-type {
     display: none;
-  }
-
-  .draggable {
-    cursor: not-allowed;
-    pointer-events: none;
-    .drag-handle {
-      display: none;
-    }
   }
 }
 
