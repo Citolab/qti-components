@@ -198,9 +198,10 @@ export const Q8L2D2: Story = {
       await drag(gapTextMAN, { to: hotspotC, duration: 300 });
       await drag(gapTextMCH, { to: hotspotC, duration: 300 });
 
-      expect(hotspotA.querySelectorAll('qti-gap-text').length).toBe(1);
-      expect(hotspotB.querySelectorAll('qti-gap-text').length).toBe(1);
-      expect(hotspotC.querySelectorAll('qti-gap-text').length).toBe(1);
+      // The hotspot renders its chips into its own shadow root.
+      expect(hotspotA.shadowRoot!.querySelectorAll('qti-gap-text').length).toBe(1);
+      expect(hotspotB.shadowRoot!.querySelectorAll('qti-gap-text').length).toBe(1);
+      expect(hotspotC.shadowRoot!.querySelectorAll('qti-gap-text').length).toBe(1);
     });
 
     await step('reset', async () => {

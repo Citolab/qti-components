@@ -121,6 +121,17 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
      */
     #placement = new WeakMap<HTMLElement, HTMLElement[]>();
 
+    /** Is this a full declarative target receiving a chip dragged out of a different target? */
+    protected isSwapTarget(droppable: HTMLElement): boolean {
+      const source = this.dragState.sourceDroppable;
+      return (
+        this.isDeclarativeTarget(droppable) &&
+        !!source &&
+        source !== droppable &&
+        this.trackedDroppables.includes(source)
+      );
+    }
+
     protected isDeclarativeTarget(el: HTMLElement | null | undefined): boolean {
       return !!el && (el as unknown as { acceptsDeclarativeDrops?: boolean }).acceptsDeclarativeDrops === true;
     }
@@ -393,6 +404,14 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       const isDisabled = droppable.hasAttribute('disabled');
       const isReturningToSource = droppable.hasAttribute('data-drag-source');
 
+      // A full single-capacity target is still droppable when the chip comes from another target:
+      // that is what a swap is. The sortable mixin used to arrange this implicitly, by moving the
+      // occupant's DOM node out during the hover preview so the target stopped being at capacity.
+      // A target that renders from data has no node to move, so the rule is stated outright.
+      if (isDisabled && this.isSwapTarget(droppable)) {
+        return true;
+      }
+
       return isTracked && (!isDisabled || isReturningToSource);
     }
 
@@ -557,7 +576,22 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
           const existingId = existing.getAttribute('identifier');
           this.removeChipFromDroppable(droppable, existing as HTMLElement);
 
-          if (existingId) {
+          // A single-capacity target that already holds a chip and receives one *from another
+          // target* swaps them: the occupant takes the dragged chip's vacated place. Dragged from
+          // the inventory instead, the occupant simply goes back to the bank.
+          //
+          // Non-declarative targets get this from the sortable mixin's hover preview, which moves
+          // the occupant's DOM node. A target that renders from data has no node to move.
+          const source = this.dragState.sourceDroppable;
+          const swapInto =
+            this.isDeclarativeTarget(droppable) && source && source !== droppable && this.isDeclarativeTarget(source)
+              ? source
+              : null;
+
+          if (swapInto) {
+            this.placeChip(swapInto, existing as HTMLElement);
+            setDropFilled(swapInto, true);
+          } else if (existingId) {
             this.restoreOriginalInInventory(existingId);
           }
         }

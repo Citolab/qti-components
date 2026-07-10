@@ -14,5 +14,14 @@ export default [
       min-height: var(--qti-dropzone-min-height, 0);
       min-width: var(--qti-dropzone-min-width, 0);
     }
+
+    /* The hotspot's own box comes from its authored coords; the drop region simply fills it. */
+    [part~='drop'] {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+    }
   `
 ];

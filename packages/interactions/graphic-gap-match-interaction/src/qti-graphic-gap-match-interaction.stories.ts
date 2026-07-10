@@ -219,10 +219,10 @@ export const SortableSwapFilledHotspots: Story = {
         await drag(draggerD, { to: hotspotD, duration: 300 });
         await settleInteraction(interaction);
 
-        expect(hotspotA.querySelector('[identifier="DraggerA"]')).toBeTruthy();
-        expect(hotspotB.querySelector('[identifier="DraggerB"]')).toBeTruthy();
-        expect(hotspotC.querySelector('[identifier="DraggerC"]')).toBeTruthy();
-        expect(hotspotD.querySelector('[identifier="DraggerD"]')).toBeTruthy();
+        expect(hotspotA.shadowRoot!.querySelector('[identifier="DraggerA"]')).toBeTruthy();
+        expect(hotspotB.shadowRoot!.querySelector('[identifier="DraggerB"]')).toBeTruthy();
+        expect(hotspotC.shadowRoot!.querySelector('[identifier="DraggerC"]')).toBeTruthy();
+        expect(hotspotD.shadowRoot!.querySelector('[identifier="DraggerD"]')).toBeTruthy();
         expect(callback.mock.calls.at(-1)?.[0].detail.response).toEqual([
           'DraggerA A',
           'DraggerB B',
@@ -232,14 +232,16 @@ export const SortableSwapFilledHotspots: Story = {
       });
 
       await step('Drag placed DraggerA from A onto occupied B to trigger sortable swap', async () => {
-        const placedDraggerA = getHotspot(interaction, 'A').querySelector('[identifier="DraggerA"]') as HTMLElement;
+        const placedDraggerA = getHotspot(interaction, 'A').shadowRoot!.querySelector(
+          '[identifier="DraggerA"]'
+        ) as HTMLElement;
         await drag(placedDraggerA, { to: hotspotB, duration: 300 });
         await settleInteraction(interaction);
 
-        expect(hotspotA.querySelector('[identifier="DraggerB"]')).toBeTruthy();
-        expect(hotspotB.querySelector('[identifier="DraggerA"]')).toBeTruthy();
-        expect(hotspotC.querySelector('[identifier="DraggerC"]')).toBeTruthy();
-        expect(hotspotD.querySelector('[identifier="DraggerD"]')).toBeTruthy();
+        expect(hotspotA.shadowRoot!.querySelector('[identifier="DraggerB"]')).toBeTruthy();
+        expect(hotspotB.shadowRoot!.querySelector('[identifier="DraggerA"]')).toBeTruthy();
+        expect(hotspotC.shadowRoot!.querySelector('[identifier="DraggerC"]')).toBeTruthy();
+        expect(hotspotD.shadowRoot!.querySelector('[identifier="DraggerD"]')).toBeTruthy();
       });
 
       await step('Response reflects swapped hotspot assignments', async () => {
@@ -354,22 +356,24 @@ export const SortableSwapPartialHotspots: Story = {
         await drag(draggerC, { to: hotspotC, duration: 300 });
         await settleInteraction(interaction);
 
-        expect(hotspotA.querySelector('[identifier="DraggerA"]')).toBeTruthy();
-        expect(hotspotB.querySelector('[identifier="DraggerB"]')).toBeTruthy();
-        expect(hotspotC.querySelector('[identifier="DraggerC"]')).toBeTruthy();
-        expect(hotspotD.querySelector('[identifier="DraggerD"]')).toBeFalsy();
+        expect(hotspotA.shadowRoot!.querySelector('[identifier="DraggerA"]')).toBeTruthy();
+        expect(hotspotB.shadowRoot!.querySelector('[identifier="DraggerB"]')).toBeTruthy();
+        expect(hotspotC.shadowRoot!.querySelector('[identifier="DraggerC"]')).toBeTruthy();
+        expect(hotspotD.shadowRoot!.querySelector('[identifier="DraggerD"]')).toBeFalsy();
         expect(callback.mock.calls.at(-1)?.[0].detail.response).toEqual(['DraggerA A', 'DraggerB B', 'DraggerC C']);
       });
 
       await step('Drag placed DraggerA from A onto occupied B and verify partial sortable swap', async () => {
-        const placedDraggerA = getHotspot(interaction, 'A').querySelector('[identifier="DraggerA"]') as HTMLElement;
+        const placedDraggerA = getHotspot(interaction, 'A').shadowRoot!.querySelector(
+          '[identifier="DraggerA"]'
+        ) as HTMLElement;
         await drag(placedDraggerA, { to: hotspotB, duration: 300 });
         await settleInteraction(interaction);
 
-        expect(hotspotA.querySelector('[identifier="DraggerB"]')).toBeTruthy();
-        expect(hotspotB.querySelector('[identifier="DraggerA"]')).toBeTruthy();
-        expect(hotspotC.querySelector('[identifier="DraggerC"]')).toBeTruthy();
-        expect(hotspotD.querySelector('[identifier="DraggerD"]')).toBeFalsy();
+        expect(hotspotA.shadowRoot!.querySelector('[identifier="DraggerB"]')).toBeTruthy();
+        expect(hotspotB.shadowRoot!.querySelector('[identifier="DraggerA"]')).toBeTruthy();
+        expect(hotspotC.shadowRoot!.querySelector('[identifier="DraggerC"]')).toBeTruthy();
+        expect(hotspotD.shadowRoot!.querySelector('[identifier="DraggerD"]')).toBeFalsy();
       });
 
       await step('Response remains partial and reflects swapped hotspots', async () => {
@@ -483,10 +487,10 @@ export const BasicPlacementAndResponse: Story = {
         await drag(draggerD, { to: hotspotD, duration: 300 });
         await settleInteraction(interaction);
 
-        expect(hotspotA.querySelector('[identifier="DraggerA"]')).toBeTruthy();
-        expect(hotspotB.querySelector('[identifier="DraggerB"]')).toBeTruthy();
-        expect(hotspotC.querySelector('[identifier="DraggerC"]')).toBeTruthy();
-        expect(hotspotD.querySelector('[identifier="DraggerD"]')).toBeTruthy();
+        expect(hotspotA.shadowRoot!.querySelector('[identifier="DraggerA"]')).toBeTruthy();
+        expect(hotspotB.shadowRoot!.querySelector('[identifier="DraggerB"]')).toBeTruthy();
+        expect(hotspotC.shadowRoot!.querySelector('[identifier="DraggerC"]')).toBeTruthy();
+        expect(hotspotD.shadowRoot!.querySelector('[identifier="DraggerD"]')).toBeTruthy();
       });
 
       await step('Response contains directed pairs for all four placements', async () => {
@@ -520,25 +524,25 @@ export const ResetAndProgrammaticResponse: Story = {
       await settleInteraction(interaction);
       await drag(draggerB, { to: hotspotB, duration: 300 });
       await settleInteraction(interaction);
-      expect(hotspotA.querySelector('[identifier="DraggerA"]')).toBeTruthy();
-      expect(hotspotB.querySelector('[identifier="DraggerB"]')).toBeTruthy();
+      expect(hotspotA.shadowRoot!.querySelector('[identifier="DraggerA"]')).toBeTruthy();
+      expect(hotspotB.shadowRoot!.querySelector('[identifier="DraggerB"]')).toBeTruthy();
     });
 
     await step('Reset clears all hotspots', async () => {
       interaction.reset();
       await settleInteraction(interaction);
-      expect(hotspotA.querySelector('[qti-draggable="true"]')).toBeFalsy();
-      expect(hotspotB.querySelector('[qti-draggable="true"]')).toBeFalsy();
-      expect(hotspotC.querySelector('[qti-draggable="true"]')).toBeFalsy();
-      expect(hotspotD.querySelector('[qti-draggable="true"]')).toBeFalsy();
+      expect(hotspotA.shadowRoot!.querySelector('[qti-draggable="true"]')).toBeFalsy();
+      expect(hotspotB.shadowRoot!.querySelector('[qti-draggable="true"]')).toBeFalsy();
+      expect(hotspotC.shadowRoot!.querySelector('[qti-draggable="true"]')).toBeFalsy();
+      expect(hotspotD.shadowRoot!.querySelector('[qti-draggable="true"]')).toBeFalsy();
     });
 
     await step('Programmatic response rebuilds placements', async () => {
       interaction.response = ['DraggerB A', 'DraggerA C', 'DraggerD D'];
       await settleInteraction(interaction);
-      expect(hotspotA.querySelector('[identifier="DraggerB"]')).toBeTruthy();
-      expect(hotspotC.querySelector('[identifier="DraggerA"]')).toBeTruthy();
-      expect(hotspotD.querySelector('[identifier="DraggerD"]')).toBeTruthy();
+      expect(hotspotA.shadowRoot!.querySelector('[identifier="DraggerB"]')).toBeTruthy();
+      expect(hotspotC.shadowRoot!.querySelector('[identifier="DraggerA"]')).toBeTruthy();
+      expect(hotspotD.shadowRoot!.querySelector('[identifier="DraggerD"]')).toBeTruthy();
     });
   }
 };

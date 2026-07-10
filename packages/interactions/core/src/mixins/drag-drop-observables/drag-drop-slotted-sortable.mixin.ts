@@ -120,6 +120,15 @@ export const DragDropSlottedSortableMixin = <T extends Constructor<DragDropSlott
         return;
       }
 
+      // A declarative target renders its chips from `dragDropContext`. Moving its nodes here as a
+      // hover preview would be undone by the next render, and the swap it was standing in for is
+      // done properly at drop time over the placement map. So: no preview, just the hover state.
+      if ((targetSlot as unknown as { acceptsDeclarativeDrops?: boolean }).acceptsDeclarativeDrops) {
+        if (this.#sortableContext.placeholder?.parentElement) this.#sortableContext.placeholder.remove();
+        this.#shiftState.hoveredSlot = targetSlot;
+        return;
+      }
+
       const itemsToAnimate = [targetItem];
       const flipStates = captureMultipleFlipStates(itemsToAnimate);
 

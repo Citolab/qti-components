@@ -812,15 +812,10 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         dropTarget = resolved ?? currentTarget;
       }
 
-      // Allow dropping into the source droppable even if it's marked as disabled
-      // The data-drag-source marker indicates this droppable should accept the item being returned
-      const isDisabledButSource = dropTarget?.hasAttribute('disabled') && dropTarget.hasAttribute('data-drag-source');
-
-      const canDrop =
-        !!dragSource &&
-        !!dropTarget &&
-        this.allowDrop(dragSource, dropTarget) &&
-        (!dropTarget.hasAttribute('disabled') || isDisabledButSource);
+      // `allowDrop` already decides `disabled` — including the cases that override it: returning to
+      // the droppable a chip came from, and swapping into a full one. Re-testing the attribute here
+      // vetoed a drop that had just been allowed.
+      const canDrop = !!dragSource && !!dropTarget && this.allowDrop(dragSource, dropTarget);
 
       if (canDrop && dragSource && dropTarget) {
         this.handleDrop(dragSource, dropTarget);

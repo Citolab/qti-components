@@ -94,11 +94,13 @@
         box-shadow: 0 0 0 1px #e5e7eb;
       }
     }
-    &.qti-selections-light qti-associable-hotspot:not(:empty) {
+    /* `:not(:empty)` tested light-DOM children. The hotspot renders its chips into its own shadow
+       root now, so it is always "empty" to a selector — `:state(filled)` is the occupancy hook. */
+    &.qti-selections-light qti-associable-hotspot:state(filled) {
       background-color: var(--qti-light-bg-active) !important;
       border-color: var(--qti-light-border-active) !important;
     }
-    &.qti-selections-dark qti-associable-hotspot:not(:empty) {
+    &.qti-selections-dark qti-associable-hotspot:state(filled) {
       background-color: var(--qti-dark-bg-active) !important;
       border-color: var(--qti-dark-border-active) !important;
     }

@@ -1938,9 +1938,53 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "",
+          "description": "A drop target positioned over an image. Like `qti-gap`, it renders the chips it holds from\n`dragDropContext` rather than having them appended into it.",
           "name": "QtiAssociableHotspot",
+          "cssParts": [
+            {
+              "description": "The region a chip lands in.",
+              "name": "drop"
+            }
+          ],
           "members": [
+            {
+              "kind": "field",
+              "name": "_dragDrop",
+              "type": {
+                "text": "Readonly<DragDropState> | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "acceptsDeclarativeDrops",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "readonly": true,
+              "default": "true",
+              "description": "Opt-in marker read by `DragDropSlottedMixin`; see qti-gap."
+            },
+            {
+              "kind": "field",
+              "name": "drags",
+              "type": {
+                "text": "readonly HTMLElement[]"
+              },
+              "privacy": "public",
+              "description": "The chips this hotspot holds. Stable node references, cloned once at drop time.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "identifier",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "identifier",
+              "reflects": true
+            },
             {
               "kind": "field",
               "name": "internals",
@@ -1957,6 +2001,15 @@
               "type": {
                 "text": "CustomEvent"
               }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "identifier",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "identifier"
             }
           ],
           "superclass": {
@@ -6439,6 +6492,25 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "isSwapTarget",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "droppable",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "description": "Is this a full declarative target receiving a chip dragged out of a different target?"
             },
             {
               "kind": "field",
@@ -13935,6 +14007,29 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "isSwapTarget",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "droppable",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "description": "Is this a full declarative target receiving a chip dragged out of a different target?",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
               }
             },
             {
@@ -21540,6 +21635,29 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "isSwapTarget",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "droppable",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "description": "Is this a full declarative target receiving a chip dragged out of a different target?",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
               }
             },
             {

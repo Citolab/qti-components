@@ -57,7 +57,9 @@
       @apply drop;
       &[disabled] {
         @apply dis;
-        &:not(:empty) {
+        /* `:not(:empty)` tested light-DOM children; the gap renders its chips into its own shadow
+           root now, so it is always "empty" to a selector. `:state(filled)` is the occupancy hook. */
+        &:state(filled) {
           cursor: default !important;
         }
       }
@@ -104,8 +106,11 @@
        * No `flex: 1`. A chip is the same size wherever it lives — in the bank, mid-drag as a
        * clone, or dropped. Stretching it to its container's width made the drop the one place
        * where that stopped being true.
+       *
+       * The chip is in the gap's shadow root, so `> *` cannot select it and `::part(drag)` is the
+       * only way in.
        */
-      &:not(:empty) > * {
+      &::part(drag) {
         flex: 0 0 auto;
         transform: rotate(0);
         box-shadow: 0 0 0 1px #e5e7eb;
