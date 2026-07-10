@@ -11,8 +11,12 @@ Four goals, stated in the order they were raised:
 3. `@apply` — a good abstraction — becomes **real Sass mixins**, and the theme is authored in `.scss`.
 4. Kennisnet stops re-declaring things `qti-native` already defines.
 
-**Layering is explicitly out of scope.** The user has a clearer picture of how `@layer` should work
-and will direct it separately. Nothing here may add, remove or reorder a `@layer`.
+5. A layer stack that makes precedence a property of *what a rule does*, not of where it happens to
+   sit in a file: `@layer reset, layout, paint, state, correction, editor` (§0.5).
+
+**Layering lands with the merge, not before.** The stack is decided (§0.5) but Phases 1–3 may not add,
+remove or reorder a `@layer`. Kennisnet is entirely unlayered today, and unlayered beats every layer —
+so a layer stack introduced before the merge changes nothing except the amount of ceremony.
 
 ---
 
@@ -204,23 +208,76 @@ and the badges silently stopped appearing. It reads `chipsIn(drop)` now. **Every
 
 ---
 
-### 0.5 Layering (for the deferred pass, recorded so it is not re-derived)
+### 0.5 Layering — agreed stack, to be applied during the merge (Phase 4)
 
-Not in scope — the user will direct this. Recorded because it explains why kennisnet wins today.
+Deferred by instruction, but decided. Recorded here so Phase 4 does not re-derive it.
 
-- The order is declared once, `item.css:1`:
-  `@layer qti-base, qti-components, qti-utilities, qti-variants, qti-extended;`
-- `qti-utilities`, `qti-variants` and `qti-extended` are declared and **never used by any rule**.
-- Only `qti3p0-override-layout.css` is in `qti-base`. The 18 interaction files and `qti-states.css`
-  are in `qti-components`.
-- `qti3p0.css` (all 1430 lines), `qti-base.css` (tokens + utilities), `item.css`'s own rules, and
-  **the entirety of kennisnet** are **unlayered** — so they beat every layered rule regardless of
-  specificity. That, not specificity, is why kennisnet's overrides work without `!important`.
-- Corollary for Phase 4: folding kennisnet into `@layer qti-components` **will change the cascade**.
-  Do not do it in the merge. Merge first, keep everything unlayered, layer later.
+```css
+@layer reset, layout, paint, state, correction, editor;
+```
 
-**Consequence:** the source format may change; **the built artifact names may not.** Every phase
-below preserves `dist/item.css` and the four `exports` subpaths.
+Low to high. Two departures from the first sketch, both deliberate:
+
+- **`cursor` folded into `state`.** A cursor is only ever set by a state (`grab` while draggable,
+  `not-allowed` when disabled, `text` on an input). A layer earns its keep by resolving a conflict,
+  not by grouping a property.
+- **`correction` above `state`.** A correct/incorrect verdict must outrank `:hover` and
+  `:state(checked)`. A candidate should not lose the red border by hovering the answer they got wrong.
+
+`editor` stays on top: it is decoration over a finished document.
+
+#### What this fixes
+
+Both ordering bugs hit while doing Phase 1 were *source-order* bugs between rules of equal
+specificity:
+
+- `::part(active)` painted over by `::part(drop)`, because `::part(drop)` came later in the file.
+  Under the stack, `active` is in `state` and `drop` is in `paint`. Layer beats source order, and
+  beats specificity. The bug cannot recur.
+- kennisnet's rules silently beating cito's `@layer qti-components`, because **kennisnet is entirely
+  unlayered and unlayered always wins**.
+
+#### The hard rule: nothing may be unlayered
+
+Unlayered styles beat every layer, regardless of specificity. Today the unlayered set is:
+
+| what | where | lines |
+|---|---|---|
+| the QTI 3.0 vocabulary | `styles/qti-native/qti3p0.css` | 1430 |
+| tokens + every `@apply` utility | `styles/qti-theme/qti-base.css` | 381 |
+| `item.css`'s own rules | `src/item.css` | ~30 |
+| **all of kennisnet** | `kennisnet-override.scss` + 17 partials | ~1200 |
+
+That last row is the entire reason kennisnet's overrides work without `!important`. Introduce these
+layers while kennisnet stays unlayered and you get identical behaviour with more ceremony. **The
+layer stack and the merge are one change, not two.**
+
+#### The `reset` layer, and a finding
+
+Members: `modern-normalize`, and kennisnet's `_reboot.scss` (153 lines, unlayered today).
+
+But `modern-normalize` is imported in exactly one place — `.storybook/preview.ts:25`. It is a **dev
+harness**. `item.css` ships no reset (`grep normalize src/item.css` → nothing), so every published
+consumer of `@qti-components/theme/item.css` or `@citolab/qti-components/item.css` gets the theme
+with whatever reset their app happens to have, or none. Phase 4 should decide whether `item.css`
+takes `@import url('…') layer(reset)` itself. That is a behaviour change for downstream consumers
+and belongs in a major.
+
+#### What layers cannot do
+
+**Layers do not cross tree scopes.** A document `::part()` rule beats a component's own shadow styles
+whatever layer either is in — verified twice this week, once when `::part(correction) { display: grid }`
+overrode the shadow's `display: none` and painted an empty ring on every uncorrected element.
+
+So `box-sizing.styles.ts`, `drop-region.styles.ts` and `correction.styles.ts` sit outside this system
+entirely. They are the component's floor, always beaten by the theme. That is exactly why Phase 1
+moves paint out of the shadow *first*: layering fixes theme-versus-theme, never shadow-versus-theme.
+
+#### Mechanism
+
+`@import url('x.css') layer(paint);` for the PostCSS chain. Sass's `@use` has no `layer()` form, so
+the kennisnet partials must be wrapped — `@layer paint { @use '…'; }` is invalid too; the partial's
+own contents get wrapped instead. Budget for touching all 17.
 
 ---
 
