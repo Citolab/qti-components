@@ -248,6 +248,16 @@
             },
             {
               "kind": "field",
+              "name": "#rowCount",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "description": "How many association rows to render.\n\n`max-associations` is how many associations the candidate may *make*, so it is exactly the\nnumber of rows. This used to be `ceil(choices / 2)` — the number of pairs the choices could\npossibly form — which made the limit unenforceable: with six choices the interaction always\ndrew three rows, so `max-associations=\"3\"` could never be exceeded and its validation always\npassed. Worse, the number read as a cap on *drags placed* rather than on associations formed.\n\n`0` is QTI's \"no limit\". With no limit there is still a natural ceiling: every choice paired\nwith one other.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "#shiftState",
               "privacy": "private",
               "type": {
@@ -6592,6 +6602,31 @@
             },
             {
               "kind": "method",
+              "name": "animateReturn",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "HTMLElement | undefined"
+                  }
+                },
+                {
+                  "name": "from",
+                  "type": {
+                    "text": "DOMRect | undefined"
+                  }
+                }
+              ],
+              "description": "Fly a chip home from wherever it was last seen on screen.\n\n`from` is never read off `dragState` in here, and that is deliberate. Two different chips take\nthis path: the one the user dragged, whose origin is the drag clone, and the occupant a swap\nevicted, whose origin is the dropzone it was sitting in. Reading the clone's rect for both\nwould launch the evicted chip out of the cursor, from a place it had never been."
+            },
+            {
+              "kind": "method",
               "name": "applyConfiguredChoicesContainerWidth",
               "privacy": "private",
               "return": {
@@ -7028,6 +7063,13 @@
                   "type": {
                     "text": "HTMLElement"
                   }
+                },
+                {
+                  "name": "from",
+                  "optional": true,
+                  "type": {
+                    "text": "DOMRect"
+                  }
                 }
               ]
             },
@@ -7046,6 +7088,14 @@
                   "type": {
                     "text": "string"
                   }
+                },
+                {
+                  "name": "from",
+                  "optional": true,
+                  "type": {
+                    "text": "DOMRect"
+                  },
+                  "description": "where the chip was last painted on screen. Given one, the restored inventory item\ntravels back from there instead of blinking into the bank. The bank's *other* chips still\nFLIP from their own captured positions, since removing a placeholder can rewrap the row."
                 }
               ]
             },
@@ -7063,6 +7113,13 @@
                   "name": "element",
                   "type": {
                     "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "from",
+                  "optional": true,
+                  "type": {
+                    "text": "DOMRect"
                   }
                 }
               ]
@@ -9135,6 +9192,24 @@
         },
         {
           "kind": "function",
+          "name": "flipStateFromRect",
+          "return": {
+            "type": {
+              "text": "FlipState"
+            }
+          },
+          "parameters": [
+            {
+              "name": "rect",
+              "type": {
+                "text": "DOMRect"
+              }
+            }
+          ],
+          "description": "A chip's last on-screen position, as a FLIP \"first\" state.\n\nThe drag clone is `position: fixed` and is destroyed the moment the pointer is released, so the\nonly record of where the chip was is the rect taken just before it goes. Handing that rect to\n`animateFlip` as the \"first\" state is what lets a chip fly home rather than blink home."
+        },
+        {
+          "kind": "function",
           "name": "performFlip",
           "return": {
             "type": {
@@ -9214,6 +9289,14 @@
           "name": "DEFAULT_FLIP_OPTIONS",
           "declaration": {
             "name": "DEFAULT_FLIP_OPTIONS",
+            "module": "packages/interactions/core/src/mixins/drag-drop-observables/utils/flip.utils.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "flipStateFromRect",
+          "declaration": {
+            "name": "flipStateFromRect",
             "module": "packages/interactions/core/src/mixins/drag-drop-observables/utils/flip.utils.ts"
           }
         },
@@ -13881,6 +13964,35 @@
             },
             {
               "kind": "method",
+              "name": "animateReturn",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "HTMLElement | undefined"
+                  }
+                },
+                {
+                  "name": "from",
+                  "type": {
+                    "text": "DOMRect | undefined"
+                  }
+                }
+              ],
+              "description": "Fly a chip home from wherever it was last seen on screen.\n\n`from` is never read off `dragState` in here, and that is deliberate. Two different chips take\nthis path: the one the user dragged, whose origin is the drag clone, and the occupant a swap\nevicted, whose origin is the dropzone it was sitting in. Reading the clone's rect for both\nwould launch the evicted chip out of the cursor, from a place it had never been.",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "applyConfiguredChoicesContainerWidth",
               "privacy": "private",
               "return": {
@@ -14776,6 +14888,13 @@
                   "type": {
                     "text": "HTMLElement"
                   }
+                },
+                {
+                  "name": "from",
+                  "optional": true,
+                  "type": {
+                    "text": "DOMRect"
+                  }
                 }
               ],
               "inheritedFrom": {
@@ -14798,6 +14917,14 @@
                   "type": {
                     "text": "string"
                   }
+                },
+                {
+                  "name": "from",
+                  "optional": true,
+                  "type": {
+                    "text": "DOMRect"
+                  },
+                  "description": "where the chip was last painted on screen. Given one, the restored inventory item\ntravels back from there instead of blinking into the bank. The bank's *other* chips still\nFLIP from their own captured positions, since removing a placeholder can rewrap the row."
                 }
               ],
               "inheritedFrom": {
@@ -14819,6 +14946,13 @@
                   "name": "element",
                   "type": {
                     "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "from",
+                  "optional": true,
+                  "type": {
+                    "text": "DOMRect"
                   }
                 }
               ],
@@ -21667,6 +21801,35 @@
             },
             {
               "kind": "method",
+              "name": "animateReturn",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "HTMLElement | undefined"
+                  }
+                },
+                {
+                  "name": "from",
+                  "type": {
+                    "text": "DOMRect | undefined"
+                  }
+                }
+              ],
+              "description": "Fly a chip home from wherever it was last seen on screen.\n\n`from` is never read off `dragState` in here, and that is deliberate. Two different chips take\nthis path: the one the user dragged, whose origin is the drag clone, and the occupant a swap\nevicted, whose origin is the dropzone it was sitting in. Reading the clone's rect for both\nwould launch the evicted chip out of the cursor, from a place it had never been.",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "applyConfiguredChoicesContainerWidth",
               "privacy": "private",
               "return": {
@@ -22590,6 +22753,13 @@
                   "type": {
                     "text": "HTMLElement"
                   }
+                },
+                {
+                  "name": "from",
+                  "optional": true,
+                  "type": {
+                    "text": "DOMRect"
+                  }
                 }
               ],
               "inheritedFrom": {
@@ -22612,6 +22782,14 @@
                   "type": {
                     "text": "string"
                   }
+                },
+                {
+                  "name": "from",
+                  "optional": true,
+                  "type": {
+                    "text": "DOMRect"
+                  },
+                  "description": "where the chip was last painted on screen. Given one, the restored inventory item\ntravels back from there instead of blinking into the bank. The bank's *other* chips still\nFLIP from their own captured positions, since removing a placeholder can rewrap the row."
                 }
               ],
               "inheritedFrom": {
@@ -22633,6 +22811,13 @@
                   "name": "element",
                   "type": {
                     "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "from",
+                  "optional": true,
+                  "type": {
+                    "text": "DOMRect"
                   }
                 }
               ],

@@ -13,7 +13,13 @@ import {
   setDragChipState
 } from './utils/drag-drop.utils';
 import { DragDropCoreMixin } from './drag-drop-core.mixin';
-import { captureMultipleFlipStates, animateMultipleFlips, type FlipAnimationOptions } from './utils/flip.utils';
+import {
+  animateFlip,
+  captureMultipleFlipStates,
+  animateMultipleFlips,
+  flipStateFromRect,
+  type FlipAnimationOptions
+} from './utils/flip.utils';
 
 import type { ComplexAttributeConverter } from 'lit';
 import type { CollisionDetectionAlgorithm } from './utils/drag-drop.utils';
@@ -493,10 +499,13 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       // If drag started from a dropzone and the drop is invalid, restore only this
       // dragged instance back to its source droppable.
       else if (sourceDroppable && this.trackedDroppables.includes(sourceDroppable)) {
-        this.dropDraggableInDroppable(dragSource, sourceDroppable);
+        // Released over nothing, having come from a dropzone: the chip goes back where it was, and
+        // it travels there. The clone is still alive at this point — `handleDragEnd` removes it
+        // only after `handleInvalidDrop` returns — so its rect is the chip's last real position.
+        this.dropDraggableInDroppable(dragSource, sourceDroppable, this.dragState.dragClone?.getBoundingClientRect());
       } else if (hasDragChipState(dragSource, 'dragging')) {
         // Drag started from inventory: simply restore inventory visual state.
-        this.restoreInventoryItem(dragSource);
+        this.restoreInventoryItem(dragSource, this.dragState.dragClone?.getBoundingClientRect());
         this.cacheInteractiveElements();
         this.checkAllMaxAssociations();
       }
@@ -522,10 +531,30 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       applyDropzoneAutoSizing(this, this.trackedDraggables, this.trackedDroppables, this.trackedDragContainers);
     }
 
-    private restoreInventoryItem(dragSource: HTMLElement): void {
+    /**
+     * Fly a chip home from wherever it was last seen on screen.
+     *
+     * `from` is never read off `dragState` in here, and that is deliberate. Two different chips take
+     * this path: the one the user dragged, whose origin is the drag clone, and the occupant a swap
+     * evicted, whose origin is the dropzone it was sitting in. Reading the clone's rect for both
+     * would launch the evicted chip out of the cursor, from a place it had never been.
+     */
+    private animateReturn(element: HTMLElement | undefined, from: DOMRect | undefined): void {
+      if (!element || !from || !this.enableFlipAnimations) return;
+      // A frame late, on purpose. A declarative target's chips are rendered by Lit on a microtask,
+      // so measuring the chip's resting box straight after `placeChip` reads the box it had before
+      // the render. FLIP would then invert against the wrong "last" and the chip would arrive
+      // somewhere other than where it is.
+      requestAnimationFrame(() => {
+        animateFlip(element, flipStateFromRect(from), this.flipAnimationConfig);
+      });
+    }
+
+    private restoreInventoryItem(dragSource: HTMLElement, from?: DOMRect): void {
       clearDragChipStates(dragSource);
       dragSource.style.display = '';
       dragSource.style.position = '';
+      this.animateReturn(dragSource, from);
     }
 
     private placeResponse(response: string): void {
@@ -557,7 +586,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
         // clears placed clones for that identifier.
         if (!this.dragState.sourceDroppable) {
           if (this.shouldReturnToInventoryOnInventoryDrop()) {
-            this.returnToInventory(draggable);
+            this.returnToInventory(draggable, dragClonePosition);
             this._dropBlockedDueToMax = false;
             this.validate();
             return;
@@ -565,7 +594,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
 
           // Keep the inventory source item in place for interactions that don't
           // use "drop to inventory clears placed clones" semantics (e.g. gap-match).
-          this.restoreInventoryItem(draggable);
+          this.restoreInventoryItem(draggable, dragClonePosition);
           this.cacheInteractiveElements();
           this.checkAllMaxAssociations();
           this._dropBlockedDueToMax = false;
@@ -577,7 +606,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
         this.removeChipFromDroppable(this.droppableHolding(draggable), draggable);
 
         if (identifier) {
-          this.restoreOriginalInInventory(identifier);
+          this.restoreOriginalInInventory(identifier, dragClonePosition);
         }
 
         this.cacheInteractiveElements();
@@ -605,6 +634,10 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
           (this.isDeclarativeTarget(droppable) ? null : droppable.querySelector('[qti-draggable="true"]'));
         if (existing) {
           const existingId = existing.getAttribute('identifier');
+          // Where the evicted occupant is standing right now. Taken before it is removed, because
+          // afterwards it has no box to measure — and it is *this* rect it should travel from, not
+          // the dragged chip's clone.
+          const evictedFrom = (existing as HTMLElement).getBoundingClientRect();
           this.removeChipFromDroppable(droppable, existing as HTMLElement);
 
           // A single-capacity target that already holds a chip and receives one *from another
@@ -622,8 +655,9 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
           if (swapInto) {
             this.placeChip(swapInto, existing as HTMLElement);
             setDropFilled(swapInto, true);
+            this.animateReturn(existing as HTMLElement, evictedFrom);
           } else if (existingId) {
-            this.restoreOriginalInInventory(existingId);
+            this.restoreOriginalInInventory(existingId, evictedFrom);
           }
         }
       }
@@ -712,7 +746,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       this.checkAllMaxAssociations();
     }
 
-    private returnToInventory(element: HTMLElement): void {
+    private returnToInventory(element: HTMLElement, from?: DOMRect): void {
       const identifier = element.getAttribute('identifier');
       if (identifier) {
         // Remove all clones of this item from drop zones
@@ -724,23 +758,36 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
           }
         });
 
-        this.restoreOriginalInInventory(identifier);
+        this.restoreOriginalInInventory(identifier, from);
       }
       this.cacheInteractiveElements();
       this.checkAllMaxAssociations();
     }
 
-    private restoreOriginalInInventory(identifier: string): void {
+    /**
+     * @param from where the chip was last painted on screen. Given one, the restored inventory item
+     * travels back from there instead of blinking into the bank. The bank's *other* chips still
+     * FLIP from their own captured positions, since removing a placeholder can rewrap the row.
+     */
+    private restoreOriginalInInventory(identifier: string, from?: DOMRect): void {
       const inventoryItems = findInventoryItems(this.trackedDragContainers, identifier);
 
-      // FLIP: First - capture positions of all items in inventory containers
-      const allInventoryItems: HTMLElement[] = [];
+      // FLIP: First - capture positions of the items that merely *shift* when the hole closes.
+      //
+      // The returning items themselves are excluded. They are still hidden at this point, so their
+      // rect is 0×0 at the viewport origin, and FLIP read that as their "first" state: the chip
+      // animated in from the top-left corner of the screen at scale(0). It travels from `from`
+      // instead, which is where the user last saw it.
+      const returning = new Set<HTMLElement>(inventoryItems);
+      const shiftingItems: HTMLElement[] = [];
       this.trackedDragContainers.forEach(container => {
-        allInventoryItems.push(...Array.from(container.querySelectorAll<HTMLElement>('[qti-draggable="true"]')));
+        container
+          .querySelectorAll<HTMLElement>('[qti-draggable="true"]')
+          .forEach(item => !returning.has(item) && shiftingItems.push(item));
       });
 
       const flipStates =
-        this.enableFlipAnimations && allInventoryItems.length > 0 ? captureMultipleFlipStates(allInventoryItems) : null;
+        this.enableFlipAnimations && shiftingItems.length > 0 ? captureMultipleFlipStates(shiftingItems) : null;
 
       // FLIP: Last - restore the inventory items (may cause reflow)
       inventoryItems.forEach(item => {
@@ -753,6 +800,9 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       if (flipStates && this.enableFlipAnimations) {
         animateMultipleFlips(flipStates, this.flipAnimationConfig);
       }
+
+      // ...and fly the chip itself home, from the dropzone or the cursor it left.
+      inventoryItems.forEach(item => this.animateReturn(item, from));
     }
 
     private updateInventoryBasedOnMatchMax(identifier: string): void {

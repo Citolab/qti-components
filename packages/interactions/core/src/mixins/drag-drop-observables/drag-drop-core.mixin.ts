@@ -569,6 +569,15 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       const holds = (d: HTMLElement) => d.contains(dragElement) || !!d.shadowRoot?.contains(dragElement);
       const isCloneInDroppable = this.trackedDroppables.some(holds);
       const sourceDroppable = this.trackedDroppables.find(holds) || null;
+
+      // A chip grabbed while it is still flying home has a transform on it, and
+      // `getBoundingClientRect` reports the transformed box, not the layout box. The drag would
+      // then start from wherever the animation happened to be, `createDragClone` would copy the
+      // half-applied transform into the clone, and the drop would resolve against a rect that is
+      // still moving. Land it first: `cancel()` drops the fill and the chip snaps to where it
+      // really lives.
+      dragElement.getAnimations().forEach(animation => animation.cancel());
+
       const rect = dragElement.getBoundingClientRect();
 
       this.dragState = {
@@ -894,6 +903,10 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       clone.removeAttribute('qti-draggable');
       clone.removeAttribute('tabindex');
       clone.setAttribute('data-drag-clone', 'true');
+      // The clone is appended to document.body, so no ancestor selector can reach it and it inherits
+      // nothing from the interaction it came from. It carries the interaction's name instead, which
+      // is the only way a theme can tell a graphic-gap-match chip in flight from any other chip.
+      clone.setAttribute('data-drag-interaction', this.tagName.toLowerCase());
 
       document.body.appendChild(clone);
       return clone;

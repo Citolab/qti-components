@@ -44,6 +44,17 @@ export function captureFlipState(element: Element): FlipState {
 }
 
 /**
+ * A chip's last on-screen position, as a FLIP "first" state.
+ *
+ * The drag clone is `position: fixed` and is destroyed the moment the pointer is released, so the
+ * only record of where the chip was is the rect taken just before it goes. Handing that rect to
+ * `animateFlip` as the "first" state is what lets a chip fly home rather than blink home.
+ */
+export function flipStateFromRect(rect: DOMRect): FlipState {
+  return { left: rect.left, top: rect.top, width: rect.width, height: rect.height };
+}
+
+/**
  * Capture FLIP states for multiple elements
  */
 export function captureMultipleFlipStates(elements: Element[]): Map<Element, FlipState> {
