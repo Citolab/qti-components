@@ -39,14 +39,11 @@ qti-match-interaction:not(.qti-match-tabular) {
     }
   }
 
-  qti-simple-match-set {
-    margin-bottom: 0.5rem;
-  }
-
-  qti-simple-match-set:first-of-type {
-    box-sizing: border-box;
-    padding: 0.5rem;
-  }
+  /*
+   * The drag bank's padding and the match-sets' margin-bottom are gone. They existed to make room
+   * for a highlight that no longer exists, and the spacing they provided belongs to a `gap` on the
+   * interaction, not to a margin on each set. That rewrite is still to come.
+   */
 
   qti-simple-match-set:last-of-type {
     > qti-simple-associable-choice {
