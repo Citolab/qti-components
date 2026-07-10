@@ -31,7 +31,13 @@ qti-order-interaction {
 
   qti-simple-choice {
     background-color: var(--bs-secondary-bg-subtle);
-    border: none;
+    /*
+     * `border: none` here, `border: 1px` on `::part(drag)` below — a bank card and a placed card
+     * are meant to look different, and that is fine. But the difference must be paint, not layout:
+     * a chip that gains a border when it lands grows 2px and shoves the sentence around it.
+     * Transparent, not absent.
+     */
+    border: 1px solid transparent;
     font-weight: 600;
 
     /* The placeholder look now lives in kennisnet-override.scss, keyed on `:state(placeholder)`

@@ -28,8 +28,14 @@
     &:state(dragzone-enabled)::part(drags) {
       @apply dropping;
     }
+    /*
+     * A bank chip is a chip. These carried only `display: flex` and no chip styling at all, while
+     * the same chip dropped on a hotspot picked up `@apply drag` through `::part(drag)` — so it
+     * grew 18px in height the moment it landed.
+     */
     & qti-gap-img,
-    qti-gap-text {
+    & qti-gap-text {
+      @apply drag;
       display: flex;
       justify-content: center;
       align-items: center;

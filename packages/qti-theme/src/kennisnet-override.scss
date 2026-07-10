@@ -82,15 +82,22 @@ test-container {
  * context and no state. It keeps its own selector.
  */
 /*
- * A chip has three homes: the light-DOM bank (`:state(drag)`), the floating clone, and — for a
- * target that renders its own chips — that target's shadow root, where only `::part()` reaches.
+ * A chip has three homes: the light-DOM bank (`:state(drag)`), the floating clone, and the drop
+ * target's shadow root, where only `::part()` reaches.
  *
- * Scoped to `qti-gap` while it is the only declarative target. A bare `::part(drag)` is the end
- * state and would sweep every dropped chip in every interaction; today that would restyle order's
- * and associate's placed chips, which still carry their own rules.
+ * Named per target, NOT a bare `::part(drag)`. Bare sweeps in order's and associate's placed chips,
+ * which those interactions style themselves — order draws a positioned correction badge on
+ * `::part(drag)::before/::after`, and this block's inline glyph fights it. The result is a card with
+ * no badge. Verified on the ITEM013 baseline.
+ *
+ * The cost of naming them: order's bank chip and its placed chip are styled by different blocks, so
+ * they must agree on the box by hand. They do — see the `border: 1px solid transparent` in
+ * kennisnet/qti/order-interaction.scss, and drag-drop.invariance.spec.ts which measures it.
  */
 :state(drag),
 qti-gap::part(drag),
+qti-associable-hotspot::part(drag),
+qti-simple-associable-choice::part(drag),
 [data-drag-clone] {
   color: #fff;
   background-color: var(--primary-color);
@@ -131,6 +138,8 @@ qti-gap::part(drag),
  */
 :state(drag)::part(control)::before,
 qti-gap::part(drag-control)::before,
+qti-associable-hotspot::part(drag-control)::before,
+qti-simple-associable-choice::part(drag-control)::before,
 [data-drag-clone]::before {
   content: '';
   display: inline-block;
@@ -156,6 +165,8 @@ qti-gap::part(drag-control)::before,
  */
 :state(drag):state(candidate-correct),
 qti-gap::part(drag):state(candidate-correct),
+qti-associable-hotspot::part(drag):state(candidate-correct),
+qti-simple-associable-choice::part(drag):state(candidate-correct),
 [data-drag-clone]:state(candidate-correct) {
   background-color: color-mix(in srgb, var(--qti-correct) 5%, white);
   color: var(--qti-correct);
@@ -165,6 +176,8 @@ qti-gap::part(drag):state(candidate-correct),
 
 :state(drag):state(candidate-correct)::after,
 qti-gap::part(drag):state(candidate-correct)::after,
+qti-associable-hotspot::part(drag):state(candidate-correct)::after,
+qti-simple-associable-choice::part(drag):state(candidate-correct)::after,
 [data-drag-clone]:state(candidate-correct)::after {
   content: '';
   display: inline-block;
@@ -179,6 +192,8 @@ qti-gap::part(drag):state(candidate-correct)::after,
 
 :state(drag):state(candidate-incorrect),
 qti-gap::part(drag):state(candidate-incorrect),
+qti-associable-hotspot::part(drag):state(candidate-incorrect),
+qti-simple-associable-choice::part(drag):state(candidate-incorrect),
 [data-drag-clone]:state(candidate-incorrect) {
   background-color: color-mix(in srgb, var(--qti-incorrect) 5%, white);
   color: var(--qti-incorrect);
@@ -188,6 +203,8 @@ qti-gap::part(drag):state(candidate-incorrect),
 
 :state(drag):state(candidate-incorrect)::after,
 qti-gap::part(drag):state(candidate-incorrect)::after,
+qti-associable-hotspot::part(drag):state(candidate-incorrect)::after,
+qti-simple-associable-choice::part(drag):state(candidate-incorrect)::after,
 [data-drag-clone]:state(candidate-incorrect)::after {
   content: '';
   display: inline-block;
