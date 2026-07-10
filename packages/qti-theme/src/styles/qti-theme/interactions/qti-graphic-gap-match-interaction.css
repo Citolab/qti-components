@@ -29,25 +29,23 @@
       @apply dropping;
     }
     /*
-     * A bank chip is a chip. These carried only `display: flex` and no chip styling at all, while
-     * the same chip dropped on a hotspot picked up `@apply drag` through `::part(drag)` — so it
-     * grew 18px in height the moment it landed.
+     * A graphic-gap-match chip is an image, not a card. No `@apply drag` — no border, no padding,
+     * no background — the tile is its picture and nothing else.
+     *
+     * The bank chip and the placed chip must still be the same size (drag-drop.invariance.spec.ts),
+     * and they are: NEITHER gets chip styling. The earlier 18px height jump came from the bank being
+     * plain while the placed chip picked up `@apply drag` through `::part(drag)` — fixed then by
+     * giving both the card, fixed better now by giving neither.
      */
     & qti-gap-img,
     & qti-gap-text {
-      @apply drag;
       display: flex;
       justify-content: center;
       align-items: center;
       cursor: grab;
     }
-    /* Editor fake-drag projected into a filled <qti-associable-hotspot>'s
-       shadow. Same `drag` styling so editor previews match runtime. */
+    /* The placed chip, in the hotspot's shadow. Plain too, to match the bank. Focus ring only. */
     & qti-associable-hotspot::part(drag) {
-      @apply drag;
-      &:hover {
-        @apply hov;
-      }
       &:focus {
         @apply foc;
       }
