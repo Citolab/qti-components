@@ -136,10 +136,14 @@ qti-simple-associable-choice::part(drag),
  * FontAwesome `grip-vertical` glyph as the drag handle, painted via
  * `mask-image` so it inherits `currentColor`. Sits BEFORE the chip text.
  */
+/*
+ * `::part(drag-control)` is bare now. It was scoped to three targets only because order drew its
+ * correction badge on `::before`/`::after` of `::part(drag)` and the two collided. That badge moved
+ * to `part="correction"`, so the scoping can go — and order's and associate's placed chips get the
+ * grip they never had.
+ */
 :state(drag)::part(control)::before,
-qti-gap::part(drag-control)::before,
-qti-associable-hotspot::part(drag-control)::before,
-qti-simple-associable-choice::part(drag-control)::before,
+::part(drag-control)::before,
 [data-drag-clone]::before {
   content: '';
   display: inline-block;
@@ -230,8 +234,23 @@ span.correct-option {
   border: var(--qti-border-thickness) solid var(--qti-answer-border);
 }
 
-.full-correct-response :state(drag)::after,
-.full-correct-response ::part(drag)::after,
+/*
+ * A chip in the answer key is not draggable, so its grip handle is a lie. The check takes the
+ * handle's place — same box, same position, so nothing moves — and there is no second glyph
+ * trailing the label.
+ *
+ * `::part(drag-control)` is bare: it reaches the chip's own `control` part, forwarded one level by
+ * `exportparts`, in whichever drop target's shadow root the chip was rendered.
+ */
+.full-correct-response {
+  :state(drag)::part(control)::before,
+  ::part(drag-control)::before {
+    background-color: var(--qti-answer-fg);
+    mask: var(--fa-check-mask) no-repeat center / contain;
+    -webkit-mask: var(--fa-check-mask) no-repeat center / contain;
+  }
+}
+
 span.correct-option::after {
   content: '';
   display: inline-block;

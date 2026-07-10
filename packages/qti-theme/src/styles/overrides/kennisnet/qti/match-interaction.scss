@@ -142,3 +142,24 @@ qti-match-interaction.qti-match-tabular qti-simple-match-set qti-simple-associab
   border: none;
   background-color: white;
 }
+
+/*
+ * The answer key, tabular. Same shape as every other interaction's: a light box with a blue mark,
+ * rather than the filled primary disc with a white one.
+ *
+ * The cells are plain spans in the interaction's shadow root, so they carry variant part tokens
+ * instead of `:state()`. An extra part token adds no specificity — `::part(control-mark radio
+ * checked)` ties with `::part(control-mark checked)` and source order would decide. These win on
+ * `.full-correct-response` instead, which is a class and does count.
+ */
+.full-correct-response qti-match-interaction.qti-match-tabular {
+  &::part(control checked) {
+    border-color: var(--qti-answer-border);
+    background-color: var(--qti-answer-bg);
+  }
+
+  &::part(control-mark radio checked),
+  &::part(control-mark checkbox checked) {
+    background-color: var(--qti-answer-fg);
+  }
+}

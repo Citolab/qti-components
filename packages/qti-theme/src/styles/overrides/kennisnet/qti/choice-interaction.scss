@@ -81,26 +81,33 @@ qti-choice-interaction {
   }
 }
 
+/*
+ * The answer key: a light box with a blue mark, not a filled blue disc with a white one. Same shape
+ * as the rest of the answer-key view — light background, dark letters.
+ *
+ * The radio/checkbox split is kept so these outrank the normal `:state(checked)` rules above on
+ * specificity rather than on source order.
+ */
 .full-correct-response {
   qti-choice-interaction {
     qti-simple-choice {
-      &:state(radio):state(checked)::part(control) {
-        border-color: var(--info-color);
-        background-color: var(--info-color);
+      &:state(radio):state(checked)::part(control),
+      &:state(checkbox):state(checked)::part(control) {
+        border-color: var(--qti-answer-border);
+        background-color: var(--qti-answer-bg);
       }
 
-      &:state(checkbox):state(checked)::part(control) {
-        background-color: var(--info-color);
+      &:state(radio):state(checked)::part(control-mark),
+      &:state(checkbox):state(checked)::part(control-mark) {
+        background-color: var(--qti-answer-fg);
       }
     }
 
-    &.qti-input-control-hidden {
-      & qti-simple-choice {
-        &:state(checked) {
-          border-color: var(--info-color);
-          background-color: var(--info-color);
-        }
-      }
+    /* No control to fill — the whole row carries the answer. */
+    &.qti-input-control-hidden qti-simple-choice:state(checked) {
+      border-color: var(--qti-answer-border);
+      background-color: var(--qti-answer-bg);
+      color: var(--qti-answer-fg);
     }
   }
 }

@@ -5,8 +5,9 @@ qti-text-entry-interaction {
   border-radius: var(--bs-border-radius);
   margin: 0.2rem 0.2rem 0.2rem 0;
 
-  // The status glyph is `part="correction"` on this element now — an out-of-flow badge anchored to
-  // the top-right corner, styled once in kennisnet-override.scss for every corrected element.
+  // Candidate correction is `part="correction"` on this element now — one badge, styled once in
+  // kennisnet-override.scss for every corrected element. The answer key's check is separate, and
+  // lives at the bottom of this file.
 
   &::part(input) {
     border: none;
@@ -49,10 +50,21 @@ qti-text-entry-interaction {
  */
 .full-correct-response {
   qti-text-entry-interaction {
+    // `status-icon` paints a mask; it draws no box. The box used to live in a shared `&::before`
+    // rule at the top of this file, which went when the correction badge moved to its own part —
+    // and took this check with it, silently: a mask on a zero-sized pseudo-element renders nothing.
     &::before {
       @include status-icon(var(--fa-check-mask), var(--qti-answer-fg));
+
+      position: absolute;
+      top: 50%;
+      left: 0.5rem;
+      translate: 0 -50%;
+      width: 1rem;
+      height: 1rem;
     }
 
+    // Room for the check, so it never overlaps the answer.
     &::part(input) {
       margin-left: 1.5rem;
     }
