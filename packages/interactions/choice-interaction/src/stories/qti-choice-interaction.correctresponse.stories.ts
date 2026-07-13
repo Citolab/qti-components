@@ -239,7 +239,6 @@ export const ShowFullCorrectResponse: Story = {
     const clonedInteraction = fullCorrectDiv?.querySelector('qti-choice-interaction') as QtiChoiceInteraction;
 
     expect(clonedInteraction).toBeTruthy();
-    expect(clonedInteraction.disabled).toBe(true);
     expect(clonedInteraction.response).toBe('A');
   }
 };

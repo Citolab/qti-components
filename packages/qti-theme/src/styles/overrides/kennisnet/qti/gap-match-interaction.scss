@@ -30,3 +30,14 @@ qti-gap-match-interaction {
     border: var(--qti-border-thickness) solid var(--info-color) !important;
   }
 }
+
+/*
+ * The answer key: hide the drag bank. Only the filled gaps carry the answer, so the source
+ * `qti-gap-text` chips are noise. Every correct chip is placed into a gap, so each source hits
+ * matchMax and takes `:state(placeholder)` — which used to be an invisible inline `opacity: 0` but
+ * now paints a visible hole (commit bce3cbc4), so the bank reappeared. Hiding the whole `::part(drags)`
+ * bank keys on the wrapper class — same mechanism as `.full-correct-response qti-order-interaction::part(drags)`.
+ */
+.full-correct-response qti-gap-match-interaction::part(drags) {
+  display: none;
+}

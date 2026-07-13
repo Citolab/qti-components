@@ -343,7 +343,6 @@ export const ShowFullCorrectResponse: Story = {
     const clonedInteraction = fullCorrectDiv?.querySelector('qti-text-entry-interaction') as QtiTextEntryInteraction;
 
     expect(clonedInteraction).toBeTruthy();
-    expect(clonedInteraction.disabled).toBe(true);
     expect(clonedInteraction.value).toBe('Paris');
   }
 };

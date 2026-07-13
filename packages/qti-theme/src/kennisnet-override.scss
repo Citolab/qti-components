@@ -116,6 +116,7 @@ test-container {
 :state(drag):where(:not(qti-graphic-gap-match-interaction *, [data-drag-interaction='qti-graphic-gap-match-interaction'])),
 qti-gap::part(drag),
 qti-simple-associable-choice::part(drag),
+qti-associate-interaction::part(drag),
 [data-drag-clone]:where(:not([data-drag-interaction='qti-graphic-gap-match-interaction'])) {
   color: #fff;
   background-color: var(--primary-color);

@@ -843,7 +843,6 @@ export const ShowFullCorrectResponse: Story = {
     ) as QtiInlineChoiceInteraction;
 
     expect(clonedInteraction).toBeTruthy();
-    expect(clonedInteraction.disabled).toBe(true);
     expect(clonedInteraction.response).toBe('Y');
   }
 };

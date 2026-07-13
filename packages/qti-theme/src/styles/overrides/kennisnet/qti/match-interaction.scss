@@ -14,7 +14,9 @@
  */
 
 qti-match-interaction:not(.qti-match-tabular):disabled {
-  /* A disabled match hides its drag bank. This keys on the real element, so it still works. */
+  /* A genuinely disabled match (e.g. a locked, submitted item) hides its drag bank. The
+     answer-key clone is handled separately, keyed on `.full-correct-response` below — it is
+     `inert`, not `:disabled`, so this selector no longer reaches it. */
   qti-simple-match-set:first-of-type {
     display: none;
   }
@@ -133,6 +135,16 @@ qti-match-interaction.qti-match-tabular {
 qti-match-interaction.qti-match-tabular qti-simple-match-set qti-simple-associable-choice {
   border: none;
   background-color: white;
+}
+
+/*
+ * The answer key, non-tabular: hide the drag bank. Only the filled targets carry the answer, so the
+ * source chips are noise. The clone is `inert`, not `:disabled` (interaction.ts deliberately dropped
+ * `disabled` so the choices are not dimmed), so this keys on the wrapper class — same mechanism as
+ * `.full-correct-response qti-order-interaction::part(drags)`.
+ */
+.full-correct-response qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:first-of-type {
+  display: none;
 }
 
 /*

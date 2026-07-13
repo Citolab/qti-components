@@ -238,16 +238,20 @@ const INTERACTIONS: Array<{ name: string; html: string; chip: string; target: ()
  * Known violations, recorded rather than deleted. `test.fails` inverts the assertion: these must
  * keep failing, and the day one starts passing the suite goes red and tells you to remove it here.
  *
- *   order      a bank chip and a placed chip are styled by different blocks — kennisnet gives the
- *              bank card `border: none` and the placed card `border: 1px` — so the chip grows 2px
- *              on drop and the drop grows with it. Present at HEAD, long before this work.
- *   associate  the same disease: the placed chip's horizontal padding comes from a different rule
- *              than the bank chip's.
+ *   order      NOT a box-model mismatch — the placed chip's own padding/border/font-weight already
+ *              match the bank's. The residual 2px is layout coupling: the placed chip stretches to
+ *              fill its drop slot (a `width` a hair off the bank chip's natural two-line wrap), and
+ *              the drop itself grows ~2px the moment it is filled (its empty min-height does not
+ *              reserve the chip's height). Fixing it means the drop reserving the chip's box up
+ *              front — what gap-match already does with `--qti-dropzone-min-*` (qti-gap.styles.ts) —
+ *              a component change, not a CSS nudge. Both the chip-box and dropzone tests fail on it.
  *
- * The cure is Phase 1 of plans/theme-merge-and-shadow-style-cleanup.md — one selector list per
- * theme, covering a chip's three homes. Not a CSS nudge here.
+ * `associate` used to live here — its placed chip drew `16px` padding from the base `@apply drag`
+ * while the bank chip drew `0.8em` from kennisnet's `:state(drag)` block, and nothing keyed the
+ * placed chip (`qti-associate-interaction::part(drag)`) to the same `0.8em`. Fixed by adding that
+ * selector to kennisnet's shared chip block, so a chip wears one box model in both homes.
  */
-const CHIP_BOX_KNOWN_BAD = new Set(['order', 'associate']);
+const CHIP_BOX_KNOWN_BAD = new Set(['order']);
 const DROPZONE_KNOWN_BAD = new Set(['order']);
 
 const chipCases = INTERACTIONS.map(i => [i.name, i] as const);

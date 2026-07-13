@@ -324,5 +324,4 @@
 /* Disabled — just dim it. No colour variables. */
 .dis {
   cursor: not-allowed;
-  opacity: 0.5;
 }
